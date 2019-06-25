@@ -123,7 +123,7 @@ function trimSearchCondition() {
 function showGroupDialog() {
     var changeSettingDialog = $("#changeSettingDialog");
     changeSettingDialog.find('#changeSettingDialogForm')[0].reset();
-    $("#changeSettingDialog").find("#settingGroup").removeAttr("disabled");
+    $("#changeSettingDialog").find("#settingOperationCombineName").removeAttr("disabled");
     $("#changeSettingDialog").find("i").text(100);
     changeSettingDialog.show();
     changeSettingDialog.dialog({
@@ -158,11 +158,11 @@ function showGroupDialog() {
     changeSettingDialog.window("resize", {top: $(document).scrollTop() + 150});
 }
 
-function showUpdateGroupDialog(groupUuid, groupName) {
+function showUpdateGroupDialog(operationCombineUuid, operationCombineName) {
     var updateGroupSettingDialog = $("#updateGroupSettingDialog");
     updateGroupSettingDialog.find('#updateGroupSettingDialogForm')[0].reset();
-    updateGroupSettingDialog.find("#settingGroup").attr("disabled", true);
-    getGroupSettingCount(groupUuid, groupName);
+    updateGroupSettingDialog.find("#settingOperationCombineName").attr("disabled", true);
+    getGroupSettingCount(operationCombineUuid, operationCombineName);
     updateGroupSettingDialog.show();
     updateGroupSettingDialog.dialog({
         resizable: false,
@@ -174,7 +174,7 @@ function showUpdateGroupDialog(groupUuid, groupName) {
             text: '修改',
             iconCls: 'icon-ok',
             handler: function () {
-                saveGroupSetting('update', 0, 1, groupUuid);
+                saveGroupSetting('update', 0, 1, operationCombineUuid);
             }
         }, {
             text: '取消',
@@ -211,14 +211,14 @@ function delGroup(groupUuid) {
     }
 }
 
-function getGroupSettingCount(groupUuid, groupName) {
+function getGroupSettingCount(operationCombineUuid, operationCombineName) {
     $.ajax({
-        url: '/internal/groupsetting/getGroupSettingCount/' + groupUuid,
+        url: '/internal/groupsetting/getGroupSettingCount/' + operationCombineUuid,
         type: 'POST',
         success: function (result) {
             if(null !== result) {
                 $("#updateGroupSettingDialog").find("strong").text(result);
-                $("#updateGroupSettingDialog").find("#settingGroup").val(groupName != null ? groupName : "");
+                $("#updateGroupSettingDialog").find("#settingOperationCombineName").val(operationCombineName != null ? operationCombineName : "");
             }
         },
         error: function () {
@@ -227,11 +227,11 @@ function getGroupSettingCount(groupUuid, groupName) {
     });
 }
 
-function showGroupSettingDialog(type, id, groupName, remainingAccount, groupUuid) {
+function showGroupSettingDialog(type, id, operationCombineName, remainingAccount, operationCombineUuid) {
     var changeSettingDialog = $("#changeSettingDialog");
     changeSettingDialog.find('#changeSettingDialogForm')[0].reset();
-    $("#changeSettingDialog").find("#settingGroup").attr("disabled", true);
-    changeSettingDialog.find('#settingGroup').val(groupName);
+    $("#changeSettingDialog").find("#settingOperationCombineName").attr("disabled", true);
+    changeSettingDialog.find('#settingOperationCombineName').val(operationCombineName);
     changeSettingDialog.find('#remainAccount').val(remainingAccount);
     changeSettingDialog.find("i").text(remainingAccount);
     changeSettingDialog.find("#maxInvalidCount").parent().parent().hide();
@@ -255,7 +255,7 @@ function showGroupSettingDialog(type, id, groupName, remainingAccount, groupUuid
             text: '保存',
             iconCls: 'icon-ok',
             handler: function () {
-                saveGroupSetting(type, 0, 0, groupUuid);
+                saveGroupSetting(type, 0, 0, operationCombineUuid);
             }
         }, {
             text: '取消',
@@ -416,12 +416,12 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
     }
     var group = {};
     if (status) {
-        var groupName = dialogDiv.find("#settingGroup").val().trim();
-        if (groupName === "") {
-            alert("请输入优化组名");
+        var operationCombineName = dialogDiv.find("#settingOperationCombineName").val().trim();
+        if (operationCombineName === "") {
+            alert("请输入操作组合名");
             return false;
         }
-        group.groupName = groupName;
+        group.operationCombineName = operationCombineName;
         type = "groupadd";
         if (dialogDiv.find("#machineUsedPercent").val() === '0' || dialogDiv.find("#machineUsedPercent").val() === '') {
             alert("每个操作的机器占比都应该大于0！！！");
@@ -901,10 +901,10 @@ function getGroupNames() {
     });
 }
 
-function editGroupNameStr(o, edit){
+function editGroupNameStr(o, edit, remainingAccount, maxInvalidCount){
     if (edit) {
         o.innerHTML = o.innerHTML.replace(/(暂无)/g, '');
-        var uuid = $(o).parent().find("input[name='operationCombineUuid']").val();
+        var uuid = $(o).parent().parent().find("input[name='operationCombineUuid']").val();
         o.innerHTML = '<input type="text" label="'+ o.innerHTML +'" uuid="'+ uuid +'" style="width: 800px;" value="' + o.innerHTML + '" onblur="editGroupNameStr(this)">';
         o.getElementsByTagName('input')[0].focus();
     } else {
@@ -916,9 +916,7 @@ function editGroupNameStr(o, edit){
             o.value = "";
             $.each(groupNames, function (idx, val) {
                 if (val != "") {
-                    var group = {};
-                    group.groupName = $.trim(val);
-                    groups.push(group);
+                    groups.push($.trim(val));
                     o.value += val + ",";
                 }
             });
@@ -932,9 +930,12 @@ function editGroupNameStr(o, edit){
             var postData = {};
             var operationCombineUuid = $(o).attr("uuid");
             postData.operationCombineUuid = $.trim(operationCombineUuid);
-            postData.groups = groups;
+            postData.groupNames = groups;
+            postData.terminalType = $("#chargeForm").find("input[name='terminalType']").val();
+            postData.remainingAccount = remainingAccount;
+            postData.maxInvalidCount = maxInvalidCount;
             $.ajax({
-                url: "/internal/operationCombine/saveGroupNames",
+                url: "/internal/group/saveGroupsBelowOperationCombine",
                 type: "POST",
                 data: JSON.stringify(postData),
                 headers: {

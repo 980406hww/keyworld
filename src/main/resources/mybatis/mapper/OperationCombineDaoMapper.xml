@@ -2,4 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.OperationCombineDao">
 
+    <select id="getOperationCombineNames" resultType="java.lang.String">
+        SELECT
+            toc.fOperationCombineName AS 'operationCombineName'
+        FROM t_operation_combine toc
+        WHERE EXISTS(
+            SELECT 1
+            FROM t_group g
+            WHERE g.fOperationCombineUuid = toc.fUuid
+            AND g.fTerminalType = #{terminalType}
+        )
+        ORDER BY toc.fOperationCombineName
+    </select>
 </mapper>

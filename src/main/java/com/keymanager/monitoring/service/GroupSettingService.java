@@ -89,8 +89,8 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
         groupSettingDao.deleteByGroupUuid(uuid);
     }
 
-    public List<Long> getGroupSettingUuids (long groupUuid) {
-        return groupSettingDao.getGroupSettingUuids(groupUuid);
+    public List<Long> getGroupSettingUuids (long operationCombineUuid) {
+        return groupSettingDao.getGroupSettingUuids(operationCombineUuid);
     }
 
     public void updateGroupSetting(GroupSetting gs, GroupSetting groupSetting){

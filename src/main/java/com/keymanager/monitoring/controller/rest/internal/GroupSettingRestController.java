@@ -5,10 +5,7 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.GroupSettingCriteria;
 import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.monitoring.entity.GroupSetting;
-import com.keymanager.monitoring.service.ConfigService;
-import com.keymanager.monitoring.service.GroupSettingService;
-import com.keymanager.monitoring.service.OperationTypeService;
-import com.keymanager.monitoring.service.PerformanceService;
+import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.GroupVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
@@ -41,6 +38,9 @@ public class GroupSettingRestController extends SpringMVCBaseController {
 
     @Autowired
     private OperationTypeService operationTypeService;
+
+    @Autowired
+    private OperationCombineService operationCombineService;
 
     @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
     @RequestMapping(value = "/searchGroupSettings", method = RequestMethod.GET)
@@ -75,12 +75,13 @@ public class GroupSettingRestController extends SpringMVCBaseController {
         Page<GroupVO> page = groupSettingService.searchGroupSettings(new Page<GroupVO>(currentPageNumber, pageSize), groupSettingCriteria);
         // String [] operationTypeValues = configService.getOperationTypeValues(groupSettingCriteria.getTerminalType());
         List operationTypeValues =  operationTypeService.getOperationTypeValuesByRole(groupSettingCriteria.getTerminalType());
-
+        List<String> operationCombineNames = operationCombineService.getOperationCombineNames(groupSettingCriteria.getTerminalType());
         HttpSession session = request.getSession();
         String entryType = (String) session.getAttribute("entryType");
         String maxInvalidCount = configService.getConfig(Constants.CONFIG_TYPE_MAX_INVALID_COUNT, entryType).getValue();
         modelAndView.addObject("groupSettingCriteria", groupSettingCriteria);
         modelAndView.addObject("operationTypeValues", operationTypeValues);
+        modelAndView.addObject("operationCombineNames", operationCombineNames);
         modelAndView.addObject("page", page);
         modelAndView.addObject("terminalType", groupSettingCriteria.getTerminalType());
         modelAndView.addObject("maxInvalidCount", maxInvalidCount);
@@ -136,10 +137,10 @@ public class GroupSettingRestController extends SpringMVCBaseController {
         }
     }
 
-    @PostMapping("/getGroupSettingCount/{groupUuid}")
-    public ResponseEntity<?> getGroupSettingCount(@PathVariable("groupUuid") long groupUuid) {
+    @PostMapping("/getGroupSettingCount/{operationCombineUuid}")
+    public ResponseEntity<?> getGroupSettingCount(@PathVariable("operationCombineUuid") long operationCombineUuid) {
         try {
-            int groupSettingCount = groupSettingService.getGroupSettingUuids(groupUuid).size();
+            int groupSettingCount = groupSettingService.getGroupSettingUuids(operationCombineUuid).size();
             return new ResponseEntity<Object>(groupSettingCount, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

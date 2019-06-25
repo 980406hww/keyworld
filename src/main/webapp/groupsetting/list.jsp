@@ -130,19 +130,19 @@
 							<label>最大无效点击数:</label>&nbsp;&nbsp;<label class="maxInvalidCountStr" operationCombineId="${groupVo.uuid}">${groupVo.maxInvalidCount}</label>
 						</span>
 						<span><a href="javascript:;"></a>&nbsp;&nbsp;&nbsp;</span>
-						<span class="groupNames" ondblclick="editGroupNameStr($(this).find('label.groupNameStr')[0], true)">
+						<span class="groupNames" ondblclick="editGroupNameStr($(this).find('label.groupNameStr')[0], true, '${groupVo.remainingAccount}', '${groupVo.maxInvalidCount}')">
 							<label>分组:&nbsp;&nbsp;</label><label class="groupNameStr">暂无</label>
 						</span>
 						<div class="handle">
 							<a class="blue" href="javascript:showGroupQueueDialog('${groupVo.uuid}', '${groupVo.maxInvalidCount}', '${groupVo.remainingAccount}')">分组详情</a>
 							<shiro:hasPermission name="/internal/groupsetting/saveGroupSetting">
-								<a class="blue" href="javascript:showGroupSettingDialog('add', '${groupVo.uuid}', '${groupVo.operationCombineName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')">新增优化组设置</a>
+								<a class="blue" href="javascript:showGroupSettingDialog('add', '${groupVo.uuid}', '${groupVo.operationCombineName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')">新增操作组设置</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/group/updateGroup">
-								<a class="blue" href="javascript:showUpdateGroupDialog('${groupVo.uuid}', '${groupVo.operationCombineName}')">批量修改优化组设置</a>
+								<a class="blue" href="javascript:showUpdateGroupDialog('${groupVo.uuid}', '${groupVo.operationCombineName}')">批量修改操作组设置</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/group/delGroup">
-								<a class="blue" href="javascript:delGroup(${groupVo.uuid})">删除优化组</a>
+								<a class="blue" href="javascript:delGroup(${groupVo.uuid})">删除操作组合</a>
 							</shiro:hasPermission>
 						</div>
 					</div>
@@ -445,12 +445,18 @@
 				<input type="hidden" name="groupSettingUuid" id="groupSettingUuid" value="" >
 				<td>
 					<table id="td_1" style="font-size:12px">
-						<tr name="trItem" onclick="checkItem(this)">
+                        <tr name="trItem" onclick="checkItem(this)">
+                            <th>操作组合</th>
+                            <td>
+                                <input type="text" name="settingOperationCombineName" id="settingOperationCombineName"/>
+                            </td>
+                        </tr>
+						<%--<tr name="trItem" onclick="checkItem(this)">
 							<th>分组</th>
 							<td>
 								<input type="text" name="settingGroup" id="settingGroup" disabled="disabled"/>
 							</td>
-						</tr>
+						</tr>--%>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>操作类型</th>
 							<td>
@@ -780,12 +786,18 @@
 				<input type="hidden" name="groupSettingUuid" id="groupSettingUuid" value="" >
 				<td>
 					<table id="td_1" style="font-size:12px">
-						<tr name="trItem" onclick="checkItem(this)">
+						<%--<tr name="trItem" onclick="checkItem(this)">
 							<th>分组</th>
 							<td>
 								<input type="text" name="settingGroup" id="settingGroup" />
 							</td>
-						</tr>
+						</tr>--%>
+                        <tr name="trItem" onclick="checkItem(this)">
+                            <th>操作组合</th>
+                            <td>
+                                <input type="text" name="settingOperationCombineName" id="settingOperationCombineName"/>
+                            </td>
+                        </tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>操作类型</th>
 							<td>

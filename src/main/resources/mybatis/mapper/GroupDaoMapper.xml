@@ -140,7 +140,6 @@
         FROM t_group g
         WHERE g.fGroupName = #{groupName}
         AND g.fTerminalType = #{terminalType}
-        AND g.fOperationCombineUuid IS NULL
         LIMIT 1
     </select>
 

@@ -36,4 +36,8 @@ public class OperationCombineService extends ServiceImpl<OperationCombineDao, Op
     public List<OperationCombineVO> searchGroupsBelowOperationCombine (Long uuid, String groupName) {
         return groupService.searchGroupsBelowOperationCombine(uuid, groupName);
     }
+
+    public List<String> getOperationCombineNames (String terminalType) {
+        return operationCombineDao.getOperationCombineNames(terminalType);
+    }
 }

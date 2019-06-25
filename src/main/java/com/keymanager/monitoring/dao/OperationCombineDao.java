@@ -2,6 +2,9 @@ package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.keymanager.monitoring.entity.OperationCombine;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @Author zhoukai
@@ -10,4 +13,5 @@ import com.keymanager.monitoring.entity.OperationCombine;
 public interface OperationCombineDao extends BaseMapper<OperationCombine> {
 
 
+    List<String> getOperationCombineNames (@Param("terminalType") String terminalType);
 }
