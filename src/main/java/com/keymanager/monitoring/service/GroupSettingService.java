@@ -9,8 +9,6 @@ import com.keymanager.monitoring.entity.Group;
 import com.keymanager.monitoring.entity.GroupSetting;
 import com.keymanager.monitoring.vo.GroupVO;
 import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +16,6 @@ import java.util.*;
 
 @Service
 public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetting> {
-
-    private static Logger logger = LoggerFactory.getLogger(GroupSettingService.class);
 
     @Autowired
     private GroupSettingDao groupSettingDao;
@@ -85,15 +81,19 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
         return null;
     }
 
-    public void deleteByGroupUuid (long uuid) {
-        groupSettingDao.deleteByGroupUuid(uuid);
-    }
-
     public List<Long> getGroupSettingUuids (long operationCombineUuid) {
         return groupSettingDao.getGroupSettingUuids(operationCombineUuid);
     }
 
     public void updateGroupSetting(GroupSetting gs, GroupSetting groupSetting){
         groupSettingDao.updateGroupSetting(gs, groupSetting);
+    }
+
+    public void deleteGroupSettingByOperationCombineUuid (long operationCombineUuid) {
+        groupSettingDao.deleteGroupSettingByOperationCombineUuid(operationCombineUuid);
+    }
+
+    public Integer getSumMachineUsedPercent (long operationCombineUuid) {
+        return 100 - groupSettingDao.getSumMachineUsedPercent(operationCombineUuid);
     }
 }

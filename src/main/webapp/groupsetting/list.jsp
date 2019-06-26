@@ -87,11 +87,11 @@
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchCondition('1')" value=" 搜索 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/group/saveGroup">
+				<%--<shiro:hasPermission name="/internal/group/saveGroup">--%>
 					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showGroupDialog()" value=" 增加 " >&nbsp;
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showOperationCombineDialog()" value=" 增加 " >&nbsp;
 					</li>
-				</shiro:hasPermission>
+				<%--</shiro:hasPermission>--%>
 				<shiro:hasPermission name="/internal/group/getAvailableOptimizationGroups">
 					<li>
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableOptimizationGroups()" value="查询需要添加的优化组">&nbsp;
@@ -441,7 +441,7 @@
 	<form id="changeSettingDialogForm" onsubmit="return false">
 		<table>
 			<tr>
-				<input type="hidden" name="groupUuid" id="groupUuid" value="" >
+				<input type="hidden" name="operationCombineUuid" id="operationCombineUuid" value="" >
 				<input type="hidden" name="groupSettingUuid" id="groupSettingUuid" value="" >
 				<td>
 					<table id="td_1" style="font-size:12px">
@@ -451,12 +451,14 @@
                                 <input type="text" name="settingOperationCombineName" id="settingOperationCombineName"/>
                             </td>
                         </tr>
-						<%--<tr name="trItem" onclick="checkItem(this)">
-							<th>分组</th>
+						<tr name="trItem" onclick="checkItem(this)" style="display:none;">
+							<th>
+                                <label>分组</label>
+                            </th>
 							<td>
-								<input type="text" name="settingGroup" id="settingGroup" disabled="disabled"/>
+								<input type="text" name="settingGroup" id="settingGroup" placeholder="分组名称, 多个用逗号分隔" />
 							</td>
-						</tr>--%>
+						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>操作类型</th>
 							<td>
@@ -1140,11 +1142,11 @@
         </tbody>
         <tfoot style="position: absolute !important;bottom: 40px !important;background-color: #eeeeee !important;width: 100% !important;">
             <tr>
-                <th colspan="2" style="text-align: left;">操作类型：<select name="operationType" style="width: 150px;">
-                    <c:forEach items="${operationTypeValues}" var="operationType">
+                <th colspan="2" style="text-align: left;">操作组合：<select name="operationCombineName" style="width: 150px;">
+                    <c:forEach items="${operationCombineNames}" var="operationCombineName">
                         <c:choose>
-                            <c:when test="${operationType eq groupSettingCriteria.operationType}"><option selected>${operationType}</option></c:when>
-                            <c:otherwise><option>${operationType}</option></c:otherwise>
+                            <c:when test="${operationCombineName eq groupSettingCriteria.operationCombineName}"><option selected>${operationCombineName}</option></c:when>
+                            <c:otherwise><option>${operationCombineName}</option></c:otherwise>
                         </c:choose>
                     </c:forEach>
                 </select></th>

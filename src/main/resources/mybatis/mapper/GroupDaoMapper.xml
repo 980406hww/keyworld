@@ -146,15 +146,22 @@
     <insert id="insertBatchGroups">
         INSERT INTO t_group(fGroupName, fOperationCombineUuid, fTerminalType, fCreateBy, fRemainingAccount, fMaxInvalidCount)
         VALUES
-        <foreach collection="groupBatchAddCriteria.groupNames" item="groupName" separator=",">
+        <foreach collection="operationCombineCriteria.groupNames" item="groupName" separator=",">
             (
                 #{groupName},
-                #{groupBatchAddCriteria.operationCombineUuid},
-                #{groupBatchAddCriteria.terminalType},
-                #{groupBatchAddCriteria.createBy},
-                #{groupBatchAddCriteria.remainingAccount},
-                #{groupBatchAddCriteria.maxInvalidCount}
+                #{operationCombineCriteria.operationCombineUuid},
+                #{operationCombineCriteria.terminalType},
+                #{operationCombineCriteria.creator},
+                #{operationCombineCriteria.remainingAccount},
+                #{operationCombineCriteria.maxInvalidCount}
             )
         </foreach>
     </insert>
+
+    <update id="updateGroupOperationCombineUuid">
+        UPDATE t_group g
+        SET g.fOperationCombineUuid = NULL
+        WHERE g.fOperationCombineUuid = #{operationCombineUuid}
+    </update>
+
 </mapper>

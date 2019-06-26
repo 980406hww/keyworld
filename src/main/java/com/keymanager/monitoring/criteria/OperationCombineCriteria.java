@@ -1,32 +1,30 @@
 package com.keymanager.monitoring.criteria;
 
+import com.keymanager.monitoring.entity.GroupSetting;
+
 import java.util.List;
 
 /**
  * @Author zhoukai
- * @Date 2019/6/25 15:49
+ * @Date 2019/4/29 18:20
  **/
-public class GroupBatchAddCriteria {
-
-    private List<String> groupNames;
+public class OperationCombineCriteria {
 
     private long operationCombineUuid;
 
+    private String operationCombineName;
+
+    private List<String> groupNames;
+
     private String terminalType;
+
+    private String creator;
 
     private int maxInvalidCount;
 
     private int remainingAccount;
 
-    private String createBy;
-
-    public List<String> getGroupNames () {
-        return groupNames;
-    }
-
-    public void setGroupNames (List<String> groupNames) {
-        this.groupNames = groupNames;
-    }
+    private GroupSetting groupSetting;
 
     public long getOperationCombineUuid () {
         return operationCombineUuid;
@@ -36,12 +34,36 @@ public class GroupBatchAddCriteria {
         this.operationCombineUuid = operationCombineUuid;
     }
 
+    public String getOperationCombineName () {
+        return operationCombineName;
+    }
+
+    public void setOperationCombineName (String operationCombineName) {
+        this.operationCombineName = operationCombineName;
+    }
+
+    public List<String> getGroupNames () {
+        return groupNames;
+    }
+
+    public void setGroupNames (List<String> groupNames) {
+        this.groupNames = groupNames;
+    }
+
     public String getTerminalType () {
         return terminalType;
     }
 
     public void setTerminalType (String terminalType) {
         this.terminalType = terminalType;
+    }
+
+    public String getCreator () {
+        return creator;
+    }
+
+    public void setCreator (String creator) {
+        this.creator = creator;
     }
 
     public int getMaxInvalidCount () {
@@ -60,11 +82,11 @@ public class GroupBatchAddCriteria {
         this.remainingAccount = remainingAccount;
     }
 
-    public String getCreateBy () {
-        return createBy;
+    public GroupSetting getGroupSetting () {
+        return groupSetting;
     }
 
-    public void setCreateBy (String createBy) {
-        this.createBy = createBy;
+    public void setGroupSetting (GroupSetting groupSetting) {
+        this.groupSetting = groupSetting;
     }
 }

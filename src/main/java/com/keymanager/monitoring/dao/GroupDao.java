@@ -2,8 +2,8 @@ package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.keymanager.monitoring.criteria.GroupBatchAddCriteria;
 import com.keymanager.monitoring.criteria.GroupSettingCriteria;
+import com.keymanager.monitoring.criteria.OperationCombineCriteria;
 import com.keymanager.monitoring.entity.Group;
 import com.keymanager.monitoring.vo.GroupVO;
 import com.keymanager.monitoring.vo.OperationCombineVO;
@@ -41,5 +41,7 @@ public interface GroupDao extends BaseMapper<Group> {
 
     Long searchExistingGroupUuid (@Param("terminalType") String terminalType, @Param("groupName") String groupName);
 
-    void insertBatchGroups (@Param("groupBatchAddCriteria") GroupBatchAddCriteria groupBatchAddCriteria);
+    void insertBatchGroups (@Param("operationCombineCriteria") OperationCombineCriteria operationCombineCriteria);
+
+    void updateGroupOperationCombineUuid (@Param("operationCombineUuid")Long operationCombineUuid);
 }

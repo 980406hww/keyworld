@@ -4,7 +4,7 @@
 
     <select id="getOperationCombineNames" resultType="java.lang.String">
         SELECT
-            toc.fOperationCombineName AS 'operationCombineName'
+            CONCAT(toc.fOperationCombineName, '_____', toc.fUuid)
         FROM t_operation_combine toc
         WHERE EXISTS(
             SELECT 1
@@ -13,5 +13,14 @@
             AND g.fTerminalType = #{terminalType}
         )
         ORDER BY toc.fOperationCombineName
+    </select>
+
+    <insert id="saveOperationCombine">
+        INSERT INTO t_operation_combine toc(fOperationCombineName, fTerminalType, fCreator, fMaxInvalidCount)
+        VALUES(#{operationCombineName}, #{terminalType}, #{creator}, #{maxInvalidCount})
+    </insert>
+    
+    <select id="lastInsertID" resultType="java.lang.Long">
+        SELECT LAST_INSERT_ID()
     </select>
 </mapper>

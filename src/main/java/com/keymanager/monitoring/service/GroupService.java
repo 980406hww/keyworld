@@ -6,6 +6,7 @@ import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.GroupDao;
 import com.keymanager.monitoring.entity.Group;
 import com.keymanager.monitoring.entity.GroupSetting;
+import com.keymanager.monitoring.entity.OperationCombine;
 import com.keymanager.monitoring.vo.GroupVO;
 import com.keymanager.monitoring.vo.OperationCombineVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -33,17 +34,15 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
     @Autowired
     private QZSettingService qzSettingService;
 
-    public void saveGroup (GroupCriteria groupCriteria) {
-        groupDao.saveGroup(groupCriteria.getGroupName(), groupCriteria.getTerminalType(), groupCriteria.getCreateBy(), groupCriteria.getGroupSetting().getRemainingAccount(), groupCriteria.getMaxInvalidCount());
-        long lastInsertID = groupDao.lastInsertID();
-        groupCriteria.getGroupSetting().setGroupUuid(lastInsertID);
-        groupSettingService.saveGroupSetting(groupCriteria.getGroupSetting(), false);
-    }
+    @Autowired
+    private OperationCombineService operationCombineService;
 
-    public void deleteGroup (long uuid) {
-        groupDao.deleteById(uuid);
-        groupSettingService.deleteByGroupUuid(uuid);
-    }
+//    public void saveGroup (GroupCriteria groupCriteria) {
+//        groupDao.saveGroup(groupCriteria.getGroupName(), groupCriteria.getTerminalType(), groupCriteria.getCreateBy(), groupCriteria.getGroupSetting().getRemainingAccount(), groupCriteria.getMaxInvalidCount());
+//        long lastInsertID = groupDao.lastInsertID();
+//        groupCriteria.getGroupSetting().setGroupUuid(lastInsertID);
+//        groupSettingService.saveGroupSetting(groupCriteria.getGroupSetting(), false);
+//    }
 
     public void updateGroupSettings (long groupUuid, UpdateGroupSettingCriteria updateGroupSettingCriteria) {
         List<Long> groupSettingUuids = groupSettingService.getGroupSettingUuids(groupUuid);
@@ -75,52 +74,11 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
         groupDao.updateGroupRemainingAccount(groupUuid, remainingAccount);
     }
 
-    public void batchAddGroups (GroupBatchCriteria groupBatchCriteria, String userName, int maxInvalidCount) {
-        for (GroupSettingCriteria groupSettingCriteria : groupBatchCriteria.getOptimizationGroupList()) {
-            groupDao.saveGroup(groupSettingCriteria.getOptimizedGroupName(), groupSettingCriteria.getTerminalType(), userName, 0, maxInvalidCount);
-            long lastInsertID = groupDao.lastInsertID();
-            GroupSetting groupSetting = new GroupSetting();
-            groupSetting.setGroupUuid(lastInsertID);
-            groupSetting.setOperationType(groupSettingCriteria.getOperationType());
-            groupSetting.setDisableStatistics(0);
-            if(groupSettingCriteria.getTerminalType().equals("PC")) {
-                groupSetting.setPage(5);
-            } else {
-                groupSetting.setPage(3);
-            }
-            groupSetting.setPageSize(0);
-            groupSetting.setZhanneiPercent(0);
-            groupSetting.setZhanwaiPercent(0);
-            groupSetting.setKuaizhaoPercent(0);
-            groupSetting.setBaiduSemPercent(0);
-            groupSetting.setDragPercent(0);
-            groupSetting.setSpecialCharPercent(0);
-            groupSetting.setMultiBrowser(1);
-            groupSetting.setClearCookie(0);
-            groupSetting.setEntryPageMinCount(0);
-            groupSetting.setEntryPageMaxCount(0);
-            groupSetting.setPageRemainMinTime(3000);
-            groupSetting.setPageRemainMaxTime(5000);
-            groupSetting.setInputDelayMinTime(50);
-            groupSetting.setInputDelayMaxTime(80);
-            groupSetting.setSlideDelayMinTime(700);
-            groupSetting.setSlideDelayMaxTime(1500);
-            groupSetting.setTitleRemainMinTime(1000);
-            groupSetting.setTitleRemainMaxTime(3000);
-            groupSetting.setOptimizeKeywordCountPerIP(1);
-            groupSetting.setMaxUserCount(300);
-            groupSetting.setWaitTimeAfterOpenBaidu(1000);
-            groupSetting.setWaitTimeBeforeClick(1000);
-            groupSetting.setWaitTimeAfterClick(5000);
-            groupSetting.setJustVisitSelfPage(1);
-            groupSetting.setSleepPer2Words(1);
-            groupSetting.setSupportPaste(1);
-            groupSetting.setMoveRandomly(1);
-            groupSetting.setClearLocalStorage(1);
-            groupSetting.setOptimizeRelatedKeyword(0);
-            groupSetting.setMachineUsedPercent(100);
-            groupSettingService.saveGroupSetting(groupSetting, false);
-        }
+    public void batchAddGroups (OperationCombineCriteria operationCombineCriteria) {
+        OperationCombine operationCombine = operationCombineService.selectById(operationCombineCriteria.getOperationCombineUuid());
+        operationCombineCriteria.setTerminalType(operationCombine.getTerminalType());
+        operationCombineCriteria.setMaxInvalidCount(operationCombine.getMaxInvalidCount());
+        this.saveGroupsBelowOperationCombine(operationCombineCriteria);
     }
 
     public List<String> getAvailableOptimizationGroups (GroupSettingCriteria groupSettingCriteria) {
@@ -164,11 +122,11 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
         return groupDao.searchGroupsBelowOperationCombine(operationCombineUuid, groupName);
     }
 
-    public void saveGroupsBelowOperationCombine (GroupBatchAddCriteria groupBatchAddCriteria) {
+    public void saveGroupsBelowOperationCombine (OperationCombineCriteria operationCombineCriteria) {
         List<Long> groupUuids = new ArrayList<>();
         List<String> notExistsGroupNames = new ArrayList<>();
-        for (String groupName : groupBatchAddCriteria.getGroupNames()) {
-            Long existingGroupUuid = groupDao.searchExistingGroupUuid(groupBatchAddCriteria.getTerminalType(), groupName);
+        for (String groupName : operationCombineCriteria.getGroupNames()) {
+            Long existingGroupUuid = groupDao.searchExistingGroupUuid(operationCombineCriteria.getTerminalType(), groupName);
             if (null != existingGroupUuid) {
                 groupUuids.add(existingGroupUuid);
             } else {
@@ -177,16 +135,22 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
         }
 
         if (CollectionUtils.isNotEmpty(groupUuids)) {
-            this.updateGroupsBelowOperationCombine(groupUuids, groupBatchAddCriteria.getOperationCombineUuid());
+            this.updateGroupsBelowOperationCombine(groupUuids, operationCombineCriteria.getOperationCombineUuid());
         }
 
         if (CollectionUtils.isNotEmpty(notExistsGroupNames)) {
-            groupBatchAddCriteria.setGroupNames(notExistsGroupNames);
-            groupDao.insertBatchGroups(groupBatchAddCriteria);
+            operationCombineCriteria.setGroupNames(notExistsGroupNames);
+            Integer remainingAccount = groupSettingService.getSumMachineUsedPercent(operationCombineCriteria.getOperationCombineUuid());
+            operationCombineCriteria.setRemainingAccount(remainingAccount);
+            groupDao.insertBatchGroups(operationCombineCriteria);
         }
     }
 
     public void updateGroupsBelowOperationCombine (List<Long> groupUuids, Long operationCombineUuid) {
         groupDao.updateGroupOperationUuid(groupUuids, operationCombineUuid);
+    }
+
+    public void updateGroupOperationCombineUuid (Long operationCombineUuid) {
+        groupDao.updateGroupOperationCombineUuid(operationCombineUuid);
     }
 }

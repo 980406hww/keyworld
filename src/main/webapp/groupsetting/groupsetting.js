@@ -120,17 +120,18 @@ function trimSearchCondition() {
     chargeForm.submit();
 }
 
-function showGroupDialog() {
+function showOperationCombineDialog() {
     var changeSettingDialog = $("#changeSettingDialog");
     changeSettingDialog.find('#changeSettingDialogForm')[0].reset();
     $("#changeSettingDialog").find("#settingOperationCombineName").removeAttr("disabled");
+    $("#changeSettingDialog").find("#settingGroup").parent().parent().css("display", "block");
     $("#changeSettingDialog").find("i").text(100);
     changeSettingDialog.show();
     changeSettingDialog.dialog({
         resizable: false,
         width: 790,
         maxHeight: 550,
-        title: "新增优化分组(只需指定一个操作类型, 如果还有其他操作类型，后续添加即可)",
+        title: "新增操作组合(只需指定一个操作类型, 如果还有其他操作类型，后续添加即可)",
         modal: false,
         buttons: [{
             text: '保存',
@@ -193,9 +194,9 @@ function showUpdateGroupDialog(operationCombineUuid, operationCombineName) {
 }
 
 function delGroup(groupUuid) {
-    if (confirm("确定删除此优化分组吗？")) {
+    if (confirm("确定删除此操作组合吗？")) {
         $.ajax({
-            url: '/internal/group/delGroup/' + groupUuid,
+            url: '/internal/operationCombine/delOperationCombine/' + groupUuid,
             type: 'POST',
             success: function (result) {
                 if (result) {
@@ -231,6 +232,7 @@ function showGroupSettingDialog(type, id, operationCombineName, remainingAccount
     var changeSettingDialog = $("#changeSettingDialog");
     changeSettingDialog.find('#changeSettingDialogForm')[0].reset();
     $("#changeSettingDialog").find("#settingOperationCombineName").attr("disabled", true);
+    $("#changeSettingDialog").find("#settingGroup").parent().parent().css("display", "none");
     changeSettingDialog.find('#settingOperationCombineName').val(operationCombineName);
     changeSettingDialog.find('#remainAccount').val(remainingAccount);
     changeSettingDialog.find("i").text(remainingAccount);
@@ -238,7 +240,7 @@ function showGroupSettingDialog(type, id, operationCombineName, remainingAccount
     var title;
     if (type == "add") {
         title = "新增操作类型";
-        changeSettingDialog.find('#groupUuid').val(id);
+        changeSettingDialog.find('#operationCombineUuid').val(id);
     } else if (type == "update") {
         title = "修改操作类型 (需要修改的信息请标红!!!)";
         changeSettingDialog.find('#groupSettingUuid').val(id);
@@ -280,7 +282,7 @@ function showGroupSettingDialog(type, id, operationCombineName, remainingAccount
 function delGroupSetting(self, operationTypeUuid) {
     var operationSpans = $($(self).parents()[6]).find("span.operation");
     if (operationSpans.length === 1) {
-        alert("这是最后一个优化组设置，请直接删除优化组！！！");
+        alert("这是最后一个优化组设置，请直接删除操作组合！！！");
         return false;
     }
     if (confirm("确定删除此操作类型？")) {
@@ -407,36 +409,55 @@ function isChecked(id, dialogDiv) {
     }
 }
 
-function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
+/*
+type: 控制方式 status: 操作组合是否可修改 isBatchUpdate: 批量修改标志 operationCombineUuid: 操作组合uuid
+ */
+function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
     var dialogDiv;
-    if (isUpdateGroup === 1) {
+    if (isBatchUpdate === 1) {
         dialogDiv = $("#updateGroupSettingDialog");
     } else {
         dialogDiv = $("#changeSettingDialog");
     }
-    var group = {};
+    var operationCombine = {};
     if (status) {
         var operationCombineName = dialogDiv.find("#settingOperationCombineName").val().trim();
         if (operationCombineName === "") {
             alert("请输入操作组合名");
+            dialogDiv.find("#settingOperationCombineName")[0].focus();
             return false;
         }
-        group.operationCombineName = operationCombineName;
-        type = "groupadd";
+        operationCombine.operationCombineName = operationCombineName;
+        var groupNames = dialogDiv.find("#settingGroup").val().trim();
+        if (groupNames === "") {
+            alert("请输入分组名");
+            dialogDiv.find("#settingGroup")[0].focus();
+            return false;
+        }
+        groupNames = groupNames.replace(/[，|\r\n]/g, ',').replace(/[\s+]/g, '');
+        if (groupNames.substring(groupNames.length - 1) === ',') {
+            groupNames = groupNames.substring(0, groupNames.length - 1);
+        }
+        var groupNameArr = groupNames.split(',');
+        groupNameArr = groupNameArr.filter(function (groupName, index) {
+            return groupNameArr.indexOf(groupName) === index && groupName !== '';
+        });
+        operationCombine.groupNames = groupNameArr;
+        type = "addOperationCombine";
         if (dialogDiv.find("#machineUsedPercent").val() === '0' || dialogDiv.find("#machineUsedPercent").val() === '') {
             alert("每个操作的机器占比都应该大于0！！！");
             return false;
         }
     }
-    var groupSetting = {}
+    var groupSetting = {};
     var operationType = dialogDiv.find("#settingOperationType").val();
-    if (isUpdateGroup === 0 && operationType == '') {
+    if (isBatchUpdate === 0 && operationType === '') {
         alert("请选择操作类型！！！");
         return false;
     }
     var remainingAccount = dialogDiv.find("#machineUsedPercent").parent().find("i").text();
     var hasChangedZhanbi = true;
-    if (isUpdateGroup === 1) {
+    if (isBatchUpdate === 1) {
         if (isChecked("machineUsedPercent", dialogDiv) !== "1") {
             hasChangedZhanbi = false;
         }
@@ -500,7 +521,7 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
     if(type === "update") {
         var groupSettingUuid = dialogDiv.find('#groupSettingUuid').val();
         groupSetting.uuid = groupSettingUuid;
-        groupSetting.groupUuid = groupUuid;
+        groupSetting.operationCombineUuid = operationCombineUuid;
         var gs = {};
         gs.operationType = isChecked("settingOperationType", dialogDiv);
         if (isChecked("machineUsedPercent", dialogDiv) === "1") {
@@ -560,9 +581,9 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
         var postData = {};
         postData.gs = gs;
         postData.groupSetting = groupSetting;
-        if (isUpdateGroup === 1) {
+        if (isBatchUpdate === 1) {
             $.ajax({
-                url: '/internal/group/updateGroup/' + groupUuid,
+                url: '/internal/group/updateGroup/' + operationCombineUuid,
                 data: JSON.stringify(postData),
                 headers: {
                     'Accept': 'application/json',
@@ -604,13 +625,15 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
             });
             $("#updateGroupSettingDialog").dialog("close");
         }
-    } else if (type === "add") {
+    } else if (type === "add") { // 增加单个操作设置
         if (groupSetting.machineUsedPercent === 0) {
             alert("每个操作的机器占比都应该大于0！！！");
             return false;
         }
-        var groupUuid = dialogDiv.find('#groupUuid').val();
-        groupSetting.groupUuid = groupUuid;
+        if (operationCombineUuid === undefined) {
+            operationCombineUuid = dialogDiv.find('#operationCombineUuid').val();
+        }
+        groupSetting.operationCombineUuid = operationCombineUuid;
         $.ajax({
             url: '/internal/groupsetting/saveGroupSetting',
             data: JSON.stringify(groupSetting),
@@ -633,15 +656,13 @@ function saveGroupSetting(type, status, isUpdateGroup, groupUuid){
                 $("#changeSettingDialog").dialog("close");
             }
         });
-    } else if (type === "groupadd") {
-        var terminalType = $("#chargeForm").find("#terminalType").val();
-        var maxInvalidCount = dialogDiv.find("#maxInvalidCount").val();
-        group.terminalType = terminalType;
-        group.groupSetting = groupSetting;
-        group.maxInvalidCount = maxInvalidCount;
+    } else if (type === "addOperationCombine") { // 增加操作组合
+        operationCombine.terminalType = $("#chargeForm").find("#terminalType").val();
+        operationCombine.groupSetting = groupSetting;
+        operationCombine.maxInvalidCount = dialogDiv.find("#maxInvalidCount").val();
         $.ajax({
-            url: '/internal/group/saveGroup',
-            data: JSON.stringify(group),
+            url: '/internal/operationCombine/saveOperationCombine',
+            data: JSON.stringify(operationCombine),
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -751,22 +772,16 @@ function selectAllChecked(self, elementName) {
 
 function batchAddGroups() {
     var postData = {};
-    postData.optimizationGroupList = [];
-    var terminalType = $("#chargeForm").find("#terminalType").val();
-    var operationType = $("#getAvailableOptimizationGroups").find("select[name='operationType']").val();
+    postData.groupNames = [];
+    var operationCombineName = $("#getAvailableOptimizationGroups").find("select[name='operationCombineName']").val();
+    postData.operationCombineUuid = operationCombineName.split('_____')[1];
     var a = document.getElementsByName("checkOptimizationGroup");
     for (var i = 0; i < a.length; i++) {
         if (a[i].checked === true) {
-            var optimizationGroup = {};
-            optimizationGroup.optimizedGroupName = $(a[i]).parent().parent().find("input[name='optimizationGroup']").val();
-            if (operationType !== "") {
-                optimizationGroup.operationType = operationType;
-            }
-            optimizationGroup.terminalType = terminalType;
-            postData.optimizationGroupList.push(optimizationGroup);
+            postData.groupNames.push($(a[i]).parent().parent().find("input[name='optimizationGroup']").val());
         }
     }
-    if (postData.optimizationGroupList.length === 0) {
+    if (postData.groupNames.length === 0) {
         $().toastmessage("showErrorToast", "请选择需要添加的优化组！！！");
         return false;
     }

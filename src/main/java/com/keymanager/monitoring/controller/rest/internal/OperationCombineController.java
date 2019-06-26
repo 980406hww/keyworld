@@ -1,8 +1,8 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
+import com.keymanager.monitoring.criteria.OperationCombineCriteria;
 import com.keymanager.monitoring.service.OperationCombineService;
 import com.keymanager.monitoring.vo.OperationCombineVO;
-import com.sun.org.apache.regexp.internal.RE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +49,30 @@ public class OperationCombineController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/saveOperationCombine")
+    public ResponseEntity<?> saveOperationCombine(@RequestBody OperationCombineCriteria operationCombineCriteria,
+                                                  HttpServletRequest request) {
+        try {
+            operationCombineCriteria.setCreator((String) request.getSession().getAttribute("username"));
+            operationCombineService.saveOperationCombine(operationCombineCriteria);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/delOperationCombine/{uuid}")
+    public ResponseEntity<?> deleteOperationCombine(@PathVariable("uuid") long uuid) {
+        try {
+            operationCombineService.deleteOperationCombine(uuid);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
     }
 }
