@@ -218,7 +218,7 @@
             crj.fGroupNames AS 'groupNames'
         FROM t_capture_rank_job crj
         WHERE crj.fQZSettingUuid = #{qzSettingUuid}
-        AND crj.fOperationType = #{operationType};
+        AND crj.fOperationType = #{operationType}
     </select>
 
 </mapper>
