@@ -136,7 +136,7 @@
 						<div class="handle">
 							<a class="blue" href="javascript:showGroupQueueDialog('${groupVo.uuid}', '${groupVo.maxInvalidCount}', '${groupVo.remainingAccount}')">分组详情</a>
 							<shiro:hasPermission name="/internal/groupsetting/saveGroupSetting">
-								<a class="blue" href="javascript:showGroupSettingDialog('add', '${groupVo.uuid}', '${groupVo.operationCombineName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')">新增操作组设置</a>
+								<a class="blue" href="javascript:showGroupSettingDialog('add', '', '${groupVo.operationCombineName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')">新增操作组设置</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/group/updateGroup">
 								<a class="blue" href="javascript:showUpdateGroupDialog('${groupVo.uuid}', '${groupVo.operationCombineName}')">批量修改操作组设置</a>

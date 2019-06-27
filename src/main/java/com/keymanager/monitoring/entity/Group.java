@@ -22,9 +22,6 @@ public class Group extends BaseEntity {
     @TableField(value = "fCreateBy")
     private String createBy;
 
-    @TableField(value = "fRemainingAccount")
-    private int remainingAccount;
-
     @TableField(value = "fMaxInvalidCount")
     private int maxInvalidCount;
 
@@ -58,14 +55,6 @@ public class Group extends BaseEntity {
 
     public void setCreateBy (String createBy) {
         this.createBy = createBy;
-    }
-
-    public int getRemainingAccount () {
-        return remainingAccount;
-    }
-
-    public void setRemainingAccount (int remainingAccount) {
-        this.remainingAccount = remainingAccount;
     }
 
     public int getMaxInvalidCount() {

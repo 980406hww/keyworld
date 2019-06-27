@@ -7,6 +7,7 @@ import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.monitoring.dao.GroupSettingDao;
 import com.keymanager.monitoring.entity.Group;
 import com.keymanager.monitoring.entity.GroupSetting;
+import com.keymanager.monitoring.entity.OperationCombine;
 import com.keymanager.monitoring.vo.GroupVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
     @Autowired
     private GroupService groupService;
 
+    @Autowired
+    private OperationCombineService operationCombineService;
+
     public Page<GroupVO> searchGroupSettings(Page<GroupVO> page, GroupSettingCriteria groupSettingCriteria) {
         page.setRecords(groupService.searchGroups(page, groupSettingCriteria));
         for (GroupVO groupVo : page.getRecords()) {
@@ -34,9 +38,9 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
 
     public void deleteGroupSetting (long uuid) {
         GroupSetting groupSetting = groupSettingDao.selectById(uuid);
-        Group group = groupService.selectById(groupSetting.getGroupUuid());
-        group.setRemainingAccount(group.getRemainingAccount() + groupSetting.getMachineUsedPercent());
-        groupService.updateById(group);
+        OperationCombine operationCombine = operationCombineService.selectById(groupSetting.getOperationCombineUuid());
+        operationCombine.setRemainingAccount(operationCombine.getRemainingAccount() + groupSetting.getMachineUsedPercent());
+        operationCombineService.updateById(operationCombine);
         groupSettingDao.deleteById(uuid);
     }
 
@@ -47,27 +51,27 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
     public void saveGroupSetting (GroupSetting groupSetting, Boolean needUpdateRemainingAccount) {
         groupSettingDao.saveGroupSetting(groupSetting);
         if (needUpdateRemainingAccount) {
-            groupService.updateGroupRemainingAccount(groupSetting.getGroupUuid(), groupSetting.getRemainingAccount());
+            operationCombineService.updateOperationCombineRemainingAccount(groupSetting.getOperationCombineUuid(), groupSetting.getRemainingAccount());
         }
     }
 
     public void updateGroupSetting (UpdateGroupSettingCriteria updateGroupSettingCriteria) {
         groupSettingDao.updateGroupSetting(updateGroupSettingCriteria.getGs(), updateGroupSettingCriteria.getGroupSetting());
         GroupSetting groupSetting = groupSettingDao.selectById(updateGroupSettingCriteria.getGroupSetting().getUuid());
-        groupService.updateGroupUpdateTime(groupSetting.getGroupUuid());
+        operationCombineService.updateOperationCombineUpdateTime(groupSetting.getOperationCombineUuid());
         if (1 == updateGroupSettingCriteria.getGs().getMachineUsedPercent()) {
-            groupService.updateGroupRemainingAccount(updateGroupSettingCriteria.getGroupSetting().getGroupUuid(), updateGroupSettingCriteria.getGroupSetting().getRemainingAccount());
+            operationCombineService.updateOperationCombineRemainingAccount(updateGroupSettingCriteria.getGroupSetting().getOperationCombineUuid(), updateGroupSettingCriteria.getGroupSetting().getRemainingAccount());
         }
     }
 
     public GroupSetting getGroupSettingViaPercentage(String groupName, String terminalType){
-        Group group = groupService.findGroup(groupName, terminalType);
-        if(group != null){
-            List<GroupSetting> groupSettings = groupSettingDao.searchGroupSettingsSortingPercentage(group.getUuid());
+        OperationCombine operationCombine = operationCombineService.getOperationCombine(groupName, terminalType);
+        if(operationCombine != null){
+            List<GroupSetting> groupSettings = groupSettingDao.searchGroupSettingsSortingPercentage(operationCombine.getUuid());
             if(CollectionUtils.isNotEmpty(groupSettings)){
                 Random ra = new Random();
-                if(group.getRemainingAccount() < 100) {
-                    int randomValue = ra.nextInt(100 - group.getRemainingAccount()) + 1;
+                if(operationCombine.getRemainingAccount() < 100) {
+                    int randomValue = ra.nextInt(100 - operationCombine.getRemainingAccount()) + 1;
                     int totalPercentage = 0;
                     for (GroupSetting groupSetting : groupSettings) {
                         totalPercentage = totalPercentage + groupSetting.getMachineUsedPercent();

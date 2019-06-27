@@ -40,17 +40,17 @@ public class GroupRestController {
 //        }
 //    }
 
-    @RequiresPermissions("/internal/group/updateGroup")
-    @PostMapping("/updateGroup/{groupUuid}")
-    public ResponseEntity<?> updateGroup(@PathVariable("groupUuid") long groupUuid, @RequestBody UpdateGroupSettingCriteria updateGroupSettingCriteria) {
-        try {
-            groupService.updateGroupSettings(groupUuid, updateGroupSettingCriteria);
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @RequiresPermissions("/internal/group/updateGroup")
+//    @PostMapping("/updateGroup/{groupUuid}")
+//    public ResponseEntity<?> updateGroup(@PathVariable("groupUuid") long groupUuid, @RequestBody UpdateGroupSettingCriteria updateGroupSettingCriteria) {
+//        try {
+//            groupService.updateGroupSettings(groupUuid, updateGroupSettingCriteria);
+//            return new ResponseEntity<Object>(true, HttpStatus.OK);
+//        } catch (Exception e) {
+//            logger.error(e.getMessage());
+//            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     @RequiresPermissions("/internal/group/batchAddGroups")
     @PostMapping("/batchAddGroups")

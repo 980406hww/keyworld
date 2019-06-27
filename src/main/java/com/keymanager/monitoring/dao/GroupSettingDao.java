@@ -10,7 +10,7 @@ public interface GroupSettingDao extends BaseMapper<GroupSetting> {
 
     List<GroupSetting> searchGroupSettings (@Param("operationCombineUuid") long operationCombineUuid);
 
-    List<GroupSetting> searchGroupSettingsSortingPercentage (@Param("groupUuid") long groupUuid);
+    List<GroupSetting> searchGroupSettingsSortingPercentage (@Param("operationCombineUuid") long operationCombineUuid);
 
     void saveGroupSetting (@Param("groupSetting") GroupSetting groupSetting);
 

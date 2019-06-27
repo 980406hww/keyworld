@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.criteria.OperationCombineCriteria;
+import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.monitoring.service.OperationCombineService;
 import com.keymanager.monitoring.vo.OperationCombineVO;
 import org.slf4j.Logger;
@@ -69,6 +70,18 @@ public class OperationCombineController {
     public ResponseEntity<?> deleteOperationCombine(@PathVariable("uuid") long uuid) {
         try {
             operationCombineService.deleteOperationCombine(uuid);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/updateOperationCombine/{operationCombineUuid}")
+    public ResponseEntity<?> updateOperationCombine(@PathVariable("operationCombineUuid") long operationCombineUuid,
+                                                    @RequestBody UpdateGroupSettingCriteria updateGroupSettingCriteria) {
+        try {
+            operationCombineService.updateOperationCombine(operationCombineUuid, updateGroupSettingCriteria);
             return new ResponseEntity<>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

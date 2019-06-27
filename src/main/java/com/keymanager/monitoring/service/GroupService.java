@@ -37,41 +37,12 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
     @Autowired
     private OperationCombineService operationCombineService;
 
-//    public void saveGroup (GroupCriteria groupCriteria) {
-//        groupDao.saveGroup(groupCriteria.getGroupName(), groupCriteria.getTerminalType(), groupCriteria.getCreateBy(), groupCriteria.getGroupSetting().getRemainingAccount(), groupCriteria.getMaxInvalidCount());
-//        long lastInsertID = groupDao.lastInsertID();
-//        groupCriteria.getGroupSetting().setGroupUuid(lastInsertID);
-//        groupSettingService.saveGroupSetting(groupCriteria.getGroupSetting(), false);
-//    }
-
-    public void updateGroupSettings (long groupUuid, UpdateGroupSettingCriteria updateGroupSettingCriteria) {
-        List<Long> groupSettingUuids = groupSettingService.getGroupSettingUuids(groupUuid);
-        if (CollectionUtils.isNotEmpty(groupSettingUuids)) {
-            for (Long groupSettingUuid : groupSettingUuids) {
-                updateGroupSettingCriteria.getGroupSetting().setUuid(groupSettingUuid);
-                groupSettingService.updateGroupSetting(updateGroupSettingCriteria.getGs(), updateGroupSettingCriteria.getGroupSetting());
-                GroupSetting groupSetting = groupSettingService.selectById(updateGroupSettingCriteria.getGroupSetting().getUuid());
-                this.updateGroupUpdateTime(groupSetting.getGroupUuid());
-            }
-            if (1 == updateGroupSettingCriteria.getGs().getMachineUsedPercent()) {
-                this.updateGroupRemainingAccount(updateGroupSettingCriteria.getGroupSetting().getGroupUuid(), updateGroupSettingCriteria.getGroupSetting().getRemainingAccount());
-            }
-            if (1 == updateGroupSettingCriteria.getGs().getMaxInvalidCount()) {
-                this.updateMaxInvalidCount(updateGroupSettingCriteria.getGroupSetting().getGroupUuid(), updateGroupSettingCriteria.getGroupSetting().getMaxInvalidCount());
-            }
-        }
-    }
-
     public List<GroupVO> searchGroups (Page<GroupVO> page, GroupSettingCriteria groupSettingCriteria) {
         return groupDao.searchGroups(page, groupSettingCriteria);
     }
     
     public Group findGroup(String groupName, String terminalType){
         return groupDao.findGroup(groupName, terminalType);
-    }
-    
-    public void updateGroupRemainingAccount (long groupUuid, int remainingAccount) {
-        groupDao.updateGroupRemainingAccount(groupUuid, remainingAccount);
     }
 
     public void batchAddGroups (OperationCombineCriteria operationCombineCriteria) {
@@ -106,12 +77,6 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
     
     public void updateMaxInvalidCount(long uuid, int maxInvalidCount){
         groupDao.updateMaxInvalidCount(uuid, maxInvalidCount);
-    }
-
-    public void updateGroupUpdateTime (long groupUuid) {
-        Group group = groupDao.selectById(groupUuid);
-        group.setUpdateTime(new Date());
-        groupDao.updateById(group);
     }
 
     public List<String> getGroupNames (Long operationCombineUuid) {

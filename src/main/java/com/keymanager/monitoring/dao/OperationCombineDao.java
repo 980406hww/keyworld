@@ -1,7 +1,6 @@
 package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.keymanager.monitoring.criteria.OperationCombineCriteria;
 import com.keymanager.monitoring.entity.OperationCombine;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,4 +21,9 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
                                @Param("maxInvalidCount") int maxInvalidCount);
 
     long lastInsertID ();
+
+    void updateOperationCombineRemainingAccount (@Param("operationCombineUuid") long operationCombineUuid,
+                                      @Param("remainingAccount") int remainingAccount);
+
+    OperationCombine getOperationCombine (@Param("groupName") String groupName, @Param("terminalType") String terminalType);
 }

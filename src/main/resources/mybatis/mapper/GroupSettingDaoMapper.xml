@@ -63,7 +63,7 @@
         SELECT
         <include refid="selectCol" />
         FROM t_group_setting gs
-        WHERE gs.fGroupUuid = #{groupUuid}
+        WHERE gs.fOperationCombineUuid = #{operationCombineUuid}
         ORDER BY gs.fMachineUsedPercent
     </select>
 

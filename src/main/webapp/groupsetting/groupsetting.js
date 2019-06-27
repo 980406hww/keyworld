@@ -228,6 +228,10 @@ function getGroupSettingCount(operationCombineUuid, operationCombineName) {
     });
 }
 
+/*
+type: 操作类型 增加还是修改 id: 操作设置id或者操作组合id  operationCombineName:操作组合名称
+remainingAccount: 剩余百分比   operationCombineUuid: 操作组合id
+ */
 function showGroupSettingDialog(type, id, operationCombineName, remainingAccount, operationCombineUuid) {
     var changeSettingDialog = $("#changeSettingDialog");
     changeSettingDialog.find('#changeSettingDialogForm')[0].reset();
@@ -240,7 +244,7 @@ function showGroupSettingDialog(type, id, operationCombineName, remainingAccount
     var title;
     if (type == "add") {
         title = "新增操作类型";
-        changeSettingDialog.find('#operationCombineUuid').val(id);
+        changeSettingDialog.find('#operationCombineUuid').val(operationCombineUuid);
     } else if (type == "update") {
         title = "修改操作类型 (需要修改的信息请标红!!!)";
         changeSettingDialog.find('#groupSettingUuid').val(id);
@@ -581,9 +585,9 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
         var postData = {};
         postData.gs = gs;
         postData.groupSetting = groupSetting;
-        if (isBatchUpdate === 1) {
+        if (isBatchUpdate === 1) { // 批量修改
             $.ajax({
-                url: '/internal/group/updateGroup/' + operationCombineUuid,
+                url: '/internal/operationCombine/updateOperationCombine/' + operationCombineUuid,
                 data: JSON.stringify(postData),
                 headers: {
                     'Accept': 'application/json',
@@ -602,7 +606,7 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
                 }
             });
             $("#changeSettingDialog").dialog("close");
-        } else {
+        } else { // 单个修改
             $.ajax({
                 url: '/internal/groupsetting/updateGroupSetting',
                 data: JSON.stringify(postData),
@@ -629,9 +633,6 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
         if (groupSetting.machineUsedPercent === 0) {
             alert("每个操作的机器占比都应该大于0！！！");
             return false;
-        }
-        if (operationCombineUuid === undefined) {
-            operationCombineUuid = dialogDiv.find('#operationCombineUuid').val();
         }
         groupSetting.operationCombineUuid = operationCombineUuid;
         $.ajax({

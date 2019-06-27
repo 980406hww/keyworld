@@ -7,9 +7,6 @@ import com.baomidou.mybatisplus.enums.FieldStrategy;
 @TableName(value = "t_group_setting")
 public class GroupSetting extends BaseEntity {
 
-	@TableField(value = "fGroupUuid")
-	private long groupUuid;
-
 	@TableField(value = "fOperationCombineUuid")
 	private Long operationCombineUuid;
 
@@ -162,14 +159,6 @@ public class GroupSetting extends BaseEntity {
 
 	@TableField(exist = false)
 	private int maxInvalidCount;
-
-	public long getGroupUuid () {
-		return groupUuid;
-	}
-
-	public void setGroupUuid (long groupUuid) {
-		this.groupUuid = groupUuid;
-	}
 
 	public Long getOperationCombineUuid () {
 		return operationCombineUuid;

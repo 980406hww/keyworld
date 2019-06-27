@@ -19,6 +19,9 @@ public class OperationCombine extends BaseEntity {
     @TableField(value = "fCreator")
     private String creator;
 
+    @TableField(value = "fRemainingAccount")
+    private int remainingAccount;
+
     @TableField(value = "fMaxInvalidCount")
     private int maxInvalidCount;
 
@@ -44,6 +47,14 @@ public class OperationCombine extends BaseEntity {
 
     public void setCreator (String creator) {
         this.creator = creator;
+    }
+
+    public int getRemainingAccount () {
+        return remainingAccount;
+    }
+
+    public void setRemainingAccount (int remainingAccount) {
+        this.remainingAccount = remainingAccount;
     }
 
     public int getMaxInvalidCount () {

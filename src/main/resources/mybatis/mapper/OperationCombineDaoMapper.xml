@@ -23,4 +23,22 @@
     <select id="lastInsertID" resultType="java.lang.Long">
         SELECT LAST_INSERT_ID()
     </select>
+
+    <update id="updateOperationCombineRemainingAccount">
+        UPDATE t_operation_combine
+        SET fRemainingAccount = #{remainingAccount}, fUpdateTime = NOW()
+        WHERE fUuid = #{operationCombineUuid}
+    </update>
+
+    <select id="getOperationCombine" resultType="com.keymanager.monitoring.entity.OperationCombine">
+        SELECT
+        toc.fUuid AS 'uuid',
+        toc.fRemainingAccount AS 'remainingAccount'
+        FROM t_group g
+        LEFT JOIN t_operation_combine toc
+        ON toc.fUuid = g.fOperationCombineUuid
+        WHERE toc.fTerminalType = #{terminalType}
+        AND g.fGroupName = #{groupName}
+        LIMIT 1
+    </select>
 </mapper>

@@ -7,8 +7,8 @@
             toc.fUuid AS "uuid",
             toc.fOperationCombineName AS "operationCombineName",
             u.fUserName AS "userName",
-            g.fRemainingAccount AS "remainingAccount",
-            g.fMaxInvalidCount AS "maxInvalidCount"
+            toc.fRemainingAccount AS "remainingAccount",
+            toc.fMaxInvalidCount AS "maxInvalidCount"
         FROM t_group g
         LEFT JOIN t_userinfo u
         ON u.fLoginName = g.fCreateBy
