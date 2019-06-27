@@ -16,7 +16,7 @@
     </select>
 
     <insert id="saveOperationCombine">
-        INSERT INTO t_operation_combine toc(fOperationCombineName, fTerminalType, fCreator, fMaxInvalidCount)
+        INSERT INTO t_operation_combine(fOperationCombineName, fTerminalType, fCreator, fMaxInvalidCount)
         VALUES(#{operationCombineName}, #{terminalType}, #{creator}, #{maxInvalidCount})
     </insert>
     
