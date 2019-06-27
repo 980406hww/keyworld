@@ -141,9 +141,9 @@ function assignment(websiteInfo) {
     websiteForm.find("#domain").val(websiteInfo.domain);
     websiteForm.find("#registrar").val(websiteInfo.registrar);
     websiteForm.find("#analysis").val(websiteInfo.analysis);
-    websiteForm.find("#backgroundDomain").val(websiteInfo.backgroundDomain);
-    websiteForm.find("#backgroundUserName").val(websiteInfo.backgroundUserName);
-    websiteForm.find("#backgroundPassword").val(websiteInfo.backgroundPassword);
+    websiteForm.find("#backendDomain").val(websiteInfo.backendDomain);
+    websiteForm.find("#backendUserName").val(websiteInfo.backendUserName);
+    websiteForm.find("#backendPassword").val(websiteInfo.backendPassword);
     websiteForm.find("#databaseName").val(websiteInfo.databaseName);
     websiteForm.find("#databaseUserName").val(websiteInfo.databaseUserName);
     websiteForm.find("#databasePassword").val(websiteInfo.databasePassword);
@@ -256,9 +256,9 @@ function saveWebsite(uuid) {
     websiteObj.registrar = $.trim($("#websiteForm").find("#registrar").val());
     websiteObj.analysis = $.trim($("#websiteForm").find("#analysis").val());
     websiteObj.expiryTime = $.trim($("#websiteForm").find("#expiryTime").val());
-    websiteObj.backgroundDomain = $.trim($("#websiteForm").find("#backgroundDomain").val());
-    websiteObj.backgroundUserName = $.trim($("#websiteForm").find("#backgroundUserName").val());
-    websiteObj.backgroundPassword = $.trim($("#websiteForm").find("#backgroundPassword").val());
+    websiteObj.backendDomain = $.trim($("#websiteForm").find("#backendDomain").val());
+    websiteObj.backendUserName = $.trim($("#websiteForm").find("#backendUserName").val());
+    websiteObj.backendPassword = $.trim($("#websiteForm").find("#backendPassword").val());
     websiteObj.websiteType = $.trim($("#websiteForm").find("#websiteType").val());
     websiteObj.databaseName = $.trim($("#websiteForm").find("#databaseName").val());
     websiteObj.databaseUserName = $.trim($("#websiteForm").find("#databaseUserName").val());

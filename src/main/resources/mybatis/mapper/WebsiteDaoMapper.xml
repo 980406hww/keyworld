@@ -12,9 +12,9 @@
 		w.fDatabaseName AS "databaseName",
 		w.fDatabaseUserName AS "databaseUserName",
 		w.fDatabasePassword AS "databasePassword",
-		w.fBackgroundDomain AS "backgroundDomain",
-		w.fBackgroundUserName AS "backgroundUserName",
-		w.fBackgroundPassword AS "backgroundPassword",
+		w.fBackendDomain AS "backendDomain",
+		w.fBackendUserName AS "backendUserName",
+		w.fBackendPassword AS "backendPassword",
 		w.fServerIP AS "serverIP",
 		w.fServerUserName AS "serverUserName",
 		w.fServerPassword AS "serverPassword",
@@ -69,12 +69,12 @@
 		fExpiryTime <![CDATA[<=]]> date_add(NOW(), interval 1 MONTH)
 	</select>
 
-	<select id="selectBackGroundInfoForUpdateSalesInfo" resultType="com.keymanager.monitoring.vo.WebsiteBackGroundInfoVO">
+	<select id="selectBackEndInfoForUpdateSalesInfo" resultType="com.keymanager.monitoring.vo.WebsiteBackendInfoVO">
 		SELECT
 		fUuid AS 'uuid',
-		fBackgroundDomain AS 'backgroundDomain',
-		fBackgroundUserName AS 'backgroundUserName',
-		fBackgroundPassword AS 'backgroundPassword',
+		fBackendDomain AS 'backendDomain',
+		fBackendUserName AS 'backendUserName',
+		fBackendPassword AS 'backendPassword',
 		fWebsiteType AS 'websiteType'
 		FROM
 		t_website
