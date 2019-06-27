@@ -27,31 +27,6 @@ public class GroupRestController {
     @Autowired
     private GroupService groupService;
 
-//    @RequiresPermissions("/internal/group/saveGroup")
-//    @PostMapping("/saveGroup")
-//    public ResponseEntity<?> saveGroup(@RequestBody GroupCriteria groupCriteria, HttpServletRequest request) {
-//        try {
-//            groupCriteria.setCreateBy((String) request.getSession().getAttribute("username"));
-//            groupService.saveGroup(groupCriteria);
-//            return new ResponseEntity<Object>(true, HttpStatus.OK);
-//        } catch (Exception e) {
-//            logger.error(e.getMessage());
-//            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-//        }
-//    }
-
-//    @RequiresPermissions("/internal/group/updateGroup")
-//    @PostMapping("/updateGroup/{groupUuid}")
-//    public ResponseEntity<?> updateGroup(@PathVariable("groupUuid") long groupUuid, @RequestBody UpdateGroupSettingCriteria updateGroupSettingCriteria) {
-//        try {
-//            groupService.updateGroupSettings(groupUuid, updateGroupSettingCriteria);
-//            return new ResponseEntity<Object>(true, HttpStatus.OK);
-//        } catch (Exception e) {
-//            logger.error(e.getMessage());
-//            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
-//        }
-//    }
-
     @RequiresPermissions("/internal/group/batchAddGroups")
     @PostMapping("/batchAddGroups")
     public ResponseEntity<?> batchAddGroups(@RequestBody OperationCombineCriteria operationCombineCriteria, HttpServletRequest request) {
@@ -76,19 +51,6 @@ public class GroupRestController {
             return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
         }
     }
-
-//    @RequestMapping("/updateMaxInvalidCount")
-//    public ResponseEntity<?> updateMaxInvalidCount(@RequestBody Map<String, Object> requestMap) {
-//        try {
-//            long uuid = Long.valueOf((String) requestMap.get("id"));
-//            int maxInvalidCount = Integer.valueOf((String) requestMap.get("maxInvalidCount"));
-//            groupService.updateMaxInvalidCount(uuid, maxInvalidCount);
-//            return new ResponseEntity<>(true, HttpStatus.OK);
-//        } catch (Exception e) {
-//            logger.error(e.getMessage());
-//            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
-//        }
-//    }
 
     @PostMapping("/saveGroupsBelowOperationCombine")
     public ResponseEntity<?> saveGroupsBelowOperationCombine(@RequestBody OperationCombineCriteria operationCombineCriteria, HttpServletRequest request) {

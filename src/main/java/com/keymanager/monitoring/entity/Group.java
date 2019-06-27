@@ -16,14 +16,8 @@ public class Group extends BaseEntity {
     @TableField(value = "fOperationCombineUuid")
     private Long operationCombineUuid;
 
-    @TableField(value = "fTerminalType")
-    private String terminalType;
-
     @TableField(value = "fCreateBy")
     private String createBy;
-
-    @TableField(value = "fMaxInvalidCount")
-    private int maxInvalidCount;
 
     public String getGroupName () {
         return groupName;
@@ -41,27 +35,11 @@ public class Group extends BaseEntity {
         this.operationCombineUuid = operationCombineUuid;
     }
 
-    public String getTerminalType () {
-        return terminalType;
-    }
-
-    public void setTerminalType (String terminalType) {
-        this.terminalType = terminalType;
-    }
-
     public String getCreateBy () {
         return createBy;
     }
 
     public void setCreateBy (String createBy) {
         this.createBy = createBy;
-    }
-
-    public int getMaxInvalidCount() {
-        return maxInvalidCount;
-    }
-
-    public void setMaxInvalidCount(int maxInvalidCount) {
-        this.maxInvalidCount = maxInvalidCount;
     }
 }

@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.GroupSettingCriteria;
 import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.monitoring.dao.GroupSettingDao;
-import com.keymanager.monitoring.entity.Group;
 import com.keymanager.monitoring.entity.GroupSetting;
 import com.keymanager.monitoring.entity.OperationCombine;
 import com.keymanager.monitoring.vo.GroupVO;

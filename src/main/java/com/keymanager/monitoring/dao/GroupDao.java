@@ -19,8 +19,6 @@ public interface GroupDao extends BaseMapper<Group> {
 
     List<GroupVO> searchGroups (Page<GroupVO> page, @Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
-    Group findGroup(@Param("groupName") String groupName, @Param("terminalType") String terminalType);
-
     List<String> getOptimizationGroups(@Param("terminalType") String terminalType);
 
     List<String> getGroupNames (@Param("operationCombineUuid") long operationCombineUuid);

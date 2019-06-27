@@ -25,9 +25,6 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
     private GroupDao groupDao;
 
     @Autowired
-    private GroupSettingService groupSettingService;
-
-    @Autowired
     private CustomerKeywordService customerKeywordService;
 
     @Autowired
@@ -38,10 +35,6 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
 
     public List<GroupVO> searchGroups (Page<GroupVO> page, GroupSettingCriteria groupSettingCriteria) {
         return groupDao.searchGroups(page, groupSettingCriteria);
-    }
-    
-    public Group findGroup(String groupName, String terminalType){
-        return groupDao.findGroup(groupName, terminalType);
     }
 
     public void batchAddGroups (OperationCombineCriteria operationCombineCriteria) {

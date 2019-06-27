@@ -4,12 +4,10 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.monitoring.common.email.ObserveOptimizationCountMailService;
-import com.keymanager.monitoring.controller.rest.internal.ScreenedWebsiteListCacheService;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.*;
-import com.keymanager.monitoring.excel.definition.SuperUserSimpleKeywordDefinition;
 import com.keymanager.monitoring.excel.operator.AbstractExcelReader;
 import com.keymanager.monitoring.vo.*;
 import com.keymanager.util.Constants;
@@ -34,7 +32,6 @@ import java.util.*;
 @Service
 public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, CustomerKeyword> {
     private static Logger logger = LoggerFactory.getLogger(CustomerKeywordService.class);
-    private static Map<String, Integer> groupMaxInvalidCountMap = new HashMap<String, Integer>();
 
     @Autowired
     private QZCaptureTitleLogService qzCaptureTitleLogService;
@@ -91,9 +88,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     private PerformanceService performanceService;
 
     @Autowired
-    private GroupService groupService;
-
-    @Autowired
     private GroupSettingService groupSettingService;
 
     @Autowired
@@ -109,13 +103,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     private NegativeListUpdateInfoService negativeListUpdateInfoService;
 
     @Autowired
-    private CustomerExcludeKeywordService customerExcludeKeywordService;
-
-    @Autowired
     private ScreenedWebsiteService screenedWebsiteService;
 
     @Autowired
-    private ScreenedWebsiteListCacheService screenedWebsiteListCacheService;
+    private OperationCombineService operationCombineService;
 
     public Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCriteria customerKeywordCriteria){
         page.setRecords(customerKeywordDao.searchCustomerKeywordsPageForCustomer(page, customerKeywordCriteria));
@@ -641,7 +632,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.getGroups(customerUuids);
     }
 
-
     public CustomerKeywordForOptimization searchCustomerKeywordsForOptimization(String terminalType, String clientID, String version, boolean updateQueryInfo) {
         MachineInfo machineInfo = machineInfoService.selectById(clientID);
         if(machineInfo == null) {
@@ -663,8 +653,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         int noPositionMaxInvalidCount = 2;
         GroupSetting groupSetting = groupSettingService.getGroupSettingViaPercentage(machineInfo.getGroup(), machineInfo.getTerminalType());
 
-        Group group = groupService.findGroup(machineInfo.getGroup(), machineInfo.getTerminalType());
-        Integer maxInvalidCount = group.getMaxInvalidCount();
+        OperationCombine operationCombine = operationCombineService.getOperationCombine(machineInfo.getGroup(), machineInfo.getTerminalType());
+        Integer maxInvalidCount = operationCombine.getMaxInvalidCount();
 
         if(groupSetting.getOperationType().contains(Constants.CONFIG_TYPE_ZHANNEI_SOGOU)) {
             Config configInvalidRefreshCount = configService.getConfig(Constants.CONFIG_TYPE_ZHANNEI_SOGOU, Constants.CONFIG_KEY_NOPOSITION_MAX_INVALID_COUNT);
@@ -897,8 +887,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
         int retryCount = 0;
         int noPositionMaxInvalidCount = 2;
-        Group group = groupService.findGroup(machineInfo.getGroup(), machineInfo.getTerminalType());
-        Integer maxInvalidCount = group.getMaxInvalidCount();
+
+        OperationCombine operationCombine = operationCombineService.getOperationCombine(machineInfo.getGroup(), machineInfo.getTerminalType());
+        Integer maxInvalidCount = operationCombine.getMaxInvalidCount();
         if(usingOperationType.contains(Constants.CONFIG_TYPE_ZHANNEI_SOGOU)) {
             Config configInvalidRefreshCount = configService.getConfig(Constants.CONFIG_TYPE_ZHANNEI_SOGOU, Constants.CONFIG_KEY_NOPOSITION_MAX_INVALID_COUNT);
             noPositionMaxInvalidCount = Integer.parseInt(configInvalidRefreshCount.getValue());
@@ -941,8 +932,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
             customerKeywordForOptimization.setGroup(machineInfo.getGroup());
             customerKeywordForOptimization.setOperationType(usingOperationType);
-            Calendar calendar = Calendar.getInstance();
-            customerKeywordForOptimization.setUpdateSettingTime((machineInfo.getUpdateSettingTime().getTime()> group.getUpdateTime().getTime()) ? machineInfo.getUpdateSettingTime() : new Timestamp(group.getUpdateTime().getTime()));
+            customerKeywordForOptimization.setUpdateSettingTime((machineInfo.getUpdateSettingTime().getTime() > operationCombine.getUpdateTime().getTime()) ? machineInfo.getUpdateSettingTime() : new Timestamp(operationCombine.getUpdateTime().getTime()));
 
             NegativeListUpdateInfo negativeListUpdateInfo = negativeListUpdateInfoService.getNegativeListUpdateInfo(customerKeyword.getKeyword());
             if(negativeListUpdateInfo != null) {
@@ -1385,8 +1375,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public SearchEngineResultVO getCustomerKeywordForAutoUpdateNegative(String terminalType, String group) throws Exception
-    {
+    public SearchEngineResultVO getCustomerKeywordForAutoUpdateNegative(String terminalType, String group) throws Exception {
         SearchEngineResultVO searchEngineResultVO = customerKeywordDao.getCustomerKeywordForAutoUpdateNegative(terminalType, group);
         if(searchEngineResultVO != null) {
             customerKeywordDao.updateAutoUpdateNegativeTime(terminalType, group, searchEngineResultVO.getKeyword());

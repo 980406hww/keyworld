@@ -32,8 +32,9 @@
 
     <select id="getOperationCombine" resultType="com.keymanager.monitoring.entity.OperationCombine">
         SELECT
-            toc.fUuid AS 'uuid',
-            toc.fRemainingAccount AS 'remainingAccount'
+            toc.fUuid             AS 'uuid',
+            toc.fRemainingAccount AS 'remainingAccount',
+            g.fUpdateTime         AS 'updateTime'
         FROM t_group g
         LEFT JOIN t_operation_combine toc
         ON toc.fUuid = g.fOperationCombineUuid

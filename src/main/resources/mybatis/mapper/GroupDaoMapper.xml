@@ -50,21 +50,6 @@
         ORDER BY toc.fCreateTime DESC
     </select>
 
-    <select id="findGroup" resultType="com.keymanager.monitoring.entity.Group">
-        SELECT
-        g.fUuid             AS "uuid",
-        g.fGroupName        AS "groupName",
-        g.fTerminalType     AS "terminalType",
-        g.fCreateBy         AS "createBy",
-        g.fMaxInvalidCount  AS "maxInvalidCount",
-        g.fUpdateTime       AS "updateTime",
-        g.fCreateTime       AS "createTime"
-        FROM t_group g
-        WHERE g.fGroupName = #{groupName}
-        AND g.fTerminalType = #{terminalType}
-        limit 1
-    </select>
-
     <select id="getOptimizationGroups" resultType="java.lang.String">
         SELECT
            g.fGroupName AS 'groupName'
