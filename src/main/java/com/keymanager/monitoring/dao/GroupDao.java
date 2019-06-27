@@ -19,19 +19,11 @@ public interface GroupDao extends BaseMapper<Group> {
 
     List<GroupVO> searchGroups (Page<GroupVO> page, @Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
-    void saveGroup (@Param("groupName") String groupName, @Param("terminalType") String terminalType, @Param("createBy") String createBy, @Param("remainingAccount") int remainingAccount, @Param("maxInvalidCount") int maxInvalidCount);
-
-    long lastInsertID ();
-
-    void updateGroupRemainingAccount (@Param("uuid") Long uuid, @Param("remainingAccount") int remainingAccount);
-
     Group findGroup(@Param("groupName") String groupName, @Param("terminalType") String terminalType);
 
     List<String> getOptimizationGroups(@Param("terminalType") String terminalType);
 
-    void updateMaxInvalidCount(@Param("uuid") long uuid,@Param("maxInvalidCount") int maxInvalidCount);
-
-    List<String> getGroupNames (@Param("operationCombineUuid") Long operationCombineUuid);
+    List<String> getGroupNames (@Param("operationCombineUuid") long operationCombineUuid);
 
     List<OperationCombineVO> searchGroupsBelowOperationCombine (@Param("operationCombineUuid")Long operationCombineUuid,
                                                                 @Param("groupName") String groupName);
@@ -43,5 +35,7 @@ public interface GroupDao extends BaseMapper<Group> {
 
     void insertBatchGroups (@Param("operationCombineCriteria") OperationCombineCriteria operationCombineCriteria);
 
-    void updateGroupOperationCombineUuid (@Param("operationCombineUuid")Long operationCombineUuid);
+    void updateGroupOperationCombineUuid (@Param("operationCombineUuid")long operationCombineUuid);
+
+    void updateOperationCombineUuidByGroupName (@Param("groupNames") List<String> groupNames, @Param("operationCombineUuid")long operationCombineUuid);
 }

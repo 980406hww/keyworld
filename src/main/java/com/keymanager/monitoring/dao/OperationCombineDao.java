@@ -26,4 +26,6 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
                                       @Param("remainingAccount") int remainingAccount);
 
     OperationCombine getOperationCombine (@Param("groupName") String groupName, @Param("terminalType") String terminalType);
+
+    void updateMaxInvalidCount (@Param("uuid") long uuid, @Param("maxInvalidCount") int maxInvalidCount);
 }

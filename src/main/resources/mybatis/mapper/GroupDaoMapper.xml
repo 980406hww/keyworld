@@ -44,24 +44,11 @@
             )
         </if>
         <if test="groupSettingCriteria.hasRemainingAccount == 1">
-            AND g.fRemainingAccount <![CDATA[>]]> 0
+            AND toc.fRemainingAccount <![CDATA[>]]> 0
         </if>
         GROUP BY g.fOperationCombineUuid
         ORDER BY toc.fCreateTime DESC
     </select>
-
-    <insert id="saveGroup">
-        INSERT INTO t_group(fGroupName, fTerminalType, fCreateBy, fRemainingAccount, fMaxInvalidCount, fUpdateTime)
-        VALUES(#{groupName}, #{terminalType}, #{createBy}, #{remainingAccount}, #{maxInvalidCount}, NOW())
-    </insert>
-
-    <select id="lastInsertID" resultType="java.lang.Long">
-        SELECT LAST_INSERT_ID();
-    </select>
-    
-    <update id="updateGroupRemainingAccount">
-        UPDATE t_group SET fRemainingAccount = #{remainingAccount}, fUpdateTime = NOW() WHERE fUuid = #{uuid}
-    </update>
 
     <select id="findGroup" resultType="com.keymanager.monitoring.entity.Group">
         SELECT
@@ -69,7 +56,6 @@
         g.fGroupName        AS "groupName",
         g.fTerminalType     AS "terminalType",
         g.fCreateBy         AS "createBy",
-        g.fRemainingAccount AS "remainingAccount",
         g.fMaxInvalidCount  AS "maxInvalidCount",
         g.fUpdateTime       AS "updateTime",
         g.fCreateTime       AS "createTime"
@@ -86,12 +72,6 @@
         WHERE g.fTerminalType = #{terminalType}
         GROUP BY g.fGroupName
     </select>
-
-    <update id="updateMaxInvalidCount">
-        UPDATE t_group
-        SET fMaxInvalidCount = #{maxInvalidCount}
-        WHERE fUuid = #{uuid}
-    </update>
 
     <select id="getGroupNames" resultType="java.lang.String">
         SELECT
@@ -144,7 +124,7 @@
     </select>
 
     <insert id="insertBatchGroups">
-        INSERT INTO t_group(fGroupName, fOperationCombineUuid, fTerminalType, fCreateBy, fRemainingAccount, fMaxInvalidCount)
+        INSERT INTO t_group(fGroupName, fOperationCombineUuid, fTerminalType, fCreateBy, fMaxInvalidCount)
         VALUES
         <foreach collection="operationCombineCriteria.groupNames" item="groupName" separator=",">
             (
@@ -152,7 +132,6 @@
                 #{operationCombineCriteria.operationCombineUuid},
                 #{operationCombineCriteria.terminalType},
                 #{operationCombineCriteria.creator},
-                #{operationCombineCriteria.remainingAccount},
                 #{operationCombineCriteria.maxInvalidCount}
             )
         </foreach>
@@ -164,4 +143,14 @@
         WHERE g.fOperationCombineUuid = #{operationCombineUuid}
     </update>
 
+    <update id="updateOperationCombineUuidByGroupName">
+        UPDATE t_group g
+        SET g.fOperationCombineUuid = NULL
+        WHERE g.fOperationCombineUuid = #{operationCombineUuid}
+        AND g.fGroupName IN (
+            <foreach collection="groupNames" item="groupName" separator=",">
+                #{groupName}
+            </foreach>
+        )
+    </update>
 </mapper>

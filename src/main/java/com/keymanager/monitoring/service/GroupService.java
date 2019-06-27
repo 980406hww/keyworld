@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.GroupDao;
 import com.keymanager.monitoring.entity.Group;
-import com.keymanager.monitoring.entity.GroupSetting;
 import com.keymanager.monitoring.entity.OperationCombine;
 import com.keymanager.monitoring.vo.GroupVO;
 import com.keymanager.monitoring.vo.OperationCombineVO;
@@ -74,12 +73,8 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
         availableOptimizationGroups.removeAll(optimizationGroups);
         return new ArrayList<>(availableOptimizationGroups);
     }
-    
-    public void updateMaxInvalidCount(long uuid, int maxInvalidCount){
-        groupDao.updateMaxInvalidCount(uuid, maxInvalidCount);
-    }
 
-    public List<String> getGroupNames (Long operationCombineUuid) {
+    public List<String> getGroupNames (long operationCombineUuid) {
         return groupDao.getGroupNames(operationCombineUuid);
     }
 
@@ -88,14 +83,25 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
     }
 
     public void saveGroupsBelowOperationCombine (OperationCombineCriteria operationCombineCriteria) {
+        List<String> existingGroupNames = operationCombineService.getGroupNames(operationCombineCriteria.getOperationCombineUuid());
+        Map<String, String> existingGroupNameMap = new HashMap<>(1000);
+        for (String groupName : existingGroupNames) {
+            existingGroupNameMap.put(groupName, groupName);
+        }
+
         List<Long> groupUuids = new ArrayList<>();
         List<String> notExistsGroupNames = new ArrayList<>();
         for (String groupName : operationCombineCriteria.getGroupNames()) {
-            Long existingGroupUuid = groupDao.searchExistingGroupUuid(operationCombineCriteria.getTerminalType(), groupName);
-            if (null != existingGroupUuid) {
-                groupUuids.add(existingGroupUuid);
+            String existingGroupName = existingGroupNameMap.get(groupName);
+            if (null == existingGroupName) {
+                Long existingGroupUuid = groupDao.searchExistingGroupUuid(operationCombineCriteria.getTerminalType(), groupName);
+                if (null != existingGroupUuid) {
+                    groupUuids.add(existingGroupUuid);
+                } else {
+                    notExistsGroupNames.add(groupName);
+                }
             } else {
-                notExistsGroupNames.add(groupName);
+                existingGroupNameMap.remove(groupName);
             }
         }
 
@@ -105,9 +111,12 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
 
         if (CollectionUtils.isNotEmpty(notExistsGroupNames)) {
             operationCombineCriteria.setGroupNames(notExistsGroupNames);
-            Integer remainingAccount = groupSettingService.getSumMachineUsedPercent(operationCombineCriteria.getOperationCombineUuid());
-            operationCombineCriteria.setRemainingAccount(remainingAccount);
             groupDao.insertBatchGroups(operationCombineCriteria);
+        }
+
+        if (!existingGroupNameMap.isEmpty()) {
+            Collection<String> groupNames = existingGroupNameMap.values();
+            groupDao.updateOperationCombineUuidByGroupName(new ArrayList<String>(groupNames), operationCombineCriteria.getOperationCombineUuid());
         }
     }
 
@@ -115,7 +124,7 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
         groupDao.updateGroupOperationUuid(groupUuids, operationCombineUuid);
     }
 
-    public void updateGroupOperationCombineUuid (Long operationCombineUuid) {
+    public void updateGroupOperationCombineUuid (long operationCombineUuid) {
         groupDao.updateGroupOperationCombineUuid(operationCombineUuid);
     }
 }

@@ -96,8 +96,4 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
     public void deleteGroupSettingByOperationCombineUuid (long operationCombineUuid) {
         groupSettingDao.deleteGroupSettingByOperationCombineUuid(operationCombineUuid);
     }
-
-    public Integer getSumMachineUsedPercent (long operationCombineUuid) {
-        return 100 - groupSettingDao.getSumMachineUsedPercent(operationCombineUuid);
-    }
 }

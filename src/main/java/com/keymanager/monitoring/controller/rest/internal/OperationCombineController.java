@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
+import com.keymanager.monitoring.common.utils.JsonUtils;
 import com.keymanager.monitoring.criteria.OperationCombineCriteria;
 import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.monitoring.service.OperationCombineService;
@@ -30,9 +31,9 @@ public class OperationCombineController {
     private OperationCombineService operationCombineService;
 
     @PostMapping("/getGroupNames/{uuid}")
-    public ResponseEntity<?> getGroupNames (@PathVariable Long uuid) {
+    public ResponseEntity<?> getGroupNames (@PathVariable long uuid) {
         try {
-            String groupNames = operationCombineService.getGroupNames(uuid);
+            String groupNames = JsonUtils.toJson(operationCombineService.getGroupNames(uuid));
             return new ResponseEntity<Object>(groupNames, HttpStatus.OK);
         } catch (Exception ex) {
             logger.error(ex.getMessage());
@@ -82,6 +83,19 @@ public class OperationCombineController {
                                                     @RequestBody UpdateGroupSettingCriteria updateGroupSettingCriteria) {
         try {
             operationCombineService.updateOperationCombine(operationCombineUuid, updateGroupSettingCriteria);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping("/updateMaxInvalidCount")
+    public ResponseEntity<?> updateMaxInvalidCount(@RequestBody Map<String, Object> requestMap) {
+        try {
+            long uuid = Long.valueOf((String) requestMap.get("uuid"));
+            int maxInvalidCount = Integer.valueOf((String) requestMap.get("maxInvalidCount"));
+            operationCombineService.updateMaxInvalidCount(uuid, maxInvalidCount);
             return new ResponseEntity<>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

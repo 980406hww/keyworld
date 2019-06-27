@@ -130,11 +130,11 @@
 							<label>最大无效点击数:</label>&nbsp;&nbsp;<label class="maxInvalidCountStr" operationCombineId="${groupVo.uuid}">${groupVo.maxInvalidCount}</label>
 						</span>
 						<span><a href="javascript:;"></a>&nbsp;&nbsp;&nbsp;</span>
-						<span class="groupNames" ondblclick="editGroupNameStr($(this).find('label.groupNameStr')[0], true, '${groupVo.remainingAccount}', '${groupVo.maxInvalidCount}')">
+						<span class="groupNames" ondblclick="editGroupNameStr($(this).find('label.groupNameStr')[0], true, '${groupVo.maxInvalidCount}')">
 							<label>分组:&nbsp;&nbsp;</label><label class="groupNameStr">暂无</label>
 						</span>
 						<div class="handle">
-							<a class="blue" href="javascript:showGroupQueueDialog('${groupVo.uuid}', '${groupVo.maxInvalidCount}', '${groupVo.remainingAccount}')">分组详情</a>
+							<a class="blue" href="javascript:showGroupQueueDialog('${groupVo.uuid}', '${groupVo.maxInvalidCount}')">分组详情</a>
 							<shiro:hasPermission name="/internal/groupsetting/saveGroupSetting">
 								<a class="blue" href="javascript:showGroupSettingDialog('add', '', '${groupVo.operationCombineName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')">新增操作组设置</a>
 							</shiro:hasPermission>

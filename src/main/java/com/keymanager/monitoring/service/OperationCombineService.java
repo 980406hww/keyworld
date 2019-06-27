@@ -32,9 +32,8 @@ public class OperationCombineService extends ServiceImpl<OperationCombineDao, Op
     @Autowired
     private GroupSettingService groupSettingService;
 
-    public String getGroupNames (Long uuid) {
-        List<String> groupNameList =  groupService.getGroupNames(uuid);
-        return JsonUtils.toJson(groupNameList);
+    public List<String> getGroupNames (long uuid) {
+        return groupService.getGroupNames(uuid);
     }
 
     public List<OperationCombineVO> searchGroupsBelowOperationCombine (Long uuid, String groupName) {
@@ -78,10 +77,9 @@ public class OperationCombineService extends ServiceImpl<OperationCombineDao, Op
         if (1 == updateGroupSettingCriteria.getGs().getMachineUsedPercent()) {
                 this.updateOperationCombineRemainingAccount(updateGroupSettingCriteria.getGroupSetting().getOperationCombineUuid(), updateGroupSettingCriteria.getGroupSetting().getRemainingAccount());
         }
-        // TODO
-//         if (1 == updateGroupSettingCriteria.getGs().getMaxInvalidCount()) {
-//            this.updateMaxInvalidCount(updateGroupSettingCriteria.getGroupSetting().getGroupUuid(), updateGroupSettingCriteria.getGroupSetting().getMaxInvalidCount());
-//        }
+        if (1 == updateGroupSettingCriteria.getGs().getMaxInvalidCount()) {
+            this.updateMaxInvalidCount(updateGroupSettingCriteria.getGroupSetting().getOperationCombineUuid(), updateGroupSettingCriteria.getGroupSetting().getMaxInvalidCount());
+        }
     }
 
     public void updateOperationCombineUpdateTime (Long operationCombineUuid) {
@@ -92,5 +90,9 @@ public class OperationCombineService extends ServiceImpl<OperationCombineDao, Op
 
     public OperationCombine getOperationCombine (String groupName, String terminalType) {
         return operationCombineDao.getOperationCombine(groupName, terminalType);
+    }
+
+    public void updateMaxInvalidCount (long uuid, int maxInvalidCount) {
+        operationCombineDao.updateMaxInvalidCount(uuid, maxInvalidCount);
     }
 }

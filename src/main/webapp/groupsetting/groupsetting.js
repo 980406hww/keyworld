@@ -847,11 +847,9 @@ function searchAvailableOptimizationGroups() {
 }
 
 function editMaxInvalidCountStr(self, edit){
-    var groupSetting = {};
-    groupSetting.id = $(self).attr("operationCombineId");
     if (edit) {
-        groupSetting.maxInvalidCount = self.textContent;
-        self.innerHTML = '<input type="text" value="' + groupSetting.maxInvalidCount + '" style="width: 40px;" label="' +groupSetting.maxInvalidCount+ '" name="maxInvalidCount" operationCombineId= "'+ groupSetting.id +'" onBlur="editMaxInvalidCountStr(this)" />';
+        var uuid = $(self).parent().parent().find("input[name='operationCombineUuid']").val();
+        self.innerHTML = '<input type="text" value="' + self.innerHTML + '" style="width: 40px;" label="' + self.innerHTML + '" operationCombineId= "'+ uuid +'" onBlur="editMaxInvalidCountStr(this)" />';
         self.getElementsByTagName('input')[0].focus();
     } else {
         var isChange = true;
@@ -860,9 +858,12 @@ function editMaxInvalidCountStr(self, edit){
             isChange = false;
         }
         if (isChange) {
+            var groupSetting = {};
+            groupSetting.uuid = $(self).attr("operationCombineId");
             groupSetting.maxInvalidCount = $.trim(self.value);
+            console.log(groupSetting);
             $.ajax({
-                url: "/internal/group/updateMaxInvalidCount",
+                url: "/internal/operationCombine/updateMaxInvalidCount",
                 type: "POST",
                 data: JSON.stringify(groupSetting),
                 headers: {
@@ -917,7 +918,7 @@ function getGroupNames() {
     });
 }
 
-function editGroupNameStr(o, edit, remainingAccount, maxInvalidCount){
+function editGroupNameStr(o, edit, maxInvalidCount){
     if (edit) {
         o.innerHTML = o.innerHTML.replace(/(暂无)/g, '');
         var uuid = $(o).parent().parent().find("input[name='operationCombineUuid']").val();
@@ -948,7 +949,6 @@ function editGroupNameStr(o, edit, remainingAccount, maxInvalidCount){
             postData.operationCombineUuid = $.trim(operationCombineUuid);
             postData.groupNames = groups;
             postData.terminalType = $("#chargeForm").find("input[name='terminalType']").val();
-            postData.remainingAccount = remainingAccount;
             postData.maxInvalidCount = maxInvalidCount;
             $.ajax({
                 url: "/internal/group/saveGroupsBelowOperationCombine",
@@ -988,7 +988,7 @@ function unique(a) {
     });
 }
 
-function showGroupQueueDialog(operationCombineUuid, maxInvalidCount, remainingAccount) {
+function showGroupQueueDialog(operationCombineUuid, maxInvalidCount) {
     var showGroupQueueDialog = $("#showGroupQueueDialog");
     showGroupQueueDialog.find("input[name='operationCombineUuid']").val(operationCombineUuid);
     showGroupQueueDialog.show();
@@ -1002,7 +1002,7 @@ function showGroupQueueDialog(operationCombineUuid, maxInvalidCount, remainingAc
             text: '保存',
             iconCls: 'icon-ok',
             handler: function () {
-                saveGroupsBelowOperationCombine(operationCombineUuid, maxInvalidCount, remainingAccount);
+                saveGroupsBelowOperationCombine(operationCombineUuid, maxInvalidCount);
             }
         }, {
             text: '取消',
@@ -1059,7 +1059,7 @@ function searchGroupsBelowOperationCombine() {
     });
 }
 
-function saveGroupsBelowOperationCombine(operationCombineUuid, maxInvalidCount, remainingAccount) {
+function saveGroupsBelowOperationCombine(operationCombineUuid, maxInvalidCount) {
     var showGroupQueueDialog = $("#showGroupQueueDialog");
     var addFlag = true;
     var updateFlag = true;
@@ -1092,7 +1092,6 @@ function saveGroupsBelowOperationCombine(operationCombineUuid, maxInvalidCount, 
         postData.groupNames = groupNameArr;
         postData.terminalType = $("#chargeForm").find("input[name='terminalType']").val();
         postData.maxInvalidCount = maxInvalidCount;
-        postData.remainingAccount = remainingAccount;
         $.ajax({
             url: '/internal/group/saveGroupsBelowOperationCombine',
             type: 'POST',

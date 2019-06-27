@@ -229,10 +229,4 @@
         WHERE gs.fOperationCombineUuid = #{operationCombineUuid}
         GROUP BY gs.fOperationType
     </select>
-
-    <select id="getSumMachineUsedPercent" resultType="java.lang.Integer">
-        SELECT SUM(fMachineUsedPercent)
-        FROM t_group_setting gs
-        WHERE gs.fOperationCombineUuid = #{operationCombineUuid}
-    </select>
 </mapper>

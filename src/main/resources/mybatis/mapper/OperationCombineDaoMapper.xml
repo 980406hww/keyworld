@@ -32,8 +32,8 @@
 
     <select id="getOperationCombine" resultType="com.keymanager.monitoring.entity.OperationCombine">
         SELECT
-        toc.fUuid AS 'uuid',
-        toc.fRemainingAccount AS 'remainingAccount'
+            toc.fUuid AS 'uuid',
+            toc.fRemainingAccount AS 'remainingAccount'
         FROM t_group g
         LEFT JOIN t_operation_combine toc
         ON toc.fUuid = g.fOperationCombineUuid
@@ -41,4 +41,10 @@
         AND g.fGroupName = #{groupName}
         LIMIT 1
     </select>
+
+    <update id="updateMaxInvalidCount">
+        UPDATE t_operation_combine
+        SET fMaxInvalidCount = #{maxInvalidCount}, fUpdateTime = NOW()
+        WHERE fUuid = #{uuid}
+    </update>
 </mapper>
