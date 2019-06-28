@@ -465,19 +465,15 @@
         UPDATE t_machine_info SET fRemainingKeyword = 1, fIdleStartTime = null, fIdleTotalMinutes = 0
     </update>
 
-    <select id="getMachineInfoVos" resultType="com.keymanager.monitoring.vo.MachineInfoVO" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria">
+    <select id="getMachineCount" resultType="java.lang.Integer">
         SELECT
-            COUNT(mi.fGroup) AS 'machineCount',
-            gs.fOperationType AS 'operationType',
-            gs.fMachineUsedPercent AS 'machineUserPercent'
+            COUNT(mi.fGroup) AS 'machineCount'
         FROM t_machine_info mi
         LEFT JOIN t_group g
         ON g.fGroupName = mi.fGroup AND g.fTerminalType = mi.fTerminalType
-        LEFT JOIN t_group_setting gs
-        ON gs.fGroupUuid = g.fUuid
-        WHERE g.fGroupName = #{qzSettingSearchClientGroupInfoCriteria.optimizeGroupName}
-        AND g.fTerminalType = #{qzSettingSearchClientGroupInfoCriteria.terminalType}
-        GROUP BY gs.fOperationType
+        WHERE g.fGroupName = #{optimizeGroupName}
+        AND g.fTerminalType = #{terminalType}
+        LIMIT 1
     </select>
 
     <select id="getClientStatusForOptimization" resultType="com.keymanager.monitoring.vo.ClientStatusForOptimization">

@@ -1110,10 +1110,6 @@ public class ClientStatusService extends ServiceImpl<ClientStatusDao, ClientStat
         clientStatusDao.updateVersion(clientID, version);
     }
 
-    public List<ClientStatusVO> getClientStatusVOs (QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria) {
-        return clientStatusDao.getClientStatusVOs(qzSettingSearchClientGroupInfoCriteria);
-    }
-
     public ClientStatusForOptimization getClientStatusForOptimization(String clientID){
         ClientStatusForOptimization clientStatusForOptimization = clientStatusDao.getClientStatusForOptimization(clientID);
         if(clientStatusForOptimization != null){

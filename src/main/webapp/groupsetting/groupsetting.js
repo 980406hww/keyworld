@@ -1092,6 +1092,7 @@ function saveGroupsBelowOperationCombine(operationCombineUuid, maxInvalidCount) 
         postData.groupNames = groupNameArr;
         postData.terminalType = $("#chargeForm").find("input[name='terminalType']").val();
         postData.maxInvalidCount = maxInvalidCount;
+        postData.onlySaveStatus = true;
         $.ajax({
             url: '/internal/group/saveGroupsBelowOperationCombine',
             type: 'POST',

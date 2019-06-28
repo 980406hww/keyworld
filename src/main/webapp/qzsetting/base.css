@@ -534,21 +534,21 @@ ul {
     color: #0c7df5;
 }
 
-.datalist-list .body .other-rank_2 .row:last-child div.showSomeOperationType {
+.datalist-list .body .other-rank_2 .row:last-child div.showOperationCombineName {
     margin-top: 10px;
     height: 60%;
 }
 
-.datalist-list .body .other-rank_2 .row:last-child div.showSomeOperationType span a {
+.datalist-list .body .other-rank_2 .row:last-child div.showOperationCombineName span a {
     font-size: 14px;
     color: #000;
 }
 
-.datalist-list .body .other-rank_2 .row:last-child div.showSomeOperationType span a:hover {
+.datalist-list .body .other-rank_2 .row:last-child div.showOperationCombineName span a:hover {
     color: #0c7df5;
 }
 
-.datalist-list .body .other-rank_2 .row:last-child div.operationTypeSpan span {
+.datalist-list .body .other-rank_2 .row:last-child div.operationCombineSpan span {
     height: 30%;
 }
 

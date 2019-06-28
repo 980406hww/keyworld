@@ -163,7 +163,7 @@ function checkTerminalType(terminalType, isManualSwitch) {
         detectedTopNum();
     }, 200);
     setTimeout(function () {
-        getQZSettingClientGroupInfo(terminalType);
+        getQZSettingGroupInfo(terminalType);
     }, 100);
 }
 function detectedTopNum() {
@@ -730,12 +730,12 @@ function generateQZDesignationWordTrendCharts(domElement, data) {
 function stringToArray(str) {
     return str.replace('[', '').replace(']', '').split(', ').reverse();
 }
-function getQZSettingClientGroupInfo(terminalType) {
+function getQZSettingGroupInfo(terminalType) {
     $(".body").find(".other-rank_2").each(function () {
         var div = $(this);
         var uuid = div.parent().parent().parent().find(".header input[name='uuid']").val();
         var optimizeGroupName = div.find(".row:first-child").find("div:eq(0) span.line1 a").text();
-        if (optimizeGroupName.indexOf("(") == -1) {
+        if (optimizeGroupName.indexOf("(") === -1) {
             optimizeGroupName = $.trim(optimizeGroupName);
         } else {
             optimizeGroupName = $.trim(optimizeGroupName.substring(0,optimizeGroupName.indexOf("(")));
@@ -745,7 +745,7 @@ function getQZSettingClientGroupInfo(terminalType) {
         postData.terminalType = terminalType;
         postData.optimizeGroupName = optimizeGroupName;
         $.ajax({
-            url: '/internal/qzsetting/getQZSettingClientGroupInfo',
+            url: '/internal/qzsetting/getQZSettingGroupInfo',
             type: 'POST',
             data: JSON.stringify(postData),
             headers: {
@@ -754,8 +754,6 @@ function getQZSettingClientGroupInfo(terminalType) {
             },
             success: function (data) {
                 div.parent().find(".other-rank .row:first-child").find("div[name='operationKeywordNum']").find("span.line1 a").text(data.customerKeywordCount);
-                var clientCount = 0;
-                var showSomeOperationType = div.find(".row:last-child").find("div[name='showSomeOperationType']");
                 if (data.categoryTagNames.length > 0) {
                     var tagNameStr = "";
                     var span = $(div).parent().parent().parent().find(".header span.tagNames");
@@ -764,29 +762,17 @@ function getQZSettingClientGroupInfo(terminalType) {
                     });
                     $(span).find("label.tagNameStr").html(tagNameStr.substring(0, tagNameStr.length-1));
                 }
-                if (data.machineInfoVos.length > 0) {
-                    showSomeOperationType.empty();
-                    var allOperationType = '';
-                    var flag = false;
-                    $.each(data.machineInfoVos, function (idx, val) {
-                        allOperationType += optimizeGroupName + " " +val.operationType + "(" + val.machineUserPercent + "%)"  + ",";
-                        if (clientCount === 0) {
-                            clientCount = val.machineCount;
-                        }
-                        if (idx < 2) {
-                            $(showSomeOperationType).append("<span name='"+ optimizeGroupName + " " + val.operationType +"'><a href='javascript:;' onclick='findOptimizeGroupAndOperationType($(this))'>"+ val.operationType + "(" + val.machineUserPercent + "%)" +"</a></span>");
-                        } else {
-                            flag = true;
+
+                if (data.operationCombineName !== null) {
+                    div.find("select[name='operationCombineName'] option:not(:first)").each(function () {
+                        if ($(this).val().split("_____")[0] === data.operationCombineName) {
+                            $(this)[0].selected = true;
+                            div.find("input[name='operationCombineName']").val($(this).val());
                         }
                     });
-                    if (flag) {
-                        $(showSomeOperationType).append("<span><a name='showAllOperationType' href='javascript:;' onclick='showAllOperationType($(this))'><strong> . . . </strong></a></span>");
-                        allOperationType = allOperationType.substring(0, allOperationType.length-1);
-                        $(showSomeOperationType).parent().find("input[name='allOperationType']").val(allOperationType);
-                    }
                 }
                 var status = div.parent().find(".other-rank .row:last-child").find("div:eq(1) span.line1 a").attr("status");
-                div.find(".row:first-child").find("div:eq(0) span.line1 a").text(optimizeGroupName+" ("+clientCount+")");
+                div.find(".row:first-child").find("div:eq(0) span.line1 a").text(optimizeGroupName+" ("+ (data.machineCount === null ? 0 : data.machineCount) +")");
                 if (status == "3") {
                     div.find(".row:first-child").find("div:eq(0) span.line1 a").css("color", "red");
                 }
@@ -990,12 +976,6 @@ function searchClientStatus(optimizeGroup) {
     searchClientStatusFrom.find("#groupName").val($.trim(optimizeGroup));
     searchClientStatusFrom.submit();
 }
-function searchGroupSettings(optimizedGroupName, operationType) {
-    var searchGroupSettingForm = $("#searchGroupSettingForm");
-    searchGroupSettingForm.find("#optimizedGroupName").val($.trim(optimizedGroupName));
-    searchGroupSettingForm.find("#operationType").val($.trim(operationType));
-    searchGroupSettingForm.submit();
-}
 function searchCustomerKeywords(customerUuid, optimizeGroupName) {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
     searchCustomerKeywordForm.find("#customerUuid").val(customerUuid);
@@ -1137,46 +1117,7 @@ function closeChargeRulesDiv() {
     clearTimeout(TimeFn);
     $("#chargeRulesDiv").css("display", "none");
 }
-function showAllOperationType(self, e) {
-    var event = e||window.event;
-    var pageX = event.pageX;
-    var pageY = event.pageY;
-    if(pageX==undefined) {
-        pageX = event.clientX+document.body.scrollLeft||document.documentElement.scrollLeft;
-    }
-    if(pageY==undefined) {
-        pageY = event.clientY+document.body.scrollTop||document.documentElement.scrollTop;
-    }
-    var allOperationType = $(self).parent().parent().parent().find("input[name='allOperationType']").val();
-    var showAllOperationType = $("#showAllOperationType");
-    showAllOperationType.empty();
-    var operationTypes = allOperationType.split(',');
-    $.each(operationTypes, function (idx, val) {
-        showAllOperationType.append("<span name='"+ val.substring(0, val.indexOf("(")) +"'>" + "<a href='javascript:;' onclick='findOptimizeGroupAndOperationType($(this))'>" + val.split(" ")[1] + "</a>" + "</span>" + "<br>");
-    });
-    showAllOperationType.show();
-    showAllOperationType.dialog({
-        resizable: false,
-        height: 300,
-        width: 200,
-        title: '查看操作类型',
-        modal: false,
-        buttons: [{
-            text: '确定',
-            iconCls: 'icon-ok',
-            handler: function () {
-                showAllOperationType.dialog("close");
-            }
-        }]
-    });
-    showAllOperationType.dialog("open");
-    showAllOperationType.window("resize",{top: pageY + 20, left: pageX - 80});
-}
-function findOptimizeGroupAndOperationType(self) {
-    var name = $(self).parent().attr("name");
-    var args = name.split(" ");
-    searchGroupSettings(args[0], args[1]);
-}
+
 function showKeywordDialog(qzSettingUuid, customerUuid, domain, optimizeGroupName, bearPawNumber) {
     var customerKeywordDialog = $("#customerKeywordDialog");
     customerKeywordDialog.find('#customerKeywordForm')[0].reset();
@@ -2535,4 +2476,35 @@ function showOptimizationType(terminalType) {
             dealSettingTable(this, terminalType, 0);
         });
     }
+}
+
+function changeQZSettingGroupOperationCombineUuid(self, groupName) {
+    var select = $(self);
+    var oldOperationCombineName = select.parent().find("input[name='operationCombineName']").val();
+    if (!confirm("确定修改" + groupName + "所属的操作组合？")) {
+        select.val(oldOperationCombineName);
+        return false;
+    }
+    var postData = {};
+    postData.operationCombineUuid = select.val() === '' ? null : select.val().split("_____")[1];
+    postData.groupName = groupName;
+    postData.terminalType = $("#chargeForm").find("#terminalType").val();
+    $.ajax({
+        url: '/internal/group/updateQZSettingGroupOperationCombineUuid',
+        type: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(postData),
+        success: function (result) {
+            if (result) {
+                $().toastmessage('showSuccessToast', "更新操作组合成功");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', '更新操作组合失败');
+            select.val(oldOperationCombineName);
+        }
+    });
 }

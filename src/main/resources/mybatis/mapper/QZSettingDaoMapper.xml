@@ -375,15 +375,15 @@
         </foreach>
     </update>
 
-    <select id="getQZSettingClientGroupInfo" resultType="java.lang.Integer" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria">
+    <select id="getQZSettingGroupInfo" resultType="java.lang.Integer" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchGroupInfoCriteria">
         SELECT COUNT(1)
         FROM t_customer_keyword ck
         LEFT JOIN t_qz_setting qs
         ON qs.fCustomerUuid = ck.fCustomerUuid
-        WHERE qs.fUuid = #{qzSettingSearchClientGroupInfoCriteria.qzSettingUuid}
+        WHERE qs.fUuid = #{qzSettingSearchGroupInfoCriteria.qzSettingUuid}
         AND ck.fStatus = 1
-        <if test="qzSettingSearchClientGroupInfoCriteria.terminalType != ''">AND ck.fTerminalType = #{qzSettingSearchClientGroupInfoCriteria.terminalType}</if>
-        <if test="qzSettingSearchClientGroupInfoCriteria.optimizeGroupName != ''">AND ck.fOptimizeGroupName LIKE '${qzSettingSearchClientGroupInfoCriteria.optimizeGroupName}%'</if>
+        <if test="qzSettingSearchGroupInfoCriteria.terminalType != ''">AND ck.fTerminalType = #{qzSettingSearchGroupInfoCriteria.terminalType}</if>
+        <if test="qzSettingSearchGroupInfoCriteria.optimizeGroupName != ''">AND ck.fOptimizeGroupName LIKE '${qzSettingSearchGroupInfoCriteria.optimizeGroupName}%'</if>
     </select>
 
     <select id="getAvailableOptimizationGroups" resultType="java.lang.String">

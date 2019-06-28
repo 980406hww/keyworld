@@ -48,4 +48,14 @@
         SET fMaxInvalidCount = #{maxInvalidCount}, fUpdateTime = NOW()
         WHERE fUuid = #{uuid}
     </update>
+
+    <select id="getOperationCombineName" resultType="java.lang.String">
+        SELECT
+            toc.fOperationCombineName AS 'operationCombineName'
+        FROM t_group g
+        LEFT JOIN t_operation_combine toc
+        ON toc.fUuid = g.fOperationCombineUuid
+        WHERE g.fGroupName = #{optimizeGroupName}
+        LIMIT 1
+    </select>
 </mapper>

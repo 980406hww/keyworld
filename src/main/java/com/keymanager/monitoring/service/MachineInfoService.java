@@ -10,7 +10,6 @@ import com.keymanager.monitoring.enums.ClientStartUpStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.vo.ClientStatusForOptimization;
 import com.keymanager.monitoring.vo.CookieVO;
-import com.keymanager.monitoring.vo.MachineInfoVO;
 import com.keymanager.util.*;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.ClientStatusGroupSummaryVO;
@@ -818,8 +817,8 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         machineInfoDao.resetOptimizationInfo();
     }
 
-    public List<MachineInfoVO> getMachineInfoVos (QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria) {
-        return machineInfoDao.getMachineInfoVos(qzSettingSearchClientGroupInfoCriteria);
+    public Integer getMachineCount (String optimizeGroupName, String terminalType) {
+        return machineInfoDao.getMachineCount(optimizeGroupName, terminalType);
     }
 
     public ClientStatusForOptimization getClientStatusForOptimization(String clientID) {

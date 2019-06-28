@@ -94,4 +94,8 @@ public class OperationCombineService extends ServiceImpl<OperationCombineDao, Op
     public void updateMaxInvalidCount (long uuid, int maxInvalidCount) {
         operationCombineDao.updateMaxInvalidCount(uuid, maxInvalidCount);
     }
+
+    public String getOperationCombineName (String optimizeGroupName) {
+        return operationCombineDao.getOperationCombineName(optimizeGroupName);
+    }
 }

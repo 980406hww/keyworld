@@ -76,4 +76,18 @@ public class GroupRestController {
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/updateQZSettingGroupOperationCombineUuid")
+    public ResponseEntity<?> updateQZSettingGroupOperationCombineUuid(@RequestBody Map<String, Object> requestMap) {
+        try {
+            Long operationCombineUuid = Long.valueOf((String) requestMap.get("operationCombineUuid"));
+            String groupName = (String) requestMap.get("groupName");
+            String terminalType = (String) requestMap.get("terminalType");
+            groupService.updateQZSettingGroupOperationCombineUuid(operationCombineUuid, groupName, terminalType);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
 }

@@ -107,7 +107,7 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
             groupDao.insertBatchGroups(operationCombineCriteria);
         }
 
-        if (!existingGroupNameMap.isEmpty()) {
+        if (!operationCombineCriteria.isOnlySaveStatus() && !existingGroupNameMap.isEmpty()) {
             Collection<String> groupNames = existingGroupNameMap.values();
             groupDao.updateOperationCombineUuidByGroupName(new ArrayList<String>(groupNames), operationCombineCriteria.getOperationCombineUuid());
         }
@@ -119,5 +119,9 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
 
     public void updateGroupOperationCombineUuid (long operationCombineUuid) {
         groupDao.updateGroupOperationCombineUuid(operationCombineUuid);
+    }
+
+    public void updateQZSettingGroupOperationCombineUuid (Long operationCombineUuid, String groupName, String terminalType) {
+        groupDao.updateQZSettingGroupOperationCombineUuid(operationCombineUuid, groupName, terminalType);
     }
 }

@@ -4,13 +4,11 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.MachineInfoCriteria;
-import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
 import com.keymanager.monitoring.entity.ClientUpgrade;
 import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord;
 import com.keymanager.monitoring.entity.MachineInfo;
 import com.keymanager.monitoring.vo.ClientStatusForOptimization;
 import com.keymanager.monitoring.vo.CookieVO;
-import com.keymanager.monitoring.vo.MachineInfoVO;
 import com.keymanager.value.ClientStatusGroupSummaryVO;
 import com.keymanager.value.ClientStatusSummaryVO;
 import org.apache.ibatis.annotations.Param;
@@ -94,7 +92,7 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     void resetOptimizationInfo();
 
-    List<MachineInfoVO> getMachineInfoVos(@Param("qzSettingSearchClientGroupInfoCriteria") QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria);
+    Integer getMachineCount(@Param("optimizeGroupName") String optimizeGroupName, @Param("terminalType") String terminalType);
 
     ClientStatusForOptimization getClientStatusForOptimization(@Param("clientID") String clientID);
 }

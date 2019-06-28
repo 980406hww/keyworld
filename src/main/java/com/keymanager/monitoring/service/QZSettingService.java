@@ -13,7 +13,7 @@ import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.monitoring.vo.DateRangeTypeVO;
 import com.keymanager.monitoring.vo.ExternalQzSettingVO;
-import com.keymanager.monitoring.vo.QZSettingSearchClientGroupInfoVO;
+import com.keymanager.monitoring.vo.QZSettingSearchGroupInfoVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.value.CustomerKeywordVO;
@@ -64,6 +64,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	@Autowired
 	private CaptureRankJobService captureRankJobService;
+
+	@Autowired
+	private OperationCombineService operationCombineService;
 
 	public QZSetting getAvailableQZSetting(){
 		List<QZSetting> qzSettings = qzSettingDao.getAvailableQZSettings();
@@ -407,7 +410,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		return page;
 	}
 
-	private Page<QZSetting> addingQZKeywordRankInfo (Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
+	private void addingQZKeywordRankInfo (Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
         for(QZSetting qzSetting : page.getRecords()){
             List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), qzSettingSearchCriteria);
             if (CollectionUtils.isNotEmpty(qzKeywordRankInfos)) {
@@ -427,10 +430,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				qzChargeRuleService.getChargeRuleTotalPrice(qzSetting, qzSetting.getUuid(), qzSettingSearchCriteria.getTerminalType());
 			}
         }
-        return page;
     }
 
-    private QZKeywordRankInfo calculatedQZKeywordRankInfo(QZKeywordRankInfo qzKeywordRankInfo) {
+    private void calculatedQZKeywordRankInfo(QZKeywordRankInfo qzKeywordRankInfo) {
         Map<String, Object> map;
         if (!StringUtils.isBlank(qzKeywordRankInfo.getTopTen())) {
             map = calculate(qzKeywordRankInfo.getTopTen());
@@ -440,7 +442,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
             map = calculate(qzKeywordRankInfo.getTopFifty());
             qzKeywordRankInfo.setTopFiftyNum((Integer) map.get("topNum"));
         }
-	    return qzKeywordRankInfo;
     }
 
     public Map<String, Object> calculate(String topString) {
@@ -729,12 +730,15 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-	public QZSettingSearchClientGroupInfoVO getQZSettingClientGroupInfo (QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria) {
-		QZSettingSearchClientGroupInfoVO qzSettingSearchClientGroupInfoVo = new QZSettingSearchClientGroupInfoVO();
-		qzSettingSearchClientGroupInfoVo.setCustomerKeywordCount(qzSettingDao.getQZSettingClientGroupInfo(qzSettingSearchClientGroupInfoCriteria));
-		qzSettingSearchClientGroupInfoVo.setMachineInfoVos(machineInfoService.getMachineInfoVos(qzSettingSearchClientGroupInfoCriteria));
-		qzSettingSearchClientGroupInfoVo.setCategoryTagNames(qzCategoryTagService.findTagNamesByQZSettingUuid(qzSettingSearchClientGroupInfoCriteria.getQzSettingUuid()));
-		return qzSettingSearchClientGroupInfoVo;
+	public QZSettingSearchGroupInfoVO getQZSettingGroupInfo (QZSettingSearchGroupInfoCriteria qzSettingSearchGroupInfoCriteria) {
+		QZSettingSearchGroupInfoVO qzSettingSearchGroupInfoVo = new QZSettingSearchGroupInfoVO();
+		qzSettingSearchGroupInfoVo.setCustomerKeywordCount(qzSettingDao.getQZSettingGroupInfo(qzSettingSearchGroupInfoCriteria));
+		qzSettingSearchGroupInfoVo.setMachineCount(machineInfoService.getMachineCount(qzSettingSearchGroupInfoCriteria
+						.getOptimizeGroupName(), qzSettingSearchGroupInfoCriteria.getTerminalType()));
+		qzSettingSearchGroupInfoVo.setOperationCombineName(operationCombineService.getOperationCombineName(
+				qzSettingSearchGroupInfoCriteria.getOptimizeGroupName()));
+		qzSettingSearchGroupInfoVo.setCategoryTagNames(qzCategoryTagService.findTagNamesByQZSettingUuid(qzSettingSearchGroupInfoCriteria.getQzSettingUuid()));
+		return qzSettingSearchGroupInfoVo;
 	}
 
 	public void saveQZSettingCustomerKeywords (QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria, String userName) {

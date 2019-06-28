@@ -24,6 +24,8 @@ public class OperationCombineCriteria {
 
     private int remainingAccount;
 
+    private boolean onlySaveStatus;
+
     private GroupSetting groupSetting;
 
     public long getOperationCombineUuid () {
@@ -80,6 +82,14 @@ public class OperationCombineCriteria {
 
     public void setRemainingAccount (int remainingAccount) {
         this.remainingAccount = remainingAccount;
+    }
+
+    public boolean isOnlySaveStatus () {
+        return onlySaveStatus;
+    }
+
+    public void setOnlySaveStatus (boolean onlySaveStatus) {
+        this.onlySaveStatus = onlySaveStatus;
     }
 
     public GroupSetting getGroupSetting () {

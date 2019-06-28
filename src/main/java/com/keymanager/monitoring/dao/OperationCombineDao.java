@@ -28,4 +28,6 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
     OperationCombine getOperationCombine (@Param("groupName") String groupName, @Param("terminalType") String terminalType);
 
     void updateMaxInvalidCount (@Param("uuid") long uuid, @Param("maxInvalidCount") int maxInvalidCount);
+
+    String getOperationCombineName (@Param("optimizeGroupName") String optimizeGroupName);
 }

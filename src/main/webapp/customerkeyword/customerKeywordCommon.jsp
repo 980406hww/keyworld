@@ -97,7 +97,7 @@
                </span>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <span class="customerKeywordSpanClassa" onclick="checkItem(this)">搜索引擎:
-                <select name="searchEngine" id="searchEngine" onChange="searchEngineChanged()" >
+                <select name="searchEngine" id="searchEngine" >
                     <c:forEach items="${searchEngineMap}" var="entry">
                         <option value="${entry.value}">${entry.key}</option>
                     </c:forEach>

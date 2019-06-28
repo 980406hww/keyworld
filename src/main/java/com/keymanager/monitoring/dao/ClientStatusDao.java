@@ -5,11 +5,9 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.ClientStatusCriteria;
 import com.keymanager.monitoring.criteria.ClientStatusGroupStatCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
-import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
 import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.ClientUpgrade;
 import com.keymanager.monitoring.vo.ClientStatusForOptimization;
-import com.keymanager.monitoring.vo.ClientStatusVO;
 import com.keymanager.monitoring.vo.CookieVO;
 import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord;
 import com.keymanager.value.ClientStatusGroupSummaryVO;
@@ -95,8 +93,6 @@ public interface ClientStatusDao extends BaseMapper<ClientStatus> {
     void updateClientStatusForCapturePosition(@Param("clientID")String clientID);
 
     void updateVersion(@Param("clientID")String clientID, @Param("version")String version);
-
-    List<ClientStatusVO> getClientStatusVOs (@Param("qzSettingSearchClientGroupInfoCriteria") QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria);
 
     ClientStatusForOptimization getClientStatusForOptimization(@Param("clientID")String clientID);
 }

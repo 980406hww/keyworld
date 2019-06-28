@@ -138,4 +138,11 @@
             </foreach>
         )
     </update>
+
+    <update id="updateQZSettingGroupOperationCombineUuid">
+        UPDATE t_group
+        SET fUpdateTime = NOW(), fOperationCombineUuid = #{operationCombineUuid}
+        WHERE fGroupName = #{groupName}
+        AND fTerminalType = #{terminalType}
+    </update>
 </mapper>

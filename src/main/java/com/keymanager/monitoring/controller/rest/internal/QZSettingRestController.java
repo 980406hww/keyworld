@@ -8,7 +8,7 @@ import com.keymanager.monitoring.entity.CustomerExcludeKeyword;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.service.*;
-import com.keymanager.monitoring.vo.QZSettingSearchClientGroupInfoVO;
+import com.keymanager.monitoring.vo.QZSettingSearchGroupInfoVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -35,22 +35,19 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	private QZChargeRuleService qzChargeRuleService;
 
 	@Autowired
-	private QZOperationTypeService qzOperationTypeService;
-
-	@Autowired
 	private CustomerService customerService;
 
 	@Autowired
 	private QZKeywordRankInfoService qzKeywordRankInfoService;
 
 	@Autowired
-	private QZCategoryTagService qzCategoryTagService;
-
-	@Autowired
 	private ConfigService configService;
 
 	@Autowired
 	private IUserInfoService userInfoService;
+
+	@Autowired
+	private OperationCombineService operationCombineService;
 
 	@RequiresPermissions("/internal/qzsetting/updateStatus")
 	@RequestMapping(value = "/updateQZSettingStatus", method = RequestMethod.POST)
@@ -198,6 +195,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
 		Integer availableQZSettingCount = qzSettingService.getAvailableQZSettings().size();
 		String [] operationTypeValues = configService.getOperationTypeValues(qzSettingSearchCriteria.getTerminalType());
+		List<String> operationCombines = operationCombineService.getOperationCombineNames(qzSettingSearchCriteria.getTerminalType());
 		// modelAndView.addObject("chargeRemindDataMap", chargeRemindDataMap);
 		modelAndView.addObject("customerList", customerList);
 		modelAndView.addObject("qzSettingSearchCriteria", qzSettingSearchCriteria);
@@ -209,6 +207,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(qzSettingSearchCriteria.getTerminalType()));
 		modelAndView.addObject("standardSpeciesMap", Constants.QZ_RANK_STANDARD_SPECIES_MAP);
 		modelAndView.addObject("optimizationTypeMap", Constants.QZ_OPERATION_OPTIMIZATION_TYPE_MAP);
+		modelAndView.addObject("operationCombines", operationCombines);
 		return modelAndView;
 	}
 
@@ -225,11 +224,11 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	}
 
 	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
-	@RequestMapping(value = "/getQZSettingClientGroupInfo", method = RequestMethod.POST)
-	public ResponseEntity<?> getQZSettingClientGroupInfo(@RequestBody QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria) {
+	@RequestMapping(value = "/getQZSettingGroupInfo", method = RequestMethod.POST)
+	public ResponseEntity<?> getQZSettingGroupInfo(@RequestBody QZSettingSearchGroupInfoCriteria qzSettingSearchGroupInfoCriteria) {
 		try {
-			QZSettingSearchClientGroupInfoVO qzSettingSearchClientGroupInfoVo = qzSettingService.getQZSettingClientGroupInfo(qzSettingSearchClientGroupInfoCriteria);
-			return new ResponseEntity<Object>(qzSettingSearchClientGroupInfoVo, HttpStatus.OK);
+			QZSettingSearchGroupInfoVO qzSettingSearchGroupInfoVo = qzSettingService.getQZSettingGroupInfo(qzSettingSearchGroupInfoCriteria);
+			return new ResponseEntity<Object>(qzSettingSearchGroupInfoVo, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);

@@ -6,9 +6,10 @@ import java.util.List;
  * @Author zhoukai
  * @Date 2018/12/18 11:22
  **/
-public class QZSettingSearchClientGroupInfoVO {
+public class QZSettingSearchGroupInfoVO {
     private int customerKeywordCount;
-    private List<MachineInfoVO> machineInfoVos;
+    private String operationCombineName;
+    private int machineCount;
     private List<String> categoryTagNames;
 
     public int getCustomerKeywordCount () {
@@ -19,12 +20,20 @@ public class QZSettingSearchClientGroupInfoVO {
         this.customerKeywordCount = customerKeywordCount;
     }
 
-    public List<MachineInfoVO> getMachineInfoVos () {
-        return machineInfoVos;
+    public String getOperationCombineName () {
+        return operationCombineName;
     }
 
-    public void setMachineInfoVos (List<MachineInfoVO> machineInfoVos) {
-        this.machineInfoVos = machineInfoVos;
+    public void setOperationCombineName (String operationCombineName) {
+        this.operationCombineName = operationCombineName;
+    }
+
+    public int getMachineCount () {
+        return machineCount;
+    }
+
+    public void setMachineCount (int machineCount) {
+        this.machineCount = machineCount;
     }
 
     public List<String> getCategoryTagNames () {

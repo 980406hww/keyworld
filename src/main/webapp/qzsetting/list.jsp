@@ -451,14 +451,19 @@
 										</div>
 									</div>
 									<div class="row">
-										<div title="该分组下所有操作类型对应的机器数, 点击链接跳转到终端监控">
-											<div class="showSomeOperationType" name="showSomeOperationType">
-												<span><a href="javascript:;"> 无 </a></span>
+										<div title="该分组属于此操作组合, 点击链接跳转到分组设置">
+											<div class="showOperationCombineName" name="showOperationCombineName">
+												<input type="hidden" name="operationCombineName" value="">
+												<select name="operationCombineName" onchange="changeQZSettingGroupOperationCombineUuid(this, '${qzSetting.pcGroup}');" style="width: 180px;">
+                                                    <option value=""></option>
+													<c:forEach items="${operationCombines}" var="operationCombine">
+                                                        <option>${operationCombine}</option>
+													</c:forEach>
+												</select>
 											</div>
-											<input type="hidden" name="allOperationType">
-											<div class="operationTypeSpan">
+											<div class="operationCombineSpan">
 											<span>
-												<a href="javascript:;">操作类型</a>
+												<a href="javascript:;">操作组合</a>
 											</span>
 											</div>
 										</div>
@@ -882,14 +887,19 @@
 										</div>
 									</div>
 									<div class="row">
-										<div title="该分组下所有操作类型对应的机器数, 点击链接跳转到终端监控">
-											<div class="showSomeOperationType" name="showSomeOperationType">
-												<span><a href="javascript:;"> 无 </a></span>
+										<div title="该分组属于此操作组合, 点击链接跳转到分组设置">
+											<div class="showOperationCombineName" name="showOperationCombineName">
+												<input type="hidden" name="operationCombineName" value="">
+												<select name="operationCombineName" onchange="changeQZSettingGroupOperationCombineUuid(this, '${qzSetting.phoneGroup}');" style="width: 180px;">
+													<option value=""></option>
+													<c:forEach items="${operationCombines}" var="operationCombine">
+														<option>${operationCombine}</option>
+													</c:forEach>
+												</select>
 											</div>
-											<input type="hidden" name="allOperationType">
-											<div class="operationTypeSpan">
+											<div class="operationCombineSpan">
 											<span>
-												<a href="javascript:;">操作类型</a>
+												<a href="javascript:;">操作组合</a>
 											</span>
 											</div>
 										</div>
@@ -1186,11 +1196,6 @@
 
 <form id="searchClientStatusForm" method="post" target="_blank" action="/internal/machineInfo/searchMachineInfos" style="display: none">
     <input type="text" name="groupName" id="groupName">
-</form>
-
-<form id="searchGroupSettingForm" method="post" target="_blank" action="/internal/groupsetting/searchGroupSettings" style="display: none">
-	<input type="text" name="optimizedGroupName" id="optimizedGroupName">
-	<input type="text" name="operationType" id="operationType">
 </form>
 
 <form id="searchCustomerKeywordForm" method="post" target="_blank" action="/internal/customerKeyword/searchCustomerKeywords" style="display: none;">
