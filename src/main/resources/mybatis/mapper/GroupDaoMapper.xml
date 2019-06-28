@@ -145,4 +145,14 @@
         WHERE fGroupName = #{groupName}
         AND fTerminalType = #{terminalType}
     </update>
+
+    <select id="findExistingGroup" resultType="com.keymanager.monitoring.entity.Group">
+        SELECT
+            g.fGroupName AS 'groupName',
+            g.fOperationCombineUuid AS 'operationCombineUuid',
+            g.fTerminalType AS 'terminalType',
+            g.fCreateBy AS 'createBy'
+        FROM t_group g
+        WHERE g.fGroupName = #{optimizeGroupName}、
+    </select>
 </mapper>

@@ -108,6 +108,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     @Autowired
     private OperationCombineService operationCombineService;
 
+    @Autowired
+    private GroupService groupService;
+
     public Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, CustomerKeywordCriteria customerKeywordCriteria){
         page.setRecords(customerKeywordDao.searchCustomerKeywordsPageForCustomer(page, customerKeywordCriteria));
         return page;
@@ -1676,6 +1679,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 }
             }
             tmpOptimizeGroupName = optimizeGroupName + "_" + (maxGroupNameSuffix + 1);
+            groupService.determineAddingGroupInfo(tmpOptimizeGroupName);
         }
         customerKeyword.setOptimizeGroupName(tmpOptimizeGroupName);
     }
@@ -1705,6 +1709,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     maxGroupNameSuffix = maxGroupNameSuffix < Integer.parseInt(optimizeGroupNameSuffix) ? Integer.parseInt(optimizeGroupNameSuffix) : maxGroupNameSuffix;
                 }
                 tmpOptimizeGroupName = optimizeGroupName + "_" + (maxGroupNameSuffix + 1);
+                groupService.determineAddingGroupInfo(tmpOptimizeGroupName);
             }
         }
         CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = new CustomerKeywordOptimizeGroupCriteria();
