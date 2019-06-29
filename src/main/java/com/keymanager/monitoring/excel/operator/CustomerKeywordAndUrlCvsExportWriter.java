@@ -53,6 +53,7 @@ public class CustomerKeywordAndUrlCvsExportWriter {
             out = new FileOutputStream(file);
             osw = new OutputStreamWriter(out, StandardCharsets.UTF_8);
             bw = new BufferedWriter(osw);
+            bw.write(0xFEFF);
             // 标题
             bw.append("关键字").append(",").append("url").append("\r");
             // 数据
@@ -116,7 +117,7 @@ public class CustomerKeywordAndUrlCvsExportWriter {
         }
     }
 
-    public static void downloadZip(HttpServletResponse response, String customerName) {
+    public static void downloadZip(HttpServletResponse response, String customerName, String terminalType) {
         File file = new File(path);
         //定义写出流
         ZipOutputStream zos = null;
@@ -124,7 +125,7 @@ public class CustomerKeywordAndUrlCvsExportWriter {
         try {
             response.setContentType("application/zip");
             response.setCharacterEncoding("utf-8");
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + new String((customerName + "_" + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".zip").getBytes("GBK"), "iso8859-1") + "\"");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + new String((terminalType + "_" + customerName + "_" + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".zip").getBytes("GBK"), "iso8859-1") + "\"");
             OutputStream stream = response.getOutputStream();
             bos = new BufferedOutputStream(stream, 64 * 1024);
             zos = new ZipOutputStream(bos);

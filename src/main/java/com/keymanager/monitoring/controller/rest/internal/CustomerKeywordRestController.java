@@ -359,7 +359,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
         Customer customer = customerService.selectById(Long.valueOf(customerUuid));
 
         CustomerKeywordAndUrlCvsExportWriter.exportCsv(dataList);
-        CustomerKeywordAndUrlCvsExportWriter.downloadZip(response, customer.getContactPerson());
+        CustomerKeywordAndUrlCvsExportWriter.downloadZip(response, customer.getContactPerson(),terminalType);
         return new ResponseEntity<Object>(true, HttpStatus.OK);
     }
 
