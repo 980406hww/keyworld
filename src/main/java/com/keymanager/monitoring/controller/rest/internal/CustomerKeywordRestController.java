@@ -2,17 +2,22 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
-import com.keymanager.monitoring.criteria.*;
-import com.keymanager.monitoring.entity.*;
+import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria;
+import com.keymanager.monitoring.entity.Customer;
+import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.entity.ServiceProvider;
+import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.enums.KeywordEffectEnum;
-import com.keymanager.monitoring.enums.TerminalTypeEnum;
+import com.keymanager.monitoring.excel.operator.CustomerKeywordAndUrlCvsExportWriter;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.monitoring.vo.KeywordStatusBatchUpdateVO;
-import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -345,6 +351,17 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		}
 		return new ResponseEntity<Object>(true,HttpStatus.OK);
 	}
+
+    @RequestMapping(value = "/keywordUrlExport", method = RequestMethod.POST)
+    public ResponseEntity<?> keywordUrlExport(HttpServletRequest request, HttpServletResponse response, @RequestParam("customerUuid") String customerUuid) {
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        List<Map> dataList = customerKeywordService.searchAllKeywordAndUrl(Long.valueOf(customerUuid), terminalType);
+        Customer customer = customerService.selectById(Long.valueOf(customerUuid));
+
+        CustomerKeywordAndUrlCvsExportWriter.exportCsv(dataList);
+        CustomerKeywordAndUrlCvsExportWriter.downloadZip(response, customer.getContactPerson());
+        return new ResponseEntity<Object>(true, HttpStatus.OK);
+    }
 
 	@RequestMapping(value = "/haveCustomerKeywordForOptimization", method = RequestMethod.POST)
 	public ResponseEntity<?> haveCustomerKeywordForOptimization(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception{

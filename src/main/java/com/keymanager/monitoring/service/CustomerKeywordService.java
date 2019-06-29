@@ -335,6 +335,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordCount > 0;
     }
 
+    public List<Map> searchAllKeywordAndUrl(Long customerUuid, String terminalType) {
+        return customerKeywordDao.selectAllKeywordAndUrl(customerUuid, terminalType);
+    }
+
     public int getCustomerKeywordCount(String terminalType, String entryType, long customerUuid) {
         return customerKeywordDao.getCustomerKeywordCount(terminalType, entryType, customerUuid);
     }
