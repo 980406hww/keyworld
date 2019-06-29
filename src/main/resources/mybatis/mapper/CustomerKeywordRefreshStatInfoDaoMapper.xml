@@ -6,10 +6,10 @@
             ck.fOptimizeGroupName AS "group",
             ck.fType AS "type",
             ck.fTerminalType AS "terminalType",
-            g.fMaxInvalidCount  AS "maxInvalidCount",
+            toc.fMaxInvalidCount  AS "maxInvalidCount",
             COUNT(1) AS "totalKeywordCount",
             SUM(IF(ck.fOptimizeRemainingCount > 0, 1, 0)) AS "needOptimizeKeywordCount",
-            SUM(IF(ck.fInvalidRefreshCount >= g.fMaxInvalidCount, 1, 0)) AS "invalidKeywordCount",
+            SUM(IF(ck.fInvalidRefreshCount >= toc.fMaxInvalidCount, 1, 0)) AS "invalidKeywordCount",
             SUM(IF(ck.fOptimizedCount = 0, 1, 0)) AS "zeroOptimizedCount",
             SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(), 1, 0)) AS "reachStandardKeywordCount",
             SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(),ck.fTodayFee, 0)) as "todaySubTotal",
@@ -17,18 +17,24 @@
             SUM(ck.fOptimizedCount) AS "totalOptimizedCount",
             SUM(ck.fOptimizeRemainingCount) AS "needOptimizeCount",
             SUM(ck.fQueryCount) AS "queryCount"
-        FROM t_customer_keyword ck, t_group g
-        <if test="customerKeywordRefreshStatInfoCriteria.userName!=null and customerKeywordRefreshStatInfoCriteria.userName!=''">
-            JOIN t_customer c
-            ON ck.fCustomerUuid = c.fUuid
+        FROM t_customer_keyword ck, t_group g, t_operation_combine toc
+        <if test="(customerKeywordRefreshStatInfoCriteria.userName != null and customerKeywordRefreshStatInfoCriteria.userName != '') ||
+            (customerKeywordRefreshStatInfoCriteria.customerName!=null and customerKeywordRefreshStatInfoCriteria.customerName!='')">
+            , t_customer c
         </if>
         <if test="customerKeywordRefreshStatInfoCriteria.categoryTag != null and customerKeywordRefreshStatInfoCriteria.categoryTag != ''">
-            JOIN t_qz_operation_type ot
-            ON ot.fGroup = g.fGroupName
-            JOIN t_qz_category_tag qc
-            ON ot.fQZSettingUuid = qc.fQZSettingUuid
+            , t_qz_operation_type ot, t_qz_category_tag qc
         </if>
         WHERE ck.fStatus = 1
+        <if test="(customerKeywordRefreshStatInfoCriteria.userName != null and customerKeywordRefreshStatInfoCriteria.userName != '') ||
+            (customerKeywordRefreshStatInfoCriteria.customerName!=null and customerKeywordRefreshStatInfoCriteria.customerName!='')">
+            AND ck.fCustomerUuid = c.fUuid
+        </if>
+        <if test="customerKeywordRefreshStatInfoCriteria.categoryTag != null and customerKeywordRefreshStatInfoCriteria.categoryTag != ''">
+            AND ot.fGroup = g.fGroupName
+            AND ot.fQZSettingUuid = qc.fQZSettingUuid
+        </if>
+        AND toc.fUuid = g.fOperationCombineUuid
         AND ck.fOptimizeGroupName = g.fGroupName
         AND ck.fTerminalType = g.fTerminalType
         <if test="customerKeywordRefreshStatInfoCriteria.entryType!=null and customerKeywordRefreshStatInfoCriteria.entryType!=''">AND ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}</if>

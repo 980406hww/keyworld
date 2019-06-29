@@ -128,7 +128,7 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
     public void determineAddingGroupInfo (String tmpOptimizeGroupName) {
         Group existingGroup = groupDao.findExistingGroup(tmpOptimizeGroupName);
         if (null == existingGroup) {
-            Group group = groupDao.findExistingGroup(tmpOptimizeGroupName.split("_")[0]);
+            Group group = groupDao.findExistingGroup(tmpOptimizeGroupName.substring(0, tmpOptimizeGroupName.lastIndexOf("_")));
             group.setGroupName(tmpOptimizeGroupName);
             groupDao.insert(group);
         }

@@ -786,6 +786,7 @@ function batchAddGroups() {
         $().toastmessage("showErrorToast", "请选择需要添加的优化组！！！");
         return false;
     }
+    postData.onlySaveStatus = true;
     $.ajax({
         url: '/internal/group/batchAddGroups',
         headers: {

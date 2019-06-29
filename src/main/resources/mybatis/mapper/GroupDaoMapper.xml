@@ -109,15 +109,14 @@
     </select>
 
     <insert id="insertBatchGroups">
-        INSERT INTO t_group(fGroupName, fOperationCombineUuid, fTerminalType, fCreateBy, fMaxInvalidCount)
+        INSERT INTO t_group(fGroupName, fOperationCombineUuid, fTerminalType, fCreateBy)
         VALUES
         <foreach collection="operationCombineCriteria.groupNames" item="groupName" separator=",">
             (
                 #{groupName},
                 #{operationCombineCriteria.operationCombineUuid},
                 #{operationCombineCriteria.terminalType},
-                #{operationCombineCriteria.creator},
-                #{operationCombineCriteria.maxInvalidCount}
+                #{operationCombineCriteria.creator}
             )
         </foreach>
     </insert>
@@ -153,6 +152,6 @@
             g.fTerminalType AS 'terminalType',
             g.fCreateBy AS 'createBy'
         FROM t_group g
-        WHERE g.fGroupName = #{optimizeGroupName}、
+        WHERE g.fGroupName = #{optimizeGroupName}
     </select>
 </mapper>

@@ -18,7 +18,8 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
     void saveOperationCombine (@Param("operationCombineName") String operationCombineName,
                                @Param("terminalType") String terminalType,
                                @Param("creator") String creator,
-                               @Param("maxInvalidCount") int maxInvalidCount);
+                               @Param("maxInvalidCount") int maxInvalidCount,
+                               @Param("remainingCount") int remainingCount);
 
     long lastInsertID ();
 

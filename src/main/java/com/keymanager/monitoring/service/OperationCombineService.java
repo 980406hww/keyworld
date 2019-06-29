@@ -51,11 +51,12 @@ public class OperationCombineService extends ServiceImpl<OperationCombineDao, Op
 
     public void saveOperationCombine (OperationCombineCriteria operationCombineCriteria) {
         operationCombineDao.saveOperationCombine(operationCombineCriteria.getOperationCombineName(), operationCombineCriteria.getTerminalType(),
-                operationCombineCriteria.getCreator(), operationCombineCriteria.getMaxInvalidCount());
+                operationCombineCriteria.getCreator(), operationCombineCriteria.getMaxInvalidCount(), operationCombineCriteria.getRemainingAccount());
         long lastInsertID = operationCombineDao.lastInsertID();
+        operationCombineCriteria.setOperationCombineUuid(lastInsertID);
         groupService.saveGroupsBelowOperationCombine(operationCombineCriteria);
         operationCombineCriteria.getGroupSetting().setOperationCombineUuid(lastInsertID);
-        groupSettingService.saveGroupSetting(operationCombineCriteria.getGroupSetting(), false);
+        groupSettingService.saveGroupSetting(operationCombineCriteria.getGroupSetting(), true);
     }
 
     public void updateOperationCombineRemainingAccount (Long operationCombineUuid, int remainingAccount) {
