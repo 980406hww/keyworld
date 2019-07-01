@@ -70,13 +70,6 @@
         FROM
             t_capture_rank_job c
         WHERE
-        <if test="jobType == 'Common'">
-            c.fQZSettingUuid IS NULL
-        </if>
-        <if test="jobType == 'Specify'">
-            c.fQZSettingUuid &gt; 0
-        </if>
-        AND
         (
             c.fExectionStatus='New' OR
             (
@@ -86,21 +79,13 @@
                 AND DATEDIFF(NOW(),fLastExecutionDate) &gt;= fCaptureDaysInterval
             )
         )
-        AND
-            c.fExectionTime &lt;= curtime()
-        AND
-            c.fCaptureRankJobStatus = 1
-        <if test="includeGroupNames!=null">
-            AND fGroupNames IN
-            <foreach collection="includeGroupNames" item="groupName" separator="," open="(" close=")">
-                #{groupName}
-            </foreach>
+        AND c.fExectionTime &lt;= curtime()
+        AND c.fCaptureRankJobStatus = 1
+        <if test="captureJobCriteria.rankJobType != null and captureJobCriteria.rankJobType != ''">
+            AND c.fRankJobType = #{captureJobCriteria.rankJobType}
         </if>
-        <if test="excludeGroupNames!=null">
-            AND fGroupNames NOT IN
-            <foreach collection="excludeGroupNames" item="groupName" separator="," open="(" close=")">
-                #{groupName}
-            </foreach>
+        <if test="captureJobCriteria.rankJobArea != null and captureJobCriteria.rankJobArea != ''">
+            AND c.fRankJobArea = #{captureJobCriteria.rankJobArea}
         </if>
         ORDER BY
             c.fExectionTime
@@ -115,17 +100,11 @@
         c.fExectionStatus='Processing'
         AND
         c.fCaptureRankJobStatus = 1
-        <if test="includeGroupNames!=null">
-        AND fGroupNames IN
-        <foreach collection="includeGroupNames" item="groupName" separator="," open="(" close=")">
-            #{groupName}
-        </foreach>
+        <if test="captureJobCriteria.rankJobType != null and captureJobCriteria.rankJobType != ''">
+            AND c.fRankJobType = #{captureJobCriteria.rankJobType}
         </if>
-        <if test="excludeGroupNames!=null">
-            AND fGroupNames NOT IN
-            <foreach collection="excludeGroupNames" item="groupName" separator="," open="(" close=")">
-                #{groupName}
-            </foreach>
+        <if test="captureJobCriteria.rankJobArea != null and captureJobCriteria.rankJobArea != ''">
+            AND c.fRankJobArea = #{captureJobCriteria.rankJobArea}
         </if>
         order By c.fExectionTime
         limit 1;

@@ -3,10 +3,10 @@ package com.keymanager.monitoring.controller.rest.external;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.BaseCriteria;
 import com.keymanager.monitoring.criteria.CaptureRankJobCriteria;
+import com.keymanager.monitoring.criteria.ExternalCaptureJobCriteria;
 import com.keymanager.monitoring.entity.CaptureRankJob;
 import com.keymanager.monitoring.service.CaptureRankJobService;
 import com.keymanager.monitoring.service.ConfigService;
-import com.keymanager.monitoring.service.CustomerKeywordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,19 +30,13 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
     @Autowired
     private CaptureRankJobService captureRankJobService;
 
-    @Autowired
-    private ConfigService configService;
-
     @RequestMapping(value = "/getCaptureRankJob", method = RequestMethod.POST)
-    public ResponseEntity<?> getCaptureRankJob(@RequestBody BaseCriteria baseCriteria) {
-        String userName = baseCriteria.getUserName();
-        String password = baseCriteria.getPassword();
+    public ResponseEntity<?> getCaptureRankJob(@RequestBody ExternalCaptureJobCriteria captureJobCriteria) {
+        String userName = captureJobCriteria.getUserName();
+        String password = captureJobCriteria.getPassword();
         try {
             if (validUser(userName, password)) {
-                // 取任务的时候先检查checking状态的任务
-                // captureRankJobService.searchFiveMiniSetCheckingJobs();
-                List<String> captureXialaRankingGroups = configService.getCaptureXialaRankingGroups();
-                CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob(null, captureXialaRankingGroups);
+                CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob(captureJobCriteria);
                 if(captureRankJob == null) {
                     captureRankJob = new CaptureRankJob();
                     captureRankJob.setGroupNames("end");
@@ -56,28 +50,28 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/getCaptureRankJobForXiala", method = RequestMethod.POST)
-    public ResponseEntity<?> getCaptureRankJobForXiala(@RequestBody BaseCriteria baseCriteria) {
-        String userName = baseCriteria.getUserName();
-        String password = baseCriteria.getPassword();
-        try {
-            if (validUser(userName, password)) {
-                // 取任务的时候先检查checking状态的任务
-                // captureRankJobService.searchFiveMiniSetCheckingJobs();
-                List<String> captureXialaRankingGroups = configService.getCaptureXialaRankingGroups();
-                CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob(captureXialaRankingGroups, null);
-                if(captureRankJob == null) {
-                    captureRankJob = new CaptureRankJob();
-                    captureRankJob.setGroupNames("end");
-                }
-                return new ResponseEntity<Object>(captureRankJob, HttpStatus.OK);
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-    }
+//    @RequestMapping(value = "/getCaptureRankJobForXiala", method = RequestMethod.POST)
+//    public ResponseEntity<?> getCaptureRankJobForXiala(@RequestBody BaseCriteria baseCriteria) {
+//        String userName = baseCriteria.getUserName();
+//        String password = baseCriteria.getPassword();
+//        try {
+//            if (validUser(userName, password)) {
+//                // 取任务的时候先检查checking状态的任务
+//                // captureRankJobService.searchFiveMiniSetCheckingJobs();
+//                List<String> captureXialaRankingGroups = configService.getCaptureXialaRankingGroups();
+//                CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob(captureXialaRankingGroups, null);
+//                if(captureRankJob == null) {
+//                    captureRankJob = new CaptureRankJob();
+//                    captureRankJob.setGroupNames("end");
+//                }
+//                return new ResponseEntity<Object>(captureRankJob, HttpStatus.OK);
+//            }
+//        } catch (Exception e) {
+//            logger.error(e.getMessage());
+//            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+//        }
+//        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+//    }
 
     @RequestMapping(value = "/updateCaptureRankJob", method = RequestMethod.POST)
     public ResponseEntity<?> updateCaptureRankJob(@RequestBody CaptureRankJobCriteria captureRankJobCriteria) {
