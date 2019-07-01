@@ -333,6 +333,8 @@ function updateCaptureRankJobs(uuid) {
                     }] : [{"id": "NaN", "text": "当前未选择客户"}]
                 });
                 $("#crawlRankingForm input[name=exectionType][value=" + data.exectionType + "]").attr("checked", true);
+                $("#crawlRankingForm #rankJobType").val(data.rankJobType);
+                $("#crawlRankingForm #rankJobArea").val(data.rankJobArea);
                 $("#crawlRankingForm #exectionTime1").val(data.exectionTime);
                 $('#crawlRankingForm #rowNumber').spinner('setValue', data.rowNumber);
                 $('#crawlRankingForm #captureDaysInterval').spinner('setValue', data.captureDaysInterval);
@@ -474,8 +476,8 @@ function saveData(uuid) {
         executeTimes.push(temp);
     }
 
+    CaptureRankJob.rankJobType = $("#rankJobType").val();
     CaptureRankJob.rankJobArea = $("#rankJobArea").val();
-    CaptureRankJob.rankJobType = "Common"; // 界面新增皆为普通任务
     CaptureRankJob.exectionType = $("#crawlRankingForm input[name=exectionType]:checked").val();
     CaptureRankJob.rowNumber = $("#crawlRankingForm #rowNumber").val();
     CaptureRankJob.captureInterval = $("#crawlRankingForm #captureInterval").val();
