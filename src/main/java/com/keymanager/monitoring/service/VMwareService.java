@@ -2,9 +2,9 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.keymanager.monitoring.dao.ClientStatusDao;
-import com.keymanager.monitoring.entity.ClientStatus;
+import com.keymanager.monitoring.dao.MachineInfoDao;
 import com.keymanager.monitoring.entity.Config;
+import com.keymanager.monitoring.entity.MachineInfo;
 import com.keymanager.util.Constants;
 import com.vmware.vim25.VirtualMachinePowerState;
 import com.vmware.vim25.mo.*;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.net.URL;
 
 @Service
-public class VMwareService extends ServiceImpl<ClientStatusDao, ClientStatus>{
+public class VMwareService extends ServiceImpl<MachineInfoDao, MachineInfo> {
 	private static Logger logger = LoggerFactory.getLogger(VMwareService.class);
 
 	private static ServiceInstance si;

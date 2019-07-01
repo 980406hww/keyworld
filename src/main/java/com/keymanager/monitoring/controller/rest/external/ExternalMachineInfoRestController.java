@@ -2,7 +2,6 @@ package com.keymanager.monitoring.controller.rest.external;
 
 import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
-import com.keymanager.monitoring.entity.ClientStatus;
 import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.MachineInfo;
 import com.keymanager.monitoring.service.MachineInfoService;
