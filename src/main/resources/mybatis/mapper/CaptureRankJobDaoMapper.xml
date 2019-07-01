@@ -88,9 +88,15 @@
             c.fExectionTime &lt;= curtime()
         AND
             c.fCaptureRankJobStatus = 1
-        <if test="groupNames!=null">
+        <if test="includeGroupNames!=null">
             AND fGroupNames IN
-            <foreach collection="groupNames" item="groupName" separator="," open="(" close=")">
+            <foreach collection="includeGroupNames" item="groupName" separator="," open="(" close=")">
+                #{groupName}
+            </foreach>
+        </if>
+        <if test="excludeGroupNames!=null">
+            AND fGroupNames NOT IN
+            <foreach collection="excludeGroupNames" item="groupName" separator="," open="(" close=")">
                 #{groupName}
             </foreach>
         </if>
@@ -107,11 +113,17 @@
         c.fExectionStatus='Processing'
         AND
         c.fCaptureRankJobStatus = 1
-        <if test="groupNames!=null">
+        <if test="includeGroupNames!=null">
         AND fGroupNames IN
-        <foreach collection="groupNames" item="groupName" separator="," open="(" close=")">
+        <foreach collection="includeGroupNames" item="groupName" separator="," open="(" close=")">
             #{groupName}
         </foreach>
+        </if>
+        <if test="excludeGroupNames!=null">
+            AND fGroupNames NOT IN
+            <foreach collection="excludeGroupNames" item="groupName" separator="," open="(" close=")">
+                #{groupName}
+            </foreach>
         </if>
         order By c.fExectionTime
         limit 1;
@@ -218,7 +230,7 @@
             crj.fGroupNames AS 'groupNames'
         FROM t_capture_rank_job crj
         WHERE crj.fQZSettingUuid = #{qzSettingUuid}
-        AND crj.fOperationType = #{operationType};
+        AND crj.fOperationType = #{operationType}
     </select>
 
 </mapper>

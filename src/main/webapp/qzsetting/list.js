@@ -1299,6 +1299,20 @@ function getSelectedIDs() {
     });
     return uuids;
 }
+function getSelectedUsefulIDs() {
+    var uuids = '';
+    $.each($("input[name=uuid]:checkbox:checked"), function(){
+        console.log($(this).parent().parent().parent().find("div.rank-wrap1 div").length)
+        if ($(this).parent().parent().parent().find("div.rank-wrap1 div").length > 0) {
+            if(uuids === ''){
+                uuids = $(this).val();
+            }else{
+                uuids = uuids + "," + $(this).val();
+            }
+        }
+    });
+    return uuids;
+}
 function delSelectedQZSettings(self) {
     var uuids = getSelectedIDs();
     if(uuids === ''){
@@ -1330,9 +1344,9 @@ function delSelectedQZSettings(self) {
     });
 }
 function immediatelyUpdateQZSettings(type) {
-    var uuids = getSelectedIDs();
+    var uuids = getSelectedUsefulIDs();
     if(uuids === ''){
-        alert('请选择要操作的设置信息！');
+        alert('请选择正确的要操作的站点信息, 必须包含至少一个是指定词的站点！');
         return;
     }
     var urlType = '';

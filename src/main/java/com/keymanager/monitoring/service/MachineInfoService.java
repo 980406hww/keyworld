@@ -8,12 +8,9 @@ import com.keymanager.monitoring.dao.MachineInfoDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.ClientStartUpStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
-import com.keymanager.monitoring.vo.ClientStatusForOptimization;
-import com.keymanager.monitoring.vo.CookieVO;
+import com.keymanager.monitoring.vo.*;
 import com.keymanager.util.*;
 import com.keymanager.util.common.StringUtil;
-import com.keymanager.value.ClientStatusGroupSummaryVO;
-import com.keymanager.value.ClientStatusSummaryVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,13 +32,7 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
     private MachineInfoDao machineInfoDao;
 
     @Autowired
-    private GroupService groupService;
-
-    @Autowired
     private GroupSettingService groupSettingService;
-
-    @Autowired
-    private CustomerKeywordService customerKeywordService;
 
     @Autowired
     private ConfigService configService;
@@ -611,6 +602,14 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         long idleTotalMinutes = sourceMachineInfo.getIdleTotalMinutes();
         sourceMachineInfo.setIdleTotalMinutes(targetMachineInfo.getIdleTotalMinutes());
         targetMachineInfo.setIdleTotalMinutes(idleTotalMinutes);
+
+        int pageSize = sourceMachineInfo.getPageSize();
+        sourceMachineInfo.setPageSize(targetMachineInfo.getPageSize());
+        targetMachineInfo.setPageSize(pageSize);
+
+        int page = sourceMachineInfo.getPage();
+        sourceMachineInfo.setPage(targetMachineInfo.getPage());
+        targetMachineInfo.setPage(page);
     }
 
     public void sendNotificationForRenewal() throws Exception{
@@ -704,51 +703,51 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         return machineInfoDao.searchMachineInfoForRefreshStat(customerKeywordRefreshStatInfoCriteria);
     }
 
-    public List<ClientStatusSummaryVO> searchClientStatusSummaryVO(String clientIDPrefix, String city, String switchGroupName) throws Exception {
-        List<ClientStatusSummaryVO> pcClientStatusSummaryVOs = machineInfoDao.searchClientStatusSummaryVO(clientIDPrefix, city, switchGroupName);
-        Collections.sort(pcClientStatusSummaryVOs);
-        ClientStatusSummaryVO previousClientIDPrefix = null;
-        ClientStatusSummaryVO previousType = null;
-        for(ClientStatusSummaryVO clientStatusSummaryVO : pcClientStatusSummaryVOs){
+    public List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(String clientIDPrefix, String city, String switchGroupName) throws Exception {
+        List<MachineInfoSummaryVO> pcMachineInfoSummaryVOs = machineInfoDao.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName);
+        Collections.sort(pcMachineInfoSummaryVOs);
+        MachineInfoSummaryVO previousClientIDPrefix = null;
+        MachineInfoSummaryVO previousType = null;
+        for(MachineInfoSummaryVO machineInfoSummaryVO : pcMachineInfoSummaryVOs){
             if(previousClientIDPrefix == null){
-                previousClientIDPrefix = clientStatusSummaryVO;
+                previousClientIDPrefix = machineInfoSummaryVO;
                 previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
                 previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
-                        clientStatusSummaryVO.getCount());
-            }else if(previousClientIDPrefix.getClientIDPrefix().equals(clientStatusSummaryVO.getClientIDPrefix())){
+                        machineInfoSummaryVO.getCount());
+            }else if(previousClientIDPrefix.getClientIDPrefix().equals(machineInfoSummaryVO.getClientIDPrefix())){
                 previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
                 previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
-                        clientStatusSummaryVO.getCount());
+                        machineInfoSummaryVO.getCount());
             }else{
-                previousClientIDPrefix = clientStatusSummaryVO;
+                previousClientIDPrefix = machineInfoSummaryVO;
                 previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
                 previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
-                        clientStatusSummaryVO.getCount());
+                        machineInfoSummaryVO.getCount());
 
                 previousType = null;
             }
 
             if(previousType == null){
-                previousType = clientStatusSummaryVO;
+                previousType = machineInfoSummaryVO;
                 previousType.setTypeCount(previousType.getTypeCount() + 1);
                 previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
-                        clientStatusSummaryVO.getCount());
-            }else if(previousType.getType().equals(clientStatusSummaryVO.getType())){
+                        machineInfoSummaryVO.getCount());
+            }else if(previousType.getType().equals(machineInfoSummaryVO.getType())){
                 previousType.setTypeCount(previousType.getTypeCount() + 1);
                 previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
-                        clientStatusSummaryVO.getCount());
+                        machineInfoSummaryVO.getCount());
             }else{
-                previousType = clientStatusSummaryVO;
+                previousType = machineInfoSummaryVO;
                 previousType.setTypeCount(previousType.getTypeCount() + 1);
                 previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
-                        clientStatusSummaryVO.getCount());
+                        machineInfoSummaryVO.getCount());
             }
         }
-        return pcClientStatusSummaryVOs;
+        return pcMachineInfoSummaryVOs;
     }
 
-    public List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(String group, String terminalType) {
-        return machineInfoDao.searchClientStatusGroupSummaryVO(group,terminalType);
+    public List<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(String group, String terminalType) {
+        return machineInfoDao.searchMachineInfoGroupSummaryVO(group,terminalType);
     }
 
     public MachineInfo getStoppedMachineInfo(){

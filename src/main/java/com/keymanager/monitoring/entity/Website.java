@@ -17,7 +17,7 @@ public class Website extends BaseEntity {
     @TableField(value = "fDomain")
     private String domain;
 
-    @TableField(value = "fIndustry", strategy = FieldStrategy.IGNORED)
+    @TableField(value = "fIndustry")
     private String industry;
 
     @TableField(value = "fRegistrar")//注册商
@@ -48,6 +48,15 @@ public class Website extends BaseEntity {
     @TableField(value = "fServerPassword")
     private String serverPassword;
 
+    @TableField(value = "fBackendDomain")
+    private String backendDomain;
+
+    @TableField(value = "fBackendUserName")
+    private String backendUserName;
+
+    @TableField(value = "fBackendPassword")
+    private String backendPassword;
+
     @TableField(value = "fAccessFailCount")
     private Integer accessFailCount;
 
@@ -56,6 +65,18 @@ public class Website extends BaseEntity {
 
     @TableField(value = "fLastAccessTime")
     private Date lastAccessTime;
+
+    @TableField(value = "fWebsiteType")
+    private String websiteType;
+
+    @TableField(value = "fUpdateSalesInfoSign")
+    private String updateSalesInfoSign;
+
+    @TableField(value = "fSynchronousFriendlyLinkSign")
+    private String synchronousFriendlyLinkSign;
+
+    @TableField(value = "fSynchronousAdvertisingSign")
+    private String synchronousAdvertisingSign;
 
     public String getWebsiteName() {
         return websiteName;
@@ -175,5 +196,61 @@ public class Website extends BaseEntity {
 
     public void setServerPassword(String serverPassword) {
         this.serverPassword = serverPassword;
+    }
+
+    public String getBackendDomain() {
+        return backendDomain;
+    }
+
+    public void setBackendDomain(String backendDomain) {
+        this.backendDomain = backendDomain;
+    }
+
+    public String getBackendUserName() {
+        return backendUserName;
+    }
+
+    public void setBackendUserName(String backendUserName) {
+        this.backendUserName = backendUserName;
+    }
+
+    public String getBackendPassword() {
+        return backendPassword;
+    }
+
+    public void setBackendPassword(String backendPassword) {
+        this.backendPassword = backendPassword;
+    }
+
+    public String getWebsiteType() {
+        return websiteType;
+    }
+
+    public void setWebsiteType(String websiteType) {
+        this.websiteType = websiteType;
+    }
+
+    public String getUpdateSalesInfoSign() {
+        return updateSalesInfoSign;
+    }
+
+    public void setUpdateSalesInfoSign(String updateSalesInfoSign) {
+        this.updateSalesInfoSign = updateSalesInfoSign;
+    }
+
+    public String getSynchronousFriendlyLinkSign() {
+        return synchronousFriendlyLinkSign;
+    }
+
+    public void setSynchronousFriendlyLinkSign(String synchronousFriendlyLinkSign) {
+        this.synchronousFriendlyLinkSign = synchronousFriendlyLinkSign;
+    }
+
+    public String getSynchronousAdvertisingSign() {
+        return synchronousAdvertisingSign;
+    }
+
+    public void setSynchronousAdvertisingSign(String synchronousAdvertisingSign) {
+        this.synchronousAdvertisingSign = synchronousAdvertisingSign;
     }
 }

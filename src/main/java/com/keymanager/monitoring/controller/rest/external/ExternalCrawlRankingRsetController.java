@@ -41,7 +41,8 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
             if (validUser(userName, password)) {
                 // 取任务的时候先检查checking状态的任务
                 // captureRankJobService.searchFiveMiniSetCheckingJobs();
-                CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob(null);
+                List<String> captureXialaRankingGroups = configService.getCaptureXialaRankingGroups();
+                CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob(null, captureXialaRankingGroups);
                 if(captureRankJob == null) {
                     captureRankJob = new CaptureRankJob();
                     captureRankJob.setGroupNames("end");
@@ -64,7 +65,7 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
                 // 取任务的时候先检查checking状态的任务
                 // captureRankJobService.searchFiveMiniSetCheckingJobs();
                 List<String> captureXialaRankingGroups = configService.getCaptureXialaRankingGroups();
-                CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob(captureXialaRankingGroups);
+                CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob(captureXialaRankingGroups, null);
                 if(captureRankJob == null) {
                     captureRankJob = new CaptureRankJob();
                     captureRankJob.setGroupNames("end");

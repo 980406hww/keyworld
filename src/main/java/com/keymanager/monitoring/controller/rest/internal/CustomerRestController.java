@@ -250,4 +250,18 @@ public class CustomerRestController {
             return new ResponseEntity<Object>(false, HttpStatus.OK);
         }
     }
+
+    @RequestMapping(value = "/searchCustomerList", method = RequestMethod.GET)
+    public ResponseEntity<?>  searchCustomerList(HttpServletRequest request) {
+        try {
+            CustomerCriteria customerCriteria = new CustomerCriteria();
+            String entryType = (String) request.getSession().getAttribute("entryType");
+            customerCriteria.setEntryType(entryType);
+            List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
+            return new ResponseEntity<Object>(customerList, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
 }

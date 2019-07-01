@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.CaptureRankJobSearchCriteria;
 import com.keymanager.monitoring.dao.CaptureRankJobDao;
 import com.keymanager.monitoring.dao.QZKeywordRankInfoDao;
-import com.keymanager.monitoring.dao.QZOperationTypeDao;
 import com.keymanager.monitoring.entity.CaptureRankJob;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.QZKeywordRankInfo;
@@ -14,7 +13,6 @@ import com.keymanager.monitoring.entity.QZOperationType;
 import com.keymanager.monitoring.enums.CaptureRankExectionStatus;
 import com.keymanager.monitoring.vo.QZChargeRuleVO;
 import com.keymanager.util.Utils;
-import com.sun.xml.internal.bind.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,14 +44,14 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
     @Autowired
     private QZChargeRuleService qzChargeRuleService;
 
-    public synchronized CaptureRankJob provideCaptureRankJob(List<String> groupNames) {
-        CaptureRankJob captureRankJob = captureRankJobDao.getProcessingJob(groupNames);
+    public synchronized CaptureRankJob provideCaptureRankJob(List<String> includeGroupNames, List<String> excludeGroupNames) {
+        CaptureRankJob captureRankJob = captureRankJobDao.getProcessingJob(includeGroupNames, excludeGroupNames);
         if (captureRankJob == null) {
             // 取普通任务
-            captureRankJob = captureRankJobDao.provideCaptureRankJob("Common", groupNames);
+            captureRankJob = captureRankJobDao.provideCaptureRankJob("Common", includeGroupNames, excludeGroupNames);
             if(captureRankJob == null){
                 // 普通任务为空取全站任务
-                captureRankJob = captureRankJobDao.provideCaptureRankJob("Specify", groupNames);
+                captureRankJob = captureRankJobDao.provideCaptureRankJob("Specify", includeGroupNames, excludeGroupNames);
             }
             if (captureRankJob != null) {
                 captureRankJob.setStartTime(new Date());

@@ -7,10 +7,7 @@ import com.keymanager.monitoring.criteria.MachineInfoCriteria;
 import com.keymanager.monitoring.entity.ClientUpgrade;
 import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord;
 import com.keymanager.monitoring.entity.MachineInfo;
-import com.keymanager.monitoring.vo.ClientStatusForOptimization;
-import com.keymanager.monitoring.vo.CookieVO;
-import com.keymanager.value.ClientStatusGroupSummaryVO;
-import com.keymanager.value.ClientStatusSummaryVO;
+import com.keymanager.monitoring.vo.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -72,9 +69,9 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(@Param("customerKeywordRefreshStatInfoCriteria") CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
-    List<ClientStatusSummaryVO> searchClientStatusSummaryVO(@Param("clientIDPrefix") String clientIDPrefix, @Param("city") String city, @Param("switchGroupName") String switchGroupName);
+    List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(@Param("clientIDPrefix") String clientIDPrefix, @Param("city") String city, @Param("switchGroupName") String switchGroupName);
 
-    List<ClientStatusGroupSummaryVO> searchClientStatusGroupSummaryVO(@Param("group") String group, @Param("terminalType") String terminalType);
+    List<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(@Param("group") String group, @Param("terminalType") String terminalType);
 
     List<MachineInfo> searchRestartingMachineInfos();
 

@@ -15,9 +15,9 @@ import java.util.List;
 public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
     List<CaptureRankJob> searchCaptureRankJobs(Page<CaptureRankJob> page, @Param("captureRankJobSearchCriteria") CaptureRankJobSearchCriteria captureRankJobSearchCriteria);
 
-    CaptureRankJob provideCaptureRankJob(@Param("jobType") String jobType, @Param("groupNames") List<String> groupNames);
+    CaptureRankJob provideCaptureRankJob(@Param("jobType") String jobType, @Param("includeGroupNames") List<String> includeGroupNames, @Param("excludeGroupNames") List<String> excludeGroupNames);
 
-    CaptureRankJob getProcessingJob(@Param("groupNames") List<String> groupNames);
+    CaptureRankJob getProcessingJob(@Param("includeGroupNames") List<String> includeGroupNames, @Param("excludeGroupNames") List<String> excludeGroupNames);
 
     Boolean getCaptureRankJobStatus(@Param("captureRankJobUuid")Long captureRankJobUuid);
 

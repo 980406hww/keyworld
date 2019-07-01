@@ -1,6 +1,6 @@
-package com.keymanager.value;
+package com.keymanager.monitoring.vo;
 
-public class ClientStatusSummaryVO implements Comparable{
+public class MachineInfoSummaryVO implements Comparable{
 	private String clientIDPrefix;
 	private int clientIDPrefixCount;
 	private int clientIDPrefixTotalCount;
@@ -87,12 +87,12 @@ public class ClientStatusSummaryVO implements Comparable{
 
 	@Override
 	public int compareTo(Object o) {
-		int result = this.getClientIDPrefix().compareTo(((ClientStatusSummaryVO)o).getClientIDPrefix());
+		int result = this.getClientIDPrefix().compareTo(((MachineInfoSummaryVO)o).getClientIDPrefix());
 		if(result == 0){
-			result = this.getType().compareTo(((ClientStatusSummaryVO)o).getType());
+			result = this.getType().compareTo(((MachineInfoSummaryVO)o).getType());
 			if(result == 0){
-				if(this.getCity() != null && ((ClientStatusSummaryVO) o).getCity() != null) {
-					result = this.getCity().compareTo(((ClientStatusSummaryVO) o).getCity());
+				if(this.getCity() != null && ((MachineInfoSummaryVO) o).getCity() != null) {
+					result = this.getCity().compareTo(((MachineInfoSummaryVO) o).getCity());
 				}else{
 					result = -1;
 				}

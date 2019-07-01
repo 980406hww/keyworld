@@ -1,14 +1,13 @@
 package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.monitoring.dao.ClientStatusDao;
 import com.keymanager.monitoring.dao.ConfigDao;
-import com.keymanager.monitoring.entity.ClientStatus;
+import com.keymanager.monitoring.dao.MachineInfoDao;
 import com.keymanager.monitoring.entity.Config;
+import com.keymanager.monitoring.entity.MachineInfo;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
-import freemarker.ext.beans.HashAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,7 @@ import java.io.File;
 import java.util.*;
 
 @Service
-public class ConfigService extends ServiceImpl<ClientStatusDao, ClientStatus>{
+public class ConfigService extends ServiceImpl<MachineInfoDao, MachineInfo>{
 
     @Autowired
     private ConfigDao configDao;
