@@ -52,6 +52,7 @@ public class GroupRestController {
         }
     }
 
+    @RequiresPermissions("/internal/group/saveGroupsBelowOperationCombine")
     @PostMapping("/saveGroupsBelowOperationCombine")
     public ResponseEntity<?> saveGroupsBelowOperationCombine(@RequestBody OperationCombineCriteria operationCombineCriteria, HttpServletRequest request) {
         try {
@@ -65,6 +66,7 @@ public class GroupRestController {
         }
     }
 
+    @RequiresPermissions("/internal/group/saveGroupsBelowOperationCombine")
     @PostMapping("/updateGroupsBelowOperationCombine")
     public ResponseEntity<?> updateGroupsBelowOperationCombine(@RequestBody Map<String, Object> requestMap) {
         try {

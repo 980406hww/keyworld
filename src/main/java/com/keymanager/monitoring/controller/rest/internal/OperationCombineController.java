@@ -5,6 +5,7 @@ import com.keymanager.monitoring.criteria.OperationCombineCriteria;
 import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.monitoring.service.OperationCombineService;
 import com.keymanager.monitoring.vo.OperationCombineVO;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class OperationCombineController {
     @Autowired
     private OperationCombineService operationCombineService;
 
+    @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
     @PostMapping("/getGroupNames/{uuid}")
     public ResponseEntity<?> getGroupNames (@PathVariable long uuid) {
         try {
@@ -41,6 +43,7 @@ public class OperationCombineController {
         }
     }
 
+    @RequiresPermissions("/internal/group/saveGroupsBelowOperationCombine")
     @PostMapping("/searchGroupsBelowOperationCombine")
     public ResponseEntity<?> searchGroupsBelowOperationCombine(@RequestBody Map<String, Object> requestMap) {
         try {
@@ -54,6 +57,7 @@ public class OperationCombineController {
         }
     }
 
+    @RequiresPermissions("/internal/operationCombine/saveOperationCombine")
     @PostMapping("/saveOperationCombine")
     public ResponseEntity<?> saveOperationCombine(@RequestBody OperationCombineCriteria operationCombineCriteria,
                                                   HttpServletRequest request) {
@@ -67,6 +71,7 @@ public class OperationCombineController {
         }
     }
 
+    @RequiresPermissions("/internal/operationCombine/delOperationCombine")
     @PostMapping("/delOperationCombine/{uuid}")
     public ResponseEntity<?> deleteOperationCombine(@PathVariable("uuid") long uuid) {
         try {
@@ -78,6 +83,7 @@ public class OperationCombineController {
         }
     }
 
+    @RequiresPermissions("/internal/operationCombine/updateOperationCombine")
     @PostMapping("/updateOperationCombine/{operationCombineUuid}")
     public ResponseEntity<?> updateOperationCombine(@PathVariable("operationCombineUuid") long operationCombineUuid,
                                                     @RequestBody UpdateGroupSettingCriteria updateGroupSettingCriteria) {
@@ -90,6 +96,7 @@ public class OperationCombineController {
         }
     }
 
+    @RequiresPermissions("/internal/operationCombine/updateMaxInvalidCount")
     @RequestMapping("/updateMaxInvalidCount")
     public ResponseEntity<?> updateMaxInvalidCount(@RequestBody Map<String, Object> requestMap) {
         try {
