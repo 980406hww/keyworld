@@ -10,6 +10,8 @@
         c.fExectionType AS `exectionType`,
         c.fExectionTime AS `exectionTime`,
         c.fExectionStatus  AS `exectionStatus`,
+        c.fRankJobType AS `rankJobType`,
+        c.fRankJobArea AS `rankJobArea`,
         c.fCaptureRankJobStatus  AS `captureRankJobStatus`,
         c.fStartTime AS `startTime`,
         c.fEndTime AS `endTime`,
@@ -53,11 +55,11 @@
             <if test="captureRankJobSearchCriteria.exectionStatus!=null and captureRankJobSearchCriteria.exectionStatus!=''">
                 AND c.fExectionStatus = #{captureRankJobSearchCriteria.exectionStatus}
             </if>
-            <if test="captureRankJobSearchCriteria.jobType == 'Specify'">
-                AND c.fQZSettingUuid > 0
+            <if test="captureRankJobSearchCriteria.rankJobType != null and captureRankJobSearchCriteria.rankJobType != ''">
+                AND c.fRankJobType = #{captureRankJobSearchCriteria.rankJobType}
             </if>
-            <if test="captureRankJobSearchCriteria.jobType == 'Common'">
-                AND c.fQZSettingUuid IS NULL
+            <if test="captureRankJobSearchCriteria.rankJobArea != null and captureRankJobSearchCriteria.rankJobArea != ''">
+                AND c.fRankJobArea = #{captureRankJobSearchCriteria.rankJobArea}
             </if>
         </where>
     </select>

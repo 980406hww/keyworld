@@ -3,6 +3,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CaptureRankJobSearchCriteria;
 import com.keymanager.monitoring.entity.CaptureRankJob;
+import com.keymanager.monitoring.enums.RankJobAreaEnum;
 import com.keymanager.monitoring.service.CaptureRankJobService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.CustomerService;
@@ -67,9 +68,10 @@ public class CaptureRankRsetController {
     private ModelAndView constructCaptureRankJobModelAndView(HttpServletRequest request, CaptureRankJobSearchCriteria captureRankJobSearchCriteria, String currentPage, String pageSize) {
         ModelAndView modelAndView = new ModelAndView("captureRank/captureRank");
         captureRankJobSearchCriteria.setOperationType(TerminalTypeMapping.getTerminalType(request));
-        captureRankJobSearchCriteria.setJobType(captureRankJobSearchCriteria.getJobType() == null ? "Common" : captureRankJobSearchCriteria.getJobType());
+        captureRankJobSearchCriteria.setRankJobType(captureRankJobSearchCriteria.getRankJobType() == null ? "Common" : captureRankJobSearchCriteria.getRankJobType());
         Page<CaptureRankJob> page = captureRankJobService.searchCaptureRankJob(new Page<CaptureRankJob>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), captureRankJobSearchCriteria);
         modelAndView.addObject("page", page);
+        modelAndView.addObject("rankJobAreaMap", RankJobAreaEnum.changeToMap());
         modelAndView.addObject("captureRankJobSearchCriteria", captureRankJobSearchCriteria);
         return modelAndView;
     }

@@ -420,12 +420,12 @@ function updateCaptureRankJobs(uuid) {
 // 新增执行时间
 function nextExecuteTime() {
     var liNum = $("#formData li").length;
-    var newLi = $("#formData li").eq(liNum - 6);
+    var newLi = $("#formData li").eq(liNum - 7);
     newLi.after('' +
-        '<li id="li' + (liNum - 6) + '">' +
+        '<li id="li' + (liNum - 7) + '">' +
         '<span style="margin-left: 3px">执行时间:&nbsp;</span>' +
-        '<input type="text" class="Wdate" id="exectionTime' + (liNum - 6) + '" autocomplete="off" onfocus="WdatePicker({lang:\'zh-cn\',dateFmt:\'HH:mm:ss\'})" required style="width: 150px">' +
-        '<input type="button" value="取消" onclick="clearThisTime(' + (liNum - 6) + ')" style="margin-left: 14px;"/>' +
+        '<input type="text" class="Wdate" id="exectionTime' + (liNum - 7) + '" autocomplete="off" onfocus="WdatePicker({lang:\'zh-cn\',dateFmt:\'HH:mm:ss\'})" required style="width: 150px">' +
+        '<input type="button" value="取消" onclick="clearThisTime(' + (liNum - 7) + ')" style="margin-left: 14px;"/>' +
         '</li>')
 }
 
@@ -474,6 +474,8 @@ function saveData(uuid) {
         executeTimes.push(temp);
     }
 
+    CaptureRankJob.rankJobArea = $("#rankJobArea").val();
+    CaptureRankJob.rankJobType = "Common"; // 界面新增皆为普通任务
     CaptureRankJob.exectionType = $("#crawlRankingForm input[name=exectionType]:checked").val();
     CaptureRankJob.rowNumber = $("#crawlRankingForm #rowNumber").val();
     CaptureRankJob.captureInterval = $("#crawlRankingForm #captureInterval").val();
