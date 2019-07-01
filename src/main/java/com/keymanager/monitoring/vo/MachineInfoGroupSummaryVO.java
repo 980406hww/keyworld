@@ -1,6 +1,6 @@
-package com.keymanager.value;
+package com.keymanager.monitoring.vo;
 
-public class ClientStatusGroupSummaryVO{
+public class MachineInfoGroupSummaryVO {
 	private String group;
 	private String terminalType;
 	private int count;

@@ -143,7 +143,7 @@
 			</td>
 			<td width=60>
 				<c:if test="${refreshStatInfo.unworkMachineCount > 0}">
-					<a target="_blank" href="javascript:findClientStatus(null)">${refreshStatInfo.unworkMachineCount}</a>
+					<a target="_blank" href="javascript:findMachineInfo(null)">${refreshStatInfo.unworkMachineCount}</a>
 				</c:if>
 			</td>
 			</tr>
@@ -219,7 +219,7 @@
 			</td>
 			<td width=60>
 				<c:if test="${refreshStatInfo.unworkMachineCount > 0}">
-					<a target="_blank" href="javascript:findClientStatus('${refreshStatInfo.group}')">${refreshStatInfo.unworkMachineCount}</a>
+					<a target="_blank" href="javascript:findMachineInfo('${refreshStatInfo.group}')">${refreshStatInfo.unworkMachineCount}</a>
 				</c:if>
 			</td>
 			</tr>
@@ -228,8 +228,8 @@
 	</table>
 </div>
 
-<form id="searchClientStatusForm" style="display: none;" method="post" target="_blank"
-	  action="/internal/clientstatus/searchBadClientStatus">
+<form id="searchMachineInfoForm" style="display: none;" method="post" target="_blank"
+	  action="/internal/machineInfo/searchBadMachineInfo">
 	<input type="hidden" name="hasProblem" value="hasProblem"/>
 	<input type="hidden" name="groupName" id="groupName" value=""/>
 </form>
@@ -274,10 +274,10 @@
 <script src="${staticPath }/refresh/refresh.js"></script>
 <script src="${staticPath }/js/jquery.tablesorter.js"></script>
 <script language="javascript">
-    <shiro:hasPermission name="/internal/clientstatus/searchBadClientStatus">
-    function findClientStatus(groupName) {
-        $("#searchClientStatusForm").find("#groupName").val(groupName);
-        $("#searchClientStatusForm").submit();
+    <shiro:hasPermission name="/internal/machineInfo/searchBadMachineInfo">
+    function findMachineInfo(groupName) {
+        $("#searchMachineInfoForm").find("#groupName").val(groupName);
+        $("#searchMachineInfoForm").submit();
     }
     </shiro:hasPermission>
 

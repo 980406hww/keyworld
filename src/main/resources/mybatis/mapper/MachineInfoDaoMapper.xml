@@ -369,7 +369,7 @@
         WHERE fClientID = #{clientID}
     </update>
 
-    <select id="searchClientStatusSummaryVO" resultType="com.keymanager.value.ClientStatusSummaryVO">
+    <select id="searchMachineInfoSummaryVO" resultType="com.keymanager.monitoring.vo.MachineInfoSummaryVO">
         SELECT cs.fClientIDPrefix as clientIDPrefix, cs.fTerminalType as type, cs.fCity as city, COUNT(1) as 'count', fSwitchGroupName as 'switchGroupName'
         FROM t_machine_info cs
         <where> cs.fValid = 1
@@ -380,7 +380,7 @@
         GROUP BY cs.fClientIDPrefix, cs.fTerminalType, cs.fCity ORDER BY cs.fClientIDPrefix
     </select>
 
-    <select id="searchClientStatusGroupSummaryVO" resultType="com.keymanager.value.ClientStatusGroupSummaryVO">
+    <select id="searchMachineInfoGroupSummaryVO" resultType="com.keymanager.monitoring.vo.MachineInfoGroupSummaryVO">
         SELECT cs.fGroup as 'group', cs.fTerminalType as terminalType, COUNT(1) AS 'count' FROM t_client_status cs
         <where>
             <if test="group!=null and group!=''">and cs.fGroup LIKE '%${group}%'</if>
