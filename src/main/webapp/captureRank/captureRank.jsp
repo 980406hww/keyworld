@@ -113,8 +113,8 @@
             <td width=60>${captureRankJob.lastExecutionDate}</td>
             <td width=50>${captureRankJob.exectionStatus}<br><font color="red">${captureRankJob.captureRankJobStatus == false ? "暂停中" : ""}</font></td>
             <td width=50 align="center">
-                <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'Common'}">普通</c:if>
-                <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'Station'}">整站</c:if>
+                <c:if test="${(captureRankJobSearchCriteria.rankJobType eq 'Common') && (captureRankJob.qzSettingUuid == null)}">普通</c:if>
+                <c:if test="${(captureRankJob.qzSettingUuid != null)}">整站</c:if>
                 <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'DropDown'}">下拉词</c:if>
                 <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'Other'}">其他</c:if>
             </td>

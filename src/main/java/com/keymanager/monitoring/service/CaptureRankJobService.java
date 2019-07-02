@@ -52,8 +52,16 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         // 取 Processing
         CaptureRankJob captureRankJob = captureRankJobDao.getProcessingJob(captureJobCriteria);
         if (captureRankJob == null) {
-            // 取 New or Complete
-            captureRankJob = captureRankJobDao.provideCaptureRankJob(captureJobCriteria);
+            if (captureJobCriteria.getRankJobType().equals("Common")) {
+                // 先取普通
+                captureRankJob = captureRankJobDao.provideCaptureRankJob(0, captureJobCriteria);
+                if (captureRankJob == null) {
+                    // 再取全站
+                    captureRankJob = captureRankJobDao.provideCaptureRankJob(1, captureJobCriteria);
+                }
+            } else {
+                captureRankJob = captureRankJobDao.provideCaptureRankJob(null, captureJobCriteria);
+            }
             if (captureRankJob != null) {
                 captureRankJob.setStartTime(new Date());
                 captureRankJob.setExectionStatus(CaptureRankExectionStatus.Processing.name());
@@ -312,7 +320,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
     public Boolean hasUncompletedCaptureRankJob(List<String> groupNames){
         return captureRankJobDao.hasUncompletedCaptureRankJob(groupNames) != null;
     }
-    
+
     public Boolean hasCaptureRankJob(){
         return captureRankJobDao.fetchCaptureRankJob() != null;
     }
