@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.MachineInfoBatchUpdateCriteria;
 import com.keymanager.monitoring.criteria.MachineInfoCriteria;
-import com.keymanager.monitoring.entity.Config;
+import com.keymanager.monitoring.criteria.MachineInfoGroupStatCriteria;
 import com.keymanager.monitoring.entity.MachineInfo;
 import com.keymanager.monitoring.entity.UserPageSetup;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.service.*;
+import com.keymanager.monitoring.vo.MachineInfoGroupSummaryVO;
+import com.keymanager.monitoring.vo.MachineInfoSummaryVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.TerminalTypeMapping;
@@ -25,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -44,9 +45,6 @@ public class MachineInfoRestController extends SpringMVCBaseController {
 
     @Autowired
     private UserPageSetupService userPageSetupService;
-
-    @Autowired
-    private ConfigService configService;
 
     @RequiresPermissions("/internal/machineInfo/changeTerminalType")
     @RequestMapping(value = "/changeTerminalType", method = RequestMethod.POST)
@@ -326,6 +324,46 @@ public class MachineInfoRestController extends SpringMVCBaseController {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @RequiresPermissions("/internal/machineInfo/machineInfoStat")
+    @RequestMapping(value = "/machineInfoStat", method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView machineInfoStat(String clientIDPrefix, String city, String switchGroupName, HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView("machineInfo/machineInfoStat");
+        try {
+            if(request.getMethod().equals("GET")){
+                return modelAndView;
+            }
+            List<MachineInfoSummaryVO> machineInfoSummaryVOs = machineInfoService.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName);
+            modelAndView.addObject("clientIDPrefix", clientIDPrefix);
+            modelAndView.addObject("city", city);
+            modelAndView.addObject("switchGroupName", switchGroupName);
+            modelAndView.addObject("machineInfoSummaryVOs", machineInfoSummaryVOs);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return modelAndView;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/machineInfoGroupStat")
+    @RequestMapping(value = "/machineInfoGroupStat", method = {RequestMethod.POST, RequestMethod.GET})
+    public ModelAndView machineInfoGroupStat(MachineInfoGroupStatCriteria machineInfoGroupStatCriteria, HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView("machineInfo/machineInfoGroupStat");
+        try {
+            if(request.getMethod().equals("GET")){
+                return modelAndView;
+            }
+            if (null != machineInfoGroupStatCriteria.getGroupName()) {
+                machineInfoGroupStatCriteria.setGroupName(machineInfoGroupStatCriteria.getGroupName().trim());
+            }
+            List<MachineInfoGroupSummaryVO> machineInfoGroupSummaryVOs = machineInfoService.searchMachineInfoGroupSummaryVO(
+                    machineInfoGroupStatCriteria.getGroupName(), machineInfoGroupStatCriteria.getTerminalType());
+            modelAndView.addObject("machineInfoGroupStatCriteria", machineInfoGroupStatCriteria);
+            modelAndView.addObject("machineInfoGroupSummaryVOs", machineInfoGroupSummaryVOs);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return modelAndView;
     }
 
     @RequiresPermissions("/internal/machineInfo/saveMachineInfo")

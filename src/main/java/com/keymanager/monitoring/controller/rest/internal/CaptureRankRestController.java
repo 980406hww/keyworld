@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CaptureRankJobSearchCriteria;
 import com.keymanager.monitoring.entity.CaptureRankJob;
 import com.keymanager.monitoring.service.CaptureRankJobService;
-import com.keymanager.monitoring.service.CustomerKeywordService;
-import com.keymanager.monitoring.service.CustomerService;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -25,9 +23,9 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(value = "/internal/captureRank")
-public class CaptureRankRsetController {
+public class CaptureRankRestController {
 
-    private static Logger logger = LoggerFactory.getLogger(CaptureRankRsetController.class);
+    private static Logger logger = LoggerFactory.getLogger(CaptureRankRestController.class);
 
     @Autowired
     private CaptureRankJobService captureRankJobService;

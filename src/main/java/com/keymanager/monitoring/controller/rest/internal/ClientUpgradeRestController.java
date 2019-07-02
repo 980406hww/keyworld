@@ -17,9 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping(value = "/internal/clientUpgrade")
-public class ClientUpgradeRsetController {
+public class ClientUpgradeRestController {
 
-    private static Logger logger = LoggerFactory.getLogger(ClientUpgradeRsetController.class);
+    private static Logger logger = LoggerFactory.getLogger(ClientUpgradeRestController.class);
 
     @Autowired
     private ClientUpgradeService clientUpgradeService;
