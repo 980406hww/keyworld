@@ -335,6 +335,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordCount > 0;
     }
 
+    public List<Map> searchAllKeywordAndUrl(Long customerUuid, String terminalType) {
+        return customerKeywordDao.selectAllKeywordAndUrl(customerUuid, terminalType);
+    }
+
     public int getCustomerKeywordCount(String terminalType, String entryType, long customerUuid) {
         return customerKeywordDao.getCustomerKeywordCount(terminalType, entryType, customerUuid);
     }
@@ -879,7 +883,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
 
         String usingOperationType = machineInfo.getUsingOperationType();
-        if(usingOperationType == null){
+        if(usingOperationType == null || machineInfo.getPageSize() == null){
             GroupSetting groupSetting = groupSettingService.getGroupSettingViaPercentage(machineInfo.getGroup(), machineInfo.getTerminalType());
             usingOperationType = groupSetting.getOperationType();
             machineInfo.setUsingOperationType(usingOperationType);
