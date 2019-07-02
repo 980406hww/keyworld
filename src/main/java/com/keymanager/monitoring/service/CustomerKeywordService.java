@@ -883,7 +883,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
 
         String usingOperationType = machineInfo.getUsingOperationType();
-        if(usingOperationType == null){
+        if(usingOperationType == null || machineInfo.getPageSize() == null){
             GroupSetting groupSetting = groupSettingService.getGroupSettingViaPercentage(machineInfo.getGroup(), machineInfo.getTerminalType());
             usingOperationType = groupSetting.getOperationType();
             machineInfo.setUsingOperationType(usingOperationType);
