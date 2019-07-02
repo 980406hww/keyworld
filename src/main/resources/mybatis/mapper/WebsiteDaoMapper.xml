@@ -22,6 +22,7 @@
 		w.fLastAccessTime AS "lastAccessTime",
 		w.fAccessFailTime AS "accessFailTime",
 		w.fWebsiteType AS "websiteType",
+		w.fDNSAnalysisStatus AS "dnsAnalysisStatus",
 		w.fUpdateSalesInfoSign AS "updateSalesInfoSign",
 		w.fSynchronousFriendlyLinkSign AS "synchronousFriendlyLinkSign",
 		w.fSynchronousAdvertisingSign AS "synchronousAdvertisingSign",
@@ -75,7 +76,10 @@
 		fBackendDomain AS 'backendDomain',
 		fBackendUserName AS 'backendUserName',
 		fBackendPassword AS 'backendPassword',
-		fWebsiteType AS 'websiteType'
+		fWebsiteType AS 'websiteType',
+		fDNSAnalysisStatus AS 'dnsAnalysisStatus',
+		fDomain AS 'domain',
+		fServerIP AS 'serverIP'
 		FROM
 		t_website
 		WHERE

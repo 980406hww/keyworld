@@ -100,14 +100,14 @@ function showAdvertisingDialog(websiteUuid, uuid) {
                     $("#customer_list").append("<option value='" + val.contactPerson + "_" + val.uuid + "'></option>")
                 });
             }
-            if (advertisingAllTypeAndCustomerList.advertisingType != null) {
-                $("#advertisingType_list").append("<option value='默认分类_0'></option>");
+            $("#advertisingType_list").append("<option value='默认分类_0'></option>");
+            if (advertisingAllTypeAndCustomerList.advertisingType[0] != null) {
                 $.each(advertisingAllTypeAndCustomerList.advertisingType, function (idx, val) {
                     $("#advertisingType_list").append("<option value='"  +val.typename + "_"  + val.id + "'></option>")
                 });
             }
-            if (advertisingAllTypeAndCustomerList.advertisingArcType != null) {
-                $("#advertisingArcType_list").append("<option value='没有同名标识所有栏目_0'></option>");
+            $("#advertisingArcType_list").append("<option value='没有同名标识所有栏目_0'></option>");
+            if (advertisingAllTypeAndCustomerList.advertisingArcType[0] != null) {
                 $.each(advertisingAllTypeAndCustomerList.advertisingArcType, function (idx, val) {
                     $("#advertisingArcType_list").append("<option value='" + val.typename + "_" + val.id + "'></option>")
                 });

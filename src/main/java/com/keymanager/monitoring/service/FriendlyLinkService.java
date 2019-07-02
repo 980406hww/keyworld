@@ -1,24 +1,21 @@
 package com.keymanager.monitoring.service;
 
+import com.alibaba.dcm.DnsCacheManipulator;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.criteria.FriendlyLinkCriteria;
 import com.keymanager.monitoring.dao.FriendlyLinkDao;
-import com.keymanager.monitoring.entity.Advertising;
 import com.keymanager.monitoring.entity.FriendlyLink;
 import com.keymanager.monitoring.entity.Website;
 import com.keymanager.monitoring.enums.WebsiteRemoteConnectionEnum;
 import com.keymanager.monitoring.vo.FriendlyLinkVO;
 import com.keymanager.util.AESUtils;
-import com.keymanager.util.FileUtil;
-import com.keymanager.util.common.StringUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONNull;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -61,6 +58,8 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         saveOrUpdateConnectionCMS(friendlyLink, file, WebsiteRemoteConnectionEnum.add.name());
         if (friendlyLink.getFriendlyLinkSortRank() != -1){
             friendlyLinkDao.retreatSortRank(friendlyLink.getWebsiteUuid(), friendlyLink.getFriendlyLinkSortRank());
+        } else {
+            friendlyLink.setFriendlyLinkSortRank(friendlyLinkDao.selectMaxSortRank(friendlyLink.getWebsiteUuid()) + 1);
         }
         insertFriendlyLink(friendlyLink);
     }
@@ -135,9 +134,16 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         requestMap.put("email", friendlyLink.getFriendlyLinkEmail());
         requestMap.put("typeid", friendlyLink.getFriendlyLinkTypeId());
         requestMap.put("ischeck", friendlyLink.getFriendlyLinkIsCheck());
+        JSONObject jsonObject = new JSONObject();
         if (WebsiteRemoteConnectionEnum.add.name().equals(type)){
             requestMap.put("dopost", WebsiteRemoteConnectionEnum.add.name());
-            JSONObject jsonObject = JSONObject.fromObject(connectionCMS(requestMap, WebsiteRemoteConnectionEnum.add.name(), website.getBackendDomain()));
+            if (website.getDnsAnalysisStatus() == 1){
+                DnsCacheManipulator.setDnsCache(website.getBackendDomain().split("/")[0], website.getServerIP());
+                jsonObject = JSONObject.fromObject(connectionCMS(requestMap, WebsiteRemoteConnectionEnum.add.name(), website.getBackendDomain()));
+                DnsCacheManipulator.removeDnsCache(website.getBackendDomain().split("/")[0]);
+            }else {
+                jsonObject = JSONObject.fromObject(connectionCMS(requestMap, WebsiteRemoteConnectionEnum.add.name(), website.getBackendDomain()));
+            }
             if (!"error".equals(jsonObject.get("status"))){
                 friendlyLink.setFriendlyLinkId((Integer) jsonObject.get("id"));
                 friendlyLink.setFriendlyLinkLogo((String) jsonObject.get("logo"));
@@ -145,7 +151,13 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         }else {
             requestMap.put("dopost", WebsiteRemoteConnectionEnum.saveedit.name());
             requestMap.put("id", friendlyLink.getFriendlyLinkId());
-            JSONObject jsonObject = JSONObject.fromObject(connectionCMS(requestMap, WebsiteRemoteConnectionEnum.saveedit.name(), website.getBackendDomain()));
+            if (website.getDnsAnalysisStatus() == 1){
+                DnsCacheManipulator.setDnsCache(website.getBackendDomain().split("/")[0], website.getServerIP());
+                jsonObject = JSONObject.fromObject(connectionCMS(requestMap, WebsiteRemoteConnectionEnum.saveedit.name(), website.getBackendDomain()));
+                DnsCacheManipulator.removeDnsCache(website.getBackendDomain().split("/")[0]);
+            }else {
+                jsonObject = JSONObject.fromObject(connectionCMS(requestMap, WebsiteRemoteConnectionEnum.saveedit.name(), website.getBackendDomain()));
+            }
             if (!"error".equals(jsonObject.get("status")) && !(jsonObject.get("logo") instanceof JSONNull)){
                 friendlyLink.setFriendlyLinkLogo((String) jsonObject.get("logo"));
             }
@@ -159,7 +171,13 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         requestMap.put("password", website.getBackendPassword());
         requestMap.put("id", StringUtils.join(uuids, ","));
         requestMap.put("dopost", WebsiteRemoteConnectionEnum.delete.name());
-        connectionCMS(requestMap, WebsiteRemoteConnectionEnum.delete.name(), website.getBackendDomain());
+        if (website.getDnsAnalysisStatus() == 1){
+            DnsCacheManipulator.setDnsCache(website.getBackendDomain().split("/")[0], website.getServerIP());
+            connectionCMS(requestMap, WebsiteRemoteConnectionEnum.delete.name(), website.getBackendDomain());
+            DnsCacheManipulator.removeDnsCache(website.getBackendDomain().split("/")[0]);
+        }else {
+            connectionCMS(requestMap, WebsiteRemoteConnectionEnum.delete.name(), website.getBackendDomain());
+        }
     }
 
     public List<FriendlyLinkVO> selectConnectionCMS(Long websiteUuid){
@@ -168,7 +186,14 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         requestMap.put("username", website.getBackendUserName());
         requestMap.put("password", website.getBackendPassword());
         requestMap.put("dopost", WebsiteRemoteConnectionEnum.select.name());
-        String resultJsonString = connectionCMS(requestMap,WebsiteRemoteConnectionEnum.select.name(), website.getBackendDomain());
+        String resultJsonString = "";
+        if (website.getDnsAnalysisStatus() == 1){
+            DnsCacheManipulator.setDnsCache(website.getBackendDomain().split("/")[0], website.getServerIP());
+            resultJsonString = connectionCMS(requestMap,WebsiteRemoteConnectionEnum.select.name(), website.getBackendDomain());
+            DnsCacheManipulator.removeDnsCache(website.getBackendDomain().split("/")[0]);
+        }else {
+            resultJsonString = connectionCMS(requestMap,WebsiteRemoteConnectionEnum.select.name(), website.getBackendDomain());
+        }
         List<FriendlyLinkVO> friendlyLinkVOS = new ArrayList<>();
         if (!"null".equals(resultJsonString)){
             JSONArray jsonArray = JSONArray.fromObject(resultJsonString);
@@ -242,14 +267,19 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
         map.put("dopost", WebsiteRemoteConnectionEnum.select.name());
         MultiValueMap requestMap = new LinkedMultiValueMap();
         requestMap.add("data", AESUtils.encrypt(JSONObject.fromObject(map)));
-        resultJsonString = restTemplate.postForObject(backendDomain + "friendlink_m_type.php",  requestMap, String.class);
+        if (website.getDnsAnalysisStatus() == 1){
+            DnsCacheManipulator.setDnsCache(website.getBackendDomain().split("/")[0], website.getServerIP());
+            resultJsonString = restTemplate.postForObject(backendDomain + "friendlink_m_type.php",  requestMap, String.class);
+            DnsCacheManipulator.removeDnsCache(website.getBackendDomain().split("/")[0]);
+        }else {
+            resultJsonString = restTemplate.postForObject(backendDomain + "friendlink_m_type.php",  requestMap, String.class);
+        }
         JSONArray jsonArray = JSONArray.fromObject(resultJsonString);
         List<Map> friendlyLinkTypeList = JSONArray.toList(jsonArray, new HashedMap(), new JsonConfig());
         return friendlyLinkTypeList;
     }
 
     public void insertFriendlyLink(FriendlyLink friendlyLink){
-        friendlyLink.setFriendlyLinkSortRank(friendlyLinkDao.selectMaxSortRank(friendlyLink.getWebsiteUuid()) + 1);
         friendlyLinkDao.insert(friendlyLink);
     }
 
@@ -321,5 +351,9 @@ public class FriendlyLinkService extends ServiceImpl<FriendlyLinkDao, FriendlyLi
             }
             friendlyLinkDao.updateById(friendlyLink);
         }
+    }
+
+    public int selectMaxSortRank(int websiteUuid){
+        return friendlyLinkDao.selectMaxSortRank(websiteUuid);
     }
 }

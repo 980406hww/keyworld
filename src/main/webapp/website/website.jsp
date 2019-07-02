@@ -265,11 +265,20 @@
             <tr>
                 <td align="right">网站类型:</td>
                 <td>
-                    <select id="websiteType" name="websiteType" style="width: 150px;" title="">
+                    <select id="websiteType" name="websiteType" style="width: 200px;" title="">
                         <option value="" selected="selected">请选择</option>
                         <c:forEach items="${websiteTypeMap}" var="websiteType">
                             <option value="${websiteType.key}">${websiteType.value}</option>
                         </c:forEach>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">需要解析DNS:</td>
+                <td>
+                    <select name="dnsAnalysisStatus" id="dnsAnalysisStatus"  style="width:200px">
+                        <option value="1">是</option>
+                        <option value="0" selected>否</option>
                     </select>
                 </td>
             </tr>
