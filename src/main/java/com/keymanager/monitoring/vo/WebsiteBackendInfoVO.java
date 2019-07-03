@@ -10,6 +10,9 @@ public class WebsiteBackendInfoVO {
     private String backendUserName;
     private String backendPassword;
     private String websiteType;
+    private int dnsAnalysisStatus;
+    private String domain;
+    private String serverIP;
 
     public Long getUuid() {
         return uuid;
@@ -49,5 +52,29 @@ public class WebsiteBackendInfoVO {
 
     public void setWebsiteType(String websiteType) {
         this.websiteType = websiteType;
+    }
+
+    public int getDnsAnalysisStatus() {
+        return dnsAnalysisStatus;
+    }
+
+    public void setDnsAnalysisStatus(int dnsAnalysisStatus) {
+        this.dnsAnalysisStatus = dnsAnalysisStatus;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public String getServerIP() {
+        return serverIP;
+    }
+
+    public void setServerIP(String serverIP) {
+        this.serverIP = serverIP;
     }
 }

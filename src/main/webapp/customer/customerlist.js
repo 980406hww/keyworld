@@ -183,6 +183,19 @@ function getSelectedIDs() {
     });
     return uuids;
 }
+function getUsfulSelectedIDs() {
+    var uuids = '';
+    $.each($("input[name=customerUuid]:checkbox:checked"), function () {
+        if ($(this).parent().find("input[name='status']").val() === '1') {
+            if (uuids === '') {
+                uuids = $(this).val();
+            } else {
+                uuids = uuids + "," + $(this).val();
+            }
+        }
+    });
+    return uuids;
+}
 function changeCustomerChargeType(customerUuid) {
     $.ajax({
         url: '/internal/customerChargeType/getCustomerChargeType/' + customerUuid,
@@ -633,13 +646,13 @@ function showCustomerDialog(uuid, loginName) {
     $("#customerDialog").dialog({
         resizable: false,
         width: 280,
-        height: 380,
+        height: 400,
         modal: true,
         buttons: [{
             text: '保存',
             iconCls: 'icon-ok',
             handler: function () {
-                savaCustomer(uuid, loginName);
+                saveCustomer(uuid, loginName);
             }
         },
             {
@@ -661,7 +674,7 @@ function showCustomerDialog(uuid, loginName) {
     $("#customerDialog").dialog("open");
     $('#customerDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
-function savaCustomer(uuid, loginName) {
+function saveCustomer(uuid, loginName) {
     var customerForm = $("#customerDialog").find("#customerForm");
     var customer = {};
     customer.uuid = uuid;
@@ -684,6 +697,12 @@ function savaCustomer(uuid, loginName) {
     }
     customer.type = customerForm.find("#type").val();
     customer.status = customerForm.find("#status").val();
+    var dailyReportIdentify = customerForm.find("#dailyReportIdentify").val();
+    if (customer.status !== '1' && dailyReportIdentify === '1') {
+        alert("请激活客户！！");
+        return;
+    }
+    customer.dailyReportIdentify = dailyReportIdentify === '1' ? true : false;
     customer.remark = customerForm.find("#remark").val();
     $.ajax({
         url: '/internal/customer/saveCustomer',
@@ -865,6 +884,7 @@ function initCustomerDialog(customer) {
     customerForm.find("#telphone").val(customer.telphone);
     customerForm.find("#type").val(customer.type);
     customerForm.find("#status").val(customer.status);
+    customerForm.find("#dailyReportIdentify").val(customer.dailyReportIdentify === false ? '0' : '1');
     customerForm.find("#saleRemark").val(customer.saleRemark);
     customerForm.find("#remark").val(customer.remark);
     customerForm.find("#entryTypeHidden").val(customer.entryType);
@@ -1116,4 +1136,70 @@ function updateCustomerUserID() {
     });
     $("#updateCustomerUserIDDialog").dialog("open");
     $('#updateCustomerUserIDDialog').window("resize", {top: $(document).scrollTop() + 150});
+}
+function changeCustomerDailyReportIdentify(self, status) {
+    var select = $(self);
+    var oldIdentify = select.parent().find("input[name='dailyReportIdentify']").val();
+    if (!confirm("确认修改此客户产生日报表的标识？")) {
+        $(self).val(oldIdentify);
+        return false;
+    }
+    if (status !== 1) {
+        alert("请激活客户");
+        $(self).val(oldIdentify);
+        return false;
+    }
+    var identify = select.val();
+    var customerUuid = select.parent().parent().find("input[name='customerUuid']").val();
+    var postData = {};
+    postData.customerUuid = customerUuid;
+    postData.identify = identify;
+    $.ajax({
+        url: '/internal/customer/changeCustomerDailyReportIdentify',
+        type: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(postData),
+        success: function (result) {
+            if (result) {
+                $().toastmessage('showSuccessToast', '更改成功！！');
+                select.parent().find("input[name='dailyReportIdentify']").val(identify);
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', '更改失败！！');
+            $(self).val(oldIdentify);
+        }
+    });
+}
+
+function updateCustomerDailyReportIdentify() {
+    var uuids = getUsfulSelectedIDs();
+    if (uuids === '') {
+        alert('请选择要触发日报表的激活客户');
+        return;
+    }
+    if (!confirm("确实要触发这些客户的日报表吗?")) return;
+    var postData = {};
+    postData.uuids = uuids;
+    $.ajax({
+        url: '/internal/customer/updateCustomerDailyReportIdentify',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if (data) {
+                $().toastmessage('showSuccessToast', "操作成功", true);
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
 }

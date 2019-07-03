@@ -105,6 +105,7 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 			oldCustomer.setRemark(customer.getRemark());
 			oldCustomer.setType(customer.getType());
 			oldCustomer.setStatus(customer.getStatus());
+			oldCustomer.setDailyReportIdentify(customer.getDailyReportIdentify());
 			oldCustomer.setLoginName(customer.getLoginName());
 			oldCustomer.setEntryType(customer.getEntryType());
 			oldCustomer.setUpdateTime(new Date());
@@ -252,5 +253,21 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 
 	public void updateCustomerUserID(List<String> uuids, String userID) {
 		customerDao.updateCustomerUserID(uuids, userID);
+	}
+
+	public void changeCustomerDailyReportIdentify (long uuid, boolean identify) {
+        Customer customer = customerDao.selectById(uuid);
+        customer.setDailyReportIdentify(identify);
+        customer.setUpdateTime(new Date());
+        customerDao.updateById(customer);
+    }
+
+    public List<Long> getActiveDailyReportIdentifyCustomerUuids () {
+	    return customerDao.getActiveDailyReportIdentifyCustomerUuids();
+    }
+
+	public void updateCustomerDailyReportIdentify (String uuidstr) {
+        String[] uuids = uuidstr.split(",");
+        customerDao.updateCustomerDailyReportIdentify(uuids);
 	}
 }

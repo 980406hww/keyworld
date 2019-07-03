@@ -16,6 +16,7 @@
         c.fType AS `type`,
         c.fSaleRemark AS 'saleRemark',
         c.fRemark AS `remark`,
+        c.fDailyReportIdentify AS `dailyReportIdentify`,
         c.fStatus AS `status`,
         c.fActiveHour AS `activeHour`,
         c.fInActiveHour AS `inActiveHour`,
@@ -163,5 +164,22 @@
         <foreach collection="uuids" item="uuid" open="(" close=")" separator=",">
             #{uuid}
         </foreach>
+    </update>
+
+    <select id="getActiveDailyReportIdentifyCustomerUuids" resultType="java.lang.Long">
+        SELECT c.fUuid
+        FROM t_customer c
+        WHERE c.fStatus = 1
+        AND c.fDailyReportIdentify = 1
+    </select>
+
+    <update id="updateCustomerDailyReportIdentify">
+        UPDATE t_customer
+        SET fUpdateTime = NOW(), fDailyReportIdentify = 1
+        WHERE fUuid IN(
+            <foreach collection="uuids" item="uuid" separator=",">
+                #{uuid}
+            </foreach>
+        )
     </update>
 </mapper>

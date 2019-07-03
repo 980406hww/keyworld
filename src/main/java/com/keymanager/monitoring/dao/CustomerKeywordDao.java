@@ -56,6 +56,8 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void deleteCustomerKeywordsByUuid(@Param("customerKeywordUuids")List<String> customerKeywordUuids);
 
+    List<Map> selectAllKeywordAndUrl(@Param("customerUuid") Long customerUuid, @Param("terminalType") String terminalType);
+
     //重构部分
     //修改该用户关键字组名
     void updateCustomerKeywordGroupName(@Param("customerKeywordUpdateCriteria")CustomerKeywordUpdateCriteria customerKeywordUpdateCriteria);

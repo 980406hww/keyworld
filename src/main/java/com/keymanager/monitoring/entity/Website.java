@@ -60,6 +60,9 @@ public class Website extends BaseEntity {
     @TableField(value = "fAccessFailCount")
     private Integer accessFailCount;
 
+    @TableField(value = "fDNSAnalysisStatus")
+    private Integer dnsAnalysisStatus;
+
     @TableField(value = "fAccessFailTime", strategy = FieldStrategy.IGNORED)
     private Date accessFailTime;
 
@@ -252,5 +255,13 @@ public class Website extends BaseEntity {
 
     public void setSynchronousAdvertisingSign(String synchronousAdvertisingSign) {
         this.synchronousAdvertisingSign = synchronousAdvertisingSign;
+    }
+
+    public Integer getDnsAnalysisStatus() {
+        return dnsAnalysisStatus;
+    }
+
+    public void setDnsAnalysisStatus(Integer dnsAnalysisStatus) {
+        this.dnsAnalysisStatus = dnsAnalysisStatus;
     }
 }
