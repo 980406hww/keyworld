@@ -52,7 +52,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         // 取 Processing
         CaptureRankJob captureRankJob = captureRankJobDao.getProcessingJob(captureJobCriteria);
         if (captureRankJob == null) {
-            if (captureJobCriteria.getRankJobType().equals("Common")) {
+            if (captureJobCriteria.getRankJobType() != null && captureJobCriteria.getRankJobType().equals("Common")) {
                 // 先取普通
                 captureRankJob = captureRankJobDao.provideCaptureRankJob(0, captureJobCriteria);
                 if (captureRankJob == null) {
