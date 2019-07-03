@@ -125,6 +125,7 @@
         <a href="javascript:cleanTitle('${customerKeywordCriteria.customerUuid}','CaptureTitleBySelected')">重采所选标题</a> |
         <a href="javascript:cleanTitle('${customerKeywordCriteria.customerUuid}', 'SelectedCustomerKeywordTitle')">清空所选标题</a> |
         <a href="javascript:cleanTitle('${customerKeywordCriteria.customerUuid}', 'CustomerTitle')">清空客户标题</a>&nbsp;&nbsp;
+        <a href="javascript:keywordAndURLExport('${customerKeywordCriteria.customerUuid}')">关键字URI导出</a>&nbsp;&nbsp;
     </shiro:hasPermission>
 
     </div>
@@ -541,6 +542,11 @@
     <input type="hidden" name="ltCurrentIndexCount" id="ltCurrentIndexCountHidden" value="" />
     <input type="hidden" name="remarks" id="remarksHidden" value="" />
 </form>
+
+<form id="customerKeywordAndUrlCsvExportFrom" method="post" action="/internal/customerKeyword/keywordUrlExport">
+    <input type="hidden" name="customerUuid" id="customerUuidTemp" value="">
+</form>
+
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath }/customerkeyword/customerKeywordList.js"></script>
 <script src="${staticPath }/customerkeyword/customerKeywordCommon.js"></script>

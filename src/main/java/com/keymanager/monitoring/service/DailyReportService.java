@@ -55,12 +55,8 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 			if(EntryTypeEnum.bc.name().equalsIgnoreCase(dailyReportType.getValue())){
 				return !captureRankJobService.hasUncompletedCaptureRankJob(null);
 			}else{
-				Config customerUuidConfig = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_CUSTOMER_UUID);
-				if(customerUuidConfig != null){
-					List<Long> customerUuids = new ArrayList<>();
-					for(String customerUuid : customerUuidConfig.getValue().split(",")){
-						customerUuids.add(Long.parseLong(customerUuid));
-					}
+				List<Long> customerUuids = customerService.getActiveDailyReportIdentifyCustomerUuids();
+				if (CollectionUtils.isNotEmpty(customerUuids)) {
 					List<String> groupNames = customerKeywordService.getGroups(customerUuids);
 					return !captureRankJobService.hasUncompletedCaptureRankJob(groupNames);
 				}
@@ -86,12 +82,8 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 						dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.Phone.name(), customerUuid.intValue());
 					}
 				} else {
-					Config customerUuidConfig = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_CUSTOMER_UUID);
-					if (customerUuidConfig != null) {
-						List<Long> customerUuids = new ArrayList<>();
-						for (String customerUuid : customerUuidConfig.getValue().split(",")) {
-							customerUuids.add(Long.parseLong(customerUuid));
-						}
+					List<Long> customerUuids = customerService.getActiveDailyReportIdentifyCustomerUuids();
+					if (CollectionUtils.isNotEmpty(customerUuids)) {
 						for (Long customerUuid : customerUuids) {
 							dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.PC.name(), customerUuid.intValue());
 						}

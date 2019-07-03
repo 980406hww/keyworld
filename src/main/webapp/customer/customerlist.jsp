@@ -60,6 +60,7 @@
                         <shiro:hasPermission name="/internal/customer/saveCustomer">
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showCustomerDialog(null,'${user.loginName}')"/>
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 修改客户归属 " onclick="updateCustomerUserID()"/>
+                            &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 触发所选客户日报表 " title="激活客户才能触发日报表" onclick="updateCustomerDailyReportIdentify()"/>
                         </shiro:hasPermission>
                         <shiro:hasPermission name="/internal/customer/deleteCustomers">
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteCustomers(this)"/>
@@ -112,6 +113,7 @@
             <td align="center" width=140>销售备注</td>
             <td align="center" width=140>备注</td>
             <td align="center" width=40>客户状态</td>
+            <td align="center" width=100>是否产生日报表</td>
             <td align="center" width=50>创建时间</td>
             <td align="center" width=200>操作</td>
         </tr>
@@ -121,7 +123,10 @@
     <table style="font-size:12px; width: 100%;" id="showCustomerTable">
         <c:forEach items="${page.records}" var="customer">
             <tr onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
-                <td width=10 style="padding-left: 7px;"><input type="checkbox" name="customerUuid" value="${customer.uuid}"/></td>
+                <td width=10 style="padding-left: 7px;">
+                    <input type="checkbox" name="customerUuid" value="${customer.uuid}"/>
+                    <input type="hidden" name="status" value="${customer.status}"/>
+                </td>
                 <td width=80>${customer.loginName}</td>
                 <td width=80>
                     <a href="#" onclick="searchCustomerKeywords('/internal/customerKeyword/searchCustomerKeywords/${customer.uuid}')">${customer.contactPerson}</a>
@@ -178,13 +183,20 @@
                 <td width=140>${customer.remark}</td>
                 <td width=40 style="text-align: center">
                     <c:choose>
-                        <c:when test="${customer.status ==1}">
+                        <c:when test="${customer.status == 1}">
                             激活
                         </c:when>
                         <c:otherwise>
                             <span style="color: red;">暂停</span>
                         </c:otherwise>
                     </c:choose>
+                </td>
+                <td width=100 style="text-align: center">
+                    <input type="hidden" name="dailyReportIdentify" value="${customer.dailyReportIdentify}">
+                    <select style="width: 100px;" onchange="changeCustomerDailyReportIdentify(this, ${customer.status});">
+                        <option value="true" <c:if test="${customer.dailyReportIdentify == true}">selected</c:if>>是</option>
+                        <option value="false" <c:if test="${customer.dailyReportIdentify == false}">selected</c:if>>否</option>
+                    </select>
                 </td>
                 <td width=50 style="text-align: center"><fmt:formatDate value="${customer.createTime}" pattern="yyyy-MM-dd"/></td>
                 <td width=200>
@@ -369,6 +381,15 @@
                     <select name="status" id="status">
                         <option value="1">激活</option>
                         <option value="2">暂停</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td align="right" width="60px">产生报表:</td>
+                <td>
+                    <select style="width: 100px" name="dailyReportIdentify" id="dailyReportIdentify">
+                        <option value="0">否</option>
+                        <option value="1">是</option>
                     </select>
                 </td>
             </tr>

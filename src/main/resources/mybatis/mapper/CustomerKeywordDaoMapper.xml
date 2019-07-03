@@ -492,6 +492,17 @@
         </foreach>
     </delete>
 
+    <select id="selectAllKeywordAndUrl" resultType="java.util.Map">
+        SELECT
+        fKeyword AS 'keyword',
+        fUrl AS 'url'
+        FROM
+        t_customer_keyword
+        WHERE fCustomerUuid = #{customerUuid}
+        AND fTerminalType = #{terminalType}
+        AND fStatus = 1
+    </select>
+
     <delete id="deleteCustomerKeywordsByCustomerUuid">
         delete from t_customer_keyword where fCustomerUuid = #{customerUuid}
     </delete>
