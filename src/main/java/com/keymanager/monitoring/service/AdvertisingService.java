@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.service;
 
+import com.alibaba.dcm.DnsCacheManipulator;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.common.utils.StringUtils;
@@ -97,7 +98,14 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         if (WebsiteRemoteConnectionEnum.add.name().equals(type)){
             requestMap.put("dopost", WebsiteRemoteConnectionEnum.save.name());
             requestMap.put("normbody", advertising.getNormbody());
-            JSONObject jsonObject = JSONObject.fromObject(connectionAdvertisingCMS(requestMap, WebsiteRemoteConnectionEnum.add.name(), website.getBackendDomain()));
+            JSONObject jsonObject = new JSONObject();
+            if (website.getDnsAnalysisStatus() == 1){
+                DnsCacheManipulator.setDnsCache(website.getBackendDomain().split("/")[0], website.getServerIP());
+                jsonObject = JSONObject.fromObject(connectionAdvertisingCMS(requestMap, WebsiteRemoteConnectionEnum.add.name(), website.getBackendDomain()));
+                DnsCacheManipulator.removeDnsCache(website.getBackendDomain().split("/")[0]);
+            }else {
+                jsonObject = JSONObject.fromObject(connectionAdvertisingCMS(requestMap, WebsiteRemoteConnectionEnum.add.name(), website.getBackendDomain()));
+            }
             if (!"error".equals(jsonObject.get("status"))){
                 advertising.setAdvertisingId((Integer) jsonObject.get("id"));
                 advertising.setAdvertisingNormbody((String) jsonObject.get("normbody"));
@@ -108,7 +116,14 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
             requestMap.put("dopost", WebsiteRemoteConnectionEnum.saveedit.name());
             requestMap.put("aid", advertising.getAdvertisingId());
             requestMap.put("normbody", advertising.getAdvertisingNormbody());
-            JSONObject jsonObject = JSONObject.fromObject(connectionAdvertisingCMS(requestMap, WebsiteRemoteConnectionEnum.saveedit.name(), website.getBackendDomain()));
+            JSONObject jsonObject = new JSONObject();
+            if (website.getDnsAnalysisStatus() == 1){
+                DnsCacheManipulator.setDnsCache(website.getBackendDomain().split("/")[0], website.getServerIP());
+                jsonObject = JSONObject.fromObject(connectionAdvertisingCMS(requestMap, WebsiteRemoteConnectionEnum.saveedit.name(), website.getBackendDomain()));
+                DnsCacheManipulator.removeDnsCache(website.getBackendDomain().split("/")[0]);
+            }else {
+                jsonObject = JSONObject.fromObject(connectionAdvertisingCMS(requestMap, WebsiteRemoteConnectionEnum.saveedit.name(), website.getBackendDomain()));
+            }
             if (!"error".equals(jsonObject.get("status"))){
                 advertising.setAdvertisingNormbody((String) jsonObject.get("normbody"));
             }
@@ -123,7 +138,13 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         requestMap.put("password", website.getBackendPassword());
         requestMap.put("aid", StringUtils.join(uuids, ","));
         requestMap.put("dopost", WebsiteRemoteConnectionEnum.delete.name());
-        connectionAdvertisingCMS(requestMap, WebsiteRemoteConnectionEnum.delete.name(), website.getBackendDomain());
+        if (website.getDnsAnalysisStatus() == 1){
+            DnsCacheManipulator.setDnsCache(website.getBackendDomain().split("/")[0], website.getServerIP());
+            connectionAdvertisingCMS(requestMap, WebsiteRemoteConnectionEnum.delete.name(), website.getBackendDomain());
+            DnsCacheManipulator.removeDnsCache(website.getBackendDomain().split("/")[0]);
+        }else {
+            connectionAdvertisingCMS(requestMap, WebsiteRemoteConnectionEnum.delete.name(), website.getBackendDomain());
+        }
     }
 
     public List<AdvertisingVO> selectConnectionCMS(Long websiteUuid){
@@ -132,7 +153,14 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         requestMap.put("username", website.getBackendUserName());
         requestMap.put("password", website.getBackendPassword());
         requestMap.put("dopost", WebsiteRemoteConnectionEnum.select.name());
-        String resultJsonString = connectionAdvertisingCMS(requestMap,WebsiteRemoteConnectionEnum.select.name(), website.getBackendDomain());
+        String resultJsonString = "";
+        if (website.getDnsAnalysisStatus() == 1){
+            DnsCacheManipulator.setDnsCache(website.getBackendDomain().split("/")[0], website.getServerIP());
+            resultJsonString = connectionAdvertisingCMS(requestMap,WebsiteRemoteConnectionEnum.select.name(), website.getBackendDomain());
+            DnsCacheManipulator.removeDnsCache(website.getBackendDomain().split("/")[0]);
+        }else {
+            resultJsonString = connectionAdvertisingCMS(requestMap,WebsiteRemoteConnectionEnum.select.name(), website.getBackendDomain());
+        }
         List<AdvertisingVO> advertisingVOS = new ArrayList<>();
         if (!"null".equals(resultJsonString)){
             JSONArray jsonArray = JSONArray.fromObject(resultJsonString);
@@ -204,7 +232,14 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
         requestMap.put("username", website.getBackendUserName());
         requestMap.put("password", website.getBackendPassword());
         requestMap.put("dopost", WebsiteRemoteConnectionEnum.select.name());
-        String advertisingTypeStr = connectionAdvertisingTypeCMS(requestMap, WebsiteRemoteConnectionEnum.select.name(), website.getBackendDomain());
+        String advertisingTypeStr = "";
+        if (website.getDnsAnalysisStatus() == 1){
+            DnsCacheManipulator.setDnsCache(website.getBackendDomain().split("/")[0], website.getServerIP());
+            advertisingTypeStr = connectionAdvertisingTypeCMS(requestMap, WebsiteRemoteConnectionEnum.select.name(), website.getBackendDomain());
+            DnsCacheManipulator.removeDnsCache(website.getBackendDomain().split("/")[0]);
+        }else {
+            advertisingTypeStr = connectionAdvertisingTypeCMS(requestMap, WebsiteRemoteConnectionEnum.select.name(), website.getBackendDomain());
+        }
         JSONArray advertisingTypeJsonArray = JSONArray.fromObject(advertisingTypeStr);
         List<Map> advertisingType = JSONArray.toList(advertisingTypeJsonArray, new HashedMap(), new JsonConfig());
         String advertisingArcTypeStr = connectionAdvertisingArcTypeCMS(requestMap, website.getBackendDomain());
@@ -245,8 +280,17 @@ public class AdvertisingService extends ServiceImpl<AdvertisingDao, Advertising>
     }
 
     public void initSynchronousAdvertising(Advertising advertising, AdvertisingVO advertisingVO){
-        advertising.setAdvertisingArcType(advertisingVO.getR_typename() + advertisingVO.getClsid());
-        advertising.setAdvertisingType(advertisingVO.getTypename() + advertisingVO.getTypeid());
+        advertising.setAdvertisingTagname(advertisingVO.getTagname());
+        if (0 == advertisingVO.getClsid()){
+            advertising.setAdvertisingArcType("默认分类_0");
+        } else {
+            advertising.setAdvertisingArcType(advertisingVO.getR_typename() + advertisingVO.getClsid());
+        }
+        if (0 == advertisingVO.getTypeid()){
+            advertising.setAdvertisingType("没有同名标识所有栏目_0");
+        } else {
+            advertising.setAdvertisingType(advertisingVO.getTypename() + advertisingVO.getTypeid());
+        }
         advertising.setAdvertisingAdName(advertisingVO.getAdname());
         advertising.setAdvertisingTimeSet(advertisingVO.getTimeset());
         advertising.setAdvertisingStarttime(advertisingVO.getStarttime());

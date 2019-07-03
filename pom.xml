@@ -312,6 +312,13 @@
 			<artifactId>fastjson</artifactId>
 			<version>1.2.4</version>
 		</dependency>
+
+		<!-- DNS修改 -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>dns-cache-manipulator</artifactId>
+			<version>1.5.1</version>
+		</dependency>
 	</dependencies>
 	
 	<build>
