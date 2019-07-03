@@ -16,6 +16,7 @@ import com.keymanager.monitoring.vo.QZChargeRuleVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.PaginationRewriteQueryTotalInterceptor;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,8 +83,14 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
             QZKeywordRankInfo qzKeywordRankInfo = qzKeywordRankInfoDao.getQZKeywordRankInfo(rankInfo.getQzSettingUuid(), rankInfo.getTerminalType(), rankInfo.getWebsiteType());
             if (null != qzKeywordRankInfo){
                 if (null == qzKeywordRankInfo.getCreateTopTenNum()) {
-                    rankInfo.setCreateTopTenNum(externalQzKeywordRankInfoVo.getCreateTopTenNum());
-                    rankInfo.setCreateTopFiftyNum(externalQzKeywordRankInfoVo.getCreateTopTenNum());
+                    String[] dateArr = rankInfo.getDate().replace("[", "").replace("]", "").split(", ");
+                    int index = ArrayUtils.indexOf(dateArr, qzKeywordRankInfo.getCreateMonthDay());
+                    if (index > -1) {
+                        rankInfo.setCreateTopTenNum(Integer.parseInt(rankInfo.getTopTen().replace("[", "").
+                                replace("]", "").split(", ")[index]));
+                        rankInfo.setCreateTopFiftyNum(Integer.parseInt(rankInfo.getTopFifty().replace("[", "")
+                                .replace("]", "").split(", ")[index]));
+                    }
                 }
                 rankInfo.setUuid(qzKeywordRankInfo.getUuid());
                 qzKeywordRankInfoDao.updateById(rankInfo);

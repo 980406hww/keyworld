@@ -115,6 +115,9 @@ public class QZKeywordRankInfo extends BaseEntity {
     @TableField(exist = false)
     private int topFiftyNum;
 
+    @TableField(exist = false)
+    private String createMonthDay;
+
     public Integer getAchieveLevel() {
         return achieveLevel;
     }
@@ -321,5 +324,13 @@ public class QZKeywordRankInfo extends BaseEntity {
 
     public void setDataProcessingStatus (boolean dataProcessingStatus) {
         this.dataProcessingStatus = dataProcessingStatus;
+    }
+
+    public String getCreateMonthDay () {
+        return createMonthDay;
+    }
+
+    public void setCreateMonthDay (String createMonthDay) {
+        this.createMonthDay = createMonthDay;
     }
 }
