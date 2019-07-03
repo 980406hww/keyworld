@@ -343,7 +343,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         captureRankJob.setExectionStatus(CaptureRankExectionStatus.New.name());
         captureRankJob.setCreateBy(userName);
         captureRankJob.setUpdateBy(userName);
-        captureRankJob.setRankJobType("Station");
+        captureRankJob.setRankJobType("Common");// 配上QZSettingUuid确定为整站任务
         captureRankJob.setUpdateTime(new Date());
         captureRankJobDao.insert(captureRankJob);
     }

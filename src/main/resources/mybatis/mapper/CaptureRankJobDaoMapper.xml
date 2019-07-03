@@ -55,15 +55,17 @@
             <if test="captureRankJobSearchCriteria.exectionStatus!=null and captureRankJobSearchCriteria.exectionStatus!=''">
                 AND c.fExectionStatus = #{captureRankJobSearchCriteria.exectionStatus}
             </if>
-            <if test="captureRankJobSearchCriteria.rankJobType == 'Common'">
-                AND c.fRankJobType = 'Common' AND c.fQZSettingUuid IS NULL
-            </if>
-            <if test="captureRankJobSearchCriteria.rankJobType == 'Station'">
-                AND c.fQZSettingUuid IS NOT NULL
-            </if>
-            <if test="captureRankJobSearchCriteria.rankJobType == 'Other' or captureRankJobSearchCriteria.rankJobType == 'DropDown'">
-                AND c.fRankJobType = #{captureRankJobSearchCriteria.rankJobType}
-            </if>
+            <choose>
+                <when test="captureRankJobSearchCriteria.rankJobType == 'Common'">
+                    AND c.fRankJobType = 'Common' AND c.fQZSettingUuid IS NULL
+                </when>
+                <when test="captureRankJobSearchCriteria.rankJobType == 'Station'">
+                    AND c.fQZSettingUuid IS NOT NULL
+                </when>
+                <otherwise>
+                    AND c.fRankJobType = #{captureRankJobSearchCriteria.rankJobType}
+                </otherwise>
+            </choose>
             <if test="captureRankJobSearchCriteria.rankJobArea != null and captureRankJobSearchCriteria.rankJobArea != ''">
                 AND c.fRankJobArea = #{captureRankJobSearchCriteria.rankJobArea}
             </if>
