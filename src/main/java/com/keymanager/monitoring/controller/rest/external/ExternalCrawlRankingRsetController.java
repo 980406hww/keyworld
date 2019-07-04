@@ -45,6 +45,7 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
+            e.printStackTrace();
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
