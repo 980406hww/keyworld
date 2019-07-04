@@ -11,7 +11,8 @@ public enum WebsiteTypeEnum {
     ASO("ASO", "ASO"),
     Amazon("Amazon", "亚马逊"),
     Negative("Negative", "负面处理"),
-    Station("Station", "整站");
+    Station("Station", "整站排名"),
+    CustomerSite("CustomerSite", "客户站点");
 
     private String desc;
     private String value;
