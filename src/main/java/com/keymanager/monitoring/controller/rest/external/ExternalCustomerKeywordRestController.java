@@ -271,15 +271,18 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         try {
             if (validUser(userName, password)) {
                 MachineInfo machineInfo = machineInfoService.selectById(clientID);
-                String terminalType = machineInfo.getTerminalType();
-
-                CustomerKeywordForOptimizationSimple customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimizationZip(terminalType, clientID, version, true);
                 String s = "";
-                if(customerKeywordForOptimization != null) {
-                    machineInfoService.updateMachineInfoVersion(clientID, version, customerKeywordForOptimization != null);
-                    byte[] compress = AESUtils.compress(AESUtils.encrypt(customerKeywordForOptimization).getBytes());
-                    s = AESUtils.parseByte2HexStr(compress);
-                    performanceService.addPerformanceLog(terminalType + ":getCustomerKeyword", System.currentTimeMillis() - startMilleSeconds, null);
+                if(machineInfo != null) {
+                    String terminalType = machineInfo.getTerminalType();
+                    CustomerKeywordForOptimizationSimple customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimizationZip(terminalType, clientID, version, true);
+                    if (customerKeywordForOptimization != null) {
+                        machineInfoService.updateMachineInfoVersion(clientID, version, customerKeywordForOptimization != null);
+                        byte[] compress = AESUtils.compress(AESUtils.encrypt(customerKeywordForOptimization).getBytes());
+                        s = AESUtils.parseByte2HexStr(compress);
+                        performanceService.addPerformanceLog(terminalType + ":getCustomerKeyword", System.currentTimeMillis() - startMilleSeconds, null);
+                    }
+                }else{
+                    logger.error("getCustomerKeywordZip,     Not found clientID:" + clientID);
                 }
                 return ResponseEntity.status(HttpStatus.OK).body(s);
             }

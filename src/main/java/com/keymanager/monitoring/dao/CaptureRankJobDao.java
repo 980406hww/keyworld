@@ -3,6 +3,7 @@ package com.keymanager.monitoring.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CaptureRankJobSearchCriteria;
+import com.keymanager.monitoring.criteria.ExternalCaptureJobCriteria;
 import com.keymanager.monitoring.entity.CaptureRankJob;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,9 +16,9 @@ import java.util.List;
 public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
     List<CaptureRankJob> searchCaptureRankJobs(Page<CaptureRankJob> page, @Param("captureRankJobSearchCriteria") CaptureRankJobSearchCriteria captureRankJobSearchCriteria);
 
-    CaptureRankJob provideCaptureRankJob(@Param("jobType") String jobType, @Param("includeGroupNames") List<String> includeGroupNames, @Param("excludeGroupNames") List<String> excludeGroupNames);
+    CaptureRankJob provideCaptureRankJob(@Param("jobType") Integer jobType, @Param("captureJobCriteria") ExternalCaptureJobCriteria captureJobCriteria);
 
-    CaptureRankJob getProcessingJob(@Param("includeGroupNames") List<String> includeGroupNames, @Param("excludeGroupNames") List<String> excludeGroupNames);
+    CaptureRankJob getProcessingJob(@Param("captureJobCriteria") ExternalCaptureJobCriteria captureJobCriteria);
 
     Boolean getCaptureRankJobStatus(@Param("captureRankJobUuid")Long captureRankJobUuid);
 

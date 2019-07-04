@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.CaptureRankJobSearchCriteria;
+import com.keymanager.monitoring.criteria.ExternalCaptureJobCriteria;
 import com.keymanager.monitoring.dao.CaptureRankJobDao;
 import com.keymanager.monitoring.dao.QZKeywordRankInfoDao;
 import com.keymanager.monitoring.entity.CaptureRankJob;
@@ -44,14 +45,22 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
     @Autowired
     private QZChargeRuleService qzChargeRuleService;
 
-    public synchronized CaptureRankJob provideCaptureRankJob(List<String> includeGroupNames, List<String> excludeGroupNames) {
-        CaptureRankJob captureRankJob = captureRankJobDao.getProcessingJob(includeGroupNames, excludeGroupNames);
+    public synchronized CaptureRankJob provideCaptureRankJob(ExternalCaptureJobCriteria captureJobCriteria) {
+        if (captureJobCriteria.getRankJobArea() == null || captureJobCriteria.getRankJobArea().equals("")) {
+            captureJobCriteria.setRankJobArea("China");
+        }
+        // 取 Processing
+        CaptureRankJob captureRankJob = captureRankJobDao.getProcessingJob(captureJobCriteria);
         if (captureRankJob == null) {
-            // 取普通任务
-            captureRankJob = captureRankJobDao.provideCaptureRankJob("Common", includeGroupNames, excludeGroupNames);
-            if(captureRankJob == null){
-                // 普通任务为空取全站任务
-                captureRankJob = captureRankJobDao.provideCaptureRankJob("Specify", includeGroupNames, excludeGroupNames);
+            if (captureJobCriteria.getRankJobType() != null && captureJobCriteria.getRankJobType().equals("Common")) {
+                // 先取普通
+                captureRankJob = captureRankJobDao.provideCaptureRankJob(0, captureJobCriteria);
+                if (captureRankJob == null) {
+                    // 再取全站
+                    captureRankJob = captureRankJobDao.provideCaptureRankJob(1, captureJobCriteria);
+                }
+            } else {
+                captureRankJob = captureRankJobDao.provideCaptureRankJob(null, captureJobCriteria);
             }
             if (captureRankJob != null) {
                 captureRankJob.setStartTime(new Date());
@@ -311,7 +320,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
     public Boolean hasUncompletedCaptureRankJob(List<String> groupNames){
         return captureRankJobDao.hasUncompletedCaptureRankJob(groupNames) != null;
     }
-    
+
     public Boolean hasCaptureRankJob(){
         return captureRankJobDao.fetchCaptureRankJob() != null;
     }
@@ -334,6 +343,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         captureRankJob.setExectionStatus(CaptureRankExectionStatus.New.name());
         captureRankJob.setCreateBy(userName);
         captureRankJob.setUpdateBy(userName);
+        captureRankJob.setRankJobType("Common");// 配上QZSettingUuid确定为整站任务
         captureRankJob.setUpdateTime(new Date());
         captureRankJobDao.insert(captureRankJob);
     }
