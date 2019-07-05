@@ -80,6 +80,11 @@ public class CustomerKeywordDailyReportSecondSummaryExcelWriter {
 			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.UC.getColumnIndex(), rowIndex, summaryMap.get("神马_Phone"));
 			total = total + Double.parseDouble(summaryMap.get("神马_Phone"));
 		}
+		if(summaryMap.get("必应中国_PC") != null) {
+			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.BingCN.getColumnIndex(), rowIndex, summaryMap.get("必应中国_PC"));
+			total = total + Double.parseDouble(summaryMap.get("必应中国_PC"));
+		}
+
 		writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.TodayFee.getColumnIndex(), rowIndex, total);
 
 		if(day == endOfMonth){

@@ -8,7 +8,8 @@ public enum CustomerKeywordDailyReportSummaryDefinition {
 	SogouPhone(4, "搜狗手机"),
 	So(5, "360"),
 	UC(6, "神马"),
-	TodayFee(7, "当日合计");
+	BingCN(7, "必应中国"),
+	TodayFee(8, "当日合计");
 
 	private int columnIndex;
 	private String title;
