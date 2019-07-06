@@ -21,4 +21,6 @@ public interface IndustryInfoDao extends BaseMapper<IndustryInfo> {
     List<IndustryInfo> searchIndustries (@Param("page") Page<IndustryInfo> page, @Param("industryCriteria") IndustryCriteria industryCriteria);
 
     void updateIndustryUserID (@Param("uuids")List<String> uuids, @Param("userID") String userID);
+
+    void deleteIndustries(@Param("uuids") List<String> uuids);
 }

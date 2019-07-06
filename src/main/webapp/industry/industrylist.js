@@ -63,34 +63,35 @@ function decideSelectAll() {
 function deleteIndustries() {
     var uuids = getSelectedIDs();
     if (uuids === '') {
-        alert('请选择要删除的行业信息');
+        $.messager.alert('提示', '请选择要删除的行业信息！！', 'info');
         return;
     }
-    if (confirm("确实要删除这些行业信息吗?") == false) return;
-    var postData = {};
-    postData.uuids = uuids.split(",");
-    $.ajax({
-        url: '/internal/industry/deleteCustomers',
-        data: JSON.stringify(postData),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (data) {
-            if (data) {
-                $().toastmessage('showSuccessToast', "操作成功",true);
+    parent.$.message.confirm('确认', "确实要删除这些行业信息吗?", function (b) {
+       if(b) {
+           var postData = {};
+           postData.uuids = uuids
+           $.ajax({
+               url: '/internal/industry/deleteIndustries',
+               data: JSON.stringify(postData),
+               headers: {
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json'
+               },
+               timeout: 5000,
+               type: 'POST',
+               success: function (data) {
+                   if (data) {
+                       $().toastmessage('showSuccessToast', "操作成功",true);
 
-            } else {
-                $().toastmessage('showErrorToast', "操作失败",true);
-
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "操作失败");
-
-        }
+                   } else {
+                       $().toastmessage('showErrorToast', "操作失败");
+                   }
+               },
+               error: function () {
+                   $().toastmessage('showErrorToast', "操作失败");
+               }
+           });
+       }
     });
 }
 
@@ -106,20 +107,6 @@ function getSelectedIDs() {
     return uuids;
 }
 
-function getUsfulSelectedIDs() {
-    var uuids = '';
-    $.each($("input[name=industryUuid]:checkbox:checked"), function () {
-        if ($(this).parent().find("input[name='status']").val() === '1') {
-            if (uuids === '') {
-                uuids = $(this).val();
-            } else {
-                uuids = uuids + "," + $(this).val();
-            }
-        }
-    });
-    return uuids;
-}
-
 function saveIndustry(uuid, loginName) {
     var industryForm = $("#industryDialog").find("#industryForm");
     var industryInfo = {};
@@ -130,17 +117,20 @@ function saveIndustry(uuid, loginName) {
     industryInfo.userID = loginName;
     industryInfo.industryName = industryForm.find("#industryName").val();
     if (industryInfo.industryName === '') {
-        alert("请输入行业名称");
+        $.messager.alert('提示', '请输入行业名称！！', 'warning');
+        industryForm.find("#industryName").focus();
         return;
     }
     industryInfo.pageNum = industryForm.find("#pageNum").val();
     if (!(/^[1-9]\d{0,3}$/.test(parseInt(industryInfo.pageNum))) && (industryInfo.pageNum !== '')) {
-        alert("请输入正确的爬取页数");
+        $.messager.alert('提示', '请输入正确的爬取页数！！', 'warning');
+        industryForm.find("#pageNum").focus();
         return;
     }
     industryInfo.pagePerNum = industryForm.find("#pagePerNum").val();
     if (!(/^[1-9]\d{0,3}$/.test(parseInt(industryInfo.pagePerNum))) && (industryInfo.pagePerNum !== '')) {
-        alert("请输入正确的每页条数");
+        $.messager.alert('提示', '请输入正确的每页条数！！', 'warning');
+        industryForm.find("#pagePerNum").focus();
         return;
     }
     industryInfo.searchEngine = industryForm.find("#searchEngine").val();
@@ -236,20 +226,23 @@ function getIndustry(uuid, callback) {
 }
 
 function delIndustry(uuid) {
-    if (confirm("确实要删除这个行业信息吗?") == false) return;
-    $.ajax({
-        url: '/internal/industry/delIndustryInfo/' + uuid,
-        type: 'Get',
-        success: function (result) {
-            if (result) {
-                $().toastmessage('showSuccessToast', "删除成功",true);
+    parent.$.message.confirm('', "确实要删除这个行业信息吗?", function (b) {
+        if (b) {
+            $.ajax({
+                url: '/internal/industry/delIndustryInfo/' + uuid,
+                type: 'Get',
+                success: function (result) {
+                    if (result) {
+                        $().toastmessage('showSuccessToast', "删除成功",true);
 
-            } else {
-                $().toastmessage('showErrorToast', "删除失败");
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "删除失败",true);
+                    } else {
+                        $().toastmessage('showErrorToast', "删除失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "删除失败");
+                }
+            });
         }
     });
 }
@@ -290,46 +283,49 @@ function resetPageNumber() {
 function updateIndustryUserID() {
     var uuids = getSelectedIDs();
     if (uuids === '') {
-        alert('请选择要修改所属用户的行业信息！！');
+        $.messager.alert('提示', '请选择要修改所属用户的行业信息！！', 'info');
         return;
     }
-    if(!confirm("确认修改行业所属人吗？"))
-    $("#updateIndustryUserIDDialog").show();
-    $("#updateIndustryUserIDDialog").dialog({
-        resizable: false,
-        width: 250,
-        height: 100,
-        modal: true,
-        closed: true,
-        buttons: [{
-            text: '确定',
-            handler: function () {
-                var data = {};
-                data.uuids = uuids.split(",");
-                data.userID = $("#userID").val();
-                $.ajax({
-                    url: '/internal/industry/updateIndustryUserID',
-                    data: JSON.stringify(data),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (result) {
-                        if (result) {
-                            $().toastmessage('showSuccessToast', "操作成功", true);
-                        } else {
-                            $().toastmessage('showErrorToast', "操作失败");
-                        }
-                    },
-                    error: function () {
-                        $().toastmessage('showErrorToast', "操作失败");
+    parent.$.messager.confirm('询问', "确认修改行业所属人吗？", function(b) {
+        if (b) {
+            $("#updateIndustryUserIDDialog").show();
+            $("#updateIndustryUserIDDialog").dialog({
+                resizable: false,
+                width: 250,
+                height: 100,
+                modal: true,
+                closed: true,
+                buttons: [{
+                    text: '确定',
+                    handler: function () {
+                        var data = {};
+                        data.uuids = uuids.split(",");
+                        data.userID = $("#userID").val();
+                        $.ajax({
+                            url: '/internal/industry/updateIndustryUserID',
+                            data: JSON.stringify(data),
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            timeout: 5000,
+                            type: 'POST',
+                            success: function (result) {
+                                if (result) {
+                                    $().toastmessage('showSuccessToast', "操作成功", true);
+                                } else {
+                                    $().toastmessage('showErrorToast', "操作失败");
+                                }
+                            },
+                            error: function () {
+                                $().toastmessage('showErrorToast', "操作失败");
+                            }
+                        });
                     }
-                });
-            }
-        }]
+                }]
+            });
+            $("#updateIndustryUserIDDialog").dialog("open");
+            $('#updateIndustryUserIDDialog').window("resize", {top: $(document).scrollTop() + 150});
+        }
     });
-    $("#updateIndustryUserIDDialog").dialog("open");
-    $('#updateIndustryUserIDDialog').window("resize", {top: $(document).scrollTop() + 150});
 }

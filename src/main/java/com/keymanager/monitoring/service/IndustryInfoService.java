@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class IndustryInfoService extends ServiceImpl<IndustryInfoDao, IndustryIn
     private IndustryInfoDao industryInfoDao;
 
     @Autowired
-    private IndustryDetailsService industryDetailsService;
+    private IndustryDetailService industryDetailService;
 
     public Page<IndustryInfo> searchIndustries (Page<IndustryInfo> page, IndustryCriteria industryCriteria) {
         return page.setRecords(industryInfoDao.searchIndustries(page, industryCriteria));
@@ -48,10 +49,14 @@ public class IndustryInfoService extends ServiceImpl<IndustryInfoDao, IndustryIn
 
     public void delIndustryInfo (long uuid) {
         industryInfoDao.deleteById(uuid);
-        industryDetailsService.delIndustryDetailsByIndustryID(uuid);
+        industryDetailService.delIndustryDetailsByIndustryID(uuid);
     }
 
     public void updateIndustryUserID (List<String> uuids, String userID) {
         industryInfoDao.updateIndustryUserID(uuids, userID);
+    }
+
+    public void deleteIndustries(String uuids) {
+        industryInfoDao.deleteIndustries(Arrays.asList(uuids.split(",")));
     }
 }

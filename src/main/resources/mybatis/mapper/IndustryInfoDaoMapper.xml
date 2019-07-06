@@ -32,4 +32,12 @@
             #{uuid}
         </foreach>
     </update>
+
+    <delete id="deleteIndustries">
+        DELETE FROM t_industry_info
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </delete>
 </mapper>

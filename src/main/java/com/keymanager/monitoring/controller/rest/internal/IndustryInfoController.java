@@ -48,7 +48,7 @@ public class IndustryInfoController {
     private UserRoleService userRoleService;
 
     @Autowired
-    ConfigService configService;
+    private ConfigService configService;
 
     @RequiresPermissions("/internal/industry/searchIndustries")
     @GetMapping("/searchIndustries")
@@ -118,7 +118,7 @@ public class IndustryInfoController {
         return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/delIndustryInfo/{uuid}")
+    @GetMapping("/delIndustryInfo/{uuid}")
     public ResponseEntity<?> delIndustryInfo(@PathVariable("uuid") long uuid) {
         try {
             industryInfoService.delIndustryInfo(uuid);
@@ -140,6 +140,18 @@ public class IndustryInfoController {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(false, HttpStatus.OK);
         }
+    }
+
+    @PostMapping("/deleteIndustries")
+    public ResponseEntity<?> deleteIndustries(@RequestBody Map<String, Object> requestMap) {
+        try {
+            String uuids = (String) requestMap.get("uuids");
+            industryInfoService.deleteIndustries(uuids);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
     }
 }
 

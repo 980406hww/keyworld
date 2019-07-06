@@ -28,7 +28,7 @@
                                    value="${industryCriteria.industryName}"
                                    style="width:160px;">
                         引擎:
-                        <select name="searchEngine" id="searchEngine" style="width:240px">
+                        <select name="searchEngine" id="searchEngine" style="width:100px">
                             <option value="">全部</option>
                             <c:forEach items="${searchEngineMap}" var="entry">
                                 <option value="${entry.value}">${entry.key}</option>
@@ -94,7 +94,7 @@
                 </td>
                 <td width=80>${industryInfo.userID}</td>
                 <td width=80>
-                    <a href="#" onclick="searchIndustryDetails('/internal/industryDetails/searchIndustryDetails/${industryInfo.uuid}')">${industryInfo.industryName}</a>
+                    <a href="#" onclick="searchIndustryDetails('/internal/industryDetail/searchIndustryDetails/${industryInfo.uuid}')">${industryInfo.industryName}</a>
                 </td>
                 <td width=60>${industryInfo.searchEngine}</td>
                 <td width=140>${industryInfo.pageNum}</td>

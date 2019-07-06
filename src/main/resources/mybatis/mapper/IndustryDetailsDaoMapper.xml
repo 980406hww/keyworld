@@ -1,9 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.keymanager.monitoring.dao.IndustryDetailsDao">
+<mapper namespace="com.keymanager.monitoring.dao.IndustryDetailDao">
+
+    <sql id="selectCol">
+        tid.fUuid AS 'uuid',
+        tid.fIndustryID AS 'industryID',
+        tid.fWebsite AS 'website',
+        tid.fQQ AS 'qq',
+        tid.fTelephone AS 'telephone',
+        tid.fWeight AS 'weight',
+        tid.fRemark AS 'remark',
+        tid.fLevel AS 'level',
+        tid.fCreateTime AS 'createTime',
+        tid.fUpdateTime AS 'updateTime'
+    </sql>
+
+    <select id="searchIndustryDetails" resultType="com.keymanager.monitoring.entity.IndustryDetail">
+        SELECT
+        <include refid="selectCol"/>
+        FROM t_industry_details tid
+        WHERE 1 = 1
+        <if test="industryDetailCriteria.industryID != null and industryDetailCriteria.industryID != ''">
+            AND tid.fIndustryID = #{industryDetailCriteria.industryID}
+        </if>
+        <if test="industryDetailCriteria.website != null and industryDetailCriteria.website != ''">
+            AND tid.fWebsite LIKE '${industryDetailCriteria.website}%'
+        </if>
+        <if test="industryDetailCriteria.weight != null and industryDetailCriteria.weight != ''">
+            AND tid.fWeight = #{industryDetailCriteria.weight}
+        </if>
+        <if test="industryDetailCriteria.remark != null and industryDetailCriteria.remark != ''">
+            AND tid.fRemark LIKE '${industryDetailCriteria.remark}%'
+        </if>
+    </select>
 
     <delete id="delIndustryDetailsByIndustryID">
         DELETE FROM t_industry_details WHERE fIndustryID = #{industryID}
     </delete>
 
+    <delete id="deleteIndustryDetails">
+        DELETE FROM t_industry_details
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </delete>
+
+    <update id="updateIndustryDetailRemark">
+        UPDATE t_industry_details SET fRemark = #{remark} WHERE fUuid = #{uuid}
+    </update>
 </mapper>

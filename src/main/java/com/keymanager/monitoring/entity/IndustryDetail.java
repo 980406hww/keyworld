@@ -16,7 +16,7 @@ import java.io.Serializable;
  * @since 2019-07-05
  */
 @TableName("t_industry_details")
-public class IndustryDetails extends BaseEntity {
+public class IndustryDetail extends BaseEntity {
 
     /**
      * 行业ID
@@ -70,11 +70,11 @@ public class IndustryDetails extends BaseEntity {
         this.website = website;
     }
 
-    public String getQQ () {
+    public String getQq() {
         return qq;
     }
 
-    public void setQQ (String qq) {
+    public void setQq(String qq) {
         this.qq = qq;
     }
 
