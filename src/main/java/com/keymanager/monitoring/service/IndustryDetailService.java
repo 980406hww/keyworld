@@ -65,20 +65,37 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
     public void updateIndustryInfoDetail(IndustryDetailCriteria criteria) {
         IndustryDetail existingIndustryDetail = industryDetailDao.findExistingIndustryDetail(criteria.getIndustryID(),
                 criteria.getWebsite());
+        boolean updateFlag = false;
         if (null == existingIndustryDetail) {
             existingIndustryDetail = new IndustryDetail();
             existingIndustryDetail.setIndustryID(criteria.getIndustryID());
             existingIndustryDetail.setWebsite(criteria.getWebsite());
-            existingIndustryDetail.setTelephone(criteria.getPhone());
-            existingIndustryDetail.setQq(criteria.getQq());
-            existingIndustryDetail.setWeight(criteria.getWeight());
-            industryDetailDao.insert(existingIndustryDetail);
         } else {
-            existingIndustryDetail.setTelephone(criteria.getPhone());
-            existingIndustryDetail.setQq(criteria.getQq());
-            existingIndustryDetail.setWeight(criteria.getWeight());
+            updateFlag = true;
             existingIndustryDetail.setUpdateTime(new Date());
+        }
+        if (criteria.getPhones().size() > 0) {
+            for (String telephone : criteria.getPhones()) {
+                existingIndustryDetail.setTelephone(telephone + ",");
+            }
+            existingIndustryDetail.setTelephone(existingIndustryDetail.getTelephone().substring(0, existingIndustryDetail.getTelephone().length() - 1));
+        } else {
+            existingIndustryDetail.setTelephone("");
+        }
+        if (criteria.getQqs().size() > 0) {
+            for (String qq : criteria.getQqs()) {
+                existingIndustryDetail.setQq(qq);
+            }
+            existingIndustryDetail.setQq(existingIndustryDetail.getQq().substring(0, existingIndustryDetail.getQq().length() - 1));
+        } else {
+            existingIndustryDetail.setQq("");
+        }
+        existingIndustryDetail.setWeight(criteria.getWeight());
+        existingIndustryDetail.setLevel(criteria.getLevel());
+        if (updateFlag) {
             industryDetailDao.updateById(existingIndustryDetail);
+        } else {
+            industryDetailDao.insert(existingIndustryDetail);
         }
     }
 }

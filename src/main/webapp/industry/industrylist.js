@@ -123,16 +123,28 @@ function saveIndustry(uuid, loginName) {
     }
     industryInfo.targetUrl = industryForm.find("#targetUrl").val();
     industryInfo.pageNum = industryForm.find("#pageNum").val();
-    if (!(/^[1-9]\d{0,3}$/.test(parseInt(industryInfo.pageNum))) && (industryInfo.pageNum !== '')) {
-        $.messager.alert('提示', '请输入正确的爬取页数！！', 'warning');
+    if (industryInfo.pageNum === '') {
+        $.messager.alert('提示', '请输入爬取页数！！', 'warning');
         industryForm.find("#pageNum").focus();
         return;
+    } else {
+        if (!(/^[1-9]\d{0,3}$/.test(parseInt(industryInfo.pageNum)))) {
+            $.messager.alert('提示', '请输入正确的爬取页数！！', 'warning');
+            industryForm.find("#pageNum").focus();
+            return;
+        }
     }
     industryInfo.pagePerNum = industryForm.find("#pagePerNum").val();
-    if (!(/^[1-9]\d{0,3}$/.test(parseInt(industryInfo.pagePerNum))) && (industryInfo.pagePerNum !== '')) {
-        $.messager.alert('提示', '请输入正确的每页条数！！', 'warning');
+    if (industryInfo.pageNum === '') {
+        $.messager.alert('提示', '请输入每页条数！！', 'warning');
         industryForm.find("#pagePerNum").focus();
         return;
+    } else {
+        if (!(/^[1-9]\d{0,3}$/.test(parseInt(industryInfo.pagePerNum)))) {
+            $.messager.alert('提示', '请输入正确的每页条数！！', 'warning');
+            industryForm.find("#pagePerNum").focus();
+            return;
+        }
     }
     industryInfo.searchEngine = industryForm.find("#searchEngine").val();
     industryInfo.status = industryForm.find("#status").val();
