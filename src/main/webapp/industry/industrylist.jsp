@@ -74,14 +74,15 @@
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="" height="30">
             <td style="padding-left: 7px;" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
-            <td align="center" width=80>用户名称</td>
-            <td align="center" width=80>行业名称</td>
-            <td align="center" width=60>搜索引擎</td>
-            <td align="center" width=140>爬取页数</td>
-            <td align="center" width=140>每页条数</td>
-            <td align="center" width=40>状态</td>
-            <td align="center" width=50>创建时间</td>
-            <td align="center" width=200>操作</td>
+            <td align="center" width=100>用户名称</td>
+            <td align="center" width=100>行业名称</td>
+            <td align="center" width=80>搜索引擎</td>
+            <td align="center" width=200>目标起始网址</td>
+            <td align="center" width=40>爬取页数</td>
+            <td align="center" width=40>每页条数</td>
+            <td align="center" width=60>状态</td>
+            <td align="center" width=60>创建时间</td>
+            <td align="center" width=100>操作</td>
         </tr>
     </table>
 </div>
@@ -92,14 +93,17 @@
                 <td width=10 style="padding-left: 7px;">
                     <input type="checkbox" name="industryUuid" value="${industryInfo.uuid}"/>
                 </td>
-                <td width=80>${industryInfo.userID}</td>
-                <td width=80>
+                <td width=100>${industryInfo.userID}</td>
+                <td width=100>
                     <a href="#" onclick="searchIndustryDetails('/internal/industryDetail/searchIndustryDetails/${industryInfo.uuid}')">${industryInfo.industryName}</a>
                 </td>
-                <td width=60>${industryInfo.searchEngine}</td>
-                <td width=140>${industryInfo.pageNum}</td>
-                <td width=140>${industryInfo.pagePerNum}</td>
-                <td width=40 style="text-align: center">
+                <td width=80>${industryInfo.searchEngine}</td>
+                <td width=200>
+                    <a href="${industryInfo.targetUrl}" target="_blank">${industryInfo.targetUrl}</a>
+                </td>
+                <td width=40>${industryInfo.pageNum}</td>
+                <td width=40>${industryInfo.pagePerNum}</td>
+                <td width=60 style="text-align: center">
                     <c:choose>
                         <c:when test="${industryInfo.status == 2}">
                             <span style="color: forestgreen;">爬取完成</span>
@@ -112,8 +116,8 @@
                         </c:otherwise>
                     </c:choose>
                 </td>
-                <td width=50 style="text-align: center"><fmt:formatDate value="${industryInfo.createTime}" pattern="yyyy-MM-dd"/></td>
-                <td width=200>
+                <td width=60 style="text-align: center"><fmt:formatDate value="${industryInfo.createTime}" pattern="yyyy-MM-dd"/></td>
+                <td width=100>
                     <%--<shiro:hasPermission name="/internal/industry/saveIndustry">--%>
                         <a href="javascript:modifyIndustry(${industryInfo.uuid})">修改</a>
                     <%--</shiro:hasPermission>--%>
@@ -129,16 +133,16 @@
 </div>
 <%-- 新增或修改行业信息 --%>
 <div id="industryDialog" title="行业信息" class="easyui-dialog" style="display:none;left: 40%;">
-    <form id="industryForm" method="post" action="industrylist.jsp">
-        <table style="font-size:14px;" cellpadding=5>
+    <form id="industryForm" method="post">
+        <table style="font-size:12px;" align="center" cellspacing="8" cellpadding=5>
             <tr>
                 <td align="right" width="60">行业名称: </td>
-                <td><input type="text" name="industryName" id="industryName" style="width:200px;"></td>
+                <td><input type="text" name="industryName" id="industryName" style="width:180px;" placeholder="行业名称"></td>
             </tr>
             <tr>
                 <td align="right" width="60">搜索引擎: </td>
                 <td>
-                    <select name="searchEngine" id="searchEngine" style="width:200px">
+                    <select name="searchEngine" id="searchEngine" style="width:180px">
                         <c:forEach items="${searchEngineMap}" var="entry">
                             <option value="${entry.value}">${entry.key}</option>
                         </c:forEach>
@@ -146,17 +150,21 @@
                 </td>
             </tr>
             <tr>
+                <td align="right" width="60">起始网址: </td>
+                <td><input type="text" name="targetUrl" id="targetUrl" style="width:180px;" placeholder="起始网址"></td>
+            </tr>
+            <tr>
                 <td align="right" width="60">爬取页数: </td>
-                <td><input type="text" name="pageNum" id="pageNum" style="width:200px;" value="2"></td>
+                <td><input type="text" name="pageNum" id="pageNum" style="width:180px;" value="2" placeholder="爬取页数(数字)"></td>
             </tr>
             <tr>
                 <td align="right" width="60">每页条数: </td>
-                <td><input type="text" name="pagePerNum" id="pagePerNum" style="width:200px;" value="10"></td>
+                <td><input type="text" name="pagePerNum" id="pagePerNum" style="width:180px;" value="10" placeholder="每页条数(数字)"></td>
             </tr>
             <tr>
                 <td align="right" width="60">爬取状态: </td>
                 <td>
-                    <select name="status" id="status" style="width: 200px;">
+                    <select name="status" id="status" style="width: 180px;">
                         <option value="0">未爬取</option>
                         <option value="1">爬取中</option>
                         <option value="2">爬取完成</option>

@@ -4,12 +4,14 @@ package com.keymanager.monitoring.criteria;
  * @Author zhoukai
  * @Date 2019/7/5 20:37
  **/
-public class IndustryDetailCriteria {
+public class IndustryDetailCriteria extends BaseCriteria {
 
     private long industryID;
     private String website;
     private Integer weight;
     private String remark;
+    private String qq;
+    private String phone;
 
     public long getIndustryID() {
         return industryID;
@@ -41,5 +43,21 @@ public class IndustryDetailCriteria {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

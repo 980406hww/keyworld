@@ -65,7 +65,7 @@ function deleteIndustryDetails() {
         $.messager.alert('提示', '请选择要删除的网站联系信息！！', 'info');
         return;
     }
-    parent.$.message.confirm('确认', "确实要删除这些网站联系信息吗?", function (b) {
+    parent.$.messager.confirm('确认', "确实要删除这些网站联系信息吗?", function (b) {
         if (b) {
             var postData = {};
             postData.uuids = uuids;
@@ -165,7 +165,7 @@ function showIndustryDetailDialog(uuid) {
     $("#industryDetailDialog").dialog({
         resizable: false,
         width: 280,
-        height: 300,
+        height: 240,
         modal: true,
         buttons: [{
             text: '保存',
@@ -226,7 +226,7 @@ function getIndustryDetail(uuid, callback) {
 }
 
 function delIndustryDetail(uuid) {
-    parent.$.message.confirm('确认', "确实要删除这个网站联系信息吗?", function (b) {
+    parent.$.messager.confirm('确认', "确实要删除这个网站联系信息吗?", function (b) {
         if (b) {
             $.ajax({
                 url: '/internal/industryDetail/delIndustryDetail/' + uuid,

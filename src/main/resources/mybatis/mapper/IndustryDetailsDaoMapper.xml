@@ -55,7 +55,7 @@
         <include refid="selectCol"/>
         FROM t_industry_detail tid
         WHERE tid.fIndustryID = #{industryID}
-        AND tid.fWebsite = #{website}
+        AND tid.fWebsite LIKE '${website}%'
         LIMIT 1
     </select>
 </mapper>

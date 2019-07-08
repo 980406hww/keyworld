@@ -94,6 +94,10 @@ public class Constants {
     public final static String CONFIG_TYPE_NOENTEREDKEYWORDSCHEDULE_SWITCH = "NoEnteredKeywordScheduleSwitch";
     public final static String CONFIG_KEY_SWITCHNUMBER = "SwitchNumber";
     public final static String CONFIG_TYPE_MAX_INVALID_COUNT = "MaxInvalidCount";
+    public final static String CONFIG_TYPE_INDUSTRY_TEL_REG = "IndustryTelReg";
+    public final static String CONFIG_KEY_INDUSTRY_TEL_REG = "IndustryTelReg";
+    public final static String CONFIG_TYPE_INDUSTRY_QQ_REG = "IndustryQqReg";
+    public final static String CONFIG_KEY_INDUSTRY_QQ_REG = "IndustryQqReg";
 
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
     static {

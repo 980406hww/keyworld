@@ -8,6 +8,7 @@
         tii.fSearchEngine AS 'searchEngine',
         tii.fTerminalType AS 'terminalType',
         tii.fIndustryName AS 'industryName',
+        tii.fTargetUrl    AS 'targetUrl',
         tii.fPageNum      AS 'pageNum',
         tii.fPagePerNum   AS 'pagePerNum',
         tii.fStatus       AS 'status',
@@ -48,6 +49,20 @@
         <include refid="selectCol"/>
         FROM t_industry_info tii
         WHERE tii.fIndustryName = #{industryName}
+        LIMIT 1
+    </select>
+
+    <select id="getValidIndustryInfo" resultType="com.keymanager.monitoring.vo.IndustryInfoVO">
+        SELECT
+            tii.fUuid         AS 'uuid',
+            tii.fSearchEngine AS 'searchEngine',
+            tii.fTerminalType AS 'terminalType',
+            tii.fIndustryName AS 'industryName',
+            tii.fTargetUrl    AS 'targetUrl',
+            tii.fPageNum      AS 'pageNum',
+            tii.fPagePerNum   AS 'pagePerNum'
+        FROM t_industry_info tii
+        WHERE tii.fStatus = 0
         LIMIT 1
     </select>
 </mapper>

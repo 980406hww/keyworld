@@ -66,7 +66,7 @@ function deleteIndustries() {
         $.messager.alert('提示', '请选择要删除的行业信息！！', 'info');
         return;
     }
-    parent.$.message.confirm('确认', "确实要删除这些行业信息吗?", function (b) {
+    parent.$.messager.confirm('确认', "确实要删除这些行业信息吗?", function (b) {
        if(b) {
            var postData = {};
            postData.uuids = uuids
@@ -121,6 +121,7 @@ function saveIndustry(uuid, loginName) {
         industryForm.find("#industryName").focus();
         return;
     }
+    industryInfo.targetUrl = industryForm.find("#targetUrl").val();
     industryInfo.pageNum = industryForm.find("#pageNum").val();
     if (!(/^[1-9]\d{0,3}$/.test(parseInt(industryInfo.pageNum))) && (industryInfo.pageNum !== '')) {
         $.messager.alert('提示', '请输入正确的爬取页数！！', 'warning');
@@ -166,7 +167,7 @@ function showIndustryDialog(uuid, loginName) {
     $("#industryDialog").dialog({
         resizable: false,
         width: 280,
-        height: 300,
+        height: 240,
         modal: true,
         buttons: [{
             text: '保存',
@@ -226,7 +227,7 @@ function getIndustry(uuid, callback) {
 }
 
 function delIndustry(uuid) {
-    parent.$.message.confirm('', "确实要删除这个行业信息吗?", function (b) {
+    parent.$.messager.confirm('确认', "确实要删除这个行业信息吗?", function (b) {
         if (b) {
             $.ajax({
                 url: '/internal/industry/delIndustryInfo/' + uuid,
@@ -251,6 +252,7 @@ function initIndustryDialog(industryInfo) {
     var industryForm = $("#industryForm");
     industryForm.find("#industryName").val(industryInfo.industryName);
     industryForm.find("#searchEngine").val(industryInfo.searchEngine);
+    industryForm.find("#targetUrl").val(industryInfo.targetUrl);
     industryForm.find("#pageNum").val(industryInfo.pageNum);
     industryForm.find("#pagePerNum").val(industryInfo.pagePerNum);
     industryForm.find("#status").val(industryInfo.status);

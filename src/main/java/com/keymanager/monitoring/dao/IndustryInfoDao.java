@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.IndustryCriteria;
 import com.keymanager.monitoring.entity.IndustryInfo;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.keymanager.monitoring.vo.IndustryInfoVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -25,4 +26,6 @@ public interface IndustryInfoDao extends BaseMapper<IndustryInfo> {
     void deleteIndustries(@Param("uuids") List<String> uuids);
 
     IndustryInfo findExistingIndustryInfo(@Param("industryName") String industryName);
+
+   IndustryInfoVO getValidIndustryInfo();
 }

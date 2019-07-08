@@ -38,6 +38,11 @@ public class IndustryInfo extends BaseEntity {
     @TableField(value = "fIndustryName")
     private String industryName;
     /**
+     * 目标起始网址
+     */
+    @TableField(value = "fTargetUrl")
+    private String targetUrl;
+    /**
      * 页数
      */
     @TableField(value = "fPageNum")
@@ -83,6 +88,14 @@ public class IndustryInfo extends BaseEntity {
 
     public void setIndustryName (String industryName) {
         this.industryName = industryName;
+    }
+
+    public String getTargetUrl() {
+        return targetUrl;
+    }
+
+    public void setTargetUrl(String targetUrl) {
+        this.targetUrl = targetUrl;
     }
 
     public Integer getPageNum () {

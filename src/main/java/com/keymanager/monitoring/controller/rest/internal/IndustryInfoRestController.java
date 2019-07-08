@@ -34,9 +34,9 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/internal/industry")
-public class IndustryInfoController {
+public class IndustryInfoRestController {
 
-    private static final Logger logger = LoggerFactory.getLogger(IndustryInfoController.class);
+    private static final Logger logger = LoggerFactory.getLogger(IndustryInfoRestController.class);
 
     @Autowired
     private IndustryInfoService industryInfoService;

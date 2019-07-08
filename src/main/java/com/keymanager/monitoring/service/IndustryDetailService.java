@@ -61,4 +61,24 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
     public void updateIndustryDetailRemark(long uuid, String remark) {
         industryDetailDao.updateIndustryDetailRemark(uuid, remark);
     }
+
+    public void updateIndustryInfoDetail(IndustryDetailCriteria criteria) {
+        IndustryDetail existingIndustryDetail = industryDetailDao.findExistingIndustryDetail(criteria.getIndustryID(),
+                criteria.getWebsite());
+        if (null == existingIndustryDetail) {
+            existingIndustryDetail = new IndustryDetail();
+            existingIndustryDetail.setIndustryID(criteria.getIndustryID());
+            existingIndustryDetail.setWebsite(criteria.getWebsite());
+            existingIndustryDetail.setTelephone(criteria.getPhone());
+            existingIndustryDetail.setQq(criteria.getQq());
+            existingIndustryDetail.setWeight(criteria.getWeight());
+            industryDetailDao.insert(existingIndustryDetail);
+        } else {
+            existingIndustryDetail.setTelephone(criteria.getPhone());
+            existingIndustryDetail.setQq(criteria.getQq());
+            existingIndustryDetail.setWeight(criteria.getWeight());
+            existingIndustryDetail.setUpdateTime(new Date());
+            industryDetailDao.updateById(existingIndustryDetail);
+        }
+    }
 }

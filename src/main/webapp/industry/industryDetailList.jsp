@@ -58,15 +58,15 @@
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="" height="30">
             <td style="padding-left: 7px;" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
-            <td align="center" width=80>网站名称</td>
-            <td align="center" width=80>QQ</td>
-            <td align="center" width=60>电话</td>
-            <td align="center" width=140>权重</td>
-            <td align="center" width=140>备注</td>
+            <td align="center" width=150>网站名称</td>
+            <td align="center" width=100>QQ</td>
+            <td align="center" width=100>电话</td>
+            <td align="center" width=40>权重</td>
+            <td align="center" width=200>备注</td>
             <td align="center" width=40>层级</td>
-            <td align="center" width=50>修改时间</td>
-            <td align="center" width=50>创建时间</td>
-            <td align="center" width=200>操作</td>
+            <td align="center" width=60>修改时间</td>
+            <td align="center" width=60>创建时间</td>
+            <td align="center" width=100>操作</td>
         </tr>
     </table>
 </div>
@@ -77,18 +77,18 @@
                 <td width=10 style="padding-left: 7px;">
                     <input type="checkbox" name="industryDetailUuid" value="${industryDetail.uuid}"/>
                 </td>
-                <td width=80>${industryDetail.website}</td>
-                <td width=80>${industryDetail.qq}</td>
-                <td width=60>${industryDetail.telephone}</td>
-                <td width=140>${industryDetail.weight}</td>
-                <td width=140>
+                <td width=150>${industryDetail.website}</td>
+                <td width=100>${industryDetail.qq}</td>
+                <td width=100>${industryDetail.telephone}</td>
+                <td width=40>${industryDetail.weight}</td>
+                <td width=200>
                     <input type="hidden" name="hiddenRemark" value="${industryDetail.remark}">
-                    <input type="text" value="${industryDetail.remark}" onblur="updateIndustryDetailRemark(this)">
+                    <input type="text" style="width: 200px;" value="${industryDetail.remark}" onblur="updateIndustryDetailRemark(this)">
                 </td>
                 <td width=40>${industryDetail.level}</td>
-                <td width=50 style="text-align: center"><fmt:formatDate value="${industryDetail.updateTime}" pattern="yyyy-MM-dd"/></td>
-                <td width=50 style="text-align: center"><fmt:formatDate value="${industryDetail.createTime}" pattern="yyyy-MM-dd"/></td>
-                <td width=200>
+                <td width=60 style="text-align: center"><fmt:formatDate value="${industryDetail.updateTime}" pattern="yyyy-MM-dd"/></td>
+                <td width=60 style="text-align: center"><fmt:formatDate value="${industryDetail.createTime}" pattern="yyyy-MM-dd"/></td>
+                <td width=100>
                     <%--<shiro:hasPermission name="/internal/industryDetail/saveIndustryDetail">--%>
                         <a href="javascript:modifyIndustryDetail(${industryDetail.uuid})">修改</a>
                     <%--</shiro:hasPermission>--%>
@@ -105,23 +105,23 @@
 <%-- 新增或修改网站联系信息 --%>
 <div id="industryDetailDialog" title="网站联系信息" class="easyui-dialog" style="display:none;left: 40%;">
     <form id="industryDetailForm" method="post" action="industryDetailList.jsp">
-        <table style="font-size:14px;" cellpadding=5>
+        <table style="font-size:12px;" align="center" cellspacing="8" cellpadding=5>
             <tr>
                 <td align="right" width="60">网站域名: </td>
-                <td><input type="text" name="website" id="website" placeholder="请填写网站域名" style="width:200px;"></td>
+                <td><input type="text" name="website" id="website" placeholder="请填写网站域名" style="width:180px;"></td>
             </tr>
             <tr>
-                <td align="right" width="60">QQ: </td>
-                <td><input type="text" name="qq" id="qq" placeholder="请填写QQ" style="width:200px;"></td>
+                <td align="right" width="60">联系QQ: </td>
+                <td><input type="text" name="qq" id="qq" placeholder="请填写QQ" style="width:180px;"></td>
             </tr>
             <tr>
-                <td align="right" width="60">电话: </td>
-                <td><input type="text" name="telephone" placeholder="请填写电话" id="telephone" style="width:200px;"></td>
+                <td align="right" width="60">联系电话: </td>
+                <td><input type="text" name="telephone" placeholder="请填写电话" id="telephone" style="width:180px;"></td>
             </tr>
             <tr>
-                <td align="right" width="60">权重: </td>
+                <td align="right" width="60">网站权重: </td>
                 <td>
-                    <select name="weight" id="weight" style="width:200px">
+                    <select name="weight" id="weight" style="width:180px">
                         <c:forEach items="${weightList}" var="weight">
                             <c:choose>
                                 <c:when test="${weight eq industryDetailCriteria.weight}"><option selected>${weight}</option></c:when>
@@ -132,12 +132,12 @@
                 </td>
             </tr>
             <tr>
-                <td align="right" width="60">备注: </td>
-                <td><input type="text" name="remark" id="remark" placeholder="请填写备注" style="width:200px;"></td>
+                <td align="right" width="60">销售备注: </td>
+                <td><input type="text" name="remark" id="remark" placeholder="请填写备注" style="width:180px;"></td>
             </tr>
             <tr>
-                <td align="right" width="60">层级: </td>
-                <td><input type="text" name="level" id="level" style="width:200px;" value="1"></td>
+                <td align="right" width="60">爬取层级: </td>
+                <td><input type="text" name="level" id="level" style="width:180px;" value="1"></td>
             </tr>
             </tr>
         </table>

@@ -28,9 +28,9 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/internal/industryDetail")
-public class IndustryDetailController {
+public class IndustryDetailRestController {
 
-    private static final Logger logger = LoggerFactory.getLogger(IndustryDetailController.class);
+    private static final Logger logger = LoggerFactory.getLogger(IndustryDetailRestController.class);
 
     @Autowired
     private IndustryDetailService industryDetailService;
