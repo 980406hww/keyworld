@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 /**
  * <p>
@@ -40,7 +39,11 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
 
     public void saveIndustryDetail(IndustryDetail industryDetail) {
         if (null == industryDetail.getUuid()) {
-            industryDetailDao.insert(industryDetail);
+            IndustryDetail existingIndustryDetail = industryDetailDao.findExistingIndustryDetail(industryDetail.getIndustryID(),
+                    industryDetail.getWebsite());
+            if (null == existingIndustryDetail) {
+                industryDetailDao.insert(industryDetail);
+            }
         } else {
             industryDetail.setUpdateTime(new Date());
             industryDetailDao.updateById(industryDetail);

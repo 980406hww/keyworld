@@ -39,8 +39,11 @@ public class IndustryInfoService extends ServiceImpl<IndustryInfoDao, IndustryIn
 
     public void saveIndustryInfo (IndustryInfo industryInfo, String loginName) {
         if(null == industryInfo.getUuid()) {
-            industryInfo.setUserID(loginName);
-            industryInfoDao.insert(industryInfo);
+            IndustryInfo existingIndustryInfo = industryInfoDao.findExistingIndustryInfo(industryInfo.getIndustryName());
+            if(null == existingIndustryInfo) {
+                industryInfo.setUserID(loginName);
+                industryInfoDao.insert(industryInfo);
+            }
         } else {
             industryInfo.setUpdateTime(new Date());
             industryInfoDao.updateById(industryInfo);

@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @author zhoukai
  * @since 2019-07-05
  */
-@TableName("t_industry_details")
+@TableName("t_industry_detail")
 public class IndustryDetail extends BaseEntity {
 
     /**

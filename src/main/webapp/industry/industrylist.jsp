@@ -176,8 +176,8 @@
     </select>
 </div>
 <%-- 底部分页 --%>
-<div id="showCustomerBottomPositionDiv">
-    <div id="showIndustryBottomDiv">
+<div id="showCustomerBottomPositioneDiv">
+    <div id="showCustomerBottomDiv">
         <input id="firstButton" class="ui-button ui-widget ui-corner-all" type="button"
                onclick="changePaging(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
         <input id="upButton" type="button" class="ui-button ui-widget ui-corner-all"

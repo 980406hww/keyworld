@@ -18,7 +18,7 @@
     <select id="searchIndustryDetails" resultType="com.keymanager.monitoring.entity.IndustryDetail">
         SELECT
         <include refid="selectCol"/>
-        FROM t_industry_details tid
+        FROM t_industry_detail tid
         WHERE 1 = 1
         <if test="industryDetailCriteria.industryID != null and industryDetailCriteria.industryID != ''">
             AND tid.fIndustryID = #{industryDetailCriteria.industryID}
@@ -35,11 +35,11 @@
     </select>
 
     <delete id="delIndustryDetailsByIndustryID">
-        DELETE FROM t_industry_details WHERE fIndustryID = #{industryID}
+        DELETE FROM t_industry_detail WHERE fIndustryID = #{industryID}
     </delete>
 
     <delete id="deleteIndustryDetails">
-        DELETE FROM t_industry_details
+        DELETE FROM t_industry_detail
         WHERE fUuid IN
         <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
             #{uuid}
@@ -47,6 +47,15 @@
     </delete>
 
     <update id="updateIndustryDetailRemark">
-        UPDATE t_industry_details SET fRemark = #{remark} WHERE fUuid = #{uuid}
+        UPDATE t_industry_detail SET fRemark = #{remark} WHERE fUuid = #{uuid}
     </update>
+
+    <select id="findExistingIndustryDetail" resultType="com.keymanager.monitoring.entity.IndustryDetail">
+        SELECT
+        <include refid="selectCol"/>
+        FROM t_industry_detail tid
+        WHERE tid.fIndustryID = #{industryID}
+        AND tid.fWebsite = #{website}
+        LIMIT 1
+    </select>
 </mapper>

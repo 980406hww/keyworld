@@ -10,25 +10,25 @@ function pageLoad() {
     var pageSize = searchIndustryForm.find('#pageSizeHidden').val();
     var pages = searchIndustryForm.find('#pagesHidden').val();
     var currentPageNumber = searchIndustryForm.find('#currentPageNumberHidden').val();
-    var showIndustryBottomDiv = $('#showIndustryBottomDiv');
-    showIndustryBottomDiv.find("#chooseRecords").val(pageSize);
+    var showCustomerBottomDiv = $('#showCustomerBottomDiv');
+    showCustomerBottomDiv.find("#chooseRecords").val(pageSize);
 
     if(parseInt(currentPageNumber) > 1 && parseInt(currentPageNumber) < parseInt(pages)) {
-        showIndustryBottomDiv.find("#firstButton").removeAttr("disabled");
-        showIndustryBottomDiv.find("#upButton").removeAttr("disabled");
-        showIndustryBottomDiv.find("#nextButton").removeAttr("disabled");
-        showIndustryBottomDiv.find("#lastButton").removeAttr("disabled");
+        showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");
+        showCustomerBottomDiv.find("#upButton").removeAttr("disabled");
+        showCustomerBottomDiv.find("#nextButton").removeAttr("disabled");
+        showCustomerBottomDiv.find("#lastButton").removeAttr("disabled");
     } else if (parseInt(pages) <= 1) {
-        showIndustryBottomDiv.find("#firstButton").attr("disabled", "disabled");
-        showIndustryBottomDiv.find("#upButton").attr("disabled", "disabled");
-        showIndustryBottomDiv.find("#nextButton").attr("disabled", "disabled");
-        showIndustryBottomDiv.find("#lastButton").attr("disabled", "disabled");
+        showCustomerBottomDiv.find("#firstButton").attr("disabled", "disabled");
+        showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
+        showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+        showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
     } else if (parseInt(currentPageNumber) <= 1) {
-        showIndustryBottomDiv.find("#firstButton").attr("disabled", "disabled");
-        showIndustryBottomDiv.find("#upButton").attr("disabled", "disabled");
+        showCustomerBottomDiv.find("#firstButton").attr("disabled", "disabled");
+        showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
     } else {
-        showIndustryBottomDiv.find("#nextButton").attr("disabled", "disabled");
-        showIndustryBottomDiv.find("#lastButton").attr("disabled", "disabled");
+        showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+        showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
     }
 }
 

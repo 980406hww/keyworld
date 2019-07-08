@@ -23,4 +23,6 @@ public interface IndustryInfoDao extends BaseMapper<IndustryInfo> {
     void updateIndustryUserID (@Param("uuids")List<String> uuids, @Param("userID") String userID);
 
     void deleteIndustries(@Param("uuids") List<String> uuids);
+
+    IndustryInfo findExistingIndustryInfo(@Param("industryName") String industryName);
 }

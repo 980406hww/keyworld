@@ -5,6 +5,8 @@
     <sql id="selectCol">
         tii.fUuid         AS 'uuid',
         tii.fUserID       AS 'userID',
+        tii.fSearchEngine AS 'searchEngine',
+        tii.fTerminalType AS 'terminalType',
         tii.fIndustryName AS 'industryName',
         tii.fPageNum      AS 'pageNum',
         tii.fPagePerNum   AS 'pagePerNum',
@@ -40,4 +42,12 @@
             #{uuid}
         </foreach>
     </delete>
+
+    <select id="findExistingIndustryInfo" resultType="com.keymanager.monitoring.entity.IndustryInfo">
+        SELECT
+        <include refid="selectCol"/>
+        FROM t_industry_info tii
+        WHERE tii.fIndustryName = #{industryName}
+        LIMIT 1
+    </select>
 </mapper>
