@@ -30,7 +30,20 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
     }
 
     public Page<IndustryDetail> searchIndustryDetails(Page<IndustryDetail> page, IndustryDetailCriteria industryDetailCriteria) {
-        return page.setRecords(industryDetailDao.searchIndustryDetails(page, industryDetailCriteria));
+        page.setRecords(industryDetailDao.searchIndustryDetails(page, industryDetailCriteria));
+        this.wrapperForIndustryDetail(page);
+        return page;
+    }
+
+    private void wrapperForIndustryDetail(Page<IndustryDetail> page) {
+        for (IndustryDetail industryDetail : page.getRecords()) {
+            if (null != industryDetail.getQq() && !"".equals(industryDetail.getQq())) {
+                industryDetail.setQq(industryDetail.getQq().replaceAll(",", "<br>"));
+            }
+            if (null != industryDetail.getTelephone() && !"".equals(industryDetail.getTelephone())) {
+                industryDetail.setTelephone(industryDetail.getTelephone().replaceAll(",", "<br>"));
+            }
+        }
     }
 
     public IndustryDetail getIndustryDetail(long uuid) {
@@ -74,8 +87,8 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
             updateFlag = true;
             existingIndustryDetail.setUpdateTime(new Date());
         }
-        existingIndustryDetail.setTelephone(criteria.getPhones());
-        existingIndustryDetail.setQq(criteria.getQqs());
+        existingIndustryDetail.setTelephone(criteria.getPhones().replace("[", "").replace("]", ""));
+        existingIndustryDetail.setQq(criteria.getQqs().replace("[", "").replace("]", ""));
         existingIndustryDetail.setWeight(criteria.getWeight());
         existingIndustryDetail.setLevel(criteria.getLevel());
         if (updateFlag) {

@@ -117,20 +117,16 @@ function saveIndustryDetail(uuid) {
         industryDetailForm.find("#website").focus();
         return;
     }
-    industryDetail.qq = industryDetailForm.find("#qq").val();
-    if ((industryDetail.qq !== '') && !(/^[1-9]\d{4,10}$/.test(parseInt(industryDetail.qq)))) {
-        industryDetailForm.find("#qq").focus();
-        $.messager.alert('提示', '请输入正确的qq号码！！', 'warning');
-        return;
+    var qq = industryDetailForm.find("#qq").val();
+    if (qq !== '') {
+        qq = qq.replace(/[\r\n]/g, ",").replace(/[\s+]/g, "");
     }
-    industryDetail.telephone = industryDetailForm.find("#telephone").val();
-    if (industryDetail.telephone.indexOf('-') === -1) {
-        if ((industryDetail.telephone !== '') && !(/^[1-9]\d{6,11}$/.test(parseInt(industryDetail.telephone)))) {
-            industryDetailForm.find("#telephone").focus();
-            $.messager.alert('提示', '请输入正确的电话号码！！', 'warning');
-            return;
-        }
+    industryDetail.qq = qq;
+    var telephone = industryDetailForm.find("#telephone").val();
+    if (telephone !== '') {
+        telephone = telephone.replace(/[\r\n]/g, ",").replace(/[\s+]/g, "");
     }
+    industryDetail.telephone = telephone;
     industryDetail.weight = industryDetailForm.find("#weight").val();
     industryDetail.remark = industryDetailForm.find("#remark").val();
     industryDetail.level = industryDetailForm.find("#level").val();
@@ -164,7 +160,7 @@ function showIndustryDetailDialog(uuid) {
     $("#industryDetailDialog").dialog({
         resizable: false,
         width: 280,
-        height: 240,
+        height: 420,
         modal: true,
         buttons: [{
             text: '保存',
@@ -249,8 +245,8 @@ function delIndustryDetail(uuid) {
 function initIndustryDetailDialog(industryDetail) {
     var industryDetailForm = $("#industryDetailForm");
     industryDetailForm.find("#website").val(industryDetail.website);
-    industryDetailForm.find("#qq").val(industryDetail.qq);
-    industryDetailForm.find("#telephone").val(industryDetail.telephone);
+    industryDetailForm.find("#qq").val(industryDetail.qq === '' ? '' : industryDetail.qq.replace(/[,]/g, '\n'));
+    industryDetailForm.find("#telephone").val(industryDetail.telephone === '' ? '' : industryDetail.telephone.replace(/[,]/g, '\n'));
     industryDetailForm.find("#weight").val(industryDetail.weight);
     industryDetailForm.find("#remark").val(industryDetail.remark);
     industryDetailForm.find("#level").val(industryDetail.level);

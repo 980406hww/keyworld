@@ -55,17 +55,19 @@
                         <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
                         <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                         <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
-                        <%--<shiro:hasPermission name="/internal/industry/searchIndustries">--%>
+                        <shiro:hasPermission name="/internal/industry/searchIndustries">
                             &nbsp;&nbsp;<input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">
-                        <%--</shiro:hasPermission>--%>
-                        <%--<shiro:hasPermission name="/internal/industry/saveIndustry">--%>
+                        </shiro:hasPermission>
+                        <shiro:hasPermission name="/internal/industry/saveIndustry">
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showIndustryDialog(null,'${user.loginName}')"/>
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 马上爬取 " onclick="updateIndustryStatus()"/>
-                        <%--</shiro:hasPermission>--%>
-                        <%--<shiro:hasPermission name="/internal/industry/deleteIndustries">--%>
-                            &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 修改客户归属 " onclick="updateIndustryUserID()"/>
+                        </shiro:hasPermission>
+                        <shiro:hasPermission name="/internal/industry/deleteIndustries">
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteIndustries()"/>
-                        <%--</shiro:hasPermission>--%>
+                        </shiro:hasPermission>
+                        <shiro:hasPermission name="/internal/industry/updateIndustryUserID">
+                            &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 修改客户归属 " onclick="updateIndustryUserID()"/>
+                        </shiro:hasPermission>
                     </div>
                 </form>
             </td>
@@ -94,16 +96,16 @@
                 <td width=10 style="padding-left: 7px;">
                     <input type="checkbox" name="industryUuid" value="${industryInfo.uuid}"/>
                 </td>
-                <td width=100>${industryInfo.userID}</td>
+                <td width=100 style="text-align: center">${industryInfo.userID}</td>
                 <td width=100>
                     <a href="#" onclick="searchIndustryDetails('/internal/industryDetail/searchIndustryDetails/${industryInfo.uuid}')">${industryInfo.industryName}(${industryInfo.detailCount})</a>
                 </td>
-                <td width=80>${industryInfo.searchEngine}</td>
+                <td width=80 style="text-align: center">${industryInfo.searchEngine}</td>
                 <td width=200>
                     <a href="${industryInfo.targetUrl}" target="_blank">${industryInfo.targetUrl}</a>
                 </td>
-                <td width=40>${industryInfo.pageNum}</td>
-                <td width=40>${industryInfo.pagePerNum}</td>
+                <td width=40 style="text-align: center">${industryInfo.pageNum}</td>
+                <td width=40 style="text-align: center">${industryInfo.pagePerNum}</td>
                 <td width=60 style="text-align: center">
                     <c:choose>
                         <c:when test="${industryInfo.status == 2}">
@@ -119,12 +121,12 @@
                 </td>
                 <td width=60 style="text-align: center"><fmt:formatDate value="${industryInfo.createTime}" pattern="yyyy-MM-dd"/></td>
                 <td width=100>
-                    <%--<shiro:hasPermission name="/internal/industry/saveIndustry">--%>
+                    <shiro:hasPermission name="/internal/industry/saveIndustry">
                         <a href="javascript:modifyIndustry(${industryInfo.uuid})">修改</a>
-                    <%--</shiro:hasPermission>--%>
-                    <%--<shiro:hasPermission name="/internal/industry/delIndustry">--%>
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="/internal/industry/delIndustry">
                         | <a href="javascript:delIndustry('${industryInfo.uuid}')">删除</a>
-                    <%--</shiro:hasPermission>--%>
+                    </shiro:hasPermission>
                 </td>
             </tr>
         </c:forEach>
@@ -221,11 +223,9 @@
         }
     });
 
-    <%--<shiro:hasPermission name="/internal/industryDetails/searchIndustryDetails">--%>
     function searchIndustryDetails(url) {
         window.open(url);
     }
-    <%--</shiro:hasPermission>--%>
 </script>
 </body>
 </html>

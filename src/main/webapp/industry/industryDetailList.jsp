@@ -40,16 +40,16 @@
                         <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
                         <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
                         <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
-                        <%--<shiro:hasPermission name="/internal/industryDetail/searchIndustryDetails">--%>
+                        <shiro:hasPermission name="/internal/industryDetail/searchIndustryDetails">
                             &nbsp;&nbsp;<input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()" name="btnQuery" id="btnQuery" value=" 查询 ">
-                        <%--</shiro:hasPermission>--%>
-                        <%--<shiro:hasPermission name="/internal/industryDetail/saveIndustryDetail">--%>
+                        </shiro:hasPermission>
+                        <shiro:hasPermission name="/internal/industryDetail/saveIndustryDetail">
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showIndustryDetailDialog(null)"/>
-                            &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" title="移除没有联系方式(tel, qq)的数据" value=" 智能移除无用数据 " onclick="removeUselessIndustryDetail(${industryDetailCriteria.industryID})"/>
-                        <%--</shiro:hasPermission>--%>
-                        <%--<shiro:hasPermission name="/internal/industryDetail/deleteIndustryDetails">--%>
+                            &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" title="移除没有联系方式(tel, qq)的数据" value=" 移除无用数据 " onclick="removeUselessIndustryDetail(${industryDetailCriteria.industryID})"/>
+                        </shiro:hasPermission>
+                        <shiro:hasPermission name="/internal/industryDetail/deleteIndustryDetails">
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteIndustryDetails()"/>
-                        <%--</shiro:hasPermission>--%>
+                        </shiro:hasPermission>
                     </div>
                 </form>
             </td>
@@ -61,9 +61,9 @@
             <td style="padding-left: 7px;" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=150>网站名称</td>
             <td align="center" width=100>QQ</td>
-            <td align="center" width=100>电话</td>
+            <td align="center" width=120>电话</td>
             <td align="center" width=40>权重</td>
-            <td align="center" width=200>备注</td>
+            <td align="center" width=150>备注</td>
             <td align="center" width=40>层级</td>
             <td align="center" width=60>修改时间</td>
             <td align="center" width=60>创建时间</td>
@@ -81,23 +81,23 @@
                 <td width=150>
                     <a href="${industryDetail.website}" target="_blank">${industryDetail.website}</a>
                 </td>
-                <td width=100>${industryDetail.qq}</td>
-                <td width=100>${industryDetail.telephone}</td>
-                <td width=40>${industryDetail.weight}</td>
-                <td width=200>
+                <td width=100 valign="top">${industryDetail.qq}</td>
+                <td width=120 valign="top">${industryDetail.telephone}</td>
+                <td width=40 style="text-align: center">${industryDetail.weight}</td>
+                <td width=150>
                     <input type="hidden" name="hiddenRemark" value="${industryDetail.remark}">
-                    <input type="text" style="width: 200px;" value="${industryDetail.remark}" onblur="updateIndustryDetailRemark(this)">
+                    <input type="text" style="width: 100%;" value="${industryDetail.remark}" onblur="updateIndustryDetailRemark(this)">
                 </td>
-                <td width=40>${industryDetail.level}</td>
+                <td width=40 style="text-align: center">${industryDetail.level}</td>
                 <td width=60 style="text-align: center"><fmt:formatDate value="${industryDetail.updateTime}" pattern="yyyy-MM-dd"/></td>
                 <td width=60 style="text-align: center"><fmt:formatDate value="${industryDetail.createTime}" pattern="yyyy-MM-dd"/></td>
                 <td width=100>
-                    <%--<shiro:hasPermission name="/internal/industryDetail/saveIndustryDetail">--%>
+                    <shiro:hasPermission name="/internal/industryDetail/saveIndustryDetail">
                         <a href="javascript:modifyIndustryDetail(${industryDetail.uuid})">修改</a>
-                    <%--</shiro:hasPermission>--%>
-                    <%--<shiro:hasPermission name="/internal/industryDetail/delIndustryDetail">--%>
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="/internal/industryDetail/delIndustryDetail">
                         | <a href="javascript:delIndustryDetail('${industryDetail.uuid}')">删除</a>
-                    <%--</shiro:hasPermission>--%>
+                    </shiro:hasPermission>
                 </td>
             </tr>
         </c:forEach>
@@ -114,12 +114,16 @@
                 <td><input type="text" name="website" id="website" placeholder="请填写网站域名" style="width:180px;"></td>
             </tr>
             <tr>
-                <td align="right" width="60">联系QQ: </td>
-                <td><input type="text" name="qq" id="qq" placeholder="请填写QQ" style="width:180px;"></td>
+                <td align="right" width="60" valign="top">联系QQ: </td>
+                <td>
+                    <textarea name="qq" id="qq" placeholder="请填写QQ, 多个请换行" style="width:180px; height: 80px; resize: none"></textarea>
+                </td>
             </tr>
             <tr>
-                <td align="right" width="60">联系电话: </td>
-                <td><input type="text" name="telephone" placeholder="请填写电话" id="telephone" style="width:180px;"></td>
+                <td align="right" width="60" valign="top">联系电话: </td>
+                <td>
+                    <textarea name="telephone" id="telephone" placeholder="请填写电话, 多个请换行" style="width:180px; height: 80px; resize: none"></textarea>
+                </td>
             </tr>
             <tr>
                 <td align="right" width="60">网站权重: </td>
@@ -135,8 +139,10 @@
                 </td>
             </tr>
             <tr>
-                <td align="right" width="60">销售备注: </td>
-                <td><input type="text" name="remark" id="remark" placeholder="请填写备注" style="width:180px;"></td>
+                <td align="right" width="60" valign="top">销售备注: </td>
+                <td>
+                    <textarea name="remark" id="remark" placeholder="请填写备注" style="width:180px; height: 80px; resize: none"></textarea>
+                </td>
             </tr>
             <tr>
                 <td align="right" width="60">爬取层级: </td>
