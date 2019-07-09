@@ -62,4 +62,8 @@
     <select id="findIndustryDetailCount" resultType="java.lang.Integer">
         SELECT COUNT(1) FROM t_industry_detail tid WHERE tid.fIndustryID = #{industryID}
     </select>
+    
+    <delete id="removeUselessIndustryDetail">
+        DELETE FROM t_industry_detail WHERE fIndustryID = #{industryID} AND fQQ = '' AND fTelephone = ''
+    </delete>
 </mapper>

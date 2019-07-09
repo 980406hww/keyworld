@@ -30,4 +30,6 @@ public interface IndustryDetailDao extends BaseMapper<IndustryDetail> {
     IndustryDetail findExistingIndustryDetail(@Param("industryID") Long industryID, @Param("website") String website);
 
     int findIndustryDetailCount(@Param("industryID") long industryID);
+
+    void removeUselessIndustryDetail(@Param("industryID") long industryID);
 }

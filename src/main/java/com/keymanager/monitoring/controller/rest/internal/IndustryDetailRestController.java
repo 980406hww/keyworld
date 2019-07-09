@@ -130,5 +130,16 @@ public class IndustryDetailRestController {
         }
         return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("/removeUselessIndustryDetail/{industryID}")
+    public ResponseEntity<?> removeUselessIndustryDetail(@PathVariable("industryID") long industryID) {
+        try {
+            industryDetailService.removeUselessIndustryDetail(industryID);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+    }
 }
 

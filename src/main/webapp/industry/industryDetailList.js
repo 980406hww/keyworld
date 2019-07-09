@@ -88,7 +88,6 @@ function deleteIndustryDetails() {
                 },
                 error: function () {
                     $().toastmessage('showErrorToast', "操作失败");
-
                 }
             });
         }
@@ -308,6 +307,29 @@ function updateIndustryDetailRemark(self) {
         error: function () {
             input.val(oldRemarkInput.val());
             $().toastmessage('showErrorToast', '修改失败');
+        }
+    });
+}
+
+function removeUselessIndustryDetail(industryID) {
+    parent.$.messager.confirm('确认', "确实要移除没有联系方式的网站信息吗?", function (b) {
+        if (b) {
+            $.ajax({
+                url: '/internal/industryDetail/removeUselessIndustryDetail/' + industryID,
+                timeout: 5000,
+                type: 'POST',
+                success: function (data) {
+                    if (data) {
+                        $().toastmessage('showSuccessToast', "操作成功", true);
+
+                    } else {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            });
         }
     });
 }

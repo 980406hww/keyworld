@@ -88,4 +88,8 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
     public int findIndustryDetailCount(long industryID) {
         return industryDetailDao.findIndustryDetailCount(industryID);
     }
+
+    public void removeUselessIndustryDetail(long industryID) {
+        industryDetailDao.removeUselessIndustryDetail(industryID);
+    }
 }

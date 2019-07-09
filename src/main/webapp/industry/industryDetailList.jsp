@@ -45,6 +45,7 @@
                         <%--</shiro:hasPermission>--%>
                         <%--<shiro:hasPermission name="/internal/industryDetail/saveIndustryDetail">--%>
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showIndustryDetailDialog(null)"/>
+                            &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" title="移除没有联系方式(tel, qq)的数据" value=" 智能移除无用数据 " onclick="removeUselessIndustryDetail(${industryDetailCriteria.industryID})"/>
                         <%--</shiro:hasPermission>--%>
                         <%--<shiro:hasPermission name="/internal/industryDetail/deleteIndustryDetails">--%>
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteIndustryDetails()"/>
@@ -77,7 +78,9 @@
                 <td width=10 style="padding-left: 7px;">
                     <input type="checkbox" name="industryDetailUuid" value="${industryDetail.uuid}"/>
                 </td>
-                <td width=150>${industryDetail.website}</td>
+                <td width=150>
+                    <a href="${industryDetail.website}" target="_blank">${industryDetail.website}</a>
+                </td>
                 <td width=100>${industryDetail.qq}</td>
                 <td width=100>${industryDetail.telephone}</td>
                 <td width=40>${industryDetail.weight}</td>
