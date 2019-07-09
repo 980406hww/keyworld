@@ -35,11 +35,11 @@ public interface GroupDao extends BaseMapper<Group> {
 
     void updateGroupOperationCombineUuid (@Param("operationCombineUuid")long operationCombineUuid);
 
-    void updateOperationCombineUuidByGroupName (@Param("groupNames") List<String> groupNames, @Param("operationCombineUuid")long operationCombineUuid);
+    void updateOperationCombineUuidByGroupName (@Param("groupNames") List<String> groupNames,
+                                                @Param("operationCombineUuid")long operationCombineUuid);
 
     void updateQZSettingGroupOperationCombineUuid (@Param("operationCombineUuid") Long operationCombineUuid,
-                                                   @Param("groupName") String groupName,
-                                                   @Param("terminalType") String terminalType);
+                                                   @Param("groupName") String groupName);
 
     Group findExistingGroup (@Param("optimizeGroupName") String optimizeGroupName);
 }

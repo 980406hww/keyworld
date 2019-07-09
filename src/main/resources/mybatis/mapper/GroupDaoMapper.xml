@@ -54,7 +54,9 @@
         SELECT
            g.fGroupName AS 'groupName'
         FROM t_group g
-        WHERE g.fTerminalType = #{terminalType}
+        LEFT JOIN t_operation_combine toc
+        ON toc.fUuid = g.fOperationCombineUuid
+        WHERE toc.fTerminalType = #{terminalType}
         GROUP BY g.fGroupName
     </select>
 
@@ -103,19 +105,20 @@
         SELECT
             g.fUuid AS 'groupUuid'
         FROM t_group g
+        LEFT JOIN t_operation_combine toc
+        ON toc.fUuid = g.fOperationCombineUuid
         WHERE g.fGroupName = #{groupName}
-        AND g.fTerminalType = #{terminalType}
+        AND toc.fTerminalType = #{terminalType}
         LIMIT 1
     </select>
 
     <insert id="insertBatchGroups">
-        INSERT INTO t_group(fGroupName, fOperationCombineUuid, fTerminalType, fCreateBy)
+        INSERT INTO t_group(fGroupName, fOperationCombineUuid, fCreateBy)
         VALUES
         <foreach collection="operationCombineCriteria.groupNames" item="groupName" separator=",">
             (
                 #{groupName},
                 #{operationCombineCriteria.operationCombineUuid},
-                #{operationCombineCriteria.terminalType},
                 #{operationCombineCriteria.creator}
             )
         </foreach>
@@ -142,14 +145,12 @@
         UPDATE t_group
         SET fUpdateTime = NOW(), fOperationCombineUuid = #{operationCombineUuid}
         WHERE fGroupName = #{groupName}
-        AND fTerminalType = #{terminalType}
     </update>
 
     <select id="findExistingGroup" resultType="com.keymanager.monitoring.entity.Group">
         SELECT
             g.fGroupName AS 'groupName',
             g.fOperationCombineUuid AS 'operationCombineUuid',
-            g.fTerminalType AS 'terminalType',
             g.fCreateBy AS 'createBy'
         FROM t_group g
         WHERE g.fGroupName = #{optimizeGroupName}

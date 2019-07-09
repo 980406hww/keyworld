@@ -10,8 +10,8 @@
             SELECT 1
             FROM t_group g
             WHERE g.fOperationCombineUuid = toc.fUuid
-            AND g.fTerminalType = #{terminalType}
         )
+        AND toc.fTerminalType = 'PC'
         ORDER BY toc.fOperationCombineName
     </select>
 

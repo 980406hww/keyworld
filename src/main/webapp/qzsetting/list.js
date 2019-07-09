@@ -2502,7 +2502,6 @@ function changeQZSettingGroupOperationCombineUuid(self, groupName) {
     var postData = {};
     postData.operationCombineUuid = select.val() === '' ? null : select.val().split("_____")[1];
     postData.groupName = groupName;
-    postData.terminalType = $("#chargeForm").find("#terminalType").val();
     $.ajax({
         url: '/internal/group/updateQZSettingGroupOperationCombineUuid',
         type: 'POST',

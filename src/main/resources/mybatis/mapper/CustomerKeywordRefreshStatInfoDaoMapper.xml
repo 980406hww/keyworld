@@ -36,7 +36,7 @@
         </if>
         AND toc.fUuid = g.fOperationCombineUuid
         AND ck.fOptimizeGroupName = g.fGroupName
-        AND ck.fTerminalType = g.fTerminalType
+        AND ck.fTerminalType = toc.fTerminalType
         <if test="customerKeywordRefreshStatInfoCriteria.entryType!=null and customerKeywordRefreshStatInfoCriteria.entryType!=''">AND ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}</if>
         <if test="customerKeywordRefreshStatInfoCriteria.terminalType!=null and customerKeywordRefreshStatInfoCriteria.terminalType!=''">AND ck.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}</if>
         <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">

@@ -121,8 +121,8 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
         groupDao.updateGroupOperationCombineUuid(operationCombineUuid);
     }
 
-    public void updateQZSettingGroupOperationCombineUuid (Long operationCombineUuid, String groupName, String terminalType) {
-        groupDao.updateQZSettingGroupOperationCombineUuid(operationCombineUuid, groupName, terminalType);
+    public void updateQZSettingGroupOperationCombineUuid (Long operationCombineUuid, String groupName) {
+        groupDao.updateQZSettingGroupOperationCombineUuid(operationCombineUuid, groupName);
     }
 
     public void determineAddingGroupInfo (String tmpOptimizeGroupName) {

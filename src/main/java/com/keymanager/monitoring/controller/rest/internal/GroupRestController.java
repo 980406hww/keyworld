@@ -87,8 +87,7 @@ public class GroupRestController {
                 operationCombineUuid = Long.valueOf((String) requestMap.get("operationCombineUuid"));
             }
             String groupName = (String) requestMap.get("groupName");
-            String terminalType = (String) requestMap.get("terminalType");
-            groupService.updateQZSettingGroupOperationCombineUuid(operationCombineUuid, groupName, terminalType);
+            groupService.updateQZSettingGroupOperationCombineUuid(operationCombineUuid, groupName);
             return new ResponseEntity<>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

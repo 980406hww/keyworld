@@ -470,9 +470,11 @@
             COUNT(mi.fGroup) AS 'machineCount'
         FROM t_machine_info mi
         LEFT JOIN t_group g
-        ON g.fGroupName = mi.fGroup AND g.fTerminalType = mi.fTerminalType
+        ON g.fGroupName = mi.fGroup
+        LEFT JOIN t_operation_combine toc
+        ON g.fOperationCombineUuid = toc.fUuid
         WHERE g.fGroupName = #{optimizeGroupName}
-        AND g.fTerminalType = #{terminalType}
+        AND toc.fTerminalType = #{terminalType}
         LIMIT 1
     </select>
 
