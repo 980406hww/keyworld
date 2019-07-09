@@ -34,6 +34,12 @@ public class CaptureRankJob extends BaseEntity{
     @TableField(value = "fExectionType")
     private String exectionType;
 
+    @TableField(value = "fRankJobType")
+    private String rankJobType;
+
+    @TableField(value = "fRankJobArea")
+    private String rankJobArea;
+
     @TableField(value = "fExectionTime")
     private java.sql.Time exectionTime;
 
@@ -149,6 +155,22 @@ public class CaptureRankJob extends BaseEntity{
 
     public void setExectionType(String exectionType) {
         this.exectionType = exectionType;
+    }
+
+    public String getRankJobType() {
+        return rankJobType;
+    }
+
+    public void setRankJobType(String rankJobType) {
+        this.rankJobType = rankJobType;
+    }
+
+    public String getRankJobArea() {
+        return rankJobArea;
+    }
+
+    public void setRankJobArea(String rankJobArea) {
+        this.rankJobArea = rankJobArea;
     }
 
     public Boolean getCaptureRankJobStatus() {

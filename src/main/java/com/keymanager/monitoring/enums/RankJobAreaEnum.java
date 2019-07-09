@@ -4,29 +4,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author wjianwu 2019/6/13 17:41
+ * @author wjianwu 2019/7/1 15:12
  */
-public enum WebsiteTypeEnum {
+public enum RankJobAreaEnum {
 
-    ASO("ASO", "ASO"),
-    Amazon("Amazon", "亚马逊"),
-    Negative("Negative", "负面处理"),
-    Station("Station", "整站排名"),
-    CustomerSite("CustomerSite", "客户站点");
+    China("China", "中国"),
+    America("America", "美国"),
+    Japan("Japan", "日本"),
+    Other("Other", "其他");
 
     private String desc;
     private String value;
 
-    WebsiteTypeEnum(String value, String desc) {
+    RankJobAreaEnum(String value, String desc) {
         this.value = value;
         this.desc = desc;
     }
 
     public static Map<String, String> changeToMap() {
         Map<String, String> map = new HashMap<>();
-        WebsiteTypeEnum[] websiteTypeEnums = WebsiteTypeEnum.values();
-        for (WebsiteTypeEnum websiteTypeEnum : websiteTypeEnums) {
-            map.put(websiteTypeEnum.getValue(), websiteTypeEnum.getDesc());
+        RankJobAreaEnum[] rankJobAreaEnums = RankJobAreaEnum.values();
+        for (RankJobAreaEnum rankJobAreaEnum : rankJobAreaEnums) {
+            map.put(rankJobAreaEnum.getValue(), rankJobAreaEnum.getDesc());
         }
         return map;
     }

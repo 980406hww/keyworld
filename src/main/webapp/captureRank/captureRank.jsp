@@ -31,26 +31,35 @@
             执行类型:
             <select name="exectionType">
                 <option value="">请选择执行类型</option>
-                <option value="Once" <c:if test="${captureRankJobSearchCriteria.exectionType.equals('Once')}">selected="selected"</c:if>>Once</option>
-                <option value="Everyday" <c:if test="${captureRankJobSearchCriteria.exectionType.equals('Everyday')}">selected="selected"</c:if>>Everyday</option>
+                <option value="Once" <c:if test="${captureRankJobSearchCriteria.exectionType eq 'Once'}">selected="selected"</c:if>>Once</option>
+                <option value="Everyday" <c:if test="${captureRankJobSearchCriteria.exectionType eq 'Everyday'}">selected="selected"</c:if>>Everyday</option>
             </select>
             执行状态:
             <select name="exectionStatus">
                 <option value="">请选择执行状态</option>
-                <option value="New" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('New')}">selected="selected"</c:if>>New</option>
-                <option value="Processing" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Processing')}">selected="selected"</c:if>>Processing</option>
-                <%--<option value="Checking" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Checking')}">selected="selected"</c:if>>Checking</option>--%>
-                <option value="Complete" <c:if test="${captureRankJobSearchCriteria.exectionStatus.equals('Complete')}">selected="selected"</c:if>>Complete</option>
+                <option value="New" <c:if test="${captureRankJobSearchCriteria.exectionStatus eq 'New'}">selected="selected"</c:if>>New</option>
+                <option value="Processing" <c:if test="${captureRankJobSearchCriteria.exectionStatus eq 'Processing'}">selected="selected"</c:if>>Processing</option>
+                <option value="Complete" <c:if test="${captureRankJobSearchCriteria.exectionStatus eq 'Complete'}">selected="selected"</c:if>>Complete</option>
             </select>
             任务类型:
-            <select name="jobType">
-                <option value="Common" <c:if test="${captureRankJobSearchCriteria.jobType.equals('Common')}">selected="selected"</c:if>>普通任务</option>
-                <option value="Specify" <c:if test="${captureRankJobSearchCriteria.jobType.equals('Specify')}">selected="selected"</c:if>>整站任务</option>
-            </select>&nbsp;&nbsp;
+            <select name="rankJobType" title="">
+                <option value="Common" <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'Common'}">selected="selected"</c:if>>普通</option>
+                <option value="Station" <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'Station'}">selected="selected"</c:if>>整站</option>
+                <option value="DropDown" <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'DropDown'}">selected="selected"</c:if>>下拉词</option>
+                <option value="Other" <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'Other'}">selected="selected"</c:if>>其他</option>
+            </select>
+            任务区域:
+            <select name="rankJobArea" title="">
+                <option value="" selected="selected">请选择</option>
+                <c:forEach items="${rankJobAreaMap}" var="rankJobArea">
+                    <option value="${rankJobArea.key}" <c:if test="${rankJobArea.key eq captureRankJobSearchCriteria.rankJobArea}">selected="selected"</c:if>>${rankJobArea.value}</option>
+                </c:forEach>
+            </select>
+            &nbsp;&nbsp;
             <shiro:hasPermission name="/internal/captureRank/searchCaptureRankJobs">
             <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
             </shiro:hasPermission>
-            <c:if test="${captureRankJobSearchCriteria.jobType.equals('Common')}">
+            <c:if test="${!(captureRankJobSearchCriteria.rankJobType eq 'Station')}">
                 <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
                     <input type="button" value=" 添加 " onclick="addCaptureRankJobs()">&nbsp;&nbsp;
                 </shiro:hasPermission>
@@ -70,6 +79,8 @@
             <td align="center" width=40>执行时间</td>
             <td align="center" width=60>最后执行日期</td>
             <td align="center" width=50>状态</td>
+            <td align="center" width=50>任务类型</td>
+            <td align="center" width=50>任务区域</td>
             <td align="center" width=50>抓取记录数</td>
             <td align="center" width=60>采集天数间隔(天)</td>
             <td align="center" width=60>抓取间隔(ms)</td>
@@ -101,6 +112,13 @@
             <td width=40><fmt:formatDate value="${captureRankJob.exectionTime}" pattern="HH:mm"/></td>
             <td width=60>${captureRankJob.lastExecutionDate}</td>
             <td width=50>${captureRankJob.exectionStatus}<br><font color="red">${captureRankJob.captureRankJobStatus == false ? "暂停中" : ""}</font></td>
+            <td width=50 align="center">
+                <c:if test="${(captureRankJobSearchCriteria.rankJobType eq 'Common') && (captureRankJob.qzSettingUuid == null)}">普通</c:if>
+                <c:if test="${(captureRankJob.qzSettingUuid != null)}">整站</c:if>
+                <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'DropDown'}">下拉词</c:if>
+                <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'Other'}">其他</c:if>
+            </td>
+            <td width=50 align="center">${rankJobAreaMap.get(captureRankJob.rankJobArea)}</td>
             <td width=50>${captureRankJob.rowNumber}</td>
             <td width=60>${captureRankJob.captureDaysInterval}</td>
             <td width=60>${captureRankJob.captureInterval}</td>
@@ -115,7 +133,7 @@
             <td width=60>${captureRankJob.createBy}</td>
             <td width=90><fmt:formatDate value="${captureRankJob.createTime}" pattern="yyyy-MM-dd HH:mm"/></td>
             <td width=80>
-                <c:if test="${captureRankJobSearchCriteria.jobType.equals('Common')}">
+                <c:if test="${!(captureRankJobSearchCriteria.rankJobType eq 'Station')}">
                     <shiro:hasPermission name="/internal/captureRank/saveCaptureRankJob">
                         <a href="javascript:updateCaptureRankJobs('${captureRankJob.uuid}')">修改</a>
                     </shiro:hasPermission>
@@ -131,7 +149,7 @@
                         </c:otherwise>
                     </c:choose>
                 </shiro:hasPermission>
-                <c:if test="${captureRankJobSearchCriteria.jobType.equals('Common')}">
+                <c:if test="${!(captureRankJobSearchCriteria.rankJobType eq 'Station')}">
                     <shiro:hasPermission name="/internal/captureRank/deleteCaptureRankJob">
                         <a href="javascript:deleteCaptureRankJob('${captureRankJob.uuid}')">删除</a>
                     </shiro:hasPermission>
@@ -153,6 +171,22 @@
             <li>
                 <span>客户名:</span>
                 <select id="customers" name="customers" title="客户名" style="width: 200px;"></select>
+            </li>
+            <li>
+                <span>任务区域:</span>
+                <select id="rankJobArea" name="rankJobArea" title="" style="width: 80px;height: 21px">
+                    <c:forEach items="${rankJobAreaMap}" var="rankJobArea">
+                        <option value="${rankJobArea.key}">${rankJobArea.value}</option>
+                    </c:forEach>
+                </select>
+            </li>
+            <li>
+                <span>任务类型:</span>
+                <select id="rankJobType" name="rankJobType" title="" style="width: 120px;height: 21px">
+                    <option value="Common">普通任务</option>
+                    <option value="DropDown">下拉词任务</option>
+                    <option value="Other">其他</option>
+                </select>
             </li>
             <li>
                 <span>执行方式:</span>

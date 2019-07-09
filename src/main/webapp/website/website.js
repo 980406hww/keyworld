@@ -150,6 +150,7 @@ function assignment(websiteInfo) {
     websiteForm.find("#serverIP").val(websiteInfo.serverIP);
     websiteForm.find("#serverUserName").val(websiteInfo.serverUserName);
     websiteForm.find("#serverPassword").val(websiteInfo.serverPassword);
+    websiteForm.find("#dnsAnalysisStatus").val(websiteInfo.dnsAnalysisStatus);
     websiteForm.find("#expiryTime").val(userDate(websiteInfo.expiryTime));
     $("#websiteForm #websiteType option[value='" + websiteInfo.websiteType + "']").prop("selected", "selected");
 }
@@ -214,8 +215,8 @@ function showWebsiteDialog(uuid) {
     $("#websiteDialog").show();
     $("#websiteDialog").dialog({
         resizable: false,
-        width: 320,
-        height: 445,
+        width: 310,
+        height: 465,
         modal: true,
         title: '网站信息',
         closed:true,
@@ -266,6 +267,7 @@ function saveWebsite(uuid) {
     websiteObj.serverIP = $.trim($("#websiteForm").find("#serverIP").val());
     websiteObj.serverUserName = $.trim($("#websiteForm").find("#serverUserName").val());
     websiteObj.serverPassword = $.trim($("#websiteForm").find("#serverPassword").val());
+    websiteObj.dnsAnalysisStatus = $.trim($("#websiteForm").find("#dnsAnalysisStatus").val());
     if(websiteObj.domain == null || websiteObj.domain=="" || websiteObj.domain ==''){
         alert("域名不能为空");
         return;

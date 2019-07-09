@@ -329,6 +329,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordCount > 0;
     }
 
+    public List<Map> searchAllKeywordAndUrl(Long customerUuid, String terminalType) {
+        return customerKeywordDao.selectAllKeywordAndUrl(customerUuid, terminalType);
+    }
+
     public int getCustomerKeywordCount(String terminalType, String entryType, long customerUuid) {
         return customerKeywordDao.getCustomerKeywordCount(terminalType, entryType, customerUuid);
     }
@@ -872,7 +876,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
 
         String usingOperationType = machineInfo.getUsingOperationType();
-        if(usingOperationType == null){
+        if(usingOperationType == null || machineInfo.getPageSize() == null){
             GroupSetting groupSetting = groupSettingService.getGroupSettingViaPercentage(machineInfo.getGroup(), machineInfo.getTerminalType());
             usingOperationType = groupSetting.getOperationType();
             machineInfo.setUsingOperationType(usingOperationType);
@@ -1151,8 +1155,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public void adjustOptimizationCount(){
         List<String> groupNames = new ArrayList<String>();
         List<Map> bcCustomerKeywordSummaries = customerKeywordDao.searchKeywordsForAdjustingOptimizationCount("bc");
-        List<Map> ptCustomerKeywordSummaries = customerKeywordDao.searchKeywordsForAdjustingOptimizationCount("pt");
-        bcCustomerKeywordSummaries.addAll(ptCustomerKeywordSummaries);
+//        List<Map> ptCustomerKeywordSummaries = customerKeywordDao.searchKeywordsForAdjustingOptimizationCount("pt");
+//        bcCustomerKeywordSummaries.addAll(ptCustomerKeywordSummaries);
         if(CollectionUtils.isNotEmpty(bcCustomerKeywordSummaries)){
             for(Map customerKeywordSummaryMap : bcCustomerKeywordSummaries) {
                 Long uuid = Long.parseLong(customerKeywordSummaryMap.get("uuid").toString());
@@ -1213,7 +1217,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                                                                   Date startTime,Long captureRankJobUuid){
         CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
         Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
-        if(captureRankJobStatus != null){
+        if(captureRankJobStatus){
             customerKeywordForCapturePosition.setCaptureRankJobStatus(captureRankJobStatus);
             Long customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForCapturePosition(terminalType, groupNames, customerUuid, startTime, 0);
             if(null == customerKeywordUuid){

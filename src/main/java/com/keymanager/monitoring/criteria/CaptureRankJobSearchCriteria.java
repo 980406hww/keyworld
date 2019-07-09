@@ -7,9 +7,10 @@ public class CaptureRankJobSearchCriteria{
     private String groupNames;
     private String customerUuid;
     private String operationType;
-    private String jobType;
     private String exectionType;
     private String exectionStatus;
+    private String rankJobType;
+    private String rankJobArea;
     private String createBy;
     private String updateBy;
     private String groupNameFuzzyQuery;
@@ -38,14 +39,6 @@ public class CaptureRankJobSearchCriteria{
         this.operationType = operationType;
     }
 
-    public String getJobType() {
-        return jobType;
-    }
-
-    public void setJobType(String jobType) {
-        this.jobType = jobType;
-    }
-
     public String getExectionType() {
         return exectionType;
     }
@@ -60,6 +53,22 @@ public class CaptureRankJobSearchCriteria{
 
     public void setExectionType(String exectionType) {
         this.exectionType = exectionType;
+    }
+
+    public String getRankJobType() {
+        return rankJobType;
+    }
+
+    public void setRankJobType(String rankJobType) {
+        this.rankJobType = rankJobType;
+    }
+
+    public String getRankJobArea() {
+        return rankJobArea;
+    }
+
+    public void setRankJobArea(String rankJobArea) {
+        this.rankJobArea = rankJobArea;
     }
 
     public String getCreateBy() {

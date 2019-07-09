@@ -56,7 +56,8 @@
             tqkri.fUuid AS 'uuid',
             tqkri.fCreateTopTenNum AS 'createTopTenNum',
             tqkri.fCreateTopFiftyNum AS 'createTopFiftyNum',
-            tqkri.fAchieveLevel AS 'achieveLevel'
+            tqkri.fAchieveLevel AS 'achieveLevel',
+            CONCAT("'", IF(MONTH(tqkri.fCreateTime) &lt; 10, CONCAT('0', MONTH(tqkri.fCreateTime)), MONTH(tqkri.fCreateTime)), '-', IF(DAY(tqkri.fCreateTime) &lt; 10, CONCAT('0', DAY(tqkri.fCreateTime)), DAY(tqkri.fCreateTime)), "'") AS 'createMonthDay'
         FROM t_qz_keyword_rank_info tqkri
         WHERE 1 = 1
         <if test="qzSettingUuid != null"> AND tqkri.fQZSettingUuid = #{qzSettingUuid} </if>

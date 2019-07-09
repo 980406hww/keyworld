@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.service;
 
+import com.alibaba.dcm.DnsCacheManipulator;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -178,7 +179,14 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
             String url = "http://" + website.getBackendDomain() + "sales_management.php";
             params.set("params", AESUtils.encrypt(postMap));
             HttpEntity<MultiValueMap> requestEntity = new HttpEntity<MultiValueMap>(params, headers);
-            ListenableFuture<ResponseEntity<String>> forEntity = asyncRestTemplate.postForEntity(url, requestEntity, String.class);
+            ListenableFuture<ResponseEntity<String>> forEntity;
+            if (website.getDnsAnalysisStatus() == 1){
+                DnsCacheManipulator.setDnsCache(website.getBackendDomain().split("/")[0], website.getServerIP());
+                forEntity = asyncRestTemplate.postForEntity(url, requestEntity, String.class);
+                DnsCacheManipulator.removeDnsCache(website.getBackendDomain().split("/")[0]);
+            }else {
+                forEntity = asyncRestTemplate.postForEntity(url, requestEntity, String.class);
+            }
             forEntity.addCallback(new SuccessCallback<ResponseEntity<String>>() {
                 @Override
                 public void onSuccess(ResponseEntity<String> response) {
@@ -235,6 +243,8 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
             friendlyLinkService.saveOrUpdateConnectionCMS(friendlyLink, file, WebsiteRemoteConnectionEnum.add.name());
             if (friendlyLink.getFriendlyLinkSortRank() != -1){
                 friendlyLinkService.retreatSortRank(friendlyLink.getWebsiteUuid(), friendlyLink.getFriendlyLinkSortRank());
+            } else {
+                friendlyLink.setFriendlyLinkSortRank(friendlyLinkService.selectMaxSortRank(friendlyLink.getWebsiteUuid()) + 1);
             }
             friendlyLinkService.insertFriendlyLink(friendlyLink);
         }

@@ -1674,7 +1674,7 @@
 				<td align="right" style="margin-right:4px;">引擎</td>
 				<td>
 					<select name="searchEngine" id="searchEngine" style="width:240px">
-						<option value="">全部</option>
+						<option value="百度">百度</option>
 						<c:forEach items="${searchEngineMap}" var="entry">
 							<option value="${entry.value}">${entry.key}</option>
 						</c:forEach>

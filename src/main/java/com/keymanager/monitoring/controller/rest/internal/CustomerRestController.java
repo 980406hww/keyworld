@@ -2,19 +2,15 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CustomerCriteria;
-import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.CustomerService;
 import com.keymanager.monitoring.service.IUserInfoService;
 import com.keymanager.monitoring.service.UserRoleService;
-import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -262,6 +258,31 @@ public class CustomerRestController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/changeCustomerDailyReportIdentify", method = RequestMethod.POST)
+    public ResponseEntity<?> changeCustomerDailyReportIdentify(@RequestBody Map requestMap) {
+        try {
+            long uuid = Long.valueOf((String) requestMap.get("customerUuid"));
+            boolean identify = Boolean.valueOf((String) requestMap.get("identify"));
+            customerService.changeCustomerDailyReportIdentify(uuid, identify);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/updateCustomerDailyReportIdentify", method = RequestMethod.POST)
+    public ResponseEntity<?> updateCustomerDailyReportIdentify(@RequestBody Map requestMap) {
+        try {
+            String uuids = (String) requestMap.get("uuids");
+            customerService.updateCustomerDailyReportIdentify(uuids);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
     }
 }
