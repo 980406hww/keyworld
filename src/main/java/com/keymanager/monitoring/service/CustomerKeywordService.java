@@ -658,9 +658,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
         int retryCount = 0;
         int noPositionMaxInvalidCount = 2;
-        GroupSetting groupSetting = groupSettingService.getGroupSettingViaPercentage(machineInfo.getGroup(), machineInfo.getTerminalType());
-
         OperationCombine operationCombine = operationCombineService.getOperationCombine(machineInfo.getGroup(), machineInfo.getTerminalType());
+        GroupSetting groupSetting = groupSettingService.getGroupSetting(operationCombine);
         Integer maxInvalidCount = operationCombine.getMaxInvalidCount();
 
         if(groupSetting.getOperationType().contains(Constants.CONFIG_TYPE_ZHANNEI_SOGOU)) {

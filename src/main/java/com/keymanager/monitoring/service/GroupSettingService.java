@@ -65,18 +65,23 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
 
     public GroupSetting getGroupSettingViaPercentage(String groupName, String terminalType){
         OperationCombine operationCombine = operationCombineService.getOperationCombine(groupName, terminalType);
-        if(operationCombine != null){
-            List<GroupSetting> groupSettings = groupSettingDao.searchGroupSettingsSortingPercentage(operationCombine.getUuid());
-            if(CollectionUtils.isNotEmpty(groupSettings)){
-                Random ra = new Random();
-                if(operationCombine.getRemainingAccount() < 100) {
-                    int randomValue = ra.nextInt(100 - operationCombine.getRemainingAccount()) + 1;
-                    int totalPercentage = 0;
-                    for (GroupSetting groupSetting : groupSettings) {
-                        totalPercentage = totalPercentage + groupSetting.getMachineUsedPercent();
-                        if (randomValue <= totalPercentage) {
-                            return groupSetting;
-                        }
+        if(operationCombine != null) {
+            return getGroupSetting(operationCombine);
+        }
+        return null;
+    }
+
+    public GroupSetting getGroupSetting(OperationCombine operationCombine) {
+        List<GroupSetting> groupSettings = groupSettingDao.searchGroupSettingsSortingPercentage(operationCombine.getUuid());
+        if(CollectionUtils.isNotEmpty(groupSettings)){
+            Random ra = new Random();
+            if(operationCombine.getRemainingAccount() < 100) {
+                int randomValue = ra.nextInt(100 - operationCombine.getRemainingAccount()) + 1;
+                int totalPercentage = 0;
+                for (GroupSetting groupSetting : groupSettings) {
+                    totalPercentage = totalPercentage + groupSetting.getMachineUsedPercent();
+                    if (randomValue <= totalPercentage) {
+                        return groupSetting;
                     }
                 }
             }
