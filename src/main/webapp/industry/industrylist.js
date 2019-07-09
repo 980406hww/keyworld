@@ -343,3 +343,37 @@ function updateIndustryUserID() {
         }
     });
 }
+
+function updateIndustryStatus() {
+    var uuids = getSelectedIDs();
+    if (uuids === '') {
+        $.messager.alert('提示', '请选择要重新爬取网站联系信息的行业信息！！', 'info');
+        return;
+    }
+    parent.$.messager.confirm('询问', "确认要重新爬取行业的网站联系信息吗？", function(b) {
+        if (b) {
+            var data = {};
+            data.uuids = uuids.split(",");
+            $.ajax({
+                url: '/internal/industry/updateIndustryStatus',
+                data: JSON.stringify(data),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result) {
+                        $().toastmessage('showSuccessToast', "操作成功", true);
+                    } else {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            });
+        }
+    });
+}

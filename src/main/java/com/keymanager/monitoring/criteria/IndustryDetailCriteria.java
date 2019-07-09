@@ -1,7 +1,5 @@
 package com.keymanager.monitoring.criteria;
 
-import java.util.List;
-
 /**
  * @Author zhoukai
  * @Date 2019/7/5 20:37
@@ -12,8 +10,8 @@ public class IndustryDetailCriteria extends BaseCriteria {
     private String website;
     private Integer weight;
     private String remark;
-    private List<String> qqs;
-    private List<String> phones;
+    private String qqs;
+    private String phones;
     private int level;
 
     public long getIndustryID() {
@@ -48,19 +46,19 @@ public class IndustryDetailCriteria extends BaseCriteria {
         this.remark = remark;
     }
 
-    public List<String> getQqs() {
+    public String getQqs() {
         return qqs;
     }
 
-    public void setQqs(List<String> qqs) {
+    public void setQqs(String qqs) {
         this.qqs = qqs;
     }
 
-    public List<String> getPhones() {
+    public String getPhones() {
         return phones;
     }
 
-    public void setPhones(List<String> phones) {
+    public void setPhones(String phones) {
         this.phones = phones;
     }
 

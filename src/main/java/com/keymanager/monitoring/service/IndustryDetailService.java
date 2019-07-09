@@ -74,22 +74,8 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
             updateFlag = true;
             existingIndustryDetail.setUpdateTime(new Date());
         }
-        if (criteria.getPhones().size() > 0) {
-            for (String telephone : criteria.getPhones()) {
-                existingIndustryDetail.setTelephone(telephone + ",");
-            }
-            existingIndustryDetail.setTelephone(existingIndustryDetail.getTelephone().substring(0, existingIndustryDetail.getTelephone().length() - 1));
-        } else {
-            existingIndustryDetail.setTelephone("");
-        }
-        if (criteria.getQqs().size() > 0) {
-            for (String qq : criteria.getQqs()) {
-                existingIndustryDetail.setQq(qq);
-            }
-            existingIndustryDetail.setQq(existingIndustryDetail.getQq().substring(0, existingIndustryDetail.getQq().length() - 1));
-        } else {
-            existingIndustryDetail.setQq("");
-        }
+        existingIndustryDetail.setTelephone(criteria.getPhones());
+        existingIndustryDetail.setQq(criteria.getQqs());
         existingIndustryDetail.setWeight(criteria.getWeight());
         existingIndustryDetail.setLevel(criteria.getLevel());
         if (updateFlag) {
@@ -97,5 +83,9 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
         } else {
             industryDetailDao.insert(existingIndustryDetail);
         }
+    }
+
+    public int findIndustryDetailCount(long industryID) {
+        return industryDetailDao.findIndustryDetailCount(industryID);
     }
 }

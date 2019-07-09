@@ -153,5 +153,17 @@ public class IndustryInfoRestController {
         }
         return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("/updateIndustryStatus")
+    public ResponseEntity<?> updateIndustryStatus(@RequestBody Map<String, Object> requestMap) {
+        try {
+            List<String> uuids = (List<String>) requestMap.get("uuids");
+            industryInfoService.updateIndustryStatus(uuids);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.OK);
+        }
+    }
 }
 

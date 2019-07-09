@@ -28,4 +28,6 @@ public interface IndustryInfoDao extends BaseMapper<IndustryInfo> {
     IndustryInfo findExistingIndustryInfo(@Param("industryName") String industryName);
 
    IndustryInfoVO getValidIndustryInfo();
+
+    void updateIndustryStatus(@Param("uuids") List<String> uuids);
 }

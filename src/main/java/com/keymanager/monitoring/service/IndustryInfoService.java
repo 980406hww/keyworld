@@ -39,7 +39,15 @@ public class IndustryInfoService extends ServiceImpl<IndustryInfoDao, IndustryIn
     private ConfigService configService;
 
     public Page<IndustryInfo> searchIndustries (Page<IndustryInfo> page, IndustryCriteria industryCriteria) {
-        return page.setRecords(industryInfoDao.searchIndustries(page, industryCriteria));
+        page.setRecords(industryInfoDao.searchIndustries(page, industryCriteria));
+        this.otherInfoForIndustryInfo(page);
+        return page;
+    }
+
+    private void otherInfoForIndustryInfo(Page<IndustryInfo> page) {
+        for (IndustryInfo industryInfo : page.getRecords()) {
+            industryInfo.setDetailCount(industryDetailService.findIndustryDetailCount(industryInfo.getUuid()));
+        }
     }
 
     public IndustryInfo getIndustry (long uuid) {
@@ -88,5 +96,9 @@ public class IndustryInfoService extends ServiceImpl<IndustryInfoDao, IndustryIn
 
     public void updateIndustryInfoDetail(IndustryDetailCriteria criteria) {
         industryDetailService.updateIndustryInfoDetail(criteria);
+    }
+
+    public void updateIndustryStatus(List<String> uuids) {
+        industryInfoDao.updateIndustryStatus(uuids);
     }
 }

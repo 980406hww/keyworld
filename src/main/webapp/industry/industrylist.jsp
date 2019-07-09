@@ -61,6 +61,7 @@
                         <%--<shiro:hasPermission name="/internal/industry/saveIndustry">--%>
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 添加 " onclick="showIndustryDialog(null,'${user.loginName}')"/>
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 修改客户归属 " onclick="updateIndustryUserID()"/>
+                            &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 马上爬取 " onclick="updateIndustryStatus()"/>
                         <%--</shiro:hasPermission>--%>
                         <%--<shiro:hasPermission name="/internal/industry/deleteIndustries">--%>
                             &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 删除所选 " onclick="deleteIndustries()"/>
@@ -95,7 +96,7 @@
                 </td>
                 <td width=100>${industryInfo.userID}</td>
                 <td width=100>
-                    <a href="#" onclick="searchIndustryDetails('/internal/industryDetail/searchIndustryDetails/${industryInfo.uuid}')">${industryInfo.industryName}</a>
+                    <a href="#" onclick="searchIndustryDetails('/internal/industryDetail/searchIndustryDetails/${industryInfo.uuid}')">${industryInfo.industryName}(${industryInfo.detailCount})</a>
                 </td>
                 <td width=80>${industryInfo.searchEngine}</td>
                 <td width=200>

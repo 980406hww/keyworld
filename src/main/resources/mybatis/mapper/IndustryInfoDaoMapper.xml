@@ -29,7 +29,7 @@
 
     <update id="updateIndustryUserID">
         UPDATE t_industry_info
-        SET fUserID = #{userID}
+        SET fUserID = #{userID}, fUpdateTime = NOW()
         WHERE fUuid IN
         <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
             #{uuid}
@@ -63,6 +63,16 @@
             tii.fPagePerNum   AS 'pagePerNum'
         FROM t_industry_info tii
         WHERE tii.fStatus = 0
+        OR (tii.fStatus = 1 AND tii.fUpdateTime &lt; DATE_SUB(NOW(), INTERVAL 12 HOUR))
         LIMIT 1
     </select>
+
+    <update id="updateIndustryStatus">
+        UPDATE t_industry_info
+        SET fStatus = 0, fUpdateTime = NOW()
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
 </mapper>

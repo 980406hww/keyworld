@@ -57,6 +57,11 @@ public class IndustryInfo extends BaseEntity {
      */
     @TableField(value = "fStatus")
     private Integer status;
+    /**
+     * 行业下的网站数
+     */
+    @TableField(exist = false)
+    private int detailCount;
 
     public String getUserID () {
         return userID;
@@ -120,5 +125,13 @@ public class IndustryInfo extends BaseEntity {
 
     public void setStatus (Integer status) {
         this.status = status;
+    }
+
+    public int getDetailCount() {
+        return detailCount;
+    }
+
+    public void setDetailCount(int detailCount) {
+        this.detailCount = detailCount;
     }
 }
