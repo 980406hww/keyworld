@@ -101,4 +101,10 @@ public class IndustryInfoService extends ServiceImpl<IndustryInfoDao, IndustryIn
     public void updateIndustryStatus(List<String> uuids) {
         industryInfoDao.updateIndustryStatus(uuids);
     }
+
+    public void updateIndustryInfoStatus(long uuid) {
+        IndustryInfo industryInfo = industryInfoDao.selectById(uuid);
+        industryInfo.setStatus(2);
+        industryInfoDao.updateById(industryInfo);
+    }
 }
