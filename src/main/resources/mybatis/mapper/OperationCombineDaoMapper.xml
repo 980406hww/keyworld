@@ -11,7 +11,7 @@
             FROM t_group g
             WHERE g.fOperationCombineUuid = toc.fUuid
         )
-        AND toc.fTerminalType = 'PC'
+        AND toc.fTerminalType = #{terminalType}
         ORDER BY toc.fOperationCombineName
     </select>
 
