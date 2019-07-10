@@ -36,6 +36,9 @@ public class QZOperationType extends BaseEntity {
   @TableField(value = "fSubDomainName",strategy = FieldStrategy.IGNORED)
   private String subDomainName;//二级域名()
 
+  @TableField(value = "fMonitorRemark")
+  private String monitorRemark; //
+
   @TableField(value = "fReachTargetDate")
   private Date reachTargetDate;// 达标日期()
 
@@ -167,5 +170,13 @@ public class QZOperationType extends BaseEntity {
 
   public void setOptimizationType (int optimizationType) {
     this.optimizationType = optimizationType;
+  }
+
+  public String getMonitorRemark() {
+    return monitorRemark;
+  }
+
+  public void setMonitorRemark(String monitorRemark) {
+    this.monitorRemark = monitorRemark;
   }
 }

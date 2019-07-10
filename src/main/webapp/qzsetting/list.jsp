@@ -106,7 +106,7 @@
 						暴涨 (${qzSettingSearchCriteria.upNum})
 					</label>
 				</li>
-				<%--<li>
+				<li>
 					<label name="lowerDifference" title="网站关键词(PC,Phone)今天前10下降">
 						<input type="radio" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 7}">checked</c:if>>
 						下降 (${qzSettingSearchCriteria.downDifferenceNum})
@@ -123,7 +123,7 @@
 						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 9}">checked</c:if>>
 						上升 (${qzSettingSearchCriteria.upDifferenceNum})
 					</label>
-				</li>--%>
+				</li>
 				<li>
 					<label name="atLeastStandard" title="标识最少有一条规则达标">
 						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 3}">checked</c:if>>
@@ -170,6 +170,7 @@
 					<span>操作类型: </span>
 					<span>
 						<select name="operationType" style="width: 150px;">
+							<option value=""></option>
 							<c:forEach items="${operationTypeValues}" var="operationType">
 								<c:choose>
 									<c:when test="${operationType eq qzSettingSearchCriteria.operationType}"><option selected>${operationType}</option></c:when>
@@ -1251,7 +1252,6 @@
 			</td>
 		</tr>
 	</table>
-
 	<table style="font-size:12px" cellspacing="5">
 		<tr>
 			<td colspan="4" class="split_line"></td>
@@ -1302,6 +1302,10 @@
 					</shiro:hasPermission>
 					<input type="hidden" id="qzSettingUuidPC" name="qzOperationTypeUuid" value="" />
 					<c:if test="${not isSEO}">
+						<tr>
+							<td align="right" style="width:72px" valign="top">达标备注</td>
+                            <td><textarea name="monitorRemark" id="monitorRemarkPC" placeholder="请填写电脑端达标备注, 如：首月30-50个词 客供词 3000" style="width:240px; height: 40px; margin-left: -6;"></textarea></td>
+						</tr>
 						<tr id="standardSpeciesPC">
 							<td align="right" style="width:72px"><label>达标种类</label></td>
 							<td title="爱站, 5118, 指定词和其他, 四选一">
@@ -1359,6 +1363,10 @@
 					</shiro:hasPermission>
 					<input type="hidden" id="qzSettingUuidPhone" name="qzOperationTypeUuid" value="" />
 					<c:if test="${not isSEO}">
+						<tr>
+							<td align="right" style="width:72px" valign="top">达标备注</td>
+                            <td><textarea name="monitorRemark" id="monitorRemarkPhone" placeholder="请填写移动端达标备注, 如：50个词" style="width:240px; height: 40px; margin-left: -6;"></textarea></td>
+						</tr>
 						<tr id="standardSpeciesPhone">
 							<td align="right" style="width:72px"><label>达标种类</label></td>
 							<td title="爱站, 5118, 指定词和其他, 四选一">

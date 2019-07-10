@@ -203,7 +203,17 @@
                 <when test="qzSettingSearchCriteria.checkStatus == 6">
                     AND qk.fIncrease = 0
                 </when>
+                <when test="qzSettingSearchCriteria.checkStatus == 7">
+                    AND qk.fTodayDifference &lt; 0
+                </when>
+                <when test="qzSettingSearchCriteria.checkStatus == 8">
+                    AND qk.fTodayDifference = 0
+                </when>
+                <when test="qzSettingSearchCriteria.checkStatus == 9">
+                    AND qk.fTodayDifference &gt; 0
+                </when>
             </choose>
+            AND qk.fDataProcessingStatus = 1
             AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType})
         </if>
         <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">

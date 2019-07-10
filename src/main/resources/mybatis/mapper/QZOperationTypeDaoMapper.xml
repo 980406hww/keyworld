@@ -32,6 +32,7 @@
        qopty.fCurrentKeywordCount    AS 'currentKeywordCount',
        qopty.fGroup            AS 'group',
        qopty.fSubDomainName    AS 'subDomainName',
+       qopty.fMonitorRemark    AS 'monitorRemark',
        qopty.fReachTargetDate  AS 'reachTargetDate',
        qopty.fNextChargeDate   AS 'nextChargeDate',
        qopty.fUpdateTime       AS 'updateTime',

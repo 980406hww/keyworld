@@ -49,6 +49,9 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@Autowired
 	private OperationCombineService operationCombineService;
 
+	@Autowired
+	private OperationTypeService operationTypeService;
+
 	@RequiresPermissions("/internal/qzsetting/updateStatus")
 	@RequestMapping(value = "/updateQZSettingStatus", method = RequestMethod.POST)
 	public ResponseEntity<?> updateQZSettingStatus(@RequestBody Map<String, Object> requestMap) throws Exception{
@@ -194,7 +197,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
 		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
 		Integer availableQZSettingCount = qzSettingService.getAvailableQZSettings().size();
-		String [] operationTypeValues = configService.getOperationTypeValues(qzSettingSearchCriteria.getTerminalType());
+		List operationTypeValues =  operationTypeService.getOperationTypeValuesByRole(qzSettingSearchCriteria.getTerminalType());
 		List<String> operationCombines = operationCombineService.getOperationCombineNames(qzSettingSearchCriteria.getTerminalType());
 		// modelAndView.addObject("chargeRemindDataMap", chargeRemindDataMap);
 		modelAndView.addObject("customerList", customerList);

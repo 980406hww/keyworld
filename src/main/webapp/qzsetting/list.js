@@ -1879,6 +1879,7 @@ function initSettingDialog(qzSetting, self) {
         settingDialogDiv.find("#optimizationType" + val.operationType).css("display", "block");
         settingDialogDiv.find("#group" + val.operationType).val(val.group);
         settingDialogDiv.find("#subDomainName" + val.operationType).val(val.subDomainName);
+        settingDialogDiv.find("#monitorRemark" + val.operationType).val(val.monitorRemark === null ? '' : val.monitorRemark);
         settingDialogDiv.find("#currentKeywordCount" + val.operationType).val(val.currentKeywordCount);
         /* 限制最大词数 */
         settingDialogDiv.find("#maxKeywordCount" + val.operationType).val(val.maxKeywordCount);
@@ -2038,6 +2039,7 @@ function saveChangeSetting(self, refresh) {
             operationType.maxKeywordCount = 1000;
         }
         operationType.subDomainName = settingDialogDiv.find("#subDomainName" + val.id).val().trim();
+        operationType.monitorRemark = settingDialogDiv.find("#monitorRemark" + val.id).val().trim();
         if (operationType.group == null || operationType.group === "") {
             alert("请输入分组");
             settingDialogDiv.find("#group" + val.id).focus();

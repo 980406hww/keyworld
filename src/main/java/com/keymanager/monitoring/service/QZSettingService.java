@@ -277,6 +277,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		oldOperationType.setStandardType(newOperationType.getStandardType());
 		oldOperationType.setGroup(newOperationType.getGroup());
 		oldOperationType.setSubDomainName(newOperationType.getSubDomainName());
+		oldOperationType.setMonitorRemark(newOperationType.getMonitorRemark());
 		oldOperationType.setMaxKeywordCount(newOperationType.getMaxKeywordCount());
 		oldOperationType.setIsDeleted(0); //只要是发生改变那么就让它的状态为0
 		qzOperationTypeService.updateById(oldOperationType);
