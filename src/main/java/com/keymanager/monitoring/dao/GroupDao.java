@@ -1,11 +1,8 @@
 package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.baomidou.mybatisplus.plugins.Page;
-import com.keymanager.monitoring.criteria.GroupSettingCriteria;
 import com.keymanager.monitoring.criteria.OperationCombineCriteria;
 import com.keymanager.monitoring.entity.Group;
-import com.keymanager.monitoring.vo.GroupVO;
 import com.keymanager.monitoring.vo.OperationCombineVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,8 +13,6 @@ import java.util.List;
  * @Date 2019/4/27 9:41
  **/
 public interface GroupDao extends BaseMapper<Group> {
-
-    List<GroupVO> searchGroups (Page<GroupVO> page, @Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
     List<String> getOptimizationGroups(@Param("terminalType") String terminalType);
 

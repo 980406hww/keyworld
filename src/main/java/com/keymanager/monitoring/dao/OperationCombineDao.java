@@ -1,6 +1,8 @@
 package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.monitoring.criteria.GroupSettingCriteria;
 import com.keymanager.monitoring.entity.OperationCombine;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,4 +33,7 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
     void updateMaxInvalidCount (@Param("uuid") long uuid, @Param("maxInvalidCount") int maxInvalidCount);
 
     String getOperationCombineName (@Param("optimizeGroupName") String optimizeGroupName);
+
+    List<OperationCombine> searchOperationCombines(@Param("page") Page<OperationCombine> page,
+                                                   @Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 }

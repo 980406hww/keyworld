@@ -87,11 +87,11 @@
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchCondition('1')" value=" 搜索 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
-				<%--<shiro:hasPermission name="/internal/group/saveGroup">--%>
+				<shiro:hasPermission name="/internal/operationCombine/saveOperationCombine">
 					<li>
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showOperationCombineDialog()" value=" 增加 " >&nbsp;
 					</li>
-				<%--</shiro:hasPermission>--%>
+				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/group/getAvailableOptimizationGroups">
 					<li>
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableOptimizationGroups()" value="查询需要添加的优化组">&nbsp;
@@ -118,36 +118,36 @@
 <div class="datalist">
 	<div class="datalist-list">
 		<ul>
-			<c:forEach items="${page.records}" var="groupVo" varStatus="status">
+			<c:forEach items="${page.records}" var="operationCombine">
 				<li title="请把分组下的机器分配完成！">
 					<div class="header">
-						<input type="hidden" name="operationCombineUuid" value="${groupVo.uuid}">
-						<span class="operationCombineName" title="${groupVo.operationCombineName}——${groupVo.remainingAccount}%">
-							<a href="javascript:;">${groupVo.operationCombineName}</a>
+						<input type="hidden" name="operationCombineUuid" value="${operationCombine.uuid}">
+						<span class="operationCombineName" title="${operationCombine.operationCombineName}——${operationCombine.remainingAccount}%">
+							<a href="javascript:;">${operationCombine.operationCombineName}</a>
 						</span>
-						<span class="userName"><a href="javascript:;"></a>${groupVo.userName}</span>
+						<span class="userName"><a href="javascript:;"></a>${operationCombine.creator}</span>
                         <span class="maxInvalidCount" ondblclick="editMaxInvalidCountStr($(this).find('label.maxInvalidCountStr')[0], true)">
-							<label>最大无效点击数:</label>&nbsp;&nbsp;<label class="maxInvalidCountStr" operationCombineId="${groupVo.uuid}">${groupVo.maxInvalidCount}</label>
+							<label>最大无效点击数:</label>&nbsp;&nbsp;<label class="maxInvalidCountStr" operationCombineId="${operationCombine.uuid}">${operationCombine.maxInvalidCount}</label>
 						</span>
 						<span><a href="javascript:;"></a>&nbsp;&nbsp;&nbsp;</span>
-						<span class="groupNames" ondblclick="editGroupNameStr($(this).find('label.groupNameStr')[0], true, '${groupVo.maxInvalidCount}')">
+						<span class="groupNames" ondblclick="editGroupNameStr($(this).find('label.groupNameStr')[0], true, '${operationCombine.maxInvalidCount}')">
 							<label>分组:&nbsp;&nbsp;</label><label class="groupNameStr">暂无</label>
 						</span>
 						<div class="handle">
-							<a class="blue" href="javascript:showGroupQueueDialog('${groupVo.uuid}', '${groupVo.maxInvalidCount}')">分组详情</a>
+							<a class="blue" href="javascript:showGroupQueueDialog('${operationCombine.uuid}', '${operationCombine.maxInvalidCount}')">分组详情</a>
 							<shiro:hasPermission name="/internal/groupsetting/saveGroupSetting">
-								<a class="blue" href="javascript:showGroupSettingDialog('add', '', '${groupVo.operationCombineName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')">新增操作组设置</a>
+								<a class="blue" href="javascript:showGroupSettingDialog('add', '', '${operationCombine.operationCombineName}', '${operationCombine.remainingAccount}', '${operationCombine.uuid}')">新增操作组设置</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/group/updateGroup">
-								<a class="blue" href="javascript:showUpdateGroupDialog('${groupVo.uuid}', '${groupVo.operationCombineName}')">批量修改操作组设置</a>
+								<a class="blue" href="javascript:showUpdateGroupDialog('${operationCombine.uuid}', '${operationCombine.operationCombineName}')">批量修改操作组设置</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/group/delGroup">
-								<a class="blue" href="javascript:delGroup(${groupVo.uuid})">删除操作组合</a>
+								<a class="blue" href="javascript:delOperationCombine(${operationCombine.uuid})">删除操作组合</a>
 							</shiro:hasPermission>
 						</div>
 					</div>
-					<div class="body" listsize="${groupVo.groupSettings.size()}">
-						<c:if test="${groupVo.groupSettings.size() > 0}">
+					<div class="body" listsize="${operationCombine.groupSettings.size()}">
+						<c:if test="${operationCombine.groupSettings.size() > 0}">
 							<div class="data-info-head">
 								<div class="other-rank">
 									<div class="row1">
@@ -260,7 +260,7 @@
 								</div>
 							</div>
 						</c:if>
-						<c:forEach items="${groupVo.groupSettings}" var="groupSetting">
+						<c:forEach items="${operationCombine.groupSettings}" var="groupSetting">
 							<div class="data-info-wrap">
 								<div class="other-rank">
 									<div class="row">
@@ -367,7 +367,7 @@
 										<div>
 											<span class="operation">
 												<shiro:hasPermission name="/internal/groupsetting/updateGroupSetting">
-													<a href="javascript:showGroupSettingDialog('update', '${groupSetting.uuid}', '${groupVo.operationCombineName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')" title="修改操作类型">修改</a>
+													<a href="javascript:showGroupSettingDialog('update', '${groupSetting.uuid}', '${operationCombine.operationCombineName}', '${operationCombine.remainingAccount}', '${operationCombine.uuid}')" title="修改操作类型">修改</a>
 												</shiro:hasPermission>
 												<shiro:hasPermission name="/internal/groupsetting/delGroupSetting">
 													<a href="javascript: void(0);" onclick="delGroupSetting(this, ${groupSetting.uuid})" title="删除操作类型">删除</a>

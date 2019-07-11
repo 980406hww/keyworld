@@ -2,54 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.GroupDao">
 
-    <select id="searchGroups" resultType="com.keymanager.monitoring.vo.GroupVO">
-        SELECT
-            toc.fUuid AS "uuid",
-            toc.fOperationCombineName AS "operationCombineName",
-            u.fUserName AS "userName",
-            toc.fRemainingAccount AS "remainingAccount",
-            toc.fMaxInvalidCount AS "maxInvalidCount"
-        FROM t_group g
-        LEFT JOIN t_userinfo u
-        ON u.fLoginName = g.fCreateBy
-        LEFT JOIN t_operation_combine toc
-        ON toc.fUuid = g.fOperationCombineUuid
-        WHERE 1 = 1
-        <choose>
-            <when test="groupSettingCriteria.operationCombineName != null and groupSettingCriteria.operationCombineName != ''">
-                AND toc.fOperationCombineName LIKE '${groupSettingCriteria.operationCombineName}%'
-            </when>
-            <otherwise>
-                AND toc.fOperationCombineName <![CDATA[>]]> ''
-            </otherwise>
-        </choose>
-        <if test="groupSettingCriteria.optimizedGroupName != null and groupSettingCriteria.optimizedGroupName != ''">
-            AND g.fGroupName LIKE '${groupSettingCriteria.optimizedGroupName}%'
-        </if>
-        AND toc.fTerminalType = #{groupSettingCriteria.terminalType}
-        <if test="groupSettingCriteria.hasOperation != null">
-            AND EXISTS (SELECT 1 FROM t_group_setting gs
-            WHERE gs.fOperationCombineUuid = toc.fUuid
-            <choose>
-                <when test="groupSettingCriteria.hasOperation == 1">
-                    AND gs.fOperationType > ''
-                    <if test="groupSettingCriteria.operationType != null and groupSettingCriteria.operationType != ''">
-                        AND gs.fOperationType = #{groupSettingCriteria.operationType}
-                    </if>
-                </when>
-                <otherwise>
-                    AND gs.fOperationType IS NULL
-                </otherwise>
-            </choose>
-            )
-        </if>
-        <if test="groupSettingCriteria.hasRemainingAccount == 1">
-            AND toc.fRemainingAccount <![CDATA[>]]> 0
-        </if>
-        GROUP BY g.fOperationCombineUuid
-        ORDER BY toc.fCreateTime DESC
-    </select>
-
     <select id="getOptimizationGroups" resultType="java.lang.String">
         SELECT
            g.fGroupName AS 'groupName'
@@ -105,10 +57,7 @@
         SELECT
             g.fUuid AS 'groupUuid'
         FROM t_group g
-        LEFT JOIN t_operation_combine toc
-        ON toc.fUuid = g.fOperationCombineUuid
         WHERE g.fGroupName = #{groupName}
-        AND toc.fTerminalType = #{terminalType}
         LIMIT 1
     </select>
 

@@ -1,12 +1,10 @@
 package com.keymanager.monitoring.service;
 
-import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.GroupDao;
 import com.keymanager.monitoring.entity.Group;
 import com.keymanager.monitoring.entity.OperationCombine;
-import com.keymanager.monitoring.vo.GroupVO;
 import com.keymanager.monitoring.vo.OperationCombineVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +30,6 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
 
     @Autowired
     private OperationCombineService operationCombineService;
-
-    public List<GroupVO> searchGroups (Page<GroupVO> page, GroupSettingCriteria groupSettingCriteria) {
-        return groupDao.searchGroups(page, groupSettingCriteria);
-    }
 
     public void batchAddGroups (OperationCombineCriteria operationCombineCriteria) {
         OperationCombine operationCombine = operationCombineService.selectById(operationCombineCriteria.getOperationCombineUuid());

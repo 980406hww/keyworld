@@ -5,8 +5,8 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.GroupSettingCriteria;
 import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.monitoring.entity.GroupSetting;
+import com.keymanager.monitoring.entity.OperationCombine;
 import com.keymanager.monitoring.service.*;
-import com.keymanager.monitoring.vo.GroupVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -44,7 +44,7 @@ public class GroupSettingRestController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
     @RequestMapping(value = "/searchGroupSettings", method = RequestMethod.GET)
-    public ModelAndView searchGroupSettingsGet(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "10") int pageSize, HttpServletRequest request) {
+    public ModelAndView searchGroupSettingsGet(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "25") int pageSize, HttpServletRequest request) {
         return constructGroupSettingModelAndView(request, new GroupSettingCriteria(), currentPageNumber, pageSize);
     }
 
@@ -72,8 +72,7 @@ public class GroupSettingRestController extends SpringMVCBaseController {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
             groupSettingCriteria.setTerminalType(terminalType);
         }
-        Page<GroupVO> page = groupSettingService.searchGroupSettings(new Page<GroupVO>(currentPageNumber, pageSize), groupSettingCriteria);
-        // String [] operationTypeValues = configService.getOperationTypeValues(groupSettingCriteria.getTerminalType());
+        Page<OperationCombine> page = groupSettingService.searchGroupSettings(new Page<OperationCombine>(currentPageNumber, pageSize), groupSettingCriteria);
         List operationTypeValues =  operationTypeService.getOperationTypeValuesByRole(groupSettingCriteria.getTerminalType());
         List<String> operationCombineNames = operationCombineService.getOperationCombineNames(groupSettingCriteria.getTerminalType());
         HttpSession session = request.getSession();

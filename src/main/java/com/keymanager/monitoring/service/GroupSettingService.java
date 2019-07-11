@@ -7,7 +7,6 @@ import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.monitoring.dao.GroupSettingDao;
 import com.keymanager.monitoring.entity.GroupSetting;
 import com.keymanager.monitoring.entity.OperationCombine;
-import com.keymanager.monitoring.vo.GroupVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,16 +20,13 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
     private GroupSettingDao groupSettingDao;
 
     @Autowired
-    private GroupService groupService;
-
-    @Autowired
     private OperationCombineService operationCombineService;
 
-    public Page<GroupVO> searchGroupSettings(Page<GroupVO> page, GroupSettingCriteria groupSettingCriteria) {
-        page.setRecords(groupService.searchGroups(page, groupSettingCriteria));
-        for (GroupVO groupVo : page.getRecords()) {
-            List<GroupSetting> groupSettings = groupSettingDao.searchGroupSettings(groupVo.getUuid());
-            groupVo.setGroupSettings(groupSettings);
+    public Page<OperationCombine> searchGroupSettings(Page<OperationCombine> page, GroupSettingCriteria groupSettingCriteria) {
+        page.setRecords(operationCombineService.searchOperationCombines(page, groupSettingCriteria));
+        for (OperationCombine operationCombine : page.getRecords()) {
+            List<GroupSetting> groupSettings = groupSettingDao.searchGroupSettings(operationCombine.getUuid());
+            operationCombine.setGroupSettings(groupSettings);
         }
         return page;
     }

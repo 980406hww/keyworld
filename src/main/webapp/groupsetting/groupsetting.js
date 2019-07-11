@@ -23,15 +23,15 @@ function loadingCheckTerminalType() {
 
 function checkTerminalType(terminalType, isManualSwitch) {
     var a = $(".mytabs .link").find("li.active a");
-    if (a[0] != undefined && a[0].innerHTML.substring(2) == terminalType) {
+    if (a[0] !== undefined && a[0].innerHTML.substring(2) === terminalType) {
         return;
     }
     $(".mytabs .link").find("li").removeClass("active");
-    if (terminalType == "PC") {
+    if (terminalType === "PC") {
         $(".mytabs .link").find("li[name='PC']").addClass("active");
         $("#chargeForm").find("#terminalType").val($.trim(terminalType));
     }
-    if (terminalType == "Phone") {
+    if (terminalType === "Phone") {
         $(".mytabs .link").find("li[name='Phone']").addClass("active");
         $("#chargeForm").find("#terminalType").val($.trim(terminalType));
     }
@@ -46,7 +46,7 @@ function checkTerminalType(terminalType, isManualSwitch) {
 function enterIn(e) {
     var e = e || event,
         keyCode = e.which || e.keyCode;
-    if (keyCode == 13) {
+    if (keyCode === 13) {
         trimSearchCondition();
     }
 }
@@ -99,20 +99,20 @@ function trimSearchCondition() {
     var operationCombineName = $(".conn").find("li.operationCombineName input[name='operationCombineName']").val();
     var optimizedGroupName = $(".conn").find("li.optimizedGroupName input[name='optimizedGroupName']").val();
     var operationType = $(".conn").find("select[name='operationType']").val();
-    if (currentPage != '1') {
+    if (currentPage !== '1') {
         chargeForm.find("#currentPageNumberHidden").val(1);
     }
-    if (operationCombineName != "") {
+    if (operationCombineName !== "") {
         chargeForm.find("#operationCombineName").val($.trim(operationCombineName));
     } else {
         chargeForm.find("#operationCombineName").val(null);
     }
-    if (optimizedGroupName != "") {
+    if (optimizedGroupName !== "") {
         chargeForm.find("#optimizedGroupName").val($.trim(optimizedGroupName));
     } else {
         chargeForm.find("#optimizedGroupName").val(null);
     }
-    if (operationType != ""){
+    if (operationType !== ""){
         chargeForm.find("#operationType").val($.trim(operationType));
     } else {
         chargeForm.find("#operationType").val(null);
@@ -193,23 +193,25 @@ function showUpdateGroupDialog(operationCombineUuid, operationCombineName) {
     updateGroupSettingDialog.window("resize", {top: $(document).scrollTop() + 150});
 }
 
-function delGroup(groupUuid) {
-    if (confirm("确定删除此操作组合吗？")) {
-        $.ajax({
-            url: '/internal/operationCombine/delOperationCombine/' + groupUuid,
-            type: 'POST',
-            success: function (result) {
-                if (result) {
-                    $().toastmessage('showSuccessToast', "删除成功!", true);
-                } else {
+function delOperationCombine(operationCombineUuid) {
+    parent.$.messager.confirm('询问', "确定删除此操作组合吗?", function (b) {
+        if (b) {
+            $.ajax({
+                url: '/internal/operationCombine/delOperationCombine/' + operationCombineUuid,
+                type: 'POST',
+                success: function (result) {
+                    if (result) {
+                        $().toastmessage('showSuccessToast', "删除成功!", true);
+                    } else {
+                        $().toastmessage('showErrorToast', "删除失败!");
+                    }
+                },
+                error: function () {
                     $().toastmessage('showErrorToast', "删除失败!");
                 }
-            },
-            error: function () {
-                $().toastmessage('showErrorToast', "删除失败!");
-            }
-        });
-    }
+            });
+        }
+    });
 }
 
 function getGroupSettingCount(operationCombineUuid, operationCombineName) {
@@ -286,25 +288,27 @@ function showGroupSettingDialog(type, id, operationCombineName, remainingAccount
 function delGroupSetting(self, operationTypeUuid) {
     var operationSpans = $($(self).parents()[6]).find("span.operation");
     if (operationSpans.length === 1) {
-        alert("这是最后一个优化组设置，请直接删除操作组合！！！");
+        $.messager.alert('提示', '这是最后一个优化组设置，请直接删除操作组合！！！', 'warning');
         return false;
     }
-    if (confirm("确定删除此操作类型？")) {
-        $.ajax({
-            url: '/internal/groupsetting/delGroupSetting/' + operationTypeUuid,
-            type: 'POST',
-            success: function (result) {
-                if (result) {
-                    $().toastmessage('showSuccessToast', "删除成功!", true);
-                } else {
+    parent.$.messager.confirm('询问', "确定删除此操作类型?", function (b) {
+        if (b) {
+            $.ajax({
+                url: '/internal/groupsetting/delGroupSetting/' + operationTypeUuid,
+                type: 'POST',
+                success: function (result) {
+                    if (result) {
+                        $().toastmessage('showSuccessToast', "删除成功!", true);
+                    } else {
+                        $().toastmessage('showErrorToast', "删除失败!");
+                    }
+                },
+                error: function () {
                     $().toastmessage('showErrorToast', "删除失败!");
                 }
-            },
-            error: function () {
-                $().toastmessage('showErrorToast', "删除失败!");
-            }
-        });
-    }
+            });
+        }
+    });
 }
 
 function findGroupSetting(id, status) {
@@ -406,7 +410,7 @@ function initSettingDialog(groupSetting, status){
 
 function isChecked(id, dialogDiv) {
     var color = $(dialogDiv).find("#" + id).parent().css("color");
-    if(color == "rgb(255, 0, 0)") {
+    if(color === "rgb(255, 0, 0)") {
         return "1";
     } else {
         return "0";
@@ -427,14 +431,14 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
     if (status) {
         var operationCombineName = dialogDiv.find("#settingOperationCombineName").val().trim();
         if (operationCombineName === "") {
-            alert("请输入操作组合名");
+            $.messager.alert('提示', '请输入操作组合名', 'warning');
             dialogDiv.find("#settingOperationCombineName")[0].focus();
             return false;
         }
         operationCombine.operationCombineName = operationCombineName;
         var groupNames = dialogDiv.find("#settingGroup").val().trim();
         if (groupNames === "") {
-            alert("请输入分组名");
+            $.messager.alert('提示', '请输入分组名', 'warning');
             dialogDiv.find("#settingGroup")[0].focus();
             return false;
         }
@@ -449,14 +453,14 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
         operationCombine.groupNames = groupNameArr;
         type = "addOperationCombine";
         if (dialogDiv.find("#machineUsedPercent").val() === '0' || dialogDiv.find("#machineUsedPercent").val() === '') {
-            alert("每个操作的机器占比都应该大于0！！！");
+            $.messager.alert('提示', '每个操作的机器占比都应该大于0！！！', 'warning');
             return false;
         }
     }
     var groupSetting = {};
     var operationType = dialogDiv.find("#settingOperationType").val();
     if (isBatchUpdate === 0 && operationType === '') {
-        alert("请选择操作类型！！！");
+        $.messager.alert('提示', '请选择操作类型！！！', 'warning');
         return false;
     }
     var remainingAccount = dialogDiv.find("#machineUsedPercent").parent().find("i").text();
@@ -468,7 +472,7 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
     }
     if (hasChangedZhanbi) {
         if (remainingAccount < 0 || remainingAccount >= 100) {
-            alert("机器占比不合理，请修改");
+            $.messager.alert('提示', '机器占比不合理，请修改！！！', 'warning');
             return false;
         }
     }
@@ -530,7 +534,7 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
         gs.operationType = isChecked("settingOperationType", dialogDiv);
         if (isChecked("machineUsedPercent", dialogDiv) === "1") {
             if (groupSetting.machineUsedPercent === 0){
-                alert("每个操作的机器占比都应该大于0！！！");
+                $.messager.alert('提示', '每个操作的机器占比都应该大于0！！！', 'warning');
                 return false;
             }
         }
@@ -631,7 +635,7 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
         }
     } else if (type === "add") { // 增加单个操作设置
         if (groupSetting.machineUsedPercent === 0) {
-            alert("每个操作的机器占比都应该大于0！！！");
+            $.messager.alert('提示', '每个操作的机器占比都应该大于0！！！', 'warning');
             return false;
         }
         groupSetting.operationCombineUuid = operationCombineUuid;
@@ -688,7 +692,7 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
 
 function checkItem(self) {
     var color = $(self).css("color");
-    if(color == "rgb(0, 0, 0)") {
+    if(color === "rgb(0, 0, 0)") {
         $(self).css("color", "red");
     } else {
         $(self).css("color", "black");
@@ -814,7 +818,7 @@ function searchAvailableOptimizationGroups() {
     var terminalType = $("#chargeForm").find("#terminalType").val();
     var optimizedGroupNameSearchSource = $("#getAvailableOptimizationGroups").find('input:radio[name="sourceRadio"]:checked').val();
     if (optimizedGroupNameSearchSource == null){
-        alert("请选择组名来源！");
+        $.messager.alert('提示', '请选择组名来源!!!', 'warning');
         return false;
     }
     var optimizedGroupName = $("#getAvailableOptimizationGroups").find($("input[name='optimizedGroupName']")).val();
@@ -855,7 +859,7 @@ function editMaxInvalidCountStr(self, edit){
     } else {
         var isChange = true;
         var label = $(self).attr("label");
-        if ($.trim(self.value) == $.trim(label)) {
+        if ($.trim(self.value) === $.trim(label)) {
             isChange = false;
         }
         if (isChange) {
@@ -904,10 +908,16 @@ function getGroupNames() {
             success: function (data) {
                 if (data != null) {
                     var groupNameStr = "";
-                    $.each(JSON.parse(data), function (idx, value) {
-                        groupNameStr += value + ",";
-                    });
-                    $(li).find(".header span.groupNames").find("label.groupNameStr").html(groupNameStr.substring(0, groupNameStr.length-1));
+                    var groupNameArr = JSON.parse(data);
+                    if (groupNameArr.length === 0) {
+                        groupNameStr = '暂无';
+                    } else {
+                        $.each(groupNameArr, function (idx, value) {
+                            groupNameStr += value + ",";
+                        });
+                        groupNameStr = groupNameStr.substring(0, groupNameStr.length-1);
+                    }
+                    $(li).find(".header span.groupNames").find("label.groupNameStr").html(groupNameStr);
                 } else {
                     $().toastmessage('showErrorToast', "获取操作组合下的分组数据失败！！");
                 }
@@ -930,10 +940,10 @@ function editGroupNameStr(o, edit, maxInvalidCount){
         var groups = [];
         var groupNames = o.value.replace(/( )+/g,"").replace(/(，)+|(,)+/g, ",").split(",");
         groupNames = unique(groupNames);
-        if (o.value != "") {
+        if (o.value !== "") {
             o.value = "";
             $.each(groupNames, function (idx, val) {
-                if (val != "") {
+                if (val !== "") {
                     groups.push($.trim(val));
                     o.value += val + ",";
                 }
@@ -974,7 +984,7 @@ function editGroupNameStr(o, edit, maxInvalidCount){
             });
         }
         setTimeout(function(){
-            if ($.trim(o.value) == "") {
+            if ($.trim(o.value) === "") {
                 o.value = "暂无";
             }
             o.parentNode.innerHTML = $.trim(o.value);

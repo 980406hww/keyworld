@@ -1,6 +1,8 @@
 package com.keymanager.monitoring.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.criteria.GroupSettingCriteria;
 import com.keymanager.monitoring.criteria.OperationCombineCriteria;
 import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.monitoring.dao.OperationCombineDao;
@@ -98,5 +100,9 @@ public class OperationCombineService extends ServiceImpl<OperationCombineDao, Op
 
     public String getOperationCombineName (String optimizeGroupName) {
         return operationCombineDao.getOperationCombineName(optimizeGroupName);
+    }
+
+    public List<OperationCombine> searchOperationCombines(Page<OperationCombine> page, GroupSettingCriteria groupSettingCriteria) {
+        return operationCombineDao.searchOperationCombines(page, groupSettingCriteria);
     }
 }

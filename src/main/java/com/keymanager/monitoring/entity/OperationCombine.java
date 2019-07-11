@@ -3,6 +3,8 @@ package com.keymanager.monitoring.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 
+import java.util.List;
+
 /**
  * @Author zhoukai
  * @Date 2019/6/24 13:50
@@ -24,6 +26,9 @@ public class OperationCombine extends BaseEntity {
 
     @TableField(value = "fMaxInvalidCount")
     private int maxInvalidCount;
+
+    @TableField(exist = false)
+    private List<GroupSetting> groupSettings;
 
     public String getOperationCombineName () {
         return operationCombineName;
@@ -63,5 +68,13 @@ public class OperationCombine extends BaseEntity {
 
     public void setMaxInvalidCount (int maxInvalidCount) {
         this.maxInvalidCount = maxInvalidCount;
+    }
+
+    public List<GroupSetting> getGroupSettings() {
+        return groupSettings;
+    }
+
+    public void setGroupSettings(List<GroupSetting> groupSettings) {
+        this.groupSettings = groupSettings;
     }
 }
