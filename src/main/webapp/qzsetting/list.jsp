@@ -1310,7 +1310,7 @@
 							<td align="right" style="width:72px"><label>达标种类</label></td>
 							<td title="爱站, 5118, 指定词和其他, 四选一">
 								<div style="display: inline-block">
-									<input type="checkbox" name="standardSpecies" id="aiZhanPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="aiZhan" checked="checked">
+									<input type="checkbox" name="standardSpecies" id="aiZhanPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="aiZhan">
 								</div>
 								<div style="display: inline-block; margin-right: 10px;">
 									<label>爱站</label>
@@ -1371,7 +1371,7 @@
 							<td align="right" style="width:72px"><label>达标种类</label></td>
 							<td title="爱站, 5118, 指定词和其他, 四选一">
 								<div style="display: inline-block">
-									<input type="checkbox" name="standardSpecies" id="aiZhanPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="aiZhan" checked="checked">
+									<input type="checkbox" name="standardSpecies" id="aiZhanPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="aiZhan">
 								</div>
 								<div style="display: inline-block; margin-right: 10px;">
 									<label>爱站</label>

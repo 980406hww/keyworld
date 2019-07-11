@@ -832,6 +832,7 @@ function searchAvailableOptimizationGroups() {
         data: JSON.stringify(groupSetting),
         success: function (result) {
             if (result !== null) {
+                $().toastmessage("showSuccessToast", "查询成功！！！");
                 var tbody = $("#getAvailableOptimizationGroups").find("table tbody");
                 $.each(result, function(index, element) {
                     tbody.append("<tr>" +

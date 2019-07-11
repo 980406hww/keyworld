@@ -794,10 +794,10 @@ function editTagNameStr(o, edit){
         var qzCategoryTags = [];
         var categoryTagNames = o.value.replace(/( )+/g,"").replace(/(，)+|(,)+/g, ",").split(",");
         categoryTagNames = unique(categoryTagNames);
-        if (o.value != "") {
+        if (o.value !== "") {
             o.value = "";
             $.each(categoryTagNames, function (idx, val) {
-                if (val != "") {
+                if (val !== "") {
                     var qzCategoryTag = {};
                     qzCategoryTag.tagName = $.trim(val);
                     qzCategoryTags.push(qzCategoryTag);
@@ -807,7 +807,7 @@ function editTagNameStr(o, edit){
             o.value = o.value.substring(0, o.value.length-1);
         }
         var label = $(o).attr("label");
-        if ($.trim(o.value) == $.trim(label)) {
+        if ($.trim(o.value) === $.trim(label)) {
             isChange = false;
         }
         if (isChange) {
@@ -838,7 +838,7 @@ function editTagNameStr(o, edit){
             });
         }
         setTimeout(function(){
-            if ($.trim(o.value) == "") {
+            if ($.trim(o.value) === "") {
                 o.value = "暂无";
             }
             o.parentNode.innerHTML = $.trim(o.value);
@@ -1172,7 +1172,7 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, tempOptimizeGroupName
     }
     var keywordStr = customerKeywordDialog.find("#customerKeywordDialogContent").val();
     if (keywordStr == "") {
-        alert("请输入关键字");
+        $.messager.alert('提示', '请输入关键字！！', 'warning');
         customerKeywordDialog.find("#customerKeywordDialogContent").focus();
         return;
     }
@@ -1272,19 +1272,22 @@ function decideSelectAll() {
     }
 }
 function delQZSetting(uuid) {
-    if (confirm("确实要删除这个全站设置吗?") == false) return;
-    $.ajax({
-        url: '/internal/qzsetting/delete/' + uuid,
-        type: 'Get',
-        success: function (data) {
-            if(data){
-                $().toastmessage('showSuccessToast', "删除成功！", true);
-            }else{
-                $().toastmessage('showErrorToast', "删除失败");
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "删除失败");
+    parent.$.messager.confirm('确认', "确实要删除这个全站设置吗?", function (b) {
+        if (b) {
+            $.ajax({
+                url: '/internal/qzsetting/delete/' + uuid,
+                type: 'Get',
+                success: function (data) {
+                    if(data){
+                        $().toastmessage('showSuccessToast', "删除成功！", true);
+                    }else{
+                        $().toastmessage('showErrorToast', "删除失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "删除失败");
+                }
+            });
         }
     });
 }
@@ -1316,37 +1319,40 @@ function getSelectedUsefulIDs() {
 function delSelectedQZSettings(self) {
     var uuids = getSelectedIDs();
     if(uuids === ''){
-        alert('请选择要操作的设置信息！');
+        $.messager.alert('提示', '请选择要操作的设置信息!!', 'info');
         return ;
     }
-    if (confirm("确实要删除这些关键字吗?") == false) return;
-    var postData = {};
-    postData.uuids = uuids.split(",");
-    $.ajax({
-        url: '/internal/qzsetting/deleteQZSettings',
-        data: JSON.stringify(postData),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (data) {
-            if(data){
-                $().toastmessage('showSuccessToast', "操作成功", true);
-            }else{
-                $().toastmessage('showErrorToast', "操作失败");
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "操作失败");
+    parent.$.messager.confirm('确认', "确实要删除这些站点设置信息吗?", function (b) {
+        if (b) {
+            var postData = {};
+            postData.uuids = uuids.split(",");
+            $.ajax({
+                url: '/internal/qzsetting/deleteQZSettings',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (data) {
+                    if(data){
+                        $().toastmessage('showSuccessToast', "操作成功", true);
+                    }else{
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            });
         }
     });
 }
 function immediatelyUpdateQZSettings(type) {
     var uuids = getSelectedUsefulIDs();
     if(uuids === ''){
-        alert('请选择正确的要操作的站点信息, 必须包含至少一个是指定词的站点！');
+        $.messager.alert('提示', '请选择正确的要操作的站点信息, 必须包含至少一个是指定词的站点！！', 'info');
         return;
     }
     var urlType = '';
@@ -1366,79 +1372,108 @@ function immediatelyUpdateQZSettings(type) {
     updateImmediately(uuids, urlType)
 }
 function updateImmediately(uuids, urlType) {
+    var updateFlag = true;
     switch (urlType) {
         case "updateImmediately":
-            if (confirm("确实要马上更新这些站点设置吗？") === false) return;
+            parent.$.messager.confirm('确认', "确实要马上更新这些站点设置吗?", function (b) {
+                if (!b) {
+                    updateFlag = false;
+                }
+            });
             break;
         case "startMonitorImmediately":
-            if (confirm("确实要启动这些站点的达标监控吗？") === false) return;
+            parent.$.messager.confirm('确认', "确实要启动这些站点所有终端的达标监控吗?", function (b) {
+                if (!b) {
+                    updateFlag = false;
+                }
+            });
             break;
         case "updateQZKeywordEffectImmediately":
-            if (confirm("确认修改这些站点下操作的关键词的作用为指定词吗？") === false) return;
+            parent.$.messager.confirm('确认', "确认修改这些站点所有终端下操作的关键词的作用为指定词吗?", function (b) {
+                if (!b) {
+                    updateFlag = false;
+                }
+            });
             break;
         default:
             break;
     }
-    var postData = {};
-    postData.uuids = uuids;
-    $.ajax({
-        url: '/internal/qzsetting/' + urlType,
-        data: JSON.stringify(postData),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        type: 'POST',
-        success: function (data) {
-            if(data){
-                $().toastmessage('showSuccessToast', "操作成功", true);
-            }else{
+    if (updateFlag) {
+        var postData = {};
+        postData.uuids = uuids;
+        $.ajax({
+            url: '/internal/qzsetting/' + urlType,
+            data: JSON.stringify(postData),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: 'POST',
+            success: function (data) {
+                if(data){
+                    $().toastmessage('showSuccessToast', "操作成功", true);
+                }else{
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            },
+            error: function () {
                 $().toastmessage('showErrorToast', "操作失败");
             }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "操作失败");
-        }
-    });
+        });
+    }
 }
 
 function updateQZSettingStatus(status) {
     var uuids = getSelectedIDs();
     if(uuids === ''){
-        alert('请选择要操作的整站！');
+        $.messager.alert('提示', '请选择要操作的整站！！', 'info');
         return ;
     }
-    if(status == 1) {
-        if (confirm("确认要激活选中的整站吗？") == false) return;
-    } else if (status == 2) {
-        if (confirm("确认要暂停收费选中的整站吗？") == false) return;
+    var updateFlag = true;
+    if(status === 1) {
+        parent.$.messager.confirm('询问', "确认要激活选中的整站吗？", function(b) {
+            if (!b) {
+                updateFlag = false;
+            }
+        });
+    } else if (status === 2) {
+        parent.$.messager.confirm('询问', "确认要暂停收选中的整站的费用吗？", function(b) {
+            if (!b) {
+                updateFlag = false;
+            }
+        });
     } else {
-        if (confirm("确认要暂停选中的整站吗？") == false) return;
+        parent.$.messager.confirm('询问', "确认要暂停选中的整站吗？", function(b) {
+            if (!b) {
+                updateFlag = false;
+            }
+        });
     }
-
-    var postData = {};
-    postData.uuids = uuids.split(",");
-    postData.status = status;
-    $.ajax({
-        url: '/internal/qzsetting/updateQZSettingStatus',
-        data: JSON.stringify(postData),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (data) {
-            if(data){
-                $().toastmessage('showSuccessToast', "操作成功", true);
-            }else{
+    if (updateFlag) {
+        var postData = {};
+        postData.uuids = uuids.split(",");
+        postData.status = status;
+        $.ajax({
+            url: '/internal/qzsetting/updateQZSettingStatus',
+            data: JSON.stringify(postData),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (data) {
+                if(data){
+                    $().toastmessage('showSuccessToast', "操作成功", true);
+                }else{
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            },
+            error: function () {
                 $().toastmessage('showErrorToast', "操作失败");
             }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "操作失败");
-        }
-    });
+        });
+    }
 }
 function toTimeFormat(time) {
     var date = toDateFormat(time);
@@ -1457,7 +1492,7 @@ function saveChargeLog(self) {
     var selectedOperationTypes = chargeDialog.find("input[name=operationType]:checkbox:checked");
     var saveChargeLogFlag = true;
     if (selectedOperationTypes.length == 0) {
-        alert("必须选择一个收费项才能收费");
+        $.messager.alert('提示', '必须选择一个收费项才能收费！！', 'warning');
         saveChargeLogFlag = false;
         return;
     }
@@ -1472,25 +1507,25 @@ function saveChargeLog(self) {
         chargeLog.actualAmount = chargeDialog.find("#actualAmount" + val.id).val();
         chargeLog.nextChargeDate = chargeDialog.find("#nextChargeDate" + val.id).val();
         if (chargeLog.nextChargeDate == "" || chargeLog.nextChargeDate == null) {
-            alert("下次收费日期为必填");
+            $.messager.alert('提示', '下次收费日期为必填！！', 'warning');
             chargeDialog.find("#nextChargeDate" + val.id).focus();
             saveChargeLogFlag = false;
             return;
         }
         if (chargeLog.actualAmount == "" || chargeLog.actualAmount == null) {
-            alert("实收金额为必填");
+            $.messager.alert('提示', '实收金额为必填！！', 'warning');
             chargeDialog.find("#actualAmount" + val.id).focus();
             saveChargeLogFlag = false;
             return;
         }
         if (!reg.test(chargeLog.actualAmount)) {
-            alert("请输入合理的金额");
+            $.messager.alert('提示', '请输入合理的金额！！', 'warning');
             chargeDialog.find("#actualAmount" + val.id).focus();
             saveChargeLogFlag = false;
             return;
         }
         if (chargeLog.actualChargeDate == "" || chargeLog.actualChargeDate == null) {
-            alert("实际收费日期为必填");
+            $.messager.alert('提示', '实际收费日期为必填！！', 'warning');
             chargeDialog.find("#actualChargeDate" + val.id).focus();
             saveChargeLogFlag = false;
             return;
@@ -1498,32 +1533,34 @@ function saveChargeLog(self) {
         chargeLogs.push(chargeLog);
     });
     if(saveChargeLogFlag) {
-        if (window.confirm("确认收费?")) {
-            $.ajax({
-                url: '/internal/qzchargelog/save',
-                data: JSON.stringify(chargeLogs),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                timeout: 5000,
-                type: 'POST',
-                success: function (data) {
-                    resetChargeDialog();
-                    if (data != null && data != "") {
-                        $().toastmessage('showSuccessToast', "收费成功！", true);
-                        $("#chargeDialog").dialog("close");
-                    } else {
+        parent.$.messager.confirm('确认', "确认收费?", function (b) {
+            if (b) {
+                $.ajax({
+                    url: '/internal/qzchargelog/save',
+                    data: JSON.stringify(chargeLogs),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (data) {
+                        resetChargeDialog();
+                        if (data != null && data != "") {
+                            $().toastmessage('showSuccessToast', "收费成功！", true);
+                            $("#chargeDialog").dialog("close");
+                        } else {
+                            $().toastmessage('showErrorToast', "收费失败");
+                        }
+                    },
+                    error: function () {
                         $().toastmessage('showErrorToast', "收费失败");
                     }
-                },
-                error: function () {
-                    $().toastmessage('showErrorToast', "收费失败");
-                }
-            });
-        } else {
-            alert("取消收费");
-        }
+                });
+            } else {
+                $.messager.alert('提示', '取消收费！！', 'info');
+            }
+        });
     }
 }
 function calTotalAmount() {
@@ -1576,7 +1613,7 @@ function showChargeLog(uuid, self) {
                 $("#chargeLogListDiv").dialog("open");
                 $("#chargeLogListDiv").window("resize",{top:$(document).scrollTop() + 100});
             } else {
-                alert("暂无收费记录");
+                $.messager.alert('提示', '暂无收费记录', 'info');
             }
         },
         error: function () {
@@ -1801,6 +1838,16 @@ function clearInfo(type) {
 }
 function clearStandardInfo(type, standardSpecies, hideStatus) {
     var settingDialogObj = $("#changeSettingDialog");
+    standardSpecies = changeStandardSpecies(standardSpecies);
+    // 修改表头信息
+    settingDialogObj.find("#chargeRule" + type).find("thead tr td").text(standardSpecies + "收费规则");
+    // 清空规则表格信息
+    settingDialogObj.find("#chargeRule" + type).find("tbody tr:not(:first,:last)").remove();
+    if (hideStatus) {
+        settingDialogObj.find("#chargeRule" + type).css("display","none");
+    }
+}
+function changeStandardSpecies(standardSpecies){
     switch (standardSpecies) {
         case 'aiZhan':
             standardSpecies = '爱站';
@@ -1816,13 +1863,7 @@ function clearStandardInfo(type, standardSpecies, hideStatus) {
         default:
             break;
     }
-    // 修改表头信息
-    settingDialogObj.find("#chargeRule" + type).find("thead tr td").text(standardSpecies + "收费规则");
-    // 清空规则表格信息
-    settingDialogObj.find("#chargeRule" + type).find("tbody tr:not(:first,:last)").remove();
-    if (hideStatus) {
-        settingDialogObj.find("#chargeRule" + type).css("display","none");
-    }
+    return standardSpecies;
 }
 function showSettingDialog(self) {
     resetSettingDialog();
@@ -1891,6 +1932,7 @@ function initSettingDialog(qzSetting, self) {
                     settingDialogDiv.find('#aiZhan' + val.operationType + 'StandardSpecies')[0].checked = false;
                     settingDialogDiv.find("#" + chargeRuleVal.standardSpecies + val.operationType + "StandardSpecies")[0].checked = true;
                     settingDialogDiv.find("#chargeRule" + val.operationType).css("display", "block");
+                    settingDialogDiv.find("#chargeRule" + val.operationType).find("thead tr td").text(changeStandardSpecies(chargeRuleVal.standardSpecies) + "收费规则");
                     addRow("chargeRule" + val.operationType, chargeRuleVal);
                 }
             });
@@ -1946,13 +1988,13 @@ function saveChangeSetting(self, refresh) {
 
     var customer = settingDialogDiv.find("#qzSettingCustomer").val().trim();
     if (customer == null || customer === "") {
-        alert("请选择客户");
+        $.messager.alert('提示', '请选择客户!!', 'warning');
         settingDialogDiv.find("#qzSettingCustomer").focus();
         return;
     }
     qzSetting.domain = settingDialogDiv.find("#qzSettingDomain").val().trim();
     if (qzSetting.domain == null || qzSetting.domain === "") {
-        alert("请输入域名");
+        $.messager.alert('提示', '请输入域名!!', 'warning');
         settingDialogDiv.find("#qzSettingDomain").focus();
         return;
     }
@@ -1994,7 +2036,7 @@ function saveChangeSetting(self, refresh) {
         if (customerArray.length == 2) {
             qzSetting.customerUuid = customerArray[1];
         } else {
-            alert("请从列表中选择客户");
+            $.messager.alert('提示', '请从列表中选择客户！！！', 'info');
             settingDialogDiv.find("#qzSettingCustomer").focus();
             return;
         }
@@ -2023,7 +2065,7 @@ function saveChangeSetting(self, refresh) {
         operationType.operationType = val.id;
         var optimizationType = settingDialogDiv.find("#optimizationType" + val.id).find("input:checkbox:checked").val();
         if (optimizationType === undefined) {
-            alert("请选中所选终端下的达标优化类型！！！");
+            $.messager.alert('提示', '请选中所选终端下的达标优化类型！！！', 'info');
             validationFlag = false;
             return false;
         }
@@ -2039,19 +2081,19 @@ function saveChangeSetting(self, refresh) {
         operationType.subDomainName = settingDialogDiv.find("#subDomainName" + val.id).val().trim();
         operationType.monitorRemark = settingDialogDiv.find("#monitorRemark" + val.id).val().trim();
         if (operationType.group == null || operationType.group === "") {
-            alert("请输入分组");
+            $.messager.alert('提示', '请输入分组！！', 'warning');
             settingDialogDiv.find("#group" + val.id).focus();
             validationFlag = false;
             return false;
         }else if(operationType.group.length>20){
-            alert(operationType.operationType+"分组大于20位，请重新输入");
+            $.messager.alert('提示', operationType.operationType + '分组大于20位, 请重新输入！！', 'warning');
             settingDialogDiv.find("#group" + val.id).focus();
             validationFlag = false;
             return false;
         }
 
         if (qzSetting.autoCrawlKeywordFlag && maxKeywordCount !== undefined && (operationType.maxKeywordCount == "" || !reg.test(operationType.maxKeywordCount))){
-            alert("请输入限制词量");
+            $.messager.alert('提示', '请输入限制词量！！', 'warning');
             settingDialogDiv.find("#maxKeywordCount" + val.id).focus();
             validationFlag = false;
             return false;
@@ -2087,34 +2129,34 @@ function saveChangeSetting(self, refresh) {
                         operationType.qzChargeRules.push(chargeRule);
 
                         if (startKeywordCountObj.val() == null || startKeywordCountObj.val().trim() == "") {
-                            alert("请输入起始达标词数");
+                            $.messager.alert('提示', '请输入起始达标词数！！', 'warning');
                             startKeywordCountObj[0].focus();
                             validationFlag = false;
                             return false;
                         }
                         if (!reg.test(startKeywordCountObj.val().trim())) {
-                            alert("请输入数字");
+                            $.messager.alert('提示', '请输入数字！！', 'warning');
                             startKeywordCountObj.focus();
                             validationFlag = false;
                             return false;
                         }
                         var skc = Number(startKeywordCountObj.val().trim());
                         if (skc <= endKeyWordCountValue) {
-                            alert("起始达标词数过小");
+                            $.messager.alert('提示', '起始达标词数过小！！', 'warning');
                             startKeywordCountObj.focus();
                             validationFlag = false;
                             return false;
                         }
                         if (idx < (trObjs.length - 1)) {
                             if (endKeywordCountObj.val() == null || endKeywordCountObj.val().trim() == "") {
-                                alert("请输入终止达标词数");
+                                $.messager.alert('提示', '请输入终止达标词数！！', 'warning');
                                 endKeywordCountObj.focus();
                                 validationFlag = false;
                                 return false;
                             }
                         } else {
                             if(endKeywordCountObj.val() != "" && operationType.currentKeywordCount>Number(endKeywordCountObj.val())){
-                                alert("最后一条规则中的终止达标词量必须大于当前词量");
+                                $.messager.alert('提示', '最后一条规则中的终止达标词量必须大于当前词量！！', 'warning');
                                 endKeywordCountObj.focus();
                                 validationFlag = false;
                                 return false;
@@ -2122,26 +2164,26 @@ function saveChangeSetting(self, refresh) {
                         }
                         if (endKeywordCountObj.val() != "") {
                             if (!reg.test(endKeywordCountObj.val())) {
-                                alert("请输入数字");
+                                $.messager.alert('提示', '请输入数字！！', 'warning');
                                 endKeywordCountObj.focus();
                                 validationFlag = false;
                                 return false;
                             }
                             if (Number(endKeywordCountObj.val().trim()) <= skc) {
-                                alert("终止达标词数必须大于起始达标词数");
+                                $.messager.alert('提示', '终止达标词数必须大于起始达标词数！！', 'warning');
                                 endKeywordCountObj.focus();
                                 validationFlag = false;
                                 return false;
                             }
                         }
                         if (amountObj.val() == null || amountObj.val().trim() == "") {
-                            alert("请输入价格");
+                            $.messager.alert('提示', '请输入价格！！', 'warning');
                             amountObj.focus();
                             validationFlag = false;
                             return false;
                         }
                         if (!reg.test(amountObj.val().trim())) {
-                            alert("输入的价格不合理");
+                            $.messager.alert('提示', '输入的价格不合理！！', 'warning');
                             amountObj.focus();
                             validationFlag = false;
                             return false;
@@ -2159,7 +2201,7 @@ function saveChangeSetting(self, refresh) {
 
     if (validationFlag) {
         if (checkedObjs.length == 0) {
-            alert("保存失败，必须要增加一条规则");
+            $.messager.alert('提示', '保存失败, 必须要增加一条规则！！', 'warning');
             return;
         }
         hideSaveButton(true);
@@ -2241,7 +2283,7 @@ function deleteCurrentRow(currentRow) {
             $("#changeSettingDialog").css("height", $("#changeSettingDialog").height() + 2);
         }
     } else {
-        alert("删除失败，规则表不允许为空");
+        $.messager.alert('提示', '删除失败, 规则表不允许为空！！', 'warning');
     }
 }
 
@@ -2268,7 +2310,7 @@ function dealSettingTable(self, operationType, type) {
     } else {
         if (type === 1) {
             $(self)[0].checked = true;
-            alert("必须选中达一种达标优化类型！！");
+            $.messager.alert('提示', '必须选中达一种达标优化类型！！', 'info');
             return false;
         }
     }
@@ -2390,7 +2432,7 @@ function excludeCustomerKeywords(qzSettingUuid, customerUuid, domain, optimizedG
     var excludeKeywordUuid = excludeCustomerKeywordDialog.find("#excludeKeywordUuid").val();
     var keywordStr = excludeCustomerKeywordDialog.find("#customerKeywordDialogContent").val();
     if (keywordStr == "") {
-        alert("请输入关键字");
+        $.messager.alert('提示', '请输入关键字！！', 'warning');
         excludeCustomerKeywordDialog.find("#customerKeywordDialogContent").focus();
         return;
     }
@@ -2473,7 +2515,7 @@ function checkedStandardSpecies(self, terminalType) {
         addRow("chargeRule" + terminalType);
     }  else {
         $(self)[0].checked = true;
-        alert("必须选中达一种达标种类！！");
+        $.messager.alert('提示', '必须选中达一种达标种类！！', 'warning');
     }
 }
 
@@ -2495,28 +2537,32 @@ function showOptimizationType(terminalType) {
 function changeQZSettingGroupOperationCombineUuid(self, groupName) {
     var select = $(self);
     var oldOperationCombineName = select.parent().find("input[name='operationCombineName']").val();
-    if (!confirm("确定修改" + groupName + "所属的操作组合？")) {
-        select.val(oldOperationCombineName);
-        return false;
-    }
-    var postData = {};
-    postData.operationCombineUuid = select.val() === '' ? null : select.val().split("_____")[1];
-    postData.groupName = groupName;
-    $.ajax({
-        url: '/internal/group/updateQZSettingGroupOperationCombineUuid',
-        type: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        data: JSON.stringify(postData),
-        success: function (result) {
-            if (result) {
-                $().toastmessage('showSuccessToast', "更新操作组合成功");
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', '更新操作组合失败');
+    parent.$.messager.confirm('确认', "确定修改" + groupName + "所属的操作组合？", function (b) {
+        if (b) {
+            var postData = {};
+            var newOperationCombineName = select.val();
+            postData.operationCombineUuid = newOperationCombineName === '' ? null : newOperationCombineName.split("_____")[1];
+            postData.groupName = groupName;
+            $.ajax({
+                url: '/internal/group/updateQZSettingGroupOperationCombineUuid',
+                type: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(postData),
+                success: function (result) {
+                    if (result) {
+                        $().toastmessage('showSuccessToast', "更新操作组合成功");
+                        select.parent().find("input[name='operationCombineName']").val(newOperationCombineName);
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', '更新操作组合失败');
+                    select.val(oldOperationCombineName);
+                }
+            });
+        } else {
             select.val(oldOperationCombineName);
         }
     });
