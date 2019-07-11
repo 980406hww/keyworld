@@ -87,8 +87,10 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
             updateFlag = true;
             existingIndustryDetail.setUpdateTime(new Date());
         }
-        existingIndustryDetail.setTelephone(criteria.getPhones().replace("[", "").replace("]", ""));
-        existingIndustryDetail.setQq(criteria.getQqs().replace("[", "").replace("]", ""));
+        existingIndustryDetail.setTelephone(criteria.getPhones().replace("[", "")
+                .replace("]", "").replaceAll("'", ""));
+        existingIndustryDetail.setQq(criteria.getQqs().replace("[", "")
+                .replace("]", "").replaceAll("'", ""));
         existingIndustryDetail.setWeight(criteria.getWeight());
         existingIndustryDetail.setLevel(criteria.getLevel());
         if (updateFlag) {
