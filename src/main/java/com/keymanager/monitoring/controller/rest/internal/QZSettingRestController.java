@@ -278,11 +278,10 @@ public class QZSettingRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/startMonitorImmediately", method = RequestMethod.POST)
     public ResponseEntity<?> startMonitorImmediately(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         String uuids = (String) requestMap.get("uuids");
-		String terminalType = (String) requestMap.get("terminalType");
 		String userName = (String) request.getSession().getAttribute("username");
         boolean returnValue = false;
         try {
-            qzSettingService.startMonitorImmediately(uuids, terminalType, userName);
+            qzSettingService.startMonitorImmediately(uuids, userName);
             returnValue = true;
         } catch(Exception ex) {
             logger.error(ex.getMessage());
@@ -294,9 +293,8 @@ public class QZSettingRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/updateQZKeywordEffectImmediately", method = RequestMethod.POST)
     public ResponseEntity<?> updateQZKeywordEffectImmediately (@RequestBody Map<String, Object> requestMap) {
 		String uuids = (String) requestMap.get("uuids");
-		String terminalType = (String) requestMap.get("terminalType");
 		try {
-			qzSettingService.updateQZKeywordEffectImmediately(uuids, terminalType);
+			qzSettingService.updateQZKeywordEffectImmediately(uuids);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		} catch (Exception ex) {
 			logger.error(ex.getMessage());
