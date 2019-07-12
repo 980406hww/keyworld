@@ -91,6 +91,7 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
                 .replace("]", "").replaceAll("'", ""));
         existingIndustryDetail.setQq(criteria.getQqs().replace("[", "")
                 .replace("]", "").replaceAll("'", ""));
+        existingIndustryDetail.setTitle(criteria.getTitle());
         existingIndustryDetail.setWeight(criteria.getWeight());
         existingIndustryDetail.setLevel(criteria.getLevel());
         if (updateFlag) {

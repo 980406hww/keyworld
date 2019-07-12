@@ -59,7 +59,8 @@
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="" height="30">
             <td style="padding-left: 7px;" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
-            <td align="center" width=150>网站名称</td>
+            <td align="center" width=150>网站URL</td>
+            <td align="center" width=200>标题</td>
             <td align="center" width=100>QQ</td>
             <td align="center" width=120>电话</td>
             <td align="center" width=40>权重</td>
@@ -81,6 +82,7 @@
                 <td width=150>
                     <a href="${industryDetail.website}" target="_blank">${industryDetail.website}</a>
                 </td>
+                <td width=200>${industryDetail.title}</td>
                 <td width=100 valign="top">${industryDetail.qq}</td>
                 <td width=120 valign="top">${industryDetail.telephone}</td>
                 <td width=40 style="text-align: center">${industryDetail.weight}</td>

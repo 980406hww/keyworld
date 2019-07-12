@@ -8,6 +8,7 @@ public class IndustryDetailCriteria extends BaseCriteria {
 
     private long industryID;
     private String website;
+    private String title;
     private Integer weight;
     private String remark;
     private String qqs;
@@ -28,6 +29,14 @@ public class IndustryDetailCriteria extends BaseCriteria {
 
     public void setWebsite(String website) {
         this.website = website;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Integer getWeight() {

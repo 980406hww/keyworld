@@ -3,14 +3,15 @@
 <mapper namespace="com.keymanager.monitoring.dao.IndustryDetailDao">
 
     <sql id="selectCol">
-        tid.fUuid AS 'uuid',
+        tid.fUuid       AS 'uuid',
         tid.fIndustryID AS 'industryID',
-        tid.fWebsite AS 'website',
-        tid.fQQ AS 'qq',
-        tid.fTelephone AS 'telephone',
-        tid.fWeight AS 'weight',
-        tid.fRemark AS 'remark',
-        tid.fLevel AS 'level',
+        tid.fWebsite    AS 'website',
+        tid.fTitle      AS 'title',
+        tid.fQQ         AS 'qq',
+        tid.fTelephone  AS 'telephone',
+        tid.fWeight     AS 'weight',
+        tid.fRemark     AS 'remark',
+        tid.fLevel      AS 'level',
         tid.fCreateTime AS 'createTime',
         tid.fUpdateTime AS 'updateTime'
     </sql>

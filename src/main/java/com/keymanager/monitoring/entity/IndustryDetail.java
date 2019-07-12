@@ -29,6 +29,11 @@ public class IndustryDetail extends BaseEntity {
     @TableField(value = "fWebsite")
     private String website;
     /**
+     * 标题
+     */
+    @TableField(value = "fTitle")
+    private String title;
+    /**
      * QQ
      */
     @TableField(value = "fQQ")
@@ -68,6 +73,14 @@ public class IndustryDetail extends BaseEntity {
 
     public void setWebsite (String website) {
         this.website = website;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getQq() {
