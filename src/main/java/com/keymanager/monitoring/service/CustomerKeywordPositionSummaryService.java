@@ -16,17 +16,21 @@ public class CustomerKeywordPositionSummaryService extends ServiceImpl<CustomerK
     private CustomerKeywordPositionSummaryDao customerKeywordPositionSummaryDao;
 
     public void savePositionSummary(Long customerKeywordUuid, int position){
-        CustomerKeywordPositionSummary positionSummary = customerKeywordPositionSummaryDao.getTodayPositionSummary(customerKeywordUuid);
-        if(positionSummary != null){
-            if((positionSummary.getPosition() == null || positionSummary.getPosition() <= 0) || (position > 0 && positionSummary.getPosition() > position)) {
+        try {
+            CustomerKeywordPositionSummary positionSummary = customerKeywordPositionSummaryDao.getTodayPositionSummary(customerKeywordUuid);
+            if (positionSummary != null) {
+                if ((positionSummary.getPosition() == null || positionSummary.getPosition() <= 0) || (position > 0 && positionSummary.getPosition() > position)) {
+                    positionSummary.setPosition(position);
+                    customerKeywordPositionSummaryDao.updateById(positionSummary);
+                }
+            } else {
+                positionSummary = new CustomerKeywordPositionSummary();
                 positionSummary.setPosition(position);
-                customerKeywordPositionSummaryDao.updateById(positionSummary);
+                positionSummary.setCustomerKeywordUuid(customerKeywordUuid);
+                customerKeywordPositionSummaryDao.addPositionSummary(positionSummary);
             }
-        }else{
-            positionSummary = new CustomerKeywordPositionSummary();
-            positionSummary.setPosition(position);
-            positionSummary.setCustomerKeywordUuid(customerKeywordUuid);
-            customerKeywordPositionSummaryDao.addPositionSummary(positionSummary);
+        }catch (Exception ex){
+
         }
     }
 
