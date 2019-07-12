@@ -22,6 +22,12 @@ INSERT INTO t_resource VALUES (null, "修改客户归属", "/internal/industry/u
 #删除权限
 INSERT INTO t_resource VALUES (null, "删除", "/internal/industry/delIndustry", 'ajax', null, null, (SELECT r.fUuid from t_resource r where r.fUrl != '#' AND r.fResourceName = "行业列表"), 0, 0, 1, 1, null , NOW());
 
+#Excel上传权限
+INSERT INTO t_resource VALUES (null, "Excel上传", "/internal/industry/uploadIndustryInfos", 'ajax', null, null, (SELECT r.fUuid from t_resource r where r.fUrl != '#' AND r.fResourceName = "行业列表"), 0, 0, 1, 1, null , NOW());
+
+#模板下载权限
+INSERT INTO t_resource VALUES (null, "模板下载", "/SuperIndustrySimpleList.xls", null, null, null, (SELECT r.fUuid from t_resource r where r.fUrl != '#' AND r.fResourceName = "行业列表"), 0, 0, 1, 1, null , NOW());
+
 #将所有行业列表子权限赋给运营人员, 技术人员和部门经理
 insert into t_role_resource(fRoleID, fResourceId) select tem_role.fUuid,tem_resource.fUuid from ((SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('DepartmentManager','Operation','Technical')) tem_role, (select t.fUuid from t_resource tr JOIN t_resource t on tr.fUUid = t.fParentID where tr.fResourceName = '行业列表') tem_resource);
 

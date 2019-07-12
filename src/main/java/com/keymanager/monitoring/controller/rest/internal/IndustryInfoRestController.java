@@ -97,6 +97,7 @@ public class IndustryInfoRestController {
         return modelAndView;
     }
 
+    @RequiresPermissions("/internal/industry/saveIndustry")
     @GetMapping("/getIndustry/{uuid}")
     public ResponseEntity<?> getIndustry(@PathVariable("uuid") long uuid) {
         try {
@@ -108,6 +109,7 @@ public class IndustryInfoRestController {
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
+    @RequiresPermissions("/internal/industry/saveIndustry")
     @PostMapping("/saveIndustryInfo")
     public ResponseEntity<?> saveIndustryInfo(@RequestBody IndustryInfo industryInfo, HttpServletRequest request) {
         try {
@@ -120,6 +122,7 @@ public class IndustryInfoRestController {
         return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
     }
 
+    @RequiresPermissions("/internal/industry/delIndustry")
     @GetMapping("/delIndustryInfo/{uuid}")
     public ResponseEntity<?> delIndustryInfo(@PathVariable("uuid") long uuid) {
         try {
@@ -131,6 +134,7 @@ public class IndustryInfoRestController {
         return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
     }
 
+    @RequiresPermissions("/internal/industry/updateIndustryUserID")
     @PostMapping("/updateIndustryUserID")
     public ResponseEntity<?> updateIndustryUserID(@RequestBody Map<String, Object> requestMap) {
         try {
@@ -144,6 +148,7 @@ public class IndustryInfoRestController {
         }
     }
 
+    @RequiresPermissions("/internal/industry/deleteIndustries")
     @PostMapping("/deleteIndustries")
     public ResponseEntity<?> deleteIndustries(@RequestBody Map<String, Object> requestMap) {
         try {
@@ -156,6 +161,7 @@ public class IndustryInfoRestController {
         return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
     }
 
+    @RequiresPermissions("/internal/industry/saveIndustry")
     @PostMapping("/updateIndustryStatus")
     public ResponseEntity<?> updateIndustryStatus(@RequestBody Map<String, Object> requestMap) {
         try {
@@ -168,6 +174,7 @@ public class IndustryInfoRestController {
         }
     }
 
+    @RequiresPermissions("/internal/industry/uploadIndustryInfos")
     @PostMapping("/uploadIndustryInfos")
     public boolean uploadIndustryInfos(@RequestParam(value = "file", required = false) MultipartFile file,
                                        HttpServletRequest request) {

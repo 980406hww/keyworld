@@ -73,6 +73,7 @@ public class IndustryDetailRestController {
         return modelAndView;
     }
 
+    @RequiresPermissions("/internal/industryDetail/saveIndustryDetail")
     @GetMapping("/getIndustryDetail/{uuid}")
     public ResponseEntity<?> getIndustryDetail(@PathVariable("uuid") long uuid) {
         try {
@@ -84,6 +85,7 @@ public class IndustryDetailRestController {
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
+    @RequiresPermissions("/internal/industryDetail/saveIndustryDetail")
     @PostMapping("/saveIndustryDetail")
     public ResponseEntity<?> saveIndustryDetail(@RequestBody IndustryDetail industryDetail) {
         try {
@@ -95,6 +97,7 @@ public class IndustryDetailRestController {
         return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
     }
 
+    @RequiresPermissions("/internal/industryDetail/delIndustryDetail")
     @GetMapping("/delIndustryDetail/{uuid}")
     public ResponseEntity<?> delIndustryDetail(@PathVariable("uuid") long uuid) {
         try {
@@ -106,6 +109,7 @@ public class IndustryDetailRestController {
         return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
     }
 
+    @RequiresPermissions("/internal/industryDetail/deleteIndustryDetails")
     @PostMapping("/deleteIndustryDetails")
     public ResponseEntity<?> deleteIndustryDetails(@RequestBody Map<String, Object> requestMap) {
         try {
@@ -118,6 +122,7 @@ public class IndustryDetailRestController {
         return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
     }
 
+    @RequiresPermissions("/internal/industryDetail/saveIndustryDetail")
     @PostMapping("/updateIndustryDetailRemark")
     public ResponseEntity<?> updateIndustryDetailRemark(@RequestBody Map<String, Object> requestMap) {
         try {
@@ -131,6 +136,7 @@ public class IndustryDetailRestController {
         return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
     }
 
+    @RequiresPermissions("/internal/industryDetail/delIndustryDetail")
     @PostMapping("/removeUselessIndustryDetail/{industryID}")
     public ResponseEntity<?> removeUselessIndustryDetail(@PathVariable("industryID") long industryID) {
         try {
