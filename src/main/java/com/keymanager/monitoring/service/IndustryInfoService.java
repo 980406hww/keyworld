@@ -8,11 +8,13 @@ import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.IndustryInfo;
 import com.keymanager.monitoring.dao.IndustryInfoDao;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.excel.operator.AbstractExcelReader;
 import com.keymanager.monitoring.vo.IndustryInfoVO;
 import com.keymanager.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -106,5 +108,21 @@ public class IndustryInfoService extends ServiceImpl<IndustryInfoDao, IndustryIn
         IndustryInfo industryInfo = industryInfoDao.selectById(uuid);
         industryInfo.setStatus(2);
         industryInfoDao.updateById(industryInfo);
+    }
+
+    public boolean handleExcel(InputStream inputStream, String excelType, String terminalType, String userName)
+            throws Exception {
+        AbstractExcelReader reader = AbstractExcelReader.createExcelOperator(inputStream, excelType);
+        List<IndustryInfo> industryInfos = reader.readIndustryDataFromExcel();
+        this.saveIndustryInfos(industryInfos, userName, terminalType);
+        return true;
+    }
+
+    private void saveIndustryInfos(List<IndustryInfo> industryInfos, String userName, String terminalType) {
+        for (IndustryInfo industryInfo : industryInfos) {
+            industryInfo.setTerminalType(terminalType);
+            industryInfo.setStatus(0);
+            this.saveIndustryInfo(industryInfo, userName);
+        }
     }
 }

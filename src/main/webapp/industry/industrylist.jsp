@@ -19,6 +19,16 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
     <%@include file="/menu.jsp" %>
+    <div style="text-align: right; margin: 10px 5px;">
+        <div style="margin: 10px 5px;">
+<%--            <shiro:hasPermission name="/internal/indusrty/uploadIndustryInfos">--%>
+                <a target="_blank" href="javascript:uploadIndustryInfos('SuperIndustrySimple')">Excel上传</a>
+<%--            </shiro:hasPermission>--%>
+<%--            <shiro:hasPermission name="/SuperIndustrySimpleList.xls">--%>
+                | <a target="_blank" href="/SuperIndustrySimpleList.xls">模板下载</a>
+<%--            </shiro:hasPermission>--%>
+        </div>
+    </div>
     <table width="100%" style="font-size:12px;" cellpadding=3>
         <tr>
             <td colspan=13>
@@ -132,7 +142,13 @@
         </c:forEach>
     </table>
 </div>
-
+<%-- excel上传 --%>
+<div id="uploadExcelDialog"  style="display: none;text-align: left;height: 60px; left: 40%;" title="Excel上传" class="easyui-dialog">
+    <form method="post" id="uploadExcelForm" style="margin-top: 10px"  enctype="multipart/form-data" >
+        <span>请选择要上传的文件(<label id="excelType" style="color: red">.xls, .xlsx</label>)</span>
+        <div style="height: 10px;"></div>
+        <input type="file" id="uploadExcelFile" name="file" >
+    </form>
 </div>
 <%-- 新增或修改行业信息 --%>
 <div id="industryDialog" title="行业信息" class="easyui-dialog" style="display:none;left: 40%;">

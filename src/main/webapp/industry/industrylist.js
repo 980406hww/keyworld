@@ -1,6 +1,7 @@
 $(function () {
     $("#industryDialog").dialog("close");
     $("#updateIndustryUserIDDialog").dialog("close");
+    $("#uploadExcelDialog").dialog("close");
     $("#showIndustryTableDiv").css("margin-top",$("#topDiv").height());
     pageLoad();
 });
@@ -339,7 +340,10 @@ function updateIndustryUserID() {
                 }]
             });
             $("#updateIndustryUserIDDialog").dialog("open");
-            $('#updateIndustryUserIDDialog').window("resize", {top: $(document).scrollTop() + 150});
+            $('#updateIndustryUserIDDialog').window("resize", {
+                top: $(document).scrollTop() + 150,
+                left: $(document).scrollLeft() + $(window).width() / 2 - 125
+            });
         }
     });
 }
@@ -375,5 +379,79 @@ function updateIndustryStatus() {
                 }
             });
         }
+    });
+}
+
+//表格上传
+function uploadIndustryInfos(excelType) {
+    $("#uploadExcelDialog").show();
+    $("#uploadExcelDialog").dialog({
+        resizable: false,
+        width: 280,
+        height: 160,
+        modal: true,
+        closed: true,
+        buttons: [{
+            text: '上传',
+            iconCls: 'icon-ok',
+            handler: function () {
+                var uploadForm = $("#uploadExcelForm");
+                var uploadFileTxt = uploadForm.find("#uploadExcelFile").val();
+                var uploadFileNames = uploadFileTxt.split(".");
+                var uploadFileType = uploadFileNames[uploadFileNames.length - 1];
+                var fileTypeArr = new Array("xls", "xlsx");
+                var fileUploadFlag = false;
+                for (var i = 0; i < fileTypeArr.length; i++) {
+                    if (fileTypeArr[i] === uploadFileType) {
+                        fileUploadFlag = true;
+                        break;
+                    }
+                }
+                if (!fileUploadFlag) {
+                    $.messager.alert('提示', '请选择表格文件, 格式: .xls, .xlsx', 'warning');
+                    return false;
+                }
+                var formData = new FormData();
+                formData.append('file', uploadForm.find("#uploadExcelFile")[0].files[0]);
+                formData.append('excelType', excelType);
+                if (fileUploadFlag) {
+                    $.ajax({
+                        url: '/internal/industry/uploadIndustryInfos',
+                        type: 'POST',
+                        cache: false,
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (result) {
+                            if (result) {
+                                $().toastmessage('showSuccessToast', '上传成功！！！', true);
+                            } else {
+                                $().toastmessage('showErrorToast', '上传失败！！！');
+                            }
+                        },
+                        error: function () {
+                            $().toastmessage('showErrorToast', '上传失败！！！');
+                        }
+                    });
+                }
+                $("#uploadExcelDialog").dialog("close");
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#uploadExcelDialog").dialog("close");
+                    $('#uploadExcelForm')[0].reset();
+                }
+            }],
+        onClose: function () {
+            $('#uploadExcelForm')[0].reset();
+        }
+    });
+    $("#uploadExcelDialog").dialog("open");
+    $('#uploadExcelDialog').window("resize",{
+        top: $(document).scrollTop() + 100,
+        left: $(document).scrollLeft() + $(window).width() / 2 - 140
     });
 }
