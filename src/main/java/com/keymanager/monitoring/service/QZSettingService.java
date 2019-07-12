@@ -277,6 +277,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		oldOperationType.setStandardType(newOperationType.getStandardType());
 		oldOperationType.setGroup(newOperationType.getGroup());
 		oldOperationType.setSubDomainName(newOperationType.getSubDomainName());
+		oldOperationType.setMonitorRemark(newOperationType.getMonitorRemark());
 		oldOperationType.setMaxKeywordCount(newOperationType.getMaxKeywordCount());
 		oldOperationType.setIsDeleted(0); //只要是发生改变那么就让它的状态为0
 		qzOperationTypeService.updateById(oldOperationType);
@@ -803,21 +804,23 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
         return qzSettingDao.searchGroupMaxCustomerKeywordCount(customerUuid, terminalType,  url);
     }
 
-    public void startMonitorImmediately(String uuids, String terminalType, String userName){
+    public void startMonitorImmediately(String uuids, String userName){
         if(StringUtils.isNotEmpty(uuids)){
             String[] qzSettingUuids = uuids.split(",");
             for (String uuid : qzSettingUuids) {
-                CaptureRankJob existCaptureRankJob = captureRankJobService.findExistCaptureRankJob(Long.valueOf(uuid), terminalType);
-                if (null == existCaptureRankJob) {
-                    QZSetting qzSetting = qzSettingDao.selectById(Long.valueOf(uuid));
-                    String groupName;
-                    if (TerminalTypeEnum.PC.name().equals(terminalType)) {
-                        groupName = qzSetting.getPcGroup();
-                    } else {
-                        groupName = qzSetting.getPhoneGroup();
-                    }
-                    captureRankJobService.qzAddCaptureRankJob(groupName, Long.valueOf(uuid), qzSetting.getCustomerUuid(), terminalType, userName);
-                }
+				QZSetting qzSetting = qzSettingDao.selectById(Long.valueOf(uuid));
+				if (null != qzSetting.getPcGroup()) {
+					CaptureRankJob existCaptureRankJob = captureRankJobService.findExistCaptureRankJob(Long.valueOf(uuid), TerminalTypeEnum.PC.name());
+					if (null == existCaptureRankJob) {
+						captureRankJobService.qzAddCaptureRankJob(qzSetting.getPcGroup(), Long.valueOf(uuid), qzSetting.getCustomerUuid(), TerminalTypeEnum.PC.name(), userName);
+					}
+				}
+				if (null != qzSetting.getPhoneGroup()) {
+					CaptureRankJob existCaptureRankJob = captureRankJobService.findExistCaptureRankJob(Long.valueOf(uuid), TerminalTypeEnum.Phone.name());
+					if (null == existCaptureRankJob) {
+						captureRankJobService.qzAddCaptureRankJob(qzSetting.getPhoneGroup(), Long.valueOf(uuid), qzSetting.getCustomerUuid(), TerminalTypeEnum.Phone.name(), userName);
+					}
+				}
             }
             qzSettingDao.startMonitorImmediately(uuids);
         }
@@ -835,20 +838,17 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		qzSettingDao.updateQzSetting(qzSetting);
 	}
 
-	public void updateQZKeywordEffectImmediately (String uuids, String terminalType) {
+	public void updateQZKeywordEffectImmediately (String uuids) {
 		if(StringUtils.isNotEmpty(uuids)) {
             String[] qzSettingUuids = uuids.split(",");
             for (String uuid : qzSettingUuids) {
                 QZSetting qzSetting = qzSettingDao.selectById(Long.valueOf(uuid));
-                if (TerminalTypeEnum.PC.name().equals(terminalType)) {
-                    if (null != qzSetting.getPcGroup()) {
-                        customerKeywordService.updateCustomerKeywordEffect(qzSetting.getCustomerUuid(), terminalType, qzSetting.getPcGroup());
-                    }
-                } else {
-                    if (null != qzSetting.getPhoneGroup()) {
-                        customerKeywordService.updateCustomerKeywordEffect(qzSetting.getCustomerUuid(), terminalType, qzSetting.getPhoneGroup());
-                    }
-                }
+				if (null != qzSetting.getPcGroup()) {
+					customerKeywordService.updateCustomerKeywordEffect(qzSetting.getCustomerUuid(), TerminalTypeEnum.PC.name(), qzSetting.getPcGroup());
+				}
+				if (null != qzSetting.getPhoneGroup()) {
+					customerKeywordService.updateCustomerKeywordEffect(qzSetting.getCustomerUuid(), TerminalTypeEnum.Phone.name(), qzSetting.getPhoneGroup());
+				}
             }
 		}
 	}

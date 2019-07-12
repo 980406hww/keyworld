@@ -19,7 +19,7 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
 
     QZKeywordRankInfo getQZKeywordRankInfo(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType, @Param("websiteType") String websiteType);
 
-    List<QZSettingSearchCriteria> getCountNumOfRankInfo(@Param("qzSettingSearchCriteria") QZSettingSearchCriteria qzSettingSearchCriteria);
+    QZSettingSearchCriteria getCountNumOfRankInfo(@Param("qzSettingSearchCriteria") QZSettingSearchCriteria qzSettingSearchCriteria);
 
     List<String> getQZKeywordRankInfoTypes (@Param("qzSettingUuid") Long qzSettingUuid);
 

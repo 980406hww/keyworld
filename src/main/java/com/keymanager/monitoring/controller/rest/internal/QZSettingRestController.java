@@ -49,6 +49,9 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@Autowired
 	private OperationCombineService operationCombineService;
 
+	@Autowired
+	private OperationTypeService operationTypeService;
+
 	@RequiresPermissions("/internal/qzsetting/updateStatus")
 	@RequestMapping(value = "/updateQZSettingStatus", method = RequestMethod.POST)
 	public ResponseEntity<?> updateQZSettingStatus(@RequestBody Map<String, Object> requestMap) throws Exception{
@@ -194,7 +197,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
 		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
 		Integer availableQZSettingCount = qzSettingService.getAvailableQZSettings().size();
-		String [] operationTypeValues = configService.getOperationTypeValues(qzSettingSearchCriteria.getTerminalType());
+		List operationTypeValues =  operationTypeService.getOperationTypeValuesByRole(qzSettingSearchCriteria.getTerminalType());
 		List<String> operationCombines = operationCombineService.getOperationCombineNames(qzSettingSearchCriteria.getTerminalType());
 		// modelAndView.addObject("chargeRemindDataMap", chargeRemindDataMap);
 		modelAndView.addObject("customerList", customerList);
@@ -275,11 +278,10 @@ public class QZSettingRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/startMonitorImmediately", method = RequestMethod.POST)
     public ResponseEntity<?> startMonitorImmediately(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         String uuids = (String) requestMap.get("uuids");
-		String terminalType = (String) requestMap.get("terminalType");
 		String userName = (String) request.getSession().getAttribute("username");
         boolean returnValue = false;
         try {
-            qzSettingService.startMonitorImmediately(uuids, terminalType, userName);
+            qzSettingService.startMonitorImmediately(uuids, userName);
             returnValue = true;
         } catch(Exception ex) {
             logger.error(ex.getMessage());
@@ -291,9 +293,8 @@ public class QZSettingRestController extends SpringMVCBaseController {
     @RequestMapping(value = "/updateQZKeywordEffectImmediately", method = RequestMethod.POST)
     public ResponseEntity<?> updateQZKeywordEffectImmediately (@RequestBody Map<String, Object> requestMap) {
 		String uuids = (String) requestMap.get("uuids");
-		String terminalType = (String) requestMap.get("terminalType");
 		try {
-			qzSettingService.updateQZKeywordEffectImmediately(uuids, terminalType);
+			qzSettingService.updateQZKeywordEffectImmediately(uuids);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		} catch (Exception ex) {
 			logger.error(ex.getMessage());

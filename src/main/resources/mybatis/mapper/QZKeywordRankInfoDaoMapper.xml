@@ -78,7 +78,11 @@
             COUNT(qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue} OR NULL) AS 'downNum',
             COUNT(qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue} OR NULL) AS 'upNum',
             COUNT(((qk.fAchieveLevel &gt; 0 OR NULL) AND qot.fStandardTime &gt; '')) AS 'atLeastStandardNum',
-            COUNT(qk.fDifferenceValue &lt;= #{qzSettingSearchCriteria.differenceValue} OR NULL) AS 'closeStandardNum'
+            COUNT(qk.fAchieveLevel = 0 OR NULL) AS 'neverStandardNum',
+            COUNT(qk.fDifferenceValue &lt;= #{qzSettingSearchCriteria.differenceValue} OR NULL) AS 'closeStandardNum',
+            COUNT(qk.fTodayDifference = 0 OR NULL) AS 'unchangedDifferenceNum',
+            COUNT(qk.fTodayDifference &gt;0 OR NULL) AS 'upDifferenceNum',
+            COUNT(qk.fTodayDifference &lt;0 OR NULL) AS 'downDifferenceNum'
         FROM t_qz_keyword_rank_info qk
         LEFT JOIN t_qz_setting qs
         ON qs.fUuid = qk.fQZSettingUuid
@@ -86,6 +90,7 @@
         ON qot.fQZSettingUuid = qk.fQZSettingUuid AND qot.fOperationtype = qk.fTerminalType
         WHERE qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
         AND qot.fIsDeleted = 0
+        AND qk.fDataProcessingStatus = 1
         AND EXISTS (
             SELECT 1 FROM t_customer c
             LEFT JOIN t_userinfo ui
@@ -102,7 +107,6 @@
                 )
             </if>
         )
-        GROUP BY qk.fQZSettingUuid, qk.fTerminalType
     </select>
 
     <select id="getQZKeywordRankInfoTypes" resultType="java.lang.String">

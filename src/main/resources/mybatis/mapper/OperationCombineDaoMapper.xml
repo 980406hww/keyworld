@@ -83,7 +83,7 @@
             toc.fUuid             AS 'uuid',
             toc.fRemainingAccount AS 'remainingAccount',
             toc.fMaxInvalidCount  AS 'maxInvalidCount',
-            g.fUpdateTime         AS 'updateTime'
+            toc.fUpdateTime         AS 'updateTime'
         FROM t_group g
         LEFT JOIN t_operation_combine toc
         ON toc.fUuid = g.fOperationCombineUuid
