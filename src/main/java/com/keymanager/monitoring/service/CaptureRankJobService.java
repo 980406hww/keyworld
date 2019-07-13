@@ -163,6 +163,10 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
 
     public void updateGenerationCurve(CaptureRankJob captureRankJob) {
         QZKeywordRankInfo qzKeywordRankInfo = qzKeywordRankInfoDao.selectByQZSettingUuid(captureRankJob.getQzSettingUuid(), captureRankJob.getOperationType());
+        if(qzKeywordRankInfo ==null){
+            captureRankJobDao.deleteById(captureRankJob.getUuid());
+            return;
+        }
         int topTenNum = captureRankJobDao.searchCountByPosition(captureRankJob, 10);
         int topTwentyNum = captureRankJobDao.searchCountByPosition(captureRankJob, 20);
         int topThirtyNum = captureRankJobDao.searchCountByPosition(captureRankJob, 30);
