@@ -258,6 +258,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         } else {
             originalUrl = null;
         }
+        customerKeyword.setKeyword(customerKeyword.getKeyword().trim());
 
         if(!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
             Integer sameCustomerKeywordCount = customerKeywordDao.getSameCustomerKeywordCount(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl(), customerKeyword.getTitle());
@@ -372,7 +373,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void supplementIndexAndPriceFromExisting(CustomerKeyword customerKeyword) {
         List<CustomerKeyword> existingCustomerKeywords = customerKeywordDao.searchSameCustomerKeywords(customerKeyword.getTerminalType(),
-                customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getSearchEngine());
+                customerKeyword.getCustomerUuid(), customerKeyword.getKeyword().trim(), customerKeyword.getSearchEngine());
         if (CollectionUtils.isNotEmpty(existingCustomerKeywords)) {
             CustomerKeyword existingCustomerKeyword = existingCustomerKeywords.get(0);
             customerKeyword.setInitialIndexCount(existingCustomerKeyword.getInitialIndexCount());
