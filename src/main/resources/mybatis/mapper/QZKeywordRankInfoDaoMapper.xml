@@ -122,6 +122,7 @@
             qk.fQZSettingUuid AS 'qzSettingUuid',
             qk.fTerminalType AS 'terminalType',
             qk.fWebsiteType AS 'websiteType',
+            qk.fDataProcessingStatus AS 'dataProcessingStatus',
             qk.fDate AS 'date',
             qk.fTopTen AS 'topTen',
             qk.fTopTwenty AS 'topTwenty',
