@@ -5,15 +5,15 @@ package com.keymanager.monitoring.criteria;
  * @Date 2018/12/18 10:59
  **/
 public class QZSettingSearchGroupInfoCriteria {
-    private int qzSettingUuid;
+    private Long qzSettingUuid;
     private String terminalType;
     private String optimizeGroupName;
 
-    public int getQzSettingUuid () {
+    public Long getQzSettingUuid () {
         return qzSettingUuid;
     }
 
-    public void setQzSettingUuid (int qzSettingUuid) {
+    public void setQzSettingUuid (Long qzSettingUuid) {
         this.qzSettingUuid = qzSettingUuid;
     }
 

@@ -10,10 +10,7 @@ import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
 import com.keymanager.monitoring.enums.QZCaptureTitleLogStatusEnum;
 import com.keymanager.monitoring.enums.QZSettingStatusEnum;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
-import com.keymanager.monitoring.vo.CustomerKeywordSummaryInfoVO;
-import com.keymanager.monitoring.vo.DateRangeTypeVO;
-import com.keymanager.monitoring.vo.ExternalQzSettingVO;
-import com.keymanager.monitoring.vo.QZSettingSearchGroupInfoVO;
+import com.keymanager.monitoring.vo.*;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.value.CustomerKeywordVO;
@@ -21,8 +18,6 @@ import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +25,6 @@ import java.util.*;
 
 @Service
 public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
-	private static Logger logger = LoggerFactory.getLogger(QZSettingService.class);
 
 	@Autowired
 	private QZSettingDao qzSettingDao;
@@ -738,7 +732,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 						.getOptimizeGroupName(), qzSettingSearchGroupInfoCriteria.getTerminalType()));
 		qzSettingSearchGroupInfoVo.setOperationCombineName(operationCombineService.getOperationCombineName(
 				qzSettingSearchGroupInfoCriteria.getOptimizeGroupName()));
-		qzSettingSearchGroupInfoVo.setCategoryTagNames(qzCategoryTagService.findTagNamesByQZSettingUuid(qzSettingSearchGroupInfoCriteria.getQzSettingUuid()));
+		qzSettingSearchGroupInfoVo.setCategoryTagNames(qzCategoryTagService.findTagNames(qzSettingSearchGroupInfoCriteria.getQzSettingUuid()));
 		return qzSettingSearchGroupInfoVo;
 	}
 
@@ -851,5 +845,23 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				}
             }
 		}
+	}
+
+	public Map<String, String> searchQZSettingSearchEngineMap(QZSettingSearchCriteria criteria, int record) {
+		Map<String, String> map = new LinkedHashMap<>();
+		if ((null != criteria.getDomain() || null != criteria.getCustomerUuid()) && record == 1) {
+			List<QZSettingVO> qzSettingVos = qzSettingDao.searchQZSettingSearchEngines(criteria.getCustomerUuid(), criteria.getDomain());
+			for (QZSettingVO qzSettingVo : qzSettingVos) {
+				if (null != qzSettingVo.getPcGroup()) {
+					map.put(qzSettingVo.getSearchEngine(), TerminalTypeEnum.PC.name());
+				}
+				if (null != qzSettingVo.getPhoneGroup()){
+					map.put(qzSettingVo.getSearchEngine() + TerminalTypeEnum.Phone.name(), TerminalTypeEnum.Phone.name());
+				}
+			}
+		} else {
+			map = Constants.SEARCH_ENGINE_MAP;
+		}
+		return map;
 	}
 }

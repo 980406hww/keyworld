@@ -77,6 +77,9 @@
 	</table>
 </div>
 <datalist id="categoryTag_list">
+	<c:forEach items="${tagNameList}" var="tagName">
+		<option>${tagName}</option>
+	</c:forEach>
 </datalist>
 <div id="showRefreshStatInfoDiv">
 	<table id="showRefreshStatInfoTable" width=100%">

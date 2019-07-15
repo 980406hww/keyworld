@@ -8,6 +8,7 @@ import com.keymanager.monitoring.criteria.QZSettingSearchGroupInfoCriteria;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.vo.DateRangeTypeVO;
 import com.keymanager.monitoring.vo.ExternalQzSettingVO;
+import com.keymanager.monitoring.vo.QZSettingVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -50,5 +51,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     void startMonitorImmediately (@Param("uuids") String uuids);
     
     List<ExternalQzSettingVO> getQZSettingTask(@Param("crawlerHour")Integer crawlerHour, @Param("taskNumber")Integer taskNumber);
+
+    List<QZSettingVO> searchQZSettingSearchEngines(@Param("customerUuid") String customerUuid, @Param("domain") String domain);
 }
 

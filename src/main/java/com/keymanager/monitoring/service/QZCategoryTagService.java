@@ -26,12 +26,8 @@ public class QZCategoryTagService extends ServiceImpl<QZCategoryTagDao, QZCatego
         return qzCategoryTagDao.searchCategoryTagByQZSettingUuid(qzSettingUuid);
     }
 
-    public List<QZCategoryTag> getAllCategoryTagName () {
-        return qzCategoryTagDao.getAllCategoryTagName();
-    }
-
-    public List<String> findTagNamesByQZSettingUuid (int qzSettingUuid) {
-        return qzCategoryTagDao.findTagNamesByQZSettingUuid(qzSettingUuid);
+    public List<String> findTagNames(Long qzSettingUuid) {
+        return qzCategoryTagDao.findTagNames(qzSettingUuid);
     }
 
     public void saveCategoryTagNames (QZCategoryTagCriteria qzCategoryTagCriteria) {

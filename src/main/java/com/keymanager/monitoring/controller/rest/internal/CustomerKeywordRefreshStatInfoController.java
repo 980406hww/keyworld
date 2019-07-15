@@ -48,11 +48,16 @@ public class CustomerKeywordRefreshStatInfoController extends SpringMVCBaseContr
     @Autowired
     private ConfigService configService;
 
+    @Autowired
+    private QZCategoryTagService qzCategoryTagService;
+
     @RequiresPermissions("/internal/refreshstatinfo/searchRefreshStatInfos")
     @RequestMapping(value = "/searchRefreshStatInfos", method = RequestMethod.GET)
     public ModelAndView searchRefreshStatInfos(HttpServletRequest request) {
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         ModelAndView modelAndView = new ModelAndView("/refresh/list");
+        List<String> tagNameList = qzCategoryTagService.findTagNames(null);
+        modelAndView.addObject("tagNameList", tagNameList);
         modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));
         return modelAndView;
     }
@@ -87,6 +92,8 @@ public class CustomerKeywordRefreshStatInfoController extends SpringMVCBaseContr
         } else {
             refreshStatInfos = customerKeywordRefreshStatInfoService.generateCustomerKeywordStatInfo(refreshStatInfoCriteria);
         }
+        List<String> tagNameList = qzCategoryTagService.findTagNames(null);
+        modelAndView.addObject("tagNameList", tagNameList);
         modelAndView.addObject("refreshStatInfoCriteria", refreshStatInfoCriteria);
         modelAndView.addObject("refreshStatInfos", refreshStatInfos);
         modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));

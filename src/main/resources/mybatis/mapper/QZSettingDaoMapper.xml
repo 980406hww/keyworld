@@ -127,6 +127,7 @@
         <if test="qzSettingSearchCriteria.organizationID != null and qzSettingSearchCriteria.organizationID != ''">AND o.fUuid = #{qzSettingSearchCriteria.organizationID}</if>
         <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
         <if test="qzSettingSearchCriteria.domain != null and qzSettingSearchCriteria.domain != ''">AND qs.fDomain = #{qzSettingSearchCriteria.domain}</if>
+        AND qs.fSearchEngine = #{qzSettingSearchCriteria.searchEngine}
         <choose>
             <when test="qzSettingSearchCriteria.terminalType == 'PC' and (qzSettingSearchCriteria.group == null or qzSettingSearchCriteria.group == '')">
                 AND qs.fPcGroup &gt; ''
@@ -467,5 +468,16 @@
         qs.fIsMonitor = 1
         WHERE qs.fUuid IN (${uuids})
     </update>
+
+    <select id="searchQZSettingSearchEngines" resultType="com.keymanager.monitoring.vo.QZSettingVO">
+        SELECT
+            qs.fSearchEngine  AS 'searchEngine',
+            qs.fPcGroup       AS 'pcGroup',
+            qs.fPhoneGroup    AS 'phoneGroup'
+        FROM t_qz_setting qs
+        WHERE 1 = 1
+        <if test="customerUuid != null and customerUuid != ''">qs.fCustomerUuid = #{customerUuid}</if>
+        <if test="domain != null and domain != ''">AND qs.fDomain = #{domain}</if>
+    </select>
 
 </mapper>

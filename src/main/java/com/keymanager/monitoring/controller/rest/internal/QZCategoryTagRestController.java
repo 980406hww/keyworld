@@ -38,6 +38,6 @@ public class QZCategoryTagRestController {
 
     @RequestMapping(value = "/getAllCategoryTagNames", method = RequestMethod.GET)
     public ResponseEntity<?> getAllCategoryTagNames() {
-        return new ResponseEntity<Object>(qzCategoryTagService.getAllCategoryTagName(),HttpStatus.OK);
+        return new ResponseEntity<Object>(qzCategoryTagService.findTagNames(null),HttpStatus.OK);
     }
 }

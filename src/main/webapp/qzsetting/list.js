@@ -34,7 +34,7 @@ $(function () {
         showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
         showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
     }
-    loadingCheckTerminalType();
+    // loadingCheckTerminalType();
     searchRiseOrFall();
     detectedMoreSearchConditionDivShow();
 });
@@ -45,10 +45,10 @@ function enterIn(e) {
         trimSearchCondition('1');
     }
 }
-function loadingCheckTerminalType() {
-    var terminalType = $("#chargeForm").find("#terminalType").val();
-    checkTerminalType(terminalType, false);
-}
+// function loadingCheckTerminalType() {
+//     var terminalType = $("#chargeForm").find("#terminalType").val();
+//     checkTerminalType(terminalType, false);
+// }
 function searchRiseOrFall() {
     var checkedRadio = $(".mytabs div:eq(0)").find("input:radio[checked='checked']");
     $(".mytabs div:eq(0)").find("input:radio").click(function () {
@@ -946,21 +946,6 @@ function trimSearchCondition(days) {
 function showMoreSearchCondition() {
     $(".mytabs").find("div[name='moreSearchCondition']").toggle();
     if ($(".mytabs").find("div[name='moreSearchCondition']").css("display") === "block") {
-        $.ajax({
-            url: "/internal/qzcategorytag/getAllCategoryTagNames",
-            type: "GET",
-            success: function (categoryTagNames) {
-                $("#categoryTag_list").find('option').remove();
-                if (categoryTagNames != null) {
-                    $.each(categoryTagNames, function (idx, val) {
-                        $("#categoryTag_list").append("<option value='" + val.tagName + "'></option>")
-                    });
-                }
-            },
-            error: function () {
-                $().toastmessage('showErrorToast', "获取标签信息失败！");
-            }
-        });
         $('#userNameTree').combotree({
             url : '/internal/user/tree',
             idFiled: 'id',

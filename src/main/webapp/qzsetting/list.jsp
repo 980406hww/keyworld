@@ -35,8 +35,36 @@
 	<%@include file="/menu.jsp" %>
 	<div class="mytabs">
 		<ul class="link">
-			<li name="PC"><a href="javascript:;" onclick="checkTerminalType('PC', true)">百度PC</a></li>
-			<li name="Phone"><a href="javascript:;" onclick="checkTerminalType('Phone', true)">百度Phone</a></li>
+			<c:forEach items="${existSearchEngineMap}" var="entry">
+				<c:if test="${entry.value eq 'PC'}">
+					<c:choose>
+						<c:when test="${entry.key eq qzSettingSearchCriteria.searchEngine}">
+							<li name="${entry.key}${entry.value}" class="active">
+								<a href="javascript:;" onclick="checkTerminalType(${entry.key}, ${entry.value}, true)">${entry.key}${entry.value}</a>
+							</li>
+						</c:when>
+						<c:otherwise>
+							<li name="${entry.key}${entry.value}">
+								<a href="javascript:;" onclick="checkTerminalType(${entry.key}, ${entry.value}, true)">${entry.key}${entry.value}</a>
+							</li>
+						</c:otherwise>
+					</c:choose>
+				</c:if>
+				<c:if test="${entry.value eq 'Phone'}">
+					<c:choose>
+						<c:when test="${entry.key eq qzSettingSearchCriteria.searchEngine'Phone'}">
+							<li name="${entry.key}" class="active">
+								<a href="javascript:;" onclick="checkTerminalType(${entry.key}, ${entry.value}, true)">${entry.key}${entry.value}</a>
+							</li>
+						</c:when>
+						<c:otherwise>
+							<li name="${entry.key}">
+								<a href="javascript:;" onclick="checkTerminalType(${entry.key}, ${entry.value}, true)">${entry.key}</a>
+							</li>
+						</c:otherwise>
+					</c:choose>
+				</c:if>
+			</c:forEach>
 		</ul>
 		<div class="conn">
 			<ul>
@@ -265,6 +293,7 @@
 	<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
 	<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
 	<input type="hidden" name="domain" id="domain" value="${qzSettingSearchCriteria.domain}"/>
+	<input type="hidden" name="searchEngine" id="searchEngine" value="${qzSettingSearchCriteria.searchEngine}"/>
 	<input type="hidden" name="group" id="group" value="${qzSettingSearchCriteria.group}"/>
 	<input type="hidden" name="customerUuid" id="customerUuid" value="${qzSettingSearchCriteria.customerUuid}"/>
 	<input type="hidden" name="statusHidden" id="statusHidden" value="${qzSettingSearchCriteria.status}"/>
@@ -1521,6 +1550,9 @@
 	</c:forEach>
 </datalist>
 <datalist id="categoryTag_list">
+	<c:forEach items="${tagNameList}" var="tagName">
+		<option>${tagName}</option>
+	</c:forEach>
 </datalist>
 <%--收费Dialog--%>
 <div id="chargeDialog" class="easyui-dialog" style="display: none;left: 40%;">
@@ -1682,9 +1714,15 @@
 				<td align="right" style="margin-right:4px;">引擎</td>
 				<td>
 					<select name="searchEngine" id="searchEngine" style="width:240px">
-						<option value="百度">百度</option>
 						<c:forEach items="${searchEngineMap}" var="entry">
-							<option value="${entry.value}">${entry.key}</option>
+							<c:choose>
+								<c:when test="${entry.key eq qzSettingSearchCriteria.searchEngine}">
+									<option value="${entry.value}" selected>${entry.key}</option>
+								</c:when>
+								<c:otherwise>
+									<option value="${entry.value}">${entry.key}</option>
+								</c:otherwise>
+							</c:choose>
 						</c:forEach>
 					</select>
 				</td>

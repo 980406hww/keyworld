@@ -7,6 +7,7 @@ public class QZSettingSearchCriteria{
     private Long userInfoID;
     private Long organizationID;
     private String domain;
+    private String searchEngine;
     private String group;
     private String updateStatus;
     private Integer dateRangeType;
@@ -81,6 +82,14 @@ public class QZSettingSearchCriteria{
 
     public void setDomain(String domain) {
         this.domain = domain;
+    }
+
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
     }
 
     public String getGroup() {

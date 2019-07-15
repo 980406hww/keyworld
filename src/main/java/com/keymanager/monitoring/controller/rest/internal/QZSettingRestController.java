@@ -52,6 +52,8 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@Autowired
 	private OperationTypeService operationTypeService;
 
+	@Autowired QZCategoryTagService qzCategoryTagService;
+
 	@RequiresPermissions("/internal/qzsetting/updateStatus")
 	@RequestMapping(value = "/updateQZSettingStatus", method = RequestMethod.POST)
 	public ResponseEntity<?> updateQZSettingStatus(@RequestBody Map<String, Object> requestMap) throws Exception{
@@ -163,9 +165,11 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		ModelAndView modelAndView = new ModelAndView("/qzsetting/list");
 		// Map<String, Integer> chargeRemindDataMap = qzSettingService.getChargeRemindData();
 		if (null == qzSettingSearchCriteria.getTerminalType()) {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
-            qzSettingSearchCriteria.setTerminalType(terminalType);
+            qzSettingSearchCriteria.setTerminalType(TerminalTypeMapping.getTerminalType(request));
         }
+		if (null == qzSettingSearchCriteria.getSearchEngine()) {
+			qzSettingSearchCriteria.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
+		}
 		CustomerCriteria customerCriteria = new CustomerCriteria();
 		String entryType = (String) request.getSession().getAttribute("entryType");
 		customerCriteria.setEntryType(entryType);
@@ -195,12 +199,17 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		}
 		qzKeywordRankInfoService.getCountNumOfRankInfo(qzSettingSearchCriteria);
 		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
+		Map<String, String> existSearchEngineMap = qzSettingService.searchQZSettingSearchEngineMap(qzSettingSearchCriteria, page.getRecords().size());
 		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
+		List<String> tagNameList = qzCategoryTagService.findTagNames(null);
 		Integer availableQZSettingCount = qzSettingService.getAvailableQZSettings().size();
 		List operationTypeValues =  operationTypeService.getOperationTypeValuesByRole(qzSettingSearchCriteria.getTerminalType());
 		List<String> operationCombines = operationCombineService.getOperationCombineNames(qzSettingSearchCriteria.getTerminalType());
 		// modelAndView.addObject("chargeRemindDataMap", chargeRemindDataMap);
+		modelAndView.addObject("existSearchEngineMap", existSearchEngineMap);
+		modelAndView.addObject("searchEngineMap", Constants.SEARCH_ENGINE_MAP);
 		modelAndView.addObject("customerList", customerList);
+		modelAndView.addObject("tagNameList", tagNameList);
 		modelAndView.addObject("qzSettingSearchCriteria", qzSettingSearchCriteria);
 		modelAndView.addObject("statusList", Constants.QZSETTING_STATUS_LIST);
 		modelAndView.addObject("page", page);
@@ -219,7 +228,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	public ResponseEntity<?> getAvailableQZSettings(HttpServletRequest request){
 		try {
 			List<QZSetting>	qzSettings = qzSettingService.getAvailableQZSettings();
-			return new ResponseEntity<Object>(qzSettings,HttpStatus.OK);
+			return new ResponseEntity<Object>(qzSettings, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);

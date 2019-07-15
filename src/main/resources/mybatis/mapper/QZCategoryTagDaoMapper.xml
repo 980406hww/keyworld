@@ -11,17 +11,14 @@
         ORDER BY qc.fCreateTime
     </select>
 
-    <select id="getAllCategoryTagName" resultType="com.keymanager.monitoring.entity.QZCategoryTag">
-        SELECT
-          qc.fTagName AS "tagName"
-        FROM t_qz_category_tag qc
-        GROUP BY qc.fTagName
-    </select>
-
-    <select id="findTagNamesByQZSettingUuid" resultType="java.lang.String">
+    <select id="findTagNames" resultType="java.lang.String">
         SELECT
             qc.fTagName AS "tagName"
         FROM t_qz_category_tag qc
-        WHERE qc.fQZSettingUuid = #{qzSettingUuid}
+        WHERE 1 = 1
+        <if test="qzSettingUuid != null">
+            AND qc.fQZSettingUuid = #{qzSettingUuid}
+        </if>
+        GROUP BY qc.fTagName
     </select>
 </mapper>
