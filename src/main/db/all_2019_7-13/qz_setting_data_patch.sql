@@ -49,3 +49,6 @@ ALTER TABLE t_qz_keyword_rank_info ALTER COLUMN fTodayDifference SET DEFAULT 0;
 UPDATE t_qz_keyword_rank_info SET fAchieveLevel = 0 WHERE fAchieveLevel IS NULL;
 UPDATE t_qz_keyword_rank_info SET fDifferenceValue = 1 WHERE fDifferenceValue IS NULL AND fDataProcessingStatus = 0;
 UPDATE t_qz_keyword_rank_info SET fTodayDifference = 0 WHERE fTodayDifference IS NULL;
+
+# 代码上线后，再跑下面的语句(指定词的爬取会修改fDataProcessingStatus标识)
+UPDATE t_qz_keyword_rank_info SET fDataProcessingStatus = 1 WHERE fWebsiteType = 'designationWord' AND fDataProcessingStatus = 0;

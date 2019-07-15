@@ -1304,7 +1304,7 @@
 					<c:if test="${not isSEO}">
 						<tr>
 							<td align="right" style="width:72px" valign="top">达标备注</td>
-                            <td><textarea name="monitorRemark" id="monitorRemarkPC" placeholder="请填写电脑端达标备注, 如：首月30-50个词 客供词 3000" style="width:240px; height: 40px; margin-left: -6;"></textarea></td>
+                            <td><textarea name="monitorRemark" id="monitorRemarkPC" placeholder="请填写电脑端达标备注, 如：首月30-50个词 客供词 3000" style="width:240px; height: 40px; margin-left: -6;resize: none"></textarea></td>
 						</tr>
 						<tr id="standardSpeciesPC">
 							<td align="right" style="width:72px"><label>达标种类</label></td>
@@ -1365,7 +1365,7 @@
 					<c:if test="${not isSEO}">
 						<tr>
 							<td align="right" style="width:72px" valign="top">达标备注</td>
-                            <td><textarea name="monitorRemark" id="monitorRemarkPhone" placeholder="请填写移动端达标备注, 如：50个词" style="width:240px; height: 40px; margin-left: -6;"></textarea></td>
+                            <td><textarea name="monitorRemark" id="monitorRemarkPhone" placeholder="请填写移动端达标备注, 如：首月30-50个词 客供词 3000" style="width:240px; height: 40px; margin-left: -6;resize: none"></textarea></td>
 						</tr>
 						<tr id="standardSpeciesPhone">
 							<td align="right" style="width:72px"><label>达标种类</label></td>
