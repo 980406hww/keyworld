@@ -178,23 +178,24 @@
                 <when test="qzSettingSearchCriteria.checkStatus == 3">
                     AND qk.fAchieveLevel &gt; 0
                     AND EXISTS (
-                    SELECT 1
-                    FROM t_qz_operation_type qot
-                    WHERE qot.fQZSettingUuid = qk.fQZSettingUuid
-                    AND qot.fOperationtype = qk.fTerminalType
-                    AND qot.fIsDeleted = 0
-                    AND qot.fStandardTime &gt; ''
+                        SELECT 1
+                        FROM t_qz_operation_type qot
+                        WHERE qot.fQZSettingUuid = qk.fQZSettingUuid
+                        AND qot.fOperationtype = qk.fTerminalType
+                        AND qot.fOperationtype = #{qzSettingSearchCriteria.terminalType}
+                        AND qot.fIsDeleted = 0
+                        AND qot.fStandardTime &gt; ''
                     )
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 4">
                     AND qk.fAchieveLevel = 0
                     AND EXISTS (
-                    SELECT 1
-                    FROM t_qz_operation_type qot
-                    WHERE qot.fQZSettingUuid = qk.fQZSettingUuid
-                    AND qot.fOperationtype = qk.fTerminalType
-                    AND qot.fIsDeleted = 0
-                    AND qot.fStandardTime IS NULL
+                        SELECT 1
+                        FROM t_qz_operation_type qot
+                        WHERE qot.fQZSettingUuid = qk.fQZSettingUuid
+                        AND qot.fOperationtype = qk.fTerminalType
+                        AND qot.fOperationtype = #{qzSettingSearchCriteria.terminalType}
+                        AND qot.fIsDeleted = 0
                     )
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 5">
@@ -207,14 +208,15 @@
                     AND qk.fTodayDifference &lt; 0
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 8">
-                    AND qk.fTodayDifference = 0
+                    AND (qk.fTodayDifference = 0 OR qk.fTodayDifference IS NULL)
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 9">
                     AND qk.fTodayDifference &gt; 0
                 </when>
             </choose>
             AND qk.fDataProcessingStatus = 1
-            AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType})
+            AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
+            )
         </if>
         <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
             AND EXISTS (SELECT 1 FROM t_qz_category_tag qc WHERE qc.fQZSettingUuid = qs.fUuid AND qc.fTagName = #{qzSettingSearchCriteria.categoryTag})
