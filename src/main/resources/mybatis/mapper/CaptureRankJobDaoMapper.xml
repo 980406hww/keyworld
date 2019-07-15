@@ -163,9 +163,11 @@
     <select id="searchFiveMiniSetCheckingJobs" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
         SELECT
             c.fUuid as `uuid`,
+            c.fCustomerUuid as `customerUuid`,
             c.fQZSettingUuid as `qzSettingUuid`,
             c.fOperationType as `operationType`,
-            c.fGroupNames as `groupNames`
+            c.fGroupNames as `groupNames`,
+            c.fStartTime as `startTime`
         FROM
             t_capture_rank_job c
         WHERE
@@ -180,9 +182,12 @@
         FROM
             t_customer_keyword
         WHERE
-            fTerminalType = #{terminalType}
+            fTerminalType = #{captureRankJob.operationType}
         AND
-            fOptimizeGroupName = #{groupName}
+            fOptimizeGroupName = #{captureRankJob.groupNames}
+        <if test="captureRankJob.customerUuid != null and captureRankJob.customerUuid != ''">
+          AND fCustomerUuid = #{captureRankJob.customerUuid}
+        </if>
         AND
             fStatus = 1
         AND

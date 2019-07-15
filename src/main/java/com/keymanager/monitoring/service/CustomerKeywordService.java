@@ -1697,7 +1697,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
         }
         return tmpGroupCriterias;
-    }
+}
 
     public CustomerKeywordOptimizeGroupCriteria matchOptimizeGroupName(List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList, String optimizeGroupName, int groupMaxCustomerKeywordCount) {
         int maxGroupNameSuffix = 1;

@@ -37,7 +37,7 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
         try {
             if (validUser(userName, password)) {
                 CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob(captureJobCriteria);
-                if(captureRankJob == null) {
+                if (captureRankJob == null) {
                     captureRankJob = new CaptureRankJob();
                     captureRankJob.setGroupNames("end");
                 }
@@ -51,28 +51,27 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-//    @RequestMapping(value = "/getCaptureRankJobForXiala", method = RequestMethod.POST)
-//    public ResponseEntity<?> getCaptureRankJobForXiala(@RequestBody BaseCriteria baseCriteria) {
-//        String userName = baseCriteria.getUserName();
-//        String password = baseCriteria.getPassword();
-//        try {
-//            if (validUser(userName, password)) {
-//                // 取任务的时候先检查checking状态的任务
-//                // captureRankJobService.searchFiveMiniSetCheckingJobs();
-//                List<String> captureXialaRankingGroups = configService.getCaptureXialaRankingGroups();
-//                CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob(captureXialaRankingGroups, null);
-//                if(captureRankJob == null) {
-//                    captureRankJob = new CaptureRankJob();
-//                    captureRankJob.setGroupNames("end");
-//                }
-//                return new ResponseEntity<Object>(captureRankJob, HttpStatus.OK);
-//            }
-//        } catch (Exception e) {
-//            logger.error(e.getMessage());
-//            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-//        }
-//        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-//    }
+    @RequestMapping(value = "/getCaptureRankJobTemp", method = RequestMethod.POST)
+    public synchronized ResponseEntity<?> getCaptureRankJobTemp(@RequestBody ExternalCaptureJobCriteria captureJobCriteria) {
+        String userName = captureJobCriteria.getUserName();
+        String password = captureJobCriteria.getPassword();
+        try {
+            if (validUser(userName, password)) {
+                captureRankJobService.searchFiveMiniSetCheckingJobs();
+                CaptureRankJob captureRankJob = captureRankJobService.provideCaptureRankJob(captureJobCriteria);
+                if (captureRankJob == null) {
+                    captureRankJob = new CaptureRankJob();
+                    captureRankJob.setGroupNames("end");
+                }
+                return new ResponseEntity<Object>(captureRankJob, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
 
     @RequestMapping(value = "/updateCaptureRankJob", method = RequestMethod.POST)
     public ResponseEntity<?> updateCaptureRankJob(@RequestBody CaptureRankJobCriteria captureRankJobCriteria) {
@@ -99,6 +98,23 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
         try {
             if (validUser(userName, password)) {
                 captureRankJobService.completeCaptureRankJobTemp(captureRankJob);
+                return new ResponseEntity<Object>(HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/updateCaptureRankJobTempTwo", method = RequestMethod.POST)
+    public ResponseEntity<?> updateCaptureRankJobTempTwo(@RequestBody CaptureRankJobCriteria captureRankJobCriteria) {
+        String userName = captureRankJobCriteria.getUserName();
+        String password = captureRankJobCriteria.getPassword();
+        CaptureRankJob captureRankJob = captureRankJobCriteria.getCaptureRankJob();
+        try {
+            if (validUser(userName, password)) {
+                captureRankJobService.completeCaptureRankJobTempTwo(captureRankJob);
                 return new ResponseEntity<Object>(HttpStatus.OK);
             }
         } catch (Exception e) {
