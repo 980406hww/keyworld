@@ -81,6 +81,8 @@
             COUNT(qk.fTodayDifference &gt;0 OR NULL) AS 'upDifferenceNum',
             COUNT(qk.fTodayDifference &lt;0 OR NULL) AS 'downDifferenceNum'
         FROM t_qz_keyword_rank_info qk
+        LEFT JOIN t_qz_setting qs
+        ON qs.fUuid = qk.fQZSettingUuid
         LEFT JOIN t_qz_operation_type qot
         ON qot.fQZSettingUuid = qk.fQZSettingUuid AND qot.fOperationtype = qk.fTerminalType
         WHERE qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
@@ -88,19 +90,17 @@
         AND qk.fDataProcessingStatus = 1
         AND EXISTS (
             SELECT 1
-            FROM t_qz_setting qs
-            LEFT JOIN t_customer c
-            ON qs.fCustomerUuid = c.fUuid
-            WHERE 1 = 1
+            FROM t_customer c
+            LEFT JOIN t_userinfo ui
+            ON ui.fLoginName = c.fUserID
+            WHERE qs.fCustomerUuid = c.fUuid
             <if test="qzSettingSearchCriteria.loginName != null and qzSettingSearchCriteria.loginName != ''">
                 AND c.fUserID = #{qzSettingSearchCriteria.loginName}
             </if>
             <if test="qzSettingSearchCriteria.organizationID != null and qzSettingSearchCriteria.organizationID != ''">
-                    AND EXISTS (
+                AND EXISTS (
                     SELECT 1
-                    FROM t_userinfo ui
-                    LEFT JOIN t_organization o
-                    ON ui.fLoginName = c.fUserID
+                    FROM t_organization o
                     WHERE o.fUuid = ui.fOrganizationID
                     AND o.fUuid = #{qzSettingSearchCriteria.organizationID}
                 )
