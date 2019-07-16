@@ -878,7 +878,7 @@ function trimSearchCondition(days) {
     chargeForm.find("#customerUuid").val(customerUuid);
     chargeForm.find("#dateRangeType").val(days);
 
-    var domain = $(".conn").find("li:first-child input[name='domain']").val();
+    var domain = $(".conn").find("input[name='domain']").val();
     var categoryTag = $(".conn").find(".category").find("input[name='categoryTag']").val();
     var group = $(".conn").find(".group").find("input[name='group']").val();
     var operationType = $(".conn").find("select[name='operationType']").val();
@@ -1234,7 +1234,7 @@ function resetSearchCondition(days) {
     chargeForm.find("#currentPageNumberHidden").val(1);
     chargeForm.submit();
 }
-function selectAll(self){
+function qzSettingSelectAll(self){
     var a = document.getElementsByName("uuid");
     if(self.checked){
         for(var i = 0;i<a.length;i++){
@@ -1244,20 +1244,6 @@ function selectAll(self){
         for(var i = 0;i<a.length;i++){
             a[i].checked = false;
         }
-    }
-}
-function decideSelect() {
-    var a = document.getElementsByName("uuid");
-    var select = 0;
-    for(var i = 0; i < a.length; i++){
-        if (a[i].checked == true){
-            select++;
-        }
-    }
-    if(select === a.length){
-        $("#selectAllChecked").prop("checked",true);
-    }else {
-        $("#selectAllChecked").prop("checked",false);
     }
 }
 function delQZSetting(uuid) {

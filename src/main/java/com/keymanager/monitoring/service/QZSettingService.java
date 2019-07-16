@@ -849,7 +849,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public Map<String, String> searchQZSettingSearchEngineMap(QZSettingSearchCriteria criteria, int record) {
 		Map<String, String> map = new LinkedHashMap<>();
-		if ((null != criteria.getDomain() || null != criteria.getCustomerUuid()) && record == 1) {
+		if ((!"".equals(criteria.getDomain()) || !"".equals(criteria.getCustomerUuid())) && record == 1) {
 			List<QZSettingVO> qzSettingVos = qzSettingDao.searchQZSettingSearchEngines(criteria.getCustomerUuid(), criteria.getDomain());
 			for (QZSettingVO qzSettingVo : qzSettingVos) {
 				if (null != qzSettingVo.getPcGroup()) {
@@ -861,6 +861,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			}
 		} else {
 			map = Constants.SEARCH_ENGINE_MAP;
+		}
+		if (!map.containsKey(criteria.getSearchEngine()) && !map.containsKey(criteria.getSearchEngine() + criteria.getTerminalType())) {
+			Map.Entry<String, String> next = map.entrySet().iterator().next();
+			criteria.setSearchEngine(next.getKey().substring(0, next.getKey().indexOf('P') > -1 ? next.getKey().indexOf('P') : next.getKey().length()));
+			criteria.setTerminalType(next.getValue());
 		}
 		return map;
 	}

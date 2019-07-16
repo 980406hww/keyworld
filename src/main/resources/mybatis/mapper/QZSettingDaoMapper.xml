@@ -127,7 +127,14 @@
         <if test="qzSettingSearchCriteria.organizationID != null and qzSettingSearchCriteria.organizationID != ''">AND o.fUuid = #{qzSettingSearchCriteria.organizationID}</if>
         <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
         <if test="qzSettingSearchCriteria.domain != null and qzSettingSearchCriteria.domain != ''">AND qs.fDomain = #{qzSettingSearchCriteria.domain}</if>
-        AND qs.fSearchEngine = #{qzSettingSearchCriteria.searchEngine}
+        <choose>
+            <when test="qzSettingSearchCriteria.customerUuid == '' and qzSettingSearchCriteria.domain == ''">
+                AND qs.fSearchEngine = #{qzSettingSearchCriteria.searchEngine}
+            </when>
+            <otherwise>
+
+            </otherwise>
+        </choose>
         <choose>
             <when test="qzSettingSearchCriteria.terminalType == 'PC' and (qzSettingSearchCriteria.group == null or qzSettingSearchCriteria.group == '')">
                 AND qs.fPcGroup &gt; ''

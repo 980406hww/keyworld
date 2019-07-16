@@ -116,7 +116,14 @@ ul {
     margin-left: 0
 }
 
-.mytabs .conn li:first-child input {
+.mytabs .conn li.selectedAllQZSetting {
+    margin-left: 5px;
+    margin-top: 6px;
+    height: 25px;
+    line-height: 25px;
+}
+
+.mytabs .conn li:nth-child(2) input {
     width: 180px;
     height: 25px;
     line-height: 25px;

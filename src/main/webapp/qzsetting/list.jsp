@@ -69,6 +69,9 @@
 		</ul>
 		<div class="conn">
 			<ul>
+                <li class="selectedAllQZSetting">
+                    <input type="checkbox" onclick="qzSettingSelectAll(this);" />
+                </li>
 				<li>
 					<input type="text" title="请输入网站域名" name="domain" placeholder="请输入网站域名" onkeydown="enterIn(event);" value="${qzSettingSearchCriteria.domain}">
 				</li>
@@ -327,7 +330,7 @@
 						<div class="header">
 							<input type="hidden" name="contactPerson" value="${qzSetting.contactPerson}">
 							<span>
-								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelect();"/>
+								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" />
 							</span>
 							<span class="contactPerson-name" title="${qzSetting.contactPerson}"><a href="javascript:;">${qzSetting.contactPerson}</a></span>
 							<span class="domain" title="${qzSetting.domain}"><a href="javascript:;">${qzSetting.domain}</a></span>
@@ -763,7 +766,7 @@
 					<li>
 						<div class="header">
 							<span>
-								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelect();"/>
+								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" />
 							</span>
 							<span class="contactPerson-name" title="${qzSetting.contactPerson}"><a href="javascript:;">${qzSetting.contactPerson}</a></span>
 							<span class="domain" title="${qzSetting.domain}"><a href="javascript:;">${qzSetting.domain}</a></span>
