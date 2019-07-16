@@ -35,6 +35,7 @@ public class QZSettingSearchCriteria{
     private Boolean hasReady;
     private String standardSpecies;
     private Integer optimizationType;
+    private boolean resetPagingParam;
 
     public String getLoginName() {
         return loginName;
@@ -306,5 +307,13 @@ public class QZSettingSearchCriteria{
 
     public void setOptimizationType (Integer optimizationType) {
         this.optimizationType = optimizationType;
+    }
+
+    public boolean getResetPagingParam() {
+        return resetPagingParam;
+    }
+
+    public void setResetPagingParam(boolean resetPagingParam) {
+        this.resetPagingParam = resetPagingParam;
     }
 }

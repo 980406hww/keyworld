@@ -154,7 +154,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	public ModelAndView searchQZSettingsPost(HttpServletRequest request, QZSettingSearchCriteria qzSettingSearchCriteria) {
 		String currentPageNumber = request.getParameter("currentPageNumber");
 		String pageSize = request.getParameter("pageSize");
-		if (null == currentPageNumber && null == pageSize) {
+		if ((null == currentPageNumber && null == pageSize) || qzSettingSearchCriteria.getResetPagingParam()) {
 			currentPageNumber = "1";
 			pageSize = "50";
 		}

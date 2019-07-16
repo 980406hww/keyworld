@@ -38,28 +38,29 @@
 			<c:forEach items="${existSearchEngineMap}" var="entry">
 				<c:if test="${entry.value eq 'PC'}">
 					<c:choose>
-						<c:when test="${entry.key eq qzSettingSearchCriteria.searchEngine}">
+						<c:when test="${entry.key eq qzSettingSearchCriteria.searchEngine and entry.value eq qzSettingSearchCriteria.terminalType}">
 							<li name="${entry.key}${entry.value}" class="active">
-								<a href="javascript:;" onclick="checkTerminalType(${entry.key}, ${entry.value}, true)">${entry.key}${entry.value}</a>
+								<a href="javascript:;" onclick="checkTerminalType('${entry.key}', '${entry.value}');">${entry.key}${entry.value}</a>
 							</li>
 						</c:when>
 						<c:otherwise>
 							<li name="${entry.key}${entry.value}">
-								<a href="javascript:;" onclick="checkTerminalType(${entry.key}, ${entry.value}, true)">${entry.key}${entry.value}</a>
+								<a href="javascript:;" onclick="checkTerminalType('${entry.key}', '${entry.value}');">${entry.key}${entry.value}</a>
 							</li>
 						</c:otherwise>
 					</c:choose>
 				</c:if>
 				<c:if test="${entry.value eq 'Phone'}">
+                    <c:set var="criteriaSearchEngine" value="${qzSettingSearchCriteria.searchEngine}Phone" />
 					<c:choose>
-						<c:when test="${entry.key eq qzSettingSearchCriteria.searchEngine'Phone'}">
+						<c:when test="${entry.key eq criteriaSearchEngine and entry.value eq qzSettingSearchCriteria.terminalType}">
 							<li name="${entry.key}" class="active">
-								<a href="javascript:;" onclick="checkTerminalType(${entry.key}, ${entry.value}, true)">${entry.key}${entry.value}</a>
+								<a href="javascript:;" onclick="checkTerminalType('${entry.key}', '${entry.value}');">${entry.key}</a>
 							</li>
 						</c:when>
 						<c:otherwise>
 							<li name="${entry.key}">
-								<a href="javascript:;" onclick="checkTerminalType(${entry.key}, ${entry.value}, true)">${entry.key}</a>
+								<a href="javascript:;" onclick="checkTerminalType('${entry.key}', '${entry.value}');">${entry.key}</a>
 							</li>
 						</c:otherwise>
 					</c:choose>
@@ -292,6 +293,7 @@
 	<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
 	<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
 	<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
+	<input type="hidden" name="resetPagingParam" id="resetPagingParam" value="${qzSettingSearchCriteria.resetPagingParam}"/>
 	<input type="hidden" name="domain" id="domain" value="${qzSettingSearchCriteria.domain}"/>
 	<input type="hidden" name="searchEngine" id="searchEngine" value="${qzSettingSearchCriteria.searchEngine}"/>
 	<input type="hidden" name="group" id="group" value="${qzSettingSearchCriteria.group}"/>
@@ -325,7 +327,7 @@
 						<div class="header">
 							<input type="hidden" name="contactPerson" value="${qzSetting.contactPerson}">
 							<span>
-								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll();"/>
+								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelect();"/>
 							</span>
 							<span class="contactPerson-name" title="${qzSetting.contactPerson}"><a href="javascript:;">${qzSetting.contactPerson}</a></span>
 							<span class="domain" title="${qzSetting.domain}"><a href="javascript:;">${qzSetting.domain}</a></span>
@@ -761,7 +763,7 @@
 					<li>
 						<div class="header">
 							<span>
-								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelectAll();"/>
+								<input type="checkbox" name="uuid" value="${qzSetting.uuid}" onclick="decideSelect();"/>
 							</span>
 							<span class="contactPerson-name" title="${qzSetting.contactPerson}"><a href="javascript:;">${qzSetting.contactPerson}</a></span>
 							<span class="domain" title="${qzSetting.domain}"><a href="javascript:;">${qzSetting.domain}</a></span>

@@ -34,7 +34,7 @@ $(function () {
         showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
         showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
     }
-    // loadingCheckTerminalType();
+    loadingRankInfo();
     searchRiseOrFall();
     detectedMoreSearchConditionDivShow();
 });
@@ -45,10 +45,15 @@ function enterIn(e) {
         trimSearchCondition('1');
     }
 }
-// function loadingCheckTerminalType() {
-//     var terminalType = $("#chargeForm").find("#terminalType").val();
-//     checkTerminalType(terminalType, false);
-// }
+function loadingRankInfo() {
+    setTimeout(function (){
+        detectedTopNum();
+    }, 200);
+    setTimeout(function () {
+        var terminalType = $("#chargeForm").find("#terminalType").val();
+        getQZSettingGroupInfo(terminalType);
+    }, 100);
+}
 function searchRiseOrFall() {
     var checkedRadio = $(".mytabs div:eq(0)").find("input:radio[checked='checked']");
     $(".mytabs div:eq(0)").find("input:radio").click(function () {
@@ -137,34 +142,26 @@ function detectedMoreSearchConditionDivShow() {
         });
         $("#userNameTree").textbox('setValue', treeValue);
     }
-    var values = customerInfo + categoryTag + group + status + standardSpecies + optimizationType + updateStatus + createTime + createTimePrefix + operationType + hasMonitor + hasReady + userInfoID + organizationID;
-    if (values != "") {
+    var values = customerInfo + categoryTag + group + status + standardSpecies + optimizationType + updateStatus +
+        createTime + createTimePrefix + operationType + hasMonitor + hasReady + userInfoID + organizationID;
+    if (values !== "") {
         moreSearchCondition.css("display", "block");
     }
 }
-function checkTerminalType(terminalType, isManualSwitch) {
+function checkTerminalType(searchEngine, terminalType) {
     var a = $(".mytabs .link").find("li.active a");
-    if (a[0] != undefined && a[0].innerHTML.substring(2) == terminalType) {
+    var html = searchEngine;
+    if (terminalType === 'PC') {
+        html += terminalType;
+    }
+    if (a[0] !== undefined && a[0].innerHTML === html) {
         return;
     }
     $(".mytabs .link").find("li").removeClass("active");
-    if (terminalType == "PC") {
-        $(".mytabs .link").find("li[name='PC']").addClass("active");
-        $("#chargeForm").find("#terminalType").val($.trim(terminalType));
-    }
-    if (terminalType == "Phone") {
-        $(".mytabs .link").find("li[name='Phone']").addClass("active");
-        $("#chargeForm").find("#terminalType").val($.trim(terminalType));
-    }
-    if (isManualSwitch) {
-        trimSearchCondition('1');
-    }
-    setTimeout(function (){
-        detectedTopNum();
-    }, 200);
-    setTimeout(function () {
-        getQZSettingGroupInfo(terminalType);
-    }, 100);
+    $(".mytabs .link").find("li[name='"+ html +"']").addClass("active");
+    $("#chargeForm").find("#searchEngine").val($.trim(html.substr(0, html.indexOf('P'))));
+    $("#chargeForm").find("#terminalType").val($.trim(terminalType));
+    trimSearchCondition('1');
 }
 function detectedTopNum() {
     $(".body").find(".rank-wrap").each(function () {
@@ -778,7 +775,7 @@ function getQZSettingGroupInfo(terminalType) {
                 }
             },
             error: function () {
-                console.log("获取优化分组机器信息失败，请刷新重试或提交问题给开发人员！");
+                $().toastmessage('showErrorToast', '获取优化分组机器信息失败，请刷新重试或提交问题给开发人员！');
             }
         });
     });
@@ -854,6 +851,7 @@ function unique(a) {
 function trimSearchCondition(days) {
     var chargeForm = $("#chargeForm");
     var customerInfo = $(".conn").find(".customerInfo").find("input[name='customerInfo']").val();
+    var resetPagingParam = false;
     var treeInput = $("#userNameTree").parent().find("input[name='userName']");
     var text = "";
     var id;
@@ -893,6 +891,12 @@ function trimSearchCondition(days) {
     var hasMonitor = $(".conn li").find("select[name='hasMonitor']").val();;
     var hasReady = $(".conn li").find("select[name='hasReady']").val();;
 
+    var str = text + customerUuid + domain + categoryTag + group + operationType + status + standardSpecies + optimizationType
+        + updateStatus + createTime + createTimePrefix + hasMonitor + hasReady;
+    if (str !== '') {
+        resetPagingParam = true;
+    }
+    chargeForm.find("#resetPagingParam").val(resetPagingParam);
     chargeForm.find("#domain").val($.trim(domain));
     chargeForm.find("#categoryTag").val($.trim(categoryTag));
     chargeForm.find("#group").val($.trim(group));
@@ -1159,7 +1163,7 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, tempOptimizeGroupName
     if (keywordStr == "") {
         $.messager.alert('提示', '请输入关键字！！', 'warning');
         customerKeywordDialog.find("#customerKeywordDialogContent").focus();
-        return;
+        return false;
     }
     keywordStr = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "");
     if (keywordStr.substring(keywordStr.length - 1) == ','){
@@ -1242,7 +1246,7 @@ function selectAll(self){
         }
     }
 }
-function decideSelectAll() {
+function decideSelect() {
     var a = document.getElementsByName("uuid");
     var select = 0;
     for(var i = 0; i < a.length; i++){
@@ -1250,7 +1254,7 @@ function decideSelectAll() {
             select++;
         }
     }
-    if(select == a.length){
+    if(select === a.length){
         $("#selectAllChecked").prop("checked",true);
     }else {
         $("#selectAllChecked").prop("checked",false);
@@ -1290,7 +1294,6 @@ function getSelectedIDs() {
 function getSelectedUsefulIDs() {
     var uuids = '';
     $.each($("input[name=uuid]:checkbox:checked"), function(){
-        console.log($(this).parent().parent().parent().find("div.rank-wrap1 div").length)
         if ($(this).parent().parent().parent().find("div.rank-wrap1 div").length > 0) {
             if(uuids === ''){
                 uuids = $(this).val();
@@ -1305,7 +1308,7 @@ function delSelectedQZSettings(self) {
     var uuids = getSelectedIDs();
     if(uuids === ''){
         $.messager.alert('提示', '请选择要操作的设置信息!!', 'info');
-        return ;
+        return false;
     }
     parent.$.messager.confirm('确认', "确实要删除这些站点设置信息吗?", function (b) {
         if (b) {
@@ -1338,7 +1341,7 @@ function immediatelyUpdateQZSettings(type) {
     var uuids = getSelectedUsefulIDs();
     if(uuids === ''){
         $.messager.alert('提示', '请选择正确的要操作的站点信息, 必须包含至少一个是指定词的站点！！', 'info');
-        return;
+        return false;
     }
     var urlType = '';
     switch (type) {
@@ -1357,26 +1360,26 @@ function immediatelyUpdateQZSettings(type) {
     updateImmediately(uuids, urlType)
 }
 function updateImmediately(uuids, urlType) {
-    var updateFlag = true;
+    var updateFlag = false;
     switch (urlType) {
         case "updateImmediately":
             parent.$.messager.confirm('确认', "确实要马上更新这些站点设置吗?", function (b) {
-                if (!b) {
-                    updateFlag = false;
+                if (b) {
+                    updateFlag = true;
                 }
             });
             break;
         case "startMonitorImmediately":
             parent.$.messager.confirm('确认', "确实要启动这些站点所有终端的达标监控吗?", function (b) {
-                if (!b) {
-                    updateFlag = false;
+                if (b) {
+                    updateFlag = true;
                 }
             });
             break;
         case "updateQZKeywordEffectImmediately":
             parent.$.messager.confirm('确认', "确认修改这些站点所有终端下操作的关键词的作用为指定词吗?", function (b) {
-                if (!b) {
-                    updateFlag = false;
+                if (b) {
+                    updateFlag = true;
                 }
             });
             break;
@@ -1412,25 +1415,25 @@ function updateQZSettingStatus(status) {
     var uuids = getSelectedIDs();
     if(uuids === ''){
         $.messager.alert('提示', '请选择要操作的整站！！', 'info');
-        return ;
+        return false;
     }
-    var updateFlag = true;
+    var updateFlag = false;
     if(status === 1) {
         parent.$.messager.confirm('询问', "确认要激活选中的整站吗？", function(b) {
-            if (!b) {
-                updateFlag = false;
+            if (b) {
+                updateFlag = true;
             }
         });
     } else if (status === 2) {
         parent.$.messager.confirm('询问', "确认要暂停收选中的整站的费用吗？", function(b) {
-            if (!b) {
-                updateFlag = false;
+            if (b) {
+                updateFlag = true;
             }
         });
     } else {
         parent.$.messager.confirm('询问', "确认要暂停选中的整站吗？", function(b) {
-            if (!b) {
-                updateFlag = false;
+            if (b) {
+                updateFlag = true;
             }
         });
     }
@@ -1476,10 +1479,10 @@ function saveChargeLog(self) {
     var chargeDialog = $("#chargeDialog");
     var selectedOperationTypes = chargeDialog.find("input[name=operationType]:checkbox:checked");
     var saveChargeLogFlag = true;
-    if (selectedOperationTypes.length == 0) {
+    if (selectedOperationTypes.length === 0) {
         $.messager.alert('提示', '必须选择一个收费项才能收费！！', 'warning');
         saveChargeLogFlag = false;
-        return;
+        return false;
     }
     var chargeLogs = [];
     $.each(selectedOperationTypes, function (index, val) {
@@ -1491,29 +1494,29 @@ function saveChargeLog(self) {
         chargeLog.receivableAmount = chargeDialog.find("#receivableAmount" + val.id).val();
         chargeLog.actualAmount = chargeDialog.find("#actualAmount" + val.id).val();
         chargeLog.nextChargeDate = chargeDialog.find("#nextChargeDate" + val.id).val();
-        if (chargeLog.nextChargeDate == "" || chargeLog.nextChargeDate == null) {
+        if (chargeLog.nextChargeDate === "" || chargeLog.nextChargeDate == null) {
             $.messager.alert('提示', '下次收费日期为必填！！', 'warning');
             chargeDialog.find("#nextChargeDate" + val.id).focus();
             saveChargeLogFlag = false;
-            return;
+            return false;
         }
-        if (chargeLog.actualAmount == "" || chargeLog.actualAmount == null) {
+        if (chargeLog.actualAmount === "" || chargeLog.actualAmount == null) {
             $.messager.alert('提示', '实收金额为必填！！', 'warning');
             chargeDialog.find("#actualAmount" + val.id).focus();
             saveChargeLogFlag = false;
-            return;
+            return false;
         }
         if (!reg.test(chargeLog.actualAmount)) {
             $.messager.alert('提示', '请输入合理的金额！！', 'warning');
             chargeDialog.find("#actualAmount" + val.id).focus();
             saveChargeLogFlag = false;
-            return;
+            return false;
         }
-        if (chargeLog.actualChargeDate == "" || chargeLog.actualChargeDate == null) {
+        if (chargeLog.actualChargeDate === "" || chargeLog.actualChargeDate == null) {
             $.messager.alert('提示', '实际收费日期为必填！！', 'warning');
             chargeDialog.find("#actualChargeDate" + val.id).focus();
             saveChargeLogFlag = false;
-            return;
+            return false;
         }
         chargeLogs.push(chargeLog);
     });
@@ -1531,7 +1534,7 @@ function saveChargeLog(self) {
                     type: 'POST',
                     success: function (data) {
                         resetChargeDialog();
-                        if (data != null && data != "") {
+                        if (data != null && data !== "") {
                             $().toastmessage('showSuccessToast', "收费成功！", true);
                             $("#chargeDialog").dialog("close");
                         } else {
@@ -1543,7 +1546,7 @@ function saveChargeLog(self) {
                     }
                 });
             } else {
-                $.messager.alert('提示', '取消收费！！', 'info');
+                $().toastmessage('showErrorToast', '取消收费！！！');
             }
         });
     }
@@ -1598,7 +1601,7 @@ function showChargeLog(uuid, self) {
                 $("#chargeLogListDiv").dialog("open");
                 $("#chargeLogListDiv").window("resize",{top:$(document).scrollTop() + 100});
             } else {
-                $.messager.alert('提示', '暂无收费记录', 'info');
+                $().toastmessage('showErrorToast', '暂无收费记录！！！');
             }
         },
         error: function () {
@@ -1976,13 +1979,13 @@ function saveChangeSetting(self, refresh) {
     if (customer == null || customer === "") {
         $.messager.alert('提示', '请选择客户!!', 'warning');
         settingDialogDiv.find("#qzSettingCustomer").focus();
-        return;
+        return false;
     }
     qzSetting.domain = settingDialogDiv.find("#qzSettingDomain").val().trim();
     if (qzSetting.domain == null || qzSetting.domain === "") {
         $.messager.alert('提示', '请输入域名!!', 'warning');
         settingDialogDiv.find("#qzSettingDomain").focus();
-        return;
+        return false;
     }
     qzSetting.bearPawNumber = settingDialogDiv.find("#bearPawNumber").val().trim();
     if (settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").length > 0) {
@@ -2010,21 +2013,21 @@ function saveChangeSetting(self, refresh) {
     }
     qzSetting.pcGroup = settingDialogDiv.find("#groupPC").val().trim();
     qzSetting.phoneGroup = settingDialogDiv.find("#groupPhone").val().trim();
-    if(qzSetting.pcGroup == "") {
+    if(qzSetting.pcGroup === "") {
         qzSetting.pcGroup = null;
     }
-    if(qzSetting.phoneGroup == "") {
+    if(qzSetting.phoneGroup === "") {
         qzSetting.phoneGroup = null;
     }
 
-    if (customer != null && customer != '') {
+    if (customer != null && customer !== '') {
         var customerArray = customer.split("_____");
         if (customerArray.length == 2) {
             qzSetting.customerUuid = customerArray[1];
         } else {
             $.messager.alert('提示', '请从列表中选择客户！！！', 'info');
             settingDialogDiv.find("#qzSettingCustomer").focus();
-            return;
+            return false;
         }
     }
     var entryType = settingDialogDiv.find("#qzSettingEntryType").val();
@@ -2034,7 +2037,7 @@ function saveChangeSetting(self, refresh) {
     qzSetting.qzCategoryTags = []; //分类标签表
 
     var tagNames = settingDialogDiv.find("#qzCategoryTagNames").val().replace(/(，)+/g, ",");
-    if (tagNames != "") {
+    if (tagNames !== "") {
         var tagNameArr = tagNames.split(",");
         tagNameArr = unique(tagNameArr);
         $.each(tagNameArr, function (idx, val) {
@@ -2078,7 +2081,7 @@ function saveChangeSetting(self, refresh) {
             return false;
         }
 
-        if (qzSetting.autoCrawlKeywordFlag && maxKeywordCount !== undefined && (operationType.maxKeywordCount == "" || !reg.test(operationType.maxKeywordCount))){
+        if (qzSetting.autoCrawlKeywordFlag && maxKeywordCount !== undefined && (operationType.maxKeywordCount === "" || !reg.test(operationType.maxKeywordCount))){
             $.messager.alert('提示', '请输入限制词量！！', 'warning');
             settingDialogDiv.find("#maxKeywordCount" + val.id).focus();
             validationFlag = false;
@@ -2103,9 +2106,9 @@ function saveChangeSetting(self, refresh) {
                     var ruleObj = settingDialogDiv.find("#chargeRule" + val.id);
                     var trObjs = ruleObj.find("tbody tr:not(:first,:last)");
                     $.each(trObjs, function (idx, val) {
-                        var startKeywordCountObj = $(val).find("input[name=startKeywordCount]");
-                        var endKeywordCountObj = $(val).find("input[name=endKeywordCount]");
-                        var amountObj = $(val).find("input[name=amount]");
+                        var startKeywordCountObj = $(val).find("input[name='startKeywordCount']");
+                        var endKeywordCountObj = $(val).find("input[name='endKeywordCount']");
+                        var amountObj = $(val).find("input[name='amount']");
 
                         var chargeRule = {};
                         chargeRule.standardSpecies = $(v).val();
@@ -2114,7 +2117,7 @@ function saveChangeSetting(self, refresh) {
                         chargeRule.amount = amountObj.val().trim();
                         operationType.qzChargeRules.push(chargeRule);
 
-                        if (startKeywordCountObj.val() == null || startKeywordCountObj.val().trim() == "") {
+                        if (startKeywordCountObj.val() === null || startKeywordCountObj.val().trim() === "") {
                             $.messager.alert('提示', '请输入起始达标词数！！', 'warning');
                             startKeywordCountObj[0].focus();
                             validationFlag = false;
@@ -2134,21 +2137,21 @@ function saveChangeSetting(self, refresh) {
                             return false;
                         }
                         if (idx < (trObjs.length - 1)) {
-                            if (endKeywordCountObj.val() == null || endKeywordCountObj.val().trim() == "") {
+                            if (endKeywordCountObj.val() === null || endKeywordCountObj.val().trim() === "") {
                                 $.messager.alert('提示', '请输入终止达标词数！！', 'warning');
                                 endKeywordCountObj.focus();
                                 validationFlag = false;
                                 return false;
                             }
                         } else {
-                            if(endKeywordCountObj.val() != "" && operationType.currentKeywordCount>Number(endKeywordCountObj.val())){
+                            if(endKeywordCountObj.val() !== "" && operationType.currentKeywordCount>Number(endKeywordCountObj.val())){
                                 $.messager.alert('提示', '最后一条规则中的终止达标词量必须大于当前词量！！', 'warning');
                                 endKeywordCountObj.focus();
                                 validationFlag = false;
                                 return false;
                             }
                         }
-                        if (endKeywordCountObj.val() != "") {
+                        if (endKeywordCountObj.val() !== "") {
                             if (!reg.test(endKeywordCountObj.val())) {
                                 $.messager.alert('提示', '请输入数字！！', 'warning');
                                 endKeywordCountObj.focus();
@@ -2162,7 +2165,7 @@ function saveChangeSetting(self, refresh) {
                                 return false;
                             }
                         }
-                        if (amountObj.val() == null || amountObj.val().trim() == "") {
+                        if (amountObj.val() === null || amountObj.val().trim() === "") {
                             $.messager.alert('提示', '请输入价格！！', 'warning');
                             amountObj.focus();
                             validationFlag = false;
@@ -2186,9 +2189,9 @@ function saveChangeSetting(self, refresh) {
     });
 
     if (validationFlag) {
-        if (checkedObjs.length == 0) {
+        if (checkedObjs.length === 0) {
             $.messager.alert('提示', '保存失败, 必须要增加一条规则！！', 'warning');
-            return;
+            return false;
         }
         hideSaveButton(true);
         $.ajax({
@@ -2200,7 +2203,7 @@ function saveChangeSetting(self, refresh) {
             },
             type: 'POST',
             success: function (data) {
-                if (data != null && data != "") {
+                if (data != null && data !== "") {
                     $().toastmessage('showSuccessToast', "更新成功", refresh);
                 } else {
                     hideSaveButton(false);
@@ -2269,7 +2272,7 @@ function deleteCurrentRow(currentRow) {
             $("#changeSettingDialog").css("height", $("#changeSettingDialog").height() + 2);
         }
     } else {
-        $.messager.alert('提示', '删除失败, 规则表不允许为空！！', 'warning');
+        $().toastmessage('showErrorToast', '删除失败, 规则表不允许为空！！')
     }
 }
 
@@ -2296,7 +2299,7 @@ function dealSettingTable(self, operationType, type) {
     } else {
         if (type === 1) {
             $(self)[0].checked = true;
-            $.messager.alert('提示', '必须选中达一种达标优化类型！！', 'info');
+            $().toastmessage('showErrorToast', '必须选中一种达标优化类型');
             return false;
         }
     }
@@ -2306,7 +2309,7 @@ function dealSettingTable(self, operationType, type) {
         var checkboxObj = settingDialogDiv.find('#' + operationType);
         var isSEO = $(".datalist-list #isSEO").val();
         var status = $(checkboxObj).attr("status");
-        if (checkboxObj[0].checked == true) {
+        if (checkboxObj[0].checked === true) {
             groupObj.css("display","block");
             if (isSEO === "false" && optimizationType !== '0') {
                 $("#chargeRule" + operationType).css("display", "block");
@@ -2420,7 +2423,7 @@ function excludeCustomerKeywords(qzSettingUuid, customerUuid, domain, optimizedG
     if (keywordStr == "") {
         $.messager.alert('提示', '请输入关键字！！', 'warning');
         excludeCustomerKeywordDialog.find("#customerKeywordDialogContent").focus();
-        return;
+        return false;
     }
     keywordStr = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "");
     if (keywordStr.substring(keywordStr.length - 1) == ','){
@@ -2501,7 +2504,7 @@ function checkedStandardSpecies(self, terminalType) {
         addRow("chargeRule" + terminalType);
     }  else {
         $(self)[0].checked = true;
-        $.messager.alert('提示', '必须选中达一种达标种类！！', 'warning');
+        $().toastmessage('showErrorToast', '必须选中一种达标种类！！')
     }
 }
 
