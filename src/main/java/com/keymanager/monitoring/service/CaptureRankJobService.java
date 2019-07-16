@@ -305,15 +305,13 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
 
         QZOperationType qzOperationType = qzOperationTypeService.searchQZOperationTypeByQZSettingAndTerminalType(qzKeywordRankInfo.getQzSettingUuid(), qzKeywordRankInfo.getTerminalType());
         int lastAchieve = qzOperationType.getStandardTime() == null ? 0 : 1; // 1代表上次达标过，0为未达标或者掉过
-        int updateFlag; // 1为要更新成最新达标时间，0为本次未达标时间置空
-        int standardCount = qzKeywordRankInfoDao.standardCountByQZSettingUuid(qzKeywordRankInfo.getQzSettingUuid(), qzKeywordRankInfo.getTerminalType());
+        int updateFlag = 0; // 1为要更新成最新达标时间，0为本次未达标时间置空
         if (qzKeywordRankInfo.getAchieveLevel() != null && qzKeywordRankInfo.getAchieveLevel() > 0) {
             qzKeywordRankInfo.setAchieveTime(new Date());
+            updateFlag = 1;
         } else {
             qzKeywordRankInfo.setAchieveTime(null);
         }
-        updateFlag = standardCount > 0 ? 1 : 0;
-        qzOperationType.setUpdateTime(new Date());
         qzOperationTypeService.updateStandardTimeByUuid(qzOperationType.getUuid(), updateFlag, lastAchieve);
         return qzKeywordRankInfo;
     }

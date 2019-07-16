@@ -1831,6 +1831,7 @@ function clearInfo(type) {
         // 清空分组表格信息
         settingDialogObj.find("#group" + type).val("");
         settingDialogObj.find("#currentKeywordCount" + type).val("");
+        settingDialogObj.find("#monitorRemark" + type).val("");
         settingDialogObj.find("#qzOperationTypeUuid" + type).val("");
         settingDialogObj.find("#" + type)[0].checked = false;
         settingDialogObj.find("#operationTypeSummaryInfo" + type).css("display","none");

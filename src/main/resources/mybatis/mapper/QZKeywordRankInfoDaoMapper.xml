@@ -54,9 +54,6 @@
     <select id="getQZKeywordRankInfo" resultType="com.keymanager.monitoring.entity.QZKeywordRankInfo">
         SELECT
             tqkri.fUuid AS 'uuid',
-            tqkri.fCreateTopTenNum AS 'createTopTenNum',
-            tqkri.fCreateTopFiftyNum AS 'createTopFiftyNum',
-            tqkri.fAchieveLevel AS 'achieveLevel',
             CONCAT("'", IF(MONTH(tqkri.fCreateTime) &lt; 10, CONCAT('0', MONTH(tqkri.fCreateTime)), MONTH(tqkri.fCreateTime)), '-', IF(DAY(tqkri.fCreateTime) &lt; 10, CONCAT('0', DAY(tqkri.fCreateTime)), DAY(tqkri.fCreateTime)), "'") AS 'createMonthDay'
         FROM t_qz_keyword_rank_info tqkri
         WHERE 1 = 1
@@ -77,7 +74,7 @@
             COUNT(qk.fIncrease = 0 OR NULL) AS 'unchangedNum',
             COUNT(qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue} OR NULL) AS 'downNum',
             COUNT(qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue} OR NULL) AS 'upNum',
-            COUNT(((qk.fAchieveLevel &gt; 0 OR NULL) AND qot.fStandardTime &gt; '')) AS 'atLeastStandardNum',
+            COUNT(qk.fAchieveLevel &gt; 0 OR NULL) AS 'atLeastStandardNum',
             COUNT(qk.fAchieveLevel = 0 OR NULL) AS 'neverStandardNum',
             COUNT(qk.fDifferenceValue &lt;= #{qzSettingSearchCriteria.differenceValue} OR NULL) AS 'closeStandardNum',
             COUNT(qk.fTodayDifference = 0 OR NULL) AS 'unchangedDifferenceNum',
@@ -92,7 +89,8 @@
         AND qot.fIsDeleted = 0
         AND qk.fDataProcessingStatus = 1
         AND EXISTS (
-            SELECT 1 FROM t_customer c
+            SELECT 1
+            FROM t_customer c
             LEFT JOIN t_userinfo ui
             ON ui.fLoginName = c.fUserID
             WHERE qs.fCustomerUuid = c.fUuid
@@ -100,7 +98,8 @@
                 AND c.fUserID = #{qzSettingSearchCriteria.loginName}
             </if>
             <if test="qzSettingSearchCriteria.organizationID != null and qzSettingSearchCriteria.organizationID != ''">
-                    AND EXISTS (SELECT 1
+                AND EXISTS (
+                    SELECT 1
                     FROM t_organization o
                     WHERE o.fUuid = ui.fOrganizationID
                     AND o.fUuid = #{qzSettingSearchCriteria.organizationID}
@@ -123,6 +122,7 @@
             qk.fQZSettingUuid AS 'qzSettingUuid',
             qk.fTerminalType AS 'terminalType',
             qk.fWebsiteType AS 'websiteType',
+            qk.fDataProcessingStatus AS 'dataProcessingStatus',
             qk.fDate AS 'date',
             qk.fTopTen AS 'topTen',
             qk.fTopTwenty AS 'topTwenty',
@@ -135,14 +135,5 @@
         WHERE qk.fQZSettingUuid = #{qzSettingUuid}
         AND qk.fTerminalType = #{terminalType}
         AND qk.fWebsiteType = 'designationWord'
-    </select>
-
-    <select id="standardCountByQZSettingUuid" resultType="java.lang.Integer">
-        SELECT COUNT(1)
-        FROM t_qz_keyword_rank_info qk
-        WHERE qk.fQZSettingUuid = #{qzSettingUuid}
-        AND qk.fTerminalType = #{terminalType}
-        AND (qk.fWebsiteType = 'aiZhan' OR qk.fWebsiteType = '5118')
-        AND qk.fAchieveLevel &gt; 0
     </select>
 </mapper>
