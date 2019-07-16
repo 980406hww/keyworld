@@ -1727,8 +1727,8 @@ function createSettingDialog() {
     $("#changeSettingDialog").show();
     $("#changeSettingDialog").dialog({
         resizable: false,
-        height: 580,
-        width: 680,
+        height: 598,
+        width: 700,
         title: '全站设置',
         modal: true,
         buttons: [{
@@ -1974,6 +1974,7 @@ function saveChangeSetting(self, refresh) {
         return false;
     }
     qzSetting.bearPawNumber = settingDialogDiv.find("#bearPawNumber").val().trim();
+    qzSetting.searchEngine = settingDialogDiv.find("#searchEngine").val();
     if (settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").length > 0) {
         qzSetting.autoCrawlKeywordFlag = settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val() === "1" ? true : false;
         qzSetting.ignoreNoIndex = settingDialogDiv.find("#qzSettingIgnoreNoIndex").val() === "1" ? true : false;

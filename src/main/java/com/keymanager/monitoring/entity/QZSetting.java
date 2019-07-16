@@ -28,6 +28,9 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fDomain")
 	private String domain;
 
+	@TableField(value = "fSearchEngine")
+	private String searchEngine;
+
 	@TableField(value = "fBearPawNumber", strategy = FieldStrategy.IGNORED)
 	private String bearPawNumber;
 
@@ -139,6 +142,14 @@ public class QZSetting extends BaseEntity{
 
 	public void setDomain(String domain) {
 		this.domain = domain;
+	}
+
+	public String getSearchEngine() {
+		return searchEngine;
+	}
+
+	public void setSearchEngine(String searchEngine) {
+		this.searchEngine = searchEngine;
 	}
 
 	public String getBearPawNumber() {

@@ -136,6 +136,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			//修改qzSetting表
 			QZSetting existingQZSetting = qzSettingDao.selectById(qzSetting.getUuid());
 			existingQZSetting.setDomain(qzSetting.getDomain());
+			existingQZSetting.setSearchEngine(qzSetting.getSearchEngine());
 			existingQZSetting.setBearPawNumber(qzSetting.getBearPawNumber());
 			existingQZSetting.setUpdateStatus(qzSetting.getUpdateStatus());
 			existingQZSetting.setCustomerUuid(qzSetting.getCustomerUuid());

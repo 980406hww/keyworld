@@ -1285,6 +1285,25 @@
 				</c:if>
 			</td>
 		</tr>
+        <tr>
+            <td style="width:65px" align="right">搜索引擎</td>
+            <td>
+                <select name="searchEngine" id="searchEngine" style="width:240px">
+                    <c:forEach items="${searchEngineMap}" var="entry">
+                        <c:choose>
+                            <c:when test="${entry.key eq qzSettingSearchCriteria.searchEngine}">
+                                <option value="${entry.value}" selected>${entry.key}</option>
+                            </c:when>
+                            <c:otherwise>
+                                <option value="${entry.value}">${entry.key}</option>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                </select>
+            </td>
+            <td style="width:65px" align="right"></td>
+            <td></td>
+        </tr>
 	</table>
 	<table style="font-size:12px" cellspacing="5">
 		<tr>
