@@ -234,4 +234,13 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         qzKeywordRankInfo.setTodayDifference(todayDifference);
         return qzKeywordRankInfo;
     }
+
+    public void addQZKeywordRankInfo(Long uuid, String terminalType, String standardSpecies, boolean dataProcessingStatus) {
+        QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
+        qzKeywordRankInfo.setQzSettingUuid(uuid);
+        qzKeywordRankInfo.setTerminalType(terminalType);
+        qzKeywordRankInfo.setWebsiteType(standardSpecies);
+        qzKeywordRankInfo.setDataProcessingStatus(dataProcessingStatus);
+        qzKeywordRankInfoDao.insert(qzKeywordRankInfo);
+    }
 }
