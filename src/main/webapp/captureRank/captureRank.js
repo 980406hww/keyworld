@@ -163,6 +163,43 @@ function changeCaptureRankJobStatus(uuid, status) {
         }
     });
 }
+
+function updateCaptureRankJobsStatus(status) {
+    var uuids = getUuids();
+    if (uuids == null || uuids === '') {
+        $.messager.alert("提示", "至少选择一条数据!", 'info');
+        return;
+    }
+    $.messager.confirm('提示', '确实要暂停这些任务吗?', function (b) {
+       if (b) {
+           var postData = {};
+           postData.uuids = uuids.split(",");
+           postData.status = status;
+           $.ajax({
+               url: '/internal/captureRank/updateCaptureRankJobsStatus',
+               headers: {
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json'
+               },
+               data: JSON.stringify(postData),
+               timeout: 5000,
+               type: 'POST',
+               success: function (data) {
+                   if (data) {
+                       $().toastmessage('showSuccessToast', "任务暂停成功", true);
+                   }
+                   else {
+                       $().toastmessage('showErrorToast', "任务暂停失败");
+                   }
+               },
+               error: function () {
+                   $().toastmessage('showErrorToast', "任务暂停失败");
+               }
+           });
+       }
+    });
+}
+
 function resetPageNumber() {
     var captureRankJobFormObj = $("#searchCaptureRankJobForm");
     var groupNames = captureRankJobFormObj.find("#groupNames").val();

@@ -128,4 +128,19 @@ public class CaptureRankRestController {
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequiresPermissions("/internal/captureRank/changeCaptureRankJobStatus")
+    @RequestMapping(value = "/updateCaptureRankJobsStatus", method = RequestMethod.POST)
+    public ResponseEntity<?> updateCaptureRankJobsStatus(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+        try {
+            List<Long> uuids = (List<Long>) requestMap.get("uuids");
+            boolean status = Boolean.valueOf(String.valueOf(requestMap.get("status")));
+            String userName = (String) request.getSession().getAttribute("username");
+            captureRankJobService.updateCaptureRankJobsStatus(uuids, userName, status);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
 }
