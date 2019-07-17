@@ -143,13 +143,12 @@ public class Constants {
         SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_BAIDU, TerminalTypeEnum.PC.name());
         SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_BAIDU  + TerminalTypeEnum.Phone.name(), TerminalTypeEnum.Phone.name());
 
-        SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_360, TerminalTypeEnum.PC.name());
-        SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_360 + TerminalTypeEnum.Phone.name(), TerminalTypeEnum.Phone.name());
-
         SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_SOGOU, TerminalTypeEnum.PC.name());
         SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_SOGOU+ TerminalTypeEnum.Phone.name(), TerminalTypeEnum.Phone.name());
 
-        SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_SM, TerminalTypeEnum.PC.name());
+        SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_360, TerminalTypeEnum.PC.name());
+        SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_360 + TerminalTypeEnum.Phone.name(), TerminalTypeEnum.Phone.name());
+
         SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_SM + TerminalTypeEnum.Phone.name(), TerminalTypeEnum.Phone.name());
 
         SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_BING_CHINA, TerminalTypeEnum.PC.name());

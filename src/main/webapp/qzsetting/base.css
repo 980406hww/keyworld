@@ -88,7 +88,7 @@ ul {
 }
 
 .mytabs .link a {
-    padding: 0 15px
+    padding: 0 10px;
 }
 
 .mytabs .link:after, .mytabs .link:before {
