@@ -272,10 +272,16 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		if (CollectionUtils.isNotEmpty(oldOperationType.getQzChargeRules())) {
 			QZChargeRule qzChargeRule = oldOperationType.getQzChargeRules().iterator().next();
 			if (qzChargeRule.getStandardSpecies().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
-				CaptureRankJob existCaptureRankJob = captureRankJobService.findExistCaptureRankJob(qzSettingUuid, newOperationType.getOperationType());
-				if (!isMonitor && null != existCaptureRankJob) { // 标识为false, 有排名任务的时候才去删除
-					isDeleteDesignationWord = true;
-				}
+                if (newOperationType.getQzChargeRules().iterator().next().getStandardSpecies().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
+                    if (!isMonitor) {
+                        isDeleteDesignationWord = true;
+                    }
+                } else {
+                    CaptureRankJob existCaptureRankJob = captureRankJobService.findExistCaptureRankJob(qzSettingUuid, newOperationType.getOperationType());
+                    if (null != existCaptureRankJob) {
+                        isDeleteDesignationWord = true;
+                    }
+                }
 			}
 		}
 
