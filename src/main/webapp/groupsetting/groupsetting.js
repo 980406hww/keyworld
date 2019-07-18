@@ -3,6 +3,7 @@
     $("#updateGroupSettingDialog").dialog("close");
     $("#getAvailableOptimizationGroups").dialog("close");
     $("#showGroupQueueDialog").dialog("close");
+    $("#uselessOptimizationGroupDialog").dialog("close");
 
     $(".datalist-list li").find("div.body").each(function (index, self) {
         var listsize = $(self).attr("listsize");
@@ -23,18 +24,13 @@ function loadingCheckTerminalType() {
 
 function checkTerminalType(terminalType, isManualSwitch) {
     var a = $(".mytabs .link").find("li.active a");
-    if (a[0] !== undefined && a[0].innerHTML.substring(2) === terminalType) {
+    if (a[0] !== undefined && a[0].innerHTML === terminalType) {
         return;
     }
     $(".mytabs .link").find("li").removeClass("active");
-    if (terminalType === "PC") {
-        $(".mytabs .link").find("li[name='PC']").addClass("active");
-        $("#chargeForm").find("#terminalType").val($.trim(terminalType));
-    }
-    if (terminalType === "Phone") {
-        $(".mytabs .link").find("li[name='Phone']").addClass("active");
-        $("#chargeForm").find("#terminalType").val($.trim(terminalType));
-    }
+    $(".mytabs .link").find("li[name='"+ terminalType +"']").addClass("active");
+    $("#chargeForm").find("#terminalType").val($.trim(terminalType));
+
     if (isManualSwitch) {
         trimSearchCondition();
     }
@@ -762,6 +758,118 @@ function getAvailableOptimizationGroups() {
     $("#getAvailableOptimizationGroups").window("resize",{top:$(document).scrollTop() + 100});
 }
 
+function showUselessOptimizationGroupDialog(inputName) {
+    $("#uselessOptimizationGroupDialog").show();
+    $("#uselessOptimizationGroupDialog").dialog({
+       resizable: false,
+       height: 450,
+       width: 250,
+       title: '查询未使用的优化组',
+       modal: true,
+       buttons: [{
+           text: '删除所选',
+           iconCls: 'icon-ok',
+           handler: function () {
+               delSelectedOptimizationGroup(inputName);
+           }
+       }, {
+           text: '取消',
+           iconCls: 'icon-cancel',
+           handler: function () {
+               $("#uselessOptimizationGroupForm")[0].reset();
+               $("#uselessOptimizationGroupDialog").dialog('close');
+           }
+       }],
+       onClose: function () {
+           $("#uselessOptimizationGroupForm")[0].reset();
+           $("#uselessOptimizationGroupForm tbody tr").remove();
+       }
+    });
+    $("#uselessOptimizationGroupDialog").dialog("open");
+    $("#uselessOptimizationGroupDialog").window("resize", {
+        top: $(document).scrollTop() + 150,
+        left: $(document).scrollLeft() + $(window).width() / 2 - 125
+    });
+}
+
+function searchUselessOptimizationGroups() {
+    $("#uselessOptimizationGroupDialog tbody tr").remove();
+    var dialog = $("#uselessOptimizationGroupDialog");
+    var postData = {};
+    postData.groupName = dialog.find("input[name='groupName']").val();
+    $.ajax({
+        url: '/internal/group/searchUselessOptimizationGroups',
+        type: 'POST',
+        headers: {
+            "Accept": 'application/json',
+            "Content-Type": 'application/json'
+        },
+        data: JSON.stringify(postData),
+        success: function (data) {
+            if (null != data) {
+                var tbody = $("#uselessOptimizationGroupDialog tbody");
+                $.each(data, function(index, element) {
+                    tbody.append("<tr>" +
+                        "<td width='20px'  style='text-align: center;'><input type='checkbox' name='checkUselessGroup' value='"+ element.uuid +"' checked='checked'></td>" +
+                        "<td width='208px'><input type='text' style='width: 200px;' name='uselessGroup' disabled='disabled' value='"+ element.groupName +"'/></td>" +
+                        "</tr>");
+                });
+            } else {
+                $().toastmessage('showErrorToast', '没有数据！！');
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', '获取优化组失败！！！');
+        }
+    });
+}
+
+function delSelectedOptimizationGroup (inputName) {
+    var uuids = getSelectedIDs(inputName);
+    if (uuids === '') {
+        $.messager.alert('提示', '请至少选中一条数据！！！', 'info');
+        return false;
+    }
+    $.messager.confirm('询问', '确认要删除选中的优化组吗', function (b) {
+        if (b) {
+            var postData = {};
+            postData.uuids = uuids.split(',');
+            $.ajax({
+                url: '/internal/group/delUselessOptimizationGroup',
+                type: 'POST',
+                data: JSON.stringify(postData),
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                success: function (result) {
+                    if (result) {
+                        $().toastmessage('showSuccessToast', '删除优化组成功！！！');
+                        $("#uselessOptimizationGroupDialog").dialog("close");
+                    } else {
+                        $().toastmessage('showErrorToast', '删除优化组失败！！！');
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', '删除优化组失败！！！');
+                }
+            });
+        }
+    });
+}
+
+function getSelectedIDs(inputName) {
+    var uuids = '';
+    $.each($("input[name='"+ inputName +"']:checkbox:checked"), function(){
+        if(uuids === ''){
+            uuids = $(this).val();
+        }else{
+            uuids = uuids + "," + $(this).val();
+        }
+    });
+    return uuids;
+}
+
 function selectAllChecked(self, elementName) {
     var a = document.getElementsByName(elementName);
     if (self.checked) {
@@ -1032,7 +1140,7 @@ function showGroupQueueDialog(operationCombineUuid, maxInvalidCount) {
     showGroupQueueDialog.dialog("open");
     showGroupQueueDialog.window("resize", {
         top: $(document).scrollTop() + 150,
-        left: $(document).scrollLeft() + $(window).width() / 2 - 150
+        left: $(document).scrollLeft() + $(window).width() / 2 - 125
     });
 }
 

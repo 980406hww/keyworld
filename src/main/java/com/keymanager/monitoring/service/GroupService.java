@@ -5,6 +5,7 @@ import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.GroupDao;
 import com.keymanager.monitoring.entity.Group;
 import com.keymanager.monitoring.entity.OperationCombine;
+import com.keymanager.monitoring.vo.GroupVO;
 import com.keymanager.monitoring.vo.OperationCombineVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,5 +127,13 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
             group.setGroupName(tmpOptimizeGroupName);
             groupDao.insert(group);
         }
+    }
+
+    public List<GroupVO> searchUselessOptimizationGroups(String groupName) {
+        return groupDao.searchUselessOptimizationGroups(groupName);
+    }
+
+    public void delUselessOptimizationGroup(List<Long> uuids) {
+        groupDao.deleteBatchIds(uuids);
     }
 }
