@@ -132,14 +132,14 @@
         c.fUuid=#{captureRankJobUuid}
     </select>
 
-    <select id="resetCaptureRankJobs">
-        UPDATE t_capture_rank_job c
-        SET c.fExectionStatus = 'New'
-        WHERE c.fUuid IN
+    <update id="resetCaptureRankJobs">
+        UPDATE t_capture_rank_job
+        SET fExectionStatus = 'New'
+        WHERE fUuid IN
         <foreach collection="uuids" item="uuid" separator="," open="(" close=")">
             #{uuid}
         </foreach>
-    </select>
+    </update>
 
     <select id="hasUncompletedCaptureRankJob" resultType="Long">
         SELECT
@@ -234,4 +234,12 @@
         LIMIT 1
     </select>
 
+    <update id="updateCaptureRankJobsStatus">
+        UPDATE t_capture_rank_job
+        SET fUpdateTime = NOW(), fUpdateBy = #{updateBy}, fCaptureRankJobStatus = #{captureRankJobStatus}
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" separator="," open="(" close=")">
+            #{uuid}
+        </foreach>
+    </update>
 </mapper>

@@ -364,4 +364,8 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
     public CaptureRankJob findExistCaptureRankJob(Long qzSettingUuid, String operationType) {
         return captureRankJobDao.findExistCaptureRankJob(qzSettingUuid, operationType);
     }
+
+    public void updateCaptureRankJobsStatus(List<Long> uuids, String updateBy, boolean captureRankJobStatus) {
+        captureRankJobDao.updateCaptureRankJobsStatus(uuids, updateBy, captureRankJobStatus);
+    }
 }
