@@ -35,8 +35,8 @@
 	<%@include file="/menu.jsp" %>
 	<div class="mytabs">
 		<ul class="link">
-			<li name="PC"><a href="javascript:;" onclick="checkTerminalType('PC', true)">百度PC</a></li>
-			<li name="Phone"><a href="javascript:;" onclick="checkTerminalType('Phone', true)">百度Phone</a></li>
+			<li name="PC"><a href="javascript:;" onclick="checkTerminalType('PC', true)">PC</a></li>
+			<li name="Phone"><a href="javascript:;" onclick="checkTerminalType('Phone', true)">Phone</a></li>
 		</ul>
 		<div class="conn">
 			<ul>
@@ -95,6 +95,9 @@
 				<shiro:hasPermission name="/internal/group/getAvailableOptimizationGroups">
 					<li>
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableOptimizationGroups()" value="查询需要添加的优化组">&nbsp;
+					</li>
+					<li>
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showUselessOptimizationGroupDialog('checkUselessGroup');" value="清除分组">&nbsp;
 					</li>
 				</shiro:hasPermission>
 			</ul>
@@ -1154,7 +1157,26 @@
         </tfoot>
     </table>
 </div>
-
+<%-- 清除分组 --%>
+<div id="uselessOptimizationGroupDialog" class="easyui-dialog" style="display: none">
+	<form id="uselessOptimizationGroupForm">
+		<table cellpadding="10" style="font-size: 12px; background-color: white;border-collapse: collapse; width: 100%;">
+			<thead style="position: absolute !important;top: 24px !important;width: 100% !important;">
+			<tr>
+				<th colspan="2" style="text-align: left;">优化组名: <input type="text" title="请输入优化组名" name="groupName" placeholder="请输入优化组名" style="width: 130px;">&nbsp;
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="searchUselessOptimizationGroups();" value="搜索">
+				</th>
+			</tr>
+			<tr>
+				<th style="width: 20px;text-align: center;"><input type="checkbox" name="checkAllUselessGroup" id="checkAllUselessGroup" onclick="selectAllChecked(this, 'checkUselessGroup');" checked='checked'></th>
+				<th>优化组名</th>
+			</tr>
+			</thead>
+			<tbody style="position: absolute !important; top: 65px !important; width: 100% !important;height: 340px;overflow-y: scroll;">
+			</tbody>
+		</table>
+	</form>
+</div>
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath }/groupsetting/groupsetting.js"></script>
 <script language="javascript">
