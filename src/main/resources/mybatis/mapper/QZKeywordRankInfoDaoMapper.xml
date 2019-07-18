@@ -67,6 +67,7 @@
                 AND tqkri.fWebsiteType = 'designationWord'
             </otherwise>
         </choose>
+        LIMIT 1
     </select>
 
     <select id="getCountNumOfRankInfo" resultType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria">
