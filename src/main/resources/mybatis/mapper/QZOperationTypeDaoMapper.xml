@@ -73,14 +73,11 @@
         SELECT
             fUuid AS 'uuid',
             fStandardTime AS 'standardTime'
-        FROM
-            t_qz_operation_type
-        WHERE
-            fQZSettingUuid = #{qzSettingUuid}
-        AND
-            fOperationType = #{operationType}
-        AND
-            fIsDeleted = 0
+        FROM t_qz_operation_type
+        WHERE fQZSettingUuid = #{qzSettingUuid}
+        AND fOperationType = #{operationType}
+        AND fIsDeleted = 0
+        LIMIT 1
     </select>
 
     <select id="updateStandardTimeByUuid">

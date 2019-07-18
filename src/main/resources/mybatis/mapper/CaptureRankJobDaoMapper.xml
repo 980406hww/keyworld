@@ -231,6 +231,7 @@
         FROM t_capture_rank_job crj
         WHERE crj.fQZSettingUuid = #{qzSettingUuid}
         AND crj.fOperationType = #{operationType}
+        LIMIT 1
     </select>
 
 </mapper>
