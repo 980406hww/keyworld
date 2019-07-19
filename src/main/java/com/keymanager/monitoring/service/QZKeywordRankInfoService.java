@@ -140,17 +140,14 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
                 qzKeywordRankInfo.setCurrentPrice(Integer.parseInt(standard.get("currentPrice").toString()));
 
                 QZOperationType qzOperationType = qzOperationTypeService.searchQZOperationTypeByQZSettingAndTerminalType(qzSettingUuid, externalQzKeywordRankInfoVo.getTerminalType());
-                int isStandardFlag = 0;
+                int isStandardFlag = 0; // 0 代表没有达标, 1 代表已经达标, 2 代表第一次达标
                 if (qzKeywordRankInfo.getAchieveLevel() > 0) {
                     qzKeywordRankInfo.setAchieveTime(new Date());
-                    isStandardFlag = 1;
+                    isStandardFlag = qzOperationType.getStandardTime() == null ? 2 : 1;
                 } else {
                     qzKeywordRankInfo.setAchieveTime(null);
                 }
-                if (isStandardFlag == 1 && null == qzOperationType.getStandardTime()) {
-                    isStandardFlag = 2;
-                }
-                qzOperationTypeService.updateQZOperationTypeStandardTime(qzSettingUuid, externalQzKeywordRankInfoVo.getTerminalType(), isStandardFlag);
+                qzOperationTypeService.updateQZOperationTypeStandardTime(qzOperationType.getUuid(), isStandardFlag);
             }
         }
         return qzKeywordRankInfo;
@@ -233,5 +230,14 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         Integer todayDifference = Integer.parseInt(arr[0]) - Integer.parseInt(arr[1]);
         qzKeywordRankInfo.setTodayDifference(todayDifference);
         return qzKeywordRankInfo;
+    }
+
+    public void addQZKeywordRankInfo(Long uuid, String terminalType, String standardSpecies, boolean dataProcessingStatus) {
+        QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
+        qzKeywordRankInfo.setQzSettingUuid(uuid);
+        qzKeywordRankInfo.setTerminalType(terminalType);
+        qzKeywordRankInfo.setWebsiteType(standardSpecies);
+        qzKeywordRankInfo.setDataProcessingStatus(dataProcessingStatus);
+        qzKeywordRankInfoDao.insert(qzKeywordRankInfo);
     }
 }

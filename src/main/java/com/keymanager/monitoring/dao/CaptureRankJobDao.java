@@ -32,9 +32,12 @@ public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
     
     List<CaptureRankJob> searchFiveMiniSetCheckingJobs();
     
-    int searchThreeMiniStatusEqualsOne(@Param("terminalType") String terminalType, @Param("groupName") String groupName);
+    int searchThreeMiniStatusEqualsOne(@Param("captureRankJob") CaptureRankJob captureRankJob);
 
     int searchCountByPosition(@Param("captureRankJob") CaptureRankJob captureRankJob, @Param("position") int position);
 
     CaptureRankJob findExistCaptureRankJob (@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType);
+
+    void updateCaptureRankJobsStatus(@Param("uuids") List<Long> uuids, @Param("updateBy") String updateBy,
+                                     @Param("captureRankJobStatus") boolean captureRankJobStatus);
 }

@@ -1535,12 +1535,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void changeOptimizeGroupName() {
-        // 移出monitoringOptimizeGroupName没刷量没排名关键字
-        List<String> monitorConfigs = configService.getMonitorOptimizeGroupName(Constants.CONFIG_TYPE_MONITOR_OPTIMIZE_GROUPNAME);
-        customerKeywordDao.moveOutNoRankingCustomerKeyword(monitorConfigs, Constants.CONFIG_TYPE_NORANK_OPTIMIZE_GROUPNAME);
         // 移出noRankingOptimizeGroupName有刷量有排名关键字
         List<Config> noRankConfigs = configService.findConfigs(Constants.CONFIG_TYPE_NORANK_OPTIMIZE_GROUPNAME);
         customerKeywordDao.moveOutDefaultCustomerKeyword(noRankConfigs, Constants.CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUPNAME);
+        // 移出monitoringOptimizeGroupName没刷量没排名关键字
+        List<String> monitorConfigs = configService.getMonitorOptimizeGroupName(Constants.CONFIG_TYPE_MONITOR_OPTIMIZE_GROUPNAME);
+        customerKeywordDao.moveOutNoRankingCustomerKeyword(monitorConfigs, Constants.CONFIG_TYPE_NORANK_OPTIMIZE_GROUPNAME);
         // 排序关键字（优先排名，其次第一报价）
         List<CustomerKeywordSortVO> customerKeywordSortVOList = customerKeywordDao.sortCustomerKeywordForOptimize(monitorConfigs);
         // 限制分组下相同关键字个数
@@ -1698,7 +1698,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
         }
         return tmpGroupCriterias;
-    }
+}
 
     public CustomerKeywordOptimizeGroupCriteria matchOptimizeGroupName(List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList, String optimizeGroupName, int groupMaxCustomerKeywordCount) {
         int maxGroupNameSuffix = 1;

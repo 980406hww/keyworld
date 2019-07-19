@@ -55,7 +55,7 @@ public class CustomerRestController {
     public ModelAndView searchCustomersPost(HttpServletRequest request, CustomerCriteria customerCriteria) {
         String currentPageNumber = request.getParameter("currentPageNumber");//
         String pageSize = request.getParameter("pageSize");
-        if (null == currentPageNumber && null == currentPageNumber) {
+        if (null == currentPageNumber && null == pageSize) {
             currentPageNumber = "1";
             pageSize = "50";
         }

@@ -94,6 +94,10 @@ public class Constants {
     public final static String CONFIG_TYPE_NOENTEREDKEYWORDSCHEDULE_SWITCH = "NoEnteredKeywordScheduleSwitch";
     public final static String CONFIG_KEY_SWITCHNUMBER = "SwitchNumber";
     public final static String CONFIG_TYPE_MAX_INVALID_COUNT = "MaxInvalidCount";
+    public final static String CONFIG_TYPE_INDUSTRY_TEL_REG = "IndustryTelReg";
+    public final static String CONFIG_KEY_INDUSTRY_TEL_REG = "IndustryTelReg";
+    public final static String CONFIG_TYPE_INDUSTRY_QQ_REG = "IndustryQqReg";
+    public final static String CONFIG_KEY_INDUSTRY_QQ_REG = "IndustryQqReg";
 
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
     static {
@@ -109,6 +113,7 @@ public class Constants {
 
     public final static String EXCEL_TYPE_SUPER_USER_SIMPLE = "SuperUserSimple";
     public final static String EXCEL_TYPE_SUPER_USER_FULL = "SuperUserFull";
+    public final static String EXCEL_TYPE_SUPER_INDUSTRY_SIMPLE = "SuperIndustrySimple";
 
     public final static String SEARCH_ENGINE_BAIDU = "百度";
     public final static String SEARCH_ENGINE_SOGOU = "搜狗";
@@ -200,5 +205,19 @@ public class Constants {
         QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("主优化", "1");
         QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("次优化", "2");
         QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("辅助优化", "0");
+    }
+
+    public final static List<String> QZSETTING_WEIGHT_LIST = new ArrayList<>();
+    static {
+        QZSETTING_WEIGHT_LIST.add("0");
+        QZSETTING_WEIGHT_LIST.add("1");
+        QZSETTING_WEIGHT_LIST.add("2");
+        QZSETTING_WEIGHT_LIST.add("3");
+        QZSETTING_WEIGHT_LIST.add("4");
+        QZSETTING_WEIGHT_LIST.add("5");
+        QZSETTING_WEIGHT_LIST.add("6");
+        QZSETTING_WEIGHT_LIST.add("7");
+        QZSETTING_WEIGHT_LIST.add("8");
+        QZSETTING_WEIGHT_LIST.add("9");
     }
 }

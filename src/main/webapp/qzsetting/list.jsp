@@ -182,7 +182,7 @@
 					<span>客户: </span>
 					<input type="text" list="customer_list" name="customerInfo" value="${qzSettingSearchCriteria.customerInfo}">
 				</li>
-				<shiro:hasPermission name="/internal/qzsetting/delete">
+				<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
 				<li class="userName condition">
 					<span>用户名称: </span>
 					<span>

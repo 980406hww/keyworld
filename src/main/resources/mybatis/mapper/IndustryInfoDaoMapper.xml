@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.IndustryInfoDao">
+
+    <sql id="selectCol">
+        tii.fUuid         AS 'uuid',
+        tii.fUserID       AS 'userID',
+        tii.fSearchEngine AS 'searchEngine',
+        tii.fTerminalType AS 'terminalType',
+        tii.fIndustryName AS 'industryName',
+        tii.fTargetUrl    AS 'targetUrl',
+        tii.fPageNum      AS 'pageNum',
+        tii.fPagePerNum   AS 'pagePerNum',
+        tii.fStatus       AS 'status',
+        tii.fCreateTime   AS 'createTime'
+    </sql>
+
+    <select id="searchIndustries" resultType="com.keymanager.monitoring.entity.IndustryInfo">
+        SELECT
+        <include refid="selectCol"/>
+        FROM t_industry_info tii
+        WHERE 1 = 1
+        <if test="industryCriteria.loginName != null and industryCriteria.loginName != ''">AND tii.fUserID = #{industryCriteria.loginName}</if>
+        <if test="industryCriteria.searchEngine != null and industryCriteria.searchEngine != ''">AND tii.fSearchEngine = #{industryCriteria.searchEngine}</if>
+        <if test="industryCriteria.industryName != null and industryCriteria.industryName != ''">AND tii.fIndustryName = #{industryCriteria.industryName}</if>
+        <if test="industryCriteria.terminalType != null and industryCriteria.terminalType != ''">AND tii.fTerminalType = #{industryCriteria.terminalType}</if>
+        <if test="industryCriteria.status != null and industryCriteria.status != ''">AND tii.fStatus = #{industryCriteria.status}</if>
+    </select>
+
+    <update id="updateIndustryUserID">
+        UPDATE t_industry_info
+        SET fUserID = #{userID}, fUpdateTime = NOW()
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
+
+    <delete id="deleteIndustries">
+        DELETE FROM t_industry_info
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </delete>
+
+    <select id="findExistingIndustryInfo" resultType="com.keymanager.monitoring.entity.IndustryInfo">
+        SELECT
+        <include refid="selectCol"/>
+        FROM t_industry_info tii
+        WHERE tii.fIndustryName = #{industryName}
+        LIMIT 1
+    </select>
+
+    <select id="getValidIndustryInfo" resultType="com.keymanager.monitoring.vo.IndustryInfoVO">
+        SELECT
+            tii.fUuid         AS 'uuid',
+            tii.fSearchEngine AS 'searchEngine',
+            tii.fTerminalType AS 'terminalType',
+            tii.fIndustryName AS 'industryName',
+            tii.fTargetUrl    AS 'targetUrl',
+            tii.fPageNum      AS 'pageNum',
+            tii.fPagePerNum   AS 'pagePerNum'
+        FROM t_industry_info tii
+        WHERE tii.fStatus = 0
+        OR (tii.fStatus = 1 AND tii.fUpdateTime &lt; DATE_SUB(NOW(), INTERVAL 12 HOUR))
+        LIMIT 1
+    </select>
+
+    <update id="updateIndustryStatus">
+        UPDATE t_industry_info
+        SET fStatus = 0, fUpdateTime = NOW()
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
+</mapper>

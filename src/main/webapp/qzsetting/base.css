@@ -243,8 +243,8 @@ ul {
     white-space: nowrap;
 }
 
-.datalist-list .header span.domain a:hover {
-    color: #0c7df5;
+.datalist-list .header span.domain a {
+    color: #000000;
 }
 
 .datalist-list .header span.to-aizhan {
@@ -255,8 +255,8 @@ ul {
     white-space: nowrap;
 }
 
-.datalist-list .header span.to-aizhan a {
-    color: #000000;
+.datalist-list .header span.to-aizhan a:hover, .datalist-list .header span.to-5118 a:hover {
+    color: #0c7df5;
 }
 
 .datalist-list .header span.to-5118 {
@@ -265,10 +265,6 @@ ul {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
-
-.datalist-list .header span.to-5118 a {
-    color: #000000;
 }
 
 .datalist-list .header span.fmtStandardDate, .datalist-list .header span.fmtCreateDate {

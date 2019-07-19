@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.entity.IndustryInfo;
 import jxl.read.biff.BiffException;
 
 import com.keymanager.monitoring.excel.definition.SuperUserFullKeywordDefinition;
@@ -80,5 +81,10 @@ public class SuperUserFullKeywordExcelOperator extends AbstractExcelReader {
 		customerKeyword.setOrderNumber(getStringValue(SuperUserFullKeywordDefinition.OrderNumber.getColumnIndex(), rowIndex).trim());
 		customerKeyword.setRemarks(getStringValue(SuperUserFullKeywordDefinition.Remarks.getColumnIndex(), rowIndex));
 		return customerKeyword;
+	}
+
+	@Override
+	public IndustryInfo readRowForIndustry(int rowIndex) {
+		return null;
 	}
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.entity.IndustryInfo;
 import jxl.Cell;
 import jxl.read.biff.BiffException;
 
@@ -24,6 +25,8 @@ public abstract class AbstractExcelReader {
 			return new SuperUserSimpleKeywordExcelOperator(inputStream);
 		}else if(Constants.EXCEL_TYPE_SUPER_USER_FULL.equals(excelType)){
 			return new SuperUserFullKeywordExcelOperator(inputStream);
+		} else if(Constants.EXCEL_TYPE_SUPER_INDUSTRY_SIMPLE.equals(excelType)) {
+			return new SimpleIndustryExcelOperator(inputStream);
 		}
 		return null;
 	}
@@ -35,7 +38,9 @@ public abstract class AbstractExcelReader {
 	}
 	
 	public abstract CustomerKeyword readRow(int rowIndex);
-	
+
+	public abstract IndustryInfo readRowForIndustry(int rowIndex);
+
 	protected String getStringValue(int columnIndex, int rowIndex) {
 		Cell cell = reader.getCell(columnIndex, rowIndex);
 		if (cell != null){
@@ -69,7 +74,7 @@ public abstract class AbstractExcelReader {
 	}
 
 	public List<CustomerKeyword> readDataFromExcel() {
-		List<CustomerKeyword> customerKeywords= new ArrayList<CustomerKeyword>();
+		List<CustomerKeyword> customerKeywords = new ArrayList<CustomerKeyword>();
 		for (int i = 1; i < reader.getCurrentSheet().getRows(); i++){
 			CustomerKeyword customerKeyword = this.readRow(i);
 			if(customerKeyword != null){
@@ -79,4 +84,14 @@ public abstract class AbstractExcelReader {
 		return customerKeywords;
 	}
 
+	public List<IndustryInfo> readIndustryDataFromExcel() {
+		List<IndustryInfo> industryInfos = new ArrayList<>();
+		for (int i = 1; i < reader.getCurrentSheet().getRows(); i++) {
+			IndustryInfo industryInfo = this.readRowForIndustry(i);
+			if (null != industryInfo) {
+				industryInfos.add(industryInfo);
+			}
+		}
+		return industryInfos;
+	}
 }
