@@ -67,6 +67,10 @@
                     <input type="button" value=" 删除所选 " onclick="deleteCaptureRankJobs()">&nbsp;&nbsp;
                 </shiro:hasPermission>
             </c:if>
+            <shiro:hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
+                <input type="button" value=" 启动所选 " onclick="updateCaptureRankJobsStatus('true')">&nbsp;&nbsp;
+                <input type="button" value=" 暂停所选 " onclick="updateCaptureRankJobsStatus('false')">&nbsp;&nbsp;
+            </shiro:hasPermission>
             <input type="button" value=" 重置任务 " onclick="resetCaptureRankJobs()">&nbsp;&nbsp;
         </form>
     </div>

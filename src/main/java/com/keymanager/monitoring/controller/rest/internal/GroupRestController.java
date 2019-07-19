@@ -1,13 +1,8 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
-import com.keymanager.monitoring.criteria.GroupBatchCriteria;
-import com.keymanager.monitoring.criteria.GroupCriteria;
-import com.keymanager.monitoring.criteria.GroupSettingCriteria;
-import com.keymanager.monitoring.criteria.UpdateGroupSettingCriteria;
-import com.keymanager.monitoring.entity.GroupSetting;
-import com.keymanager.monitoring.service.ConfigService;
+import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.service.GroupService;
-import com.keymanager.util.Constants;
+import com.keymanager.monitoring.vo.GroupVO;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -34,55 +28,12 @@ public class GroupRestController {
     @Autowired
     private GroupService groupService;
 
-    @Autowired
-    private ConfigService configService;
-
-    @RequiresPermissions("/internal/group/saveGroup")
-    @PostMapping("/saveGroup")
-    public ResponseEntity<?> saveGroup(@RequestBody GroupCriteria groupCriteria, HttpServletRequest request) {
-        try {
-            groupCriteria.setCreateBy((String) request.getSession().getAttribute("username"));
-            groupService.saveGroup(groupCriteria);
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @RequiresPermissions("/internal/group/updateGroup")
-    @PostMapping("/updateGroup/{groupUuid}")
-    public ResponseEntity<?> updateGroup(@PathVariable("groupUuid") long groupUuid, @RequestBody UpdateGroupSettingCriteria updateGroupSettingCriteria) {
-        try {
-            groupService.updateGroupSettings(groupUuid, updateGroupSettingCriteria);
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @RequiresPermissions("/internal/group/delGroup")
-    @PostMapping("/delGroup/{uuid}")
-    public ResponseEntity<?> deleteGroup(@PathVariable("uuid") long uuid) {
-        try {
-            groupService.deleteGroup(uuid);
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @RequiresPermissions("/internal/group/batchAddGroups")
     @PostMapping("/batchAddGroups")
-    public ResponseEntity<?> batchAddGroups(@RequestBody GroupBatchCriteria groupBatchCriteria, HttpServletRequest request) {
+    public ResponseEntity<?> batchAddGroups(@RequestBody OperationCombineCriteria operationCombineCriteria, HttpServletRequest request) {
         try {
-            String userName = (String) request.getSession().getAttribute("username");
-            HttpSession session = request.getSession();
-            String entryType = (String) session.getAttribute("entryType");
-            String maxInvalidCount = configService.getConfig(Constants.CONFIG_TYPE_MAX_INVALID_COUNT, entryType).getValue();
-            groupService.batchAddGroups(groupBatchCriteria, userName, Integer.valueOf(maxInvalidCount));
+            operationCombineCriteria.setCreator((String) request.getSession().getAttribute("username"));
+            groupService.batchAddGroups(operationCombineCriteria);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -102,16 +53,72 @@ public class GroupRestController {
         }
     }
 
-    @RequestMapping("/updateMaxInvalidCount")
-    public ResponseEntity<?> updateMaxInvalidCount(@RequestBody Map<String, Object> requestMap) {
+    @RequiresPermissions("/internal/group/saveGroupsBelowOperationCombine")
+    @PostMapping("/saveGroupsBelowOperationCombine")
+    public ResponseEntity<?> saveGroupsBelowOperationCombine(@RequestBody OperationCombineCriteria operationCombineCriteria, HttpServletRequest request) {
         try {
-            long uuid = Long.valueOf((String) requestMap.get("id"));
-            int maxInvalidCount = Integer.valueOf((String) requestMap.get("maxInvalidCount"));
-            groupService.updateMaxInvalidCount(uuid, maxInvalidCount);
+            String userName = (String) request.getSession().getAttribute("username");
+            operationCombineCriteria.setCreator(userName);
+            groupService.saveGroupsBelowOperationCombine(operationCombineCriteria);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequiresPermissions("/internal/group/saveGroupsBelowOperationCombine")
+    @PostMapping("/updateGroupsBelowOperationCombine")
+    public ResponseEntity<?> updateGroupsBelowOperationCombine(@RequestBody Map<String, Object> requestMap) {
+        try {
+            List<Long> groupUuids = (List<Long>) requestMap.get("groupUuids");
+            groupService.updateGroupsBelowOperationCombine(groupUuids, null);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/updateQZSettingGroupOperationCombineUuid")
+    public ResponseEntity<?> updateQZSettingGroupOperationCombineUuid(@RequestBody Map<String, Object> requestMap) {
+        try {
+            Long operationCombineUuid = null;
+            if (null != requestMap.get("operationCombineUuid")) {
+                operationCombineUuid = Long.valueOf((String) requestMap.get("operationCombineUuid"));
+            }
+            String groupName = (String) requestMap.get("groupName");
+            groupService.updateQZSettingGroupOperationCombineUuid(operationCombineUuid, groupName);
             return new ResponseEntity<>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequiresPermissions("/internal/group/getAvailableOptimizationGroups")
+    @PostMapping("/searchUselessOptimizationGroups")
+    public ResponseEntity<?> searchUselessOptimizationGroups(@RequestBody Map<String, Object> requestMap) {
+        try {
+            String groupName = (String) requestMap.get("groupName");
+            List<GroupVO> groupVos = groupService.searchUselessOptimizationGroups(groupName);
+            return new ResponseEntity<Object>(groupVos, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequiresPermissions("/internal/group/getAvailableOptimizationGroups")
+    @PostMapping("/delUselessOptimizationGroup")
+    public ResponseEntity<?> delUselessOptimizationGroup(@RequestBody Map<String, Object> requestMap) {
+        try {
+            List<Long> uuids = (List<Long>) requestMap.get("uuids");
+            groupService.delUselessOptimizationGroup(uuids);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
         }
     }
 }

@@ -32,6 +32,7 @@
        qopty.fCurrentKeywordCount    AS 'currentKeywordCount',
        qopty.fGroup            AS 'group',
        qopty.fSubDomainName    AS 'subDomainName',
+       qopty.fMonitorRemark    AS 'monitorRemark',
        qopty.fReachTargetDate  AS 'reachTargetDate',
        qopty.fNextChargeDate   AS 'nextChargeDate',
        qopty.fUpdateTime       AS 'updateTime',
@@ -55,45 +56,41 @@
         UPDATE t_qz_operation_type
         SET fUpdateTime = NOW()
         <choose>
-            <when test="isStandardFlag == 1 or isStandardFlag == 2">
+            <when test="isStandardFlag == 2">
                 , fStandardTime = NOW()
             </when>
             <when test="isStandardFlag == 0">
                 , fStandardTime = NULL
             </when>
         </choose>
-        WHERE fQZSettingUuid = #{qzSettingUuid}
-        AND fOperationtype = #{operationType}
+        WHERE fUuid = #{uuid}
         <if test="isStandardFlag == 1">
-            AND fStandardTime &gt; ''
+            AND fStandardTime IS NULL
         </if>
     </update>
 
     <select id="searchQZOperationTypeByQZSettingAndTerminalType" resultType="com.keymanager.monitoring.entity.QZOperationType">
         SELECT
             fUuid AS 'uuid',
-            fStandardType AS 'standardType',
             fStandardTime AS 'standardTime'
-        FROM
-            t_qz_operation_type
-        WHERE
-            fQZSettingUuid = #{qzSettingUuid}
-        AND
-            fOperationType = #{operationType}
-        AND
-            fIsDeleted = 0
+        FROM t_qz_operation_type
+        WHERE fQZSettingUuid = #{qzSettingUuid}
+        AND fOperationType = #{operationType}
+        AND fIsDeleted = 0
+        LIMIT 1
     </select>
 
     <select id="updateStandardTimeByUuid">
         UPDATE t_qz_operation_type
-        SET
-        fUpdateTime = NOW()
-        <if test="updateFlag == 1 and lastAchieve == 0">
-            ,fStandardTime = NOW()
-        </if>
-        <if test="updateFlag == 0">
-            ,fStandardTime = NULL
-        </if>
+        SET fUpdateTime = NOW()
+        <choose>
+            <when test="updateFlag == 1 and lastAchieve == 0">
+                , fStandardTime = NOW()
+            </when>
+            <when test="updateFlag == 0">
+                , fStandardTime = NULL
+            </when>
+        </choose>
         WHERE fUuid = #{uuid}
     </select>
 </mapper>

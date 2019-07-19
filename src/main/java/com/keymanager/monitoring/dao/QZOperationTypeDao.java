@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface QZOperationTypeDao extends BaseMapper<QZOperationType> {
 
-    //通过uuid查询操作类型表（）
+    //通过uuid查询操作类型表
     List<QZOperationType> searchQZOperationTypesByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid);
 
     //通过uuid查询操作类型表
@@ -20,9 +20,9 @@ public interface QZOperationTypeDao extends BaseMapper<QZOperationType> {
     //上一级的主键
     int selectLastId();
 
-    void updateQZOperationTypeStandardTime (@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType, @Param("isStandardFlag") int isStandardFlag);
+    void updateQZOperationTypeStandardTime (@Param("uuid") long uuid, @Param("isStandardFlag") int isStandardFlag);
 
-    QZOperationType searchQZOperationTypeByQZSettingAndTerminalType(@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType);
+    QZOperationType searchQZOperationTypeByQZSettingAndTerminalType(@Param("qzSettingUuid") long qzSettingUuid, @Param("operationType") String operationType);
 
     void updateStandardTimeByUuid(@Param("uuid") Long uuid, @Param("updateFlag") int updateFlag, @Param("lastAchieve") int lastAchieve);
 }

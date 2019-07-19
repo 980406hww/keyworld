@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.OperationCombineDao">
+
+    <select id="searchOperationCombines" resultType="com.keymanager.monitoring.entity.OperationCombine">
+        SELECT
+            toc.fUuid                 AS "uuid",
+            toc.fOperationCombineName AS "operationCombineName",
+            u.fUserName               AS "creator",
+            toc.fRemainingAccount     AS "remainingAccount",
+            toc.fMaxInvalidCount      AS "maxInvalidCount"
+        FROM t_operation_combine toc
+        LEFT JOIN t_userinfo u
+        ON u.fLoginName = toc.fCreator
+        WHERE 1 = 1
+        <choose>
+            <when test="groupSettingCriteria.operationCombineName != null and groupSettingCriteria.operationCombineName != ''">
+                AND toc.fOperationCombineName LIKE '${groupSettingCriteria.operationCombineName}%'
+            </when>
+            <otherwise>
+                AND toc.fOperationCombineName <![CDATA[>]]> ''
+            </otherwise>
+        </choose>
+        <if test="groupSettingCriteria.optimizedGroupName != null and groupSettingCriteria.optimizedGroupName != ''">
+            AND EXISTS(SELECT 1 FROM t_group g WHERE toc.fUuid = g.fOperationCombineUuid AND g.fGroupName LIKE '${groupSettingCriteria.optimizedGroupName}%')
+        </if>
+        AND toc.fTerminalType = #{groupSettingCriteria.terminalType}
+        <if test="groupSettingCriteria.hasOperation != null">
+            AND EXISTS (
+            SELECT 1
+            FROM t_group_setting gs
+            WHERE gs.fOperationCombineUuid = toc.fUuid
+            <choose>
+                <when test="groupSettingCriteria.hasOperation == 1">
+                    AND gs.fOperationType > ''
+                    <if test="groupSettingCriteria.operationType != null and groupSettingCriteria.operationType != ''">
+                        AND gs.fOperationType = #{groupSettingCriteria.operationType}
+                    </if>
+                </when>
+                <otherwise>
+                    AND gs.fOperationType IS NULL
+                </otherwise>
+            </choose>
+            )
+        </if>
+        <if test="groupSettingCriteria.hasRemainingAccount == 1">
+            AND toc.fRemainingAccount <![CDATA[>]]> 0
+        </if>
+        GROUP BY toc.fUuid
+        ORDER BY toc.fCreateTime DESC
+    </select>
+
+    <select id="getOperationCombineNames" resultType="java.lang.String">
+        SELECT
+            CONCAT(toc.fOperationCombineName, '_____', toc.fUuid)
+        FROM t_operation_combine toc
+        WHERE EXISTS(
+            SELECT 1
+            FROM t_group g
+            WHERE g.fOperationCombineUuid = toc.fUuid
+        )
+        AND toc.fTerminalType = #{terminalType}
+        ORDER BY toc.fOperationCombineName
+    </select>
+
+    <insert id="saveOperationCombine">
+        INSERT INTO t_operation_combine(fOperationCombineName, fTerminalType, fCreator, fMaxInvalidCount)
+        VALUES(#{operationCombineName}, #{terminalType}, #{creator}, #{maxInvalidCount})
+    </insert>
+    
+    <select id="lastInsertID" resultType="java.lang.Long">
+        SELECT LAST_INSERT_ID()
+    </select>
+
+    <update id="updateOperationCombineRemainingAccount">
+        UPDATE t_operation_combine
+        SET fRemainingAccount = #{remainingAccount}, fUpdateTime = NOW()
+        WHERE fUuid = #{operationCombineUuid}
+    </update>
+
+    <select id="getOperationCombine" resultType="com.keymanager.monitoring.entity.OperationCombine">
+        SELECT
+            toc.fUuid             AS 'uuid',
+            toc.fRemainingAccount AS 'remainingAccount',
+            toc.fMaxInvalidCount  AS 'maxInvalidCount',
+            toc.fUpdateTime         AS 'updateTime'
+        FROM t_group g
+        LEFT JOIN t_operation_combine toc
+        ON toc.fUuid = g.fOperationCombineUuid
+        WHERE toc.fTerminalType = #{terminalType}
+        AND g.fGroupName = #{groupName}
+        LIMIT 1
+    </select>
+
+    <update id="updateMaxInvalidCount">
+        UPDATE t_operation_combine
+        SET fMaxInvalidCount = #{maxInvalidCount}, fUpdateTime = NOW()
+        WHERE fUuid = #{uuid}
+    </update>
+
+    <select id="getOperationCombineName" resultType="java.lang.String">
+        SELECT
+            toc.fOperationCombineName AS 'operationCombineName'
+        FROM t_group g
+        LEFT JOIN t_operation_combine toc
+        ON toc.fUuid = g.fOperationCombineUuid
+        WHERE g.fGroupName = #{optimizeGroupName}
+        LIMIT 1
+    </select>
+</mapper>

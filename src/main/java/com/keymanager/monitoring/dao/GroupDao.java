@@ -1,10 +1,10 @@
 package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.baomidou.mybatisplus.plugins.Page;
-import com.keymanager.monitoring.criteria.GroupSettingCriteria;
+import com.keymanager.monitoring.criteria.OperationCombineCriteria;
 import com.keymanager.monitoring.entity.Group;
 import com.keymanager.monitoring.vo.GroupVO;
+import com.keymanager.monitoring.vo.OperationCombineVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -15,17 +15,29 @@ import java.util.List;
  **/
 public interface GroupDao extends BaseMapper<Group> {
 
-    List<GroupVO> searchGroups (Page<GroupVO> page, @Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
-
-    void saveGroup (@Param("groupName") String groupName, @Param("terminalType") String terminalType, @Param("createBy") String createBy, @Param("remainingAccount") int remainingAccount, @Param("maxInvalidCount") int maxInvalidCount);
-
-    long lastInsertID ();
-
-    void updateGroupRemainingAccount (@Param("uuid") Long uuid, @Param("remainingAccount") int remainingAccount);
-
-    Group findGroup(@Param("groupName") String groupName, @Param("terminalType") String terminalType);
-
     List<String> getOptimizationGroups(@Param("terminalType") String terminalType);
 
-    void updateMaxInvalidCount(@Param("uuid") long uuid,@Param("maxInvalidCount") int maxInvalidCount);
+    List<String> getGroupNames (@Param("operationCombineUuid") long operationCombineUuid);
+
+    List<OperationCombineVO> searchGroupsBelowOperationCombine (@Param("operationCombineUuid")Long operationCombineUuid,
+                                                                @Param("groupName") String groupName);
+
+    void updateGroupOperationUuid (@Param("groupUuids") List<Long> groupUuids,
+                                   @Param("operationCombineUuid")Long operationCombineUuid);
+
+    Long searchExistingGroupUuid (@Param("terminalType") String terminalType, @Param("groupName") String groupName);
+
+    void insertBatchGroups (@Param("operationCombineCriteria") OperationCombineCriteria operationCombineCriteria);
+
+    void updateGroupOperationCombineUuid (@Param("operationCombineUuid")long operationCombineUuid);
+
+    void updateOperationCombineUuidByGroupName (@Param("groupNames") List<String> groupNames,
+                                                @Param("operationCombineUuid")long operationCombineUuid);
+
+    void updateQZSettingGroupOperationCombineUuid (@Param("operationCombineUuid") Long operationCombineUuid,
+                                                   @Param("groupName") String groupName);
+
+    Group findExistingGroup (@Param("optimizeGroupName") String optimizeGroupName);
+
+    List<GroupVO> searchUselessOptimizationGroups(@Param("groupName") String groupName);
 }

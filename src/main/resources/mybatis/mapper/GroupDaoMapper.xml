@@ -2,91 +2,115 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.GroupDao">
 
-    <select id="searchGroups" resultType="com.keymanager.monitoring.vo.GroupVO">
-        SELECT
-            g.fUuid AS "uuid",
-            g.fGroupName AS "groupName",
-            u.fUserName AS "userName",
-            g.fRemainingAccount AS "remainingAccount",
-            g.fMaxInvalidCount AS "maxInvalidCount"
-        FROM t_group g
-        LEFT JOIN t_userinfo u
-        ON u.fLoginName = g.fCreateBy
-        WHERE 1 = 1
-        <if test="groupSettingCriteria.optimizedGroupName != null and groupSettingCriteria.optimizedGroupName != ''">
-            <choose>
-                <when test="groupSettingCriteria.groupNameFuzzyQuery == null or groupSettingCriteria.groupNameFuzzyQuery == ''">
-                    AND g.fGroupName = #{groupSettingCriteria.optimizedGroupName}
-                </when>
-                <otherwise>
-                    AND g.fGroupName LIKE '${groupSettingCriteria.optimizedGroupName}%'
-                </otherwise>
-            </choose>
-        </if>
-        AND g.fTerminalType = #{groupSettingCriteria.terminalType}
-        <if test="groupSettingCriteria.hasOperation != null">
-            AND EXISTS (SELECT 1 FROM t_group_setting gs
-            WHERE gs.fGroupUuid = g.fUuid
-            <choose>
-                <when test="groupSettingCriteria.hasOperation == 1">
-                    AND gs.fOperationType > ''
-                    <if test="groupSettingCriteria.operationType != null and groupSettingCriteria.operationType != ''">
-                        AND gs.fOperationType = #{groupSettingCriteria.operationType}
-                    </if>
-                </when>
-                <otherwise>
-                    AND gs.fOperationType IS NULL
-                </otherwise>
-            </choose>
-            )
-        </if>
-        <if test="groupSettingCriteria.hasRemainingAccount == 1">
-            AND g.fRemainingAccount <![CDATA[>]]> 0
-        </if>
-        ORDER BY g.fCreateTime DESC
-    </select>
-
-    <insert id="saveGroup">
-        INSERT INTO t_group(fGroupName, fTerminalType, fCreateBy, fRemainingAccount, fMaxInvalidCount, fUpdateTime) VALUES(#{groupName}, #{terminalType}, #{createBy}, #{remainingAccount}, #{maxInvalidCount}, NOW());
-    </insert>
-
-    <select id="lastInsertID" resultType="java.lang.Long">
-        SELECT LAST_INSERT_ID();
-    </select>
-    
-    <update id="updateGroupRemainingAccount">
-        UPDATE t_group SET fRemainingAccount = #{remainingAccount}, fUpdateTime = NOW() WHERE fUuid = #{uuid}
-    </update>
-
-    <select id="findGroup" resultType="com.keymanager.monitoring.entity.Group">
-        SELECT
-        g.fUuid             AS "uuid",
-        g.fGroupName        AS "groupName",
-        g.fTerminalType     AS "terminalType",
-        g.fCreateBy         AS "createBy",
-        g.fRemainingAccount AS "remainingAccount",
-        g.fMaxInvalidCount  AS "maxInvalidCount",
-        g.fUpdateTime       AS "updateTime",
-        g.fCreateTime       AS "createTime"
-        FROM t_group g
-        WHERE g.fGroupName = #{groupName}
-        AND g.fTerminalType = #{terminalType}
-        limit 1
-    </select>
-
-
     <select id="getOptimizationGroups" resultType="java.lang.String">
         SELECT
            g.fGroupName AS 'groupName'
         FROM t_group g
-        WHERE g.fTerminalType = #{terminalType}
+        LEFT JOIN t_operation_combine toc
+        ON toc.fUuid = g.fOperationCombineUuid
+        WHERE toc.fTerminalType = #{terminalType}
         GROUP BY g.fGroupName
     </select>
 
+    <select id="getGroupNames" resultType="java.lang.String">
+        SELECT
+          g.fGroupName AS 'groupName'
+        FROM t_group g
+        LEFT JOIN t_operation_combine toc
+        ON toc.fUuid = g.fOperationCombineUuid
+        WHERE g.fOperationCombineUuid = #{operationCombineUuid}
+        ORDER BY g.fCreateTime
+    </select>
+    
+    <select id="searchGroupsBelowOperationCombine" resultType="com.keymanager.monitoring.vo.OperationCombineVO">
+        SELECT
+          g.fUuid AS 'groupUuid',
+          g.fGroupName AS 'groupName'
+        FROM t_group g
+        LEFT JOIN t_operation_combine toc
+        ON toc.fUuid = g.fOperationCombineUuid
+        WHERE g.fOperationCombineUuid = #{operationCombineUuid}
+        <if test="groupName != null and groupName != ''">
+            AND g.fGroupName LIKE '${groupName}%'
+        </if>
+        ORDER BY g.fCreateTime
+    </select>
 
-    <update id="updateMaxInvalidCount">
+    <update id="updateGroupOperationUuid">
         UPDATE t_group
-        SET fMaxInvalidCount = #{maxInvalidCount}
-        WHERE fUuid = #{uuid}
+        SET fUpdateTime = NOW(),
+        <choose>
+            <when test="operationCombineUuid == null">
+                fOperationCombineUuid = NULL
+            </when>
+            <otherwise>
+                fOperationCombineUuid = #{operationCombineUuid}
+            </otherwise>
+        </choose>
+        WHERE fUuid IN
+        <foreach collection="groupUuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
     </update>
+
+    <select id="searchExistingGroupUuid" resultType="java.lang.Long">
+        SELECT
+            g.fUuid AS 'groupUuid'
+        FROM t_group g
+        WHERE g.fGroupName = #{groupName}
+        LIMIT 1
+    </select>
+
+    <insert id="insertBatchGroups">
+        INSERT INTO t_group(fGroupName, fOperationCombineUuid, fCreateBy)
+        VALUES
+        <foreach collection="operationCombineCriteria.groupNames" item="groupName" separator=",">
+            (
+                #{groupName},
+                #{operationCombineCriteria.operationCombineUuid},
+                #{operationCombineCriteria.creator}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateGroupOperationCombineUuid">
+        UPDATE t_group g
+        SET g.fOperationCombineUuid = NULL
+        WHERE g.fOperationCombineUuid = #{operationCombineUuid}
+    </update>
+
+    <update id="updateOperationCombineUuidByGroupName">
+        UPDATE t_group g
+        SET g.fOperationCombineUuid = NULL
+        WHERE g.fOperationCombineUuid = #{operationCombineUuid}
+        AND g.fGroupName IN (
+            <foreach collection="groupNames" item="groupName" separator=",">
+                #{groupName}
+            </foreach>
+        )
+    </update>
+
+    <update id="updateQZSettingGroupOperationCombineUuid">
+        UPDATE t_group
+        SET fUpdateTime = NOW(), fOperationCombineUuid = #{operationCombineUuid}
+        WHERE fGroupName = #{groupName}
+    </update>
+
+    <select id="findExistingGroup" resultType="com.keymanager.monitoring.entity.Group">
+        SELECT
+            g.fGroupName AS 'groupName',
+            g.fOperationCombineUuid AS 'operationCombineUuid',
+            g.fCreateBy AS 'createBy'
+        FROM t_group g
+        WHERE g.fGroupName = #{optimizeGroupName}
+    </select>
+
+    <select id="searchUselessOptimizationGroups" resultType="com.keymanager.monitoring.vo.GroupVO">
+        SELECT
+            g.fUuid      AS 'uuid',
+            g.fGroupName AS 'groupName'
+        FROM t_group g
+        WHERE g.fOperationCombineUuid IS NULL
+        <if test="groupName != ''">AND g.fGroupName LIKE '${groupName}%'</if>
+    </select>
 </mapper>

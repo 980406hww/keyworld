@@ -106,7 +106,7 @@
 						暴涨 (${qzSettingSearchCriteria.upNum})
 					</label>
 				</li>
-				<%--<li>
+				<li>
 					<label name="lowerDifference" title="网站关键词(PC,Phone)今天前10下降">
 						<input type="radio" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 7}">checked</c:if>>
 						下降 (${qzSettingSearchCriteria.downDifferenceNum})
@@ -123,7 +123,7 @@
 						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 9}">checked</c:if>>
 						上升 (${qzSettingSearchCriteria.upDifferenceNum})
 					</label>
-				</li>--%>
+				</li>
 				<li>
 					<label name="atLeastStandard" title="标识最少有一条规则达标">
 						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 3}">checked</c:if>>
@@ -170,6 +170,7 @@
 					<span>操作类型: </span>
 					<span>
 						<select name="operationType" style="width: 150px;">
+							<option value=""></option>
 							<c:forEach items="${operationTypeValues}" var="operationType">
 								<c:choose>
 									<c:when test="${operationType eq qzSettingSearchCriteria.operationType}"><option selected>${operationType}</option></c:when>
@@ -451,14 +452,19 @@
 										</div>
 									</div>
 									<div class="row">
-										<div title="该分组下所有操作类型对应的机器数, 点击链接跳转到终端监控">
-											<div class="showSomeOperationType" name="showSomeOperationType">
-												<span><a href="javascript:;"> 无 </a></span>
+										<div title="该分组属于此操作组合, 点击链接跳转到分组设置">
+											<div class="showOperationCombineName" name="showOperationCombineName">
+												<input type="hidden" name="operationCombineName" value="">
+												<select name="operationCombineName" onchange="changeQZSettingGroupOperationCombineUuid(this, '${qzSetting.pcGroup}');" style="width: 180px;">
+                                                    <option value=""></option>
+													<c:forEach items="${operationCombines}" var="operationCombine">
+                                                        <option>${operationCombine}</option>
+													</c:forEach>
+												</select>
 											</div>
-											<input type="hidden" name="allOperationType">
-											<div class="operationTypeSpan">
+											<div class="operationCombineSpan">
 											<span>
-												<a href="javascript:;">操作类型</a>
+												<a href="javascript:;">操作组合</a>
 											</span>
 											</div>
 										</div>
@@ -882,14 +888,19 @@
 										</div>
 									</div>
 									<div class="row">
-										<div title="该分组下所有操作类型对应的机器数, 点击链接跳转到终端监控">
-											<div class="showSomeOperationType" name="showSomeOperationType">
-												<span><a href="javascript:;"> 无 </a></span>
+										<div title="该分组属于此操作组合, 点击链接跳转到分组设置">
+											<div class="showOperationCombineName" name="showOperationCombineName">
+												<input type="hidden" name="operationCombineName" value="">
+												<select name="operationCombineName" onchange="changeQZSettingGroupOperationCombineUuid(this, '${qzSetting.phoneGroup}');" style="width: 180px;">
+													<option value=""></option>
+													<c:forEach items="${operationCombines}" var="operationCombine">
+														<option>${operationCombine}</option>
+													</c:forEach>
+												</select>
 											</div>
-											<input type="hidden" name="allOperationType">
-											<div class="operationTypeSpan">
+											<div class="operationCombineSpan">
 											<span>
-												<a href="javascript:;">操作类型</a>
+												<a href="javascript:;">操作组合</a>
 											</span>
 											</div>
 										</div>
@@ -1188,11 +1199,6 @@
     <input type="text" name="groupName" id="groupName">
 </form>
 
-<form id="searchGroupSettingForm" method="post" target="_blank" action="/internal/groupsetting/searchGroupSettings" style="display: none">
-	<input type="text" name="optimizedGroupName" id="optimizedGroupName">
-	<input type="text" name="operationType" id="operationType">
-</form>
-
 <form id="searchCustomerKeywordForm" method="post" target="_blank" action="/internal/customerKeyword/searchCustomerKeywords" style="display: none;">
 	<input type="text" name="customerUuid" id="customerUuid">
 	<input type="text" name="optimizeGroupName" id="optimizeGroupName">
@@ -1246,7 +1252,6 @@
 			</td>
 		</tr>
 	</table>
-
 	<table style="font-size:12px" cellspacing="5">
 		<tr>
 			<td colspan="4" class="split_line"></td>
@@ -1297,11 +1302,15 @@
 					</shiro:hasPermission>
 					<input type="hidden" id="qzSettingUuidPC" name="qzOperationTypeUuid" value="" />
 					<c:if test="${not isSEO}">
+						<tr>
+							<td align="right" style="width:72px" valign="top">达标备注</td>
+                            <td><textarea name="monitorRemark" id="monitorRemarkPC" placeholder="请填写电脑端达标备注, 如：首月30-50个词 客供词 3000" style="width:240px; height: 40px; margin-left: -6;resize: none"></textarea></td>
+						</tr>
 						<tr id="standardSpeciesPC">
 							<td align="right" style="width:72px"><label>达标种类</label></td>
 							<td title="爱站, 5118, 指定词和其他, 四选一">
 								<div style="display: inline-block">
-									<input type="checkbox" name="standardSpecies" id="aiZhanPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="aiZhan" checked="checked">
+									<input type="checkbox" name="standardSpecies" id="aiZhanPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="aiZhan">
 								</div>
 								<div style="display: inline-block; margin-right: 10px;">
 									<label>爱站</label>
@@ -1354,11 +1363,15 @@
 					</shiro:hasPermission>
 					<input type="hidden" id="qzSettingUuidPhone" name="qzOperationTypeUuid" value="" />
 					<c:if test="${not isSEO}">
+						<tr>
+							<td align="right" style="width:72px" valign="top">达标备注</td>
+                            <td><textarea name="monitorRemark" id="monitorRemarkPhone" placeholder="请填写移动端达标备注, 如：首月30-50个词 客供词 3000" style="width:240px; height: 40px; margin-left: -6;resize: none"></textarea></td>
+						</tr>
 						<tr id="standardSpeciesPhone">
 							<td align="right" style="width:72px"><label>达标种类</label></td>
 							<td title="爱站, 5118, 指定词和其他, 四选一">
 								<div style="display: inline-block">
-									<input type="checkbox" name="standardSpecies" id="aiZhanPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="aiZhan" checked="checked">
+									<input type="checkbox" name="standardSpecies" id="aiZhanPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="aiZhan">
 								</div>
 								<div style="display: inline-block; margin-right: 10px;">
 									<label>爱站</label>
@@ -1669,7 +1682,7 @@
 				<td align="right" style="margin-right:4px;">引擎</td>
 				<td>
 					<select name="searchEngine" id="searchEngine" style="width:240px">
-						<option value="">全部</option>
+						<option value="百度">百度</option>
 						<c:forEach items="${searchEngineMap}" var="entry">
 							<option value="${entry.value}">${entry.key}</option>
 						</c:forEach>

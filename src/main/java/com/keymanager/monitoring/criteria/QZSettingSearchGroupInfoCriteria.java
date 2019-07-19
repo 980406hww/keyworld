@@ -4,7 +4,7 @@ package com.keymanager.monitoring.criteria;
  * @Author zhoukai
  * @Date 2018/12/18 10:59
  **/
-public class QZSettingSearchClientGroupInfoCriteria {
+public class QZSettingSearchGroupInfoCriteria {
     private int qzSettingUuid;
     private String terminalType;
     private String optimizeGroupName;

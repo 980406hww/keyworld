@@ -1206,7 +1206,8 @@
             AND c.fKey = CONCAT(fSearchEngine, '_', fTerminalType)
         )
         WHERE fOptimizedCount = 0
-        AND fCurrentPosition = 0
+        AND (fCurrentPosition = 0 OR fCurrentPosition > 900)
+        AND fQueryCount > 0
         AND fOptimizeGroupName IN
         <foreach item = "item" collection = "monitorConfigs" open="(" separator="," close=")">
             #{item}
@@ -1264,6 +1265,7 @@
         <foreach item = "item" collection = "monitorConfigs" open="(" separator="," close=")">
             #{item}
         </foreach>
+        and fStatus = 1
         GROUP BY fKeyword,fTerminalType,fSearchEngine
         HAVING count(1) &gt; 10
     </select>

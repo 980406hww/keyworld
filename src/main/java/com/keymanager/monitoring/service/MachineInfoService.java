@@ -816,8 +816,8 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         machineInfoDao.resetOptimizationInfo();
     }
 
-    public List<MachineInfoVO> getMachineInfoVos (QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria) {
-        return machineInfoDao.getMachineInfoVos(qzSettingSearchClientGroupInfoCriteria);
+    public Integer getMachineCount (String optimizeGroupName, String terminalType) {
+        return machineInfoDao.getMachineCount(optimizeGroupName, terminalType);
     }
 
     public ClientStatusForOptimization getClientStatusForOptimization(String clientID) {

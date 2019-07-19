@@ -178,23 +178,24 @@
                 <when test="qzSettingSearchCriteria.checkStatus == 3">
                     AND qk.fAchieveLevel &gt; 0
                     AND EXISTS (
-                    SELECT 1
-                    FROM t_qz_operation_type qot
-                    WHERE qot.fQZSettingUuid = qk.fQZSettingUuid
-                    AND qot.fOperationtype = qk.fTerminalType
-                    AND qot.fIsDeleted = 0
-                    AND qot.fStandardTime &gt; ''
+                        SELECT 1
+                        FROM t_qz_operation_type qot
+                        WHERE qot.fQZSettingUuid = qk.fQZSettingUuid
+                        AND qot.fOperationtype = qk.fTerminalType
+                        AND qot.fOperationtype = #{qzSettingSearchCriteria.terminalType}
+                        AND qot.fIsDeleted = 0
+                        AND qot.fStandardTime &gt; ''
                     )
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 4">
                     AND qk.fAchieveLevel = 0
                     AND EXISTS (
-                    SELECT 1
-                    FROM t_qz_operation_type qot
-                    WHERE qot.fQZSettingUuid = qk.fQZSettingUuid
-                    AND qot.fOperationtype = qk.fTerminalType
-                    AND qot.fIsDeleted = 0
-                    AND qot.fStandardTime IS NULL
+                        SELECT 1
+                        FROM t_qz_operation_type qot
+                        WHERE qot.fQZSettingUuid = qk.fQZSettingUuid
+                        AND qot.fOperationtype = qk.fTerminalType
+                        AND qot.fOperationtype = #{qzSettingSearchCriteria.terminalType}
+                        AND qot.fIsDeleted = 0
                     )
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 5">
@@ -203,8 +204,19 @@
                 <when test="qzSettingSearchCriteria.checkStatus == 6">
                     AND qk.fIncrease = 0
                 </when>
+                <when test="qzSettingSearchCriteria.checkStatus == 7">
+                    AND qk.fTodayDifference &lt; 0
+                </when>
+                <when test="qzSettingSearchCriteria.checkStatus == 8">
+                    AND (qk.fTodayDifference = 0 OR qk.fTodayDifference IS NULL)
+                </when>
+                <when test="qzSettingSearchCriteria.checkStatus == 9">
+                    AND qk.fTodayDifference &gt; 0
+                </when>
             </choose>
-            AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType})
+            AND qk.fDataProcessingStatus = 1
+            AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
+            )
         </if>
         <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
             AND EXISTS (SELECT 1 FROM t_qz_category_tag qc WHERE qc.fQZSettingUuid = qs.fUuid AND qc.fTagName = #{qzSettingSearchCriteria.categoryTag})
@@ -375,15 +387,15 @@
         </foreach>
     </update>
 
-    <select id="getQZSettingClientGroupInfo" resultType="java.lang.Integer" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria">
+    <select id="getQZSettingGroupInfo" resultType="java.lang.Integer" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchGroupInfoCriteria">
         SELECT COUNT(1)
         FROM t_customer_keyword ck
         LEFT JOIN t_qz_setting qs
         ON qs.fCustomerUuid = ck.fCustomerUuid
-        WHERE qs.fUuid = #{qzSettingSearchClientGroupInfoCriteria.qzSettingUuid}
+        WHERE qs.fUuid = #{qzSettingSearchGroupInfoCriteria.qzSettingUuid}
         AND ck.fStatus = 1
-        <if test="qzSettingSearchClientGroupInfoCriteria.terminalType != ''">AND ck.fTerminalType = #{qzSettingSearchClientGroupInfoCriteria.terminalType}</if>
-        <if test="qzSettingSearchClientGroupInfoCriteria.optimizeGroupName != ''">AND ck.fOptimizeGroupName LIKE '${qzSettingSearchClientGroupInfoCriteria.optimizeGroupName}%'</if>
+        <if test="qzSettingSearchGroupInfoCriteria.terminalType != ''">AND ck.fTerminalType = #{qzSettingSearchGroupInfoCriteria.terminalType}</if>
+        <if test="qzSettingSearchGroupInfoCriteria.optimizeGroupName != ''">AND ck.fOptimizeGroupName LIKE '${qzSettingSearchGroupInfoCriteria.optimizeGroupName}%'</if>
     </select>
 
     <select id="getAvailableOptimizationGroups" resultType="java.lang.String">

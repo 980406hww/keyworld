@@ -15,11 +15,9 @@
 		#changeSettingDialog th, #updateGroupSettingDialog th {
 			text-align : right;
 		}
-
 		#changeSettingDialog select, #updateGroupSettingDialog select {
 			width : 152px;
 		}
-
 		#changeSettingDialog input[type=text], #updateGroupSettingDialog input[type=text] {
 			width : 152px;
 		}
@@ -37,19 +35,16 @@
 	<%@include file="/menu.jsp" %>
 	<div class="mytabs">
 		<ul class="link">
-			<li name="PC"><a href="javascript:;" onclick="checkTerminalType('PC', true)">百度PC</a></li>
-			<li name="Phone"><a href="javascript:;" onclick="checkTerminalType('Phone', true)">百度Phone</a></li>
+			<li name="PC"><a href="javascript:;" onclick="checkTerminalType('PC', true)">PC</a></li>
+			<li name="Phone"><a href="javascript:;" onclick="checkTerminalType('Phone', true)">Phone</a></li>
 		</ul>
 		<div class="conn">
 			<ul>
-				<li>
-					优化组名: <input type="text" title="请输入优化分组名" name="optimizedGroupName" placeholder="请输入优化分组名" onkeydown="enterIn(event);" value="${groupSettingCriteria.optimizedGroupName}">
+				<li class="operationCombineName">
+					操作组合名称: <input type="text" title="请输入操作组合名称" name="operationCombineName" placeholder="请输入操作组合名称" onkeydown="enterIn(event);" value="${groupSettingCriteria.operationCombineName}">
 				</li>
-				<li>
-					<label name="groupNameFuzzyQuery" title="模糊查询">
-						<input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${groupSettingCriteria.groupNameFuzzyQuery == "1" ? "checked=true" : ""}/>
-						模糊查询
-					</label>
+				<li class="optimizedGroupName">
+					优化组名: <input type="text" title="请输入优化分组名" name="optimizedGroupName" placeholder="请输入优化分组名" onkeydown="enterIn(event);" value="${groupSettingCriteria.optimizedGroupName}">
 				</li>
 				<li>
 					<span>操作类型: </span>
@@ -92,14 +87,17 @@
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchCondition('1')" value=" 搜索 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/group/saveGroup">
+				<shiro:hasPermission name="/internal/operationCombine/saveOperationCombine">
 					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showGroupDialog()" value=" 增加 " >&nbsp;
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showOperationCombineDialog()" value=" 增加 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/group/getAvailableOptimizationGroups">
 					<li>
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableOptimizationGroups()" value="查询需要添加的优化组">&nbsp;
+					</li>
+					<li>
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showUselessOptimizationGroupDialog('checkUselessGroup');" value="清除分组">&nbsp;
 					</li>
 				</shiro:hasPermission>
 			</ul>
@@ -112,39 +110,47 @@
 	<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
 	<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
 	<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
+	<input type="hidden" name="operationCombineName" id="operationCombineName" value="${groupSettingCriteria.operationCombineName}"/>
 	<input type="hidden" name="optimizedGroupName" id="optimizedGroupName" value="${groupSettingCriteria.optimizedGroupName}"/>
 	<input type="hidden" name="operationType" id="operationType" value="${groupSettingCriteria.operationType}"/>
 	<input type="hidden" name="terminalType" id="terminalType" value="${groupSettingCriteria.terminalType}"/>
     <input type="hidden" name="hasOperation" id="hasOperation" value="${groupSettingCriteria.hasOperation}"/>
-    <input type="hidden" name="groupNameFuzzyQuery" id="groupNameFuzzyQuery" value="${groupSettingCriteria.groupNameFuzzyQuery}"/>
 	<input type="hidden" name="hasRemainingAccount" id="hasRemainingAccount" value="${groupSettingCriteria.hasRemainingAccount}"/>
 </form>
 
 <div class="datalist">
 	<div class="datalist-list">
 		<ul>
-			<c:forEach items="${page.records}" var="groupVo" varStatus="status">
+			<c:forEach items="${page.records}" var="operationCombine">
 				<li title="请把分组下的机器分配完成！">
 					<div class="header">
-						<input type="hidden" name="groupUuid" value="${groupVo.uuid}">
-						<span class="groupName" title="${groupVo.remainingAccount}%"><a href="javascript:;">${groupVo.groupName}</a></span>
-						<span class="userName"><a href="javascript:;"></a>${groupVo.userName}</span>
-                        <span><a href="javascript:;"></a>&nbsp;&nbsp;&nbsp;</span>
-                        &nbsp;&nbsp;<span class="maxInvalidCount" ondblclick="editMaxInvalidCountStr($(this).find('label.maxInvalidCountStr')[0], true)"><label>最大无效点击数:</label>&nbsp;&nbsp;<label class="maxInvalidCountStr" id="${groupVo.uuid}">${groupVo.maxInvalidCount}</label></span>
+						<input type="hidden" name="operationCombineUuid" value="${operationCombine.uuid}">
+						<span class="operationCombineName" title="${operationCombine.operationCombineName}——${operationCombine.remainingAccount}%">
+							<a href="javascript:;">${operationCombine.operationCombineName}</a>
+						</span>
+						<span class="userName"><a href="javascript:;"></a>${operationCombine.creator}</span>
+                        <span class="maxInvalidCount" ondblclick="editMaxInvalidCountStr($(this).find('label.maxInvalidCountStr')[0], true)">
+							<label>最大无效点击数:</label>&nbsp;&nbsp;<label class="maxInvalidCountStr" operationCombineId="${operationCombine.uuid}">${operationCombine.maxInvalidCount}</label>
+						</span>
+						<span><a href="javascript:;"></a>&nbsp;&nbsp;&nbsp;</span>
+						<span class="groupNames" ondblclick="editGroupNameStr($(this).find('label.groupNameStr')[0], true, '${operationCombine.maxInvalidCount}')">
+							<label>分组:&nbsp;&nbsp;</label><label class="groupNameStr">暂无</label>
+						</span>
 						<div class="handle">
+							<a class="blue" href="javascript:showGroupQueueDialog('${operationCombine.uuid}', '${operationCombine.maxInvalidCount}')">分组详情</a>
 							<shiro:hasPermission name="/internal/groupsetting/saveGroupSetting">
-								<a class="blue" href="javascript:showGroupSettingDialog('add', '${groupVo.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')">新增优化组设置</a>
+								<a class="blue" href="javascript:showGroupSettingDialog('add', '', '${operationCombine.operationCombineName}', '${operationCombine.remainingAccount}', '${operationCombine.uuid}')">新增操作组设置</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/group/updateGroup">
-								<a class="blue" href="javascript:showUpdateGroupDialog('${groupVo.uuid}', '${groupVo.groupName}')">批量修改优化组设置</a>
+								<a class="blue" href="javascript:showUpdateGroupDialog('${operationCombine.uuid}', '${operationCombine.operationCombineName}')">批量修改操作组设置</a>
 							</shiro:hasPermission>
 							<shiro:hasPermission name="/internal/group/delGroup">
-								<a class="blue" href="javascript:delGroup(${groupVo.uuid})">删除优化组</a>
+								<a class="blue" href="javascript:delOperationCombine(${operationCombine.uuid})">删除操作组合</a>
 							</shiro:hasPermission>
 						</div>
 					</div>
-					<div class="body" listsize="${groupVo.groupSettings.size()}">
-						<c:if test="${groupVo.groupSettings.size() > 0}">
+					<div class="body" listsize="${operationCombine.groupSettings.size()}">
+						<c:if test="${operationCombine.groupSettings.size() > 0}">
 							<div class="data-info-head">
 								<div class="other-rank">
 									<div class="row1">
@@ -257,8 +263,8 @@
 								</div>
 							</div>
 						</c:if>
-						<c:forEach items="${groupVo.groupSettings}" var="groupSetting">
-						<div class="data-info-wrap">
+						<c:forEach items="${operationCombine.groupSettings}" var="groupSetting">
+							<div class="data-info-wrap">
 								<div class="other-rank">
 									<div class="row">
 										<div>
@@ -364,7 +370,7 @@
 										<div>
 											<span class="operation">
 												<shiro:hasPermission name="/internal/groupsetting/updateGroupSetting">
-													<a href="javascript:showGroupSettingDialog('update', '${groupSetting.uuid}', '${groupVo.groupName}', '${groupVo.remainingAccount}', '${groupVo.uuid}')" title="修改操作类型">修改</a>
+													<a href="javascript:showGroupSettingDialog('update', '${groupSetting.uuid}', '${operationCombine.operationCombineName}', '${operationCombine.remainingAccount}', '${operationCombine.uuid}')" title="修改操作类型">修改</a>
 												</shiro:hasPermission>
 												<shiro:hasPermission name="/internal/groupsetting/delGroupSetting">
 													<a href="javascript: void(0);" onclick="delGroupSetting(this, ${groupSetting.uuid})" title="删除操作类型">删除</a>
@@ -373,7 +379,7 @@
 										</div>
 									</div>
 								</div>
-						</div>
+							</div>
 						</c:forEach>
 					</div>
 				</li>
@@ -407,19 +413,53 @@
 	</div>
 </div>
 
+<%--分组详情--%>
+<div id="showGroupQueueDialog" class="easyui-dialog" style="display: none">
+    <form id="showGroupQueueForm">
+        <table cellpadding="10" style="font-size: 12px; background-color: white;border-collapse: collapse; width: 100%;">
+            <thead style="position: absolute !important;top: 24px !important;width: 100% !important;">
+                <tr>
+                    <th colspan="2" style="text-align: left;">优化组名: <input type="text" title="请输入优化组名" name="optimizedGroupName" placeholder="请输入优化组名" style="width: 130px;">&nbsp;
+                        <input type="hidden" name="operationCombineUuid" value="">
+                        <input type="button" onclick="searchGroupsBelowOperationCombine();" value="搜索"  style="width: 34px;">
+                    </th>
+                </tr>
+                <tr>
+                    <th style="width: 20px;text-align: center;"><input type="checkbox" name="checkAllGroup" id="checkAllGroup" onclick="selectAllChecked(this, 'checkGroup');" checked='checked'></th>
+                    <th>优化组名</th>
+                </tr>
+            </thead>
+            <tbody style="position: absolute !important;bottom: 60px !important; width: 100% !important;height: 420px;overflow-y: scroll;">
+            </tbody>
+            <tfoot style="position: absolute !important;bottom: 45px !important; width: 100% !important;">
+                <tr>
+                    <th colspan="2" style="text-align: left;">新增优化组: <input type="text" placeholder="请正确输入:pc_pm,m_pm" name="newOptimizationGroups" style="width: 150px;"></th>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
 <%--增加、修改操作类型--%>
 <div id="changeSettingDialog" class="easyui-dialog" style="display: none;left: 30%;">
 	<form id="changeSettingDialogForm" onsubmit="return false">
 		<table>
 			<tr>
-				<input type="hidden" name="groupUuid" id="groupUuid" value="" >
+				<input type="hidden" name="operationCombineUuid" id="operationCombineUuid" value="" >
 				<input type="hidden" name="groupSettingUuid" id="groupSettingUuid" value="" >
 				<td>
 					<table id="td_1" style="font-size:12px">
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>分组</th>
+                        <tr name="trItem" onclick="checkItem(this)">
+                            <th>操作组合</th>
+                            <td>
+                                <input type="text" name="settingOperationCombineName" id="settingOperationCombineName"/>
+                            </td>
+                        </tr>
+						<tr name="trItem" onclick="checkItem(this)" style="display:none;">
+							<th>
+                                <label>分组</label>
+                            </th>
 							<td>
-								<input type="text" name="settingGroup" id="settingGroup" disabled="disabled"/>
+								<input type="text" name="settingGroup" id="settingGroup" placeholder="分组名称, 多个用逗号分隔" />
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
@@ -751,12 +791,18 @@
 				<input type="hidden" name="groupSettingUuid" id="groupSettingUuid" value="" >
 				<td>
 					<table id="td_1" style="font-size:12px">
-						<tr name="trItem" onclick="checkItem(this)">
+						<%--<tr name="trItem" onclick="checkItem(this)">
 							<th>分组</th>
 							<td>
 								<input type="text" name="settingGroup" id="settingGroup" />
 							</td>
-						</tr>
+						</tr>--%>
+                        <tr name="trItem" onclick="checkItem(this)">
+                            <th>操作组合</th>
+                            <td>
+                                <input type="text" name="settingOperationCombineName" id="settingOperationCombineName"/>
+                            </td>
+                        </tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>操作类型</th>
 							<td>
@@ -1091,7 +1137,7 @@
                 </th>
             </tr>
 			<tr>
-				<th style="width: 15px;text-align: center;"><input type="checkbox" name="checkAllOptimizationGroup" id="checkAllOptimizationGroup" onclick="selectAllChecked(this);" checked='checked'></th>
+				<th style="width: 15px;text-align: center;"><input type="checkbox" name="checkAllOptimizationGroup" id="checkAllOptimizationGroup" onclick="selectAllChecked(this, 'checkOptimizationGroup');" checked='checked'></th>
 				<th>优化组</th>
 			</tr>
         </thead>
@@ -1099,11 +1145,11 @@
         </tbody>
         <tfoot style="position: absolute !important;bottom: 40px !important;background-color: #eeeeee !important;width: 100% !important;">
             <tr>
-                <th colspan="2" style="text-align: left;">操作类型：<select name="operationType" style="width: 150px;">
-                    <c:forEach items="${operationTypeValues}" var="operationType">
+                <th colspan="2" style="text-align: left;">操作组合：<select name="operationCombineName" style="width: 150px;">
+                    <c:forEach items="${operationCombineNames}" var="operationCombineName">
                         <c:choose>
-                            <c:when test="${operationType eq groupSettingCriteria.operationType}"><option selected>${operationType}</option></c:when>
-                            <c:otherwise><option>${operationType}</option></c:otherwise>
+                            <c:when test="${operationCombineName eq groupSettingCriteria.operationCombineName}"><option selected>${operationCombineName}</option></c:when>
+                            <c:otherwise><option>${operationCombineName}</option></c:otherwise>
                         </c:choose>
                     </c:forEach>
                 </select></th>
@@ -1111,7 +1157,26 @@
         </tfoot>
     </table>
 </div>
-
+<%-- 清除分组 --%>
+<div id="uselessOptimizationGroupDialog" class="easyui-dialog" style="display: none">
+	<form id="uselessOptimizationGroupForm">
+		<table cellpadding="10" style="font-size: 12px; background-color: white;border-collapse: collapse; width: 100%;">
+			<thead style="position: absolute !important;top: 24px !important;width: 100% !important;">
+			<tr>
+				<th colspan="2" style="text-align: left;">优化组名: <input type="text" title="请输入优化组名" name="groupName" placeholder="请输入优化组名" style="width: 130px;">&nbsp;
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="searchUselessOptimizationGroups();" value="搜索">
+				</th>
+			</tr>
+			<tr>
+				<th style="width: 20px;text-align: center;"><input type="checkbox" name="checkAllUselessGroup" id="checkAllUselessGroup" onclick="selectAllChecked(this, 'checkUselessGroup');" checked='checked'></th>
+				<th>优化组名</th>
+			</tr>
+			</thead>
+			<tbody style="position: absolute !important; top: 65px !important; width: 100% !important;height: 340px;overflow-y: scroll;">
+			</tbody>
+		</table>
+	</form>
+</div>
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath }/groupsetting/groupsetting.js"></script>
 <script language="javascript">

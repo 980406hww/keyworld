@@ -13,17 +13,11 @@ public class Group extends BaseEntity {
     @TableField(value = "fGroupName")
     private String groupName;
 
-    @TableField(value = "fTerminalType")
-    private String terminalType;
+    @TableField(value = "fOperationCombineUuid")
+    private Long operationCombineUuid;
 
     @TableField(value = "fCreateBy")
     private String createBy;
-
-    @TableField(value = "fRemainingAccount")
-    private int remainingAccount;
-
-    @TableField(value = "fMaxInvalidCount")
-    private int maxInvalidCount;
 
     public String getGroupName () {
         return groupName;
@@ -33,12 +27,12 @@ public class Group extends BaseEntity {
         this.groupName = groupName;
     }
 
-    public String getTerminalType () {
-        return terminalType;
+    public Long getOperationCombineUuid () {
+        return operationCombineUuid;
     }
 
-    public void setTerminalType (String terminalType) {
-        this.terminalType = terminalType;
+    public void setOperationCombineUuid (Long operationCombineUuid) {
+        this.operationCombineUuid = operationCombineUuid;
     }
 
     public String getCreateBy () {
@@ -47,21 +41,5 @@ public class Group extends BaseEntity {
 
     public void setCreateBy (String createBy) {
         this.createBy = createBy;
-    }
-
-    public int getRemainingAccount () {
-        return remainingAccount;
-    }
-
-    public void setRemainingAccount (int remainingAccount) {
-        this.remainingAccount = remainingAccount;
-    }
-
-    public int getMaxInvalidCount() {
-        return maxInvalidCount;
-    }
-
-    public void setMaxInvalidCount(int maxInvalidCount) {
-        this.maxInvalidCount = maxInvalidCount;
     }
 }

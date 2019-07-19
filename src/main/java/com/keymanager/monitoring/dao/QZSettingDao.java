@@ -3,8 +3,8 @@ package com.keymanager.monitoring.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.GroupSettingCriteria;
-import com.keymanager.monitoring.criteria.QZSettingSearchClientGroupInfoCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
+import com.keymanager.monitoring.criteria.QZSettingSearchGroupInfoCriteria;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.vo.DateRangeTypeVO;
 import com.keymanager.monitoring.vo.ExternalQzSettingVO;
@@ -42,7 +42,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     void updateCrawlerStatus(@Param("uuids")Long[] uuids);
 
-    int getQZSettingClientGroupInfo (@Param("qzSettingSearchClientGroupInfoCriteria") QZSettingSearchClientGroupInfoCriteria qzSettingSearchClientGroupInfoCriteria);
+    int getQZSettingGroupInfo (@Param("qzSettingSearchGroupInfoCriteria") QZSettingSearchGroupInfoCriteria qzSettingSearchGroupInfoCriteria);
 
     List<String> getAvailableOptimizationGroups (@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
