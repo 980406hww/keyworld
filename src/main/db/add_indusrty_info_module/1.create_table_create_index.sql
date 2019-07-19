@@ -1,4 +1,4 @@
-
+﻿
 DROP TABLE IF EXISTS `t_industry_info`;
 CREATE TABLE `t_industry_info` (
   `fUuid` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
@@ -35,5 +35,5 @@ CREATE TABLE `t_industry_detail` (
   KEY `fWebsite` (`fWebsite`(20),`fWeight`,`fRemark`(20))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='行业详情表';
 
-INSERT INTO t_config VALUES('IndustryTelReg', 'IndustryTelReg', '电 *话 *[:：] *[+ \d-]*|手 *机 *[:：] *[+ \d-]*|热 *线 *[:：] *[+ \d-]*|直 *线 *[:：] *[+ \d-]*'),
+INSERT INTO t_config VALUES('IndustryTelReg', 'IndustryTelReg', '电 *话[号]?[码]? *[:：] *[( )+\d-]+|手 *机 *[:：] *[( )+\d-]+|热 *线 *[:：] *[( )+\d-]+|直 *线 *[:：] *[( )+\d-]+|Tel *[:：] *[( )+\d-]+'),
 ('IndustryQqReg', 'IndustryQqReg', '[Qq] *[Qq] *[:：] *\d{8,10}');
