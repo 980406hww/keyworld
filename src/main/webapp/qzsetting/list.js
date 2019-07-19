@@ -1212,6 +1212,7 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, tempOptimizeGroupName
 }
 function changePaging(currentPage, pageSize) {
     var chargeForm = $("#chargeForm");
+    chargeForm.find("#resetPagingParam").val(false);
     chargeForm.find("#currentPageNumberHidden").val(currentPage);
     chargeForm.find("#pageSizeHidden").val(pageSize);
     chargeForm.submit();
@@ -1346,55 +1347,40 @@ function immediatelyUpdateQZSettings(type) {
     updateImmediately(uuids, urlType)
 }
 function updateImmediately(uuids, urlType) {
-    var updateFlag = false;
     switch (urlType) {
         case "updateImmediately":
-            parent.$.messager.confirm('确认', "确实要马上更新这些站点设置吗?", function (b) {
-                if (b) {
-                    updateFlag = true;
-                }
-            });
+            if (!confirm("确实要马上更新这些站点设置吗?")) return false;
             break;
         case "startMonitorImmediately":
-            parent.$.messager.confirm('确认', "确实要启动这些站点所有终端的达标监控吗?", function (b) {
-                if (b) {
-                    updateFlag = true;
-                }
-            });
+            if (!confirm("确实要启动这些站点所有终端的达标监控吗?")) return false;
             break;
         case "updateQZKeywordEffectImmediately":
-            parent.$.messager.confirm('确认', "确认修改这些站点所有终端下操作的关键词的作用为指定词吗?", function (b) {
-                if (b) {
-                    updateFlag = true;
-                }
-            });
+            if (!confirm("确认修改这些站点所有终端下操作的关键词的作用为指定词吗?")) return false;
             break;
         default:
             break;
     }
-    if (updateFlag) {
-        var postData = {};
-        postData.uuids = uuids;
-        $.ajax({
-            url: '/internal/qzsetting/' + urlType,
-            data: JSON.stringify(postData),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            type: 'POST',
-            success: function (data) {
-                if(data){
-                    $().toastmessage('showSuccessToast', "操作成功", true);
-                }else{
-                    $().toastmessage('showErrorToast', "操作失败");
-                }
-            },
-            error: function () {
+    var postData = {};
+    postData.uuids = uuids;
+    $.ajax({
+        url: '/internal/qzsetting/' + urlType,
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        type: 'POST',
+        success: function (data) {
+            if(data){
+                $().toastmessage('showSuccessToast', "操作成功", true);
+            }else{
                 $().toastmessage('showErrorToast', "操作失败");
             }
-        });
-    }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
 }
 
 function updateQZSettingStatus(status) {
@@ -1403,51 +1389,36 @@ function updateQZSettingStatus(status) {
         $.messager.alert('提示', '请选择要操作的整站！！', 'info');
         return false;
     }
-    var updateFlag = false;
     if(status === 1) {
-        parent.$.messager.confirm('询问', "确认要激活选中的整站吗？", function(b) {
-            if (b) {
-                updateFlag = true;
-            }
-        });
+        if (!confirm("确认要激活选中的整站吗?")) return false;
     } else if (status === 2) {
-        parent.$.messager.confirm('询问', "确认要暂停收选中的整站的费用吗？", function(b) {
-            if (b) {
-                updateFlag = true;
-            }
-        });
+        if (!confirm("确认要暂停收选中的整站的费用吗?")) return false;
     } else {
-        parent.$.messager.confirm('询问', "确认要暂停选中的整站吗？", function(b) {
-            if (b) {
-                updateFlag = true;
-            }
-        });
+        if (!confirm("确认要暂停选中的整站吗?")) return false;
     }
-    if (updateFlag) {
-        var postData = {};
-        postData.uuids = uuids.split(",");
-        postData.status = status;
-        $.ajax({
-            url: '/internal/qzsetting/updateQZSettingStatus',
-            data: JSON.stringify(postData),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            timeout: 5000,
-            type: 'POST',
-            success: function (data) {
-                if(data){
-                    $().toastmessage('showSuccessToast', "操作成功", true);
-                }else{
-                    $().toastmessage('showErrorToast', "操作失败");
-                }
-            },
-            error: function () {
+    var postData = {};
+    postData.uuids = uuids.split(",");
+    postData.status = status;
+    $.ajax({
+        url: '/internal/qzsetting/updateQZSettingStatus',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if(data){
+                $().toastmessage('showSuccessToast', "操作成功", true);
+            }else{
                 $().toastmessage('showErrorToast', "操作失败");
             }
-        });
-    }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
 }
 function toTimeFormat(time) {
     var date = toDateFormat(time);
