@@ -12,7 +12,8 @@ public enum WebsiteTypeEnum {
     Amazon("Amazon", "亚马逊"),
     Negative("Negative", "负面处理"),
     Station("Station", "整站排名"),
-    CustomerSite("CustomerSite", "客户站点");
+    CustomerSite("CustomerSite", "客户站点"),
+    InformationSite("InformationSite", "资讯站点");
 
     private String desc;
     private String value;
