@@ -53,12 +53,12 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 		Config dailyReportType = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_TYPE);
 		if(dailyReportType != null){
 			if(EntryTypeEnum.bc.name().equalsIgnoreCase(dailyReportType.getValue())){
-				return !captureRankJobService.hasUncompletedCaptureRankJob(null);
+				return !captureRankJobService.hasUncompletedCaptureRankJob(null, "China");
 			}else{
 				List<Long> customerUuids = customerService.getActiveDailyReportIdentifyCustomerUuids();
 				if (CollectionUtils.isNotEmpty(customerUuids)) {
 					List<String> groupNames = customerKeywordService.getGroups(customerUuids);
-					return !captureRankJobService.hasUncompletedCaptureRankJob(groupNames);
+					return !captureRankJobService.hasUncompletedCaptureRankJob(groupNames, null);
 				}
 			}
 		}

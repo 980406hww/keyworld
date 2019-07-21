@@ -330,8 +330,8 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         captureRankJobDao.resetCaptureRankJobs(uuids);
     }
 
-    public Boolean hasUncompletedCaptureRankJob(List<String> groupNames) {
-        return captureRankJobDao.hasUncompletedCaptureRankJob(groupNames) != null;
+    public Boolean hasUncompletedCaptureRankJob(List<String> groupNames, String rankJobArea) {
+        return captureRankJobDao.hasUncompletedCaptureRankJob(groupNames, rankJobArea) != null;
     }
 
     public Boolean hasCaptureRankJob() {

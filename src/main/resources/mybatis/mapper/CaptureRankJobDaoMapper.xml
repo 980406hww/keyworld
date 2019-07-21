@@ -151,6 +151,9 @@
         AND c.fExectionType = 'Everyday'
         AND c.fLastExecutionDate &lt; curdate())
         )
+        <if test="rankJobArea != null">
+          AND fRankJobArea = #{rankJobArea}
+        </if>
         AND c.fCaptureRankJobStatus = 1
         <if test="groupNames!=null"> and c.fGroupNames IN
             <foreach collection="groupNames" item="groupName" open="(" separator="," close=")">
