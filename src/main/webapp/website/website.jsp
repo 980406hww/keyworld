@@ -288,13 +288,13 @@
 <div id="friendlyLinkDialog" title="友情链接信息" class="easyui-dialog" style="display: none">
     <form id="friendlyLinkForm">
         <table style="font-size:12px" id="friendlyLinkTable" align="center" cellspacing="8">
-            <tr>
+            <%--<tr>
                 <td style="width:60px;"  align="right">用户名称:</td>
                 <td>
                     <input type="hidden" name="friendlyLinkId" id="friendlyLinkId">
                     <input type="text" name="customerInfo" id="customerInfo" list="customer_list" style="width:180px;">
                 </td>
-            </tr>
+            </tr>--%>
             <tr>
                 <td style="width:60px;"  align="right">网站名称:</td>
                 <td>
@@ -364,12 +364,12 @@
                     <input type="text" name="advertisingTagname" id="advertisingTagname" style="width:180px;" placeholder="唯一，不可进行更改，查询条件">
                 </td>
             </tr>
-            <tr>
+            <%--<tr>
                 <td style="width:80px;"  align="right">用户名称:</td>
                 <td>
                     <input type="text" name="customerInfo" id="customerInfo" list="customer_list" style="width:180px;">
                 </td>
-            </tr>
+            </tr>--%>
             <tr>
                 <td style="width:80px;"  align="right">广告名称:</td>
                 <td>
@@ -499,12 +499,12 @@
 <div id="synchronousFriendlyLinkDialog" title="同步友链信息(同步默认数据)" class="easyui-dialog" style="display: none;left: 35%;">
     <form id="synchronousFriendlyLinkForm" method="post">
         <table style="font-size:14px;" cellpadding=10 cellspacing="5">
-            <tr>
+            <%--<tr>
                 <td style="width:60px;"  align="right">用户名称:</td>
                 <td>
                     <input type="text" name="customerInfo" id="customerInfo" list="customer_list" style="width:180px;">
                 </td>
-            </tr>
+            </tr>--%>
             <tr>
                 <td style="width:60px;"  align="right">到期时间:</td>
                 <td>
@@ -523,12 +523,12 @@
 <div id="synchronousAdvertisingDialog" title="同步广告信息(同步默认数据)" class="easyui-dialog" style="display: none;left: 35%;">
     <form id="synchronousAdvertisingForm" method="post">
         <table style="font-size:14px;" cellpadding=10 cellspacing="5">
-            <tr>
+            <%--<tr>
                 <td style="width:60px;"  align="right">用户名称:</td>
                 <td>
                     <input type="text" name="customerInfo" id="customerInfo" list="customer_list" style="width:180px;">
                 </td>
-            </tr>
+            </tr>--%>
             <tr>
                 <td style="width:60px;"  align="right">续费时间:</td>
                 <td>
