@@ -12,6 +12,8 @@ public class WebsiteCriteria {
     private Integer accessFailCount;
     private String friendlyLinkUrl;
     private String advertisingTagname;
+    private String industryType;
+    private String websiteType;
 
     public String getWebsiteName() {
         return websiteName;
@@ -75,5 +77,21 @@ public class WebsiteCriteria {
 
     public void setSynchronousAdvertisingSign(String synchronousAdvertisingSign) {
         this.synchronousAdvertisingSign = synchronousAdvertisingSign;
+    }
+
+    public String getIndustryType() {
+        return industryType;
+    }
+
+    public void setIndustryType(String industryType) {
+        this.industryType = industryType;
+    }
+
+    public String getWebsiteType() {
+        return websiteType;
+    }
+
+    public void setWebsiteType(String websiteType) {
+        this.websiteType = websiteType;
     }
 }
