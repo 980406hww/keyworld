@@ -159,7 +159,11 @@ function checkTerminalType(searchEngine, terminalType) {
     }
     $(".mytabs .link").find("li").removeClass("active");
     $(".mytabs .link").find("li[name='"+ html +"']").addClass("active");
-    $("#chargeForm").find("#searchEngine").val($.trim(html.substr(0, html.indexOf('P'))));
+    if (html.indexOf('A') > -1) {
+        $("#chargeForm").find("#searchEngine").val('');
+    } else {
+        $("#chargeForm").find("#searchEngine").val($.trim(html.substr(0, html.indexOf('P'))));
+    }
     $("#chargeForm").find("#terminalType").val($.trim(terminalType));
     trimSearchCondition('1');
 }

@@ -115,6 +115,7 @@ public class Constants {
     public final static String EXCEL_TYPE_SUPER_USER_FULL = "SuperUserFull";
     public final static String EXCEL_TYPE_SUPER_INDUSTRY_SIMPLE = "SuperIndustrySimple";
 
+    public final static String ALL_SEARCH_ENGINE = "All";
     public final static String SEARCH_ENGINE_BAIDU = "百度";
     public final static String SEARCH_ENGINE_SOGOU = "搜狗";
     public final static String SEARCH_ENGINE_360 = "360";
