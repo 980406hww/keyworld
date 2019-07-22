@@ -97,10 +97,16 @@
     <form id="advertisingForm">
         <table style="font-size:12px" id="advertisingTable" align="center" cellspacing="8">
             <tr>
+                <td style="width:80px;"  align="right">广告位标识:</td>
+                <td>
+                    <p id="adPositionId" title="广告位标识"></p>
+                </td>
+            </tr>
+            <tr>
                 <td style="width:80px;"  align="right">广告标识:</td>
                 <td>
                     <input type="hidden" name="advertisingId" id="advertisingId">
-                    <input type="text" name="advertisingTagname" id="advertisingTagname" style="width:180px;">
+                    <input type="text" name="advertisingTagname" id="advertisingTagname" style="width:180px;" onkeyup="changeAdpositionIdValue(this.value)">
                 </td>
             </tr>
             <tr>
@@ -286,6 +292,22 @@
             $("#showAdvertisingTableDiv").css("margin-top",$("#topDiv").height());
         }
     });
+
+    /**
+     * 动态展示广告位标识，根据广告标识所填写内容变化
+     *  内容格式如下：{dede:myad name='广告位标识'/}
+     */
+    function changeAdpositionIdValue( value) {
+        var api = $("#adPositionId");
+        var htm = '';
+       if(value == "" || value==null){
+           htm ='{dede:myad name=\'广告位标识\'/}'
+       }else{
+           htm =' {dede:myad name=\''+value+'\'/}';
+       }
+        api.text(htm);
+    }
+
 
     function initExpireChecked() {
         if(${advertisingCriteria.expire == 1}){

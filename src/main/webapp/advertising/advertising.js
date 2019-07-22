@@ -69,7 +69,6 @@ function deleteBatchAdvertising(websiteUuid) {
         },
         error: function () {
             $().toastmessage('showErrorToast', "操作失败");
-
         }
     });
 }
@@ -123,6 +122,7 @@ function showAdvertisingDialog(websiteUuid, uuid) {
         changeAdvertisingBodySubmit("all");
 
     }
+
     $("#advertisingDialog").show();
     $("#advertisingDialog").dialog({
         resizable: false,
@@ -134,6 +134,7 @@ function showAdvertisingDialog(websiteUuid, uuid) {
             iconCls: 'icon-ok',
             handler: function () {
                 saveAdvertising(websiteUuid, uuid);
+                $("#adPositionId").text("{dede:myad name='广告位标识'/}");
             }
         },
             {
@@ -141,6 +142,7 @@ function showAdvertisingDialog(websiteUuid, uuid) {
                 iconCls: 'fi-trash',
                 handler: function () {
                     $('#advertisingForm')[0].reset();
+                    $("#adPositionId").text("{dede:myad name='广告位标识'/}");
                 }
             },
             {
@@ -149,6 +151,7 @@ function showAdvertisingDialog(websiteUuid, uuid) {
                 handler: function () {
                     $("#advertisingDialog").dialog("close");
                     $('#advertisingForm')[0].reset();
+                    $("#adPositionId").text("{dede:myad name='广告位标识'/}");
                 }
             }]
     });
@@ -237,7 +240,6 @@ function saveAdvertising(websiteUuid, uuid) {
                     $().toastmessage('showSuccessToast', "保存成功",true);
                 } else {
                     $().toastmessage('showErrorToast', "保存失败, 请检查广告标识是否唯一！");
-
                 }
             },
             error: function () {
@@ -262,7 +264,6 @@ function saveAdvertising(websiteUuid, uuid) {
                     $().toastmessage('showSuccessToast', "保存成功",true);
                 } else {
                     $().toastmessage('showErrorToast', "保存失败");
-
                 }
             },
             error: function () {
@@ -276,6 +277,7 @@ function saveAdvertising(websiteUuid, uuid) {
 function modifyAdvertising(uuid) {
     getAdvertising(uuid, function (advertising) {
         if (advertising != null) {
+
             initAdvertisingDialog(advertising);
             showAdvertisingDialog(advertising.websiteUuid, uuid);
         } else {
@@ -321,6 +323,10 @@ function initAdvertisingDialog(advertising) {
     var advertisingForm = $("#advertisingDialog").find("#advertisingForm");
     advertisingForm.find("#customerInfo").val(advertising.customerInfo + "_" + advertising.customerUuid);
     advertisingForm.find("#advertisingId").val(advertising.advertisingId);
+    //给广告位标识设值
+    var htm  = ' {dede:myad name=\''+advertising.advertisingTagname+'\'/}';
+    var api = advertisingForm.find("#adPositionId");
+    api.text(htm);
     advertisingForm.find("#advertisingTagname").val(advertising.advertisingTagname);
     advertisingForm.find("#advertisingAdName").val(advertising.advertisingAdName);
     advertisingForm.find("#advertisingType").val(advertising.advertisingType);
