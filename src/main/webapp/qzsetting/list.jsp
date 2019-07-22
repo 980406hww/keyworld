@@ -325,7 +325,8 @@
 		<ul>
 			<c:forEach items="${page.records}" var="qzSetting" varStatus="status">
 				<c:choose>
-					<c:when test="${qzSetting.pcGroup != null and qzSetting.qzKeywordRankInfoMap['PC'] != null}">
+					<c:when test="${qzSetting.pcGroup != null and qzSetting.qzKeywordRankInfoMap['PC'] != null and
+					        qzSetting.searchEngine eq qzSettingSearchCriteria.searchEngine}">
 					<li>
 						<div class="header">
 							<input type="hidden" name="contactPerson" value="${qzSetting.contactPerson}">
@@ -762,7 +763,8 @@
 					</li>
 					<!--li-end-pc-->
 					</c:when>
-					<c:when test="${qzSetting.phoneGroup != null and qzSetting.qzKeywordRankInfoMap['Phone'] != null}">
+					<c:when test="${qzSetting.phoneGroup != null and qzSetting.qzKeywordRankInfoMap['Phone'] != null and
+					        qzSetting.searchEngine eq qzSettingSearchCriteria.searchEngine}">
 					<li>
 						<div class="header">
 							<span>
@@ -1465,10 +1467,10 @@
 						</thead>
 						<tbody>
 						<tr>
-							<td style="width:56px">达标阶段</td>
+							<td style="width:52px">达标阶段</td>
 							<td style="width:76px">起始达标词数</td>
 							<td style="width:76px">终止达标词数</td>
-							<td style="width:46px">价格</td>
+							<td style="width:66px">电脑端价格</td>
 							<td style="width:46px">操作</td>
 						</tr>
 						<tr>
@@ -1489,10 +1491,10 @@
 						</thead>
 						<tbody>
 						<tr>
-							<td style="width:56px">达标阶段</td>
+							<td style="width:52px">达标阶段</td>
 							<td style="width:76px">起始达标词数</td>
 							<td style="width:76px">终止达标词数</td>
-							<td style="width:46px">价格</td>
+							<td style="width:66px">手机端价格</td>
 							<td style="width:46px">操作</td>
 						</tr>
 						<tr>

@@ -145,7 +145,8 @@ public class QZSettingRestController extends SpringMVCBaseController {
 
 	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
 	@RequestMapping(value = "/searchQZSettings", method = RequestMethod.GET)
-	public ModelAndView searchQZSettingsGet(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
+	public ModelAndView searchQZSettingsGet(@RequestParam(defaultValue = "1") int currentPageNumber,
+											@RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
 		return constructQZSettingModelAndView(request, new QZSettingSearchCriteria(), currentPageNumber, pageSize);
 	}
 
