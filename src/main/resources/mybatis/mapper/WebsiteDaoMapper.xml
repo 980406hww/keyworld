@@ -43,8 +43,8 @@
 		WHERE 1 = 1
 		<if test="websiteCriteria.websiteName != null and websiteCriteria.websiteName != ''">AND w.fWebsiteName LIKE '%${websiteCriteria.websiteName}%'</if>
 		<if test="websiteCriteria.domain != null and websiteCriteria.domain != ''">AND w.fDomain LIKE '%${websiteCriteria.domain}%'</if>
-		<if test="websiteCriteria.industryType != null and websiteCriteria.industryType != ''">AND w.fIndustry LIKE '%${websiteCriteria.industryType}%'</if>
-		<if test="websiteCriteria.websiteType != null and websiteCriteria.websiteType != ''">AND w.fWebsiteType LIKE '%${websiteCriteria.websiteType}%'</if>
+		<if test="websiteCriteria.industryType != null and websiteCriteria.industryType != ''">AND w.fIndustry = #{websiteCriteria.industryType}</if>
+		<if test="websiteCriteria.websiteType != null and websiteCriteria.websiteType != ''">AND w.fWebsiteType = #{websiteCriteria.websiteType}</if>
 		<if test="websiteCriteria.friendlyLinkUrl != null and websiteCriteria.friendlyLinkUrl != ''">AND fl.fFriendlyLinkUrl = #{websiteCriteria.friendlyLinkUrl}</if>
 		<if test="websiteCriteria.updateSalesInfoSign != null and websiteCriteria.updateSalesInfoSign != ''">AND w.fUpdateSalesInfoSign = #{websiteCriteria.updateSalesInfoSign}</if>
 		<if test="websiteCriteria.synchronousFriendlyLinkSign != null and websiteCriteria.synchronousFriendlyLinkSign != ''">AND w.fSynchronousFriendlyLinkSign = #{websiteCriteria.synchronousFriendlyLinkSign}</if>

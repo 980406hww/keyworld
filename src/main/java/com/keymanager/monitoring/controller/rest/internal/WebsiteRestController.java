@@ -12,7 +12,6 @@ import com.keymanager.monitoring.service.AdvertisingService;
 import com.keymanager.monitoring.service.FriendlyLinkService;
 import com.keymanager.monitoring.enums.PutSalesInfoSignEnum;
 import com.keymanager.monitoring.enums.WebsiteTypeEnum;
-import com.keymanager.monitoring.service.SalesManageService;
 import com.keymanager.monitoring.service.WebsiteService;
 import com.keymanager.monitoring.vo.WebsiteVO;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -44,9 +43,6 @@ public class WebsiteRestController extends SpringMVCBaseController {
     private FriendlyLinkService friendlyLinkService;
     @Autowired
     private AdvertisingService advertisingService;
-
-    @Autowired
-    private SalesManageService salesManageService;
 
     @RequiresPermissions("/internal/website/searchWebsites")
     @RequestMapping(value = "/searchWebsites", method = RequestMethod.GET)

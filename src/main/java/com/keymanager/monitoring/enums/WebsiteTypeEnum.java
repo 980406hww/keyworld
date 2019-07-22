@@ -1,6 +1,6 @@
 package com.keymanager.monitoring.enums;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -24,7 +24,7 @@ public enum WebsiteTypeEnum {
     }
 
     public static Map<String, String> changeToMap() {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new LinkedHashMap<>();
         WebsiteTypeEnum[] websiteTypeEnums = WebsiteTypeEnum.values();
         for (WebsiteTypeEnum websiteTypeEnum : websiteTypeEnums) {
             map.put(websiteTypeEnum.getValue(), websiteTypeEnum.getDesc());

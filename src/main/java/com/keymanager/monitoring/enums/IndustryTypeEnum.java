@@ -1,6 +1,5 @@
 package com.keymanager.monitoring.enums;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -9,15 +8,6 @@ import java.util.Map;
  *  所属行业类型 枚举类
  */
 public enum IndustryTypeEnum {
-
-   /* ASO("ASO", "ASO"),
-    Amazon("Amazon", "亚马逊"),
-    Negative("Negative", "负面处理"),
-    Station("Station", "整站排名"),
-    CustomerSite("CustomerSite", "客户站点"),
-    InformationSite("InformationSite", "资讯站点");
-*/
-
 
     SEOExtension("SEOExtension","SEO推广项目"),
     BrandRelationsAndSentiment("BrandRelationsAndSentiment","品牌公关舆情项目"),
