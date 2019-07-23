@@ -486,10 +486,10 @@
 										</div>
 									</div>
 									<div class="row">
-										<div title="该分组属于此操作组合, 点击链接跳转到分组设置">
+										<div title="销售和SEO没有修改操作组合的权限！！！">
 											<div class="showOperationCombineName" name="showOperationCombineName">
 												<input type="hidden" name="operationCombineName" value="">
-												<select name="operationCombineName" onchange="changeQZSettingGroupOperationCombineUuid(this, '${qzSetting.pcGroup}');" style="width: 180px;">
+												<select name="operationCombineName" onchange="changeQZSettingGroupOperationCombineUuid(this, '${qzSetting.pcGroup}', '${qzSettingSearchCriteria.loginName}', '${isSEO}');" style="width: 180px;">
                                                     <option value=""></option>
 													<c:forEach items="${operationCombines}" var="operationCombine">
                                                         <option>${operationCombine}</option>
@@ -925,7 +925,7 @@
 										<div title="该分组属于此操作组合, 点击链接跳转到分组设置">
 											<div class="showOperationCombineName" name="showOperationCombineName">
 												<input type="hidden" name="operationCombineName" value="">
-												<select name="operationCombineName" onchange="changeQZSettingGroupOperationCombineUuid(this, '${qzSetting.phoneGroup}');" style="width: 180px;">
+												<select name="operationCombineName" onchange="changeQZSettingGroupOperationCombineUuid(this, '${qzSetting.phoneGroup}', '${qzSettingSearchCriteria.loginName}', '${isSEO}');" style="width: 180px;">
 													<option value=""></option>
 													<c:forEach items="${operationCombines}" var="operationCombine">
 														<option>${operationCombine}</option>

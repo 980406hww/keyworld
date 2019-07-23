@@ -2026,7 +2026,6 @@ function saveChangeSetting(self, refresh) {
             operationType.maxKeywordCount = 1000;
         }
         operationType.subDomainName = settingDialogDiv.find("#subDomainName" + val.id).val().trim();
-        operationType.monitorRemark = settingDialogDiv.find("#monitorRemark" + val.id).val().trim();
         if (operationType.group == null || operationType.group === "") {
             $.messager.alert('提示', '请输入分组！！', 'warning');
             settingDialogDiv.find("#group" + val.id).focus();
@@ -2056,6 +2055,7 @@ function saveChangeSetting(self, refresh) {
             chargeRule.amount = 3;
             operationType.qzChargeRules.push(chargeRule);
         } else {
+            operationType.monitorRemark = settingDialogDiv.find("#monitorRemark" + val.id).val().trim();
             if (operationType.optimizationType !== '0') {
                 var standardSpeciesObjs = $("#operationTypeSummaryInfo"+val.id).find("input[name='standardSpecies']:checkbox:checked");
                 $.each(standardSpeciesObjs, function (i, v) {
@@ -2470,7 +2470,7 @@ function showOptimizationType(terminalType) {
     var settingDialogDiv = $("#changeSettingDialog");
     var groupObj = settingDialogDiv.find("#" + terminalType);
     var divObj = settingDialogDiv.find("#optimizationType" + terminalType);
-    if (groupObj[0].checked == true) {
+    if (groupObj[0].checked === true) {
         divObj.css("display", "block");
     } else {
         divObj.css("display", "none");
@@ -2481,9 +2481,14 @@ function showOptimizationType(terminalType) {
     }
 }
 
-function changeQZSettingGroupOperationCombineUuid(self, groupName) {
+function changeQZSettingGroupOperationCombineUuid(self, groupName, userName, isSEO) {
     var select = $(self);
     var oldOperationCombineName = select.parent().find("input[name='operationCombineName']").val();
+    if (isSEO === 'true' || userName !== '') {
+        $().toastmessage('showErrorToast', '您无权更改操作组合');
+        select.val(oldOperationCombineName);
+        return false;
+    }
     parent.$.messager.confirm('确认', "确定修改" + groupName + "所属的操作组合？", function (b) {
         if (b) {
             var postData = {};
