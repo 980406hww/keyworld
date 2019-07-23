@@ -89,6 +89,7 @@
         WHERE qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
         AND qot.fIsDeleted = 0
         AND qk.fDataProcessingStatus = 1
+        <if test="qzSettingSearchCriteria.renewalStatus != null">AND qs.fRenewalStatus = #{qzSettingSearchCriteria.renewalStatus}</if>
         AND EXISTS (
             SELECT 1
             FROM t_customer c

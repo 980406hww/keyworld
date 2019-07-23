@@ -12,6 +12,7 @@ public class QZSettingSearchCriteria{
     private String updateStatus;
     private Integer dateRangeType;
     private Integer status;
+    private Integer renewalStatus;
     private int unchangedNum;
     private int downNum;
     private int upNum;
@@ -315,5 +316,13 @@ public class QZSettingSearchCriteria{
 
     public void setResetPagingParam(boolean resetPagingParam) {
         this.resetPagingParam = resetPagingParam;
+    }
+
+    public Integer getRenewalStatus() {
+        return renewalStatus;
+    }
+
+    public void setRenewalStatus(Integer renewalStatus) {
+        this.renewalStatus = renewalStatus;
     }
 }

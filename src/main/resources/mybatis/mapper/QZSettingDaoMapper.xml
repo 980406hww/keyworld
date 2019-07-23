@@ -114,6 +114,7 @@
             qs.fIsReady AS 'fIsReady',
             qs.fCreateTime AS 'createTime',
             qs.fStatus AS 'status',
+            qs.fRenewalStatus AS 'renewalStatus',
             qs.fAutoCrawlKeywordFlag AS 'autoCrawlKeywordFlag'
         FROM t_qz_setting qs
         JOIN t_customer c
@@ -151,6 +152,7 @@
         </choose>
         <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingSearchCriteria.updateStatus}</if>
         <if test="qzSettingSearchCriteria.status != null">AND qs.fStatus = #{qzSettingSearchCriteria.status}</if>
+        <if test="qzSettingSearchCriteria.renewalStatus != null">AND qs.fRenewalStatus = #{qzSettingSearchCriteria.renewalStatus}</if>
         <if test="qzSettingSearchCriteria.hasMonitor != null">AND qs.fIsMonitor = #{qzSettingSearchCriteria.hasMonitor}</if>
         <if test="qzSettingSearchCriteria.hasReady != null">AND qs.fIsReady = #{qzSettingSearchCriteria.hasReady}</if>
         <if test="qzSettingSearchCriteria.standardSpecies != null and qzSettingSearchCriteria.standardSpecies != ''">
@@ -486,5 +488,16 @@
         <if test="customerUuid != null and customerUuid != ''">qs.fCustomerUuid = #{customerUuid}</if>
         <if test="domain != null and domain != ''">AND qs.fDomain = #{domain}</if>
     </select>
+
+    <update id="updateQZSettingRenewalStatus">
+        UPDATE t_qz_setting
+        SET fUpdateTime = NOW()
+            fRenewalStatus = #{renewalStatus},
+            fStatus = #{renewalStatus},
+        WHERE fUuid IN
+        <foreach item="item" index="index" collection="uuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
 
 </mapper>

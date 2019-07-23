@@ -85,6 +85,9 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fStatus")
 	private int status;
 
+	@TableField(value = "fRenewalStatus")
+	private int renewalStatus; // 续费状态 1：续费  0：暂停续费
+
 	@TableField(exist = false)
 	private List<QZOperationType> qzOperationTypes; //qzOperationTypes为全站表子类  一对多
 
@@ -375,4 +378,12 @@ public class QZSetting extends BaseEntity{
     public void setGroupMaxCustomerKeywordCount(int groupMaxCustomerKeywordCount) {
         this.groupMaxCustomerKeywordCount = groupMaxCustomerKeywordCount;
     }
+
+	public int getRenewalStatus() {
+		return renewalStatus;
+	}
+
+	public void setRenewalStatus(int renewalStatus) {
+		this.renewalStatus = renewalStatus;
+	}
 }

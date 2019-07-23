@@ -840,4 +840,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 		return map;
 	}
+
+	public void updateQZSettingRenewalStatus(List<Long> uuids, Integer renewalStatus) {
+		qzSettingDao.updateQZSettingRenewalStatus(uuids, renewalStatus);
+	}
 }

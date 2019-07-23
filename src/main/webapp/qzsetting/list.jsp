@@ -107,7 +107,9 @@
 						&nbsp;&nbsp;
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(1)" value=" 激活整站 " >
 						&nbsp;&nbsp;
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(3)" value=" 暂停续费 " >
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingRenewalStatus(0)" value=" 暂停续费 " >
+						&nbsp;&nbsp;
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingRenewalStatus(1)" value=" 续费 " >
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/deleteQZSettings">
@@ -213,13 +215,19 @@
 					</span>
 				</li>
 				<li>
-					<span>状态: </span>
+					<span>采集状态: </span>
 					<select name="status">
 						<option value="" <c:if test="${qzSettingSearchCriteria.status == null}">selected</c:if>></option>
 						<option value="1" <c:if test="${qzSettingSearchCriteria.status == 1}">selected</c:if>>激活</option>
 						<option value="0" <c:if test="${qzSettingSearchCriteria.status == 0}">selected</c:if>>暂停</option>
 						<option value="2" <c:if test="${qzSettingSearchCriteria.status == 2}">selected</c:if>>新增</option>
-						<option value="3" <c:if test="${qzSettingSearchCriteria.status == 3}">selected</c:if>>暂停续费</option>
+					</select>
+				</li>
+				<li>
+					<span>续费状态: </span>
+					<select name="renewalStatus">
+						<option value="1" <c:if test="${qzSettingSearchCriteria.renewalStatus == 1}">selected</c:if>>续费</option>
+						<option value="0" <c:if test="${qzSettingSearchCriteria.renewalStatus == 0}">selected</c:if>>暂停续费</option>
 					</select>
 				</li>
 				<li>
@@ -307,6 +315,7 @@
 	<input type="hidden" name="organizationID" id="organizationID" value="${qzSettingSearchCriteria.organizationID}">
 	<input type="hidden" name="operationType" id="operationType" value="${qzSettingSearchCriteria.operationType}"/>
 	<input type="hidden" name="status" id="status" value="${qzSettingSearchCriteria.status}"/>
+	<input type="hidden" name="renewalStatus" id="renewalStatus" value="${qzSettingSearchCriteria.renewalStatus}"/>
 	<input type="hidden" name="updateStatus" id="updateStatus" value="${qzSettingSearchCriteria.updateStatus}"/>
 	<input type="hidden" name="checkStatus" id="checkStatus" value="${qzSettingSearchCriteria.checkStatus}"/>
 	<input type="hidden" name="terminalType" id="terminalType" value="${qzSettingSearchCriteria.terminalType}"/>
@@ -442,24 +451,30 @@
 										</div>
 										<div>
                                             <span class="line1">
-                                                <input type="hidden" name="type" value="${qzSetting.type}">
-                                                <a href="javascript:;">${qzSetting.autoCrawlKeywordFlag == true ? "是" : "否"}</a>
+                                                <input type="hidden">
+                                                <a href="javascript:;">
+													<c:choose>
+														<c:when test="${qzSetting.renewalStatus == 1}">
+															<span style="color: green;">续费</span>
+														</c:when>
+														<c:otherwise>
+															<span style="color: red;">暂停续费</span>
+														</c:otherwise>
+													</c:choose>
+												</a>
                                             </span>
-                                                <span>
-                                                <a href="javascript:;">爬取关键字</a>
+											<span>
+                                                <a href="javascript:;">续费状态</a>
                                             </span>
 										</div>
 
 										<div>
                                             <span class="line1">
-                                                <a href="javascript:;" status="${qzSetting.status}">
+                                                <a href="javascript:;">
                                                    <c:choose>
                                                        <c:when test="${qzSetting.status == 1}">激活</c:when>
                                                        <c:when test="${qzSetting.status == 2}">
                                                            <span style="color: green;">新增</span>
-                                                       </c:when>
-                                                       <c:when test="${qzSetting.status == 3}">
-                                                           <span style="color: red;">暂停续费</span>
                                                        </c:when>
                                                        <c:otherwise>
                                                            <span style="color: red;">暂停</span>
@@ -877,35 +892,41 @@
 											</span>
 										</div>
 										<div>
-										<span class="line1">
-											<input type="hidden" name="type" value="${qzSetting.type}">
-											<a href="javascript:;">${qzSetting.autoCrawlKeywordFlag == true ? "是" : "否"}</a>
-										</span>
-											<span>
-											<a href="javascript:;">爬取关键字</a>
-										</span>
+											<span class="line1">
+												<input type="hidden">
+												<a href="javascript:;">
+													<c:choose>
+														<c:when test="${qzSetting.renewalStatus == 1}">
+															<span style="color: green;">续费</span>
+														</c:when>
+														<c:otherwise>
+															<span style="color: red;">暂停续费</span>
+														</c:otherwise>
+													</c:choose>
+												</a>
+											</span>
+												<span>
+												<a href="javascript:;">续费状态</a>
+											</span>
 										</div>
 
 										<div>
-										<span class="line1">
-											<a href="javascript:;" status="${qzSetting.status}">
-											   <c:choose>
-												   <c:when test="${qzSetting.status == 1}">激活</c:when>
-												   <c:when test="${qzSetting.status == 2}">
-													   <span style="color: green;">新增</span>
-												   </c:when>
-												   <c:when test="${qzSetting.status == 3}">
-													   <span style="color: red;">暂停续费</span>
-												   </c:when>
-												   <c:otherwise>
-													   <span style="color: red;">暂停</span>
-												   </c:otherwise>
-											   </c:choose>
-											</a>
-										</span>
-											<span>
-											<a href="javascript:;">状态</a>
-										</span>
+											<span class="line1">
+												<a href="javascript:;">
+												   <c:choose>
+													   <c:when test="${qzSetting.status == 1}">激活</c:when>
+													   <c:when test="${qzSetting.status == 2}">
+														   <span style="color: green;">新增</span>
+													   </c:when>
+													   <c:otherwise>
+														   <span style="color: red;">暂停</span>
+													   </c:otherwise>
+												   </c:choose>
+												</a>
+											</span>
+												<span>
+												<a href="javascript:;">采集状态</a>
+											</span>
 										</div>
 									</div>
 								</div>

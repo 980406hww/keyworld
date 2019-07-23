@@ -768,11 +768,7 @@ function getQZSettingGroupInfo(terminalType) {
                         }
                     });
                 }
-                var status = div.parent().find(".other-rank .row:last-child").find("div:eq(1) span.line1 a").attr("status");
                 div.find(".row:first-child").find("div:eq(0) span.line1 a").text(optimizeGroupName+" ("+ (data.machineCount === null ? 0 : data.machineCount) +")");
-                if (status == "3") {
-                    div.find(".row:first-child").find("div:eq(0) span.line1 a").css("color", "red");
-                }
             },
             error: function () {
                 $().toastmessage('showErrorToast', '获取优化分组机器信息失败，请刷新重试或提交问题给开发人员！');
@@ -883,6 +879,7 @@ function trimSearchCondition(days) {
     var group = $(".conn").find(".group").find("input[name='group']").val();
     var operationType = $(".conn").find("select[name='operationType']").val();
     var status = $(".conn").find("select[name='status']").val();
+    var renewalStatus = $(".conn").find("select[name='renewalStatus']").val();
     var standardSpecies = $(".conn").find("select[name='standardSpecies']").val();
     var optimizationType = $(".conn").find("select[name='optimizationType']").val();
     var updateStatus = $(".conn").find("select[name='updateStatus']").val();
@@ -900,6 +897,7 @@ function trimSearchCondition(days) {
     chargeForm.find("#domain").val($.trim(domain));
     chargeForm.find("#categoryTag").val($.trim(categoryTag));
     chargeForm.find("#group").val($.trim(group));
+    chargeForm.find("#renewalStatus").val(renewalStatus);
     if (operationType !== ""){
         chargeForm.find("#operationType").val($.trim(operationType));
     } else {
@@ -1391,9 +1389,7 @@ function updateQZSettingStatus(status) {
     }
     if(status === 1) {
         if (!confirm("确认要激活选中的整站吗?")) return false;
-    } else if (status === 2) {
-        if (!confirm("确认要暂停收选中的整站的费用吗?")) return false;
-    } else {
+    } else if (status === 0) {
         if (!confirm("确认要暂停选中的整站吗?")) return false;
     }
     var postData = {};
@@ -1401,6 +1397,41 @@ function updateQZSettingStatus(status) {
     postData.status = status;
     $.ajax({
         url: '/internal/qzsetting/updateQZSettingStatus',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if(data){
+                $().toastmessage('showSuccessToast', "操作成功", true);
+            }else{
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
+}
+function updateQZSettingRenewalStatus(renewalStatus) {
+    var uuids = getSelectedIDs();
+    if(uuids === ''){
+        $.messager.alert('提示', '请选择要操作的整站！！', 'info');
+        return false;
+    }
+    if(renewalStatus === 1) {
+        if (!confirm("确认选中的整站要续费吗?")) return false;
+    } else if (renewalStatus === 0) {
+        if (!confirm("确认要停止收取所选整站的费用吗?")) return false;
+    }
+    var postData = {};
+    postData.uuids = uuids.split(",");
+    postData.renewalStatus = renewalStatus;
+    $.ajax({
+        url: '/internal/qzsetting/updateQZSettingRenewalStatus',
         data: JSON.stringify(postData),
         headers: {
             'Accept': 'application/json',

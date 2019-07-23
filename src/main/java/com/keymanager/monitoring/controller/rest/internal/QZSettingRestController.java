@@ -170,6 +170,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		if (null == qzSettingSearchCriteria.getSearchEngine()) {
 			qzSettingSearchCriteria.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
 		}
+		qzSettingSearchCriteria.setRenewalStatus(qzSettingSearchCriteria.getRenewalStatus() == null ? 1 : qzSettingSearchCriteria.getRenewalStatus());
 		CustomerCriteria customerCriteria = new CustomerCriteria();
 		String entryType = (String) request.getSession().getAttribute("entryType");
 		customerCriteria.setEntryType(entryType);
@@ -309,5 +310,19 @@ public class QZSettingRestController extends SpringMVCBaseController {
 			logger.error(ex.getMessage());
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@RequiresPermissions("/internal/qzsetting/updateStatus")
+	@RequestMapping(value = "/updateQZSettingRenewalStatus", method = RequestMethod.POST)
+	public ResponseEntity<?> updateQZSettingRenewalStatus(@RequestBody Map<String, Object> requestMap) {
+		List<Long> uuids = (List<Long>) requestMap.get("uuids");
+		Integer renewalStatus = (Integer) requestMap.get("renewalStatus");
+		try {
+			qzSettingService.updateQZSettingRenewalStatus(uuids, renewalStatus);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		}catch(Exception ex){
+			logger.error(ex.getMessage());
+		}
+		return new ResponseEntity<Object>(false, HttpStatus.OK);
 	}
 }
