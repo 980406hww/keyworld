@@ -236,9 +236,9 @@
                 </c:if>
             </shiro:hasPermission>
             <%--批量修改已选关键字机器分组            machineGroupBatchUpdate --%>
-            <input type="button" onclick="machineGroupBatchUpdateSelected(${customerKeywordCriteria.customerUuid})" value="批量更新所选关键字机器分组">
+            <input type="button" onclick="machineGroupBatchUpdateSelected()" value="修改所选关键字机器分组">
             <%--批量修改所有 查询到的关键字的机器分组--%>
-            <input type="button" onclick="machineGroupBatchUpdateSearched(${customerKeywordCriteria.customerUuid})" value="批量更新所有搜索结果关键字机器分组">
+            <input type="button" onclick="machineGroupBatchUpdateSearched()" value="修改当前关键字机器分组">
 
             <shiro:hasPermission name="/internal/qzsetting/save">
                 <input type="button" id="customerKeywordBtnInput" onclick="openMessageBox('关键字列表', '${customerKeywordCriteria.customerUuid}', '${customer.contactPerson}')" value=" 用户留言 ">
@@ -273,6 +273,7 @@
             <td align="center" width=100>备注</td>
             <td align="center" width=100>收录备注</td>
             <td align="center" width=60>优化组名</td>
+            <td align="center" width=60>机器分组</td>
             <td align="center" width=80>操作</td>
         </tr>
     </table>
@@ -287,7 +288,7 @@
                 </td>
                 <td  align="center" width=200 class="wrap floatTd"
                      title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}">
-                    <div style="height:16;">
+                    <div style="height:16px;">
                             ${customerKeyword.url==null?'':customerKeyword.url}
                     </div>
                 </td>
@@ -323,8 +324,9 @@
                 <td align="center" width=50>${customerKeyword.orderNumber}</td>
                 <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
                 <td align="center" width=100>${customerKeyword.enteredKeywordRemarks == null ? "" : customerKeyword.enteredKeywordRemarks}</td>
-                <td align="center" width=60>${customerKeyword.optimizeGroupName == ''? "" : customerKeyword.optimizeGroupName}
-                </td>
+                <td align="center" width=60>${customerKeyword.optimizeGroupName == ''? "" : customerKeyword.optimizeGroupName} </td>
+                <td align="center" width=60>${customerKeyword.machineGroup == ''? "" : customerKeyword.machineGroup} </td>
+
                 <td align="center" width=80>
                     <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
                         <a href="javascript:modifyCustomerKeyword('${customerKeyword.uuid}', '${customerKeyword.customerUuid}')">修改</a>
@@ -351,6 +353,7 @@
         <input id="lastButton" type="button" class="ui-button ui-widget ui-corner-all"
                onclick="changePaging('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
         总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
+        <input hidden value="${page.total}" id="totalRecord">
         每页显示条数:<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
         <option>10</option>
         <option>25</option>

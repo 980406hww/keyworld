@@ -389,6 +389,7 @@
         ck.fCurrentPosition	AS	'currentPosition',
         ck.fInvalidRefreshCount	AS	'invalidRefreshCount',
         ck.fOptimizeGroupName	AS	'optimizeGroupName',
+        ck.fMachineGroup AS 'machineGroup',
         ck.fOptimizePlanCount	AS	'optimizePlanCount',
         ck.fOptimizedCount	AS	'optimizedCount',
         ck.fOptimizeDate	AS	'optimizeDate',
@@ -1596,4 +1597,16 @@
         AND fStatus = 1
         AND fKeywordEffect <![CDATA[<>]]> 'Appointment'
     </update>
+
+    <update id="updateMachineGroup" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordCriteria">
+            UPDATE t_customer_keyword ck
+            SET ck.fMachineGroup = #{customerKeywordCriteria.targetMachineGroup},
+            ck.fUpdateTime = NOW()
+            WHERE 1=1
+        <include refid="updateCustomerKeywordsCriteria"/>
+    </update>
+
+
+
+
 </mapper>

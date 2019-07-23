@@ -306,6 +306,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				if (EntryTypeEnum.qz.name().equalsIgnoreCase(entryType) && !"zanting".equals(customerKeyword.getOptimizeGroupName()) && StringUtils.isEmpty(customerKeyword.getOptimizeGroupName())){
                     customerKeywordService.checkOptimizeGroupName(customerKeyword);
                 }
+				if("".equals(customerKeyword.getMachineGroup())){
+					customerKeyword.setMachineGroup(null);
+				}
 				customerKeywordService.addCustomerKeyword(customerKeyword, userName);
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			} else {
@@ -634,12 +637,28 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	 * 批量更新所选关键字的机器分组
 	 */
 	@RequestMapping(value = "/updateMachineGroupByCustomerUuids",method = RequestMethod.POST)
-	public ResponseEntity<?> updateMachineGroupByCustomerUuids(KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO) {
+	public ResponseEntity<?> updateMachineGroupByCustomerUuids(@RequestBody KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO) {
 		try{
-			System.out.println(keywordStatusBatchUpdateVO.getCustomerUuids());
+			customerKeywordService.batchUpdateKeywordStatus(keywordStatusBatchUpdateVO);
+			return new ResponseEntity<Object>(true,HttpStatus.OK);
 		}catch (Exception e){
-
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<Object>(true, HttpStatus.OK);
+	}
+
+	/**
+	 * 批量更新根据检索条件获取到的关键字的机器分组
+	 */
+	@RequestMapping(value = "/updateMachineGroupByCriteria",method = RequestMethod.POST)
+	public ResponseEntity<?> updateMachineGroupByCriteria(@RequestBody CustomerKeywordCriteria customerKeywordCriteria) {
+		try{
+			//System.out.println(customerKeywordCriteria.toString());
+			customerKeywordService.updateMachineGroup(customerKeywordCriteria);
+			return new ResponseEntity<Object>(true,HttpStatus.OK);
+		}catch (Exception e){
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
+		}
 	}
 }

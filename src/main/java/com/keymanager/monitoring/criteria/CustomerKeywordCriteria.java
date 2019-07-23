@@ -40,6 +40,7 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String orderingElement;
     private String orderingRule;
     private String targetOptimizeGroupName;
+    private String targetMachineGroup;
     private String targetBearPawNumber;
     private Integer noReachStandardDays;
     private Integer sevenDaysNoReachStandard;
@@ -299,6 +300,12 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setTargetOptimizeGroupName(String targetOptimizeGroupName) {
         this.targetOptimizeGroupName = targetOptimizeGroupName;
+    }
+    public String getTargetMachineGroup() {
+        return targetMachineGroup;
+    }
+    public void setTargetMachineGroup(String targetMachineGroup) {
+        this.targetMachineGroup = targetMachineGroup;
     }
 
     public Integer getNoReachStandardDays() {
