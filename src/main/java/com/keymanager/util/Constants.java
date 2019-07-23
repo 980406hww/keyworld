@@ -83,6 +83,7 @@ public class Constants {
     public final static String CONFIG_TYPE_QZSETTING_KEYWORD_RANK = "QZSettingKeywordRank";
     public final static String CONFIG_KEY_UPPER_VALUE = "UpperValue";
     public final static String CONFIG_KEY_LOWER_VALUE = "LowerValue";
+    public final static String CONFIG_KEY_ONE_WEEK_DIFF = "OneWeekDiff";
     public final static String CONFIG_KEY_DIFFERENCEVALUE_VALUE = "DifferenceValue";
     public final static String CONFIG_KEY_CRAWLER_HOUR = "CrawlerHour";
     public final static String CONFIG_TYPE_QZSETTING = "QZSetting";

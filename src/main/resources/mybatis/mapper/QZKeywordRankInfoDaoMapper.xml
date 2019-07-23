@@ -73,8 +73,8 @@
     <select id="getCountNumOfRankInfo" resultType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria">
         SELECT
             COUNT(qk.fIncrease = 0 OR NULL) AS 'unchangedNum',
-            COUNT(qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue} OR NULL) AS 'downNum',
-            COUNT(qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue} OR NULL) AS 'upNum',
+            COUNT((qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue} OR NULL) AND qk.fOneWeekDifference &lt;= #{qzSettingSearchCriteria.downOneWeekDiff}) AS 'downNum',
+            COUNT((qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue} OR NULL) AND qk.fOneWeekDifference &gt;= #{qzSettingSearchCriteria.upOneWeekDiff}) AS 'upNum',
             COUNT(qk.fAchieveLevel &gt; 0 OR NULL) AS 'atLeastStandardNum',
             COUNT(qk.fAchieveLevel = 0 OR NULL) AS 'neverStandardNum',
             COUNT(qk.fDifferenceValue &lt;= #{qzSettingSearchCriteria.differenceValue} OR NULL) AS 'closeStandardNum',

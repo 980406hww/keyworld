@@ -123,7 +123,7 @@
 					</li>
 				</shiro:hasPermission>
 				<li>
-					<label name="lower" title="网站关键词(PC,Phone)一星期排名趋势涨幅&lt;${qzSettingSearchCriteria.lowerValue}">
+					<label name="lower" title="网站关键词(PC,Phone)一星期排名趋势涨幅&lt;${qzSettingSearchCriteria.lowerValue}且下降至少${qzSettingSearchCriteria.upOneWeekDiff}个词">
 						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 1}">checked</c:if>>
 						骤降 (${qzSettingSearchCriteria.downNum})
 					</label>
@@ -135,7 +135,7 @@
 					</label>
 				</li>
 				<li>
-					<label name="upper" title="网站关键词(PC,Phone)一星期排名趋势涨幅&gt;${qzSettingSearchCriteria.upperValue}">
+					<label name="upper" title="网站关键词(PC,Phone)一星期排名趋势涨幅&gt;${qzSettingSearchCriteria.upperValue}且上涨至少${qzSettingSearchCriteria.upOneWeekDiff}个词">
 						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 2}">checked</c:if>>
 						暴涨 (${qzSettingSearchCriteria.upNum})
 					</label>

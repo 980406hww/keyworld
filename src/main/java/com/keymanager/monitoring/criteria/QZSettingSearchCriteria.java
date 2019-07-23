@@ -37,6 +37,8 @@ public class QZSettingSearchCriteria{
     private String standardSpecies;
     private Integer optimizationType;
     private boolean resetPagingParam;
+    private int upOneWeekDiff;
+    private int downOneWeekDiff;
 
     public String getLoginName() {
         return loginName;
@@ -324,5 +326,21 @@ public class QZSettingSearchCriteria{
 
     public void setRenewalStatus(Integer renewalStatus) {
         this.renewalStatus = renewalStatus;
+    }
+
+    public int getUpOneWeekDiff() {
+        return upOneWeekDiff;
+    }
+
+    public void setUpOneWeekDiff(int upOneWeekDiff) {
+        this.upOneWeekDiff = upOneWeekDiff;
+    }
+
+    public int getDownOneWeekDiff() {
+        return downOneWeekDiff;
+    }
+
+    public void setDownOneWeekDiff(int downOneWeekDiff) {
+        this.downOneWeekDiff = downOneWeekDiff;
     }
 }
