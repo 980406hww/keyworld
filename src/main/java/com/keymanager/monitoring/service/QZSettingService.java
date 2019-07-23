@@ -820,6 +820,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public Map<String, String> searchQZSettingSearchEngineMap(QZSettingSearchCriteria criteria, int record) {
 		Map<String, String> map = new LinkedHashMap<>();
+		map.put(Constants.ALL_SEARCH_ENGINE, TerminalTypeEnum.PC.name());
+		map.put(Constants.ALL_SEARCH_ENGINE + TerminalTypeEnum.Phone.name(), TerminalTypeEnum.Phone.name());
 		if ((!"".equals(criteria.getDomain()) || !"".equals(criteria.getCustomerUuid())) && record == 1) {
 			List<QZSettingVO> qzSettingVos = qzSettingDao.searchQZSettingSearchEngines(criteria.getCustomerUuid(), criteria.getDomain());
 			for (QZSettingVO qzSettingVo : qzSettingVos) {
@@ -831,12 +833,17 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				}
 			}
 		} else {
-			map = Constants.SEARCH_ENGINE_MAP;
+			map.putAll(Constants.SEARCH_ENGINE_MAP);
 		}
 		if (!map.containsKey(criteria.getSearchEngine()) && !map.containsKey(criteria.getSearchEngine() + criteria.getTerminalType())) {
 			Map.Entry<String, String> next = map.entrySet().iterator().next();
-			criteria.setSearchEngine(next.getKey().substring(0, next.getKey().indexOf('P') > -1 ? next.getKey().indexOf('P') : next.getKey().length()));
-			criteria.setTerminalType(next.getValue());
+			if ("".equals(criteria.getSearchEngine()) && TerminalTypeEnum.Phone.name().equals(criteria.getTerminalType())) {
+				criteria.setSearchEngine(Constants.ALL_SEARCH_ENGINE);
+				criteria.setTerminalType(TerminalTypeEnum.Phone.name());
+			} else {
+				criteria.setSearchEngine(next.getKey().substring(0, next.getKey().contains("P") ? next.getKey().indexOf('P') : next.getKey().length()));
+				criteria.setTerminalType(next.getValue());
+			}
 		}
 		return map;
 	}

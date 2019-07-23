@@ -159,7 +159,11 @@ function checkTerminalType(searchEngine, terminalType) {
     }
     $(".mytabs .link").find("li").removeClass("active");
     $(".mytabs .link").find("li[name='"+ html +"']").addClass("active");
-    $("#chargeForm").find("#searchEngine").val($.trim(html.substr(0, html.indexOf('P'))));
+    if (html.indexOf('A') > -1) {
+        $("#chargeForm").find("#searchEngine").val('');
+    } else {
+        $("#chargeForm").find("#searchEngine").val($.trim(html.substr(0, html.indexOf('P'))));
+    }
     $("#chargeForm").find("#terminalType").val($.trim(terminalType));
     trimSearchCondition('1');
 }
@@ -593,8 +597,8 @@ function generateQZDesignationWordTrendCharts(domElement, data) {
     $(parentElement).find("#" + result.terminalType + "Top50").text(topFifty[topFifty.length-1]);
     $(parentElement).find("#" + result.terminalType + "TopCreate10").text(result.createTopTenNum);
     $(parentElement).find("#" + result.terminalType + "TopCreate50").text(result.createTopFiftyNum);
-    $(parentElement).find("#" + result.terminalType + "IsStandard").text(result.achieveLevel == 0 ? "否" : "是");
-    $(parentElement).find("#" + result.terminalType + "StandardTime").text(result.achieveTime == null ? "无" : toDateFormat(new Date(result.achieveTime.time)));
+    $(parentElement).find("#" + result.terminalType + "IsStandard").text(result.achieveLevel === 0 ? "否" : "是");
+    $(parentElement).find("#" + result.terminalType + "StandardTime").text(result.achieveTime === null ? "无" : toDateFormat(new Date(result.achieveTime.time)));
     option = {
         color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
         title : {
@@ -768,7 +772,7 @@ function getQZSettingGroupInfo(terminalType) {
                         }
                     });
                 }
-                div.find(".row:first-child").find("div:eq(0) span.line1 a").text(optimizeGroupName+" ("+ (data.machineCount === null ? 0 : data.machineCount) +")");
+                div.find(".row:first-child").find("div:eq(0) span.line1 a").text(optimizeGroupName+" ("+ (data.machineCount == null ? 0 : data.machineCount) +")");
             },
             error: function () {
                 $().toastmessage('showErrorToast', '获取优化分组机器信息失败，请刷新重试或提交问题给开发人员！');
@@ -1154,28 +1158,28 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, tempOptimizeGroupName
     }
     var domain = customerKeywordDialog.find("#domain").val();
     var bearPawNumber = customerKeywordDialog.find("#bearPawNumber").val();
-    if (bearPawNumber != "") {
+    if (bearPawNumber !== "") {
         postData.bearPawNumber = bearPawNumber;
     }
     var keywordStr = customerKeywordDialog.find("#customerKeywordDialogContent").val();
-    if (keywordStr == "") {
+    if (keywordStr === "") {
         $.messager.alert('提示', '请输入关键字！！', 'warning');
         customerKeywordDialog.find("#customerKeywordDialogContent").focus();
         return false;
     }
     keywordStr = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "");
-    if (keywordStr.substring(keywordStr.length - 1) == ','){
+    if (keywordStr.substring(keywordStr.length - 1) === ','){
         keywordStr = keywordStr.substring(0, keywordStr.length - 1);
     }
     var keywords = keywordStr.split(',');
     keywords = keywords.filter(function (keyword, index) {
-        return keywords.indexOf(keyword) === index && keyword != '';
+        return keywords.indexOf(keyword) === index && keyword !== '';
     });
     var type = customerKeywordDialog.find("#qzSettingEntryType").val();
     var searchEngine = customerKeywordDialog.find("#searchEngine").val();
     var keywordEffect = customerKeywordDialog.find("#keywordEffect").val();
     var optimizeGroupName = customerKeywordDialog.find("#optimizeGroupName").val();
-    if (optimizeGroupName == "") {
+    if (optimizeGroupName === "") {
         optimizeGroupName = tempOptimizeGroupName;
     }
     postData.qzSettingUuid = qzSettingUuid;
@@ -2011,7 +2015,7 @@ function saveChangeSetting(self, refresh) {
 
     if (customer != null && customer !== '') {
         var customerArray = customer.split("_____");
-        if (customerArray.length == 2) {
+        if (customerArray.length === 2) {
             qzSetting.customerUuid = customerArray[1];
         } else {
             $.messager.alert('提示', '请从列表中选择客户！！！', 'info');
@@ -2019,8 +2023,7 @@ function saveChangeSetting(self, refresh) {
             return false;
         }
     }
-    var entryType = settingDialogDiv.find("#qzSettingEntryType").val();
-    qzSetting.type = entryType;
+    qzSetting.type = settingDialogDiv.find("#qzSettingEntryType").val();
     qzSetting.qzOperationTypes = [];//操作类型表
     qzSetting.qzOperationTypes.qzChargeRules = [];//收费规则
     qzSetting.qzCategoryTags = []; //分类标签表
@@ -2236,15 +2239,15 @@ function addRow(tableID, chargeRule){
         var newRow = tableObj[0].insertRow(rowCount - 1); //插入新行
 
         var col1 = newRow.insertCell(0);
-        col1.innerHTML="<input type='text' name='sequenceID' value='"+(rowCount - 1)+"' style='width:58px'/>";
+        col1.innerHTML="<input type='text' name='sequenceID' value='"+(rowCount - 1)+"' style='width:52px'/>";
         var col2 = newRow.insertCell(1);
-        col2.innerHTML = "<input type='text' name='startKeywordCount' value='"+(chargeRule != null ? chargeRule.startKeywordCount : '')+"' style='width:78px'/>";
+        col2.innerHTML = "<input type='text' name='startKeywordCount' value='"+(chargeRule != null ? chargeRule.startKeywordCount : '')+"' style='width:76px'/>";
         var col3 = newRow.insertCell(2);
-        col3.innerHTML = "<input type='text' name='endKeywordCount' value='"+((chargeRule != null && chargeRule.endKeywordCount != null) ? chargeRule.endKeywordCount : '')+"'  style='width:78px'/>";
+        col3.innerHTML = "<input type='text' name='endKeywordCount' value='"+((chargeRule != null && chargeRule.endKeywordCount != null) ? chargeRule.endKeywordCount : '')+"'  style='width:76px'/>";
         var col4 = newRow.insertCell(3);
-        col4.innerHTML = "<input type='text' name='amount' value='"+(chargeRule != null ? chargeRule.amount : '')+"'  style='width:48px'/>";
+        col4.innerHTML = "<input type='text' name='amount' value='"+(chargeRule != null ? chargeRule.amount : '')+"'  style='width:66px'/>";
         var col5 = newRow.insertCell(4);
-        col5.innerHTML = "<input style='width:48px' type='button' value='删除' onclick='deleteCurrentRow(this.parentNode.parentNode)' />";
+        col5.innerHTML = "<input style='width:46px' type='button' value='删除' onclick='deleteCurrentRow(this.parentNode.parentNode)' />";
 
         $("#changeSettingDialog").css("height", $("#changeSettingDialog").height() + 25);
     }
@@ -2409,18 +2412,18 @@ function excludeCustomerKeywords(qzSettingUuid, customerUuid, domain, optimizedG
     var terminalType = excludeCustomerKeywordDialog.find("#terminalType").val();
     var excludeKeywordUuid = excludeCustomerKeywordDialog.find("#excludeKeywordUuid").val();
     var keywordStr = excludeCustomerKeywordDialog.find("#customerKeywordDialogContent").val();
-    if (keywordStr == "") {
+    if (keywordStr === "") {
         $.messager.alert('提示', '请输入关键字！！', 'warning');
         excludeCustomerKeywordDialog.find("#customerKeywordDialogContent").focus();
         return false;
     }
     keywordStr = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "");
-    if (keywordStr.substring(keywordStr.length - 1) == ','){
+    if (keywordStr.substring(keywordStr.length - 1) === ','){
         keywordStr = keywordStr.substring(0, keywordStr.length - 1);
     }
     var keywords = keywordStr.split(',');
     keywords = keywords.filter(function (keyword, index) {
-        return keywords.indexOf(keyword) === index && keyword != '';
+        return keywords.indexOf(keyword) === index && keyword !== '';
     });
     var postData = {};
     postData.excludeKeywordUuid = excludeKeywordUuid;
@@ -2467,7 +2470,7 @@ function echoExcludeKeyword() {
             'Content-Type': 'application/json'
         },
         success: function (data) {
-            if (data != null && data != "") {
+            if (data != null && data !== "") {
                 data.keyword = data.keyword.replace(/[,]/g, "\n");
                 $("#excludeCustomerKeywordDialog").find("#excludeKeywordUuid").val(data.uuid);
                 $("#excludeCustomerKeywordDialog").find("#customerKeywordDialogContent").val(data.keyword);

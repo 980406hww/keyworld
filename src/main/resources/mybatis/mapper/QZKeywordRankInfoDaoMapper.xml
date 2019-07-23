@@ -87,6 +87,9 @@
         LEFT JOIN t_qz_operation_type qot
         ON qot.fQZSettingUuid = qk.fQZSettingUuid AND qot.fOperationtype = qk.fTerminalType
         WHERE qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
+        <if test="qzSettingSearchCriteria.searchEngine != null and qzSettingSearchCriteria.searchEngine != ''">
+            AND qs.fSearchEngine = #{qzSettingSearchCriteria.searchEngine}
+        </if>
         AND qot.fIsDeleted = 0
         AND qk.fDataProcessingStatus = 1
         <if test="qzSettingSearchCriteria.renewalStatus != null">AND qs.fRenewalStatus = #{qzSettingSearchCriteria.renewalStatus}</if>

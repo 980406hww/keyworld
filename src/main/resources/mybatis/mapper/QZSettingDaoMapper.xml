@@ -100,6 +100,7 @@
             c.fContactPerson AS 'contactPerson',
             o.fOrganizationName AS 'organizationName',
             qs.fDomain AS 'domain',
+            qs.fSearchEngine  AS 'searchEngine',
             qs.fBearPawNumber AS 'bearPawNumber',
             <choose>
                 <when test="qzSettingSearchCriteria.terminalType == 'PC'">
@@ -129,12 +130,12 @@
         <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
         <if test="qzSettingSearchCriteria.domain != null and qzSettingSearchCriteria.domain != ''">AND qs.fDomain = #{qzSettingSearchCriteria.domain}</if>
         <choose>
-            <when test="qzSettingSearchCriteria.customerUuid == '' and qzSettingSearchCriteria.domain == ''">
+            <when test="qzSettingSearchCriteria.searchEngine == ''"></when>
+            <when test="(qzSettingSearchCriteria.customerUuid == '' or qzSettingSearchCriteria.customerUuid == null) and
+                    (qzSettingSearchCriteria.domain == '' or qzSettingSearchCriteria.domain == null)">
                 AND qs.fSearchEngine = #{qzSettingSearchCriteria.searchEngine}
             </when>
-            <otherwise>
-
-            </otherwise>
+            <otherwise></otherwise>
         </choose>
         <choose>
             <when test="qzSettingSearchCriteria.terminalType == 'PC' and (qzSettingSearchCriteria.group == null or qzSettingSearchCriteria.group == '')">
