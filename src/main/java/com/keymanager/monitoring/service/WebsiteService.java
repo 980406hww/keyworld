@@ -192,10 +192,7 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
                 public void onSuccess(ResponseEntity<String> response) {
                     Website websiteInfo = new Website();
                     websiteInfo.setUuid(website.getUuid());
-                    if (!response.getStatusCode().toString().equals("200")) {
-                        websiteInfo.setUpdateSalesInfoSign(PutSalesInfoSignEnum.Refuse.getValue());
-                        websiteDao.updateById(websiteInfo);
-                    } else {
+                    if (response.getStatusCode().toString().equals("200") || response.getStatusCode().toString().equals("301")) {
                         try {
                             Map map = JSON.parseObject(response.getBody());
                             String status = (String) map.get("status");
@@ -203,6 +200,9 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
                         } catch (Exception e) {
                             websiteInfo.setUpdateSalesInfoSign(PutSalesInfoSignEnum.UpdateException.getValue());
                         }
+                    } else {
+                        websiteInfo.setUpdateSalesInfoSign(PutSalesInfoSignEnum.Refuse.getValue());
+                        websiteDao.updateById(websiteInfo);
                     }
                     websiteInfo.setUpdateTime(new Date());
                     websiteDao.updateById(websiteInfo);
