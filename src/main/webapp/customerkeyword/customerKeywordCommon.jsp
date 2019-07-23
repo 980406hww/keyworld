@@ -19,7 +19,7 @@
             <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">要刷数量:</span><input type="text" name="optimizePlanCount" id="optimizePlanCount" value="" style="width:300px;">
             </li>
             <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >优化组名:</span><input name="optimizeGroupName" id="optimizeGroupName" type="text" style="width:300px;"   value=""></li>
-            <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >机器分组:</span><input name="machineGroup" id="machineGroup" type="text" style="width:300px;"   value=""></li>
+            <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >机器分组:</span><input name="machineGroup" id="machineGroup" type="text" style="width:300px;"   value="Default"></li>
 
 
             <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >指数:</span><input type="text" id="initialIndexCount" size="5" name="initialIndexCount" value="100" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)"></li>
@@ -168,8 +168,8 @@
 
 
 <%--Dialog部分--%>
-<div id="machineGroupBatchUpdateSelectedDialog" style="text-align: center;left: 40%;display: none;">
-    <form id="machineGroupBatchUpdateSelectedForm" style="text-align: center;margin-top: 10px;" onkeydown="if(event.keyCode==13)return false;">
-        机器分组:<input type="text" id="machineGroup" name="machineGroup" style="width:150px;"><%-- margin-top: 10px;--%>
+<div id="machineGroupBatchUpdateDialog" style="text-align: center;left: 40%;display: none;">
+    <form id="machineGroupBatchUpdateForm" style="text-align: center;margin-top: 10px;" onkeydown="if(event.keyCode==13)return false;">
+        机器分组:<input type="text" id="targetGachineGroup" name="targetGachineGroup" style="width:150px;"><%-- margin-top: 10px;--%>
     </form>
 </div>

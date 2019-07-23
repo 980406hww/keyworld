@@ -1727,4 +1727,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public void updateCustomerKeywordEffect (long customerUuid, String terminalType, String optimizeGroupName) {
         customerKeywordDao.updateCustomerKeywordEffect(customerUuid, terminalType, optimizeGroupName);
     }
+
+    public void updateMachineGroup(CustomerKeywordCriteria customerKeywordCriteria) {
+        customerKeywordDao.updateMachineGroup(customerKeywordCriteria);
+    }
 }
