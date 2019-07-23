@@ -114,6 +114,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fOptimizeDate")
     private Date optimizeDate;
 
+    @TableField(value = "fMachineGroup")
+    private String machineGroup;
+
     @TableField(exist = false)
     private String userID;
 
@@ -523,6 +526,15 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setOptimizeDate(Date optimizeDate) {
         this.optimizeDate = optimizeDate;
+    }
+
+
+    public String getMachineGroup() {
+        return machineGroup;
+    }
+
+    public void setMachineGroup(String machineGroup) {
+        this.machineGroup = machineGroup;
     }
 
     public String getUserID() {

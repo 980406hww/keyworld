@@ -186,6 +186,9 @@ function saveCustomerKeyword(customerKeyword, customerUuid) {
     customerKeyword.title = title;
     var optimizeGroupName = $.trim(saveCustomerKeywordDialog.find("#optimizeGroupName").val());
     customerKeyword.optimizeGroupName = optimizeGroupName;
+
+    var machineGroup  =$.trim(saveCustomerKeywordDialog.find("#machineGroup").val());
+    customerKeyword.machineGroup = machineGroup;
     var collectMethod = $.trim(saveCustomerKeywordDialog.find("#collectMethod").val());
     customerKeyword.collectMethod = collectMethod;
     var serviceProvider = $.trim(saveCustomerKeywordDialog.find("#serviceProvider").val());
@@ -325,6 +328,7 @@ function onlyNumber(self) {
 //批量设置
 function CustomerKeywordBatchUpdate(entryType) {
     var CustomerUuids = getSelectedCustomerUuids();
+
     if (CustomerUuids === '') {
         alert('请选择关键字进行修改');
         return;
@@ -617,6 +621,74 @@ function updateBearPawNumber(changeType, customerUuid) {
                 handler: function () {
                     $("#targetBearPawNumberDialog").dialog("close");
                     $('#bearPawNumberChangeForm')[0].reset();
+                }
+            }],
+        onClose: function () {
+            $('#bearPawNumberChangeForm')[0].reset();
+        }
+    });
+    $("#targetBearPawNumberDialog").dialog("open");
+    $('#targetBearPawNumberDialog').window("resize",{top:$(document).scrollTop() + 200});
+}
+
+function machineGroupBatchUpdateSelected(customerUuid) {
+    var CustomerUuids = getSelectedCustomerUuids();
+
+    if (CustomerUuids === '') {
+        alert('请选择关键字进行修改');
+        return;
+    }
+
+    $("#machineGroupBatchUpdateSelectedDialog").css("display", "block");
+    $("#machineGroupBatchUpdateSelectedDialog").dialog({
+        resizable: false,
+        width: 260,
+        height: 100,
+        title:"修改关键字机器分组",
+        closed: true,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                var machineGroup = $("#machineGroupBatchUpdateSelectedForm").find("#machineGroup").val();
+                var keywordStatus = {};
+                var keywordChecks = {};
+                keywordStatus.machineGroup = machineGroup;
+                keywordChecks.machineGroup = "1";
+                var postData = {};
+                postData.keywordChecks = keywordChecks;
+                postData.keywordStatus = keywordStatus;
+                postData.customerUuids = CustomerUuids;
+                $.ajax({
+                    url: '/internal/customerKeyword/updateMachineGroupByCustomerUuids',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (data) {
+                        if(data){
+                            $().toastmessage('showSuccessToast',"操作成功", true);
+                        }else{
+                            $().toastmessage('showErrorToast', "操作失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                });
+                $("#machineGroupBatchUpdateSelectedDialog").dialog("close");
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#machineGroupBatchUpdateSelectedDialog").dialog("close");
+                    $('#machineGroupBatchUpdateSelectedDialog')[0].reset();
                 }
             }],
         onClose: function () {

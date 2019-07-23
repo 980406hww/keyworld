@@ -1305,6 +1305,7 @@
         <if test="keywordChecks.originalUrl==1"> ,fOriginalUrl = #{keywordStatus.originalUrl}</if>
         <if test="keywordChecks.optimizePlanCount==1"> ,fOptimizePlanCount = #{keywordStatus.optimizePlanCount}</if>
         <if test="keywordChecks.optimizeGroupName==1"> ,fOptimizeGroupName = #{keywordStatus.optimizeGroupName}</if>
+        <if test="keywordChecks.machineGroup==1"> ,fMachineGroup = #{keywordStatus.machineGroup}</if>
         <if test="keywordChecks.initialIndexCount==1"> ,fInitialIndexCount = #{keywordStatus.initialIndexCount}</if>
         <if test="keywordChecks.initialPosition==1"> ,fInitialPosition = #{keywordStatus.initialPosition}</if>
         <if test="keywordChecks.positionFirstFee==1"> ,fPositionFirstFee = #{keywordStatus.positionFirstFee}</if>

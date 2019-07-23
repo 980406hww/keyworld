@@ -629,4 +629,17 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
 	}
+
+	/**
+	 * 批量更新所选关键字的机器分组
+	 */
+	@RequestMapping(value = "/updateMachineGroupByCustomerUuids",method = RequestMethod.POST)
+	public ResponseEntity<?> updateMachineGroupByCustomerUuids(KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO) {
+		try{
+			System.out.println(keywordStatusBatchUpdateVO.getCustomerUuids());
+		}catch (Exception e){
+
+		}
+		return new ResponseEntity<Object>(true, HttpStatus.OK);
+	}
 }

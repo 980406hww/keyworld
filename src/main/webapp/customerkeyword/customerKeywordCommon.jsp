@@ -19,6 +19,9 @@
             <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">要刷数量:</span><input type="text" name="optimizePlanCount" id="optimizePlanCount" value="" style="width:300px;">
             </li>
             <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >优化组名:</span><input name="optimizeGroupName" id="optimizeGroupName" type="text" style="width:300px;"   value=""></li>
+            <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >机器分组:</span><input name="machineGroup" id="machineGroup" type="text" style="width:300px;"   value=""></li>
+
+
             <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >指数:</span><input type="text" id="initialIndexCount" size="5" name="initialIndexCount" value="100" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)"></li>
             <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >排名:</span><input type="text" id="initialPosition" size="5" name="initialPosition" value="10" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)" ></li>
             <li onclick="checkItem(this)"><span style="margin-left: 3px">关键词作用:</span>
@@ -160,5 +163,13 @@
 <div id="targetBearPawNumberDialog" style="text-align: center;left: 40%;display: none;">
     <form id="bearPawNumberChangeForm" style="text-align: center;margin-top: 10px;" onkeydown="if(event.keyCode==13)return false;">
         熊掌号:<input type="text" id="targetBearPawNumber" name="targetBearPawNumber" style="width:150px;"><%-- margin-top: 10px;--%>
+    </form>
+</div>
+
+
+<%--Dialog部分--%>
+<div id="machineGroupBatchUpdateSelectedDialog" style="text-align: center;left: 40%;display: none;">
+    <form id="machineGroupBatchUpdateSelectedForm" style="text-align: center;margin-top: 10px;" onkeydown="if(event.keyCode==13)return false;">
+        机器分组:<input type="text" id="machineGroup" name="machineGroup" style="width:150px;"><%-- margin-top: 10px;--%>
     </form>
 </div>
