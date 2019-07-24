@@ -1,5 +1,5 @@
 
-ALTER TABLE `db_keyword`.`t_qz_setting` ADD COLUMN `fOperatorStatus` TINYINT(1) DEFAULT 1 COMMENT '续费状态 1: 续费 0: 暂停续费' AFTER `fStatus`;
+ALTER TABLE `db_keyword`.`t_qz_setting` ADD COLUMN `fRenewalStatus` TINYINT(1) DEFAULT 1 COMMENT '续费状态 1: 续费 0: 暂停续费' AFTER `fStatus`;
 
 # 原采集状态为 暂停状态(3)的修改为 续费状态为暂停续费(0) 采集状态为暂停(0)
 UPDATE t_qz_setting SET fRenewalStatus = 0, fStatus = 0 WHERE fStatus = 3;
