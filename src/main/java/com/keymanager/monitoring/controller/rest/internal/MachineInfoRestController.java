@@ -441,7 +441,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
     public ResponseEntity<?> updateMachineGroupByCriteria(@RequestBody MachineInfoCriteria machineInfoCriteria) {
         try{
 
-            machineInfoService.updateMachineGroup(machineInfoCriteria);
+            machineInfoService.updateMachineGroupByCriteria(machineInfoCriteria);
             return new ResponseEntity<Object>(true,HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -459,6 +459,33 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /*===========================*/
+    @RequiresPermissions("/internal/machineInfo/changeStatus")
+    @RequestMapping(value = "/batchUpdateGroupSelected", method = RequestMethod.POST)
+    public ResponseEntity<?> batchUpdateGroupSelected(@Param("clientIDs") String clientIDs,@Param("group")String group) {
+        try {
+            machineInfoService.batchUpdateGroupByIds(clientIDs,group);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+    /**
+     * 批量更新根据检索条件获取到的机器的机器分组
+     */
+    @RequestMapping(value = "/updateGroupByCriteria",method = RequestMethod.POST)
+    public ResponseEntity<?> updateGroupByCriteria(@RequestBody MachineInfoCriteria machineInfoCriteria) {
+        try{
+
+            machineInfoService.updateGroupByCriteria(machineInfoCriteria);
+            return new ResponseEntity<Object>(true,HttpStatus.OK);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
         }
     }
 

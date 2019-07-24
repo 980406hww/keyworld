@@ -34,6 +34,7 @@ public class MachineInfoCriteria extends BaseCriteria {
 
     private boolean haveHiddenColumns; //是否为设置隐藏弹窗提交的
     private String targetMachineGroup;
+    private String targetGroup;
 
 
     public boolean getHaveHiddenColumns() {
@@ -258,5 +259,13 @@ public class MachineInfoCriteria extends BaseCriteria {
 
     public void setTargetMachineGroup(String targetMachineGroup) {
         this.targetMachineGroup = targetMachineGroup;
+    }
+
+    public String getTargetGroup() {
+        return targetGroup;
+    }
+
+    public void setTargetGroup(String targetGroup) {
+        this.targetGroup = targetGroup;
     }
 }

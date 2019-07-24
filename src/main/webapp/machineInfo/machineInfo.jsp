@@ -168,6 +168,9 @@
 							&nbsp;&nbsp;<input type="button" onclick="batchChangeMachineGroupSelected()" value="修改所选终端机器分组">
 							&nbsp;&nbsp;<input type="button" onclick="batchChangeMachineGroupSearched()" value="修改当前终端机器分组">
 
+							<input type="button" onclick="batchChangeGroupSelected()" value="修改所选终端优化组">
+							<input type="button" onclick="batchChangeGroupSearched()" value="修改当前终端优化组">
+
 							&nbsp;&nbsp;<input type="button" onclick="headerTableSetting()" value="表格设置">
 						</td>
 						</tr>
@@ -286,10 +289,7 @@
 						   name="group" id="${machineInfo.clientID}" onBlur="updateMachineGroup(this)" style="width: 100%;"/>
 
 			</td>
-			<td width=40>
 
-
-			</td>
 			<td width="60">${machineInfo.usingOperationType}</td>
 			<td width=20><font color="${keywordColor}"><fmt:formatDate value="${machineInfo.renewalDate}"
 															  pattern="MM-dd"/></font></td>
@@ -586,7 +586,13 @@
 	<%--Dialog部分--%>
 	<div id="machineGroupBatchUpdateDialog" style="text-align: center;left: 40%;display: none;">
 		<form id="machineGroupBatchUpdateForm" style="text-align: center;margin-top: 10px;" onkeydown="if(event.keyCode==13)return false;">
-			机器分组:<input type="text" id="targetGachineGroup" name="targetGachineGroup" style="width:150px;"><%-- margin-top: 10px;--%>
+			机器分组:<input type="text" id="targetMachineGroup" name="targetMachineGroup" style="width:150px;"><%-- margin-top: 10px;--%>
+		</form>
+	</div>
+	<%--Dialog部分--%>
+	<div id="groupBatchUpdateDialog" style="text-align: center;left: 40%;display: none;">
+		<form id="groupBatchUpdateForm" style="text-align: center;margin-top: 10px;" onkeydown="if(event.keyCode==13)return false;">
+			优化组:<input type="text" id="targetGroup" name="targetGroup" style="width:150px;"><%-- margin-top: 10px;--%>
 		</form>
 	</div>
 <%@ include file="/commons/loadjs.jsp" %>

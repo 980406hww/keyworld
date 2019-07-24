@@ -541,9 +541,59 @@
         </foreach>
     </update>
 
-    <update id="updateMachineGroup" parameterType="com.keymanager.monitoring.criteria.MachineInfoCriteria">
+    <update id="updateMachineGroupByCriteria" parameterType="com.keymanager.monitoring.criteria.MachineInfoCriteria">
         UPDATE t_machine_info mi
         SET mi.fMachineGroup = #{machineInfoCriteria.targetMachineGroup}
+        WHERE 1=1
+        <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''"> AND mi.fClientID like '%${machineInfoCriteria.clientID}%'</if>
+        <if test="machineInfoCriteria.groupName != null and machineInfoCriteria.groupName != ''">
+            <choose>
+                <when test="machineInfoCriteria.groupNameFuzzyQuery == null or machineInfoCriteria.groupNameFuzzyQuery == ''">
+                    AND mi.fGroup = #{machineInfoCriteria.groupName}
+                </when>
+                <otherwise>
+                    AND mi.fGroup like '%${machineInfoCriteria.groupName}%'
+                </otherwise>
+            </choose>
+        </if>
+        <if test="machineInfoCriteria.operationType != null and machineInfoCriteria.operationType != ''"> AND mi.fUsingOperationType like '${machineInfoCriteria.operationType}%'</if>
+        <if test="machineInfoCriteria.upgradeFailedReason != null and machineInfoCriteria.upgradeFailedReason != ''"> AND mi.fUpgradeFailedReason like '%${machineInfoCriteria.upgradeFailedReason}%'</if>
+        <if test="machineInfoCriteria.version != null and machineInfoCriteria.version != ''"> AND mi.fVersion like concat(#{machineInfoCriteria.version},'%')</if>
+        <if test="machineInfoCriteria.targetVersion != null and machineInfoCriteria.targetVersion != ''"> AND mi.fTargetVersion like concat(#{machineInfoCriteria.targetVersion},'%')</if>
+        <if test="machineInfoCriteria.city != null and machineInfoCriteria.city != ''"> AND mi.fCity like concat(#{machineInfoCriteria.city},'%')</if>
+        <if test="machineInfoCriteria.valid != null and machineInfoCriteria.valid != ''"> AND mi.fValid = #{machineInfoCriteria.valid}</if>
+        <if test="machineInfoCriteria.hasProblem != null"> AND (mi.fContinuousFailCount &gt; 5 OR mi.fTenMinsLastVisitTime &lt; NOW()) and mi.fValid = 1</if>
+        <if test="machineInfoCriteria.renewal != null"> AND mi.fRenewalDate &lt; DATE_ADD(CURRENT_DATE(), INTERVAL -3 DAY) and mi.fValid = 1</if>
+        <if test="machineInfoCriteria.noGroup != null"> AND (mi.fGroup is null or mi.fGroup = '')</if>
+        <if test="machineInfoCriteria.hasGroup != null"> AND mi.fGroup > ''</if>
+        <if test="machineInfoCriteria.startUpStatus != null and machineInfoCriteria.startUpStatus != ''"> AND mi.fStartUpStatus = #{machineInfoCriteria.startUpStatus}</if>
+        <if test="machineInfoCriteria.runningProgramType != null and machineInfoCriteria.runningProgramType != ''"> AND mi.fRunningProgramType = #{machineInfoCriteria.runningProgramType}</if>
+        <if test="machineInfoCriteria.noVNC != null"> AND (mi.fHost is null or mi.fHost = '')</if>
+        <if test="machineInfoCriteria.noUpgrade != null"> AND (mi.fVersion &lt;&gt; mi.fTargetVersion)</if>
+        <if test="machineInfoCriteria.noChangePassword != null"> AND (mi.fPassword &lt;&gt; mi.fTargetVPSPassword)</if>
+        <if test="machineInfoCriteria.startUpClient != null"> AND mi.fDownloadProgramType > ''</if>
+        <if test="machineInfoCriteria.vpsBackendSystemComputerID != null and machineInfoCriteria.vpsBackendSystemComputerID != ''"> AND (mi.fVPSBackendSystemComputerID = #{machineInfoCriteria.vpsBackendSystemComputerID})</if>
+        <if test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''"> AND mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName}</if>
+        <if test="machineInfoCriteria.switchGroups != null"> AND mi.fSwitchGroupName IN
+            <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")" separator=",">
+                #{machineInfoCriteria.switchGroup}
+            </foreach>
+        </if>
+        <if test="machineInfoCriteria.orderBy != null and machineInfoCriteria.orderBy != ''"> ORDER BY ${machineInfoCriteria.orderBy}</if>
+    </update>
+
+    <update id="batchUpdateGroupByIds">
+        UPDATE t_machine_info
+        SET fGroup = #{group}
+        WHERE fClientID IN
+        <foreach collection="clientIds" item="clientID" open="(" close=")" separator=",">
+            #{clientID}
+        </foreach>
+    </update>
+
+    <update id="updateGroupByCriteria" parameterType="com.keymanager.monitoring.criteria.MachineInfoCriteria">
+        UPDATE t_machine_info mi
+        SET mi.fGroup = #{machineInfoCriteria.targetGroup}
         WHERE 1=1
         <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''"> AND mi.fClientID like '%${machineInfoCriteria.clientID}%'</if>
         <if test="machineInfoCriteria.groupName != null and machineInfoCriteria.groupName != ''">

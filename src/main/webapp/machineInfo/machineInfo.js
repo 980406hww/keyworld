@@ -1179,7 +1179,7 @@ function batchChangeMachineGroupSelected(){
             text: '保存',
             iconCls: 'icon-ok',
             handler: function () {
-                var machineGroup = $("#machineGroupBatchUpdateForm").find("#targetGachineGroup").val();
+                var machineGroup = $("#machineGroupBatchUpdateForm").find("#targetMachineGroup").val();
                 console.log()
                 $.ajax({
                     url: '/internal/machineInfo/batchUpdateMachineGroupSelected',
@@ -1237,7 +1237,7 @@ function batchChangeMachineGroupSearched(){
             handler: function () {
                 resetPageNumber();
                 var obj = {};
-                var targetMachineGroup = $("#machineGroupBatchUpdateForm").find("#targetGachineGroup").val();
+                var targetMachineGroup = $("#machineGroupBatchUpdateForm").find("#targetMachineGroup").val();
 
                 if (confirm("确定要修改当前查询条件下所有机器的机器分组吗?") == false) return;
                 var postData = $("#searchMachineInfoForm").serializeArray();
@@ -1318,5 +1318,144 @@ function updateMachineGroup(self){
             $().toastmessage('showErrorToast', "更新失败");
         }
     });
+}
+
+/*=================================*/
+/**
+ * 批量修改优化组
+ */
+function batchChangeGroupSelected(){
+    var clientIDs = getSelectedClientIDs();
+    if (clientIDs.indexOf(",") == -1) {
+        alert('请选择多个终端进行设置');
+        return;
+    }
+
+    $("#groupBatchUpdateDialog").css("display", "block");
+    $("#groupBatchUpdateDialog").dialog({
+        resizable: false,
+        width: 260,
+        height: 100,
+        title:"修改关键字优化组",
+        closed: true,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                var group = $("#groupBatchUpdateDialog").find("#targetGroup").val();
+                console.log()
+                $.ajax({
+                    url: '/internal/machineInfo/batchUpdateGroupSelected',
+                    data: {"clientIDs":clientIDs,"group":group},
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (data) {
+                        if(data){
+                            $().toastmessage('showSuccessToast',"操作成功", true);
+                        }else{
+                            $().toastmessage('showErrorToast', "操作失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                });
+                $("#groupBatchUpdateDialog").dialog("close");
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#groupBatchUpdateDialog").dialog("close");
+                    $('#groupBatchUpdateDialog')[0].reset();
+                }
+            }],
+        onClose: function () {
+            $('#groupBatchUpdateDialog')[0].reset();
+        }
+    });
+    $("#groupBatchUpdateDialog").dialog("open");
+    $('#groupBatchUpdateDialog').window("resize",{top:$(document).scrollTop() + 200});
+}
+
+/**
+ *
+ */
+function batchChangeGroupSearched(){
+    var totalRecord =  $("#totalRecord").val();
+    if (totalRecord == 0) {
+        alert('搜索结果为空，请重新设置检索条件获取结果');
+        return;
+    }
+    $("#groupBatchUpdateDialog").css("display", "block");
+    $("#groupBatchUpdateDialog").dialog({
+        resizable: false,
+        width: 260,
+        height: 100,
+        title:"修改关键字优化组",
+        closed: true,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                resetPageNumber();
+                var obj = {};
+                var targetGroup = $("#groupBatchUpdateDialog").find("#targetGroup").val();
+
+                if (confirm("确定要修改当前查询条件下所有机器的优化组吗?") == false) return;
+                var postData = $("#searchMachineInfoForm").serializeArray();
+                $.each(postData, function() {
+                    if (obj[this.name]) {
+                        if (!obj[this.name].push) {
+                            obj[this.name] = [obj[this.name]];
+                        }
+                        obj[this.name].push(this.value || '');
+                    } else {
+                        obj[this.name] = this.value || '';
+                    }
+                });
+
+                obj.targetGroup = targetGroup;
+
+                $.ajax({
+                    url: '/internal/machineInfo/updateGroupByCriteria',
+                    data: JSON.stringify(obj),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (data) {
+                        if(data){
+                            $().toastmessage('showSuccessToast',"操作成功", true);
+                        }else{
+                            $().toastmessage('showErrorToast', "操作失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                });
+                $("#groupBatchUpdateDialog").dialog("close");
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#groupBatchUpdateDialog").dialog("close");
+                    $('#groupBatchUpdateDialog')[0].reset();
+                }
+            }],
+        onClose: function () {
+            //$('#machineGroupBatchUpdateDialog')[0].reset();
+        }
+    });
+    $("#groupBatchUpdateDialog").dialog("open");
+    $('#groupBatchUpdateDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
 
