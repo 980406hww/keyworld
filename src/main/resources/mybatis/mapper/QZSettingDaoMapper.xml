@@ -499,6 +499,14 @@
         <foreach item="item" index="index" collection="uuids" open="(" separator="," close=")">
             #{item}
         </foreach>
+        <choose>
+            <when test="renewalStatus == 1">
+                AND fRenewalStatus = 0
+            </when>
+            <otherwise>
+                AND fRenewalStatus = 1
+            </otherwise>
+        </choose>
     </update>
 
 </mapper>

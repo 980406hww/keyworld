@@ -188,7 +188,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				if (null != standardSpecies) {
 					qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), qzOperationType.getOperationType(), standardSpecies, !isExtraRankInfo);
 					if (standardSpecies.equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
-						qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), qzOperationType.getOperationType(), "aiZhan", false);
+						if (qzSetting.getSearchEngine().equals(Constants.SEARCH_ENGINE_BAIDU)) {
+							qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), qzOperationType.getOperationType(), "aiZhan", false);
+						}
 						if (qzSetting.getfIsMonitor()) {
 							captureRankJobService.qzAddCaptureRankJob(qzOperationType.getGroup(), qzSettingUuid, qzSetting.getCustomerUuid(), qzOperationType.getOperationType(), userName);
 						}
@@ -348,7 +350,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 						standardSpecies = qzChargeRule.getStandardSpecies();
 					}
 				} else { // 辅助优化, 采集爱站曲线，不计算达标
-					qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), qzOperationType.getOperationType(), "aiZhan", false);
+            		if (qzSetting.getSearchEngine().equals(Constants.SEARCH_ENGINE_BAIDU)) {
+						qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), qzOperationType.getOperationType(), "aiZhan", false);
+					}
 				}
             }
             if (null != standardSpecies) {
@@ -359,7 +363,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		for (Map.Entry<String, String> entry : standardSpeciesMap.entrySet()) {
 			qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), entry.getKey(), entry.getValue(), true);
 			if (entry.getValue().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
-				qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), entry.getKey(), "aiZhan", false);
+				if (qzSetting.getSearchEngine().equals(Constants.SEARCH_ENGINE_BAIDU)) {
+					qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), entry.getKey(), "aiZhan", false);
+				}
 			}
         }
 
