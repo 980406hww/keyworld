@@ -434,4 +434,19 @@ public class MachineInfoRestController extends SpringMVCBaseController {
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
     }
+    /**
+     * 批量更新根据检索条件获取到的机器的机器分组
+     */
+    @RequestMapping(value = "/updateMachineGroupByCriteria",method = RequestMethod.POST)
+    public ResponseEntity<?> updateMachineGroupByCriteria(@RequestBody MachineInfoCriteria machineInfoCriteria) {
+        try{
+
+            machineInfoService.updateMachineGroup(machineInfoCriteria);
+            return new ResponseEntity<Object>(true,HttpStatus.OK);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

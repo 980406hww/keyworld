@@ -1286,7 +1286,7 @@ function batchChangeMachineGroupSearched(){
                 }
             }],
         onClose: function () {
-            $('#machineGroupBatchUpdateDialog')[0].reset();
+            //$('#machineGroupBatchUpdateDialog')[0].reset();
         }
     });
     $("#machineGroupBatchUpdateDialog").dialog("open");
