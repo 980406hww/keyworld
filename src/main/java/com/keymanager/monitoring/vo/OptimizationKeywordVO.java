@@ -6,7 +6,7 @@ public class OptimizationKeywordVO {
     private String keyword;
     private long uuid;
     private String url;
-    private String group;
+    private String optimizeGroup;
     private String entryType;
     private String bearPawNumber;
     private String title;
@@ -51,12 +51,12 @@ public class OptimizationKeywordVO {
         this.url = url;
     }
 
-    public String getGroup() {
-        return group;
+    public String getOptimizeGroup() {
+        return optimizeGroup;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setOptimizeGroup(String optimizeGroup) {
+        this.optimizeGroup = optimizeGroup;
     }
 
     public String getEntryType() {
