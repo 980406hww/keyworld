@@ -293,6 +293,41 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
+    @RequestMapping(value = "/fetchCustomerKeywordZip", method = RequestMethod.GET)
+    public ResponseEntity<?> fetchCustoemrKeywordForOptimization(HttpServletRequest request) throws Exception {
+        long startMilleSeconds = System.currentTimeMillis();
+        String clientID = request.getParameter("clientID");
+        String userName = request.getParameter("userName");
+        if(StringUtils.isBlank(userName)){
+            userName = request.getParameter("username");
+        }
+        String password = request.getParameter("password");
+        String version = request.getParameter("version");
+        try {
+            if (validUser(userName, password)) {
+                MachineInfo machineInfo = machineInfoService.selectById(clientID);
+                String s = "";
+                if(machineInfo != null) {
+                    String terminalType = machineInfo.getTerminalType();
+                    OptimizationVO optimizationVO = customerKeywordService.fetchCustoemrKeywordForOptimization(machineInfo);
+                    if (optimizationVO != null) {
+                        machineInfoService.updateMachineInfoVersion(clientID, version, optimizationVO != null);
+                        byte[] compress = AESUtils.compress(AESUtils.encrypt(optimizationVO).getBytes());
+                        s = AESUtils.parseByte2HexStr(compress);
+                        performanceService.addPerformanceLog(terminalType + ":fetchCustomerKeywordZip", System.currentTimeMillis() - startMilleSeconds, null);
+                    }
+                }else{
+                    logger.error("fetchCustomerKeywordZip,     Not found clientID:" + clientID);
+                }
+                return ResponseEntity.status(HttpStatus.OK).body(s);
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+            logger.error("fetchCustomerKeywordZip:     " + clientID + ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
     @RequestMapping(value = "/updateOptimizedCount", method = RequestMethod.GET)
     public ResponseEntity<?> updateOptimizedCount(HttpServletRequest request) throws Exception {
         long startMilleSeconds = System.currentTimeMillis();
