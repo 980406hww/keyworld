@@ -164,6 +164,10 @@
 								&nbsp;&nbsp;<input type="button" name="btnFilter" onclick="showUploadVPSDialog('common')" value=" 导入普通终端 ">
 								&nbsp;&nbsp;<input type="button" onclick="showUploadVPSDialog('startUp')" value=" 导入开机终端 ">
 							</shiro:hasPermission>
+
+							&nbsp;&nbsp;<input type="button" onclick="batchChangeMachineGroupSelected()" value="修改所选终端机器分组">
+							&nbsp;&nbsp;<input type="button" onclick="batchChangeMachineGroupSearched()" value="修改当前终端机器分组">
+
 							&nbsp;&nbsp;<input type="button" onclick="headerTableSetting()" value="表格设置">
 						</td>
 						</tr>
@@ -205,6 +209,8 @@
 			<td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
 			<td align="center" width=40>客户端ID</td>
 			<td align="center" width=60>优化组</td>
+			<td align="center" width=60>机器分组</td>
+
 			<td align="center" width=60>当前操作类型</td>
 			<td align="center" width=20>续费<br>日期</td>
 			<td align="center" width=30>现版本<br>目标版本</td>
@@ -267,11 +273,16 @@
 					<span name="invalidClient" id="span_${machineInfo.clientID}"></span>
 				</c:if>
 			</td>
+
 			<td width=60>
 				<shiro:hasPermission name="/internal/machineInfo/updateGroup">
 					<input type="text" value="${machineInfo.group == null ? "" : machineInfo.group}"
 						   name="group" id="${machineInfo.clientID}" onBlur="updateGroup(this)" style="width: 100%;"/>
 				</shiro:hasPermission>
+			</td>
+			<td width=40>
+				<font color="${keywordColor}">${machineInfo.machineGroup}</font>
+
 			</td>
 			<td width="60">${machineInfo.usingOperationType}</td>
 			<td width=20><font color="${keywordColor}"><fmt:formatDate value="${machineInfo.renewalDate}"
@@ -360,6 +371,7 @@
 		<input id="lastButton" type="button" class="ui-button ui-widget ui-corner-all"
 			   onclick="changePaging('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
 		总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
+		<input hidden value="${page.total}" id="totalRecord">
 		每页显示条数:<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
 		<option>10</option>
 		<option>25</option>
@@ -386,6 +398,12 @@
 							<td>
 								<input type="hidden" id="settingClientID" />
 								<input type="text" name="settingGroup" id="settingGroup" />
+							</td>
+						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>机器分组</th>
+							<td>
+								<input type="text" name="machineGroup" id="machineGroup" />
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
@@ -558,6 +576,12 @@
 			<tr><td><input type="checkbox" name="columnName" id="17">服务器ID</td></tr>
 			<tr><td><input type="checkbox" name="columnName" id="18">操作</td></tr>
 		</table>
+	</div>
+	<%--Dialog部分--%>
+	<div id="machineGroupBatchUpdateDialog" style="text-align: center;left: 40%;display: none;">
+		<form id="machineGroupBatchUpdateForm" style="text-align: center;margin-top: 10px;" onkeydown="if(event.keyCode==13)return false;">
+			机器分组:<input type="text" id="targetGachineGroup" name="targetGachineGroup" style="width:150px;"><%-- margin-top: 10px;--%>
+		</form>
 	</div>
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath }/machineInfo/machineInfo.js"></script>

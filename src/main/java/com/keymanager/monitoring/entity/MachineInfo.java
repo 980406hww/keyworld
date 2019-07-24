@@ -32,6 +32,9 @@ public class MachineInfo {
 	@TableField(value = "fGroup", strategy = FieldStrategy.IGNORED)
 	private String group;
 
+	@TableField(value = "fMachineGroup", strategy = FieldStrategy.IGNORED)
+	private String machineGroup;
+
 	@TableField(value = "fUsingOperationType")
 	private String usingOperationType;
 
@@ -216,6 +219,14 @@ public class MachineInfo {
 
 	public void setGroup(String group) {
 		this.group = group;
+	}
+
+	public String getMachineGroup() {
+		return machineGroup;
+	}
+
+	public void setMachineGroup(String machineGroup) {
+		this.machineGroup = machineGroup;
 	}
 
 	public String getUsingOperationType () {

@@ -148,6 +148,7 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         if (null != machineInfo.getClientID()) {
             MachineInfo oldMachineInfo = machineInfoDao.selectById(machineInfo.getClientID());
             oldMachineInfo.setGroup(machineInfo.getGroup());
+            oldMachineInfo.setMachineGroup(machineInfo.getMachineGroup());
             oldMachineInfo.setAllowSwitchGroup(machineInfo.getAllowSwitchGroup());
             oldMachineInfo.setHost(machineInfo.getHost());
             oldMachineInfo.setPort(machineInfo.getPort());
@@ -675,6 +676,11 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         machineInfoDao.batchChangeStatus(clientIds,status);
     }
 
+    public void batchUpdateMachineGroupByIds(String clientIDs,String machineGroup) {
+        String[] clientIds = clientIDs.split(",");
+        machineInfoDao.batchUpdateMachineGroupByIds(clientIds,machineGroup);
+    }
+
     public void batchChangeTerminalType(String[] clientIds, String terminalType) {
         machineInfoDao.batchChangeTerminalType(clientIds, terminalType);
     }
@@ -891,5 +897,9 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
             clientStatusForOptimization.setCurrentTime(Utils.formatDate(new Date(), Utils.TIME_FORMAT));
         }
         return clientStatusForOptimization;
+    }
+
+    public void updateMachineGroup(MachineInfoCriteria machineInfoCriteria) {
+        machineInfoDao.updateMachineGroup(machineInfoCriteria);
     }
 }

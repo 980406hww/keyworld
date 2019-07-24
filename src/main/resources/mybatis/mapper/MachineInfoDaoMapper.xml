@@ -12,6 +12,7 @@
         mi.fContinuousFailCount AS "continuousFailCount",
         mi.fCity AS "city",
         mi.fGroup AS "group",
+        mi.fMachineGroup AS "machineGroup",
         mi.fUsingOperationType AS "usingOperationType",
         mi.fAllowSwitchGroup AS "allowSwitchGroup",
         mi.fSwitchGroupName AS "switchGroupName",
@@ -288,6 +289,7 @@
         UPDATE t_machine_info
         SET fTerminalType = fTerminalType
         <if test="mi.group==1"> ,fGroup = #{machineInfo.group}</if>
+        <if test="mi.machineGroup==1"> ,fMachineGroup = #{machineInfo.machineGroup}</if>
         <if test="mi.allowSwitchGroup==1"> ,fAllowSwitchGroup = #{machineInfo.allowSwitchGroup}</if>
         <if test="mi.switchGroupName==1"> ,fSwitchGroupName = #{machineInfo.switchGroupName}</if>
         <if test="mi.host==1"> ,fHost = #{machineInfo.host}</if>
@@ -529,4 +531,13 @@
         t_client_status cs
         WHERE cs.fClientID = #{clientID}
     </select>
+
+    <update id="batchUpdateMachineGroupByIds">
+        UPDATE t_machine_info
+        SET fMachineGroup = #{machineGroup}
+        WHERE fClientID IN
+        <foreach collection="clientIds" item="clientID" open="(" close=")" separator=",">
+            #{clientID}
+        </foreach>
+    </update>
 </mapper>
