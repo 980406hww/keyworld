@@ -902,4 +902,10 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
     public void updateMachineGroup(MachineInfoCriteria machineInfoCriteria) {
         machineInfoDao.updateMachineGroup(machineInfoCriteria);
     }
+
+    public void updateMachineGroup(String clientID, String machineGroup) {
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        machineInfo.setMachineGroup(machineGroup);
+        machineInfoDao.updateById(machineInfo);
+    }
 }

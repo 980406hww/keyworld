@@ -1293,3 +1293,30 @@ function batchChangeMachineGroupSearched(){
     $('#machineGroupBatchUpdateDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
 
+
+function updateMachineGroup(self){
+    var machineInfo = {};
+    machineInfo.clientID = self.id;
+    machineInfo.machineGroup = self.value.trim();
+    $.ajax({
+        url: '/internal/machineInfo/updateMachineGroup',
+        data: JSON.stringify(machineInfo),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (result) {
+            if(result){
+                $().toastmessage('showSuccessToast', "更新成功", true);
+            }else{
+                $().toastmessage('showErrorToast', "更新失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "更新失败");
+        }
+    });
+}
+

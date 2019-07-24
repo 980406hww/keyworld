@@ -281,7 +281,13 @@
 				</shiro:hasPermission>
 			</td>
 			<td width=40>
-				<font color="${keywordColor}">${machineInfo.machineGroup}</font>
+
+					<input type="text" value="${machineInfo.machineGroup == null ? "" : machineInfo.machineGroup}"
+						   name="group" id="${machineInfo.clientID}" onBlur="updateMachineGroup(this)" style="width: 100%;"/>
+
+			</td>
+			<td width=40>
+
 
 			</td>
 			<td width="60">${machineInfo.usingOperationType}</td>

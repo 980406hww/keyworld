@@ -449,4 +449,17 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequestMapping(value = "/updateMachineGroup", method = RequestMethod.POST)
+    public ResponseEntity<?> updateMachineGroup(@RequestBody Map<String, Object> requestMap) {
+        try {
+            String clientID = (String)requestMap.get("clientID");
+            String machineGroup = (String)requestMap.get("machineGroup");
+            machineInfoService.updateMachineGroup(clientID, machineGroup);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
