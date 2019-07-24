@@ -331,6 +331,7 @@
 <div class="datalist">
 	<div class="datalist-list">
 		<input type="hidden" id="isSEO" value="${isSEO}">
+		<input type="hidden" id="isBaiduEngine" value="${isBaiduEngine}">
 		<ul>
 			<c:forEach items="${page.records}" var="qzSetting" varStatus="status">
 				<c:choose>
@@ -1340,8 +1341,10 @@
 				<div style="display: none" id="optimizationTypePC">
 					达标优化类型&nbsp;&nbsp;
 					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'PC', 1)" value="1" />&nbsp;主优化&nbsp;
-					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'PC', 1)" value="2" />&nbsp;次优化&nbsp;
-					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'PC', 1)" value="0" />&nbsp;辅助优化&nbsp;
+					<c:if test="${isBaiduEngine}">
+						<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'PC', 1)" value="2" />&nbsp;次优化&nbsp;
+						<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'PC', 1)" value="0" />&nbsp;辅助优化&nbsp;
+					</c:if>
 				</div>
 			</td>
 			<td colspan="2" width="325px">
@@ -1349,8 +1352,10 @@
 				<div style="display: none;" id="optimizationTypePhone">
 					达标优化类型&nbsp;&nbsp;
 					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'Phone', 1)" value="1" />&nbsp;主优化&nbsp;
-					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'Phone', 1)" value="2" />&nbsp;次优化&nbsp;
-					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'Phone', 1)" value="0" />&nbsp;辅助优化&nbsp;
+					<c:if test="${isBaiduEngine}">
+						<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'Phone', 1)" value="2" />&nbsp;次优化&nbsp;
+						<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'Phone', 1)" value="0" />&nbsp;辅助优化&nbsp;
+					</c:if>
 				</div>
 			</td>
 		</tr>
@@ -1386,31 +1391,35 @@
 						</tr>
 						<tr id="standardSpeciesPC">
 							<td align="right" style="width:72px"><label>达标种类</label></td>
-							<td title="爱站, 5118, 指定词和其他, 四选一">
-								<div style="display: inline-block">
-									<input type="checkbox" name="standardSpecies" id="aiZhanPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="aiZhan">
-								</div>
-								<div style="display: inline-block; margin-right: 10px;">
-									<label>爱站</label>
-								</div>
-								<div style="display: inline-block">
-									<input type="checkbox" name="standardSpecies" id="5118PCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="5118">
-								</div>
-								<div style="display: inline-block; margin-right: 10px;">
-									<label>5118</label>
-								</div>
+							<td title="必选一个">
+								<c:if test="${isBaiduEngine}">
+									<div style="display: inline-block">
+										<input type="checkbox" name="standardSpecies" id="aiZhanPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="aiZhan">
+									</div>
+									<div style="display: inline-block; margin-right: 10px;">
+										<label>爱站</label>
+									</div>
+									<div style="display: inline-block">
+										<input type="checkbox" name="standardSpecies" id="5118PCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="5118">
+									</div>
+									<div style="display: inline-block; margin-right: 10px;">
+										<label>5118</label>
+									</div>
+								</c:if>
 								<div style="display: inline-block">
 									<input type="checkbox" name="standardSpecies" id="designationWordPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="designationWord">
 								</div>
 								<div style="display: inline-block; margin-right: 10px;">
 									<label>指定词</label>
 								</div>
-								<div style="display: inline-block">
-									<input type="checkbox" name="standardSpecies" id="otherPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="other">
-								</div>
-								<div style="display: inline-block; margin-right: 10px;">
-									<label>其他</label>
-								</div>
+								<c:if test="${isBaiduEngine}">
+									<div style="display: inline-block">
+										<input type="checkbox" name="standardSpecies" id="otherPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="other">
+									</div>
+									<div style="display: inline-block; margin-right: 10px;">
+										<label>其他</label>
+									</div>
+								</c:if>
 							</td>
 						</tr>
 					</c:if>
@@ -1447,31 +1456,35 @@
 						</tr>
 						<tr id="standardSpeciesPhone">
 							<td align="right" style="width:72px"><label>达标种类</label></td>
-							<td title="爱站, 5118, 指定词和其他, 四选一">
-								<div style="display: inline-block">
-									<input type="checkbox" name="standardSpecies" id="aiZhanPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="aiZhan">
-								</div>
-								<div style="display: inline-block; margin-right: 10px;">
-									<label>爱站</label>
-								</div>
-								<div style="display: inline-block">
-									<input type="checkbox" name="standardSpecies" id="5118PhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="5118">
-								</div>
-								<div style="display: inline-block; margin-right: 10px;">
-									<label>5118</label>
-								</div>
+							<td title="必选一个">
+								<c:if test="${isBaiduEngine}">
+									<div style="display: inline-block">
+										<input type="checkbox" name="standardSpecies" id="aiZhanPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="aiZhan">
+									</div>
+									<div style="display: inline-block; margin-right: 10px;">
+										<label>爱站</label>
+									</div>
+									<div style="display: inline-block">
+										<input type="checkbox" name="standardSpecies" id="5118PhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="5118">
+									</div>
+									<div style="display: inline-block; margin-right: 10px;">
+										<label>5118</label>
+									</div>
+								</c:if>
 								<div style="display: inline-block">
 									<input type="checkbox" name="standardSpecies" id="designationWordPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="designationWord">
 								</div>
 								<div style="display: inline-block; margin-right: 10px;">
 									<label>指定词</label>
 								</div>
-								<div style="display: inline-block">
-									<input type="checkbox" name="standardSpecies" id="otherPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="other">
-								</div>
-								<div style="display: inline-block; margin-right: 10px;">
-									<label>其他</label>
-								</div>
+								<c:if test="${isBaiduEngine}">
+									<div style="display: inline-block">
+										<input type="checkbox" name="standardSpecies" id="otherPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="other">
+									</div>
+									<div style="display: inline-block; margin-right: 10px;">
+										<label>其他</label>
+									</div>
+								</c:if>
 							</td>
 						</tr>
 					</c:if>
@@ -1542,44 +1555,6 @@
 					<td>
 						<input type="text" name="groupMaxCustomerKeywordCount" id="groupMaxCustomerKeywordCount" placeholder="请输入数字：" value="5000" style="width:240px">
 					</td>
-					<td style="width:65px" align="right">爬取关键字</td>
-					<td>
-						<select name="qzSettingAutoCrawlKeywordFlag" id="qzSettingAutoCrawlKeywordFlag" style="width:240px">
-							<option value="1">是</option>
-							<option value="0" selected>否</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td style="width:65px" align="right">去掉没指数</td>
-					<td>
-						<select name="qzSettingIgnoreNoIndex" id="qzSettingIgnoreNoIndex"  style="width:240px">
-							<option value="1" selected>是</option>
-							<option value="0">否</option>
-						</select>
-					</td>
-					<td style="width:65px" align="right">去掉没排名</td>
-					<td>
-						<select name="qzSettingIgnoreNoOrder" id="qzSettingIgnoreNoOrder"  style="width:240px">
-							<option value="1" selected>是</option>
-							<option value="0">否</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td style="width:65px" align="right">更新间隔</td>
-					<td>
-						<select name="qzSettingInterval" id="qzSettingInterval"  style="width:240px">
-							<option value="1">1天</option>
-							<option value="2">2天</option>
-							<option value="3">3天</option>
-							<option value="5">5天</option>
-							<option value="7">7天</option>
-							<option value="10">10天</option>
-							<option value="12">12天</option>
-							<option value="15" selected>15天</option>
-						</select>
-					</td>
 					<td style="width:65px" align="right">达标监控</td>
 					<td>
 						<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
@@ -1588,6 +1563,48 @@
 						</select>
 					</td>
 				</tr>
+				<c:if test="${isBaiduEngine}">
+					<tr>
+						<td style="width:65px" align="right">去掉没指数</td>
+						<td>
+							<select name="qzSettingIgnoreNoIndex" id="qzSettingIgnoreNoIndex"  style="width:240px">
+								<option value="1" selected>是</option>
+								<option value="0">否</option>
+							</select>
+						</td>
+						<td style="width:65px" align="right">去掉没排名</td>
+						<td>
+							<select name="qzSettingIgnoreNoOrder" id="qzSettingIgnoreNoOrder"  style="width:240px">
+								<option value="1" selected>是</option>
+								<option value="0">否</option>
+							</select>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${isBaiduEngine}">
+					<tr>
+						<td style="width:65px" align="right">爬取关键字</td>
+						<td>
+							<select name="qzSettingAutoCrawlKeywordFlag" id="qzSettingAutoCrawlKeywordFlag" style="width:240px">
+								<option value="1">是</option>
+								<option value="0" selected>否</option>
+							</select>
+						</td>
+						<td style="width:65px" align="right">更新间隔</td>
+						<td>
+							<select name="qzSettingInterval" id="qzSettingInterval"  style="width:240px">
+								<option value="1">1天</option>
+								<option value="2">2天</option>
+								<option value="3">3天</option>
+								<option value="5">5天</option>
+								<option value="7">7天</option>
+								<option value="10">10天</option>
+								<option value="12">12天</option>
+								<option value="15" selected>15天</option>
+							</select>
+						</td>
+					</tr>
+				</c:if>
 			</c:if>
 		</shiro:hasPermission>
 	</table>

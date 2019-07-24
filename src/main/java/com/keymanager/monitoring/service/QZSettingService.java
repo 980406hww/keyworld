@@ -168,6 +168,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			qzSettingDao.updateById(existingQZSetting);
 		} else {
 			qzSetting.setUpdateTime(new Date());
+			qzSetting.setRenewalStatus(1);
 			qzSettingDao.insert(qzSetting);
 			Long qzSettingUuid  = new Long(qzSettingDao.selectLastId());//插入qzSetting是的uuid
 			for (QZOperationType qzOperationType : qzSetting.getQzOperationTypes()){

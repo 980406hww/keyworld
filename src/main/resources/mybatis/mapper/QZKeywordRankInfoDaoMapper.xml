@@ -73,8 +73,10 @@
     <select id="getCountNumOfRankInfo" resultType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria">
         SELECT
             COUNT(qk.fIncrease = 0 OR NULL) AS 'unchangedNum',
-            COUNT((qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue} OR NULL) AND qk.fOneWeekDifference &lt;= #{qzSettingSearchCriteria.downOneWeekDiff}) AS 'downNum',
-            COUNT((qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue} OR NULL) AND qk.fOneWeekDifference &gt;= #{qzSettingSearchCriteria.upOneWeekDiff}) AS 'upNum',
+            COUNT((qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue} OR NULL) AND
+            (qk.fOneWeekDifference &lt;= #{qzSettingSearchCriteria.downOneWeekDiff} OR NULL)) AS 'downNum',
+            COUNT((qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue} OR NULL) AND
+            (qk.fOneWeekDifference &gt;= #{qzSettingSearchCriteria.upOneWeekDiff} OR NULL)) AS 'upNum',
             COUNT(qk.fAchieveLevel &gt; 0 OR NULL) AS 'atLeastStandardNum',
             COUNT(qk.fAchieveLevel = 0 OR NULL) AS 'neverStandardNum',
             COUNT(qk.fDifferenceValue &lt;= #{qzSettingSearchCriteria.differenceValue} OR NULL) AS 'closeStandardNum',
@@ -87,9 +89,9 @@
         LEFT JOIN t_qz_operation_type qot
         ON qot.fQZSettingUuid = qk.fQZSettingUuid AND qot.fOperationtype = qk.fTerminalType
         WHERE qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
-        <if test="qzSettingSearchCriteria.searchEngine != null and qzSettingSearchCriteria.searchEngine != ''">
-            AND qs.fSearchEngine = #{qzSettingSearchCriteria.searchEngine}
-        </if>
+        <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
+        <if test="qzSettingSearchCriteria.domain != null and qzSettingSearchCriteria.domain != ''">AND qs.fDomain = #{qzSettingSearchCriteria.domain}</if>
+        <if test="qzSettingSearchCriteria.searchEngine != 'All'">AND qs.fSearchEngine = #{qzSettingSearchCriteria.searchEngine}</if>
         AND qot.fIsDeleted = 0
         AND qk.fDataProcessingStatus = 1
         <if test="qzSettingSearchCriteria.renewalStatus != null">AND qs.fRenewalStatus = #{qzSettingSearchCriteria.renewalStatus}</if>

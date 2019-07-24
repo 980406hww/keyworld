@@ -130,9 +130,7 @@
         <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
         <if test="qzSettingSearchCriteria.domain != null and qzSettingSearchCriteria.domain != ''">AND qs.fDomain = #{qzSettingSearchCriteria.domain}</if>
         <choose>
-            <when test="qzSettingSearchCriteria.searchEngine == ''"></when>
-            <when test="(qzSettingSearchCriteria.customerUuid == '' or qzSettingSearchCriteria.customerUuid == null) and
-                    (qzSettingSearchCriteria.domain == '' or qzSettingSearchCriteria.domain == null)">
+            <when test="qzSettingSearchCriteria.searchEngine != 'All'">
                 AND qs.fSearchEngine = #{qzSettingSearchCriteria.searchEngine}
             </when>
             <otherwise></otherwise>
@@ -178,13 +176,20 @@
             )
         </if>
         <if test="qzSettingSearchCriteria.checkStatus != null">
-            AND EXISTS (SELECT 1 FROM t_qz_keyword_rank_info qk WHERE qk.fQZSettingUuid = qs.fUuid
+            AND EXISTS (
+                SELECT 1
+                FROM t_qz_keyword_rank_info qk
+                WHERE qk.fQZSettingUuid = qs.fUuid
+                AND qk.fDataProcessingStatus = 1
+                AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
             <choose>
                 <when test="qzSettingSearchCriteria.checkStatus == 1">
                     AND qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue}
+                    AND qk.fOneWeekDifference &lt;= #{qzSettingSearchCriteria.downOneWeekDiff}
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 2">
                     AND qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue}
+                    AND qk.fOneWeekDifference &gt;= #{qzSettingSearchCriteria.upOneWeekDiff}
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 3">
                     AND qk.fAchieveLevel &gt; 0
@@ -225,8 +230,6 @@
                     AND qk.fTodayDifference &gt; 0
                 </when>
             </choose>
-            AND qk.fDataProcessingStatus = 1
-            AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
             )
         </if>
         <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
@@ -492,9 +495,9 @@
 
     <update id="updateQZSettingRenewalStatus">
         UPDATE t_qz_setting
-        SET fUpdateTime = NOW()
+        SET fUpdateTime = NOW(),
             fRenewalStatus = #{renewalStatus},
-            fStatus = #{renewalStatus},
+            fStatus = #{renewalStatus}
         WHERE fUuid IN
         <foreach item="item" index="index" collection="uuids" open="(" separator="," close=")">
             #{item}

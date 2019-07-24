@@ -160,7 +160,7 @@ function checkTerminalType(searchEngine, terminalType) {
     $(".mytabs .link").find("li").removeClass("active");
     $(".mytabs .link").find("li[name='"+ html +"']").addClass("active");
     if (html.indexOf('A') > -1) {
-        $("#chargeForm").find("#searchEngine").val('');
+        $("#chargeForm").find("#searchEngine").val('All');
     } else {
         $("#chargeForm").find("#searchEngine").val($.trim(html.substr(0, html.indexOf('P'))));
     }
@@ -1766,6 +1766,7 @@ function createSettingDialog() {
                 }
             }],
         onClose: function () {
+            $('#changeSettingForm')[0].reset();
             $("#changeSettingDialog").find("#PC").attr("status", 1);
             $("#changeSettingDialog").find("#Phone").attr("status", 1);
             $("#changeSettingDialog").find("#optimizationType").find("div").each(function() {
@@ -1792,10 +1793,12 @@ function resetSettingDialog() {
     settingDialogDiv.find("#bearPawNumber").val("");
     settingDialogDiv.find("#qzCategoryTagNames").val("");
     settingDialogDiv.find("#groupMaxCustomerKeywordCount").val("5000");
-    settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val("0");
-    settingDialogDiv.find("#qzSettingIgnoreNoIndex").val("1");
-    settingDialogDiv.find("#qzSettingIgnoreNoOrder").val("1");
-    settingDialogDiv.find("#qzSettingInterval").val("2");
+    if ($(".datalist-list #isBaiduEngine").val() === 'true') {
+        settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val("0");
+        settingDialogDiv.find("#qzSettingIgnoreNoIndex").val("1");
+        settingDialogDiv.find("#qzSettingIgnoreNoOrder").val("1");
+        settingDialogDiv.find("#qzSettingInterval").val("2");
+    }
     settingDialogDiv.find("#qzSettingStartMonitor").val("0");
     settingDialogDiv.find("#qzSettingJoinReady").val("0");
     clearInfo("Both");
@@ -1805,8 +1808,12 @@ function clearInfo(type) {
     if(type === "Both") {
         clearInfo("PC");
         clearInfo("Phone");
-        clearStandardInfo("PC", "aiZhan", 1);
-        clearStandardInfo("Phone", "aiZhan", 1);
+        var standardSpecies = 'aiZhan';
+        if ($(".datalist-list #isBaiduEngine").val() === 'false') {
+            standardSpecies = 'designationWord';
+        }
+        clearStandardInfo("PC", standardSpecies, 1);
+        clearStandardInfo("Phone", standardSpecies, 1);
     } else {
         // 清空分组表格信息
         settingDialogObj.find("#group" + type).val("");
@@ -1880,10 +1887,14 @@ function initSettingDialog(qzSetting, self) {
     settingDialogDiv.find("#bearPawNumber").val(qzSetting.bearPawNumber);
     settingDialogDiv.find("#qzSettingCustomer").val(qzSetting.contactPerson + "_____" + qzSetting.customerUuid);
     settingDialogDiv.find("#qzSettingDomain").val(qzSetting.domain != null ? qzSetting.domain : "");
-    settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val(qzSetting.autoCrawlKeywordFlag ? "1" : "0");
-    settingDialogDiv.find("#qzSettingIgnoreNoIndex").val(qzSetting.ignoreNoIndex ? "1" : "0");
-    settingDialogDiv.find("#qzSettingIgnoreNoOrder").val(qzSetting.ignoreNoOrder ? "1" : "0");
-    settingDialogDiv.find("#qzSettingInterval").val(qzSetting.updateInterval != null ? qzSetting.updateInterval : "");
+    settingDialogDiv.find("#searchEngine").val(qzSetting.searchEngine != null ? qzSetting.searchEngine : "");
+    var isBaiduEngine = $(".datalist-list #isBaiduEngine").val();
+    if (isBaiduEngine === 'true') {
+        settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val(qzSetting.autoCrawlKeywordFlag ? "1" : "0");
+        settingDialogDiv.find("#qzSettingIgnoreNoIndex").val(qzSetting.ignoreNoIndex ? "1" : "0");
+        settingDialogDiv.find("#qzSettingIgnoreNoOrder").val(qzSetting.ignoreNoOrder ? "1" : "0");
+        settingDialogDiv.find("#qzSettingInterval").val(qzSetting.updateInterval != null ? qzSetting.updateInterval : "");
+    }
     settingDialogDiv.find("#qzSettingStartMonitor").val(qzSetting.fIsMonitor ? "1" : "0");
     settingDialogDiv.find("#qzSettingJoinReady").val(qzSetting.fIsReady ? "1" : "0");
     settingDialogDiv.find("#qzSettingEntryType").val(qzSetting.type != null ? qzSetting.type : "");
@@ -1895,7 +1906,11 @@ function initSettingDialog(qzSetting, self) {
 
     // 操作类型表填充数据
     $.each(qzSetting.qzOperationTypes, function (idx, val) {
-        settingDialogDiv.find("#optimizationType" + val.operationType).find("input[value='"+ val.optimizationType +"']")[0].checked = true;
+        if (isBaiduEngine === 'false') {
+            settingDialogDiv.find("#optimizationType" + val.operationType).find("input")[0].checked = true;
+        } else {
+            settingDialogDiv.find("#optimizationType" + val.operationType).find("input[value='"+ val.optimizationType +"']")[0].checked = true;
+        }
         settingDialogDiv.find("#optimizationType" + val.operationType).css("display", "block");
         settingDialogDiv.find("#group" + val.operationType).val(val.group);
         settingDialogDiv.find("#subDomainName" + val.operationType).val(val.subDomainName);
@@ -1910,7 +1925,9 @@ function initSettingDialog(qzSetting, self) {
         if (val.qzChargeRules !== null) {
             $.each(val.qzChargeRules, function (chargeRuleIdx, chargeRuleVal) {
                 if (isSEO !== "true") {
-                    settingDialogDiv.find('#aiZhan' + val.operationType + 'StandardSpecies')[0].checked = false;
+                    if (isBaiduEngine === 'true') {
+                        settingDialogDiv.find('#aiZhan' + val.operationType + 'StandardSpecies')[0].checked = false;
+                    }
                     settingDialogDiv.find("#" + chargeRuleVal.standardSpecies + val.operationType + "StandardSpecies")[0].checked = true;
                     settingDialogDiv.find("#chargeRule" + val.operationType).css("display", "block");
                     settingDialogDiv.find("#chargeRule" + val.operationType).find("thead tr td").text(changeStandardSpecies(chargeRuleVal.standardSpecies) + "收费规则");
@@ -2301,14 +2318,18 @@ function dealSettingTable(self, operationType, type) {
         var checkboxObj = settingDialogDiv.find('#' + operationType);
         var isSEO = $(".datalist-list #isSEO").val();
         var status = $(checkboxObj).attr("status");
+        var standardSpecies = 'aiZhan';
+        if ($(".datalist-list #isBaiduEngine").val() === 'false') {
+            standardSpecies = 'designationWord';
+        }
         if (checkboxObj[0].checked === true) {
             groupObj.css("display","block");
             if (isSEO === "false" && optimizationType !== '0') {
                 $("#chargeRule" + operationType).css("display", "block");
                 if ($("#standardSpecies" + operationType).find("input:checkbox:checked").length > 0) {
-                    $("#aiZhan"+ operationType +"StandardSpecies")[0].checked = false;
+                    $("#" + standardSpecies + operationType +"StandardSpecies")[0].checked = false;
                 } else {
-                    $("#aiZhan"+ operationType +"StandardSpecies")[0].checked = true;
+                    $("#" + standardSpecies + operationType +"StandardSpecies")[0].checked = true;
                     addRow("chargeRule" + operationType);
                 }
             }
@@ -2327,7 +2348,7 @@ function dealSettingTable(self, operationType, type) {
                 groupObj.find("input:checked").each(function () {
                     $("#changeSettingDialog").find("#" + $(this).val() + operationType + "StandardSpecies").prop("checked", false);
                 });
-                clearStandardInfo(operationType, "aiZhan", 1);
+                clearStandardInfo(operationType, standardSpecies, 1);
             }
             groupObj.css("display","none");
         }

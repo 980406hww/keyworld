@@ -202,6 +202,10 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		qzKeywordRankInfoService.getCountNumOfRankInfo(qzSettingSearchCriteria);
 		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
 		Map<String, String> existSearchEngineMap = qzSettingService.searchQZSettingSearchEngineMap(qzSettingSearchCriteria, page.getRecords().size());
+		boolean isBaiduEngine = false;
+		if (qzSettingSearchCriteria.getSearchEngine().equals(Constants.SEARCH_ENGINE_BAIDU) || qzSettingSearchCriteria.getSearchEngine().equals("All")){
+			isBaiduEngine = true;
+		}
 		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
 		List<String> tagNameList = qzCategoryTagService.findTagNames(null);
 		Integer availableQZSettingCount = qzSettingService.getAvailableQZSettings().size();
@@ -216,6 +220,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		modelAndView.addObject("statusList", Constants.QZSETTING_STATUS_LIST);
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("isSEO", isSEO);
+		modelAndView.addObject("isBaiduEngine", isBaiduEngine);
 		modelAndView.addObject("availableQZSettingCount", availableQZSettingCount);
 		modelAndView.addObject("operationTypeValues", operationTypeValues);
 		modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(qzSettingSearchCriteria.getTerminalType()));
