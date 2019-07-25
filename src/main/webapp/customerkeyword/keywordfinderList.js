@@ -11,6 +11,7 @@ function resetPageNumber(days) {
     var url = searchCustomerKeywordForm.find("#url").val();
     var bearPawNumber = searchCustomerKeywordForm.find("#bearPawNumber").val();
     var optimizeGroupName = searchCustomerKeywordForm.find("#optimizeGroupName").val();
+    var machineGroup = searchCustomerKeywordForm.find("#machineGroup").val();
     var gtOptimizedCount = searchCustomerKeywordForm.find("#gtOptimizedCount").val();
     var ltOptimizedCount = searchCustomerKeywordForm.find("#ltOptimizedCount").val();
     var gtOptimizePlanCount = searchCustomerKeywordForm.find("#gtOptimizePlanCount").val();
@@ -36,6 +37,9 @@ function resetPageNumber(days) {
     }
     if(optimizeGroupName != "") {
         searchCustomerKeywordForm.find("#optimizeGroupName").val($.trim(optimizeGroupName));
+    }
+    if(machineGroup != "") {
+        searchCustomerKeywordForm.find("#machineGroup").val($.trim(machineGroup));
     }
     if(gtOptimizedCount != "") {
         searchCustomerKeywordForm.find("#gtOptimizedCount").val($.trim(gtOptimizedCount));
@@ -324,7 +328,7 @@ function updateMachineGroupName(changeType) {
         resizable: false,
         width: 260,
         height: 100,
-        title:"修改关键字优化组名",
+        title:"修改关键字机器分组",
         closed: true,
         modal: true,
         buttons: [{
@@ -333,7 +337,7 @@ function updateMachineGroupName(changeType) {
             handler: function () {
                 var targetMachineGroup = $("#targetMachineGroupFrom").find("#machineGroup").val();
                 if (targetMachineGroup == null || targetMachineGroup == '') {
-                    alert("请输入目标优化组名!");
+                    alert("请输入目标机器分组!");
                     return;
                 }
                 var obj = {};

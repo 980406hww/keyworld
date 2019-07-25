@@ -59,7 +59,11 @@
             优化组名:
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
                    value="${customerKeywordCriteria.optimizeGroupName}" style="width:100px;">&nbsp;
-            <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox"  onclick="groupNameFuzzyQueryValue()" value="${customerKeywordCriteria.groupNameFuzzyQuery}"/>模糊查询 &nbsp;
+            <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox"  onclick="groupNameFuzzyQueryValue()" value="${customerKeywordCriteria.groupNameFuzzyQuery}" ${customerKeywordCriteria.groupNameFuzzyQuery=='1' ? 'checked' :''} />模糊查询 &nbsp;
+            机器分组:
+            <input type="text" name="machineGroup" id="machineGroup"
+                   value="${customerKeywordCriteria.machineGroup}" style="width:100px;">&nbsp;
+            <input id="machineGroupFuzzyQuery" name="machineGroupFuzzyQuery" type="checkbox"  onclick="machineGroupFuzzyQueryValue()" value="${customerKeywordCriteria.machineGroupFuzzyQuery}" ${customerKeywordCriteria.machineGroupFuzzyQuery=='1' ? 'checked' :''} />模糊查询 &nbsp;
             <c:if test="${isDepartmentManager}">
                 用户名称:
                 <select name="userName" id="userName">
@@ -91,7 +95,6 @@
             <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}"/>显示下架 &nbsp;
             <input id="requireDelete" name="requireDelete" type="checkbox"  ${customerKeywordCriteria.requireDelete == true ? "checked=true" : ""}/>要求删除 &nbsp;
             <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>显示排名为0 &nbsp;
-            <br/>
             要刷:<input type="text" name="gtOptimizePlanCount" id="gtOptimizePlanCount" placeholder=">=" value="${customerKeywordCriteria.gtOptimizePlanCount}" style="width:40px;"/>
             <input type="text" name="ltOptimizePlanCount" id="ltOptimizePlanCount" placeholder="<="  value="${customerKeywordCriteria.ltOptimizePlanCount}" style="width:40px;"/>
             已刷:<input type="text" name="gtOptimizedCount" id="gtOptimizedCount" placeholder=">=" value="${customerKeywordCriteria.gtOptimizedCount}" style="width:40px;"/>
@@ -118,6 +121,8 @@
             value="${customerKeywordCriteria.creationFromTime}">
             到&nbsp;<input name="creationToTime" id="creationToTime" class="Wdate" type="text" style="width:90px;"
             onClick="WdatePicker()" value="${customerKeywordCriteria.creationToTime}">&nbsp;
+
+            <br>
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
                 <input type="submit" onclick="resetPageNumber(0)" value=" 查询 ">&nbsp;
             </shiro:hasPermission>
@@ -222,17 +227,17 @@
                     ${customerKeyword.title == null ? "" : customerKeyword.title.trim()}
                 </td>
                 <td align="center" width=30>
-                    <div style="height:16;">
+                    <div style="height:16px;">
                         <a href="/internal/customerKeywordPositionIndexLog/historyPositionAndIndex/${customerKeyword.uuid}/30"
                              target="_blank" title="查看历史排名" class="floatTd">${customerKeyword.currentIndexCount}</a>
                     </div>
                 </td>
                 <td align="center" width=50>
-                    <div style="height:16;">${customerKeyword.initialPosition}
+                    <div style="height:16px;">${customerKeyword.initialPosition}
                     </div>
                 </td>
                 <td align="center" width=50 class="floatTd" title="排名采集城市: ${customerKeyword.capturePositionCity}">
-                    <div style="height:16;">
+                    <div style="height:16px;">
                         <a href="${customerKeyword.searchEngineUrl}" target="_blank">${customerKeyword.currentPosition}</a>
                     </div>
                 </td>
@@ -359,6 +364,19 @@
             $("#groupNameFuzzyQuery").val("0");
         }
     }
+
+    /**
+     * 检索条件，机器分组是否模糊查询
+     */
+    function machineGroupFuzzyQueryValue() {
+        if ($("#machineGroupFuzzyQuery").is(":checked")){
+            $("#machineGroupFuzzyQuery").val("1");
+        } else {
+            $("#machineGroupFuzzyQuery").val("0");
+        }
+    }
+
+
 
     //显示排名为0
     function noPositionValue() {

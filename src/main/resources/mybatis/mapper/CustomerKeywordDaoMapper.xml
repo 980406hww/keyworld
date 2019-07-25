@@ -89,6 +89,14 @@
                 </if>
             </otherwise>
         </choose>
+        <if test="customerKeywordCriteria.machineGroup != null and customerKeywordCriteria.machineGroup != ''">
+            <if test="customerKeywordCriteria.machineGroupFuzzyQuery == null or customerKeywordCriteria.machineGroupFuzzyQuery == ''">
+                AND ck.fMachineGroup = #{customerKeywordCriteria.machineGroup}
+            </if>
+            <if test="customerKeywordCriteria.machineGroupFuzzyQuery == 1">
+                AND ck.fMachineGroup like '${customerKeywordCriteria.machineGroup}%'
+            </if>
+        </if>
         <choose>
             <when test="customerKeywordCriteria.orderingElement != null and customerKeywordCriteria.orderingElement != ''">
                 ORDER BY ck.${customerKeywordCriteria.orderingElement}  DESC
@@ -159,6 +167,14 @@
                 </if>
             </otherwise>
         </choose>
+        <if test="customerKeywordCriteria.machineGroup != null and customerKeywordCriteria.machineGroup != ''">
+            <if test="customerKeywordCriteria.machineGroupFuzzyQuery == null or customerKeywordCriteria.machineGroupFuzzyQuery == ''">
+                AND ck.fMachineGroup = #{customerKeywordCriteria.machineGroup}
+            </if>
+            <if test="customerKeywordCriteria.machineGroupFuzzyQuery == 1">
+                AND ck.fMachineGroup like '${customerKeywordCriteria.machineGroup}%'
+            </if>
+        </if>
     </sql>
 
     <update id="cleanSelectedCustomerKeywordTitle">
