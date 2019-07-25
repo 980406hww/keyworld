@@ -36,11 +36,12 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String orderNumber;//订单号
     private String remarks;//备注
     private String enteredKeywordRemarks; //收录备注
+    private String machineGroup;//机器分组搜索条件
 
     private String orderingElement;
     private String orderingRule;
     private String targetOptimizeGroupName;
-    private String targetMachineGroup;
+    private String targetMachineGroup;//目标机器分组
     private String targetBearPawNumber;
     private Integer noReachStandardDays;
     private Integer sevenDaysNoReachStandard;
@@ -49,6 +50,7 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private Integer openDialogStatus;
     private String customerKeywordSource;
     private String groupNameFuzzyQuery;
+    private String machineGroupFuzzyQuery;
 
     public String getBearPawNumber() {
         return bearPawNumber;
@@ -396,6 +398,14 @@ public class CustomerKeywordCriteria extends BaseCriteria{
         this.enteredKeywordRemarks = enteredKeywordRemarks;
     }
 
+    public String getMachineGroup() {
+        return machineGroup;
+    }
+
+    public void setMachineGroup(String machineGroup) {
+        this.machineGroup = machineGroup;
+    }
+
     public String getCustomerKeywordSource() {
         return customerKeywordSource;
     }
@@ -410,5 +420,13 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setGroupNameFuzzyQuery(String groupNameFuzzyQuery) {
         this.groupNameFuzzyQuery = groupNameFuzzyQuery;
+    }
+
+    public String getMachineGroupFuzzyQuery() {
+        return machineGroupFuzzyQuery;
+    }
+
+    public void setMachineGroupFuzzyQuery(String machineGroupFuzzyQuery) {
+        this.machineGroupFuzzyQuery = machineGroupFuzzyQuery;
     }
 }
