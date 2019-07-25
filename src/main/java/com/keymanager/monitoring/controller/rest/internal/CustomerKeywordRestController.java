@@ -636,6 +636,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	/**
 	 * 批量更新所选关键字的机器分组
 	 */
+	@RequiresPermissions("/internal/customerKeyword/updateMachineGroupByCustomerUuids")
 	@RequestMapping(value = "/updateMachineGroupByCustomerUuids",method = RequestMethod.POST)
 	public ResponseEntity<?> updateMachineGroupByCustomerUuids(@RequestBody KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO) {
 		try{
@@ -650,6 +651,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	/**
 	 * 批量更新根据检索条件获取到的关键字的机器分组
 	 */
+	@RequiresPermissions("/internal/customerKeyword/updateMachineGroupByCriteria")
 	@RequestMapping(value = "/updateMachineGroupByCriteria",method = RequestMethod.POST)
 	public ResponseEntity<?> updateMachineGroupByCriteria(@RequestBody CustomerKeywordCriteria customerKeywordCriteria) {
 		try{
@@ -659,6 +661,29 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		}catch (Exception e){
 			logger.error(e.getMessage());
 			return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
+		}
+	}
+
+
+
+	@RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordMachineGroup")
+	@RequestMapping(value = "/updateCustomerKeywordMachineGroup", method = RequestMethod.POST)
+	public ResponseEntity<?> updateCustomerKeywordMachineGroupName(@RequestBody CustomerKeywordCriteria customerKeywordCriteria, HttpServletRequest request) {
+		try {
+			String entryType = (String) request.getSession().getAttribute("entryType");
+			String terminalType = TerminalTypeMapping.getTerminalType(request);
+			String userName = (String) request.getSession().getAttribute("username");
+			boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+			if(!isDepartmentManager) {
+				customerKeywordCriteria.setUserName(userName);
+			}
+			customerKeywordCriteria.setEntryType(entryType);
+			customerKeywordCriteria.setTerminalType(terminalType);
+			customerKeywordService.updateMachineGroup(customerKeywordCriteria);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
 	}
 }
