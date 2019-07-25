@@ -674,6 +674,12 @@
         </foreach>
     </update>
 
+    <update id="updateOptimizationQueryTimeSingle">
+        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(NOW(), INTERVAL fQueryInterval MINUTE),
+        fInvalidFlag = if(fInvalidRefreshCount > #{maxInvalidCount}, 1, 0)
+        WHERE fUuid = #{customerKeywordUuid}
+    </update>
+
     <update id="updateOptimizationResult">
         UPDATE t_customer_keyword
         SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + #{count}, fQueryTime = if(fOptimizePlanCount > fOptimizedCount, fQueryTime, DATE_ADD(NOW(), INTERVAL 1 DAY)),

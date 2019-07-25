@@ -153,31 +153,33 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             Object obj = arrayBlockingQueue.take();
             if (obj != null) {
                 OptimizationKeywordVO keywordVO = (OptimizationKeywordVO) obj;
-                OperationCombine operationCombine = operationCombineService.getOperationCombine(keywordVO.getOptimizeGroup(), machineInfo.getTerminalType());
-                GroupSetting groupSetting = groupSettingService.getGroupSetting(operationCombine);
-                OptimizationMachineVO optimizationMachineVO = new OptimizationMachineVO();
-                optimizationMachineVO.setDisableStatistics(groupSetting.getDisableStatistics());
-                optimizationMachineVO.setDisableVisitWebsite(groupSetting.getDisableVisitWebsite());
-                optimizationMachineVO.setEntryPageMinCount(groupSetting.getEntryPageMinCount());
-                optimizationMachineVO.setEntryPageMaxCount(groupSetting.getEntryPageMaxCount());
-                optimizationMachineVO.setPageRemainMinTime(groupSetting.getPageRemainMinTime());
-                optimizationMachineVO.setPageRemainMaxTime(groupSetting.getPageRemainMaxTime());
-                optimizationMachineVO.setInputDelayMinTime(groupSetting.getInputDelayMinTime());
-                optimizationMachineVO.setInputDelayMaxTime(groupSetting.getInputDelayMaxTime());
-                optimizationMachineVO.setSlideDelayMinTime(groupSetting.getSlideDelayMinTime());
-                optimizationMachineVO.setSlideDelayMaxTime(groupSetting.getSlideDelayMaxTime());
-                optimizationMachineVO.setTitleRemainMinTime(groupSetting.getTitleRemainMinTime());
-                optimizationMachineVO.setTitleRemainMaxTime(groupSetting.getTitleRemainMaxTime());
-                optimizationMachineVO.setOptimizeKeywordCountPerIP(groupSetting.getOptimizeKeywordCountPerIP());
-                optimizationMachineVO.setRandomlyClickNoResult(groupSetting.getRandomlyClickNoResult());
-                optimizationMachineVO.setMaxUserCount(groupSetting.getMaxUserCount());
-                optimizationMachineVO.setPage(groupSetting.getPage());
-                optimizationMachineVO.setOperationType(groupSetting.getOperationType());
-                optimizationMachineVO.setClearCookie(groupSetting.getClearCookie());
-                OptimizationVO optimizationVO = new OptimizationVO();
-                optimizationVO.setKeywordVO(keywordVO);
-                optimizationVO.setMachineVO(optimizationMachineVO);
-                return optimizationVO;
+                if(StringUtils.isNotBlank(keywordVO.getOptimizeGroup())) {
+                    OperationCombine operationCombine = operationCombineService.getOperationCombine(keywordVO.getOptimizeGroup(), machineInfo.getTerminalType());
+                    GroupSetting groupSetting = groupSettingService.getGroupSetting(operationCombine);
+                    OptimizationMachineVO optimizationMachineVO = new OptimizationMachineVO();
+                    optimizationMachineVO.setDisableStatistics(groupSetting.getDisableStatistics());
+                    optimizationMachineVO.setDisableVisitWebsite(groupSetting.getDisableVisitWebsite());
+                    optimizationMachineVO.setEntryPageMinCount(groupSetting.getEntryPageMinCount());
+                    optimizationMachineVO.setEntryPageMaxCount(groupSetting.getEntryPageMaxCount());
+                    optimizationMachineVO.setPageRemainMinTime(groupSetting.getPageRemainMinTime());
+                    optimizationMachineVO.setPageRemainMaxTime(groupSetting.getPageRemainMaxTime());
+                    optimizationMachineVO.setInputDelayMinTime(groupSetting.getInputDelayMinTime());
+                    optimizationMachineVO.setInputDelayMaxTime(groupSetting.getInputDelayMaxTime());
+                    optimizationMachineVO.setSlideDelayMinTime(groupSetting.getSlideDelayMinTime());
+                    optimizationMachineVO.setSlideDelayMaxTime(groupSetting.getSlideDelayMaxTime());
+                    optimizationMachineVO.setTitleRemainMinTime(groupSetting.getTitleRemainMinTime());
+                    optimizationMachineVO.setTitleRemainMaxTime(groupSetting.getTitleRemainMaxTime());
+                    optimizationMachineVO.setOptimizeKeywordCountPerIP(groupSetting.getOptimizeKeywordCountPerIP());
+                    optimizationMachineVO.setRandomlyClickNoResult(groupSetting.getRandomlyClickNoResult());
+                    optimizationMachineVO.setMaxUserCount(groupSetting.getMaxUserCount());
+                    optimizationMachineVO.setPage(groupSetting.getPage());
+                    optimizationMachineVO.setOperationType(groupSetting.getOperationType());
+                    optimizationMachineVO.setClearCookie(groupSetting.getClearCookie());
+                    OptimizationVO optimizationVO = new OptimizationVO();
+                    optimizationVO.setKeywordVO(keywordVO);
+                    optimizationVO.setMachineVO(optimizationMachineVO);
+                    return optimizationVO;
+                }
             }
         }
         return null;
@@ -755,9 +757,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
             retryCount++;
             if (customerKeywordUuid != null && updateQueryInfo) {
-                List<Long> customerKeywordUuids = new ArrayList<Long>();
-                customerKeywordUuids.add(customerKeywordUuid);
-                updateOptimizationQueryTime(customerKeywordUuids);
+                customerKeywordDao.updateOptimizationQueryTimeSingle(customerKeywordUuid, maxInvalidCount);
             }
         } while (customerKeywordUuid == null && retryCount < 2);
 
@@ -992,9 +992,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
             retryCount++;
             if (customerKeywordUuid != null && updateQueryInfo) {
-                List<Long> customerKeywordUuids = new ArrayList<Long>();
-                customerKeywordUuids.add(customerKeywordUuid);
-                updateOptimizationQueryTime(customerKeywordUuids);
+                customerKeywordDao.updateOptimizationQueryTimeSingle(customerKeywordUuid, maxInvalidCount);
             }
         } while (customerKeywordUuid == null && retryCount < 2);
 
