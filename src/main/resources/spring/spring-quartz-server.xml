@@ -7,8 +7,26 @@
 		<!-- Triggers集成 -->
 		<property name="triggers">
 			<list>
-				<ref bean="cronTriggerGenerateDailyReport" />
-				<ref bean="cronAutoTriggerDailyReport" />
+				<ref bean="cronTriggerControlCustomerKeywordStatus" />
+				<ref bean="cronTriggerAdjustOptimizationCount" />
+				<ref bean="cronTriggerSwitchClientStatusGroup" />
+				<ref bean="cronTriggerRenewalNotification" />
+				<ref bean="cronTriggerAccessWebsite" />
+				<ref bean="cronTriggerExpiryTimeWebsite" />
+				<ref bean="cronTriggerObserveOptimizationCount" />
+				<ref bean="cronTriggerRemainingKeywordIndicator" />
+				<ref bean="cronTriggerAutoSwitchCustomerKeywordStatus" />
+				<ref bean="cronTriggerCleanCKLogFromAWeekAgo" />
+				<ref bean="cronTriggerCleanCKLogFromAMonthAgo" />
+				<ref bean="cronTriggerKeywordInfoSynchronize" />
+				<ref bean="cronTriggerCustomerChargeRemind" />
+				<ref bean="cronTriggerNegativeStandardSettingCount" />
+				<ref bean="cronTriggerAllotCookie" />
+				<ref bean="cronTriggerClientUpgrade" />
+				<ref bean="cronTriggerExceedMaxCount" />
+				<ref bean="cronTriggerRefreshStatInfo" />
+				<ref bean="cronAutoTriggerResetInfoDaily" />
+				<ref bean="cronTriggerCacheCustomerKeyword" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->

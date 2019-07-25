@@ -147,7 +147,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             return null;
         }
 
-        String key = machineInfo.getTerminalType() + "####" + (machineInfo.getGroup() == null ? "Default" : machineInfo.getGroup());
+        String key = machineInfo.getTerminalType() + "####" + (machineInfo.getMachineGroup() == null ? "Default" : machineInfo.getMachineGroup());
         ArrayBlockingQueue arrayBlockingQueue = machineGroupQueueMap.get(key);
         if(arrayBlockingQueue != null) {
             Object obj = arrayBlockingQueue.take();
