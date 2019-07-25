@@ -13,7 +13,7 @@
             margin: auto;
         }
         #customerKeywordTopDiv {
-            position: fixed;
+           /* position: fixed;*/
             top: 0px;
             left: 0px;
             background-color: white;
@@ -41,7 +41,7 @@
 
             <br>
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
-                <input type="submit" onclick="resetPageNumber(0)" value=" 查询 ">&nbsp;
+                <input type="submit"  value=" 查询 ">&nbsp;
             </shiro:hasPermission>
 
         </div>
@@ -55,6 +55,7 @@
 </div>
 <div id="showMachineGroupQueueTableDiv" style="margin-bottom: 30px">
     <table id="machineGroupQueueTable" style="font-size:12px;">
+
         <c:forEach items="${machineGroupQueueVOS}" var="machineGroupQueueVO">
             <tr height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
                 <td align="center" width=80>
