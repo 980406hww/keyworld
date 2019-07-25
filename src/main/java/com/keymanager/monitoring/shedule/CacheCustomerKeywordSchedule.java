@@ -18,6 +18,7 @@ public class CacheCustomerKeywordSchedule {
         try{
             customerKeywordService.cacheCustomerKeywords();
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error("Cache Customer Keyword is error" + e.getMessage());
         }
     }

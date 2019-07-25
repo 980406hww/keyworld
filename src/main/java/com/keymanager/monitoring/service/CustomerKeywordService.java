@@ -131,7 +131,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                         if (CollectionUtils.isNotEmpty(optimizationKeywordVOS)) {
                             List<Long> customerKeywordUuids = new ArrayList<Long>();
                             for (OptimizationKeywordVO optimizationKeywordVO : optimizationKeywordVOS) {
-                                blockingQueue.add(optimizationKeywordVO);
+                                blockingQueue.offer(optimizationKeywordVO);
                                 customerKeywordUuids.add(optimizationKeywordVO.getUuid());
                             }
                             updateOptimizationQueryTime(customerKeywordUuids);
@@ -150,7 +150,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         String key = machineInfo.getTerminalType() + "####" + (machineInfo.getMachineGroup() == null ? "Default" : machineInfo.getMachineGroup());
         ArrayBlockingQueue arrayBlockingQueue = machineGroupQueueMap.get(key);
         if (arrayBlockingQueue != null) {
-            Object obj = arrayBlockingQueue.take();
+            Object obj = arrayBlockingQueue.peek();
             if (obj != null) {
                 OptimizationKeywordVO keywordVO = (OptimizationKeywordVO) obj;
                 if(StringUtils.isNotBlank(keywordVO.getOptimizeGroup())) {

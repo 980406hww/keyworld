@@ -1607,7 +1607,7 @@
         SELECT
           CONCAT(ck.fTerminalType, '####', ck.fMachineGroup)
         FROM t_customer_keyword ck
-        WHERE ck.fStatus = 1
+        WHERE ck.fStatus = 1 AND ck.fMachineGroup > ''
         GROUP BY ck.fTerminalType, ck.fMachineGroup
     </select>
 
