@@ -145,7 +145,8 @@ public class QZSettingRestController extends SpringMVCBaseController {
 
 	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
 	@RequestMapping(value = "/searchQZSettings", method = RequestMethod.GET)
-	public ModelAndView searchQZSettingsGet(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
+	public ModelAndView searchQZSettingsGet(@RequestParam(defaultValue = "1") int currentPageNumber,
+											@RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
 		return constructQZSettingModelAndView(request, new QZSettingSearchCriteria(), currentPageNumber, pageSize);
 	}
 
@@ -170,6 +171,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		if (null == qzSettingSearchCriteria.getSearchEngine()) {
 			qzSettingSearchCriteria.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
 		}
+		qzSettingSearchCriteria.setRenewalStatus(qzSettingSearchCriteria.getRenewalStatus() == null ? 1 : qzSettingSearchCriteria.getRenewalStatus());
 		CustomerCriteria customerCriteria = new CustomerCriteria();
 		String entryType = (String) request.getSession().getAttribute("entryType");
 		customerCriteria.setEntryType(entryType);
@@ -200,6 +202,10 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		qzKeywordRankInfoService.getCountNumOfRankInfo(qzSettingSearchCriteria);
 		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
 		Map<String, String> existSearchEngineMap = qzSettingService.searchQZSettingSearchEngineMap(qzSettingSearchCriteria, page.getRecords().size());
+		boolean isBaiduEngine = false;
+		if (qzSettingSearchCriteria.getSearchEngine().equals(Constants.SEARCH_ENGINE_BAIDU) || qzSettingSearchCriteria.getSearchEngine().equals("All")){
+			isBaiduEngine = true;
+		}
 		List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
 		List<String> tagNameList = qzCategoryTagService.findTagNames(null);
 		Integer availableQZSettingCount = qzSettingService.getAvailableQZSettings().size();
@@ -214,6 +220,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		modelAndView.addObject("statusList", Constants.QZSETTING_STATUS_LIST);
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("isSEO", isSEO);
+		modelAndView.addObject("isBaiduEngine", isBaiduEngine);
 		modelAndView.addObject("availableQZSettingCount", availableQZSettingCount);
 		modelAndView.addObject("operationTypeValues", operationTypeValues);
 		modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(qzSettingSearchCriteria.getTerminalType()));
@@ -309,5 +316,19 @@ public class QZSettingRestController extends SpringMVCBaseController {
 			logger.error(ex.getMessage());
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@RequiresPermissions("/internal/qzsetting/updateStatus")
+	@RequestMapping(value = "/updateQZSettingRenewalStatus", method = RequestMethod.POST)
+	public ResponseEntity<?> updateQZSettingRenewalStatus(@RequestBody Map<String, Object> requestMap) {
+		List<Long> uuids = (List<Long>) requestMap.get("uuids");
+		Integer renewalStatus = (Integer) requestMap.get("renewalStatus");
+		try {
+			qzSettingService.updateQZSettingRenewalStatus(uuids, renewalStatus);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		}catch(Exception ex){
+			logger.error(ex.getMessage());
+		}
+		return new ResponseEntity<Object>(false, HttpStatus.OK);
 	}
 }

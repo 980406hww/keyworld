@@ -237,22 +237,28 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         String[] weekData = weekDataString.split(", ");
         DecimalFormat decimalFormat = new DecimalFormat("0.0000");
         String increase;
+        int oneWeekDiff;
         if (weekData.length < 7) {
             int lastDayNum = Integer.parseInt(weekData[weekData.length - 1]);
             if (lastDayNum == 0) {
                 increase = topTenNum == 0 ? "0" : "1";
+                oneWeekDiff = topTenNum;
             } else {
                 increase = decimalFormat.format((double) (topTenNum - Integer.parseInt(weekData[weekData.length - 1])) / lastDayNum);
+                oneWeekDiff = topTenNum - Integer.parseInt(weekData[weekData.length - 1]);
             }
         } else {
             int weekDayNum = Integer.parseInt(weekData[6]);
             if (weekDayNum == 0) {
                 increase = topTenNum == 0 ? "0" : "1";
+                oneWeekDiff = topTenNum;
             } else {
                 increase = decimalFormat.format((double) (topTenNum - Integer.parseInt(weekData[6])) / weekDayNum);
+                oneWeekDiff = topTenNum - Integer.parseInt(weekData[6]);
             }
         }
         qzKeywordRankInfo.setIncrease(Double.parseDouble(increase));
+        qzKeywordRankInfo.setOneWeekDifference(oneWeekDiff);
         qzKeywordRankInfo.setTodayDifference(weekData.length > 1 ? topTenNum - Integer.parseInt(weekData[1]) : 0);
 
         // 判断是否达标，返回达标等级，近下一达标比率

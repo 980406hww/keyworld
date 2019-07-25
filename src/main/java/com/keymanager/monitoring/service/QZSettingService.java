@@ -168,6 +168,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			qzSettingDao.updateById(existingQZSetting);
 		} else {
 			qzSetting.setUpdateTime(new Date());
+			qzSetting.setRenewalStatus(1);
 			qzSettingDao.insert(qzSetting);
 			Long qzSettingUuid  = new Long(qzSettingDao.selectLastId());//插入qzSetting是的uuid
 			for (QZOperationType qzOperationType : qzSetting.getQzOperationTypes()){
@@ -188,7 +189,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				if (null != standardSpecies) {
 					qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), qzOperationType.getOperationType(), standardSpecies, !isExtraRankInfo);
 					if (standardSpecies.equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
-						qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), qzOperationType.getOperationType(), "aiZhan", false);
+						if (qzSetting.getSearchEngine().equals(Constants.SEARCH_ENGINE_BAIDU)) {
+							qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), qzOperationType.getOperationType(), "aiZhan", false);
+						}
 						if (qzSetting.getfIsMonitor()) {
 							captureRankJobService.qzAddCaptureRankJob(qzOperationType.getGroup(), qzSettingUuid, qzSetting.getCustomerUuid(), qzOperationType.getOperationType(), userName);
 						}
@@ -348,7 +351,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 						standardSpecies = qzChargeRule.getStandardSpecies();
 					}
 				} else { // 辅助优化, 采集爱站曲线，不计算达标
-					qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), qzOperationType.getOperationType(), "aiZhan", false);
+            		if (qzSetting.getSearchEngine().equals(Constants.SEARCH_ENGINE_BAIDU)) {
+						qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), qzOperationType.getOperationType(), "aiZhan", false);
+					}
 				}
             }
             if (null != standardSpecies) {
@@ -359,7 +364,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		for (Map.Entry<String, String> entry : standardSpeciesMap.entrySet()) {
 			qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), entry.getKey(), entry.getValue(), true);
 			if (entry.getValue().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
-				qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), entry.getKey(), "aiZhan", false);
+				if (qzSetting.getSearchEngine().equals(Constants.SEARCH_ENGINE_BAIDU)) {
+					qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), entry.getKey(), "aiZhan", false);
+				}
 			}
         }
 
@@ -820,6 +827,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public Map<String, String> searchQZSettingSearchEngineMap(QZSettingSearchCriteria criteria, int record) {
 		Map<String, String> map = new LinkedHashMap<>();
+		map.put(Constants.ALL_SEARCH_ENGINE, TerminalTypeEnum.PC.name());
+		map.put(Constants.ALL_SEARCH_ENGINE + TerminalTypeEnum.Phone.name(), TerminalTypeEnum.Phone.name());
 		if ((!"".equals(criteria.getDomain()) || !"".equals(criteria.getCustomerUuid())) && record == 1) {
 			List<QZSettingVO> qzSettingVos = qzSettingDao.searchQZSettingSearchEngines(criteria.getCustomerUuid(), criteria.getDomain());
 			for (QZSettingVO qzSettingVo : qzSettingVos) {
@@ -831,13 +840,22 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				}
 			}
 		} else {
-			map = Constants.SEARCH_ENGINE_MAP;
+			map.putAll(Constants.SEARCH_ENGINE_MAP);
 		}
 		if (!map.containsKey(criteria.getSearchEngine()) && !map.containsKey(criteria.getSearchEngine() + criteria.getTerminalType())) {
 			Map.Entry<String, String> next = map.entrySet().iterator().next();
-			criteria.setSearchEngine(next.getKey().substring(0, next.getKey().indexOf('P') > -1 ? next.getKey().indexOf('P') : next.getKey().length()));
-			criteria.setTerminalType(next.getValue());
+			if ("".equals(criteria.getSearchEngine()) && TerminalTypeEnum.Phone.name().equals(criteria.getTerminalType())) {
+				criteria.setSearchEngine(Constants.ALL_SEARCH_ENGINE);
+				criteria.setTerminalType(TerminalTypeEnum.Phone.name());
+			} else {
+				criteria.setSearchEngine(next.getKey().substring(0, next.getKey().contains("P") ? next.getKey().indexOf('P') : next.getKey().length()));
+				criteria.setTerminalType(next.getValue());
+			}
 		}
 		return map;
+	}
+
+	public void updateQZSettingRenewalStatus(List<Long> uuids, Integer renewalStatus) {
+		qzSettingDao.updateQZSettingRenewalStatus(uuids, renewalStatus);
 	}
 }

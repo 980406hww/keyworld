@@ -116,7 +116,7 @@
                 </td>
                 <td width=40 style="text-align: center">${industryInfo.pageNum}</td>
                 <td width=40 style="text-align: center">${industryInfo.pagePerNum}</td>
-                <td width=60 style="text-align: center">
+                <td width=60 style="text-align: center" name="status">
                     <c:choose>
                         <c:when test="${industryInfo.status == 2}">
                             <span style="color: forestgreen;">爬取完成</span>

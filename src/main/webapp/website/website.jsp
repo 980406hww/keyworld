@@ -9,37 +9,52 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
     <%@include file="/menu.jsp" %>
-    <div style="margin-top: 35px">
+    <div >
         <form method="post" id="searchWebsiteForm" action="/internal/website/searchWebsites" style="margin-bottom:0px ">
             <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}" />
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-            网站名称:<input type="text" name="websiteName" id="websiteName" value="${websiteCriteria.websiteName}">&nbsp;&nbsp;
-            域名:<input type="text" name="domain" id="domain" value="${websiteCriteria.domain}">&nbsp;&nbsp;
-            失败次数:<input type="text" name="accessFailCount" id="accessFailCount" value="${websiteCriteria.accessFailCount}">&nbsp;&nbsp;
-            含有指定友链:<input type="text" name="friendlyLinkUrl" id="friendlyLinkUrl" value="${(websiteCriteria.friendlyLinkUrl == null || websiteCriteria.friendlyLinkUrl == '') ? 'http://': websiteCriteria.friendlyLinkUrl}" placeholder="请填写准确友链链接url">&nbsp;&nbsp;
-            含有指定广告:<input type="text" name="advertisingTagname" id="advertisingTagname" value="${websiteCriteria.advertisingTagname}" placeholder="请填写准确广告标识">&nbsp;&nbsp;
-            销售更新状态:<select id="updateSalesInfoSign" name="updateSalesInfoSign" style="width: 150px;" title="">
+            网站名称:<input type="text" name="websiteName" id="websiteName" value="${websiteCriteria.websiteName}" style="width: 100px;">&nbsp;&nbsp;
+            域名:<input type="text" name="domain" id="domain" value="${websiteCriteria.domain}" style="width: 100px;">&nbsp;&nbsp;
+            失败次数:<input type="text" name="accessFailCount" id="accessFailCount" value="${websiteCriteria.accessFailCount}" style="width: 40px;">&nbsp;&nbsp;
+            含有指定友链:<input type="text" name="friendlyLinkUrl" id="friendlyLinkUrl" style="width: 180px;" value="${(websiteCriteria.friendlyLinkUrl == null || websiteCriteria.friendlyLinkUrl == '') ? 'http://': websiteCriteria.friendlyLinkUrl}" placeholder="请填写准确友链链接url">&nbsp;&nbsp;
+            含有指定广告:<input type="text" name="advertisingTagname" id="advertisingTagname" style="width: 120px;" value="${websiteCriteria.advertisingTagname}" placeholder="请填写准确广告标识">&nbsp;&nbsp;
+            销售更新状态:<select id="updateSalesInfoSign" name="updateSalesInfoSign" style="width: 100px;">
                 <option value="" selected="selected">请选择</option>
                 <c:forEach items="${putSalesInfoSignMap}" var="putSalesInfoSign">
                     <option value="${putSalesInfoSign.key}" <c:if test="${putSalesInfoSign.key eq websiteCriteria.updateSalesInfoSign}">selected="selected"</c:if>>${putSalesInfoSign.value}</option>
                 </c:forEach>
             </select>
             友链更新状态:
-            <select id="synchronousFriendlyLinkSign" name="synchronousFriendlyLinkSign" style="width: 150px;" title="">
+            <select id="synchronousFriendlyLinkSign" name="synchronousFriendlyLinkSign" style="width: 100px;" title="">
                 <option value="" selected="selected">请选择</option>
                 <c:forEach items="${websiteSynchronousSignMap}" var="websiteSynchronousSign">
                     <option value="${websiteSynchronousSign.key}" <c:if test="${websiteSynchronousSign.key eq websiteCriteria.synchronousFriendlyLinkSign}">selected="selected"</c:if>>${websiteSynchronousSign.value}</option>
                 </c:forEach>
             </select>
             广告更新状态:
-            <select id="synchronousAdvertisingSign" name="synchronousAdvertisingSign" style="width: 150px;" title="">
+            <select id="synchronousAdvertisingSign" name="synchronousAdvertisingSign" style="width: 100px;" title="">
                 <option value="" selected="selected">请选择</option>
                 <c:forEach items="${websiteSynchronousSignMap}" var="websiteSynchronousSign">
                     <option value="${websiteSynchronousSign.key}" <c:if test="${websiteSynchronousSign.key eq websiteCriteria.synchronousAdvertisingSign}">selected="selected"</c:if>>${websiteSynchronousSign.value}</option>
                 </c:forEach>
             </select>
+            所属行业类型:
+            <select id="industryType" name="industryType" style="width: 100px;" title="">
+                <option value="" selected="selected">请选择</option>
+                <c:forEach items="${industryTypeMap}" var="industryType">
+                    <option value="${industryType.key}" <c:if test="${industryType.key eq websiteCriteria.industryType}">selected="selected"</c:if>>${industryType.value}</option>
+                </c:forEach>
+            </select>
+            销售网站类型:
+            <select id="websiteType" name="websiteType" style="width: 100px;" title="">
+                <option value="" selected="selected">请选择</option>
+                <c:forEach items="${websiteTypeMap}" var="websiteType">
+                    <option value="${websiteType.key}" <c:if test="${websiteType.key eq websiteCriteria.websiteType}">selected="selected"</c:if>>${websiteType.value}</option>
+                </c:forEach>
+            </select>
+            <br>
             <shiro:hasPermission name="/internal/website/searchWebsites">
             <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
             </shiro:hasPermission>
@@ -79,56 +94,43 @@
         </form>
     </div>
     <table style="font-size:12px; width: 100%;" id="headerTable">
-        <%--<tr bgcolor="" height="30">
-            <td align="center" width="10">
+        <tr bgcolor="" height="22">
+            <td width="35" align="center" rowspan="2">
                 <input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/>
             </td>
-            <td align="center" width=80>网站名称</td>
-            <td align="center" width=100>网站域名</td>
-            <td align="center" width=60>所属行业</td>
-            <td align="center" width=40>访问失败次数</td>
-            <td align="center" width=50>发现故障时间</td>
-            <td align="center" width=50>最近访问时间</td>
-            <td align="center" width=50>更新时间</td>
-            <td align="center" width=50>操作</td>
-        </tr>--%>
-            <tr bgcolor="" height="22">
-                <td width="35" align="center" rowspan="2">
-                    <input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/>
-                </td>
-                <td width="80" align="center" rowspan="2">网站名称</td>
-                <td width="80" align="center" rowspan="2">所属行业</td>
-                <td width="80" align="center" rowspan="2">访问失败次数</td>
-                <td width="80" align="center" rowspan="2">发现故障时间</td>
-                <td width="80" align="center" rowspan="2">最近访问时间</td>
-                <td width="80" align="center" rowspan="2">更新时间</td>
-                <td width="270" align="center" colspan="7">域名信息</td>
-                <td width="210" colspan="6" align="center">后台信息</td>
-                <td width="210" colspan="3" align="center">数据库信息</td>
-                <td width="210" colspan="3" align="center">服务器信息</td>
-                <td width="80" align="center" rowspan="2">操作</td>
-            </tr>
-            <tr height="23">
-                <td width="70" align="center">网站域名</td>
-                <td width="70" align="center">网站类型</td>
-                <td width="70" align="center">友情链接</td>
-                <td width="70" align="center">广告</td>
-                <td width="70" align="center">注册商</td>
-                <td width="70" align="center">解析商</td>
-                <td width="70" align="center">到期时间</td>
-                <td width="70" align="center">后台链接</td>
-                <td width="70" align="center">后台用户名</td>
-                <td width="70" align="center">后台密码</td>
-                <td width="70" align="center">更新销售信息状态</td>
-                <td width="70" align="center">更新友链信息状态</td>
-                <td width="70" align="center">更新广告信息状态</td>
-                <td width="70" align="center">数据库名称</td>
-                <td width="70" align="center">用户名</td>
-                <td width="70" align="center">密码</td>
-                <td width="70" align="center">IP</td>
-                <td width="70" align="center">用户名</td>
-                <td width="70" align="center">密码</td>
-            </tr>
+            <td width="80" align="center" rowspan="2">网站名称</td>
+            <td width="80" align="center" rowspan="2">所属行业类型</td>
+            <td width="80" align="center" rowspan="2">访问失败次数</td>
+            <td width="80" align="center" rowspan="2">发现故障时间</td>
+            <td width="80" align="center" rowspan="2">最近访问时间</td>
+            <td width="80" align="center" rowspan="2">更新时间</td>
+            <td width="270" align="center" colspan="7">域名信息</td>
+            <td width="210" colspan="6" align="center">后台信息</td>
+            <td width="210" colspan="3" align="center">数据库信息</td>
+            <td width="210" colspan="3" align="center">服务器信息</td>
+            <td width="80" align="center" rowspan="2">操作</td>
+        </tr>
+        <tr height="23">
+            <td width="70" align="center">网站域名</td>
+            <td width="70" align="center">销售网站类型</td>
+            <td width="70" align="center">友情链接</td>
+            <td width="70" align="center">广告</td>
+            <td width="70" align="center">注册商</td>
+            <td width="70" align="center">解析商</td>
+            <td width="70" align="center">到期时间</td>
+            <td width="70" align="center">后台链接</td>
+            <td width="70" align="center">后台用户名</td>
+            <td width="70" align="center">后台密码</td>
+            <td width="70" align="center">更新销售信息状态</td>
+            <td width="70" align="center">更新友链信息状态</td>
+            <td width="70" align="center">更新广告信息状态</td>
+            <td width="70" align="center">数据库名称</td>
+            <td width="70" align="center">用户名</td>
+            <td width="70" align="center">密码</td>
+            <td width="70" align="center">IP</td>
+            <td width="70" align="center">用户名</td>
+            <td width="70" align="center">密码</td>
+        </tr>
     </table>
 </div>
 <div id="centerDiv" style="margin-bottom: 30px;">
@@ -137,7 +139,7 @@
         <tr align="left" height=30  <c:if test="${status.index%2==0}">bgcolor="#eeeeee"</c:if> >
             <td width=35 align="center"><input type="checkbox" name="uuid" value="${website.uuid}" onclick="decideSelectAll()"/></td>
             <td width=80>${website.websiteName}</td>
-            <td width=80>${website.industry}</td>
+            <td width=80> ${industryTypeMap.get(website.industry)}</td>
             <td width=80>${website.accessFailCount > 0 ? website.accessFailCount : ""}</td>
             <td width=80><fmt:formatDate value="${website.accessFailTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td width=80><fmt:formatDate value="${website.lastAccessTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
@@ -205,8 +207,15 @@
                 <td><input type="text" name="websiteName" id="websiteName" style="width:200px;"></td>
             </tr>
             <tr>
-                <td align="right">所属行业</td>
-                <td><input type="text" name="industry" id="industry" style="width:200px;"></td>
+                <td align="right">所属行业类型</td>
+                <td>
+                    <select id="industry" name="industry" style="width: 200px;" title="">
+                        <option value="" selected="selected">请选择</option>
+                        <c:forEach items="${industryTypeMap}" var="industryType">
+                            <option value="${industryType.key}">${industryType.value}</option>
+                        </c:forEach>
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td align="right">网站域名:</td>
@@ -263,7 +272,7 @@
                 <td><input type="text" name="serverPassword" id="serverPassword" style="width:200px;"></td>
             </tr>
             <tr>
-                <td align="right">网站类型:</td>
+                <td align="right">销售网站类型:</td>
                 <td>
                     <select id="websiteType" name="websiteType" style="width: 200px;" title="">
                         <option value="" selected="selected">请选择</option>
@@ -288,13 +297,7 @@
 <div id="friendlyLinkDialog" title="友情链接信息" class="easyui-dialog" style="display: none">
     <form id="friendlyLinkForm">
         <table style="font-size:12px" id="friendlyLinkTable" align="center" cellspacing="8">
-            <%--<tr>
-                <td style="width:60px;"  align="right">用户名称:</td>
-                <td>
-                    <input type="hidden" name="friendlyLinkId" id="friendlyLinkId">
-                    <input type="text" name="customerInfo" id="customerInfo" list="customer_list" style="width:180px;">
-                </td>
-            </tr>--%>
+
             <tr>
                 <td style="width:60px;"  align="right">网站名称:</td>
                 <td>
@@ -364,12 +367,7 @@
                     <input type="text" name="advertisingTagname" id="advertisingTagname" style="width:180px;" placeholder="唯一，不可进行更改，查询条件">
                 </td>
             </tr>
-            <%--<tr>
-                <td style="width:80px;"  align="right">用户名称:</td>
-                <td>
-                    <input type="text" name="customerInfo" id="customerInfo" list="customer_list" style="width:180px;">
-                </td>
-            </tr>--%>
+
             <tr>
                 <td style="width:80px;"  align="right">广告名称:</td>
                 <td>
@@ -499,12 +497,7 @@
 <div id="synchronousFriendlyLinkDialog" title="同步友链信息(同步默认数据)" class="easyui-dialog" style="display: none;left: 35%;">
     <form id="synchronousFriendlyLinkForm" method="post">
         <table style="font-size:14px;" cellpadding=10 cellspacing="5">
-            <%--<tr>
-                <td style="width:60px;"  align="right">用户名称:</td>
-                <td>
-                    <input type="text" name="customerInfo" id="customerInfo" list="customer_list" style="width:180px;">
-                </td>
-            </tr>--%>
+
             <tr>
                 <td style="width:60px;"  align="right">到期时间:</td>
                 <td>
@@ -523,12 +516,7 @@
 <div id="synchronousAdvertisingDialog" title="同步广告信息(同步默认数据)" class="easyui-dialog" style="display: none;left: 35%;">
     <form id="synchronousAdvertisingForm" method="post">
         <table style="font-size:14px;" cellpadding=10 cellspacing="5">
-            <%--<tr>
-                <td style="width:60px;"  align="right">用户名称:</td>
-                <td>
-                    <input type="text" name="customerInfo" id="customerInfo" list="customer_list" style="width:180px;">
-                </td>
-            </tr>--%>
+
             <tr>
                 <td style="width:60px;"  align="right">续费时间:</td>
                 <td>
@@ -547,6 +535,13 @@
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath }/website/website.js"></script>
 <script language="javascript">
+    $(function () {
+        $("#centerDiv").css("margin-top", $("#topDiv").height()+15);
+        window.onresize = function(){
+            $("#centerDiv").css("margin-top", $("#topDiv").height()+15);
+        }
+    });
+
     function searchFriendlyLinks(url) {
         window.open(url);
     }

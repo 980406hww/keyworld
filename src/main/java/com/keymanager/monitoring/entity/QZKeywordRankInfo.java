@@ -107,6 +107,10 @@ public class QZKeywordRankInfo extends BaseEntity {
     @TableField(value = "fTodayDifference")
     private Integer todayDifference;
 
+    /* 一周top10差值 */
+    @TableField(value = "fOneWeekDifference")
+    private Integer oneWeekDifference;
+
     /* 前10数 */
     @TableField(exist = false)
     private int topTenNum;
@@ -284,6 +288,14 @@ public class QZKeywordRankInfo extends BaseEntity {
 
     public void setTodayDifference(Integer todayDifference) {
         this.todayDifference = todayDifference;
+    }
+
+    public Integer getOneWeekDifference() {
+        return oneWeekDifference;
+    }
+
+    public void setOneWeekDifference(Integer oneWeekDifference) {
+        this.oneWeekDifference = oneWeekDifference;
     }
 
     public String getTopHundred () {

@@ -157,9 +157,12 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         double upperValue = Double.parseDouble(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_UPPER_VALUE).getValue());
         double lowerValue = Double.parseDouble(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_LOWER_VALUE).getValue());
         double differenceValue = Double.parseDouble(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_DIFFERENCEVALUE_VALUE).getValue());
+        int oneWeekDiff = Integer.parseInt(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_ONE_WEEK_DIFF).getValue());
         qzSettingSearchCriteria.setUpperValue(upperValue);
         qzSettingSearchCriteria.setLowerValue(lowerValue);
         qzSettingSearchCriteria.setDifferenceValue(differenceValue);
+        qzSettingSearchCriteria.setUpOneWeekDiff(oneWeekDiff);
+        qzSettingSearchCriteria.setDownOneWeekDiff(-oneWeekDiff);
 
         QZSettingSearchCriteria countNumOfRankInfo = qzKeywordRankInfoDao.getCountNumOfRankInfo(qzSettingSearchCriteria);
         qzSettingSearchCriteria.setUnchangedNum(countNumOfRankInfo.getUnchangedNum());
@@ -217,11 +220,12 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     private QZKeywordRankInfo setIncreaseAndTodayDifference(QZKeywordRankInfo qzKeywordRankInfo) {
         DecimalFormat decimalFormat = new DecimalFormat("0.0000");
         String[] arr = qzKeywordRankInfo.getTopTen().replace("[", "").replace("]", "").split(", ");
+        int oneWeekDiff = Integer.parseInt(arr[0]) - Integer.parseInt(arr[6]);
         if (Integer.parseInt(arr[6]) > 0) {
-            String increase = decimalFormat.format((Integer.parseInt(arr[0]) - Integer.parseInt(arr[6])) * 1.0 / Integer.parseInt(arr[6]));
+            String increase = decimalFormat.format(oneWeekDiff * 1.0 / Integer.parseInt(arr[6]));
             qzKeywordRankInfo.setIncrease(Double.parseDouble(increase));
         } else {
-            if ((Integer.parseInt(arr[0]) - Integer.parseInt(arr[6])) > 0) {
+            if (oneWeekDiff > 0) {
                 qzKeywordRankInfo.setIncrease(1.0);
             } else {
                 qzKeywordRankInfo.setIncrease(0.0);
@@ -229,6 +233,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         }
         Integer todayDifference = Integer.parseInt(arr[0]) - Integer.parseInt(arr[1]);
         qzKeywordRankInfo.setTodayDifference(todayDifference);
+        qzKeywordRankInfo.setOneWeekDifference(oneWeekDiff);
         return qzKeywordRankInfo;
     }
 

@@ -806,7 +806,7 @@ function searchUselessOptimizationGroups() {
         },
         data: JSON.stringify(postData),
         success: function (data) {
-            if (null != data) {
+            if (null != data && data.length > 0) {
                 var tbody = $("#uselessOptimizationGroupDialog tbody");
                 $.each(data, function(index, element) {
                     tbody.append("<tr>" +

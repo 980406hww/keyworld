@@ -107,7 +107,9 @@
 						&nbsp;&nbsp;
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(1)" value=" 激活整站 " >
 						&nbsp;&nbsp;
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingStatus(3)" value=" 暂停续费 " >
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingRenewalStatus(0)" value=" 暂停续费 " >
+						&nbsp;&nbsp;
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQZSettingRenewalStatus(1)" value=" 续费 " >
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/deleteQZSettings">
@@ -121,7 +123,7 @@
 					</li>
 				</shiro:hasPermission>
 				<li>
-					<label name="lower" title="网站关键词(PC,Phone)一星期排名趋势涨幅&lt;${qzSettingSearchCriteria.lowerValue}">
+					<label name="lower" title="网站关键词(PC,Phone)一星期排名趋势涨幅&lt;${qzSettingSearchCriteria.lowerValue}且下降至少${qzSettingSearchCriteria.upOneWeekDiff}个词">
 						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 1}">checked</c:if>>
 						骤降 (${qzSettingSearchCriteria.downNum})
 					</label>
@@ -133,7 +135,7 @@
 					</label>
 				</li>
 				<li>
-					<label name="upper" title="网站关键词(PC,Phone)一星期排名趋势涨幅&gt;${qzSettingSearchCriteria.upperValue}">
+					<label name="upper" title="网站关键词(PC,Phone)一星期排名趋势涨幅&gt;${qzSettingSearchCriteria.upperValue}且上涨至少${qzSettingSearchCriteria.upOneWeekDiff}个词">
 						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 2}">checked</c:if>>
 						暴涨 (${qzSettingSearchCriteria.upNum})
 					</label>
@@ -213,13 +215,19 @@
 					</span>
 				</li>
 				<li>
-					<span>状态: </span>
+					<span>采集状态: </span>
 					<select name="status">
 						<option value="" <c:if test="${qzSettingSearchCriteria.status == null}">selected</c:if>></option>
 						<option value="1" <c:if test="${qzSettingSearchCriteria.status == 1}">selected</c:if>>激活</option>
 						<option value="0" <c:if test="${qzSettingSearchCriteria.status == 0}">selected</c:if>>暂停</option>
 						<option value="2" <c:if test="${qzSettingSearchCriteria.status == 2}">selected</c:if>>新增</option>
-						<option value="3" <c:if test="${qzSettingSearchCriteria.status == 3}">selected</c:if>>暂停续费</option>
+					</select>
+				</li>
+				<li>
+					<span>续费状态: </span>
+					<select name="renewalStatus">
+						<option value="1" <c:if test="${qzSettingSearchCriteria.renewalStatus == 1}">selected</c:if>>续费</option>
+						<option value="0" <c:if test="${qzSettingSearchCriteria.renewalStatus == 0}">selected</c:if>>暂停续费</option>
 					</select>
 				</li>
 				<li>
@@ -307,6 +315,7 @@
 	<input type="hidden" name="organizationID" id="organizationID" value="${qzSettingSearchCriteria.organizationID}">
 	<input type="hidden" name="operationType" id="operationType" value="${qzSettingSearchCriteria.operationType}"/>
 	<input type="hidden" name="status" id="status" value="${qzSettingSearchCriteria.status}"/>
+	<input type="hidden" name="renewalStatus" id="renewalStatus" value="${qzSettingSearchCriteria.renewalStatus}"/>
 	<input type="hidden" name="updateStatus" id="updateStatus" value="${qzSettingSearchCriteria.updateStatus}"/>
 	<input type="hidden" name="checkStatus" id="checkStatus" value="${qzSettingSearchCriteria.checkStatus}"/>
 	<input type="hidden" name="terminalType" id="terminalType" value="${qzSettingSearchCriteria.terminalType}"/>
@@ -322,10 +331,13 @@
 <div class="datalist">
 	<div class="datalist-list">
 		<input type="hidden" id="isSEO" value="${isSEO}">
+		<input type="hidden" id="isBaiduEngine" value="${isBaiduEngine}">
 		<ul>
 			<c:forEach items="${page.records}" var="qzSetting" varStatus="status">
 				<c:choose>
-					<c:when test="${qzSetting.pcGroup != null and qzSetting.qzKeywordRankInfoMap['PC'] != null}">
+					<c:when test="${qzSetting.pcGroup != null and qzSetting.qzKeywordRankInfoMap['PC'] != null and
+					        (qzSetting.searchEngine eq qzSettingSearchCriteria.searchEngine or
+					        qzSettingSearchCriteria.searchEngine eq 'All')}">
 					<li>
 						<div class="header">
 							<input type="hidden" name="contactPerson" value="${qzSetting.contactPerson}">
@@ -442,24 +454,30 @@
 										</div>
 										<div>
                                             <span class="line1">
-                                                <input type="hidden" name="type" value="${qzSetting.type}">
-                                                <a href="javascript:;">${qzSetting.autoCrawlKeywordFlag == true ? "是" : "否"}</a>
+                                                <input type="hidden">
+                                                <a href="javascript:;">
+													<c:choose>
+														<c:when test="${qzSetting.renewalStatus == 1}">
+															<span style="color: green;">续费</span>
+														</c:when>
+														<c:otherwise>
+															<span style="color: red;">暂停续费</span>
+														</c:otherwise>
+													</c:choose>
+												</a>
                                             </span>
-                                                <span>
-                                                <a href="javascript:;">爬取关键字</a>
+											<span>
+                                                <a href="javascript:;">续费状态</a>
                                             </span>
 										</div>
 
 										<div>
                                             <span class="line1">
-                                                <a href="javascript:;" status="${qzSetting.status}">
+                                                <a href="javascript:;">
                                                    <c:choose>
                                                        <c:when test="${qzSetting.status == 1}">激活</c:when>
                                                        <c:when test="${qzSetting.status == 2}">
                                                            <span style="color: green;">新增</span>
-                                                       </c:when>
-                                                       <c:when test="${qzSetting.status == 3}">
-                                                           <span style="color: red;">暂停续费</span>
                                                        </c:when>
                                                        <c:otherwise>
                                                            <span style="color: red;">暂停</span>
@@ -486,10 +504,10 @@
 										</div>
 									</div>
 									<div class="row">
-										<div title="该分组属于此操作组合, 点击链接跳转到分组设置">
+										<div title="销售和SEO没有修改操作组合的权限！！！">
 											<div class="showOperationCombineName" name="showOperationCombineName">
 												<input type="hidden" name="operationCombineName" value="">
-												<select name="operationCombineName" onchange="changeQZSettingGroupOperationCombineUuid(this, '${qzSetting.pcGroup}');" style="width: 180px;">
+												<select name="operationCombineName" onchange="changeQZSettingGroupOperationCombineUuid(this, '${qzSetting.pcGroup}', '${qzSettingSearchCriteria.loginName}', '${isSEO}');" style="width: 180px;">
                                                     <option value=""></option>
 													<c:forEach items="${operationCombines}" var="operationCombine">
                                                         <option>${operationCombine}</option>
@@ -762,7 +780,9 @@
 					</li>
 					<!--li-end-pc-->
 					</c:when>
-					<c:when test="${qzSetting.phoneGroup != null and qzSetting.qzKeywordRankInfoMap['Phone'] != null}">
+					<c:when test="${qzSetting.phoneGroup != null and qzSetting.qzKeywordRankInfoMap['Phone'] != null and
+					        (qzSetting.searchEngine eq qzSettingSearchCriteria.searchEngine or
+					        qzSettingSearchCriteria.searchEngine eq 'All')}">
 					<li>
 						<div class="header">
 							<span>
@@ -877,35 +897,41 @@
 											</span>
 										</div>
 										<div>
-										<span class="line1">
-											<input type="hidden" name="type" value="${qzSetting.type}">
-											<a href="javascript:;">${qzSetting.autoCrawlKeywordFlag == true ? "是" : "否"}</a>
-										</span>
-											<span>
-											<a href="javascript:;">爬取关键字</a>
-										</span>
+											<span class="line1">
+												<input type="hidden">
+												<a href="javascript:;">
+													<c:choose>
+														<c:when test="${qzSetting.renewalStatus == 1}">
+															<span style="color: green;">续费</span>
+														</c:when>
+														<c:otherwise>
+															<span style="color: red;">暂停续费</span>
+														</c:otherwise>
+													</c:choose>
+												</a>
+											</span>
+												<span>
+												<a href="javascript:;">续费状态</a>
+											</span>
 										</div>
 
 										<div>
-										<span class="line1">
-											<a href="javascript:;" status="${qzSetting.status}">
-											   <c:choose>
-												   <c:when test="${qzSetting.status == 1}">激活</c:when>
-												   <c:when test="${qzSetting.status == 2}">
-													   <span style="color: green;">新增</span>
-												   </c:when>
-												   <c:when test="${qzSetting.status == 3}">
-													   <span style="color: red;">暂停续费</span>
-												   </c:when>
-												   <c:otherwise>
-													   <span style="color: red;">暂停</span>
-												   </c:otherwise>
-											   </c:choose>
-											</a>
-										</span>
-											<span>
-											<a href="javascript:;">状态</a>
-										</span>
+											<span class="line1">
+												<a href="javascript:;">
+												   <c:choose>
+													   <c:when test="${qzSetting.status == 1}">激活</c:when>
+													   <c:when test="${qzSetting.status == 2}">
+														   <span style="color: green;">新增</span>
+													   </c:when>
+													   <c:otherwise>
+														   <span style="color: red;">暂停</span>
+													   </c:otherwise>
+												   </c:choose>
+												</a>
+											</span>
+												<span>
+												<a href="javascript:;">采集状态</a>
+											</span>
 										</div>
 									</div>
 								</div>
@@ -925,7 +951,7 @@
 										<div title="该分组属于此操作组合, 点击链接跳转到分组设置">
 											<div class="showOperationCombineName" name="showOperationCombineName">
 												<input type="hidden" name="operationCombineName" value="">
-												<select name="operationCombineName" onchange="changeQZSettingGroupOperationCombineUuid(this, '${qzSetting.phoneGroup}');" style="width: 180px;">
+												<select name="operationCombineName" onchange="changeQZSettingGroupOperationCombineUuid(this, '${qzSetting.phoneGroup}', '${qzSettingSearchCriteria.loginName}', '${isSEO}');" style="width: 180px;">
 													<option value=""></option>
 													<c:forEach items="${operationCombines}" var="operationCombine">
 														<option>${operationCombine}</option>
@@ -1315,8 +1341,10 @@
 				<div style="display: none" id="optimizationTypePC">
 					达标优化类型&nbsp;&nbsp;
 					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'PC', 1)" value="1" />&nbsp;主优化&nbsp;
-					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'PC', 1)" value="2" />&nbsp;次优化&nbsp;
-					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'PC', 1)" value="0" />&nbsp;辅助优化&nbsp;
+					<c:if test="${isBaiduEngine}">
+						<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'PC', 1)" value="2" />&nbsp;次优化&nbsp;
+						<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'PC', 1)" value="0" />&nbsp;辅助优化&nbsp;
+					</c:if>
 				</div>
 			</td>
 			<td colspan="2" width="325px">
@@ -1324,8 +1352,10 @@
 				<div style="display: none;" id="optimizationTypePhone">
 					达标优化类型&nbsp;&nbsp;
 					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'Phone', 1)" value="1" />&nbsp;主优化&nbsp;
-					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'Phone', 1)" value="2" />&nbsp;次优化&nbsp;
-					<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'Phone', 1)" value="0" />&nbsp;辅助优化&nbsp;
+					<c:if test="${isBaiduEngine}">
+						<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'Phone', 1)" value="2" />&nbsp;次优化&nbsp;
+						<input type="checkbox" name="optimizationType" onclick="dealSettingTable(this, 'Phone', 1)" value="0" />&nbsp;辅助优化&nbsp;
+					</c:if>
 				</div>
 			</td>
 		</tr>
@@ -1361,31 +1391,35 @@
 						</tr>
 						<tr id="standardSpeciesPC">
 							<td align="right" style="width:72px"><label>达标种类</label></td>
-							<td title="爱站, 5118, 指定词和其他, 四选一">
-								<div style="display: inline-block">
-									<input type="checkbox" name="standardSpecies" id="aiZhanPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="aiZhan">
-								</div>
-								<div style="display: inline-block; margin-right: 10px;">
-									<label>爱站</label>
-								</div>
-								<div style="display: inline-block">
-									<input type="checkbox" name="standardSpecies" id="5118PCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="5118">
-								</div>
-								<div style="display: inline-block; margin-right: 10px;">
-									<label>5118</label>
-								</div>
+							<td title="必选一个">
+								<c:if test="${isBaiduEngine}">
+									<div style="display: inline-block">
+										<input type="checkbox" name="standardSpecies" id="aiZhanPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="aiZhan">
+									</div>
+									<div style="display: inline-block; margin-right: 10px;">
+										<label>爱站</label>
+									</div>
+									<div style="display: inline-block">
+										<input type="checkbox" name="standardSpecies" id="5118PCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="5118">
+									</div>
+									<div style="display: inline-block; margin-right: 10px;">
+										<label>5118</label>
+									</div>
+								</c:if>
 								<div style="display: inline-block">
 									<input type="checkbox" name="standardSpecies" id="designationWordPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="designationWord">
 								</div>
 								<div style="display: inline-block; margin-right: 10px;">
 									<label>指定词</label>
 								</div>
-								<div style="display: inline-block">
-									<input type="checkbox" name="standardSpecies" id="otherPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="other">
-								</div>
-								<div style="display: inline-block; margin-right: 10px;">
-									<label>其他</label>
-								</div>
+								<c:if test="${isBaiduEngine}">
+									<div style="display: inline-block">
+										<input type="checkbox" name="standardSpecies" id="otherPCStandardSpecies" onclick="checkedStandardSpecies(this, 'PC')" value="other">
+									</div>
+									<div style="display: inline-block; margin-right: 10px;">
+										<label>其他</label>
+									</div>
+								</c:if>
 							</td>
 						</tr>
 					</c:if>
@@ -1422,31 +1456,35 @@
 						</tr>
 						<tr id="standardSpeciesPhone">
 							<td align="right" style="width:72px"><label>达标种类</label></td>
-							<td title="爱站, 5118, 指定词和其他, 四选一">
-								<div style="display: inline-block">
-									<input type="checkbox" name="standardSpecies" id="aiZhanPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="aiZhan">
-								</div>
-								<div style="display: inline-block; margin-right: 10px;">
-									<label>爱站</label>
-								</div>
-								<div style="display: inline-block">
-									<input type="checkbox" name="standardSpecies" id="5118PhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="5118">
-								</div>
-								<div style="display: inline-block; margin-right: 10px;">
-									<label>5118</label>
-								</div>
+							<td title="必选一个">
+								<c:if test="${isBaiduEngine}">
+									<div style="display: inline-block">
+										<input type="checkbox" name="standardSpecies" id="aiZhanPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="aiZhan">
+									</div>
+									<div style="display: inline-block; margin-right: 10px;">
+										<label>爱站</label>
+									</div>
+									<div style="display: inline-block">
+										<input type="checkbox" name="standardSpecies" id="5118PhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="5118">
+									</div>
+									<div style="display: inline-block; margin-right: 10px;">
+										<label>5118</label>
+									</div>
+								</c:if>
 								<div style="display: inline-block">
 									<input type="checkbox" name="standardSpecies" id="designationWordPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="designationWord">
 								</div>
 								<div style="display: inline-block; margin-right: 10px;">
 									<label>指定词</label>
 								</div>
-								<div style="display: inline-block">
-									<input type="checkbox" name="standardSpecies" id="otherPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="other">
-								</div>
-								<div style="display: inline-block; margin-right: 10px;">
-									<label>其他</label>
-								</div>
+								<c:if test="${isBaiduEngine}">
+									<div style="display: inline-block">
+										<input type="checkbox" name="standardSpecies" id="otherPhoneStandardSpecies" onclick="checkedStandardSpecies(this, 'Phone')" value="other">
+									</div>
+									<div style="display: inline-block; margin-right: 10px;">
+										<label>其他</label>
+									</div>
+								</c:if>
 							</td>
 						</tr>
 					</c:if>
@@ -1465,10 +1503,10 @@
 						</thead>
 						<tbody>
 						<tr>
-							<td style="width:56px">达标阶段</td>
+							<td style="width:52px">达标阶段</td>
 							<td style="width:76px">起始达标词数</td>
 							<td style="width:76px">终止达标词数</td>
-							<td style="width:46px">价格</td>
+							<td style="width:66px">电脑端价格</td>
 							<td style="width:46px">操作</td>
 						</tr>
 						<tr>
@@ -1489,10 +1527,10 @@
 						</thead>
 						<tbody>
 						<tr>
-							<td style="width:56px">达标阶段</td>
+							<td style="width:52px">达标阶段</td>
 							<td style="width:76px">起始达标词数</td>
 							<td style="width:76px">终止达标词数</td>
-							<td style="width:46px">价格</td>
+							<td style="width:66px">手机端价格</td>
 							<td style="width:46px">操作</td>
 						</tr>
 						<tr>
@@ -1517,44 +1555,6 @@
 					<td>
 						<input type="text" name="groupMaxCustomerKeywordCount" id="groupMaxCustomerKeywordCount" placeholder="请输入数字：" value="5000" style="width:240px">
 					</td>
-					<td style="width:65px" align="right">爬取关键字</td>
-					<td>
-						<select name="qzSettingAutoCrawlKeywordFlag" id="qzSettingAutoCrawlKeywordFlag" style="width:240px">
-							<option value="1">是</option>
-							<option value="0" selected>否</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td style="width:65px" align="right">去掉没指数</td>
-					<td>
-						<select name="qzSettingIgnoreNoIndex" id="qzSettingIgnoreNoIndex"  style="width:240px">
-							<option value="1" selected>是</option>
-							<option value="0">否</option>
-						</select>
-					</td>
-					<td style="width:65px" align="right">去掉没排名</td>
-					<td>
-						<select name="qzSettingIgnoreNoOrder" id="qzSettingIgnoreNoOrder"  style="width:240px">
-							<option value="1" selected>是</option>
-							<option value="0">否</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td style="width:65px" align="right">更新间隔</td>
-					<td>
-						<select name="qzSettingInterval" id="qzSettingInterval"  style="width:240px">
-							<option value="1">1天</option>
-							<option value="2">2天</option>
-							<option value="3">3天</option>
-							<option value="5">5天</option>
-							<option value="7">7天</option>
-							<option value="10">10天</option>
-							<option value="12">12天</option>
-							<option value="15" selected>15天</option>
-						</select>
-					</td>
 					<td style="width:65px" align="right">达标监控</td>
 					<td>
 						<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
@@ -1563,6 +1563,48 @@
 						</select>
 					</td>
 				</tr>
+				<c:if test="${isBaiduEngine}">
+					<tr>
+						<td style="width:65px" align="right">去掉没指数</td>
+						<td>
+							<select name="qzSettingIgnoreNoIndex" id="qzSettingIgnoreNoIndex"  style="width:240px">
+								<option value="1" selected>是</option>
+								<option value="0">否</option>
+							</select>
+						</td>
+						<td style="width:65px" align="right">去掉没排名</td>
+						<td>
+							<select name="qzSettingIgnoreNoOrder" id="qzSettingIgnoreNoOrder"  style="width:240px">
+								<option value="1" selected>是</option>
+								<option value="0">否</option>
+							</select>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${isBaiduEngine}">
+					<tr>
+						<td style="width:65px" align="right">爬取关键字</td>
+						<td>
+							<select name="qzSettingAutoCrawlKeywordFlag" id="qzSettingAutoCrawlKeywordFlag" style="width:240px">
+								<option value="1">是</option>
+								<option value="0" selected>否</option>
+							</select>
+						</td>
+						<td style="width:65px" align="right">更新间隔</td>
+						<td>
+							<select name="qzSettingInterval" id="qzSettingInterval"  style="width:240px">
+								<option value="1">1天</option>
+								<option value="2">2天</option>
+								<option value="3">3天</option>
+								<option value="5">5天</option>
+								<option value="7">7天</option>
+								<option value="10">10天</option>
+								<option value="12">12天</option>
+								<option value="15" selected>15天</option>
+							</select>
+						</td>
+					</tr>
+				</c:if>
 			</c:if>
 		</shiro:hasPermission>
 	</table>

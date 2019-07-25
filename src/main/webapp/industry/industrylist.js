@@ -108,6 +108,20 @@ function getSelectedIDs() {
     return uuids;
 }
 
+function getUsefulSelectedIDs() {
+    var uuids = '';
+    $.each($("input[name=industryUuid]:checkbox:checked"), function () {
+        if ($(this).parent().parent().find("td[name='status'] span").text() === '爬取完成') {
+            if (uuids === '') {
+                uuids = $(this).val();
+            } else {
+                uuids = uuids + "," + $(this).val();
+            }
+        }
+    });
+    return uuids;
+}
+
 function saveIndustry(uuid, loginName) {
     var industryForm = $("#industryDialog").find("#industryForm");
     var industryInfo = {};
@@ -349,7 +363,7 @@ function updateIndustryUserID() {
 }
 
 function updateIndustryStatus() {
-    var uuids = getSelectedIDs();
+    var uuids = getUsefulSelectedIDs();
     if (uuids === '') {
         $.messager.alert('提示', '请选择要重新爬取网站联系信息的行业信息！！', 'info');
         return;

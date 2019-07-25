@@ -12,6 +12,7 @@ public class QZSettingSearchCriteria{
     private String updateStatus;
     private Integer dateRangeType;
     private Integer status;
+    private Integer renewalStatus;
     private int unchangedNum;
     private int downNum;
     private int upNum;
@@ -36,6 +37,8 @@ public class QZSettingSearchCriteria{
     private String standardSpecies;
     private Integer optimizationType;
     private boolean resetPagingParam;
+    private int upOneWeekDiff;
+    private int downOneWeekDiff;
 
     public String getLoginName() {
         return loginName;
@@ -315,5 +318,29 @@ public class QZSettingSearchCriteria{
 
     public void setResetPagingParam(boolean resetPagingParam) {
         this.resetPagingParam = resetPagingParam;
+    }
+
+    public Integer getRenewalStatus() {
+        return renewalStatus;
+    }
+
+    public void setRenewalStatus(Integer renewalStatus) {
+        this.renewalStatus = renewalStatus;
+    }
+
+    public int getUpOneWeekDiff() {
+        return upOneWeekDiff;
+    }
+
+    public void setUpOneWeekDiff(int upOneWeekDiff) {
+        this.upOneWeekDiff = upOneWeekDiff;
+    }
+
+    public int getDownOneWeekDiff() {
+        return downOneWeekDiff;
+    }
+
+    public void setDownOneWeekDiff(int downOneWeekDiff) {
+        this.downOneWeekDiff = downOneWeekDiff;
     }
 }
