@@ -423,7 +423,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
     /**
      * 批量更新机器的机器分组
      */
-    @RequiresPermissions("/internal/machineInfo/changeStatus")
+    @RequiresPermissions("/internal/machineInfo/batchUpdateMachineGroupSelected")
     @RequestMapping(value = "/batchUpdateMachineGroupSelected", method = RequestMethod.POST)
     public ResponseEntity<?> batchUpdateMachineGroupSelected(@Param("clientIDs") String clientIDs,@Param("machineGroup")String machineGroup) {
         try {
@@ -437,6 +437,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
     /**
      * 批量更新根据检索条件获取到的机器的机器分组
      */
+    @RequiresPermissions("/internal/machineInfo/updateMachineGroupByCriteria")
     @RequestMapping(value = "/updateMachineGroupByCriteria",method = RequestMethod.POST)
     public ResponseEntity<?> updateMachineGroupByCriteria(@RequestBody MachineInfoCriteria machineInfoCriteria) {
         try{
@@ -449,6 +450,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/machineInfo/updateMachineGroup")
     @RequestMapping(value = "/updateMachineGroup", method = RequestMethod.POST)
     public ResponseEntity<?> updateMachineGroup(@RequestBody Map<String, Object> requestMap) {
         try {
@@ -463,7 +465,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
     }
 
     /*===========================*/
-    @RequiresPermissions("/internal/machineInfo/changeStatus")
+    @RequiresPermissions("/internal/machineInfo/batchUpdateGroupSelected")
     @RequestMapping(value = "/batchUpdateGroupSelected", method = RequestMethod.POST)
     public ResponseEntity<?> batchUpdateGroupSelected(@Param("clientIDs") String clientIDs,@Param("group")String group) {
         try {
@@ -477,6 +479,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
     /**
      * 批量更新根据检索条件获取到的机器的机器分组
      */
+    @RequiresPermissions("/internal/machineInfo/updateGroupByCriteria")
     @RequestMapping(value = "/updateGroupByCriteria",method = RequestMethod.POST)
     public ResponseEntity<?> updateGroupByCriteria(@RequestBody MachineInfoCriteria machineInfoCriteria) {
         try{

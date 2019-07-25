@@ -131,6 +131,12 @@
             <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
                 <input type="button" onclick="updateOptimizeGroupName('selected')" value=" 修改选中关键字优化组 ">&nbsp;
             </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordMachineGroup">
+                <input type="button" onclick="updateMachineGroupName('total')" value=" 修改当前关键字机器分组 ">&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordMachineGroup">
+                <input type="button" onclick="updateMachineGroupName('selected')" value=" 修改选中关键字机器分组 ">&nbsp;
+            </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
                 <input type="button" onclick="deleteCustomerKeywords()" value=" 删除所选 ">
             </shiro:hasPermission>
@@ -271,6 +277,11 @@
 <div id="targetGroupNameDialog" style="text-align: center;left: 40%;display: none;">
     <form id="targetGroupNameFrom" style="text-align: center;margin-top: 10px;">
         目标优化组名:<input type="text" id="groupName" name="groupName" style="width:150px">
+    </form>
+</div>
+<div id="targetMachineGroupDialog" style="text-align: center;left: 40%;display: none;">
+    <form id="targetMachineGroupFrom" style="text-align: center;margin-top: 10px;">
+        目标机器分组名:<input type="text" id="machineGroup" name="machineGroup" style="width:150px">
     </form>
 </div>
 <%@ include file="/customerkeyword/customerKeywordCommon.jsp" %>

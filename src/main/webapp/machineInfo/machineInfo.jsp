@@ -165,11 +165,22 @@
 								&nbsp;&nbsp;<input type="button" onclick="showUploadVPSDialog('startUp')" value=" 导入开机终端 ">
 							</shiro:hasPermission>
 
-							&nbsp;&nbsp;<input type="button" onclick="batchChangeMachineGroupSelected()" value="修改所选终端机器分组">
-							&nbsp;&nbsp;<input type="button" onclick="batchChangeMachineGroupSearched()" value="修改当前终端机器分组">
+                            <shiro:hasPermission name="/internal/machineInfo/batchUpdateMachineGroupSelected">
+							    <input type="button" onclick="batchChangeMachineGroupSelected()" value="修改所选终端机器分组">
+                            </shiro:hasPermission>
 
-							<input type="button" onclick="batchChangeGroupSelected()" value="修改所选终端优化组">
-							<input type="button" onclick="batchChangeGroupSearched()" value="修改当前终端优化组">
+                            <shiro:hasPermission name="/internal/machineInfo/updateMachineGroupByCriteria">
+                                <input type="button" onclick="batchChangeMachineGroupSearched()" value="修改当前终端机器分组">
+                            </shiro:hasPermission>
+
+                            <shiro:hasPermission name="/internal/machineInfo/batchUpdateGroupSelected">
+                                <input type="button" onclick="batchChangeGroupSelected()" value="修改所选终端优化组">
+                            </shiro:hasPermission>
+
+                            <shiro:hasPermission name="/internal/machineInfo/updateGroupByCriteria">
+                                <input type="button" onclick="batchChangeGroupSearched()" value="修改当前终端优化组">
+                            </shiro:hasPermission>
+
 
 							&nbsp;&nbsp;<input type="button" onclick="headerTableSetting()" value="表格设置">
 						</td>

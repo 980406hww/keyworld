@@ -312,3 +312,87 @@ function deleteDuplicateQZKeyword() {
         }
     });
 }
+
+
+/**
+ * 批量修改关键字机器分组
+ * @param changeType
+ */
+function updateMachineGroupName(changeType) {
+    $("#targetMachineGroupDialog").css("display", "block");
+    $("#targetMachineGroupDialog").dialog({
+        resizable: false,
+        width: 260,
+        height: 100,
+        title:"修改关键字优化组名",
+        closed: true,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                var targetMachineGroup = $("#targetMachineGroupFrom").find("#machineGroup").val();
+                if (targetMachineGroup == null || targetMachineGroup == '') {
+                    alert("请输入目标优化组名!");
+                    return;
+                }
+                var obj = {};
+                if ("selected" === changeType){
+                    var uuids = getSelectedIDs();
+                    if(uuids === ''){
+                        alert('请选择要修改机器分组的关键字！');
+                        return ;
+                    }
+                    if (confirm("确定要修改选中关键字的机器分组吗?") == false) return;
+                    obj['uuids'] = uuids.split(",");
+                }else{
+                    if (confirm("确定要修改当前查询条件下所有关键字的机器分组吗?") == false) return;
+                    var postData = $("#searchCustomerKeywordForm").serializeArray();
+                    $.each(postData, function() {
+                        if (obj[this.name]) {
+                            if (!obj[this.name].push) {
+                                obj[this.name] = [obj[this.name]];
+                            }
+                            obj[this.name].push(this.value || '');
+                        } else {
+                            obj[this.name] = this.value || '';
+                        }
+                    });
+                }
+                obj.targetMachineGroup = targetMachineGroup;
+                console.log(obj)
+                $.ajax({
+                    url: '/internal/customerKeyword/updateCustomerKeywordMachineGroup',
+                    data: JSON.stringify(obj),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (data) {
+                        if(data){
+                            $().toastmessage('showSuccessToast',"操作成功", true);
+                        }else{
+                            $().toastmessage('showErrorToast', "操作失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                });
+                $("#targetMachineGroupDialog").dialog("close");
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#targetMachineGroupDialog").dialog("close");
+                    $('#targetMachineGroupFrom')[0].reset();
+                }
+            }]
+    });
+    $("#targetMachineGroupDialog").dialog("open");
+    $('#targetMachineGroupDialog').window("resize",{top:$(document).scrollTop() + 200});
+}
