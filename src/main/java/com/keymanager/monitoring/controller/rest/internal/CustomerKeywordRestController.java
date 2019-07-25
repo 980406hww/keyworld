@@ -18,6 +18,7 @@ import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.monitoring.vo.KeywordStatusBatchUpdateVO;
+import com.keymanager.monitoring.vo.machineGroupQueueVO;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import org.apache.commons.lang3.StringUtils;
@@ -686,4 +687,22 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
 	}
+
+
+    @RequiresPermissions("/internal/customerKeyword/showMachineGroupAndSize")
+    @RequestMapping("/showMachineGroupAndSize")
+    public ModelAndView showMachineGroupAndSize(HttpServletRequest request){
+        long startMilleSeconds = System.currentTimeMillis();
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("/customerkeyword/machineGroupQueue");
+        try{
+            List<machineGroupQueueVO> machineGroupQueueVOS = customerKeywordService.getMachineGroupAndSize();
+            mv.addObject("machineGroupQueueVOS",machineGroupQueueVOS);
+            performanceService.addPerformanceLog(terminalType + ":showMachineGroupAndSize", (System.currentTimeMillis() - startMilleSeconds), null);
+            return mv;
+        }catch (Exception e){
+            return mv;
+        }
+    }
 }

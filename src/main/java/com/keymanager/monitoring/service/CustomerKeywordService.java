@@ -1807,4 +1807,15 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public void updateMachineGroup(CustomerKeywordCriteria customerKeywordCriteria) {
         customerKeywordDao.updateMachineGroup(customerKeywordCriteria);
     }
+
+    public List<machineGroupQueueVO> getMachineGroupAndSize(){
+
+        List<machineGroupQueueVO> machineGroupQueueVOS = new ArrayList<>();
+        for (Map.Entry<String, ArrayBlockingQueue> entry : machineGroupQueueMap.entrySet()) {
+
+            machineGroupQueueVOS.add(new machineGroupQueueVO(entry.getKey(),entry.getValue().size()));
+        }
+
+        return machineGroupQueueVOS;
+    }
 }
