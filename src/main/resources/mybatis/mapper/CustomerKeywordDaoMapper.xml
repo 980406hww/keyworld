@@ -588,7 +588,6 @@
         WHERE ck.fMachineGroup = #{machineGroup}
         AND ck.fStatus = 1
         AND ck.fTerminalType = #{terminalType}
-        AND EXISTS (SELECT 1 FROM t_group g, t_operation_combine oc WHERE g.fGroupName = fOptimizeGroupName AND oc.fUuid = g.fOperationCombineUuid)
         AND ck.fQueryTime <![CDATA[<]]> NOW()
         AND ck.fInvalidFlag = 0
         ORDER BY ck.fQueryTime
@@ -1587,7 +1586,6 @@
           CONCAT(ck.fTerminalType, '####', ck.fMachineGroup)
         FROM t_customer_keyword ck
         WHERE ck.fStatus = 1
-        AND EXISTS (SELECT 1 FROM t_group g, t_operation_combine oc WHERE g.fGroupName = fOptimizeGroupName AND oc.fUuid = g.fOperationCombineUuid)
         GROUP BY ck.fTerminalType, ck.fMachineGroup
     </select>
 
