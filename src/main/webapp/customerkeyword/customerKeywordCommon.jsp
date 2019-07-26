@@ -168,8 +168,8 @@
 
 
 <%--Dialog部分--%>
-<div id="machineGroupBatchUpdateDialog" style="text-align: center;left: 40%;display: none;">
-    <form id="machineGroupBatchUpdateForm" style="text-align: center;margin-top: 10px;" onkeydown="if(event.keyCode==13)return false;">
-        机器分组:<input type="text" id="targetGachineGroup" name="targetGachineGroup" style="width:150px;"><%-- margin-top: 10px;--%>
+<div id="targetMachineGroupDialog" style="text-align: center;left: 40%;display: none;">
+    <form id="targetMachineGroupFrom" style="text-align: center;margin-top: 10px;">
+        目标机器分组名:<input type="text" id="machineGroup" name="machineGroup" style="width:150px">
     </form>
 </div>
