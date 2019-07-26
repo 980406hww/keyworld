@@ -15,6 +15,8 @@
 					<input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${refreshStatInfoCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>模糊查询
                     &nbsp;&nbsp;
 				</td>
+				<td align="right">机器分组:<input name="machineGroup" id="machineGroup" type="text" style="width:200px;"
+											  value="${refreshStatInfoCriteria.machineGroup}"></td>
 				<td align="right">客户名称:<input name="customerName" id="customerName" type="text" style="width:200px;"
 											  value="${refreshStatInfoCriteria.customerName}"></td>
 				<td align="right">分类标签:<input name="categoryTag" list="categoryTag_list" type="text" style="width:200px;"

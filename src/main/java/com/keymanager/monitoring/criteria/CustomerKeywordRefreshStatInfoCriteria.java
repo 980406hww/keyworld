@@ -5,6 +5,8 @@ public class CustomerKeywordRefreshStatInfoCriteria extends BaseCriteria {
 
     private String groupName;
 
+    private String machineGroup;
+
     private String customerName;
 
     private String configValue;
@@ -89,5 +91,13 @@ public class CustomerKeywordRefreshStatInfoCriteria extends BaseCriteria {
 
     public void setGroupNameFuzzyQuery(String groupNameFuzzyQuery) {
         this.groupNameFuzzyQuery = groupNameFuzzyQuery;
+    }
+
+    public String getMachineGroup() {
+        return machineGroup;
+    }
+
+    public void setMachineGroup(String machineGroup) {
+        this.machineGroup = machineGroup;
     }
 }

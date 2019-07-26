@@ -24,7 +24,7 @@ public class CustomerKeywordTerminalRefreshStatRecordService extends ServiceImpl
 
     public List<CustomerKeywordTerminalRefreshStatRecord> getHistoryTerminalRefreshStatRecord (CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
         List<CustomerKeywordTerminalRefreshStatRecord> historyTerminalRefreshStatRecords = customerKeywordTerminalRefreshStatRecordDao.getHistoryTerminalRefreshStatRecord(customerKeywordRefreshStatInfoCriteria);
-        customerKeywordRefreshStatInfoService.SetCountCustomerKeywordRefreshStatInfo(historyTerminalRefreshStatRecords);
+        customerKeywordRefreshStatInfoService.setCountCustomerKeywordRefreshStatInfo(historyTerminalRefreshStatRecords);
         return historyTerminalRefreshStatRecords;
     }
 }
