@@ -110,6 +110,7 @@ function detectedMoreSearchConditionDivShow() {
     var group =  moreSearchCondition.find("ul li.group input").val();
     var operationType = moreSearchCondition.find("select[name='operationType']").val();
     var status = moreSearchCondition.find("select[name='status']").val();
+    var renewalStatus = moreSearchCondition.find("select[name='renewalStatus']").val();
     var standardSpecies = moreSearchCondition.find("select[name='standardSpecies']").val();
     var optimizationType = moreSearchCondition.find("select[name='optimizationType']").val();
     var updateStatus = moreSearchCondition.find("select[name='updateStatus']").val();
@@ -142,7 +143,7 @@ function detectedMoreSearchConditionDivShow() {
         });
         $("#userNameTree").textbox('setValue', treeValue);
     }
-    var values = customerInfo + categoryTag + group + status + standardSpecies + optimizationType + updateStatus +
+    var values = customerInfo + categoryTag + group + status + renewalStatus + standardSpecies + optimizationType + updateStatus +
         createTime + createTimePrefix + operationType + hasMonitor + hasReady + userInfoID + organizationID;
     if (values !== "") {
         moreSearchCondition.css("display", "block");
@@ -901,7 +902,6 @@ function trimSearchCondition(days) {
     chargeForm.find("#domain").val($.trim(domain));
     chargeForm.find("#categoryTag").val($.trim(categoryTag));
     chargeForm.find("#group").val($.trim(group));
-    chargeForm.find("#renewalStatus").val(renewalStatus);
     if (operationType !== ""){
         chargeForm.find("#operationType").val($.trim(operationType));
     } else {
@@ -911,6 +911,11 @@ function trimSearchCondition(days) {
         chargeForm.find("#status").val($.trim(status));
     } else {
         chargeForm.find("#status").val(null);
+    }
+    if (renewalStatus !== "") {
+        chargeForm.find("#renewalStatus").val($.trim(renewalStatus));
+    } else {
+        chargeForm.find("#renewalStatus").val(null);
     }
     if (standardSpecies !== '') {
         chargeForm.find("#standardSpecies").val(standardSpecies);

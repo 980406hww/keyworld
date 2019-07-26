@@ -204,7 +204,7 @@
 					<span>操作类型: </span>
 					<span>
 						<select name="operationType" style="width: 150px;">
-							<option value=""></option>
+							<option value="">全部</option>
 							<c:forEach items="${operationTypeValues}" var="operationType">
 								<c:choose>
 									<c:when test="${operationType eq qzSettingSearchCriteria.operationType}"><option selected>${operationType}</option></c:when>
@@ -217,7 +217,7 @@
 				<li>
 					<span>采集状态: </span>
 					<select name="status">
-						<option value="" <c:if test="${qzSettingSearchCriteria.status == null}">selected</c:if>></option>
+						<option value="" <c:if test="${qzSettingSearchCriteria.status == null}">selected</c:if>>全部</option>
 						<option value="1" <c:if test="${qzSettingSearchCriteria.status == 1}">selected</c:if>>激活</option>
 						<option value="0" <c:if test="${qzSettingSearchCriteria.status == 0}">selected</c:if>>暂停</option>
 						<option value="2" <c:if test="${qzSettingSearchCriteria.status == 2}">selected</c:if>>新增</option>
@@ -226,6 +226,7 @@
 				<li>
 					<span>续费状态: </span>
 					<select name="renewalStatus">
+						<option value="" <c:if test="${qzSettingSearchCriteria.renewalStatus == null}">selected</c:if>>全部</option>
 						<option value="1" <c:if test="${qzSettingSearchCriteria.renewalStatus == 1}">selected</c:if>>续费</option>
 						<option value="0" <c:if test="${qzSettingSearchCriteria.renewalStatus == 0}">selected</c:if>>暂停续费</option>
 					</select>
@@ -273,7 +274,7 @@
 					<li>
 						<span>达标监控: </span>
 						<select name="hasMonitor" style="width: 80px;">
-							<option value="" <c:if test="${qzSettingSearchCriteria.hasMonitor == null}">selected</c:if>></option>
+							<option value="" <c:if test="${qzSettingSearchCriteria.hasMonitor == null}">selected</c:if>>全部</option>
 							<option value="1" <c:if test="${qzSettingSearchCriteria.hasMonitor == true}">selected</c:if>>是</option>
 							<option value="0" <c:if test="${qzSettingSearchCriteria.hasMonitor == false}">selected</c:if>>否</option>
 						</select>
@@ -282,7 +283,7 @@
 				<li>
 					<span>达标计划: </span>
 					<select name="hasReady" style="width: 80px;">
-						<option value="" <c:if test="${qzSettingSearchCriteria.hasReady == null}">selected</c:if>></option>
+						<option value="" <c:if test="${qzSettingSearchCriteria.hasReady == null}">selected</c:if>>全部</option>
 						<option value="1" <c:if test="${qzSettingSearchCriteria.hasReady == true}">selected</c:if>>是</option>
 						<option value="0" <c:if test="${qzSettingSearchCriteria.hasReady == false}">selected</c:if>>否</option>
 					</select>
