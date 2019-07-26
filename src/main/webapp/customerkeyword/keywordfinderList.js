@@ -335,7 +335,7 @@ function updateMachineGroupName(changeType) {
             text: '保存',
             iconCls: 'icon-ok',
             handler: function () {
-                var targetMachineGroup = $("#targetMachineGroupFrom").find("#machineGroup").val();
+                var targetMachineGroup = $("#targetMachineGroupForm").find("#machineGroup").val();
                 if (targetMachineGroup == null || targetMachineGroup == '') {
                     alert("请输入目标机器分组!");
                     return;
@@ -393,7 +393,7 @@ function updateMachineGroupName(changeType) {
                 iconCls: 'icon-cancel',
                 handler: function () {
                     $("#targetMachineGroupDialog").dialog("close");
-                    $('#targetMachineGroupFrom')[0].reset();
+                    $('#targetMachineGroupForm')[0].reset();
                 }
             }]
     });

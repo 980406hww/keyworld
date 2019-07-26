@@ -634,39 +634,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		}
 	}
 
-	/**
-	 * 批量更新所选关键字的机器分组
-	 */
-	@RequiresPermissions("/internal/customerKeyword/updateMachineGroupByCustomerUuids")
-	@RequestMapping(value = "/updateMachineGroupByCustomerUuids",method = RequestMethod.POST)
-	public ResponseEntity<?> updateMachineGroupByCustomerUuids(@RequestBody KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO) {
-		try{
-			customerKeywordService.batchUpdateKeywordStatus(keywordStatusBatchUpdateVO);
-			return new ResponseEntity<Object>(true,HttpStatus.OK);
-		}catch (Exception e){
-			logger.error(e.getMessage());
-			return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
-		}
-	}
-
-	/**
-	 * 批量更新根据检索条件获取到的关键字的机器分组
-	 */
-	@RequiresPermissions("/internal/customerKeyword/updateMachineGroupByCriteria")
-	@RequestMapping(value = "/updateMachineGroupByCriteria",method = RequestMethod.POST)
-	public ResponseEntity<?> updateMachineGroupByCriteria(@RequestBody CustomerKeywordCriteria customerKeywordCriteria) {
-		try{
-			//System.out.println(customerKeywordCriteria.toString());
-			customerKeywordService.updateMachineGroup(customerKeywordCriteria);
-			return new ResponseEntity<Object>(true,HttpStatus.OK);
-		}catch (Exception e){
-			logger.error(e.getMessage());
-			return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
-		}
-	}
-
-
-
 	@RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordMachineGroup")
 	@RequestMapping(value = "/updateCustomerKeywordMachineGroup", method = RequestMethod.POST)
 	public ResponseEntity<?> updateCustomerKeywordMachineGroupName(@RequestBody CustomerKeywordCriteria customerKeywordCriteria, HttpServletRequest request) {

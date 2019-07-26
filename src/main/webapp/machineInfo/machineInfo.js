@@ -75,6 +75,7 @@ function resetPageNumber() {
     var machineInfoFormObj = $("#searchMachineInfoForm");
     var clientId = machineInfoFormObj.find("#clientID").val();
     var groupName = machineInfoFormObj.find("#groupName").val();
+    var machineGroup = machineInfoFormObj.find("#machineGroup").val();
     var operationType = machineInfoFormObj.find("#operationType").val();
     var version = machineInfoFormObj.find("#version").val();
     var targetVersion = machineInfoFormObj.find("#targetVersion").val();
@@ -88,6 +89,9 @@ function resetPageNumber() {
     }
     if(groupName != "") {
         machineInfoFormObj.find("#groupName").val($.trim(groupName));
+    }
+    if(machineGroup != "") {
+        machineInfoFormObj.find("#machineGroup").val($.trim(machineGroup));
     }
     if(operationType != "") {
         machineInfoFormObj.find("#operationType").val($.trim(operationType));
@@ -448,7 +452,7 @@ function updateGroup(self){
     machineInfo.clientID = self.id;
     machineInfo.group = self.value.trim();
     $.ajax({
-        url: '/internal/machineInfo/updateGroup',
+        url: '/internal/machineInfo/updateGroupById',
         data: JSON.stringify(machineInfo),
         headers: {
             'Accept': 'application/json',
@@ -1457,5 +1461,183 @@ function batchChangeGroupSearched(){
     });
     $("#groupBatchUpdateDialog").dialog("open");
     $('#groupBatchUpdateDialog').window("resize",{top:$(document).scrollTop() + 200});
+}
+
+/**
+ * 批量修改关键字机器分组
+ * @param changeType
+ */
+function batchUpdateMachineGroup(changeType) {
+    $("#targetMachineGroupDialog").css("display", "block");
+    $("#targetMachineGroupDialog").dialog({
+        resizable: false,
+        width: 260,
+        height: 100,
+        title:"修改终端机器分组",
+        closed: true,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                var targetMachineGroup = $("#targetMachineGroupForm").find("#targetMachineGroup").val();
+                if (targetMachineGroup == null || targetMachineGroup == '') {
+                    alert("请输入目标机器分组!");
+                    return;
+                }
+                var obj = {};
+                if ("selected" === changeType){
+                    var clientIDs = getSelectedClientIDs();
+                    if(clientIDs === ''){
+                        alert('请选择要修改机器分组的终端！');
+                        return ;
+                    }
+                    if (confirm("确定要修改选中终端的机器分组吗?") == false) return;
+                    obj['clientIDs'] = clientIDs.split(",");
+                }else{
+                    if (confirm("确定要修改当前查询条件下所有终端的机器分组吗?") == false) return;
+                    var postData = $("#searchCustomerKeywordForm").serializeArray();
+                    $.each(postData, function() {
+                        if (obj[this.name]) {
+                            if (!obj[this.name].push) {
+                                obj[this.name] = [obj[this.name]];
+                            }
+                            obj[this.name].push(this.value || '');
+                        } else {
+                            obj[this.name] = this.value || '';
+                        }
+                    });
+                }
+                obj.targetMachineGroup = targetMachineGroup;
+                console.log(obj)
+                $.ajax({
+                    url: '/internal/machineInfo/updateMachineGroup',
+                    data: JSON.stringify(obj),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (data) {
+                        if(data){
+                            $().toastmessage('showSuccessToast',"操作成功", true);
+                        }else{
+                            $().toastmessage('showErrorToast', "操作失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                });
+                $("#targetMachineGroupDialog").dialog("close");
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#targetMachineGroupDialog").dialog("close");
+                    $('#targetMachineGroupForm')[0].reset();
+                }
+            }]
+    });
+    $("#targetMachineGroupDialog").dialog("open");
+    $('#targetMachineGroupDialog').window("resize",{top:$(document).scrollTop() + 200});
+}
+
+
+/**
+ * 检索条件，机器分组是否模糊查询
+ */
+function machineGroupFuzzyQueryValue() {
+    if ($("#machineGroupFuzzyQuery").is(":checked")){
+        $("#machineGroupFuzzyQuery").val("1");
+    } else {
+        $("#machineGroupFuzzyQuery").val("0");
+    }
+}
+
+/**
+ * 批量修改关键字优化组
+ * @param changeType
+ */
+function batchUpdateGroup(changeType) {
+    $("#targetGroupDialog").css("display", "block");
+    $("#targetGroupDialog").dialog({
+        resizable: false,
+        width: 260,
+        height: 100,
+        title:"修改终端优化组",
+        closed: true,
+        modal: true,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                var targetGroup = $("#targetGroupForm").find("#targetGroup").val();
+                if (targetGroup == null || targetGroup == '') {
+                    alert("请输入目标优化组!");
+                    return;
+                }
+                var obj = {};
+                if ("selected" === changeType){
+                    var clientIDs = getSelectedClientIDs();
+                    if(clientIDs === ''){
+                        alert('请选择要修改机器分组的终端！');
+                        return ;
+                    }
+                    if (confirm("确定要修改选中终端的机器分组吗?") == false) return;
+                    obj['clientIDs'] = clientIDs.split(",");
+                }else{
+                    if (confirm("确定要修改当前查询条件下所有终端的机器分组吗?") == false) return;
+                    var postData = $("#searchCustomerKeywordForm").serializeArray();
+                    $.each(postData, function() {
+                        if (obj[this.name]) {
+                            if (!obj[this.name].push) {
+                                obj[this.name] = [obj[this.name]];
+                            }
+                            obj[this.name].push(this.value || '');
+                        } else {
+                            obj[this.name] = this.value || '';
+                        }
+                    });
+                }
+                obj.targetGroup = targetGroup;
+                console.log(obj)
+                $.ajax({
+                    url: '/internal/machineInfo/batchUpdateGroup',
+                    data: JSON.stringify(obj),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (data) {
+                        if(data){
+                            $().toastmessage('showSuccessToast',"操作成功", true);
+                        }else{
+                            $().toastmessage('showErrorToast', "操作失败");
+                        }
+                    },
+                    error: function () {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                });
+                $("#targetGroupDialog").dialog("close");
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#targetGroupDialog").dialog("close");
+                    $('#targetGroupForm')[0].reset();
+                }
+            }]
+    });
+    $("#targetGroupDialog").dialog("open");
+    $('#targetGroupDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
 

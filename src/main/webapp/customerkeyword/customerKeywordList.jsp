@@ -156,6 +156,10 @@
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
                    value="${customerKeywordCriteria.optimizeGroupName}" style="width:100px;">
             <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox"  onclick="groupNameFuzzyQueryValue()" value="${customerKeywordCriteria.groupNameFuzzyQuery}"/>模糊查询 &nbsp;
+            机器分组:
+            <input type="text" name="machineGroup" id="machineGroup"
+                   value="${customerKeywordCriteria.machineGroup}" style="width:100px;">&nbsp;
+            <input id="machineGroupFuzzyQuery" name="machineGroupFuzzyQuery" type="checkbox"  onclick="machineGroupFuzzyQueryValue()" value="${customerKeywordCriteria.machineGroupFuzzyQuery}" ${customerKeywordCriteria.machineGroupFuzzyQuery=='1' ? 'checked' :''} />模糊查询 &nbsp;
             关键字来源:
             <select name="customerKeywordSource" id="customerKeywordSource">
                 <option value="">所有</option>
@@ -235,11 +239,10 @@
                     <input type="button" onclick="deleteDuplicateCustomerKeyword(${customerKeywordCriteria.customerUuid})" value="删除重复关键字">
                 </c:if>
             </shiro:hasPermission>
-            <%--批量修改已选关键字机器分组            machineGroupBatchUpdate --%>
-            <input type="button" onclick="machineGroupBatchUpdateSelected()" value="修改所选关键字机器分组">
-            <%--批量修改所有 查询到的关键字的机器分组--%>
-            <input type="button" onclick="machineGroupBatchUpdateSearched()" value="修改当前关键字机器分组">
-
+            <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordMachineGroup">
+            <input type="button" onclick="updateMachineGroupName('selected')" value="修改所选关键字机器分组">
+            <input type="button" onclick="updateMachineGroupName('total')" value="修改当前关键字机器分组">
+            </shiro:hasPermission>
             <shiro:hasPermission name="/internal/qzsetting/save">
                 <input type="button" id="customerKeywordBtnInput" onclick="openMessageBox('关键字列表', '${customerKeywordCriteria.customerUuid}', '${customer.contactPerson}')" value=" 用户留言 ">
             </shiro:hasPermission>
