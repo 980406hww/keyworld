@@ -174,7 +174,7 @@
 								<input type="button" onclick="batchUpdateMachineGroup('total')" value="修改当前终端机器分组">
 							</shiro:hasPermission>
 
-							<shiro:hasPermission name="/internal/machineInfo/updateGroup">
+							<shiro:hasPermission name="/internal/machineInfo/batchUpdateGroup">
 								<input type="button" onclick="batchUpdateGroup('selected')" value="修改所选终端优化组">
 								<input type="button" onclick="batchUpdateGroup('total')" value="修改当前终端优化组">
 							</shiro:hasPermission>

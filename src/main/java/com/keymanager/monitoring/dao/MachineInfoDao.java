@@ -93,10 +93,6 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     ClientStatusForOptimization getClientStatusForOptimization(@Param("clientID") String clientID);
 
-    void batchUpdateMachineGroupByIds(@Param("clientIds") String[] clientIds, @Param("machineGroup") String machineGroup);
-    void batchUpdateGroupByIds(@Param("clientIds") String[] clientIds, @Param("group") String roup);
-
-
     void updateMachineGroup(@Param("machineInfoCriteria") MachineInfoCriteria machineInfoCriteria);
 
     void updateGroup(@Param("machineInfoCriteria") MachineInfoCriteria machineInfoCriteria);

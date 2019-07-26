@@ -1606,7 +1606,7 @@ function batchUpdateGroup(changeType) {
                 obj.targetGroup = targetGroup;
                 console.log(obj)
                 $.ajax({
-                    url: '/internal/machineInfo/updateGroup',
+                    url: '/internal/machineInfo/batchUpdateGroup',
                     data: JSON.stringify(obj),
                     headers: {
                         'Accept': 'application/json',

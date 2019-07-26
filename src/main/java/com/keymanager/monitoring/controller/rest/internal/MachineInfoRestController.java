@@ -454,8 +454,8 @@ public class MachineInfoRestController extends SpringMVCBaseController {
     /**
      * 批量更新根据检索条件获取到的机器的机器分组
      */
-    @RequiresPermissions("/internal/machineInfo/updateGroup")
-    @RequestMapping(value = "/updateGroup",method = RequestMethod.POST)
+    @RequiresPermissions("/internal/machineInfo/batchUpdateGroup")
+    @RequestMapping(value = "/batchUpdateGroup",method = RequestMethod.POST)
     public ResponseEntity<?> batchUpdateGroup(@RequestBody MachineInfoCriteria machineInfoCriteria) {
         try{
             machineInfoService.batchUpdateGroup(machineInfoCriteria);
