@@ -89,12 +89,58 @@
         LEFT JOIN t_qz_operation_type qot
         ON qot.fQZSettingUuid = qk.fQZSettingUuid AND qot.fOperationtype = qk.fTerminalType
         WHERE qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
+        AND qot.fOperationtype = #{qzSettingSearchCriteria.terminalType}
+        AND qot.fIsDeleted = 0
+        AND qk.fDataProcessingStatus = 1
         <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
         <if test="qzSettingSearchCriteria.domain != null and qzSettingSearchCriteria.domain != ''">AND qs.fDomain = #{qzSettingSearchCriteria.domain}</if>
         <if test="qzSettingSearchCriteria.searchEngine != 'All'">AND qs.fSearchEngine = #{qzSettingSearchCriteria.searchEngine}</if>
-        AND qot.fIsDeleted = 0
-        AND qk.fDataProcessingStatus = 1
+        <choose>
+            <when test="qzSettingSearchCriteria.group == null or qzSettingSearchCriteria.group == ''">
+                AND qot.fGroup &gt; ''
+            </when>
+            <when test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">
+                AND qot.fGroup = #{qzSettingSearchCriteria.group}
+            </when>
+        </choose>
+        <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingSearchCriteria.updateStatus}</if>
+        <if test="qzSettingSearchCriteria.status != null">AND qs.fStatus = #{qzSettingSearchCriteria.status}</if>
         <if test="qzSettingSearchCriteria.renewalStatus != null">AND qs.fRenewalStatus = #{qzSettingSearchCriteria.renewalStatus}</if>
+        <if test="qzSettingSearchCriteria.hasMonitor != null">AND qs.fIsMonitor = #{qzSettingSearchCriteria.hasMonitor}</if>
+        <if test="qzSettingSearchCriteria.hasReady != null">AND qs.fIsReady = #{qzSettingSearchCriteria.hasReady}</if>
+        <if test="qzSettingSearchCriteria.standardSpecies != null and qzSettingSearchCriteria.standardSpecies != ''">
+            AND EXISTS (
+                SELECT 1
+                FROM t_qz_charge_rule qcr
+                WHERE qcr.fQZOperationTypeUuid = qot.fUuid
+                AND qcr.fStandardSpecies = #{qzSettingSearchCriteria.standardSpecies}
+            )
+        </if>
+        <if test="qzSettingSearchCriteria.optimizationType != null">AND qot.fOptimizationType = #{qzSettingSearchCriteria.optimizationType}</if>
+        <if test="qzSettingSearchCriteria.renewalStatus != null">AND qs.fRenewalStatus = #{qzSettingSearchCriteria.renewalStatus}</if>
+        <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
+            AND EXISTS (
+                SELECT 1
+                FROM t_qz_category_tag qc
+                WHERE qc.fQZSettingUuid = qs.fUuid
+                AND qc.fTagName = #{qzSettingSearchCriteria.categoryTag}
+            )
+        </if>
+        <if test="qzSettingSearchCriteria.operationType != null and qzSettingSearchCriteria.operationType != ''">
+            AND EXISTS (
+                SELECT 1
+                FROM t_machine_info mi
+                WHERE mi.fUsingOperationType = #{qzSettingSearchCriteria.operationType}
+                AND mi.fGroup = qot.fGroup
+                AND mi.fTerminalType = #{qzSettingSearchCriteria.terminalType}
+            )
+        </if>
+        <if test="qzSettingSearchCriteria.createTime != null and qzSettingSearchCriteria.createTime != ''">
+            AND qs.fCreateTime &gt;= #{qzSettingSearchCriteria.createTime}
+        </if>
+        <if test="qzSettingSearchCriteria.createTimePrefix != null and qzSettingSearchCriteria.createTimePrefix != ''">
+            AND qs.fCreateTime &lt;= #{qzSettingSearchCriteria.createTimePrefix}
+        </if>
         AND EXISTS (
             SELECT 1
             FROM t_customer c

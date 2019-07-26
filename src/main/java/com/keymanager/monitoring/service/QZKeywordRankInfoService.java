@@ -155,11 +155,10 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
 
     public QZSettingSearchCriteria getCountNumOfRankInfo(QZSettingSearchCriteria qzSettingSearchCriteria){
         double upperValue = Double.parseDouble(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_UPPER_VALUE).getValue());
-        double lowerValue = Double.parseDouble(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_LOWER_VALUE).getValue());
         double differenceValue = Double.parseDouble(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_DIFFERENCEVALUE_VALUE).getValue());
         int oneWeekDiff = Integer.parseInt(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_ONE_WEEK_DIFF).getValue());
         qzSettingSearchCriteria.setUpperValue(upperValue);
-        qzSettingSearchCriteria.setLowerValue(lowerValue);
+        qzSettingSearchCriteria.setLowerValue(-upperValue);
         qzSettingSearchCriteria.setDifferenceValue(differenceValue);
         qzSettingSearchCriteria.setUpOneWeekDiff(oneWeekDiff);
         qzSettingSearchCriteria.setDownOneWeekDiff(-oneWeekDiff);

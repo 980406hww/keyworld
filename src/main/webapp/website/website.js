@@ -9,6 +9,12 @@ $(function () {
 });
 function changePaging(currentPage, pageSize) {
     var searchWebsiteForm = $("#searchWebsiteForm");
+    var friendlyLinkUrl = searchWebsiteForm.find("#friendlyLinkUrl").val();
+    if ("http://" === friendlyLinkUrl) {
+        searchWebsiteForm.find("#friendlyLinkUrl").val('');
+    } else {
+        searchWebsiteForm.find("#friendlyLinkUrl").val($.trim(friendlyLinkUrl));
+    }
     searchWebsiteForm.find("#currentPageNumberHidden").val(currentPage);
     searchWebsiteForm.find("#pageSizeHidden").val(pageSize);
     searchWebsiteForm.submit();

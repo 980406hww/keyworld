@@ -171,7 +171,6 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		if (null == qzSettingSearchCriteria.getSearchEngine()) {
 			qzSettingSearchCriteria.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
 		}
-		qzSettingSearchCriteria.setRenewalStatus(qzSettingSearchCriteria.getRenewalStatus() == null ? 1 : qzSettingSearchCriteria.getRenewalStatus());
 		CustomerCriteria customerCriteria = new CustomerCriteria();
 		String entryType = (String) request.getSession().getAttribute("entryType");
 		customerCriteria.setEntryType(entryType);
