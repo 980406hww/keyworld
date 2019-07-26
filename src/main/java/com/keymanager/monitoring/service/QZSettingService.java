@@ -310,7 +310,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		Map<String, Map<String, QZKeywordRankInfo>> existingQZKeywordRankInfoMap = new HashMap<>();
 		for (QZKeywordRankInfo qzKeywordRankInfo : existingQZKeywordRankInfos) {
             Map<String, QZKeywordRankInfo> qzKeywordRankInfoMap = existingQZKeywordRankInfoMap.get(qzKeywordRankInfo.getTerminalType());
-            if (null != qzKeywordRankInfoMap && !qzKeywordRankInfoMap.isEmpty()){
+            if (null != qzKeywordRankInfoMap){
 		        qzKeywordRankInfoMap.put(qzKeywordRankInfo.getWebsiteType(), qzKeywordRankInfo);
             } else {
                 qzKeywordRankInfoMap = new HashMap<>();
@@ -324,7 +324,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
             Map<String, QZKeywordRankInfo> qzKeywordRankInfoMap = existingQZKeywordRankInfoMap.get(qzOperationType.getOperationType());
             String standardSpecies = null;
             Set<String> existingStandardSpeciesSet = new HashSet<>();
-            if (!qzKeywordRankInfoMap.isEmpty()) {
+            if (null != qzKeywordRankInfoMap) {
 				if (CollectionUtils.isNotEmpty(qzOperationType.getQzChargeRules())) {
 					QZChargeRule qzChargeRule = qzOperationType.getQzChargeRules().iterator().next();
 					QZKeywordRankInfo qzKeywordRankInfo = qzKeywordRankInfoMap.get(qzChargeRule.getStandardSpecies());
