@@ -1184,13 +1184,18 @@ function saveCustomerKeywords(qzSettingUuid, customerUuid, tempOptimizeGroupName
     var searchEngine = customerKeywordDialog.find("#searchEngine").val();
     var keywordEffect = customerKeywordDialog.find("#keywordEffect").val();
     var optimizeGroupName = customerKeywordDialog.find("#optimizeGroupName").val();
+    var machineGroupName = customerKeywordDialog.find("#machineGroupName").val();
     if (optimizeGroupName === "") {
         optimizeGroupName = tempOptimizeGroupName;
+    }
+    if (machineGroupName === "") {
+        machineGroupName = "Default";;
     }
     postData.qzSettingUuid = qzSettingUuid;
     postData.customerUuid = customerUuid;
     postData.domain = $.trim(domain);
     postData.optimizeGroupName = optimizeGroupName;
+    postData.machineGroupName = machineGroupName;
     postData.type = type;
     postData.searchEngine = searchEngine;
     postData.terminalTypes = terminalTypes;

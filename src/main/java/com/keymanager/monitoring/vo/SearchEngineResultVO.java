@@ -7,6 +7,7 @@ import java.util.List;
 public class SearchEngineResultVO extends BaseCriteria{
 	private  String searchEngine;
 	private String group;
+	private String machineGroup;
 	private String keyword;
 	private int customerUuid;
 	private String entryType;
@@ -26,6 +27,14 @@ public class SearchEngineResultVO extends BaseCriteria{
 
 	public void setGroup(String group) {
 		this.group = group;
+	}
+
+	public String getMachineGroup() {
+		return machineGroup;
+	}
+
+	public void setMachineGroup(String machineGroup) {
+		this.machineGroup = machineGroup;
 	}
 
 	public String getKeyword() {

@@ -1812,9 +1812,15 @@
                 </td>
             </tr>
 			<tr>
-				<td style="width:60px" align="right">分组</td>
+				<td style="width:60px" align="right">优化组</td>
 				<td>
 					<input type="text" name="optimizeGroupName" id="optimizeGroupName" style="width:240px" placeholder="可不填写，默认这个站的分组" />
+				</td>
+			</tr>
+			<tr>
+				<td style="width:60px" align="right">机器分组</td>
+				<td>
+					<input type="text" name="machineGroupName" id="machineGroupName" style="width:240px" value="Default" placeholder="不填写，默认Default" />
 				</td>
 			</tr>
 			<tr>

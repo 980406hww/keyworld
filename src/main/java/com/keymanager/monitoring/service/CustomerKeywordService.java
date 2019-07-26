@@ -372,6 +372,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (customerKeyword.getCurrentPosition() == null) {
             customerKeyword.setCurrentPosition(10);
         }
+        if (Utils.isNullOrEmpty(customerKeyword.getMachineGroup())) {
+            customerKeyword.setMachineGroup("Default");
+        }
         customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
         customerKeyword.setCapturePositionQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));
         customerKeyword.setStartOptimizedTime(new Date());
@@ -1376,18 +1379,19 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             String searchEngine = searchEngineResultVO.getSearchEngine();
             List<CustomerKeyword> customerKeywords = new ArrayList<CustomerKeyword>();
             for (SearchEngineResultItemVO searchEngineResultItemVO : searchEngineResultVO.getSearchEngineResultItemVOs()) {
-                CustomerKeyword customerKeyword = convert(searchEngineResultItemVO, terminalType, searchEngineResultVO.getGroup(), searchEngineResultVO.getCustomerUuid(), searchEngine);
+                CustomerKeyword customerKeyword = convert(searchEngineResultItemVO, terminalType, searchEngineResultVO.getGroup(), searchEngineResultVO.getMachineGroup(), searchEngineResultVO.getCustomerUuid(), searchEngine);
                 customerKeywords.add(customerKeyword);
             }
             this.addCustomerKeyword(customerKeywords, userName);
         }
     }
 
-    private CustomerKeyword convert(SearchEngineResultItemVO searchEngineResultItemVO, String terminalType, String groupName, long customerUuid, String searchEngine) {
+    private CustomerKeyword convert(SearchEngineResultItemVO searchEngineResultItemVO, String terminalType, String groupName, String machineGroupName, long customerUuid, String searchEngine) {
         CustomerKeyword customerKeyword = new CustomerKeyword();
         customerKeyword.setCurrentPosition(searchEngineResultItemVO.getOrder());
         customerKeyword.setInitialPosition(searchEngineResultItemVO.getOrder());
         customerKeyword.setOptimizeGroupName(groupName);
+        customerKeyword.setMachineGroup(machineGroupName);
         customerKeyword.setOptimizePlanCount(searchEngineResultItemVO.getClickCount());
         customerKeyword.setOptimizeRemainingCount(searchEngineResultItemVO.getClickCount());
         customerKeyword.setKeyword(searchEngineResultItemVO.getKeyword());
@@ -1441,7 +1445,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     }
                 }
                 if (tmpSearchEngineResultItemVO != null) {
-                    CustomerKeyword customerKeyword = convert(searchEngineResultItemVO, terminalType, searchEngineResultVO.getGroup(), searchEngineResultVO.getCustomerUuid(), searchEngine);
+                    CustomerKeyword customerKeyword = convert(searchEngineResultItemVO, terminalType, searchEngineResultVO.getGroup(), searchEngineResultVO.getMachineGroup(), searchEngineResultVO.getCustomerUuid(), searchEngine);
                     if (!Utils.isNullOrEmpty(customerKeyword.getOriginalUrl())) {
                         String targetUrl = captureRealUrlService.fetchSingleRealUrl(customerKeyword.getOriginalUrl());
                         if (!Utils.isNullOrEmpty(targetUrl)) {

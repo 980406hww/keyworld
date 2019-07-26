@@ -105,11 +105,15 @@
         <a href="javascript:updateSpecifiedCustomerKeywordSearchEngine()">修改选中搜索引擎</a> |
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupNameByRank">
-        <a href="javascript:showGroupNameChangeByRankDialog('${customerKeywordCriteria.customerUuid}')">按排名修改分组</a> |
+        <a href="javascript:showGroupNameChangeByRankDialog('${customerKeywordCriteria.customerUuid}')">按排名修改优化组</a> |
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordMachineGroup">
+        <a href="javascript:updateMachineGroupName('total')">修改当前关键字机器分组</a> |
+        <a href="javascript:updateMachineGroupName('selected')">修改所选关键字机器分组</a> |
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
-        <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCriteria.customerUuid}'})">修改所有分组</a> |
-        <a href="javascript:updateSpecifiedCustomerKeywordGroupName()">修改选中分组</a> |
+        <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCriteria.customerUuid}'})">修改所有优化组</a> |
+        <a href="javascript:updateSpecifiedCustomerKeywordGroupName()">修改选中优化组</a> |
         <a href="javascript:stopOptimization(${customerKeywordCriteria.customerUuid})">下架所有关键字</a>|
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
@@ -200,7 +204,6 @@
                 <option value="1">无</option>
                 <option value="2">有</option>
             </select>
-            <br>
             指数:<input type="text" id="gtCurrentIndexCount" name="gtCurrentIndexCount" placeholder=">=" value="${customerKeywordCriteria.gtCurrentIndexCount}" style="width: 40px;">
             <input type="text" id="ltCurrentIndexCount" name="ltCurrentIndexCount" placeholder="<=" value="${customerKeywordCriteria.ltCurrentIndexCount}" style="width: 40px;">
             备注:<input type="text" id="remarks" name="remarks" value="${customerKeywordCriteria.remarks}" style="width: 90px;">
@@ -238,10 +241,6 @@
                 <c:if test="${sessionScope.get('entryType') eq 'qz'}">
                     <input type="button" onclick="deleteDuplicateCustomerKeyword(${customerKeywordCriteria.customerUuid})" value="删除重复关键字">
                 </c:if>
-            </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordMachineGroup">
-            <input type="button" onclick="updateMachineGroupName('selected')" value="修改所选关键字机器分组">
-            <input type="button" onclick="updateMachineGroupName('total')" value="修改当前关键字机器分组">
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/qzsetting/save">
                 <input type="button" id="customerKeywordBtnInput" onclick="openMessageBox('关键字列表', '${customerKeywordCriteria.customerUuid}', '${customer.contactPerson}')" value=" 用户留言 ">

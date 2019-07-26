@@ -743,6 +743,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				customerKeyword.setBearPawNumber(qzSettingSaveCustomerKeywordsCriteria.getBearPawNumber());
                 customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Specify.name());
 				customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
+				customerKeyword.setMachineGroup(qzSettingSaveCustomerKeywordsCriteria.getMachineGroupName());
 				if (!excludeKeyword.isEmpty()){
 					if (excludeKeyword.contains(keyword)){
 						customerKeyword.setOptimizeGroupName("zanting");
