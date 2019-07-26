@@ -34,6 +34,7 @@ public class CustomerKeywordVO {
 	private int optimizePlanCount;
 	private int sequence;
 	private Timestamp optimizeDate;
+	private String machineGroup;
 	private int optimizePositionFirstPercentage;
 	private int optimizePositionSecondPercentage;
 	private int optimizePositionThirdPercentage;
@@ -552,7 +553,16 @@ public class CustomerKeywordVO {
 		this.optimizeDate = optimizeDate;
 	}
 
-	public int getOptimizePositionFirstPercentage() {
+
+    public String getMachineGroup() {
+        return machineGroup;
+    }
+
+    public void setMachineGroup(String machineGroup) {
+        this.machineGroup = machineGroup;
+    }
+
+    public int getOptimizePositionFirstPercentage() {
 		return optimizePositionFirstPercentage;
 	}
 

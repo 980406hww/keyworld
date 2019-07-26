@@ -33,7 +33,8 @@ public class MachineInfoCriteria extends BaseCriteria {
     private String groupNameFuzzyQuery;
 
     private boolean haveHiddenColumns; //是否为设置隐藏弹窗提交的
-
+    private String targetMachineGroup;
+    private String targetGroup;
 
 
     public boolean getHaveHiddenColumns() {
@@ -250,5 +251,21 @@ public class MachineInfoCriteria extends BaseCriteria {
 
     public void setGroupNameFuzzyQuery(String groupNameFuzzyQuery) {
         this.groupNameFuzzyQuery = groupNameFuzzyQuery;
+    }
+
+    public String getTargetMachineGroup() {
+        return targetMachineGroup;
+    }
+
+    public void setTargetMachineGroup(String targetMachineGroup) {
+        this.targetMachineGroup = targetMachineGroup;
+    }
+
+    public String getTargetGroup() {
+        return targetGroup;
+    }
+
+    public void setTargetGroup(String targetGroup) {
+        this.targetGroup = targetGroup;
     }
 }

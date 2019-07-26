@@ -89,6 +89,14 @@
                 </if>
             </otherwise>
         </choose>
+        <if test="customerKeywordCriteria.machineGroup != null and customerKeywordCriteria.machineGroup != ''">
+            <if test="customerKeywordCriteria.machineGroupFuzzyQuery == null or customerKeywordCriteria.machineGroupFuzzyQuery == ''">
+                AND ck.fMachineGroup = #{customerKeywordCriteria.machineGroup}
+            </if>
+            <if test="customerKeywordCriteria.machineGroupFuzzyQuery == 1">
+                AND ck.fMachineGroup like '${customerKeywordCriteria.machineGroup}%'
+            </if>
+        </if>
         <choose>
             <when test="customerKeywordCriteria.orderingElement != null and customerKeywordCriteria.orderingElement != ''">
                 ORDER BY ck.${customerKeywordCriteria.orderingElement}  DESC
@@ -159,6 +167,14 @@
                 </if>
             </otherwise>
         </choose>
+        <if test="customerKeywordCriteria.machineGroup != null and customerKeywordCriteria.machineGroup != ''">
+            <if test="customerKeywordCriteria.machineGroupFuzzyQuery == null or customerKeywordCriteria.machineGroupFuzzyQuery == ''">
+                AND ck.fMachineGroup = #{customerKeywordCriteria.machineGroup}
+            </if>
+            <if test="customerKeywordCriteria.machineGroupFuzzyQuery == 1">
+                AND ck.fMachineGroup like '${customerKeywordCriteria.machineGroup}%'
+            </if>
+        </if>
     </sql>
 
     <update id="cleanSelectedCustomerKeywordTitle">
@@ -389,6 +405,7 @@
         ck.fCurrentPosition	AS	'currentPosition',
         ck.fInvalidRefreshCount	AS	'invalidRefreshCount',
         ck.fOptimizeGroupName	AS	'optimizeGroupName',
+        ck.fMachineGroup AS 'machineGroup',
         ck.fOptimizePlanCount	AS	'optimizePlanCount',
         ck.fOptimizedCount	AS	'optimizedCount',
         ck.fOptimizeDate	AS	'optimizeDate',
@@ -572,6 +589,27 @@
         ORDER BY ck.fOptimizeRemainingCount DESC
     </select>
 
+    <select id="fetchCustomerKeywordsForCache" resultType="com.keymanager.monitoring.vo.OptimizationKeywordVO">
+        SELECT
+            ck.fUuid              AS 'uuid',
+            ck.fTerminalType      AS 'terminalType',
+            ck.fKeyword           AS 'keyword',
+            ck.fUrl               AS 'url',
+            ck.fBearPawNumber     AS 'bearPawNumber',
+            ck.fType              AS 'entryType',
+            ck.fTitle             AS 'title',
+            ck.fSearchEngine      AS 'searchEngine',
+            ck.fOptimizeGroupName AS 'optimizeGroup'
+        FROM t_customer_keyword ck
+        WHERE ck.fMachineGroup = #{machineGroup}
+        AND ck.fStatus = 1
+        AND ck.fTerminalType = #{terminalType}
+        AND ck.fQueryTime <![CDATA[<]]> NOW()
+        AND ck.fInvalidFlag = 0
+        ORDER BY ck.fQueryTime
+        LIMIT 200
+    </select>
+
     <select id="getCustomerKeywordUuidForOptimization" resultType="Long">
         SELECT
         ck.fUuid	AS	'uuid'
@@ -628,7 +666,17 @@
     </select>
 
     <update id="updateOptimizationQueryTime">
-        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(NOW(), INTERVAL fQueryInterval MINUTE),fInvalidFlag = if(fInvalidRefreshCount > #{maxInvalidRefreshCount}, 1, 0)
+        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(NOW(), INTERVAL fQueryInterval MINUTE),
+        fInvalidFlag = if(fInvalidRefreshCount > (SELECT oc.fMaxInvalidCount FROM t_group g, t_operation_combine oc WHERE g.fGroupName = fOptimizeGroupName AND oc.fUuid = g.fOperationCombineUuid), 1, 0)
+        WHERE fUuid IN
+        <foreach item="uuid" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
+
+    <update id="updateOptimizationQueryTimeSingle">
+        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(NOW(), INTERVAL fQueryInterval MINUTE),
+        fInvalidFlag = if(fInvalidRefreshCount > #{maxInvalidCount}, 1, 0)
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 
@@ -1305,6 +1353,7 @@
         <if test="keywordChecks.originalUrl==1"> ,fOriginalUrl = #{keywordStatus.originalUrl}</if>
         <if test="keywordChecks.optimizePlanCount==1"> ,fOptimizePlanCount = #{keywordStatus.optimizePlanCount}</if>
         <if test="keywordChecks.optimizeGroupName==1"> ,fOptimizeGroupName = #{keywordStatus.optimizeGroupName}</if>
+        <if test="keywordChecks.machineGroup==1"> ,fMachineGroup = #{keywordStatus.machineGroup}</if>
         <if test="keywordChecks.initialIndexCount==1"> ,fInitialIndexCount = #{keywordStatus.initialIndexCount}</if>
         <if test="keywordChecks.initialPosition==1"> ,fInitialPosition = #{keywordStatus.initialPosition}</if>
         <if test="keywordChecks.positionFirstFee==1"> ,fPositionFirstFee = #{keywordStatus.positionFirstFee}</if>
@@ -1553,6 +1602,15 @@
         GROUP BY fOptimizeGroupName
         ORDER BY fOptimizeGroupName
     </select>
+
+    <select id="getMachineGroups" resultType="java.lang.String">
+        SELECT
+          CONCAT(ck.fTerminalType, '####', ck.fMachineGroup)
+        FROM t_customer_keyword ck
+        WHERE ck.fStatus = 1 AND ck.fMachineGroup > ''
+        GROUP BY ck.fTerminalType, ck.fMachineGroup
+    </select>
+
     <update id="updateSameCustomerKeywordSource">
         UPDATE t_customer_keyword
         SET fCustomerKeywordSource = #{customerKeywordSource}
@@ -1595,4 +1653,16 @@
         AND fStatus = 1
         AND fKeywordEffect <![CDATA[<>]]> 'Appointment'
     </update>
+
+    <update id="updateMachineGroup" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordCriteria">
+            UPDATE t_customer_keyword ck
+            SET ck.fMachineGroup = #{customerKeywordCriteria.targetMachineGroup},
+            ck.fUpdateTime = NOW()
+            WHERE 1=1
+        <include refid="updateCustomerKeywordsCriteria"/>
+    </update>
+
+
+
+
 </mapper>

@@ -18,6 +18,7 @@ import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.monitoring.vo.KeywordStatusBatchUpdateVO;
+import com.keymanager.monitoring.vo.machineGroupQueueVO;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import org.apache.commons.lang3.StringUtils;
@@ -306,6 +307,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				if (EntryTypeEnum.qz.name().equalsIgnoreCase(entryType) && !"zanting".equals(customerKeyword.getOptimizeGroupName()) && StringUtils.isEmpty(customerKeyword.getOptimizeGroupName())){
                     customerKeywordService.checkOptimizeGroupName(customerKeyword);
                 }
+				if("".equals(customerKeyword.getMachineGroup())){
+					customerKeyword.setMachineGroup(null);
+				}
 				customerKeywordService.addCustomerKeyword(customerKeyword, userName);
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			} else {
@@ -629,4 +633,76 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
 	}
+
+	/**
+	 * 批量更新所选关键字的机器分组
+	 */
+	@RequiresPermissions("/internal/customerKeyword/updateMachineGroupByCustomerUuids")
+	@RequestMapping(value = "/updateMachineGroupByCustomerUuids",method = RequestMethod.POST)
+	public ResponseEntity<?> updateMachineGroupByCustomerUuids(@RequestBody KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO) {
+		try{
+			customerKeywordService.batchUpdateKeywordStatus(keywordStatusBatchUpdateVO);
+			return new ResponseEntity<Object>(true,HttpStatus.OK);
+		}catch (Exception e){
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	/**
+	 * 批量更新根据检索条件获取到的关键字的机器分组
+	 */
+	@RequiresPermissions("/internal/customerKeyword/updateMachineGroupByCriteria")
+	@RequestMapping(value = "/updateMachineGroupByCriteria",method = RequestMethod.POST)
+	public ResponseEntity<?> updateMachineGroupByCriteria(@RequestBody CustomerKeywordCriteria customerKeywordCriteria) {
+		try{
+			//System.out.println(customerKeywordCriteria.toString());
+			customerKeywordService.updateMachineGroup(customerKeywordCriteria);
+			return new ResponseEntity<Object>(true,HttpStatus.OK);
+		}catch (Exception e){
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
+		}
+	}
+
+
+
+	@RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordMachineGroup")
+	@RequestMapping(value = "/updateCustomerKeywordMachineGroup", method = RequestMethod.POST)
+	public ResponseEntity<?> updateCustomerKeywordMachineGroupName(@RequestBody CustomerKeywordCriteria customerKeywordCriteria, HttpServletRequest request) {
+		try {
+			String entryType = (String) request.getSession().getAttribute("entryType");
+			String terminalType = TerminalTypeMapping.getTerminalType(request);
+			String userName = (String) request.getSession().getAttribute("username");
+			boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+			if(!isDepartmentManager) {
+				customerKeywordCriteria.setUserName(userName);
+			}
+			customerKeywordCriteria.setEntryType(entryType);
+			customerKeywordCriteria.setTerminalType(terminalType);
+			customerKeywordService.updateMachineGroup(customerKeywordCriteria);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+
+    @RequiresPermissions("/internal/customerKeyword/showMachineGroupAndSize")
+    @RequestMapping("/showMachineGroupAndSize")
+    public ModelAndView showMachineGroupAndSize(HttpServletRequest request){
+        long startMilleSeconds = System.currentTimeMillis();
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("/customerkeyword/machineGroupQueue");
+        try{
+            List<machineGroupQueueVO> machineGroupQueueVOS = customerKeywordService.getMachineGroupAndSize();
+            mv.addObject("machineGroupQueueVOS",machineGroupQueueVOS);
+            performanceService.addPerformanceLog(terminalType + ":showMachineGroupAndSize", (System.currentTimeMillis() - startMilleSeconds), null);
+            return mv;
+        }catch (Exception e){
+            return mv;
+        }
+    }
 }

@@ -94,7 +94,9 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     CustomerKeyword getCustomerKeywordForOptimization(@Param("uuid")Long uuid);
 
-    void updateOptimizationQueryTime(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("maxInvalidRefreshCount")int maxInvalidRefreshCount);
+    void updateOptimizationQueryTime(@Param("customerKeywordUuids")List<Long> customerKeywordUuids);
+
+    void updateOptimizationQueryTimeSingle(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("maxInvalidCount")int maxInvalidCount);
 
     void updateOptimizationResult(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("count")int count);
 
@@ -237,4 +239,10 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateSimilarCustomerKeywordSource(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("originalUrl") String originalUrl, @Param("title") String title, @Param("customerKeywordSource") String customerKeywordSource);
 
     void updateCustomerKeywordEffect (@Param("customerUuid") long customerUuid, @Param("terminalType") String terminalType, @Param("optimizeGroupName") String optimizeGroupName);
+
+    void updateMachineGroup(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
+
+    List<String> getMachineGroups();
+
+    List<OptimizationKeywordVO> fetchCustomerKeywordsForCache(@Param("terminalType") String terminalType, @Param("machineGroup") String machineGroup);
 }
