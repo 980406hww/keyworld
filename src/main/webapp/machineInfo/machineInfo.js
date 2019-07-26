@@ -1496,7 +1496,7 @@ function batchUpdateMachineGroup(changeType) {
                     obj['clientIDs'] = clientIDs.split(",");
                 }else{
                     if (confirm("确定要修改当前查询条件下所有终端的机器分组吗?") == false) return;
-                    var postData = $("#searchCustomerKeywordForm").serializeArray();
+                    var postData = $("#searchMachineInfoForm").serializeArray();
                     $.each(postData, function() {
                         if (obj[this.name]) {
                             if (!obj[this.name].push) {
@@ -1509,7 +1509,6 @@ function batchUpdateMachineGroup(changeType) {
                     });
                 }
                 obj.targetMachineGroup = targetMachineGroup;
-                console.log(obj)
                 $.ajax({
                     url: '/internal/machineInfo/updateMachineGroup',
                     data: JSON.stringify(obj),
@@ -1591,7 +1590,7 @@ function batchUpdateGroup(changeType) {
                     obj['clientIDs'] = clientIDs.split(",");
                 }else{
                     if (confirm("确定要修改当前查询条件下所有终端的机器分组吗?") == false) return;
-                    var postData = $("#searchCustomerKeywordForm").serializeArray();
+                    var postData = $("#searchMachineInfoForm").serializeArray();
                     $.each(postData, function() {
                         if (obj[this.name]) {
                             if (!obj[this.name].push) {
