@@ -585,12 +585,14 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                                 if (!pcExcludeKeyword.isEmpty()){
                                     if (pcExcludeKeyword.contains(customerKeyword.getKeyword())){
                                         customerKeyword.setOptimizeGroupName("zanting");
+                                        customerKeyword.setMachineGroup("Pause");
                                     }
                                 }
                             } else {
                                 if (!phoneExcludeKeyword.isEmpty()){
                                     if (phoneExcludeKeyword.contains(customerKeyword.getKeyword())){
                                         customerKeyword.setOptimizeGroupName("zanting");
+										customerKeyword.setMachineGroup("Pause");
                                     }
                                 }
                             }
@@ -744,6 +746,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				if (!excludeKeyword.isEmpty()){
 					if (excludeKeyword.contains(keyword)){
 						customerKeyword.setOptimizeGroupName("zanting");
+						customerKeyword.setMachineGroup("Pause");
 					}
 				}
 				if (!"zanting".equals(customerKeyword.getOptimizeGroupName()) && customerKeyword.getOptimizeGroupName().equals(TerminalTypeEnum.PC.name().equals(terminalType) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup())){

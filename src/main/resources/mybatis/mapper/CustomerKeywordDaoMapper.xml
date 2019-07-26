@@ -1490,6 +1490,7 @@
             fQueryTime,
             fServiceProvider,
             fOptimizeGroupName,
+            fMachineGroup,
             fOptimizePlanCount,
             fOptimizeRemainingCount,
             fLastReachStandardDate,
@@ -1533,6 +1534,7 @@
                 #{customerKeyword.queryTime},
                 #{customerKeyword.serviceProvider},
                 #{customerKeyword.optimizeGroupName},
+                #{customerKeyword.machineGroup},
                 <choose>
                     <when test="customerKeyword.optimizePlanCount != null">#{customerKeyword.optimizePlanCount},</when>
                     <when test="customerKeyword.optimizePlanCount == null">0,</when>

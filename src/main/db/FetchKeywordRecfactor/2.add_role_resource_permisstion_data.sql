@@ -1,25 +1,25 @@
-#关键字管理权限
-INSERT INTO `db_keyword`.`t_resource`(`fUuid`, `fResourceName`, `fUrl`, `fOpenMode`, `fDescription`, `fIconCls`, 
+﻿#关键字管理权限
+INSERT INTO `db_keyword`.`t_resource`(`fResourceName`, `fUrl`, `fOpenMode`, `fDescription`, `fIconCls`, 
 	`fParentID`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`, `fUpdateTime`, `fCreateTime`) 
-VALUES (null, '机器分组工作统计', '/internal/customerKeyword/showMachineGroupAndSize', NULL, NULL, 'fi-thumbnails', 
+VALUES ('机器分组工作统计', '/internal/customerKeyword/showMachineGroupAndSize', NULL, NULL, 'fi-thumbnails', 
 	(SELECT r.fUuid from t_resource r where r.fUrl = '#' AND r.fResourceName = "关键字管理"), 0, 0, 1, 0, NULL, NOW());
 
 
-INSERT INTO `db_keyword`.`t_resource`(`fUuid`, `fResourceName`, `fUrl`, `fOpenMode`, `fDescription`, `fIconCls`, 
+INSERT INTO `db_keyword`.`t_resource`(`fResourceName`, `fUrl`, `fOpenMode`, `fDescription`, `fIconCls`, 
 	`fParentID`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`, `fUpdateTime`, `fCreateTime`) 
-VALUES (null, '修改机器分组', '/internal/customerKeyword/updateCustomerKeywordMachineGroup', 'ajax', NULL,null, 
+VALUES ('修改机器分组', '/internal/customerKeyword/updateCustomerKeywordMachineGroup', 'ajax', NULL,null, 
 	(SELECT r.fUuid from t_resource r where r.fUrl != '#' AND r.fResourceName = "客户关键字管理"), 0, 0, 1, 0, NULL, NOW());
 
 #机器管理权限
 
-INSERT INTO `db_keyword`.`t_resource`(`fUuid`, `fResourceName`, `fUrl`, `fOpenMode`, `fDescription`, `fIconCls`, 
+INSERT INTO `db_keyword`.`t_resource`(`fResourceName`, `fUrl`, `fOpenMode`, `fDescription`, `fIconCls`, 
 	`fParentID`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`, `fUpdateTime`, `fCreateTime`) 
-VALUES (null, '修改机器分组', '/internal/machineInfo/updateMachineGroup', 'ajax', NULL,null, 
+VALUES ('修改机器分组', '/internal/machineInfo/updateMachineGroup', 'ajax', NULL,null, 
 	(SELECT r.fUuid from t_resource r where r.fUrl != '#' AND r.fResourceName = "机器管理"), 0, 0, 1, 0, NULL, NOW());
 
-INSERT INTO `db_keyword`.`t_resource`(`fUuid`, `fResourceName`, `fUrl`, `fOpenMode`, `fDescription`, `fIconCls`, 
+INSERT INTO `db_keyword`.`t_resource`(`fResourceName`, `fUrl`, `fOpenMode`, `fDescription`, `fIconCls`, 
 	`fParentID`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`, `fUpdateTime`, `fCreateTime`) 
-VALUES (null, '修改优化组', '/internal/machineInfo/batchUpdateGroup', 'ajax', NULL,null, 
+VALUES ('修改优化组', '/internal/machineInfo/batchUpdateGroup', 'ajax', NULL,null, 
 	(SELECT r.fUuid from t_resource r where r.fUrl != '#' AND r.fResourceName = "机器管理"), 0, 0, 1, 0, NULL, NOW());
 
 

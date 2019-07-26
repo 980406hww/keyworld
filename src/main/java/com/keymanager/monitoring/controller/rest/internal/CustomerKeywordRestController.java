@@ -300,6 +300,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 					if (!excludeKeyword.isEmpty()){
 						if (excludeKeyword.contains(customerKeyword.getKeyword())){
 							customerKeyword.setOptimizeGroupName("zanting");
+							customerKeyword.setMachineGroup("Pause");
 						}
 					}
 				}
