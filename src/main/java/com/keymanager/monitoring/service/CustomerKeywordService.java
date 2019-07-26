@@ -150,7 +150,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         String key = machineInfo.getTerminalType() + "####" + (machineInfo.getMachineGroup() == null ? "Default" : machineInfo.getMachineGroup());
         ArrayBlockingQueue arrayBlockingQueue = machineGroupQueueMap.get(key);
         if (arrayBlockingQueue != null) {
-            Object obj = arrayBlockingQueue.peek();
+            Object obj = arrayBlockingQueue.poll();
             if (obj != null) {
                 OptimizationKeywordVO keywordVO = (OptimizationKeywordVO) obj;
                 if(StringUtils.isNotBlank(keywordVO.getOptimizeGroup())) {
