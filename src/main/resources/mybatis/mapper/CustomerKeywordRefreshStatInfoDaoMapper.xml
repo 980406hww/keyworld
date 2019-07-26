@@ -51,6 +51,7 @@
                 </otherwise>
             </choose>
         </if>
+        <if test="customerKeywordRefreshStatInfoCriteria.machineGroup!=null and customerKeywordRefreshStatInfoCriteria.machineGroup!=''">AND ck.fMachineGroup like concat('%', #{customerKeywordRefreshStatInfoCriteria.machineGroup}, "%")</if>
         <if test="customerKeywordRefreshStatInfoCriteria.customerName!=null and customerKeywordRefreshStatInfoCriteria.customerName!=''">AND c.fContactPerson like concat('%', #{customerKeywordRefreshStatInfoCriteria.customerName}, "%")</if>
         <if test="customerKeywordRefreshStatInfoCriteria.userName!=null and customerKeywordRefreshStatInfoCriteria.userName!=''">AND c.fUserID = #{customerKeywordRefreshStatInfoCriteria.userName}</if>
         <if test="customerKeywordRefreshStatInfoCriteria.categoryTag != null and customerKeywordRefreshStatInfoCriteria.categoryTag != ''">AND qc.fTagName = #{customerKeywordRefreshStatInfoCriteria.categoryTag} </if>

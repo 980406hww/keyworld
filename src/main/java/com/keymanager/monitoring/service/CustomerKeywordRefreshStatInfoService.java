@@ -5,10 +5,8 @@ import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.dao.CustomerKeywordRefreshStatInfoDao;
 import com.keymanager.monitoring.dao.CustomerKeywordTerminalRefreshStatRecordDao;
-import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord;
 import com.keymanager.monitoring.vo.PositionVO;
-import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import org.apache.commons.collections.CollectionUtils;
@@ -59,11 +57,11 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
                 customerKeywordTerminalRefreshStatRecord.setUnworkMachineCount(csCustomerKeywordTerminalRefreshStatRecord.getUnworkMachineCount());
             }
         }
-        this.SetCountCustomerKeywordRefreshStatInfo(customerKeywordTerminalRefreshStatRecords);
+        this.setCountCustomerKeywordRefreshStatInfo(customerKeywordTerminalRefreshStatRecords);
         return customerKeywordTerminalRefreshStatRecords;
     }
 
-    public void SetCountCustomerKeywordRefreshStatInfo(List<CustomerKeywordTerminalRefreshStatRecord> customerKeywordTerminalRefreshStatRecords){
+    public void setCountCustomerKeywordRefreshStatInfo(List<CustomerKeywordTerminalRefreshStatRecord> customerKeywordTerminalRefreshStatRecords){
         CustomerKeywordTerminalRefreshStatRecord total = new CustomerKeywordTerminalRefreshStatRecord();
         total.setGroup("总计");
         for (CustomerKeywordTerminalRefreshStatRecord customerKeywordTerminalRefreshStatRecord : customerKeywordTerminalRefreshStatRecords) {
