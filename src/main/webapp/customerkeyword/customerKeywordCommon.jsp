@@ -169,7 +169,7 @@
 
 <%--Dialog部分--%>
 <div id="targetMachineGroupDialog" style="text-align: center;left: 40%;display: none;">
-    <form id="targetMachineGroupFrom" style="text-align: center;margin-top: 10px;">
+    <form id="targetMachineGroupForm" style="text-align: center;margin-top: 10px;">
         目标机器分组名:<input type="text" id="machineGroup" name="machineGroup" style="width:150px">
     </form>
 </div>

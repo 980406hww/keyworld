@@ -1,10 +1,13 @@
 package com.keymanager.monitoring.criteria;
 
+import java.util.List;
 import java.util.Set;
 
 public class MachineInfoCriteria extends BaseCriteria {
+    private List<String> clientIDs;//客户端ID组，用户批量操作
     private String clientID; // 客户端ID
     private String groupName; // 优化组
+    private String machineGroup;
     private String operationType; // 操作类型
     private String noGroup; // 没分组
     private String version; // 版本
@@ -31,6 +34,7 @@ public class MachineInfoCriteria extends BaseCriteria {
     private String terminalType;
     private Set<String> switchGroups;
     private String groupNameFuzzyQuery;
+    private String machineGroupFuzzyQuery;
 
     private boolean haveHiddenColumns; //是否为设置隐藏弹窗提交的
     private String targetMachineGroup;
@@ -43,6 +47,14 @@ public class MachineInfoCriteria extends BaseCriteria {
 
     public void setHaveHiddenColumns(boolean haveHiddenColumns) {
         this.haveHiddenColumns = haveHiddenColumns;
+    }
+
+    public List<String> getClientIDs() {
+        return clientIDs;
+    }
+
+    public void setClientIDs(List<String> clientIDs) {
+        this.clientIDs = clientIDs;
     }
 
     public String getClientID() {
@@ -267,5 +279,21 @@ public class MachineInfoCriteria extends BaseCriteria {
 
     public void setTargetGroup(String targetGroup) {
         this.targetGroup = targetGroup;
+    }
+
+    public String getMachineGroup() {
+        return machineGroup;
+    }
+
+    public void setMachineGroup(String machineGroup) {
+        this.machineGroup = machineGroup;
+    }
+
+    public String getMachineGroupFuzzyQuery() {
+        return machineGroupFuzzyQuery;
+    }
+
+    public void setMachineGroupFuzzyQuery(String machineGroupFuzzyQuery) {
+        this.machineGroupFuzzyQuery = machineGroupFuzzyQuery;
     }
 }

@@ -676,15 +676,6 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         machineInfoDao.batchChangeStatus(clientIds,status);
     }
 
-    public void batchUpdateMachineGroupByIds(String clientIDs,String machineGroup) {
-        String[] clientIds = clientIDs.split(",");
-        machineInfoDao.batchUpdateMachineGroupByIds(clientIds,machineGroup);
-    }
-    public void batchUpdateGroupByIds(String clientIDs,String group) {
-        String[] clientIds = clientIDs.split(",");
-        machineInfoDao.batchUpdateGroupByIds(clientIds,group);
-    }
-
     public void batchChangeTerminalType(String[] clientIds, String terminalType) {
         machineInfoDao.batchChangeTerminalType(clientIds, terminalType);
     }
@@ -903,19 +894,17 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         return clientStatusForOptimization;
     }
 
-    public void updateMachineGroupByCriteria(MachineInfoCriteria machineInfoCriteria) {
-        machineInfoDao.updateMachineGroupByCriteria(machineInfoCriteria);
+    public void updateMachineGroup(MachineInfoCriteria machineInfoCriteria){
+        machineInfoDao.updateMachineGroup(machineInfoCriteria);
     }
 
-    public void updateGroupByCriteria(MachineInfoCriteria machineInfoCriteria) {
-        machineInfoDao.updateGroupByCriteria(machineInfoCriteria);
-    }
-
-    public void updateMachineGroup(String clientID, String machineGroup) {
+    public void updateMachineGroupById(String clientID, String machineGroup) {
         MachineInfo machineInfo = machineInfoDao.selectById(clientID);
         machineInfo.setMachineGroup(machineGroup);
         machineInfoDao.updateById(machineInfo);
     }
 
-
+    public void batchUpdateGroup(MachineInfoCriteria machineInfoCriteria) {
+        machineInfoDao.updateGroup(machineInfoCriteria);
+    }
 }

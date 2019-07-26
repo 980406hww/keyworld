@@ -420,29 +420,15 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-    /**
-     * 批量更新机器的机器分组
-     */
-    @RequiresPermissions("/internal/machineInfo/batchUpdateMachineGroupSelected")
-    @RequestMapping(value = "/batchUpdateMachineGroupSelected", method = RequestMethod.POST)
-    public ResponseEntity<?> batchUpdateMachineGroupSelected(@Param("clientIDs") String clientIDs,@Param("machineGroup")String machineGroup) {
-        try {
-            machineInfoService.batchUpdateMachineGroupByIds(clientIDs,machineGroup);
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-        }
-    }
+
     /**
      * 批量更新根据检索条件获取到的机器的机器分组
      */
-    @RequiresPermissions("/internal/machineInfo/updateMachineGroupByCriteria")
-    @RequestMapping(value = "/updateMachineGroupByCriteria",method = RequestMethod.POST)
-    public ResponseEntity<?> updateMachineGroupByCriteria(@RequestBody MachineInfoCriteria machineInfoCriteria) {
+    /*@RequiresPermissions("/internal/machineInfo/updateMachineGroup")*/
+    @RequestMapping(value = "/updateMachineGroup",method = RequestMethod.POST)
+    public ResponseEntity<?> batchUpdateMachineGroup(@RequestBody MachineInfoCriteria machineInfoCriteria) {
         try{
-
-            machineInfoService.updateMachineGroupByCriteria(machineInfoCriteria);
+            machineInfoService.updateMachineGroup(machineInfoCriteria);
             return new ResponseEntity<Object>(true,HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -451,12 +437,12 @@ public class MachineInfoRestController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/machineInfo/updateMachineGroup")
-    @RequestMapping(value = "/updateMachineGroup", method = RequestMethod.POST)
+    @RequestMapping(value = "/updateMachineGroupById", method = RequestMethod.POST)
     public ResponseEntity<?> updateMachineGroup(@RequestBody Map<String, Object> requestMap) {
         try {
             String clientID = (String)requestMap.get("clientID");
             String machineGroup = (String)requestMap.get("machineGroup");
-            machineInfoService.updateMachineGroup(clientID, machineGroup);
+            machineInfoService.updateMachineGroupById(clientID, machineGroup);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -464,32 +450,22 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-    /*===========================*/
-    @RequiresPermissions("/internal/machineInfo/batchUpdateGroupSelected")
-    @RequestMapping(value = "/batchUpdateGroupSelected", method = RequestMethod.POST)
-    public ResponseEntity<?> batchUpdateGroupSelected(@Param("clientIDs") String clientIDs,@Param("group")String group) {
-        try {
-            machineInfoService.batchUpdateGroupByIds(clientIDs,group);
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-        }
-    }
+
     /**
      * 批量更新根据检索条件获取到的机器的机器分组
      */
-    @RequiresPermissions("/internal/machineInfo/updateGroupByCriteria")
-    @RequestMapping(value = "/updateGroupByCriteria",method = RequestMethod.POST)
-    public ResponseEntity<?> updateGroupByCriteria(@RequestBody MachineInfoCriteria machineInfoCriteria) {
+    @RequiresPermissions("/internal/machineInfo/updateGroup")
+    @RequestMapping(value = "/updateGroup",method = RequestMethod.POST)
+    public ResponseEntity<?> batchUpdateGroup(@RequestBody MachineInfoCriteria machineInfoCriteria) {
         try{
-
-            machineInfoService.updateGroupByCriteria(machineInfoCriteria);
+            machineInfoService.batchUpdateGroup(machineInfoCriteria);
             return new ResponseEntity<Object>(true,HttpStatus.OK);
         }catch (Exception e){
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
         }
     }
+
+
 
 }

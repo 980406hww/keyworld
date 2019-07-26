@@ -74,7 +74,12 @@
 								&nbsp;&nbsp;
 								优化组:<input type="text" name="groupName" id="groupName" value="${machineInfoCriteria.groupName}" style="width: 120px;">
 								<input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${machineInfoCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>模糊查询
-                                &nbsp;&nbsp;
+                                &nbsp;
+                                机器分组:
+                                <input type="text" name="machineGroup" id="machineGroup"
+                                       value="${machineInfoCriteria.machineGroup}" style="width:100px;">&nbsp;
+								<input id="machineGroupFuzzyQuery" name="machineGroupFuzzyQuery" type="checkbox"  onclick="machineGroupFuzzyQueryValue()" value="${machineInfoCriteria.machineGroupFuzzyQuery}" ${machineInfoCriteria.machineGroupFuzzyQuery=='1' ? 'checked' :''} />模糊查询 &nbsp;
+                                &nbsp;
 								当前操作类型:<input type="text" name="operationType" id="operationType" value="${machineInfoCriteria.operationType}" style="width: 120px;">
 								&nbsp;&nbsp;
 								版本:<input type="text" name="version" id="version" value="${machineInfoCriteria.version}" style="width: 20px;">
@@ -164,24 +169,15 @@
 								&nbsp;&nbsp;<input type="button" name="btnFilter" onclick="showUploadVPSDialog('common')" value=" 导入普通终端 ">
 								&nbsp;&nbsp;<input type="button" onclick="showUploadVPSDialog('startUp')" value=" 导入开机终端 ">
 							</shiro:hasPermission>
+							<shiro:hasPermission name="/internal/machineInfo/updateMachineGroup">
+								<input type="button" onclick="batchUpdateMachineGroup('selected')" value="修改所选终端机器分组">
+								<input type="button" onclick="batchUpdateMachineGroup('total')" value="修改当前终端机器分组">
+							</shiro:hasPermission>
 
-                            <shiro:hasPermission name="/internal/machineInfo/batchUpdateMachineGroupSelected">
-							    <input type="button" onclick="batchChangeMachineGroupSelected()" value="修改所选终端机器分组">
-                            </shiro:hasPermission>
-
-                            <shiro:hasPermission name="/internal/machineInfo/updateMachineGroupByCriteria">
-                                <input type="button" onclick="batchChangeMachineGroupSearched()" value="修改当前终端机器分组">
-                            </shiro:hasPermission>
-
-                            <shiro:hasPermission name="/internal/machineInfo/batchUpdateGroupSelected">
-                                <input type="button" onclick="batchChangeGroupSelected()" value="修改所选终端优化组">
-                            </shiro:hasPermission>
-
-                            <shiro:hasPermission name="/internal/machineInfo/updateGroupByCriteria">
-                                <input type="button" onclick="batchChangeGroupSearched()" value="修改当前终端优化组">
-                            </shiro:hasPermission>
-
-
+							<shiro:hasPermission name="/internal/machineInfo/updateGroup">
+								<input type="button" onclick="batchUpdateGroup('selected')" value="修改所选终端优化组">
+								<input type="button" onclick="batchUpdateGroup('total')" value="修改当前终端优化组">
+							</shiro:hasPermission>
 							&nbsp;&nbsp;<input type="button" onclick="headerTableSetting()" value="表格设置">
 						</td>
 						</tr>
@@ -595,14 +591,14 @@
 		</table>
 	</div>
 	<%--Dialog部分--%>
-	<div id="machineGroupBatchUpdateDialog" style="text-align: center;left: 40%;display: none;">
-		<form id="machineGroupBatchUpdateForm" style="text-align: center;margin-top: 10px;" onkeydown="if(event.keyCode==13)return false;">
+	<div id="targetMachineGroupDialog" style="text-align: center;left: 40%;display: none;">
+		<form id="targetMachineGroupForm" style="text-align: center;margin-top: 10px;" onkeydown="if(event.keyCode==13)return false;">
 			机器分组:<input type="text" id="targetMachineGroup" name="targetMachineGroup" style="width:150px;"><%-- margin-top: 10px;--%>
 		</form>
 	</div>
 	<%--Dialog部分--%>
-	<div id="groupBatchUpdateDialog" style="text-align: center;left: 40%;display: none;">
-		<form id="groupBatchUpdateForm" style="text-align: center;margin-top: 10px;" onkeydown="if(event.keyCode==13)return false;">
+	<div id="targetGroupDialog" style="text-align: center;left: 40%;display: none;">
+		<form id="targetGroupForm" style="text-align: center;margin-top: 10px;" onkeydown="if(event.keyCode==13)return false;">
 			优化组:<input type="text" id="targetGroup" name="targetGroup" style="width:150px;"><%-- margin-top: 10px;--%>
 		</form>
 	</div>
