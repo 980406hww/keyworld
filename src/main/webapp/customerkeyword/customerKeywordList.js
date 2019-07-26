@@ -761,7 +761,7 @@ function updateMachineGroupName(changeType) {
                 }
                 var obj = {};
                 if ("selected" === changeType){
-                    var uuids = getSelectedIDs();
+                    var uuids = getUuids();
                     if(uuids === ''){
                         alert('请选择要修改机器分组的关键字！');
                         return ;
