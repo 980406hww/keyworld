@@ -66,10 +66,10 @@
             mgwi.fIdleTotalMinutes AS 'idleTotalMinutes'
         FROM t_machine_group_work_info mgwi
         WHERE DATE_SUB(CURDATE(), INTERVAL #{machineGroupWorkInfoCriteria.dayNum} DAY) = mgwi.fCreateDate
-        AND mgwi.fType = #{MachineGroupWorkInfoCriteria.entryType}
-        AND mgwi.fTerminalType = #{MachineGroupWorkInfoCriteria.terminalType}
+        AND mgwi.fType = #{machineGroupWorkInfoCriteria.entryType}
+        AND mgwi.fTerminalType = #{machineGroupWorkInfoCriteria.terminalType}
         GROUP BY mgwi.fUuid
-        ORDER BY mgwi.fGroup
+        ORDER BY mgwi.fMachineGroup
     </select>
 
 
