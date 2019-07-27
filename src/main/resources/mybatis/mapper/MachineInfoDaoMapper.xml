@@ -659,4 +659,21 @@
 
     </update>
 
+    <select id="searchMachineInfoFormMachineGroupWorkInfo" parameterType="com.keymanager.monitoring.criteria.MachineGroupWorkInfoCriteria" resultType="com.keymanager.monitoring.entity.MachineGroupWorkInfo">
+        SELECT
+        cs.fMachineGroup AS "machineGroup",
+        cs.fTerminalType AS "terminalType",
+        SUM(IF(DATE_ADD(cs.fLastVisitTime, INTERVAL IF(10 > cs.fPageNo * 3, 15, cs.fPageNo * 3 + 5) MINUTE) &lt; NOW(), 1, 0)) AS 'unworkMachineCount',
+        SUM(cs.fIdleTotalMinutes) AS "idleTotalMinutes",
+        COUNT(1)  AS 'totalMachineCount'
+        FROM t_machine_info cs
+        WHERE cs.fValid = 1
+        <if test="machineGroupWorkInfoCriteria.terminalType!=null and machineGroupWorkInfoCriteria.terminalType!=''">AND cs.fTerminalType = #{machineGroupWorkInfoCriteria.terminalType}</if>
+        <if test="machineGroupWorkInfoCriteria.machineGroup!=null and machineGroupWorkInfoCriteria.machineGroup!=''">
+            AND cs.fGroup like '${machineGroupWorkInfoCriteria.machineGroup}%'
+            AND EXISTS (SELECT 1 FROM t_customer_keyword ck WHERE ck.fType = #{machineGroupWorkInfoCriteria.entryType} AND ck.fMachineGroup like '${machineGroupWorkInfoCriteria.machineGroup}%')
+        </if>
+        GROUP BY cs.fMachineGroup, cs.fTerminalType
+    </select>
+
 </mapper>

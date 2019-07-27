@@ -3,9 +3,11 @@ package com.keymanager.monitoring.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
+import com.keymanager.monitoring.criteria.MachineGroupWorkInfoCriteria;
 import com.keymanager.monitoring.criteria.MachineInfoCriteria;
 import com.keymanager.monitoring.entity.ClientUpgrade;
 import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord;
+import com.keymanager.monitoring.entity.MachineGroupWorkInfo;
 import com.keymanager.monitoring.entity.MachineInfo;
 import com.keymanager.monitoring.vo.*;
 import org.apache.ibatis.annotations.Param;
@@ -96,4 +98,6 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
     void updateMachineGroup(@Param("machineInfoCriteria") MachineInfoCriteria machineInfoCriteria);
 
     void updateGroup(@Param("machineInfoCriteria") MachineInfoCriteria machineInfoCriteria);
+
+    List<MachineGroupWorkInfo> searchMachineInfoFormMachineGroupWorkInfo(@Param("machineGroupWorkInfoCriteria") MachineGroupWorkInfoCriteria machineGroupWorkInfoCriteria);
 }

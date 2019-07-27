@@ -830,6 +830,16 @@
                 </otherwise>
             </choose>
         </if>
+        <if test="customerKeywordRefreshStatInfoCriteria.machineGroup!=null and customerKeywordRefreshStatInfoCriteria.machineGroup!=''">
+            <choose>
+                <when test="customerKeywordRefreshStatInfoCriteria.fullMatchGroup == true">
+                    AND fMachineGroup = #{customerKeywordRefreshStatInfoCriteria.machineGroup}
+                </when>
+                <otherwise>
+                    AND fMachineGroup LIKE concat(#{customerKeywordRefreshStatInfoCriteria.machineGroup}, '%')
+                </otherwise>
+            </choose>
+        </if>
     </update>
 
     <update id="updateCustomerKeywordStatus">

@@ -21,6 +21,8 @@ public class CustomerKeywordRefreshStatInfoCriteria extends BaseCriteria {
 
     private String groupNameFuzzyQuery;
 
+    private String machineGroupFuzzyQuery;
+
     public int getDayNum () {
         return dayNum > 0 ? dayNum : 0;
     }
@@ -99,5 +101,13 @@ public class CustomerKeywordRefreshStatInfoCriteria extends BaseCriteria {
 
     public void setMachineGroup(String machineGroup) {
         this.machineGroup = machineGroup;
+    }
+
+    public String getMachineGroupFuzzyQuery() {
+        return machineGroupFuzzyQuery;
+    }
+
+    public void setMachineGroupFuzzyQuery(String machineGroupFuzzyQuery) {
+        this.machineGroupFuzzyQuery = machineGroupFuzzyQuery;
     }
 }
