@@ -71,4 +71,13 @@
         GROUP BY mgwi.fUuid
         ORDER BY mgwi.fGroup
     </select>
+
+
+    <select id="findMostDistantMachineGroupWorkInfo" resultType="java.lang.Integer">
+        SELECT
+          mgwi.fUuid AS 'uuid'
+        FROM t_machine_group_work_info mgwi
+        WHERE DATE_SUB(CURDATE(), INTERVAL 6 DAY) <![CDATA[>=]]> mgwi.fCreateDate
+        GROUP BY mgwi.fUuid
+    </select>
 </mapper>

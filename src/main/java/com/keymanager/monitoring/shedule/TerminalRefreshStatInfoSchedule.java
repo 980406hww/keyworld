@@ -4,6 +4,7 @@ import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.CustomerKeywordRefreshStatInfoService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
+import com.keymanager.monitoring.service.MachineGroupWorkInfoService;
 import com.keymanager.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,9 @@ public class TerminalRefreshStatInfoSchedule {
     private CustomerKeywordService customerKeywordService;
 
     @Autowired
+    private MachineGroupWorkInfoService machineGroupWorkInfoService;
+
+    @Autowired
     private ConfigService configService;
 
     public void runTask(){
@@ -35,6 +39,12 @@ public class TerminalRefreshStatInfoSchedule {
             logger.error("Terminal Refresh Stat Info is error" + e.getMessage());
         }
 
+        logger.info("============= " + " machineGroup refresh WorkInfo Task "+"===================");
+        try{
+            machineGroupWorkInfoService.updateCustomerKeywordStatInfo();
+        } catch (Exception e) {
+            logger.error("machineGroup refresh WorkInfo is error" + e.getMessage());
+        }
         logger.info("============= "+" Change Optimize Group Name Task "+"===================");
         try {
             customerKeywordService.changeOptimizeGroupName();
