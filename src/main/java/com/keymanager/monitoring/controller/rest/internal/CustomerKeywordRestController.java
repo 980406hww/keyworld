@@ -36,7 +36,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -64,9 +63,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 
 	@Autowired
     private CustomerExcludeKeywordService customerExcludeKeywordService;
-
-    @Autowired
-    private QZSettingService qzSettingService;
 
 	@Autowired
 	private ConfigService configService;
@@ -295,7 +291,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				customerKeyword.setType(entryType);
 				String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(customerKeyword.getCustomerUuid(), customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
 				if (null != customerExcludeKeywords) {
-					Set excludeKeyword = new HashSet();
+					Set<String> excludeKeyword = new HashSet<>();
 					excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
 					if (!excludeKeyword.isEmpty()){
 						if (excludeKeyword.contains(customerKeyword.getKeyword())){
@@ -304,9 +300,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 					}
 				}
 				customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.UI.name());
-				if (EntryTypeEnum.qz.name().equalsIgnoreCase(entryType) && !"zanting".equals(customerKeyword.getOptimizeGroupName()) && StringUtils.isEmpty(customerKeyword.getOptimizeGroupName())){
-                    customerKeywordService.checkOptimizeGroupName(customerKeyword);
-                }
 				if("".equals(customerKeyword.getMachineGroup())){
 					customerKeyword.setMachineGroup(null);
 				}

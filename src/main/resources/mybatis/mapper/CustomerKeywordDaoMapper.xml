@@ -1594,15 +1594,6 @@
         GROUP BY ck.fOptimizeGroupName
     </select>
 
-    <select id="searchOptimizeGroupNameAndCount" resultType="com.keymanager.monitoring.criteria.CustomerKeywordOptimizeGroupCriteria">
-        SELECT fOptimizeGroupName AS 'optimizeGroupName',
-        COUNT(1) AS 'sameGroupCustomerKeywordCount'
-        FROM t_customer_keyword
-        WHERE fOptimizeGroupName LIKE '${optimizeGroupName}%'
-        GROUP BY fOptimizeGroupName
-        ORDER BY fOptimizeGroupName
-    </select>
-
     <select id="getMachineGroups" resultType="java.lang.String">
         SELECT
           CONCAT(ck.fTerminalType, '####', ck.fMachineGroup)

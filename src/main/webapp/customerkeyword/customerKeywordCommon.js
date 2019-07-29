@@ -121,7 +121,6 @@ function addCustomerKeyword(customerKeyword, customerUuid) {
 
 
 function saveCustomerKeyword(customerKeyword, customerUuid) {
-    var customerKeyword = customerKeyword;
     if(customerKeyword == null) {
         customerKeyword = {};
     }
@@ -136,43 +135,24 @@ function saveCustomerKeyword(customerKeyword, customerUuid) {
         return;
     }
     customerKeyword.keyword = keyword;
-    var recommendKeywords = $.trim(saveCustomerKeywordDialog.find("#recommendKeywords").val());
-    customerKeyword.recommendKeywords = recommendKeywords;
-    var negativeKeywords = $.trim(saveCustomerKeywordDialog.find("#negativeKeywords").val());
-    customerKeyword.negativeKeywords = negativeKeywords;
-    var excludeKeywords = $.trim(saveCustomerKeywordDialog.find("#excludeKeywords").val());
-    customerKeyword.excludeKeywords = excludeKeywords;
-    var url = $.trim(saveCustomerKeywordDialog.find("#url").val());
-    customerKeyword.url = url;
-    var originalUrl = $.trim(saveCustomerKeywordDialog.find("#originalUrl").val());
-    customerKeyword.originalUrl = originalUrl;
-    var bearPawNumber = $.trim(saveCustomerKeywordDialog.find("#bearPawNumber").val());
-    customerKeyword.bearPawNumber = bearPawNumber;
-    var optimizePlanCount = $.trim(saveCustomerKeywordDialog.find("#optimizePlanCount").val());
-    customerKeyword.optimizePlanCount = optimizePlanCount;
-    var regNumber = /^\d+$/;
-    var positionFirstFee = $.trim(saveCustomerKeywordDialog.find("#positionFirstFee").val());
-    customerKeyword.positionFirstFee = positionFirstFee;
-    var positionSecondFee = $.trim(saveCustomerKeywordDialog.find("#positionSecondFee").val());
-    customerKeyword.positionSecondFee = positionSecondFee;
-    var positionThirdFee = $.trim(saveCustomerKeywordDialog.find("#positionThirdFee").val());
-    customerKeyword.positionThirdFee = positionThirdFee;
-    var positionForthFee = $.trim(saveCustomerKeywordDialog.find("#positionForthFee").val());
-    customerKeyword.positionForthFee = positionForthFee;
-    var positionFifthFee = $.trim(saveCustomerKeywordDialog.find("#positionFifthFee").val());
-    customerKeyword.positionFifthFee = positionFifthFee;
-    var positionFirstPageFee = $.trim(saveCustomerKeywordDialog.find("#positionFirstPageFee").val());
-    customerKeyword.positionFirstPageFee = positionFirstPageFee;
-    var positionFirstCost = $.trim(saveCustomerKeywordDialog.find("#positionFirstCost").val());
-    customerKeyword.positionFirstCost = positionFirstCost;
-    var positionSecondCost = $.trim(saveCustomerKeywordDialog.find("#positionSecondCost").val());
-    customerKeyword.positionSecondCost = positionSecondCost;
-    var positionThirdCost = $.trim(saveCustomerKeywordDialog.find("#positionThirdCost").val());
-    customerKeyword.positionThirdCost = positionThirdCost;
-    var positionForthCost = $.trim(saveCustomerKeywordDialog.find("#positionForthCost").val());
-    customerKeyword.positionForthCost = positionForthCost;
-    var positionFifthCost = $.trim(saveCustomerKeywordDialog.find("#positionFifthCost").val());
-    customerKeyword.positionFifthCost = positionFifthCost;
+    customerKeyword.recommendKeywords = $.trim(saveCustomerKeywordDialog.find("#recommendKeywords").val());
+    customerKeyword.negativeKeywords = $.trim(saveCustomerKeywordDialog.find("#negativeKeywords").val());
+    customerKeyword.excludeKeywords = $.trim(saveCustomerKeywordDialog.find("#excludeKeywords").val());
+    customerKeyword.url = $.trim(saveCustomerKeywordDialog.find("#url").val());
+    customerKeyword.originalUrl = $.trim(saveCustomerKeywordDialog.find("#originalUrl").val());
+    customerKeyword.bearPawNumber = $.trim(saveCustomerKeywordDialog.find("#bearPawNumber").val());
+    customerKeyword.optimizePlanCount = $.trim(saveCustomerKeywordDialog.find("#optimizePlanCount").val());
+    customerKeyword.positionFirstFee = $.trim(saveCustomerKeywordDialog.find("#positionFirstFee").val());
+    customerKeyword.positionSecondFee = $.trim(saveCustomerKeywordDialog.find("#positionSecondFee").val());
+    customerKeyword.positionThirdFee = $.trim(saveCustomerKeywordDialog.find("#positionThirdFee").val());
+    customerKeyword.positionForthFee = $.trim(saveCustomerKeywordDialog.find("#positionForthFee").val());
+    customerKeyword.positionFifthFee = $.trim(saveCustomerKeywordDialog.find("#positionFifthFee").val());
+    customerKeyword.positionFirstPageFee = $.trim(saveCustomerKeywordDialog.find("#positionFirstPageFee").val());
+    customerKeyword.positionFirstCost = $.trim(saveCustomerKeywordDialog.find("#positionFirstCost").val());
+    customerKeyword.positionSecondCost = $.trim(saveCustomerKeywordDialog.find("#positionSecondCost").val());
+    customerKeyword.positionThirdCost = $.trim(saveCustomerKeywordDialog.find("#positionThirdCost").val());
+    customerKeyword.positionForthCost = $.trim(saveCustomerKeywordDialog.find("#positionForthCost").val());
+    customerKeyword.positionFifthCost = $.trim(saveCustomerKeywordDialog.find("#positionFifthCost").val());
     var initialPosition = $.trim(saveCustomerKeywordDialog.find("#initialPosition").val());
     customerKeyword.initialPosition = initialPosition;
     customerKeyword.currentPosition = initialPosition;
@@ -180,42 +160,26 @@ function saveCustomerKeyword(customerKeyword, customerUuid) {
     var initialIndexCount = $.trim(saveCustomerKeywordDialog.find("#initialIndexCount").val());
     customerKeyword.initialIndexCount = initialIndexCount;
     customerKeyword.currentIndexCount = initialIndexCount;
-    var sequence = $.trim(saveCustomerKeywordDialog.find("#sequence").val());
-    customerKeyword.sequence = sequence;
-    var title = $.trim(saveCustomerKeywordDialog.find("#title").val());
-    customerKeyword.title = title;
-    var optimizeGroupName = $.trim(saveCustomerKeywordDialog.find("#optimizeGroupName").val());
-    customerKeyword.optimizeGroupName = optimizeGroupName;
+    customerKeyword.sequence = $.trim(saveCustomerKeywordDialog.find("#sequence").val());
+    customerKeyword.title = $.trim(saveCustomerKeywordDialog.find("#title").val());
+    customerKeyword.optimizeGroupName = $.trim(saveCustomerKeywordDialog.find("#optimizeGroupName").val());
 
-    var machineGroup  =$.trim(saveCustomerKeywordDialog.find("#machineGroup").val());
-    customerKeyword.machineGroup = machineGroup;
-    var collectMethod = $.trim(saveCustomerKeywordDialog.find("#collectMethod").val());
-    customerKeyword.collectMethod = collectMethod;
-    var serviceProvider = $.trim(saveCustomerKeywordDialog.find("#serviceProvider").val());
-    customerKeyword.serviceProvider = serviceProvider;
-    var orderNumber = $.trim(saveCustomerKeywordDialog.find("#orderNumber").val());
-    customerKeyword.orderNumber = orderNumber;
-    var paymentStatus = $.trim(saveCustomerKeywordDialog.find("#paymentStatus").val());
-    customerKeyword.paymentStatus = paymentStatus;
+    customerKeyword.machineGroup = $.trim(saveCustomerKeywordDialog.find("#machineGroup").val());
+    customerKeyword.collectMethod = $.trim(saveCustomerKeywordDialog.find("#collectMethod").val());
+    customerKeyword.serviceProvider = $.trim(saveCustomerKeywordDialog.find("#serviceProvider").val());
+    customerKeyword.orderNumber = $.trim(saveCustomerKeywordDialog.find("#orderNumber").val());
+    customerKeyword.paymentStatus = $.trim(saveCustomerKeywordDialog.find("#paymentStatus").val());
 
-    var operateSelectKeyword = $("#operateSelectKeyword")[0].checked;
-    customerKeyword.operateSelectKeyword = operateSelectKeyword;
-    var operateRelatedKeyword = $("#operateRelatedKeyword")[0].checked;
-    customerKeyword.operateRelatedKeyword = operateRelatedKeyword;
-    var operateRecommendKeyword = $("#operateRecommendKeyword")[0].checked;
-    customerKeyword.operateRecommendKeyword = operateRecommendKeyword;
-    var operateSearchAfterSelectKeyword = $("#operateSearchAfterSelectKeyword")[0].checked;
-    customerKeyword.operateSearchAfterSelectKeyword = operateSearchAfterSelectKeyword;
+    customerKeyword.operateSelectKeyword = $("#operateSelectKeyword")[0].checked;
+    customerKeyword.operateRelatedKeyword = $("#operateRelatedKeyword")[0].checked;
+    customerKeyword.operateRecommendKeyword = $("#operateRecommendKeyword")[0].checked;
+    customerKeyword.operateSearchAfterSelectKeyword = $("#operateSearchAfterSelectKeyword")[0].checked;
 
-    var clickUrl = $("input[name='clickUrl']:checked").val();
-    customerKeyword.clickUrl = clickUrl;
-    var showPage = $.trim(saveCustomerKeywordDialog.find("#showPage").val());
-    customerKeyword.showPage = showPage;
-    var relatedKeywordPercentage = $.trim(saveCustomerKeywordDialog.find("#relatedKeywordPercentage").val());
-    customerKeyword.relatedKeywordPercentage = relatedKeywordPercentage;
+    customerKeyword.clickUrl = $("input[name='clickUrl']:checked").val();
+    customerKeyword.showPage = $.trim(saveCustomerKeywordDialog.find("#showPage").val());
+    customerKeyword.relatedKeywordPercentage = $.trim(saveCustomerKeywordDialog.find("#relatedKeywordPercentage").val());
 
-    var remarks = $.trim(saveCustomerKeywordDialog.find("#remarks").val());
-    customerKeyword.remarks = remarks;
+    customerKeyword.remarks = $.trim(saveCustomerKeywordDialog.find("#remarks").val());
     customerKeyword.manualCleanTitle = true;
     var optimizedCount = saveCustomerKeywordDialog.find("#optimizedCount").val();
     var optimizeRemainingCount = customerKeyword.optimizePlanCount - optimizedCount;

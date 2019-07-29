@@ -1791,7 +1791,6 @@ function resetSettingDialog() {
     settingDialogDiv.find("#qzSettingDomain").val("");
     settingDialogDiv.find("#bearPawNumber").val("");
     settingDialogDiv.find("#qzCategoryTagNames").val("");
-    settingDialogDiv.find("#groupMaxCustomerKeywordCount").val("5000");
     if ($(".datalist-list #isBaiduEngine").val() === 'true') {
         settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val("0");
         settingDialogDiv.find("#qzSettingIgnoreNoIndex").val("1");
@@ -1882,7 +1881,6 @@ function initSettingDialog(qzSetting, self) {
     var PhoneOptimizationType = false;
     var settingDialogDiv = $("#changeSettingDialog");
     settingDialogDiv.find("#qzSettingUuid").val(qzSetting.uuid);
-    settingDialogDiv.find("#groupMaxCustomerKeywordCount").val(qzSetting.groupMaxCustomerKeywordCount);
     settingDialogDiv.find("#bearPawNumber").val(qzSetting.bearPawNumber);
     settingDialogDiv.find("#qzSettingCustomer").val(qzSetting.contactPerson + "_____" + qzSetting.customerUuid);
     settingDialogDiv.find("#qzSettingDomain").val(qzSetting.domain != null ? qzSetting.domain : "");
@@ -2002,13 +2000,11 @@ function saveChangeSetting(self, refresh) {
         qzSetting.ignoreNoIndex = settingDialogDiv.find("#qzSettingIgnoreNoIndex").val() === "1" ? true : false;
         qzSetting.ignoreNoOrder = settingDialogDiv.find("#qzSettingIgnoreNoOrder").val() === "1" ? true : false;
         qzSetting.updateInterval = settingDialogDiv.find("#qzSettingInterval").val();
-        qzSetting.groupMaxCustomerKeywordCount = settingDialogDiv.find("#groupMaxCustomerKeywordCount").val();
     } else {
         qzSetting.autoCrawlKeywordFlag = false;
         qzSetting.ignoreNoIndex = true;
         qzSetting.ignoreNoOrder = true;
         qzSetting.updateInterval = 2;
-        qzSetting.groupMaxCustomerKeywordCount = 5000;
     }
     if (settingDialogDiv.find("#qzSettingStartMonitor").length > 0) {
         qzSetting.fIsMonitor = settingDialogDiv.find("#qzSettingStartMonitor").val() === "1" ? true : false;

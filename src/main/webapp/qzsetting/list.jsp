@@ -1334,8 +1334,13 @@
                     </c:forEach>
                 </select>
             </td>
-            <td style="width:65px" align="right"></td>
-            <td></td>
+            <td style="width:65px" align="right">达标监控</td>
+            <td>
+				<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
+					<option value="1">是</option>
+					<option value="0" selected>否</option>
+				</select>
+			</td>
         </tr>
 	</table>
 	<table style="font-size:12px" cellspacing="5">
@@ -1557,19 +1562,6 @@
 	<table style="font-size:12px" cellspacing="5">
 		<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
 			<c:if test="${not isSEO}">
-				<tr>
-					<td style="width:65px" align="right">组最大词数</td>
-					<td>
-						<input type="text" name="groupMaxCustomerKeywordCount" id="groupMaxCustomerKeywordCount" placeholder="请输入数字：" value="5000" style="width:240px">
-					</td>
-					<td style="width:65px" align="right">达标监控</td>
-					<td>
-						<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
-							<option value="1">是</option>
-							<option value="0" selected>否</option>
-						</select>
-					</td>
-				</tr>
 				<c:if test="${isBaiduEngine}">
 					<tr>
 						<td style="width:65px" align="right">去掉没指数</td>
