@@ -330,4 +330,21 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		}
 		return new ResponseEntity<Object>(false, HttpStatus.OK);
 	}
+
+	/**
+	 * 批量更新全站分组标签
+	 * @param qzSettingSearchCriteria
+	 * @return
+	 */
+	@RequiresPermissions("/internal/qzsetting/save")
+	@RequestMapping(value = "/updateQzCategoryTags", method = RequestMethod.POST)
+	public ResponseEntity<?> updateQzCategoryTags(@RequestBody QZSettingSearchCriteria qzSettingSearchCriteria) {
+		try {
+			qzSettingService.updateQzCategoryTags(qzSettingSearchCriteria);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		}catch(Exception ex){
+			logger.error(ex.getMessage());
+		}
+		return new ResponseEntity<Object>(false, HttpStatus.OK);
+	}
 }

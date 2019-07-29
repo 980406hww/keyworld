@@ -86,6 +86,12 @@
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showSettingDialog($(this))" value=" 增加 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
+
+				<shiro:hasPermission name="/internal/qzsetting/save">
+					<li>
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQzCategoryTags()" value=" 修改分组标签 " >&nbsp;
+					</li>
+				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
 					<li>
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="immediatelyUpdateQZSettings('updateSettings')" value=" 马上更新 " >&nbsp;
@@ -1967,6 +1973,12 @@
 <%--达标信息详情DIV--%>
 <div id="chargeRulesDiv" style="display:none;width:300px;">
 	<table id="chargeRulesDivTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;"></table>
+</div>
+
+<div id="targetQzCategoryTagsDialog" style="text-align: center;left: 40%;display: none;">
+	<form id="targetQzCategoryTagsFrom" style="text-align: center;margin-top: 10px;">
+		目标分组标签:<input type="text" id="targetQzCategoryTags" name="targetQzCategoryTags" style="width:200px" placeholder="按正确方式输入：阿卡索,MBA,算法">
+	</form>
 </div>
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath}/js/echarts.min.js"></script>
