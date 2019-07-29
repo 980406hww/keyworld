@@ -706,10 +706,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	public QZSettingSearchGroupInfoVO getQZSettingGroupInfo (QZSettingSearchGroupInfoCriteria qzSettingSearchGroupInfoCriteria) {
 		QZSettingSearchGroupInfoVO qzSettingSearchGroupInfoVo = new QZSettingSearchGroupInfoVO();
 		qzSettingSearchGroupInfoVo.setCustomerKeywordCount(qzSettingDao.getQZSettingGroupInfo(qzSettingSearchGroupInfoCriteria));
-		qzSettingSearchGroupInfoVo.setMachineCount(machineInfoService.getMachineCount(qzSettingSearchGroupInfoCriteria
-						.getOptimizeGroupName(), qzSettingSearchGroupInfoCriteria.getTerminalType()));
-		qzSettingSearchGroupInfoVo.setOperationCombineName(operationCombineService.getOperationCombineName(
-				qzSettingSearchGroupInfoCriteria.getOptimizeGroupName()));
+		qzSettingSearchGroupInfoVo.setOperationCombineName(operationCombineService.getOperationCombineName(qzSettingSearchGroupInfoCriteria.getOptimizeGroupName()));
 		qzSettingSearchGroupInfoVo.setCategoryTagNames(qzCategoryTagService.findTagNames(qzSettingSearchGroupInfoCriteria.getQzSettingUuid()));
 		return qzSettingSearchGroupInfoVo;
 	}
@@ -860,7 +857,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	}
 
 	public void updateQzCategoryTags(QZSettingSearchCriteria qzSettingSearchCriteria) {
-
 		String[] uuids = qzSettingSearchCriteria.getCustomerUuids().split(",");
 		for (int i = 0; i < uuids.length; i++) {
 			List<QZCategoryTag> existingQZCategoryTags = qzCategoryTagService.searchCategoryTagByQZSettingUuid(Long.parseLong(uuids[i]));

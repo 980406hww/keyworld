@@ -36,7 +36,7 @@ public class QZCategoryTagService extends ServiceImpl<QZCategoryTagDao, QZCatego
     }
 
     public void updateQZCategoryTag(List<QZCategoryTag> existingQZCategoryTags, List<QZCategoryTag> updateQZCategoryTags, long qzSettingUuid){
-        Map<String, QZCategoryTag> existingQZCategoryTagMap = new HashMap<String, QZCategoryTag>();
+        Map<String, QZCategoryTag> existingQZCategoryTagMap = new HashMap<>();
         for (QZCategoryTag qzCategoryTag : existingQZCategoryTags) {
             existingQZCategoryTagMap.put(qzCategoryTag.getTagName(), qzCategoryTag);
         }

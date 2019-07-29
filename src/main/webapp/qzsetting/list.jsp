@@ -501,9 +501,9 @@
 
 								<div class="other-rank_2">
 									<div class="row">
-										<div title="该站下该分组所有机器数, 点击链接跳转到终端监控">
+										<div title="站点所属优化组">
 										<span class="line1">
-											<a target="_blank" href="javascript:searchClientStatus('${qzSetting.pcGroup}')">${qzSetting.pcGroup == null or qzSetting.pcGroup == "" ? "暂无" : qzSetting.pcGroup}</a>
+											<a target="_blank" href="javascript:searchMachineInfo('${qzSetting.pcGroup}')">${qzSetting.pcGroup == null or qzSetting.pcGroup == "" ? "暂无" : qzSetting.pcGroup}</a>
 										</span>
 											<span>
 											<a href="javascript:;">优化分组</a>
@@ -945,9 +945,9 @@
 
 								<div class="other-rank_2">
 									<div class="row">
-										<div title="该站下该分组所有机器数, 点击链接跳转到终端监控">
+										<div title="站点所属优化组">
 										<span class="line1">
-											<a target="_blank" href="javascript:searchClientStatus('${qzSetting.phoneGroup}')">${qzSetting.phoneGroup == null or qzSetting.phoneGroup == "" ? "暂无" : qzSetting.phoneGroup}</a>
+											<a target="_blank" href="javascript:searchMachineInfo('${qzSetting.phoneGroup}')">${qzSetting.phoneGroup == null or qzSetting.phoneGroup == "" ? "暂无" : qzSetting.phoneGroup}</a>
 										</span>
 											<span>
 											<a href="javascript:;">优化分组</a>
@@ -1262,7 +1262,7 @@
 	</div>
 </div>
 
-<form id="searchClientStatusForm" method="post" target="_blank" action="/internal/machineInfo/searchMachineInfos" style="display: none">
+<form id="searchMachineInfoForm" method="post" target="_blank" action="/internal/machineInfo/searchMachineInfos" style="display: none">
     <input type="text" name="groupName" id="groupName">
 </form>
 

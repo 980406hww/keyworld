@@ -9,7 +9,6 @@ import java.util.List;
 public class QZSettingSearchGroupInfoVO {
     private int customerKeywordCount;
     private String operationCombineName;
-    private int machineCount;
     private List<String> categoryTagNames;
 
     public int getCustomerKeywordCount () {
@@ -26,14 +25,6 @@ public class QZSettingSearchGroupInfoVO {
 
     public void setOperationCombineName (String operationCombineName) {
         this.operationCombineName = operationCombineName;
-    }
-
-    public int getMachineCount () {
-        return machineCount;
-    }
-
-    public void setMachineCount (int machineCount) {
-        this.machineCount = machineCount;
     }
 
     public List<String> getCategoryTagNames () {
