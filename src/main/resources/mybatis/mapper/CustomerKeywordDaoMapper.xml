@@ -537,14 +537,14 @@
     </delete>
 
     <select id="getGroups" resultType="String">
-        SELECT DISTINCT ck.fOptimizeGroupName as 'group' FROM t_customer_keyword ck WHERE ck.fStatus = 1
+        SELECT ck.fOptimizeGroupName as 'group' FROM t_customer_keyword ck WHERE ck.fStatus = 1
         <if test="customerUuids != null">
             AND ck.fCustomerUuid IN
             <foreach item="item" index="index" collection="customerUuids" open="(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
-        AND ck.fOptimizeGroupName &gt; '' ORDER BY ck.fOptimizeGroupName
+        AND ck.fOptimizeGroupName &gt; '' GROUP BY ck.fOptimizeGroupName
     </select>
 
     <update id="cleanBigKeywordIndicator">
@@ -575,11 +575,11 @@
     </select>
 
     <update id="resetOptimizationInfoForNoOptimizeDate" timeout="200000">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = NOW() WHERE fOptimizeDate IS NULL
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fQueryInterval = (24*60*60)/fOptimizePlanCount, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = NOW() WHERE fOptimizeDate IS NULL
     </update>
 
     <update id="resetOptimizationInfo">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = NOW() WHERE fOptimizeDate <![CDATA[<]]> CURRENT_DATE() LIMIT 200000
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fQueryInterval = (24*60*60)/fOptimizePlanCount, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = NOW() WHERE fOptimizeDate <![CDATA[<]]> CURRENT_DATE() LIMIT 200000
     </update>
 
     <select id="searchRemainingOptimizationCount" resultType="java.util.Map">
@@ -600,6 +600,8 @@
             ck.fTitle             AS 'title',
             ck.fSearchEngine      AS 'searchEngine',
             ck.fOptimizeGroupName AS 'optimizeGroup'
+            ck.fOptimizedCount	  AS 'optimizedCount',
+            ck.fQueryInterval	  AS 'queryInterval'
         FROM t_customer_keyword ck
         WHERE ck.fMachineGroup = #{machineGroup}
         AND ck.fStatus = 1
@@ -607,7 +609,7 @@
         AND ck.fQueryTime <![CDATA[<]]> NOW()
         AND ck.fInvalidFlag = 0
         ORDER BY ck.fQueryTime
-        LIMIT 200
+        LIMIT 2000
     </select>
 
     <select id="getCustomerKeywordUuidForOptimization" resultType="Long">
@@ -666,8 +668,8 @@
     </select>
 
     <update id="updateOptimizationQueryTime">
-        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(NOW(), INTERVAL fQueryInterval MINUTE),
-        fInvalidFlag = if(fInvalidRefreshCount > (SELECT oc.fMaxInvalidCount FROM t_group g, t_operation_combine oc WHERE g.fGroupName = fOptimizeGroupName AND oc.fUuid = g.fOperationCombineUuid), 1, 0)
+        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(NOW(), INTERVAL fQueryInterval SECOND ),
+        fInvalidFlag = if(fInvalidRefreshCount > 8, 1, 0)
         WHERE fUuid IN
         <foreach item="uuid" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
             #{uuid}
@@ -675,7 +677,7 @@
     </update>
 
     <update id="updateOptimizationQueryTimeSingle">
-        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(NOW(), INTERVAL fQueryInterval MINUTE),
+        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(NOW(), INTERVAL fQueryInterval SECOND ),
         fInvalidFlag = if(fInvalidRefreshCount > #{maxInvalidCount}, 1, 0)
         WHERE fUuid = #{customerKeywordUuid}
     </update>
@@ -1607,10 +1609,10 @@
 
     <select id="getMachineGroups" resultType="java.lang.String">
         SELECT
-          CONCAT(ck.fTerminalType, '####', ck.fMachineGroup)
-        FROM t_customer_keyword ck
-        WHERE ck.fStatus = 1 AND ck.fMachineGroup > ''
-        GROUP BY ck.fTerminalType, ck.fMachineGroup
+          CONCAT(fTerminalType, '####', fMachineGroup)
+        FROM t_machine_info mi
+        WHERE fMachineGroup > ''
+        GROUP BY fTerminalType, fMachineGroup
     </select>
 
     <update id="updateSameCustomerKeywordSource">

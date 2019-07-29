@@ -10,6 +10,9 @@ public class OptimizationKeywordVO {
     private String entryType;
     private String bearPawNumber;
     private String title;
+    private int optimizedCount;
+    private int queryInterval;
+    private int maxOptimizeCount;
 
     public String getTerminalType() {
         return terminalType;
@@ -81,5 +84,29 @@ public class OptimizationKeywordVO {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public int getOptimizedCount() {
+        return optimizedCount;
+    }
+
+    public void setOptimizedCount(int optimizedCount) {
+        this.optimizedCount = optimizedCount;
+    }
+
+    public int getQueryInterval() {
+        return queryInterval;
+    }
+
+    public void setQueryInterval(int queryInterval) {
+        this.queryInterval = queryInterval;
+    }
+
+    public int getMaxOptimizeCount() {
+        return maxOptimizeCount;
+    }
+
+    public void setMaxOptimizeCount(int maxOptimizeCount) {
+        this.maxOptimizeCount = maxOptimizeCount;
     }
 }

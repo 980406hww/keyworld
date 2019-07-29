@@ -300,23 +300,11 @@
 	<!--自动触发每天的报表-->
 	<bean id="cronAutoTriggerResetInfoDaily" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronAutoTriggerResetInfoDailySchedule"/>
-		<property name="cronExpression" value="0 1 0 * * ?" />
+		<property name="cronExpression" value="0 19 17 * * ?" />
 	</bean>
 
 	<bean id="cronAutoTriggerResetInfoDailySchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="resetInfoDailySchedule" />
-		<property name="targetMethod" value="runTask" />
-		<property name="concurrent" value="false" />
-	</bean>
-
-	<!--缓存关键字信息到队列中-->
-	<bean id="cronTriggerCacheCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="cronTriggerCacheCustomerKeywordSchedule"/>
-		<property name="cronExpression" value="0 0/1 * * * ?" />
-	</bean>
-
-	<bean id="cronTriggerCacheCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="cacheCustomerKeywordSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>
