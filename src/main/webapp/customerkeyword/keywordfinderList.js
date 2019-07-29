@@ -228,7 +228,6 @@ function updateOptimizeGroupName(changeType) {
                     });
                 }
                 obj.targetOptimizeGroupName = targetGroupName;
-
                 $.ajax({
                     url: '/internal/customerKeyword/updateOptimizeGroupName',
                     data: JSON.stringify(obj),
@@ -304,7 +303,6 @@ function deleteDuplicateQZKeyword() {
         timeout: 5000,
         type: 'POST',
         success: function (result) {
-            console.log(result);
             if (result) {
                 $().toastmessage('showSuccessToast', "操作成功", true);
             } else {
@@ -364,7 +362,6 @@ function updateMachineGroupName(changeType) {
                     });
                 }
                 obj.targetMachineGroup = targetMachineGroup;
-                console.log(obj)
                 $.ajax({
                     url: '/internal/customerKeyword/updateCustomerKeywordMachineGroup',
                     data: JSON.stringify(obj),
