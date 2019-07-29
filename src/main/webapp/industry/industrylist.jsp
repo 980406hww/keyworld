@@ -21,7 +21,7 @@
     <%@include file="/menu.jsp" %>
     <div style="text-align: right; margin: 10px 5px;">
         <div style="margin: 10px 5px;">
-            <shiro:hasPermission name="/internal/indusrty/uploadIndustryInfos">
+            <shiro:hasPermission name="/internal/industry/uploadIndustryInfos">
                 <a target="_blank" href="javascript:uploadIndustryInfos('SuperIndustrySimple')">Excel上传</a>
             </shiro:hasPermission>
             <shiro:hasPermission name="/SuperIndustrySimpleList.xls">
