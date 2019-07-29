@@ -78,7 +78,9 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
 		customerKeyword.setOptimizeRemainingCount(optimizePlanCount);
 
 		customerKeyword.setOriginalUrl(getStringValue(SuperUserSimpleKeywordDefinition.OriginalURL.getColumnIndex(), rowIndex).trim());
+		customerKeyword.setMachineGroup(getStringValue(SuperUserSimpleKeywordDefinition.MachineGroupName.getColumnIndex(), rowIndex).trim());
 		customerKeyword.setOptimizeGroupName(getStringValue(SuperUserSimpleKeywordDefinition.OptimizeGroupName.getColumnIndex(), rowIndex).trim());
+
 
 		customerKeyword.setBearPawNumber(getStringValue(SuperUserSimpleKeywordDefinition.BearPawNumber.getColumnIndex(), rowIndex).trim());
 		customerKeyword.setTitle(getStringValue(SuperUserSimpleKeywordDefinition.Title.getColumnIndex(), rowIndex).trim());

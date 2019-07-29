@@ -11,6 +11,7 @@ public class QZSettingSaveCustomerKeywordsCriteria {
     private long customerUuid;
     private String domain;
     private String optimizeGroupName;
+    private String machineGroupName;
     private String type;
     private String searchEngine;
     private String bearPawNumber;
@@ -48,6 +49,14 @@ public class QZSettingSaveCustomerKeywordsCriteria {
 
     public void setOptimizeGroupName (String optimizeGroupName) {
         this.optimizeGroupName = optimizeGroupName;
+    }
+
+    public String getMachineGroupName() {
+        return machineGroupName;
+    }
+
+    public void setMachineGroupName(String machineGroupName) {
+        this.machineGroupName = machineGroupName;
     }
 
     public String getType () {

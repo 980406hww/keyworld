@@ -364,7 +364,6 @@ function updateMachineGroupName(changeType) {
                     });
                 }
                 obj.targetMachineGroup = targetMachineGroup;
-                console.log(obj)
                 $.ajax({
                     url: '/internal/customerKeyword/updateCustomerKeywordMachineGroup',
                     data: JSON.stringify(obj),

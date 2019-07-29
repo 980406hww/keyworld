@@ -907,4 +907,8 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
     public void batchUpdateGroup(MachineInfoCriteria machineInfoCriteria) {
         machineInfoDao.updateGroup(machineInfoCriteria);
     }
+    public List<MachineGroupWorkInfo> searchMachineInfoFormMachineGroupWorkInfo(MachineGroupWorkInfoCriteria machineGroupWorkInfoCriteria) {
+        return machineInfoDao.searchMachineInfoFormMachineGroupWorkInfo(machineGroupWorkInfoCriteria);
+    }
+
 }

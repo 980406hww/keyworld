@@ -223,7 +223,7 @@ function showGroupNameChangeByRankDialog(customerUuid) {
         height: 170,
         closed: true,
         modal: true,
-        title: "通过排名修改分组",
+        title: "通过排名修改优化组",
         position:{
             my:"center top",
             at:"center top+150",
@@ -237,7 +237,7 @@ function showGroupNameChangeByRankDialog(customerUuid) {
                 var position = $("#groupNameChangeByRankFrom").find("#position").val();
                 var day = $("#groupNameChangeByRankFrom").find("#day").val();
                 if (targetGroupName == null || targetGroupName === '') {
-                    alert("请输入分组名");
+                    alert("请输入优化组名");
                     return;
                 }
                 if (position == null || position === '') {
@@ -311,7 +311,7 @@ function showGroupNameChangeDialog(changeGroupCriteria) {
             handler: function () {
                 var targetGroupName = $("#groupNameChangeFrom").find("#groupName").val();
                 if (targetGroupName == null || targetGroupName === '') {
-                    alert("请输入分组名");
+                    alert("请输入优化组名");
                     return;
                 }
                 changeGroupCriteria.targetGroupName = targetGroupName;
@@ -420,7 +420,7 @@ function updateSpecifiedCustomerKeywordGroupName() {
         alert("请选中要操作的关键词！");
         return;
     }
-    var changeGroupCriteria = {"title" : "修改选中关键字分组", "customerKeywordUuids":customerKeywordUuids.split(",")};
+    var changeGroupCriteria = {"title" : "修改选中关键字优化组", "customerKeywordUuids":customerKeywordUuids.split(",")};
     showGroupNameChangeDialog(changeGroupCriteria);
 }
 function changeGroupName(customerKeywordUpdateGroupCriteria) {
@@ -783,7 +783,6 @@ function updateMachineGroupName(changeType) {
                     });
                 }
                 obj.targetMachineGroup = targetMachineGroup;
-                console.log(obj)
                 $.ajax({
                     url: '/internal/customerKeyword/updateCustomerKeywordMachineGroup',
                     data: JSON.stringify(obj),
