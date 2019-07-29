@@ -5,10 +5,8 @@ import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
 import com.keymanager.monitoring.dao.CustomerKeywordRefreshStatInfoDao;
 import com.keymanager.monitoring.dao.CustomerKeywordTerminalRefreshStatRecordDao;
-import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord;
 import com.keymanager.monitoring.vo.PositionVO;
-import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import org.apache.commons.collections.CollectionUtils;
@@ -29,12 +27,6 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
     private static Logger logger = LoggerFactory.getLogger(CustomerKeywordRefreshStatInfoService.class);
 
     @Autowired
-    private ConfigService configService;
-
-    @Autowired
-    private MachineInfoService machineInfoService;
-
-    @Autowired
     private CustomerKeywordDao customerKeywordDao;
 
     @Autowired
@@ -49,16 +41,6 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
         for (CustomerKeywordTerminalRefreshStatRecord customerKeywordTerminalRefreshStatRecord : customerKeywordTerminalRefreshStatRecords) {
             customerKeywordRefreshStatInfoRecordMap.put(customerKeywordTerminalRefreshStatRecord.getGroup(), customerKeywordTerminalRefreshStatRecord);
         }
-
-        List<CustomerKeywordTerminalRefreshStatRecord> csCustomerKeywordTerminalRefreshStatRecords = machineInfoService.searchMachineInfoForRefreshStat(customerKeywordRefreshStatInfoCriteria);
-        for (CustomerKeywordTerminalRefreshStatRecord csCustomerKeywordTerminalRefreshStatRecord : csCustomerKeywordTerminalRefreshStatRecords) {
-            CustomerKeywordTerminalRefreshStatRecord customerKeywordTerminalRefreshStatRecord = customerKeywordRefreshStatInfoRecordMap.get(csCustomerKeywordTerminalRefreshStatRecord.getGroup());
-            if (null != customerKeywordTerminalRefreshStatRecord) {
-                customerKeywordTerminalRefreshStatRecord.setIdleTotalMinutes(csCustomerKeywordTerminalRefreshStatRecord.getIdleTotalMinutes());
-                customerKeywordTerminalRefreshStatRecord.setTotalMachineCount(csCustomerKeywordTerminalRefreshStatRecord.getTotalMachineCount());
-                customerKeywordTerminalRefreshStatRecord.setUnworkMachineCount(csCustomerKeywordTerminalRefreshStatRecord.getUnworkMachineCount());
-            }
-        }
         this.SetCountCustomerKeywordRefreshStatInfo(customerKeywordTerminalRefreshStatRecords);
         return customerKeywordTerminalRefreshStatRecords;
     }
@@ -72,15 +54,12 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
             total.setNeedOptimizeKeywordCount(total.getNeedOptimizeKeywordCount() + customerKeywordTerminalRefreshStatRecord.getNeedOptimizeKeywordCount());
             total.setQueryCount(total.getQueryCount() + customerKeywordTerminalRefreshStatRecord.getQueryCount());
             total.setTotalKeywordCount(total.getTotalKeywordCount() + customerKeywordTerminalRefreshStatRecord.getTotalKeywordCount());
-            total.setTotalMachineCount(total.getTotalMachineCount() + customerKeywordTerminalRefreshStatRecord.getTotalMachineCount());
             total.setTotalOptimizeCount(total.getTotalOptimizeCount() + customerKeywordTerminalRefreshStatRecord.getTotalOptimizeCount());
             total.setTotalOptimizedCount(total.getTotalOptimizedCount() + customerKeywordTerminalRefreshStatRecord.getTotalOptimizedCount());
-            total.setUnworkMachineCount(total.getUnworkMachineCount() + customerKeywordTerminalRefreshStatRecord.getUnworkMachineCount());
             total.setZeroOptimizedCount(total.getZeroOptimizedCount() + customerKeywordTerminalRefreshStatRecord.getZeroOptimizedCount());
             total.setReachStandardKeywordCount(total.getReachStandardKeywordCount() + customerKeywordTerminalRefreshStatRecord.getReachStandardKeywordCount());
             total.setTodaySubTotal(total.getTodaySubTotal() + customerKeywordTerminalRefreshStatRecord.getTodaySubTotal());
             total.setMaxInvalidCount(customerKeywordTerminalRefreshStatRecord.getMaxInvalidCount());
-            total.setIdleTotalMinutes(total.getIdleTotalMinutes() + customerKeywordTerminalRefreshStatRecord.getIdleTotalMinutes());
         }
         customerKeywordTerminalRefreshStatRecords.add(0, total);
     }
@@ -164,30 +143,15 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
         for (CustomerKeywordTerminalRefreshStatRecord customerKeywordTerminalRefreshStatRecord : customerKeywordStatInfoRecords) {
             Map<String, Map<String, CustomerKeywordTerminalRefreshStatRecord>> refreshStatInfoRecordTerminalTypeMap = refreshStatInfoRecordGroupMap.get(customerKeywordTerminalRefreshStatRecord.getGroup());
             if (null == refreshStatInfoRecordTerminalTypeMap) {
-                refreshStatInfoRecordTerminalTypeMap = new HashMap<String, Map<String, CustomerKeywordTerminalRefreshStatRecord>>();
+                refreshStatInfoRecordTerminalTypeMap = new HashMap<>();
             }
             Map<String, CustomerKeywordTerminalRefreshStatRecord> refreshStatInfoRecordTypeMap = refreshStatInfoRecordTerminalTypeMap.get(customerKeywordTerminalRefreshStatRecord.getTerminalType());
             if (null == refreshStatInfoRecordTypeMap) {
-                refreshStatInfoRecordTypeMap = new HashMap<String, CustomerKeywordTerminalRefreshStatRecord>();
+                refreshStatInfoRecordTypeMap = new HashMap<>();
             }
             refreshStatInfoRecordTypeMap.put(customerKeywordTerminalRefreshStatRecord.getType(), customerKeywordTerminalRefreshStatRecord);
             refreshStatInfoRecordTerminalTypeMap.put(customerKeywordTerminalRefreshStatRecord.getTerminalType(), refreshStatInfoRecordTypeMap);
             refreshStatInfoRecordGroupMap.put(customerKeywordTerminalRefreshStatRecord.getGroup(), refreshStatInfoRecordTerminalTypeMap);
-        }
-
-        List<CustomerKeywordTerminalRefreshStatRecord> searchClientStatusForRefreshStatRecords = machineInfoService.searchMachineInfoForRefreshStat(customerKeywordRefreshStatInfoCriteria);
-        for (CustomerKeywordTerminalRefreshStatRecord csCustomerKeywordTerminalRefreshStatRecord : searchClientStatusForRefreshStatRecords) {
-            Map<String, Map<String, CustomerKeywordTerminalRefreshStatRecord>> csCustomerKeywordRefreshStatInfoRecordTerminalTypeMap = refreshStatInfoRecordGroupMap.get(csCustomerKeywordTerminalRefreshStatRecord.getGroup());
-            if (null != csCustomerKeywordRefreshStatInfoRecordTerminalTypeMap) {
-                Map<String, CustomerKeywordTerminalRefreshStatRecord> csCustomerKeywordRefreshStatInfoRecordTypeMap = csCustomerKeywordRefreshStatInfoRecordTerminalTypeMap.get(csCustomerKeywordTerminalRefreshStatRecord.getTerminalType());
-                if (null != csCustomerKeywordRefreshStatInfoRecordTypeMap) {
-                    for (CustomerKeywordTerminalRefreshStatRecord customerKeywordTerminalRefreshStatRecord : csCustomerKeywordRefreshStatInfoRecordTypeMap.values()) {
-                        customerKeywordTerminalRefreshStatRecord.setIdleTotalMinutes(csCustomerKeywordTerminalRefreshStatRecord.getIdleTotalMinutes());
-                        customerKeywordTerminalRefreshStatRecord.setTotalMachineCount(csCustomerKeywordTerminalRefreshStatRecord.getTotalMachineCount());
-                        customerKeywordTerminalRefreshStatRecord.setUnworkMachineCount(csCustomerKeywordTerminalRefreshStatRecord.getUnworkMachineCount());
-                    }
-                }
-            }
         }
         return customerKeywordStatInfoRecords;
     }
