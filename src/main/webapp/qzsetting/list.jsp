@@ -501,9 +501,9 @@
 
 								<div class="other-rank_2">
 									<div class="row">
-										<div title="该站下该分组所有机器数, 点击链接跳转到终端监控">
+										<div title="站点所属优化组">
 										<span class="line1">
-											<a target="_blank" href="javascript:searchClientStatus('${qzSetting.pcGroup}')">${qzSetting.pcGroup == null or qzSetting.pcGroup == "" ? "暂无" : qzSetting.pcGroup}</a>
+											<a target="_blank" href="javascript:searchMachineInfo('${qzSetting.pcGroup}')">${qzSetting.pcGroup == null or qzSetting.pcGroup == "" ? "暂无" : qzSetting.pcGroup}</a>
 										</span>
 											<span>
 											<a href="javascript:;">优化分组</a>
@@ -945,9 +945,9 @@
 
 								<div class="other-rank_2">
 									<div class="row">
-										<div title="该站下该分组所有机器数, 点击链接跳转到终端监控">
+										<div title="站点所属优化组">
 										<span class="line1">
-											<a target="_blank" href="javascript:searchClientStatus('${qzSetting.phoneGroup}')">${qzSetting.phoneGroup == null or qzSetting.phoneGroup == "" ? "暂无" : qzSetting.phoneGroup}</a>
+											<a target="_blank" href="javascript:searchMachineInfo('${qzSetting.phoneGroup}')">${qzSetting.phoneGroup == null or qzSetting.phoneGroup == "" ? "暂无" : qzSetting.phoneGroup}</a>
 										</span>
 											<span>
 											<a href="javascript:;">优化分组</a>
@@ -1262,7 +1262,7 @@
 	</div>
 </div>
 
-<form id="searchClientStatusForm" method="post" target="_blank" action="/internal/machineInfo/searchMachineInfos" style="display: none">
+<form id="searchMachineInfoForm" method="post" target="_blank" action="/internal/machineInfo/searchMachineInfos" style="display: none">
     <input type="text" name="groupName" id="groupName">
 </form>
 
@@ -1334,8 +1334,13 @@
                     </c:forEach>
                 </select>
             </td>
-            <td style="width:65px" align="right"></td>
-            <td></td>
+            <td style="width:65px" align="right">达标监控</td>
+            <td>
+				<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
+					<option value="1">是</option>
+					<option value="0" selected>否</option>
+				</select>
+			</td>
         </tr>
 	</table>
 	<table style="font-size:12px" cellspacing="5">
@@ -1557,19 +1562,6 @@
 	<table style="font-size:12px" cellspacing="5">
 		<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
 			<c:if test="${not isSEO}">
-				<tr>
-					<td style="width:65px" align="right">组最大词数</td>
-					<td>
-						<input type="text" name="groupMaxCustomerKeywordCount" id="groupMaxCustomerKeywordCount" placeholder="请输入数字：" value="5000" style="width:240px">
-					</td>
-					<td style="width:65px" align="right">达标监控</td>
-					<td>
-						<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
-							<option value="1">是</option>
-							<option value="0" selected>否</option>
-						</select>
-					</td>
-				</tr>
 				<c:if test="${isBaiduEngine}">
 					<tr>
 						<td style="width:65px" align="right">去掉没指数</td>

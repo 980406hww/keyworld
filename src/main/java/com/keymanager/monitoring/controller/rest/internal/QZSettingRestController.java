@@ -245,8 +245,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/getQZSettingGroupInfo", method = RequestMethod.POST)
 	public ResponseEntity<?> getQZSettingGroupInfo(@RequestBody QZSettingSearchGroupInfoCriteria qzSettingSearchGroupInfoCriteria) {
 		try {
-			QZSettingSearchGroupInfoVO qzSettingSearchGroupInfoVo = qzSettingService.getQZSettingGroupInfo(qzSettingSearchGroupInfoCriteria);
-			return new ResponseEntity<Object>(qzSettingSearchGroupInfoVo, HttpStatus.OK);
+			return new ResponseEntity<Object>(qzSettingService.getQZSettingGroupInfo(qzSettingSearchGroupInfoCriteria), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);

@@ -737,15 +737,10 @@ function getQZSettingGroupInfo(terminalType) {
         var div = $(this);
         var uuid = div.parent().parent().parent().find(".header input[name='uuid']").val();
         var optimizeGroupName = div.find(".row:first-child").find("div:eq(0) span.line1 a").text();
-        if (optimizeGroupName.indexOf("(") === -1) {
-            optimizeGroupName = $.trim(optimizeGroupName);
-        } else {
-            optimizeGroupName = $.trim(optimizeGroupName.substring(0,optimizeGroupName.indexOf("(")));
-        }
         var postData = {};
-        postData.qzSettingUuid = uuid;
-        postData.terminalType = terminalType;
-        postData.optimizeGroupName = optimizeGroupName;
+        postData.qzSettingUuid = $.trim(uuid);
+        postData.terminalType = $.trim(terminalType);
+        postData.optimizeGroupName = $.trim(optimizeGroupName);
         $.ajax({
             url: '/internal/qzsetting/getQZSettingGroupInfo',
             type: 'POST',
@@ -773,7 +768,6 @@ function getQZSettingGroupInfo(terminalType) {
                         }
                     });
                 }
-                div.find(".row:first-child").find("div:eq(0) span.line1 a").text(optimizeGroupName+" ("+ (data.machineCount == null ? 0 : data.machineCount) +")");
             },
             error: function () {
                 $().toastmessage('showErrorToast', '获取优化分组机器信息失败，请刷新重试或提交问题给开发人员！');
@@ -967,10 +961,10 @@ function showMoreSearchCondition() {
         });
     }
 }
-function searchClientStatus(optimizeGroup) {
-    var searchClientStatusFrom = $("#searchClientStatusForm");
-    searchClientStatusFrom.find("#groupName").val($.trim(optimizeGroup));
-    searchClientStatusFrom.submit();
+function searchMachineInfo(optimizeGroup) {
+    var searchMachineInfoForm = $("#searchMachineInfoForm");
+    searchMachineInfoForm.find("#groupName").val($.trim(optimizeGroup));
+    searchMachineInfoForm.submit();
 }
 function searchCustomerKeywords(customerUuid, optimizeGroupName) {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
@@ -1797,7 +1791,6 @@ function resetSettingDialog() {
     settingDialogDiv.find("#qzSettingDomain").val("");
     settingDialogDiv.find("#bearPawNumber").val("");
     settingDialogDiv.find("#qzCategoryTagNames").val("");
-    settingDialogDiv.find("#groupMaxCustomerKeywordCount").val("5000");
     if ($(".datalist-list #isBaiduEngine").val() === 'true') {
         settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val("0");
         settingDialogDiv.find("#qzSettingIgnoreNoIndex").val("1");
@@ -1888,7 +1881,6 @@ function initSettingDialog(qzSetting, self) {
     var PhoneOptimizationType = false;
     var settingDialogDiv = $("#changeSettingDialog");
     settingDialogDiv.find("#qzSettingUuid").val(qzSetting.uuid);
-    settingDialogDiv.find("#groupMaxCustomerKeywordCount").val(qzSetting.groupMaxCustomerKeywordCount);
     settingDialogDiv.find("#bearPawNumber").val(qzSetting.bearPawNumber);
     settingDialogDiv.find("#qzSettingCustomer").val(qzSetting.contactPerson + "_____" + qzSetting.customerUuid);
     settingDialogDiv.find("#qzSettingDomain").val(qzSetting.domain != null ? qzSetting.domain : "");
@@ -2008,13 +2000,11 @@ function saveChangeSetting(self, refresh) {
         qzSetting.ignoreNoIndex = settingDialogDiv.find("#qzSettingIgnoreNoIndex").val() === "1" ? true : false;
         qzSetting.ignoreNoOrder = settingDialogDiv.find("#qzSettingIgnoreNoOrder").val() === "1" ? true : false;
         qzSetting.updateInterval = settingDialogDiv.find("#qzSettingInterval").val();
-        qzSetting.groupMaxCustomerKeywordCount = settingDialogDiv.find("#groupMaxCustomerKeywordCount").val();
     } else {
         qzSetting.autoCrawlKeywordFlag = false;
         qzSetting.ignoreNoIndex = true;
         qzSetting.ignoreNoOrder = true;
         qzSetting.updateInterval = 2;
-        qzSetting.groupMaxCustomerKeywordCount = 5000;
     }
     if (settingDialogDiv.find("#qzSettingStartMonitor").length > 0) {
         qzSetting.fIsMonitor = settingDialogDiv.find("#qzSettingStartMonitor").val() === "1" ? true : false;
