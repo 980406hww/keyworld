@@ -167,11 +167,15 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                     customerKeywordUuids.clear();
                                     for(Long customerKeywordUuid : customerKeywordUuidAndRepeatCount.keySet()){
                                         if(customerKeywordUuidAndRepeatCount.get(customerKeywordUuid) < 2){
-                                            customerKeywordUuidAndRepeatCount.remove(customerKeywordUuid);
+                                            customerKeywordUuids.add(customerKeywordUuid);
                                         }else{
                                             customerKeywordUuidAndRepeatCount.put(customerKeywordUuid, (customerKeywordUuidAndRepeatCount.get(customerKeywordUuid) - 1));
                                         }
                                     }
+                                    for(Long customerKeywordUuid : customerKeywordUuids) {
+                                        customerKeywordUuidAndRepeatCount.remove(customerKeywordUuid);
+                                    }
+                                    customerKeywordUuids.clear();
                                 }while (customerKeywordUuidAndRepeatCount.size() > 0);
                             }
                         }
