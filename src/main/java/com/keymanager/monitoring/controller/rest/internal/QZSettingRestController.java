@@ -1,14 +1,12 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.*;
-import com.keymanager.monitoring.entity.Customer;
-import com.keymanager.monitoring.entity.CustomerExcludeKeyword;
-import com.keymanager.monitoring.entity.QZSetting;
-import com.keymanager.monitoring.entity.UserInfo;
+import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.service.*;
-import com.keymanager.monitoring.vo.QZSettingSearchGroupInfoVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -21,7 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/internal/qzsetting")
@@ -330,16 +330,21 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		return new ResponseEntity<Object>(false, HttpStatus.OK);
 	}
 
+
 	/**
 	 * 批量更新全站分组标签
-	 * @param qzSettingSearchCriteria
+	 * @param
 	 * @return
 	 */
 	@RequiresPermissions("/internal/qzsetting/save")
 	@RequestMapping(value = "/updateQzCategoryTags", method = RequestMethod.POST)
-	public ResponseEntity<?> updateQzCategoryTags(@RequestBody QZSettingSearchCriteria qzSettingSearchCriteria) {
+	public ResponseEntity<?> updateQzCategoryTags(@RequestBody Map<String, Object> requestMap) {
 		try {
-			qzSettingService.updateQzCategoryTags(qzSettingSearchCriteria);
+			List<String> uuids = (List<String>) requestMap.get("uuids");
+			ObjectMapper mapper = new ObjectMapper();
+			//复杂数据类型接参后会被转化为linkedhashmap，使用objectmapper转换会对应实体
+			List<QZCategoryTag> targetQZCategoryTags = mapper.convertValue(requestMap.get("targetQZCategoryTags"), new TypeReference<List<QZCategoryTag>>() { });
+			qzSettingService.updateQzCategoryTags(uuids,targetQZCategoryTags);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		}catch(Exception ex){
 			logger.error(ex.getMessage());
