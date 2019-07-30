@@ -961,11 +961,6 @@ function showMoreSearchCondition() {
         });
     }
 }
-function searchMachineInfo(optimizeGroup) {
-    var searchMachineInfoForm = $("#searchMachineInfoForm");
-    searchMachineInfoForm.find("#groupName").val($.trim(optimizeGroup));
-    searchMachineInfoForm.submit();
-}
 function searchCustomerKeywords(customerUuid, optimizeGroupName) {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
     searchCustomerKeywordForm.find("#customerUuid").val(customerUuid);
