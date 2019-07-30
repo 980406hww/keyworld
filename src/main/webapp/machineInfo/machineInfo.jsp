@@ -72,19 +72,15 @@
 								<input type="hidden" name="haveHiddenColumns" id="haveHiddenColumns" value="${machineInfoCriteria.haveHiddenColumns}"/>
 								客户端ID:<input type="text" name="clientID" id="clientID" value="${machineInfoCriteria.clientID}" style="width: 90px;">
 								&nbsp;&nbsp;
-								优化组:<input type="text" name="groupName" id="groupName" value="${machineInfoCriteria.groupName}" style="width: 120px;">
-								<input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${machineInfoCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>模糊查询
-                                &nbsp;
+								&nbsp;
                                 机器分组:
                                 <input type="text" name="machineGroup" id="machineGroup"
                                        value="${machineInfoCriteria.machineGroup}" style="width:100px;">&nbsp;
 								<input id="machineGroupFuzzyQuery" name="machineGroupFuzzyQuery" type="checkbox"  onclick="machineGroupFuzzyQueryValue()" value="${machineInfoCriteria.machineGroupFuzzyQuery}" ${machineInfoCriteria.machineGroupFuzzyQuery=='1' ? 'checked' :''} />模糊查询 &nbsp;
                                 &nbsp;
-								当前操作类型:<input type="text" name="operationType" id="operationType" value="${machineInfoCriteria.operationType}" style="width: 120px;">
+								版本:<input type="text" name="version" id="version" value="${machineInfoCriteria.version}" style="width: 40px;">
 								&nbsp;&nbsp;
-								版本:<input type="text" name="version" id="version" value="${machineInfoCriteria.version}" style="width: 20px;">
-								&nbsp;&nbsp;
-								目标版本:<input type="text" name="targetVersion" id="targetVersion" value="${machineInfoCriteria.targetVersion}" style="width: 20px;">
+								目标版本:<input type="text" name="targetVersion" id="targetVersion" value="${machineInfoCriteria.targetVersion}" style="width: 40px;">
 								&nbsp;&nbsp;
 								城市:<input type="text" name="city" id="city" value="${machineInfoCriteria.city}" style="width: 120px;">
 								&nbsp;&nbsp;
@@ -113,10 +109,6 @@
 							<input id="hasProblem" name="hasProblem" type="checkbox" value="hasProblem" ${machineInfoCriteria.hasProblem != null ? "checked=true" : ""}>停了</input>
 							&nbsp;&nbsp;
 							<input id="renewal" name="renewal" type="checkbox" value="renewal" ${machineInfoCriteria.renewal != null ? "checked=true" : ""}>续费</input>
-							&nbsp;&nbsp;
-							<input id="hasGroup" name="hasGroup" type="checkbox" value="hasGroup" ${machineInfoCriteria.hasGroup != null ? "checked=true" : ""}>有分组</input>
-							&nbsp;&nbsp;
-							<input id="noGroup" name="noGroup" type="checkbox" value="noGroup" ${machineInfoCriteria.noGroup != null ? "checked=true" : ""}>没分组</input>
 							&nbsp;&nbsp;
 							<input id="noVNC" name="noVNC" type="checkbox" value="noVNC" ${machineInfoCriteria.noVNC != null ? "checked=true" : ""}>没VNC</input>
 							&nbsp;&nbsp;
@@ -174,10 +166,6 @@
 								<input type="button" onclick="batchUpdateMachineGroup('total')" value="修改当前终端机器分组">
 							</shiro:hasPermission>
 
-							<shiro:hasPermission name="/internal/machineInfo/batchUpdateGroup">
-								<input type="button" onclick="batchUpdateGroup('selected')" value="修改所选终端优化组">
-								<input type="button" onclick="batchUpdateGroup('total')" value="修改当前终端优化组">
-							</shiro:hasPermission>
 							&nbsp;&nbsp;<input type="button" onclick="headerTableSetting()" value="表格设置">
 						</td>
 						</tr>
@@ -218,10 +206,7 @@
 		<tr bgcolor="#eeeeee" height=30>
 			<td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
 			<td align="center" width=40>客户端ID</td>
-			<td align="center" width=60>优化组</td>
 			<td align="center" width=60>机器分组</td>
-
-			<td align="center" width=60>当前操作类型</td>
 			<td align="center" width=20>续费<br>日期</td>
 			<td align="center" width=30>现版本<br>目标版本</td>
 			<td align="center" width=40>重启数/重启状态<br>失败次数</td>
@@ -283,21 +268,12 @@
 					<span name="invalidClient" id="span_${machineInfo.clientID}"></span>
 				</c:if>
 			</td>
-
-			<td width=60>
-				<shiro:hasPermission name="/internal/machineInfo/updateGroup">
-					<input type="text" value="${machineInfo.group == null ? "" : machineInfo.group}"
-						   name="group" id="${machineInfo.clientID}" onBlur="updateGroup(this)" style="width: 100%;"/>
-				</shiro:hasPermission>
-			</td>
 			<td width=40>
 
 					<input type="text" value="${machineInfo.machineGroup == null ? "" : machineInfo.machineGroup}"
-						   name="group" id="${machineInfo.clientID}" onBlur="updateMachineGroup(this)" style="width: 100%;"/>
+						   name="machineGroup" id="${machineInfo.clientID}" onBlur="updateMachineGroup(this)" style="width: 100%;"/>
 
 			</td>
-
-			<td width="60">${machineInfo.usingOperationType}</td>
 			<td width=20><font color="${keywordColor}"><fmt:formatDate value="${machineInfo.renewalDate}"
 															  pattern="MM-dd"/></font></td>
 			<td width=30><font
@@ -406,13 +382,8 @@
 			<tr>
 				<td>
 					<table id="td_1" style="font-size:12px">
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>分组</th>
-							<td>
-								<input type="hidden" id="settingClientID" />
-								<input type="text" name="settingGroup" id="settingGroup" />
-							</td>
-						</tr>
+						<input type="hidden" id="settingClientID" />
+
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>机器分组</th>
 							<td>
@@ -571,8 +542,6 @@
 	<div id="headerTableDialog" class="easyui-dialog" style="display: none">
 		<table>
 			<tr><td><input type="checkbox" name="columnName" id="1">客户端ID</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="2">优化组</td></tr>
-			<tr><td><input type="checkbox" name="columnName" id="3">当前操作类型</td></tr>
 			<tr><td><input type="checkbox" name="columnName" id="4">续费日期</td></tr>
 			<tr><td><input type="checkbox" name="columnName" id="5">现版本-目标版本</td></tr>
 			<tr><td><input type="checkbox" name="columnName" id="6">重启数/重启状态-失败次数</td></tr>
@@ -594,12 +563,6 @@
 	<div id="targetMachineGroupDialog" style="text-align: center;left: 40%;display: none;">
 		<form id="targetMachineGroupForm" style="text-align: center;margin-top: 10px;" onkeydown="if(event.keyCode==13)return false;">
 			机器分组:<input type="text" id="targetMachineGroup" name="targetMachineGroup" style="width:150px;"><%-- margin-top: 10px;--%>
-		</form>
-	</div>
-	<%--Dialog部分--%>
-	<div id="targetGroupDialog" style="text-align: center;left: 40%;display: none;">
-		<form id="targetGroupForm" style="text-align: center;margin-top: 10px;" onkeydown="if(event.keyCode==13)return false;">
-			优化组:<input type="text" id="targetGroup" name="targetGroup" style="width:150px;"><%-- margin-top: 10px;--%>
 		</form>
 	</div>
 <%@ include file="/commons/loadjs.jsp" %>

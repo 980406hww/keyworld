@@ -447,31 +447,6 @@ function changeStatus(clientID, status) {
 
 }
 
-function updateGroup(self){
-    var machineInfo = {};
-    machineInfo.clientID = self.id;
-    machineInfo.group = self.value.trim();
-    $.ajax({
-        url: '/internal/machineInfo/updateGroupById',
-        data: JSON.stringify(machineInfo),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (result) {
-            if(result){
-                $().toastmessage('showSuccessToast', "更新成功", true);
-            }else{
-                $().toastmessage('showErrorToast', "更新失败");
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "更新失败");
-        }
-    });
-}
 function changeTerminalType(clientID){
     if (confirm("确定要变更终端类型吗?") == false) return;
     var postData = {};
@@ -568,11 +543,8 @@ function showSettingDialog(clientID, self){
 function initSettingDialog(machineInfo, self){
     var settingDialogDiv = $("#changeSettingDialog");
     settingDialogDiv.find("#settingClientID").val(machineInfo.clientID);
-    settingDialogDiv.find("#settingGroup").val(machineInfo.group != null ? machineInfo.group : "");
     settingDialogDiv.find("#machineGroup").val(machineInfo.machineGroup != null ? machineInfo.machineGroup : "");
-
     settingDialogDiv.find("#allowSwitchGroup ").val(machineInfo.allowSwitchGroup );
-
     settingDialogDiv.find("#switchGroupName").val(machineInfo.switchGroupName != null ? machineInfo.switchGroupName : "");
     settingDialogDiv.find("#host").val(machineInfo.host != null ? machineInfo.host : "");
     settingDialogDiv.find("#port").val(machineInfo.port != null ? machineInfo.port : "");
@@ -595,7 +567,6 @@ function isChecked(id) {
 function saveChangeSetting(clientIDs){
     var settingDialogDiv = $("#changeSettingDialog");
     var machineInfo = {};
-    machineInfo.group = settingDialogDiv.find("#settingGroup").val();
     machineInfo.machineGroup = settingDialogDiv.find("#machineGroup").val();
     machineInfo.allowSwitchGroup = settingDialogDiv.find("#allowSwitchGroup").val();
     machineInfo.switchGroupName = settingDialogDiv.find("#switchGroupName").val();
@@ -610,7 +581,6 @@ function saveChangeSetting(clientIDs){
     if(clientIDs != null) {
         machineInfo.clientID = clientIDs;
         var mi = {};
-        mi.group = isChecked("settingGroup");
         mi.machineGroup = isChecked("machineGroup");
         mi.allowSwitchGroup = isChecked("allowSwitchGroup");
         mi.switchGroupName = isChecked("switchGroupName");
@@ -648,7 +618,6 @@ function saveChangeSetting(clientIDs){
             }
         });
     } else {
-
         machineInfo.clientID = settingDialogDiv.find("#settingClientID").val();
         console.log(machineInfo.clientID)
         $.ajax({
@@ -1324,145 +1293,6 @@ function updateMachineGroup(self){
     });
 }
 
-/*=================================*/
-/**
- * 批量修改优化组
- */
-function batchChangeGroupSelected(){
-    var clientIDs = getSelectedClientIDs();
-    if (clientIDs.indexOf(",") == -1) {
-        alert('请选择多个终端进行设置');
-        return;
-    }
-
-    $("#groupBatchUpdateDialog").css("display", "block");
-    $("#groupBatchUpdateDialog").dialog({
-        resizable: false,
-        width: 260,
-        height: 100,
-        title:"修改关键字优化组",
-        closed: true,
-        modal: true,
-        buttons: [{
-            text: '保存',
-            iconCls: 'icon-ok',
-            handler: function () {
-                var group = $("#groupBatchUpdateDialog").find("#targetGroup").val();
-                console.log()
-                $.ajax({
-                    url: '/internal/machineInfo/batchUpdateGroupSelected',
-                    data: {"clientIDs":clientIDs,"group":group},
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (data) {
-                        if(data){
-                            $().toastmessage('showSuccessToast',"操作成功", true);
-                        }else{
-                            $().toastmessage('showErrorToast', "操作失败");
-                        }
-                    },
-                    error: function () {
-                        $().toastmessage('showErrorToast', "操作失败");
-                    }
-                });
-                $("#groupBatchUpdateDialog").dialog("close");
-            }
-        },
-            {
-                text: '取消',
-                iconCls: 'icon-cancel',
-                handler: function () {
-                    $("#groupBatchUpdateDialog").dialog("close");
-                    $('#groupBatchUpdateDialog')[0].reset();
-                }
-            }],
-        onClose: function () {
-            $('#groupBatchUpdateDialog')[0].reset();
-        }
-    });
-    $("#groupBatchUpdateDialog").dialog("open");
-    $('#groupBatchUpdateDialog').window("resize",{top:$(document).scrollTop() + 200});
-}
-
-/**
- *
- */
-function batchChangeGroupSearched(){
-    var totalRecord =  $("#totalRecord").val();
-    if (totalRecord == 0) {
-        alert('搜索结果为空，请重新设置检索条件获取结果');
-        return;
-    }
-    $("#groupBatchUpdateDialog").css("display", "block");
-    $("#groupBatchUpdateDialog").dialog({
-        resizable: false,
-        width: 260,
-        height: 100,
-        title:"修改关键字优化组",
-        closed: true,
-        modal: true,
-        buttons: [{
-            text: '保存',
-            iconCls: 'icon-ok',
-            handler: function () {
-                resetPageNumber();
-                var obj = {};
-                var targetGroup = $("#groupBatchUpdateDialog").find("#targetGroup").val();
-
-                if (confirm("确定要修改当前查询条件下所有机器的优化组吗?") == false) return;
-                var postData = $("#searchMachineInfoForm").serializeArray();
-                $.each(postData, function() {
-                    if (obj[this.name]) {
-                        if (!obj[this.name].push) {
-                            obj[this.name] = [obj[this.name]];
-                        }
-                        obj[this.name].push(this.value || '');
-                    } else {
-                        obj[this.name] = this.value || '';
-                    }
-                });
-
-                obj.targetGroup = targetGroup;
-
-                $.ajax({
-                    url: '/internal/machineInfo/updateGroupByCriteria',
-                    data: JSON.stringify(obj),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (data) {
-                        if(data){
-                            $().toastmessage('showSuccessToast',"操作成功", true);
-                        }else{
-                            $().toastmessage('showErrorToast', "操作失败");
-                        }
-                    },
-                    error: function () {
-                        $().toastmessage('showErrorToast', "操作失败");
-                    }
-                });
-                $("#groupBatchUpdateDialog").dialog("close");
-            }
-        },
-            {
-                text: '取消',
-                iconCls: 'icon-cancel',
-                handler: function () {
-                    $("#groupBatchUpdateDialog").dialog("close");
-                    $('#groupBatchUpdateDialog')[0].reset();
-                }
-            }],
-        onClose: function () {
-            //$('#machineGroupBatchUpdateDialog')[0].reset();
-        }
-    });
-    $("#groupBatchUpdateDialog").dialog("open");
-    $('#groupBatchUpdateDialog').window("resize",{top:$(document).scrollTop() + 200});
-}
-
 /**
  * 批量修改关键字机器分组
  * @param changeType
@@ -1545,7 +1375,6 @@ function batchUpdateMachineGroup(changeType) {
     $('#targetMachineGroupDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
 
-
 /**
  * 检索条件，机器分组是否模糊查询
  */
@@ -1557,86 +1386,4 @@ function machineGroupFuzzyQueryValue() {
     }
 }
 
-/**
- * 批量修改关键字优化组
- * @param changeType
- */
-function batchUpdateGroup(changeType) {
-    $("#targetGroupDialog").css("display", "block");
-    $("#targetGroupDialog").dialog({
-        resizable: false,
-        width: 260,
-        height: 100,
-        title:"修改终端优化组",
-        closed: true,
-        modal: true,
-        buttons: [{
-            text: '保存',
-            iconCls: 'icon-ok',
-            handler: function () {
-                var targetGroup = $("#targetGroupForm").find("#targetGroup").val();
-                if (targetGroup == null || targetGroup == '') {
-                    alert("请输入目标优化组!");
-                    return;
-                }
-                var obj = {};
-                if ("selected" === changeType){
-                    var clientIDs = getSelectedClientIDs();
-                    if(clientIDs === ''){
-                        alert('请选择要修改机器分组的终端！');
-                        return ;
-                    }
-                    if (confirm("确定要修改选中终端的机器分组吗?") == false) return;
-                    obj['clientIDs'] = clientIDs.split(",");
-                }else{
-                    if (confirm("确定要修改当前查询条件下所有终端的机器分组吗?") == false) return;
-                    var postData = $("#searchMachineInfoForm").serializeArray();
-                    $.each(postData, function() {
-                        if (obj[this.name]) {
-                            if (!obj[this.name].push) {
-                                obj[this.name] = [obj[this.name]];
-                            }
-                            obj[this.name].push(this.value || '');
-                        } else {
-                            obj[this.name] = this.value || '';
-                        }
-                    });
-                }
-                obj.targetGroup = targetGroup;
-                console.log(obj)
-                $.ajax({
-                    url: '/internal/machineInfo/batchUpdateGroup',
-                    data: JSON.stringify(obj),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (data) {
-                        if(data){
-                            $().toastmessage('showSuccessToast',"操作成功", true);
-                        }else{
-                            $().toastmessage('showErrorToast', "操作失败");
-                        }
-                    },
-                    error: function () {
-                        $().toastmessage('showErrorToast', "操作失败");
-                    }
-                });
-                $("#targetGroupDialog").dialog("close");
-            }
-        },
-            {
-                text: '取消',
-                iconCls: 'icon-cancel',
-                handler: function () {
-                    $("#targetGroupDialog").dialog("close");
-                    $('#targetGroupForm')[0].reset();
-                }
-            }]
-    });
-    $("#targetGroupDialog").dialog("open");
-    $('#targetGroupDialog').window("resize",{top:$(document).scrollTop() + 200});
-}
 
