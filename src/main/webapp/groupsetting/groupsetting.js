@@ -120,14 +120,14 @@ function showOperationCombineDialog() {
     var changeSettingDialog = $("#changeSettingDialog");
     changeSettingDialog.find('#changeSettingDialogForm')[0].reset();
     $("#changeSettingDialog").find("#settingOperationCombineName").removeAttr("disabled");
-    $("#changeSettingDialog").find("#settingGroup").parent().parent().css("display", "block");
+    $("#changeSettingDialog").find("#settingGroup").removeAttr("disabled");
     $("#changeSettingDialog").find("i").text(100);
     changeSettingDialog.show();
     changeSettingDialog.dialog({
         resizable: false,
-        width: 790,
+        width: 650,
         maxHeight: 550,
-        title: "新增操作组合(只需指定一个操作类型, 如果还有其他操作类型，后续添加即可)",
+        title: "新增操作组合(只需指定一个操作类型, 如果还有其他操作类型, 后续添加即可)",
         modal: false,
         buttons: [{
             text: '保存',
@@ -163,7 +163,7 @@ function showUpdateGroupDialog(operationCombineUuid, operationCombineName) {
     updateGroupSettingDialog.show();
     updateGroupSettingDialog.dialog({
         resizable: false,
-        width: 790,
+        width: 650,
         maxHeight: 550,
         title: "批量修改优化组设置(需要修改的信息请标红!!!)",
         modal: false,
@@ -234,7 +234,7 @@ function showGroupSettingDialog(type, id, operationCombineName, remainingAccount
     var changeSettingDialog = $("#changeSettingDialog");
     changeSettingDialog.find('#changeSettingDialogForm')[0].reset();
     $("#changeSettingDialog").find("#settingOperationCombineName").attr("disabled", true);
-    $("#changeSettingDialog").find("#settingGroup").parent().parent().css("display", "none");
+    $("#changeSettingDialog").find("#settingGroup").attr("disabled", true);
     changeSettingDialog.find('#settingOperationCombineName').val(operationCombineName);
     changeSettingDialog.find('#remainAccount').val(remainingAccount);
     changeSettingDialog.find("i").text(remainingAccount);
@@ -251,7 +251,7 @@ function showGroupSettingDialog(type, id, operationCombineName, remainingAccount
     changeSettingDialog.show();
     changeSettingDialog.dialog({
         resizable: false,
-        width: 790,
+        width: 650,
         maxHeight: 550,
         title: title,
         modal: false,
@@ -340,27 +340,6 @@ function initSettingDialog(groupSetting, status){
     if(groupSetting.pageSize != null){
         dialogDiv.find("#pageSize").val(groupSetting.pageSize);
     }
-    if(groupSetting.zhanneiPercent != null){
-        dialogDiv.find("#zhanneiPercent").val(groupSetting.zhanneiPercent);
-    }
-    if(groupSetting.zhanwaiPercent != null){
-        dialogDiv.find("#zhanwaiPercent").val(groupSetting.zhanwaiPercent);
-    }
-    if(groupSetting.kuaizhaoPercent != null){
-        dialogDiv.find("#kuaizhaoPercent").val(groupSetting.kuaizhaoPercent);
-    }
-    if(groupSetting.baiduSemPercent != null){
-        dialogDiv.find("#baiduSemPercent").val(groupSetting.baiduSemPercent);
-    }
-    if(groupSetting.specialCharPercent != null){
-        dialogDiv.find("#specialCharPercent").val(groupSetting.specialCharPercent);
-    }
-    if(groupSetting.dragPercent  != null){
-        dialogDiv.find("#dragPercent").val(groupSetting.dragPercent );
-    }
-    if(groupSetting.multiBrowser != null){
-        dialogDiv.find("#multiBrowser").val(groupSetting.multiBrowser);
-    }
     if(groupSetting.clearCookie != null){
         dialogDiv.find("#clearCookie").val(groupSetting.clearCookie);
     }
@@ -379,28 +358,7 @@ function initSettingDialog(groupSetting, status){
     dialogDiv.find("#titleRemainMaxTime").val(groupSetting.titleRemainMaxTime);
     dialogDiv.find("#optimizeKeywordCountPerIP").val(groupSetting.optimizeKeywordCountPerIP);
 
-    dialogDiv.find("#oneIPOneUser")[0].checked = (groupSetting.oneIPOneUser == 1) ? true : false;
-    dialogDiv.find("#randomlyClickNoResult")[0].checked = (groupSetting.randomlyClickNoResult == 1) ? true : false;
-    dialogDiv.find("#justVisitSelfPage")[0].checked = (groupSetting.justVisitSelfPage == 1) ? true : false;
-    dialogDiv.find("#sleepPer2Words")[0].checked = (groupSetting.sleepPer2Words == 1) ? true : false;
-    dialogDiv.find("#supportPaste")[0].checked = (groupSetting.supportPaste == 1) ? true : false;
-    dialogDiv.find("#moveRandomly")[0].checked = (groupSetting.moveRandomly == 1) ? true : false;
-    dialogDiv.find("#parentSearchEntry")[0].checked = (groupSetting.parentSearchEntry == 1) ? true : false;
-    dialogDiv.find("#clearLocalStorage")[0].checked = (groupSetting.clearLocalStorage == 1) ? true : false;
-    dialogDiv.find("#lessClickAtNight")[0].checked = (groupSetting.lessClickAtNight == 1) ? true : false;
-    dialogDiv.find("#sameCityUser")[0].checked = (groupSetting.sameCityUser == 1) ? true : false;
-    dialogDiv.find("#locateTitlePosition")[0].checked = (groupSetting.locateTitlePosition == 1) ? true : false;
-    dialogDiv.find("#baiduAllianceEntry")[0].checked = (groupSetting.baiduAllianceEntry == 1) ? true : false;
-    dialogDiv.find("#justClickSpecifiedTitle")[0].checked = (groupSetting.justClickSpecifiedTitle == 1) ? true : false;
-    dialogDiv.find("#randomlyClickMoreLink")[0].checked = (groupSetting.randomlyClickMoreLink == 1) ? true : false;
-    dialogDiv.find("#moveUp20")[0].checked = (groupSetting.moveUp20 == 1) ? true : false;
-    dialogDiv.find("#optimizeRelatedKeyword")[0].checked = (groupSetting.optimizeRelatedKeyword == 1) ? true : false;
-
-    dialogDiv.find("#waitTimeAfterOpenBaidu").val(groupSetting.waitTimeAfterOpenBaidu);
-    dialogDiv.find("#waitTimeBeforeClick").val(groupSetting.waitTimeBeforeClick);
-    dialogDiv.find("#waitTimeAfterClick").val(groupSetting.waitTimeAfterClick);
-    dialogDiv.find("#maxUserCount").val(groupSetting.maxUserCount);
-
+    dialogDiv.find("#randomlyClickNoResult")[0].checked = groupSetting.randomlyClickNoResult == 1 ? true : false;
     dialogDiv.show();
 }
 
@@ -473,22 +431,14 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
         }
     }
     groupSetting.operationType = operationType;
-    groupSetting.machineUsedPercent = parseInt(dialogDiv.find("#machineUsedPercent").val() == '' ? 0 : dialogDiv.find("#machineUsedPercent").val());
+    groupSetting.machineUsedPercent = parseInt(dialogDiv.find("#machineUsedPercent").val() === '' ? 0 : dialogDiv.find("#machineUsedPercent").val());
     groupSetting.remainingAccount = remainingAccount;
     groupSetting.disableStatistics = dialogDiv.find("#disableStatistics").val();
     groupSetting.disableVisitWebsite = dialogDiv.find("#disableVisitWebsite").val();
     groupSetting.page = dialogDiv.find("#page").val();
     groupSetting.pageSize = dialogDiv.find("#pageSize").val();
-    groupSetting.zhanneiPercent = dialogDiv.find("#zhanneiPercent").val();
-    groupSetting.zhanwaiPercent = dialogDiv.find("#zhanwaiPercent").val();
-    groupSetting.kuaizhaoPercent = dialogDiv.find("#kuaizhaoPercent").val();
-    groupSetting.baiduSemPercent = dialogDiv.find("#baiduSemPercent").val();
-    groupSetting.dragPercent = dialogDiv.find("#dragPercent").val();
-    groupSetting.specialCharPercent = dialogDiv.find("#specialCharPercent").val();
 
-    groupSetting.multiBrowser = dialogDiv.find("#multiBrowser").val();
     groupSetting.clearCookie = dialogDiv.find("#clearCookie").val();
-    groupSetting.maxUserCount = dialogDiv.find("#maxUserCount").val();
     groupSetting.entryPageMinCount = dialogDiv.find("#entryPageMinCount").val();
     groupSetting.entryPageMaxCount = dialogDiv.find("#entryPageMaxCount").val();
     groupSetting.pageRemainMinTime = dialogDiv.find("#pageRemainMinTime").val();
@@ -500,27 +450,8 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
     groupSetting.titleRemainMinTime = dialogDiv.find("#titleRemainMinTime").val();
     groupSetting.titleRemainMaxTime = dialogDiv.find("#titleRemainMaxTime").val();
     groupSetting.optimizeKeywordCountPerIP = dialogDiv.find("#optimizeKeywordCountPerIP").val();
-    groupSetting.waitTimeAfterOpenBaidu = dialogDiv.find("#waitTimeAfterOpenBaidu").val();
-    groupSetting.waitTimeBeforeClick = dialogDiv.find("#waitTimeBeforeClick").val();
-    groupSetting.waitTimeAfterClick = dialogDiv.find("#waitTimeAfterClick").val();
     groupSetting.maxInvalidCount = dialogDiv.find("#maxInvalidCount").val();
-
-    groupSetting.oneIPOneUser = dialogDiv.find("#oneIPOneUser:checked").val() === '1' ? 1 : 0;
     groupSetting.randomlyClickNoResult = dialogDiv.find("#randomlyClickNoResult:checked").val() === '1' ? 1 : 0;
-    groupSetting.justVisitSelfPage = dialogDiv.find("#justVisitSelfPage:checked").val() === '1' ? 1 : 0;
-    groupSetting.sleepPer2Words = dialogDiv.find("#sleepPer2Words:checked").val() === '1' ? 1 : 0;
-    groupSetting.supportPaste = dialogDiv.find("#supportPaste:checked").val() === '1' ? 1 : 0;
-    groupSetting.moveRandomly = dialogDiv.find("#moveRandomly:checked").val() === '1' ? 1 : 0;
-    groupSetting.parentSearchEntry = dialogDiv.find("#parentSearchEntry:checked").val() === '1' ? 1 : 0;
-    groupSetting.clearLocalStorage = dialogDiv.find("#clearLocalStorage:checked").val() === '1' ? 1 : 0;
-    groupSetting.lessClickAtNight = dialogDiv.find("#lessClickAtNight:checked").val() === '1' ? 1 : 0;
-    groupSetting.sameCityUser = dialogDiv.find("#sameCityUser:checked").val() === '1' ? 1 : 0;
-    groupSetting.locateTitlePosition = dialogDiv.find("#locateTitlePosition:checked").val() === '1' ? 1 : 0;
-    groupSetting.baiduAllianceEntry = dialogDiv.find("#baiduAllianceEntry:checked").val() === '1' ? 1 : 0;
-    groupSetting.justClickSpecifiedTitle = dialogDiv.find("#justClickSpecifiedTitle:checked").val() === '1' ? 1 : 0;
-    groupSetting.randomlyClickMoreLink = dialogDiv.find("#randomlyClickMoreLink:checked").val() === '1' ? 1 : 0;
-    groupSetting.moveUp20 = dialogDiv.find("#moveUp20:checked").val() === '1' ? 1 : 0;
-    groupSetting.optimizeRelatedKeyword = dialogDiv.find("#optimizeRelatedKeyword:checked").val() === '1' ? 1 : 0;
 
     if(type === "update") {
         var groupSettingUuid = dialogDiv.find('#groupSettingUuid').val();
@@ -539,16 +470,8 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
         gs.disableVisitWebsite = isChecked("disableVisitWebsite", dialogDiv);
         gs.page = isChecked("page", dialogDiv);
         gs.pageSize = isChecked("pageSize", dialogDiv);
-        gs.zhanneiPercent = isChecked("zhanneiPercent", dialogDiv);
-        gs.zhanwaiPercent = isChecked("zhanwaiPercent", dialogDiv);
-        gs.kuaizhaoPercent = isChecked("kuaizhaoPercent", dialogDiv);
-        gs.baiduSemPercent = isChecked("baiduSemPercent", dialogDiv);
-        gs.dragPercent = isChecked("dragPercent", dialogDiv);
-        gs.specialCharPercent = isChecked("specialCharPercent", dialogDiv);
 
-        gs.multiBrowser = isChecked("multiBrowser", dialogDiv);
         gs.clearCookie = isChecked("clearCookie", dialogDiv);
-        gs.maxUserCount = isChecked("maxUserCount", dialogDiv);
         gs.entryPageMinCount = isChecked("entryPageMinCount", dialogDiv);
         gs.entryPageMaxCount = isChecked("entryPageMaxCount", dialogDiv);
         gs.pageRemainMinTime = isChecked("pageRemainMinTime", dialogDiv);
@@ -560,27 +483,8 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
         gs.titleRemainMinTime = isChecked("titleRemainMinTime", dialogDiv);
         gs.titleRemainMaxTime = isChecked("titleRemainMaxTime", dialogDiv);
         gs.optimizeKeywordCountPerIP = isChecked("optimizeKeywordCountPerIP", dialogDiv);
-        gs.waitTimeAfterOpenBaidu = isChecked("waitTimeAfterOpenBaidu", dialogDiv);
-        gs.waitTimeBeforeClick = isChecked("waitTimeBeforeClick", dialogDiv);
-        gs.waitTimeAfterClick = isChecked("waitTimeAfterClick", dialogDiv);
         gs.maxInvalidCount = isChecked("maxInvalidCount", dialogDiv);
-
-        gs.oneIPOneUser = isChecked("oneIPOneUser", dialogDiv) === '1' ? 1 : 0;
         gs.randomlyClickNoResult = isChecked("randomlyClickNoResult", dialogDiv) === '1' ? 1 : 0;
-        gs.justVisitSelfPage = isChecked("justVisitSelfPage", dialogDiv) === '1' ? 1 : 0;
-        gs.sleepPer2Words = isChecked("sleepPer2Words", dialogDiv) === '1' ? 1 : 0;
-        gs.supportPaste = isChecked("supportPaste", dialogDiv) === '1' ? 1 : 0;
-        gs.moveRandomly = isChecked("moveRandomly", dialogDiv) === '1' ? 1 : 0;
-        gs.parentSearchEntry = isChecked("parentSearchEntry", dialogDiv) === '1' ? 1 : 0;
-        gs.clearLocalStorage = isChecked("clearLocalStorage", dialogDiv) === '1' ? 1 : 0;
-        gs.lessClickAtNight = isChecked("lessClickAtNight", dialogDiv) === '1' ? 1 : 0;
-        gs.sameCityUser = isChecked("sameCityUser", dialogDiv) === '1' ? 1 : 0;
-        gs.locateTitlePosition = isChecked("locateTitlePosition", dialogDiv) === '1' ? 1 : 0;
-        gs.baiduAllianceEntry = isChecked("baiduAllianceEntry", dialogDiv) === '1' ? 1 : 0;
-        gs.justClickSpecifiedTitle = isChecked("justClickSpecifiedTitle", dialogDiv) === '1' ? 1 : 0;
-        gs.randomlyClickMoreLink = isChecked("randomlyClickMoreLink", dialogDiv) === '1' ? 1 : 0;
-        gs.moveUp20 = isChecked("moveUp20", dialogDiv) === '1' ? 1 : 0;
-        gs.optimizeRelatedKeyword = isChecked("optimizeRelatedKeyword", dialogDiv) === '1' ? 1 : 0;
 
         var postData = {};
         postData.gs = gs;

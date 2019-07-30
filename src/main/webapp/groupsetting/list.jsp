@@ -21,7 +21,7 @@
 		#changeSettingDialog input[type=text], #updateGroupSettingDialog input[type=text] {
 			width : 152px;
 		}
-		#td_2, #td_3 {
+		#td_2 {
 			margin-right: 10px;
 		}
 		#td_2 input[type=text] {
@@ -77,9 +77,9 @@
 					</label>
 				</li>
 				<li>
-					<label name="hasRemainingAccount" title="分组下机器未分配完成">
+					<label name="hasRemainingAccount" title="分组设置占比未分配完成">
 						<input type="checkbox" name="checkbox" <c:if test="${groupSettingCriteria.hasRemainingAccount == true}">checked</c:if>>
-						剩机器
+						剩分组设置占比
 					</label>
 				</li>
 				<shiro:hasPermission name="/internal/groupsetting/searchGroupSettings">
@@ -122,7 +122,7 @@
 	<div class="datalist-list">
 		<ul>
 			<c:forEach items="${page.records}" var="operationCombine">
-				<li title="请把分组下的机器分配完成！">
+				<li title="请把分组下的分组设置占比分配完成！">
 					<div class="header">
 						<input type="hidden" name="operationCombineUuid" value="${operationCombine.uuid}">
 						<span class="operationCombineName" title="${operationCombine.operationCombineName}——${operationCombine.remainingAccount}%">
@@ -186,47 +186,7 @@
 										</div>
 										<div>
 										<span>
-											<a href="javascript:;">站内搜索比例</a>
-										</span>
-										</div>
-										<div>
-										<span>
-											<a href="javascript:;">外链检索比例</a>
-										</span>
-										</div>
-										<div>
-										<span>
-											<a href="javascript:;">快照点击比例</a>
-										</span>
-										</div>
-										<div>
-										<span>
-											<a href="javascript:;">竞价点击比例</a>
-										</span>
-										</div>
-										<div>
-										<span>
-											<a href="javascript:;">标题拖动比例</a>
-										</span>
-										</div>
-										<div>
-										<span>
-											<a href="javascript:;">特殊字符比例</a>
-										</span>
-										</div>
-										<div>
-										<span>
-											<a href="javascript:;">浏览器设置</a>
-										</span>
-										</div>
-										<div>
-										<span>
 											<a href="javascript:;">Cookie设置</a>
-										</span>
-										</div>
-										<div>
-										<span>
-											<a href="javascript:;">最大用户数</a>
 										</span>
 										</div>
 										<div>
@@ -236,22 +196,7 @@
 										</div>
 										<div>
 										<span>
-											<a href="javascript:;">每IP对每用户</a>
-										</span>
-										</div>
-										<div>
-										<span>
-											<a href="javascript:;">在域名下访问</a>
-										</span>
-										</div>
-										<div>
-										<span>
 											<a href="javascript:;">没结果随机点</a>
-										</span>
-										</div>
-										<div>
-										<span>
-											<a href="javascript:;">清除本地存储</a>
 										</span>
 										</div>
 										<div>
@@ -299,47 +244,7 @@
 										</div>
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${groupSetting.zhanneiPercent == 0 ? '0%' : groupSetting.zhanneiPercent == 1 ? '10%' : groupSetting.zhanneiPercent == 2 ? '30%' : groupSetting.zhanneiPercent == 3 ? '50%' : groupSetting.zhanneiPercent == 4 ? '100%' : '无'}</a>
-											</span>
-										</div>
-										<div>
-											<span class="line1">
-												<a href="javascript:;">${groupSetting.zhanwaiPercent == 0 ? '0%' : groupSetting.zhanwaiPercent == 1 ? '10%' : groupSetting.zhanwaiPercent == 2 ? '30%' : groupSetting.zhanwaiPercent == 3 ? '50%' : groupSetting.zhanwaiPercent == 4 ? '100%' : '无'}</a>
-											</span>
-										</div>
-										<div>
-											<span class="line1">
-												<a href="javascript:;">${groupSetting.kuaizhaoPercent == 0 ? '0%' : groupSetting.kuaizhaoPercent == 1 ? '10%' : groupSetting.kuaizhaoPercent == 2 ? '30%' : groupSetting.kuaizhaoPercent == 3 ? '50%' : groupSetting.kuaizhaoPercent == 4 ? '100%' : '无'}</a>
-											</span>
-										</div>
-										<div>
-											<span class="line1">
-												<a href="javascript:;">${groupSetting.baiduSemPercent == 0 ? '0%' : groupSetting.baiduSemPercent == 1 ? '10%' : groupSetting.baiduSemPercent == 2 ? '30%' : groupSetting.baiduSemPercent == 3 ? '50%' : groupSetting.baiduSemPercent == 4 ? '100%' : '无'}</a>
-											</span>
-										</div>
-										<div>
-											<span class="line1">
-												<a href="javascript:;">${groupSetting.dragPercent == 0 ? '0%' : groupSetting.dragPercent == 1 ? '10%' : groupSetting.dragPercent == 2 ? '30%' : groupSetting.dragPercent == 3 ? '50%' : groupSetting.dragPercent == 4 ? '100%' : '无'}</a>
-											</span>
-										</div>
-										<div>
-											<span class="line1">
-												<a href="javascript:;">${groupSetting.specialCharPercent == 0 ? '0%' : groupSetting.specialCharPercent == 1 ? '10%' : groupSetting.specialCharPercent == 2 ? '30%' : groupSetting.specialCharPercent == 3 ? '50%' : groupSetting.specialCharPercent == null ? '无' : '100%'}</a>
-											</span>
-										</div>
-										<div>
-											<span class="line1">
-												<a href="javascript:;" title="${groupSetting.multiBrowser == 0 ? "命令多浏览器" : groupSetting.multiBrowser == 1 ? "模拟多浏览器" : "单个浏览器"}">${groupSetting.multiBrowser == 0 ? "命令多浏览器" : groupSetting.multiBrowser == 1 ? "模拟多浏览器" : "单个浏览器"}</a>
-											</span>
-										</div>
-										<div>
-											<span class="line1">
 												<a href="javascript:;" title="${groupSetting.clearCookie == 0 ? "不清理Cookie" : groupSetting.clearCookie == 1 ? "每次都清理Cookie" : groupSetting.clearCookie == 2 ? "随机操作清理Cookie" : "N次操作清理Cookie"}">${groupSetting.clearCookie == 0 ? "不清理Cookie" : groupSetting.clearCookie == 1 ? "每次都清理Cookie" : groupSetting.clearCookie == 2 ? "随机操作清理Cookie" : "N次操作清理Cookie"}</a>
-											</span>
-										</div>
-										<div>
-											<span class="line1">
-												<a href="javascript:;">${groupSetting.maxUserCount}</a>
 											</span>
 										</div>
 										<div>
@@ -349,28 +254,13 @@
 										</div>
 										<div>
 											<span class="line1">
-												<a href="javascript:;">${groupSetting.oneIPOneUser == 1 ? "是" : "否"}</a>
-											</span>
-										</div>
-										<div>
-											<span class="line1">
-												<a href="javascript:;">${groupSetting.justVisitSelfPage == 1 ? "是" : "否"}</a>
-											</span>
-										</div>
-										<div>
-											<span class="line1">
 												<a href="javascript:;">${groupSetting.randomlyClickNoResult == 1 ? "是" : "否"}</a>
-											</span>
-										</div>
-										<div>
-											<span class="line1">
-												<a href="javascript:;">${groupSetting.clearLocalStorage == 1 ? "是" : "否"}</a>
 											</span>
 										</div>
 										<div>
 											<span class="operation">
 												<shiro:hasPermission name="/internal/groupsetting/updateGroupSetting">
-													<a href="javascript:showGroupSettingDialog('update', '${groupSetting.uuid}', '${operationCombine.operationCombineName}', '${operationCombine.remainingAccount}', '${operationCombine.uuid}')" title="修改操作类型">修改</a>
+													<a href="javascript:showGroupSettingDialog('update', '${groupSetting.uuid}', '${operationCombine.operationCombineName}', '${operationCombine.remainingAccount}', '${operationCombine.uuid}')" title="修改操作类型">修改</a>&nbsp;&nbsp;
 												</shiro:hasPermission>
 												<shiro:hasPermission name="/internal/groupsetting/delGroupSetting">
 													<a href="javascript: void(0);" onclick="delGroupSetting(this, ${groupSetting.uuid})" title="删除操作类型">删除</a>
@@ -446,20 +336,18 @@
 			<tr>
 				<input type="hidden" name="operationCombineUuid" id="operationCombineUuid" value="" >
 				<input type="hidden" name="groupSettingUuid" id="groupSettingUuid" value="" >
-				<td>
-					<table id="td_1" style="font-size:12px">
+				<td style="vertical-align: top;">
+					<table id="td_1" style="font-size:12px;">
                         <tr name="trItem" onclick="checkItem(this)">
                             <th>操作组合</th>
                             <td>
                                 <input type="text" name="settingOperationCombineName" id="settingOperationCombineName"/>
                             </td>
                         </tr>
-						<tr name="trItem" onclick="checkItem(this)" style="display:none;">
-							<th>
-                                <label>分组</label>
-                            </th>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>分组</th>
 							<td>
-								<input type="text" name="settingGroup" id="settingGroup" placeholder="分组名称, 多个用逗号分隔" />
+								<input type="text" name="settingGroup" id="settingGroup" disabled="disabled" placeholder="分组名称, 多个用逗号分隔" />
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
@@ -523,92 +411,10 @@
 								</select>条
 							</td>
 						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>站内搜索</th>
-							<td>
-								<select name="zhanneiPercent" id="zhanneiPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>外链检索</th>
-							<td>
-								<select name="zhanwaiPercent" id="zhanwaiPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>快照点击比例</th>
-							<td>
-								<select name="kuaizhaoPercent" id="kuaizhaoPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>竞价点击比例</th>
-							<td>
-								<select name="baiduSemPercent" id="baiduSemPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>特殊字符比例</th>
-							<td>
-								<select name="specialCharPercent" id="specialCharPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>拖动标题的点击比例</th>
-							<td>
-								<select name="dragPercent" id="dragPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
 					</table>
 				</td>
 				<td style="vertical-align:top;">
-					<table id="td_2" style="font-size:12px">
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>浏览器设置</th>
-							<td>
-								<select name="multiBrowser" id="multiBrowser">
-									<option value="0">命令多浏览器</option>
-									<option value="1"  selected>模拟多浏览器</option>
-									<option value="2">单个浏览器</option>
-								</select>
-							</td>
-						</tr>
+					<table id="td_2" style="font-size:12px;">
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>Cookie设置</th>
 							<td>
@@ -618,12 +424,6 @@
 									<option value="2">随机清理Cookie</option>
 									<option value="3">N次操作清理Cookie</option>
 								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>最大用户数</th>
-							<td>
-								<input type="text" name="maxUserCount" id="maxUserCount" value="300"  style="width:110px;"/>
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
@@ -664,24 +464,6 @@
 								<input type="text" name="optimizeKeywordCountPerIP" id="optimizeKeywordCountPerIP" value="1"/>个词换IP
 							</td>
 						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>打开百度等待</th>
-							<td>
-								<input type="text" name="waitTimeAfterOpenBaidu" id="waitTimeAfterOpenBaidu" value="1000"/>毫秒
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>点击目标等待</th>
-							<td>
-								<input type="text" name="waitTimeBeforeClick" id="waitTimeBeforeClick" value="1000"/>毫秒
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>点击目标后等待</th>
-							<td>
-								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>毫秒
-							</td>
-						</tr>
                         <tr name="trItem" onclick="checkItem(this)">
                             <th>无效点击数限制</th>
                             <td>
@@ -691,89 +473,10 @@
 					</table>
 				</td>
 				<td style="vertical-align:top;">
-					<table id="td_3" style="font-size:12px">
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="oneIPOneUser" name="oneIPOneUser" type="checkbox" value="1">每IP对每用户</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="justVisitSelfPage" name="justVisitSelfPage" type="checkbox" value="1" checked>在域名下访问</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="supportPaste" name="supportPaste" type="checkbox" value="1" checked>支持粘贴输入</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="parentSearchEntry" name="parentSearchEntry" type="checkbox" value="1">爸妈搜索入口</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="lessClickAtNight" name="lessClickAtNight" type="checkbox" value="1">晚上减少点击</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="locateTitlePosition" name="locateTitlePosition" type="checkbox" value="1">直接获取标题位置</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="justClickSpecifiedTitle" name="justClickSpecifiedTitle" type="checkbox" value="1">随机只点指定标题</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="moveUp20" name="moveUp20" type="checkbox" value="1">向上偏移20</input>
-							</td>
-						</tr>
-					</table>
-				</td>
-				<td style="vertical-align:top;">
 					<table id="td_4" style="font-size:12px">
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="randomlyClickNoResult" name="randomlyClickNoResult" type="checkbox" value="1">没结果则随机点</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="sleepPer2Words" name="sleepPer2Words" type="checkbox" value="1" checked>输入2字稍微停顿</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="moveRandomly" name="moveRandomly" type="checkbox" value="1" checked>随机移动</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="clearLocalStorage" name="clearLocalStorage" type="checkbox" value="1" checked>清除LocalStorage</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="sameCityUser" name="sameCityUser" type="checkbox" value="1">同城用户</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="baiduAllianceEntry" name="baiduAllianceEntry" type="checkbox" value="1">百度联盟入口</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="randomlyClickMoreLink" name="randomlyClickMoreLink" type="checkbox" value="1">随机多点一些链接</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="optimizeRelatedKeyword" name="optimizeRelatedKeyword" type="checkbox" value="1">操作相关词</input>
 							</td>
 						</tr>
 					</table>
@@ -791,12 +494,6 @@
 				<input type="hidden" name="groupSettingUuid" id="groupSettingUuid" value="" >
 				<td>
 					<table id="td_1" style="font-size:12px">
-						<%--<tr name="trItem" onclick="checkItem(this)">
-							<th>分组</th>
-							<td>
-								<input type="text" name="settingGroup" id="settingGroup" />
-							</td>
-						</tr>--%>
                         <tr name="trItem" onclick="checkItem(this)">
                             <th>操作组合</th>
                             <td>
@@ -863,92 +560,10 @@
 								</select>条
 							</td>
 						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>站内搜索</th>
-							<td>
-								<select name="zhanneiPercent" id="zhanneiPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>外链检索</th>
-							<td>
-								<select name="zhanwaiPercent" id="zhanwaiPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>快照点击比例</th>
-							<td>
-								<select name="kuaizhaoPercent" id="kuaizhaoPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>竞价点击比例</th>
-							<td>
-								<select name="baiduSemPercent" id="baiduSemPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>特殊字符比例</th>
-							<td>
-								<select name="specialCharPercent" id="specialCharPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>拖动标题的点击比例</th>
-							<td>
-								<select name="dragPercent" id="dragPercent">
-									<option value="0">0%</option>
-									<option value="1">10%</option>
-									<option value="2">30%</option>
-									<option value="3">50%</option>
-									<option value="4">100%</option>
-								</select>
-							</td>
-						</tr>
 					</table>
 				</td>
 				<td style="vertical-align:top;">
 					<table id="td_2" style="font-size:12px">
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>浏览器设置</th>
-							<td>
-								<select name="multiBrowser" id="multiBrowser">
-									<option value="0">命令多浏览器</option>
-									<option value="1"  selected>模拟多浏览器</option>
-									<option value="2">单个浏览器</option>
-								</select>
-							</td>
-						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
 							<th>Cookie设置</th>
 							<td>
@@ -958,12 +573,6 @@
 									<option value="2">随机清理Cookie</option>
 									<option value="3">N次操作清理Cookie</option>
 								</select>
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>最大用户数</th>
-							<td>
-								<input type="text" name="maxUserCount" id="maxUserCount" value="300"  style="width:110px;"/>
 							</td>
 						</tr>
 						<tr name="trItem" onclick="checkItem(this)">
@@ -1004,24 +613,6 @@
 								<input type="text" name="optimizeKeywordCountPerIP" id="optimizeKeywordCountPerIP" value="1"/>个词换IP
 							</td>
 						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>打开百度等待</th>
-							<td>
-								<input type="text" name="waitTimeAfterOpenBaidu" id="waitTimeAfterOpenBaidu" value="1000"/>毫秒
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>点击目标等待</th>
-							<td>
-								<input type="text" name="waitTimeBeforeClick" id="waitTimeBeforeClick" value="1000"/>毫秒
-							</td>
-						</tr>
-						<tr name="trItem" onclick="checkItem(this)">
-							<th>点击目标后等待</th>
-							<td>
-								<input type="text" name="waitTimeAfterClick" id="waitTimeAfterClick" value="5000"/>毫秒
-							</td>
-						</tr>
                         <tr name="trItem" onclick="checkItem(this)">
                             <th>无效点击数限制</th>
                             <td>
@@ -1031,89 +622,10 @@
 					</table>
 				</td>
 				<td style="vertical-align:top;">
-					<table id="td_3" style="font-size:12px">
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="oneIPOneUser" name="oneIPOneUser" type="checkbox" value="1">每IP对每用户</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="justVisitSelfPage" name="justVisitSelfPage" type="checkbox" value="1" checked>在域名下访问</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="supportPaste" name="supportPaste" type="checkbox" value="1" checked>支持粘贴输入</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="parentSearchEntry" name="parentSearchEntry" type="checkbox" value="1">爸妈搜索入口</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="lessClickAtNight" name="lessClickAtNight" type="checkbox" value="1">晚上减少点击</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="locateTitlePosition" name="locateTitlePosition" type="checkbox" value="1">直接获取标题位置</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="justClickSpecifiedTitle" name="justClickSpecifiedTitle" type="checkbox" value="1">随机只点指定标题</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="moveUp20" name="moveUp20" type="checkbox" value="1">向上偏移20</input>
-							</td>
-						</tr>
-					</table>
-				</td>
-				<td style="vertical-align:top;">
 					<table id="td_4" style="font-size:12px">
 						<tr>
 							<td name="trItem" onclick="checkItem(this)">
 								<input id="randomlyClickNoResult" name="randomlyClickNoResult" type="checkbox" value="1">没结果则随机点</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="sleepPer2Words" name="sleepPer2Words" type="checkbox" value="1" checked>输入2字稍微停顿</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="moveRandomly" name="moveRandomly" type="checkbox" value="1" checked>随机移动</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="clearLocalStorage" name="clearLocalStorage" type="checkbox" value="1" checked>清除LocalStorage</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="sameCityUser" name="sameCityUser" type="checkbox" value="1">同城用户</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="baiduAllianceEntry" name="baiduAllianceEntry" type="checkbox" value="1">百度联盟入口</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="randomlyClickMoreLink" name="randomlyClickMoreLink" type="checkbox" value="1">随机多点一些链接</input>
-							</td>
-						</tr>
-						<tr>
-							<td name="trItem" onclick="checkItem(this)">
-								<input id="optimizeRelatedKeyword" name="optimizeRelatedKeyword" type="checkbox" value="1">操作相关词</input>
 							</td>
 						</tr>
 					</table>

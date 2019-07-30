@@ -43,11 +43,9 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
         return groupSettingDao.selectById(uuid);
     }
 
-    public void saveGroupSetting (GroupSetting groupSetting, Boolean needUpdateRemainingAccount) {
+    public void saveGroupSetting (GroupSetting groupSetting) {
         groupSettingDao.saveGroupSetting(groupSetting);
-        if (needUpdateRemainingAccount) {
-            operationCombineService.updateOperationCombineRemainingAccount(groupSetting.getOperationCombineUuid(), groupSetting.getRemainingAccount());
-        }
+        operationCombineService.updateOperationCombineRemainingAccount(groupSetting.getOperationCombineUuid(), groupSetting.getRemainingAccount());
     }
 
     public void updateGroupSetting (UpdateGroupSettingCriteria updateGroupSettingCriteria) {
