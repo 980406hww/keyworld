@@ -412,7 +412,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setCurrentPosition(10);
         }
         if (Utils.isNullOrEmpty(customerKeyword.getMachineGroup())) {
-            customerKeyword.setMachineGroup("Default");
+            if (EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
+                customerKeyword.setMachineGroup("fm");
+            } else {
+                customerKeyword.setMachineGroup("Default");
+            }
         }
         customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
         customerKeyword.setCapturePositionQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));
