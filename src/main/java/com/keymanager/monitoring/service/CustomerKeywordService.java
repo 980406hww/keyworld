@@ -1791,64 +1791,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.getAvailableOptimizationGroups(groupSettingCriteria);
     }
 
-    public void checkOptimizeGroupName(CustomerKeyword customerKeyword) {
-        QZSetting qzSetting = qzSettingService.searchGroupMaxCustomerKeywordCount(customerKeyword.getCustomerUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
-        String optimizeGroupName = TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType()) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup();
-        List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList = searchOptimizeGroupNameAndCount(optimizeGroupName);
-        int maxGroupNameSuffix = 1;
-        String tmpOptimizeGroupName = optimizeGroupName;
-        if (customerKeywordOptimizeGroupCriteriaList.size() > 0) {
-            for (CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria : customerKeywordOptimizeGroupCriteriaList) {
-                if (customerKeywordOptimizeGroupCriteria.getSameGroupCustomerKeywordCount() < qzSetting.getGroupMaxCustomerKeywordCount() && (customerKeywordOptimizeGroupCriteria.getOptimizeGroupName().equalsIgnoreCase(optimizeGroupName))) {
-                    customerKeyword.setOptimizeGroupName(customerKeywordOptimizeGroupCriteria.getOptimizeGroupName());
-                    return;
-                }
-                String optimizeGroupNameSuffix = customerKeywordOptimizeGroupCriteria.getOptimizeGroupName().replaceAll(optimizeGroupName + "_", "");
-                if (StringUtils.isNumeric(optimizeGroupNameSuffix)) {
-                    maxGroupNameSuffix = maxGroupNameSuffix < Integer.parseInt(optimizeGroupNameSuffix) ? Integer.parseInt(optimizeGroupNameSuffix) : maxGroupNameSuffix;
-                }
-            }
-            tmpOptimizeGroupName = optimizeGroupName + "_" + (maxGroupNameSuffix + 1);
-            groupService.determineAddingGroupInfo(tmpOptimizeGroupName);
-        }
-        customerKeyword.setOptimizeGroupName(tmpOptimizeGroupName);
-    }
-
-    public List<CustomerKeywordOptimizeGroupCriteria> searchOptimizeGroupNameAndCount(String optimizeGroupName) {
-        List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriterias = customerKeywordDao.searchOptimizeGroupNameAndCount(optimizeGroupName);
-        List<CustomerKeywordOptimizeGroupCriteria> tmpGroupCriterias = new ArrayList<CustomerKeywordOptimizeGroupCriteria>();
-        for (CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria : customerKeywordOptimizeGroupCriterias) {
-            if (customerKeywordOptimizeGroupCriteria.getOptimizeGroupName().equalsIgnoreCase(optimizeGroupName) || customerKeywordOptimizeGroupCriteria.getOptimizeGroupName().matches(optimizeGroupName + "_\\d{1,}")) {
-                tmpGroupCriterias.add(customerKeywordOptimizeGroupCriteria);
-            }
-        }
-        return tmpGroupCriterias;
-    }
-
-    public CustomerKeywordOptimizeGroupCriteria matchOptimizeGroupName(List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList, String optimizeGroupName, int groupMaxCustomerKeywordCount) {
-        int maxGroupNameSuffix = 1;
-        String tmpOptimizeGroupName = optimizeGroupName;
-        if (customerKeywordOptimizeGroupCriteriaList.size() > 0) {
-            for (CustomerKeywordOptimizeGroupCriteria tempCustomerKeywordOptimizeGroupCriteria : customerKeywordOptimizeGroupCriteriaList) {
-                if (tempCustomerKeywordOptimizeGroupCriteria.getSameGroupCustomerKeywordCount() < groupMaxCustomerKeywordCount) {
-                    tempCustomerKeywordOptimizeGroupCriteria.setSameGroupCustomerKeywordCount(tempCustomerKeywordOptimizeGroupCriteria.getSameGroupCustomerKeywordCount() + 1);
-                    return tempCustomerKeywordOptimizeGroupCriteria;
-                }
-                String optimizeGroupNameSuffix = tempCustomerKeywordOptimizeGroupCriteria.getOptimizeGroupName().replaceAll(optimizeGroupName + "_", "");
-                if (StringUtils.isNumeric(optimizeGroupNameSuffix)) {
-                    maxGroupNameSuffix = maxGroupNameSuffix < Integer.parseInt(optimizeGroupNameSuffix) ? Integer.parseInt(optimizeGroupNameSuffix) : maxGroupNameSuffix;
-                }
-                tmpOptimizeGroupName = optimizeGroupName + "_" + (maxGroupNameSuffix + 1);
-                groupService.determineAddingGroupInfo(tmpOptimizeGroupName);
-            }
-        }
-        CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = new CustomerKeywordOptimizeGroupCriteria();
-        customerKeywordOptimizeGroupCriteria.setOptimizeGroupName(tmpOptimizeGroupName);
-        customerKeywordOptimizeGroupCriteria.setSameGroupCustomerKeywordCount(1);
-        customerKeywordOptimizeGroupCriteriaList.add(customerKeywordOptimizeGroupCriteria);
-        return customerKeywordOptimizeGroupCriteria;
-    }
-
     public void updateCustomerKeywordEffect(long customerUuid, String terminalType, String optimizeGroupName) {
         customerKeywordDao.updateCustomerKeywordEffect(customerUuid, terminalType, optimizeGroupName);
     }

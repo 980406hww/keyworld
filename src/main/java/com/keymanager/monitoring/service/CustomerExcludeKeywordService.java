@@ -20,9 +20,9 @@ public class CustomerExcludeKeywordService extends ServiceImpl<CustomerExcludeKe
         customerExcludeKeyword.setCustomerUuid(qzSettingExcludeCustomerKeywordsCriteria.getCustomerUuid());
         customerExcludeKeyword.setQzSettingUuid(qzSettingExcludeCustomerKeywordsCriteria.getQzSettingUuid());
         customerExcludeKeyword.setTerminalType(qzSettingExcludeCustomerKeywordsCriteria.getTerminalType());
-        StringBuffer jointKeyword = new StringBuffer();
+        StringBuilder jointKeyword = new StringBuilder();
         for (String keyword: qzSettingExcludeCustomerKeywordsCriteria.getKeywords()) {
-            jointKeyword.append(keyword + ",");
+            jointKeyword.append(keyword).append(",");
         }
         customerExcludeKeyword.setKeyword(jointKeyword.toString().substring(0, jointKeyword.toString().length() - 1));
         if (null == qzSettingExcludeCustomerKeywordsCriteria.getExcludeKeywordUuid()){
@@ -34,7 +34,7 @@ public class CustomerExcludeKeywordService extends ServiceImpl<CustomerExcludeKe
         }
     }
 
-    public String getCustomerExcludeKeyword(Long customerUuid, Long qzSettingUuid, String terminalType, String url){
+    public String getCustomerExcludeKeyword(long customerUuid, long qzSettingUuid, String terminalType, String url){
         url = url.replace("www.","").replace("http://","").replace("https://","").split("/")[0];
         return customerExcludeKeywordDao.getCustomerExcludeKeyword(customerUuid, qzSettingUuid, terminalType, url);
     }

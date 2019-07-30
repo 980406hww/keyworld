@@ -465,19 +465,6 @@
         UPDATE t_machine_info SET fRemainingKeyword = 1, fIdleStartTime = null, fIdleTotalMinutes = 0
     </update>
 
-    <select id="getMachineCount" resultType="java.lang.Integer">
-        SELECT
-            COUNT(mi.fGroup) AS 'machineCount'
-        FROM t_machine_info mi
-        LEFT JOIN t_group g
-        ON g.fGroupName = mi.fGroup
-        LEFT JOIN t_operation_combine toc
-        ON g.fOperationCombineUuid = toc.fUuid
-        WHERE g.fGroupName = #{optimizeGroupName}
-        AND toc.fTerminalType = #{terminalType}
-        LIMIT 1
-    </select>
-
     <select id="getClientStatusForOptimization" resultType="com.keymanager.monitoring.vo.ClientStatusForOptimization">
         SELECT
             cs.fGroup AS "group",

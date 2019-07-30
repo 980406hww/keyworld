@@ -1,8 +1,14 @@
 package com.keymanager.monitoring.criteria;
 
+import com.keymanager.monitoring.entity.QZCategoryTag;
+
+import java.util.List;
+
 public class QZSettingSearchCriteria{
     private String loginName;
     private String customerUuid;
+    //uuid串，批量操作时用
+    private String customerUuids;
     private String customerInfo;
     private Long userInfoID;
     private Long organizationID;
@@ -39,6 +45,23 @@ public class QZSettingSearchCriteria{
     private boolean resetPagingParam;
     private int upOneWeekDiff;
     private int downOneWeekDiff;
+    private List<QZCategoryTag> targetQZCategoryTags;
+
+    public String getCustomerUuids() {
+        return customerUuids;
+    }
+
+    public void setCustomerUuids(String customerUuids) {
+        this.customerUuids = customerUuids;
+    }
+
+    public List<QZCategoryTag> getTargetQZCategoryTags() {
+        return targetQZCategoryTags;
+    }
+
+    public void setTargetQZCategoryTags(List<QZCategoryTag> targetQZCategoryTags) {
+        this.targetQZCategoryTags = targetQZCategoryTags;
+    }
 
     public String getLoginName() {
         return loginName;
