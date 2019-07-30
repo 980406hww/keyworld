@@ -505,7 +505,6 @@ function showSettingDialog(clientID, self){
         url: '/internal/machineInfo/getMachineInfo/' + clientID,
         type: 'POST',
         success: function (machineInfo) {
-            console.log(machineInfo)
             if(machineInfo == null) {
                 $().toastmessage('showErrorToast', "获取信息失败");
             } else {
@@ -619,7 +618,6 @@ function saveChangeSetting(clientIDs){
         });
     } else {
         machineInfo.clientID = settingDialogDiv.find("#settingClientID").val();
-        console.log(machineInfo.clientID)
         $.ajax({
             url: '/internal/machineInfo/saveMachineInfo',
             data: JSON.stringify(machineInfo),
@@ -1033,7 +1031,6 @@ function batchChangeTerminalType(){
         timeout: 5000,
         type: 'POST',
         success: function (result) {
-            console.log(JSON.stringify(postData));
             if(result){
                 $().toastmessage('showSuccessToast', "操作成功",true);
 
@@ -1153,7 +1150,6 @@ function batchChangeMachineGroupSelected(){
             iconCls: 'icon-ok',
             handler: function () {
                 var machineGroup = $("#machineGroupBatchUpdateForm").find("#targetMachineGroup").val();
-                console.log()
                 $.ajax({
                     url: '/internal/machineInfo/batchUpdateMachineGroupSelected',
                     data: {"clientIDs":clientIDs,"machineGroup":machineGroup},
