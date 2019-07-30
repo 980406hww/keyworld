@@ -1,7 +1,7 @@
 #添加机器分组工作统计标签栏
 INSERT INTO `db_keyword`.`t_resource`(`fResourceName`, `fUrl`, `fOpenMode`, `fDescription`, `fIconCls`,
 	`fParentID`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`, `fUpdateTime`, `fCreateTime`)
-VALUES ('机器分组工作统计', '/internal/machinegroupworkinfo/searchMachineGroupWorkInfos', NULL, NULL, 'fi-thumbnails',
+VALUES ('机器分组统计', '/internal/machinegroupworkinfo/searchMachineGroupWorkInfos', NULL, NULL, 'fi-thumbnails',
 	(SELECT r.fUuid from t_resource r where r.fUrl = '#' AND r.fResourceName = "终端管理"), 0, 0, 1, 0, NULL, NOW());
 
 
@@ -9,7 +9,7 @@ VALUES ('机器分组工作统计', '/internal/machinegroupworkinfo/searchMachin
 INSERT INTO `db_keyword`.`t_resource`(`fResourceName`, `fUrl`, `fOpenMode`, `fDescription`, `fIconCls`,
 	`fParentID`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`, `fUpdateTime`, `fCreateTime`)
 VALUES ('查询统计信息', '/internal/machinegroupworkinfo/searchMachineGroupWorkInfos', 'ajax', NULL,null,
-	(SELECT r.fUuid from t_resource r where r.fUrl != '#' AND r.fResourceName = "机器分组工作统计"), 0, 0, 1, 1, NULL, NOW());
+	(SELECT r.fUuid from t_resource r where r.fUrl != '#' AND r.fResourceName = "机器分组统计"), 0, 0, 1, 1, NULL, NOW());
 
 
 

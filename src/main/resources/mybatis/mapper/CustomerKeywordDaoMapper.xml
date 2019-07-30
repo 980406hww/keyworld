@@ -599,7 +599,7 @@
             ck.fType              AS 'entryType',
             ck.fTitle             AS 'title',
             ck.fSearchEngine      AS 'searchEngine',
-            ck.fOptimizeGroupName AS 'optimizeGroup'
+            ck.fOptimizeGroupName AS 'optimizeGroup',
             ck.fOptimizedCount	  AS 'optimizedCount',
             ck.fQueryInterval	  AS 'queryInterval'
         FROM t_customer_keyword ck

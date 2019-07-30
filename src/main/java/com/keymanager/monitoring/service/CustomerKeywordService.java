@@ -142,18 +142,21 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                 Map<Long, Integer> customerKeywordUuidAndRepeatCount = new HashMap<>();
                                 do {
                                     for (OptimizationKeywordVO optimizationKeywordVO : optimizationKeywordVOS) {
-                                        int maxOptimizeCount = Math.round(System.currentTimeMillis() / (1000 * optimizationKeywordVO.getQueryInterval()));
-                                        Integer repeatCount = customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid());
-                                        if(repeatCount == null){
-                                            customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), 0);}
-                                        if(maxOptimizeCount > optimizationKeywordVO.getOptimizedCount()){
-                                            blockingQueue.offer(optimizationKeywordVO);
-                                            optimizationKeywordVO.setOptimizedCount(optimizationKeywordVO.getOptimizedCount() + 1);
-                                            hasNewElement = true;
-                                            customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), (customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid()) - 1));
-                                            count++;
-                                            if(count > 2000){
-                                                break;
+                                        if(optimizationKeywordVO.getQueryInterval() > 0) {
+                                            int maxOptimizeCount = Math.round(System.currentTimeMillis() / (1000 * optimizationKeywordVO.getQueryInterval()));
+                                            Integer repeatCount = customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid());
+                                            if (repeatCount == null) {
+                                                customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), 0);
+                                            }
+                                            if (maxOptimizeCount > optimizationKeywordVO.getOptimizedCount()) {
+                                                blockingQueue.offer(optimizationKeywordVO);
+                                                optimizationKeywordVO.setOptimizedCount(optimizationKeywordVO.getOptimizedCount() + 1);
+                                                hasNewElement = true;
+                                                customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), (customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid()) + 1));
+                                                count++;
+                                                if (count > 2000) {
+                                                    break;
+                                                }
                                             }
                                         }
                                     }

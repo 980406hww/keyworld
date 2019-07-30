@@ -1,7 +1,7 @@
 <%@ include file="/commons/global.jsp" %>
 <html>
 <head>
-    <title>机器分组工作队列</title>
+    <title>机器分组队列</title>
     <%@ include file="/commons/basejs.jsp" %>
     <style>
         td{
