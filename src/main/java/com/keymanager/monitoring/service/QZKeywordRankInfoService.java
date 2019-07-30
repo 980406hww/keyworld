@@ -98,6 +98,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
                     }
                 }
                 rankInfo.setUuid(qzKeywordRankInfo.getUuid());
+                rankInfo.setUpdateTime(new Date());
                 qzKeywordRankInfoDao.updateById(rankInfo);
             } else {
                 rankInfo.setCreateTopTenNum(externalQzKeywordRankInfoVo.getCreateTopTenNum());
@@ -216,7 +217,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         }
     }
 
-    private QZKeywordRankInfo setIncreaseAndTodayDifference(QZKeywordRankInfo qzKeywordRankInfo) {
+    private void setIncreaseAndTodayDifference(QZKeywordRankInfo qzKeywordRankInfo) {
         DecimalFormat decimalFormat = new DecimalFormat("0.0000");
         String[] arr = qzKeywordRankInfo.getTopTen().replace("[", "").replace("]", "").split(", ");
         int oneWeekDiff = Integer.parseInt(arr[0]) - Integer.parseInt(arr[6]);
@@ -233,7 +234,6 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         Integer todayDifference = Integer.parseInt(arr[0]) - Integer.parseInt(arr[1]);
         qzKeywordRankInfo.setTodayDifference(todayDifference);
         qzKeywordRankInfo.setOneWeekDifference(oneWeekDiff);
-        return qzKeywordRankInfo;
     }
 
     public void addQZKeywordRankInfo(Long uuid, String terminalType, String standardSpecies, boolean dataProcessingStatus) {

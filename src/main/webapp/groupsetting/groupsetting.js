@@ -152,7 +152,10 @@ function showOperationCombineDialog() {
         }
     });
     changeSettingDialog.dialog("open");
-    changeSettingDialog.window("resize", {top: $(document).scrollTop() + 150});
+    changeSettingDialog.window("resize", {
+        top: $(document).scrollTop() + 150,
+        left: $(document).scrollLeft() + $(window).width() / 2 - 325
+    });
 }
 
 function showUpdateGroupDialog(operationCombineUuid, operationCombineName) {
@@ -186,7 +189,10 @@ function showUpdateGroupDialog(operationCombineUuid, operationCombineName) {
         }
     });
     updateGroupSettingDialog.dialog("open");
-    updateGroupSettingDialog.window("resize", {top: $(document).scrollTop() + 150});
+    updateGroupSettingDialog.window("resize", {
+        top: $(document).scrollTop() + 150,
+        left: $(document).scrollLeft() + $(window).width() / 2 - 325
+    });
 }
 
 function delOperationCombine(operationCombineUuid) {
@@ -278,7 +284,10 @@ function showGroupSettingDialog(type, id, operationCombineName, remainingAccount
         }
     });
     changeSettingDialog.dialog("open");
-    changeSettingDialog.window("resize", {top: $(document).scrollTop() + 150});
+    changeSettingDialog.window("resize", {
+        top: $(document).scrollTop() + 150,
+        left: $(document).scrollLeft() + $(window).width() / 2 - 325
+    });
 }
 
 function delGroupSetting(self, operationTypeUuid) {

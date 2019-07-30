@@ -116,6 +116,7 @@
             qs.fCreateTime AS 'createTime',
             qs.fStatus AS 'status',
             qs.fRenewalStatus AS 'renewalStatus',
+            qs.fCrawlerStatus AS 'crawlerStatus',
             qs.fAutoCrawlKeywordFlag AS 'autoCrawlKeywordFlag'
         FROM t_qz_setting qs
         JOIN t_customer c
