@@ -89,7 +89,7 @@
 
 				<shiro:hasPermission name="/internal/qzsetting/save">
 					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="updateQzCategoryTags()" value=" 修改分组标签 " >&nbsp;
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showQZCategoryTagsDialog()" value=" 修改分组标签 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/updateImmediately">

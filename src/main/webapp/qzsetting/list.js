@@ -2565,13 +2565,16 @@ function changeQZSettingGroupOperationCombineUuid(self, groupName, userName, isS
     });
 }
 
-/** 批量修改关键字机器分组 */
-function updateQzCategoryTags() {
+
+
+
+function showQZCategoryTagsDialog() {
     var uuids = getSelectedIDs();
     if(uuids === ''){
         alert("请选择要操作的站点!!")
         return false;
     }
+    $("#targetQzCategoryTagsDialog").css("display", "block");
     $("#targetQzCategoryTagsDialog").dialog({
         resizable: false,
         width: 320,
@@ -2583,46 +2586,7 @@ function updateQzCategoryTags() {
             text: '保存',
             iconCls: 'icon-ok',
             handler: function () {
-                var qzSettingSearchCriteria = {};
-                qzSettingSearchCriteria.customerUuids = uuids;
-                qzSettingSearchCriteria.targetQZCategoryTags =[];
-                var qzCategoryTagNames = $("#targetQzCategoryTagsFrom").find("#targetQzCategoryTags").val().replace(/(，)+/g, ",");
-                if (qzCategoryTagNames !== "") {
-                    var tagNameArr = qzCategoryTagNames.split(",");
-                    tagNameArr = unique(tagNameArr);
-                    $.each(tagNameArr, function (idx, val) {
-                        //防止多打了分号或者分组名为空格串导致存入分组名为空的数据
-                        if($.trim(val)!=""){
-                            var qzCategoryTag = {};
-                            qzCategoryTag.tagName = $.trim(val);
-                            qzSettingSearchCriteria.targetQZCategoryTags.push(qzCategoryTag);
-                        }
-                });
-                }else{
-                    $.messager.alert('提示', '请输入分组标签!!', 'info');
-                    return false;
-                }
-                $.ajax({
-                    url: '/internal/qzsetting/updateQzCategoryTags',
-                    data: JSON.stringify(qzSettingSearchCriteria),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (data) {
-                        if(data){
-                            $().toastmessage('showSuccessToast',"操作成功", true);
-                        }else{
-                            $().toastmessage('showErrorToast', "操作失败");
-                        }
-                    },
-                    error: function () {
-                        $().toastmessage('showErrorToast', "操作失败");
-                    }
-                });
-                $("#targetMachineGroupDialog").dialog("close");
+                updateQzCategoryTags(uuids);
             }
         },
             {
@@ -2638,4 +2602,47 @@ function updateQzCategoryTags() {
     $('#targetQzCategoryTagsDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
 
+
+function updateQzCategoryTags(uuids){
+    var qzSettingSearchCriteria = {};
+    qzSettingSearchCriteria.customerUuids = uuids;
+    qzSettingSearchCriteria.targetQZCategoryTags =[];
+    var qzCategoryTagNames = $("#targetQzCategoryTagsFrom").find("#targetQzCategoryTags").val().replace(/(，)+/g, ",");
+    if (qzCategoryTagNames !== "") {
+        var tagNameArr = qzCategoryTagNames.split(",");
+        tagNameArr = unique(tagNameArr);
+        $.each(tagNameArr, function (idx, val) {
+            //防止多打了分号或者分组名为空格串导致存入分组名为空的数据
+            if($.trim(val)!=""){
+                var qzCategoryTag = {};
+                qzCategoryTag.tagName = $.trim(val);
+                qzSettingSearchCriteria.targetQZCategoryTags.push(qzCategoryTag);
+            }
+        });
+    }else{
+        $.messager.alert('提示', '请输入分组标签!!', 'info');
+        return false;
+    }
+    $.ajax({
+        url: '/internal/qzsetting/updateQzCategoryTags',
+        data: JSON.stringify(qzSettingSearchCriteria),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (data) {
+            if(data){
+                $().toastmessage('showSuccessToast',"操作成功", true);
+            }else{
+                $().toastmessage('showErrorToast', "操作失败");
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败");
+        }
+    });
+    $("#targetMachineGroupDialog").dialog("close");
+}
 

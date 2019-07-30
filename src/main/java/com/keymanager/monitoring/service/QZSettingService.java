@@ -843,10 +843,10 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public void updateQzCategoryTags(QZSettingSearchCriteria qzSettingSearchCriteria) {
 		String[] uuids = qzSettingSearchCriteria.getCustomerUuids().split(",");
-		for (int i = 0; i < uuids.length; i++) {
-			List<QZCategoryTag> existingQZCategoryTags = qzCategoryTagService.searchCategoryTagByQZSettingUuid(Long.parseLong(uuids[i]));
+		for (String uuid : uuids) {
+			List<QZCategoryTag> existingQZCategoryTags = qzCategoryTagService.searchCategoryTagByQZSettingUuid(Long.parseLong(uuid));
 			List<QZCategoryTag> updateQZCategoryTags = qzSettingSearchCriteria.getTargetQZCategoryTags();
-			qzCategoryTagService.updateQZCategoryTag(existingQZCategoryTags, updateQZCategoryTags, Long.parseLong(uuids[i]));
+			qzCategoryTagService.updateQZCategoryTag(existingQZCategoryTags, updateQZCategoryTags, Long.parseLong(uuid));
 		}
 	}
 }

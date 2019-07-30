@@ -54,7 +54,6 @@
 			<td align="center" width=100 rowspan="2">类型</td>
 			<td align="center" width=80 colspan="7">关键字</td>
 			<td align="center" width=80 colspan="6">刷的次数</td>
-			<td align="center" width=100 colspan="3">机器数</td>
 		</tr>
 		<tr bgcolor="#eeeeee" height=30>
 			<td align="center" width=80>总数</td>
@@ -70,9 +69,6 @@
 			<td align="center" width=80>平均有效刷量</td>
 			<td align="center" width=80>取词次数</td>
 			<td align="center" width=80>无效占比</td>
-			<td align="center" width=50>总数</td>
-			<td align="center" width=50>空闲率</td>
-			<td align="center" width=60>已停数</td>
 		</tr>
 	</table>
 </div>
@@ -138,17 +134,7 @@
 					</c:if>
 				</font>
 			</td>
-			<td width=50>${refreshStatInfo.totalMachineCount > 0 ? refreshStatInfo.totalMachineCount : ""}</td>
-			<td width=50>
-				<c:if test="${refreshStatInfo.idlePercentage > 0}">
-					<fmt:formatNumber value="${refreshStatInfo.idlePercentage}" pattern="#.##" minFractionDigits="2"/>%
-				</c:if>
-			</td>
-			<td width=60>
-				<c:if test="${refreshStatInfo.unworkMachineCount > 0}">
-					<a target="_blank" href="javascript:findMachineInfo(null)">${refreshStatInfo.unworkMachineCount}</a>
-				</c:if>
-			</td>
+
 			</tr>
 		</c:forEach>
 		</thead>
@@ -214,17 +200,7 @@
 					</c:if>
 				</font>
 			</td>
-			<td width=50>${refreshStatInfo.totalMachineCount > 0 ? refreshStatInfo.totalMachineCount : ""}</td>
-			<td width=50>
-				<c:if test="${refreshStatInfo.idlePercentage > 0}">
-					<fmt:formatNumber value="${refreshStatInfo.idlePercentage}" pattern="#.##" minFractionDigits="2"/>%
-				</c:if>
-			</td>
-			<td width=60>
-				<c:if test="${refreshStatInfo.unworkMachineCount > 0}">
-					<a target="_blank" href="javascript:findMachineInfo('${refreshStatInfo.group}')">${refreshStatInfo.unworkMachineCount}</a>
-				</c:if>
-			</td>
+
 			</tr>
 		</c:forEach>
 		</tbody>
