@@ -147,7 +147,6 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
     public void saveMachineInfo(MachineInfo machineInfo) {
         if (null != machineInfo.getClientID()) {
             MachineInfo oldMachineInfo = machineInfoDao.selectById(machineInfo.getClientID());
-            oldMachineInfo.setGroup(machineInfo.getGroup());
             oldMachineInfo.setMachineGroup(machineInfo.getMachineGroup());
             oldMachineInfo.setAllowSwitchGroup(machineInfo.getAllowSwitchGroup());
             oldMachineInfo.setHost(machineInfo.getHost());
@@ -479,11 +478,6 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         o.close();
     }
 
-    public void updateGroup(String clientID, String groupName) {
-        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
-        machineInfo.setGroup(groupName);
-        machineInfoDao.updateById(machineInfo);
-    }
 
     public void updateUpgradeFailedReason(String clientID, String upgradeFailedReason) {
         MachineInfo machineInfo = machineInfoDao.selectById(clientID);
@@ -904,9 +898,6 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         machineInfoDao.updateById(machineInfo);
     }
 
-    public void batchUpdateGroup(MachineInfoCriteria machineInfoCriteria) {
-        machineInfoDao.updateGroup(machineInfoCriteria);
-    }
     public List<MachineGroupWorkInfo> searchMachineInfoFormMachineGroupWorkInfo(MachineGroupWorkInfoCriteria machineGroupWorkInfoCriteria) {
         return machineInfoDao.searchMachineInfoFormMachineGroupWorkInfo(machineGroupWorkInfoCriteria);
     }
