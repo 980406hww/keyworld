@@ -196,6 +196,11 @@
 										</div>
 										<div>
 										<span>
+											<a href="javascript:;">刷多少个词换IP</a>
+										</span>
+										</div>
+										<div>
+										<span>
 											<a href="javascript:;">没结果随机点</a>
 										</span>
 										</div>
@@ -250,6 +255,11 @@
 										<div>
 											<span class="line1">
 												<a href="javascript:;">${groupSetting.entryPageMinCount} - ${groupSetting.entryPageMaxCount}</a>
+											</span>
+										</div>
+										<div>
+											<span class="line1">
+												<a href="javascript:;">${groupSetting.optimizeKeywordCountPerIP}</a>
 											</span>
 										</div>
 										<div>

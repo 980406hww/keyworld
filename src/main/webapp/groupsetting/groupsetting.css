@@ -244,7 +244,7 @@ ul {
     width: 100%;
     word-wrap: break-word;
     color: #000;
-    max-width: 168px;
+    max-width: 160px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -255,7 +255,7 @@ ul {
     width: 100%;
     word-wrap: break-word;
     color: #000;
-    max-width: 200px;
+    max-width: 160px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -266,7 +266,7 @@ ul {
     width: 100%;
     word-wrap: break-word;
     color: #000;
-    max-width: 206px;
+    max-width: 150px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -295,16 +295,16 @@ ul {
 }
 
 .datalist-list .body .other-rank .row > div, .datalist-list .body .other-rank .row1 > div {
-    width: 168px;
+    width: 160px;
 }
 
 .datalist-list .body .other-rank .row > div:first-child, .datalist-list .body .other-rank .row1 > div:first-child {
-    width: 200px;
+    width: 160px;
     border-left: 1px solid #e6e6e6;
 }
 
 .datalist-list .body .other-rank .row > div:last-child, .datalist-list .body .other-rank .row1 > div:last-child {
-    width: 206px;
+    width: 150px;
 }
 
 .datalist-list .body .other-rank .row span {
@@ -314,7 +314,7 @@ ul {
 .datalist-list .body .other-rank .row span.line1 {
     font-size: 12px;
     margin-top: 8px;
-    max-width: 168px;
+    max-width: 160px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -323,7 +323,7 @@ ul {
 .datalist-list .body .other-rank .row span.line1:first-child {
     font-size: 12px;
     margin-top: 8px;
-    max-width: 168px;
+    max-width: 160px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -332,7 +332,7 @@ ul {
 .datalist-list .body .other-rank .row span.line1:last-child {
     font-size: 12px;
     margin-top: 8px;
-    max-width: 168px;
+    max-width: 150px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
