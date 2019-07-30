@@ -2584,7 +2584,7 @@ function showQZCategoryTagsDialog() {
         resizable: false,
         width: 320,
         height: 100,
-        title:"修改站点分组标签",
+        title:"修改站点分组标签2",
         closed: true,
         modal: true,
         buttons: [{
@@ -2592,6 +2592,7 @@ function showQZCategoryTagsDialog() {
             iconCls: 'icon-ok',
             handler: function () {
                 updateQzCategoryTags(uuids);
+
             }
         },
             {
@@ -2607,11 +2608,10 @@ function showQZCategoryTagsDialog() {
     $('#targetQzCategoryTagsDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
 
-
 function updateQzCategoryTags(uuids){
-    var qzSettingSearchCriteria = {};
-    qzSettingSearchCriteria.customerUuids = uuids;
-    qzSettingSearchCriteria.targetQZCategoryTags =[];
+    var postData = {};
+    postData.uuids = uuids.split(",");
+    postData.targetQZCategoryTags =[];
     var qzCategoryTagNames = $("#targetQzCategoryTagsFrom").find("#targetQzCategoryTags").val().replace(/(，)+/g, ",");
     if (qzCategoryTagNames !== "") {
         var tagNameArr = qzCategoryTagNames.split(",");
@@ -2621,7 +2621,7 @@ function updateQzCategoryTags(uuids){
             if($.trim(val)!=""){
                 var qzCategoryTag = {};
                 qzCategoryTag.tagName = $.trim(val);
-                qzSettingSearchCriteria.targetQZCategoryTags.push(qzCategoryTag);
+                postData.targetQZCategoryTags.push(qzCategoryTag);
             }
         });
     }else{
@@ -2630,7 +2630,7 @@ function updateQzCategoryTags(uuids){
     }
     $.ajax({
         url: '/internal/qzsetting/updateQzCategoryTags',
-        data: JSON.stringify(qzSettingSearchCriteria),
+        data: JSON.stringify(postData),
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -2650,4 +2650,8 @@ function updateQzCategoryTags(uuids){
     });
     $("#targetMachineGroupDialog").dialog("close");
 }
+
+
+
+
 
