@@ -17,6 +17,7 @@ import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -138,9 +139,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                 updateOptimizationQueryTime(customerKeywordUuids);
                             }else{
                                 int count = 0;
+                                int repeatTimes = 0;
                                 boolean hasNewElement = false;
                                 Map<Long, Integer> customerKeywordUuidAndRepeatCount = new HashMap<>();
                                 do {
+                                    hasNewElement = false;
+                                    repeatTimes++;
                                     for (OptimizationKeywordVO optimizationKeywordVO : optimizationKeywordVOS) {
                                         if(optimizationKeywordVO.getQueryInterval() > 0) {
                                             int maxOptimizeCount = Math.round(System.currentTimeMillis() / (1000 * optimizationKeywordVO.getQueryInterval()));
@@ -160,8 +164,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                             }
                                         }
                                     }
-                                }while(count < 2000 && hasNewElement);
-                                do{
+                                }while(count < 2000 && hasNewElement && repeatTimes < 50);
+
+                                if(customerKeywordUuidAndRepeatCount.size() == 0){
+                                    break;
+                                }
+                                while(customerKeywordUuidAndRepeatCount.size() > 0){
                                     customerKeywordUuids.addAll(customerKeywordUuidAndRepeatCount.keySet());
                                     updateOptimizationQueryTime(customerKeywordUuids);
                                     customerKeywordUuids.clear();
@@ -176,7 +184,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                         customerKeywordUuidAndRepeatCount.remove(customerKeywordUuid);
                                     }
                                     customerKeywordUuids.clear();
-                                }while (customerKeywordUuidAndRepeatCount.size() > 0);
+                                };
                             }
                         }
                     } while (blockingQueue.size() < 8000 && CollectionUtils.isNotEmpty(optimizationKeywordVOS));
@@ -416,11 +424,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setCurrentPosition(10);
         }
         if (Utils.isNullOrEmpty(customerKeyword.getMachineGroup())) {
-            if (EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
-                customerKeyword.setMachineGroup("fm");
-            } else {
-                customerKeyword.setMachineGroup("Default");
-            }
+            customerKeyword.setMachineGroup(customerKeyword.getType());
         }
         customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
         customerKeyword.setCapturePositionQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));
