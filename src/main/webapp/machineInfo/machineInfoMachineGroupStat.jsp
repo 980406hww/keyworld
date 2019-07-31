@@ -80,11 +80,12 @@
             machineInfoSummaryForm.find("#machineGroup").val($.trim(machineGroup));
         }
     }
-
+<shiro:hasPermission name="/internal/machineInfo/searchMachineInfos">
     function showMachineInfoListByMachineGroup(machineGroup){
         $("#toMachineInfoForm").find("#machineGroup").val(machineGroup.trim());
         $("#toMachineInfoForm").submit();
     }
+</shiro:hasPermission>
 </script>
 </body>
 </html>

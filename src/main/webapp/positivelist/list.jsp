@@ -30,7 +30,7 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
 	<%@include file="/menu.jsp" %>
-	<table width="100%" style="font-size:12px;margin-top: 40px;" cellpadding="3">
+	<table width="100%" style="font-size:12px;margin-top: 5px;" cellpadding="3">
 	  <tr>
 		 <td colspan="8">
 			<form method="post" id="searchPositiveListForm" action="/internal/positivelist/searchPositiveLists">

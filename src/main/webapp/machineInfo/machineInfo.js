@@ -1382,4 +1382,23 @@ function machineGroupFuzzyQueryValue() {
     }
 }
 
+/**
+ * 有机器分组与没机器分组不能同时勾选，否则查不到任何数据
+ */
+function uncheckedAnother(machineGroup){
+    var hasMachineGroup = $("#searchMachineInfoForm").find("#hasMachineGroup");
+    var noMachineGroup = $("#searchMachineInfoForm").find("#noMachineGroup");
+    if(machineGroup == "hasMachineGroup"){
+        if(hasMachineGroup.is(':checked')){
+            noMachineGroup.prop("checked",false);
+        }
+    }else{
+        if(noMachineGroup.is(':checked')){
+            hasMachineGroup.prop("checked",false);
+        }
+    }
+
+
+}
+
 

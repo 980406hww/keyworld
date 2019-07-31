@@ -9,7 +9,7 @@ public class MachineInfoCriteria extends BaseCriteria {
     private String groupName; // 优化组
     private String machineGroup;
     private String operationType; // 操作类型
-    private String noGroup; // 没分组
+    private String noMachineGroup; // 没机器分组
     private String version; // 版本
     private String targetVersion;
     private String city; // 城市
@@ -26,7 +26,7 @@ public class MachineInfoCriteria extends BaseCriteria {
     private String vpsBackendSystemComputerID;//服务器ID
     private String switchGroupName;
     private String startUpClient; // 开机机器
-    private String hasGroup; // 有分组
+    private String hasMachineGroup; // 有机器分组
     private String startUpStatus; // 开机状态
     private String runningProgramType; // 运行程序类型
     private String hiddenColumns; // 隐藏列号
@@ -79,14 +79,6 @@ public class MachineInfoCriteria extends BaseCriteria {
 
     public void setOperationType (String operationType) {
         this.operationType = operationType;
-    }
-
-    public String getNoGroup() {
-        return noGroup;
-    }
-
-    public void setNoGroup(String noGroup) {
-        this.noGroup = noGroup;
     }
 
     public String getVersion() {
@@ -201,14 +193,6 @@ public class MachineInfoCriteria extends BaseCriteria {
         this.startUpClient = startUpClient;
     }
 
-    public String getHasGroup() {
-        return hasGroup;
-    }
-
-    public void setHasGroup(String hasGroup) {
-        this.hasGroup = hasGroup;
-    }
-
     public String getStartUpStatus() {
         return startUpStatus;
     }
@@ -295,5 +279,21 @@ public class MachineInfoCriteria extends BaseCriteria {
 
     public void setMachineGroupFuzzyQuery(String machineGroupFuzzyQuery) {
         this.machineGroupFuzzyQuery = machineGroupFuzzyQuery;
+    }
+
+    public String getNoMachineGroup() {
+        return noMachineGroup;
+    }
+
+    public void setNoMachineGroup(String noMachineGroup) {
+        this.noMachineGroup = noMachineGroup;
+    }
+
+    public String getHasMachineGroup() {
+        return hasMachineGroup;
+    }
+
+    public void setHasMachineGroup(String hasMachineGroup) {
+        this.hasMachineGroup = hasMachineGroup;
     }
 }
