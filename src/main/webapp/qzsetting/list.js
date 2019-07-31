@@ -7,6 +7,7 @@ $(function () {
     $("#customerKeywordDialog").dialog("close");
     $("#showUserMessageDialog").dialog("close");
     $("#excludeCustomerKeywordDialog").dialog("close");
+    $("#targetQzCategoryTagsDialog").dialog("close");
 
     var searchCustomerForm = $("#chargeForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
@@ -2570,29 +2571,25 @@ function changeQZSettingGroupOperationCombineUuid(self, groupName, userName, isS
     });
 }
 
-
-
-
 function showQZCategoryTagsDialog() {
     var uuids = getSelectedIDs();
     if(uuids === ''){
-        alert("请选择要操作的站点!!")
+        alert("请选择要操作的站点!!");
         return false;
     }
-    $("#targetQzCategoryTagsDialog").css("display", "block");
+    $("#targetQzCategoryTagsDialog").show();
     $("#targetQzCategoryTagsDialog").dialog({
         resizable: false,
         width: 320,
         height: 100,
-        title:"修改站点分组标签2",
+        title:"修改站点分组标签",
         closed: true,
-        modal: true,
+        modal: false,
         buttons: [{
             text: '保存',
             iconCls: 'icon-ok',
             handler: function () {
                 updateQzCategoryTags(uuids);
-
             }
         },
             {
@@ -2600,12 +2597,18 @@ function showQZCategoryTagsDialog() {
                 iconCls: 'icon-cancel',
                 handler: function () {
                     $("#targetQzCategoryTagsDialog").dialog("close");
-                    $('#targetQzCategoryTagsFrom')[0].reset();
+                    $("#targetQzCategoryTagsDialog #targetQzCategoryTags").val(null);
                 }
-            }]
+            }],
+        onClose: function () {
+            $("#targetQzCategoryTagsDialog #targetQzCategoryTags").val(null);
+        }
     });
     $("#targetQzCategoryTagsDialog").dialog("open");
-    $('#targetQzCategoryTagsDialog').window("resize",{top:$(document).scrollTop() + 200});
+    $('#targetQzCategoryTagsDialog').window("resize",{
+        top: $(document).scrollTop() + 200,
+        left: $(document).scrollLeft() + $(window).width() / 2 - 160
+    });
 }
 
 function updateQzCategoryTags(uuids){
@@ -2618,7 +2621,7 @@ function updateQzCategoryTags(uuids){
         tagNameArr = unique(tagNameArr);
         $.each(tagNameArr, function (idx, val) {
             //防止多打了分号或者分组名为空格串导致存入分组名为空的数据
-            if($.trim(val)!=""){
+            if($.trim(val) !== ""){
                 var qzCategoryTag = {};
                 qzCategoryTag.tagName = $.trim(val);
                 postData.targetQZCategoryTags.push(qzCategoryTag);
@@ -2627,6 +2630,9 @@ function updateQzCategoryTags(uuids){
     }else{
         $.messager.alert('提示', '请输入分组标签!!', 'info');
         return false;
+    }
+    if (postData.targetQZCategoryTags.length === 0) {
+        $().toastmessage('showErrorToast', "请输入有效的数据！！");
     }
     $.ajax({
         url: '/internal/qzsetting/updateQzCategoryTags',

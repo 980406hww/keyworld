@@ -327,28 +327,20 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		}catch(Exception ex){
 			logger.error(ex.getMessage());
 		}
-		return new ResponseEntity<Object>(false, HttpStatus.OK);
+		return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 	}
 
-
-	/**
-	 * 批量更新全站分组标签
-	 * @param
-	 * @return
-	 */
 	@RequiresPermissions("/internal/qzsetting/save")
 	@RequestMapping(value = "/updateQzCategoryTags", method = RequestMethod.POST)
 	public ResponseEntity<?> updateQzCategoryTags(@RequestBody Map<String, Object> requestMap) {
 		try {
 			List<String> uuids = (List<String>) requestMap.get("uuids");
-			ObjectMapper mapper = new ObjectMapper();
-			//复杂数据类型接参后会被转化为linkedhashmap，使用objectmapper转换会对应实体
-			List<QZCategoryTag> targetQZCategoryTags = mapper.convertValue(requestMap.get("targetQZCategoryTags"), new TypeReference<List<QZCategoryTag>>() { });
-			qzSettingService.updateQzCategoryTags(uuids,targetQZCategoryTags);
+			List<QZCategoryTag> targetQZCategoryTags = new ObjectMapper().convertValue(requestMap.get("targetQZCategoryTags"), new TypeReference<List<QZCategoryTag>>() {});
+			qzSettingService.updateQzCategoryTags(uuids, targetQZCategoryTags);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		}catch(Exception ex){
 			logger.error(ex.getMessage());
 		}
-		return new ResponseEntity<Object>(false, HttpStatus.OK);
+		return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 	}
 }
