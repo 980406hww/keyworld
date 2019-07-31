@@ -10,7 +10,7 @@
 <%@ include file="/commons/basejs.jsp" %>
     <div id="topDiv">
         <%@include file="/menu.jsp" %>
-         <div style="margin-top: 35px">
+         <div style="margin-top: 5px">
             <form method="post" id="searchNegativeRankFrom" action="/internal/negativeRank/searchNegativeRanks" style="margin-bottom:0px">
                 <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
                 <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>

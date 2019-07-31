@@ -46,7 +46,7 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="showMainKeywordTopDiv">
     <%@include file="/menu.jsp" %>
-    <div id="serachMainKeyword" style="margin-top: 35px;">
+    <div id="serachMainKeyword" style="margin: 5px 0px 0px 5px;">
         <form id="serachMainKeywordForm" action="/internal/complaints/findTSMainKeywords" method="post">
             主关键词&nbsp;&nbsp;<input id="itemKeyword" name="itemKeyword" type="text"
                                    value="${page.condition.get("keyword")}"/>&nbsp;&nbsp;
