@@ -424,11 +424,21 @@
 										<div>
 										<span class="line1">
 											<a href="javascript:;">
-													${qzSetting.updateStatus == null ? "暂无" : qzSetting.updateStatus}
+												<c:choose>
+													<c:when test="${qzSetting.crawlerStatus == 'new'}">
+														<span style="color: indianred;">未爬取</span>
+													</c:when>
+													<c:when test="${qzSetting.crawlerStatus == 'processing'}">
+														<span style="color: darkorange;">爬取中</span>
+													</c:when>
+													<c:otherwise>
+														<span style="color: forestgreen;">爬取完成</span>
+													</c:otherwise>
+												</c:choose>
 											</a>
 										</span>
 											<span>
-											<a href="javascript:;">更新状态</a>
+											<a href="javascript:;">爬取状态</a>
 										</span>
 										</div>
 
@@ -868,11 +878,21 @@
 										<div>
 										<span class="line1">
 											<a href="javascript:;">
-													${qzSetting.updateStatus == null ? "暂无" : qzSetting.updateStatus}
+												<c:choose>
+													<c:when test="${qzSetting.crawlerStatus == 'new'}">
+														<span style="color: indianred;">未爬取</span>
+													</c:when>
+													<c:when test="${qzSetting.crawlerStatus == 'processing'}">
+														<span style="color: darkorange;">爬取中</span>
+													</c:when>
+													<c:otherwise>
+														<span style="color: forestgreen;">爬取完成</span>
+													</c:otherwise>
+												</c:choose>
 											</a>
 										</span>
 											<span>
-											<a href="javascript:;">更新状态</a>
+											<a href="javascript:;">爬取状态</a>
 										</span>
 										</div>
 

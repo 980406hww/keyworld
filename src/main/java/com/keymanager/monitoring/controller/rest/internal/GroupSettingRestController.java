@@ -116,7 +116,7 @@ public class GroupSettingRestController extends SpringMVCBaseController {
     @PostMapping("/saveGroupSetting")
     public ResponseEntity<?> saveGroupSetting(@RequestBody GroupSetting groupSetting) {
         try {
-            groupSettingService.saveGroupSetting(groupSetting, true);
+            groupSettingService.saveGroupSetting(groupSetting);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

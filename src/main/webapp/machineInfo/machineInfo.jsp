@@ -145,6 +145,7 @@
 								<option value=''>All</option>
 								<option value='New'>New</option>
 								<option value='Old'>Old</option>
+								<option value='Super'>Super</option>
 							</select>
 
 							<shiro:hasPermission name="/internal/machineInfo/searchMachineInfos">
@@ -509,6 +510,7 @@
 						下载程序:
 						<input type="radio" name="downloadProgramType" value="New" checked /> 新程序
 						<input type="radio" name="downloadProgramType" value="Old" /> 旧程序
+						<input type="radio" name="downloadProgramType" value="Super" /> Super
 					</td>
 				</tr>
 				<tr>
@@ -533,6 +535,7 @@
 					下载程序:
 					<input type="radio" name="downloadProgramType" value="New" checked /> 新程序
 					<input type="radio" name="downloadProgramType" value="Old" /> 旧程序
+					<input type="radio" name="downloadProgramType" value="Super" /> Super
 				</td>
 			</tr>
 		</table>
