@@ -17,6 +17,7 @@ import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -138,38 +139,52 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                 updateOptimizationQueryTime(customerKeywordUuids);
                             }else{
                                 int count = 0;
+                                int repeatTimes = 0;
                                 boolean hasNewElement = false;
                                 Map<Long, Integer> customerKeywordUuidAndRepeatCount = new HashMap<>();
                                 do {
+                                    hasNewElement = false;
+                                    repeatTimes++;
                                     for (OptimizationKeywordVO optimizationKeywordVO : optimizationKeywordVOS) {
-                                        int maxOptimizeCount = Math.round(System.currentTimeMillis() / (1000 * optimizationKeywordVO.getQueryInterval()));
-                                        Integer repeatCount = customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid());
-                                        if(repeatCount == null){
-                                            customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), 0);}
-                                        if(maxOptimizeCount > optimizationKeywordVO.getOptimizedCount()){
-                                            blockingQueue.offer(optimizationKeywordVO);
-                                            optimizationKeywordVO.setOptimizedCount(optimizationKeywordVO.getOptimizedCount() + 1);
-                                            hasNewElement = true;
-                                            customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), (customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid()) - 1));
-                                            count++;
-                                            if(count > 2000){
-                                                break;
+                                        if(optimizationKeywordVO.getQueryInterval() > 0) {
+                                            int maxOptimizeCount = Math.round(System.currentTimeMillis() / (1000 * optimizationKeywordVO.getQueryInterval()));
+                                            Integer repeatCount = customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid());
+                                            if (repeatCount == null) {
+                                                customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), 0);
+                                            }
+                                            if (maxOptimizeCount > optimizationKeywordVO.getOptimizedCount()) {
+                                                blockingQueue.offer(optimizationKeywordVO);
+                                                optimizationKeywordVO.setOptimizedCount(optimizationKeywordVO.getOptimizedCount() + 1);
+                                                hasNewElement = true;
+                                                customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), (customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid()) + 1));
+                                                count++;
+                                                if (count > 2000) {
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
-                                }while(count < 2000 && hasNewElement);
-                                do{
+                                }while(count < 2000 && hasNewElement && repeatTimes < 50);
+
+                                if(customerKeywordUuidAndRepeatCount.size() == 0){
+                                    break;
+                                }
+                                while(customerKeywordUuidAndRepeatCount.size() > 0){
                                     customerKeywordUuids.addAll(customerKeywordUuidAndRepeatCount.keySet());
                                     updateOptimizationQueryTime(customerKeywordUuids);
                                     customerKeywordUuids.clear();
                                     for(Long customerKeywordUuid : customerKeywordUuidAndRepeatCount.keySet()){
                                         if(customerKeywordUuidAndRepeatCount.get(customerKeywordUuid) < 2){
-                                            customerKeywordUuidAndRepeatCount.remove(customerKeywordUuid);
+                                            customerKeywordUuids.add(customerKeywordUuid);
                                         }else{
                                             customerKeywordUuidAndRepeatCount.put(customerKeywordUuid, (customerKeywordUuidAndRepeatCount.get(customerKeywordUuid) - 1));
                                         }
                                     }
-                                }while (customerKeywordUuidAndRepeatCount.size() > 0);
+                                    for(Long customerKeywordUuid : customerKeywordUuids) {
+                                        customerKeywordUuidAndRepeatCount.remove(customerKeywordUuid);
+                                    }
+                                    customerKeywordUuids.clear();
+                                };
                             }
                         }
                     } while (blockingQueue.size() < 8000 && CollectionUtils.isNotEmpty(optimizationKeywordVOS));
@@ -409,11 +424,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeyword.setCurrentPosition(10);
         }
         if (Utils.isNullOrEmpty(customerKeyword.getMachineGroup())) {
-            if (EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
-                customerKeyword.setMachineGroup("fm");
-            } else {
-                customerKeyword.setMachineGroup("Default");
-            }
+            customerKeyword.setMachineGroup(customerKeyword.getType());
         }
         customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
         customerKeyword.setCapturePositionQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));

@@ -97,7 +97,5 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     void updateMachineGroup(@Param("machineInfoCriteria") MachineInfoCriteria machineInfoCriteria);
 
-    void updateGroup(@Param("machineInfoCriteria") MachineInfoCriteria machineInfoCriteria);
-
     List<MachineGroupWorkInfo> searchMachineInfoFormMachineGroupWorkInfo(@Param("machineGroupWorkInfoCriteria") MachineGroupWorkInfoCriteria machineGroupWorkInfoCriteria);
 }

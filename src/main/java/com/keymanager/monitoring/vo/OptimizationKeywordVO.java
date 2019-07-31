@@ -12,7 +12,6 @@ public class OptimizationKeywordVO {
     private String title;
     private int optimizedCount;
     private int queryInterval;
-    private int maxOptimizeCount;
 
     public String getTerminalType() {
         return terminalType;
@@ -100,13 +99,5 @@ public class OptimizationKeywordVO {
 
     public void setQueryInterval(int queryInterval) {
         this.queryInterval = queryInterval;
-    }
-
-    public int getMaxOptimizeCount() {
-        return maxOptimizeCount;
-    }
-
-    public void setMaxOptimizeCount(int maxOptimizeCount) {
-        this.maxOptimizeCount = maxOptimizeCount;
     }
 }

@@ -1,7 +1,7 @@
 ﻿#关键字管理权限
 INSERT INTO `db_keyword`.`t_resource`(`fResourceName`, `fUrl`, `fOpenMode`, `fDescription`, `fIconCls`, 
 	`fParentID`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`, `fUpdateTime`, `fCreateTime`) 
-VALUES ('机器分组工作统计', '/internal/customerKeyword/showMachineGroupAndSize', NULL, NULL, 'fi-thumbnails', 
+VALUES ('机器分组统计', '/internal/customerKeyword/showMachineGroupAndSize', NULL, NULL, 'fi-thumbnails',
 	(SELECT r.fUuid from t_resource r where r.fUrl = '#' AND r.fResourceName = "关键字管理"), 0, 0, 1, 0, NULL, NOW());
 
 

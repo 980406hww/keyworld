@@ -202,20 +202,6 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
-    @RequiresPermissions("/internal/machineInfo/updateGroup")
-    @RequestMapping(value = "/updateGroup", method = RequestMethod.POST)
-    public ResponseEntity<?> updateGroup(@RequestBody Map<String, Object> requestMap) {
-        try {
-            String clientID = (String)requestMap.get("clientID");
-            String group = (String)requestMap.get("group");
-            machineInfoService.updateGroup(clientID, group);
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @RequiresPermissions("/internal/machineInfo/updateUpgradeFailedReason")
     @RequestMapping(value = "/updateUpgradeFailedReason", method = RequestMethod.POST)
     public ResponseEntity<?> updateUpgradeFailedReason(@RequestBody Map<String, Object> requestMap) {
@@ -449,23 +435,5 @@ public class MachineInfoRestController extends SpringMVCBaseController {
             return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
     }
-
-
-    /**
-     * 批量更新根据检索条件获取到的机器的机器分组
-     */
-    @RequiresPermissions("/internal/machineInfo/batchUpdateGroup")
-    @RequestMapping(value = "/batchUpdateGroup",method = RequestMethod.POST)
-    public ResponseEntity<?> batchUpdateGroup(@RequestBody MachineInfoCriteria machineInfoCriteria) {
-        try{
-            machineInfoService.batchUpdateGroup(machineInfoCriteria);
-            return new ResponseEntity<Object>(true,HttpStatus.OK);
-        }catch (Exception e){
-            logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
-        }
-    }
-
-
 
 }

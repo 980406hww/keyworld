@@ -1743,10 +1743,11 @@ function createSettingDialog() {
     $("#changeSettingDialog").show();
     $("#changeSettingDialog").dialog({
         resizable: false,
-        height: 598,
         width: 700,
+        minHeight: 500,
+        maxHeight: 598,
         title: '全站设置',
-        modal: true,
+        modal: false,
         buttons: [{
             text: '保存不刷新',
             iconCls: 'icon-ok',
@@ -1791,7 +1792,7 @@ function createSettingDialog() {
     $("#changeSettingDialog").window("resize",
         {
             top:$(document).scrollTop() + 150,
-            left: $(document).scrollLeft() + $(window).width() / 2 - 340
+            left: $(document).scrollLeft() + $(window).width() / 2 - 350
         }
     );
 }
@@ -2276,7 +2277,7 @@ function addRow(tableID, chargeRule){
         var col5 = newRow.insertCell(4);
         col5.innerHTML = "<input style='width:46px' type='button' value='删除' onclick='deleteCurrentRow(this.parentNode.parentNode)' />";
 
-        $("#changeSettingDialog").css("height", $("#changeSettingDialog").height() + 25);
+        // $("#changeSettingDialog").css("height", $("#changeSettingDialog").height() + 25);
     }
 }
 function deleteCurrentRow(currentRow) {
@@ -2287,7 +2288,7 @@ function deleteCurrentRow(currentRow) {
         $.each($("#"+tableObj.id).find("input[name=sequenceID]"), function(idx, val){
             $(val).val(idx + 1);
         });
-        if ($("#changeSettingDialog").height() > "412") {
+        if ($("#changeSettingDialog").height() > "434") {
             $("#changeSettingDialog").css("height", $("#changeSettingDialog").height() + 2);
         }
     } else {

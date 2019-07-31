@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 机器分组工作信息统计
+ * 机器分组信息统计
  */
 @Service
 public class MachineGroupWorkInfoService {
