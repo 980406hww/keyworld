@@ -2615,7 +2615,7 @@ function updateQzCategoryTags(uuids){
     var postData = {};
     postData.uuids = uuids.split(",");
     postData.targetQZCategoryTags =[];
-    var qzCategoryTagNames = $("#targetQzCategoryTagsFrom").find("#targetQzCategoryTags").val().replace(/(，)+/g, ",");
+    var qzCategoryTagNames = $("#targetQzCategoryTagsDialog").find("#targetQzCategoryTags").val().replace(/(，)+/g, ",");
     if (qzCategoryTagNames !== "") {
         var tagNameArr = qzCategoryTagNames.split(",");
         tagNameArr = unique(tagNameArr);
@@ -2634,24 +2634,28 @@ function updateQzCategoryTags(uuids){
     if (postData.targetQZCategoryTags.length === 0) {
         $().toastmessage('showErrorToast', "请输入有效的数据！！");
     }
-    $.ajax({
-        url: '/internal/qzsetting/updateQzCategoryTags',
-        data: JSON.stringify(postData),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (data) {
-            if(data){
-                $().toastmessage('showSuccessToast',"操作成功", true);
-            }else{
-                $().toastmessage('showErrorToast', "操作失败");
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "操作失败");
+    parent.$.messager.confirm('询问', "确认修改所选站点的标签吗？", function(b) {
+        if (b) {
+            $.ajax({
+                url: '/internal/qzsetting/updateQzCategoryTags',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (data) {
+                    if(data){
+                        $().toastmessage('showSuccessToast',"操作成功", true);
+                    }else{
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            });
         }
     });
     $("#targetMachineGroupDialog").dialog("close");
