@@ -121,8 +121,6 @@
             value="${customerKeywordCriteria.creationFromTime}">
             到&nbsp;<input name="creationToTime" id="creationToTime" class="Wdate" type="text" style="width:90px;"
             onClick="WdatePicker()" value="${customerKeywordCriteria.creationToTime}">&nbsp;
-
-            <br>
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
                 <input type="submit" onclick="resetPageNumber(0)" value=" 查询 ">&nbsp;
             </shiro:hasPermission>
