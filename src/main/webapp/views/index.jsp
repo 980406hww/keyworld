@@ -2,6 +2,7 @@
 <html>
 <head>
 <%@ include file="/commons/basejs.jsp" %>
+
 <%@ include file="/commons/loadjs.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <link rel="stylesheet" type="text/css" href="${staticPath }/static/ztree/css/zTreeStyle.css" />
@@ -160,15 +161,16 @@
 </script>
 </head>
 <body>
+<%@include file="/menu.jsp"%>
     <div id="loading" style="position: fixed;top: -50%;left: -50%;width: 200%;height: 200%;background: #fff;z-index: 100;overflow: hidden;">
         <img src="${staticPath }/static/style/images/ajax-loader.gif" style="position: absolute;top: 0;left: 0;right: 0;bottom: 0;margin: auto;"/>
     </div>
     <div id="index_layout">
-        <div data-options="region:'north',border:false" style="overflow: hidden;height: 30px">
+        <%--<div data-options="region:'north',border:false" style="overflow: hidden;height: 30px">
             <div style="z-index: 20;">
                 <%@include file="/menu.jsp"%>
             </div>
-        </div>
+        </div>--%>
         <ul id="layout_west_tree" class="ztree" style="display: none"></ul>
         <div data-options="region:'center'" style="overflow: hidden;">
             <div id="index_tabs" style="overflow: hidden;">

@@ -9,9 +9,9 @@
 <div id="topDiv">
 	<%@include file="/menu.jsp" %>
 	<form method="post" id="searchMachineGroupInfoForm" action="/internal/machinegroupworkinfo/searchMachineGroupWorkInfos">
-		<table style="font-size:12px;">
+		<table style="font-size:12px;margin: 5px 0px 0px 5px;">
 			<tr>
-				<td align="right">分组名称:<input name="machineGroup" id="machineGroup" type="text" style="width:200px;"
+				<td align="right">机器分组:<input name="machineGroup" id="machineGroup" type="text" style="width:200px;"
 											  value="${machineGroupWorkInfoCriteria.machineGroup}">
 					<input id="machineGroupFuzzyQuery" name="machineGroupFuzzyQuery" type="checkbox" value="machineGroupFuzzyQuery" ${machineGroupWorkInfoCriteria.machineGroupFuzzyQuery != null ? "checked=true" : ""}/>模糊查询 &nbsp;
 					&nbsp;&nbsp;

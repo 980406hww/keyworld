@@ -7,46 +7,37 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
 	<%@include file="/menu.jsp" %>
-	<form method="post" id="searchRefreshStatInfoForm" action="/internal/refreshstatinfo/searchRefreshStatInfos">
+	<form method="post" id="searchRefreshStatInfoForm" action="/internal/refreshstatinfo/searchRefreshStatInfos" style="margin: 5px 0px 0px 5px">
 		<table style="font-size:12px;">
 			<tr>
-				<td align="right">分组名称:<input name="groupName" id="groupName" type="text" style="width:200px;"
-											  value="${refreshStatInfoCriteria.groupName}">
-					<input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${refreshStatInfoCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>模糊查询
-                    &nbsp;&nbsp;
-				</td>
-				<td align="right">机器分组:<input name="machineGroup" id="machineGroup" type="text" style="width:200px;"
-											  value="${refreshStatInfoCriteria.machineGroup}"></td>
-				<td align="right">客户名称:<input name="customerName" id="customerName" type="text" style="width:200px;"
-											  value="${refreshStatInfoCriteria.customerName}"></td>
-				<td align="right">分类标签:<input name="categoryTag" list="categoryTag_list" type="text" style="width:200px;"
-											  value="${refreshStatInfoCriteria.categoryTag}"></td>
-				<td>
-					&nbsp;&nbsp;
-					<select id="dayNum" name="dayNum" value="${refreshStatInfoCriteria.dayNum}">
-						<option value="0" <c:if test="${0 eq refreshStatInfoCriteria.dayNum}">selected</c:if>> 请选择要查询的历史记录 </option>
-						<option value="1" <c:if test="${1 eq refreshStatInfoCriteria.dayNum}">selected</c:if>> 一天前 </option>
-						<option value="2" <c:if test="${2 eq refreshStatInfoCriteria.dayNum}">selected</c:if>> 两天前 </option>
-						<option value="3" <c:if test="${3 eq refreshStatInfoCriteria.dayNum}">selected</c:if>> 三天前 </option>
-						<option value="4" <c:if test="${4 eq refreshStatInfoCriteria.dayNum}">selected</c:if>> 四天前 </option>
-						<option value="5" <c:if test="${5 eq refreshStatInfoCriteria.dayNum}">selected</c:if>> 五天前 </option>
-						<option value="6" <c:if test="${6 eq refreshStatInfoCriteria.dayNum}">selected</c:if>> 六天前 </option>
-					</select>
-					&nbsp;&nbsp;
-				</td>
-				<td align="right">
-					&nbsp;
-					<shiro:hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
-						<input type="submit" name="btnQuery" id="btnQuery" value=" 查询 " onclick="trimSearchCondition()">&nbsp;&nbsp;
-					</shiro:hasPermission>
-					<shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
+				分组名称:<input name="groupName" id="groupName" type="text" style="width:200px;"
+										  value="${refreshStatInfoCriteria.groupName}">
+				<input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${refreshStatInfoCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>模糊查询
+				&nbsp;&nbsp;机器分组:<input name="machineGroup" id="machineGroup" type="text" style="width:200px;" value="${refreshStatInfoCriteria.machineGroup}">
+				&nbsp;&nbsp;客户名称:<input name="customerName" id="customerName" type="text" style="width:200px;" value="${refreshStatInfoCriteria.customerName}">
+				&nbsp;&nbsp;分类标签:<input name="categoryTag" list="categoryTag_list" type="text" style="width:200px;" value="${refreshStatInfoCriteria.categoryTag}">
+				&nbsp;&nbsp;
+				<select id="dayNum" name="dayNum" value="${refreshStatInfoCriteria.dayNum}">
+					<option value="0" <c:if test="${0 eq refreshStatInfoCriteria.dayNum}">selected</c:if>> 请选择要查询的历史记录 </option>
+					<option value="1" <c:if test="${1 eq refreshStatInfoCriteria.dayNum}">selected</c:if>> 一天前 </option>
+					<option value="2" <c:if test="${2 eq refreshStatInfoCriteria.dayNum}">selected</c:if>> 两天前 </option>
+					<option value="3" <c:if test="${3 eq refreshStatInfoCriteria.dayNum}">selected</c:if>> 三天前 </option>
+					<option value="4" <c:if test="${4 eq refreshStatInfoCriteria.dayNum}">selected</c:if>> 四天前 </option>
+					<option value="5" <c:if test="${5 eq refreshStatInfoCriteria.dayNum}">selected</c:if>> 五天前 </option>
+					<option value="6" <c:if test="${6 eq refreshStatInfoCriteria.dayNum}">selected</c:if>> 六天前 </option>
+				</select>
+				&nbsp;&nbsp;
+				<shiro:hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
+					<input type="submit" name="btnQuery" id="btnQuery" value=" 查询 " onclick="trimSearchCondition()">&nbsp;&nbsp;
+				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
 					<input type="button" value="导入从爱站抓取排名" onclick="uploadCsv()">&nbsp;&nbsp;
-					</shiro:hasPermission>
-					<shiro:hasPermission name="/internal/customerKeyword/downloadCustomerKeywordInfo">
+				</shiro:hasPermission>
+				<shiro:hasPermission name="/internal/customerKeyword/downloadCustomerKeywordInfo">
 					<input type="button" value="导出关键字信息到爱站抓排名" onclick="downloadTxt()">&nbsp;&nbsp;
 					<a download="keywordUrl.txt" href="/keywordUrl.txt" target="blank" id="downTXT" style="display: none">点击下载</a>&nbsp;&nbsp;
-					</shiro:hasPermission>
-				</td>
+				</shiro:hasPermission>
+
 			</tr>
 		</table>
 	</form>
