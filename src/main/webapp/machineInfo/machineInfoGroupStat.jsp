@@ -2,25 +2,34 @@
 <html>
 <head>
     <title>终端分组统计</title>
+    <%@ include file="/commons/basejs.jsp" %>
     <style>
+        td{
+            display: table-cell;
+            vertical-align: inherit;
+        }
+        #centerDiv {
+            width: 100%;
+            margin: auto;
+        }
         #topDiv {
-            position: fixed;
             top: 0px;
             left: 0px;
             background-color: white;
             width: 100%;
         }
-        #MachineInfoGroupSummaryTable tr:nth-child(even){background-color: #eeeeee}
-        #MachineInfoGroupSummaryTable tr:hover{background-color: green;}
+        #MachineInfoGroupSummaryTable {
+            width: 100%;
+        }
+        #MachineInfoGroupSummaryTable tr:nth-child(odd){background:#EEEEEE;}
     </style>
 </head>
 <body>
-<%@ include file="/commons/basejs.jsp" %>
+
 <div id="topDiv">
     <%@include file="/menu.jsp"%>
-    <form action="/internal/machineInfo/machineInfoGroupStat" method="post" id="searchMachineInfoSummaryVOForm" style="margin: 35px 0 5px 10px;">
+    <form action="/internal/machineInfo/machineInfoGroupStat" method="post" id="searchMachineInfoSummaryVOForm" style="margin: 5px 0 5px 10px;">
         分组名称:<input type="text" name="groupName" id="groupName" value="${machineInfoGroupStatCriteria.groupName}">
-        <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${machineInfoGroupStatCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>模糊查询
         &nbsp;&nbsp;
         终端类型:
         <select name="terminalType">
@@ -32,21 +41,21 @@
             <input type="submit" value=" 查询 " onclick="trimSearchCondition()">
         </shiro:hasPermission>
     </form>
-    <table width=40% style="font-size: 12px;" cellpadding=3 id="headerTable">
+    <table  style="font-size: 12px;  width: 100%"  id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
-            <td align="center" width=100>分组名称</td>
-            <td align="center" width=100>终端类型</td>
-            <td align="center" width=50>数量</td>
+            <td align="center" width=80>分组名称</td>
+            <td align="center" width=80>终端类型</td>
+            <td align="center" width=80>数量</td>
         </tr>
     </table>
 </div>
 <div id="centerDiv">
-    <table width=40% style="font-size: 12px;" cellpadding=3 id="MachineInfoGroupSummaryTable">
+    <table width=40% style="font-size: 12px;"  id="MachineInfoGroupSummaryTable">
     <c:forEach items="${machineInfoGroupSummaryVOs}" var="machineInfoGroupSummaryVOs" varStatus="status">
-        <tr align="left" height="30px">
-        <td style="padding-left: 7px;">${machineInfoGroupSummaryVOs.group}</td>
-        <td>${machineInfoGroupSummaryVOs.terminalType}</td>
-        <td>${machineInfoGroupSummaryVOs.count}</td>
+        <tr align="left" height="30px" onmouseover="doOver(this);" onmouseout="doOut(this);">
+            <td align="center" width=80>${machineInfoGroupSummaryVOs.group}</td>
+            <td align="center" width=80>${machineInfoGroupSummaryVOs.terminalType}</td>
+            <td align="center" width=80>${machineInfoGroupSummaryVOs.count}</td>
         </tr>
     </c:forEach>
 </table>

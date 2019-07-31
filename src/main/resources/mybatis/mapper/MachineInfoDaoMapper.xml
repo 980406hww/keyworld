@@ -381,7 +381,7 @@
     </select>
 
     <select id="searchMachineInfoGroupSummaryVO" resultType="com.keymanager.monitoring.vo.MachineInfoGroupSummaryVO">
-        SELECT cs.fGroup as 'group', cs.fTerminalType as terminalType, COUNT(1) AS 'count' FROM t_client_status cs
+        SELECT cs.fGroup as 'group', cs.fTerminalType as terminalType, COUNT(1) AS 'count' FROM t_machine_info cs
         <where>
             <if test="group!=null and group!=''">and cs.fGroup LIKE '%${group}%'</if>
             <if test="terminalType!=null and terminalType!=''">and cs.fTerminalType = #{terminalType}</if>
@@ -465,58 +465,6 @@
         UPDATE t_machine_info SET fRemainingKeyword = 1, fIdleStartTime = null, fIdleTotalMinutes = 0
     </update>
 
-    <select id="getClientStatusForOptimization" resultType="com.keymanager.monitoring.vo.ClientStatusForOptimization">
-        SELECT
-            cs.fGroup AS "group",
-            cs.fOperationType AS "operationType",
-            cs.fKuaizhaoPercent AS "kuaizhaoPercent",
-            cs.fBaiduSemPercent AS "baiduSemPercent",
-            cs.fDragPercent AS "dragPercent",
-            cs.fMultiBrowser AS "multiBrowser",
-            cs.fClearCookie AS "clearCookie",
-            cs.fZhanneiPercent AS "zhanneiPercent",
-            cs.fZhanwaiPercent AS "zhanwaiPercent",
-            cs.fSpecialCharPercent AS "specialCharPercent",
-            cs.fDisableStatistics AS "disableStatistics",
-            cs.fEntryPageMinCount AS "entryPageMinCount",
-            cs.fEntryPageMaxCount AS "entryPageMaxCount",
-            cs.fDisableVisitWebsite AS "disableVisitWebsite",
-            cs.fPageRemainMinTime AS "pageRemainMinTime",
-            cs.fPageRemainMaxTime AS "pageRemainMaxTime",
-            cs.fInputDelayMinTime AS "inputDelayMinTime",
-            cs.fInputDelayMaxTime AS "inputDelayMaxTime",
-            cs.fSlideDelayMinTime AS "slideDelayMinTime",
-            cs.fSlideDelayMaxTime AS "slideDelayMaxTime",
-            cs.fTitleRemainMinTime AS "titleRemainMinTime",
-            cs.fTitleRemainMaxTime AS "titleRemainMaxTime",
-            cs.fOptimizeKeywordCountPerIP AS "optimizeKeywordCountPerIP",
-            cs.fOneIPOneUser AS "oneIPOneUser",
-            cs.fRandomlyClickNoResult AS "randomlyClickNoResult",
-            cs.fJustVisitSelfPage AS "justVisitSelfPage",
-            cs.fSleepPer2Words AS "sleepPer2Words",
-            cs.fSupportPaste AS "supportPaste",
-            cs.fMoveRandomly AS "moveRandomly",
-            cs.fParentSearchEntry AS "parentSearchEntry",
-            cs.fClearLocalStorage AS "clearLocalStorage",
-            cs.fLessClickAtNight AS "lessClickAtNight",
-            cs.fSameCityUser AS "sameCityUser",
-            cs.fLocateTitlePosition AS "locateTitlePosition",
-            cs.fBaiduAllianceEntry AS "baiduAllianceEntry",
-            cs.fJustClickSpecifiedTitle AS "justClickSpecifiedTitle",
-            cs.fRandomlyClickMoreLink AS "randomlyClickMoreLink",
-            cs.fMoveUp20 AS "moveUp20",
-            cs.fWaitTimeAfterOpenBaidu AS "waitTimeAfterOpenBaidu",
-            cs.fWaitTimeBeforeClick AS "waitTimeBeforeClick",
-            cs.fWaitTimeAfterClick AS "waitTimeAfterClick",
-            cs.fMaxUserCount AS "maxUserCount",
-            cs.fSwitchGroupName AS "switchGroupName",
-            cs.fBroadbandAccount AS "broadbandAccount",
-            cs.fBroadbandPassword AS "broadbandPassword"
-        FROM
-        t_client_status cs
-        WHERE cs.fClientID = #{clientID}
-    </select>
-
     <update id="updateMachineGroup" parameterType="com.keymanager.monitoring.criteria.MachineInfoCriteria">
         UPDATE t_machine_info mi
         SET mi.fMachineGroup = #{machineInfoCriteria.targetMachineGroup}
@@ -580,4 +528,12 @@
         GROUP BY cs.fMachineGroup, cs.fTerminalType
     </select>
 
+    <select id="searchMachineInfoMachineGroupSummaryVO" resultType="com.keymanager.monitoring.vo.MachineInfoMachineGroupSummaryVO">
+        SELECT mi.fMachineGroup as 'machineGroup', mi.fTerminalType as terminalType, COUNT(1) AS 'count' FROM t_machine_info mi
+        <where>
+            <if test="machineGroup!=null and machineGroup!=''">and mi.fMachineGroup LIKE '%${machineGroup}%'</if>
+            <if test="terminalType!=null and terminalType!=''">and mi.fTerminalType = #{terminalType}</if>
+        </where>
+        GROUP BY mi.fMachineGroup, mi.fTerminalType ORDER BY mi.fMachineGroup
+    </select>
 </mapper>
