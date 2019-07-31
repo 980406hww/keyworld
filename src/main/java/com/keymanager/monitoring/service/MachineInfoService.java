@@ -898,4 +898,8 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         return machineInfoDao.searchMachineInfoFormMachineGroupWorkInfo(machineGroupWorkInfoCriteria);
     }
 
+    public List<MachineInfoMachineGroupSummaryVO> searchMachineInfoMachineGroupSummaryVO(String machineGroup, String terminalType) {
+        return machineInfoDao.searchMachineInfoMachineGroupSummaryVO(machineGroup,terminalType);
+    }
+
 }

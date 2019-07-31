@@ -91,9 +91,9 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     void resetOptimizationInfo();
 
-    ClientStatusForOptimization getClientStatusForOptimization(@Param("clientID") String clientID);
-
     void updateMachineGroup(@Param("machineInfoCriteria") MachineInfoCriteria machineInfoCriteria);
 
     List<MachineGroupWorkInfo> searchMachineInfoFormMachineGroupWorkInfo(@Param("machineGroupWorkInfoCriteria") MachineGroupWorkInfoCriteria machineGroupWorkInfoCriteria);
+
+    List<MachineInfoMachineGroupSummaryVO> searchMachineInfoMachineGroupSummaryVO(@Param("machineGroup") String machineGroup, @Param("terminalType") String terminalType);
 }
