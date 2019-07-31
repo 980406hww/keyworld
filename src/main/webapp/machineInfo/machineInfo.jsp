@@ -269,10 +269,9 @@
 				</c:if>
 			</td>
 			<td width=40>
-
-					<input type="text" value="${machineInfo.machineGroup == null ? "" : machineInfo.machineGroup}"
-						   name="machineGroup" id="${machineInfo.clientID}" onBlur="updateMachineGroup(this)" style="width: 100%;"/>
-
+				<input type="hidden" name="hiddenMachineGroup" value="${machineInfo.machineGroup}">
+				<input type="text" value="${machineInfo.machineGroup == null ? "" : machineInfo.machineGroup}"
+					   name="machineGroup" id="${machineInfo.clientID}" onBlur="updateMachineGroup(this)" style="width: 100%;"/>
 			</td>
 			<td width=20><font color="${keywordColor}"><fmt:formatDate value="${machineInfo.renewalDate}"
 															  pattern="MM-dd"/></font></td>
