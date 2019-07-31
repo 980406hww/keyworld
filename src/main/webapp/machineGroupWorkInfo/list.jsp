@@ -3,32 +3,6 @@
 <head>
 	<title>机器分组刷量统计列表</title>
 	<%@ include file="/commons/basejs.jsp" %>
-	<%--<style>
-		td{
-			display: table-cell;
-			vertical-align: inherit;
-		}
-		#showMachineGroupWorkInfoDiv {
-			width: 100%;
-			margin: auto;
-		}
-		#topDiv {
-			top: 0px;
-			left: 0px;
-			background-color: white;
-			width: 100%;
-		}
-		#showMachineGroupWorkInfoTable {
-			width: 100%;
-		}
-		#showMachineGroupWorkInfoTable tr:nth-child(odd){background:#EEEEEE;}
-
-
-		#saveCustomerKeywordDialog ul{list-style: none;margin: 0px;padding: 0px;}
-		#saveCustomerKeywordDialog li{margin: 5px 0;}
-		#saveCustomerKeywordDialog .customerKeywordSpanClass{width: 70px;display: inline-block;text-align: right;}
-	</style>--%>
-
 </head>
 <body>
 

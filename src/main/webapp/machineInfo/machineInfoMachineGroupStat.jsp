@@ -53,12 +53,19 @@
     <table style="font-size: 12px;"  id="machineInfoMachineGroupSummaryTable">
     <c:forEach items="${machineInfoMachineGroupSummaryVOS}" var="machineInfoMachineGroupSummaryVO" varStatus="status">
         <tr height="30px" onmouseover="doOver(this);" onmouseout="doOut(this);">
-            <td align="center" width=80>${machineInfoMachineGroupSummaryVO.machineGroup}</td>
+            <td align="center" width=80>
+                <a href="#" onclick="showMachineInfoListByMachineGroup('${machineInfoMachineGroupSummaryVO.machineGroup}')">${machineInfoMachineGroupSummaryVO.machineGroup}</a>
+            </td>
             <td align="center" width=80>${machineInfoMachineGroupSummaryVO.terminalType}</td>
             <td align="center" width=80>${machineInfoMachineGroupSummaryVO.count}</td>
         </tr>
     </c:forEach>
 </table>
+</div>
+<div id="toMachineInfoDialog" style="text-align: center;left: 40%;display: none;">
+    <form id="toMachineInfoForm" style="text-align: center;margin-top: 10px;" action="/internal/machineInfo/searchMachineInfos" method="post" target="_blank" >
+        <input type="text" id="machineGroup" name="machineGroup" style="width:150px">
+    </form>
 </div>
 <%@ include file="/commons/loadjs.jsp" %>
 <script language="javascript" type="text/javascript">
@@ -72,6 +79,11 @@
         if(machineGroup != "") {
             machineInfoSummaryForm.find("#machineGroup").val($.trim(machineGroup));
         }
+    }
+
+    function showMachineInfoListByMachineGroup(machineGroup){
+        $("#toMachineInfoForm").find("#machineGroup").val(machineGroup.trim());
+        $("#toMachineInfoForm").submit();
     }
 </script>
 </body>
