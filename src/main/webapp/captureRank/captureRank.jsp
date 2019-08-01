@@ -188,6 +188,7 @@
             <li>
                 <span>任务区域:</span>
                 <select id="rankJobArea" name="rankJobArea" title="" style="width: 80px;height: 21px">
+                    <option value="" selected="selected">请选择</option>
                     <c:forEach items="${rankJobAreaMap}" var="rankJobArea">
                         <option value="${rankJobArea.key}">${rankJobArea.value}</option>
                     </c:forEach>
@@ -196,6 +197,7 @@
             <li>
                 <span>任务城市:</span>
                 <select id="rankJobCity" name="rankJobCity" title="" style="width: 80px;height: 21px">
+                    <option value="" selected="selected">请选择</option>
                     <c:forEach items="${rankJobCityList}" var="rankJobCity">
                         <option value="${rankJobCity}">${rankJobCity}</option>
                     </c:forEach>
