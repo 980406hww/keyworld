@@ -68,11 +68,11 @@ public class GroupRestController {
     }
 
     @RequiresPermissions("/internal/group/saveGroupsBelowOperationCombine")
-    @PostMapping("/updateGroupsBelowOperationCombine")
-    public ResponseEntity<?> updateGroupsBelowOperationCombine(@RequestBody Map<String, Object> requestMap) {
+    @PostMapping("/deleteGroupsBelowOperationCombine")
+    public ResponseEntity<?> deleteGroupsBelowOperationCombine(@RequestBody Map<String, Object> requestMap) {
         try {
             List<Long> groupUuids = (List<Long>) requestMap.get("groupUuids");
-            groupService.updateGroupsBelowOperationCombine(groupUuids, null);
+            groupService.deleteGroupsBelowOperationCombine(groupUuids);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

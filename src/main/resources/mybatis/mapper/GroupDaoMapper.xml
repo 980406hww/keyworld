@@ -73,22 +73,15 @@
         </foreach>
     </insert>
 
-    <update id="updateGroupOperationCombineUuid">
-        UPDATE t_group g
-        SET g.fOperationCombineUuid = NULL
-        WHERE g.fOperationCombineUuid = #{operationCombineUuid}
-    </update>
-
-    <update id="updateOperationCombineUuidByGroupName">
-        UPDATE t_group g
-        SET g.fOperationCombineUuid = NULL
-        WHERE g.fOperationCombineUuid = #{operationCombineUuid}
-        AND g.fGroupName IN (
+    <delete id="deleteGroupByGroupName">
+        DELETE FROM t_group
+        WHERE fOperationCombineUuid = #{operationCombineUuid}
+        AND fGroupName IN (
             <foreach collection="groupNames" item="groupName" separator=",">
                 #{groupName}
             </foreach>
         )
-    </update>
+    </delete>
 
     <update id="updateQZSettingGroupOperationCombineUuid">
         UPDATE t_group

@@ -29,10 +29,7 @@ public interface GroupDao extends BaseMapper<Group> {
 
     void insertBatchGroups (@Param("operationCombineCriteria") OperationCombineCriteria operationCombineCriteria);
 
-    void updateGroupOperationCombineUuid (@Param("operationCombineUuid")long operationCombineUuid);
-
-    void updateOperationCombineUuidByGroupName (@Param("groupNames") List<String> groupNames,
-                                                @Param("operationCombineUuid")long operationCombineUuid);
+    void deleteGroupByGroupName (@Param("operationCombineUuid")long operationCombineUuid, @Param("groupNames") List<String> groupNames);
 
     void updateQZSettingGroupOperationCombineUuid (@Param("operationCombineUuid") Long operationCombineUuid,
                                                    @Param("groupName") String groupName);

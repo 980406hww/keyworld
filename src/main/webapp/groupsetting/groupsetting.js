@@ -196,22 +196,45 @@ function showUpdateGroupDialog(operationCombineUuid, operationCombineName) {
 }
 
 function delOperationCombine(operationCombineUuid) {
-    parent.$.messager.confirm('询问', "确定删除此操作组合吗?", function (b) {
-        if (b) {
-            $.ajax({
-                url: '/internal/operationCombine/delOperationCombine/' + operationCombineUuid,
-                type: 'POST',
-                success: function (result) {
-                    if (result) {
-                        $().toastmessage('showSuccessToast', "删除成功!", true);
-                    } else {
-                        $().toastmessage('showErrorToast', "删除失败!");
-                    }
-                },
-                error: function () {
-                    $().toastmessage('showErrorToast', "删除失败!");
+    checkGroupNames(operationCombineUuid, function (flag) {
+        if (flag) {
+            parent.$.messager.confirm('询问', "确定删除此操作组合吗?", function (b) {
+                if (b) {
+                    $.ajax({
+                        url: '/internal/operationCombine/delOperationCombine/' + operationCombineUuid,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result) {
+                                $().toastmessage('showSuccessToast', "删除成功!", true);
+                            } else {
+                                $().toastmessage('showErrorToast', "删除失败!");
+                            }
+                        },
+                        error: function () {
+                            $().toastmessage('showErrorToast', "删除失败!");
+                        }
+                    });
                 }
             });
+        } else {
+            $().toastmessage('showErrorToast', "请先将要删除的操作组合下的分组移除！！！");
+        }
+    });
+}
+
+function checkGroupNames(uuid, callback) {
+    var flag = true;
+    $.ajax({
+        url: '/internal/operationCombine/getGroupNames/' + uuid,
+        type: 'POST',
+        success: function (data) {
+            if (JSON.parse(data).length > 0) {
+                flag = false;
+            }
+            callback(flag);
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "获取操作组合下的分组数据失败！！");
         }
     });
 }
@@ -413,7 +436,9 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
         groupNameArr = groupNameArr.filter(function (groupName, index) {
             return groupNameArr.indexOf(groupName) === index && groupName !== '';
         });
-        operationCombine.groupNames = groupNameArr;
+        if (groupNameArr.length > 0) {
+            operationCombine.groupNames = groupNameArr;
+        }
         type = "addOperationCombine";
         if (dialogDiv.find("#machineUsedPercent").val() === '0' || dialogDiv.find("#machineUsedPercent").val() === '') {
             $.messager.alert('提示', '每个操作的机器占比都应该大于0！！！', 'warning');
@@ -993,7 +1018,7 @@ function editGroupNameStr(o, edit, maxInvalidCount){
                 },
                 success: function (data) {
                     if (data) {
-                        $().toastmessage('showSuccessToast', "保存成功！");
+                        $().toastmessage('showSuccessToast', "保存成功！", true);
                     } else {
                         $().toastmessage('showErrorToast', "保存失败！");
                         o.value = $.trim(label);
@@ -1107,6 +1132,9 @@ function saveGroupsBelowOperationCombine(operationCombineUuid, maxInvalidCount) 
         groupNameArr = groupNameArr.filter(function (groupName, index) {
            return groupNameArr.indexOf(groupName) === index && groupName !== '';
         });
+        if (groupNameArr.length === 0) {
+            addFlag = false;
+        }
     } else {
         addFlag = false;
     }
@@ -1148,7 +1176,7 @@ function saveGroupsBelowOperationCombine(operationCombineUuid, maxInvalidCount) 
     if (updateFlag) {
         postData.groupUuids = groupUuids;
         $.ajax({
-            url: '/internal/group/updateGroupsBelowOperationCombine',
+            url: '/internal/group/deleteGroupsBelowOperationCombine',
             type: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -1166,4 +1194,5 @@ function saveGroupsBelowOperationCombine(operationCombineUuid, maxInvalidCount) 
             }
         });
     }
+    $("#showGroupQueueDialog").dialog("close");
 }
