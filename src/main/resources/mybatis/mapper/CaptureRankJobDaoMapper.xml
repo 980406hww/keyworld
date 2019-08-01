@@ -105,9 +105,11 @@
         <if test="captureJobCriteria.rankJobArea != null and captureJobCriteria.rankJobArea != ''">
             AND c.fRankJobArea = #{captureJobCriteria.rankJobArea}
         </if>
-        ORDER BY
-            c.fExectionTime
-        limit 1;
+        <if test="captureJobCriteria.rankJobCity != null and captureJobCriteria.rankJobCity != ''">
+            AND c.fRankJobCity = #{captureJobCriteria.rankJobCity}
+        </if>
+        ORDER BY c.fExectionTime
+        limit 1
     </select>
 
     <select id="getProcessingJob" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
@@ -124,8 +126,11 @@
         <if test="captureJobCriteria.rankJobArea != null and captureJobCriteria.rankJobArea != ''">
             AND c.fRankJobArea = #{captureJobCriteria.rankJobArea}
         </if>
+        <if test="captureJobCriteria.rankJobCity != null and captureJobCriteria.rankJobCity != ''">
+            AND c.fRankJobCity = #{captureJobCriteria.rankJobCity}
+        </if>
         order By c.fExectionTime
-        limit 1;
+        limit 1
     </select>
 
     <select id="getCaptureRankJobStatus" resultType="java.lang.Boolean">

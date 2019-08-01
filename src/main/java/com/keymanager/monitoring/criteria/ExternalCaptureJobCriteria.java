@@ -7,6 +7,7 @@ public class ExternalCaptureJobCriteria extends BaseCriteria {
 
     private String rankJobType;
     private String rankJobArea;
+    private String rankJobCity;
 
     public String getRankJobType() {
         return rankJobType;
@@ -22,5 +23,13 @@ public class ExternalCaptureJobCriteria extends BaseCriteria {
 
     public void setRankJobArea(String rankJobArea) {
         this.rankJobArea = rankJobArea;
+    }
+
+    public String getRankJobCity() {
+        return rankJobCity;
+    }
+
+    public void setRankJobCity(String rankJobCity) {
+        this.rankJobCity = rankJobCity;
     }
 }
