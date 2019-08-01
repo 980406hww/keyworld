@@ -330,7 +330,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 					QZKeywordRankInfo qzKeywordRankInfo = qzKeywordRankInfoMap.get(qzChargeRule.getStandardSpecies());
 					if (null != qzKeywordRankInfo && qzKeywordRankInfo.getDataProcessingStatus()) {
 						existingStandardSpeciesSet.add(qzChargeRule.getStandardSpecies());
-						if (qzChargeRule.getStandardSpecies().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
+						if (qzChargeRule.getStandardSpecies().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)
+								&& qzSetting.getSearchEngine().equals(Constants.SEARCH_ENGINE_BAIDU)) {
 							existingStandardSpeciesSet.add("aiZhan");
 						}
 					} else {
