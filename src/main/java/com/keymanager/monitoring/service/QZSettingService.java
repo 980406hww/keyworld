@@ -121,10 +121,10 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				qzSetting.setUpdateStatus(QZSettingStatusEnum.Completed.getValue());
 			}
 			if (pcKeywordExceedMaxCount) {
-				qzSetting.setPcKeywordExceedMaxCount(pcKeywordExceedMaxCount);
+				qzSetting.setPcKeywordExceedMaxCount(true);
 			}
 			if(phoneKeywordExceedMaxCount) {
-				qzSetting.setPhoneKeywordExceedMaxCount(phoneKeywordExceedMaxCount);
+				qzSetting.setPhoneKeywordExceedMaxCount(true);
 			}
 			qzSetting.setUpdateEndTime(new Date());
 			qzSettingDao.updateById(qzSetting);
@@ -146,7 +146,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			existingQZSetting.setAutoCrawlKeywordFlag(qzSetting.isAutoCrawlKeywordFlag());
 			existingQZSetting.setIgnoreNoIndex(qzSetting.isIgnoreNoIndex());
             existingQZSetting.setIgnoreNoOrder(qzSetting.isIgnoreNoOrder());
-            existingQZSetting.setGroupMaxCustomerKeywordCount(qzSetting.getGroupMaxCustomerKeywordCount());
 			existingQZSetting.setUpdateInterval(qzSetting.getUpdateInterval());
 			existingQZSetting.setfIsMonitor(qzSetting.getfIsMonitor());
 			existingQZSetting.setfIsReady(qzSetting.getfIsReady());
@@ -567,10 +566,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 							qzSettingCriteria.getQzSetting().setPhoneKeywordExceedMaxCount(true);
 						}
 					}
-                    String pcCustomerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(Long.valueOf(qzSettingCriteria.getQzSetting().getCustomerUuid()), qzSettingCriteria.getQzSetting().getUuid(), TerminalTypeEnum.PC.toString(), qzSettingCriteria.getQzSetting().getDomain());
-                    String phoneCustomerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(Long.valueOf(qzSettingCriteria.getQzSetting().getCustomerUuid()), qzSettingCriteria.getQzSetting().getUuid(), TerminalTypeEnum.Phone.toString(), qzSettingCriteria.getQzSetting().getDomain());
-                    Set pcExcludeKeyword = new HashSet();
-                    Set phoneExcludeKeyword = new HashSet();
+                    String pcCustomerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword((long) qzSettingCriteria.getQzSetting().getCustomerUuid(),
+							qzSettingCriteria.getQzSetting().getUuid(), TerminalTypeEnum.PC.toString(), qzSettingCriteria.getQzSetting().getDomain());
+                    String phoneCustomerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword((long) qzSettingCriteria.getQzSetting().getCustomerUuid(),
+							qzSettingCriteria.getQzSetting().getUuid(), TerminalTypeEnum.Phone.toString(), qzSettingCriteria.getQzSetting().getDomain());
+
+                    Set<String> pcExcludeKeyword = new HashSet<>();
+                    Set<String> phoneExcludeKeyword = new HashSet<String>();
                     if (null != pcCustomerExcludeKeywords) {
                         pcExcludeKeyword.addAll(Arrays.asList(pcCustomerExcludeKeywords.split(",")));
                     }
@@ -579,10 +581,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                     }
 					if (CollectionUtils.isNotEmpty(insertingCustomerKeywords)) {
 						List<CustomerKeyword> customerKeywords = new ArrayList<>();
-                        QZSetting qzSetting = qzSettingDao.selectById(qzSettingCriteria.getQzSetting().getUuid());
-                        List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList = customerKeywordService.searchOptimizeGroupNameAndCount(insertingCustomerKeywords.get(0).getOptimizeGroupName());
                         for (CustomerKeyword customerKeyword : insertingCustomerKeywords) {
-                            if (TerminalTypeEnum.PC.equals(customerKeyword.getTerminalType())){
+                            if (TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())){
                                 if (!pcExcludeKeyword.isEmpty()){
                                     if (pcExcludeKeyword.contains(customerKeyword.getKeyword())){
                                         customerKeyword.setOptimizeGroupName("zanting");
@@ -598,10 +598,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                                 }
                             }
 							customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Capture.name());
-                            if (!"zanting".equals(customerKeyword.getOptimizeGroupName())){
-                                CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = customerKeywordService.matchOptimizeGroupName(customerKeywordOptimizeGroupCriteriaList, customerKeyword.getOptimizeGroupName(), qzSetting.getGroupMaxCustomerKeywordCount());
-                                customerKeyword.setOptimizeGroupName(customerKeywordOptimizeGroupCriteria.getOptimizeGroupName());
-                            }
                             customerKeywords.add(customerKeyword);
                         }
 						customerKeywordService.addCustomerKeyword(customerKeywords, qzSettingCriteria.getUserName());
@@ -709,10 +705,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	public QZSettingSearchGroupInfoVO getQZSettingGroupInfo (QZSettingSearchGroupInfoCriteria qzSettingSearchGroupInfoCriteria) {
 		QZSettingSearchGroupInfoVO qzSettingSearchGroupInfoVo = new QZSettingSearchGroupInfoVO();
 		qzSettingSearchGroupInfoVo.setCustomerKeywordCount(qzSettingDao.getQZSettingGroupInfo(qzSettingSearchGroupInfoCriteria));
-		qzSettingSearchGroupInfoVo.setMachineCount(machineInfoService.getMachineCount(qzSettingSearchGroupInfoCriteria
-						.getOptimizeGroupName(), qzSettingSearchGroupInfoCriteria.getTerminalType()));
-		qzSettingSearchGroupInfoVo.setOperationCombineName(operationCombineService.getOperationCombineName(
-				qzSettingSearchGroupInfoCriteria.getOptimizeGroupName()));
+		qzSettingSearchGroupInfoVo.setOperationCombineName(operationCombineService.getOperationCombineName(qzSettingSearchGroupInfoCriteria.getOptimizeGroupName()));
 		qzSettingSearchGroupInfoVo.setCategoryTagNames(qzCategoryTagService.findTagNames(qzSettingSearchGroupInfoCriteria.getQzSettingUuid()));
 		return qzSettingSearchGroupInfoVo;
 	}
@@ -721,12 +714,10 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		for (String terminalType : qzSettingSaveCustomerKeywordsCriteria.getTerminalTypes()) {
 			List<CustomerKeyword> customerKeywords = new ArrayList<>();
 			String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid(), qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid(), terminalType, qzSettingSaveCustomerKeywordsCriteria.getDomain());
-			Set excludeKeyword = new HashSet();
+			Set<String> excludeKeyword = new HashSet<String>();
 			if (null != customerExcludeKeywords) {
 				excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
 			}
-            QZSetting qzSetting = qzSettingDao.searchGroupMaxCustomerKeywordCount(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid(), terminalType,  qzSettingSaveCustomerKeywordsCriteria.getDomain());
-            List<CustomerKeywordOptimizeGroupCriteria> customerKeywordOptimizeGroupCriteriaList = customerKeywordService.searchOptimizeGroupNameAndCount(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
 			for (String keyword : qzSettingSaveCustomerKeywordsCriteria.getKeywords()) {
 				CustomerKeyword customerKeyword = new CustomerKeyword();
 				customerKeyword.setQzSettingUuid(qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid());
@@ -751,10 +742,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 						customerKeyword.setMachineGroup("Pause");
 					}
 				}
-				if (!"zanting".equals(customerKeyword.getOptimizeGroupName()) && customerKeyword.getOptimizeGroupName().equals(TerminalTypeEnum.PC.name().equals(terminalType) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup())){
-                    CustomerKeywordOptimizeGroupCriteria customerKeywordOptimizeGroupCriteria = customerKeywordService.matchOptimizeGroupName(customerKeywordOptimizeGroupCriteriaList, customerKeyword.getOptimizeGroupName(), qzSetting.getGroupMaxCustomerKeywordCount());
-                    customerKeyword.setOptimizeGroupName(customerKeywordOptimizeGroupCriteria.getOptimizeGroupName());
-                }
 				customerKeyword.setKeyword(keyword);
 				customerKeywords.add(customerKeyword);
 			}
@@ -774,11 +761,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
     public List<String> getAvailableOptimizationGroups (GroupSettingCriteria groupSettingCriteria) {
 		return qzSettingDao.getAvailableOptimizationGroups(groupSettingCriteria);
-    }
-
-    public QZSetting searchGroupMaxCustomerKeywordCount(Long customerUuid, String terminalType, String url){
-        url = url.replace("www.","").replace("http://","").replace("https://","").split("/")[0];
-        return qzSettingDao.searchGroupMaxCustomerKeywordCount(customerUuid, terminalType,  url);
     }
 
     public void startMonitorImmediately(String uuids, String userName){
@@ -862,5 +844,12 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public void updateQZSettingRenewalStatus(List<Long> uuids, Integer renewalStatus) {
 		qzSettingDao.updateQZSettingRenewalStatus(uuids, renewalStatus);
+	}
+
+	public void updateQzCategoryTags(List<String> uuids, List<QZCategoryTag> targetQZCategoryTags) {
+		for (String uuid : uuids) {
+			List<QZCategoryTag> existingQZCategoryTags = qzCategoryTagService.searchCategoryTagByQZSettingUuid(Long.parseLong(uuid));
+			qzCategoryTagService.updateQZCategoryTag(existingQZCategoryTags, targetQZCategoryTags, Long.parseLong(uuid));
+		}
 	}
 }

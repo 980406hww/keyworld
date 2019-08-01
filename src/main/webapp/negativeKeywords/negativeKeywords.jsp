@@ -259,7 +259,7 @@
 <div id="topDiv">
     <%@include file="/menu.jsp" %>
 </div>
-<div id="centerDiv" style="margin-top: 20px;">
+<div id="centerDiv" style="margin-top: 15px;">
    <div>
         负面词:<br><br>
         <textarea name="negativeKeywords" id="negativeKeywords" style="width: 500px;height: 100px;">${negativeKeywords}</textarea><br><br>

@@ -15,6 +15,7 @@ import com.keymanager.monitoring.entity.QZOperationType;
 import com.keymanager.monitoring.enums.CaptureRankExectionStatus;
 import com.keymanager.monitoring.vo.QZChargeRuleVO;
 import com.keymanager.util.Utils;
+import com.keymanager.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,11 +47,8 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
     @Autowired
     private QZChargeRuleService qzChargeRuleService;
 
-    @Autowired
-    private CustomerKeywordDao customerKeywordDao;
-
     public synchronized CaptureRankJob provideCaptureRankJob(ExternalCaptureJobCriteria captureJobCriteria) {
-        if (captureJobCriteria.getRankJobArea() == null || captureJobCriteria.getRankJobArea().equals("")) {
+        if (StringUtil.isNullOrEmpty(captureJobCriteria.getRankJobArea())) {
             captureJobCriteria.setRankJobArea("China");
         }
         // 取 Processing

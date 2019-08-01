@@ -86,6 +86,12 @@
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showSettingDialog($(this))" value=" 增加 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
+
+				<shiro:hasPermission name="/internal/qzsetting/save">
+					<li>
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showQZCategoryTagsDialog()" value=" 修改分组标签 " >&nbsp;
+					</li>
+				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
 					<li>
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="immediatelyUpdateQZSettings('updateSettings')" value=" 马上更新 " >&nbsp;
@@ -505,9 +511,9 @@
 
 								<div class="other-rank_2">
 									<div class="row">
-										<div title="该站下该分组所有机器数, 点击链接跳转到终端监控">
+										<div title="站点所属优化组">
 										<span class="line1">
-											<a target="_blank" href="javascript:searchClientStatus('${qzSetting.pcGroup}')">${qzSetting.pcGroup == null or qzSetting.pcGroup == "" ? "暂无" : qzSetting.pcGroup}</a>
+											<a href="javascript:;"></a>
 										</span>
 											<span>
 											<a href="javascript:;">优化分组</a>
@@ -960,9 +966,9 @@
 
 								<div class="other-rank_2">
 									<div class="row">
-										<div title="该站下该分组所有机器数, 点击链接跳转到终端监控">
+										<div title="站点所属优化组">
 										<span class="line1">
-											<a target="_blank" href="javascript:searchClientStatus('${qzSetting.phoneGroup}')">${qzSetting.phoneGroup == null or qzSetting.phoneGroup == "" ? "暂无" : qzSetting.phoneGroup}</a>
+											<a href="javascript:;"></a>
 										</span>
 											<span>
 											<a href="javascript:;">优化分组</a>
@@ -1279,10 +1285,6 @@
 	</div>
 </div>
 
-<form id="searchClientStatusForm" method="post" target="_blank" action="/internal/machineInfo/searchMachineInfos" style="display: none">
-    <input type="text" name="groupName" id="groupName">
-</form>
-
 <form id="searchCustomerKeywordForm" method="post" target="_blank" action="/internal/customerKeyword/searchCustomerKeywords" style="display: none;">
 	<input type="text" name="customerUuid" id="customerUuid">
 	<input type="text" name="optimizeGroupName" id="optimizeGroupName">
@@ -1351,8 +1353,13 @@
                     </c:forEach>
                 </select>
             </td>
-            <td style="width:65px" align="right"></td>
-            <td></td>
+            <td style="width:65px" align="right">达标监控</td>
+            <td>
+				<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
+					<option value="1">是</option>
+					<option value="0" selected>否</option>
+				</select>
+			</td>
         </tr>
 	</table>
 	<table style="font-size:12px" cellspacing="5">
@@ -1574,19 +1581,6 @@
 	<table style="font-size:12px" cellspacing="5">
 		<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
 			<c:if test="${not isSEO}">
-				<tr>
-					<td style="width:65px" align="right">组最大词数</td>
-					<td>
-						<input type="text" name="groupMaxCustomerKeywordCount" id="groupMaxCustomerKeywordCount" placeholder="请输入数字：" value="5000" style="width:240px">
-					</td>
-					<td style="width:65px" align="right">达标监控</td>
-					<td>
-						<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
-							<option value="1">是</option>
-							<option value="0" selected>否</option>
-						</select>
-					</td>
-				</tr>
 				<c:if test="${isBaiduEngine}">
 					<tr>
 						<td style="width:65px" align="right">去掉没指数</td>
@@ -1996,6 +1990,10 @@
 <%--达标信息详情DIV--%>
 <div id="chargeRulesDiv" style="display:none;width:300px;">
 	<table id="chargeRulesDivTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;"></table>
+</div>
+
+<div id="targetQzCategoryTagsDialog" class="easyui-dialog" style="left: 30%;display: none;">
+	目标分组标签:<input type="text" id="targetQzCategoryTags" name="targetQzCategoryTags" style="width:200px; margin-top: 10px" placeholder="按正确方式输入：阿卡索,MBA,算法">
 </div>
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath}/js/echarts.min.js"></script>

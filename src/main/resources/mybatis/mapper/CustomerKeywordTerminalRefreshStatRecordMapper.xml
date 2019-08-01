@@ -22,10 +22,7 @@
             ckrsr.fTotalOptimizedCount AS 'totalOptimizedCount',
             ckrsr.fNeedOptimizeCount AS 'needOptimizeCount',
             ckrsr.fQueryCount AS 'queryCount',
-            ckrsr.fTotalMachineCount AS 'totalMachineCount',
-            ckrsr.fUnworkMachineCount AS 'unworkMachineCount',
-            ckrsr.fMaxInvalidCount AS 'maxInvalidCount',
-            ckrsr.fIdleTotalMinutes AS 'idleTotalMinutes'
+            ckrsr.fMaxInvalidCount AS 'maxInvalidCount'
         FROM t_ck_refresh_stat_record ckrsr
         WHERE DATE_SUB(CURDATE(), INTERVAL #{customerKeywordRefreshStatInfoCriteria.dayNum} DAY) = ckrsr.fCreateDate
         AND ckrsr.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}

@@ -7,7 +7,7 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
     <%@include file="/menu.jsp" %>
-    <form action="/internal/machineInfo/machineInfoStat" method="post" id="searchMachineInfoSummaryVOForm" style="margin-top: 35px;margin-left: 20px">
+    <form action="/internal/machineInfo/machineInfoStat" method="post" id="searchMachineInfoSummaryVOForm" style="margin-top: 5px;margin-left: 5px">
      客户端ID前缀:&nbsp;<input type="text" name="clientIDPrefix" id="clientIDPrefix" value="${clientIDPrefix}">
         &nbsp;&nbsp;城市: <input type="text" name="city" id="city" value="${city}">&nbsp;&nbsp;
         流转分组: <input type="text" name="switchGroupName" id="switchGroupName" value="${switchGroupName}">&nbsp;&nbsp;
@@ -15,7 +15,7 @@
             <input type="submit" value=" 查询 " onclick="trimSearchCondition()">
         </shiro:hasPermission>
     </form>
-    <table width=60% style="font-size: 12px;" cellpadding=3 id="headerTable">
+    <table width=100% style="font-size: 12px;" cellpadding=3 id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
             <td align="center" width=100>客户端ID前缀</td>
             <td align="center" width=100>总数</td>
@@ -28,7 +28,7 @@
     </table>
 </div>
 <div id="centerDiv">
-<table width=60% style="font-size: 12px" id="machineInfoSummaryTable" cellpadding=3>
+<table width=100% style="font-size: 12px" id="machineInfoSummaryTable" cellpadding=3>
     <c:set var="color" scope="session" value="#eeeeff"/>
     <c:forEach items="${machineInfoSummaryVOs}" var="machineInfoSummaryVO" varStatus="status">
             <c:if test="${machineInfoSummaryVO.clientIDPrefixCount>0}">

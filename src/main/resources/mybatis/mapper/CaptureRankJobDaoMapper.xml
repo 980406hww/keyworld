@@ -12,6 +12,7 @@
         c.fExectionStatus  AS `exectionStatus`,
         c.fRankJobType AS `rankJobType`,
         c.fRankJobArea AS `rankJobArea`,
+        c.fRankJobCity AS `rankJobCity`,
         c.fCaptureRankJobStatus  AS `captureRankJobStatus`,
         c.fStartTime AS `startTime`,
         c.fEndTime AS `endTime`,
@@ -69,6 +70,9 @@
             <if test="captureRankJobSearchCriteria.rankJobArea != null and captureRankJobSearchCriteria.rankJobArea != ''">
                 AND c.fRankJobArea = #{captureRankJobSearchCriteria.rankJobArea}
             </if>
+            <if test="captureRankJobSearchCriteria.rankJobCity != null and captureRankJobSearchCriteria.rankJobCity != ''">
+                AND c.fRankJobCity = #{captureRankJobSearchCriteria.rankJobCity}
+            </if>
         </where>
     </select>
 
@@ -101,9 +105,11 @@
         <if test="captureJobCriteria.rankJobArea != null and captureJobCriteria.rankJobArea != ''">
             AND c.fRankJobArea = #{captureJobCriteria.rankJobArea}
         </if>
-        ORDER BY
-            c.fExectionTime
-        limit 1;
+        <if test="captureJobCriteria.rankJobCity != null and captureJobCriteria.rankJobCity != ''">
+            AND c.fRankJobCity = #{captureJobCriteria.rankJobCity}
+        </if>
+        ORDER BY c.fExectionTime
+        limit 1
     </select>
 
     <select id="getProcessingJob" resultType="com.keymanager.monitoring.entity.CaptureRankJob">
@@ -120,8 +126,11 @@
         <if test="captureJobCriteria.rankJobArea != null and captureJobCriteria.rankJobArea != ''">
             AND c.fRankJobArea = #{captureJobCriteria.rankJobArea}
         </if>
+        <if test="captureJobCriteria.rankJobCity != null and captureJobCriteria.rankJobCity != ''">
+            AND c.fRankJobCity = #{captureJobCriteria.rankJobCity}
+        </if>
         order By c.fExectionTime
-        limit 1;
+        limit 1
     </select>
 
     <select id="getCaptureRankJobStatus" resultType="java.lang.Boolean">

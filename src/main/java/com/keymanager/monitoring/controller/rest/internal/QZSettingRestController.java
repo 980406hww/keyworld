@@ -1,14 +1,12 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.baomidou.mybatisplus.plugins.Page;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.*;
-import com.keymanager.monitoring.entity.Customer;
-import com.keymanager.monitoring.entity.CustomerExcludeKeyword;
-import com.keymanager.monitoring.entity.QZSetting;
-import com.keymanager.monitoring.entity.UserInfo;
+import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.service.*;
-import com.keymanager.monitoring.vo.QZSettingSearchGroupInfoVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -21,7 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/internal/qzsetting")
@@ -245,8 +245,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/getQZSettingGroupInfo", method = RequestMethod.POST)
 	public ResponseEntity<?> getQZSettingGroupInfo(@RequestBody QZSettingSearchGroupInfoCriteria qzSettingSearchGroupInfoCriteria) {
 		try {
-			QZSettingSearchGroupInfoVO qzSettingSearchGroupInfoVo = qzSettingService.getQZSettingGroupInfo(qzSettingSearchGroupInfoCriteria);
-			return new ResponseEntity<Object>(qzSettingSearchGroupInfoVo, HttpStatus.OK);
+			return new ResponseEntity<Object>(qzSettingService.getQZSettingGroupInfo(qzSettingSearchGroupInfoCriteria), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
@@ -328,6 +327,20 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		}catch(Exception ex){
 			logger.error(ex.getMessage());
 		}
-		return new ResponseEntity<Object>(false, HttpStatus.OK);
+		return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+	}
+
+	@RequiresPermissions("/internal/qzsetting/save")
+	@RequestMapping(value = "/updateQzCategoryTags", method = RequestMethod.POST)
+	public ResponseEntity<?> updateQzCategoryTags(@RequestBody Map<String, Object> requestMap) {
+		try {
+			List<String> uuids = (List<String>) requestMap.get("uuids");
+			List<QZCategoryTag> targetQZCategoryTags = new ObjectMapper().convertValue(requestMap.get("targetQZCategoryTags"), new TypeReference<List<QZCategoryTag>>() {});
+			qzSettingService.updateQzCategoryTags(uuids, targetQZCategoryTags);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		}catch(Exception ex){
+			logger.error(ex.getMessage());
+		}
+		return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 	}
 }

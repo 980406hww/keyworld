@@ -5,11 +5,15 @@ import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.MachineInfoBatchUpdateCriteria;
 import com.keymanager.monitoring.criteria.MachineInfoCriteria;
 import com.keymanager.monitoring.criteria.MachineInfoGroupStatCriteria;
+import com.keymanager.monitoring.criteria.MachineInfoMachineGroupStatCriteria;
 import com.keymanager.monitoring.entity.MachineInfo;
 import com.keymanager.monitoring.entity.UserPageSetup;
 import com.keymanager.monitoring.enums.TerminalTypeEnum;
-import com.keymanager.monitoring.service.*;
+import com.keymanager.monitoring.service.MachineInfoService;
+import com.keymanager.monitoring.service.PerformanceService;
+import com.keymanager.monitoring.service.UserPageSetupService;
 import com.keymanager.monitoring.vo.MachineInfoGroupSummaryVO;
+import com.keymanager.monitoring.vo.MachineInfoMachineGroupSummaryVO;
 import com.keymanager.monitoring.vo.MachineInfoSummaryVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
@@ -436,4 +440,25 @@ public class MachineInfoRestController extends SpringMVCBaseController {
         }
     }
 
+
+    @RequiresPermissions("/internal/machineInfo/machineInfoMachineGroupStat")
+    @RequestMapping(value = "/machineInfoMachineGroupStat", method = {RequestMethod.POST, RequestMethod.GET})
+    public ModelAndView machineInfoMachineGroupStat(MachineInfoMachineGroupStatCriteria machineInfoMachineGroupStatCriteria, HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView("machineInfo/machineInfoMachineGroupStat");
+        try {
+            if(request.getMethod().equals("GET")){
+                return modelAndView;
+            }
+            if (null != machineInfoMachineGroupStatCriteria.getMachineGroup()) {
+                machineInfoMachineGroupStatCriteria.setMachineGroup(machineInfoMachineGroupStatCriteria.getMachineGroup().trim());
+            }
+            List<MachineInfoMachineGroupSummaryVO> machineInfoMachineGroupSummaryVOS = machineInfoService.searchMachineInfoMachineGroupSummaryVO(
+                    machineInfoMachineGroupStatCriteria.getMachineGroup(), machineInfoMachineGroupStatCriteria.getTerminalType());
+            modelAndView.addObject("machineInfoMachineGroupStatCriteria", machineInfoMachineGroupStatCriteria);
+            modelAndView.addObject("machineInfoMachineGroupSummaryVOS", machineInfoMachineGroupSummaryVOS);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return modelAndView;
+    }
 }

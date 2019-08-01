@@ -315,18 +315,19 @@ function updateIndustryUserID() {
         $.messager.alert('提示', '请选择要修改所属用户的行业信息！！', 'info');
         return;
     }
-    parent.$.messager.confirm('询问', "确认修改行业所属人吗？", function(b) {
-        if (b) {
-            $("#updateIndustryUserIDDialog").show();
-            $("#updateIndustryUserIDDialog").dialog({
-                resizable: false,
-                width: 250,
-                height: 100,
-                modal: true,
-                closed: true,
-                buttons: [{
-                    text: '确定',
-                    handler: function () {
+
+    $("#updateIndustryUserIDDialog").show();
+    $("#updateIndustryUserIDDialog").dialog({
+        resizable: false,
+        width: 250,
+        height: 100,
+        modal: true,
+        closed: true,
+        buttons: [{
+            text: '确定',
+            handler: function () {
+                parent.$.messager.confirm('询问', "确认修改行业所属人吗？", function(b) {
+                    if (b) {
                         var data = {};
                         data.uuids = uuids.split(",");
                         data.userID = $("#userID").val();
@@ -351,14 +352,14 @@ function updateIndustryUserID() {
                             }
                         });
                     }
-                }]
-            });
-            $("#updateIndustryUserIDDialog").dialog("open");
-            $('#updateIndustryUserIDDialog').window("resize", {
-                top: $(document).scrollTop() + 150,
-                left: $(document).scrollLeft() + $(window).width() / 2 - 125
-            });
-        }
+                });
+            }
+        }]
+    });
+    $("#updateIndustryUserIDDialog").dialog("open");
+    $('#updateIndustryUserIDDialog').window("resize", {
+        top: $(document).scrollTop() + 150,
+        left: $(document).scrollLeft() + $(window).width() / 2 - 125
     });
 }
 

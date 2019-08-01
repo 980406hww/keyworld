@@ -178,4 +178,14 @@ public class ConfigService extends ServiceImpl<MachineInfoDao, MachineInfo>{
         }
         return null;
     }
+    public List<String> getRankJobCity(){
+
+        Config config = getConfig(Constants.CONFIG_TYPE_RANK_JOB_CITY, "RankJobCity");
+        if(config != null) {
+            String[] cities = config.getValue().split(",");
+            Arrays.sort(cities);
+            return Arrays.asList(cities);
+        }
+        return null;
+    }
 }

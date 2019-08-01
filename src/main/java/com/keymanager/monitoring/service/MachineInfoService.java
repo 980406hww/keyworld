@@ -811,10 +811,6 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         machineInfoDao.resetOptimizationInfo();
     }
 
-    public Integer getMachineCount (String optimizeGroupName, String terminalType) {
-        return machineInfoDao.getMachineCount(optimizeGroupName, terminalType);
-    }
-
     public ClientStatusForOptimization getClientStatusForOptimization(String clientID) {
         MachineInfo machineInfo = this.selectById(clientID);
         ClientStatusForOptimization clientStatusForOptimization = null;
@@ -900,6 +896,10 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
 
     public List<MachineGroupWorkInfo> searchMachineInfoFormMachineGroupWorkInfo(MachineGroupWorkInfoCriteria machineGroupWorkInfoCriteria) {
         return machineInfoDao.searchMachineInfoFormMachineGroupWorkInfo(machineGroupWorkInfoCriteria);
+    }
+
+    public List<MachineInfoMachineGroupSummaryVO> searchMachineInfoMachineGroupSummaryVO(String machineGroup, String terminalType) {
+        return machineInfoDao.searchMachineInfoMachineGroupSummaryVO(machineGroup,terminalType);
     }
 
 }

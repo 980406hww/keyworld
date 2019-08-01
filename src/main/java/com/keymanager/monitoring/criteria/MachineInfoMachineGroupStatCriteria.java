@@ -1,15 +1,15 @@
 package com.keymanager.monitoring.criteria;
 
-public class MachineInfoGroupStatCriteria extends BaseCriteria {
-    private String groupName;
+public class MachineInfoMachineGroupStatCriteria extends BaseCriteria {
+    private String machineGroup;
     private String terminalType;
 
-    public String getGroupName() {
-        return groupName;
+    public String getMachineGroup() {
+        return machineGroup;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setMachineGroup(String machineGroup) {
+        this.machineGroup = machineGroup;
     }
 
     public String getTerminalType() {

@@ -38,10 +38,8 @@
     <%@include file="/menu.jsp" %>
     <form id="searchCustomerKeywordForm" style="font-size:12px; width: 100%;" action="/internal/customerKeyword/showMachineGroupAndSize" method="post">
         <div id="searchCustomerKeywordTable" >
-
-            <br>
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
-                <input type="submit"  value=" 查询 ">&nbsp;
+                &nbsp;&nbsp;<input type="submit"  value=" 查询 ">&nbsp;
             </shiro:hasPermission>
 
         </div>

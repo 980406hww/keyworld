@@ -7,6 +7,7 @@ $(function () {
     $("#customerKeywordDialog").dialog("close");
     $("#showUserMessageDialog").dialog("close");
     $("#excludeCustomerKeywordDialog").dialog("close");
+    $("#targetQzCategoryTagsDialog").dialog("close");
 
     var searchCustomerForm = $("#chargeForm");
     var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
@@ -737,15 +738,10 @@ function getQZSettingGroupInfo(terminalType) {
         var div = $(this);
         var uuid = div.parent().parent().parent().find(".header input[name='uuid']").val();
         var optimizeGroupName = div.find(".row:first-child").find("div:eq(0) span.line1 a").text();
-        if (optimizeGroupName.indexOf("(") === -1) {
-            optimizeGroupName = $.trim(optimizeGroupName);
-        } else {
-            optimizeGroupName = $.trim(optimizeGroupName.substring(0,optimizeGroupName.indexOf("(")));
-        }
         var postData = {};
-        postData.qzSettingUuid = uuid;
-        postData.terminalType = terminalType;
-        postData.optimizeGroupName = optimizeGroupName;
+        postData.qzSettingUuid = $.trim(uuid);
+        postData.terminalType = $.trim(terminalType);
+        postData.optimizeGroupName = $.trim(optimizeGroupName);
         $.ajax({
             url: '/internal/qzsetting/getQZSettingGroupInfo',
             type: 'POST',
@@ -773,7 +769,6 @@ function getQZSettingGroupInfo(terminalType) {
                         }
                     });
                 }
-                div.find(".row:first-child").find("div:eq(0) span.line1 a").text(optimizeGroupName+" ("+ (data.machineCount == null ? 0 : data.machineCount) +")");
             },
             error: function () {
                 $().toastmessage('showErrorToast', '获取优化分组机器信息失败，请刷新重试或提交问题给开发人员！');
@@ -966,11 +961,6 @@ function showMoreSearchCondition() {
             panelHeight : 'auto'
         });
     }
-}
-function searchClientStatus(optimizeGroup) {
-    var searchClientStatusFrom = $("#searchClientStatusForm");
-    searchClientStatusFrom.find("#groupName").val($.trim(optimizeGroup));
-    searchClientStatusFrom.submit();
 }
 function searchCustomerKeywords(customerUuid, optimizeGroupName) {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
@@ -1803,7 +1793,6 @@ function resetSettingDialog() {
     settingDialogDiv.find("#qzSettingDomain").val("");
     settingDialogDiv.find("#bearPawNumber").val("");
     settingDialogDiv.find("#qzCategoryTagNames").val("");
-    settingDialogDiv.find("#groupMaxCustomerKeywordCount").val("5000");
     if ($(".datalist-list #isBaiduEngine").val() === 'true') {
         settingDialogDiv.find("#qzSettingAutoCrawlKeywordFlag").val("0");
         settingDialogDiv.find("#qzSettingIgnoreNoIndex").val("1");
@@ -1894,7 +1883,6 @@ function initSettingDialog(qzSetting, self) {
     var PhoneOptimizationType = false;
     var settingDialogDiv = $("#changeSettingDialog");
     settingDialogDiv.find("#qzSettingUuid").val(qzSetting.uuid);
-    settingDialogDiv.find("#groupMaxCustomerKeywordCount").val(qzSetting.groupMaxCustomerKeywordCount);
     settingDialogDiv.find("#bearPawNumber").val(qzSetting.bearPawNumber);
     settingDialogDiv.find("#qzSettingCustomer").val(qzSetting.contactPerson + "_____" + qzSetting.customerUuid);
     settingDialogDiv.find("#qzSettingDomain").val(qzSetting.domain != null ? qzSetting.domain : "");
@@ -2014,13 +2002,11 @@ function saveChangeSetting(self, refresh) {
         qzSetting.ignoreNoIndex = settingDialogDiv.find("#qzSettingIgnoreNoIndex").val() === "1" ? true : false;
         qzSetting.ignoreNoOrder = settingDialogDiv.find("#qzSettingIgnoreNoOrder").val() === "1" ? true : false;
         qzSetting.updateInterval = settingDialogDiv.find("#qzSettingInterval").val();
-        qzSetting.groupMaxCustomerKeywordCount = settingDialogDiv.find("#groupMaxCustomerKeywordCount").val();
     } else {
         qzSetting.autoCrawlKeywordFlag = false;
         qzSetting.ignoreNoIndex = true;
         qzSetting.ignoreNoOrder = true;
         qzSetting.updateInterval = 2;
-        qzSetting.groupMaxCustomerKeywordCount = 5000;
     }
     if (settingDialogDiv.find("#qzSettingStartMonitor").length > 0) {
         qzSetting.fIsMonitor = settingDialogDiv.find("#qzSettingStartMonitor").val() === "1" ? true : false;
@@ -2585,3 +2571,98 @@ function changeQZSettingGroupOperationCombineUuid(self, groupName, userName, isS
         }
     });
 }
+
+function showQZCategoryTagsDialog() {
+    var uuids = getSelectedIDs();
+    if(uuids === ''){
+        alert("请选择要操作的站点!!");
+        return false;
+    }
+    $("#targetQzCategoryTagsDialog").show();
+    $("#targetQzCategoryTagsDialog").dialog({
+        resizable: false,
+        width: 320,
+        height: 100,
+        title:"修改站点分组标签",
+        closed: true,
+        modal: false,
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-ok',
+            handler: function () {
+                updateQzCategoryTags(uuids);
+            }
+        },
+            {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $("#targetQzCategoryTagsDialog").dialog("close");
+                    $("#targetQzCategoryTagsDialog #targetQzCategoryTags").val(null);
+                }
+            }],
+        onClose: function () {
+            $("#targetQzCategoryTagsDialog #targetQzCategoryTags").val(null);
+        }
+    });
+    $("#targetQzCategoryTagsDialog").dialog("open");
+    $('#targetQzCategoryTagsDialog').window("resize",{
+        top: $(document).scrollTop() + 200,
+        left: $(document).scrollLeft() + $(window).width() / 2 - 160
+    });
+}
+
+function updateQzCategoryTags(uuids){
+    var postData = {};
+    postData.uuids = uuids.split(",");
+    postData.targetQZCategoryTags =[];
+    var qzCategoryTagNames = $("#targetQzCategoryTagsDialog").find("#targetQzCategoryTags").val().replace(/(，)+/g, ",");
+    if (qzCategoryTagNames !== "") {
+        var tagNameArr = qzCategoryTagNames.split(",");
+        tagNameArr = unique(tagNameArr);
+        $.each(tagNameArr, function (idx, val) {
+            //防止多打了分号或者分组名为空格串导致存入分组名为空的数据
+            if($.trim(val) !== ""){
+                var qzCategoryTag = {};
+                qzCategoryTag.tagName = $.trim(val);
+                postData.targetQZCategoryTags.push(qzCategoryTag);
+            }
+        });
+    }else{
+        $.messager.alert('提示', '请输入分组标签!!', 'info');
+        return false;
+    }
+    if (postData.targetQZCategoryTags.length === 0) {
+        $().toastmessage('showErrorToast', "请输入有效的数据！！");
+    }
+    parent.$.messager.confirm('询问', "确认修改所选站点的标签吗？", function(b) {
+        if (b) {
+            $.ajax({
+                url: '/internal/qzsetting/updateQzCategoryTags',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (data) {
+                    if(data){
+                        $().toastmessage('showSuccessToast',"操作成功", true);
+                    }else{
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            });
+        }
+    });
+    $("#targetMachineGroupDialog").dialog("close");
+}
+
+
+
+
+

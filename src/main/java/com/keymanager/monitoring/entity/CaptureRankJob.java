@@ -40,6 +40,9 @@ public class CaptureRankJob extends BaseEntity{
     @TableField(value = "fRankJobArea")
     private String rankJobArea;
 
+    @TableField(value = "fRankJobCity")
+    private String rankJobCity;
+
     @TableField(value = "fExectionTime")
     private java.sql.Time exectionTime;
 
@@ -243,5 +246,13 @@ public class CaptureRankJob extends BaseEntity{
 
     public void setContactPerson(String contactPerson) {
         this.contactPerson = contactPerson;
+    }
+
+    public String getRankJobCity() {
+        return rankJobCity;
+    }
+
+    public void setRankJobCity(String rankJobCity) {
+        this.rankJobCity = rankJobCity;
     }
 }

@@ -73,22 +73,15 @@
         </foreach>
     </insert>
 
-    <update id="updateGroupOperationCombineUuid">
-        UPDATE t_group g
-        SET g.fOperationCombineUuid = NULL
-        WHERE g.fOperationCombineUuid = #{operationCombineUuid}
-    </update>
-
-    <update id="updateOperationCombineUuidByGroupName">
-        UPDATE t_group g
-        SET g.fOperationCombineUuid = NULL
-        WHERE g.fOperationCombineUuid = #{operationCombineUuid}
-        AND g.fGroupName IN (
+    <delete id="deleteGroupByGroupName">
+        DELETE FROM t_group
+        WHERE fOperationCombineUuid = #{operationCombineUuid}
+        AND fGroupName IN (
             <foreach collection="groupNames" item="groupName" separator=",">
                 #{groupName}
             </foreach>
         )
-    </update>
+    </delete>
 
     <update id="updateQZSettingGroupOperationCombineUuid">
         UPDATE t_group
@@ -103,14 +96,5 @@
             g.fCreateBy AS 'createBy'
         FROM t_group g
         WHERE g.fGroupName = #{optimizeGroupName}
-    </select>
-
-    <select id="searchUselessOptimizationGroups" resultType="com.keymanager.monitoring.vo.GroupVO">
-        SELECT
-            g.fUuid      AS 'uuid',
-            g.fGroupName AS 'groupName'
-        FROM t_group g
-        WHERE g.fOperationCombineUuid IS NULL
-        <if test="groupName != ''">AND g.fGroupName LIKE '${groupName}%'</if>
     </select>
 </mapper>
