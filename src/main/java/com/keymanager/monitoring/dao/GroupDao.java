@@ -35,6 +35,4 @@ public interface GroupDao extends BaseMapper<Group> {
                                                    @Param("groupName") String groupName);
 
     Group findExistingGroup (@Param("optimizeGroupName") String optimizeGroupName);
-
-    List<GroupVO> searchUselessOptimizationGroups(@Param("groupName") String groupName);
 }

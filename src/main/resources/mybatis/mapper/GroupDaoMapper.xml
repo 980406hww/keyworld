@@ -97,13 +97,4 @@
         FROM t_group g
         WHERE g.fGroupName = #{optimizeGroupName}
     </select>
-
-    <select id="searchUselessOptimizationGroups" resultType="com.keymanager.monitoring.vo.GroupVO">
-        SELECT
-            g.fUuid      AS 'uuid',
-            g.fGroupName AS 'groupName'
-        FROM t_group g
-        WHERE g.fOperationCombineUuid IS NULL
-        <if test="groupName != ''">AND g.fGroupName LIKE '${groupName}%'</if>
-    </select>
 </mapper>

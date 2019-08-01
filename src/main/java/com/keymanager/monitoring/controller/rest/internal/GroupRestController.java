@@ -95,30 +95,4 @@ public class GroupRestController {
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
     }
-
-    @RequiresPermissions("/internal/group/getAvailableOptimizationGroups")
-    @PostMapping("/searchUselessOptimizationGroups")
-    public ResponseEntity<?> searchUselessOptimizationGroups(@RequestBody Map<String, Object> requestMap) {
-        try {
-            String groupName = (String) requestMap.get("groupName");
-            List<GroupVO> groupVos = groupService.searchUselessOptimizationGroups(groupName);
-            return new ResponseEntity<Object>(groupVos, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @RequiresPermissions("/internal/group/getAvailableOptimizationGroups")
-    @PostMapping("/delUselessOptimizationGroup")
-    public ResponseEntity<?> delUselessOptimizationGroup(@RequestBody Map<String, Object> requestMap) {
-        try {
-            List<Long> uuids = (List<Long>) requestMap.get("uuids");
-            groupService.delUselessOptimizationGroup(uuids);
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
-        }
-    }
 }

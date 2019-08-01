@@ -124,14 +124,6 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
         }
     }
 
-    public List<GroupVO> searchUselessOptimizationGroups(String groupName) {
-        return groupDao.searchUselessOptimizationGroups(groupName);
-    }
-
-    public void delUselessOptimizationGroup(List<Long> uuids) {
-        groupDao.deleteBatchIds(uuids);
-    }
-
     public void deleteGroupsBelowOperationCombine(List<Long> groupUuids) {
         groupDao.deleteBatchIds(groupUuids);
     }
