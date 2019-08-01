@@ -1,43 +1,17 @@
 ﻿<%@ include file="/commons/global.jsp" %>
 <html>
 <head>
-	<title>机器分组统计列表</title>
+	<title>机器分组刷量统计列表</title>
 	<%@ include file="/commons/basejs.jsp" %>
-	<%--<style>
-		td{
-			display: table-cell;
-			vertical-align: inherit;
-		}
-		#showMachineGroupWorkInfoDiv {
-			width: 100%;
-			margin: auto;
-		}
-		#topDiv {
-			top: 0px;
-			left: 0px;
-			background-color: white;
-			width: 100%;
-		}
-		#showMachineGroupWorkInfoTable {
-			width: 100%;
-		}
-		#showMachineGroupWorkInfoTable tr:nth-child(odd){background:#EEEEEE;}
-
-
-		#saveCustomerKeywordDialog ul{list-style: none;margin: 0px;padding: 0px;}
-		#saveCustomerKeywordDialog li{margin: 5px 0;}
-		#saveCustomerKeywordDialog .customerKeywordSpanClass{width: 70px;display: inline-block;text-align: right;}
-	</style>--%>
-
 </head>
 <body>
 
 <div id="topDiv">
 	<%@include file="/menu.jsp" %>
 	<form method="post" id="searchMachineGroupInfoForm" action="/internal/machinegroupworkinfo/searchMachineGroupWorkInfos">
-		<table style="font-size:12px;">
+		<table style="font-size:12px;margin: 5px 0px 0px 5px;">
 			<tr>
-				<td align="right">分组名称:<input name="machineGroup" id="machineGroup" type="text" style="width:200px;"
+				<td align="right">机器分组:<input name="machineGroup" id="machineGroup" type="text" style="width:200px;"
 											  value="${machineGroupWorkInfoCriteria.machineGroup}">
 					<input id="machineGroupFuzzyQuery" name="machineGroupFuzzyQuery" type="checkbox" value="machineGroupFuzzyQuery" ${machineGroupWorkInfoCriteria.machineGroupFuzzyQuery != null ? "checked=true" : ""}/>模糊查询 &nbsp;
 					&nbsp;&nbsp;

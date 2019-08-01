@@ -5,6 +5,7 @@ import com.keymanager.monitoring.criteria.CaptureRankJobSearchCriteria;
 import com.keymanager.monitoring.entity.CaptureRankJob;
 import com.keymanager.monitoring.enums.RankJobAreaEnum;
 import com.keymanager.monitoring.service.CaptureRankJobService;
+import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -30,6 +31,9 @@ public class CaptureRankRestController {
 
     @Autowired
     private CaptureRankJobService captureRankJobService;
+
+    @Autowired
+    private ConfigService configService;
 
     @RequiresPermissions("/internal/captureRank/saveCaptureRankJob")
     @RequestMapping(value = "/saveCaptureRankJob", method = RequestMethod.POST)
@@ -68,8 +72,10 @@ public class CaptureRankRestController {
         captureRankJobSearchCriteria.setOperationType(TerminalTypeMapping.getTerminalType(request));
         captureRankJobSearchCriteria.setRankJobType(captureRankJobSearchCriteria.getRankJobType() == null ? "Common" : captureRankJobSearchCriteria.getRankJobType());
         Page<CaptureRankJob> page = captureRankJobService.searchCaptureRankJob(new Page<CaptureRankJob>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), captureRankJobSearchCriteria);
+        List<String> rankJobCityList = configService.getRankJobCity();
         modelAndView.addObject("page", page);
         modelAndView.addObject("rankJobAreaMap", RankJobAreaEnum.changeToMap());
+        modelAndView.addObject("rankJobCityList", rankJobCityList);
         modelAndView.addObject("captureRankJobSearchCriteria", captureRankJobSearchCriteria);
         return modelAndView;
     }

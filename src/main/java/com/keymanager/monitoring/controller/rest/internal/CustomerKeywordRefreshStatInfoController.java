@@ -79,7 +79,6 @@ public class CustomerKeywordRefreshStatInfoController extends SpringMVCBaseContr
         refreshStatInfoCriteria.setEntryType(entryType);
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         refreshStatInfoCriteria.setTerminalType(terminalType);
-
         HttpSession session = request.getSession();
         String userName = (String) session.getAttribute("username");
         boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));

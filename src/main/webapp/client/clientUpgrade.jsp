@@ -7,14 +7,14 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
 	<%@include file="/menu.jsp" %>
-	<div style="margin-top: 35px">
+	<div style="margin-top: 5px">
 		<form method="post" id="searchClientUpgradeFrom" action="/internal/ClientUpgrade/searchClientUpgrades" style="margin-bottom:0px">
 			<input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
 			<input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
 			<input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
 			<input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
 		</form>
-		<div style="margin: 10px 20px 5px 0px" align="right">
+		<div style="margin: 5px 10px 0px 5px" align="right">
             <shiro:hasPermission name="/internal/clientUpgrade/saveClientUpgrade">
 			<a href="#" onclick="showClientUpgrade(null)">新增</a>
             </shiro:hasPermission>

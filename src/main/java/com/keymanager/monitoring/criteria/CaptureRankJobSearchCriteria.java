@@ -11,6 +11,7 @@ public class CaptureRankJobSearchCriteria{
     private String exectionStatus;
     private String rankJobType;
     private String rankJobArea;
+    private String rankJobCity;
     private String createBy;
     private String updateBy;
     private String groupNameFuzzyQuery;
@@ -93,5 +94,13 @@ public class CaptureRankJobSearchCriteria{
 
     public void setGroupNameFuzzyQuery(String groupNameFuzzyQuery) {
         this.groupNameFuzzyQuery = groupNameFuzzyQuery;
+    }
+
+    public String getRankJobCity() {
+        return rankJobCity;
+    }
+
+    public void setRankJobCity(String rankJobCity) {
+        this.rankJobCity = rankJobCity;
     }
 }

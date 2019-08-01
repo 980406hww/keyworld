@@ -110,6 +110,10 @@
 							&nbsp;&nbsp;
 							<input id="renewal" name="renewal" type="checkbox" value="renewal" ${machineInfoCriteria.renewal != null ? "checked=true" : ""}>续费</input>
 							&nbsp;&nbsp;
+							<input id="hasMachineGroup" name="hasMachineGroup" type="checkbox" value="hasMachineGroup" ${machineInfoCriteria.hasMachineGroup != null ? "checked=true" : ""} onclick="uncheckedAnother('hasMachineGroup')">有机器分组</input>
+							&nbsp;&nbsp;
+							<input id="noMachineGroup" name="noMachineGroup" type="checkbox" value="noMachineGroup" ${machineInfoCriteria.noMachineGroup != null ? "checked=true" : ""} onclick="uncheckedAnother('noMachineGroup')">没机器分组</input>
+							&nbsp;&nbsp;
 							<input id="noVNC" name="noVNC" type="checkbox" value="noVNC" ${machineInfoCriteria.noVNC != null ? "checked=true" : ""}>没VNC</input>
 							&nbsp;&nbsp;
 							<input id="noUpgrade" name="noUpgrade" type="checkbox" value="noUpgrade" ${machineInfoCriteria.noUpgrade != null ? "checked=true" : ""}>没升级</input>

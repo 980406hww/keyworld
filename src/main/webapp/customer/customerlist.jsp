@@ -25,7 +25,7 @@
 <%@ include file="/commons/basejs.jsp" %>
 <div id="topDiv">
     <%@include file="/menu.jsp" %>
-    <table width="100%" style="font-size:12px;" cellpadding=3>
+    <table width="100%" style="font-size:12px; margin: 5px 0px 0px 5px" cellpadding=3>
         <tr>
             <td colspan=13>
                 <form method="post" id="searchCustomerForm" action="/internal/customer/searchCustomers" style="margin-bottom:0px ">
