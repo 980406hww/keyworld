@@ -119,19 +119,20 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         List<String> machineGroups = customerKeywordDao.getMachineGroups();
         if (CollectionUtils.isNotEmpty(machineGroups)) {
             for (String machineGroup : machineGroups) {
-                ArrayBlockingQueue blockingQueue = machineGroupQueueMap.get(machineGroup);
+                String[] terminalTypeAndMachineGroups = machineGroup.split("####");
+                ArrayBlockingQueue blockingQueue = machineGroupQueueMap.get(terminalTypeAndMachineGroups[0] + "####" + terminalTypeAndMachineGroups[1]);
                 if (blockingQueue == null) {
-                    blockingQueue = new ArrayBlockingQueue<String>(10000);
-                    machineGroupQueueMap.put(machineGroup, blockingQueue);
+                    blockingQueue = new ArrayBlockingQueue<String>(100000);
+                    machineGroupQueueMap.put(terminalTypeAndMachineGroups[0] + "####" + terminalTypeAndMachineGroups[1], blockingQueue);
                 }
-                if (blockingQueue.size() < 2000) {
-                    String[] terminalTypeAndMachineGroups = machineGroup.split("####");
+                int machineCount = Integer.parseInt(terminalTypeAndMachineGroups[2]);
+                if (blockingQueue.size() < (machineCount * 4)) {
                     List<OptimizationKeywordVO> optimizationKeywordVOS = null;
                     do {
-                        optimizationKeywordVOS = customerKeywordDao.fetchCustomerKeywordsForCache(terminalTypeAndMachineGroups[0], terminalTypeAndMachineGroups[1]);
+                        optimizationKeywordVOS = customerKeywordDao.fetchCustomerKeywordsForCache(terminalTypeAndMachineGroups[0], terminalTypeAndMachineGroups[1], ((machineCount * 10) > 5000 ? 5000 : (machineCount * 10)));
                         if (CollectionUtils.isNotEmpty(optimizationKeywordVOS)) {
                             List<Long> customerKeywordUuids = new ArrayList<Long>();
-                            if(optimizationKeywordVOS.size() > 400) {
+                            if(optimizationKeywordVOS.size() > machineCount) {
                                 for (OptimizationKeywordVO optimizationKeywordVO : optimizationKeywordVOS) {
                                     blockingQueue.offer(optimizationKeywordVO);
                                     customerKeywordUuids.add(optimizationKeywordVO.getUuid());
@@ -146,25 +147,26 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                     hasNewElement = false;
                                     repeatTimes++;
                                     for (OptimizationKeywordVO optimizationKeywordVO : optimizationKeywordVOS) {
-                                        if(optimizationKeywordVO.getQueryInterval() > 0) {
-                                            int maxOptimizeCount = Math.round(System.currentTimeMillis() / (1000 * optimizationKeywordVO.getQueryInterval()));
-                                            Integer repeatCount = customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid());
-                                            if (repeatCount == null) {
-                                                customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), 0);
-                                            }
-                                            if (maxOptimizeCount > optimizationKeywordVO.getOptimizedCount()) {
-                                                blockingQueue.offer(optimizationKeywordVO);
-                                                optimizationKeywordVO.setOptimizedCount(optimizationKeywordVO.getOptimizedCount() + 1);
-                                                hasNewElement = true;
-                                                customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), (customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid()) + 1));
-                                                count++;
-                                                if (count > 2000) {
-                                                    break;
-                                                }
+                                        if(optimizationKeywordVO.getQueryInterval() == 0) {
+                                            optimizationKeywordVO.setQueryInterval(5000);
+                                        }
+                                        int maxOptimizeCount = Math.round(System.currentTimeMillis() / (1000 * optimizationKeywordVO.getQueryInterval()));
+                                        Integer repeatCount = customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid());
+                                        if (repeatCount == null) {
+                                            customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), 0);
+                                        }
+                                        if (maxOptimizeCount > optimizationKeywordVO.getOptimizedCount()) {
+                                            blockingQueue.offer(optimizationKeywordVO);
+                                            optimizationKeywordVO.setOptimizedCount(optimizationKeywordVO.getOptimizedCount() + 1);
+                                            hasNewElement = true;
+                                            customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), (customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid()) + 1));
+                                            count++;
+                                            if (count > (machineCount * 4)) {
+                                                break;
                                             }
                                         }
                                     }
-                                }while(count < 2000 && hasNewElement && repeatTimes < 50);
+                                }while(count < (machineCount * 4) && hasNewElement && repeatTimes < 50);
 
                                 if(customerKeywordUuidAndRepeatCount.size() == 0){
                                     break;
@@ -187,7 +189,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                 };
                             }
                         }
-                    } while (blockingQueue.size() < 8000 && CollectionUtils.isNotEmpty(optimizationKeywordVOS));
+                    } while (blockingQueue.size() < (machineCount * 10) && CollectionUtils.isNotEmpty(optimizationKeywordVOS));
                 }
             }
         }
