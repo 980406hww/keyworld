@@ -12,6 +12,7 @@
         c.fExectionStatus  AS `exectionStatus`,
         c.fRankJobType AS `rankJobType`,
         c.fRankJobArea AS `rankJobArea`,
+        c.fRankJobCity AS `rankJobCity`,
         c.fCaptureRankJobStatus  AS `captureRankJobStatus`,
         c.fStartTime AS `startTime`,
         c.fEndTime AS `endTime`,
@@ -68,6 +69,9 @@
             </choose>
             <if test="captureRankJobSearchCriteria.rankJobArea != null and captureRankJobSearchCriteria.rankJobArea != ''">
                 AND c.fRankJobArea = #{captureRankJobSearchCriteria.rankJobArea}
+            </if>
+            <if test="captureRankJobSearchCriteria.rankJobCity != null and captureRankJobSearchCriteria.rankJobCity != ''">
+                AND c.fRankJobCity = #{captureRankJobSearchCriteria.rankJobCity}
             </if>
         </where>
     </select>

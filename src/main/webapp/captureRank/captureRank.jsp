@@ -26,33 +26,40 @@
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-            组名:<input type="text" name="groupNames" id="groupNames" value="${captureRankJobSearchCriteria.groupNames}">
+            &nbsp;&nbsp;组名:<input type="text" name="groupNames" id="groupNames" value="${captureRankJobSearchCriteria.groupNames}">
             <input id="groupNameFuzzyQuery" name="groupNameFuzzyQuery" type="checkbox" value="groupNameFuzzyQuery" ${captureRankJobSearchCriteria.groupNameFuzzyQuery != null ? "checked=true" : ""}/>模糊查询 &nbsp;
-            执行类型:
+            &nbsp;&nbsp;执行类型:
             <select name="exectionType">
                 <option value="">请选择执行类型</option>
-                <option value="Once" <c:if test="${captureRankJobSearchCriteria.exectionType eq 'Once'}">selected="selected"</c:if>>Once</option>
-                <option value="Everyday" <c:if test="${captureRankJobSearchCriteria.exectionType eq 'Everyday'}">selected="selected"</c:if>>Everyday</option>
+                <option value="Once" <c:if test="${captureRankJobSearchCriteria.exectionType eq 'Once'}">selected="selected"</c:if>>一次</option>
+                <option value="Everyday" <c:if test="${captureRankJobSearchCriteria.exectionType eq 'Everyday'}">selected="selected"</c:if>>每天</option>
             </select>
-            执行状态:
+            &nbsp;&nbsp;执行状态:
             <select name="exectionStatus">
                 <option value="">请选择执行状态</option>
                 <option value="New" <c:if test="${captureRankJobSearchCriteria.exectionStatus eq 'New'}">selected="selected"</c:if>>New</option>
                 <option value="Processing" <c:if test="${captureRankJobSearchCriteria.exectionStatus eq 'Processing'}">selected="selected"</c:if>>Processing</option>
                 <option value="Complete" <c:if test="${captureRankJobSearchCriteria.exectionStatus eq 'Complete'}">selected="selected"</c:if>>Complete</option>
             </select>
-            任务类型:
+            &nbsp;&nbsp;任务类型:
             <select name="rankJobType" title="">
                 <option value="Common" <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'Common'}">selected="selected"</c:if>>普通</option>
                 <option value="Station" <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'Station'}">selected="selected"</c:if>>整站</option>
                 <option value="DropDown" <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'DropDown'}">selected="selected"</c:if>>下拉词</option>
                 <option value="Other" <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'Other'}">selected="selected"</c:if>>其他</option>
             </select>
-            任务区域:
+            &nbsp;&nbsp;任务区域:
             <select name="rankJobArea" title="">
                 <option value="" selected="selected">请选择</option>
                 <c:forEach items="${rankJobAreaMap}" var="rankJobArea">
                     <option value="${rankJobArea.key}" <c:if test="${rankJobArea.key eq captureRankJobSearchCriteria.rankJobArea}">selected="selected"</c:if>>${rankJobArea.value}</option>
+                </c:forEach>
+            </select>
+            &nbsp;&nbsp;任务城市:
+            <select name="rankJobCity" title="">
+                <option value="" selected="selected">请选择</option>
+                <c:forEach items="${rankJobCityList}" var="rankJobCity">
+                    <option value="${rankJobCity}" <c:if test="${rankJobCity eq captureRankJobSearchCriteria.rankJobCity}">selected="selected"</c:if>>${rankJobCity}</option>
                 </c:forEach>
             </select>
             &nbsp;&nbsp;
@@ -79,12 +86,13 @@
             <td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=80>组名</td>
             <td align="center" width=40>客户</td>
-            <td align="center" width=40>执行方式</td>
+            <td align="center" width=40>执行类型</td>
             <td align="center" width=40>执行时间</td>
             <td align="center" width=60>最后执行日期</td>
             <td align="center" width=50>状态</td>
             <td align="center" width=50>任务类型</td>
             <td align="center" width=50>任务区域</td>
+            <td align="center" width=50>任务城市</td>
             <td align="center" width=50>抓取记录数</td>
             <td align="center" width=60>采集天数间隔(天)</td>
             <td align="center" width=60>抓取间隔(ms)</td>
@@ -110,7 +118,7 @@
             <td width=40>
                 <c:choose>
                     <c:when test="${captureRankJob.exectionType == 'Everyday'}">每天</c:when>
-                    <c:otherwise>一次性</c:otherwise>
+                    <c:otherwise>一次</c:otherwise>
                 </c:choose>
             </td>
             <td width=40><fmt:formatDate value="${captureRankJob.exectionTime}" pattern="HH:mm"/></td>
@@ -123,6 +131,7 @@
                 <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'Other'}">其他</c:if>
             </td>
             <td width=50 align="center">${rankJobAreaMap.get(captureRankJob.rankJobArea)}</td>
+            <td width=50 align="center">${captureRankJob.rankJobCity}</td>
             <td width=50>${captureRankJob.rowNumber}</td>
             <td width=60>${captureRankJob.captureDaysInterval}</td>
             <td width=60>${captureRankJob.captureInterval}</td>
@@ -185,6 +194,14 @@
                 </select>
             </li>
             <li>
+                <span>任务城市:</span>
+                <select id="rankJobCity" name="rankJobCity" title="" style="width: 80px;height: 21px">
+                    <c:forEach items="${rankJobCityList}" var="rankJobCity">
+                        <option value="${rankJobCity}">${rankJobCity}</option>
+                    </c:forEach>
+                </select>
+            </li>
+            <li>
                 <span>任务类型:</span>
                 <select id="rankJobType" name="rankJobType" title="" style="width: 120px;height: 21px">
                     <option value="Common">普通任务</option>
@@ -195,7 +212,7 @@
             <li>
                 <span>执行方式:</span>
                 <input type="radio" name="exectionType" checked  value="Once">一次</label>
-                <input type="radio" name="exectionType" value="Everyday">多次</li>
+                <input type="radio" name="exectionType" value="Everyday">每天</li>
             <li id="start">
                 <span>执行时间:</span>
                 <input type="text" class="Wdate" id="exectionTime1" autocomplete="off" onfocus="WdatePicker({lang:'zh-cn',dateFmt:'HH:mm:ss'})" required style="width: 150px">

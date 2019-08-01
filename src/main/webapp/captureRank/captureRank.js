@@ -37,24 +37,27 @@ function pageLoad() {
     }
 }
 function deleteCaptureRankJob(uuid) {
-    $.ajax({
-        url: '/internal/captureRank/deleteCaptureRankJob?uuid=' + uuid,
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (data) {
-            if (data) {
-                $().toastmessage('showSuccessToast', "删除成功", true);
-            }
-            else {
-                $().toastmessage('showErrorToast', "删除失败");
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "删除失败");
+    $.messager.confirm('确认', "确定要删除此任务吗?", function (b) {
+        if (b) {
+            $.ajax({
+                url: '/internal/captureRank/deleteCaptureRankJob?uuid=' + uuid,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (data) {
+                    if (data) {
+                        $().toastmessage('showSuccessToast', "删除成功", true);
+                    } else {
+                        $().toastmessage('showErrorToast', "删除失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "删除失败");
+                }
+            });
         }
     });
 }
@@ -79,28 +82,30 @@ function deleteCaptureRankJobs() {
         alert("至少选择一条数据!");
         return;
     }
-    if (confirm("确实要删除这些任务吗?") == false) return;
-    var postData = {};
-    postData.uuids = uuids.split(",");
-    $.ajax({
-        url: '/internal/captureRank/deleteCaptureRankJobs',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        data: JSON.stringify(postData),
-        timeout: 5000,
-        type: 'POST',
-        success: function (data) {
-            if (data) {
-                $().toastmessage('showSuccessToast', "删除成功", true);
-            }
-            else {
-                $().toastmessage('showErrorToast', "删除失败", true);
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "删除失败", true);
+    $.messager.confirm('确认', "确定要删除这些任务吗?", function (b) {
+        if (b) {
+            var postData = {};
+            postData.uuids = uuids.split(",");
+            $.ajax({
+                url: '/internal/captureRank/deleteCaptureRankJobs',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(postData),
+                timeout: 5000,
+                type: 'POST',
+                success: function (data) {
+                    if (data) {
+                        $().toastmessage('showSuccessToast', "删除成功", true);
+                    } else {
+                        $().toastmessage('showErrorToast', "删除失败", true);
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "删除失败", true);
+                }
+            });
         }
     });
 }
@@ -170,7 +175,7 @@ function updateCaptureRankJobsStatus(status) {
         $.messager.alert("提示", "至少选择一条数据!", 'info');
         return;
     }
-    $.messager.confirm('提示', '确实要暂停这些任务吗?', function (b) {
+    $.messager.confirm('提示', '确定要暂停这些任务吗?', function (b) {
        if (b) {
            var postData = {};
            postData.uuids = uuids.split(",");
@@ -372,6 +377,7 @@ function updateCaptureRankJobs(uuid) {
                 $("#crawlRankingForm input[name=exectionType][value=" + data.exectionType + "]").attr("checked", true);
                 $("#crawlRankingForm #rankJobType").val(data.rankJobType);
                 $("#crawlRankingForm #rankJobArea").val(data.rankJobArea);
+                $("#crawlRankingForm #rankJobCity").val(data.rankJobCity);
                 $("#crawlRankingForm #exectionTime1").val(data.exectionTime);
                 $('#crawlRankingForm #rowNumber').spinner('setValue', data.rowNumber);
                 $('#crawlRankingForm #captureDaysInterval').spinner('setValue', data.captureDaysInterval);
@@ -515,6 +521,7 @@ function saveData(uuid) {
 
     CaptureRankJob.rankJobType = $("#rankJobType").val();
     CaptureRankJob.rankJobArea = $("#rankJobArea").val();
+    CaptureRankJob.rankJobCity = $("#rankJobCity").val();
     CaptureRankJob.exectionType = $("#crawlRankingForm input[name=exectionType]:checked").val();
     CaptureRankJob.rowNumber = $("#crawlRankingForm #rowNumber").val();
     CaptureRankJob.captureInterval = $("#crawlRankingForm #captureInterval").val();
@@ -551,7 +558,7 @@ function resetCaptureRankJobs(){
         alert("至少选择一条数据!");
         return;
     }
-    if (confirm("确实要重置所选任务吗?") == false) return;
+    if (confirm("确定要重置所选任务吗?") == false) return;
     var postData = {};
     postData.uuids = uuids.split(",");
     $.ajax({
