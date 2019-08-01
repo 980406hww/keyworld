@@ -609,7 +609,7 @@
         AND ck.fQueryTime <![CDATA[<]]> NOW()
         AND ck.fInvalidFlag = 0
         ORDER BY ck.fQueryTime
-        LIMIT 2000
+        LIMIT #{batchCount}
     </select>
 
     <select id="getCustomerKeywordUuidForOptimization" resultType="Long">
@@ -1610,7 +1610,7 @@
 
     <select id="getMachineGroups" resultType="java.lang.String">
         SELECT
-          CONCAT(fTerminalType, '####', fMachineGroup)
+          CONCAT(fTerminalType, '####', fMachineGroup, '####', COUNT(1))
         FROM t_machine_info mi
         WHERE fMachineGroup > ''
         GROUP BY fTerminalType, fMachineGroup

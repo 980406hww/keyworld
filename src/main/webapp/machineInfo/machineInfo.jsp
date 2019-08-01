@@ -149,6 +149,7 @@
 								<option value=''>All</option>
 								<option value='New'>New</option>
 								<option value='Old'>Old</option>
+								<option value='Super'>Super</option>
 							</select>
 
 							<shiro:hasPermission name="/internal/machineInfo/searchMachineInfos">
@@ -273,10 +274,9 @@
 				</c:if>
 			</td>
 			<td width=40>
-
-					<input type="text" value="${machineInfo.machineGroup == null ? "" : machineInfo.machineGroup}"
-						   name="machineGroup" id="${machineInfo.clientID}" onBlur="updateMachineGroup(this)" style="width: 100%;"/>
-
+				<input type="hidden" name="hiddenMachineGroup" value="${machineInfo.machineGroup}">
+				<input type="text" value="${machineInfo.machineGroup == null ? "" : machineInfo.machineGroup}"
+					   name="machineGroup" id="${machineInfo.clientID}" onBlur="updateMachineGroup(this)" style="width: 100%;"/>
 			</td>
 			<td width=20><font color="${keywordColor}"><fmt:formatDate value="${machineInfo.renewalDate}"
 															  pattern="MM-dd"/></font></td>
@@ -514,6 +514,7 @@
 						下载程序:
 						<input type="radio" name="downloadProgramType" value="New" checked /> 新程序
 						<input type="radio" name="downloadProgramType" value="Old" /> 旧程序
+						<input type="radio" name="downloadProgramType" value="Super" /> Super
 					</td>
 				</tr>
 				<tr>
@@ -538,6 +539,7 @@
 					下载程序:
 					<input type="radio" name="downloadProgramType" value="New" checked /> 新程序
 					<input type="radio" name="downloadProgramType" value="Old" /> 旧程序
+					<input type="radio" name="downloadProgramType" value="Super" /> Super
 				</td>
 			</tr>
 		</table>

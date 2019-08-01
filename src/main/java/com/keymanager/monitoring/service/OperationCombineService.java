@@ -58,7 +58,7 @@ public class OperationCombineService extends ServiceImpl<OperationCombineDao, Op
         operationCombineCriteria.setOperationCombineUuid(lastInsertID);
         groupService.saveGroupsBelowOperationCombine(operationCombineCriteria);
         operationCombineCriteria.getGroupSetting().setOperationCombineUuid(lastInsertID);
-        groupSettingService.saveGroupSetting(operationCombineCriteria.getGroupSetting(), true);
+        groupSettingService.saveGroupSetting(operationCombineCriteria.getGroupSetting());
     }
 
     public void updateOperationCombineRemainingAccount (Long operationCombineUuid, int remainingAccount) {

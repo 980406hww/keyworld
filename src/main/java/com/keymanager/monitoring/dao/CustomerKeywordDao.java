@@ -243,5 +243,5 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<String> getMachineGroups();
 
-    List<OptimizationKeywordVO> fetchCustomerKeywordsForCache(@Param("terminalType") String terminalType, @Param("machineGroup") String machineGroup);
+    List<OptimizationKeywordVO> fetchCustomerKeywordsForCache(@Param("terminalType") String terminalType, @Param("machineGroup") String machineGroup, @Param("batchCount") int batchCount);
 }

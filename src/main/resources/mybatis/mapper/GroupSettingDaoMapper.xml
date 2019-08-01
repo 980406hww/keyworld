@@ -53,7 +53,26 @@
 
     <select id="searchGroupSettings" resultType="com.keymanager.monitoring.entity.GroupSetting">
         SELECT
-        <include refid="selectCol" />
+            gs.fUuid               AS "uuid",
+            gs.fOperationType      AS "operationType",
+            gs.fMachineUsedPercent AS "machineUsedPercent",
+            gs.fPage               AS "page",
+            gs.fPageSize           AS "pageSize",
+            gs.fClearCookie        AS "clearCookie",
+            gs.fDisableStatistics  AS "disableStatistics",
+            gs.fDisableVisitWebsite AS "disableVisitWebsite",
+            gs.fEntryPageMinCount AS "entryPageMinCount",
+            gs.fEntryPageMaxCount AS "entryPageMaxCount",
+            gs.fPageRemainMinTime AS "pageRemainMinTime",
+            gs.fPageRemainMaxTime AS "pageRemainMaxTime",
+            gs.fInputDelayMinTime AS "inputDelayMinTime",
+            gs.fInputDelayMaxTime AS "inputDelayMaxTime",
+            gs.fSlideDelayMinTime AS "slideDelayMinTime",
+            gs.fSlideDelayMaxTime AS "slideDelayMaxTime",
+            gs.fTitleRemainMinTime AS "titleRemainMinTime",
+            gs.fTitleRemainMaxTime AS "titleRemainMaxTime",
+            gs.fOptimizeKeywordCountPerIP AS "optimizeKeywordCountPerIP",
+            gs.fRandomlyClickNoResult AS "randomlyClickNoResult"
         FROM t_group_setting gs
         WHERE gs.fOperationCombineUuid = #{operationCombineUuid}
         ORDER BY gs.fCreateTime DESC
@@ -74,13 +93,7 @@
             fMachineUsedPercent,
             fPage,
             fPageSize,
-            fZhanneiPercent,
-            fZhanwaiPercent,
-            fKuaizhaoPercent,
-            fBaiduSemPercent,
-            fDragPercent,
-            fSpecialCharPercent,
-            fMultiBrowser,
+            fZhanneiPercent, fZhanwaiPercent, fKuaizhaoPercent, fBaiduSemPercent, fDragPercent, fSpecialCharPercent, fMultiBrowser,
             fClearCookie,
             fDisableStatistics,
             fEntryPageMinCount,
@@ -95,26 +108,10 @@
             fTitleRemainMinTime,
             fTitleRemainMaxTime,
             fOptimizeKeywordCountPerIP,
-            fOneIPOneUser,
             fRandomlyClickNoResult,
-            fJustVisitSelfPage,
-            fSleepPer2Words,
-            fSupportPaste,
-            fMoveRandomly,
-            fParentSearchEntry,
-            fClearLocalStorage,
-            fLessClickAtNight,
-            fSameCityUser,
-            fLocateTitlePosition,
-            fBaiduAllianceEntry,
-            fJustClickSpecifiedTitle,
-            fRandomlyClickMoreLink,
-            fMoveUp20,
-            fWaitTimeAfterOpenBaidu,
-            fWaitTimeBeforeClick,
-            fWaitTimeAfterClick,
-            fMaxUserCount,
-            fOptimizeRelatedKeyword,
+            fOneIPOneUser, fJustVisitSelfPage, fSleepPer2Words, fSupportPaste, fMoveRandomly, fParentSearchEntry, fClearLocalStorage, fLessClickAtNight, fSameCityUser,
+            fLocateTitlePosition, fBaiduAllianceEntry, fJustClickSpecifiedTitle, fRandomlyClickMoreLink, fMoveUp20, fWaitTimeAfterOpenBaidu, fWaitTimeBeforeClick,
+            fWaitTimeAfterClick, fMaxUserCount, fOptimizeRelatedKeyword,
             fCreateTime
           )
           VALUES (
@@ -123,13 +120,7 @@
             #{groupSetting.machineUsedPercent},
             #{groupSetting.page},
             #{groupSetting.pageSize},
-            #{groupSetting.zhanneiPercent},
-            #{groupSetting.zhanwaiPercent},
-            #{groupSetting.kuaizhaoPercent},
-            #{groupSetting.baiduSemPercent},
-            #{groupSetting.dragPercent},
-            #{groupSetting.specialCharPercent},
-            #{groupSetting.multiBrowser},
+            0, 0, 0, 0, 0, 0, 1,
             #{groupSetting.clearCookie},
             #{groupSetting.disableStatistics},
             #{groupSetting.entryPageMinCount},
@@ -144,26 +135,10 @@
             #{groupSetting.titleRemainMinTime},
             #{groupSetting.titleRemainMaxTime},
             #{groupSetting.optimizeKeywordCountPerIP},
-            #{groupSetting.oneIPOneUser},
             #{groupSetting.randomlyClickNoResult},
-            #{groupSetting.justVisitSelfPage},
-            #{groupSetting.sleepPer2Words},
-            #{groupSetting.supportPaste},
-            #{groupSetting.moveRandomly},
-            #{groupSetting.parentSearchEntry},
-            #{groupSetting.clearLocalStorage},
-            #{groupSetting.lessClickAtNight},
-            #{groupSetting.sameCityUser},
-            #{groupSetting.locateTitlePosition},
-            #{groupSetting.baiduAllianceEntry},
-            #{groupSetting.justClickSpecifiedTitle},
-            #{groupSetting.randomlyClickMoreLink},
-            #{groupSetting.moveUp20},
-            #{groupSetting.waitTimeAfterOpenBaidu},
-            #{groupSetting.waitTimeBeforeClick},
-            #{groupSetting.waitTimeAfterClick},
-            #{groupSetting.maxUserCount},
-            #{groupSetting.optimizeRelatedKeyword},
+            0, 1, 1, 1, 1, 0, 1, 0, 0,
+            0, 0, 0, 0, 0, 1000, 1000,
+            5000, 300, 0,
             NOW()
           )
     </insert>
@@ -177,15 +152,7 @@
         <if test="gs.disableVisitWebsite==1"> ,fDisableVisitWebsite = #{groupSetting.disableVisitWebsite}</if>
         <if test="gs.page==1"> ,fPage = #{groupSetting.page}</if>
         <if test="gs.pageSize==1"> ,fPageSize = #{groupSetting.pageSize}</if>
-        <if test="gs.zhanneiPercent==1"> ,fZhanneiPercent = #{groupSetting.zhanneiPercent}</if>
-        <if test="gs.zhanwaiPercent==1"> ,fZhanwaiPercent = #{groupSetting.zhanwaiPercent}</if>
-        <if test="gs.kuaizhaoPercent==1"> ,fKuaizhaoPercent = #{groupSetting.kuaizhaoPercent}</if>
-        <if test="gs.baiduSemPercent==1"> ,fBaiduSemPercent = #{groupSetting.baiduSemPercent}</if>
-        <if test="gs.dragPercent==1"> ,fDragPercent = #{groupSetting.dragPercent}</if>
-        <if test="gs.specialCharPercent==1"> ,fSpecialCharPercent = #{groupSetting.specialCharPercent}</if>
-        <if test="gs.multiBrowser==1"> ,fMultiBrowser = #{groupSetting.multiBrowser}</if>
         <if test="gs.clearCookie==1"> ,fClearCookie = #{groupSetting.clearCookie}</if>
-        <if test="gs.maxUserCount==1"> ,fMaxUserCount = #{groupSetting.maxUserCount}</if>
         <if test="gs.entryPageMinCount==1"> ,fEntryPageMinCount = #{groupSetting.entryPageMinCount}</if>
         <if test="gs.entryPageMaxCount==1"> ,fEntryPageMaxCount = #{groupSetting.entryPageMaxCount}</if>
         <if test="gs.pageRemainMinTime==1"> ,fPageRemainMinTime = #{groupSetting.pageRemainMinTime}</if>
@@ -197,25 +164,7 @@
         <if test="gs.titleRemainMinTime==1"> ,fTitleRemainMinTime = #{groupSetting.titleRemainMinTime}</if>
         <if test="gs.titleRemainMaxTime==1"> ,fTitleRemainMaxTime = #{groupSetting.titleRemainMaxTime}</if>
         <if test="gs.optimizeKeywordCountPerIP==1"> ,fOptimizeKeywordCountPerIP = #{groupSetting.optimizeKeywordCountPerIP}</if>
-        <if test="gs.waitTimeAfterOpenBaidu==1"> ,fWaitTimeAfterOpenBaidu = #{groupSetting.waitTimeAfterOpenBaidu}</if>
-        <if test="gs.waitTimeBeforeClick==1"> ,fWaitTimeBeforeClick = #{groupSetting.waitTimeBeforeClick}</if>
-        <if test="gs.waitTimeAfterClick==1"> ,fWaitTimeAfterClick = #{groupSetting.waitTimeAfterClick}</if>
-        <if test="gs.oneIPOneUser==1"> ,fOneIPOneUser = #{groupSetting.oneIPOneUser}</if>
         <if test="gs.randomlyClickNoResult==1"> ,fRandomlyClickNoResult = #{groupSetting.randomlyClickNoResult}</if>
-        <if test="gs.justVisitSelfPage==1"> ,fJustVisitSelfPage = #{groupSetting.justVisitSelfPage}</if>
-        <if test="gs.sleepPer2Words==1"> ,fSleepPer2Words = #{groupSetting.sleepPer2Words}</if>
-        <if test="gs.supportPaste==1"> ,fSupportPaste = #{groupSetting.supportPaste}</if>
-        <if test="gs.moveRandomly==1"> ,fMoveRandomly = #{groupSetting.moveRandomly}</if>
-        <if test="gs.parentSearchEntry==1"> ,fParentSearchEntry = #{groupSetting.parentSearchEntry}</if>
-        <if test="gs.clearLocalStorage==1"> ,fClearLocalStorage = #{groupSetting.clearLocalStorage}</if>
-        <if test="gs.lessClickAtNight==1"> ,fLessClickAtNight = #{groupSetting.lessClickAtNight}</if>
-        <if test="gs.sameCityUser==1"> ,fSameCityUser = #{groupSetting.sameCityUser}</if>
-        <if test="gs.locateTitlePosition==1"> ,fLocateTitlePosition = #{groupSetting.locateTitlePosition}</if>
-        <if test="gs.baiduAllianceEntry==1"> ,fBaiduAllianceEntry = #{groupSetting.baiduAllianceEntry}</if>
-        <if test="gs.justClickSpecifiedTitle==1"> ,fJustClickSpecifiedTitle = #{groupSetting.justClickSpecifiedTitle}</if>
-        <if test="gs.randomlyClickMoreLink==1"> ,fRandomlyClickMoreLink = #{groupSetting.randomlyClickMoreLink}</if>
-        <if test="gs.moveUp20==1"> ,fMoveUp20 = #{groupSetting.moveUp20}</if>
-        <if test="gs.optimizeRelatedKeyword==1"> ,fOptimizeRelatedKeyword = #{groupSetting.optimizeRelatedKeyword}</if>
         WHERE fUuid = #{groupSetting.uuid}
     </update>
 
