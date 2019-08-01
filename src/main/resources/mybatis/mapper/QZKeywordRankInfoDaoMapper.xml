@@ -33,19 +33,10 @@
         FROM t_qz_keyword_rank_info qzkri
         WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}
         AND EXISTS(SELECT 1 FROM t_qz_setting qs WHERE qs.fUuid = qzkri.fQZSettingUuid)
-        <if test="qzSettingSearchCriteria.checkStatus != null">
-            <choose>
-                <when test="qzSettingSearchCriteria.checkStatus == 2">
-                    AND qzkri.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue}
-                </when>
-                <when test="qzSettingSearchCriteria.checkStatus == 1">
-                    AND qzkri.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue}
-                </when>
-            </choose>
+        <if test="terminalType != null">
+            AND qzkri.fTerminalType = #{terminalType}
         </if>
-        <if test="qzSettingSearchCriteria.terminalType != null">
-            AND qzkri.fTerminalType = #{qzSettingSearchCriteria.terminalType}
-        </if>
+        ORDER BY qzkri.fCreateTime
     </select>
 
     <delete id="deleteByQZSettingUuid" parameterType="java.lang.Long">
@@ -157,11 +148,11 @@
     </select>
 
     <select id="getQZKeywordRankInfoTypes" resultType="java.lang.String">
-        SELECT
-        CONCAT(qk.fTerminalType, '_', qk.fWebsiteType, '_', qk.fDataProcessingStatus)
+        SELECT CONCAT(qk.fTerminalType, '_', qk.fWebsiteType, '_', qk.fDataProcessingStatus)
         FROM t_qz_keyword_rank_info qk
         WHERE qk.fQZSettingUuid = #{qzSettingUuid}
         AND qk.fWebsiteType <![CDATA[<>]]> 'designationWord'
+        GROUP BY qk.fTerminalType
     </select>
 
     <select id="selectByQZSettingUuid" resultType="com.keymanager.monitoring.entity.QZKeywordRankInfo">
@@ -183,5 +174,14 @@
         WHERE qk.fQZSettingUuid = #{qzSettingUuid}
         AND qk.fTerminalType = #{terminalType}
         AND qk.fWebsiteType = 'designationWord'
+    </select>
+
+    <select id="searchExistingExtraQZKeywordRankInfo" resultType="com.keymanager.monitoring.entity.QZKeywordRankInfo">
+        SELECT qzkri.fUuid AS 'uuid'
+        FROM t_qz_keyword_rank_info qzkri
+        WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}
+        AND EXISTS(SELECT 1 FROM t_qz_setting qs WHERE qs.fUuid = qzkri.fQZSettingUuid)
+        AND qzkri.fTerminalType = #{terminalType}
+        AND qzkri.fWebsiteType = 'aiZhan'
     </select>
 </mapper>

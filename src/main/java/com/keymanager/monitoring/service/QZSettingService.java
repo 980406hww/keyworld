@@ -159,7 +159,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			List<QZOperationType> oldOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
 			List<QZOperationType> updOperationTypes = qzSetting.getQzOperationTypes();
 			this.updateOperationTypeAndChargeRule(oldOperationTypes, updOperationTypes, qzSetting.getUuid(), qzSetting.getCustomerUuid(), qzSetting.getfIsMonitor(), userName);
-			List<QZKeywordRankInfo> existingQZKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), new QZSettingSearchCriteria());
+			List<QZKeywordRankInfo> existingQZKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), null);
 			this.updateQZKeywordRankInfo(existingQZKeywordRankInfos, updOperationTypes, existingQZSetting);
 			// 修改标签
 			List<QZCategoryTag> existingQZCategoryTags = qzCategoryTagService.searchCategoryTagByQZSettingUuid(qzSetting.getUuid());
@@ -379,13 +379,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
 		page.setRecords(qzSettingDao.searchQZSettings(page, qzSettingSearchCriteria));
-		this.addingQZKeywordRankInfo(page, qzSettingSearchCriteria);
+		this.addingQZKeywordRankInfo(page, qzSettingSearchCriteria.getTerminalType());
 		return page;
 	}
 
-	private void addingQZKeywordRankInfo (Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
+	private void addingQZKeywordRankInfo (Page<QZSetting> page, String terminalType){
         for(QZSetting qzSetting : page.getRecords()){
-            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), qzSettingSearchCriteria);
+            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType);
             if (CollectionUtils.isNotEmpty(qzKeywordRankInfos)) {
 				Map<String, Map<String, JSONObject>> qzKeywordRankInfoMap = new HashMap<>();
 				for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
@@ -400,7 +400,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 					qzKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), jSONObjectMap);
 				}
 				qzSetting.setQzKeywordRankInfoMap(qzKeywordRankInfoMap);
-				qzChargeRuleService.getChargeRuleTotalPrice(qzSetting, qzSetting.getUuid(), qzSettingSearchCriteria.getTerminalType());
+				qzChargeRuleService.getChargeRuleTotalPrice(qzSetting, qzSetting.getUuid(), terminalType);
 			}
         }
     }
