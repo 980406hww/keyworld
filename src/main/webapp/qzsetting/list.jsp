@@ -513,7 +513,7 @@
 									<div class="row">
 										<div title="站点所属优化组">
 										<span class="line1">
-											<a href="javascript:;"></a>
+											<a href="javascript:;">${qzSetting.pcGroup == null or qzSetting.pcGroup == "" ? "暂无" : qzSetting.pcGroup}</a>
 										</span>
 											<span>
 											<a href="javascript:;">优化分组</a>
@@ -968,7 +968,7 @@
 									<div class="row">
 										<div title="站点所属优化组">
 										<span class="line1">
-											<a href="javascript:;"></a>
+											<a href="javascript:;">${qzSetting.phoneGroup == null or qzSetting.phoneGroup == "" ? "暂无" : qzSetting.phoneGroup}</a>
 										</span>
 											<span>
 											<a href="javascript:;">优化分组</a>
