@@ -56,13 +56,15 @@
                     <option value="${rankJobArea.key}" <c:if test="${rankJobArea.key eq captureRankJobSearchCriteria.rankJobArea}">selected="selected"</c:if>>${rankJobArea.value}</option>
                 </c:forEach>
             </select>
-            &nbsp;&nbsp;任务城市:
-            <select name="rankJobCity" title="">
-                <option value="" selected="selected">请选择</option>
-                <c:forEach items="${rankJobCityList}" var="rankJobCity">
-                    <option value="${rankJobCity}" <c:if test="${rankJobCity eq captureRankJobSearchCriteria.rankJobCity}">selected="selected"</c:if>>${rankJobCity}</option>
-                </c:forEach>
-            </select>
+            <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'Common'}">
+                &nbsp;&nbsp;任务城市:
+                <select name="rankJobCity" title="">
+                    <option value="" selected="selected">请选择</option>
+                    <c:forEach items="${rankJobCityList}" var="rankJobCity">
+                        <option value="${rankJobCity}" <c:if test="${rankJobCity eq captureRankJobSearchCriteria.rankJobCity}">selected="selected"</c:if>>${rankJobCity}</option>
+                    </c:forEach>
+                </select>
+            </c:if>
             &nbsp;&nbsp;
             <shiro:hasPermission name="/internal/captureRank/searchCaptureRankJobs">
             <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
@@ -93,7 +95,9 @@
             <td align="center" width=50>状态</td>
             <td align="center" width=50>任务类型</td>
             <td align="center" width=50>任务区域</td>
-            <td align="center" width=50>任务城市</td>
+            <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'Common'}">
+                <td align="center" width=50>任务城市</td>
+            </c:if>
             <td align="center" width=50>抓取记录数</td>
             <td align="center" width=60>采集天数间隔(天)</td>
             <td align="center" width=60>抓取间隔(ms)</td>
@@ -132,7 +136,9 @@
                 <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'Other'}">其他</c:if>
             </td>
             <td width=50 align="center">${rankJobAreaMap.get(captureRankJob.rankJobArea)}</td>
-            <td width=50 align="center">${captureRankJob.rankJobCity}</td>
+            <c:if test="${captureRankJobSearchCriteria.rankJobType eq 'Common'}">
+                <td width=50 align="center">${captureRankJob.rankJobCity}</td>
+            </c:if>
             <td width=50>${captureRankJob.rowNumber}</td>
             <td width=60>${captureRankJob.captureDaysInterval}</td>
             <td width=60>${captureRankJob.captureInterval}</td>
