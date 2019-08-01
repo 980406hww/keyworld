@@ -39,6 +39,7 @@
                 <option value="">请选择执行状态</option>
                 <option value="New" <c:if test="${captureRankJobSearchCriteria.exectionStatus eq 'New'}">selected="selected"</c:if>>New</option>
                 <option value="Processing" <c:if test="${captureRankJobSearchCriteria.exectionStatus eq 'Processing'}">selected="selected"</c:if>>Processing</option>
+                <option value="Checking" <c:if test="${captureRankJobSearchCriteria.exectionStatus eq 'Checking'}">selected="selected"</c:if>>Checking</option>
                 <option value="Complete" <c:if test="${captureRankJobSearchCriteria.exectionStatus eq 'Complete'}">selected="selected"</c:if>>Complete</option>
             </select>
             &nbsp;&nbsp;任务类型:
