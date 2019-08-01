@@ -196,22 +196,45 @@ function showUpdateGroupDialog(operationCombineUuid, operationCombineName) {
 }
 
 function delOperationCombine(operationCombineUuid) {
-    parent.$.messager.confirm('询问', "确定删除此操作组合吗?", function (b) {
-        if (b) {
-            $.ajax({
-                url: '/internal/operationCombine/delOperationCombine/' + operationCombineUuid,
-                type: 'POST',
-                success: function (result) {
-                    if (result) {
-                        $().toastmessage('showSuccessToast', "删除成功!", true);
-                    } else {
-                        $().toastmessage('showErrorToast', "删除失败!");
-                    }
-                },
-                error: function () {
-                    $().toastmessage('showErrorToast', "删除失败!");
+    checkGroupNames(operationCombineUuid, function (flag) {
+        if (flag) {
+            parent.$.messager.confirm('询问', "确定删除此操作组合吗?", function (b) {
+                if (b) {
+                    $.ajax({
+                        url: '/internal/operationCombine/delOperationCombine/' + operationCombineUuid,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result) {
+                                $().toastmessage('showSuccessToast', "删除成功!", true);
+                            } else {
+                                $().toastmessage('showErrorToast', "删除失败!");
+                            }
+                        },
+                        error: function () {
+                            $().toastmessage('showErrorToast', "删除失败!");
+                        }
+                    });
                 }
             });
+        } else {
+            $().toastmessage('showErrorToast', "请先将要删除的操作组合下的分组移除！！！");
+        }
+    });
+}
+
+function checkGroupNames(uuid, callback) {
+    var flag = true;
+    $.ajax({
+        url: '/internal/operationCombine/getGroupNames/' + uuid,
+        type: 'POST',
+        success: function (data) {
+            if (JSON.parse(data).length > 0) {
+                flag = false;
+            }
+            callback(flag);
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "获取操作组合下的分组数据失败！！");
         }
     });
 }
@@ -413,7 +436,9 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
         groupNameArr = groupNameArr.filter(function (groupName, index) {
             return groupNameArr.indexOf(groupName) === index && groupName !== '';
         });
-        operationCombine.groupNames = groupNameArr;
+        if (groupNameArr.length > 0) {
+            operationCombine.groupNames = groupNameArr;
+        }
         type = "addOperationCombine";
         if (dialogDiv.find("#machineUsedPercent").val() === '0' || dialogDiv.find("#machineUsedPercent").val() === '') {
             $.messager.alert('提示', '每个操作的机器占比都应该大于0！！！', 'warning');
@@ -671,106 +696,6 @@ function getAvailableOptimizationGroups() {
     $("#getAvailableOptimizationGroups").window("resize",{top:$(document).scrollTop() + 100});
 }
 
-function showUselessOptimizationGroupDialog(inputName) {
-    $("#uselessOptimizationGroupDialog").show();
-    $("#uselessOptimizationGroupDialog").dialog({
-       resizable: false,
-       height: 450,
-       width: 250,
-       title: '查询未使用的优化组',
-       modal: true,
-       buttons: [{
-           text: '删除所选',
-           iconCls: 'icon-ok',
-           handler: function () {
-               delSelectedOptimizationGroup(inputName);
-           }
-       }, {
-           text: '取消',
-           iconCls: 'icon-cancel',
-           handler: function () {
-               $("#uselessOptimizationGroupForm")[0].reset();
-               $("#uselessOptimizationGroupDialog").dialog('close');
-           }
-       }],
-       onClose: function () {
-           $("#uselessOptimizationGroupForm")[0].reset();
-           $("#uselessOptimizationGroupForm tbody tr").remove();
-       }
-    });
-    $("#uselessOptimizationGroupDialog").dialog("open");
-    $("#uselessOptimizationGroupDialog").window("resize", {
-        top: $(document).scrollTop() + 150,
-        left: $(document).scrollLeft() + $(window).width() / 2 - 125
-    });
-}
-
-function searchUselessOptimizationGroups() {
-    $("#uselessOptimizationGroupDialog tbody tr").remove();
-    var dialog = $("#uselessOptimizationGroupDialog");
-    var postData = {};
-    postData.groupName = dialog.find("input[name='groupName']").val();
-    $.ajax({
-        url: '/internal/group/searchUselessOptimizationGroups',
-        type: 'POST',
-        headers: {
-            "Accept": 'application/json',
-            "Content-Type": 'application/json'
-        },
-        data: JSON.stringify(postData),
-        success: function (data) {
-            if (null != data && data.length > 0) {
-                var tbody = $("#uselessOptimizationGroupDialog tbody");
-                $.each(data, function(index, element) {
-                    tbody.append("<tr>" +
-                        "<td width='20px'  style='text-align: center;'><input type='checkbox' name='checkUselessGroup' value='"+ element.uuid +"' checked='checked'></td>" +
-                        "<td width='208px'><input type='text' style='width: 200px;' name='uselessGroup' disabled='disabled' value='"+ element.groupName +"'/></td>" +
-                        "</tr>");
-                });
-            } else {
-                $().toastmessage('showErrorToast', '没有数据！！');
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', '获取优化组失败！！！');
-        }
-    });
-}
-
-function delSelectedOptimizationGroup (inputName) {
-    var uuids = getSelectedIDs(inputName);
-    if (uuids === '') {
-        $.messager.alert('提示', '请至少选中一条数据！！！', 'info');
-        return false;
-    }
-    $.messager.confirm('询问', '确认要删除选中的优化组吗', function (b) {
-        if (b) {
-            var postData = {};
-            postData.uuids = uuids.split(',');
-            $.ajax({
-                url: '/internal/group/delUselessOptimizationGroup',
-                type: 'POST',
-                data: JSON.stringify(postData),
-                headers: {
-                    "Accept": 'application/json',
-                    "Content-Type": 'application/json'
-                },
-                success: function (result) {
-                    if (result) {
-                        $().toastmessage('showSuccessToast', '删除优化组成功！！！');
-                        $("#uselessOptimizationGroupDialog").dialog("close");
-                    } else {
-                        $().toastmessage('showErrorToast', '删除优化组失败！！！');
-                    }
-                },
-                error: function () {
-                    $().toastmessage('showErrorToast', '删除优化组失败！！！');
-                }
-            });
-        }
-    });
-}
-
 function getSelectedIDs(inputName) {
     var uuids = '';
     $.each($("input[name='"+ inputName +"']:checkbox:checked"), function(){
@@ -993,7 +918,7 @@ function editGroupNameStr(o, edit, maxInvalidCount){
                 },
                 success: function (data) {
                     if (data) {
-                        $().toastmessage('showSuccessToast', "保存成功！");
+                        $().toastmessage('showSuccessToast', "保存成功！", true);
                     } else {
                         $().toastmessage('showErrorToast', "保存失败！");
                         o.value = $.trim(label);
@@ -1107,6 +1032,9 @@ function saveGroupsBelowOperationCombine(operationCombineUuid, maxInvalidCount) 
         groupNameArr = groupNameArr.filter(function (groupName, index) {
            return groupNameArr.indexOf(groupName) === index && groupName !== '';
         });
+        if (groupNameArr.length === 0) {
+            addFlag = false;
+        }
     } else {
         addFlag = false;
     }
@@ -1148,7 +1076,7 @@ function saveGroupsBelowOperationCombine(operationCombineUuid, maxInvalidCount) 
     if (updateFlag) {
         postData.groupUuids = groupUuids;
         $.ajax({
-            url: '/internal/group/updateGroupsBelowOperationCombine',
+            url: '/internal/group/deleteGroupsBelowOperationCombine',
             type: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -1166,4 +1094,5 @@ function saveGroupsBelowOperationCombine(operationCombineUuid, maxInvalidCount) 
             }
         });
     }
+    $("#showGroupQueueDialog").dialog("close");
 }

@@ -1264,7 +1264,7 @@
             SELECT c.fValue FROM t_config c
             WHERE c.fConfigType = #{noRankOptimizeGroupNameConfigType}
             AND c.fKey = CONCAT(fSearchEngine, '_', fTerminalType)
-        )
+        ), fMachineGroup = 'no'
         WHERE fOptimizedCount = 0
         AND (fCurrentPosition = 0 OR fCurrentPosition > 900)
         AND fQueryCount > 0
@@ -1280,7 +1280,7 @@
             SELECT c.fValue FROM t_config c
             WHERE c.fConfigType = #{noRankOptimizeGroupNameConfigType}
             AND c.fKey = CONCAT(fSearchEngine, '_', fTerminalType)
-        )
+        ), fMachineGroup = 'no'
         WHERE fUuid IN
         <foreach item = "item" collection = "needMoveUuids" open="(" separator="," close=")">
             #{item}
@@ -1294,7 +1294,7 @@
             FROM t_config c
             WHERE c.fConfigType = #{defaultOptimizeGroupNameConfigType}
             AND c.fKey = CONCAT(ck.fSearchEngine, '_', ck.fTerminalType)
-        )
+        ), ck.fMachineGroup = ck.fType
         WHERE (ck.fOptimizedCount &gt; 0 OR ck.fCurrentPosition &gt; 0)
         AND ck.fOptimizeGroupName IN
         <foreach item = "item" collection = "noRankConfigs" open="(" separator="," close=")">

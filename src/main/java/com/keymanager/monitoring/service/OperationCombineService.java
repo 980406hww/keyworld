@@ -47,7 +47,6 @@ public class OperationCombineService extends ServiceImpl<OperationCombineDao, Op
 
     public void deleteOperationCombine (long uuid) {
         operationCombineDao.deleteById(uuid);
-        groupService.updateGroupOperationCombineUuid(uuid);
         groupSettingService.deleteGroupSettingByOperationCombineUuid(uuid);
     }
 

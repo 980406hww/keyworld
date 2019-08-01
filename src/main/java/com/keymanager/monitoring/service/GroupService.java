@@ -72,7 +72,7 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
 
     public void saveGroupsBelowOperationCombine (OperationCombineCriteria operationCombineCriteria) {
         List<String> existingGroupNames = operationCombineService.getGroupNames(operationCombineCriteria.getOperationCombineUuid());
-        Map<String, String> existingGroupNameMap = new HashMap<>(1000);
+        Map<String, String> existingGroupNameMap = new HashMap<>();
         for (String groupName : existingGroupNames) {
             existingGroupNameMap.put(groupName, groupName);
         }
@@ -103,17 +103,12 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
         }
 
         if (!operationCombineCriteria.isOnlySaveStatus() && !existingGroupNameMap.isEmpty()) {
-            Collection<String> groupNames = existingGroupNameMap.values();
-            groupDao.updateOperationCombineUuidByGroupName(new ArrayList<String>(groupNames), operationCombineCriteria.getOperationCombineUuid());
+            groupDao.deleteGroupByGroupName(operationCombineCriteria.getOperationCombineUuid(), new ArrayList<String>(existingGroupNameMap.values()));
         }
     }
 
     public void updateGroupsBelowOperationCombine (List<Long> groupUuids, Long operationCombineUuid) {
         groupDao.updateGroupOperationUuid(groupUuids, operationCombineUuid);
-    }
-
-    public void updateGroupOperationCombineUuid (long operationCombineUuid) {
-        groupDao.updateGroupOperationCombineUuid(operationCombineUuid);
     }
 
     public void updateQZSettingGroupOperationCombineUuid (Long operationCombineUuid, String groupName) {
@@ -129,11 +124,7 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
         }
     }
 
-    public List<GroupVO> searchUselessOptimizationGroups(String groupName) {
-        return groupDao.searchUselessOptimizationGroups(groupName);
-    }
-
-    public void delUselessOptimizationGroup(List<Long> uuids) {
-        groupDao.deleteBatchIds(uuids);
+    public void deleteGroupsBelowOperationCombine(List<Long> groupUuids) {
+        groupDao.deleteBatchIds(groupUuids);
     }
 }
