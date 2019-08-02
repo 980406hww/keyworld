@@ -620,33 +620,36 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "getNoEnteredKeywords", method = RequestMethod.POST)
-    public ResponseEntity<?> getNoEnteredKeywords(@RequestBody Map<String, Object> requestMap) throws Exception {
+    @RequestMapping(value = "getCheckingEnteredKeywords", method = RequestMethod.POST)
+    public ResponseEntity<?> getCheckingEnteredKeywords(@RequestBody Map<String, Object> requestMap) throws Exception {
         try {
             String userName = (String) requestMap.get("userName");
             String password = (String) requestMap.get("password");
             String searchEngine = (String) requestMap.get("searchEngine");
+            if (StringUtil.isNullOrEmpty(searchEngine)) {
+                searchEngine = Constants.SEARCH_ENGINE_BAIDU;
+            }
             if (validUser(userName, password)) {
-                List<CustomerKeywordEnteredVO> customerKeywordEnteredVos = customerKeywordService.getNoEnteredKeywords(searchEngine);
+                List<CustomerKeywordEnteredVO> customerKeywordEnteredVos = customerKeywordService.getCheckingEnteredKeywords(searchEngine);
                 return new ResponseEntity<Object>(customerKeywordEnteredVos, HttpStatus.OK);
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error("getNoEnteredKeywords:       " +  ex.getMessage());
+            logger.error("getNoEnteredKeywords:  " +  ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "updateNoEnteredKeywords", method = RequestMethod.POST)
-    public ResponseEntity<?> updateNoEnteredKeywords(@RequestBody Map<String, Object> requestMap) throws Exception {
+    @RequestMapping(value = "updateCheckingEnteredKeywords", method = RequestMethod.POST)
+    public ResponseEntity<?> updateCheckingEnteredKeywords(@RequestBody Map<String, Object> requestMap) throws Exception {
         try {
             String userName = (String) requestMap.get("userName");
             String password = (String) requestMap.get("password");
             if (validUser(userName, password)) {
                 JSONArray jsonArray = JSONArray.fromObject(requestMap.get("customerKeywordEnteredVos"));
                 List<CustomerKeywordEnteredVO> customerKeywordEnteredVos = JSONArray.toList(jsonArray, new CustomerKeywordEnteredVO(), new JsonConfig());
-                customerKeywordService.updateNoEnteredKeywords(customerKeywordEnteredVos);
+                customerKeywordService.updateCheckingEnteredKeywords(customerKeywordEnteredVos);
                  return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);

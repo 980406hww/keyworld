@@ -47,7 +47,7 @@
         <if test="customerKeywordCriteria.gtOptimizePlanCount != null">AND ck.fOptimizePlanCount &gt;= #{customerKeywordCriteria.gtOptimizePlanCount} </if>
         <if test="customerKeywordCriteria.ltOptimizePlanCount != null">AND ck.fOptimizePlanCount &lt;= #{customerKeywordCriteria.ltOptimizePlanCount} </if>
         <if test="customerKeywordCriteria.remarks != null and customerKeywordCriteria.remarks != ''">AND ck.fRemarks like '%${customerKeywordCriteria.remarks}%' </if>
-        <if test="customerKeywordCriteria.enteredKeywordRemarks != null and customerKeywordCriteria.enteredKeywordRemarks != ''">AND ck.fEnteredKeywordRemarks like '%${customerKeywordCriteria.enteredKeywordRemarks}%' </if>
+        <if test="customerKeywordCriteria.failedCause != null and customerKeywordCriteria.failedCause != ''">AND ck.fFailedCause like '%${customerKeywordCriteria.failedCause}%' </if>
         <if test="customerKeywordCriteria.keywordEffect != null and customerKeywordCriteria.keywordEffect != ''">AND ck.fKeywordEffect = #{customerKeywordCriteria.keywordEffect} </if>
         <if test="customerKeywordCriteria.gtCurrentIndexCount != null">AND ck.fCurrentIndexCount &gt;= #{customerKeywordCriteria.gtCurrentIndexCount} </if>
         <if test="customerKeywordCriteria.ltCurrentIndexCount != null">AND ck.fCurrentIndexCount &lt;= #{customerKeywordCriteria.ltCurrentIndexCount} </if>
@@ -357,7 +357,7 @@
         ck.fPaymentStatus	AS	'paymentStatus',
         ck.fOrderNumber	AS	'orderNumber',
         ck.fRemarks	AS	'remarks',
-        ck.fEnteredKeywordRemarks AS 'enteredKeywordRemarks'
+        ck.fFailedCause AS 'failedCause'
         FROM
         t_customer_keyword ck,
         t_customer c
@@ -421,7 +421,7 @@
         ck.fCollectMethod	AS	'collectMethod',
         ck.fOrderNumber	AS	'orderNumber',
         ck.fRemarks	AS	'remarks',
-        ck.fEnteredKeywordRemarks AS 'enteredKeywordRemarks'
+        ck.fFailedCause AS 'failedCause'
         FROM
         t_customer_keyword ck,
         t_customer c
@@ -1422,22 +1422,8 @@
         </foreach>
         AND ck.fUrl like '%${qzSettingExcludeCustomerKeywordsCriteria.domain}%'
     </update>
-    
-    <update id="updateNoEnteredKeywordGroupName">
-        UPDATE t_customer_keyword ck
-        SET
-           ck.fOptimizeGroupName = CONCAT('no_', fOptimizeGroupName)
-        WHERE ck.fOptimizedCount = 0
-        AND ck.fInvalidRefreshCount > 1
-        AND ck.fStatus = 1
-        AND ck.fType = 'qz'
-        AND ck.fCapturedTitle = 0
-        AND ck.fOptimizeGroupName NOT LIKE 'no_%'
-        AND ck.fOptimizeGroupName NOT IN ('stop','zanting','ZANTING','sotp')
-        LIMIT 10000
-    </update>
 
-    <select id="getNoEnteredKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeywordEnteredVO">
+    <select id="getCheckEnteredKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeywordEnteredVO">
         SELECT
             ck.fUuid AS	'uuid',
             ck.fTerminalType AS	'terminalType',
@@ -1471,7 +1457,7 @@
         <foreach collection="customerKeywords" item="customerKeyword" separator=";">
             UPDATE t_customer_keyword
             <set>
-                fEnteredKeywordRemarks = #{customerKeyword.enteredKeywordRemarks}
+                fFailedCause = #{customerKeyword.failedCause}
                 <if test="customerKeyword.capturedTitle == 1">
                     ,fTitle = NULL, fCaptureTitleQueryTime = NULL, fCapturedTitle = 0
                     ,fOptimizeGroupName = #{customerKeyword.optimizeGroupName}
@@ -1667,7 +1653,15 @@
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 
-
-
+    <select id="getSearchEngines" resultType="java.lang.String">
+        SELECT ck.fSearchEngine
+        FROM t_customer_keyword ck
+        WHERE ck.fOptimizedCount = 0
+        AND ck.fInvalidRefreshCount &gt;= 4
+        AND ck.fStatus = 1
+        AND ck.fSearchEngine = '百度'
+        AND (ck.fFailedCause IS NULL OR (ck.fFailedCause = '爬取中' AND ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(NOW(), INTERVAL 20 MINUTE)))
+        GROUP BY ck.fSearchEngine
+    </select>
 
 </mapper>

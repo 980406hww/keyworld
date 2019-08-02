@@ -268,8 +268,8 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fVerifyEnteredKeywordTime")
     private Date verifyEnteredKeywordTime;
 
-    @TableField(value = "fEnteredKeywordRemarks")
-    private String enteredKeywordRemarks;
+    @TableField(value = "fFailedCause")
+    private String failedCause;
 
     @TableField(value = "fKeywordEffect")
     private String keywordEffect;
@@ -1037,10 +1037,12 @@ public class CustomerKeyword extends BaseEntity {
         this.verifyEnteredKeywordTime = verifyEnteredKeywordTime;
     }
 
-    public String getEnteredKeywordRemarks() {  return enteredKeywordRemarks; }
+    public String getFailedCause() {
+        return failedCause;
+    }
 
-    public void setEnteredKeywordRemarks(String enteredKeywordRemarks) {
-        this.enteredKeywordRemarks = enteredKeywordRemarks;
+    public void setFailedCause(String failedCause) {
+        this.failedCause = failedCause;
     }
 
     public String getKeywordEffect() {

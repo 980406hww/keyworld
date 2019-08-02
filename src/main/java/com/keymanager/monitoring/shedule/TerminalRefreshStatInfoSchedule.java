@@ -51,15 +51,5 @@ public class TerminalRefreshStatInfoSchedule {
         } catch (Exception e) {
             logger.error(" Change Optimize Group Name is error" + e.getMessage());
         }
-
-        logger.info("============= "+" Change No Entered Keyword Group Name Task  "+"===================");
-        try {
-            Config config = configService.getConfig(Constants.CONFIG_TYPE_NOENTEREDKEYWORDSCHEDULE_SWITCH, Constants.CONFIG_KEY_SWITCHNUMBER);
-            if (config != null && config.getValue().equals("1")) {
-                customerKeywordService.updateNoEnteredKeywordGroupName();
-            }
-        } catch (Exception e) {
-            logger.error(" Change No Entered Keyword Group Name is error" + e.getMessage());
-        }
     }
 }
