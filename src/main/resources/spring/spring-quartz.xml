@@ -27,6 +27,7 @@
 				<ref bean="cronAutoTriggerResetInfoDaily" />
 				<ref bean="cronTriggerGenerateDailyReport" />
 				<ref bean="cronAutoTriggerDailyReport" />
+				<ref bean="cronTriggerSwitchClientStatusGroup" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->

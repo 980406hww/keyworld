@@ -593,14 +593,6 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         long idleTotalMinutes = sourceMachineInfo.getIdleTotalMinutes();
         sourceMachineInfo.setIdleTotalMinutes(targetMachineInfo.getIdleTotalMinutes());
         targetMachineInfo.setIdleTotalMinutes(idleTotalMinutes);
-
-        Integer pageSize = sourceMachineInfo.getPageSize();
-        sourceMachineInfo.setPageSize(targetMachineInfo.getPageSize());
-        targetMachineInfo.setPageSize(pageSize);
-
-        int page = sourceMachineInfo.getPage();
-        sourceMachineInfo.setPage(targetMachineInfo.getPage());
-        targetMachineInfo.setPage(page);
     }
 
     public void sendNotificationForRenewal() throws Exception{
