@@ -212,8 +212,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                         if (CollectionUtils.isNotEmpty(checkEnteredKeywords)) {
                             List<Long> customerKeywordUuids = new ArrayList<>();
                             for (CustomerKeywordEnteredVO keywordEnteredVo : checkEnteredKeywords) {
-                                blockingQueue.offer(keywordEnteredVo);
-                                customerKeywordUuids.add(keywordEnteredVo.getUuid());
+                                if (blockingQueue.offer(keywordEnteredVo)) {
+                                    customerKeywordUuids.add(keywordEnteredVo.getUuid());
+                                } else {
+                                    break;
+                                }
                             }
                             customerKeywordDao.updateVerifyEnteredKeywordTimeByUuids(customerKeywordUuids);
                         }
