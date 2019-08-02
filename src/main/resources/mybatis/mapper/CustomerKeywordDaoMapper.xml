@@ -1433,7 +1433,7 @@
             ck.fSearchEngine  AS 'searchEngine',
             ck.fBearPawNumber AS 'bearPawNumber'
         FROM t_customer_keyword ck
-        WHEREck.fOptimizedCount = 0
+        WHERE ck.fOptimizedCount = 0
         AND ck.fInvalidRefreshCount &gt;= 4
         AND ck.fStatus = 1
         AND ck.fSearchEngine = #{searchEngine}
