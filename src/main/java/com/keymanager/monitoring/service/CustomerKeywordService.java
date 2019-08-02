@@ -199,8 +199,26 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public void cacheCheckingEnteredCustomerKeywords() {
         List<String> searchEngines = customerKeywordDao.getSearchEngines();
         if (CollectionUtils.isNotEmpty(searchEngines)) {
-            for (String searcheEngine : searchEngines) {
-                
+            for (String searchEngine : searchEngines) {
+                ArrayBlockingQueue blockingQueue = checkingEnteredKeywordQueueMap.get(searchEngine);
+                if (null == blockingQueue) {
+                    blockingQueue = new ArrayBlockingQueue<String>(1000);
+                    checkingEnteredKeywordQueueMap.put(searchEngine, blockingQueue);
+                }
+                if (blockingQueue.size() < 500 ) {
+                    List<CustomerKeywordEnteredVO> checkEnteredKeywords = null;
+                    do {
+                        checkEnteredKeywords = customerKeywordDao.getCheckEnteredKeywords(searchEngine);
+                        if (CollectionUtils.isNotEmpty(checkEnteredKeywords)) {
+                            List<Long> customerKeywordUuids = new ArrayList<>();
+                            for (CustomerKeywordEnteredVO keywordEnteredVo : checkEnteredKeywords) {
+                                blockingQueue.offer(keywordEnteredVo);
+                                customerKeywordUuids.add(keywordEnteredVo.getUuid());
+                            }
+                            customerKeywordDao.updateVerifyEnteredKeywordTimeByUuids(customerKeywordUuids);
+                        }
+                    } while (blockingQueue.size() < 1000 && CollectionUtils.isNotEmpty(checkEnteredKeywords));
+                }
             }
         }
     }
@@ -1764,32 +1782,29 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public synchronized List<CustomerKeywordEnteredVO> getCheckingEnteredKeywords(String searchEngine) {
-        List<CustomerKeywordEnteredVO> checkEnteredKeywords = customerKeywordDao.getCheckEnteredKeywords(searchEngine);
-        if (CollectionUtils.isNotEmpty(checkEnteredKeywords)) {
-            List<Long> uuids = new ArrayList<>();
-            for (CustomerKeywordEnteredVO customerKeywordEnteredVo : checkEnteredKeywords) {
-                uuids.add(customerKeywordEnteredVo.getUuid());
-            }
-            customerKeywordDao.updateVerifyEnteredKeywordTimeByUuids(uuids);
+        ArrayBlockingQueue blockingQueue = checkingEnteredKeywordQueueMap.get(searchEngine);
+        if (null != blockingQueue && blockingQueue.size() > 0) {
+            List<CustomerKeywordEnteredVO> customerKeywordEnteredVos = new ArrayList<>();
+            do {
+                Object obj = blockingQueue.poll();
+                customerKeywordEnteredVos.add((CustomerKeywordEnteredVO) obj);
+            } while (blockingQueue.size() > 0 && customerKeywordEnteredVos.size() < 10);
+            return customerKeywordEnteredVos;
         }
-        return checkEnteredKeywords;
+        return null;
     }
 
     public void updateCheckingEnteredKeywords(List<CustomerKeywordEnteredVO> customerKeywordEnteredVos) {
-        if (!customerKeywordEnteredVos.isEmpty()) {
-            List<CustomerKeyword> customerKeywords = new ArrayList<CustomerKeyword>();
-            Config configCustomerKeywordRemarks = configService.getConfig(Constants.CONFIG_TYPE_NO_ENTERED_KEYWORD, Constants.CONFIG_KEY_NO_ENTERED_KEYWORD_REMARKS);
-            if (null != configCustomerKeywordRemarks) {
-                for (CustomerKeywordEnteredVO customerKeywordEnteredVo : customerKeywordEnteredVos) {
-                    CustomerKeyword customerKeyword = new CustomerKeyword();
-
-                    customerKeyword.setUuid(customerKeywordEnteredVo.getUuid());
-                    customerKeyword.setFailedCause(customerKeywordEnteredVo.getFailedCause());
-                    customerKeywords.add(customerKeyword);
-                }
+        if (CollectionUtils.isNotEmpty(customerKeywordEnteredVos)) {
+            List<CustomerKeyword> customerKeywords = new ArrayList<>();
+            for (CustomerKeywordEnteredVO customerKeywordEnteredVo : customerKeywordEnteredVos) {
+                CustomerKeyword customerKeyword = new CustomerKeyword();
+                customerKeyword.setUuid(customerKeywordEnteredVo.getUuid());
+                customerKeyword.setFailedCause(customerKeywordEnteredVo.getFailedCause());
+                customerKeywords.add(customerKeyword);
             }
-            if (!customerKeywords.isEmpty()) {
-                customerKeywordDao.updateNoEnteredKeywords(customerKeywords);
+            if (CollectionUtils.isNotEmpty(customerKeywords)) {
+                customerKeywordDao.updateCheckingEnteredKeywords(customerKeywords);
             }
         }
     }

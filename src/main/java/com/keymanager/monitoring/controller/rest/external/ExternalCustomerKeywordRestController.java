@@ -621,7 +621,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     }
 
     @RequestMapping(value = "getCheckingEnteredKeywords", method = RequestMethod.POST)
-    public ResponseEntity<?> getCheckingEnteredKeywords(@RequestBody Map<String, Object> requestMap) throws Exception {
+    public ResponseEntity<?> getCheckingEnteredKeywords(@RequestBody Map<String, Object> requestMap) {
         try {
             String userName = (String) requestMap.get("userName");
             String password = (String) requestMap.get("password");
@@ -630,30 +630,28 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 searchEngine = Constants.SEARCH_ENGINE_BAIDU;
             }
             if (validUser(userName, password)) {
-                List<CustomerKeywordEnteredVO> customerKeywordEnteredVos = customerKeywordService.getCheckingEnteredKeywords(searchEngine);
-                return new ResponseEntity<Object>(customerKeywordEnteredVos, HttpStatus.OK);
+                return new ResponseEntity<Object>(customerKeywordService.getCheckingEnteredKeywords(searchEngine), HttpStatus.OK);
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
-            logger.error("getNoEnteredKeywords:  " +  ex.getMessage());
+            logger.error("getNoEnteredKeywords:  " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "updateCheckingEnteredKeywords", method = RequestMethod.POST)
-    public ResponseEntity<?> updateCheckingEnteredKeywords(@RequestBody Map<String, Object> requestMap) throws Exception {
+    public ResponseEntity<?> updateCheckingEnteredKeywords(@RequestBody Map<String, Object> requestMap) {
         try {
             String userName = (String) requestMap.get("userName");
             String password = (String) requestMap.get("password");
             if (validUser(userName, password)) {
                 JSONArray jsonArray = JSONArray.fromObject(requestMap.get("customerKeywordEnteredVos"));
-                List<CustomerKeywordEnteredVO> customerKeywordEnteredVos = JSONArray.toList(jsonArray, new CustomerKeywordEnteredVO(), new JsonConfig());
-                customerKeywordService.updateCheckingEnteredKeywords(customerKeywordEnteredVos);
-                 return new ResponseEntity<Object>(true, HttpStatus.OK);
+                customerKeywordService.updateCheckingEnteredKeywords(JSONArray.toList(jsonArray, new CustomerKeywordEnteredVO(), new JsonConfig()));
+                return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("updateNoEnteredKeywords:     " + ex.getMessage());
         }

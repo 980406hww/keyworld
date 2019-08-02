@@ -1425,44 +1425,36 @@
 
     <select id="getCheckEnteredKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeywordEnteredVO">
         SELECT
-            ck.fUuid AS	'uuid',
-            ck.fTerminalType AS	'terminalType',
-            ck.fTitle AS 'title',
-            ck.fOptimizeGroupName AS 'optimizeGroupName',
-            ck.fKeyword	AS 'keyword',
-            ck.fUrl	AS 'url',
-            ck.fSearchEngine AS	'searchEngine',
-            ck.fCaptureTitleQueryTime AS 'captureTitleQueryTime'
-        FROM
-            t_customer_keyword ck
-        WHERE
-            ck.fOptimizeGroupName like 'no_%'
+            ck.fUuid          AS 'uuid',
+            ck.fTerminalType  AS 'terminalType',
+            ck.fTitle         AS 'title',
+            ck.fKeyword	      AS 'keyword',
+            ck.fUrl	          AS 'url',
+            ck.fSearchEngine  AS 'searchEngine',
+            ck.fBearPawNumber AS 'bearPawNumber'
+        FROM t_customer_keyword ck
+        WHEREck.fOptimizedCount = 0
+        AND ck.fInvalidRefreshCount &gt;= 4
         AND ck.fStatus = 1
         AND ck.fSearchEngine = #{searchEngine}
-        AND ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(CURDATE(),INTERVAL 7 DAY)
+        AND (ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(NOW(), INTERVAL 1 DAY) OR (ck.fFailedCause = '爬取中' AND ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(NOW(), INTERVAL 20 MINUTE)))
         ORDER BY ck.fVerifyEnteredKeywordTime
         LIMIT 100
     </select>
 
     <update id="updateVerifyEnteredKeywordTimeByUuids">
         UPDATE t_customer_keyword
-        SET fVerifyEnteredKeywordTime = NOW()
+        SET fVerifyEnteredKeywordTime = NOW(), fFailedCause = '爬取中'
         WHERE fUuid IN
         <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
             #{uuid}
         </foreach>
     </update>
 
-    <update id="updateNoEnteredKeywords">
+    <update id="updateCheckingEnteredKeywords">
         <foreach collection="customerKeywords" item="customerKeyword" separator=";">
             UPDATE t_customer_keyword
-            <set>
-                fFailedCause = #{customerKeyword.failedCause}
-                <if test="customerKeyword.capturedTitle == 1">
-                    ,fTitle = NULL, fCaptureTitleQueryTime = NULL, fCapturedTitle = 0
-                    ,fOptimizeGroupName = #{customerKeyword.optimizeGroupName}
-                </if>
-            </set>
+            SET fFailedCause = #{customerKeyword.failedCause}
             WHERE fUuid = #{customerKeyword.uuid}
         </foreach>
     </update>
@@ -1660,7 +1652,7 @@
         AND ck.fInvalidRefreshCount &gt;= 4
         AND ck.fStatus = 1
         AND ck.fSearchEngine = '百度'
-        AND (ck.fFailedCause IS NULL OR (ck.fFailedCause = '爬取中' AND ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(NOW(), INTERVAL 20 MINUTE)))
+        AND (ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(NOW(), INTERVAL 1 DAY) OR (ck.fFailedCause = '爬取中' AND ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(NOW(), INTERVAL 20 MINUTE)))
         GROUP BY ck.fSearchEngine
     </select>
 

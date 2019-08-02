@@ -28,9 +28,6 @@ public class TerminalRefreshStatInfoSchedule {
     @Autowired
     private MachineGroupWorkInfoService machineGroupWorkInfoService;
 
-    @Autowired
-    private ConfigService configService;
-
     public void runTask(){
         logger.info("============= " + " Terminal Refresh Stat Info Task "+"===================");
         try{

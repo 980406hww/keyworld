@@ -224,7 +224,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<CustomerKeywordEnteredVO> getCheckEnteredKeywords(@Param("searchEngine") String searchEngine);
 
-    void updateNoEnteredKeywords(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
+    void updateCheckingEnteredKeywords(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
 
     void updateVerifyEnteredKeywordTimeByUuids (@Param("uuids")List<Long> uuids);
 
