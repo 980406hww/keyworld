@@ -208,8 +208,15 @@
             <input type="text" id="ltCurrentIndexCount" name="ltCurrentIndexCount" placeholder="<=" value="${customerKeywordCriteria.ltCurrentIndexCount}" style="width: 40px;">
             备注:<input type="text" id="remarks" name="remarks" value="${customerKeywordCriteria.remarks}" style="width: 90px;">
             &nbsp;&nbsp;
-            失败原因:<input type="text" id="failedCause" name="failedCause" value="${customerKeywordCriteria.failedCause}" style="width: 90px;">
-            &nbsp;&nbsp;
+            失败原因:
+            <select name="failedCause" id="failedCause">
+                <option value="" selected="selected">请选择</option>
+                <option value="无收录"<c:if test="${customerKeywordCriteria.failedCause =='无收录'}">selected="selected"</c:if>>无收录</option>
+                <option value="熊掌号错误"<c:if test="${customerKeywordCriteria.failedCause =='熊掌号错误'}">selected="selected"</c:if>>熊掌号错误</option>
+                <option value="标题错误"<c:if test="${customerKeywordCriteria.failedCause =='标题错误'}">selected="selected"</c:if>>标题错误</option>
+                <option value="爬取中"<c:if test="${customerKeywordCriteria.failedCause =='爬取中'}">selected="selected"</c:if>>爬取中</option>
+            </select>
+                &nbsp;&nbsp;
             关键词作用:
             <select name="keywordEffect" id="keywordEffect" style="width: 80px;" title="">
                 <option value="" <c:if test="${customerKeywordCriteria.keywordEffect.equals('')}">selected="selected"</c:if>>全部</option>

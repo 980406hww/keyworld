@@ -22,7 +22,6 @@ function resetPageNumber(days) {
     var invalidRefreshCount = searchCustomerKeywordForm.find("#invalidRefreshCount").val();
     var noReachStandardDays = searchCustomerKeywordForm.find("#noReachStandardDays").val();
     var remarks = searchCustomerKeywordForm.find("#remarks").val();
-    var failedCause = failedCause.find("#failedCause").val();
     if(keyword != "") {
         searchCustomerKeywordForm.find("#keyword").val($.trim(keyword));
     }
@@ -75,9 +74,7 @@ function resetPageNumber(days) {
     if(remarks != "") {
         searchCustomerKeywordForm.find("#remarks").val($.trim(remarks));
     }
-    if(failedCause != "") {
-        searchCustomerKeywordForm.find("#failedCause").val($.trim(failedCause));
-    }
+
     searchCustomerKeywordForm.find("#currentPageNumberHidden").val(1);
     if(days != 0) {
         searchCustomerKeywordForm.submit();

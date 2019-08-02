@@ -163,7 +163,6 @@ function resetPageNumber() {
     var gtCurrentIndexCount = searchCustomerKeywordForm.find("#gtCurrentIndexCount").val();
     var ltCurrentIndexCount = searchCustomerKeywordForm.find("#ltCurrentIndexCount").val();
     var remarks = searchCustomerKeywordForm.find("#remarks").val();
-    var failedCause = searchCustomerKeywordForm.find("#failedCause").val();
     if(keyword != "") {
         searchCustomerKeywordForm.find("#keyword").val($.trim(keyword));
     }
@@ -208,9 +207,6 @@ function resetPageNumber() {
     }
     if(remarks != "") {
         searchCustomerKeywordForm.find("#remarks").val($.trim(remarks));
-    }
-    if(failedCause != "") {
-        searchCustomerKeywordForm.find("#failedCause").val($.trim(failedCause));
     }
     searchCustomerKeywordForm.find("#currentPageNumberHidden").val(1);
 }
