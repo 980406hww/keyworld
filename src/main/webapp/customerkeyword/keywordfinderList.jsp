@@ -95,9 +95,11 @@
             <select name="failedCause" id="failedCause">
                 <option value="" selected="selected">请选择</option>
                 <option value="无收录"<c:if test="${customerKeywordCriteria.failedCause =='无收录'}">selected="selected"</c:if>>无收录</option>
-                <option value="熊掌号错误"<c:if test="${customerKeywordCriteria.failedCause =='熊掌号错误'}">selected="selected"</c:if>>熊掌号错误</option>
-                <option value="标题错误"<c:if test="${customerKeywordCriteria.failedCause =='标题错误'}">selected="selected"</c:if>>标题错误</option>
                 <option value="爬取中"<c:if test="${customerKeywordCriteria.failedCause =='爬取中'}">selected="selected"</c:if>>爬取中</option>
+                <option value="标题异常"<c:if test="${customerKeywordCriteria.failedCause =='标题异常'}">selected="selected"</c:if>>标题异常</option>
+                <option value="标题错误"<c:if test="${customerKeywordCriteria.failedCause =='标题错误'}">selected="selected"</c:if>>标题错误</option>
+                <option value="熊掌号异常"<c:if test="${customerKeywordCriteria.failedCause =='熊掌号异常'}">selected="selected"</c:if>>熊掌号异常</option>
+                <option value="熊掌号错误"<c:if test="${customerKeywordCriteria.failedCause =='熊掌号错误'}">selected="selected"</c:if>>熊掌号错误</option>
             </select>
 
             <input id="pushPay" name="pushPay" type="checkbox"  onclick="pushPayValue()" value="${customerKeywordCriteria.pushPay}"/>催缴 &nbsp;
