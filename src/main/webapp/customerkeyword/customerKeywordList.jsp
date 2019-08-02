@@ -208,7 +208,7 @@
             <input type="text" id="ltCurrentIndexCount" name="ltCurrentIndexCount" placeholder="<=" value="${customerKeywordCriteria.ltCurrentIndexCount}" style="width: 40px;">
             备注:<input type="text" id="remarks" name="remarks" value="${customerKeywordCriteria.remarks}" style="width: 90px;">
             &nbsp;&nbsp;
-            收录备注:<input type="text" id="enteredKeywordRemarks" name="enteredKeywordRemarks" value="${customerKeywordCriteria.enteredKeywordRemarks}" style="width: 90px;">
+            失败原因:<input type="text" id="failedCause" name="failedCause" value="${customerKeywordCriteria.failedCause}" style="width: 90px;">
             &nbsp;&nbsp;
             关键词作用:
             <select name="keywordEffect" id="keywordEffect" style="width: 80px;" title="">
@@ -273,7 +273,7 @@
             <td align="center" width=80>最后优化时间</td>
             <td align="center" width=50>订单号</td>
             <td align="center" width=100>备注</td>
-            <td align="center" width=100>收录备注</td>
+            <td align="center" width=100>失败原因</td>
             <td align="center" width=60>优化组名</td>
             <td align="center" width=60>机器分组</td>
             <td align="center" width=80>操作</td>
@@ -325,7 +325,7 @@
                 <td align="center" width=80><fmt:formatDate value="${customerKeyword.lastOptimizeDateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
                 <td align="center" width=50>${customerKeyword.orderNumber}</td>
                 <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
-                <td align="center" width=100>${customerKeyword.enteredKeywordRemarks == null ? "" : customerKeyword.enteredKeywordRemarks}</td>
+                <td align="center" width=100>${customerKeyword.failedCause == null ? "" : customerKeyword.failedCause}</td>
                 <td align="center" width=60>${customerKeyword.optimizeGroupName == ''? "" : customerKeyword.optimizeGroupName} </td>
                 <td align="center" width=60>${customerKeyword.machineGroup == ''? "" : customerKeyword.machineGroup} </td>
 
