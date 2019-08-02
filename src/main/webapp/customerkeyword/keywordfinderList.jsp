@@ -90,7 +90,7 @@
             </select>
             &nbsp;
             备注:<input type="text" id="remarks" name="remarks" style="width: 90px;" value="${customerKeywordCriteria.remarks}">&nbsp;
-            收录备注:<input type="text" id="enteredKeywordRemarks" name="enteredKeywordRemarks" style="width: 90px;" value="${customerKeywordCriteria.enteredKeywordRemarks}">&nbsp;
+            失败原因:<input type="text" id="failedCause" name="failedCause" style="width: 90px;" value="${customerKeywordCriteria.failedCause}">&nbsp;
             <input id="pushPay" name="pushPay" type="checkbox"  onclick="pushPayValue()" value="${customerKeywordCriteria.pushPay}"/>催缴 &nbsp;
             <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}"/>显示下架 &nbsp;
             <input id="requireDelete" name="requireDelete" type="checkbox"  ${customerKeywordCriteria.requireDelete == true ? "checked=true" : ""}/>要求删除 &nbsp;
@@ -191,7 +191,7 @@
             <td align="center" width=100>订单号</td>
             <td align="center" width=60>付费状态</td>
             <td align="center" width=100>备注</td>
-            <td align="center" width=100>收录备注</td>
+            <td align="center" width=100>失败原因</td>
         </tr>
     </table>
 </div>
@@ -251,7 +251,7 @@
                 <td align="center" width=100>${customerKeyword.orderNumber}</td>
                 <td align="center" width="60">${customerKeyword.paymentStatus}</td>
                 <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
-                <td align="center" width=100>${customerKeyword.enteredKeywordRemarks == null ? "" : customerKeyword.enteredKeywordRemarks} </td>
+                <td align="center" width=100>${customerKeyword.failedCause == null ? "" : customerKeyword.failedCause} </td>
             </tr>
         </c:forEach>
     </table>
