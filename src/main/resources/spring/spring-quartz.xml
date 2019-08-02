@@ -67,7 +67,7 @@
 
 	<bean id="cronTriggerSwitchClientStatusGroup" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronJobDetailSwitchClientStatusGroup" />
-		<property name="cronExpression" value="0 0 0,12 * * ?" />
+		<property name="cronExpression" value="0 0 0/1 * * ?" />
 	</bean>
 
 	<!-- JobDetajil, 基于MethodInvokingJobDetailFactoryBean调用普通Spring Bean -->

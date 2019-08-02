@@ -582,13 +582,9 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
     }
 
     private void switchMachineInfoInfo(MachineInfo sourceMachineInfo, MachineInfo targetMachineInfo){
-        String group = sourceMachineInfo.getGroup();
-        sourceMachineInfo.setGroup(targetMachineInfo.getGroup());
-        targetMachineInfo.setGroup(group);
-
-        String usingOperationType = sourceMachineInfo.getUsingOperationType();
-        sourceMachineInfo.setUsingOperationType(targetMachineInfo.getUsingOperationType());
-        targetMachineInfo.setUsingOperationType(usingOperationType);
+        String machineGroup = sourceMachineInfo.getMachineGroup();
+        sourceMachineInfo.setMachineGroup(targetMachineInfo.getMachineGroup());
+        targetMachineInfo.setMachineGroup(machineGroup);
 
         Timestamp idleStartTime = sourceMachineInfo.getIdleStartTime();
         sourceMachineInfo.setIdleStartTime(targetMachineInfo.getIdleStartTime());
@@ -598,11 +594,11 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         sourceMachineInfo.setIdleTotalMinutes(targetMachineInfo.getIdleTotalMinutes());
         targetMachineInfo.setIdleTotalMinutes(idleTotalMinutes);
 
-        int pageSize = sourceMachineInfo.getPageSize();
+        Integer pageSize = sourceMachineInfo.getPageSize();
         sourceMachineInfo.setPageSize(targetMachineInfo.getPageSize());
         targetMachineInfo.setPageSize(pageSize);
 
-        int page = sourceMachineInfo.getPage();
+        Integer page = sourceMachineInfo.getPage();
         sourceMachineInfo.setPage(targetMachineInfo.getPage());
         targetMachineInfo.setPage(page);
     }
