@@ -598,7 +598,7 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         sourceMachineInfo.setPageSize(targetMachineInfo.getPageSize());
         targetMachineInfo.setPageSize(pageSize);
 
-        Integer page = sourceMachineInfo.getPage();
+        int page = sourceMachineInfo.getPage();
         sourceMachineInfo.setPage(targetMachineInfo.getPage());
         targetMachineInfo.setPage(page);
     }
