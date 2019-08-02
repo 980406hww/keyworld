@@ -620,7 +620,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "getCheckingEnteredKeywords", method = RequestMethod.POST)
+    @RequestMapping(value = "/getCheckingEnteredKeywords", method = RequestMethod.POST)
     public ResponseEntity<?> getCheckingEnteredKeywords(@RequestBody Map<String, Object> requestMap) {
         try {
             String userName = (String) requestMap.get("userName");
@@ -640,7 +640,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "updateCheckingEnteredKeywords", method = RequestMethod.POST)
+    @RequestMapping(value = "/updateCheckingEnteredKeywords", method = RequestMethod.POST)
     public ResponseEntity<?> updateCheckingEnteredKeywords(@RequestBody Map<String, Object> requestMap) {
         try {
             String userName = (String) requestMap.get("userName");
