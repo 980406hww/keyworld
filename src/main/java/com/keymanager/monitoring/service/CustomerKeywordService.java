@@ -135,8 +135,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                             List<Long> customerKeywordUuids = new ArrayList<Long>();
                             if(optimizationKeywordVOS.size() > machineCount) {
                                 for (OptimizationKeywordVO optimizationKeywordVO : optimizationKeywordVOS) {
-                                    blockingQueue.offer(optimizationKeywordVO);
-                                    customerKeywordUuids.add(optimizationKeywordVO.getUuid());
+                                    if (blockingQueue.offer(optimizationKeywordVO)){
+                                        customerKeywordUuids.add(optimizationKeywordVO.getUuid());
+                                    } else {
+                                        break;
+                                    }
                                 }
                                 updateOptimizationQueryTime(customerKeywordUuids);
                             }else{
