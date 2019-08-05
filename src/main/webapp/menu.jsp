@@ -259,8 +259,8 @@
     function showConditionTr() {
         var type = $("#showUserMessageQueueForm").find("#message_type_select").val();
         var status = $("#showUserMessageQueueForm").find("#message_status_select").val();
-        $("#userMessageQueueTable").find("thead tr:last-child").find("input[name='type']").val(type == '' ? '所有' : type);
-        $("#userMessageQueueTable").find("thead tr:last-child").find("input[name='messageStatus']").val(status == '' ? '所有' : (status == 0 ? "未处理" : "处理完毕"));
+        $("#userMessageQueueTable").find("thead tr:last-child").find("input[name='type']").val(type === '' ? '所有' : type);
+        $("#userMessageQueueTable").find("thead tr:last-child").find("input[name='messageStatus']").val(status === '' ? '所有' : (status === 0 ? "未处理" : "处理完毕"));
         $("#userMessageQueueTable").find("thead tr:last-child").toggle();
     }
 
@@ -268,11 +268,11 @@
         var postData = {};
         var showUserMessageQueueForm = $("#showUserMessageQueueForm");
         var type = showUserMessageQueueForm.find("#message_type_select").val();
-        if (type != '') {
+        if (type !== '') {
             postData.type = type;
 		}
         var status = showUserMessageQueueForm.find("#message_status_select").val();
-        if (status != '') {
+        if (status !== '') {
             postData.status = status;
 		} else {
             if (openStatus){
@@ -282,34 +282,34 @@
             postData.status = status;
         }
         var date = showUserMessageQueueForm.find("#messageCreateDate").val();
-        if (date != '') {
+        if (date !== '') {
             postData.date = date.trim();
 		}
         var userMessageQueueTr = $("#userMessageQueueTable").find("thead tr:last-child");
         var contactPerson = userMessageQueueTr.find("input[name='contactPerson']").val();
-        if (contactPerson != '') {
+        if (contactPerson !== '') {
             postData.contactPerson = contactPerson.trim();
 		}
 		var senderUserNames = [];
         var senderUserName = userMessageQueueTr.find("input[name='senderUserName']").val();
-        if (senderUserName != '') {
+        if (senderUserName !== '') {
             senderUserNames = senderUserName.replace(/[，]/g, ",").replace(/[\s+]/g, "").split(',');
             senderUserNames = senderUserNames.filter(function(name, index) {
-                return senderUserNames.indexOf(name) === index && name != '';
+                return senderUserNames.indexOf(name) === index && name !== '';
             });
             postData.senderUserNames = senderUserNames;
 		}
 		var receiverUserNames = [];
         var receiverUserName = userMessageQueueTr.find("input[name='receiverUserName']").val();
-        if (receiverUserName != '') {
+        if (receiverUserName !== '') {
             receiverUserNames = receiverUserName.replace(/[，]/g, ",").replace(/[\s+]/g, "").split(',');
             receiverUserNames = receiverUserNames.filter(function(name, index) {
-                return receiverUserNames.indexOf(name) === index && name != '';
+                return receiverUserNames.indexOf(name) === index && name !== '';
             });
             postData.receiverUserNames = receiverUserNames;
         }
         var pageNumber = $("#showUserMessageQueueForm").find("#current-page-number label").text();
-        if (query || pageNumber == "" || pageNumber == 0 || ((pageNumber == "" || pageNumber == 0))){
+        if (query || pageNumber === "" || pageNumber === 0 || ((pageNumber === "" || pageNumber === 0))){
             pageNumber = 1;
         }
         postData.pageNumber = pageNumber;
@@ -369,8 +369,7 @@
     }
 
     function jumpToCorrespondJspPage(result) {
-        console.log(result);
-        if (result.type == '全站设置') {
+        if (result.type === '全站设置') {
             jumpSearchQZSettings(result.customerUuid);
         } else {
             jumpSearchCustomerKeywords(result.customerUuid);

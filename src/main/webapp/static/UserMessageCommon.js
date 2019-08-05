@@ -53,7 +53,7 @@ function openMessageBox(type, customerUuid, contactPerson) {
         }
     });
     showUserMessageDialog.dialog("open");
-    showUserMessageDialog.window("resize", {top: $(document).scrollTop() + 150 , left: 801});
+    showUserMessageDialog.window("resize", {top: $(document).scrollTop() + 150, left: 758});
 }
 
 function getActiveUsers(){
@@ -141,7 +141,7 @@ function findHistoryUserMessages(type, customerUuid) {
                         idx+1,
                         val.content,
                         val.receiverUserName,
-                        val.status == 1 ? "处理完毕" : "未处理"
+                        val.status === 1 ? "处理完毕" : "未处理"
                     ];
                     $.each(userMessageElements, function (id, v) {
                         var newTd = document.createElement("td");
@@ -150,12 +150,14 @@ function findHistoryUserMessages(type, customerUuid) {
                         newTd.appendChild(newSpan);
                         newSpan.innerHTML = v;
                         newTd.title = v;
-                        if (id == 1) {
+                        if (id === 1) {
                             newSpan.className = "user-message-content";
                         }
                     });
                     $("#userMessageListTable")[0].lastChild.appendChild(newTr);
                 });
+            } else {
+                $().toastmessage("showErrorToast", "没有数据");
             }
         },
         error: function () {
@@ -230,8 +232,8 @@ function openNoteBookDialog(customerUuid, terminalType) {
         resizable: false,
         bgiframe: true,
         draggable: false,
-        height: 280,
-        width: 400,
+        height: 300,
+        width: 560,
         title: '记事本',
         modal: false,
         onClose: function() {
@@ -241,7 +243,10 @@ function openNoteBookDialog(customerUuid, terminalType) {
         }
     });
     showUserNoteBookDialog.dialog("open");
-    showUserNoteBookDialog.window("resize", {top: $(document).scrollTop() + 150 , left: 800});
+    showUserNoteBookDialog.window("resize", {
+        top: $(document).scrollTop() + 150,
+        left: $(document).scrollLeft() + $(window).width() / 2 - 280
+    });
 }
 
 function getUserNoteBooks(customerUuid, searchAll, terminalType) {
@@ -265,10 +270,10 @@ function getUserNoteBooks(customerUuid, searchAll, terminalType) {
                     $("#userNoteBookTable tbody").append("<tr>" +
                         "<td name='index'>"+ (idx+1) +"</td>" +
                         "<td>"+ val.notesPerson +"</td>" +
+                        "<td>"+ val.content +"</td>" +
                         "<td>"+ new Date(val.createTime).format("yyyy-MM-dd") +"</td>" +
                         "<td>" +
-                        "<input class='ui-button ui-widget ui-corner-all' type='button' onclick='showUserNoteBookP(this)' value='展开内容' >" +
-                        "&nbsp;&nbsp;<input class='ui-button ui-widget ui-corner-all' type='button' onclick='updateUserNoteBook(this)' idx='"+ (idx+1) +"' uuid='"+ val.uuid +"' value='修改内容' >" +
+                        "<input class='ui-button ui-widget ui-corner-all' type='button' onclick='updateUserNoteBook(this)' idx='"+ (idx+1) +"' uuid='"+ val.uuid +"' value='修改内容' >" +
                         "</td>" +
                     "</tr>" +
                     "<tr id='note_book_"+ (idx+1) +"' style='display: none'>" +

@@ -110,20 +110,10 @@ td .tree-title {
 .ui-multiselect-menu {
     z-index: 9999 !important;
 }
-.ui-multiselect-menu1 {
-    position: absolute !important;
-    top: 148px !important;
-    left: 789px !important;
-}
 .ui-multiselect-menu3 {
     position: absolute !important;
     top: 208px !important;
-    left: 1004px !important;
-}
-.ui-multiselect-menu2 {
-    position: absolute !important;
-    top: 148px !important;
-    left: 922px !important;
+    left: 960px !important;
 }
 #userMessageQueueTable {
     text-align: center;
