@@ -211,12 +211,12 @@
             失败原因:
             <select name="failedCause" id="failedCause">
                 <option value="" selected="selected">请选择</option>
-                <option value="无收录"<c:if test="${customerKeywordCriteria.failedCause =='无收录'}">selected="selected"</c:if>>无收录</option>
                 <option value="爬取中"<c:if test="${customerKeywordCriteria.failedCause =='爬取中'}">selected="selected"</c:if>>爬取中</option>
-                <option value="标题异常"<c:if test="${customerKeywordCriteria.failedCause =='标题异常'}">selected="selected"</c:if>>标题异常</option>
-                <option value="标题错误"<c:if test="${customerKeywordCriteria.failedCause =='标题错误'}">selected="selected"</c:if>>标题错误</option>
-                <option value="熊掌号异常"<c:if test="${customerKeywordCriteria.failedCause =='熊掌号异常'}">selected="selected"</c:if>>熊掌号异常</option>
+                <option value="关键字未收录"<c:if test="${customerKeywordCriteria.failedCause =='关键字未收录'}">selected="selected"</c:if>>关键字未收录</option>
+                <option value="标题无法操作"<c:if test="${customerKeywordCriteria.failedCause =='标题无法操作'}">selected="selected"</c:if>>标题无法操作</option>
+                <option value="关键字无此标题"<c:if test="${customerKeywordCriteria.failedCause =='关键字无此标题'}">selected="selected"</c:if>>关键字无此标题</option>
                 <option value="熊掌号错误"<c:if test="${customerKeywordCriteria.failedCause =='熊掌号错误'}">selected="selected"</c:if>>熊掌号错误</option>
+                <option value="熊掌号缺失"<c:if test="${customerKeywordCriteria.failedCause =='熊掌号缺失'}">selected="selected"</c:if>>熊掌号缺失</option>
             </select>
                 &nbsp;&nbsp;
             关键词作用:
