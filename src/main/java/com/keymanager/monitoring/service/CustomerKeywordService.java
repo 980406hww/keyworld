@@ -17,7 +17,6 @@ import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -115,6 +114,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     private final static Map<String, ArrayBlockingQueue> machineGroupQueueMap = new HashMap<String, ArrayBlockingQueue>();
 
+    private final static ArrayBlockingQueue customerKeywordCrawlRankQueue = new ArrayBlockingQueue(30000);
+
     public void cacheCustomerKeywords() {
         List<String> machineGroups = customerKeywordDao.getMachineGroups();
         if (CollectionUtils.isNotEmpty(machineGroups)) {
@@ -195,6 +196,25 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
+    public void cacheCrawlRankCustomerKeywords() {
+        if (customerKeywordCrawlRankQueue.size() < 15000 ) {
+            List<CustomerKeyWordCrawlRankdVO> customerKeyWordCrawlRankdVOS = null;
+            do {
+                customerKeyWordCrawlRankdVOS = customerKeywordDao.getCrawlRankKeywords();
+                if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankdVOS)) {
+                    List<Long> customerKeywordUuids = new ArrayList<>();
+                    for (CustomerKeyWordCrawlRankdVO customerKeyWordCrawlRankdVo : customerKeyWordCrawlRankdVOS) {
+                        if (customerKeywordCrawlRankQueue.offer(customerKeyWordCrawlRankdVo)) {
+                            customerKeywordUuids.add(customerKeyWordCrawlRankdVo.getUuid());
+                        } else {
+                            break;
+                        }
+                    }
+                    customerKeywordDao.updateCrawlRankKeywordTimeByUuids(customerKeywordUuids);
+                }
+            } while (customerKeywordCrawlRankQueue.size() < 30000 && CollectionUtils.isNotEmpty(customerKeyWordCrawlRankdVOS));
+        }
+    }
     public OptimizationVO fetchCustoemrKeywordForOptimization(MachineInfo machineInfo) throws InterruptedException {
         if (!machineInfo.getValid()) {
             return null;
@@ -1811,6 +1831,28 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             machineGroupQueueVOS.add(new machineGroupQueueVO(entry.getKey(),entry.getValue().size()));
         }
         return machineGroupQueueVOS;
+    }
+
+    public synchronized CustomerKeyWordCrawlRankdVO getCrawlRankKeywords() {
+        if (null != customerKeywordCrawlRankQueue && customerKeywordCrawlRankQueue.size() > 0) {
+            return (CustomerKeyWordCrawlRankdVO) customerKeywordCrawlRankQueue.poll();
+        }
+        return null;
+    }
+
+    public void updateCrawlRankKeywords(List<CustomerKeyWordCrawlRankdVO> customerKeyWordCrawlRankdVOS) {
+        if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankdVOS)) {
+            List<CustomerKeyword> customerKeywords = new ArrayList<>();
+            for (CustomerKeyWordCrawlRankdVO customerKeyWordCrawlRankdVo : customerKeyWordCrawlRankdVOS) {
+                CustomerKeyword customerKeyword = new CustomerKeyword();
+                customerKeyword.setUuid(customerKeyWordCrawlRankdVo.getUuid());
+                customerKeyword.setRankStatus(customerKeyWordCrawlRankdVo.getRankStatus());
+                customerKeywords.add(customerKeyword);
+            }
+            if (CollectionUtils.isNotEmpty(customerKeywords)) {
+                customerKeywordDao.updateCrawlRankKeywords(customerKeywords);
+            }
+        }
     }
 
     public CustomerKeywordRankingCountVO getCustomerKeywordRankingCount(int customerUuid, String groupName) {
