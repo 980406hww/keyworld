@@ -1667,7 +1667,47 @@
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 
+    <select id="getCrawlRankKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeyWordCrawlRankdVO">
+        SELECT
+        ck.fUuid AS 'uuid',
+        ck.fTerminalType AS 'terminalType',
+        ck.fTitle AS 'title',
+        ck.fKeyword AS 'keyword',
+        ck.fUrl AS 'url',
+        ck.fSearchEngine AS 'searchEngine',
+        ck.fBearPawNumber AS 'bearPawNumber'
+        FROM
+        t_customer_keyword ck
+        WHERE
+        ck.fStatus = 1
+        AND ck.fMachineGroup &lt;&gt; 'Pause'
+        AND (
+        ck.fRankDate &lt;= DATE_SUB( CURDATE(), INTERVAL 1 DAY )
+        OR (
+        ck.fRankStatus = 0
+        AND ck.fRankQueryTime &lt;= DATE_SUB( NOW(), INTERVAL 20 MINUTE )))
+        ORDER BY
+        ck.fRankQueryTime
+        LIMIT 3000
+    </select>
 
+    <update id="updateCrawlRankKeywordTimeByUuids">
+        UPDATE t_customer_keyword
+        SET
+        fRankDate = CURDATE(),
+        fRankQueryTime = NOW(),
+        fRankStatus = 1
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
 
-
+    <update id="updateCrawlRankKeywords">
+        <foreach collection="customerKeywords" item="customerKeyword" separator=";">
+            UPDATE t_customer_keyword
+            SET fRankStatus = #{customerKeyword.rankStatus}
+            WHERE fUuid = #{customerKeyword.uuid}
+        </foreach>
+    </update>
 </mapper>

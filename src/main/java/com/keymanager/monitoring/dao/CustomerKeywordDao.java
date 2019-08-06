@@ -244,4 +244,11 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<String> getMachineGroups();
 
     List<OptimizationKeywordVO> fetchCustomerKeywordsForCache(@Param("terminalType") String terminalType, @Param("machineGroup") String machineGroup, @Param("batchCount") int batchCount);
+
+    List<CustomerKeyWordCrawlRankdVO> getCrawlRankKeywords();
+
+    void updateCrawlRankKeywordTimeByUuids (@Param("uuids")List<Long> uuids);
+
+    void updateCrawlRankKeywords(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
+
 }
