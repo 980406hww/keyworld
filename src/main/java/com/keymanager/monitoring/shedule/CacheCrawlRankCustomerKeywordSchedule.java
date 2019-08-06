@@ -15,12 +15,12 @@ public class CacheCrawlRankCustomerKeywordSchedule {
     private CustomerKeywordService customerKeywordService;
 
     public void runTask() {
-        logger.info("============= " + " Cache checking entered Customer Keyword Task " + "===================");
+        logger.info("============= " + " Cache crawl rank Customer Keyword Task " + "===================");
         try {
             customerKeywordService.cacheCrawlRankCustomerKeywords();
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("Cache checking entered Customer Keyword is error" + e.getMessage());
+            logger.error("Cache crawl rank Customer Keyword is error" + e.getMessage());
         }
     }
 }
