@@ -1812,4 +1812,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
         return machineGroupQueueVOS;
     }
+
+    public CustomerKeywordRankingCountVO getCustomerKeywordRankingCount(int customerUuid, String groupName) {
+        return customerKeywordDao.getCustomerKeywordRankingCount(customerUuid, groupName);
+    }
 }

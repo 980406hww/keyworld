@@ -13,6 +13,7 @@ import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.vo.*;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
+import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordVO;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
@@ -21,6 +22,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -158,7 +160,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			List<QZOperationType> oldOperationTypes = qzOperationTypeService.searchQZOperationTypesIsDelete(qzSetting.getUuid());
 			List<QZOperationType> updOperationTypes = qzSetting.getQzOperationTypes();
 			this.updateOperationTypeAndChargeRule(oldOperationTypes, updOperationTypes, qzSetting.getUuid(), qzSetting.getCustomerUuid(), qzSetting.getfIsMonitor(), userName);
-			List<QZKeywordRankInfo> existingQZKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), null);
+			List<QZKeywordRankInfo> existingQZKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), null, null);
 			this.updateQZKeywordRankInfo(existingQZKeywordRankInfos, updOperationTypes, existingQZSetting);
 			// 修改标签
 			List<QZCategoryTag> existingQZCategoryTags = qzCategoryTagService.searchCategoryTagByQZSettingUuid(qzSetting.getUuid());
@@ -385,7 +387,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	private void addingQZKeywordRankInfo (Page<QZSetting> page, String terminalType){
         for(QZSetting qzSetting : page.getRecords()){
-            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType);
+            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, null);
             if (CollectionUtils.isNotEmpty(qzKeywordRankInfos)) {
 				Map<String, Map<String, JSONObject>> qzKeywordRankInfoMap = new HashMap<>();
 				for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
@@ -852,4 +854,87 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			qzCategoryTagService.updateQZCategoryTag(existingQZCategoryTags, targetQZCategoryTags, Long.parseLong(uuid));
 		}
 	}
+
+    public void generateRankingCurve() {
+        List<QZSetting> allQZSettings = qzSettingDao.searchAllQZSettingForGenerateRankingCurve();
+        if (CollectionUtils.isNotEmpty(allQZSettings)) {
+            for (QZSetting qzSetting : allQZSettings) {
+                if (null != qzSetting) {
+                    String terminalType = null;
+                    if (null != qzSetting.getPcGroup()) {
+                        terminalType = "PC";
+                        generateRankInfo(qzSetting, terminalType);
+                    }
+                    if (null != qzSetting.getPhoneGroup()) {
+                        terminalType = "Phone";
+                        generateRankInfo(qzSetting, terminalType);
+                    }
+                }
+            }
+        }
+    }
+
+    private void generateRankInfo(QZSetting qzSetting, String terminalType) {
+        QZKeywordRankInfo rankInfo;
+        String groupName = terminalType.equals("PC") ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup();
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+
+        CustomerKeywordRankingCountVO countVo = customerKeywordService.getCustomerKeywordRankingCount(qzSetting.getCustomerUuid(), groupName);
+        List<QZKeywordRankInfo> list = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "排名");
+        if (CollectionUtils.isNotEmpty(list)) {
+            rankInfo = list.iterator().next();
+            String dateStr = rankInfo.getDate();
+            if (StringUtil.isNullOrEmpty(dateStr)) {
+                fillRankInfo(rankInfo, countVo, 1);
+                rankInfo.setDate("['" + sdf.format(date) + "']");
+            } else {
+                String[] dateStrings = dateStr.substring(1, dateStr.length() - 1).split(", ");
+                String nowDate = dateStrings[0];
+                if (nowDate.equals("'" + sdf.format(date) + "'")) {
+                    // 为当天数据, 替换数据
+                    fillRankInfo(rankInfo, countVo, 0);
+                } else {
+                    // 不为当天, 添加数据
+                    fillRankInfo(rankInfo, countVo, 1);
+                    rankInfo.setDate(fillData(rankInfo.getDate(), "'" + sdf.format(date) + "'", 1));
+                }
+            }
+        } else {
+            rankInfo = new QZKeywordRankInfo();
+            rankInfo.setQzSettingUuid(qzSetting.getUuid());
+            rankInfo.setTerminalType(terminalType);
+            rankInfo.setWebsiteType("排名");
+            rankInfo.setDataProcessingStatus(false);
+            fillRankInfo(rankInfo, countVo, 1);
+            rankInfo.setDate("['" + sdf.format(date) + "']");
+        }
+    }
+
+    private void fillRankInfo(QZKeywordRankInfo rankInfo, CustomerKeywordRankingCountVO countVo, int fillMode) {
+        rankInfo.setTopTen(fillData(rankInfo.getTopTen(), countVo.getTopTenNum() + "", fillMode));
+        rankInfo.setTopTwenty(fillData(rankInfo.getTopTwenty(), countVo.getTopTwentyNum() + "", fillMode));
+        rankInfo.setTopThirty(fillData(rankInfo.getTopThirty(), countVo.getTopThirtyNum() + "", fillMode));
+        rankInfo.setTopForty(fillData(rankInfo.getTopForty(), countVo.getTopFortyNum() + "", fillMode));
+        rankInfo.setTopFifty(fillData(rankInfo.getTopFifty(), countVo.getTopFiftyNum() + "", fillMode));
+    }
+
+    private String fillData(String str, String num, int fillMode) {
+        if (str == null) {
+            return "[" + num + "]";
+        }
+        StringBuilder sb = new StringBuilder(str);
+        if (fillMode == 1) { // 添加
+            String[] strings = str.split(", ");
+            sb.replace(0, 1, "[" + num + ", ");
+            if (strings.length >= 90) {
+                int end = sb.lastIndexOf(",");
+                sb.replace(end, sb.length(), "]");
+            }
+        } else { // 替换
+            int index = sb.indexOf(",");
+            sb.replace(0, index, "[" + num);
+        }
+        return sb.toString();
+    }
 }

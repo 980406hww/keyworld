@@ -49,8 +49,8 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     @Autowired
     private QZChargeRuleService qzChargeRuleService;
 
-    public List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (Long qzSettingUuid, String terminalType) {
-        return qzKeywordRankInfoDao.searchExistingQZKeywordRankInfo(qzSettingUuid, terminalType);
+    public List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (Long qzSettingUuid, String terminalType, String websiteType) {
+        return qzKeywordRankInfoDao.searchExistingQZKeywordRankInfo(qzSettingUuid, terminalType, null);
     }
 
     public void deleteByQZSettingUuid (Long uuid) {

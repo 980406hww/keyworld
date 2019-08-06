@@ -1667,7 +1667,17 @@
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 
-
-
-
+    <select id="getCustomerKeywordRankingCount" resultType="com.keymanager.monitoring.vo.CustomerKeywordRankingCountVO">
+        SELECT
+            COUNT(ck.fCurrentPosition &lt;= 10 OR NULL)  AS 'topTenNum',
+            COUNT(ck.fCurrentPosition &lt;= 20 OR NULL)  AS 'topTwentyNum',
+            COUNT(ck.fCurrentPosition &lt;= 30 OR NULL)  AS 'topThirtyNum',
+            COUNT(ck.fCurrentPosition &lt;= 40 OR NULL)  AS 'topFortyNum',
+            COUNT(ck.fCurrentPosition &lt;= 50 OR NULL)  AS 'topFiftyNum'
+        FROM t_customer_keyword ck
+        WHERE ck.fCustomerUuid = #{customerUuid}
+        AND ck.fStatus = 1
+        AND ck.fOptimizeGroupName = #{groupName}
+        AND ck.fRankDate = CURRENT_DATE()
+    </select>
 </mapper>
