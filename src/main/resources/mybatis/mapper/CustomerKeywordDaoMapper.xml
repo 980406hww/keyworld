@@ -1677,19 +1677,19 @@
         FROM t_customer_keyword ck
         WHERE ck.fCustomerUuid = #{customerUuid}
         AND ck.fStatus = 1
-        AND ck.fOptimizeGroupName = #{groupName}
+        AND ck.fOptimizeGroupName LIKE '${groupName}%'
         AND ck.fRankDate = CURRENT_DATE()
     </select>
     
     <select id="getCrawlRankKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeyWordCrawlRankdVO">
         SELECT
-        ck.fUuid AS 'uuid',
-        ck.fTerminalType AS 'terminalType',
-        ck.fTitle AS 'title',
-        ck.fKeyword AS 'keyword',
-        ck.fUrl AS 'url',
-        ck.fSearchEngine AS 'searchEngine',
-        ck.fBearPawNumber AS 'bearPawNumber'
+            ck.fUuid AS 'uuid',
+            ck.fTerminalType AS 'terminalType',
+            ck.fTitle AS 'title',
+            ck.fKeyword AS 'keyword',
+            ck.fUrl AS 'url',
+            ck.fSearchEngine AS 'searchEngine',
+            ck.fBearPawNumber AS 'bearPawNumber'
         FROM
         t_customer_keyword ck
         WHERE
@@ -1704,6 +1704,7 @@
         ck.fRankQueryTime
         LIMIT 3000
     </select>
+
     <update id="updateCrawlRankKeywordTimeByUuids">
         UPDATE t_customer_keyword
         SET
@@ -1715,6 +1716,7 @@
             #{uuid}
         </foreach>
     </update>
+
     <update id="updateCrawlRankKeywords">
         <foreach collection="customerKeywords" item="customerKeyword" separator=";">
             UPDATE t_customer_keyword
@@ -1722,4 +1724,12 @@
             WHERE fUuid = #{customerKeyword.uuid}
         </foreach>
     </update>
+
+    <select id="getQZSettingKeywordCount" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM t_customer_keyword ck
+        WHERE ck.fCustomerUuid = #{customerUuid}
+        AND ck.fStatus = 1
+        AND ck.fOptimizeGroupName LIKE '${groupName}%'
+    </select>
 </mapper>

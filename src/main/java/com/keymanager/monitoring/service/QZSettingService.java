@@ -863,25 +863,25 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                     String terminalType = null;
                     if (null != qzSetting.getPcGroup()) {
                         terminalType = "PC";
-                        generateRankInfo(qzSetting, terminalType);
+                        generateRankingCurveRankInfo(qzSetting, terminalType);
                     }
                     if (null != qzSetting.getPhoneGroup()) {
                         terminalType = "Phone";
-                        generateRankInfo(qzSetting, terminalType);
+                        generateRankingCurveRankInfo(qzSetting, terminalType);
                     }
                 }
             }
         }
     }
 
-    private void generateRankInfo(QZSetting qzSetting, String terminalType) {
+    private void generateRankingCurveRankInfo(QZSetting qzSetting, String terminalType) {
         QZKeywordRankInfo rankInfo;
-        String groupName = terminalType.equals("PC") ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup();
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
 
-        CustomerKeywordRankingCountVO countVo = customerKeywordService.getCustomerKeywordRankingCount(qzSetting.getCustomerUuid(), groupName);
-        List<QZKeywordRankInfo> list = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "排名");
+        CustomerKeywordRankingCountVO countVo = customerKeywordService.getCustomerKeywordRankingCount(qzSetting.getCustomerUuid(),
+				terminalType.equals("PC") ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup());
+        List<QZKeywordRankInfo> list = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "曲线");
         if (CollectionUtils.isNotEmpty(list)) {
             rankInfo = list.iterator().next();
             String dateStr = rankInfo.getDate();
@@ -904,11 +904,12 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
             rankInfo = new QZKeywordRankInfo();
             rankInfo.setQzSettingUuid(qzSetting.getUuid());
             rankInfo.setTerminalType(terminalType);
-            rankInfo.setWebsiteType("排名");
+            rankInfo.setWebsiteType("曲线");
             rankInfo.setDataProcessingStatus(false);
             fillRankInfo(rankInfo, countVo, 1);
             rankInfo.setDate("['" + sdf.format(date) + "']");
         }
+        qzKeywordRankInfoService.saveQZKeywordRankInfo(rankInfo);
     }
 
     private void fillRankInfo(QZKeywordRankInfo rankInfo, CustomerKeywordRankingCountVO countVo, int fillMode) {
@@ -937,4 +938,59 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
         }
         return sb.toString();
     }
+
+    public void generateQZSettingKeywordCountCurve() {
+		List<QZSetting> qzSettings = qzSettingDao.searchAllQZSettingForGenerateRankingCurve();
+		if (CollectionUtils.isNotEmpty(qzSettings)) {
+			for (QZSetting qzSetting : qzSettings) {
+				if (null != qzSetting) {
+					String terminalType = null;
+					if (null != qzSetting.getPcGroup()) {
+						terminalType = "PC";
+						generateQZSettingKeywordCountCurveRankInfo(qzSetting, terminalType);
+					}
+					if (null != qzSetting.getPhoneGroup()) {
+						terminalType = "Phone";
+						generateQZSettingKeywordCountCurveRankInfo(qzSetting, terminalType);
+					}
+				}
+			}
+		}
+	}
+
+	private void generateQZSettingKeywordCountCurveRankInfo(QZSetting qzSetting, String terminalType) {
+		QZKeywordRankInfo rankInfo;
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		int qzSettingKeywordCount = customerKeywordService.getQZSettingKeywordCount(qzSetting.getCustomerUuid(), terminalType.equals("PC") ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup());
+		List<QZKeywordRankInfo> list = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "曲线");
+		if (CollectionUtils.isNotEmpty(list)) {
+			rankInfo = list.iterator().next();
+			String dateStr = rankInfo.getBaiduRecordFullDate();
+			if (StringUtil.isNullOrEmpty(dateStr)) {
+				rankInfo.setBaiduRecord("['" + qzSettingKeywordCount + "']");
+				rankInfo.setBaiduRecordFullDate("['" + sdf.format(date) + "']");
+			} else {
+				String[] dateStrings = dateStr.substring(1, dateStr.length() - 1).split(", ");
+				String nowDate = dateStrings[0];
+				if (nowDate.equals("'" + sdf.format(date) + "'")) {
+					// 为当天数据, 替换数据
+					rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'", 0));
+				} else {
+					// 不为当天, 添加数据
+					rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'", 1));
+					rankInfo.setBaiduRecordFullDate(fillData(rankInfo.getBaiduRecordFullDate(), "'" + sdf.format(date) + "'", 1));
+				}
+			}
+		} else {
+			rankInfo = new QZKeywordRankInfo();
+			rankInfo.setQzSettingUuid(qzSetting.getUuid());
+			rankInfo.setTerminalType(terminalType);
+			rankInfo.setWebsiteType("曲线");
+			rankInfo.setDataProcessingStatus(false);
+			rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'", 1));
+			rankInfo.setBaiduRecordFullDate("['" + sdf.format(date) + "']");
+		}
+		qzKeywordRankInfoService.saveQZKeywordRankInfo(rankInfo);
+	}
 }

@@ -251,4 +251,13 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         qzKeywordRankInfo.setDataProcessingStatus(dataProcessingStatus);
         qzKeywordRankInfoDao.insert(qzKeywordRankInfo);
     }
+
+    public void saveQZKeywordRankInfo(QZKeywordRankInfo rankInfo) {
+        if (null == rankInfo.getUuid()) {
+            qzKeywordRankInfoDao.insert(rankInfo);
+        } else {
+            rankInfo.setUpdateTime(new Date());
+            qzKeywordRankInfoDao.updateById(rankInfo);
+        }
+    }
 }
