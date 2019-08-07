@@ -1833,26 +1833,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return machineGroupQueueVOS;
     }
 
-    public synchronized CustomerKeyWordCrawlRankdVO getCrawlRankKeywords() {
+    public synchronized CustomerKeyWordCrawlRankdVO getCrawlRankKeyword() {
         if (null != customerKeywordCrawlRankQueue && customerKeywordCrawlRankQueue.size() > 0) {
             return (CustomerKeyWordCrawlRankdVO) customerKeywordCrawlRankQueue.poll();
         }
         return null;
-    }
-
-    public void updateCrawlRankKeywords(List<CustomerKeyWordCrawlRankdVO> customerKeyWordCrawlRankdVOS) {
-        if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankdVOS)) {
-            List<CustomerKeyword> customerKeywords = new ArrayList<>();
-            for (CustomerKeyWordCrawlRankdVO customerKeyWordCrawlRankdVo : customerKeyWordCrawlRankdVOS) {
-                CustomerKeyword customerKeyword = new CustomerKeyword();
-                customerKeyword.setUuid(customerKeyWordCrawlRankdVo.getUuid());
-                customerKeyword.setRankStatus(customerKeyWordCrawlRankdVo.getRankStatus());
-                customerKeywords.add(customerKeyword);
-            }
-            if (CollectionUtils.isNotEmpty(customerKeywords)) {
-                customerKeywordDao.updateCrawlRankKeywords(customerKeywords);
-            }
-        }
     }
 
     public CustomerKeywordRankingCountVO getCustomerKeywordRankingCount(int customerUuid, String groupName) {

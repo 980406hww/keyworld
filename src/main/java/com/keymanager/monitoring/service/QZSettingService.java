@@ -394,10 +394,10 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 					this.calculatedQZKeywordRankInfo(qzKeywordRankInfo);
 					Map<String, JSONObject> jSONObjectMap = qzKeywordRankInfoMap.get(qzKeywordRankInfo.getTerminalType());
 					if (null != jSONObjectMap && !jSONObjectMap.isEmpty()) {
-						jSONObjectMap.put(qzKeywordRankInfo.getWebsiteType(), new JSONObject().fromObject(qzKeywordRankInfo));
+						jSONObjectMap.put(qzKeywordRankInfo.getWebsiteType(), JSONObject.fromObject(qzKeywordRankInfo));
 					} else {
 						jSONObjectMap = new HashMap<>();
-						jSONObjectMap.put(qzKeywordRankInfo.getWebsiteType(), new JSONObject().fromObject(qzKeywordRankInfo));
+						jSONObjectMap.put(qzKeywordRankInfo.getWebsiteType(), JSONObject.fromObject(qzKeywordRankInfo));
 					}
 					qzKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), jSONObjectMap);
 				}
