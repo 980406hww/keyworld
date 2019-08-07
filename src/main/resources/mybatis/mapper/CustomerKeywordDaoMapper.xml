@@ -1705,9 +1705,8 @@
     <update id="updateCrawlRankKeywordTimeByUuids">
         UPDATE t_customer_keyword
         SET
-        fRankDate = CURDATE(),
-        fRankQueryTime = NOW(),
-        fRankStatus = 1
+        fCapturePositionQueryTime = NOW(),
+        fCaptureStatus = 1
         WHERE fUuid IN
         <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
             #{uuid}

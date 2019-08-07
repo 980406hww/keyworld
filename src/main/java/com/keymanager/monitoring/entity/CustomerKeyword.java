@@ -280,15 +280,6 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fCustomerKeywordSource")
     private String customerKeywordSource;
 
-    @TableField(value = "fRankDate")
-    private String rankDate;
-
-    @TableField(value = "fRankQueryTime")
-    private String rankQueryTime;
-
-    @TableField(value = "fRankStatus")
-    private String rankStatus;
-
     public long getCustomerUuid() {
         return customerUuid;
     }
@@ -1074,29 +1065,5 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setCustomerKeywordSource(String customerKeywordSource) {
         this.customerKeywordSource = customerKeywordSource;
-    }
-
-    public String getRankDate() {
-        return rankDate;
-    }
-
-    public void setRankDate(String rankDate) {
-        this.rankDate = rankDate;
-    }
-
-    public String getRankQueryTime() {
-        return rankQueryTime;
-    }
-
-    public void setRankQueryTime(String rankQueryTime) {
-        this.rankQueryTime = rankQueryTime;
-    }
-
-    public String getRankStatus() {
-        return rankStatus;
-    }
-
-    public void setRankStatus(String rankStatus) {
-        this.rankStatus = rankStatus;
     }
 }
