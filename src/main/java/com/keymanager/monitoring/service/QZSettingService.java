@@ -926,12 +926,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
         }
         StringBuilder sb = new StringBuilder(str);
         if (fillMode == 1) { // 添加
-            String[] strings = str.split(", ");
             sb.replace(0, 1, "[" + num + ", ");
-            if (strings.length >= 90) {
-                int end = sb.lastIndexOf(",");
-                sb.replace(end, sb.length(), "]");
-            }
         } else { // 替换
             int index = sb.indexOf(",");
             sb.replace(0, index, "[" + num);
