@@ -1854,4 +1854,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
         }
     }
+
+    public CustomerKeywordRankingCountVO getCustomerKeywordRankingCount(int customerUuid, String groupName) {
+        return customerKeywordDao.getCustomerKeywordRankingCount(customerUuid, groupName);
+    }
+
+    public int getQZSettingKeywordCount(int customerUuid, String groupName) {
+        return customerKeywordDao.getQZSettingKeywordCount(customerUuid, groupName);
+    }
 }

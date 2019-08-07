@@ -49,8 +49,8 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     @Autowired
     private QZChargeRuleService qzChargeRuleService;
 
-    public List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (Long qzSettingUuid, String terminalType) {
-        return qzKeywordRankInfoDao.searchExistingQZKeywordRankInfo(qzSettingUuid, terminalType);
+    public List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (Long qzSettingUuid, String terminalType, String websiteType) {
+        return qzKeywordRankInfoDao.searchExistingQZKeywordRankInfo(qzSettingUuid, terminalType, null);
     }
 
     public void deleteByQZSettingUuid (Long uuid) {
@@ -250,5 +250,14 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         qzKeywordRankInfo.setWebsiteType(standardSpecies);
         qzKeywordRankInfo.setDataProcessingStatus(dataProcessingStatus);
         qzKeywordRankInfoDao.insert(qzKeywordRankInfo);
+    }
+
+    public void saveQZKeywordRankInfo(QZKeywordRankInfo rankInfo) {
+        if (null == rankInfo.getUuid()) {
+            qzKeywordRankInfoDao.insert(rankInfo);
+        } else {
+            rankInfo.setUpdateTime(new Date());
+            qzKeywordRankInfoDao.updateById(rankInfo);
+        }
     }
 }
