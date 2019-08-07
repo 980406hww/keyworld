@@ -522,7 +522,7 @@
         WHERE cs.fValid = 1
         <if test="machineGroupWorkInfoCriteria.terminalType!=null and machineGroupWorkInfoCriteria.terminalType!=''">AND cs.fTerminalType = #{machineGroupWorkInfoCriteria.terminalType}</if>
         <if test="machineGroupWorkInfoCriteria.machineGroup!=null and machineGroupWorkInfoCriteria.machineGroup!=''">
-            AND cs.fGroup like '${machineGroupWorkInfoCriteria.machineGroup}%'
+            AND cs.fMachineGroup like '${machineGroupWorkInfoCriteria.machineGroup}%'
             AND EXISTS (SELECT 1 FROM t_customer_keyword ck WHERE ck.fType = #{machineGroupWorkInfoCriteria.entryType} AND ck.fMachineGroup like '${machineGroupWorkInfoCriteria.machineGroup}%')
         </if>
         GROUP BY cs.fMachineGroup, cs.fTerminalType
