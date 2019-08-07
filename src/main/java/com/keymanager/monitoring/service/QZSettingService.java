@@ -881,7 +881,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
         CustomerKeywordRankingCountVO countVo = customerKeywordService.getCustomerKeywordRankingCount(qzSetting.getCustomerUuid(),
 				terminalType.equals("PC") ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup());
-        List<QZKeywordRankInfo> list = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "曲线");
+        List<QZKeywordRankInfo> list = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "xt");
         if (CollectionUtils.isNotEmpty(list)) {
             rankInfo = list.iterator().next();
             String dateStr = rankInfo.getDate();
@@ -904,7 +904,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
             rankInfo = new QZKeywordRankInfo();
             rankInfo.setQzSettingUuid(qzSetting.getUuid());
             rankInfo.setTerminalType(terminalType);
-            rankInfo.setWebsiteType("曲线");
+            rankInfo.setWebsiteType("xt");
             rankInfo.setDataProcessingStatus(false);
             fillRankInfo(rankInfo, countVo, 1);
             rankInfo.setDate("['" + sdf.format(date) + "']");
@@ -958,7 +958,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		int qzSettingKeywordCount = customerKeywordService.getQZSettingKeywordCount(qzSetting.getCustomerUuid(), terminalType.equals("PC") ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup());
-		List<QZKeywordRankInfo> list = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "曲线");
+		List<QZKeywordRankInfo> list = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "xt");
 		if (CollectionUtils.isNotEmpty(list)) {
 			rankInfo = list.iterator().next();
 			String dateStr = rankInfo.getBaiduRecordFullDate();
@@ -981,7 +981,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			rankInfo = new QZKeywordRankInfo();
 			rankInfo.setQzSettingUuid(qzSetting.getUuid());
 			rankInfo.setTerminalType(terminalType);
-			rankInfo.setWebsiteType("曲线");
+			rankInfo.setWebsiteType("xt");
 			rankInfo.setDataProcessingStatus(false);
 			rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'", 1));
 			rankInfo.setBaiduRecordFullDate("['" + sdf.format(date) + "']");

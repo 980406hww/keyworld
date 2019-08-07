@@ -30,7 +30,7 @@ ul {
 }
 
 .mytabs {
-    width: 1820px;
+    width: 1900px;
     margin: 15px auto 0px auto;
     box-shadow: 0 0 2px 2px hsla(0, 0%, 89%, .2);
 }
@@ -154,7 +154,7 @@ ul {
 }
 
 .datalist {
-    width: 1820px;
+    width: 1900px;
     margin: 0px auto 40px auto;
     overflow: visible;
 }
@@ -330,27 +330,34 @@ ul {
 }
 
 .datalist-list .body .rank-wrap {
-    width: 741px;
+    width: 588px;
     float: left;
     height: 150px;
     border-left: 1px solid #e6e6e6;
 }
 
 .datalist-list .body .rank-wrap1 {
-    width: 456px;
+    width: 389px;
     float: left;
     height: 150px;
     border-left: 1px solid #e6e6e6;
 }
 
-.datalist-list .body .rank-wrap > div, .datalist-list .body .rank-wrap1 > div {
+.datalist-list .body .rank-wrap2 {
+    width: 300px;
+    float: left;
+    height: 150px;
+    border-left: 1px solid #e6e6e6;
+}
+
+.datalist-list .body .rank-wrap > div, .datalist-list .body .rank-wrap1 > div, .datalist-list .body .rank-wrap2 > div {
     float: left;
     font-size: 12px;
     height: 150px;
     display: block;
 }
 
-.datalist-list .body .rank-wrap > div, .datalist-list .body .rank-wrap1 > div {
+.datalist-list .body .rank-wrap > div, .datalist-list .body .rank-wrap1 > div, .datalist-list .body .rank-wrap2 > div  {
     padding: 0 5px;
 }
 
@@ -366,7 +373,7 @@ ul {
     font-size: 12px;
     display: block;
     float: left;
-    width: 50%;
+    width: 45%;
     text-align: left;
 }
 
@@ -374,7 +381,7 @@ ul {
     font-size: 12px;
     display: block;
     float: left;
-    width: 50%;
+    width: 55%;
     text-align: left;
 }
 
@@ -557,12 +564,17 @@ ul {
 
 .rank-wrap .col-4 {
     float: left;
-    width: 18%;
+    width: 22%;
     text-align: left;
 }
 
-.rank-wrap .col-1, .rank-wrap .col-2 {
-    width: 41%;
+.rank-wrap .col-1 {
+    width: 33%;
+    text-align: left;
+}
+
+.rank-wrap .col-2 {
+    width: 45%;
     text-align: left;
 }
 
@@ -573,18 +585,23 @@ ul {
 
 .rank-wrap1 .col-5 {
     float: left;
-    width: 30%;
+    width: 33%;
     text-align: left;
 }
 
 .rank-wrap1 .col-1 {
-    width: 70%;
+    width: 67%;
     text-align: left;
 }
 
 .rank-wrap1 .col-1 h1 {
     text-align: center;
     padding-top: 65px;
+}
+
+.rank-wrap2 .col-1 {
+    width: 100%;
+    text-align: left;
 }
 
 #moreSearchCondition {
