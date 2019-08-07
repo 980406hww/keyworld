@@ -343,6 +343,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				} else {
 					existingStandardSpeciesSet.add("aiZhan");
 				}
+				existingStandardSpeciesSet.add("xt");
                 for (String existingStandardSpecies: existingStandardSpeciesSet) {
                     qzKeywordRankInfoMap.remove(existingStandardSpecies);
                 }
