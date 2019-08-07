@@ -182,8 +182,8 @@ function detectedTopNum() {
             }
         });
     });
+    // 指定词曲线
     $(".body").find(".rank-wrap1").each(function () {
-        // 指定词曲线
         generateQZDesignationWordTrendCharts($(this).find("#designationWordCharts")[0], $(this).find("div[name='rankInfo'] span").text());
         $(this).find(".row4").each(function () {
             var a = $(this).find("span:last-child a");
@@ -193,6 +193,10 @@ function detectedTopNum() {
                 $(a).addClass("red");
             }
         });
+    });
+    // 排名-操作词数图表
+    $(".body").find(".rank-wrap2").each(function () {
+        generateQZXTKeywordTrendCharts($(this).find("#xtCharts")[0], $(this).find("div[name='rankInfo'] span").text());
     });
 }
 function generateQZKeywordRecordCharts(domElement, data) {
@@ -252,6 +256,8 @@ function generateQZKeywordRecordCharts(domElement, data) {
             data: date
         },
         yAxis: {
+            show: true,
+            type: 'value',
             axisLine: {
                 show: false,
                 lineStyle: {
@@ -272,23 +278,27 @@ function generateQZKeywordRecordCharts(domElement, data) {
             axisLabel: {
                 fontStyle: 'italic',
                 textStyle: {
-                    color: '#000'
+                    color: '#000',
+                    fontFamily: "Arial",
+                    fontWeight: 400,
+                    fontSize: 12
                 }
-            },
-            type: 'value'
-        },
-        series: [{
-            name: '收录',
-            smooth: true,
-            type: 'line',
-            symbolSize: 1,
-            symbol: 'none',
-            data: baiduRecord,
-            lineStyle:{
-                type:"solid",
-                width: 1
             }
-        }]
+        },
+        series: [
+            {
+                name: '收录',
+                smooth: true,
+                type: 'line',
+                symbolSize: 1,
+                symbol: 'none',
+                data: baiduRecord,
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            }
+        ]
     };
     keywordRecordCharts.setOption(option);
 }
@@ -370,6 +380,8 @@ function generateQZKeywordTrendCharts(domElement, data) {
                 data: date
             },
             yAxis: {
+                show: true,
+                type: 'value',
                 axisLine: {
                     show: false,
                     lineStyle: {
@@ -392,65 +404,70 @@ function generateQZKeywordTrendCharts(domElement, data) {
                     textStyle: {
                         color: '#000'
                     }
-                },
-                type: 'value'
+                }
             },
-            series: [{
-                name: '前10名',
-                smooth: true,
-                type: 'line',
-                symbolSize: 1,
-                symbol: 'none',
-                data: topTen,
-                lineStyle:{
-                    type:"solid",
-                    width: 1
+            series: [
+                {
+                    name: '前10名',
+                    smooth: true,
+                    type: 'line',
+                    symbolSize: 1,
+                    symbol: 'none',
+                    data: topTen,
+                    lineStyle:{
+                        type:"solid",
+                        width: 1
+                    }
+                },
+                {
+                    name: '前20名',
+                    smooth: true,
+                    type: 'line',
+                    symbolSize: 1,
+                    symbol: 'none',
+                    data: topTwenty,
+                    lineStyle:{
+                        type:"solid",
+                        width: 1
+                    }
+                },
+                {
+                    name: '前30名',
+                    smooth: true,
+                    type: 'line',
+                    symbolSize: 1,
+                    symbol: 'none',
+                    data: topThirty,
+                    lineStyle:{
+                        type:"solid",
+                        width: 1
+                    }
+                },
+                {
+                    name: '前40名',
+                    smooth: true,
+                    type: 'line',
+                    symbolSize: 1,
+                    symbol: 'none',
+                    data: topForty,
+                    lineStyle:{
+                        type:"solid",
+                        width: 1
+                    }
+                },
+                {
+                    name: '前50名',
+                    smooth: true,
+                    type: 'line',
+                    symbolSize: 1,
+                    symbol: 'none',
+                    data: topFifty,
+                    lineStyle:{
+                        type:"solid",
+                        width: 1
+                    }
                 }
-            }, {
-                name: '前20名',
-                smooth: true,
-                type: 'line',
-                symbolSize: 1,
-                symbol: 'none',
-                data: topTwenty,
-                lineStyle:{
-                    type:"solid",
-                    width: 1
-                }
-            }, {
-                name: '前30名',
-                smooth: true,
-                type: 'line',
-                symbolSize: 1,
-                symbol: 'none',
-                data: topThirty,
-                lineStyle:{
-                    type:"solid",
-                    width: 1
-                }
-            }, {
-                name: '前40名',
-                smooth: true,
-                type: 'line',
-                symbolSize: 1,
-                symbol: 'none',
-                data: topForty,
-                lineStyle:{
-                    type:"solid",
-                    width: 1
-                }
-            }, {
-                name: '前50名',
-                smooth: true,
-                type: 'line',
-                symbolSize: 1,
-                symbol: 'none',
-                data: topFifty,
-                lineStyle:{
-                    type:"solid",
-                    width: 1
-                }
-            }]
+            ]
         };
     } else if (result.websiteType === "5118") {
         topHundred = stringToArray(result.topHundred);
@@ -524,51 +541,56 @@ function generateQZKeywordTrendCharts(domElement, data) {
                 },
                 type: 'value'
             },
-            series: [{
-                name: '前10名',
-                smooth: true,
-                type: 'line',
-                symbolSize: 1,
-                symbol: 'none',
-                data: topTen,
-                lineStyle:{
-                    type:"solid",
-                    width: 1
+            series: [
+                {
+                    name: '前10名',
+                    smooth: true,
+                    type: 'line',
+                    symbolSize: 1,
+                    symbol: 'none',
+                    data: topTen,
+                    lineStyle:{
+                        type:"solid",
+                        width: 1
+                    }
+                },
+                {
+                    name: '前20名',
+                    smooth: true,
+                    type: 'line',
+                    symbolSize: 1,
+                    symbol: 'none',
+                    data: topTwenty,
+                    lineStyle:{
+                        type:"solid",
+                        width: 1
+                    }
+                },
+                {
+                    name: '前50名',
+                    smooth: true,
+                    type: 'line',
+                    symbolSize: 1,
+                    symbol: 'none',
+                    data: topFifty,
+                    lineStyle:{
+                        type:"solid",
+                        width: 1
+                    }
+                },
+                {
+                    name: '前100名',
+                    smooth: true,
+                    type: 'line',
+                    symbolSize: 1,
+                    symbol: 'none',
+                    data: topHundred,
+                    lineStyle:{
+                        type:"solid",
+                        width: 1
+                    }
                 }
-            }, {
-                name: '前20名',
-                smooth: true,
-                type: 'line',
-                symbolSize: 1,
-                symbol: 'none',
-                data: topTwenty,
-                lineStyle:{
-                    type:"solid",
-                    width: 1
-                }
-            }, {
-                name: '前50名',
-                smooth: true,
-                type: 'line',
-                symbolSize: 1,
-                symbol: 'none',
-                data: topFifty,
-                lineStyle:{
-                    type:"solid",
-                    width: 1
-                }
-            }, {
-                name: '前100名',
-                smooth: true,
-                type: 'line',
-                symbolSize: 1,
-                symbol: 'none',
-                data: topHundred,
-                lineStyle:{
-                    type:"solid",
-                    width: 1
-                }
-            }]
+            ]
         };
     }
     keywordTrendCharts.setOption(option);
@@ -646,6 +668,8 @@ function generateQZDesignationWordTrendCharts(domElement, data) {
             data: date
         },
         yAxis: {
+            show: true,
+            type: 'value',
             axisLine: {
                 show: false,
                 lineStyle: {
@@ -668,67 +692,275 @@ function generateQZDesignationWordTrendCharts(domElement, data) {
                 textStyle: {
                     color: '#000'
                 }
-            },
-            type: 'value'
+            }
         },
-        series: [{
-            name: '前10名',
-            smooth: true,
-            type: 'line',
-            symbolSize: 1,
-            symbol: 'none',
-            data: topTen,
-            lineStyle:{
-                type:"solid",
-                width: 1
+        series: [
+            {
+                name: '前10名',
+                smooth: true,
+                type: 'line',
+                symbolSize: 1,
+                symbol: 'none',
+                data: topTen,
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            },
+            {
+                name: '前20名',
+                smooth: true,
+                type: 'line',
+                symbolSize: 1,
+                symbol: 'none',
+                data: topTwenty,
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            },
+            {
+                name: '前30名',
+                smooth: true,
+                type: 'line',
+                symbolSize: 1,
+                symbol: 'none',
+                data: topThirty,
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            },
+            {
+                name: '前40名',
+                smooth: true,
+                type: 'line',
+                symbolSize: 1,
+                symbol: 'none',
+                data: topForty,
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            },
+            {
+                name: '前50名',
+                smooth: true,
+                type: 'line',
+                symbolSize: 1,
+                symbol: 'none',
+                data: topFifty,
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
             }
-        }, {
-            name: '前20名',
-            smooth: true,
-            type: 'line',
-            symbolSize: 1,
-            symbol: 'none',
-            data: topTwenty,
-            lineStyle:{
-                type:"solid",
-                width: 1
-            }
-        }, {
-            name: '前30名',
-            smooth: true,
-            type: 'line',
-            symbolSize: 1,
-            symbol: 'none',
-            data: topThirty,
-            lineStyle:{
-                type:"solid",
-                width: 1
-            }
-        }, {
-            name: '前40名',
-            smooth: true,
-            type: 'line',
-            symbolSize: 1,
-            symbol: 'none',
-            data: topForty,
-            lineStyle:{
-                type:"solid",
-                width: 1
-            }
-        }, {
-            name: '前50名',
-            smooth: true,
-            type: 'line',
-            symbolSize: 1,
-            symbol: 'none',
-            data: topFifty,
-            lineStyle:{
-                type:"solid",
-                width: 1
-            }
-        }]
+        ]
     };
     designationWordTrendCharts.setOption(option);
+}
+function generateQZXTKeywordTrendCharts(domElement, data) {
+    if (domElement === undefined) {
+        return;
+    }
+    if (data === '' || JSON.parse(data).date === '') {
+        domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
+        return;
+    }
+    var result = JSON.parse(data);
+    var date = result.date.replace("['", "").replace("']", "").split("', '").reverse();
+    var topTen = stringToArray(result.topTen);
+    var topTwenty = stringToArray(result.topTwenty);
+    var topThirty = stringToArray(result.topThirty);
+    var topForty = stringToArray(result.topForty);
+    var topFifty = stringToArray(result.topFifty);
+    var operationKeywordCount = result.baiduRecord.replace("['", "").replace("']", "").split("', '").reverse();
+    var keywordRecordCharts = echarts.init(domElement);
+    var colors = ['#228B22', '#0000FF', '#FF6100', '#FF0000', '#d14a61', '#675bba'];
+    var option = {
+        color: colors,
+        title : {
+            text: '排名 - 操作词数图表',
+            textStyle: {
+                color: '#999',
+                fontFamily: "Arial",
+                fontWeight: 400,
+                fontSize: 12
+            },
+            x:'center',
+            bottom: -3
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        grid: {
+            left: '0%',
+            right: '1%',
+            top: '3%',
+            bottom: '0%',
+            containLabel: true
+        },
+        xAxis: [
+            {
+                show: false,
+                type: 'category',
+                axisLine: {
+                    show: false,
+                    lineStyle: {
+                        color: '#404A59'
+                    }
+                },
+                axisTick: {
+                    show: false
+                },
+                boundaryGap: true,
+                data: date
+            }
+        ],
+        yAxis: [
+            {
+                show: true,
+                type: 'value',
+                name: '站点操作词数',
+                position: 'right',
+                axisLine: {
+                    show: false,
+                    lineStyle: {
+                        color: '#404A59'
+                    }
+                },
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: '#DCDCDC',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisTick: {
+                    show: false
+                },
+                axisLabel: {
+                    fontStyle: 'italic',
+                    textStyle: {
+                        color: '#000'
+                    }
+                }
+            },
+            {
+                show: true,
+                type: 'value',
+                name: 'Top排名词数',
+                position: 'left',
+                axisLine: {
+                    show: false,
+                    lineStyle: {
+                        color: '#404A59'
+                    }
+                },
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: '#DCDCDC',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisTick: {
+                    show: false
+                },
+                axisLabel: {
+                    fontStyle: 'italic',
+                    textStyle: {
+                        color: '#000'
+                    }
+                }
+            }
+        ],
+        series: [
+            {
+                name:'操作词数',
+                type:'line',
+                smooth: true,
+                symbolSize: 3,
+                symbol: 'none',
+                lineStyle: {
+                    normal: {
+                        type: 'dashed',
+                        width: 3
+                    }
+                },
+                yAxisIndex: 0,
+                data: operationKeywordCount
+            },
+            {
+                name:'排名前10',
+                type:'line',
+                yAxisIndex: 1,
+                data: topTen,
+                smooth: true,
+                symbolSize: 1,
+                symbol: 'none',
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            },
+            {
+                name:'排名前20',
+                type:'line',
+                yAxisIndex: 1,
+                data: topTwenty,
+                smooth: true,
+                symbolSize: 1,
+                symbol: 'none',
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            },
+            {
+                name:'排名前30',
+                type:'line',
+                yAxisIndex: 1,
+                data: topThirty,
+                smooth: true,
+                symbolSize: 1,
+                symbol: 'none',
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            },
+            {
+                name:'排名前40',
+                type:'line',
+                yAxisIndex: 1,
+                data: topForty,
+                smooth: true,
+                symbolSize: 1,
+                symbol: 'none',
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            },
+            {
+                name:'排名前50',
+                type:'line',
+                yAxisIndex: 1,
+                data: topFifty,
+                smooth: true,
+                symbolSize: 1,
+                symbol: 'none',
+                lineStyle:{
+                    type:"solid",
+                    width: 1
+                }
+            }
+        ]
+    };
+    keywordRecordCharts.setOption(option);
 }
 function stringToArray(str) {
     return str.replace('[', '').replace(']', '').split(', ').reverse();
