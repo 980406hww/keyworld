@@ -251,7 +251,5 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     
     void updateCrawlRankKeywordTimeByUuids (@Param("uuids")List<Long> uuids);
 
-    void updateCrawlRankKeywords(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
-
     int getQZSettingKeywordCount(@Param("customerUuid") int customerUuid, @Param("groupName") String groupName);
 }

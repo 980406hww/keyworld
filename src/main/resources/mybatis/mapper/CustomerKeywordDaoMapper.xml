@@ -1696,9 +1696,10 @@
         WHERE
         ck.fStatus = 1
         AND ck.fMachineGroup &lt;&gt; 'Pause'
-        AND (ck.fRankDate  &lt;= DATE_SUB( CURDATE(), INTERVAL 1 DAY )
-            OR (ck.fRankStatus = 0 AND ck.fRankQueryTime &lt;= DATE_SUB( NOW(), INTERVAL 15 MINUTE )))
-        ORDER BY ck.fRankQueryTime
+        AND ck.fCaptureStatus = 0
+        AND ck.fCapturePositionQueryTime &lt;= DATE_SUB( CURRENT_DATE(), INTERVAL 1 DAY )
+        ORDER BY ck.fCapturePositionQueryTime
+        LIMIT 3000
     </select>
 
     <update id="updateCrawlRankKeywordTimeByUuids">
@@ -1710,14 +1711,6 @@
         WHERE fUuid IN
         <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
             #{uuid}
-        </foreach>
-    </update>
-
-    <update id="updateCrawlRankKeywords">
-        <foreach collection="customerKeywords" item="customerKeyword" separator=";">
-            UPDATE t_customer_keyword
-            SET fRankStatus = #{customerKeyword.rankStatus}
-            WHERE fUuid = #{customerKeyword.uuid}
         </foreach>
     </update>
 
