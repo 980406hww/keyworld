@@ -1669,16 +1669,16 @@
 
     <select id="getCustomerKeywordRankingCount" resultType="com.keymanager.monitoring.vo.CustomerKeywordRankingCountVO">
         SELECT
-            COUNT(ck.fCurrentPosition &lt;= 10 OR NULL)  AS 'topTenNum',
-            COUNT(ck.fCurrentPosition &lt;= 20 OR NULL)  AS 'topTwentyNum',
-            COUNT(ck.fCurrentPosition &lt;= 30 OR NULL)  AS 'topThirtyNum',
-            COUNT(ck.fCurrentPosition &lt;= 40 OR NULL)  AS 'topFortyNum',
-            COUNT(ck.fCurrentPosition &lt;= 50 OR NULL)  AS 'topFiftyNum'
+            COUNT((ck.fCurrentPosition BETWEEN 1 AND 10) OR NULL)  AS 'topTenNum',
+            COUNT((ck.fCurrentPosition BETWEEN 1 AND 20) OR NULL)  AS 'topTwentyNum',
+            COUNT((ck.fCurrentPosition BETWEEN 1 AND 30) OR NULL)  AS 'topThirtyNum',
+            COUNT((ck.fCurrentPosition BETWEEN 1 AND 40) OR NULL)  AS 'topFortyNum',
+            COUNT((ck.fCurrentPosition BETWEEN 1 AND 50) OR NULL)  AS 'topFiftyNum'
         FROM t_customer_keyword ck
         WHERE ck.fCustomerUuid = #{customerUuid}
         AND ck.fStatus = 1
         AND ck.fOptimizeGroupName LIKE '${groupName}%'
-        AND ck.fRankDate = CURRENT_DATE()
+        AND ck.fCapturePositionQueryTime &gt;= CURRENT_DATE()
     </select>
 
     <select id="getCrawlRankKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeyWordCrawlRankdVO">
@@ -1697,7 +1697,7 @@
         ck.fStatus = 1
         AND ck.fMachineGroup &lt;&gt; 'Pause'
         AND ck.fCaptureStatus = 0
-        AND ck.fCapturePositionQueryTime &lt;= DATE_SUB( CURRENT_DATE(), INTERVAL 1 DAY )
+        AND ck.fCapturePositionQueryTime &lt;= CURRENT_DATE()
         ORDER BY ck.fCapturePositionQueryTime
         LIMIT 3000
     </select>

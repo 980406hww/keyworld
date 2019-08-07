@@ -894,7 +894,15 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                 String nowDate = dateStrings[0];
                 if (nowDate.equals("'" + sdf.format(date) + "'")) {
                     // 为当天数据, 替换数据
-                    fillRankInfo(rankInfo, countVo, 0);
+                    if (dateStrings.length == 1) {
+                        rankInfo.setTopTen("[" + countVo.getTopTenNum() + "]");
+                        rankInfo.setTopTwenty("[" + countVo.getTopTwentyNum() + "]");
+                        rankInfo.setTopThirty("[" + countVo.getTopThirtyNum() + "]");
+                        rankInfo.setTopForty("[" + countVo.getTopFortyNum() + "]");
+                        rankInfo.setTopFifty("[" + countVo.getTopFiftyNum() + "]");
+                    } else {
+                        fillRankInfo(rankInfo, countVo, 0);
+                    }
                 } else {
                     // 不为当天, 添加数据
                     fillRankInfo(rankInfo, countVo, 1);
@@ -971,7 +979,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				String nowDate = dateStrings[0];
 				if (nowDate.equals("'" + sdf.format(date) + "'")) {
 					// 为当天数据, 替换数据
-					rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'", 0));
+                    if (dateStrings.length == 1) {
+                        rankInfo.setBaiduRecord("['" + qzSettingKeywordCount + "']");
+                    } else {
+                        rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'", 0));
+                    }
 				} else {
 					// 不为当天, 添加数据
 					rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'", 1));

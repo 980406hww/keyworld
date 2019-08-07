@@ -20,7 +20,7 @@ public class GenerateQZSettingKeywordCountCurveSchedule {
             qzSettingService.generateQZSettingKeywordCountCurve();
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(" Generate QZSetting Keyword Count Curve Task is error" + e.getMessage());
+            logger.error(" Generate QZSetting Keyword Count Curve Task is error " + e.getMessage());
         }
     }
 }

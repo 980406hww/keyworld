@@ -20,7 +20,7 @@ public class GenerateRankingCurveSchedule {
             qzSettingService.generateRankingCurve();
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(" Generate Ranking Curve Task is error" + e.getMessage());
+            logger.error(" Generate Ranking Curve Task is error  " + e.getMessage());
         }
     }
 }

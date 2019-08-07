@@ -498,7 +498,6 @@
             qs.fPcGroup      AS 'pcGroup',
             qs.fPhoneGroup   AS 'phoneGroup'
         FROM t_qz_setting qs
-        WHERE qs.fRenewalStatus = 1
-        AND EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = qs.fCustomerUuid)
+        WHERE EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = qs.fCustomerUuid)
     </select>
 </mapper>
