@@ -1,6 +1,6 @@
 package com.keymanager.monitoring.vo;
 
-public class CustomerKeyWordCrawlRankdVO {
+public class CustomerKeyWordCrawlRankVO {
     private long uuid;
     private String terminalType;
     private String searchEngine;

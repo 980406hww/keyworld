@@ -187,7 +187,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                         customerKeywordUuidAndRepeatCount.remove(customerKeywordUuid);
                                     }
                                     customerKeywordUuids.clear();
-                                };
+                                }
                             }
                         }
                     } while (blockingQueue.size() < (machineCount * 10) && CollectionUtils.isNotEmpty(optimizationKeywordVOS));
@@ -198,24 +198,25 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void cacheCrawlRankCustomerKeywords() {
         if (customerKeywordCrawlRankQueue.size() < 15000 ) {
-            List<CustomerKeyWordCrawlRankdVO> customerKeyWordCrawlRankdVOS = null;
+            List<CustomerKeyWordCrawlRankVO> customerKeyWordCrawlRankVos = null;
             do {
-                customerKeyWordCrawlRankdVOS = customerKeywordDao.getCrawlRankKeywords();
-                if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankdVOS)) {
+                customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords();
+                if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos)) {
                     List<Long> customerKeywordUuids = new ArrayList<>();
-                    for (CustomerKeyWordCrawlRankdVO customerKeyWordCrawlRankdVo : customerKeyWordCrawlRankdVOS) {
-                        if (customerKeywordCrawlRankQueue.offer(customerKeyWordCrawlRankdVo)) {
-                            customerKeywordUuids.add(customerKeyWordCrawlRankdVo.getUuid());
+                    for (CustomerKeyWordCrawlRankVO customerKeyWordCrawlRankVo : customerKeyWordCrawlRankVos) {
+                        if (customerKeywordCrawlRankQueue.offer(customerKeyWordCrawlRankVo)) {
+                            customerKeywordUuids.add(customerKeyWordCrawlRankVo.getUuid());
                         } else {
                             break;
                         }
                     }
                     customerKeywordDao.updateCrawlRankKeywordTimeByUuids(customerKeywordUuids);
                 }
-            } while (customerKeywordCrawlRankQueue.size() < 30000 && CollectionUtils.isNotEmpty(customerKeyWordCrawlRankdVOS));
+            } while (customerKeywordCrawlRankQueue.size() < 30000 && CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos));
         }
     }
-    public OptimizationVO fetchCustoemrKeywordForOptimization(MachineInfo machineInfo) throws InterruptedException {
+
+    public OptimizationVO fetchCustomerKeywordForOptimization(MachineInfo machineInfo) throws InterruptedException {
         if (!machineInfo.getValid()) {
             return null;
         }
@@ -1833,9 +1834,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return machineGroupQueueVOS;
     }
 
-    public synchronized CustomerKeyWordCrawlRankdVO getCrawlRankKeyword() {
-        if (null != customerKeywordCrawlRankQueue && customerKeywordCrawlRankQueue.size() > 0) {
-            return (CustomerKeyWordCrawlRankdVO) customerKeywordCrawlRankQueue.poll();
+    public synchronized List<CustomerKeyWordCrawlRankVO> getCrawlRankKeyword() {
+        if (customerKeywordCrawlRankQueue.size() > 0) {
+            List<CustomerKeyWordCrawlRankVO> rankVos = new ArrayList<>();
+            do {
+                rankVos.add((CustomerKeyWordCrawlRankVO) customerKeywordCrawlRankQueue.poll());
+            } while(customerKeywordCrawlRankQueue.size() > 0 && rankVos.size() < 10);
+            return rankVos;
         }
         return null;
     }

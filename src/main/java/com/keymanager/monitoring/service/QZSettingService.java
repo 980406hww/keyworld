@@ -47,9 +47,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	private CustomerKeywordService customerKeywordService;
 
 	@Autowired
-	private MachineInfoService machineInfoService;
-
-	@Autowired
 	private QZKeywordRankInfoService qzKeywordRankInfoService;
 
 	@Autowired
