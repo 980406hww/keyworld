@@ -208,8 +208,17 @@
             <input type="text" id="ltCurrentIndexCount" name="ltCurrentIndexCount" placeholder="<=" value="${customerKeywordCriteria.ltCurrentIndexCount}" style="width: 40px;">
             备注:<input type="text" id="remarks" name="remarks" value="${customerKeywordCriteria.remarks}" style="width: 90px;">
             &nbsp;&nbsp;
-            收录备注:<input type="text" id="enteredKeywordRemarks" name="enteredKeywordRemarks" value="${customerKeywordCriteria.enteredKeywordRemarks}" style="width: 90px;">
-            &nbsp;&nbsp;
+            失败原因:
+            <select name="failedCause" id="failedCause">
+                <option value="" selected="selected">请选择</option>
+                <option value="爬取中"<c:if test="${customerKeywordCriteria.failedCause =='爬取中'}">selected="selected"</c:if>>爬取中</option>
+                <option value="关键字未收录"<c:if test="${customerKeywordCriteria.failedCause =='关键字未收录'}">selected="selected"</c:if>>关键字未收录</option>
+                <option value="标题无法操作"<c:if test="${customerKeywordCriteria.failedCause =='标题无法操作'}">selected="selected"</c:if>>标题无法操作</option>
+                <option value="关键字无此标题"<c:if test="${customerKeywordCriteria.failedCause =='关键字无此标题'}">selected="selected"</c:if>>关键字无此标题</option>
+                <option value="熊掌号错误"<c:if test="${customerKeywordCriteria.failedCause =='熊掌号错误'}">selected="selected"</c:if>>熊掌号错误</option>
+                <option value="熊掌号缺失"<c:if test="${customerKeywordCriteria.failedCause =='熊掌号缺失'}">selected="selected"</c:if>>熊掌号缺失</option>
+            </select>
+                &nbsp;&nbsp;
             关键词作用:
             <select name="keywordEffect" id="keywordEffect" style="width: 80px;" title="">
                 <option value="" <c:if test="${customerKeywordCriteria.keywordEffect.equals('')}">selected="selected"</c:if>>全部</option>
@@ -273,7 +282,7 @@
             <td align="center" width=80>最后优化时间</td>
             <td align="center" width=50>订单号</td>
             <td align="center" width=100>备注</td>
-            <td align="center" width=100>收录备注</td>
+            <td align="center" width=100>失败原因</td>
             <td align="center" width=60>优化组名</td>
             <td align="center" width=60>机器分组</td>
             <td align="center" width=80>操作</td>
@@ -325,7 +334,7 @@
                 <td align="center" width=80><fmt:formatDate value="${customerKeyword.lastOptimizeDateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
                 <td align="center" width=50>${customerKeyword.orderNumber}</td>
                 <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
-                <td align="center" width=100>${customerKeyword.enteredKeywordRemarks == null ? "" : customerKeyword.enteredKeywordRemarks}</td>
+                <td align="center" width=100>${customerKeyword.failedCause == null ? "" : customerKeyword.failedCause}</td>
                 <td align="center" width=60>${customerKeyword.optimizeGroupName == ''? "" : customerKeyword.optimizeGroupName} </td>
                 <td align="center" width=60>${customerKeyword.machineGroup == ''? "" : customerKeyword.machineGroup} </td>
 
@@ -498,7 +507,8 @@
             <thead>
             <tr>
                 <td>序号</td>
-                <td>记事者</td>
+                <td>记录者</td>
+                <td>内容</td>
                 <td>日期</td>
                 <td>操作</td>
             </tr>

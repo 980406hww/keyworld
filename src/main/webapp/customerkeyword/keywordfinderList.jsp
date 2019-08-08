@@ -90,7 +90,18 @@
             </select>
             &nbsp;
             备注:<input type="text" id="remarks" name="remarks" style="width: 90px;" value="${customerKeywordCriteria.remarks}">&nbsp;
-            收录备注:<input type="text" id="enteredKeywordRemarks" name="enteredKeywordRemarks" style="width: 90px;" value="${customerKeywordCriteria.enteredKeywordRemarks}">&nbsp;
+
+            失败原因:
+            <select name="failedCause" id="failedCause">
+                <option value="" selected="selected">请选择</option>
+                <option value="爬取中"<c:if test="${customerKeywordCriteria.failedCause =='爬取中'}">selected="selected"</c:if>>爬取中</option>
+                <option value="关键字未收录"<c:if test="${customerKeywordCriteria.failedCause =='关键字未收录'}">selected="selected"</c:if>>关键字未收录</option>
+                <option value="标题无法操作"<c:if test="${customerKeywordCriteria.failedCause =='标题无法操作'}">selected="selected"</c:if>>标题无法操作</option>
+                <option value="关键字无此标题"<c:if test="${customerKeywordCriteria.failedCause =='关键字无此标题'}">selected="selected"</c:if>>关键字无此标题</option>
+                <option value="熊掌号错误"<c:if test="${customerKeywordCriteria.failedCause =='熊掌号错误'}">selected="selected"</c:if>>熊掌号错误</option>
+                <option value="熊掌号缺失"<c:if test="${customerKeywordCriteria.failedCause =='熊掌号缺失'}">selected="selected"</c:if>>熊掌号缺失</option>
+            </select>
+
             <input id="pushPay" name="pushPay" type="checkbox"  onclick="pushPayValue()" value="${customerKeywordCriteria.pushPay}"/>催缴 &nbsp;
             <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}"/>显示下架 &nbsp;
             <input id="requireDelete" name="requireDelete" type="checkbox"  ${customerKeywordCriteria.requireDelete == true ? "checked=true" : ""}/>要求删除 &nbsp;
@@ -191,7 +202,7 @@
             <td align="center" width=100>订单号</td>
             <td align="center" width=60>付费状态</td>
             <td align="center" width=100>备注</td>
-            <td align="center" width=100>收录备注</td>
+            <td align="center" width=100>失败原因</td>
         </tr>
     </table>
 </div>
@@ -251,7 +262,7 @@
                 <td align="center" width=100>${customerKeyword.orderNumber}</td>
                 <td align="center" width="60">${customerKeyword.paymentStatus}</td>
                 <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
-                <td align="center" width=100>${customerKeyword.enteredKeywordRemarks == null ? "" : customerKeyword.enteredKeywordRemarks} </td>
+                <td align="center" width=100>${customerKeyword.failedCause == null ? "" : customerKeyword.failedCause} </td>
             </tr>
         </c:forEach>
     </table>

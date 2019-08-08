@@ -28,9 +28,6 @@ public class TerminalRefreshStatInfoSchedule {
     @Autowired
     private MachineGroupWorkInfoService machineGroupWorkInfoService;
 
-    @Autowired
-    private ConfigService configService;
-
     public void runTask(){
         logger.info("============= " + " Terminal Refresh Stat Info Task "+"===================");
         try{
@@ -50,16 +47,6 @@ public class TerminalRefreshStatInfoSchedule {
             customerKeywordService.changeOptimizeGroupName();
         } catch (Exception e) {
             logger.error(" Change Optimize Group Name is error" + e.getMessage());
-        }
-
-        logger.info("============= "+" Change No Entered Keyword Group Name Task  "+"===================");
-        try {
-            Config config = configService.getConfig(Constants.CONFIG_TYPE_NOENTEREDKEYWORDSCHEDULE_SWITCH, Constants.CONFIG_KEY_SWITCHNUMBER);
-            if (config != null && config.getValue().equals("1")) {
-                customerKeywordService.updateNoEnteredKeywordGroupName();
-            }
-        } catch (Exception e) {
-            logger.error(" Change No Entered Keyword Group Name is error" + e.getMessage());
         }
     }
 }
