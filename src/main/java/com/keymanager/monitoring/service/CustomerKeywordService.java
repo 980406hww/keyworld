@@ -114,7 +114,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     private final static Map<String, ArrayBlockingQueue> machineGroupQueueMap = new HashMap<String, ArrayBlockingQueue>();
 
-    private final static Map<String, ArrayBlockingQueue> checkingEnteredKeywordQueueMap = new HashMap<String, ArrayBlockingQueue>();
+    private final static ArrayBlockingQueue checkingEnteredKeywordQueue = new ArrayBlockingQueue<String>(1000);
 
     public void cacheCustomerKeywords() {
         List<String> machineGroups = customerKeywordDao.getMachineGroups();
@@ -200,32 +200,22 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void cacheCheckingEnteredCustomerKeywords() {
-        List<String> searchEngines = customerKeywordDao.getSearchEngines();
-        if (CollectionUtils.isNotEmpty(searchEngines)) {
-            for (String searchEngine : searchEngines) {
-                ArrayBlockingQueue blockingQueue = checkingEnteredKeywordQueueMap.get(searchEngine);
-                if (null == blockingQueue) {
-                    blockingQueue = new ArrayBlockingQueue<String>(1000);
-                    checkingEnteredKeywordQueueMap.put(searchEngine, blockingQueue);
-                }
-                if (blockingQueue.size() < 500 ) {
-                    List<CustomerKeywordEnteredVO> checkEnteredKeywords = null;
-                    do {
-                        checkEnteredKeywords = customerKeywordDao.getCheckEnteredKeywords(searchEngine);
-                        if (CollectionUtils.isNotEmpty(checkEnteredKeywords)) {
-                            List<Long> customerKeywordUuids = new ArrayList<>();
-                            for (CustomerKeywordEnteredVO keywordEnteredVo : checkEnteredKeywords) {
-                                if (blockingQueue.offer(keywordEnteredVo)) {
-                                    customerKeywordUuids.add(keywordEnteredVo.getUuid());
-                                } else {
-                                    break;
-                                }
-                            }
-                            customerKeywordDao.updateVerifyEnteredKeywordTimeByUuids(customerKeywordUuids);
+        if (checkingEnteredKeywordQueue.size() < 500 ) {
+            List<CustomerKeywordEnteredVO> checkEnteredKeywords = null;
+            do {
+                checkEnteredKeywords = customerKeywordDao.getCheckEnteredKeywords();
+                if (CollectionUtils.isNotEmpty(checkEnteredKeywords)) {
+                    List<Long> customerKeywordUuids = new ArrayList<>();
+                    for (CustomerKeywordEnteredVO keywordEnteredVo : checkEnteredKeywords) {
+                        if (checkingEnteredKeywordQueue.offer(keywordEnteredVo)) {
+                            customerKeywordUuids.add(keywordEnteredVo.getUuid());
+                        } else {
+                            break;
                         }
-                    } while (blockingQueue.size() < 1000 && CollectionUtils.isNotEmpty(checkEnteredKeywords));
+                    }
+                    customerKeywordDao.updateVerifyEnteredKeywordTimeByUuids(customerKeywordUuids);
                 }
-            }
+            } while (checkingEnteredKeywordQueue.size() < 1000 && CollectionUtils.isNotEmpty(checkEnteredKeywords));
         }
     }
 
@@ -1787,14 +1777,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.excludeCustomerKeyword(qzSettingExcludeCustomerKeywordsCriteria);
     }
 
-    public synchronized List<CustomerKeywordEnteredVO> getCheckingEnteredKeywords(String searchEngine) {
-        ArrayBlockingQueue blockingQueue = checkingEnteredKeywordQueueMap.get(searchEngine);
-        if (null != blockingQueue && blockingQueue.size() > 0) {
+    public synchronized List<CustomerKeywordEnteredVO> getCheckingEnteredKeywords() {
+        if (checkingEnteredKeywordQueue.size() > 0) {
             List<CustomerKeywordEnteredVO> customerKeywordEnteredVos = new ArrayList<>();
             do {
-                Object obj = blockingQueue.poll();
+                Object obj = checkingEnteredKeywordQueue.poll();
                 customerKeywordEnteredVos.add((CustomerKeywordEnteredVO) obj);
-            } while (blockingQueue.size() > 0 && customerKeywordEnteredVos.size() < 10);
+            } while (checkingEnteredKeywordQueue.size() > 0 && customerKeywordEnteredVos.size() < 10);
             return customerKeywordEnteredVos;
         }
         return null;

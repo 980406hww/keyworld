@@ -222,7 +222,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void excludeCustomerKeyword(@Param("qzSettingExcludeCustomerKeywordsCriteria") QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
 
-    List<CustomerKeywordEnteredVO> getCheckEnteredKeywords(@Param("searchEngine") String searchEngine);
+    List<CustomerKeywordEnteredVO> getCheckEnteredKeywords();
 
     void updateCheckingEnteredKeywords(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
 
@@ -243,6 +243,4 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<String> getMachineGroups();
 
     List<OptimizationKeywordVO> fetchCustomerKeywordsForCache(@Param("terminalType") String terminalType, @Param("machineGroup") String machineGroup, @Param("batchCount") int batchCount);
-
-    List<String> getSearchEngines();
 }
