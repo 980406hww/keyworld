@@ -36,6 +36,8 @@
 		<property name="quartzProperties">
 			<props>
 				<prop key="org.quartz.threadPool.threadCount">1</prop>
+				<!--当任务错过触发时间时，能忍受的最长延迟时间，超过就错失调度.-->
+				<prop key="org.quartz.jobStore.misfireThreshold">30000</prop>
 			</props>
 		</property>
 		<!-- 启动时延期2秒开始任务 -->
