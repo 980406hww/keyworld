@@ -1355,10 +1355,12 @@
             </td>
             <td style="width:65px" align="right">达标监控</td>
             <td>
-				<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
-					<option value="1">是</option>
-					<option value="0" selected>否</option>
-				</select>
+				<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
+					<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
+						<option value="1">是</option>
+						<option value="0" selected>否</option>
+					</select>
+				</shiro:hasPermission>
 			</td>
         </tr>
 	</table>
