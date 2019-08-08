@@ -1438,7 +1438,7 @@
         AND ck.fStatus = 1
         AND (ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(NOW(), INTERVAL 1 DAY) OR (ck.fFailedCause = '爬取中' AND ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(NOW(), INTERVAL 20 MINUTE)))
         ORDER BY ck.fVerifyEnteredKeywordTime
-        LIMIT 100
+        LIMIT 500
     </select>
 
     <update id="updateVerifyEnteredKeywordTimeByUuids">

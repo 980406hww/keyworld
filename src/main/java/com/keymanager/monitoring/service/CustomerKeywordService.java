@@ -109,12 +109,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     @Autowired
     private OperationCombineService operationCombineService;
 
-    @Autowired
-    private GroupService groupService;
-
     private final static Map<String, ArrayBlockingQueue> machineGroupQueueMap = new HashMap<String, ArrayBlockingQueue>();
 
-    private final static ArrayBlockingQueue checkingEnteredKeywordQueue = new ArrayBlockingQueue<String>(1000);
+    private final static ArrayBlockingQueue checkingEnteredKeywordQueue = new ArrayBlockingQueue<String>(5000);
 
     public void cacheCustomerKeywords() {
         List<String> machineGroups = customerKeywordDao.getMachineGroups();
@@ -200,7 +197,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void cacheCheckingEnteredCustomerKeywords() {
-        if (checkingEnteredKeywordQueue.size() < 500 ) {
+        if (checkingEnteredKeywordQueue.size() < 4000 ) {
             List<CustomerKeywordEnteredVO> checkEnteredKeywords = null;
             do {
                 checkEnteredKeywords = customerKeywordDao.getCheckEnteredKeywords();
@@ -215,7 +212,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     }
                     customerKeywordDao.updateVerifyEnteredKeywordTimeByUuids(customerKeywordUuids);
                 }
-            } while (checkingEnteredKeywordQueue.size() < 1000 && CollectionUtils.isNotEmpty(checkEnteredKeywords));
+            } while (checkingEnteredKeywordQueue.size() < 5000 && CollectionUtils.isNotEmpty(checkEnteredKeywords));
         }
     }
 
