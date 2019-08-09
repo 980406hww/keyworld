@@ -1682,19 +1682,21 @@
     </select>
 
     <select id="getCrawlRankKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeyWordCrawlRankdVO">
-       SELECT
-        ck.fUuid AS 'uuid',
-        ck.fTerminalType AS 'terminalType',
-        ck.fTitle AS 'title',
-        ck.fKeyword AS 'keyword',
-        ck.fUrl AS 'url',
-        ck.fSearchEngine AS 'searchEngine',
-        ck.fBearPawNumber AS 'bearPawNumber'
+        SELECT
+            ck.fUuid AS 'uuid',
+            ck.fTerminalType AS 'terminalType',
+            ck.fTitle AS 'title',
+            ck.fKeyword AS 'keyword',
+            ck.fUrl AS 'url',
+            ck.fSearchEngine AS 'searchEngine',
+            ck.fBearPawNumber AS 'bearPawNumber'
         FROM t_customer c
         LEFT JOIN t_customer_keyword ck
         ON ck.fCustomerUuid = c.fUuid
-        WHERE
-        ck.fStatus = 1
+        WHERE ck.fTerminalType = 'PC'
+        AND ck.fType = 'qz'
+        AND ck.fStatus = 1
+        AND CK.fSearchEngine = '百度'
         AND ck.fMachineGroup &lt;&gt; 'Pause'
         AND ck.fCaptureStatus = 0
         AND ck.fCapturePositionQueryTime &lt;= CURRENT_DATE()
