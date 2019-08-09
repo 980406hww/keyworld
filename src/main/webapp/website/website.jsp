@@ -86,6 +86,9 @@
             <shiro:hasPermission name="/internal/website/saveWebsite">
             <input type="button" value=" 添加 " onclick="showWebsiteDialog(null)">&nbsp;&nbsp;
             </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/website/saveWebsite">
+            <input type="button" value=" 发送更新网站状态请求 " onclick="updateWebsiteStatus()">&nbsp;&nbsp;
+            </shiro:hasPermission>
             <shiro:hasPermission name="/internal/friendlyLink/synchronousFriendlyLink">
             <input type="button" value=" 同步所选友链信息 " onclick="synchronousFriendlyLink()">&nbsp;&nbsp;
             </shiro:hasPermission>
@@ -129,10 +132,10 @@
             <td width="80" align="center" rowspan="2">发现故障时间</td>
             <td width="80" align="center" rowspan="2">最近访问时间</td>
             <td width="80" align="center" rowspan="2">更新时间</td>
-            <td width="80" align="center" colspan="7">域名信息</td>
-            <td width="80" colspan="7" align="center">后台信息</td>
-            <td width="80" colspan="4" align="center">数据库信息</td>
-            <td width="80" colspan="5" align="center">服务器信息</td>
+            <td width="490" align="center" colspan="7">域名信息</td>
+            <td width="490" colspan="7" align="center">后台信息</td>
+            <td width="480" colspan="4" align="center">数据库信息</td>
+            <td width="350" colspan="5" align="center">服务器信息</td>
             <td width="80" align="center" rowspan="2">操作</td>
         </tr>
         <tr height="23">

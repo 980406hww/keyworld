@@ -132,7 +132,8 @@
 				w.fBackgroundLoginStatus = #{websiteCheckResultVO.backgroundLoginStatus},
 				w.fSftpStatus = #{websiteCheckResultVO.sftpStatus},
 				w.fIndexFileStatus = #{websiteCheckResultVO.indexFileStatus},
-				w.fDatabaseStatus = #{websiteCheckResultVO.databaseStatus}
+				w.fDatabaseStatus = #{websiteCheckResultVO.databaseStatus},
+                w.fUpdateTime = NOW()
 			</set>
 			<where>
 				w.fUuid = #{websiteCheckResultVO.uuid}
