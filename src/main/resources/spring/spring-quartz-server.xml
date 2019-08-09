@@ -36,7 +36,7 @@
 	<!--缓存检查收录的关键字信息到队列中-->
 	<bean id="cronTriggerCacheCheckingEnteredCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerCacheCheckingEnteredCustomerKeywordSchedule"/>
-		<property name="cronExpression" value="0 0/10 * * * ?" />
+		<property name="cronExpression" value="0 0/10 9-23 * * ?" />
 	</bean>
 
 	<bean id="cronTriggerCacheCheckingEnteredCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
