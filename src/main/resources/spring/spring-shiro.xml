@@ -104,6 +104,7 @@
 				/webhooks = anon
 				/external/** = anon
 				/login = anon
+				/internal/keywordManagerSession/** = anon
 				/internal/terminalSetting/** = anon
 				/internal/user/** = anon
 				/tj.js =anon
