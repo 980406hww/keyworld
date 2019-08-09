@@ -491,4 +491,11 @@
         </choose>
     </update>
 
+    <select id="findQZSetting" resultType="java.lang.Boolean">
+        SELECT COUNT(1)
+        FROM t_qz_setting qs
+        WHERE  qs.fSearchEngine = #{searchEngine}
+        AND qs.fDomain = #{domain}
+    </select>
+
 </mapper>

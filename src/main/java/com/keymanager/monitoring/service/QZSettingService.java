@@ -852,4 +852,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			qzCategoryTagService.updateQZCategoryTag(existingQZCategoryTags, targetQZCategoryTags, Long.parseLong(uuid));
 		}
 	}
+
+	public boolean findQZSetting(String searchEngine, String domain) {
+		return qzSettingDao.findQZSetting(searchEngine, domain);
+	}
 }

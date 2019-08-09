@@ -25,6 +25,9 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
     @Autowired
     private IndustryDetailDao industryDetailDao;
 
+    @Autowired
+    private QZSettingService qzSettingService;
+
     public void delIndustryDetailsByIndustryID (long industryID) {
         industryDetailDao.delIndustryDetailsByIndustryID(industryID);
     }
@@ -76,8 +79,7 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
     }
 
     public void updateIndustryInfoDetail(IndustryDetailCriteria criteria) {
-        IndustryDetail existingIndustryDetail = industryDetailDao.findExistingIndustryDetail(criteria.getIndustryID(),
-                criteria.getWebsite());
+        IndustryDetail existingIndustryDetail = industryDetailDao.findExistingIndustryDetail(criteria.getIndustryID(), criteria.getWebsite());
         boolean updateFlag = false;
         if (null == existingIndustryDetail) {
             existingIndustryDetail = new IndustryDetail();
@@ -94,6 +96,11 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
         existingIndustryDetail.setTitle(criteria.getTitle());
         existingIndustryDetail.setWeight(criteria.getWeight());
         existingIndustryDetail.setLevel(criteria.getLevel());
+        String domain = criteria.getWebsite().replace("http://","").replace("https://","").replace("www.","").split("/")[0];
+        boolean hasQZSetting = qzSettingService.findQZSetting(criteria.getSearchEngine(), domain);
+        if (hasQZSetting) {
+            existingIndustryDetail.setRemark("系统存在此客户(" + criteria.getSearchEngine() + ")");
+        }
         if (updateFlag) {
             industryDetailDao.updateById(existingIndustryDetail);
         } else {

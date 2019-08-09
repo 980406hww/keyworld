@@ -7,6 +7,7 @@ package com.keymanager.monitoring.criteria;
 public class IndustryDetailCriteria extends BaseCriteria {
 
     private long industryID;
+    private String searchEngine;
     private String website;
     private String title;
     private Integer weight;
@@ -21,6 +22,14 @@ public class IndustryDetailCriteria extends BaseCriteria {
 
     public void setIndustryID(long industryID) {
         this.industryID = industryID;
+    }
+
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
     }
 
     public String getWebsite() {
