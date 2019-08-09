@@ -9,4 +9,4 @@ ALTER TABLE `db_keyword`.`t_website`ADD COLUMN `fDatabaseStatus` VARCHAR(100) NU
 
 
 #增加更新网站的开关 0：关闭 1：打开
-insert into `db_keyword`.`t_config` VALUE("WebsiteCheckSign","WebsiteCheck","1");
+INSERT INTO `db_keyword`.`t_config` VALUE("WebsiteCheckSign","WebsiteCheck","1");

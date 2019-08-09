@@ -194,7 +194,7 @@
                     正常
                 </c:if>
                 <c:if test="${website.backgroundLoginStatus eq 1}">
-                    url地址出错
+                    url地址错误
                 </c:if>
                 <c:if test="${website.backgroundLoginStatus eq 2}">
                     用户名密码不正确
