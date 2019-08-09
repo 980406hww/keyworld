@@ -7,8 +7,8 @@
 		<!-- Triggers集成 -->
 		<property name="triggers">
 			<list>
-				<ref bean="cronTriggerCacheCustomerKeyword" />
-				<ref bean="cronTriggerCacheCheckingEnteredCustomerKeyword" />
+				<!--<ref bean="cronTriggerCacheCustomerKeyword" />
+				<ref bean="cronTriggerCacheCheckingEnteredCustomerKeyword" />-->
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->

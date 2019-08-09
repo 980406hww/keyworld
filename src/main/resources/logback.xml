@@ -18,9 +18,9 @@
 	</appender>
 
 	<!-- project default level -->
-	<logger name="com.keymanager.monitoring" level="INFO" />
+	<logger name="com.keymanager.monitoring" level="DEBUG" />
 
-	<logger name="dao" level="INFO"/>
+	<logger name="dao" level="DEBUG"/>
 
 	<root level="INFO">
 		<appender-ref ref="console" />

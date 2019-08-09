@@ -25,7 +25,10 @@
 		w.fDNSAnalysisStatus AS "dnsAnalysisStatus",
 		w.fUpdateSalesInfoSign AS "updateSalesInfoSign",
 		w.fSynchronousFriendlyLinkSign AS "synchronousFriendlyLinkSign",
-		w.fSynchronousAdvertisingSign AS "synchronousAdvertisingSign",
+		w.fBackgroundLoginStatus AS "backgroundLoginStatus",
+		w.fSftpStatus AS "sftpStatus",
+		w.fIndexFileStatus AS "indexFileStatus",
+		w.fDatabaseStatus AS "databaseStatus",
 		w.fUpdateTime AS "updateTime",
 		w.fCreateTime AS "createTime"
 	</sql>
@@ -49,6 +52,19 @@
 		<if test="websiteCriteria.updateSalesInfoSign != null and websiteCriteria.updateSalesInfoSign != ''">AND w.fUpdateSalesInfoSign = #{websiteCriteria.updateSalesInfoSign}</if>
 		<if test="websiteCriteria.synchronousFriendlyLinkSign != null and websiteCriteria.synchronousFriendlyLinkSign != ''">AND w.fSynchronousFriendlyLinkSign = #{websiteCriteria.synchronousFriendlyLinkSign}</if>
 		<if test="websiteCriteria.synchronousAdvertisingSign != null and websiteCriteria.synchronousAdvertisingSign != ''">AND w.fSynchronousAdvertisingSign = #{websiteCriteria.synchronousAdvertisingSign}</if>
+		<if test="websiteCriteria.backgroundLoginStatus != null ">AND w.fBackgroundLoginStatus = #{websiteCriteria.backgroundLoginStatus}</if>
+		<if test="websiteCriteria.sftpStatus != null ">AND w.fSftpStatus = #{websiteCriteria.sftpStatus}</if>
+		<if test="websiteCriteria.indexFileStatus != null">AND w.fIndexFileStatus = #{websiteCriteria.indexFileStatus}</if>
+		<if test="websiteCriteria.databaseStatus != null and websiteCriteria.databaseStatus != ''">
+			<choose>
+				<when test="websiteCriteria.databaseStatus == '0'">
+					AND w.fDatabaseStatus = '0'
+				</when>
+				<otherwise>
+					AND w.fDatabaseStatus != '0'
+				</otherwise>
+			</choose>
+		</if>
 		<if test="websiteCriteria.advertisingTagname != null and websiteCriteria.advertisingTagname != ''">AND a.fAdvertisingTagname = #{websiteCriteria.advertisingTagname}</if>
 		<if test="websiteCriteria.accessFailCount != null">AND w.fAccessFailCount = #{websiteCriteria.accessFailCount}</if>
 		GROUP BY w.fUuid
@@ -90,5 +106,38 @@
 			#{uuid}
 		</foreach>
 	</select>
+	
+	<select id="selectAllWebsiteForExternalCheckStatus" resultType="com.keymanager.monitoring.vo.ExternalWebsiteVO">
+		SELECT
+			w.fUuid AS "uuid",
+			w.fWebsiteType AS "websiteType",
+			w.fDomain AS "domain",
+			w.fBackendDomain AS "backendDomain",
+			w.fBackendUserName AS "backendUserName",
+			w.fBackendPassword AS "backendPassword",
+			w.fDatabaseName AS "databaseName",
+			w.fDatabaseUserName AS "databaseUserName",
+			w.fDatabasePassword AS "databasePassword",
+			w.fServerIP AS "serverIP",
+			w.fServerUserName AS "serverUserName",
+			w.fServerPassword AS "serverPassword",
+			'22' AS "serverPort"
+		FROM t_website w
+		ORDER BY w.fLastAccessTime
+	</select>
+	<update id="updateWebSiteStatus">
+		<foreach collection="websiteCheckResultVOS" item="websiteCheckResultVO" index="index" open="" close="" separator=";">
+			UPDATE t_website w
+			<set>
+				w.fBackgroundLoginStatus = #{websiteCheckResultVO.backgroundLoginStatus},
+				w.fSftpStatus = #{websiteCheckResultVO.sftpStatus},
+				w.fIndexFileStatus = #{websiteCheckResultVO.indexFileStatus},
+				w.fDatabaseStatus = #{websiteCheckResultVO.databaseStatus}
+			</set>
+			<where>
+				w.fUuid = #{websiteCheckResultVO.uuid}
+			</where>
+		</foreach>
+	</update>
 
 </mapper>
