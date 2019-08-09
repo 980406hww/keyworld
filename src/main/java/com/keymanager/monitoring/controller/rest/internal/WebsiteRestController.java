@@ -263,7 +263,6 @@ public class WebsiteRestController extends SpringMVCBaseController {
         }
     }
 
-
     @RequiresPermissions("/internal/website/saveWebsite")
     @RequestMapping(value = "/updateWebsiteStatus", method = RequestMethod.POST)
     public ResponseEntity<?> updateWebsiteStatus() {

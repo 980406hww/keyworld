@@ -81,40 +81,40 @@
             </select>
             <br>
             <shiro:hasPermission name="/internal/website/searchWebsites">
-            <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
+                <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/website/saveWebsite">
-            <input type="button" value=" 添加 " onclick="showWebsiteDialog(null)">&nbsp;&nbsp;
+                <input type="button" value=" 添加 " onclick="showWebsiteDialog(null)">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/website/saveWebsite">
-            <input type="button" value=" 发送更新网站状态请求 " onclick="updateWebsiteStatus()">&nbsp;&nbsp;
+                <input type="button" value=" 发送更新网站状态请求 " onclick="updateWebsiteStatus()">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/friendlyLink/synchronousFriendlyLink">
-            <input type="button" value=" 同步所选友链信息 " onclick="synchronousFriendlyLink()">&nbsp;&nbsp;
+                <input type="button" value=" 同步所选友链信息 " onclick="synchronousFriendlyLink()">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/advertising/synchronousAdvertising">
-            <input type="button" value=" 同步所选广告信息 " onclick="synchronousAdvertising()">&nbsp;&nbsp;
+                <input type="button" value=" 同步所选广告信息 " onclick="synchronousAdvertising()">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/friendlyLink/saveFriendlyLinks">
-            <input type="button" value=" 指定网站增加友链 " onclick="showBatchAddFriendlyLinkDialog(null)">&nbsp;&nbsp;
+                <input type="button" value=" 指定网站增加友链 " onclick="showBatchAddFriendlyLinkDialog(null)">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/advertising/saveAdvertisings">
-            <input type="button" value=" 指定网站增加广告 " onclick="showBatchAddAdvertisingDialog(null)">&nbsp;&nbsp;
+                <input type="button" value=" 指定网站增加广告 " onclick="showBatchAddAdvertisingDialog(null)">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/friendlyLink/saveFriendlyLink">
-            <input type="button" value=" 指定网站修改友链 " onclick="batchModifyFriendlyLink('${websiteCriteria.friendlyLinkUrl}')">&nbsp;&nbsp;
+                <input type="button" value=" 指定网站修改友链 " onclick="batchModifyFriendlyLink('${websiteCriteria.friendlyLinkUrl}')">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/advertising/saveAdvertising">
-            <input type="button" value=" 指定网站修改广告 " onclick="batchModifyAdvertising('${websiteCriteria.advertisingTagname}')">&nbsp;&nbsp;
+                <input type="button" value=" 指定网站修改广告 " onclick="batchModifyAdvertising('${websiteCriteria.advertisingTagname}')">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/friendlyLink/deleteFriendlyLinks">
-            <input type="button" value=" 指定网站删除友链 " onclick="batchDelFriendlyLink('${websiteCriteria.friendlyLinkUrl}')">&nbsp;&nbsp;
+                <input type="button" value=" 指定网站删除友链 " onclick="batchDelFriendlyLink('${websiteCriteria.friendlyLinkUrl}')">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/advertising/deleteAdvertisings">
-            <input type="button" value=" 指定网站删除广告 " onclick="batchDelAdvertising('${websiteCriteria.advertisingTagname}')">&nbsp;&nbsp;
+                <input type="button" value=" 指定网站删除广告 " onclick="batchDelAdvertising('${websiteCriteria.advertisingTagname}')">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/website/putSalesInfoToWebsite">
-            <input type="button" onclick="putSalesInfoToWebsite()" value=" 推送销售信息至站点 ">&nbsp;&nbsp;
+                <input type="button" onclick="putSalesInfoToWebsite()" value=" 推送销售信息至站点 ">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/website/deleteWebsites">
                 <input type="button" onclick="deleteWebsites()" value=" 删除所选 ">&nbsp;&nbsp;
@@ -134,7 +134,7 @@
             <td width="80" align="center" rowspan="2">更新时间</td>
             <td width="490" align="center" colspan="7">域名信息</td>
             <td width="490" colspan="7" align="center">后台信息</td>
-            <td width="480" colspan="4" align="center">数据库信息</td>
+            <td width="280" colspan="4" align="center">数据库信息</td>
             <td width="350" colspan="5" align="center">服务器信息</td>
             <td width="80" align="center" rowspan="2">操作</td>
         </tr>
@@ -227,7 +227,7 @@
                     正常
                 </c:if>
                 <c:if test="${website.sftpStatus eq 1}">
-                   异常
+                    异常
                 </c:if>
             </td>
             <td style="text-align: center;" width="80">

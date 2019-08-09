@@ -56,7 +56,6 @@ public class ExternalCheckWebsiteStatusController extends SpringMVCBaseControlle
         try {
             String userName = externalWebsiteUpdateStatusCriteria.getUserName();
             String password = externalWebsiteUpdateStatusCriteria.getPassword();
-
             if (validUser(userName, password)) {
                 List<ExternalWebsiteCheckResultVO> websiteCheckResultVOS = externalWebsiteUpdateStatusCriteria.getWebsiteCheckResultVOS();
                 websiteService.updateWebsiteStatus(websiteCheckResultVOS);

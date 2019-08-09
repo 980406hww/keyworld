@@ -1081,9 +1081,6 @@ function synchronousAdvertising() {
     $('#synchronousAdvertisingDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
 
-
-
-
 function updateWebsiteStatus() {
     $.messager.confirm('询问', '确定发送更新网站状态请求吗？', function(b) {
         if (b) {
@@ -1106,6 +1103,5 @@ function updateWebsiteStatus() {
                 }
             });
         }
-
     });
 }

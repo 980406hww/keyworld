@@ -125,6 +125,7 @@
 		FROM t_website w
 		ORDER BY w.fLastAccessTime
 	</select>
+
 	<update id="updateWebSiteStatus">
 		<foreach collection="websiteCheckResultVOS" item="websiteCheckResultVO" index="index" open="" close="" separator=";">
 			UPDATE t_website w
