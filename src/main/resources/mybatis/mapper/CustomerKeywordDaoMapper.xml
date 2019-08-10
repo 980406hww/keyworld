@@ -1696,7 +1696,6 @@
         LEFT JOIN t_customer_keyword ck
         ON ck.fCustomerUuid = c.fUuid
         WHERE ck.fTerminalType = 'PC'
-        #and ck.fUuid in (184783,26493,784874)
         AND ck.fType = 'qz'
         AND ck.fStatus = 1
         AND CK.fSearchEngine = '百度'
