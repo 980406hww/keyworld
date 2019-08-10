@@ -314,7 +314,7 @@
 	<!--每隔一小时更新一次站点排名曲线-->
 	<bean id="cronTriggerGenerateRankingCurve" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronJobDetailGenerateRankingCurve" />
-		<property name="cronExpression" value="0 0 0/1 * * ?" />
+		<property name="cronExpression" value="0 0 8-23/2  * * ?" />
 	</bean>
 
 	<bean id="cronJobDetailGenerateRankingCurve" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -326,7 +326,7 @@
 	<!--每天更新一次站点操作词数曲线-->
 	<bean id="cronTriggerGenerateQZSettingKeywordCountCurve" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronJobDetailGenerateQZSettingKeywordCountCurve" />
-		<property name="cronExpression" value="0 30 1 * * ?" />
+		<property name="cronExpression" value="0 0 22 * * ?" />
 	</bean>
 
 	<bean id="cronJobDetailGenerateQZSettingKeywordCountCurve" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
