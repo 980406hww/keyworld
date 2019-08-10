@@ -135,7 +135,7 @@
             <td width="490" align="center" colspan="7">域名信息</td>
             <td width="490" colspan="7" align="center">后台信息</td>
             <td width="280" colspan="4" align="center">数据库信息</td>
-            <td width="350" colspan="5" align="center">服务器信息</td>
+            <td width="420" colspan="6" align="center">服务器信息</td>
             <td width="80" align="center" rowspan="2">操作</td>
         </tr>
         <tr height="23">
@@ -160,6 +160,7 @@
             <td width="70" align="center">IP</td>
             <td width="70" align="center">用户名</td>
             <td width="70" align="center">密码</td>
+            <td width="70" align="center">端口</td>
             <td width="70" align="center">index文件状态</td>
             <td width="70" align="center">sftp服务状态</td>
         </tr>
@@ -214,6 +215,7 @@
             <td width=70>${website.serverIP}</td>
             <td width=70>${website.serverUserName}</td>
             <td width=70>${website.serverPassword}</td>
+            <td width=70>${website.serverPort}</td>
             <td width=70 align="center">
                 <c:if test="${website.indexFileStatus eq 0}">
                     正常
@@ -230,7 +232,7 @@
                     异常
                 </c:if>
             </td>
-            <td style="text-align: center;" width="80">
+            <td style="text-align: center;" width="75">
                 <shiro:hasPermission name="/internal/website/saveWebsite">
                 <a href="javascript:editWebsiteInfo('${website.uuid}')">修改</a>
                 </shiro:hasPermission>

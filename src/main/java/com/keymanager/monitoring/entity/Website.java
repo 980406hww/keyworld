@@ -48,6 +48,9 @@ public class Website extends BaseEntity {
     @TableField(value = "fServerPassword")
     private String serverPassword;
 
+    @TableField(value = "fServerPort")
+    private String serverPort;
+
     @TableField(value = "fBackendDomain")
     private String backendDomain;
 
@@ -211,6 +214,14 @@ public class Website extends BaseEntity {
 
     public void setServerPassword(String serverPassword) {
         this.serverPassword = serverPassword;
+    }
+
+    public String getServerPort() {
+        return serverPort;
+    }
+
+    public void setServerPort(String serverPort) {
+        this.serverPort = serverPort;
     }
 
     public String getBackendDomain() {

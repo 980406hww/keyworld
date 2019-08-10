@@ -18,6 +18,7 @@
 		w.fServerIP AS "serverIP",
 		w.fServerUserName AS "serverUserName",
 		w.fServerPassword AS "serverPassword",
+		w.fServerPort AS "serverPort",
 		w.fAccessFailCount AS "accessFailCount",
 		w.fLastAccessTime AS "lastAccessTime",
 		w.fAccessFailTime AS "accessFailTime",
@@ -25,6 +26,7 @@
 		w.fDNSAnalysisStatus AS "dnsAnalysisStatus",
 		w.fUpdateSalesInfoSign AS "updateSalesInfoSign",
 		w.fSynchronousFriendlyLinkSign AS "synchronousFriendlyLinkSign",
+		w.fSynchronousAdvertisingSign AS "synchronousAdvertisingSign",
 		w.fBackgroundLoginStatus AS "backgroundLoginStatus",
 		w.fSftpStatus AS "sftpStatus",
 		w.fIndexFileStatus AS "indexFileStatus",
@@ -121,7 +123,7 @@
 			w.fServerIP AS "serverIP",
 			w.fServerUserName AS "serverUserName",
 			w.fServerPassword AS "serverPassword",
-			'22' AS "serverPort"
+			w.fServerPort AS "serverPort"
 		FROM t_website w
 		ORDER BY w.fLastAccessTime
 	</select>

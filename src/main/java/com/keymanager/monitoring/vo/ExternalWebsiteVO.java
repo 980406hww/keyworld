@@ -15,10 +15,6 @@ public class ExternalWebsiteVO {
     private String databaseName;
     private String databaseUserName;
     private String databasePassword;
-    private Integer backgroundLoginStatus;
-    private Integer sftpStatus;
-    private Integer indexFileStatus;
-    private String databaseStatus;
 
     public Long getUuid() {
         return uuid;
@@ -122,37 +118,5 @@ public class ExternalWebsiteVO {
 
     public void setDatabasePassword(String databasePassword) {
         this.databasePassword = databasePassword;
-    }
-
-    public Integer getBackgroundLoginStatus() {
-        return backgroundLoginStatus;
-    }
-
-    public void setBackgroundLoginStatus(Integer backgroundLoginStatus) {
-        this.backgroundLoginStatus = backgroundLoginStatus;
-    }
-
-    public Integer getSftpStatus() {
-        return sftpStatus;
-    }
-
-    public void setSftpStatus(Integer sftpStatus) {
-        this.sftpStatus = sftpStatus;
-    }
-
-    public Integer getIndexFileStatus() {
-        return indexFileStatus;
-    }
-
-    public void setIndexFileStatus(Integer indexFileStatus) {
-        this.indexFileStatus = indexFileStatus;
-    }
-
-    public String getDatabaseStatus() {
-        return databaseStatus;
-    }
-
-    public void setDatabaseStatus(String databaseStatus) {
-        this.databaseStatus = databaseStatus;
     }
 }

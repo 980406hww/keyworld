@@ -20,6 +20,7 @@ public class WebsiteVO{
     private String serverIP;
     private String serverUserName;
     private String serverPassword;
+    private String serverPort;
     private Integer accessFailCount;
     private Date accessFailTime;
     private Date lastAccessTime;
@@ -152,6 +153,14 @@ public class WebsiteVO{
 
     public String getServerPassword() {
         return serverPassword;
+    }
+
+    public String getServerPort() {
+        return serverPort;
+    }
+
+    public void setServerPort(String serverPort) {
+        this.serverPort = serverPort;
     }
 
     public void setServerPassword(String serverPassword) {
