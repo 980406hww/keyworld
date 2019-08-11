@@ -1436,8 +1436,7 @@
         WHERE ck.fOptimizedCount = 0
         AND ck.fInvalidRefreshCount &gt;= 4
         AND ck.fStatus = 1
-        AND (ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(NOW(), INTERVAL 1 DAY) OR (ck.fFailedCause = '爬取中' AND ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(NOW(), INTERVAL 20 MINUTE)))
-        ORDER BY ck.fVerifyEnteredKeywordTime
+        AND (ck.fVerifyEnteredKeywordTime &lt; CURRENT_DATE() OR (ck.fFailedCause = '爬取中' AND ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(NOW(), INTERVAL 20 MINUTE)))
         LIMIT 500
     </select>
 
