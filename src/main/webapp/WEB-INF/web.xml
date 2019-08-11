@@ -22,11 +22,6 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
-    <!--配置HttpSessionListener的启动-->
-    <listener>
-        <listener-class>com.keymanager.monitoring.common.listener.KeywordManagerHttpSessionListener</listener-class>
-    </listener>
-
     <filter>
         <filter-name>encodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>

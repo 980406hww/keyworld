@@ -7,7 +7,7 @@ td,.wrap {
     word-break: break-all;
     word-wrap: break-word;
 }
-#headerTable tr{ background: #ADD1FF}
+#headerTable tr:first-child{ background: #ADD1FF}
 #topDiv {
     position: fixed;
     top: 0px;

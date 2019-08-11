@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class RetryLimitCredentialsMatcher extends HashedCredentialsMatcher implements InitializingBean {
 	private final static Logger logger =  LoggerFactory.getLogger(RetryLimitCredentialsMatcher.class);
-	private final static String DEFAULT_CHACHE_NAME = "retryLimitCache";
+	private final static String DEFAULT_CACHE_NAME = "retryLimitCache";
 	
 	private final CacheManager cacheManager;
 	private String retryLimitCacheName;
@@ -49,7 +49,7 @@ public class RetryLimitCredentialsMatcher extends HashedCredentialsMatcher imple
 	
 	public RetryLimitCredentialsMatcher(CacheManager cacheManager) {
 		this.cacheManager = cacheManager;
-		this.retryLimitCacheName = DEFAULT_CHACHE_NAME;
+		this.retryLimitCacheName = DEFAULT_CACHE_NAME;
 	}
 	
 	public String getRetryLimitCacheName() {
