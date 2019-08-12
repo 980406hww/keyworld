@@ -20,25 +20,27 @@
     <h3>在线用户数：<span>${list.size()}</span><a style="float: right" href="${staticPath}/login">去登录</a> </h3>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="" height="30">
-            <td>用户名称</td>
-            <td>主机</td>
-            <td>终端</td>
-            <td>链接入口</td>
-            <td>登录时间</td>
-            <td>最后访问时间</td>
-            <td>状态</td>
-            <td>操作</td>
+            <td align="center" width=100>SessionID</td>
+            <td align="center" width=60>用户名称</td>
+            <td align="center" width=60>主机</td>
+            <td align="center" width=60>终端</td>
+            <td align="center" width=60>链接入口</td>
+            <td align="center" width=100>登录时间</td>
+            <td align="center" width=100>最后访问时间</td>
+            <td align="center" width=60>状态</td>
+            <td align="center" width=80>操作</td>
         </tr>
         <c:forEach items="${list}" var="onlineUser">
             <tr height=30 onmouseover="doOver(this);" onmouseout="doOut(this);">
-                <td>${onlineUser.shiroUser.name}</td>
-                <td>${onlineUser.host}</td>
-                <td>${onlineUser.terminalType}</td>
-                <td>${onlineUser.entryType}</td>
-                <td><fmt:formatDate value="${onlineUser.startTimestamp}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
-                <td><fmt:formatDate value="${onlineUser.lastAccessTime}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
-                <td>${onlineUser.status}</td>
-                <td><a href="#" onclick="offline('${onlineUser.id}', '${onlineUser.status}')">下线</a></td>
+                <td align="center" width=100>${onlineUser.id}</td>
+                <td align="center" width=60>${onlineUser.shiroUser.name}</td>
+                <td align="center" width=60>${onlineUser.host}</td>
+                <td align="center" width=60>${onlineUser.terminalType}</td>
+                <td align="center" width=60>${onlineUser.entryType}</td>
+                <td align="center" width=100><fmt:formatDate value="${onlineUser.startTimestamp}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
+                <td align="center" width=100><fmt:formatDate value="${onlineUser.lastAccessTime}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
+                <td align="center" width=60>${onlineUser.status}</td>
+                <td align="center" width=80><a href="#" onclick="offline('${onlineUser.id}', '${onlineUser.status}')">下线</a></td>
             </tr>
         </c:forEach>
     </table>
@@ -58,7 +60,7 @@
 
     function doOut(obj) {
         var rowIndex = obj.rowIndex;
-        if ((rowIndex % 2) == 0) {
+        if ((rowIndex % 2) === 0) {
             obj.style.backgroundColor = "#eeeeee";
         } else {
             obj.style.backgroundColor = "#ffffff";
