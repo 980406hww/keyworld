@@ -1689,9 +1689,7 @@
             ck.fKeyword AS 'keyword',
             ck.fUrl AS 'url',
             ck.fSearchEngine AS 'searchEngine',
-            ck.fBearPawNumber AS 'bearPawNumber',
-            ck.fCaptureStatus AS 'captureStatus',
-            ck.fCapturePositionQueryTime AS 'capturePositionQueryTime'
+            ck.fBearPawNumber AS 'bearPawNumber'
         FROM t_customer c
         LEFT JOIN t_customer_keyword ck
         ON ck.fCustomerUuid = c.fUuid

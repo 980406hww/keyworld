@@ -8,7 +8,6 @@ public class CustomerKeyWordCrawlRankVO {
     private String url;
     private String bearPawNumber;
     private String title;
-    private String rankStatus;
 
     public String getTitle() {
         return title;
@@ -24,15 +23,6 @@ public class CustomerKeyWordCrawlRankVO {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-
-    public String getRankStatus() {
-        return rankStatus;
-    }
-
-    public void setRankStatus(String rankStatus) {
-        this.rankStatus = rankStatus;
     }
 
     public long getUuid() {
