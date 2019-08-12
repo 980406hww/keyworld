@@ -109,9 +109,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     @Autowired
     private OperationCombineService operationCombineService;
 
-    @Autowired
-    private GroupService groupService;
-
     private final static Map<String, ArrayBlockingQueue> machineGroupQueueMap = new HashMap<String, ArrayBlockingQueue>();
 
     private final static ArrayBlockingQueue customerKeywordCrawlRankQueue = new ArrayBlockingQueue(30000);
@@ -197,22 +194,29 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void cacheCrawlRankCustomerKeywords() {
-        if (customerKeywordCrawlRankQueue.size() < 15000 ) {
-            List<CustomerKeyWordCrawlRankVO> customerKeyWordCrawlRankVos = null;
-            do {
-                customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords();
-                if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos)) {
-                    List<Long> customerKeywordUuids = new ArrayList<>();
-                    for (CustomerKeyWordCrawlRankVO customerKeyWordCrawlRankVo : customerKeyWordCrawlRankVos) {
-                        if (customerKeywordCrawlRankQueue.offer(customerKeyWordCrawlRankVo)) {
-                            customerKeywordUuids.add(customerKeyWordCrawlRankVo.getUuid());
-                        } else {
-                            break;
+        // 检查全站任务是否爬取完成
+        ExternalCaptureJobCriteria captureJobCriteria = new ExternalCaptureJobCriteria();
+        captureJobCriteria.setRankJobArea("China");
+        captureJobCriteria.setRankJobType("Common");
+        CaptureRankJob captureRankJob = captureRankJobService.checkingCaptureRankJobCompleted(captureJobCriteria);
+        if (null == captureRankJob) {
+            if (customerKeywordCrawlRankQueue.size() < 15000 ) {
+                List<CustomerKeyWordCrawlRankVO> customerKeyWordCrawlRankVos = null;
+                do {
+                    customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords();
+                    if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos)) {
+                        List<Long> customerKeywordUuids = new ArrayList<>();
+                        for (CustomerKeyWordCrawlRankVO customerKeyWordCrawlRankVo : customerKeyWordCrawlRankVos) {
+                            if (customerKeywordCrawlRankQueue.offer(customerKeyWordCrawlRankVo)) {
+                                customerKeywordUuids.add(customerKeyWordCrawlRankVo.getUuid());
+                            } else {
+                                break;
+                            }
                         }
+                        customerKeywordDao.updateCrawlRankKeywordTimeByUuids(customerKeywordUuids);
                     }
-                    customerKeywordDao.updateCrawlRankKeywordTimeByUuids(customerKeywordUuids);
-                }
-            } while (customerKeywordCrawlRankQueue.size() < 30000 && CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos));
+                } while (customerKeywordCrawlRankQueue.size() < 30000 && CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos));
+            }
         }
     }
 

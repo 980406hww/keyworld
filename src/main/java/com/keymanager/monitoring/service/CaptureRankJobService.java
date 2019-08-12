@@ -372,4 +372,8 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
     public void updateCaptureRankJobsStatus(List<Long> uuids, String updateBy, boolean captureRankJobStatus) {
         captureRankJobDao.updateCaptureRankJobsStatus(uuids, updateBy, captureRankJobStatus);
     }
+
+    public CaptureRankJob checkingCaptureRankJobCompleted(ExternalCaptureJobCriteria captureJobCriteria) {
+        return captureRankJobDao.provideCaptureRankJob(1, captureJobCriteria);
+    }
 }
