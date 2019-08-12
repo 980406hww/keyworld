@@ -6,7 +6,6 @@ import com.keymanager.monitoring.criteria.ExternalWebsiteUpdateStatusCriteria;
 import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.WebsiteService;
 import com.keymanager.monitoring.vo.ExternalWebsiteCheckResultVO;
-import com.keymanager.monitoring.vo.ExternalWebsiteVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +36,7 @@ public class ExternalCheckWebsiteStatusController extends SpringMVCBaseControlle
             String userName = (String) requestMap.get("userName");
             String password = (String) requestMap.get("password");
             if (validUser(userName, password)) {
-                List<ExternalWebsiteVO> websites = null;
-                String websiteCheckSign = configService.getWebsiteCheckSign();
-                if (websiteCheckSign.equals("1")) {
-                    websites = websiteService.getAllWebsiteForexternalCheckStauts();
-                    configService.refreshWebsiteCheckSign("0");
-                }
-                return new ResponseEntity<Object>(websites, HttpStatus.OK);
+                return new ResponseEntity<Object>( websiteService.getAllWebsiteForexternalCheckStauts(), HttpStatus.OK);
             }
         }catch (Exception ex){
             logger.error(ex.getMessage());

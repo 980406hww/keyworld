@@ -86,9 +86,6 @@
             <shiro:hasPermission name="/internal/website/saveWebsite">
                 <input type="button" value=" 添加 " onclick="showWebsiteDialog(null)">&nbsp;&nbsp;
             </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/website/saveWebsite">
-                <input type="button" value=" 发送更新网站状态请求 " onclick="updateWebsiteStatus()">&nbsp;&nbsp;
-            </shiro:hasPermission>
             <shiro:hasPermission name="/internal/friendlyLink/synchronousFriendlyLink">
                 <input type="button" value=" 同步所选友链信息 " onclick="synchronousFriendlyLink()">&nbsp;&nbsp;
             </shiro:hasPermission>

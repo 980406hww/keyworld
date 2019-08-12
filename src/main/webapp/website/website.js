@@ -1081,27 +1081,3 @@ function synchronousAdvertising() {
     $('#synchronousAdvertisingDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
 
-function updateWebsiteStatus() {
-    $.messager.confirm('询问', '确定发送更新网站状态请求吗？', function(b) {
-        if (b) {
-            $.ajax({
-                url: '/internal/website/updateWebsiteStatus',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                type: 'POST',
-                success: function (data) {
-                    if (data) {
-                        $().toastmessage('showSuccessToast', "请求成功！即将开始检查网站状态",true);
-                    } else {
-                        $().toastmessage('showErrorToast', "请求失败，请重试！");
-                    }
-                },
-                error: function () {
-                    $().toastmessage('showErrorToast', "请求失败，请重试！");
-                }
-            });
-        }
-    });
-}

@@ -125,7 +125,6 @@
 			w.fServerPassword AS "serverPassword",
 			w.fServerPort AS "serverPort"
 		FROM t_website w
-		ORDER BY w.fLastAccessTime
 	</select>
 
 	<update id="updateWebSiteStatus">
