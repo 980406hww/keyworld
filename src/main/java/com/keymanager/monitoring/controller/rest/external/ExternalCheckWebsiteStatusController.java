@@ -3,7 +3,6 @@ package com.keymanager.monitoring.controller.rest.external;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.ExternalWebsiteUpdateStatusCriteria;
-import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.WebsiteService;
 import com.keymanager.monitoring.vo.ExternalWebsiteCheckResultVO;
 import org.slf4j.Logger;
@@ -26,9 +25,6 @@ public class ExternalCheckWebsiteStatusController extends SpringMVCBaseControlle
 
     @Autowired
     private WebsiteService websiteService;
-
-    @Autowired
-    private ConfigService configService;
 
     @RequestMapping(value = "/getAllWebsite", method = RequestMethod.POST)
     public ResponseEntity<?> getAllWebsite(@RequestBody Map<String, Object> requestMap) {
