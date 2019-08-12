@@ -150,6 +150,7 @@
 								<option value='New'>New</option>
 								<option value='Old'>Old</option>
 								<option value='Super'>Super</option>
+								<option value='Rank'>Rank</option>
 							</select>
 
 							<shiro:hasPermission name="/internal/machineInfo/searchMachineInfos">
