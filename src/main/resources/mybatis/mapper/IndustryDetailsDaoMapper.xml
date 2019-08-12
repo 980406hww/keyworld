@@ -67,4 +67,18 @@
     <delete id="removeUselessIndustryDetail">
         DELETE FROM t_industry_detail WHERE fIndustryID = #{industryID} AND fQQ = '' AND fTelephone = ''
     </delete>
+
+    <select id="getIndustryInfos" resultType="com.keymanager.monitoring.vo.IndustryDetailVO">
+        SELECT
+            tii.fIndustryName AS 'industryName',
+            tid.fWebsite      AS 'website',
+            tid.fQQ           AS 'qq',
+            tid.fTelephone    AS 'telephone',
+            tid.fWeight       AS 'weight',
+            tid.fRemark       AS 'remark'
+        FROM t_industry_detail tid
+        LEFT JOIN t_industry_info tii
+        ON tid.fIndustryID = tii.fUuid
+        WHERE tid.fIndustryID = #{uuid}
+    </select>
 </mapper>

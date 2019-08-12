@@ -470,3 +470,36 @@ function uploadIndustryInfos(excelType) {
         left: $(document).scrollLeft() + $(window).width() / 2 - 140
     });
 }
+
+// 导出网站联系信息
+function downloadIndustryInfo() {
+    var uuids = getSelectedIDs();
+    if (uuids === '') {
+        $.messager.alert('提示', '请选择要要导出网站联系信息的行业！！', 'info');
+        return;
+    }
+    parent.$.messager.confirm('询问', "确认要导出这些行业的网站联系信息吗？", function(b) {
+        if (b) {
+            var postData = {};
+            postData.uuids = uuids.split(",");
+            $.ajax({
+                url: '/internal/industry/downloadIndustryInfo',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (!result) {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            });
+        }
+    });
+}

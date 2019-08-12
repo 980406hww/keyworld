@@ -21,8 +21,11 @@
     <%@include file="/menu.jsp" %>
     <div style="text-align: right; margin: 10px 5px;">
         <div style="margin: 5px 0px 0px 5px;">
+<%--            <shiro:hasPermission name="/internal/industry/downloadIndustryInfo">--%>
+                <a target="_blank" href="javascript:downloadIndustryInfo()">导出网站联系信息</a>
+<%--            </shiro:hasPermission>--%>
             <shiro:hasPermission name="/internal/industry/uploadIndustryInfos">
-                <a target="_blank" href="javascript:uploadIndustryInfos('SuperIndustrySimple')">Excel上传</a>
+                | <a target="_blank" href="javascript:uploadIndustryInfos('SuperIndustrySimple')">Excel上传</a>
             </shiro:hasPermission>
             <shiro:hasPermission name="/SuperIndustrySimpleList.xls">
                 | <a target="_blank" href="/SuperIndustrySimpleList.xls">模板下载</a>
