@@ -356,10 +356,47 @@
 							<span class="organization-name" title="${qzSetting.organizationName}"><a href="javascript:;">${qzSetting.organizationName}</a></span>
 							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}" target="_blank" title="查看爱站">爱站</a></span>
 							<span class="to-5118"><a href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
-							<span class="fmtStandardDate" title="<fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">达标日期:<a href="javascript:;">
+							<span class="fmtStandardDate" title="${qzSetting.fIsMonitor == true ? "是" : "否"}">
+								达标监控:<a href="javascript:;">${qzSetting.fIsMonitor == true ? "是" : "否"}</a>
+							</span>
+
+							<span class="fmtStandardDate" title="<fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">&nbsp;&nbsp;达标时间:<a href="javascript:;">
 								<c:if test="${qzSetting.standardTime == null}">无</c:if>
 								<c:if test="${qzSetting.standardTime != null}"><fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate></c:if>
 							</a></span>
+
+							<span class="fmtStandardDate" title="${qzSetting.fIsReady == true ? "是" : "否"}">
+								&nbsp;&nbsp;达标计划:<a href="javascript:;">${qzSetting.fIsReady == true ? "是" : "否"}</a>
+							</span>
+							<span class="fmtStandardDate" >&nbsp;&nbsp;爬取状态:
+								<a href="javascript:;">
+									<c:choose>
+										<c:when test="${qzSetting.crawlerStatus == 'new'}">
+											未爬取
+										</c:when>
+										<c:when test="${qzSetting.crawlerStatus == 'processing'}">
+											爬取中
+										</c:when>
+										<c:otherwise>
+											爬取完成
+										</c:otherwise>
+									</c:choose>
+								</a>
+							</span>
+							<span class="fmtStandardDate" >&nbsp;&nbsp;采集状态:
+								<a href="javascript:;">
+								   <c:choose>
+									   <c:when test="${qzSetting.status == 1}">激活</c:when>
+									   <c:when test="${qzSetting.status == 2}">
+										   新增
+									   </c:when>
+									   <c:otherwise>
+										   暂停
+									   </c:otherwise>
+								   </c:choose>
+								</a>
+
+							</span>
 							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<span class="fmtCreateDate" title="<fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">创建日期:<a href="javascript:;"><fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate></a></span>
 							<div class="handle">
@@ -414,39 +451,8 @@
 										<span>全站达标信息</span>
 									</a>
 								</div>
-
 								<div class="other-rank">
 									<div class="row">
-										<div>
-											<span class="line1">
-												<a href="javascript:;" name="fIsMonitor">
-														${qzSetting.fIsMonitor == true ? "是" : "否"}
-												</a>
-											</span>
-												<span>
-												<a href="javascript:;">达标监控</a>
-											</span>
-										</div>
-										<div>
-										<span class="line1">
-											<a href="javascript:;">
-												<c:choose>
-													<c:when test="${qzSetting.crawlerStatus == 'new'}">
-														<span style="color: indianred;">未爬取</span>
-													</c:when>
-													<c:when test="${qzSetting.crawlerStatus == 'processing'}">
-														<span style="color: darkorange;">爬取中</span>
-													</c:when>
-													<c:otherwise>
-														<span style="color: forestgreen;">爬取完成</span>
-													</c:otherwise>
-												</c:choose>
-											</a>
-										</span>
-											<span>
-											<a href="javascript:;">爬取状态</a>
-										</span>
-										</div>
 
 										<div name="operationKeywordNum" title="点击链接跳转到关键字列表">
 										<span class="line1">
@@ -459,16 +465,6 @@
 									</div>
 
 									<div class="row">
-										<div>
-											<span class="line1">
-												<a href="javascript:;">
-														${qzSetting.fIsReady == true ? "是" : "否"}
-												</a>
-											</span>
-											<span>
-												<a href="javascript:;">达标计划</a>
-											</span>
-										</div>
 										<div>
                                             <span class="line1">
                                                 <input type="hidden">
@@ -485,25 +481,6 @@
                                             </span>
 											<span>
                                                 <a href="javascript:;">续费状态</a>
-                                            </span>
-										</div>
-
-										<div>
-                                            <span class="line1">
-                                                <a href="javascript:;">
-                                                   <c:choose>
-                                                       <c:when test="${qzSetting.status == 1}">激活</c:when>
-                                                       <c:when test="${qzSetting.status == 2}">
-                                                           <span style="color: green;">新增</span>
-                                                       </c:when>
-                                                       <c:otherwise>
-                                                           <span style="color: red;">暂停</span>
-                                                       </c:otherwise>
-                                                   </c:choose>
-                                                </a>
-                                            </span>
-											<span>
-                                                <a href="javascript:;">状态</a>
                                             </span>
 										</div>
 									</div>
@@ -837,10 +814,48 @@
 							<span class="contactPerson-name" title="${qzSetting.organizationName}"><a href="javascript:;">${qzSetting.organizationName}</a></span>
 							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}" target="_blank" title="查看爱站">爱站</a></span>
 							<span class="to-5118"><a  href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
-							<span class="fmtStandardDate" title="<fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">达标时间:<a href="javascript:;">
+
+							<span class="fmtStandardDate" title="${qzSetting.fIsMonitor == true ? "是" : "否"}">
+								达标监控:<a href="javascript:;">${qzSetting.fIsMonitor == true ? "是" : "否"}</a>
+							</span>
+
+							<span class="fmtStandardDate" title="<fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">&nbsp;&nbsp;达标时间:<a href="javascript:;">
 								<c:if test="${qzSetting.standardTime == null}">无</c:if>
 								<c:if test="${qzSetting.standardTime != null}"><fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate></c:if>
 							</a></span>
+
+							<span class="fmtStandardDate" title="${qzSetting.fIsReady == true ? "是" : "否"}">
+								&nbsp;&nbsp;达标计划:<a href="javascript:;">${qzSetting.fIsReady == true ? "是" : "否"}</a>
+							</span>
+							<span class="fmtStandardDate" >&nbsp;&nbsp;爬取状态:
+								<a href="javascript:;">
+									<c:choose>
+										<c:when test="${qzSetting.crawlerStatus == 'new'}">
+											未爬取
+										</c:when>
+										<c:when test="${qzSetting.crawlerStatus == 'processing'}">
+										爬取中
+										</c:when>
+										<c:otherwise>
+											爬取完成
+										</c:otherwise>
+									</c:choose>
+								</a>
+							</span>
+							<span class="fmtStandardDate" >&nbsp;&nbsp;采集状态:
+								<a href="javascript:;">
+								   <c:choose>
+									   <c:when test="${qzSetting.status == 1}">激活</c:when>
+									   <c:when test="${qzSetting.status == 2}">
+										  新增
+									   </c:when>
+									   <c:otherwise>
+										   暂停
+									   </c:otherwise>
+								   </c:choose>
+								</a>
+
+							</span>
 							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<span class="fmtCreateDate" title="<fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">创建时间:<a href="javascript:;"><fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate></a></span>
 							<div class="handle">
@@ -898,58 +913,19 @@
 
 								<div class="other-rank">
 									<div class="row">
-										<div>
-											<span class="line1">
-												<a href="javascript:;" name="fIsMonitor">
-														${qzSetting.fIsMonitor == true ? "是" : "否"}
-												</a>
-											</span>
-											<span>
-												<a href="javascript:;">达标监控</a>
-											</span>
-										</div>
-										<div>
-										<span class="line1">
-											<a href="javascript:;">
-												<c:choose>
-													<c:when test="${qzSetting.crawlerStatus == 'new'}">
-														<span style="color: indianred;">未爬取</span>
-													</c:when>
-													<c:when test="${qzSetting.crawlerStatus == 'processing'}">
-														<span style="color: darkorange;">爬取中</span>
-													</c:when>
-													<c:otherwise>
-														<span style="color: forestgreen;">爬取完成</span>
-													</c:otherwise>
-												</c:choose>
-											</a>
-										</span>
-											<span>
-											<a href="javascript:;">爬取状态</a>
-										</span>
-										</div>
 
 										<div name="operationKeywordNum" title="点击链接跳转到关键字列表">
-										<span class="line1">
-											<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.phoneGroup}');">0</a>
-										</span>
-											<span>
-											<a href="javascript:;">操作词数</a>
-										</span>
+											<span class="line1">
+												<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${qzSetting.phoneGroup}');">0</a>
+											</span>
+												<span>
+												<a href="javascript:;">操作词数</a>
+											</span>
 										</div>
 									</div>
 
 									<div class="row">
-										<div>
-											<span class="line1">
-												<a href="javascript:;">
-														${qzSetting.fIsReady == true ? "是" : "否"}
-												</a>
-											</span>
-											<span>
-												<a href="javascript:;">达标计划</a>
-											</span>
-										</div>
+
 										<div>
 											<span class="line1">
 												<input type="hidden">
@@ -969,24 +945,7 @@
 											</span>
 										</div>
 
-										<div>
-											<span class="line1">
-												<a href="javascript:;">
-												   <c:choose>
-													   <c:when test="${qzSetting.status == 1}">激活</c:when>
-													   <c:when test="${qzSetting.status == 2}">
-														   <span style="color: green;">新增</span>
-													   </c:when>
-													   <c:otherwise>
-														   <span style="color: red;">暂停</span>
-													   </c:otherwise>
-												   </c:choose>
-												</a>
-											</span>
-												<span>
-												<a href="javascript:;">采集状态</a>
-											</span>
-										</div>
+
 									</div>
 								</div>
 

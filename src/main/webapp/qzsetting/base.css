@@ -268,7 +268,7 @@ ul {
 }
 
 .datalist-list .header span.fmtStandardDate, .datalist-list .header span.fmtCreateDate {
-    max-width: 130px;
+    max-width: 170px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -284,13 +284,13 @@ ul {
 
 .datalist-list .header span.fmtCreateDate {
     position: absolute;
-    left: 900px;
+    left: 1200px;
     z-index: 1;
 }
 
 .datalist-list .header span.tagNames {
     position: absolute;
-    left: 570px;
+    left: 900px;
     z-index: 1;
     width: 330px;
     color: #000000;
@@ -323,28 +323,28 @@ ul {
 }
 
 .datalist-list .body .data-info-wrap {
-    width: 621px;
+    width: 452px;
     float: left;
     height: 150px;
     text-align: center
 }
 
 .datalist-list .body .rank-wrap {
-    width: 588px;
+    width: 680px;
     float: left;
     height: 150px;
     border-left: 1px solid #e6e6e6;
 }
 
 .datalist-list .body .rank-wrap1 {
-    width: 389px;
+    width: 440px;
     float: left;
     height: 150px;
     border-left: 1px solid #e6e6e6;
 }
 
 .datalist-list .body .rank-wrap2 {
-    width: 300px;
+    width: 320px;
     float: left;
     height: 150px;
     border-left: 1px solid #e6e6e6;
@@ -464,7 +464,7 @@ ul {
 
 .datalist-list .body .other-rank {
     float: left;
-    width: 255px;
+    width: 84px;
 }
 
 .datalist-list .body .other-rank_2 {
@@ -569,12 +569,12 @@ ul {
 }
 
 .rank-wrap .col-1 {
-    width: 33%;
+    width: 35%;
     text-align: left;
 }
 
 .rank-wrap .col-2 {
-    width: 45%;
+    width: 43%;
     text-align: left;
 }
 
@@ -585,12 +585,12 @@ ul {
 
 .rank-wrap1 .col-5 {
     float: left;
-    width: 33%;
+    width: 30%;
     text-align: left;
 }
 
 .rank-wrap1 .col-1 {
-    width: 67%;
+    width: 70%;
     text-align: left;
 }
 
