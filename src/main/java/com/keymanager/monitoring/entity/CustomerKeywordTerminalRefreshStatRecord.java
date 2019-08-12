@@ -39,6 +39,9 @@ public class CustomerKeywordTerminalRefreshStatRecord implements Serializable{
     @TableField(value = "fInvalidKeywordCount")
     protected int invalidKeywordCount;
 
+    @TableField(value = "fFailedKeywordCount")
+    protected int failedKeywordCount;
+
     @TableField(value = "fZeroOptimizedCount")
     protected int zeroOptimizedCount;
 
@@ -237,6 +240,14 @@ public class CustomerKeywordTerminalRefreshStatRecord implements Serializable{
 
     public void setIdleTotalMinutes(long idleTotalMinutes) {
         this.idleTotalMinutes = idleTotalMinutes;
+    }
+
+    public int getFailedKeywordCount() {
+        return failedKeywordCount;
+    }
+
+    public void setFailedKeywordCount(int failedKeywordCount) {
+        this.failedKeywordCount = failedKeywordCount;
     }
 
     public double getIdlePercentage(){
