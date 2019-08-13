@@ -24,11 +24,11 @@
         WHERE (qs.fUpdateStatus IS NULL
                OR qs.fUpdateEndTime IS NULL
                OR (qs.fUpdateStatus = 'Completed'
-                   AND DATE_SUB(NOW(), INTERVAL qs.fUpdateInterval DAY) > qs.fUpdateEndTime)
+                   AND qs.fUpdateEndTime &gt; DATE_SUB(CURRENT_DATE(), INTERVAL qs.fUpdateInterval DAY))
                OR (qs.fUpdateStatus = 'Processing'
                    AND DATE_SUB(NOW(), INTERVAL 10 MINUTE) > qs.fUpdateStartTime)
                OR (qs.fUpdateStatus = 'DownloadTimesUsed'
-                   AND DATE_SUB(NOW(), INTERVAL 1 DAY) > qs.fUpdateEndTime)
+                   AND qs.fUpdateEndTime &lt; CURRENT_DATE())
               ) AND qs.fStatus = 1
               AND ((qs.fPcGroup > '' AND qs.fPcKeywordExceedMaxCount = 0)
               OR  (qs.fPhoneGroup > '' AND qs.fPhoneKeywordExceedMaxCount = 0))
