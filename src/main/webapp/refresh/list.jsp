@@ -45,7 +45,7 @@
 		<tr bgcolor="#eeeeee" height=30>
 			<td align="center" width=30 rowspan="2"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
 			<td align="center" width=100 rowspan="2">类型</td>
-			<td align="center" width=80 colspan="7">关键字</td>
+			<td align="center" width=80 colspan="8">关键字</td>
 			<td align="center" width=80 colspan="6">刷的次数</td>
 		</tr>
 		<tr bgcolor="#eeeeee" height=30>
@@ -55,6 +55,7 @@
 			<td align="center" width=80>没有刷量</td>
 			<td align="center" width=80>待刷数</td>
 			<td align="center" width=80>无效刷量</td>
+			<td align="center" width=80>失败数</td>
 			<td align="center" width=80>无效占比</td>
 			<td align="center" width=60>总次数</td>
 			<td align="center" width=80>已刷次数</td>
@@ -100,7 +101,7 @@
 					</c:if>
 				</shiro:hasPermission>
 			</td>
-
+			<td width=80>${refreshStatInfo.failedKeywordCount > 0 ? refreshStatInfo.failedKeywordCount : ""}</td>
 			<td width=80>
 				<font color="${refreshStatInfo.invalidKeywordPercentage > 20 ? "red" : (refreshStatInfo.invalidKeywordPercentage > 10 ? "purple" : "")}">
 					<c:if test="${refreshStatInfo.invalidKeywordPercentage > 0}">
@@ -166,7 +167,7 @@
 					</c:if>
 				</shiro:hasPermission>
 			</td>
-
+			<td width=80>${refreshStatInfo.failedKeywordCount > 0 ? refreshStatInfo.failedKeywordCount : ""}</td>
 			<td width=80>
 				<font color="${refreshStatInfo.invalidKeywordPercentage > 20 ? "red" : (refreshStatInfo.invalidKeywordPercentage > 10 ? "purple" : "")}">
 					<c:if test="${refreshStatInfo.invalidKeywordPercentage > 0}">
