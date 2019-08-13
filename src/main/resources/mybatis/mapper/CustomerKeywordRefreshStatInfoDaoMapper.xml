@@ -10,6 +10,7 @@
             COUNT(1) AS "totalKeywordCount",
             SUM(IF(ck.fOptimizeRemainingCount > 0, 1, 0)) AS "needOptimizeKeywordCount",
             SUM(IF(ck.fInvalidRefreshCount >= toc.fMaxInvalidCount, 1, 0)) AS "invalidKeywordCount",
+            SUM(IF(ck.fFailedCause > '', 1, 0)) AS "failedKeywordCount",
             SUM(IF(ck.fOptimizedCount = 0, 1, 0)) AS "zeroOptimizedCount",
             SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(), 1, 0)) AS "reachStandardKeywordCount",
             SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(),ck.fTodayFee, 0)) as "todaySubTotal",

@@ -7,11 +7,12 @@ import com.keymanager.monitoring.entity.Advertising;
 import com.keymanager.monitoring.entity.FriendlyLink;
 import com.keymanager.monitoring.entity.Website;
 import com.keymanager.monitoring.enums.IndustryTypeEnum;
-import com.keymanager.monitoring.enums.WebsiteSynchronousSignEnum;
-import com.keymanager.monitoring.service.AdvertisingService;
-import com.keymanager.monitoring.service.FriendlyLinkService;
 import com.keymanager.monitoring.enums.PutSalesInfoSignEnum;
+import com.keymanager.monitoring.enums.WebsiteSynchronousSignEnum;
 import com.keymanager.monitoring.enums.WebsiteTypeEnum;
+import com.keymanager.monitoring.service.AdvertisingService;
+import com.keymanager.monitoring.service.ConfigService;
+import com.keymanager.monitoring.service.FriendlyLinkService;
 import com.keymanager.monitoring.service.WebsiteService;
 import com.keymanager.monitoring.vo.WebsiteVO;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -43,6 +44,9 @@ public class WebsiteRestController extends SpringMVCBaseController {
     private FriendlyLinkService friendlyLinkService;
     @Autowired
     private AdvertisingService advertisingService;
+
+    @Autowired
+    private ConfigService configService;
 
     @RequiresPermissions("/internal/website/searchWebsites")
     @RequestMapping(value = "/searchWebsites", method = RequestMethod.GET)
@@ -252,6 +256,18 @@ public class WebsiteRestController extends SpringMVCBaseController {
         try {
             List uuids = (List) requestMap.get("uuids");
             websiteService.putSalesInfoToWebsite(uuids);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequiresPermissions("/internal/website/saveWebsite")
+    @RequestMapping(value = "/updateWebsiteStatus", method = RequestMethod.POST)
+    public ResponseEntity<?> updateWebsiteStatus() {
+        try {
+            configService.refreshWebsiteCheckSign("1");
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

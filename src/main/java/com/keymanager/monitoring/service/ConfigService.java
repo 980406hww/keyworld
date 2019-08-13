@@ -188,4 +188,20 @@ public class ConfigService extends ServiceImpl<MachineInfoDao, MachineInfo>{
         }
         return null;
     }
+
+    public String getWebsiteCheckSign(){
+        Config config = getConfig(Constants.CONFIG_TYPE_WEBSITE_CHECK_SIGN, "WebsiteCheck");
+        if(config != null) {
+            return config.getValue();
+        }
+        return null;
+    }
+
+    public void refreshWebsiteCheckSign(String websiteCheckSign){
+        Config config = new Config();
+        config.setConfigType(Constants.CONFIG_TYPE_WEBSITE_CHECK_SIGN);
+        config.setKey("WebsiteCheck");
+        config.setValue(websiteCheckSign);
+        updateConfig(config);
+    }
 }
