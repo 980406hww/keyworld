@@ -48,7 +48,6 @@
         <if test="customerKeywordCriteria.ltOptimizePlanCount != null">AND ck.fOptimizePlanCount &lt;= #{customerKeywordCriteria.ltOptimizePlanCount} </if>
         <if test="customerKeywordCriteria.remarks != null and customerKeywordCriteria.remarks != ''">AND ck.fRemarks like '%${customerKeywordCriteria.remarks}%' </if>
         <if test="customerKeywordCriteria.failedCause != null and customerKeywordCriteria.failedCause != ''">AND ck.fFailedCause = #{customerKeywordCriteria.failedCause} </if>
-        <if test="customerKeywordCriteria.enteredKeywordRemarks != null and customerKeywordCriteria.enteredKeywordRemarks != ''">AND ck.fEnteredKeywordRemarks like '%${customerKeywordCriteria.enteredKeywordRemarks}%' </if>
         <if test="customerKeywordCriteria.keywordEffect != null and customerKeywordCriteria.keywordEffect != ''">AND ck.fKeywordEffect = #{customerKeywordCriteria.keywordEffect} </if>
         <if test="customerKeywordCriteria.gtCurrentIndexCount != null">AND ck.fCurrentIndexCount &gt;= #{customerKeywordCriteria.gtCurrentIndexCount} </if>
         <if test="customerKeywordCriteria.ltCurrentIndexCount != null">AND ck.fCurrentIndexCount &lt;= #{customerKeywordCriteria.ltCurrentIndexCount} </if>
