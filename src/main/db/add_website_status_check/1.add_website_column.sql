@@ -9,7 +9,3 @@ ALTER TABLE `db_keyword`.`t_website`ADD COLUMN `fDatabaseStatus` VARCHAR(100) NU
 
 
 ALTER TABLE `db_keyword`.`t_website`ADD COLUMN `fServerPort` VARCHAR(10) NULL DEFAULT '22' COMMENT '服务器端口，默认22' AFTER `fServerPassword` ;
-
-
-#增加更新网站的开关
-INSERT INTO `db_keyword`.`t_config` VALUE("WebsiteCheck","WebsiteCheck","1");
