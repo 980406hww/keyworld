@@ -262,12 +262,16 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
         customerDao.updateById(customer);
     }
 
-    public List<Long> getActiveDailyReportIdentifyCustomerUuids () {
-	    return customerDao.getActiveDailyReportIdentifyCustomerUuids();
+    public List<Long> getActiveDailyReportIdentifyCustomerUuids (String userID) {
+	    return customerDao.getActiveDailyReportIdentifyCustomerUuids(userID);
     }
 
 	public void updateCustomerDailyReportIdentify (String uuidstr) {
         String[] uuids = uuidstr.split(",");
         customerDao.updateCustomerDailyReportIdentify(uuids);
 	}
+
+    public List<String> getActiveDailyReportIdentifyUserIDs() {
+		return customerDao.getActiveDailyReportIdentifyUserIDs();
+    }
 }

@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface DailyReportDao extends BaseMapper<DailyReport> {
-    List<DailyReport> findByStatus(@Param("status") String status);
+    DailyReport findByStatus(@Param("status") String status);
 
     List<DailyReport> searchCurrentDateCompletedReports(@Param("terminalType") String terminalType);
 

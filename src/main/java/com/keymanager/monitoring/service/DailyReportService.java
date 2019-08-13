@@ -55,7 +55,7 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 			if(EntryTypeEnum.bc.name().equalsIgnoreCase(dailyReportType.getValue())){
 				return !captureRankJobService.hasUncompletedCaptureRankJob(null, "China");
 			}else{
-				List<Long> customerUuids = customerService.getActiveDailyReportIdentifyCustomerUuids();
+				List<Long> customerUuids = customerService.getActiveDailyReportIdentifyCustomerUuids(null);
 				if (CollectionUtils.isNotEmpty(customerUuids)) {
 					List<String> groupNames = customerKeywordService.getGroups(customerUuids);
 					return !captureRankJobService.hasUncompletedCaptureRankJob(groupNames, null);
@@ -67,28 +67,33 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 
 	public void autoTriggerDailyReport(){
 		if(autoTriggerDailyReportCondition() && dailyReportDao.fetchDailyReportTriggeredInToday(DailyReportTriggerModeEnum.Auto.name()) == null){
-			long dailyReportUuid = createDailyReport(null, DailyReportTriggerModeEnum.Auto.name());
+			List<String> userIDs = customerService.getActiveDailyReportIdentifyUserIDs();
+			if (CollectionUtils.isNotEmpty(userIDs)) {
+				for (String userID : userIDs) {
+					long dailyReportUuid = createDailyReport(null, DailyReportTriggerModeEnum.Auto.name(), userID);
 
-			Config dailyReportType = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_TYPE);
-			if(dailyReportType != null) {
-				if (EntryTypeEnum.bc.name().equalsIgnoreCase(dailyReportType.getValue())) {
-					List<Long> pcCustomerUuids = customerKeywordService.getCustomerUuids(EntryTypeEnum.bc.name(), TerminalTypeEnum.PC.name());
-					for (Long customerUuid : pcCustomerUuids) {
-						dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.PC.name(), customerUuid.intValue());
-					}
+					Config dailyReportType = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_TYPE);
+					if(dailyReportType != null) {
+						if (EntryTypeEnum.bc.name().equalsIgnoreCase(dailyReportType.getValue())) {
+							List<Long> pcCustomerUuids = customerKeywordService.getCustomerUuids(userID, EntryTypeEnum.bc.name(), TerminalTypeEnum.PC.name());
+							for (Long customerUuid : pcCustomerUuids) {
+								dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.PC.name(), customerUuid.intValue());
+							}
 
-					List<Long> phoneCustomerUuids = customerKeywordService.getCustomerUuids(EntryTypeEnum.bc.name(), TerminalTypeEnum.Phone.name());
-					for (Long customerUuid : phoneCustomerUuids) {
-						dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.Phone.name(), customerUuid.intValue());
-					}
-				} else {
-					List<Long> customerUuids = customerService.getActiveDailyReportIdentifyCustomerUuids();
-					if (CollectionUtils.isNotEmpty(customerUuids)) {
-						for (Long customerUuid : customerUuids) {
-							dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.PC.name(), customerUuid.intValue());
-						}
-						for (Long customerUuid : customerUuids) {
-							dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.Phone.name(), customerUuid.intValue());
+							List<Long> phoneCustomerUuids = customerKeywordService.getCustomerUuids(userID, EntryTypeEnum.bc.name(), TerminalTypeEnum.Phone.name());
+							for (Long customerUuid : phoneCustomerUuids) {
+								dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.Phone.name(), customerUuid.intValue());
+							}
+						} else {
+							List<Long> customerUuids = customerService.getActiveDailyReportIdentifyCustomerUuids(userID);
+							if (CollectionUtils.isNotEmpty(customerUuids)) {
+								for (Long customerUuid : customerUuids) {
+									dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.PC.name(), customerUuid.intValue());
+								}
+								for (Long customerUuid : customerUuids) {
+									dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.Phone.name(), customerUuid.intValue());
+								}
+							}
 						}
 					}
 				}
@@ -96,18 +101,9 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 		}
 	}
 
-	public void triggerReportGeneration(String terminalType, String customerUuids){
-		long dailyReportUuid = createDailyReport(terminalType, DailyReportTriggerModeEnum.Manual.name());
-		if(StringUtils.isNotEmpty(customerUuids)){
-			String [] customerUuidArray = customerUuids.trim().split(",");
-			for(String customerUuid : customerUuidArray){
-				dailyReportItemService.createDailyReportItem(dailyReportUuid, terminalType, Integer.parseInt(customerUuid));
-			}
-		}
-	}
-
-	private long createDailyReport(String terminalType, String triggerMode) {
+	private long createDailyReport(String terminalType, String triggerMode, String userID) {
 		DailyReport dailyReport = new DailyReport();
+		dailyReport.setUserID(userID);
 		dailyReport.setTriggerTime(new Date());
 		dailyReport.setCompleteTime(null);
 		dailyReport.setTriggerMode(triggerMode);
@@ -119,18 +115,14 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 	}
 
 	public void generateReport() throws Exception {
-		List<DailyReport> dailyReports = dailyReportDao.findByStatus(DailyReportStatusEnum.Processing.name());
-		DailyReport dailyReport = null;
-		if(CollectionUtils.isEmpty(dailyReports)){
-			dailyReports = dailyReportDao.findByStatus(DailyReportStatusEnum.New.name());
-			if(CollectionUtils.isNotEmpty(dailyReports)){
-				dailyReport = dailyReports.get(0);
+		DailyReport dailyReport = dailyReportDao.findByStatus(DailyReportStatusEnum.Processing.name());
+		if (null == dailyReport) {
+			dailyReport = dailyReportDao.findByStatus(DailyReportStatusEnum.New.name());
+			if (null != dailyReport) {
 				dailyReport.setStatus(DailyReportStatusEnum.Processing.name());
 				dailyReport.setUpdateTime(new Date());
 				dailyReportDao.updateById(dailyReport);
 			}
-		}else{
-			dailyReport = dailyReports.get(0);
 		}
 		if(dailyReport == null){
 			return;

@@ -9,6 +9,9 @@ import java.util.Date;
 public class DailyReport extends BaseEntity{
 	private static final long serialVersionUID = -1101942701283949852L;
 
+	@TableField(value = "fUserID")
+	private String userID;
+
 	@TableField(value = "fTerminalType")
 	private String terminalType;
 
@@ -26,6 +29,14 @@ public class DailyReport extends BaseEntity{
 
 	@TableField(value = "fStatus")
 	private String status;
+
+	public String getUserID() {
+		return userID;
+	}
+
+	public void setUserID(String userID) {
+		this.userID = userID;
+	}
 
 	public String getTerminalType() {
 		return terminalType;

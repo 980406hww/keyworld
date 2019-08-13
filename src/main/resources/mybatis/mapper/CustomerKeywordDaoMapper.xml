@@ -1403,8 +1403,15 @@
         </foreach>
     </update>
 
-    <select id="getCustomerUuids" resultType="Long">
-        SELECT DISTINCT ck.fCustomerUuid FROM t_customer_keyword ck WHERE ck.fType = #{entryType} AND ck.fTerminalType = #{terminalType} AND ck.fStatus = 1
+    <select id="getCustomerUuids" resultType="java.lang.Long">
+        SELECT DISTINCT ck.fCustomerUuid
+        FROM t_customer_keyword ck
+        LEFT JOIN t_customer c
+        ON c.fUuid = ck.fCustomerUuid
+        WHERE c.fUserID = #{userID}
+        AND ck.fType =  #{entryType}
+        AND ck.fTerminalType = #{terminalType}
+        AND ck.fStatus = 1
     </select>
 
     <update id="excludeCustomerKeyword" parameterType="com.keymanager.monitoring.entity.CustomerKeyword">

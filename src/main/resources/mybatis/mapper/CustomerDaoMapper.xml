@@ -171,6 +171,7 @@
         FROM t_customer c
         WHERE c.fStatus = 1
         AND c.fDailyReportIdentify = 1
+        <if test="userID != null and userID != ''"> AND c.fUserID = #{userID}</if>
     </select>
 
     <update id="updateCustomerDailyReportIdentify">
@@ -182,4 +183,11 @@
             </foreach>
         )
     </update>
+
+    <select id="getActiveDailyReportIdentifyUserIDs" resultType="java.lang.String">
+        SELECT DISTINCT c.fUserID
+        FROM t_customer c
+        WHERE c.fStatus = 1
+        AND c.fDailyReportIdentify = 1
+    </select>
 </mapper>
