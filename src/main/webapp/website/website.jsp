@@ -614,14 +614,10 @@
 
     function selectDatabaseStatus(){
         var databaseStatus = $("#databaseStatus_bak").val();
-        var dbs = $("#databaseStatus");
-        if(databaseStatus=="" || databaseStatus == null){
-            dbs.val("");
-        }else if(databaseStatus == "0"){
-            dbs.val("0");
-        }else{
-            dbs.val("1");
+        if (null == databaseStatus) {
+            databaseStatus = '';
         }
+        $("#databaseStatus").val(databaseStatus);
     }
 
     function searchFriendlyLinks(url) {
