@@ -42,6 +42,7 @@
 
 	<bean id="cronTriggerCacheCrawlRankCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="cacheCrawlRankCustomerKeywordSchedule" />
+		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>
 

@@ -1673,7 +1673,7 @@
         WHERE ck.fTerminalType = 'PC'
         AND ck.fType = 'qz'
         AND ck.fStatus = 1
-        AND CK.fSearchEngine = '百度'
+        AND ck.fSearchEngine = '百度'
         AND ck.fMachineGroup &lt;&gt; 'Pause'
         AND (
             (ck.fCaptureStatus = 0 AND ck.fCapturePositionQueryTime &lt;= CURRENT_DATE())
