@@ -54,5 +54,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     List<QZSettingVO> searchQZSettingSearchEngines(@Param("customerUuid") String customerUuid, @Param("domain") String domain);
 
     void updateQZSettingRenewalStatus(@Param("uuids") List<Long> uuids, @Param("renewalStatus") Integer renewalStatus);
+
+    List<QZSetting> searchAllQZSettingForGenerateRankingCurve();
 }
 

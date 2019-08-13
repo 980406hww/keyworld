@@ -536,4 +536,23 @@
         </where>
         GROUP BY mi.fMachineGroup, mi.fTerminalType ORDER BY mi.fMachineGroup
     </select>
+
+    <update id="updateMachine">
+        UPDATE t_machine_info
+        <set>
+            <if test="city!=null and city!=''">
+                fCity=#{city},
+            </if>
+             <if test="version!=null and version!=''">
+                fVersion=#{version},
+            </if>
+             <if test="freeSpace!=null and freeSpace!=''">
+                 fFreeSpace=#{freeSpace},
+            </if>
+             <if test="runningProgramType!=null and runningProgramType!=''">
+                 fRunningProgramType=#{runningProgramType},
+            </if>
+        </set>
+        WHERE fClientID = #{clientID}
+    </update>
 </mapper>

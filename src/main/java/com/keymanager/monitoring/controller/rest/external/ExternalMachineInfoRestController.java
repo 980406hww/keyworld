@@ -340,5 +340,28 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
     }
 
+    @RequestMapping(value = "/updateMachine", method = RequestMethod.GET)
+    public ResponseEntity<?> updateMachine(HttpServletRequest request) throws Exception {
+        String userName = request.getParameter("userName");
+        if (StringUtils.isBlank(userName)) {
+            userName = request.getParameter("username");
+        }
+        String password = request.getParameter("password");
+        String clientID = request.getParameter("clientID");
+        String city = request.getParameter("city");
+        String version = request.getParameter("version");
+        String freeSpace = request.getParameter("freeSpace");
+        String runningProgramType = request.getParameter("runningProgramType");
+        try {
+            if (validUser(userName, password)) {
+                machineInfoService.updateMachine(clientID, city,version,freeSpace,runningProgramType);
+                return new ResponseEntity<Object>(true, HttpStatus.OK);
+            }
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+    }
+
 
 }

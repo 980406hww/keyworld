@@ -48,6 +48,9 @@ public class Website extends BaseEntity {
     @TableField(value = "fServerPassword")
     private String serverPassword;
 
+    @TableField(value = "fServerPort")
+    private String serverPort;
+
     @TableField(value = "fBackendDomain")
     private String backendDomain;
 
@@ -80,6 +83,18 @@ public class Website extends BaseEntity {
 
     @TableField(value = "fSynchronousAdvertisingSign")
     private String synchronousAdvertisingSign;
+
+     @TableField(value = "fBackgroundLoginStatus")
+    private Integer backgroundLoginStatus;
+
+     @TableField(value = "fSftpStatus")
+    private Integer sftpStatus;
+
+     @TableField(value = "fIndexFileStatus")
+    private Integer indexFileStatus;
+
+     @TableField(value = "fDatabaseStatus")
+    private String databaseStatus;
 
     public String getWebsiteName() {
         return websiteName;
@@ -201,6 +216,14 @@ public class Website extends BaseEntity {
         this.serverPassword = serverPassword;
     }
 
+    public String getServerPort() {
+        return serverPort;
+    }
+
+    public void setServerPort(String serverPort) {
+        this.serverPort = serverPort;
+    }
+
     public String getBackendDomain() {
         return backendDomain;
     }
@@ -263,5 +286,37 @@ public class Website extends BaseEntity {
 
     public void setDnsAnalysisStatus(Integer dnsAnalysisStatus) {
         this.dnsAnalysisStatus = dnsAnalysisStatus;
+    }
+
+    public Integer getBackgroundLoginStatus() {
+        return backgroundLoginStatus;
+    }
+
+    public void setBackgroundLoginStatus(Integer backgroundLoginStatus) {
+        this.backgroundLoginStatus = backgroundLoginStatus;
+    }
+
+    public Integer getSftpStatus() {
+        return sftpStatus;
+    }
+
+    public void setSftpStatus(Integer sftpStatus) {
+        this.sftpStatus = sftpStatus;
+    }
+
+    public Integer getIndexFileStatus() {
+        return indexFileStatus;
+    }
+
+    public void setIndexFileStatus(Integer indexStatus) {
+        this.indexFileStatus = indexStatus;
+    }
+
+    public String getDatabaseStatus() {
+        return databaseStatus;
+    }
+
+    public void setDatabaseStatus(String databaseStatus) {
+        this.databaseStatus = databaseStatus;
     }
 }

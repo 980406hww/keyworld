@@ -10,12 +10,8 @@ import com.keymanager.monitoring.entity.Advertising;
 import com.keymanager.monitoring.entity.FriendlyLink;
 import com.keymanager.monitoring.entity.Website;
 import com.keymanager.monitoring.enums.WebsiteRemoteConnectionEnum;
-import com.keymanager.monitoring.vo.AdvertisingVO;
-import com.keymanager.monitoring.vo.FriendlyLinkVO;
+import com.keymanager.monitoring.vo.*;
 import com.keymanager.monitoring.enums.PutSalesInfoSignEnum;
-import com.keymanager.monitoring.vo.SalesManageVO;
-import com.keymanager.monitoring.vo.WebsiteBackendInfoVO;
-import com.keymanager.monitoring.vo.WebsiteVO;
 import com.keymanager.util.AESUtils;
 import com.keymanager.util.Utils;
 import org.slf4j.Logger;
@@ -388,5 +384,13 @@ public class WebsiteService  extends ServiceImpl<WebsiteDao, Website> {
                 continue;
             }
         }
+    }
+
+    public List<ExternalWebsiteVO> getAllWebsiteForexternalCheckStauts() {
+        return websiteDao.selectAllWebsiteForExternalCheckStatus();
+    }
+
+    public void updateWebsiteStatus(List<ExternalWebsiteCheckResultVO> websiteCheckResultVOS) {
+        websiteDao.updateWebSiteStatus(websiteCheckResultVOS);
     }
 }
