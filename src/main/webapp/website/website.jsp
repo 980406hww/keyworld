@@ -47,11 +47,13 @@
                 <option value="1" <c:if test="${1 eq websiteCriteria.backgroundLoginStatus}">selected="selected"</c:if>>url地址错误</option>
                 <option value="2" <c:if test="${2 eq websiteCriteria.backgroundLoginStatus}">selected="selected"</c:if>>用户名密码</option>
             </select>
-            &nbsp;&nbsp;数据库状态:
+            &nbsp;&nbsp;数据库状态:<input id="databaseStatus_bak" value="${websiteCriteria.databaseStatus}" hidden/>
+
             <select id="databaseStatus" name="databaseStatus" style="width: 100px;" title="">
+
                 <option value="" selected="selected">请选择</option>
-                <option value="0" <c:if test="${'0' eq websiteCriteria.databaseStatus}">selected="selected"</c:if>>正常</option>
-                <option value="1" <c:if test="${'0' ne websiteCriteria.databaseStatus  && websiteCriteria.databaseStatus ne ''}">selected="selected"</c:if>>访问失败</option>
+                <option value="0" >正常</option>
+                <option value="1" >访问失败</option>
             </select>
             &nbsp;&nbsp;index文件状态:
             <select id="indexFileStatus" name="indexFileStatus" style="width: 100px;" title="">
@@ -607,6 +609,21 @@
             $("#centerDiv").css("margin-top", $("#topDiv").height());
         }
     });
+
+    window.onload = selectDatabaseStatus;
+
+    function selectDatabaseStatus(){
+        var databaseStatus = $("#databaseStatus_bak").val();
+        var osel=document.getElementById("databaseStatus"); //得到select的ID
+        var opts=osel.getElementsByTagName("option");//得到数组option
+        if(databaseStatus=="" || databaseStatus == null){
+            opts[0].selected = true;
+        }else if(databaseStatus == "0"){
+            opts[1].selected = true;
+        }else{
+            opts[2].selected = true;
+        }
+    }
 
     function searchFriendlyLinks(url) {
         window.open(url);
