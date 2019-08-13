@@ -388,7 +388,13 @@
             OR qs.fCrawlerTime IS NULL
             OR (qs.fCrawlerStatus = 'finish' AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL #{crawlerHour} HOUR))
         )
-        AND EXISTS(SELECT 1 FROM t_qz_keyword_rank_info qk WHERE qk.fQZSettingUuid = qs.fUuid AND qk.fWebsiteType <![CDATA[<>]]> 'designationWord')
+        AND EXISTS(
+            SELECT 1
+            FROM t_qz_keyword_rank_info qk
+            WHERE qk.fQZSettingUuid = qs.fUuid
+            AND qk.fWebsiteType <![CDATA[<>]]> 'designationWord'
+            AND qk.fWebsiteType <![CDATA[<>]]> 'xt'
+        )
         ORDER BY qs.fCreateTime DESC
         LIMIT #{taskNumber}
     </select>
