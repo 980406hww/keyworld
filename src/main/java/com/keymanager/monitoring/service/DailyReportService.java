@@ -217,8 +217,8 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 	}
 
 
-	public List<DailyReport> searchCurrentDateCompletedReports(String terminalType){
-		return dailyReportDao.searchCurrentDateCompletedReports(terminalType);
+	public List<DailyReport> searchCurrentDateCompletedReports(String userName){
+		return dailyReportDao.searchCurrentDateCompletedReports(userName);
 	}
 
 	public void resetDailyReportExcel(String terminalType, String customerUuids) {

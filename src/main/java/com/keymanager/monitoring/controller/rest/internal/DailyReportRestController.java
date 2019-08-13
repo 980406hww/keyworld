@@ -61,8 +61,8 @@ public class DailyReportRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/searchCurrentDateCompletedReports", method = RequestMethod.GET)
 	public ResponseEntity<?> searchCurrentDateCompletedReports(HttpServletRequest request) throws Exception{
 		try {
-			String terminalType = TerminalTypeMapping.getTerminalType(request);
-			List<DailyReport> dailyReports = dailyReportService.searchCurrentDateCompletedReports(terminalType);
+			String userName = (String) request.getSession().getAttribute("username");
+			List<DailyReport> dailyReports = dailyReportService.searchCurrentDateCompletedReports(userName);
 			return new ResponseEntity<Object>(dailyReports, HttpStatus.OK);
 		}catch (Exception ex) {
 			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);

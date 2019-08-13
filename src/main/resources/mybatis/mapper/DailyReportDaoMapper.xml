@@ -29,7 +29,8 @@
           dr.fCreateTime   AS 'createTime'
         FROM t_daily_report dr
         WHERE dr.fStatus = 'Completed'
-            AND dr.fCompleteTime > CURRENT_DATE()
+        AND dr.fCompleteTime > CURRENT_DATE()
+        AND dr.fUserID = #{userName}
     </select>
 
     <select id="selectLastId" resultType="long">

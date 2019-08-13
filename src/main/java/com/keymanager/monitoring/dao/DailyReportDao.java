@@ -9,7 +9,7 @@ import java.util.List;
 public interface DailyReportDao extends BaseMapper<DailyReport> {
     DailyReport findByStatus(@Param("status") String status);
 
-    List<DailyReport> searchCurrentDateCompletedReports(@Param("terminalType") String terminalType);
+    List<DailyReport> searchCurrentDateCompletedReports(@Param("userName") String userName);
 
     long selectLastId();
 
