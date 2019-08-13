@@ -121,7 +121,7 @@
         </form>
     </div>
     <table style="font-size:12px; width: 100%;" id="headerTable">
-        <tr bgcolor="" height="22">
+        <tr height="22">
             <td width="35" align="center" rowspan="2">
                 <input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/>
             </td>
@@ -137,7 +137,7 @@
             <td width="420" colspan="6" align="center">服务器信息</td>
             <td width="80" align="center" rowspan="2">操作</td>
         </tr>
-        <tr height="23">
+        <tr height="23" style="background-color: #ADD1FF">
             <td width="70" align="center">网站域名</td>
             <td width="70" align="center">销售网站类型</td>
             <td width="70" align="center">友情链接</td>
@@ -614,14 +614,13 @@
 
     function selectDatabaseStatus(){
         var databaseStatus = $("#databaseStatus_bak").val();
-        var osel=document.getElementById("databaseStatus"); //得到select的ID
-        var opts=osel.getElementsByTagName("option");//得到数组option
+        var dbs = $("#databaseStatus");
         if(databaseStatus=="" || databaseStatus == null){
-            opts[0].selected = true;
+            dbs.val("");
         }else if(databaseStatus == "0"){
-            opts[1].selected = true;
+            dbs.val("0");
         }else{
-            opts[2].selected = true;
+            dbs.val("1");
         }
     }
 
