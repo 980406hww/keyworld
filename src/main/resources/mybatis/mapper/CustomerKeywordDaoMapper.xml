@@ -1657,7 +1657,8 @@
         AND ck.fOptimizeGroupName LIKE '${groupName}%'
         AND ck.fCapturePositionQueryTime &gt;= CURRENT_DATE()
     </select>
-    <select id="getCrawlRankKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeyWordCrawlRankdVO">
+
+    <select id="getCrawlRankKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeyWordCrawlRankVO">
         SELECT
             ck.fUuid AS 'uuid',
             ck.fTerminalType AS 'terminalType',

@@ -34,6 +34,17 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
+	<!--缓存需抓取排名的关键字信息到队列中-->
+	<bean id="cronTriggerCacheCrawlRankCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerCacheCrawlRankCustomerKeywordSchedule"/>
+		<property name="cronExpression" value="0 0/3 * * * ?" />
+	</bean>
+
+	<bean id="cronTriggerCacheCrawlRankCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cacheCrawlRankCustomerKeywordSchedule" />
+		<property name="concurrent" value="false" />
+	</bean>
+
 	<!--缓存检查收录的关键字信息到队列中-->
 	<bean id="cronTriggerCacheCheckingEnteredCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerCacheCheckingEnteredCustomerKeywordSchedule"/>
@@ -42,18 +53,6 @@
 
 	<bean id="cronTriggerCacheCheckingEnteredCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="cacheCheckingEnteredCustomerKeywordSchedule" />
-		<property name="targetMethod" value="runTask" />
-		<property name="concurrent" value="false" />
-	</bean>
-
-	<!--缓存需抓取排名的关键字信息到队列中-->
-	<bean id="cronTriggerCacheCrawlRankCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="cronTriggerCacheCheckingEnteredCustomerKeywordSchedule"/>
-		<property name="cronExpression" value="0 0/3 * * * ?" />
-	</bean>
-
-	<bean id="cronTriggerCacheCheckingEnteredCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="cacheCrawlRankCustomerKeywordSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>
