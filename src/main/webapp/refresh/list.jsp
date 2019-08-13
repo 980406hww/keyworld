@@ -55,7 +55,7 @@
 			<td align="center" width=80>没有刷量</td>
 			<td align="center" width=80>待刷数</td>
 			<td align="center" width=80>无效刷量</td>
-			<td align="center" width=80>失败关键字</td>
+			<td align="center" width=80>失败数</td>
 			<td align="center" width=80>无效占比</td>
 			<td align="center" width=60>总次数</td>
 			<td align="center" width=80>已刷次数</td>
