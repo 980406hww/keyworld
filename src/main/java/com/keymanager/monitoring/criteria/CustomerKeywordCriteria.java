@@ -35,7 +35,7 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String displayStop;//显示下架
     private String orderNumber;//订单号
     private String remarks;//备注
-    private String enteredKeywordRemarks; //收录备注
+    private String failedCause; // 失败原因
     private String machineGroup;//机器分组搜索条件
 
     private String orderingElement;
@@ -390,12 +390,12 @@ public class CustomerKeywordCriteria extends BaseCriteria{
         this.excludeUrl = excludeUrl;
     }
 
-    public String getEnteredKeywordRemarks () {
-        return enteredKeywordRemarks;
+    public String getFailedCause() {
+        return failedCause;
     }
 
-    public void setEnteredKeywordRemarks (String enteredKeywordRemarks) {
-        this.enteredKeywordRemarks = enteredKeywordRemarks;
+    public void setFailedCause(String failedCause) {
+        this.failedCause = failedCause;
     }
 
     public String getMachineGroup() {

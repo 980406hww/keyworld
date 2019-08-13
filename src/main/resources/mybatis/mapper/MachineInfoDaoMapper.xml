@@ -522,7 +522,7 @@
         WHERE cs.fValid = 1
         <if test="machineGroupWorkInfoCriteria.terminalType!=null and machineGroupWorkInfoCriteria.terminalType!=''">AND cs.fTerminalType = #{machineGroupWorkInfoCriteria.terminalType}</if>
         <if test="machineGroupWorkInfoCriteria.machineGroup!=null and machineGroupWorkInfoCriteria.machineGroup!=''">
-            AND cs.fGroup like '${machineGroupWorkInfoCriteria.machineGroup}%'
+            AND cs.fMachineGroup like '${machineGroupWorkInfoCriteria.machineGroup}%'
             AND EXISTS (SELECT 1 FROM t_customer_keyword ck WHERE ck.fType = #{machineGroupWorkInfoCriteria.entryType} AND ck.fMachineGroup like '${machineGroupWorkInfoCriteria.machineGroup}%')
         </if>
         GROUP BY cs.fMachineGroup, cs.fTerminalType
@@ -536,4 +536,23 @@
         </where>
         GROUP BY mi.fMachineGroup, mi.fTerminalType ORDER BY mi.fMachineGroup
     </select>
+
+    <update id="updateMachine">
+        UPDATE t_machine_info
+        <set>
+            <if test="city!=null and city!=''">
+                fCity=#{city},
+            </if>
+             <if test="version!=null and version!=''">
+                fVersion=#{version},
+            </if>
+             <if test="freeSpace!=null and freeSpace!=''">
+                 fFreeSpace=#{freeSpace},
+            </if>
+             <if test="runningProgramType!=null and runningProgramType!=''">
+                 fRunningProgramType=#{runningProgramType},
+            </if>
+        </set>
+        WHERE fClientID = #{clientID}
+    </update>
 </mapper>

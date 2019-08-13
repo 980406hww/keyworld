@@ -91,8 +91,8 @@ public class Constants {
     public final static String CONFIG_KEY_EXTERNALUSER = "ExternalUser";
     public final static String CONFIG_VALUE_EXTERNALUSER = "externaluser";
     public final static String CONFIG_TYPE_SCREENED_WEBSITE = "ScreenedWebsite";
-    public final static String CONFIG_TYPE_NOENTEREDKEYWORDSCHEDULE_SWITCH = "NoEnteredKeywordScheduleSwitch";
-    public final static String CONFIG_KEY_SWITCHNUMBER = "SwitchNumber";
+    public final static String CONFIG_TYPE_NO_ENTERED_KEYWORD_SCHEDULE_SWITCH = "NoEnteredKeywordScheduleSwitch";
+    public final static String CONFIG_KEY_SWITCH_NUMBER = "SwitchNumber";
     public final static String CONFIG_TYPE_MAX_INVALID_COUNT = "MaxInvalidCount";
     public final static String CONFIG_TYPE_INDUSTRY_TEL_REG = "IndustryTelReg";
     public final static String CONFIG_KEY_INDUSTRY_TEL_REG = "IndustryTelReg";
@@ -188,9 +188,6 @@ public class Constants {
         QZSETTING_STATUS_LIST.add("Completed");
         QZSETTING_STATUS_LIST.add("DownloadTimesUsed");
     }
-
-    public final static String CONFIG_TYPE_NO_ENTERED_KEYWORD = "NoEnteredKeyword";
-    public final static String CONFIG_KEY_NO_ENTERED_KEYWORD_REMARKS = "Remarks";
 
     public final static Map<String, String> QZ_RANK_STANDARD_SPECIES_MAP = new LinkedHashMap<>();
     static {

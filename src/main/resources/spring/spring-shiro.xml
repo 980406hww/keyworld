@@ -104,6 +104,7 @@
 				/webhooks = anon
 				/external/** = anon
 				/login = anon
+				/internal/useronline/** = anon
 				/internal/terminalSetting/** = anon
 				/internal/user/** = anon
 				/tj.js =anon
@@ -140,7 +141,11 @@
 
 		<property name="sessionIdCookie" ref="sessionIdCookie"/>
 		<property name="sessionIdCookieEnabled" value="true"/>
+		<!-- 设置监听器 -->
+		<property name="sessionListeners" ref="shiroSessionListener"/>
 	</bean>
+
+	<bean id="shiroSessionListener" class="com.keymanager.monitoring.common.shiro.listener.ShiroSessionListener" />
 
 	<!-- 指定本系统SESSIONID, 默认为: JSESSIONID 问题: 与SERVLET容器名冲突, 如JETTY, TOMCAT 等默认JSESSIONID,
         当跳出SHIRO SERVLET时如ERROR-PAGE容器会为JSESSIONID重新分配值导致登录会话丢失! -->
@@ -149,11 +154,7 @@
 	</bean>
 
 	<!-- 会话DAO 用于会话的CRUD -->
-	<bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
-		<!-- Session缓存名字，默认就是shiro-activeSessionCache -->
-		<property name="activeSessionsCacheName" value="activeSessionCache"/>
-		<property name="cacheManager" ref="shiroSpringCacheManager"/>
-	</bean>
+	<bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.MemorySessionDAO"/>
 
 	<!-- 在方法中 注入  securityManager ，进行代理控制 -->
 	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">

@@ -47,6 +47,7 @@
         <if test="customerKeywordCriteria.gtOptimizePlanCount != null">AND ck.fOptimizePlanCount &gt;= #{customerKeywordCriteria.gtOptimizePlanCount} </if>
         <if test="customerKeywordCriteria.ltOptimizePlanCount != null">AND ck.fOptimizePlanCount &lt;= #{customerKeywordCriteria.ltOptimizePlanCount} </if>
         <if test="customerKeywordCriteria.remarks != null and customerKeywordCriteria.remarks != ''">AND ck.fRemarks like '%${customerKeywordCriteria.remarks}%' </if>
+        <if test="customerKeywordCriteria.failedCause != null and customerKeywordCriteria.failedCause != ''">AND ck.fFailedCause = #{customerKeywordCriteria.failedCause} </if>
         <if test="customerKeywordCriteria.enteredKeywordRemarks != null and customerKeywordCriteria.enteredKeywordRemarks != ''">AND ck.fEnteredKeywordRemarks like '%${customerKeywordCriteria.enteredKeywordRemarks}%' </if>
         <if test="customerKeywordCriteria.keywordEffect != null and customerKeywordCriteria.keywordEffect != ''">AND ck.fKeywordEffect = #{customerKeywordCriteria.keywordEffect} </if>
         <if test="customerKeywordCriteria.gtCurrentIndexCount != null">AND ck.fCurrentIndexCount &gt;= #{customerKeywordCriteria.gtCurrentIndexCount} </if>
@@ -357,7 +358,7 @@
         ck.fPaymentStatus	AS	'paymentStatus',
         ck.fOrderNumber	AS	'orderNumber',
         ck.fRemarks	AS	'remarks',
-        ck.fEnteredKeywordRemarks AS 'enteredKeywordRemarks'
+        ck.fFailedCause AS 'failedCause'
         FROM
         t_customer_keyword ck,
         t_customer c
@@ -421,7 +422,7 @@
         ck.fCollectMethod	AS	'collectMethod',
         ck.fOrderNumber	AS	'orderNumber',
         ck.fRemarks	AS	'remarks',
-        ck.fEnteredKeywordRemarks AS 'enteredKeywordRemarks'
+        ck.fFailedCause AS 'failedCause'
         FROM
         t_customer_keyword ck,
         t_customer c
@@ -1422,61 +1423,37 @@
         </foreach>
         AND ck.fUrl like '%${qzSettingExcludeCustomerKeywordsCriteria.domain}%'
     </update>
-    
-    <update id="updateNoEnteredKeywordGroupName">
-        UPDATE t_customer_keyword ck
-        SET
-           ck.fOptimizeGroupName = CONCAT('no_', fOptimizeGroupName)
-        WHERE ck.fOptimizedCount = 0
-        AND ck.fInvalidRefreshCount > 1
-        AND ck.fStatus = 1
-        AND ck.fType = 'qz'
-        AND ck.fCapturedTitle = 0
-        AND ck.fOptimizeGroupName NOT LIKE 'no_%'
-        AND ck.fOptimizeGroupName NOT IN ('stop','zanting','ZANTING','sotp')
-        LIMIT 10000
-    </update>
 
-    <select id="getNoEnteredKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeywordEnteredVO">
+    <select id="getCheckEnteredKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeywordEnteredVO">
         SELECT
-            ck.fUuid AS	'uuid',
-            ck.fTerminalType AS	'terminalType',
-            ck.fTitle AS 'title',
-            ck.fOptimizeGroupName AS 'optimizeGroupName',
-            ck.fKeyword	AS 'keyword',
-            ck.fUrl	AS 'url',
-            ck.fSearchEngine AS	'searchEngine',
-            ck.fCaptureTitleQueryTime AS 'captureTitleQueryTime'
-        FROM
-            t_customer_keyword ck
-        WHERE
-            ck.fOptimizeGroupName like 'no_%'
+            ck.fUuid          AS 'uuid',
+            ck.fTerminalType  AS 'terminalType',
+            ck.fTitle         AS 'title',
+            ck.fKeyword	      AS 'keyword',
+            ck.fUrl	          AS 'url',
+            ck.fSearchEngine  AS 'searchEngine',
+            ck.fBearPawNumber AS 'bearPawNumber'
+        FROM t_customer_keyword ck
+        WHERE ck.fOptimizedCount = 0
+        AND ck.fInvalidRefreshCount &gt;= 4
         AND ck.fStatus = 1
-        AND ck.fSearchEngine = #{searchEngine}
-        AND ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(CURDATE(),INTERVAL 7 DAY)
-        ORDER BY ck.fVerifyEnteredKeywordTime
-        LIMIT 100
+        AND (ck.fVerifyEnteredKeywordTime IS NULL OR (ck.fVerifyEnteredKeywordTime &lt; CURRENT_DATE()) OR (ck.fFailedCause = '爬取中' AND ck.fVerifyEnteredKeywordTime &lt;= DATE_SUB(NOW(), INTERVAL 20 MINUTE)))
+        LIMIT 500
     </select>
 
     <update id="updateVerifyEnteredKeywordTimeByUuids">
         UPDATE t_customer_keyword
-        SET fVerifyEnteredKeywordTime = NOW()
+        SET fVerifyEnteredKeywordTime = NOW(), fFailedCause = '爬取中'
         WHERE fUuid IN
         <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
             #{uuid}
         </foreach>
     </update>
 
-    <update id="updateNoEnteredKeywords">
+    <update id="updateCheckingEnteredKeywords">
         <foreach collection="customerKeywords" item="customerKeyword" separator=";">
             UPDATE t_customer_keyword
-            <set>
-                fEnteredKeywordRemarks = #{customerKeyword.enteredKeywordRemarks}
-                <if test="customerKeyword.capturedTitle == 1">
-                    ,fTitle = NULL, fCaptureTitleQueryTime = NULL, fCapturedTitle = 0
-                    ,fOptimizeGroupName = #{customerKeyword.optimizeGroupName}
-                </if>
-            </set>
+            SET fFailedCause = #{customerKeyword.failedCause}
             WHERE fUuid = #{customerKeyword.uuid}
         </foreach>
     </update>
@@ -1680,7 +1657,6 @@
         AND ck.fOptimizeGroupName LIKE '${groupName}%'
         AND ck.fCapturePositionQueryTime &gt;= CURRENT_DATE()
     </select>
-
     <select id="getCrawlRankKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeyWordCrawlRankdVO">
         SELECT
             ck.fUuid AS 'uuid',
@@ -1705,7 +1681,6 @@
         )
         LIMIT 3000
     </select>
-
     <update id="updateCrawlRankKeywordTimeByUuids">
         UPDATE t_customer_keyword
         SET
@@ -1716,7 +1691,6 @@
             #{uuid}
         </foreach>
     </update>
-
     <select id="getQZSettingKeywordCount" resultType="java.lang.Integer">
         SELECT COUNT(1)
         FROM t_customer_keyword ck

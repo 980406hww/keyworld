@@ -1,18 +1,15 @@
 package com.keymanager.monitoring.vo;
 
-import java.util.Date;
-
 public class CustomerKeywordEnteredVO {
 
     private long uuid;
     private String terminalType;
-    private String optimizeGroupName;
     private String searchEngine;
     private String keyword;
     private String url;
-    private Date captureTitleQueryTime;
-    private String enteredKeywordRemarks;
-
+    private String bearPawNumber;
+    private String title;
+    private String failedCause;
 
     public String getTitle() {
         return title;
@@ -22,8 +19,6 @@ public class CustomerKeywordEnteredVO {
         this.title = title;
     }
 
-    private String title;
-
     public String getUrl() {
         return url;
     }
@@ -32,21 +27,12 @@ public class CustomerKeywordEnteredVO {
         this.url = url;
     }
 
-
-    public String getOptimizeGroupName() {
-        return optimizeGroupName;
+    public String getFailedCause() {
+        return failedCause;
     }
 
-    public void setOptimizeGroupName(String optimizeGroupName) {
-        this.optimizeGroupName = optimizeGroupName;
-    }
-
-    public String getEnteredKeywordRemarks() {
-        return enteredKeywordRemarks;
-    }
-
-    public void setEnteredKeywordRemarks(String enteredKeywordRemarks) {
-        this.enteredKeywordRemarks = enteredKeywordRemarks;
+    public void setFailedCause(String failedCause) {
+        this.failedCause = failedCause;
     }
 
     public long getUuid() {
@@ -81,11 +67,11 @@ public class CustomerKeywordEnteredVO {
         this.keyword = keyword;
     }
 
-    public Date getCaptureTitleQueryTime() {
-        return captureTitleQueryTime;
+    public String getBearPawNumber() {
+        return bearPawNumber;
     }
 
-    public void setCaptureTitleQueryTime(Date captureTitleQueryTime) {
-        this.captureTitleQueryTime = captureTitleQueryTime;
+    public void setBearPawNumber(String bearPawNumber) {
+        this.bearPawNumber = bearPawNumber;
     }
 }

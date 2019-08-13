@@ -1972,7 +1972,8 @@
 			<thead>
 				<tr>
 					<td>序号</td>
-					<td>记事者</td>
+                    <td>记录者</td>
+                    <td>内容</td>
 					<td>日期</td>
 					<td>操作</td>
 				</tr>

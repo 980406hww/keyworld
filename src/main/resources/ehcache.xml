@@ -20,7 +20,7 @@
            statistics="true">
     </cache>
     
-    <cache name="activeSessionCache"
+    <cache name="shiro-activeSessionCache"
            maxEntriesLocalHeap="2000"
            eternal="false"
            timeToIdleSeconds="1800"
