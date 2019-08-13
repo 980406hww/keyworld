@@ -36,6 +36,9 @@
         <if test="terminalType != null">
             AND qzkri.fTerminalType = #{terminalType}
         </if>
+        <if test="websiteType != null">
+            AND qzkri.fWebSiteType = #{websiteType}
+        </if>
         ORDER BY qzkri.fCreateTime
     </select>
 

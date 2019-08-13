@@ -890,4 +890,7 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         return machineInfoDao.searchMachineInfoMachineGroupSummaryVO(machineGroup,terminalType);
     }
 
+    public void updateMachine(String clientID, String city, String version, String freeSpace, String runningProgramType) {
+        machineInfoDao.updateMachine(clientID,city,version,freeSpace,runningProgramType);
+    }
 }

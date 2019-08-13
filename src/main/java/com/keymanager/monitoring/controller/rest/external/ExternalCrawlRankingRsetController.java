@@ -5,6 +5,7 @@ import com.keymanager.monitoring.criteria.CaptureRankJobCriteria;
 import com.keymanager.monitoring.criteria.ExternalCaptureJobCriteria;
 import com.keymanager.monitoring.entity.CaptureRankJob;
 import com.keymanager.monitoring.service.CaptureRankJobService;
+import com.keymanager.monitoring.service.CustomerKeywordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.Map;
 
 /**
  * Created by shunshikj24 on 2017/9/27.
@@ -25,6 +27,9 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
 
     @Autowired
     private CaptureRankJobService captureRankJobService;
+
+    @Autowired
+    private CustomerKeywordService customerKeywordService;
 
     @RequestMapping(value = "/getCaptureRankJob", method = RequestMethod.POST)
     public ResponseEntity<?> getCaptureRankJob(@RequestBody ExternalCaptureJobCriteria captureJobCriteria) {
@@ -116,6 +121,23 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/getCrawlRankKeyword", method = RequestMethod.POST)
+    public ResponseEntity<?> getCrawlRankKeyword(@RequestBody Map<String, Object> requestMap) {
+        try {
+            String userName = (String) requestMap.get("userName");
+            String password = (String) requestMap.get("password");
+
+            if (validUser(userName, password)) {
+                return new ResponseEntity<Object>(customerKeywordService.getCrawlRankKeyword(), HttpStatus.OK);
+            }
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.error("getNoEnteredKeyword:  " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }

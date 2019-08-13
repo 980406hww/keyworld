@@ -294,7 +294,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     }
 
     @RequestMapping(value = "/fetchCustomerKeywordZip", method = RequestMethod.GET)
-    public ResponseEntity<?> fetchCustoemrKeywordForOptimization(HttpServletRequest request) throws Exception {
+    public ResponseEntity<?> fetchCustomerKeywordForOptimization(HttpServletRequest request) throws Exception {
         long startMilleSeconds = System.currentTimeMillis();
         String clientID = request.getParameter("clientID");
         String userName = request.getParameter("userName");
@@ -309,7 +309,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 String s = "";
                 if(machineInfo != null) {
                     String terminalType = machineInfo.getTerminalType();
-                    OptimizationVO optimizationVO = customerKeywordService.fetchCustoemrKeywordForOptimization(machineInfo);
+                    OptimizationVO optimizationVO = customerKeywordService.fetchCustomerKeywordForOptimization(machineInfo);
                     if (optimizationVO != null) {
                         machineInfoService.updateMachineInfoVersion(clientID, version, optimizationVO != null);
                         byte[] compress = AESUtils.compress(AESUtils.encrypt(optimizationVO).getBytes());

@@ -361,6 +361,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         captureRankJob.setCreateBy(userName);
         captureRankJob.setUpdateBy(userName);
         captureRankJob.setRankJobType("Common");// 配上QZSettingUuid确定为整站任务
+        captureRankJob.setRankJobArea("China");
         captureRankJob.setUpdateTime(new Date());
         captureRankJobDao.insert(captureRankJob);
     }
@@ -371,5 +372,9 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
 
     public void updateCaptureRankJobsStatus(List<Long> uuids, String updateBy, boolean captureRankJobStatus) {
         captureRankJobDao.updateCaptureRankJobsStatus(uuids, updateBy, captureRankJobStatus);
+    }
+
+    public CaptureRankJob checkingCaptureRankJobCompleted(ExternalCaptureJobCriteria captureJobCriteria) {
+        return captureRankJobDao.provideCaptureRankJob(1, captureJobCriteria);
     }
 }
