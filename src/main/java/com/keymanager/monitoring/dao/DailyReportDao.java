@@ -15,5 +15,5 @@ public interface DailyReportDao extends BaseMapper<DailyReport> {
 
     void deleteDailyReportFromAWeekAgo();
 
-    DailyReport fetchDailyReportTriggeredInToday(@Param("triggerMode") String triggerMode);
+    List<DailyReport> fetchDailyReportTriggeredInToday(@Param("userID") String userID, @Param("triggerMode") String triggerMode);
 }

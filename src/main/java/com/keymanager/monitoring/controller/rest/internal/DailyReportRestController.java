@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/internal/dailyReport")
@@ -48,7 +49,12 @@ public class DailyReportRestController extends SpringMVCBaseController {
 	public ResponseEntity<?> triggerReportGeneration(HttpServletRequest request) throws Exception{
 		String returnValue = null;
 		try {
-			dailyReportService.removeDailyReportInToday();
+			String username = null;
+			Set<String> roles = getCurrentUser().getRoles();
+			if(!roles.contains("DepartmentManager")) {
+				username = (String) request.getSession().getAttribute("username");
+			}
+			dailyReportService.removeDailyReportInToday(username);
 			returnValue = "{\"status\":true}";
 		}catch(Exception ex){
 			logger.error(ex.getMessage());

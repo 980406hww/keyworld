@@ -54,6 +54,6 @@
         FROM t_daily_report dr
         WHERE dr.fTriggerMode = #{triggerMode}
         AND dr.fCreateTime > CURRENT_DATE()
-        limit 1
+        <if test="userID != null and userID != ''">AND dr.fUserID = #{userID} limit 1</if>
     </select>
 </mapper>

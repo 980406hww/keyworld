@@ -66,10 +66,10 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 	}
 
 	public void autoTriggerDailyReport(){
-		if(autoTriggerDailyReportCondition() && dailyReportDao.fetchDailyReportTriggeredInToday(DailyReportTriggerModeEnum.Auto.name()) == null){
-			List<String> userIDs = customerService.getActiveDailyReportIdentifyUserIDs();
-			if (CollectionUtils.isNotEmpty(userIDs)) {
-				for (String userID : userIDs) {
+		List<String> userIDs = customerService.getActiveDailyReportIdentifyUserIDs();
+		if (CollectionUtils.isNotEmpty(userIDs)) {
+			for (String userID : userIDs) {
+				if(autoTriggerDailyReportCondition() && CollectionUtils.isEmpty(dailyReportDao.fetchDailyReportTriggeredInToday(userID, DailyReportTriggerModeEnum.Auto.name()))){
 					long dailyReportUuid = createDailyReport(null, DailyReportTriggerModeEnum.Auto.name(), userID);
 
 					Config dailyReportType = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_TYPE);
@@ -255,11 +255,13 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 		dailyReportDao.deleteDailyReportFromAWeekAgo();
 	}
 
-	public void removeDailyReportInToday(){
-		DailyReport dailyReport = dailyReportDao.fetchDailyReportTriggeredInToday(DailyReportTriggerModeEnum.Auto.name());
-		if(dailyReport != null){
-			dailyReportItemService.deleteDailyReportItems(dailyReport.getUuid());
-			dailyReportDao.deleteById(dailyReport.getUuid());
+	public void removeDailyReportInToday(String userID){
+		List<DailyReport> dailyReports = dailyReportDao.fetchDailyReportTriggeredInToday(userID, DailyReportTriggerModeEnum.Auto.name());
+		if (CollectionUtils.isNotEmpty(dailyReports)) {
+			for (DailyReport dailyReport : dailyReports) {
+				dailyReportItemService.deleteDailyReportItems(dailyReport.getUuid());
+				dailyReportDao.deleteById(dailyReport.getUuid());
+			}
 		}
 	}
 }
