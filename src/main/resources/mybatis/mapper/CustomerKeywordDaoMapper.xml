@@ -1661,7 +1661,6 @@
         WHERE ck.fCustomerUuid = #{customerUuid}
         AND ck.fStatus = 1
         AND ck.fOptimizeGroupName LIKE '${groupName}%'
-        AND ck.fCapturePositionQueryTime &gt;= CURRENT_DATE()
     </select>
 
     <select id="getCrawlRankKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeyWordCrawlRankVO">
