@@ -318,25 +318,38 @@ function CustomerKeywordBatchUpdate(entryType) {
         onBeforeClose:function(){
             $("#KeywordDiv").show();
         },
-        buttons: [{
-            text: '保存',
-            iconCls: 'icon-ok',
-            handler: function () {
-                if(isChecked("keyword")=="1" && $("#saveCustomerKeywordDialog").find("input[name='keyword']").val()==""){
-                    alert("关键字不能为空");
-                    return;
-                }else {
-                    saveChangeSetting(CustomerUuids);
+        buttons: [
+            {
+                text: '清除失败原因',
+                iconCls: 'icon-ok',
+                handler: function () {
+                    parent.$.messager.confirm('确认', "确实要清除选中关键字的失败原因吗?", function (b) {
+                        if (b) {
+                            saveChangeSetting(CustomerUuids, true);
+                        }
+                    });
                 }
-            }
-        },
+            },
+            {
+                text: '保存',
+                iconCls: 'icon-ok',
+                handler: function () {
+                    if(isChecked("keyword")=="1" && $("#saveCustomerKeywordDialog").find("input[name='keyword']").val()==""){
+                        alert("关键字不能为空");
+                        return;
+                    }else {
+                        saveChangeSetting(CustomerUuids, false);
+                    }
+                }
+            },
             {
                 text: '取消',
                 iconCls: 'icon-cancel',
                 handler: function () {
                     $("#saveCustomerKeywordDialog").dialog("close");
                 }
-            }]
+            }
+        ]
     });
     $('#saveCustomerKeywordDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
@@ -370,7 +383,7 @@ function checkItem(self) {
         $(self).css("color", "black");
     }
 }
-function saveChangeSetting(CustomerUuids){
+function saveChangeSetting(CustomerUuids, updateFailedCauseFlag){
     var KeywordDialogDiv = $("#saveCustomerKeywordDialog");
     var keywordStatus = {};
     keywordStatus.keyword = KeywordDialogDiv.find("#keyword").val();
@@ -454,6 +467,9 @@ function saveChangeSetting(CustomerUuids){
         keywordChecks.operateRelatedKeyword =isChecked("operateRelatedKeyword") === '1' ? 1 : 0;
         keywordChecks.operateRecommendKeyword = isChecked("operateRecommendKeyword") === '1' ? 1 : 0;
         keywordChecks.operateSearchAfterSelectKeyword = isChecked("operateSearchAfterSelectKeyword") === '1' ? 1 : 0;
+        if (updateFailedCauseFlag) {
+            keywordChecks.failedCause = 1;
+        }
         var postData = {};
         postData.keywordChecks = keywordChecks;
         postData.keywordStatus = keywordStatus;
