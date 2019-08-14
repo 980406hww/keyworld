@@ -38,6 +38,7 @@ public class Constants {
 
     public final static String CONFIG_TYPE_CAPTURE_RANKING = "CaptureRanking";
     public final static String CONFIG_TYPE_RANK_JOB_CITY = "RankJobCity";
+    public final static String CONFIG_TYPE_WEBSITE_CHECK_SIGN = "WebsiteCheckSign";
 
     public final static String CONFIG_KEY_VMWARE = "VMWARE";
     public final static String CONFIG_TYPE_OPTIMIZATION_DATE = "OptimizationDate";

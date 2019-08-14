@@ -388,7 +388,13 @@
             OR qs.fCrawlerTime IS NULL
             OR (qs.fCrawlerStatus = 'finish' AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL #{crawlerHour} HOUR))
         )
-        AND EXISTS(SELECT 1 FROM t_qz_keyword_rank_info qk WHERE qk.fQZSettingUuid = qs.fUuid AND qk.fWebsiteType <![CDATA[<>]]> 'designationWord')
+        AND EXISTS(
+            SELECT 1
+            FROM t_qz_keyword_rank_info qk
+            WHERE qk.fQZSettingUuid = qs.fUuid
+            AND qk.fWebsiteType <![CDATA[<>]]> 'designationWord'
+            AND qk.fWebsiteType <![CDATA[<>]]> 'xt'
+        )
         ORDER BY qs.fCreateTime DESC
         LIMIT #{taskNumber}
     </select>
@@ -491,4 +497,13 @@
         </choose>
     </update>
 
+    <select id="searchAllQZSettingForGenerateRankingCurve" resultType="com.keymanager.monitoring.entity.QZSetting">
+        SELECT
+            qs.fUuid         AS 'uuid',
+            qs.fCustomerUuid AS 'customerUuid',
+            qs.fPcGroup      AS 'pcGroup',
+            qs.fPhoneGroup   AS 'phoneGroup'
+        FROM t_qz_setting qs
+        WHERE EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = qs.fCustomerUuid)
+    </select>
 </mapper>

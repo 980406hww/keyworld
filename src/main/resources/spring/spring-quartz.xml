@@ -27,6 +27,8 @@
 				<ref bean="cronTriggerGenerateDailyReport" />
 				<ref bean="cronAutoTriggerDailyReport" />
 				<ref bean="cronTriggerSwitchClientStatusGroup" />
+				<ref bean="cronTriggerGenerateRankingCurve" />
+				<ref bean="cronTriggerGenerateQZSettingKeywordCountCurve" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -306,4 +308,27 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
+	<!--每隔一小时更新一次站点排名曲线-->
+	<bean id="cronTriggerGenerateRankingCurve" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronJobDetailGenerateRankingCurve" />
+		<property name="cronExpression" value="0 0 8-23/2  * * ?" />
+	</bean>
+
+	<bean id="cronJobDetailGenerateRankingCurve" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="generateRankingCurveSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--每天更新一次站点操作词数曲线-->
+	<bean id="cronTriggerGenerateQZSettingKeywordCountCurve" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronJobDetailGenerateQZSettingKeywordCountCurve" />
+		<property name="cronExpression" value="0 0 22 * * ?" />
+	</bean>
+
+	<bean id="cronJobDetailGenerateQZSettingKeywordCountCurve" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="generateQZSettingKeywordCountCurveSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
 </beans>

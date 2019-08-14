@@ -1080,3 +1080,4 @@ function synchronousAdvertising() {
     $("#synchronousAdvertisingDialog").dialog("open");
     $('#synchronousAdvertisingDialog').window("resize",{top:$(document).scrollTop() + 100});
 }
+

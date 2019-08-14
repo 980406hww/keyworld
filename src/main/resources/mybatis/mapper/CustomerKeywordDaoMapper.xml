@@ -1650,4 +1650,59 @@
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 
+    <select id="getCustomerKeywordRankingCount" resultType="com.keymanager.monitoring.vo.CustomerKeywordRankingCountVO">
+        SELECT
+            COUNT((ck.fCurrentPosition BETWEEN 1 AND 10) OR NULL)  AS 'topTenNum',
+            COUNT((ck.fCurrentPosition BETWEEN 1 AND 20) OR NULL)  AS 'topTwentyNum',
+            COUNT((ck.fCurrentPosition BETWEEN 1 AND 30) OR NULL)  AS 'topThirtyNum',
+            COUNT((ck.fCurrentPosition BETWEEN 1 AND 40) OR NULL)  AS 'topFortyNum',
+            COUNT((ck.fCurrentPosition BETWEEN 1 AND 50) OR NULL)  AS 'topFiftyNum'
+        FROM t_customer_keyword ck
+        WHERE ck.fCustomerUuid = #{customerUuid}
+        AND ck.fStatus = 1
+        AND ck.fOptimizeGroupName LIKE '${groupName}%'
+        AND ck.fCapturePositionQueryTime &gt;= CURRENT_DATE()
+    </select>
+
+    <select id="getCrawlRankKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeyWordCrawlRankVO">
+        SELECT
+            ck.fUuid AS 'uuid',
+            ck.fTerminalType AS 'terminalType',
+            ck.fTitle AS 'title',
+            ck.fKeyword AS 'keyword',
+            ck.fUrl AS 'url',
+            ck.fSearchEngine AS 'searchEngine',
+            ck.fBearPawNumber AS 'bearPawNumber'
+        FROM t_customer c
+        LEFT JOIN t_customer_keyword ck
+        ON ck.fCustomerUuid = c.fUuid
+        WHERE ck.fTerminalType = 'PC'
+        AND ck.fType = 'qz'
+        AND ck.fStatus = 1
+        AND ck.fSearchEngine = '百度'
+        AND ck.fMachineGroup &lt;&gt; 'Pause'
+        AND (
+            (ck.fCaptureStatus = 0 AND ck.fCapturePositionQueryTime &lt;= CURRENT_DATE())
+            OR
+            (ck.fCaptureStatus = 1 AND ck.fCapturePositionQueryTime &lt;=  DATE_SUB(NOW(), INTERVAL 30 MINUTE))
+        )
+        LIMIT 3000
+    </select>
+    <update id="updateCrawlRankKeywordTimeByUuids">
+        UPDATE t_customer_keyword
+        SET
+        fCapturePositionQueryTime = NOW(),
+        fCaptureStatus = 1
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
+    <select id="getQZSettingKeywordCount" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM t_customer_keyword ck
+        WHERE ck.fCustomerUuid = #{customerUuid}
+        AND ck.fStatus = 1
+        AND ck.fOptimizeGroupName LIKE '${groupName}%'
+    </select>
 </mapper>
