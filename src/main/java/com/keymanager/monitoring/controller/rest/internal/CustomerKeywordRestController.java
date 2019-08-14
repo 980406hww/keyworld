@@ -103,7 +103,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		Customer customer = customerService.getCustomerWithKeywordCount(terminalType, entryType, customerKeywordCriteria.getCustomerUuid(), loginName);
 		String orderElement = request.getParameter("orderingElement");
-		initOrderElemnet(orderElement, customerKeywordCriteria);
+		initOrderElement(orderElement, customerKeywordCriteria);
 		customerKeywordCriteria.setEntryType(entryType);
 		customerKeywordCriteria.setTerminalType(terminalType);
 		List<ServiceProvider> serviceProviders = serviceProviderService.searchServiceProviders();
@@ -128,7 +128,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		return modelAndView;
 	}
 
-	private void initOrderElemnet(String orderElement, CustomerKeywordCriteria customerKeywordCriteria){
+	private void initOrderElement(String orderElement, CustomerKeywordCriteria customerKeywordCriteria){
 		if(StringUtils.isNotEmpty(orderElement)){
 			switch (orderElement.charAt(0)){
 				case '0':
@@ -140,8 +140,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				case '3':
 					customerKeywordCriteria.setOrderingElement("fSequence");break;
 			}
-		}else{
-			orderElement = "0";
 		}
 	}
 
@@ -332,7 +330,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			String entryType = (String) request.getSession().getAttribute("entryType");
 			customerKeywordCriteria.setTerminalType(terminalType);
 			customerKeywordCriteria.setEntryType(entryType);
-			initOrderElemnet(customerKeywordCriteria.getOrderingElement(), customerKeywordCriteria);
+			initOrderElement(customerKeywordCriteria.getOrderingElement(), customerKeywordCriteria);
 			List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywordInfo(customerKeywordCriteria);
 			if (!Utils.isEmpty(customerKeywords)) {
 				CustomerKeywordInfoExcelWriter excelWriter = new CustomerKeywordInfoExcelWriter();
@@ -435,7 +433,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		String entryType = (String) session.getAttribute("entryType");
 		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		String orderElement = request.getParameter("orderingElement");
-		initOrderElemnet(orderElement, customerKeywordCriteria);
+		initOrderElement(orderElement, customerKeywordCriteria);
 		customerKeywordCriteria.setEntryType(entryType);
 		customerKeywordCriteria.setTerminalType(terminalType);
 		boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));

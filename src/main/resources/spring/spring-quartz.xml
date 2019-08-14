@@ -323,7 +323,7 @@
 	<!--每天更新一次站点操作词数曲线-->
 	<bean id="cronTriggerGenerateQZSettingKeywordCountCurve" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronJobDetailGenerateQZSettingKeywordCountCurve" />
-		<property name="cronExpression" value="0 0 22 * * ?" />
+		<property name="cronExpression" value="0 0 8,22 * * ?" />
 	</bean>
 
 	<bean id="cronJobDetailGenerateQZSettingKeywordCountCurve" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
