@@ -282,17 +282,11 @@ ul {
     color: #0c7df5;
 }
 
-.datalist-list .header span.fmtCreateDate {
-    position: absolute;
-    left: 1200px;
-    z-index: 1;
-}
-
 .datalist-list .header span.tagNames {
     position: absolute;
-    left: 900px;
+    left: 1000px;
     z-index: 1;
-    width: 330px;
+    width: 300px;
     color: #000000;
     max-width: 600px;
     overflow: hidden;
