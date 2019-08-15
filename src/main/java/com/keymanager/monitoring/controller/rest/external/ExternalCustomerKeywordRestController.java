@@ -231,33 +231,6 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/getCustomerKeyword", method = RequestMethod.GET)
-    public ResponseEntity<?> getCustomerKeywordForOptimization(HttpServletRequest request) throws Exception {
-        long startMilleSeconds = System.currentTimeMillis();
-        String clientID = request.getParameter("clientID");
-        String userName = request.getParameter("userName");
-        if(StringUtils.isBlank(userName)){
-            userName = request.getParameter("username");
-        }
-        String password = request.getParameter("password");
-        String version = request.getParameter("version");
-        try {
-            if (validUser(userName, password)) {
-                MachineInfo machineInfo = machineInfoService.selectById(clientID);
-                String terminalType = machineInfo.getTerminalType();
-
-                CustomerKeywordForOptimization customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimization(terminalType, clientID, version, true);
-                machineInfoService.updateMachineInfoVersion(clientID, version, customerKeywordForOptimization != null);
-                performanceService.addPerformanceLog(terminalType + ":getCustomerKeyword", System.currentTimeMillis() - startMilleSeconds, null);
-                return ResponseEntity.status(HttpStatus.OK).body(customerKeywordForOptimization);
-            }
-        }catch (Exception ex){
-            ex.printStackTrace();
-            logger.error("getCustomerKeyword:    " + ex.getMessage());
-        }
-        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-    }
-
     @RequestMapping(value = "/getCustomerKeywordZip", method = RequestMethod.GET)
     public ResponseEntity<?> getCustomerKeywordForOptimizationZip(HttpServletRequest request) throws Exception {
         long startMilleSeconds = System.currentTimeMillis();
