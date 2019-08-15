@@ -1,12 +1,14 @@
 package com.keymanager.monitoring.criteria;
 
 import com.keymanager.monitoring.entity.QZSetting;
+import com.keymanager.monitoring.vo.ExternalQzSettingVO;
 import com.keymanager.value.CustomerKeywordVO;
 
 import java.util.List;
 
 public class QZSettingCriteria extends BaseCriteria{
     private List<CustomerKeywordVO> customerKeywordVOs;
+    private ExternalQzSettingVO externalQzSettingVO;
     private QZSetting qzSetting;
     private boolean downloadTimesUsed;
 
@@ -18,12 +20,12 @@ public class QZSettingCriteria extends BaseCriteria{
         this.customerKeywordVOs = customerKeywordVOs;
     }
 
-    public QZSetting getQzSetting() {
-        return qzSetting;
+    public ExternalQzSettingVO getExternalQzSettingVO() {
+        return externalQzSettingVO;
     }
 
-    public void setQzSetting(QZSetting qzSetting) {
-        this.qzSetting = qzSetting;
+    public void setExternalQzSettingVO(ExternalQzSettingVO externalQzSettingVO) {
+        this.externalQzSettingVO = externalQzSettingVO;
     }
 
     public boolean isDownloadTimesUsed() {
@@ -32,5 +34,13 @@ public class QZSettingCriteria extends BaseCriteria{
 
     public void setDownloadTimesUsed(boolean downloadTimesUsed) {
         this.downloadTimesUsed = downloadTimesUsed;
+    }
+
+    public QZSetting getQzSetting() {
+        return qzSetting;
+    }
+
+    public void setQzSetting(QZSetting qzSetting) {
+        this.qzSetting = qzSetting;
     }
 }

@@ -506,4 +506,30 @@
         FROM t_qz_setting qs
         WHERE EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = qs.fCustomerUuid)
     </select>
+    
+    <select id="selectQZSettingForAutoOperate" resultType="com.keymanager.monitoring.vo.ExternalQzSettingVO">
+        SELECT
+            qzs.fUuid AS 'uuid',
+            qzs.fDomain AS 'domain',
+            qzs.fCustomerUuid AS 'customerUuid',
+            qzs.fType As 'type',
+	        qzs.fBearPawNumber AS 'bearPawNumber'
+        FROM t_qz_setting qzs
+        WHERE
+        (qzs.fUpdateStatus IS NULL
+            OR qzs.fUpdateEndTime IS NULL
+            OR (qzs.fUpdateStatus = 'Completed'
+            AND qzs.fUpdateEndTime &lt; DATE_SUB(CURRENT_DATE(), INTERVAL qzs.fUpdateInterval DAY))
+            OR (qzs.fUpdateStatus = 'Processing'
+            AND DATE_SUB(NOW(), INTERVAL 10 MINUTE) > qzs.fUpdateStartTime)
+            OR (qzs.fUpdateStatus = 'DownloadTimesUsed'
+            AND qzs.fUpdateEndTime &lt; CURRENT_DATE())
+        )
+        AND qzs.fType = 'qz'
+        AND qzs.fRenewalStatus = 1
+        AND qzs.fStatus = 1
+        AND qzs.fAutoCrawlKeywordFlag = 1
+        ORDER BY qzs.fUuid
+        LIMIT 1
+    </select>
 </mapper>

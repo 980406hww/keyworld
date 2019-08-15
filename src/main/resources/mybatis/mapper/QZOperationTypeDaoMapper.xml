@@ -93,4 +93,13 @@
         </choose>
         WHERE fUuid = #{uuid}
     </select>
+
+    <select id="getAllOperationChargeKeywordCountByQZSettingUuid" resultType="String">
+        SELECT
+            CONCAT(qzot.fOperationtype,"_",qzcr.fStandardSpecies,"_",IF(qzcr.fStartKeywordCount*3 &lt; 50,50,qzcr.fStartKeywordCount*3))
+        FROM t_qz_operation_type qzot , t_qz_charge_rule qzcr
+        WHERE qzot.fQZSettingUuid = #{qzSettingUuid}
+        AND qzot.fUuid = qzcr.fQZOperationTypeUuid
+        GROUP BY qzot.fUuid
+    </select>
 </mapper>

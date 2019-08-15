@@ -56,5 +56,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     void updateQZSettingRenewalStatus(@Param("uuids") List<Long> uuids, @Param("renewalStatus") Integer renewalStatus);
 
     List<QZSetting> searchAllQZSettingForGenerateRankingCurve();
+
+    ExternalQzSettingVO selectQZSettingForAutoOperate();
 }
 
