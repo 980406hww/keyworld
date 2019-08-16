@@ -30,7 +30,7 @@
         FROM t_daily_report dr
         WHERE dr.fStatus = 'Completed'
         AND dr.fCompleteTime > CURRENT_DATE()
-        AND dr.fUserID = #{userName}
+        <if test="userName != null and userName != ''">AND dr.fUserID = #{userName}</if>
     </select>
 
     <select id="selectLastId" resultType="long">

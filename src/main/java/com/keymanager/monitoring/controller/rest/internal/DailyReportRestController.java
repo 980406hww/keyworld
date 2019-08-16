@@ -3,6 +3,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportExcelWriter;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.Customer;
@@ -68,7 +69,8 @@ public class DailyReportRestController extends SpringMVCBaseController {
 	public ResponseEntity<?> searchCurrentDateCompletedReports(HttpServletRequest request) throws Exception{
 		try {
 			String userName = (String) request.getSession().getAttribute("username");
-			List<DailyReport> dailyReports = dailyReportService.searchCurrentDateCompletedReports(userName);
+			String entryType = (String) request.getSession().getAttribute("entryType");
+			List<DailyReport> dailyReports = dailyReportService.searchCurrentDateCompletedReports(EntryTypeEnum.bc.name().equalsIgnoreCase(entryType) ? null : userName);
 			return new ResponseEntity<Object>(dailyReports, HttpStatus.OK);
 		}catch (Exception ex) {
 			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
