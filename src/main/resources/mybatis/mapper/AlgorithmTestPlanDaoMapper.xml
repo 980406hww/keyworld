@@ -10,7 +10,8 @@
         <result column="fMachineGroup" property="machineGroup" />
         <result column="fTestIntervalDay" property="testIntervalDay" />
         <result column="fTestKeywordCount" property="testKeywordCount" />
-        <result column="fTestkeywordRankInterval" property="testkeywordRankInterval" />
+        <result column="fTestkeywordRankBegin" property="testkeywordRankBegin" />
+        <result column="fTestkeywordRankEnd" property="testkeywordRankEnd" />
         <result column="fOptimizePlanCount" property="optimizePlanCount" />
         <result column="fStatus" property="status" />
         <result column="fCreateTime" property="createTime" />
@@ -25,7 +26,8 @@
         atp.fMachineGroup AS machineGroup,
         atp.fTestIntervalDay AS testIntervalDay,
         atp.fTestKeywordCount AS testKeywordCount,
-        atp.fTestkeywordRankInterval AS testkeywordRankInterval,
+        atp.fTestkeywordRankBegin AS testkeywordRankBegin,
+        atp.fTestkeywordRankEnd AS testkeywordRankEnd,
         atp.fOptimizePlanCount AS optimizePlanCount,
         atp.fStatus AS status,
         atp.fCreateTime AS createTime,
@@ -38,13 +40,13 @@
         t_algorithm_test_plan atp
         <where>
             <if test="algorithmTestPlanSearchCriteria.algorithmTestPlanName!=null and algorithmTestPlanSearchCriteria.algorithmTestPlanName!=''">
-                AND atp.fAlgorithmTestPlanName LIKE concat('%',#{algorithmTestPlanSearchCriteria.algorithmTestPlanName},'%')
+                AND atp.fAlgorithmTestPlanName LIKE concat(#{algorithmTestPlanSearchCriteria.algorithmTestPlanName},'%')
             </if>
             <if test="algorithmTestPlanSearchCriteria.operationCombineName!=null and algorithmTestPlanSearchCriteria.operationCombineName!=''">
-                AND atp.fOperationCombineName LIKE concat('%',#{algorithmTestPlanSearchCriteria.operationCombineName},'%')
+                AND atp.fOperationCombineName LIKE concat(#{algorithmTestPlanSearchCriteria.operationCombineName},'%')
             </if>
             <if test="algorithmTestPlanSearchCriteria.machineGroup!=null and algorithmTestPlanSearchCriteria.machineGroup!=''">
-                AND atp.fMachineGroup LIKE concat('%',#{algorithmTestPlanSearchCriteria.machineGroup},'%')
+                AND atp.fMachineGroup LIKE concat(#{algorithmTestPlanSearchCriteria.machineGroup},'%')
             </if>
         </where>
     </select>

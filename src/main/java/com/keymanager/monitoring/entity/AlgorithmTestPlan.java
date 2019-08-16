@@ -59,8 +59,14 @@ public class AlgorithmTestPlan{
     /**
      * 测试词排名区间
      */
-    @TableField("fTestkeywordRankInterval")
-    private String testkeywordRankInterval;
+    @TableField("fTestkeywordRankBegin")
+    private String testkeywordRankBegin;
+
+    /**
+     * 测试词排名区间
+     */
+    @TableField("fTestkeywordRankEnd")
+    private String testkeywordRankEnd;
 
     /**
      * 刷量
@@ -134,12 +140,20 @@ public class AlgorithmTestPlan{
         this.testKeywordCount = testKeywordCount;
     }
 
-    public String getTestkeywordRankInterval() {
-        return testkeywordRankInterval;
+    public String getTestkeywordRankBegin() {
+        return testkeywordRankBegin;
     }
 
-    public void setTestkeywordRankInterval(String testkeywordRankInterval) {
-        this.testkeywordRankInterval = testkeywordRankInterval;
+    public void setTestkeywordRankBegin(String testkeywordRankBegin) {
+        this.testkeywordRankBegin = testkeywordRankBegin;
+    }
+
+    public String getTestkeywordRankEnd() {
+        return testkeywordRankEnd;
+    }
+
+    public void setTestkeywordRankEnd(String testkeywordRankEnd) {
+        this.testkeywordRankEnd = testkeywordRankEnd;
     }
 
     public Integer getOptimizePlanCount() {

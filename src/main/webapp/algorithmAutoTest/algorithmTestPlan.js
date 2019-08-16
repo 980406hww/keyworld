@@ -273,6 +273,8 @@ function addAlgorithmTestPlans() {
     $('#algorithmTestPlanForm')[0].reset();
     $('#algorithmTestPlanForm #testIntervalDay').spinner('setValue', 2);
     $('#algorithmTestPlanForm #testKeywordCount').spinner('setValue', 50);
+    $('#algorithmTestPlanForm #testkeywordRankBegin').spinner('setValue', 20);
+    $('#algorithmTestPlanForm #testkeywordRankEnd').spinner('setValue', 50);
     $('#algorithmTestPlanForm #optimizePlanCount').spinner('setValue', 100);
 
 }
@@ -298,6 +300,8 @@ function updateAlgorithmTestPlan(uuid) {
                 $('#algorithmTestPlanForm #testIntervalDay').spinner('setValue', data.testIntervalDay);
                 $('#algorithmTestPlanForm #testKeywordCount').spinner('setValue', data.testKeywordCount);
                 $('#algorithmTestPlanForm #optimizePlanCount').spinner('setValue', data.optimizePlanCount);
+                $('#algorithmTestPlanForm #testkeywordRankBegin').spinner('setValue', data.testkeywordRankBegin);
+                $('#algorithmTestPlanForm #testkeywordRankEnd').spinner('setValue', data.testkeywordRankEnd);
                 // 打开弹框
                 openDialog(uuid);
             } else {
@@ -337,18 +341,15 @@ function saveData(uuid) {
         $().toastmessage('showWarningToast', "机器分组不能为空!");
         return;
     }
-    var testkeywordRankInterval = $('#algorithmTestPlanForm #testkeywordRankInterval').val();
-    if(testkeywordRankInterval == null || testkeywordRankInterval == ''){
-        $().toastmessage('showWarningToast', "测试词排名区间不能为空!");
-        return;
-    }
+
     algorithmTestPlan.algorithmTestPlanName = algorithmTestPlanName;
     algorithmTestPlan.operationCombineName = operationCombineName;
     algorithmTestPlan.machineGroup = machineGroup;
     algorithmTestPlan.testIntervalDay = $("#algorithmTestPlanForm #testIntervalDay").val();
     algorithmTestPlan.testKeywordCount = $("#algorithmTestPlanForm #testKeywordCount").val();
-    algorithmTestPlan.testkeywordRankInterval = testkeywordRankInterval;
     algorithmTestPlan.optimizePlanCount = $("#algorithmTestPlanForm #optimizePlanCount").val();
+    algorithmTestPlan.testkeywordRankBegin = $("#algorithmTestPlanForm #testkeywordRankBegin").val();
+    algorithmTestPlan.testkeywordRankEnd = $("#algorithmTestPlanForm #testkeywordRankEnd").val();
 
     $.ajax({
         url: '/internal/algorithmAutoTest/saveAlgorithmTestPlan',

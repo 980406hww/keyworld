@@ -80,7 +80,7 @@
                 </td>
                 <td width=70>${algorithmTestPlan.testIntervalDay}</td>
                 <td width=70>${algorithmTestPlan.testKeywordCount}</td>
-                <td width=70>${algorithmTestPlan.testkeywordRankInterval}</td>
+                <td width=70>${algorithmTestPlan.testkeywordRankBegin}-${algorithmTestPlan.testkeywordRankEnd}</td>
                 <td width=70>${algorithmTestPlan.optimizePlanCount}</td>
                 <td width=70>
                     <c:choose>
@@ -141,8 +141,12 @@
                 <input id="testKeywordCount" name="testKeywordCount" class="easyui-numberspinner"  data-options="min:0,max:100,increment:5" required style="width: 200px">
             </li>
             <li>
-                <span>测试词排名区间:</span>
-                <input id="testkeywordRankInterval" name="testkeywordRankInterval" placeholder="25-50" style="width: 200px" value="">
+                <span>测试词排名起始:</span>
+                <input id="testkeywordRankBegin" name="testkeywordRankBegin" class="easyui-numberspinner"  data-options="min:0,max:100,increment:1" style="width: 200px" value="">
+            </li>
+            <li>
+                <span>测试词排名结束:</span>
+                <input id="testkeywordRankEnd" name="testkeywordRankEnd" class="easyui-numberspinner"  data-options="min:0,max:100,increment:1" style="width: 200px" value="">
             </li>
             <li>
                 <span>刷量:</span>

@@ -33,6 +33,7 @@ public class AlgorithmTestPlanService extends ServiceImpl<AlgorithmTestPlanDao, 
 
     public void saveAlgorithmTestPlan(AlgorithmTestPlan algorithmTestPlan) {
         if (algorithmTestPlan.getUuid() == null){
+            algorithmTestPlan.setStatus(1);
             algorithmTestPlanDao.insert(algorithmTestPlan);
         }else {
             algorithmTestPlan.setUpdateTime(new Date());
