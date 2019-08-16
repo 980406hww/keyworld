@@ -1794,8 +1794,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.batchUpdateKeywordStatus(keywordIDs, keywordStatusBatchUpdateVO.getKeywordChecks(), keywordStatusBatchUpdateVO.getKeywordStatus());
     }
 
-    public List<Long> getCustomerUuids(String userID, String entryType, String terminalType) {
-        return customerKeywordDao.getCustomerUuids(userID, entryType, terminalType);
+    public List<Long> getCustomerUuids(String entryType, String terminalType) {
+        return customerKeywordDao.getCustomerUuids(entryType, terminalType);
     }
 
     public void excludeCustomerKeyword(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
