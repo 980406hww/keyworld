@@ -1012,7 +1012,7 @@ function editTagNameStr(o, edit){
     if (edit) {
         o.innerHTML = o.innerHTML.replace(/(暂无)/g, '');
         var uuid = $(o).parent().parent().find("input[name='uuid']").val();
-        o.innerHTML = '<input type="text" label="'+ o.innerHTML +'" uuid="'+ uuid +'" style="width: 250px;" value="' + o.innerHTML + '" onblur="editTagNameStr(this)">';
+        o.innerHTML = '<input type="text" label="'+ o.innerHTML +'" uuid="'+ uuid +'" style="width: 220px;" value="' + o.innerHTML + '" onblur="editTagNameStr(this)">';
         o.getElementsByTagName('input')[0].focus();
     } else {
         var isChange = true;
@@ -2300,10 +2300,10 @@ function saveChangeSetting(self, refresh) {
         operationType.group = settingDialogDiv.find("#group" + val.id).val().trim();
         operationType.currentKeywordCount = settingDialogDiv.find("#currentKeywordCount" + val.id).val().trim();
         var maxKeywordCount = settingDialogDiv.find("#maxKeywordCount" + val.id).val();
-        if (maxKeywordCount !== undefined) {
+        if (maxKeywordCount !== undefined || maxKeywordCount !== '') {
             operationType.maxKeywordCount = maxKeywordCount.trim();
         } else {
-            operationType.maxKeywordCount = 1000;
+            operationType.maxKeywordCount = 300;
         }
         operationType.subDomainName = settingDialogDiv.find("#subDomainName" + val.id).val().trim();
         if (operationType.group == null || operationType.group === "") {
@@ -2591,7 +2591,7 @@ function getAvailableQZSettings() {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        timeout:'5000',
+        timeout: 5000,
         type:'POST',
         success: function (data) {
             var text = "";

@@ -81,6 +81,13 @@ public class OperationCombineService extends ServiceImpl<OperationCombineDao, Op
         if (1 == updateGroupSettingCriteria.getGs().getMaxInvalidCount()) {
             this.updateMaxInvalidCount(updateGroupSettingCriteria.getGroupSetting().getOperationCombineUuid(), updateGroupSettingCriteria.getGroupSetting().getMaxInvalidCount());
         }
+        if ("1".equals(updateGroupSettingCriteria.getGs().getOperationCombineName())) {
+            updateOperationCombineName(operationCombineUuid, updateGroupSettingCriteria.getGroupSetting().getOperationCombineName());
+        }
+    }
+
+    public void updateOperationCombineName(long uuid, String operationCombineName) {
+        operationCombineDao.updateOperationCombineName(uuid, operationCombineName);
     }
 
     public void updateOperationCombineUpdateTime (Long operationCombineUuid) {

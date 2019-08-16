@@ -66,25 +66,27 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 	}
 
 	public void autoTriggerDailyReport(){
-		List<String> userIDs = customerService.getActiveDailyReportIdentifyUserIDs();
-		if (CollectionUtils.isNotEmpty(userIDs)) {
-			for (String userID : userIDs) {
-				if(autoTriggerDailyReportCondition() && CollectionUtils.isEmpty(dailyReportDao.fetchDailyReportTriggeredInToday(userID, DailyReportTriggerModeEnum.Auto.name()))){
-					long dailyReportUuid = createDailyReport(null, DailyReportTriggerModeEnum.Auto.name(), userID);
+		Config dailyReportType = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_TYPE);
+		if(dailyReportType != null) {
+			if (EntryTypeEnum.bc.name().equalsIgnoreCase(dailyReportType.getValue())) {
+				if(autoTriggerDailyReportCondition() && CollectionUtils.isEmpty(dailyReportDao.fetchDailyReportTriggeredInToday(null, DailyReportTriggerModeEnum.Auto.name()))) {
+					long dailyReportUuid = createDailyReport(null, DailyReportTriggerModeEnum.Auto.name(), null);
+					List<Long> pcCustomerUuids = customerKeywordService.getCustomerUuids(EntryTypeEnum.bc.name(), TerminalTypeEnum.PC.name());
+					for (Long customerUuid : pcCustomerUuids) {
+						dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.PC.name(), customerUuid.intValue());
+					}
 
-					Config dailyReportType = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_TYPE);
-					if(dailyReportType != null) {
-						if (EntryTypeEnum.bc.name().equalsIgnoreCase(dailyReportType.getValue())) {
-							List<Long> pcCustomerUuids = customerKeywordService.getCustomerUuids(userID, EntryTypeEnum.bc.name(), TerminalTypeEnum.PC.name());
-							for (Long customerUuid : pcCustomerUuids) {
-								dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.PC.name(), customerUuid.intValue());
-							}
-
-							List<Long> phoneCustomerUuids = customerKeywordService.getCustomerUuids(userID, EntryTypeEnum.bc.name(), TerminalTypeEnum.Phone.name());
-							for (Long customerUuid : phoneCustomerUuids) {
-								dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.Phone.name(), customerUuid.intValue());
-							}
-						} else {
+					List<Long> phoneCustomerUuids = customerKeywordService.getCustomerUuids(EntryTypeEnum.bc.name(), TerminalTypeEnum.Phone.name());
+					for (Long customerUuid : phoneCustomerUuids) {
+						dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.Phone.name(), customerUuid.intValue());
+					}
+				}
+			}else{
+				List<String> userIDs = customerService.getActiveDailyReportIdentifyUserIDs();
+				if (CollectionUtils.isNotEmpty(userIDs)) {
+					for (String userID : userIDs) {
+						if (autoTriggerDailyReportCondition() && CollectionUtils.isEmpty(dailyReportDao.fetchDailyReportTriggeredInToday(userID, DailyReportTriggerModeEnum.Auto.name()))) {
+							long dailyReportUuid = createDailyReport(null, DailyReportTriggerModeEnum.Auto.name(), userID);
 							List<Long> customerUuids = customerService.getActiveDailyReportIdentifyCustomerUuids(userID);
 							if (CollectionUtils.isNotEmpty(customerUuids)) {
 								for (Long customerUuid : customerUuids) {

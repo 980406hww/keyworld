@@ -160,6 +160,9 @@ public class GroupSetting extends BaseEntity {
 	@TableField(exist = false)
 	private int maxInvalidCount;
 
+	@TableField(exist = false)
+	private String operationCombineName;
+
 	public Long getOperationCombineUuid () {
 		return operationCombineUuid;
 	}
@@ -567,4 +570,12 @@ public class GroupSetting extends BaseEntity {
     public void setMaxInvalidCount(int maxInvalidCount) {
         this.maxInvalidCount = maxInvalidCount;
     }
+
+	public String getOperationCombineName() {
+		return operationCombineName;
+	}
+
+	public void setOperationCombineName(String operationCombineName) {
+		this.operationCombineName = operationCombineName;
+	}
 }

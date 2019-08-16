@@ -38,7 +38,7 @@
         <if test="customerKeywordCriteria.entryType != null and customerKeywordCriteria.entryType != ''">AND ck.fType = #{customerKeywordCriteria.entryType}</if>
         <if test="customerKeywordCriteria.gtPosition != null and (customerKeywordCriteria.noPosition == null or customerKeywordCriteria.noPosition == '') "> AND ck.fCurrentPosition &gt;= #{customerKeywordCriteria.gtPosition}</if>
         <if test="customerKeywordCriteria.ltPosition != null and (customerKeywordCriteria.noPosition == null or customerKeywordCriteria.noPosition == '') "> AND ck.fCurrentPosition &lt;= #{customerKeywordCriteria.ltPosition}</if>
-        <if test="customerKeywordCriteria.noPosition == 1 ">AND ck.fCurrentPosition =  0    </if>
+        <if test="customerKeywordCriteria.noPosition == 1 ">AND ck.fCurrentPosition = 0 </if>
         <if test="customerKeywordCriteria.orderNumber != null and customerKeywordCriteria.orderNumber != ''">AND ck.fOrderNumber  like '%${customerKeywordCriteria.orderNumber}%'</if>
         <if test="customerKeywordCriteria.pushPay != null and customerKeywordCriteria.pushPay != ''">AND ((ck.fCollectMethod = 'PerDay' AND ck.fEffectiveToTime is not null) OR (ck.fEffectiveToTime &lt;= DATE_ADD(CURDATE(),INTERVAL 3 DAY))) </if>
         <if test="customerKeywordCriteria.terminalType != null and customerKeywordCriteria.terminalType != ''">AND fTerminalType =  #{customerKeywordCriteria.terminalType} </if>
@@ -229,8 +229,10 @@
 
     <select id="getCustomerKeywordsCount" resultType="java.util.Map">
         SELECT ck.fCustomerUuid as 'customerUuid', COUNT(1) as 'totalCount', SUM(IF(ck.fStatus = 1, 1, 0)) AS 'activeCount'
-        FROM t_customer_keyword ck WHERE ck.fTerminalType = #{terminalType}
-        and ck.fType = #{entryType} and ck.fTerminalType = #{terminalType} and ck.fCustomerUuid IN
+        FROM t_customer_keyword ck
+        WHERE ck.fTerminalType = #{terminalType}
+        AND ck.fType = #{entryType}
+        AND ck.fCustomerUuid IN
         <foreach item="item" index="index" collection="customerUuids" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -251,7 +253,6 @@
                 AND fOriginalUrl like concat('%', #{originalUrl});
             </otherwise>
         </choose>
-
     </select>
 
     <select id="getSameCustomerKeywordCount" resultType="java.lang.Integer">
@@ -1407,10 +1408,7 @@
     <select id="getCustomerUuids" resultType="java.lang.Long">
         SELECT DISTINCT ck.fCustomerUuid
         FROM t_customer_keyword ck
-        LEFT JOIN t_customer c
-        ON c.fUuid = ck.fCustomerUuid
-        WHERE c.fUserID = #{userID}
-        AND ck.fType =  #{entryType}
+        WHERE ck.fType =  #{entryType}
         AND ck.fTerminalType = #{terminalType}
         AND ck.fStatus = 1
     </select>
@@ -1682,7 +1680,7 @@
         AND ck.fSearchEngine = '百度'
         AND ck.fMachineGroup &lt;&gt; 'Pause'
         AND (
-            (ck.fCaptureStatus = 0 AND ck.fCapturePositionQueryTime &lt;= CURRENT_DATE())
+            (ck.fCaptureStatus = 0 AND (ck.fCapturePositionQueryTime IS NULL OR ck.fCapturePositionQueryTime &lt;= CURRENT_DATE()))
             OR
             (ck.fCaptureStatus = 1 AND ck.fCapturePositionQueryTime &lt;=  DATE_SUB(NOW(), INTERVAL 30 MINUTE))
         )
