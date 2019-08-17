@@ -19,5 +19,5 @@ import java.util.List;
 public interface AlgorithmTestPlanDao extends BaseMapper<AlgorithmTestPlan> {
     List<AlgorithmTestPlan> searchAlgorithmTestPlans(Page<AlgorithmTestPlan> page, @Param("algorithmTestPlanSearchCriteria") AlgorithmTestPlanSearchCriteria algorithmTestPlanSearchCriteria);
 
-    void updateCaptureRankJobsStatus(@Param("uuids") List<Long> uuids,@Param("status") Integer status);
+    void updateAlgorithmTestPlansStatus(@Param("uuids") List<Long> uuids,@Param("status") Integer status);
 }

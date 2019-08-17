@@ -1,5 +1,6 @@
 package com.keymanager.monitoring.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.AlgorithmTestTaskDao;
 import com.keymanager.monitoring.entity.AlgorithmTestTask;
@@ -22,7 +23,10 @@ public class AlgorithmTestTaskService extends ServiceImpl<AlgorithmTestTaskDao, 
     @Autowired
     private AlgorithmTestTaskDao algorithmTestTaskDao;
 
-    public List<AlgorithmTestTask> selectAlgorithmTestTasksByAlgorithmTestPlanUuid(Long algorithmTestPlanUuid) {
-        return algorithmTestTaskDao.selectAlgorithmTestTasksByAlgorithmTestPlanUuid(algorithmTestPlanUuid);
+    public Page<AlgorithmTestTask> selectAlgorithmTestTasksByAlgorithmTestPlanUuid(Page<AlgorithmTestTask> algorithmTestTaskPage,Long algorithmTestPlanUuid) {
+
+        List<AlgorithmTestTask> algorithmTestTasks = algorithmTestTaskDao.selectAlgorithmTestTasksByAlgorithmTestPlanUuid(algorithmTestTaskPage,algorithmTestPlanUuid);
+        algorithmTestTaskPage.setRecords(algorithmTestTasks);
+        return algorithmTestTaskPage;
     }
 }

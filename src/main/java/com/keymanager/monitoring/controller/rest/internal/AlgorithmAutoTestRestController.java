@@ -54,7 +54,6 @@ public class AlgorithmAutoTestRestController {
 
     private ModelAndView constructCaptureRankJobModelAndView(HttpServletRequest request, AlgorithmTestPlanSearchCriteria algorithmTestPlanSearchCriteria, String currentPage, String pageSize) {
         ModelAndView modelAndView = new ModelAndView("algorithmAutoTest/algorithmTestPlan");
-
         Page<AlgorithmTestPlan> page = algorithmTestPlanService.searchAlgorithmTestPlans(new Page<AlgorithmTestPlan>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), algorithmTestPlanSearchCriteria);
         modelAndView.addObject("page", page);
         modelAndView.addObject("algorithmTestPlanSearchCriteria", algorithmTestPlanSearchCriteria);
@@ -123,7 +122,7 @@ public class AlgorithmAutoTestRestController {
         try {
             List<Long> uuids = (List<Long>) requestMap.get("uuids");
             Integer status = Integer.valueOf(String.valueOf(requestMap.get("status")));
-            algorithmTestPlanService.updateCaptureRankJobsStatus(uuids, status);
+            algorithmTestPlanService.updateAlgorithmTestPlansStatus(uuids, status);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -133,13 +132,13 @@ public class AlgorithmAutoTestRestController {
 
     @RequiresPermissions("/internal/algorithmAutoTest/showAlgorithmTestTask")
     @RequestMapping(value = "/showAlgorithmTestTask", method = RequestMethod.POST)
-    public ModelAndView showAlgorithmTestTask(Long algorithmTestPlanUuid) {
+    public ModelAndView showAlgorithmTestTask(Long algorithmTestPlanUuid, @RequestParam(defaultValue = "1") String currentPageNumber, @RequestParam(defaultValue = "50") String pageSize) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("algorithmAutoTest/algorithmTestTask");
         try {
-            List<AlgorithmTestTask> algorithmTestTasks = algorithmTestTaskService.selectAlgorithmTestTasksByAlgorithmTestPlanUuid(algorithmTestPlanUuid);
-            //algorithmTestPlanService.deleteBatchIds((List<Long>) requestMap.get("uuids"));
-            mv.addObject("algorithmTestTasks",algorithmTestTasks);
+            Page<AlgorithmTestTask> algorithmTestTaskPage = algorithmTestTaskService.selectAlgorithmTestTasksByAlgorithmTestPlanUuid(new Page<AlgorithmTestTask>(Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize)), algorithmTestPlanUuid);
+            mv.addObject("page",algorithmTestTaskPage);
+            mv.addObject("algorithmTestPlanUuid",algorithmTestPlanUuid);
             return mv;
         } catch (Exception e) {
             logger.error(e.getMessage());

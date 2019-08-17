@@ -21,7 +21,12 @@
 <div id="topDiv">
     <%@include file="/menu.jsp" %>
     <div style="margin-top: 5px;margin-bottom: 5px">
-        <form method="post" id="searchAlgorithmTestTaskForm" action="/internal/algorithmAutoTest/searchAlgorithmTestTasks" style="margin-bottom:0px ">
+        <form method="post" id="searchAlgorithmTestTaskForm" action="/internal/algorithmAutoTest/showAlgorithmTestTask" style="margin-bottom:0px ">
+            <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}" />
+            <input type="hidden" name="algorithmTestPlanUuid" id="algorithmTestPlanUuid" value="${algorithmTestPlanUuid}" />
+            <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
+            <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
+            <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
         </form>
     </div>
     <table style="font-size:12px; width: 100%;" id="headerTable">
@@ -39,48 +44,59 @@
 </div>
 <div id="centerDiv" style="margin-bottom: 30px">
     <table style="font-size:12px; width: 100%;"id="showAlgorithmTestTaskTable" >
-        <c:if test="${empty algorithmTestTasks }">
-            <tr align="left" onmouseover="doOver(this);" onmouseout="doOut(this);" height=30  <c:if test="${status.index%2==0}">bgcolor="#eeeeee"</c:if> >
-                <td colspan="8">
-                    暂无数据
+        <c:forEach items="${page.records}" var="algorithmTestTask" varStatus="status">
+            <tr align="center" onmouseover="doOver(this);" onmouseout="doOut(this);" height=30  <c:if test="${status.index%2==0}">bgcolor="#eeeeee"</c:if> >
+                <td width=10 align="center"><input type="checkbox" name="uuid" value="${algorithmTestTask.uuid}" onclick="decideSelectAll()"/></td>
+                <td width=70>
+                        ${algorithmTestTask.keywordGroup}
+                </td>
+                <td width=70>
+                        ${algorithmTestTask.customerName}
+                </td>
+                <td width=70>
+                        ${algorithmTestTask.actualKeywordCount}
+                </td>
+                <td width=70>
+                    <fmt:formatDate value="${algorithmTestTask.startDate}" pattern="yyyy-MM-dd"/>
+                </td>
+                <td width=70><fmt:formatDate value="${algorithmTestTask.createTime}" pattern="yyyy-MM-dd HH:mm"/></td>
+                <td width=70><fmt:formatDate value="${algorithmTestTask.updateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
+                <td width=80>
+                    暂无操作
                 </td>
             </tr>
-        </c:if>
-        <c:if test="${!empty algorithmTestTasks }">
-            <c:forEach items="${algorithmTestTasks}" var="algorithmTestTask" varStatus="status">
-                <tr align="left" onmouseover="doOver(this);" onmouseout="doOut(this);" height=30  <c:if test="${status.index%2==0}">bgcolor="#eeeeee"</c:if> >
-                    <td width=10 align="center"><input type="checkbox" name="uuid" value="${algorithmTestTask.uuid}" onclick="decideSelectAll()"/></td>
-                    <td width=70>
-                            ${algorithmTestTask.keywordGroup}
-                    </td>
-                    <td width=70>
-                            ${algorithmTestTask.customerName}
-                    </td>
-                    <td width=70>
-                            ${algorithmTestTask.actualKeywordCount}
-                    </td>
-                    <td width=70>
-                        <fmt:formatDate value="${algorithmTestTask.startDate}" pattern="yyyy-MM-dd"/>
-                    </td>
-                    <td width=70><fmt:formatDate value="${algorithmTestTask.createTime}" pattern="yyyy-MM-dd HH:mm"/></td>
-                    <td width=70><fmt:formatDate value="${algorithmTestTask.updateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
-                    <td width=80>
-                        暂无操作
-                    </td>
-                </tr>
-            </c:forEach>
-        </c:if>
+        </c:forEach>
+
 
     </table>
 </div>
 
+<div id="showCustomerBottomPositioneDiv">
+    <div id="showCustomerBottomDiv">
+        <input id="fisrtButton" class="ui-button ui-widget ui-corner-all" type="button"
+               onclick="changePaging(1,'${page.size}')" value="首页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+        <input id="upButton" type="button" class="ui-button ui-widget ui-corner-all"
+               onclick="changePaging('${page.current-1}','${page.size}')" value="上一页"/>&nbsp;&nbsp;&nbsp;&nbsp;
+        ${page.current}/${page.pages}&nbsp;&nbsp;
+        <input id="nextButton" type="button" class="ui-button ui-widget ui-corner-all"
+               onclick="changePaging('${page.current+1>=page.pages?page.pages:page.current+1}','${page.size}')"
+               value="下一页">&nbsp;&nbsp;&nbsp;&nbsp;
+        <input id="lastButton" type="button" class="ui-button ui-widget ui-corner-all"
+               onclick="changePaging('${page.pages}','${page.size}')" value="末页">&nbsp;&nbsp;&nbsp;&nbsp;
+        总记录数:${page.total}&nbsp;&nbsp;&nbsp;&nbsp;
+        每页显示条数:<select id="chooseRecords" onchange="changePaging(${page.current},this.value)">
+        <option>10</option>
+        <option>25</option>
+        <option>50</option>
+        <option>75</option>
+        <option>100</option>
+        <option>500</option>
+        <option>1000</option>
+    </select>
+    </div>
+</div>
 <%@ include file="/commons/loadjs.jsp" %>
 <script type="text/javascript" src="${staticPath}/static/select2/select2-4.0.6.min.js"></script>
-<script type="text/javascript">
-    $(function () {
-        $("#centerDiv").css("margin-top", $("#topDiv").height());
-    });
-
-</script>
+<script src="${staticPath}/algorithmAutoTest/algorithmTestTask.js"></script>
 </body>
 </html>

@@ -48,7 +48,7 @@ public class AlgorithmTestPlanService extends ServiceImpl<AlgorithmTestPlanDao, 
         algorithmTestPlanDao.updateById(algorithmTestPlan);
     }
 
-    public void updateCaptureRankJobsStatus(List<Long> uuids, Integer status) {
-        algorithmTestPlanDao.updateCaptureRankJobsStatus(uuids,status);
+    public void updateAlgorithmTestPlansStatus(List<Long> uuids, Integer status) {
+        algorithmTestPlanDao.updateAlgorithmTestPlansStatus(uuids,status);
     }
 }

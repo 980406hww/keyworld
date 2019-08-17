@@ -142,11 +142,11 @@
             </li>
             <li>
                 <span>测试词排名起始:</span>
-                <input id="testkeywordRankBegin" name="testkeywordRankBegin" class="easyui-numberspinner"  data-options="min:0,max:100,increment:1" style="width: 200px" value="">
+                <input id="testkeywordRankBegin" name="testkeywordRankBegin" class="easyui-numberspinner"  data-options="min:0,max:100,increment:10" style="width: 200px" value="">
             </li>
             <li>
                 <span>测试词排名结束:</span>
-                <input id="testkeywordRankEnd" name="testkeywordRankEnd" class="easyui-numberspinner"  data-options="min:0,max:100,increment:1" style="width: 200px" value="">
+                <input id="testkeywordRankEnd" name="testkeywordRankEnd" class="easyui-numberspinner"  data-options="min:0,max:100,increment:10" style="width: 200px" value="">
             </li>
             <li>
                 <span>刷量:</span>
@@ -192,6 +192,8 @@
 <form id="searchAlgorithmTestTaskForm" style="display: none;" method="post" target="_blank"
       action="/internal/algorithmAutoTest/showAlgorithmTestTask">
     <input type="hidden" name="algorithmTestPlanUuid" id="algorithmTestPlanUuid" value=""/>
+    <input type="hidden" name="currentPage" id="currentPage" value="${page.current}"/>
+    <input type="hidden" name="pageSize" id="pageSize" value="${page.size}"/>
 </form>
 
 <%@ include file="/commons/loadjs.jsp" %>

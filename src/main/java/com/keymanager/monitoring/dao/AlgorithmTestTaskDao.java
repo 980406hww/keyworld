@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.entity.AlgorithmTestTask;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,5 +17,5 @@ import java.util.List;
  */
 public interface AlgorithmTestTaskDao extends BaseMapper<AlgorithmTestTask> {
 
-    List<AlgorithmTestTask> selectAlgorithmTestTasksByAlgorithmTestPlanUuid(@Param("algorithmTestPlanUuid") Long algorithmTestPlanUuid);
+    List<AlgorithmTestTask> selectAlgorithmTestTasksByAlgorithmTestPlanUuid(Page<AlgorithmTestTask> algorithmTestTaskPage, @Param("algorithmTestPlanUuid") Long algorithmTestPlanUuid);
 }
