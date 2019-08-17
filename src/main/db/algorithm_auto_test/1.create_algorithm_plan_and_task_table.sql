@@ -33,3 +33,7 @@ CREATE TABLE `t_algorithm_test_task`  (
   `fUpdateTime` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`fUuid`)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8 COMMENT = '算法测试任务表' ;
+
+
+#plan表创建可查询字段的组合索引
+CREATE INDEX `searchingIndex` ON `t_algorithm_test_plan` (`fAlgorithmTestPlanName`, `fOperationCombineName`, `fMachineGroup`) USING BTREE COMMENT '查询条件索引';
