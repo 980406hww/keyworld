@@ -29,4 +29,8 @@ public class AlgorithmTestTaskService extends ServiceImpl<AlgorithmTestTaskDao, 
         algorithmTestTaskPage.setRecords(algorithmTestTasks);
         return algorithmTestTaskPage;
     }
+
+    public void saveAlgorithmTestTasks(List<AlgorithmTestTask> algorithmTestTasks) {
+        algorithmTestTaskDao.saveAlgorithmTestTasks(algorithmTestTasks);
+    }
 }

@@ -14,7 +14,8 @@ CREATE TABLE `t_algorithm_test_plan`  (
   `fTestkeywordRankEnd` int(11) NULL DEFAULT NULL COMMENT '测试词排名区间尾',
   `fOptimizePlanCount` int(11) NULL DEFAULT NULL COMMENT '刷量',
   `fStatus` tinyint(4) NULL DEFAULT NULL COMMENT '状态 0：暂停 1：激活',
-    `fCreateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `fExecuteQueryTime` datetime NULL DEFAULT NULL COMMENT '计划取出查询时间',
+  `fCreateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `fUpdateTime` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`fUuid`)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8 COMMENT = '算法测试任务表' ;

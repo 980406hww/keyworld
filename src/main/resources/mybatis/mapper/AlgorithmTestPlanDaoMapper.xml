@@ -14,6 +14,7 @@
         <result column="fTestkeywordRankEnd" property="testkeywordRankEnd" />
         <result column="fOptimizePlanCount" property="optimizePlanCount" />
         <result column="fStatus" property="status" />
+        <result column="fTestQueryTime" property="testQueryTime" />
         <result column="fCreateTime" property="createTime" />
         <result column="fUpdateTime" property="updateTime" />
     </resultMap>
@@ -30,9 +31,11 @@
         atp.fTestkeywordRankEnd AS testkeywordRankEnd,
         atp.fOptimizePlanCount AS optimizePlanCount,
         atp.fStatus AS status,
+        atp.fExecuteQueryTime AS executeQueryTime,
         atp.fCreateTime AS createTime,
         atp.fUpdateTime AS updateTime
     </sql>
+
     <select id="searchAlgorithmTestPlans" resultType="com.keymanager.monitoring.entity.AlgorithmTestPlan">
         SELECT
         <include refid="Base_Column_List"/>
@@ -49,6 +52,23 @@
                 AND atp.fMachineGroup LIKE concat(#{algorithmTestPlanSearchCriteria.machineGroup},'%')
             </if>
         </where>
+    </select>
+
+    <select id="selectAvailableAlgorithmTestPlans" resultType="com.keymanager.monitoring.entity.AlgorithmTestPlan">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_algorithm_test_plan atp
+        WHERE atp.fstatus = 1
+        AND  atp.fExecuteQueryTime IS NULL
+        OR atp.fExecuteQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 1 DAY)
+    </select>
+
+    <select id="batchUpdateTestQueryTime">
+        UPDATE t_algorithm_test_plan atp
+        SET atp.fExecuteQueryTime = NOW() ,fUpdateTime = NOW()
+        WHERE atp.FUuid in
+        <foreach item="algorithmTestPlan" index="index" collection="algorithmTestPlans" open="(" separator="," close=")">
+            #{algorithmTestPlan.uuid}
+        </foreach>
     </select>
 
     <update id="updateCaptureRankJobsStatus">

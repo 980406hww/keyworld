@@ -29,7 +29,7 @@ public class AlgorithmTestTask {
     /**
      * 算法测试计划表ID
      */
-    @TableId(value = "fAlgorithmTestPlanUuid")
+    @TableField(value = "fAlgorithmTestPlanUuid")
     private Long algorithmTestPlanUuid;
 
     /**

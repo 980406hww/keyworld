@@ -33,4 +33,18 @@
         WHERE atk.fAlgorithmTestPlanUuid = #{algorithmTestPlanUuid}
     </select>
 
+    <update id="saveAlgorithmTestTasks">
+        INSERT INTO t_algorithm_test_task ( fAlgorithmTestPlanUuid, fKeywordGroup, fCustomerName, fActualKeywordCount, fStartDate )
+        VALUES
+        <foreach collection="algorithmTestTasks" item="algorithmTestTask" separator=",">
+            (
+                algorithmTestTask.algorithmTestPlanUuid,
+                algorithmTestTask.fKeywordGroup,
+                algorithmTestTask.fCustomerName,
+                algorithmTestTask.fActualKeywordCount,
+                algorithmTestTask.fStartDate
+            )
+        </foreach>
+    </update>
+
 </mapper>

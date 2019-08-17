@@ -81,6 +81,12 @@ public class AlgorithmTestPlan{
     private Integer status;
 
     /**
+     * 外部取算法时间
+     */
+    @TableField("fExecuteQueryTime")
+    private Date executeQueryTime;
+
+    /**
      * 创建时间
      */
     @TableField("fCreateTime")
@@ -170,6 +176,14 @@ public class AlgorithmTestPlan{
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Date getExecuteQueryTime() {
+        return executeQueryTime;
+    }
+
+    public void setExecuteQueryTime(Date executeQueryTime) {
+        this.executeQueryTime = executeQueryTime;
     }
 
     public Date getCreateTime() {

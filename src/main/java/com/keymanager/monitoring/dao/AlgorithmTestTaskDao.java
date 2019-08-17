@@ -18,4 +18,6 @@ import java.util.List;
 public interface AlgorithmTestTaskDao extends BaseMapper<AlgorithmTestTask> {
 
     List<AlgorithmTestTask> selectAlgorithmTestTasksByAlgorithmTestPlanUuid(Page<AlgorithmTestTask> algorithmTestTaskPage, @Param("algorithmTestPlanUuid") Long algorithmTestPlanUuid);
+
+    void saveAlgorithmTestTasks( @Param("algorithmTestTasks")List<AlgorithmTestTask> algorithmTestTasks);
 }
