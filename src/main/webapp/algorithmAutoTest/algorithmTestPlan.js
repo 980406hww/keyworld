@@ -295,6 +295,8 @@ function updateAlgorithmTestPlan(uuid) {
             if (data) {
                 $("#algorithmTestPlanForm #algorithmTestPlanName").val(data.algorithmTestPlanName);
                 $("#algorithmTestPlanForm #operationCombineName").val(data.operationCombineName);
+                $("#algorithmTestPlanForm #terminalType").val(data.terminalType);
+                $("#algorithmTestPlanForm #searchEngine").val(data.searchEngine);
                 $("#algorithmTestPlanForm #machineGroup").val(data.machineGroup);
                 $("#algorithmTestPlanForm #testkeywordRankInterval").val(data.testkeywordRankInterval);
                 $('#algorithmTestPlanForm #testIntervalDay').spinner('setValue', data.testIntervalDay);
@@ -369,6 +371,8 @@ function saveData(uuid) {
 
     algorithmTestPlan.algorithmTestPlanName = algorithmTestPlanName;
     algorithmTestPlan.operationCombineName = operationCombineName;
+    algorithmTestPlan.terminalType = $('#algorithmTestPlanForm #terminalType').val();
+    algorithmTestPlan.searchEngine = $('#algorithmTestPlanForm #searchEngine').val();
     algorithmTestPlan.machineGroup = machineGroup;
     algorithmTestPlan.testIntervalDay = testIntervalDay;
     algorithmTestPlan.testKeywordCount =testKeywordCount;

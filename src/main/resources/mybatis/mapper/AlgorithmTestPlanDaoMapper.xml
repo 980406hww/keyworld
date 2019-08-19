@@ -7,6 +7,8 @@
         <id column="fUuid" property="uuid" />
         <result column="fAlgorithmTestPlanName" property="algorithmTestPlanName" />
         <result column="fOperationCombineName" property="operationCombineName" />
+        <result column="fTerminalType" property="terminalType" />
+        <result column="fSearchEngine" property="searchEngine" />
         <result column="fMachineGroup" property="machineGroup" />
         <result column="fTestIntervalDay" property="testIntervalDay" />
         <result column="fTestKeywordCount" property="testKeywordCount" />
@@ -24,6 +26,8 @@
         atp.fUuid AS uuid,
         atp.fAlgorithmTestPlanName AS algorithmTestPlanName,
         atp.fOperationCombineName AS operationCombineName,
+        atp.fTerminalType AS terminalType,
+        atp.fSearchEngine AS searchEngine,
         atp.fMachineGroup AS machineGroup,
         atp.fTestIntervalDay AS testIntervalDay,
         atp.fTestKeywordCount AS testKeywordCount,

@@ -6,6 +6,8 @@ import com.keymanager.monitoring.entity.AlgorithmTestPlan;
 import com.keymanager.monitoring.entity.AlgorithmTestTask;
 import com.keymanager.monitoring.service.AlgorithmTestPlanService;
 import com.keymanager.monitoring.service.AlgorithmTestTaskService;
+import com.keymanager.monitoring.service.ConfigService;
+import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,9 @@ public class AlgorithmAutoTestRestController {
     @Autowired
     private AlgorithmTestTaskService algorithmTestTaskService;
 
+    @Autowired
+    private ConfigService configService;
+
     @RequiresPermissions("/internal/algorithmAutoTest/searchAlgorithmTestPlans")
     @RequestMapping(value = "/searchAlgorithmTestPlans", method = RequestMethod.GET)
     public ModelAndView toSetCrawlRanking(@RequestParam(defaultValue = "1") int currentPage, @RequestParam(defaultValue = "50") int displaysRecords, HttpServletRequest request) {
@@ -54,9 +59,11 @@ public class AlgorithmAutoTestRestController {
 
     private ModelAndView constructCaptureRankJobModelAndView(HttpServletRequest request, AlgorithmTestPlanSearchCriteria algorithmTestPlanSearchCriteria, String currentPage, String pageSize) {
         ModelAndView modelAndView = new ModelAndView("algorithmAutoTest/algorithmTestPlan");
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
         Page<AlgorithmTestPlan> page = algorithmTestPlanService.searchAlgorithmTestPlans(new Page<AlgorithmTestPlan>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), algorithmTestPlanSearchCriteria);
         modelAndView.addObject("page", page);
         modelAndView.addObject("algorithmTestPlanSearchCriteria", algorithmTestPlanSearchCriteria);
+        modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));
         return modelAndView;
     }
 

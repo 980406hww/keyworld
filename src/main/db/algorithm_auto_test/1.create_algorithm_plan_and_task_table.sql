@@ -7,6 +7,8 @@ CREATE TABLE `t_algorithm_test_plan`  (
   `fUuid` int(11) NOT NULL AUTO_INCREMENT COMMENT '算法测试计划id',
   `fAlgorithmTestPlanName` varchar(255) NOT NULL COMMENT '算法测试计划名称',
   `fOperationCombineName` varchar(255) NULL DEFAULT NULL COMMENT '操作组合名称',
+  `fTerminalType` varchar(10) NULL DEFAULT NULL COMMENT '终端类型',
+  `fSearchEngine` varchar(100) NULL DEFAULT NULL COMMENT '搜索引擎',
   `fMachineGroup` varchar(255) NULL DEFAULT NULL COMMENT '机器分组',
   `fTestIntervalDay` int(11) NULL DEFAULT NULL COMMENT '测试间隔日期（每隔多少天生成一批测试数据）',
   `fTestKeywordCount` int(11) NULL DEFAULT NULL COMMENT '测试词数',

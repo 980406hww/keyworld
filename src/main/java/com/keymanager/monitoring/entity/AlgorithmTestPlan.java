@@ -39,6 +39,18 @@ public class AlgorithmTestPlan{
     private String operationCombineName;
 
     /**
+     * 终端类型
+     */
+    @TableField("fTerminalType")
+    private String terminalType;
+
+    /**
+     * 搜索引擎
+     */
+    @TableField("fSearchEngine")
+    private String searchEngine;
+
+    /**
      * 机器分组
      */
     @TableField("fMachineGroup")
@@ -120,6 +132,22 @@ public class AlgorithmTestPlan{
 
     public void setOperationCombineName(String operationCombineName) {
         this.operationCombineName = operationCombineName;
+    }
+
+    public String getTerminalType() {
+        return terminalType;
+    }
+
+    public void setTerminalType(String terminalType) {
+        this.terminalType = terminalType;
+    }
+
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
     }
 
     public String getMachineGroup() {

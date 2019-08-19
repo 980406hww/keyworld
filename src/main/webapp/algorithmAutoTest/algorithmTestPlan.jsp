@@ -52,6 +52,8 @@
             <td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=70>测试计划名称</td>
             <td align="center" width=70>操作组合名称</td>
+            <td align="center" width=70>终端类型</td>
+            <td align="center" width=70>搜索引擎</td>
             <td align="center" width=70>机器分组</td>
             <td align="center" width=70>测试间隔日期(天)</td>
             <td align="center" width=70>测试词数</td>
@@ -75,6 +77,12 @@
                 </td>
                 <td width=70>
                     <a href="javascript:searchGroupSettings('${algorithmTestPlan.operationCombineName}')">${algorithmTestPlan.operationCombineName}</a>
+                </td>
+                <td width=70>
+                    ${algorithmTestPlan.terminalType}
+                </td>
+                <td width=70>
+                    ${algorithmTestPlan.searchEngine}
                 </td>
                 <td width=70>
                     <a href="javascript:searchMachineInfos('${algorithmTestPlan.machineGroup}')">${algorithmTestPlan.machineGroup}</a>
@@ -129,6 +137,21 @@
             <li>
                 <span>操作组合名称:</span>
                 <input id="operationCombineName" name="operationCombineName" title="优化组名" style="width: 200px;" value=""/>
+            </li>
+            <li>
+                <span>终端类型:</span>
+                <select id="terminalType" name="terminalType"  style="width: 200px;">
+                    <option value="PC">PC</option>
+                    <option value="Phone">Phone</option>
+                </select>
+            </li>
+            <li>
+                <span>搜索引擎:</span>
+                <select name="searchEngine" id="searchEngine" style="width: 200px;">
+                    <c:forEach items="${searchEngineMap}" var="entry">
+                        <option value="${entry.value}">${entry.key}</option>
+                    </c:forEach>
+                </select>
             </li>
             <li>
                 <span>机器分组:</span>
