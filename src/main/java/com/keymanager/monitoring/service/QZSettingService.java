@@ -73,18 +73,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		ExternalQzSettingVO externalQzSettingVO = qzSettingDao.selectQZSettingForAutoOperate();
 		if(externalQzSettingVO !=null){
 			List<String> typeList = qzOperationTypeDao.getAllOperationChargeKeywordCountByQZSettingUuid(externalQzSettingVO.getUuid());
-			List<String> retainTypeList = new ArrayList<>();
-			if (CollectionUtils.isNotEmpty(typeList)) {
-				for(String type : typeList){
-					String[]  strs = type.split("_");
-					Integer keywordCount = customerKeywordDao.getCustomerKeywordCountByCustomerUuidAndTerminalType(externalQzSettingVO.getCustomerUuid(),strs[0]);
-					if(keywordCount < Integer.parseInt(strs[2])){
-						retainTypeList.add(new StringBuilder("").append(strs[0]).append("_").append(strs[1]).append("_").append(Integer.parseInt(strs[2])-keywordCount).toString());
-					}
-				}
-				String types = StringUtils.join(retainTypeList,",");
-				externalQzSettingVO.setTypeList(retainTypeList);
-				externalQzSettingVO.setKeywordType(types);
+			if(CollectionUtils.isNotEmpty(typeList)){
+				externalQzSettingVO.setKeywordType(StringUtils.join(typeList,","));
 			}
 			startQZSettingForUpdateKeyword(externalQzSettingVO.getUuid());
 		}
