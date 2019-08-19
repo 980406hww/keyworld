@@ -134,8 +134,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                         optimizationKeywordVOS = customerKeywordDao.fetchCustomerKeywordsForCache(terminalTypeAndMachineGroups[0], terminalTypeAndMachineGroups[1], ((machineCount * 10) > 5000 ? 5000 : (machineCount * 10)));
                         if (CollectionUtils.isNotEmpty(optimizationKeywordVOS)) {
                             List<Long> customerKeywordUuids = new ArrayList<Long>();
-                            //其实大部分情况下先触发这个条件再触发触发else
-                            if (optimizationKeywordVOS.size() > machineCount && terminalTypeAndMachineGroups[1] != "ssp") {
+                            if (optimizationKeywordVOS.size() > machineCount) {
                                 for (OptimizationKeywordVO optimizationKeywordVO : optimizationKeywordVOS) {
                                     if (blockingQueue.offer(optimizationKeywordVO)) {
                                         offerCount++;
@@ -159,14 +158,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                         if (optimizationKeywordVO.getQueryInterval() == 0) {
                                             optimizationKeywordVO.setQueryInterval(5000);
                                         }
-                                        int maxOptimizeCount = 0;
-                                        if (terminalTypeAndMachineGroups[1] == "ssp") {
-                                            //给与满额刷量或者分批集中刷量
-                                            maxOptimizeCount = optimizationKeywordVO.getOptimizePlanCount() - optimizationKeywordVO.getOptimizedCount();
-                                        } else {
-                                            //补足之前不够的刷量
-                                            maxOptimizeCount = Math.round(Calendar.getInstance().getTimeInMillis() / (1000 * optimizationKeywordVO.getQueryInterval()));
-                                        }
+                                        int maxOptimizeCount = Math.round(Calendar.getInstance().getTimeInMillis() / (1000 * optimizationKeywordVO.getQueryInterval()));
                                         Integer repeatCount = customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid());
                                         if (repeatCount == null) {
                                             customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), 0);
@@ -185,7 +177,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                             it.remove();
                                         }
                                     }
-                                } while (count < (machineCount * 4) && hasNewElement && repeatTimes < 50);
+                                }
+                                while (count < (machineCount * 4) && hasNewElement && repeatTimes < 50 && CollectionUtils.isNotEmpty(optimizationKeywordVOS));
 
                                 if (customerKeywordUuidAndRepeatCount.size() == 0) {
                                     break;
@@ -205,6 +198,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                         customerKeywordUuidAndRepeatCount.remove(customerKeywordUuid);
                                     }
                                     customerKeywordUuids.clear();
+                                }
+                                if(!CollectionUtils.isNotEmpty(optimizationKeywordVOS)){
+                                    break;
                                 }
                             }
                         }
