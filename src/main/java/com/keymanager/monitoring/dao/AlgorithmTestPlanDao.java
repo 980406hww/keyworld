@@ -21,7 +21,7 @@ public interface AlgorithmTestPlanDao extends BaseMapper<AlgorithmTestPlan> {
 
     void updateAlgorithmTestPlansStatus(@Param("uuids") List<Long> uuids,@Param("status") Integer status);
 
-    List<AlgorithmTestPlan> selectAvailableAlgorithmTestPlans();
+    AlgorithmTestPlan selectOneAvailableAlgorithmTestPlan();
 
-    void batchUpdateTestQueryTime(@Param("algorithmTestPlans") List<AlgorithmTestPlan> algorithmTestPlans);
+    void updateTestQueryTime(@Param("algorithmTestPlan") AlgorithmTestPlan algorithmTestPlan);
 }

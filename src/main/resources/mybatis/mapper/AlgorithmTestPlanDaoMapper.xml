@@ -58,7 +58,7 @@
         </where>
     </select>
 
-    <select id="selectAvailableAlgorithmTestPlans" resultType="com.keymanager.monitoring.entity.AlgorithmTestPlan">
+    <select id="selectOneAvailableAlgorithmTestPlan" resultType="com.keymanager.monitoring.entity.AlgorithmTestPlan">
         SELECT <include refid="Base_Column_List"/>
         FROM t_algorithm_test_plan atp
         WHERE atp.fstatus = 1
@@ -66,13 +66,10 @@
         OR atp.fExecuteQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 1 DAY)
     </select>
 
-    <select id="batchUpdateTestQueryTime">
+    <select id="updateTestQueryTime">
         UPDATE t_algorithm_test_plan atp
         SET atp.fExecuteQueryTime = NOW() ,fUpdateTime = NOW()
-        WHERE atp.FUuid in
-        <foreach item="algorithmTestPlan" index="index" collection="algorithmTestPlans" open="(" separator="," close=")">
-            #{algorithmTestPlan.uuid}
-        </foreach>
+        WHERE atp.FUuid = #{algorithmTestPlan.uuid}
     </select>
 
     <update id="updateCaptureRankJobsStatus">

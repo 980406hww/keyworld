@@ -5,11 +5,9 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.AlgorithmTestPlanSearchCriteria;
 import com.keymanager.monitoring.dao.AlgorithmTestPlanDao;
 import com.keymanager.monitoring.entity.AlgorithmTestPlan;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -54,21 +52,9 @@ public class AlgorithmTestPlanService extends ServiceImpl<AlgorithmTestPlanDao, 
         algorithmTestPlanDao.updateAlgorithmTestPlansStatus(uuids,status);
     }
 
-    public List<AlgorithmTestPlan> selectAvailableAlgorithmTestPlans() {
-        List<AlgorithmTestPlan> algorithmTestPlans = algorithmTestPlanDao.selectAvailableAlgorithmTestPlans();
-        algorithmTestPlanDao.batchUpdateTestQueryTime(algorithmTestPlans);
-        return algorithmTestPlans;
-    }
-
     public AlgorithmTestPlan selectOneAvailableAlgorithmTestPlan() {
-        List<AlgorithmTestPlan> algorithmTestPlans = algorithmTestPlanDao.selectAvailableAlgorithmTestPlans();
-        AlgorithmTestPlan algorithmTestPlan = null;
-        if (CollectionUtils.isNotEmpty(algorithmTestPlans)){
-            algorithmTestPlan = algorithmTestPlans.get(1);
-            List<AlgorithmTestPlan> list = new ArrayList<>();
-            list.add(algorithmTestPlan);
-            algorithmTestPlanDao.batchUpdateTestQueryTime(list);
-        }
+        AlgorithmTestPlan algorithmTestPlan = algorithmTestPlanDao.selectOneAvailableAlgorithmTestPlan();
+        algorithmTestPlanDao.updateTestQueryTime(algorithmTestPlan);
         return algorithmTestPlan;
     }
 }

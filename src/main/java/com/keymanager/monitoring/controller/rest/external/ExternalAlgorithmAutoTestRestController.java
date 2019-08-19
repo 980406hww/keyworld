@@ -12,10 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @ClassName ExternalAlgorithmAutoTestRestController
@@ -35,26 +35,11 @@ public class ExternalAlgorithmAutoTestRestController extends SpringMVCBaseContro
     @Autowired
     private AlgorithmTestTaskService algorithmTestTaskService;
 
-    @RequestMapping("/getAlgorithmTestPlans")
-    public ResponseEntity<?> getAlgorithmTestPlans(@RequestBody Map<String, Object> requestMap){
+    @RequestMapping(value = "/getAlgorithmTestPlan", method = RequestMethod.POST)
+    public ResponseEntity<?> getAlgorithmTestPlan(HttpServletRequest request){
         try {
-            String userName = (String) requestMap.get("userName");
-            String password = (String) requestMap.get("password");
-            if (validUser(userName, password)) {
-                List<AlgorithmTestPlan> algorithmTestPlans = algorithmTestPlanService.selectAvailableAlgorithmTestPlans();
-                return new ResponseEntity<Object>(algorithmTestPlans, HttpStatus.OK);
-            }
-        }catch (Exception ex){
-            logger.error(ex.getMessage());
-        }
-        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-    }
-
-    @RequestMapping("/getAlgorithmTestPlan")
-    public ResponseEntity<?> getAlgorithmTestPlan(@RequestBody Map<String, Object> requestMap){
-        try {
-            String userName = (String) requestMap.get("userName");
-            String password = (String) requestMap.get("password");
+            String userName = request.getParameter("userName");
+            String password = request.getParameter("password");
             if (validUser(userName, password)) {
                 AlgorithmTestPlan algorithmTestPlan = algorithmTestPlanService.selectOneAvailableAlgorithmTestPlan();
                 return new ResponseEntity<Object>(algorithmTestPlan, HttpStatus.OK);
