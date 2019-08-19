@@ -158,7 +158,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                         if (optimizationKeywordVO.getQueryInterval() == 0) {
                                             optimizationKeywordVO.setQueryInterval(5000);
                                         }
-                                        int maxOptimizeCount = Math.round(Calendar.getInstance().getTimeInMillis() / (1000 * optimizationKeywordVO.getQueryInterval()));
+                                        int maxOptimizeCount = Math.round(DateUtils.getFragmentInSeconds(Calendar.getInstance(), Calendar.DATE) / (optimizationKeywordVO.getQueryInterval()));
                                         Integer repeatCount = customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid());
                                         if (repeatCount == null) {
                                             customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), 0);
@@ -199,7 +199,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                     }
                                     customerKeywordUuids.clear();
                                 }
-                                if(!CollectionUtils.isNotEmpty(optimizationKeywordVOS)){
+                                if (!CollectionUtils.isNotEmpty(optimizationKeywordVOS)) {
                                     break;
                                 }
                             }
