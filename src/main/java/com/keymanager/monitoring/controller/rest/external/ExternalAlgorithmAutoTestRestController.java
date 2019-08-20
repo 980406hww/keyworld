@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @ClassName ExternalAlgorithmAutoTestRestController
@@ -36,10 +36,10 @@ public class ExternalAlgorithmAutoTestRestController extends SpringMVCBaseContro
     private AlgorithmTestTaskService algorithmTestTaskService;
 
     @RequestMapping(value = "/getAlgorithmTestPlan", method = RequestMethod.POST)
-    public ResponseEntity<?> getAlgorithmTestPlan(HttpServletRequest request){
+    public ResponseEntity<?> getAlgorithmTestPlan(@RequestBody Map<String, Object> requestMap){
         try {
-            String userName = request.getParameter("userName");
-            String password = request.getParameter("password");
+            String userName = (String) requestMap.get("userName");
+            String password = (String) requestMap.get("password");
             if (validUser(userName, password)) {
                 AlgorithmTestPlan algorithmTestPlan = algorithmTestPlanService.selectOneAvailableAlgorithmTestPlan();
                 return new ResponseEntity<Object>(algorithmTestPlan, HttpStatus.OK);
@@ -50,18 +50,18 @@ public class ExternalAlgorithmAutoTestRestController extends SpringMVCBaseContro
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping("/saveAlgorithmTestTasks")
-    public ResponseEntity<?> saveAlgorithmTestTasks(@RequestBody ExternalAlgorithmTestTaskCriteria externalAlgorithmTestTaskCriteria){
+    @RequestMapping("/saveAlgorithmTestTask")
+    public ResponseEntity<?> saveAlgorithmTestTask(@RequestBody ExternalAlgorithmTestTaskCriteria externalAlgorithmTestTaskCriteria){
         try {
             String userName = externalAlgorithmTestTaskCriteria.getUserName();
             String password = externalAlgorithmTestTaskCriteria.getPassword();
             if (validUser(userName, password)) {
-                algorithmTestTaskService.saveAlgorithmTestTasks(externalAlgorithmTestTaskCriteria.getAlgorithmTestTasks());
-                return new ResponseEntity<Object>(HttpStatus.OK);
+                algorithmTestTaskService.saveAlgorithmTestTask(externalAlgorithmTestTaskCriteria);
+                return new ResponseEntity<Object>(true,HttpStatus.OK);
             }
         }catch (Exception ex){
             logger.error(ex.getMessage());
         }
-        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
     }
 }

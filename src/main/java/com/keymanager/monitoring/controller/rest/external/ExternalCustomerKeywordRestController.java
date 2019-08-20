@@ -3,6 +3,7 @@ package com.keymanager.monitoring.controller.rest.external;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.BaseCriteria;
+import com.keymanager.monitoring.criteria.ExternalCustomerKeywordCriteria;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.*;
@@ -653,4 +654,24 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
+
+
+    @RequestMapping(value = "/saveTestCustomerKeywords", method = RequestMethod.POST)
+    public ResponseEntity<?> saveTestCustomerKeywords(@RequestBody ExternalCustomerKeywordCriteria externalCustomerKeywordCriteria) {
+        try {
+            String userName = externalCustomerKeywordCriteria.getUserName();
+            String password = externalCustomerKeywordCriteria.getPassword();
+            if (validUser(userName, password)) {
+                JSONArray jsonArray = JSONArray.fromObject(externalCustomerKeywordCriteria.getCustomerKeywords());
+                customerKeywordService.saveTestCustomerKeywords(JSONArray.toList(jsonArray, new CustomerKeyword(), new JsonConfig()));
+                return new ResponseEntity<Object>(true, HttpStatus.OK);
+            }
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.error("saveTestCustomerKeywords:     " + ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
 }

@@ -1867,4 +1867,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public int getQZSettingKeywordCount(int customerUuid, String groupName) {
         return customerKeywordDao.getQZSettingKeywordCount(customerUuid, groupName);
     }
+
+    public void saveTestCustomerKeywords(List<CustomerKeyword> customerKeywords) {
+        this.insertBatch(customerKeywords);
+    }
 }

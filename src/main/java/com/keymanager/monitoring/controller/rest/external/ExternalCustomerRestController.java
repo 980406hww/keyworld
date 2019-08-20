@@ -27,28 +27,29 @@ public class ExternalCustomerRestController extends SpringMVCBaseController {
     private CustomerService customerService;
 
 
-    @RequestMapping(value = "getActiveCustomerSimpleInfo" , method = RequestMethod.POST)
-    public ResponseEntity<?> getActiveCustomerSimpleInfo(@RequestBody CustomerCriteria customerCriteria) throws Exception{
+    @RequestMapping(value = "getActiveCustomerSimpleInfo", method = RequestMethod.POST)
+    public ResponseEntity<?> getActiveCustomerSimpleInfo(@RequestBody CustomerCriteria customerCriteria)
+            throws Exception {
         try {
             if (validUser(customerCriteria.getUserName(), customerCriteria.getPassword())) {
                 List<Customer> customers = customerService.getActiveCustomerSimpleInfo(customerCriteria);
                 return new ResponseEntity<Object>(customers, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             logger.error(ex.getMessage());
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "saveExternalCustomer" , method = RequestMethod.POST)
+    @RequestMapping(value = "saveExternalCustomer", method = RequestMethod.POST)
     public ResponseEntity<?> saveCustomer(@RequestBody CustomerCriteria customerCriteria) {
         try {
             if (validUser(customerCriteria.getUserName(), customerCriteria.getPassword())) {
                 customerService.saveExternalCustomer(customerCriteria);
                 return new ResponseEntity<Object>(customerCriteria.getUuid(), HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             logger.error(ex.getMessage());
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
