@@ -40,12 +40,13 @@ public class ExternalCustomerRestController extends SpringMVCBaseController {
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
+
     @RequestMapping(value = "saveExternalCustomer" , method = RequestMethod.POST)
     public ResponseEntity<?> saveCustomer(@RequestBody CustomerCriteria customerCriteria) {
         try {
             if (validUser(customerCriteria.getUserName(), customerCriteria.getPassword())) {
                 customerService.saveExternalCustomer(customerCriteria);
-                return new ResponseEntity<Object>(customerCriteria, HttpStatus.OK);
+                return new ResponseEntity<Object>(customerCriteria.getUuid(), HttpStatus.OK);
             }
         }catch (Exception ex){
             logger.error(ex.getMessage());
@@ -53,6 +54,4 @@ public class ExternalCustomerRestController extends SpringMVCBaseController {
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
-
-
 }
