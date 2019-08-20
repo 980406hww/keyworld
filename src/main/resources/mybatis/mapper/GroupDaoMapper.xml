@@ -97,4 +97,9 @@
         FROM t_group g
         WHERE g.fGroupName = #{optimizeGroupName}
     </select>
+
+    <insert id="saveExternalGroup" parameterType="com.keymanager.monitoring.criteria.GroupCriteria" useGeneratedKeys="true" keyProperty="uuid" keyColumn="fUuid">
+        INSERT INTO t_group (fGroupName, fOperationCombineUuid, fCreateBy)
+        VALUES(#{groupName}, (SELECT fuuid FROM t_operation_combine WHERE fOperationCombineName =#{operationCombineName}), #{createBy})
+    </insert>
 </mapper>

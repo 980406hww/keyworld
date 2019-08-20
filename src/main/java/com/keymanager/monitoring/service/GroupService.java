@@ -1,17 +1,21 @@
 package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.monitoring.criteria.*;
+import com.keymanager.monitoring.criteria.GroupCriteria;
+import com.keymanager.monitoring.criteria.GroupSettingCriteria;
+import com.keymanager.monitoring.criteria.OperationCombineCriteria;
 import com.keymanager.monitoring.dao.GroupDao;
 import com.keymanager.monitoring.entity.Group;
 import com.keymanager.monitoring.entity.OperationCombine;
-import com.keymanager.monitoring.vo.GroupVO;
 import com.keymanager.monitoring.vo.OperationCombineVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author zhoukai
@@ -126,5 +130,9 @@ public class GroupService extends ServiceImpl<GroupDao, Group> {
 
     public void deleteGroupsBelowOperationCombine(List<Long> groupUuids) {
         groupDao.deleteBatchIds(groupUuids);
+    }
+
+    public void saveExternalGroup(GroupCriteria groupCriteria) {
+        groupDao.saveExternalGroup(groupCriteria);
     }
 }
