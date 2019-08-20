@@ -669,7 +669,7 @@
     </select>
 
     <update id="updateOptimizationQueryTime">
-        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(fQueryTime, INTERVAL (fQueryInterval + ROUND(RAND(1000)*1000))  SECOND ),
+        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(fQueryTime, INTERVAL (fQueryInterval + ROUND(RAND(10)*10))  SECOND ),
         fInvalidFlag = if(fInvalidRefreshCount > 8, 1, 0)
         WHERE fUuid IN
         <foreach item="uuid" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
@@ -678,7 +678,7 @@
     </update>
 
     <update id="updateOptimizationQueryTimeSingle">
-        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(fQueryTime, INTERVAL (fQueryInterval + ROUND(RAND(1000)*1000))  SECOND ),
+        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(fQueryTime, INTERVAL (fQueryInterval + ROUND(RAND(10)*10))  SECOND ),
         fInvalidFlag = if(fInvalidRefreshCount > #{maxInvalidCount}, 1, 0)
         WHERE fUuid = #{customerKeywordUuid}
     </update>
