@@ -14,15 +14,6 @@ public class OptimizationKeywordVO {
     private String title;
     private int optimizedCount;
     private int queryInterval;
-    private int optimizePlanCount;
-
-    public int getOptimizePlanCount() {
-        return optimizePlanCount;
-    }
-
-    public void setOptimizePlanCount(int optimizePlanCount) {
-        this.optimizePlanCount = optimizePlanCount;
-    }
 
     public String getTerminalType() {
         return terminalType;
