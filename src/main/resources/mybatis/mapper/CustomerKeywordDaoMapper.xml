@@ -1671,20 +1671,30 @@
             ck.fUrl AS 'url',
             ck.fSearchEngine AS 'searchEngine',
             ck.fBearPawNumber AS 'bearPawNumber'
-        FROM t_customer c
-        LEFT JOIN t_customer_keyword ck
-        ON ck.fCustomerUuid = c.fUuid
+        FROM t_customer_keyword ck
         WHERE ck.fType = 'qz'
         AND ck.fStatus = 1
-        AND ck.fSearchEngine = '百度'
-        AND ck.fMachineGroup &lt;&gt; 'Pause'
-        AND (
-            (ck.fCaptureStatus = 0 AND (ck.fCapturePositionQueryTime IS NULL OR ck.fCapturePositionQueryTime &lt;= CURRENT_DATE()))
-            OR
-            (ck.fCaptureStatus = 1 AND ck.fCapturePositionQueryTime &lt;=  DATE_SUB(NOW(), INTERVAL 30 MINUTE))
-        )
+        AND CK.fSearchEngine = '百度'
+        AND ck.fMachineGroup != 'Pause'
+        AND (ck.fCaptureStatus = 0 AND ck.fCapturePositionQueryTime &lt;= CURRENT_DATE())
+        UNION ALL
+        SELECT
+            ck.fUuid AS 'uuid',
+            ck.fTerminalType AS 'terminalType',
+            ck.fTitle AS 'title',
+            ck.fKeyword AS 'keyword',
+            ck.fUrl AS 'url',
+            ck.fSearchEngine AS 'searchEngine',
+            ck.fBearPawNumber AS 'bearPawNumber'
+        FROM t_customer_keyword ck
+        WHERE ck.fType = 'qz'
+        AND ck.fStatus = 1
+        AND CK.fSearchEngine = '百度'
+        AND ck.fMachineGroup != 'Pause'
+        AND (ck.fCaptureStatus = 1 AND ck.fCapturePositionQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE))
         LIMIT 3000
     </select>
+
     <update id="updateCrawlRankKeywordTimeByUuids">
         UPDATE t_customer_keyword
         SET
