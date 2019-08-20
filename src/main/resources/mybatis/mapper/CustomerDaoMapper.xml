@@ -182,4 +182,9 @@
             </foreach>
         )
     </update>
+
+    <insert id="saveExternalCustomer">
+        insert into t_customer (fUserID, fEntryType, fContactPerson, fType, fSearchEngine, fRemark, fStatus)
+        values(#{customerCriteria.loginName},#{customerCriteria.entryType},#{customerCriteria.contactPerson}, #{customerCriteria.type}, #{customerCriteria.searchEngine},#{customerCriteria.remark},#{customerCriteria.status})
+    </insert>
 </mapper>

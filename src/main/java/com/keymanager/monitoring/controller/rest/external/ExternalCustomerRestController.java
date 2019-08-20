@@ -3,11 +3,7 @@ package com.keymanager.monitoring.controller.rest.external;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.entity.Customer;
-import com.keymanager.monitoring.entity.NegativeList;
 import com.keymanager.monitoring.service.CustomerService;
-import com.keymanager.util.Constants;
-import com.keymanager.util.TerminalTypeMapping;
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +36,23 @@ public class ExternalCustomerRestController extends SpringMVCBaseController {
             }
         }catch (Exception ex){
             logger.error(ex.getMessage());
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
+    @RequestMapping(value = "saveExternalCustomer" , method = RequestMethod.POST)
+    public ResponseEntity<?> saveCustomer(@RequestBody CustomerCriteria customerCriteria) {
+        try {
+            if (validUser(customerCriteria.getUserName(), customerCriteria.getPassword())) {
+                customerService.saveExternalCustomer(customerCriteria);
+                return new ResponseEntity<Object>(customerCriteria, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+
 }

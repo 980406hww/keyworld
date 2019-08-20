@@ -270,4 +270,8 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
         String[] uuids = uuidstr.split(",");
         customerDao.updateCustomerDailyReportIdentify(uuids);
 	}
+
+	public void saveExternalCustomer(CustomerCriteria customerCriteria) {
+		customerDao.saveExternalCustomer(customerCriteria);
+	}
 }
