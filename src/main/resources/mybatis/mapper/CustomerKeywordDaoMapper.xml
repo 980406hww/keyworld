@@ -1218,6 +1218,7 @@
         AND fBearPawNumber &gt; ''
         LIMIT 1
     </select>
+
     <update id="batchUpdateRequireDalete">
         <foreach item="item" index="index" collection="requireDeleteKeywordVOs" open="" separator=";" close="">
             UPDATE t_customer_keyword

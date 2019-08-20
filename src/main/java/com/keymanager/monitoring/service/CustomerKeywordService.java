@@ -680,7 +680,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     }
                     if (percentageCustomerChargeTypeCalculation.getChargesOfFirstPage() != null) {
                         double positionFirstPageFee = calculatePrice(customerKeyword.getCurrentIndexCount(),
-                                fixedPriceCustomerChargeTypeCalculation.getChargesOfFirstPage(), percentageCustomerChargeTypeCalculation
+                                (fixedPriceCustomerChargeTypeCalculation != null ? fixedPriceCustomerChargeTypeCalculation.getChargesOfFirstPage() :
+                                        null), percentageCustomerChargeTypeCalculation
                                         .getChargesOfFirstPage());
                         if (percentageCustomerChargeTypeCalculation.getMaxPrice() != null) {
                             double maxPrice = percentageCustomerChargeTypeCalculation.getMaxPrice();
@@ -729,7 +730,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             return fixedPrice.doubleValue();
         }
         double price = Math.round((currentIndexCount * pricePercentage.doubleValue()) / 1000.0) * 10;
-        return price < fixedPrice.doubleValue() ? fixedPrice.doubleValue() : price;
+        double checkedPrice = fixedPrice == null ? 0.0 : fixedPrice.doubleValue();
+        return price < checkedPrice ? checkedPrice : price;
     }
 
     public List<Map> getCustomerKeywordsCount(List<Long> customerUuids, String terminalType, String entryType) {
@@ -746,17 +748,17 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void updateCustomerKeywordGroupNameByRank(Map<String, Object> resultMap) {
         List<Long> customerKeywordUuids = customerKeywordDao.searchCustomerKeywordUuidByRank(resultMap);
-        List<Long> customerKeyowrdUuidsTmp = new ArrayList<Long>();
+        List<Long> customerKeywordUuidsTmp = new ArrayList<Long>();
         if (customerKeywordUuids != null) {
             for (Long customerKeywordUuid : customerKeywordUuids) {
-                customerKeyowrdUuidsTmp.add(customerKeywordUuid);
-                if (customerKeyowrdUuidsTmp.size() == 200) {
-                    customerKeywordDao.updateCustomerKeywordGroupNameByRank(customerKeyowrdUuidsTmp, resultMap.get("targetGroupName").toString());
-                    customerKeyowrdUuidsTmp.clear();
+                customerKeywordUuidsTmp.add(customerKeywordUuid);
+                if (customerKeywordUuidsTmp.size() == 200) {
+                    customerKeywordDao.updateCustomerKeywordGroupNameByRank(customerKeywordUuidsTmp, resultMap.get("targetGroupName").toString());
+                    customerKeywordUuidsTmp.clear();
                 }
             }
-            if (customerKeyowrdUuidsTmp.size() > 0) {
-                customerKeywordDao.updateCustomerKeywordGroupNameByRank(customerKeyowrdUuidsTmp, resultMap.get("targetGroupName").toString());
+            if (customerKeywordUuidsTmp.size() > 0) {
+                customerKeywordDao.updateCustomerKeywordGroupNameByRank(customerKeywordUuidsTmp, resultMap.get("targetGroupName").toString());
             }
         }
     }
@@ -769,13 +771,16 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public boolean handleExcel(InputStream inputStream, String excelType, int customerUuid, String type, String terminalType, String userName)
             throws Exception {
         AbstractExcelReader operator = AbstractExcelReader.createExcelOperator(inputStream, excelType);
-        List<CustomerKeyword> customerKeywords = operator.readDataFromExcel();
-        supplementInfo(customerKeywords, customerUuid, type, terminalType);
-        addCustomerKeywords(customerKeywords, userName);
-        return true;
+        if (null != operator) {
+            List<CustomerKeyword> customerKeywords = operator.readDataFromExcel();
+            supplementInfo(customerKeywords, customerUuid, type, terminalType);
+            addCustomerKeywords(customerKeywords, userName);
+            return true;
+        }
+        return false;
     }
 
-    public void supplementInfo(List<CustomerKeyword> customerKeywords, int customerUuid, String type, String terminalType) {
+    private void supplementInfo(List<CustomerKeyword> customerKeywords, int customerUuid, String type, String terminalType) {
         for (CustomerKeyword customerKeyword : customerKeywords) {
             customerKeyword.setCustomerUuid(customerUuid);
             customerKeyword.setType(type);
@@ -786,19 +791,24 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public void addCustomerKeywords(List<CustomerKeyword> customerKeywords, String loginName) throws Exception {
+    private void addCustomerKeywords(List<CustomerKeyword> customerKeywords, String loginName) throws Exception {
         for (CustomerKeyword customerKeyword : customerKeywords) {
             if (customerKeyword.getKeywordEffect() == null || customerKeyword.getKeywordEffect().equals("")) {
                 customerKeyword.setKeywordEffect(KeywordEffectEnum.Common.name());
             } else {
-                if (customerKeyword.getKeywordEffect().trim().equals("曲线词")) {
-                    customerKeyword.setKeywordEffect(KeywordEffectEnum.Curve.name());
-                } else if (customerKeyword.getKeywordEffect().trim().equals("指定词")) {
-                    customerKeyword.setKeywordEffect(KeywordEffectEnum.Appointment.name());
-                } else if (customerKeyword.getKeywordEffect().trim().equals("赠送词")) {
-                    customerKeyword.setKeywordEffect(KeywordEffectEnum.Present.name());
-                } else {
-                    customerKeyword.setKeywordEffect(KeywordEffectEnum.Common.name());
+                switch (customerKeyword.getKeywordEffect().trim()) {
+                    case "曲线词":
+                        customerKeyword.setKeywordEffect(KeywordEffectEnum.Curve.name());
+                        break;
+                    case "指定词":
+                        customerKeyword.setKeywordEffect(KeywordEffectEnum.Appointment.name());
+                        break;
+                    case "赠送词":
+                        customerKeyword.setKeywordEffect(KeywordEffectEnum.Present.name());
+                        break;
+                    default:
+                        customerKeyword.setKeywordEffect(KeywordEffectEnum.Common.name());
+                        break;
                 }
             }
             addCustomerKeyword(customerKeyword, loginName);
@@ -840,7 +850,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         int noPositionMaxInvalidCount = 2;
         OperationCombine operationCombine = operationCombineService.getOperationCombine(machineInfo.getGroup(), machineInfo.getTerminalType());
         GroupSetting groupSetting = groupSettingService.getGroupSetting(operationCombine);
-        Integer maxInvalidCount = operationCombine.getMaxInvalidCount();
+        int maxInvalidCount = operationCombine.getMaxInvalidCount();
 
         if (groupSetting.getOperationType().contains(Constants.CONFIG_TYPE_ZHANNEI_SOGOU)) {
             Config configInvalidRefreshCount = configService.getConfig(Constants.CONFIG_TYPE_ZHANNEI_SOGOU, Constants.CONFIG_KEY_NOPOSITION_MAX_INVALID_COUNT);
@@ -891,13 +901,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 customerKeywordForOptimization.setNegativeListUpdateTime(negativeListUpdateInfo.getNegativeListUpdateTime());
             }
 
-            Set<String> specialGruupNames = new HashSet<String>();
-            specialGruupNames.add("pc_pm_xiaowu");
-            specialGruupNames.add("pc_pm_learner");
-            specialGruupNames.add("pc_pm_51yza");
-            specialGruupNames.add("pc_pm_yilufa");
+            Set<String> specialGroupNames = new HashSet<String>();
+            specialGroupNames.add("pc_pm_xiaowu");
+            specialGroupNames.add("pc_pm_learner");
+            specialGroupNames.add("pc_pm_51yza");
+            specialGroupNames.add("pc_pm_yilufa");
 
-            if (specialGruupNames.contains(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
+            if (specialGroupNames.contains(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
                     customerKeyword.getCurrentPosition() > 20)) {
                 customerKeywordForOptimization.setPage(2);
             } else {
@@ -905,7 +915,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
 
             if (groupSetting.getPageSize() != null) {
-                if (specialGruupNames.contains(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
+                if (specialGroupNames.contains(customerKeyword.getOptimizeGroupName()) && (customerKeyword.getCurrentPosition() == 0 ||
                         customerKeyword.getCurrentPosition() > 20)) {
                     customerKeywordForOptimization.setPageSize(50);
                 } else {
@@ -1076,7 +1086,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         int noPositionMaxInvalidCount = 2;
 
         OperationCombine operationCombine = operationCombineService.getOperationCombine(machineInfo.getGroup(), machineInfo.getTerminalType());
-        Integer maxInvalidCount = operationCombine.getMaxInvalidCount();
+        int maxInvalidCount = operationCombine.getMaxInvalidCount();
         if (usingOperationType.contains(Constants.CONFIG_TYPE_ZHANNEI_SOGOU)) {
             Config configInvalidRefreshCount = configService.getConfig(Constants.CONFIG_TYPE_ZHANNEI_SOGOU, Constants.CONFIG_KEY_NOPOSITION_MAX_INVALID_COUNT);
             noPositionMaxInvalidCount = Integer.parseInt(configInvalidRefreshCount.getValue());
@@ -1234,7 +1244,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 configValue = ct;
             } else {
                 String afterSplitStr = ctValue.substring(splitIndex + splitStr.length());
-                if (afterSplitStr.indexOf(",") == -1) { // 分配到最后一个ct
+                if (!afterSplitStr.contains(",")) { // 分配到最后一个ct
                     int count = Integer.parseInt(ctValue.substring(splitIndex + splitStr.length()));
                     int countLength = (count + "").length();
                     if (count == countPerElement) {
@@ -1253,7 +1263,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                         String beginCt = ctValue.substring(0, splitIndex);
                         String endCt = ctValue.substring(splitIndex);
                         endCt = endCt.substring(endCt.indexOf(",") + countLength);
-                        if (endCt.indexOf(",") > -1) {
+                        if (endCt.contains(",")) {
                             String ct = endCt.substring(0, endCt.indexOf(","));
                             configValue = ct;
                             configCt.setValue(beginCt + "," + ct + splitStr + "1" + endCt.substring(endCt.indexOf(",")));
@@ -1279,9 +1289,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         String[] firstElements = str.split(",");
         Set<String> elements = new HashSet<String>();
         for (String firstElement : firstElements) {
-            for (String subElement : firstElement.split("，")) {
-                elements.add(subElement);
-            }
+            Collections.addAll(elements, firstElement.split("，"));
         }
         return elements;
     }
@@ -1303,7 +1311,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordForOptimization != null;
     }
 
-    public void resetBigKeywordIndicator(String groupName, int maxInvalidCount, int noPositionMaxInvalidCount) {
+    private void resetBigKeywordIndicator(String groupName, int maxInvalidCount, int noPositionMaxInvalidCount) {
         List<Map> remainingOptimizationCountMap = customerKeywordDao.searchRemainingOptimizationCount(groupName, maxInvalidCount, noPositionMaxInvalidCount);
         if (CollectionUtils.isNotEmpty(remainingOptimizationCountMap)) {
             customerKeywordDao.cleanBigKeywordIndicator(groupName);
@@ -1332,7 +1340,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void adjustOptimizationCount() {
-        List<String> groupNames = new ArrayList<String>();
         List<Map> bcCustomerKeywordSummaries = customerKeywordDao.searchKeywordsForAdjustingOptimizationCount("bc");
 //        List<Map> ptCustomerKeywordSummaries = customerKeywordDao.searchKeywordsForAdjustingOptimizationCount("pt");
 //        bcCustomerKeywordSummaries.addAll(ptCustomerKeywordSummaries);
@@ -1397,7 +1404,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
         Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
         if (captureRankJobStatus) {
-            customerKeywordForCapturePosition.setCaptureRankJobStatus(captureRankJobStatus);
+            customerKeywordForCapturePosition.setCaptureRankJobStatus(true);
             Long customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForCapturePosition(terminalType, groupNames, customerUuid, startTime, 0);
             if (null == customerKeywordUuid) {
                 customerKeywordUuid = customerKeywordDao.getCustomerKeywordUuidForCapturePosition(terminalType, groupNames, customerUuid, startTime, 1);
