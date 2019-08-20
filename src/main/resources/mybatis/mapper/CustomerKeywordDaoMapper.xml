@@ -1674,8 +1674,7 @@
         FROM t_customer c
         LEFT JOIN t_customer_keyword ck
         ON ck.fCustomerUuid = c.fUuid
-        WHERE ck.fTerminalType = 'PC'
-        AND ck.fType = 'qz'
+        WHERE ck.fType = 'qz'
         AND ck.fStatus = 1
         AND ck.fSearchEngine = '百度'
         AND ck.fMachineGroup &lt;&gt; 'Pause'
