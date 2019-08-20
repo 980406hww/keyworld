@@ -501,5 +501,6 @@
             qs.fPhoneGroup   AS 'phoneGroup'
         FROM t_qz_setting qs
         WHERE EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = qs.fCustomerUuid)
+        AND qs.fSearchEngine = '百度'
     </select>
 </mapper>
