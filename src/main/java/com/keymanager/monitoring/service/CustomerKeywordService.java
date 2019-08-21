@@ -416,7 +416,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
         }
         if (CollectionUtils.isNotEmpty(addCustomerKeywords)) {
-            customerKeywordDao.addCustomerKeywords(addCustomerKeywords);
+            int fromIndex = 0, toIndex = 1000;
+            do {
+                customerKeywordDao.addCustomerKeywords(new ArrayList<>(addCustomerKeywords.subList(fromIndex, toIndex >
+                        addCustomerKeywords.size() ? addCustomerKeywords.size() : toIndex)));
+                fromIndex += 1000; toIndex += 1000;
+            } while (addCustomerKeywords.size() > fromIndex);
         }
     }
 
