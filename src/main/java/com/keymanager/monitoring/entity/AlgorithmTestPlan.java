@@ -99,6 +99,12 @@ public class AlgorithmTestPlan{
     private Date executeQueryTime;
 
     /**
+     * 状态 0：暂停 1：激活
+     */
+    @TableField("fExcuteStatus")
+    private Integer excuteStatus;
+
+    /**
      * 创建时间
      */
     @TableField("fCreateTime")
@@ -212,6 +218,14 @@ public class AlgorithmTestPlan{
 
     public void setExecuteQueryTime(Date executeQueryTime) {
         this.executeQueryTime = executeQueryTime;
+    }
+
+    public Integer getExcuteStatus() {
+        return excuteStatus;
+    }
+
+    public void setExcuteStatus(Integer excuteStatus) {
+        this.excuteStatus = excuteStatus;
     }
 
     public Date getCreateTime() {

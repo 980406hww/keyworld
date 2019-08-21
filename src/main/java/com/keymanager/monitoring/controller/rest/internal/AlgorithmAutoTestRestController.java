@@ -42,34 +42,35 @@ public class AlgorithmAutoTestRestController {
     @RequiresPermissions("/internal/algorithmAutoTest/searchAlgorithmTestPlans")
     @RequestMapping(value = "/searchAlgorithmTestPlans", method = RequestMethod.GET)
     public ModelAndView toSetCrawlRanking(@RequestParam(defaultValue = "1") int currentPage, @RequestParam(defaultValue = "50") int displaysRecords, HttpServletRequest request) {
-        return constructCaptureRankJobModelAndView(request, new AlgorithmTestPlanSearchCriteria(), currentPage + "", displaysRecords + "");
+        return constructAlgorithmTestPlanModelAndView(request, new AlgorithmTestPlanSearchCriteria(), currentPage + "", displaysRecords + "");
     }
 
     @RequiresPermissions("/internal/algorithmAutoTest/searchAlgorithmTestPlans")
     @RequestMapping(value = "/searchAlgorithmTestPlans", method = RequestMethod.POST)
-    public ModelAndView searchCaptureRankingJobs(AlgorithmTestPlanSearchCriteria algorithmTestPlanSearchCriteria, HttpServletRequest request) {
+    public ModelAndView searchAlgorithmTestPlans(AlgorithmTestPlanSearchCriteria algorithmTestPlanSearchCriteria, HttpServletRequest request) {
         String currentPageNumber = request.getParameter("currentPageNumber");
         String pageSize = request.getParameter("pageSize");
         if (null == currentPageNumber) {
             currentPageNumber = "1";
             pageSize = "50";
         }
-        return constructCaptureRankJobModelAndView(request, algorithmTestPlanSearchCriteria, currentPageNumber, pageSize);
+        return constructAlgorithmTestPlanModelAndView(request, algorithmTestPlanSearchCriteria, currentPageNumber, pageSize);
     }
 
-    private ModelAndView constructCaptureRankJobModelAndView(HttpServletRequest request, AlgorithmTestPlanSearchCriteria algorithmTestPlanSearchCriteria, String currentPage, String pageSize) {
+    private ModelAndView constructAlgorithmTestPlanModelAndView(HttpServletRequest request, AlgorithmTestPlanSearchCriteria algorithmTestPlanSearchCriteria, String currentPage, String pageSize) {
         ModelAndView modelAndView = new ModelAndView("algorithmAutoTest/algorithmTestPlan");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         Page<AlgorithmTestPlan> page = algorithmTestPlanService.searchAlgorithmTestPlans(new Page<AlgorithmTestPlan>(Integer.parseInt(currentPage), Integer.parseInt(pageSize)), algorithmTestPlanSearchCriteria);
         modelAndView.addObject("page", page);
         modelAndView.addObject("algorithmTestPlanSearchCriteria", algorithmTestPlanSearchCriteria);
         modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));
+        modelAndView.addObject("terminalType", terminalType);
         return modelAndView;
     }
 
     @RequiresPermissions("/internal/algorithmAutoTest/saveAlgorithmTestPlan")
     @RequestMapping(value = "/saveAlgorithmTestPlan", method = RequestMethod.POST)
-    public ResponseEntity<?> saveCaptureRankJob(@RequestBody AlgorithmTestPlan algorithmTestPlan, HttpServletRequest request) {
+    public ResponseEntity<?> saveAlgorithmTestPlan(@RequestBody AlgorithmTestPlan algorithmTestPlan, HttpServletRequest request) {
         try {
             algorithmTestPlanService.saveAlgorithmTestPlan(algorithmTestPlan);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
@@ -87,7 +88,7 @@ public class AlgorithmAutoTestRestController {
 
     @RequiresPermissions("/internal/algorithmAutoTest/deleteAlgorithmTestPlan")
     @RequestMapping(value = "/deleteAlgorithmTestPlan", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteCaptureRankJob(Long uuid) {
+    public ResponseEntity<?> deleteAlgorithmTestPlan(Long uuid) {
         try {
             algorithmTestPlanService.deleteById(uuid);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
@@ -99,7 +100,7 @@ public class AlgorithmAutoTestRestController {
 
     @RequiresPermissions("/internal/algorithmAutoTest/deleteAlgorithmTestPlan")
     @RequestMapping(value = "/deleteAlgorithmTestPlans", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteCaptureRankJobs(@RequestBody Map<String, Object> requestMap) {
+    public ResponseEntity<?> deleteAlgorithmTestPlans(@RequestBody Map<String, Object> requestMap) {
         try {
             algorithmTestPlanService.deleteBatchIds((List<Long>) requestMap.get("uuids"));
             return new ResponseEntity<Object>(true, HttpStatus.OK);
@@ -111,7 +112,7 @@ public class AlgorithmAutoTestRestController {
 
     @RequiresPermissions("/internal/algorithmAutoTest/changeAlgorithmTestPlanStatus")
     @RequestMapping(value = "/changeAlgorithmTestPlanStatus", method = RequestMethod.POST)
-    public ResponseEntity<?> changeCaptureRankJobStatus(@RequestBody Map<String, Object> requestMap) {
+    public ResponseEntity<?> changeAlgorithmTestPlanStatus(@RequestBody Map<String, Object> requestMap) {
         try {
             Long uuid = Long.parseLong((String) requestMap.get("uuid"));
             Integer status = Integer.parseInt((String)requestMap.get("status"));
@@ -125,7 +126,7 @@ public class AlgorithmAutoTestRestController {
 
     @RequiresPermissions("/internal/algorithmAutoTest/saveAlgorithmTestPlan")
     @RequestMapping(value = "/updateAlgorithmTestPlansStatus", method = RequestMethod.POST)
-    public ResponseEntity<?> updateCaptureRankJobsStatus(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+    public ResponseEntity<?> updateAlgorithmTestPlansStatus(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         try {
             List<Long> uuids = (List<Long>) requestMap.get("uuids");
             Integer status = Integer.valueOf(String.valueOf(requestMap.get("status")));

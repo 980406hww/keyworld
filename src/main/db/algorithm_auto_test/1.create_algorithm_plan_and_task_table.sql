@@ -22,6 +22,9 @@ CREATE TABLE `t_algorithm_test_plan`  (
   PRIMARY KEY (`fUuid`)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8 COMMENT = '算法测试任务表' ;
 
+#添加执行状态字段
+ALTER TABLE `db_keyword`.`t_algorithm_test_plan`ADD COLUMN `fExcuteStatus` tinyint(4) NULL DEFAULT 0 COMMENT '执行状态 0:未执行、1：执行中' AFTER `fExecuteQueryTime` ;
+
 #任务表
 DROP TABLE IF EXISTS `t_algorithm_test_task`;
 CREATE TABLE `t_algorithm_test_task`  (

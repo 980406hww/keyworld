@@ -26,14 +26,14 @@
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
+            <input type="hidden" name="ternimal" id="ternimal" value="${terminalType}" />
             &nbsp;&nbsp;测试计划名称:<input type="text" name="algorithmTestPlanName" id="algorithmTestPlanName" value="${algorithmTestPlanSearchCriteria.algorithmTestPlanName}">
             &nbsp;&nbsp;操作组合名称:<input type="text" name="operationCombineName" id="operationCombineName" value="${algorithmTestPlanSearchCriteria.operationCombineName}">
             &nbsp;&nbsp;机器分组:<input type="text" name="machineGroup" id="machineGroup" value="${algorithmTestPlanSearchCriteria.machineGroup}">
-            &nbsp;&nbsp;
+
             <shiro:hasPermission name="/internal/algorithmAutoTest/searchAlgorithmTestPlans">
             <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
             </shiro:hasPermission>
-
             <shiro:hasPermission name="/internal/algorithmAutoTest/saveAlgorithmTestPlan">
                 <input type="button" value=" 添加 " onclick="addAlgorithmTestPlans()">&nbsp;&nbsp;
             </shiro:hasPermission>

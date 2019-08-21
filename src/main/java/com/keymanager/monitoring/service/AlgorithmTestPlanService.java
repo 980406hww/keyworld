@@ -5,11 +5,10 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.AlgorithmTestPlanSearchCriteria;
 import com.keymanager.monitoring.dao.AlgorithmTestPlanDao;
 import com.keymanager.monitoring.entity.AlgorithmTestPlan;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * <p>
@@ -52,9 +51,9 @@ public class AlgorithmTestPlanService extends ServiceImpl<AlgorithmTestPlanDao, 
         algorithmTestPlanDao.updateAlgorithmTestPlansStatus(uuids,status);
     }
 
-    public AlgorithmTestPlan selectOneAvailableAlgorithmTestPlan() {
+    public synchronized AlgorithmTestPlan selectOneAvailableAlgorithmTestPlan() {
         AlgorithmTestPlan algorithmTestPlan = algorithmTestPlanDao.selectOneAvailableAlgorithmTestPlan();
-        algorithmTestPlanDao.updateTestQueryTime(algorithmTestPlan);
+        algorithmTestPlanDao.updateExcuteQueryTime(algorithmTestPlan.getUuid());
         return algorithmTestPlan;
     }
 }

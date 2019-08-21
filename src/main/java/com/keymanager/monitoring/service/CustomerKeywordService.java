@@ -1869,6 +1869,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void saveTestCustomerKeywords(List<CustomerKeyword> customerKeywords) {
-        this.insertBatch(customerKeywords);
+        customerKeywordDao.saveTestCustomerKeywords(customerKeywords);
     }
 }

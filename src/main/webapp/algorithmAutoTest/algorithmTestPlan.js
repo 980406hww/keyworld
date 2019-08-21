@@ -271,11 +271,13 @@ function addAlgorithmTestPlans() {
     openDialog();
     // 初始化数据
     $('#algorithmTestPlanForm')[0].reset();
-    $('#algorithmTestPlanForm #testIntervalDay').spinner('setValue', 2);
-    $('#algorithmTestPlanForm #testKeywordCount').spinner('setValue', 50);
-    $('#algorithmTestPlanForm #testkeywordRankBegin').spinner('setValue', 20);
+    $('#algorithmTestPlanForm #testIntervalDay').spinner('setValue', 7);
+    $('#algorithmTestPlanForm #testKeywordCount').spinner('setValue', 40);
+    $('#algorithmTestPlanForm #testkeywordRankBegin').spinner('setValue', 40);
     $('#algorithmTestPlanForm #testkeywordRankEnd').spinner('setValue', 50);
-    $('#algorithmTestPlanForm #optimizePlanCount').spinner('setValue', 20);
+    $('#algorithmTestPlanForm #optimizePlanCount').spinner('setValue', 50);
+    $('#algorithmTestPlanForm #searchEngine').val('百度');
+    $('#algorithmTestPlanForm #terminalType').val($('#searchAlgorithmTestPlanForm #ternimal').val());
 
 }
 

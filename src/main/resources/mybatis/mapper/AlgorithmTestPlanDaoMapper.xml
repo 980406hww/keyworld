@@ -16,7 +16,7 @@
         <result column="fTestkeywordRankEnd" property="testkeywordRankEnd" />
         <result column="fOptimizePlanCount" property="optimizePlanCount" />
         <result column="fStatus" property="status" />
-        <result column="fTestQueryTime" property="testQueryTime" />
+        <result column="fExecuteQueryTime" property="executeQueryTime" />
         <result column="fCreateTime" property="createTime" />
         <result column="fUpdateTime" property="updateTime" />
     </resultMap>
@@ -36,6 +36,7 @@
         atp.fOptimizePlanCount AS optimizePlanCount,
         atp.fStatus AS status,
         atp.fExecuteQueryTime AS executeQueryTime,
+        atp.fExcuteStatus AS excuteStatus,
         atp.fCreateTime AS createTime,
         atp.fUpdateTime AS updateTime
     </sql>
@@ -62,17 +63,18 @@
         SELECT <include refid="Base_Column_List"/>
         FROM t_algorithm_test_plan atp
         WHERE atp.fstatus = 1
-        AND  atp.fExecuteQueryTime IS NULL
-        OR atp.fExecuteQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 1 DAY)
+        AND  (atp.fExcuteStatus= 0 AND (atp.fExecuteQueryTime IS NULL OR atp.fExecuteQueryTime &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL fTestIntervalDay-1 DAY))
+            OR(atp.fExcuteStatus = 1 AND atp.fExecuteQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE))
+        )
     </select>
 
-    <select id="updateTestQueryTime">
+    <select id="updateExcuteQueryTime">
         UPDATE t_algorithm_test_plan atp
-        SET atp.fExecuteQueryTime = NOW() ,fUpdateTime = NOW()
-        WHERE atp.FUuid = #{algorithmTestPlan.uuid}
+        SET atp.fExecuteQueryTime = NOW() ,fExcuteStatus = 1
+        WHERE atp.fUuid = #{uuid}
     </select>
 
-    <update id="updateCaptureRankJobsStatus">
+    <update id="updateAlgorithmTestPlansStatus">
         UPDATE t_algorithm_test_plan SET fStatus = #{status}
         WHERE fUuid IN
         <foreach item="uuid" collection="uuids" open="(" separator="," close=")">
