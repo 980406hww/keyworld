@@ -1674,7 +1674,7 @@
         FROM t_customer_keyword ck
         WHERE ck.fType = 'qz'
         AND ck.fStatus = 1
-        AND CK.fSearchEngine = '百度'
+        AND ck.fSearchEngine = '百度'
         AND ck.fMachineGroup != 'Pause'
         AND (ck.fCaptureStatus = 0 AND ck.fCapturePositionQueryTime &lt;= CURRENT_DATE())
         UNION ALL
@@ -1689,7 +1689,7 @@
         FROM t_customer_keyword ck
         WHERE ck.fType = 'qz'
         AND ck.fStatus = 1
-        AND CK.fSearchEngine = '百度'
+        AND ck.fSearchEngine = '百度'
         AND ck.fMachineGroup != 'Pause'
         AND (ck.fCaptureStatus = 1 AND ck.fCapturePositionQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE))
         LIMIT 3000
