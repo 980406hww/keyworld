@@ -3,7 +3,6 @@ $(function () {
     $("#chargeDialog").dialog("close");
     $("#changeSettingDialog").dialog("close");
     $("#getAvailableQZSettings").dialog("close");
-    $("#showAllOperationType").dialog("close");
     $("#customerKeywordDialog").dialog("close");
     $("#showUserMessageDialog").dialog("close");
     $("#excludeCustomerKeywordDialog").dialog("close");

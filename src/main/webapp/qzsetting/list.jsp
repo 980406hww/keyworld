@@ -1300,7 +1300,6 @@
 	<input type="text" name="status" id="status">
 </form>
 
-<div id="showAllOperationType" class="easyui-dialog" style="display: none;"></div>
 <%--增加,修改对话框--%>
 <div id="changeSettingDialog" class="easyui-dialog" style="display: none;left: 40%;">
 	<form id="changeSettingForm">
@@ -2003,7 +2002,7 @@
 <div id="chargeRulesDiv" style="display:none;width:300px;">
 	<table id="chargeRulesDivTable" border="1" cellpadding="10" style="font-size: 12px;background-color: white;border-collapse: collapse;margin: 10px 10px;width:92%;"></table>
 </div>
-
+<%--分组修改--%>
 <div id="targetQzCategoryTagsDialog" class="easyui-dialog" style="left: 30%;display: none;">
 	目标分组标签:<input type="text" id="targetQzCategoryTags" name="targetQzCategoryTags" style="width:200px; margin-top: 10px" placeholder="按正确方式输入：阿卡索,MBA,算法">
 </div>
@@ -2018,21 +2017,10 @@
     var today = dateStr.getFullYear() + "-" + m + "-" + d;
     $(function () {
         $(".datalist").css("margin-top", $("#topDiv").height()+15);
+
         window.onresize = function(){
             $(".datalist").css("margin-top", $("#topDiv").height()+15);
-        }
-
-        var flag = false;
-        window.onclick = function (e) {
-            if ($("#showAllOperationType").css("display") === "block") {
-                if (flag &&!$("#showAllOperationType").is(e.target) && $("#showAllOperationType").has(e.target).length === 0 ){
-                    $("#showAllOperationType").dialog("close");
-                    flag = false;
-                    return;
-                }
-                flag = true;
-            }
-        }
+        };
     });
 
 </script>

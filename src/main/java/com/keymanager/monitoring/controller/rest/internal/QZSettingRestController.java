@@ -146,7 +146,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
 	@RequestMapping(value = "/searchQZSettings", method = RequestMethod.GET)
 	public ModelAndView searchQZSettingsGet(@RequestParam(defaultValue = "1") int currentPageNumber,
-											@RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
+											@RequestParam(defaultValue = "25") int pageSize, HttpServletRequest request) {
 		return constructQZSettingModelAndView(request, new QZSettingSearchCriteria(), currentPageNumber, pageSize);
 	}
 
@@ -157,7 +157,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		String pageSize = request.getParameter("pageSize");
 		if ((null == currentPageNumber && null == pageSize) || qzSettingSearchCriteria.getResetPagingParam()) {
 			currentPageNumber = "1";
-			pageSize = "50";
+			pageSize = "25";
 		}
 		return constructQZSettingModelAndView(request, qzSettingSearchCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
 	}
