@@ -27,12 +27,9 @@
             qzkri.fDifferenceValue      AS 'differenceValue',
             qzkri.fCurrentPrice         AS 'currentPrice',
             qzkri.fBaiduRecordFullDate  AS 'baiduRecordFullDate',
-            qzkri.fAchieveTime          AS 'achieveTime',
-            DATE(qzkri.fCreateTime)     AS 'createTime',
-            DATE(qzkri.fUpdateTime)     AS 'updateTime'
+            qzkri.fAchieveTime          AS 'achieveTime'
         FROM t_qz_keyword_rank_info qzkri
         WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}
-        AND EXISTS(SELECT 1 FROM t_qz_setting qs WHERE qs.fUuid = qzkri.fQZSettingUuid)
         <if test="terminalType != null">
             AND qzkri.fTerminalType = #{terminalType}
         </if>

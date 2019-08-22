@@ -15,7 +15,6 @@ import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordVO;
-import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -379,50 +378,63 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingSearchCriteria){
 		page.setRecords(qzSettingDao.searchQZSettings(page, qzSettingSearchCriteria));
-		this.addingQZKeywordRankInfo(page, qzSettingSearchCriteria.getTerminalType());
 		return page;
 	}
 
-	private void addingQZKeywordRankInfo (Page<QZSetting> page, String terminalType){
-        for(QZSetting qzSetting : page.getRecords()){
-            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, null);
-            if (CollectionUtils.isNotEmpty(qzKeywordRankInfos)) {
-				Map<String, Map<String, JSONObject>> qzKeywordRankInfoMap = new HashMap<>();
-				for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
-					this.calculatedQZKeywordRankInfo(qzKeywordRankInfo);
-					Map<String, JSONObject> jSONObjectMap = qzKeywordRankInfoMap.get(qzKeywordRankInfo.getTerminalType());
-					if (null != jSONObjectMap) {
-						jSONObjectMap.put(qzKeywordRankInfo.getWebsiteType(), JSONObject.fromObject(qzKeywordRankInfo));
-					} else {
-						jSONObjectMap = new HashMap<>();
-						jSONObjectMap.put(qzKeywordRankInfo.getWebsiteType(), JSONObject.fromObject(qzKeywordRankInfo));
-					}
-					qzKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), jSONObjectMap);
-				}
-				qzSetting.setQzKeywordRankInfoMap(qzKeywordRankInfoMap);
-				qzChargeRuleService.getChargeRuleTotalPrice(qzSetting, qzSetting.getUuid(), terminalType);
+    private void initQZKeywordRankInfoVo(QZKeywordRankInfo qzKeywordRankInfo, QZKeywordRankInfoVO rankInfoVo) {
+		rankInfoVo.setUuid(qzKeywordRankInfo.getUuid());
+		rankInfoVo.setQzSettingUuid(qzKeywordRankInfo.getQzSettingUuid());
+		rankInfoVo.setTerminalType(qzKeywordRankInfo.getTerminalType());
+		rankInfoVo.setWebsiteType(qzKeywordRankInfo.getWebsiteType());
+		rankInfoVo.setDataProcessingStatus(qzKeywordRankInfo.getDataProcessingStatus());
+		String[] topTen = calculate(qzKeywordRankInfo.getTopTen());
+		String[] topFifty = calculate(qzKeywordRankInfo.getTopFifty());
+		if (null != topTen) {
+			rankInfoVo.setTopTenNum(Integer.parseInt(topTen[topTen.length - 1]));
+			rankInfoVo.setTopFiftyNum(Integer.parseInt(topFifty[topFifty.length - 1]));
+		} else {
+			rankInfoVo.setTopTenNum(0);
+			rankInfoVo.setTopFiftyNum(0);
+		}
+		rankInfoVo.setCreateTopTenNum(qzKeywordRankInfo.getCreateTopTenNum() == null ? 0 : qzKeywordRankInfo.getCreateTopTenNum());
+		rankInfoVo.setCreateTopFiftyNum(qzKeywordRankInfo.getCreateTopFiftyNum() == null ? 0 : qzKeywordRankInfo.getCreateTopFiftyNum());
+		rankInfoVo.setTopTen(topTen);
+		rankInfoVo.setTopTwenty(calculate(qzKeywordRankInfo.getTopTwenty()));
+		rankInfoVo.setTopThirty(calculate(qzKeywordRankInfo.getTopThirty()));
+		rankInfoVo.setTopForty(calculate(qzKeywordRankInfo.getTopForty()));
+		rankInfoVo.setTopFifty(topFifty);
+		rankInfoVo.setTopHundred(calculate(qzKeywordRankInfo.getTopHundred()));
+		rankInfoVo.setDate(calculate(qzKeywordRankInfo.getDate()));
+		rankInfoVo.setBaiduRecord(calculate(qzKeywordRankInfo.getBaiduRecord()));
+		rankInfoVo.setBaiduRecordFullDate(calculate(qzKeywordRankInfo.getBaiduRecordFullDate()));
+		rankInfoVo.setAchieveTime(qzKeywordRankInfo.getAchieveTime());
+    }
+
+    public String[] calculate(String targetStr) {
+		String[] split = null;
+		if (StringUtil.isNotNullNorEmpty(targetStr)) {
+			split = targetStr.replace("[", "").replace("]", "").replaceAll("'", "").split(", ");
+			Collections.reverse(Arrays.asList(split));
+		}
+		return split;
+    }
+
+	public Map<String, Object> searchQZKeywordRankInfo(long uuid, String terminalType, String optimizeGroupName) {
+		List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(uuid, terminalType, null);
+		Map<String, Object> rankInfoVoMap = new HashMap<>();
+		if (CollectionUtils.isNotEmpty(qzKeywordRankInfos)) {
+			int price = 0;
+			for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
+				QZKeywordRankInfoVO qzKeywordRankInfoVo = new QZKeywordRankInfoVO();
+				this.initQZKeywordRankInfoVo(qzKeywordRankInfo, qzKeywordRankInfoVo);
+				price += qzKeywordRankInfo.getCurrentPrice() == null ? 0 : qzKeywordRankInfo.getCurrentPrice();
+				rankInfoVoMap.put(qzKeywordRankInfo.getWebsiteType(), qzKeywordRankInfoVo);
 			}
-        }
-    }
-
-    private void calculatedQZKeywordRankInfo(QZKeywordRankInfo qzKeywordRankInfo) {
-        Map<String, Object> map;
-        if (!StringUtils.isBlank(qzKeywordRankInfo.getTopTen())) {
-            map = calculate(qzKeywordRankInfo.getTopTen());
-            qzKeywordRankInfo.setTopTenNum((Integer) map.get("topNum"));
-        }
-        if (!StringUtils.isBlank(qzKeywordRankInfo.getTopFifty())) {
-            map = calculate(qzKeywordRankInfo.getTopFifty());
-            qzKeywordRankInfo.setTopFiftyNum((Integer) map.get("topNum"));
-        }
-    }
-
-    public Map<String, Object> calculate(String topString) {
-	    Map<String, Object> map = new HashMap<>();
-        String[] topArr = topString.replace("[", "").replace("]", "").split(", ");
-        map.put("topNum", Integer.parseInt(topArr[0]));
-        return map;
-    }
+			rankInfoVoMap.put("price", price);
+			this.getQZSettingGroupInfo(rankInfoVoMap, uuid, terminalType, optimizeGroupName);
+		}
+		return rankInfoVoMap;
+	}
 
 	public Map<String,Integer> getChargeRemindData() {
 		Map<String,Integer> dateRangeTypeMap = new HashMap<String, Integer>();
@@ -702,12 +714,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-	public QZSettingSearchGroupInfoVO getQZSettingGroupInfo (QZSettingSearchGroupInfoCriteria qzSettingSearchGroupInfoCriteria) {
-		QZSettingSearchGroupInfoVO qzSettingSearchGroupInfoVo = new QZSettingSearchGroupInfoVO();
-		qzSettingSearchGroupInfoVo.setCustomerKeywordCount(qzSettingDao.getQZSettingGroupInfo(qzSettingSearchGroupInfoCriteria));
-		qzSettingSearchGroupInfoVo.setOperationCombineName(operationCombineService.getOperationCombineName(qzSettingSearchGroupInfoCriteria.getOptimizeGroupName()));
-		qzSettingSearchGroupInfoVo.setCategoryTagNames(qzCategoryTagService.findTagNames(qzSettingSearchGroupInfoCriteria.getQzSettingUuid()));
-		return qzSettingSearchGroupInfoVo;
+	private void getQZSettingGroupInfo(Map<String, Object> rankInfoVoMap, long uuid, String terminalType, String optimizeGroupName) {
+		rankInfoVoMap.put("customerKeywordCount", qzSettingDao.getQZSettingGroupInfo(uuid, terminalType, optimizeGroupName));
+		rankInfoVoMap.put("operationCombineName", operationCombineService.getOperationCombineName(optimizeGroupName));
+		rankInfoVoMap.put("categoryTagNames", qzCategoryTagService.findTagNames(uuid));
+		rankInfoVoMap.put("standardTime", qzOperationTypeService.getStandardTime(uuid, terminalType));
 	}
 
 	public void saveQZSettingCustomerKeywords (QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria, String userName) {

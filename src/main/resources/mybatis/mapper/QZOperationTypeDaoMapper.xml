@@ -80,7 +80,7 @@
         LIMIT 1
     </select>
 
-    <select id="updateStandardTimeByUuid">
+    <update id="updateStandardTimeByUuid">
         UPDATE t_qz_operation_type
         SET fUpdateTime = NOW()
         <choose>
@@ -92,5 +92,9 @@
             </when>
         </choose>
         WHERE fUuid = #{uuid}
+    </update>
+
+    <select id="getStandardTime" resultType="java.util.Date">
+        SELECT fStandardTime FROM t_qz_operation_type WHERE fQZSettingUuid = #{qzSettingUuid} AND fOperationtype = #{terminalType}
     </select>
 </mapper>

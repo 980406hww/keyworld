@@ -242,14 +242,18 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	}
 
 	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
-	@RequestMapping(value = "/getQZSettingGroupInfo", method = RequestMethod.POST)
-	public ResponseEntity<?> getQZSettingGroupInfo(@RequestBody QZSettingSearchGroupInfoCriteria qzSettingSearchGroupInfoCriteria) {
+	@RequestMapping(value = "/searchQZKeywordRankInfo", method = RequestMethod.POST)
+	public ResponseEntity<?> searchQZKeywordRankInfo(@RequestBody Map<String, Object> requestMap){
+		long uuid = Long.parseLong((String) requestMap.get("uuid"));
+		String terminalType = (String) requestMap.get("terminalType");
+		String optimizeGroupName = (String) requestMap.get("optimizeGroupName");
 		try {
-			return new ResponseEntity<Object>(qzSettingService.getQZSettingGroupInfo(qzSettingSearchGroupInfoCriteria), HttpStatus.OK);
+			return new ResponseEntity<Object>(qzSettingService.searchQZKeywordRankInfo(uuid, terminalType, optimizeGroupName), HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error(e.getMessage());
-			return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
 		}
+		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 	}
 
 	@RequestMapping(value = "saveQZSettingCustomerKeywords", method = RequestMethod.POST)
