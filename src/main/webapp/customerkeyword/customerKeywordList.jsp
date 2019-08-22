@@ -299,7 +299,7 @@
                 <td align="center" width=100>
                     <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}</font>
                 </td>
-                <td  align="center" width=200 class="wrap floatTd"
+                <td  align="center" width=200 class="wrap floatTd" style="text-align: left;"
                      title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}">
                     <div style="height:16px;">
                             ${customerKeyword.url==null?'':customerKeyword.url}
@@ -308,7 +308,7 @@
                 <td align="center" width=150>
                         ${customerKeyword.bearPawNumber == null ? "" : customerKeyword.bearPawNumber}
                 </td>
-                <td align="center" width=250>
+                <td align="center" width=250 style="text-align: left;">
                         ${customerKeyword.title == null ? "" : customerKeyword.title.trim()}
                 </td>
                 <td align="center" width=30>

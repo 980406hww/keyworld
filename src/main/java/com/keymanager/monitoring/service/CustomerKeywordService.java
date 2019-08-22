@@ -474,18 +474,18 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setOriginalUrl(customerKeyword.getOriginalUrl() != null ? customerKeyword.getOriginalUrl().trim() : null);
         customerKeyword.setOrderNumber(customerKeyword.getOrderNumber() != null ? customerKeyword.getOrderNumber().trim() : null);
         customerKeyword.setOptimizeRemainingCount(customerKeyword.getOptimizePlanCount() != null ? customerKeyword.getOptimizePlanCount() : 0);
-
-        if (StringUtils.isNotBlank(userName)) {
-            boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
-            if (isDepartmentManager) {
-                customerKeyword.setStatus(1);
+        if (customerKeyword.getStatus() == null){
+            if (StringUtils.isNotBlank(userName)) {
+                boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+                if (isDepartmentManager) {
+                    customerKeyword.setStatus(1);
+                } else {
+                    customerKeyword.setStatus(2);
+                }
             } else {
-                customerKeyword.setStatus(2);
+                customerKeyword.setStatus(1);
             }
-        } else {
-            customerKeyword.setStatus(1);
         }
-
         if (customerKeyword.getCurrentPosition() == null) {
             customerKeyword.setCurrentPosition(10);
         }

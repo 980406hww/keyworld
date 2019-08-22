@@ -242,7 +242,7 @@ public class CustomerKeyword extends BaseEntity {
     private String remarks;
 
     @TableField(value = "fStatus")
-    private int status;
+    private Integer status;
 
     @TableField(value = "fRequireDelete")
     private Boolean requireDelete;
@@ -791,11 +791,11 @@ public class CustomerKeyword extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

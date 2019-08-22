@@ -84,6 +84,12 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
 
 		customerKeyword.setBearPawNumber(getStringValue(SuperUserSimpleKeywordDefinition.BearPawNumber.getColumnIndex(), rowIndex).trim());
 		customerKeyword.setTitle(getStringValue(SuperUserSimpleKeywordDefinition.Title.getColumnIndex(), rowIndex).trim());
+		Integer status = getIntValue(SuperUserSimpleKeywordDefinition.Status.getColumnIndex(), rowIndex);
+		if (status == null){
+			customerKeyword.setStatus(1);
+		}else {
+			customerKeyword.setStatus(status);
+		}
 		customerKeyword.setOrderNumber(getStringValue(SuperUserSimpleKeywordDefinition.OrderNumber.getColumnIndex(), rowIndex).trim());
 		customerKeyword.setRemarks(getStringValue(SuperUserSimpleKeywordDefinition.Remarks.getColumnIndex(), rowIndex));
 		return customerKeyword;
