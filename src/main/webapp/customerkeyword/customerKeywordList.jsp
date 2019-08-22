@@ -23,7 +23,7 @@
             #customerKeywordTable tr:nth-child(odd){background:#EEEEEE;}
 
             #customerKeywordTable td{
-                text-align: left;
+                text-align: center;
             }
 
             .tip-yellow {
@@ -114,9 +114,12 @@
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
         <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCriteria.customerUuid}'})">修改所有优化组</a> |
         <a href="javascript:updateSpecifiedCustomerKeywordGroupName()">修改选中优化组</a> |
-        <a href="javascript:stopOptimization(${customerKeywordCriteria.customerUuid})">下架所有关键字</a>|
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+        <a href="javascript:stopOptimization('${customerKeywordCriteria.customerUuid}',3)">下架所有关键字</a>|
+        <a href="javascript:updateCustomerKeywordStatus(3)">下架选中关键字</a>|
+        <a href="javascript:stopOptimization('${customerKeywordCriteria.customerUuid}',0)">暂停所有关键字</a>|
+        <a href="javascript:stopOptimization('${customerKeywordCriteria.customerUuid}',1)">激活所有关键字</a>|
         <a href="javascript:updateCustomerKeywordStatus(0)">暂停选中关键字</a> |
         <a href="javascript:updateCustomerKeywordStatus(1)">激活选中关键字</a> |
     </shiro:hasPermission>
@@ -154,7 +157,8 @@
                 <option value=''>所有</option>
                 <option value='1'>激活</option>
                 <option value='2'>新增</option>
-                <option value='0'>过期</option>
+                <option value='0'>暂不操作</option>
+                <option value='3'>下架</option>
             </select>
             优化组名:
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
@@ -167,7 +171,7 @@
             关键字来源:
             <select name="customerKeywordSource" id="customerKeywordSource">
                 <option value="">所有</option>
-                <c:forEach items="${CustomerKeywordSourceMap}" var="entry">
+                <c:forEach items="${customerKeywordSourceMap}" var="entry">
                     <option value="${entry.value}">${entry.key}</option>
                 </c:forEach>
             </select>
@@ -261,10 +265,7 @@
     </form>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
-            <td width=10 style="
-
-
-            padding-left:7px;"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
+            <td width=10 style="padding-left:7px;"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=100>关键字</td>
             <td align="center" width=200>URL</td>
             <td align="center" width=150>熊掌号</td>
@@ -280,6 +281,7 @@
             <td align="center" width=60>报价</td>
             <td align="center" width=80>开始优化日期</td>
             <td align="center" width=80>最后优化时间</td>
+            <td align="center" width=70>状态</td>
             <td align="center" width=50>订单号</td>
             <td align="center" width=100>备注</td>
             <td align="center" width=100>失败原因</td>
@@ -332,6 +334,7 @@
                 <td align="center" width=60>${customerKeyword.feeString}</td>
                 <td align="center" width=80><fmt:formatDate value="${customerKeyword.startOptimizedTime}" pattern="yyyy-MM-dd"/></td>
                 <td align="center" width=80><fmt:formatDate value="${customerKeyword.lastOptimizeDateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
+                <td align="center" width=70 style="color:${customerKeywordStautsMap.get(customerKeyword.status).get("color")}">${customerKeywordStautsMap.get(customerKeyword.status).get("desc")} </td>
                 <td align="center" width=50>${customerKeyword.orderNumber}</td>
                 <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
                 <td align="center" width=100>${customerKeyword.failedCause == null ? "" : customerKeyword.failedCause}</td>

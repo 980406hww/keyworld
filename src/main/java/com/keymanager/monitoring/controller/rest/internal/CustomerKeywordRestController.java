@@ -11,6 +11,7 @@ import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.ServiceProvider;
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
+import com.keymanager.monitoring.enums.CustomerKeywordStautsEnum;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.enums.KeywordEffectEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordAndUrlCvsExportWriter;
@@ -119,8 +120,9 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("customer", customer);
-        modelAndView.addObject("CustomerKeywordSourceMap", CustomerKeywordSourceEnum.toMap());
+        modelAndView.addObject("customerKeywordSourceMap", CustomerKeywordSourceEnum.toMap());
 		modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));
+		modelAndView.addObject("customerKeywordStautsMap", CustomerKeywordStautsEnum.changeToMap());
 		modelAndView.addObject("serviceProviders",serviceProviders);
         modelAndView.addObject("keywordEffects", KeywordEffectEnum.values());
 		modelAndView.addObject("orderElement",orderElement);
@@ -448,7 +450,8 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("activeUsers", activeUsers);
 		modelAndView.addObject("orderElement",orderElement);
-        modelAndView.addObject("CustomerKeywordSourceMap", CustomerKeywordSourceEnum.toMap());
+        modelAndView.addObject("customerKeywordSourceMap", CustomerKeywordSourceEnum.toMap());
+        modelAndView.addObject("customerKeywordStautsMap", CustomerKeywordStautsEnum.changeToMap());
 		modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));
 		modelAndView.addObject("isDepartmentManager",isDepartmentManager);
 		performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywordLists", (System.currentTimeMillis() - startMilleSeconds), null);
@@ -664,4 +667,18 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
             return mv;
         }
     }
+
+	@RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordStatus")
+	@RequestMapping(value = "/updateCustomerKeywordStatusByCustomerUuid", method = RequestMethod.POST)
+	public ResponseEntity<?> updateCustomerKeywordStatusByCustomerUuid(@RequestBody Map<String, Object> requestMap) {
+		try {
+			Long customerUuid = Long.parseLong((String) requestMap.get("customerUuid"));
+			Integer status = (Integer) requestMap.get("status");
+			customerKeywordService.updateCustomerKeywordStatusByCustomerUuid(customerUuid, status);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
 }

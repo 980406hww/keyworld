@@ -338,6 +338,7 @@
         ck.fOriginalUrl	AS	'originalUrl',
         ck.fBearPawNumber AS 'bearPawNumber',
         ck.fTitle	AS	'title',
+        ck.fStatus	AS	'status',
         ck.fSearchEngine	AS	'searchEngine',
         ck.fCollectMethod	AS	'collectMethod',
         ck.fInitialPosition	AS	'initialPosition',
@@ -399,6 +400,7 @@
         ck.fOriginalUrl	AS	'originalUrl',
         ck.fBearPawNumber AS 'bearPawNumber',
         ck.fTitle	AS	'title',
+        ck.fStatus	AS	'status',
         ck.fCapturePositionCity AS 'capturePositionCity',
         ck.fSearchEngine	AS	'searchEngine',
         ck.fInitialPosition	AS	'initialPosition',
@@ -1705,6 +1707,7 @@
             #{uuid}
         </foreach>
     </update>
+
     <select id="getQZSettingKeywordCount" resultType="java.lang.Integer">
         SELECT COUNT(1)
         FROM t_customer_keyword ck
@@ -1712,4 +1715,10 @@
         AND ck.fStatus = 1
         AND ck.fOptimizeGroupName LIKE '${groupName}%'
     </select>
+
+    <update id="updateCustomerKeywordStatusByCustomerUuid">
+        UPDATE t_customer_keyword ck
+        SET ck.fStatus = #{status}
+        WHERE ck.fCustomerUuid = #{customerUuid}
+    </update>
 </mapper>

@@ -369,6 +369,7 @@ function showSearchEngineChangeDialog(searchEngineCriteria) {
     $("#changeSearchEngineDialog").dialog("open");
     $('#changeSearchEngineDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
+
 function updateCustomerKeywordStatus(status) {
     var customerKeyword = {};
     var customerKeywordUuids = getUuids();
@@ -379,8 +380,10 @@ function updateCustomerKeywordStatus(status) {
 
     if(status == 0) {
         if (confirm("确认要暂停选中的关键字吗?") == false) return;
-    } else {
+    } else if(status == 1){
         if (confirm("确认要上线选中的关键字吗?") == false) return;
+    }else{
+        if (confirm("确认要下架选中的关键字吗?") == false) return;
     }
     customerKeyword.uuids = customerKeywordUuids.split(",");
     customerKeyword.status = status;
@@ -406,10 +409,36 @@ function updateCustomerKeywordStatus(status) {
         }
     });
 }
-//下架
-function stopOptimization(customerUuid){
-    changeGroupName({"customerUuid": customerUuid, "targetGroupName": "stop"});
+//暂停所有关键字
+function stopOptimization(customerUuid,status){
+    $.messager.confirm('提示','确定暂停该用户的所有关键字吗?',function(r){
+        if(r){
+            $.ajax({
+                url:'/internal/customerKeyword/updateCustomerKeywordStatusByCustomerUuid',
+                data:JSON.stringify({"customerUuid": customerUuid, "status": status}),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result) {
+                        $().toastmessage('showSuccessToast', "操作成功",true);
+                    } else {
+                        $().toastmessage('showErrorToast', "操作失败",true);
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败",true);
+                }
+            });
+        }
+    })
 }
+
+
+
 function updateSpecifiedCustomerKeywordGroupName() {
     var customerKeywordUuids = getUuids();
     if (customerKeywordUuids.trim() === '') {
@@ -419,28 +448,7 @@ function updateSpecifiedCustomerKeywordGroupName() {
     var changeGroupCriteria = {"title" : "修改选中关键字优化组", "customerKeywordUuids":customerKeywordUuids.split(",")};
     showGroupNameChangeDialog(changeGroupCriteria);
 }
-function changeGroupName(customerKeywordUpdateGroupCriteria) {
-    $.ajax({
-        url:'/internal/customerKeyword/updateCustomerKeywordGroupName',
-        data:JSON.stringify(customerKeywordUpdateGroupCriteria),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (result) {
-            if (result) {
-                $().toastmessage('showSuccessToast', "操作成功",true);
-            } else {
-                $().toastmessage('showErrorToast', "操作失败",true);
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "操作失败",true);
-        }
-    });
-}
+
 function updateSpecifiedCustomerKeywordSearchEngine() {
     var customerKeywordUuids = getUuids();
     if (customerKeywordUuids.trim() === '') {

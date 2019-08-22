@@ -25,7 +25,7 @@
             #customerKeywordTable tr:nth-child(odd){background:#EEEEEE;}
 
             #customerKeywordTable td{
-                text-align: left;
+                text-align: center;
             }
             #saveCustomerKeywordDialog ul{list-style: none;margin: 0px;padding: 0px;}
             #saveCustomerKeywordDialog li{margin: 5px 0;}
@@ -54,7 +54,8 @@
                 <option value=''>所有</option>
                 <option value='1'>激活</option>
                 <option value='2'>新增</option>
-                <option value='0'>过期</option>
+                <option value='0'>暂不操作</option>
+                <option value='3'>下架</option>
             </select>&nbsp;
             优化组名:
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
@@ -77,7 +78,7 @@
             关键字来源:
             <select name="customerKeywordSource" id="customerKeywordSource">
                 <option value="">所有</option>
-                <c:forEach items="${CustomerKeywordSourceMap}" var="entry">
+                <c:forEach items="${customerKeywordSourceMap}" var="entry">
                     <option value="${entry.value}">${entry.key}</option>
                 </c:forEach>
             </select>
@@ -198,7 +199,10 @@
             <td align="center" width=30>要刷</td>
             <td align="center" width=30>已刷</td>
             <td align="center" width=30>无效</td>
-            <td align="center" width=60>报价</td>
+            <c:if test="${sessionScope.get('entryType') ne 'qz'}">
+                <td align="center" width=60>报价</td>
+            </c:if>
+            <td align="center" width=70>状态</td>
             <td align="center" width=100>订单号</td>
             <td align="center" width=60>付费状态</td>
             <td align="center" width=100>备注</td>
@@ -258,7 +262,10 @@
                 <td align="center" width=30>${customerKeyword.optimizePlanCount}</td>
                 <td align="center" width=30>${customerKeyword.optimizedCount} </td>
                 <td align="center" width=30>${customerKeyword.invalidRefreshCount}</td>
-                <td align="center" width=60>${customerKeyword.feeString}</td>
+                <c:if test="${sessionScope.get('entryType') ne 'qz'}">
+                    <td align="center" width=60>${customerKeyword.feeString}</td>
+                </c:if>
+                <td align="center" width=70 style="color:${customerKeywordStautsMap.get(customerKeyword.status).get("color")}">${customerKeywordStautsMap.get(customerKeyword.status).get("desc")} </td>
                 <td align="center" width=100>${customerKeyword.orderNumber}</td>
                 <td align="center" width="60">${customerKeyword.paymentStatus}</td>
                 <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
