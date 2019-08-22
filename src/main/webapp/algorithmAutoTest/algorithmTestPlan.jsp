@@ -61,6 +61,7 @@
             <td align="center" width=70>刷量</td>
             <td align="center" width=70>状态</td>
             <td align="center" width=70>上次执行时间</td>
+            <td align="center" width=70>创建人</td>
             <td align="center" width=70>创建时间</td>
             <td align="center" width=70>修改时间</td>
             <td align="center" width=80>操作</td>
@@ -102,6 +103,7 @@
                     </c:choose>
                 </td>
                 <td width=70><fmt:formatDate value="${algorithmTestPlan.executeQueryTime}" pattern="yyyy-MM-dd HH:mm"/></td>
+                <td width=70>${algorithmTestPlan.createBy}</td>
                 <td width=70><fmt:formatDate value="${algorithmTestPlan.createTime}" pattern="yyyy-MM-dd HH:mm"/></td>
                 <td width=70><fmt:formatDate value="${algorithmTestPlan.updateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
                 <td width=80>

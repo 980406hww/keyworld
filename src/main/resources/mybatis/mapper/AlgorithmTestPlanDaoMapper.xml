@@ -17,6 +17,8 @@
         <result column="fOptimizePlanCount" property="optimizePlanCount" />
         <result column="fStatus" property="status" />
         <result column="fExecuteQueryTime" property="executeQueryTime" />
+        <result column="fExcuteStatus" property="excuteStatus" />
+        <result column="fCreateBy" property="createBy" />
         <result column="fCreateTime" property="createTime" />
         <result column="fUpdateTime" property="updateTime" />
     </resultMap>
@@ -37,6 +39,7 @@
         atp.fStatus AS status,
         atp.fExecuteQueryTime AS executeQueryTime,
         atp.fExcuteStatus AS excuteStatus,
+        atp.fCreateBy AS createBy,
         atp.fCreateTime AS createTime,
         atp.fUpdateTime AS updateTime
     </sql>

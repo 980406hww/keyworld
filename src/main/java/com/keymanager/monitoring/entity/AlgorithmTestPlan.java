@@ -105,6 +105,12 @@ public class AlgorithmTestPlan{
     private Integer excuteStatus;
 
     /**
+     * 创建人
+     */
+    @TableField("fCreateBy")
+    private String createBy;
+
+    /**
      * 创建时间
      */
     @TableField("fCreateTime")
@@ -222,6 +228,14 @@ public class AlgorithmTestPlan{
 
     public Integer getExcuteStatus() {
         return excuteStatus;
+    }
+
+    public String getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
     }
 
     public void setExcuteStatus(Integer excuteStatus) {
