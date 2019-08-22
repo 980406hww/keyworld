@@ -130,7 +130,21 @@ ul {
     font-size: 14px;
 }
 
-.mytabs .conn:last-child li.category input, .mytabs .conn:last-child li.userName input, .mytabs .conn:last-child li.group input {
+.mytabs .conn:last-child li.customerInfo input {
+    width: 180px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 14px;
+}
+
+.mytabs .conn:last-child li.category input {
+    width: 120px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 14px;
+}
+
+.mytabs .conn:last-child li.userName input, .mytabs .conn:last-child li.group input {
     width: 150px;
     height: 25px;
     line-height: 25px;
@@ -284,7 +298,7 @@ ul {
 
 .datalist-list .header span.tagNames {
     position: absolute;
-    left: 1020px;
+    left: 1090px;
     z-index: 1;
     width: 300px;
     color: #000000;

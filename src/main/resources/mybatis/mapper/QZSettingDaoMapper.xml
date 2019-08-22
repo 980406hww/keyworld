@@ -91,8 +91,7 @@
         AND qs.fStatus = 1
     </select>
 
-    <select id="searchQZSettings" parameterType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria"
-            resultType="com.keymanager.monitoring.entity.QZSetting">
+    <select id="searchQZSettings" resultType="com.keymanager.monitoring.entity.QZSetting">
         SELECT
             qs.fUuid AS 'uuid',
             c.fUserID AS 'userID',
@@ -153,6 +152,7 @@
         <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingSearchCriteria.updateStatus}</if>
         <if test="qzSettingSearchCriteria.status != null">AND qs.fStatus = #{qzSettingSearchCriteria.status}</if>
         <if test="qzSettingSearchCriteria.renewalStatus != null">AND qs.fRenewalStatus = #{qzSettingSearchCriteria.renewalStatus}</if>
+        <if test="qzSettingSearchCriteria.autoCrawlKeywordFlag != null">AND qs.fAutoCrawlKeywordFlag = #{qzSettingSearchCriteria.autoCrawlKeywordFlag}</if>
         <if test="qzSettingSearchCriteria.hasMonitor != null">AND qs.fIsMonitor = #{qzSettingSearchCriteria.hasMonitor}</if>
         <if test="qzSettingSearchCriteria.hasReady != null">AND qs.fIsReady = #{qzSettingSearchCriteria.hasReady}</if>
         <if test="qzSettingSearchCriteria.standardSpecies != null and qzSettingSearchCriteria.standardSpecies != ''">
@@ -321,7 +321,8 @@
         SET qs.fUpdateStatus = NULL,
             qs.fUpdateTime = NOW(),
             qs.fUpdateEndTime = NULL
-        WHERE qs.fUuid IN (${uuids})
+        WHERE qs.fAutoCrawlKeywordFlag IS TRUE
+        AND qs.fUuid IN (${uuids})
     </update>
 
     <update id="updateExceedMaxCountFlag">

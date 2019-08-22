@@ -159,7 +159,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 			currentPageNumber = "1";
 			pageSize = "25";
 		}
-		return constructQZSettingModelAndView(request, qzSettingSearchCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
+		return constructQZSettingModelAndView(request, qzSettingSearchCriteria, currentPageNumber == null ? 1 : Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
 	}
 
 	private ModelAndView constructQZSettingModelAndView(HttpServletRequest request, QZSettingSearchCriteria qzSettingSearchCriteria, int currentPageNumber, int pageSize) {

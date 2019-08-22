@@ -43,6 +43,7 @@ public class QZSettingSearchCriteria{
     private String standardSpecies;
     private Integer optimizationType;
     private boolean resetPagingParam;
+    private Boolean autoCrawlKeywordFlag;
     private int upOneWeekDiff;
     private int downOneWeekDiff;
     private List<QZCategoryTag> targetQZCategoryTags;
@@ -365,5 +366,13 @@ public class QZSettingSearchCriteria{
 
     public void setDownOneWeekDiff(int downOneWeekDiff) {
         this.downOneWeekDiff = downOneWeekDiff;
+    }
+
+    public Boolean getAutoCrawlKeywordFlag() {
+        return autoCrawlKeywordFlag;
+    }
+
+    public void setAutoCrawlKeywordFlag(Boolean autoCrawlKeywordFlag) {
+        this.autoCrawlKeywordFlag = autoCrawlKeywordFlag;
     }
 }

@@ -221,20 +221,19 @@
 					</span>
 				</li>
 				<li>
-					<span>采集状态: </span>
-					<select name="status">
-						<option value="" <c:if test="${qzSettingSearchCriteria.status == null}">selected</c:if>>全部</option>
-						<option value="1" <c:if test="${qzSettingSearchCriteria.status == 1}">selected</c:if>>激活</option>
-						<option value="0" <c:if test="${qzSettingSearchCriteria.status == 0}">selected</c:if>>暂停</option>
-						<option value="2" <c:if test="${qzSettingSearchCriteria.status == 2}">selected</c:if>>新增</option>
-					</select>
-				</li>
-				<li>
 					<span>续费状态: </span>
 					<select name="renewalStatus">
 						<option value="" <c:if test="${qzSettingSearchCriteria.renewalStatus == null}">selected</c:if>>全部</option>
 						<option value="1" <c:if test="${qzSettingSearchCriteria.renewalStatus == 1}">selected</c:if>>续费</option>
 						<option value="0" <c:if test="${qzSettingSearchCriteria.renewalStatus == 0}">selected</c:if>>暂停续费</option>
+					</select>
+				</li>
+				<li>
+					<span>自动采词: </span>
+					<select name="autoCrawlKeywordFlag" style="width: 80px;">
+						<option value="" <c:if test="${qzSettingSearchCriteria.autoCrawlKeywordFlag == null}">selected</c:if>>全部</option>
+						<option value="1" <c:if test="${qzSettingSearchCriteria.autoCrawlKeywordFlag == true}">selected</c:if>>是</option>
+						<option value="0" <c:if test="${qzSettingSearchCriteria.autoCrawlKeywordFlag == false}">selected</c:if>>否</option>
 					</select>
 				</li>
 				<li>
@@ -247,23 +246,6 @@
 							</c:choose>
 						</c:forEach>
 					</select>
-				</li>
-				<li>
-					<span>更新状态: </span>
-					<select name="updateStatus">
-						<c:forEach items="${statusList}" var="status">
-							<c:choose>
-								<c:when test="${status eq qzSettingSearchCriteria.updateStatus}"><option selected>${status}</option></c:when>
-								<c:otherwise><option>${status}</option></c:otherwise>
-							</c:choose>
-						</c:forEach>
-					</select>
-				</li>
-				<li class="createTime condition">
-					<span>创建时间: </span>
-					<input type="text" name="createTime" id="createTime" class="Wdate" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d' })" placeholder=">=" value="${qzSettingSearchCriteria.createTime}">
-                    <span>--</span>
-                    <input type="text" name="createTimePrefix" id="createTimePrefix" class="Wdate" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d' })" placeholder="<=" value="${qzSettingSearchCriteria.createTimePrefix}">
 				</li>
 				<li>
 					<span>达标优化类型: </span>
@@ -285,14 +267,40 @@
 							<option value="0" <c:if test="${qzSettingSearchCriteria.hasMonitor == false}">selected</c:if>>否</option>
 						</select>
 					</li>
+					<li>
+						<span>达标计划: </span>
+						<select name="hasReady" style="width: 80px;">
+							<option value="" <c:if test="${qzSettingSearchCriteria.hasReady == null}">selected</c:if>>全部</option>
+							<option value="1" <c:if test="${qzSettingSearchCriteria.hasReady == true}">selected</c:if>>是</option>
+							<option value="0" <c:if test="${qzSettingSearchCriteria.hasReady == false}">selected</c:if>>否</option>
+						</select>
+					</li>
 				</shiro:hasPermission>
 				<li>
-					<span>达标计划: </span>
-					<select name="hasReady" style="width: 80px;">
-						<option value="" <c:if test="${qzSettingSearchCriteria.hasReady == null}">selected</c:if>>全部</option>
-						<option value="1" <c:if test="${qzSettingSearchCriteria.hasReady == true}">selected</c:if>>是</option>
-						<option value="0" <c:if test="${qzSettingSearchCriteria.hasReady == false}">selected</c:if>>否</option>
+					<span>采集状态: </span>
+					<select name="status">
+						<option value="" <c:if test="${qzSettingSearchCriteria.status == null}">selected</c:if>>全部</option>
+						<option value="1" <c:if test="${qzSettingSearchCriteria.status == 1}">selected</c:if>>激活</option>
+						<option value="0" <c:if test="${qzSettingSearchCriteria.status == 0}">selected</c:if>>暂停</option>
+						<option value="2" <c:if test="${qzSettingSearchCriteria.status == 2}">selected</c:if>>新增</option>
 					</select>
+				</li>
+				<li>
+					<span>更新状态: </span>
+					<select name="updateStatus">
+						<c:forEach items="${statusList}" var="status">
+							<c:choose>
+								<c:when test="${status eq qzSettingSearchCriteria.updateStatus}"><option selected>${status}</option></c:when>
+								<c:otherwise><option>${status}</option></c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</select>
+				</li>
+				<li class="createTime condition">
+					<span>创建时间: </span>
+					<input type="text" name="createTime" id="createTime" class="Wdate" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d' })" placeholder=">=" value="${qzSettingSearchCriteria.createTime}">
+                    <span>--</span>
+                    <input type="text" name="createTimePrefix" id="createTimePrefix" class="Wdate" onclick="WdatePicker({skin:'whyGreen',dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d' })" placeholder="<=" value="${qzSettingSearchCriteria.createTimePrefix}">
 				</li>
 				<%--<shiro:hasPermission name="/internal/qzsetting/searchQZSettings">
 					<li><a href="javascript:resetSearchCondition('-1')">过期未收费(${chargeRemindDataMap['expiredChargeSize']})</a></li>
@@ -323,6 +331,7 @@
 	<input type="hidden" name="operationType" id="operationType" value="${qzSettingSearchCriteria.operationType}"/>
 	<input type="hidden" name="status" id="status" value="${qzSettingSearchCriteria.status}"/>
 	<input type="hidden" name="renewalStatus" id="renewalStatus" value="${qzSettingSearchCriteria.renewalStatus}"/>
+	<input type="hidden" name="autoCrawlKeywordFlag" id="autoCrawlKeywordFlag" value="${qzSettingSearchCriteria.autoCrawlKeywordFlag}"/>
 	<input type="hidden" name="updateStatus" id="updateStatus" value="${qzSettingSearchCriteria.updateStatus}"/>
 	<input type="hidden" name="checkStatus" id="checkStatus" value="${qzSettingSearchCriteria.checkStatus}"/>
 	<input type="hidden" name="terminalType" id="terminalType" value="${qzSettingSearchCriteria.terminalType}"/>
@@ -359,9 +368,8 @@
 							<span class="fmtStandardDate">
 								达标监控:<a href="javascript:;">${qzSetting.fIsMonitor == true ? "是" : "否"}</a>
 							</span>
-							<span class="fmtStandardDate" id="fmtStandardDate">
-								达标时间:
-								<a href="javascript:;">无</a>
+							<span class="fmtStandardDate">
+								自动采词:<a href="javascript:;">${qzSetting.autoCrawlKeywordFlag == true ? "是" : "否"}</a>
 							</span>
 							<span class="fmtStandardDate">
 								达标计划:<a href="javascript:;">${qzSetting.fIsReady == true ? "是" : "否"}</a>
@@ -396,6 +404,10 @@
 									   </c:otherwise>
 								   </c:choose>
 								</a>
+							</span>
+							<span class="fmtStandardDate" id="fmtStandardDate">
+								达标时间:
+								<a href="javascript:;">无</a>
 							</span>
 							<span class="fmtCreateDate">
 								创建日期:

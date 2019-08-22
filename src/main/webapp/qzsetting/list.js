@@ -102,6 +102,7 @@ function detectedMoreSearchConditionDivShow() {
     var operationType = moreSearchCondition.find("select[name='operationType']").val();
     var status = moreSearchCondition.find("select[name='status']").val();
     var renewalStatus = moreSearchCondition.find("select[name='renewalStatus']").val();
+    var autoCrawlKeywordFlag = moreSearchCondition.find("select[name='autoCrawlKeywordFlag']").val();
     var standardSpecies = moreSearchCondition.find("select[name='standardSpecies']").val();
     var optimizationType = moreSearchCondition.find("select[name='optimizationType']").val();
     var updateStatus = moreSearchCondition.find("select[name='updateStatus']").val();
@@ -134,8 +135,8 @@ function detectedMoreSearchConditionDivShow() {
         });
         $("#userNameTree").textbox('setValue', treeValue);
     }
-    var values = customerInfo + categoryTag + group + status + renewalStatus + standardSpecies + optimizationType + updateStatus +
-        createTime + createTimePrefix + operationType + hasMonitor + hasReady + userInfoID + organizationID;
+    var values = customerInfo + categoryTag + group + status + renewalStatus + autoCrawlKeywordFlag + standardSpecies +
+        optimizationType + updateStatus + createTime + createTimePrefix + operationType + hasMonitor + hasReady + userInfoID + organizationID;
     if (values !== "") {
         moreSearchCondition.css("display", "block");
     }
@@ -167,7 +168,7 @@ function initQZKeywordRankInfo() {
         searchQZKeywordRankInfo(li, terminalType, optimizeGroupName, function (data) {
             li.find(".other-rank_2").find("span.line1 a").text(optimizeGroupName);
             if (data != null) {
-                li.find("#fmtStandardDate").text(data["standardTime"] === null ? "无" : toDateFormat(new Date(data["standardTime"])));
+                li.find("#fmtStandardDate a").text(data["standardTime"] === null ? "无" : toDateFormat(new Date(data["standardTime"])));
                 var font = li.find(".standard-info").find("span.line1 a font");
                 font.text("￥ " + data["price"]);
                 if (data["price"] > 0) {
@@ -1081,6 +1082,7 @@ function trimSearchCondition(days) {
     var operationType = $(".conn").find("select[name='operationType']").val();
     var status = $(".conn").find("select[name='status']").val();
     var renewalStatus = $(".conn").find("select[name='renewalStatus']").val();
+    var autoCrawlKeywordFlag = $(".conn").find("select[name='autoCrawlKeywordFlag']").val();
     var standardSpecies = $(".conn").find("select[name='standardSpecies']").val();
     var optimizationType = $(".conn").find("select[name='optimizationType']").val();
     var updateStatus = $(".conn").find("select[name='updateStatus']").val();
@@ -1112,6 +1114,11 @@ function trimSearchCondition(days) {
         chargeForm.find("#renewalStatus").val($.trim(renewalStatus));
     } else {
         chargeForm.find("#renewalStatus").val(null);
+    }
+    if (autoCrawlKeywordFlag !== "") {
+        chargeForm.find("#autoCrawlKeywordFlag").val(autoCrawlKeywordFlag);
+    } else {
+        chargeForm.find("#autoCrawlKeywordFlag").val(null);
     }
     if (standardSpecies !== '') {
         chargeForm.find("#standardSpecies").val(standardSpecies);
