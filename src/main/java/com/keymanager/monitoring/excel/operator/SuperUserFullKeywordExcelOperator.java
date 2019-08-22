@@ -1,16 +1,14 @@
 package com.keymanager.monitoring.excel.operator;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.IndustryInfo;
-import jxl.read.biff.BiffException;
-
 import com.keymanager.monitoring.excel.definition.SuperUserFullKeywordDefinition;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.util.excel.JXLExcelReader;
+import java.io.IOException;
+import java.io.InputStream;
+import jxl.read.biff.BiffException;
 
 public class SuperUserFullKeywordExcelOperator extends AbstractExcelReader {
 	
@@ -78,6 +76,12 @@ public class SuperUserFullKeywordExcelOperator extends AbstractExcelReader {
 
 		customerKeyword.setBearPawNumber(getStringValue(SuperUserFullKeywordDefinition.BearPawNumber.getColumnIndex(), rowIndex).trim());
 		customerKeyword.setTitle(getStringValue(SuperUserFullKeywordDefinition.Title.getColumnIndex(), rowIndex).trim());
+		Integer status = getIntValue(SuperUserFullKeywordDefinition.Status.getColumnIndex(), rowIndex);
+		if (status == null){
+			customerKeyword.setStatus(1);
+		}else {
+			customerKeyword.setStatus(status);
+		}
 		customerKeyword.setOrderNumber(getStringValue(SuperUserFullKeywordDefinition.OrderNumber.getColumnIndex(), rowIndex).trim());
 		customerKeyword.setRemarks(getStringValue(SuperUserFullKeywordDefinition.Remarks.getColumnIndex(), rowIndex));
 		return customerKeyword;
