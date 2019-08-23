@@ -1,6 +1,9 @@
 package com.keymanager.monitoring.criteria;
 
-import java.util.Date;
+import com.keymanager.monitoring.entity.AlgorithmTestTask;
+import com.keymanager.monitoring.entity.Customer;
+import com.keymanager.monitoring.entity.CustomerKeyword;
+import java.util.List;
 
 /**
  * @ClassName ExternalAlgorithmTestTaskCriteria
@@ -11,53 +14,40 @@ import java.util.Date;
  */
 public class ExternalAlgorithmTestTaskCriteria extends BaseCriteria{
 
-    private Long algorithmTestPlanUuid;
+    private Customer customer;
+    private GroupCriteria groupCriteria;
+    private List<CustomerKeyword> customerKeywords;
+    private AlgorithmTestTask algorithmTestTask;
 
-    private String keywordGroup;
-
-    private String customerName;
-
-    private Integer actualKeywordCount;
-
-    private Date startDate;
-
-    public Long getAlgorithmTestPlanUuid() {
-        return algorithmTestPlanUuid;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setAlgorithmTestPlanUuid(Long algorithmTestPlanUuid) {
-        this.algorithmTestPlanUuid = algorithmTestPlanUuid;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
-    public String getKeywordGroup() {
-        return keywordGroup;
+    public GroupCriteria getGroupCriteria() {
+        return groupCriteria;
     }
 
-    public void setKeywordGroup(String keywordGroup) {
-        this.keywordGroup = keywordGroup;
+    public void setGroupCriteria(GroupCriteria groupCriteria) {
+        this.groupCriteria = groupCriteria;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public List<CustomerKeyword> getCustomerKeywords() {
+        return customerKeywords;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setCustomerKeywords(List<CustomerKeyword> customerKeywords) {
+        this.customerKeywords = customerKeywords;
     }
 
-    public Integer getActualKeywordCount() {
-        return actualKeywordCount;
+    public AlgorithmTestTask getAlgorithmTestTask() {
+        return algorithmTestTask;
     }
 
-    public void setActualKeywordCount(Integer actualKeywordCount) {
-        this.actualKeywordCount = actualKeywordCount;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setAlgorithmTestTask(AlgorithmTestTask algorithmTestTask) {
+        this.algorithmTestTask = algorithmTestTask;
     }
 }

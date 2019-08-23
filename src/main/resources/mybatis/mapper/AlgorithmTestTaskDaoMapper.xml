@@ -35,8 +35,8 @@
 
     <insert id="saveAlgorithmTestTask">
         INSERT INTO t_algorithm_test_task ( fAlgorithmTestPlanUuid, fKeywordGroup, fCustomerName, fActualKeywordCount, fStartDate )
-        VALUES (#{externalAlgorithmTestTaskCriteria.algorithmTestPlanUuid}, #{externalAlgorithmTestTaskCriteria.keywordGroup}, #{externalAlgorithmTestTaskCriteria.customerName},
-                #{externalAlgorithmTestTaskCriteria.actualKeywordCount}, #{externalAlgorithmTestTaskCriteria.startDate} )
+        VALUES (#{algorithmTestTask.algorithmTestPlanUuid}, #{algorithmTestTask.keywordGroup}, #{algorithmTestTask.customerName},
+                #{algorithmTestTask.actualKeywordCount}, #{algorithmTestTask.startDate} )
     </insert>
 
     <delete id="deleteTaskByPlanUuid">

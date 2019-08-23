@@ -22,10 +22,8 @@ public class ExternalCustomerRestController extends SpringMVCBaseController {
 
     private static Logger logger = LoggerFactory.getLogger(ExternalCustomerRestController.class);
 
-
     @Autowired
     private CustomerService customerService;
-
 
     @RequestMapping(value = "getActiveCustomerSimpleInfo", method = RequestMethod.POST)
     public ResponseEntity<?> getActiveCustomerSimpleInfo(@RequestBody CustomerCriteria customerCriteria)
@@ -42,17 +40,4 @@ public class ExternalCustomerRestController extends SpringMVCBaseController {
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "saveExternalCustomer", method = RequestMethod.POST)
-    public ResponseEntity<?> saveCustomer(@RequestBody CustomerCriteria customerCriteria) {
-        try {
-            if (validUser(customerCriteria.getUserName(), customerCriteria.getPassword())) {
-                customerService.saveExternalCustomer(customerCriteria);
-                return new ResponseEntity<Object>(customerCriteria.getUuid(), HttpStatus.OK);
-            }
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-    }
 }

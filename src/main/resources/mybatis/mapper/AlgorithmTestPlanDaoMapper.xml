@@ -69,6 +69,7 @@
         AND  (atp.fExcuteStatus= 0 AND (atp.fExecuteQueryTime IS NULL OR atp.fExecuteQueryTime &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL fTestIntervalDay-1 DAY))
             OR(atp.fExcuteStatus = 1 AND atp.fExecuteQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE))
         )
+        LIMIT 1
     </select>
 
     <select id="updateExcuteQueryTime">

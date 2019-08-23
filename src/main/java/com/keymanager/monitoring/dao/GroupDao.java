@@ -36,5 +36,5 @@ public interface GroupDao extends BaseMapper<Group> {
 
     Group findExistingGroup (@Param("optimizeGroupName") String optimizeGroupName);
 
-    void saveExternalGroup(GroupCriteria groupCriteria);
+    void saveExternalGroup(@Param("groupCriteria")GroupCriteria groupCriteria);
 }
