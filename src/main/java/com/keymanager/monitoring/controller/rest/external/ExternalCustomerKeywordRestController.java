@@ -276,18 +276,25 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         }
         String password = request.getParameter("password");
         String version = request.getParameter("version");
+        StringBuilder errorFlag = new StringBuilder("");
         try {
             if (validUser(userName, password)) {
                 MachineInfo machineInfo = machineInfoService.selectById(clientID);
                 String s = "";
                 if(machineInfo != null) {
                     String terminalType = machineInfo.getTerminalType();
+                    errorFlag.append("1");
                     OptimizationVO optimizationVO = customerKeywordService.fetchCustomerKeywordForOptimization(machineInfo);
+                    errorFlag.append("2");
                     if (optimizationVO != null) {
                         machineInfoService.updateMachineInfoVersion(clientID, version, optimizationVO != null);
+                        errorFlag.append("3");
                         byte[] compress = AESUtils.compress(AESUtils.encrypt(optimizationVO).getBytes());
+                        errorFlag.append("4");
                         s = AESUtils.parseByte2HexStr(compress);
+                        errorFlag.append("5");
                         performanceService.addPerformanceLog(terminalType + ":fetchCustomerKeywordZip", System.currentTimeMillis() - startMilleSeconds, null);
+                        errorFlag.append("6");
                     }
                 }else{
                     logger.error("fetchCustomerKeywordZip,     Not found clientID:" + clientID);
@@ -296,7 +303,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error("fetchCustomerKeywordZip:     " + clientID + ex.getMessage());
+            logger.error("fetchCustomerKeywordZip: " + errorFlag.toString() + "clientID:" + clientID + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
