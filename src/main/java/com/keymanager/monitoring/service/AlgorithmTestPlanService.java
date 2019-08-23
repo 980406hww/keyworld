@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.AlgorithmTestPlanSearchCriteria;
 import com.keymanager.monitoring.dao.AlgorithmTestPlanDao;
+import com.keymanager.monitoring.dao.AlgorithmTestTaskDao;
 import com.keymanager.monitoring.entity.AlgorithmTestPlan;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +24,9 @@ public class AlgorithmTestPlanService extends ServiceImpl<AlgorithmTestPlanDao, 
 
     @Autowired
     private AlgorithmTestPlanDao algorithmTestPlanDao;
+
+    @Autowired
+    private AlgorithmTestTaskDao algorithmTestTaskDao;
 
     public Page<AlgorithmTestPlan> searchAlgorithmTestPlans(Page<AlgorithmTestPlan> algorithmTestPlanPage, AlgorithmTestPlanSearchCriteria algorithmTestPlanSearchCriteria) {
         List<AlgorithmTestPlan> algorithmTestPlans =  algorithmTestPlanDao.searchAlgorithmTestPlans(algorithmTestPlanPage,algorithmTestPlanSearchCriteria);
@@ -55,5 +59,15 @@ public class AlgorithmTestPlanService extends ServiceImpl<AlgorithmTestPlanDao, 
         AlgorithmTestPlan algorithmTestPlan = algorithmTestPlanDao.selectOneAvailableAlgorithmTestPlan();
         algorithmTestPlanDao.updateExcuteQueryTime(algorithmTestPlan.getUuid());
         return algorithmTestPlan;
+    }
+
+    public void deletePlanAndTaskByPlanId(Long PlanUuid) {
+        this.deleteById(PlanUuid);
+        algorithmTestTaskDao.deleteTaskByPlanUuid(PlanUuid);
+    }
+
+    public void deletePlanAndTaskByPlanIds(List<Long> PlanUuids) {
+        this.deleteBatchIds(PlanUuids);
+        algorithmTestTaskDao.deleteTaskByPlanUuids(PlanUuids);
     }
 }

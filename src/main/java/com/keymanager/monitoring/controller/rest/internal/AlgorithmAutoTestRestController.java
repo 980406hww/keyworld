@@ -97,7 +97,7 @@ public class AlgorithmAutoTestRestController {
     @RequestMapping(value = "/deleteAlgorithmTestPlan", method = RequestMethod.POST)
     public ResponseEntity<?> deleteAlgorithmTestPlan(Long uuid) {
         try {
-            algorithmTestPlanService.deleteById(uuid);
+            algorithmTestPlanService.deletePlanAndTaskByPlanId(uuid);
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -109,7 +109,7 @@ public class AlgorithmAutoTestRestController {
     @RequestMapping(value = "/deleteAlgorithmTestPlans", method = RequestMethod.POST)
     public ResponseEntity<?> deleteAlgorithmTestPlans(@RequestBody Map<String, Object> requestMap) {
         try {
-            algorithmTestPlanService.deleteBatchIds((List<Long>) requestMap.get("uuids"));
+            algorithmTestPlanService.deletePlanAndTaskByPlanIds((List<Long>) requestMap.get("uuids"));
             return new ResponseEntity<Object>(true, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

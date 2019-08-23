@@ -20,4 +20,8 @@ public interface AlgorithmTestTaskDao extends BaseMapper<AlgorithmTestTask> {
     List<AlgorithmTestTask> selectAlgorithmTestTasksByAlgorithmTestPlanUuid(Page<AlgorithmTestTask> algorithmTestTaskPage, @Param("algorithmTestPlanUuid") Long algorithmTestPlanUuid);
 
     void saveAlgorithmTestTask( @Param("externalAlgorithmTestTaskCriteria") ExternalAlgorithmTestTaskCriteria externalAlgorithmTestTaskCriteria);
+
+    void deleteTaskByPlanUuid(@Param("planUuid") Long planUuid);
+
+    void deleteTaskByPlanUuids(@Param("planUuids") List<Long> planUuids);
 }

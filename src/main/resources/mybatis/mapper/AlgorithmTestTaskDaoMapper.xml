@@ -39,4 +39,16 @@
                 #{externalAlgorithmTestTaskCriteria.actualKeywordCount}, #{externalAlgorithmTestTaskCriteria.startDate} )
     </insert>
 
+    <delete id="deleteTaskByPlanUuid">
+        DELETE FROM t_algorithm_test_task
+        WHERE fAlgorithmTestPlanUuid = #{planUuid}
+    </delete>
+
+    <delete id="deleteTaskByPlanUuids">
+        DELETE FROM t_algorithm_test_task
+        WHERE fAlgorithmTestPlanUuid IN
+        <foreach collection="planUuids" item="planUuid" open="(" close=")" separator=",">
+            #{planUuid}
+        </foreach>
+    </delete>
 </mapper>
