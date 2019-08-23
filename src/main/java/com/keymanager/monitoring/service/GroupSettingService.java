@@ -55,6 +55,9 @@ public class GroupSettingService extends ServiceImpl<GroupSettingDao, GroupSetti
         if (1 == updateGroupSettingCriteria.getGs().getMachineUsedPercent()) {
             operationCombineService.updateOperationCombineRemainingAccount(updateGroupSettingCriteria.getGroupSetting().getOperationCombineUuid(), updateGroupSettingCriteria.getGroupSetting().getRemainingAccount());
         }
+        if ("1".equals(updateGroupSettingCriteria.getGs().getOperationCombineName())) {
+            operationCombineService.updateOperationCombineName(groupSetting.getOperationCombineUuid(), updateGroupSettingCriteria.getGroupSetting().getOperationCombineName());
+        }
     }
 
     public GroupSetting getGroupSettingViaPercentage(String groupName, String terminalType){

@@ -359,12 +359,10 @@
 							<span class="fmtStandardDate" title="${qzSetting.fIsMonitor == true ? "是" : "否"}">
 								达标监控:<a href="javascript:;">${qzSetting.fIsMonitor == true ? "是" : "否"}</a>
 							</span>
-
 							<span class="fmtStandardDate" title="<fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">&nbsp;&nbsp;达标时间:<a href="javascript:;">
 								<c:if test="${qzSetting.standardTime == null}">无</c:if>
 								<c:if test="${qzSetting.standardTime != null}"><fmt:formatDate value="${qzSetting.standardTime}" pattern="yyyy-MM-dd"></fmt:formatDate></c:if>
 							</a></span>
-
 							<span class="fmtStandardDate" title="${qzSetting.fIsReady == true ? "是" : "否"}">
 								&nbsp;&nbsp;达标计划:<a href="javascript:;">${qzSetting.fIsReady == true ? "是" : "否"}</a>
 							</span>
@@ -397,8 +395,8 @@
 								</a>
 
 							</span>
-							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<span class="fmtCreateDate" title="<fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">创建日期:<a href="javascript:;"><fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate></a></span>
+							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<div class="handle">
                                 <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.pcGroup}','PC')">排除关键字</a>
                                 <shiro:hasPermission name="/internal/qzsetting/save">
@@ -856,8 +854,8 @@
 								</a>
 
 							</span>
-							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<span class="fmtCreateDate" title="<fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate>">创建时间:<a href="javascript:;"><fmt:formatDate value="${qzSetting.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate></a></span>
+							<span class="tagNames" ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label class="tagNameStr">暂无</label></span>
 							<div class="handle">
                                 <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.phoneGroup}','Phone')">排除关键字</a>
 								<shiro:hasPermission name="/internal/qzsetting/save">
@@ -1364,15 +1362,15 @@
                     </c:forEach>
                 </select>
             </td>
-            <td style="width:65px" align="right">达标监控</td>
-            <td>
-				<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
+			<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
+				<td style="width:65px" align="right">达标监控</td>
+				<td>
 					<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
 						<option value="1">是</option>
 						<option value="0" selected>否</option>
 					</select>
-				</shiro:hasPermission>
-			</td>
+				</td>
+			</shiro:hasPermission>
         </tr>
 	</table>
 	<table style="font-size:12px" cellspacing="5">
@@ -1419,11 +1417,11 @@
 						<td align="right" style="width:72px">当前词量</td>
 						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPC" style="width:240px;margin-left: -6;" readonly/></td>
 					</tr>
-					<shiro:hasPermission name="/internal/qzsetting/delete">
+					<shiro:hasPermission name="/internal/qzsetting/save">
 						<c:if test="${not isSEO}">
 							<tr>
 								<td align="right" style="width:72px">限制词量</td>
-								<td colspan="4"><input type="text" name="maxKeywordCount" id="maxKeywordCountPC" style="width:240px;margin-left: -6;"/></td>
+								<td colspan="4"><input type="text" name="maxKeywordCount" id="maxKeywordCountPC" style="width:240px;margin-left: -6;" value="300" placeholder="请设置限制词量"/></td>
 							</tr>
 						</c:if>
 					</shiro:hasPermission>
@@ -1484,11 +1482,11 @@
 						<td align="right" style="width:72px">当前词量</td>
 						<td colspan="4"><input type="text" name="currentKeywordCount" id="currentKeywordCountPhone"  style="width:240px;margin-left: -6;" readonly/></td>
 					</tr>
-					<shiro:hasPermission name="/internal/qzsetting/delete">
+					<shiro:hasPermission name="/internal/qzsetting/save">
 						<c:if test="${not isSEO}">
 							<tr>
 								<td align="right" style="width:72px">限制词量</td>
-								<td colspan="4"><input type="text" name="maxKeywordCount" id="maxKeywordCountPhone" style="width:240px;margin-left: -6;"/></td>
+								<td colspan="4"><input type="text" name="maxKeywordCount" id="maxKeywordCountPhone" style="width:240px;margin-left: -6;" value="300" placeholder="请设置限制词量"/></td>
 							</tr>
 						</c:if>
 					</shiro:hasPermission>

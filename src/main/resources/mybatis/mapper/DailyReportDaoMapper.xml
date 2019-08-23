@@ -29,7 +29,8 @@
           dr.fCreateTime   AS 'createTime'
         FROM t_daily_report dr
         WHERE dr.fStatus = 'Completed'
-            AND dr.fCompleteTime > CURRENT_DATE()
+        AND dr.fCompleteTime > CURRENT_DATE()
+        <if test="userName != null and userName != ''">AND dr.fUserID = #{userName}</if>
     </select>
 
     <select id="selectLastId" resultType="long">
@@ -53,6 +54,6 @@
         FROM t_daily_report dr
         WHERE dr.fTriggerMode = #{triggerMode}
         AND dr.fCreateTime > CURRENT_DATE()
-        limit 1
+        <if test="userID != null and userID != ''">AND dr.fUserID = #{userID} limit 1</if>
     </select>
 </mapper>

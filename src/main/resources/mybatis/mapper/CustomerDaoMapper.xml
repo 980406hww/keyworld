@@ -171,6 +171,7 @@
         FROM t_customer c
         WHERE c.fStatus = 1
         AND c.fDailyReportIdentify = 1
+        <if test="userID != null and userID != ''"> AND c.fUserID = #{userID}</if>
     </select>
 
     <update id="updateCustomerDailyReportIdentify">
@@ -187,4 +188,10 @@
         INSERT INTO t_customer (fUserID, fEntryType, fContactPerson, fType, fSearchEngine, fRemark, fStatus)
         VALUES(#{loginName},#{entryType},#{contactPerson}, #{type}, #{searchEngine},#{remark},#{status})
     </insert>
+    <select id="getActiveDailyReportIdentifyUserIDs" resultType="java.lang.String">
+        SELECT DISTINCT c.fUserID
+        FROM t_customer c
+        WHERE c.fStatus = 1
+        AND c.fDailyReportIdentify = 1
+    </select>
 </mapper>

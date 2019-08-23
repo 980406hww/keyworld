@@ -107,4 +107,8 @@
         WHERE g.fGroupName = #{optimizeGroupName}
         LIMIT 1
     </select>
+
+    <update id="updateOperationCombineName">
+        UPDATE t_operation_combine SET fOperationCombineName = #{operationCombineName} WHERE fUuid = #{uuid}
+    </update>
 </mapper>

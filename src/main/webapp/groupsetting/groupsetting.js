@@ -5,6 +5,33 @@
     $("#showGroupQueueDialog").dialog("close");
     $("#uselessOptimizationGroupDialog").dialog("close");
 
+    var searchCustomerForm = $("#chargeForm");
+    var pageSize = searchCustomerForm.find('#pageSizeHidden').val();
+    var pages = searchCustomerForm.find('#pagesHidden').val();
+    $("#chargeForm").find("#status").val($("#statusHidden").val());
+    var currentPageNumber = searchCustomerForm.find('#currentPageNumberHidden').val();
+    var showCustomerBottomDiv = $('#showCustomerBottomDiv');
+    showCustomerBottomDiv.find('#chooseRecords').val(pageSize);
+    showCustomerBottomDiv.find('#pagesHidden').val(pages);
+
+    if(parseInt(currentPageNumber) > 1 && parseInt(currentPageNumber) < parseInt(pages)) {
+        showCustomerBottomDiv.find("#firstButton").removeAttr("disabled");
+        showCustomerBottomDiv.find("#upButton").removeAttr("disabled");
+        showCustomerBottomDiv.find("#nextButton").removeAttr("disabled");
+        showCustomerBottomDiv.find("#lastButton").removeAttr("disabled");
+    } else if (parseInt(pages) <= 1) {
+        showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+        showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
+        showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+        showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
+    } else if (parseInt(currentPageNumber) <= 1) {
+        showCustomerBottomDiv.find("#fisrtButton").attr("disabled", "disabled");
+        showCustomerBottomDiv.find("#upButton").attr("disabled", "disabled");
+    } else {
+        showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
+        showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
+    }
+
     $(".datalist-list li").find("div.body").each(function (index, self) {
         var listsize = $(self).attr("listsize");
         var height = 0;
@@ -161,13 +188,12 @@ function showOperationCombineDialog() {
 function showUpdateGroupDialog(operationCombineUuid, operationCombineName) {
     var updateGroupSettingDialog = $("#updateGroupSettingDialog");
     updateGroupSettingDialog.find('#updateGroupSettingDialogForm')[0].reset();
-    updateGroupSettingDialog.find("#settingOperationCombineName").attr("disabled", true);
     getGroupSettingCount(operationCombineUuid, operationCombineName);
     updateGroupSettingDialog.show();
     updateGroupSettingDialog.dialog({
         resizable: false,
-        width: 650,
-        maxHeight: 550,
+        width: 500,
+        maxHeight: 350,
         title: "批量修改优化组设置(需要修改的信息请标红!!!)",
         modal: false,
         buttons: [{
@@ -191,7 +217,7 @@ function showUpdateGroupDialog(operationCombineUuid, operationCombineName) {
     updateGroupSettingDialog.dialog("open");
     updateGroupSettingDialog.window("resize", {
         top: $(document).scrollTop() + 150,
-        left: $(document).scrollLeft() + $(window).width() / 2 - 325
+        left: $(document).scrollLeft() + $(window).width() / 2 - 250
     });
 }
 
@@ -262,12 +288,13 @@ remainingAccount: 剩余百分比   operationCombineUuid: 操作组合id
 function showGroupSettingDialog(type, id, operationCombineName, remainingAccount, operationCombineUuid) {
     var changeSettingDialog = $("#changeSettingDialog");
     changeSettingDialog.find('#changeSettingDialogForm')[0].reset();
-    $("#changeSettingDialog").find("#settingOperationCombineName").attr("disabled", true);
+    if (type === "add") {
+        $("#changeSettingDialog").find("#settingOperationCombineName").attr("disabled", true);
+    }
     $("#changeSettingDialog").find("#settingGroup").attr("disabled", true);
     changeSettingDialog.find('#settingOperationCombineName').val(operationCombineName);
     changeSettingDialog.find('#remainAccount').val(remainingAccount);
     changeSettingDialog.find("i").text(remainingAccount);
-    changeSettingDialog.find("#maxInvalidCount").parent().parent().hide();
     var title;
     if (type == "add") {
         title = "新增操作类型";
@@ -280,8 +307,8 @@ function showGroupSettingDialog(type, id, operationCombineName, remainingAccount
     changeSettingDialog.show();
     changeSettingDialog.dialog({
         resizable: false,
-        width: 650,
-        maxHeight: 550,
+        width: 500,
+        maxHeight: 350,
         title: title,
         modal: false,
         buttons: [{
@@ -309,7 +336,7 @@ function showGroupSettingDialog(type, id, operationCombineName, remainingAccount
     changeSettingDialog.dialog("open");
     changeSettingDialog.window("resize", {
         top: $(document).scrollTop() + 150,
-        left: $(document).scrollLeft() + $(window).width() / 2 - 325
+        left: $(document).scrollLeft() + $(window).width() / 2 - 250
     });
 }
 
@@ -404,7 +431,7 @@ function isChecked(id, dialogDiv) {
 }
 
 /*
-type: 控制方式 status: 操作组合是否可修改 isBatchUpdate: 批量修改标志 operationCombineUuid: 操作组合uuid
+type: 控制方式 status: 分组分割 isBatchUpdate: 批量修改标志 operationCombineUuid: 操作组合uuid
  */
 function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
     var dialogDiv;
@@ -414,13 +441,13 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
         dialogDiv = $("#changeSettingDialog");
     }
     var operationCombine = {};
+    var operationCombineName = dialogDiv.find("#settingOperationCombineName").val().trim();
+    if (operationCombineName === "") {
+        $.messager.alert('提示', '请输入操作组合名', 'warning');
+        dialogDiv.find("#settingOperationCombineName")[0].focus();
+        return false;
+    }
     if (status) {
-        var operationCombineName = dialogDiv.find("#settingOperationCombineName").val().trim();
-        if (operationCombineName === "") {
-            $.messager.alert('提示', '请输入操作组合名', 'warning');
-            dialogDiv.find("#settingOperationCombineName")[0].focus();
-            return false;
-        }
         operationCombine.operationCombineName = operationCombineName;
         var groupNames = dialogDiv.find("#settingGroup").val().trim();
         if (groupNames === "") {
@@ -488,9 +515,9 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
     groupSetting.randomlyClickNoResult = dialogDiv.find("#randomlyClickNoResult:checked").val() === '1' ? 1 : 0;
 
     if(type === "update") {
-        var groupSettingUuid = dialogDiv.find('#groupSettingUuid').val();
-        groupSetting.uuid = groupSettingUuid;
+        groupSetting.uuid = dialogDiv.find('#groupSettingUuid').val();
         groupSetting.operationCombineUuid = operationCombineUuid;
+        groupSetting.operationCombineName = operationCombineName;
         var gs = {};
         gs.operationType = isChecked("settingOperationType", dialogDiv);
         if (isChecked("machineUsedPercent", dialogDiv) === "1") {
@@ -519,6 +546,7 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
         gs.optimizeKeywordCountPerIP = isChecked("optimizeKeywordCountPerIP", dialogDiv);
         gs.maxInvalidCount = isChecked("maxInvalidCount", dialogDiv);
         gs.randomlyClickNoResult = isChecked("randomlyClickNoResult", dialogDiv) === '1' ? 1 : 0;
+        gs.operationCombineName = isChecked("settingOperationCombineName", dialogDiv) === '1' ? 1 : 0;
 
         var postData = {};
         postData.gs = gs;
@@ -543,7 +571,6 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
                     $().toastmessage('showErrorToast', "更新失败");
                 }
             });
-            $("#changeSettingDialog").dialog("close");
         } else { // 单个修改
             $.ajax({
                 url: '/internal/groupsetting/updateGroupSetting',
@@ -565,7 +592,6 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
 
                 }
             });
-            $("#updateGroupSettingDialog").dialog("close");
         }
     } else if (type === "add") { // 增加单个操作设置
         if (groupSetting.machineUsedPercent === 0) {
@@ -588,11 +614,9 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
                 }else{
                     $().toastmessage('showErrorToast', "添加失败");
                 }
-                $("#changeSettingDialog").dialog("close");
             },
             error: function () {
                 $().toastmessage('showErrorToast', "添加失败");
-                $("#changeSettingDialog").dialog("close");
             }
         });
     } else if (type === "addOperationCombine") { // 增加操作组合
@@ -614,14 +638,13 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
                 }else{
                     $().toastmessage('showErrorToast', "添加失败");
                 }
-                $("#changeSettingDialog").dialog("close");
             },
             error: function () {
                 $().toastmessage('showErrorToast', "添加失败");
-                $("#changeSettingDialog").dialog("close");
             }
         });
     }
+    $(dialogDiv).dialog("close");
 }
 
 function checkItem(self) {
