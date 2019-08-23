@@ -1712,4 +1712,33 @@
         AND ck.fStatus = 1
         AND ck.fOptimizeGroupName LIKE '${groupName}%'
     </select>
+
+    <insert id="saveTestCustomerKeywords">
+        INSERT INTO t_customer_keyword ( fCustomerUuid, fTerminalType, fKeyword,fUrl, fType, fBearPawNumber,
+            fOriginalUrl, fTitle, fSearchEngine, fCurrentPosition, fServiceProvider, fOptimizeGroupName,
+            fOptimizePlanCount, fMachineGroup, fRemarks, fStatus, fCaptureStatus, fCustomerKeywordSource )
+        VALUES
+        <foreach collection="customerKeywords" item="customerKeyword" index="index" separator=",">
+            (
+                #{customerKeyword.customerUuid},
+                #{customerKeyword.terminalType},
+                #{customerKeyword.keyword},
+                #{customerKeyword.url},
+                #{customerKeyword.type},
+                #{customerKeyword.bearPawNumber},
+                #{customerKeyword.originalUrl},
+                #{customerKeyword.title},
+                #{customerKeyword.searchEngine},
+                #{customerKeyword.currentPosition},
+                #{customerKeyword.serviceProvider},
+                #{customerKeyword.optimizeGroupName},
+                #{customerKeyword.optimizePlanCount},
+                #{customerKeyword.machineGroup},
+                #{customerKeyword.remarks},
+                #{customerKeyword.status},
+                #{customerKeyword.captureStatus},
+                #{customerKeyword.customerKeywordSource}
+            )
+        </foreach>
+    </insert>
 </mapper>
