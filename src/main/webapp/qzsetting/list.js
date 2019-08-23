@@ -225,6 +225,7 @@ function searchCountNumOfQZKeywordRankInfo(postData, callback) {
     });
 }
 function initCountNumOfQZKeywordRankInfo(){
+    trimSearchCondition('1');
     var postData = {};
     var fieldArray = $("#chargeForm").serializeArray();
     var excludeFieldArray = ["currentPageNumber", "pages", "pageSize", "total", "statusHidden"];
