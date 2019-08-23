@@ -74,21 +74,14 @@
         <if test="customerKeywordCriteria.titleFlag == 2">
             AND ck.fTitle > ''
         </if>
-        <choose>
-            <when test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
-                <if test="customerKeywordCriteria.groupNameFuzzyQuery == null or customerKeywordCriteria.groupNameFuzzyQuery == ''">
-                    AND ck.fOptimizeGroupName = #{customerKeywordCriteria.optimizeGroupName}
-                </if>
-                <if test="customerKeywordCriteria.groupNameFuzzyQuery == 1">
-                    AND ck.fOptimizeGroupName like '${customerKeywordCriteria.optimizeGroupName}%'
-                </if>
-            </when>
-            <otherwise>
-                <if test="customerKeywordCriteria.displayStop == null or customerKeywordCriteria.displayStop == ''">
-                    AND (ck.fOptimizeGroupName != 'stop')
-                </if>
-            </otherwise>
-        </choose>
+        <if test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
+            <if test="customerKeywordCriteria.groupNameFuzzyQuery == null or customerKeywordCriteria.groupNameFuzzyQuery == ''">
+                AND ck.fOptimizeGroupName = #{customerKeywordCriteria.optimizeGroupName}
+            </if>
+            <if test="customerKeywordCriteria.groupNameFuzzyQuery == 1">
+                AND ck.fOptimizeGroupName like '${customerKeywordCriteria.optimizeGroupName}%'
+            </if>
+        </if>
         <if test="customerKeywordCriteria.machineGroup != null and customerKeywordCriteria.machineGroup != ''">
             <if test="customerKeywordCriteria.machineGroupFuzzyQuery == null or customerKeywordCriteria.machineGroupFuzzyQuery == ''">
                 AND ck.fMachineGroup = #{customerKeywordCriteria.machineGroup}
@@ -157,16 +150,9 @@
         <if test="customerKeywordCriteria.titleFlag == 2">
             AND ck.fTitle > ''
         </if>
-        <choose>
-            <when test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
-                AND ck.fOptimizeGroupName  like '${customerKeywordCriteria.optimizeGroupName}%'
-            </when>
-            <otherwise>
-                <if test="customerKeywordCriteria.displayStop == null or customerKeywordCriteria.displayStop == ''">
-                    AND (ck.fOptimizeGroupName != 'stop')
-                </if>
-            </otherwise>
-        </choose>
+        <if test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
+            AND ck.fOptimizeGroupName  like '${customerKeywordCriteria.optimizeGroupName}%'
+        </if>
         <if test="customerKeywordCriteria.machineGroup != null and customerKeywordCriteria.machineGroup != ''">
             <if test="customerKeywordCriteria.machineGroupFuzzyQuery == null or customerKeywordCriteria.machineGroupFuzzyQuery == ''">
                 AND ck.fMachineGroup = #{customerKeywordCriteria.machineGroup}
@@ -386,7 +372,6 @@
         WHERE ck.fCustomerUuid = #{customerKeywordCriteria.customerUuid}
         AND ck.fStatus = 1
         AND fTerminalType =  #{customerKeywordCriteria.terminalType}
-        AND (ck.fOptimizeGroupName != 'stop')
         ORDER BY ck.fSequence
     </select>
 
@@ -760,7 +745,7 @@
                 </foreach>
             </when>
             <otherwise>
-                AND (ck.fOptimizeGroupName IS NULL OR ck.fOptimizeGroupName <![CDATA[<>]]> 'stop')
+                AND ck.fOptimizeGroupName IS NULL
             </otherwise>
         </choose>
         LIMIT 1
@@ -770,7 +755,8 @@
         SELECT
         ck.fUuid AS 'uuid'
         FROM t_customer_keyword ck
-        WHERE ck.fTerminalType = #{terminalType} and ck.fStatus = 1
+        WHERE ck.fTerminalType = #{terminalType}
+        AND ck.fStatus = 1
         AND fCaptureStatus = #{captureStatus}
         <if test="startTime != null and captureStatus == 0">
             AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
@@ -784,9 +770,6 @@
         </if>
         <if test="groupName != null">
             AND ck.fOptimizeGroupName = #{groupName}
-        </if>
-        <if test="groupName == null">
-            AND (ck.fOptimizeGroupName IS NULL OR ck.fOptimizeGroupName <![CDATA[<>]]> 'stop')
         </if>
         LIMIT 10
     </select>
@@ -1040,7 +1023,6 @@
         AND u.fEmail > ''
         AND ck.fStatus = 1
         AND ck.fCurrentPosition &gt; 0
-        AND ck.fOptimizeGroupName &lt;&gt; 'stop'
         AND (ck.fOptimizedCount = 0 OR ck.fInvalidRefreshCount &gt;= 8)
         GROUP BY u.fLoginName
     </select>
@@ -1055,7 +1037,6 @@
         WHERE c.fUuid = ck.fCustomerUuid
         AND ck.fStatus = 1
         AND ck.fCurrentPosition &gt; 0
-        AND ck.fOptimizeGroupName &lt;&gt; 'stop'
         AND ck.fType = 'qz'
         AND c.fUserID = #{userID}
         AND (ck.fOptimizedCount = 0 OR ck.fInvalidRefreshCount &gt;= 8)
@@ -1074,7 +1055,6 @@
         WHERE c.fUuid = ck.fCustomerUuid
         AND ck.fStatus = 1
         AND ck.fCurrentPosition &gt; 0
-        AND ck.fOptimizeGroupName &lt;&gt; 'stop'
         AND ck.fType IN ('fm', 'pt', 'bc')
         AND c.fUserID = #{userID}
         AND (ck.fOptimizedCount = 0 OR ck.fInvalidRefreshCount &gt;= 8)
@@ -1417,7 +1397,7 @@
 
     <update id="excludeCustomerKeyword" parameterType="com.keymanager.monitoring.entity.CustomerKeyword">
         UPDATE  t_customer_keyword ck
-        SET ck.fOptimizeGroupName = 'zanting'
+        SET ck.fStatus = 3
         WHERE 1=1
         <if test="qzSettingExcludeCustomerKeywordsCriteria.customerUuid != null and qzSettingExcludeCustomerKeywordsCriteria.customerUuid != ''">
           AND ck.fCustomerUuid = #{qzSettingExcludeCustomerKeywordsCriteria.customerUuid}
@@ -1677,7 +1657,6 @@
         WHERE ck.fType = 'qz'
         AND ck.fStatus = 1
         AND ck.fSearchEngine = '百度'
-        AND ck.fMachineGroup != 'Pause'
         AND (ck.fCaptureStatus = 0 AND ck.fCapturePositionQueryTime &lt;= CURRENT_DATE())
         UNION ALL
         SELECT
@@ -1692,7 +1671,6 @@
         WHERE ck.fType = 'qz'
         AND ck.fStatus = 1
         AND ck.fSearchEngine = '百度'
-        AND ck.fMachineGroup != 'Pause'
         AND (ck.fCaptureStatus = 1 AND ck.fCapturePositionQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE))
         LIMIT 3000
     </select>

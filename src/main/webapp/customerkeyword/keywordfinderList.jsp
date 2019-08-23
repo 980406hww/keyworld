@@ -104,7 +104,6 @@
             </select>
 
             <input id="pushPay" name="pushPay" type="checkbox"  onclick="pushPayValue()" value="${customerKeywordCriteria.pushPay}"/>催缴 &nbsp;
-            <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}"/>显示下架 &nbsp;
             <input id="requireDelete" name="requireDelete" type="checkbox"  ${customerKeywordCriteria.requireDelete == true ? "checked=true" : ""}/>要求删除 &nbsp;
             <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>显示排名为0 &nbsp;
             要刷:<input type="text" name="gtOptimizePlanCount" id="gtOptimizePlanCount" placeholder=">=" value="${customerKeywordCriteria.gtOptimizePlanCount}" style="width:40px;"/>
@@ -223,14 +222,14 @@
                     ${customerKeyword.userID}
                 </td>
                 </c:if>
-                <td align="center" width=80>
+                <td align="center" width=80 style="text-align: left;">
                     <a href="#" onclick="searchCustomerKeywords('/internal/customerKeyword/searchCustomerKeywords/${customerKeyword.customerUuid}')">${customerKeyword.contactPerson}</a>
                 </td>
-                <td align="center" width=80>
+                <td align="center" width=80 style="text-align: left;">
                     ${customerKeyword.keyword}
                 </td>
 
-                <td align="center" width=100 class="floatTd" title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}" >
+                <td align="center" width=100 class="floatTd" style="text-align: left;" title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}" >
                         ${customerKeyword.url==null?'':customerKeyword.url}
                 </td>
                 <td align="center" width=100>
@@ -335,11 +334,6 @@
         }else{
             $("#noPosition").prop("checked",false);
         }
-        if(${customerKeywordCriteria.displayStop == 1}){
-            $("#displayStop").prop("checked",true);
-        }else{
-            $("#displayStop").prop("checked",false);
-        }
         if(${customerKeywordCriteria.pushPay == 1}){
             $("#pushPay").prop("checked",true);
         }else{
@@ -362,14 +356,6 @@
             $("#pushPay").val("1")
         }else {
             $("#pushPay").val("0");
-        }
-    }
-    //显示下架
-    function displayStopValue() {
-        if($("#displayStop").is(":checked")){
-            $("#displayStop").val("1")
-        }else {
-            $("#displayStop").val("0");
         }
     }
 

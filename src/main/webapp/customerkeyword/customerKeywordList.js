@@ -437,8 +437,6 @@ function stopOptimization(customerUuid,status){
     })
 }
 
-
-
 function updateSpecifiedCustomerKeywordGroupName() {
     var customerKeywordUuids = getUuids();
     if (customerKeywordUuids.trim() === '') {
@@ -447,6 +445,29 @@ function updateSpecifiedCustomerKeywordGroupName() {
     }
     var changeGroupCriteria = {"title" : "修改选中关键字优化组", "customerKeywordUuids":customerKeywordUuids.split(",")};
     showGroupNameChangeDialog(changeGroupCriteria);
+}
+
+function changeGroupName(customerKeywordUpdateGroupCriteria) {
+    $.ajax({
+        url:'/internal/customerKeyword/updateCustomerKeywordGroupName',
+        data:JSON.stringify(customerKeywordUpdateGroupCriteria),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        timeout: 5000,
+        type: 'POST',
+        success: function (result) {
+            if (result) {
+                $().toastmessage('showSuccessToast', "操作成功",true);
+            } else {
+                $().toastmessage('showErrorToast', "操作失败",true);
+            }
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "操作失败",true);
+        }
+    });
 }
 
 function updateSpecifiedCustomerKeywordSearchEngine() {
@@ -458,6 +479,7 @@ function updateSpecifiedCustomerKeywordSearchEngine() {
     var changeSearchEngineCriteria = {"title" : "修改选中关键字搜索引擎", "customerKeywordUuids":customerKeywordUuids.split(",")};
     showSearchEngineChangeDialog(changeSearchEngineCriteria);
 }
+
 function changeSearchEngine(searchEngineCriteria) {
     $.ajax({
         url:'/internal/customerKeyword/updateCustomerKeywordSearchEngine',
@@ -556,6 +578,7 @@ function uploadCustomerKeywords(customerUuid, excelType){
     $("#uploadExcelDailog").dialog("open");
     $('#uploadExcelDailog').window("resize",{top:$(document).scrollTop() + 100});
 }
+
 //导出结果
 function downloadCustomerKeywordInfo() {
     var customerKeywordCrilteriaArray = $("#searchCustomerKeywordForm").serializeArray();
@@ -564,14 +587,6 @@ function downloadCustomerKeywordInfo() {
         downloadCustomerKeywordInfoForm.find("#"+val.name+"Hidden").val(val.value == '' ? null : val.value);
     });
     downloadCustomerKeywordInfoForm.submit();
-}
-//显示下架
-function displayStopValue() {
-    if($("#displayStop").is(":checked")){
-        $("#displayStop").val("1")
-    }else {
-        $("#displayStop").val("");
-    }
 }
 
 function showOptimizePlanCountDialog() {
@@ -612,6 +627,7 @@ function showOptimizePlanCountDialog() {
     });
     $('#optimizePlanCountDialog').window("resize",{top:$(document).scrollTop() + 150});
 }
+
 function editOptimizePlanCount(customerUuid, uuids) {
     var settingType = $("#optimizePlanCountDialog").find("input[name=settingType]:checked").val();
     var optimizePlanCount = $("#optimizePlanCountDialog").find("#optimizePlanCount").val();
@@ -739,7 +755,6 @@ function deleteDuplicateCustomerKeyword(customerUuid) {
         }
     });
 }
-
 
 /**
  * 批量修改关键字机器分组

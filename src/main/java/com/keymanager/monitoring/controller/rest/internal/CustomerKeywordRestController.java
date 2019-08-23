@@ -72,7 +72,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	@RequestMapping(value="/searchCustomerKeywords/{customerUuid}" , method=RequestMethod.GET)
 	public ModelAndView searchCustomerKeywords(@PathVariable("customerUuid") Long customerUuid,@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request){
 		CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
-		customerKeywordCriteria.setStatus("1");
 		customerKeywordCriteria.setCustomerUuid(customerUuid);
 		return constructCustomerKeywordModelAndView(request, customerKeywordCriteria, currentPageNumber, pageSize);
 	}
@@ -267,10 +266,8 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		try{
 			String terminalType = TerminalTypeMapping.getTerminalType(request);
 			String entryType = (String)request.getSession().getAttribute("entryType");
-
 			customerKeywordCleanCriteria.setTerminalType(terminalType);
 			customerKeywordCleanCriteria.setEntryType(entryType);
-
 			customerKeywordService.cleanTitle(customerKeywordCleanCriteria);
 			return new ResponseEntity<Object>(true, HttpStatus.OK);
 		}catch (Exception ex){
@@ -355,7 +352,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         List<Map> dataList = customerKeywordService.searchAllKeywordAndUrl(Long.valueOf(customerUuid), terminalType);
         Customer customer = customerService.selectById(Long.valueOf(customerUuid));
-
         CustomerKeywordAndUrlCvsExportWriter.exportCsv(dataList);
         CustomerKeywordAndUrlCvsExportWriter.downloadZip(response, customer.getContactPerson(),terminalType);
         return new ResponseEntity<Object>(true, HttpStatus.OK);
@@ -402,7 +398,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			SecurityUtils.getSubject().logout();
 		}
 		CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
-		customerKeywordCriteria.setStatus("1");
 		return constructCustomerKeywordListsModelAndView(request, customerKeywordCriteria, currentPageNumber, pageSize);
 	}
 
@@ -601,6 +596,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
         	return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
 		}
     }
+
 	@RequiresPermissions("/internal/customerKeyword/deleteCustomerKeywords")
     @RequestMapping(value = "/deleteDuplicateCustomerKeyword/{customerUuid}" , method = RequestMethod.POST)
     public ResponseEntity<?>  deleteDuplicateCustomerKeyword(@PathVariable("customerUuid") Long customerUuid,HttpServletRequest request,HttpSession session) {
@@ -649,7 +645,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
 		}
 	}
-
 
     @RequiresPermissions("/internal/customerKeyword/showMachineGroupAndSize")
     @RequestMapping("/showMachineGroupAndSize")
