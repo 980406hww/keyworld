@@ -34,6 +34,7 @@ $(function () {
         showCustomerBottomDiv.find("#nextButton").attr("disabled", "disabled");
         showCustomerBottomDiv.find("#lastButton").attr("disabled", "disabled");
     }
+    initCountNumOfQZKeywordRankInfo();
     initQZKeywordRankInfo();
     searchRiseOrFall();
     detectedMoreSearchConditionDivShow();
@@ -42,7 +43,7 @@ function enterIn(e) {
     var e = e || event,
         keyCode = e.which || e.keyCode;
     if (keyCode == 13) {
-        trimSearchCondition('1');
+        trimSearchConditionSubmit('1');
     }
 }
 function searchRiseOrFall() {
@@ -91,7 +92,7 @@ function searchRiseOrFall() {
                 $(this).prop("checked", false);
             }
         });
-        trimSearchCondition('1');
+        trimSearchConditionSubmit('1');
     });
 }
 function detectedMoreSearchConditionDivShow() {
@@ -158,14 +159,18 @@ function checkTerminalType(searchEngine, terminalType) {
         $("#chargeForm").find("#searchEngine").val($.trim(html.substr(0, html.indexOf('P'))));
     }
     $("#chargeForm").find("#terminalType").val($.trim(terminalType));
-    trimSearchCondition('1');
+    trimSearchConditionSubmit('1');
 }
 function initQZKeywordRankInfo() {
+    var terminalType = $("#chargeForm").find("input[name='terminalType']").val();
     $(".datalist ul li").each(function () {
         var li = $(this);
-        var terminalType = $("#chargeForm").find("input[name='terminalType']").val();
+        var postData = {};
+        postData.uuid = li.find("input[name='uuid']").val();
         var optimizeGroupName = terminalType === 'PC' ? li.find("input[name='pcGroup']").val() : li.find("input[name='phoneGroup']").val();
-        searchQZKeywordRankInfo(li, terminalType, optimizeGroupName, function (data) {
+        postData.terminalType = terminalType;
+        postData.optimizeGroupName = optimizeGroupName;
+        searchQZKeywordRankInfo(postData, function (data) {
             li.find(".other-rank_2").find("span.line1 a").text(optimizeGroupName);
             if (data != null) {
                 li.find("#fmtStandardDate a").text(data["standardTime"] === null ? "无" : toDateFormat(new Date(data["standardTime"])));
@@ -202,11 +207,52 @@ function initQZKeywordRankInfo() {
         });
     });
 }
-function searchQZKeywordRankInfo(li, terminalType, optimizeGroupName, callback) {
+function searchCountNumOfQZKeywordRankInfo(postData, callback) {
+    $.ajax({
+        url: '/internal/qzkeywordrank/searchCountNumOfQZKeywordRankInfo',
+        type: 'POST',
+        data: JSON.stringify(postData),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        success: function (data) {
+            callback(data);
+        },
+        error: function () {
+            $().toastmessage('showErrorToast', "获取全站统计信息失败！！！");
+        }
+    });
+}
+function initCountNumOfQZKeywordRankInfo(){
     var postData = {};
-    postData.uuid = li.find("input[name='uuid']").val();
-    postData.terminalType = terminalType;
-    postData.optimizeGroupName = optimizeGroupName;
+    var fieldArray = $("#chargeForm").serializeArray();
+    var excludeFieldArray = ["currentPageNumber", "pages", "pageSize", "total", "statusHidden"];
+    for (var i = 0; i < fieldArray.length; i++) {
+        var field = fieldArray[i];
+        if (excludeFieldArray.indexOf(field.name) === -1) {
+            postData[field.name] = field.value;
+        }
+    }
+    searchCountNumOfQZKeywordRankInfo(postData, function (data) {
+        var div = $(".mytabs").find("div.conn")[0];
+        $(div).find("li[name='lower']  label")[0].title = $(div).find("li[name='lower']  label")[0].title.replace("0", data.upperValue).replace("N", data.upOneWeekDiff);
+        $(div).find("li[name='lower']  label").text($(div).find("li[name='lower']  label").text().replace("0", data.downNum));
+        $(div).find("li[name='unchanged']  label").text($(div).find("li[name='unchanged']  label").text().replace("0", data.unchangedNum));
+        $(div).find("li[name='upper']  label")[0].title = $(div).find("li[name='upper']  label")[0].title.replace("0", data.upperValue).replace("N", data.upOneWeekDiff);
+        $(div).find("li[name='upper']  label").text($(div).find("li[name='upper']  label").text().replace("0", data.upNum));
+
+        $(div).find("li[name='lowerDifference']  label").text($(div).find("li[name='lowerDifference']  label").text().replace("0", data.downDifferenceNum));
+        $(div).find("li[name='unchangedDifference']  label").text($(div).find("li[name='unchangedDifference']  label").text().replace("0", data.unchangedDifferenceNum));
+        $(div).find("li[name='upperDifference']  label").text($(div).find("li[name='upperDifference']  label").text().replace("0", data.upDifferenceNum));
+
+        $(div).find("li[name='atLeastStandard']  label").text($(div).find("li[name='atLeastStandard']  label").text().replace("0", data.atLeastStandardNum));
+        $(div).find("li[name='neverStandard']  label").text($(div).find("li[name='neverStandard']  label").text().replace("0", data.neverStandardNum));
+        $(div).find("li[name='closeStandard']  label")[0].title = $(div).find("li[name='closeStandard']  label")[0].title.replace("0", data.differenceValue);
+        $(div).find("li[name='closeStandard']  label").text($(div).find("li[name='closeStandard']  label").text().replace("0", data.closeStandardNum));
+    });
+}
+function searchQZKeywordRankInfo(postData, callback) {
     $.ajax({
         url: '/internal/qzsetting/searchQZKeywordRankInfo',
         type: 'POST',
@@ -1155,7 +1201,10 @@ function trimSearchCondition(days) {
     } else {
         chargeForm.find("#hasReady").val(null);
     }
-    chargeForm.submit();
+}
+function trimSearchConditionSubmit(days) {
+    trimSearchCondition(days);
+    $("#chargeForm").submit();
 }
 function showMoreSearchCondition() {
     $(".mytabs").find("div[name='moreSearchCondition']").toggle();

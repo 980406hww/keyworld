@@ -3,6 +3,7 @@ package com.keymanager.monitoring.service;
 import com.alibaba.druid.support.logging.Log;
 import com.alibaba.druid.support.logging.LogFactory;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.criteria.QZSettingCountNumCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.dao.QZKeywordRankInfoDao;
 import com.keymanager.monitoring.entity.Config;
@@ -161,27 +162,16 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         return qzKeywordRankInfo;
     }
 
-    public QZSettingSearchCriteria getCountNumOfRankInfo(QZSettingSearchCriteria qzSettingSearchCriteria){
+    public QZSettingCountNumCriteria searchCountNumOfQZKeywordRankInfo(QZSettingSearchCriteria criteria){
         double upperValue = Double.parseDouble(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_UPPER_VALUE).getValue());
         double differenceValue = Double.parseDouble(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_DIFFERENCEVALUE_VALUE).getValue());
         int oneWeekDiff = Integer.parseInt(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_ONE_WEEK_DIFF).getValue());
-        qzSettingSearchCriteria.setUpperValue(upperValue);
-        qzSettingSearchCriteria.setLowerValue(-upperValue);
-        qzSettingSearchCriteria.setDifferenceValue(differenceValue);
-        qzSettingSearchCriteria.setUpOneWeekDiff(oneWeekDiff);
-        qzSettingSearchCriteria.setDownOneWeekDiff(-oneWeekDiff);
 
-        QZSettingSearchCriteria countNumOfRankInfo = qzKeywordRankInfoDao.getCountNumOfRankInfo(qzSettingSearchCriteria);
-        qzSettingSearchCriteria.setUnchangedNum(countNumOfRankInfo.getUnchangedNum());
-        qzSettingSearchCriteria.setUpNum(countNumOfRankInfo.getUpNum());
-        qzSettingSearchCriteria.setDownNum(countNumOfRankInfo.getDownNum());
-        qzSettingSearchCriteria.setAtLeastStandardNum(countNumOfRankInfo.getAtLeastStandardNum());
-        qzSettingSearchCriteria.setNeverStandardNum(countNumOfRankInfo.getNeverStandardNum());
-        qzSettingSearchCriteria.setCloseStandardNum(countNumOfRankInfo.getCloseStandardNum());
-        qzSettingSearchCriteria.setUnchangedDifferenceNum(countNumOfRankInfo.getUnchangedDifferenceNum());
-        qzSettingSearchCriteria.setUpDifferenceNum(countNumOfRankInfo.getUpDifferenceNum());
-        qzSettingSearchCriteria.setDownDifferenceNum(countNumOfRankInfo.getDownDifferenceNum());
-        return qzSettingSearchCriteria;
+        QZSettingCountNumCriteria qzSettingCountNumCriteria = qzKeywordRankInfoDao.getCountNumOfRankInfo(-upperValue, upperValue, differenceValue, -oneWeekDiff, oneWeekDiff, criteria);
+        qzSettingCountNumCriteria.setUpperValue(upperValue);
+        qzSettingCountNumCriteria.setDifferenceValue(differenceValue);
+        qzSettingCountNumCriteria.setUpOneWeekDiff(oneWeekDiff);
+        return qzSettingCountNumCriteria;
     }
 
     private QZSetting getQZSetting(Long qzSettingUuid, String crawlerStatus) {

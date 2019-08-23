@@ -1,9 +1,5 @@
 package com.keymanager.monitoring.criteria;
 
-import com.keymanager.monitoring.entity.QZCategoryTag;
-
-import java.util.List;
-
 public class QZSettingSearchCriteria{
     private String loginName;
     private String customerUuid;
@@ -19,21 +15,9 @@ public class QZSettingSearchCriteria{
     private Integer dateRangeType;
     private Integer status;
     private Integer renewalStatus;
-    private int unchangedNum;
-    private int downNum;
-    private int upNum;
-    private int atLeastStandardNum;
-    private int neverStandardNum;
-    private int closeStandardNum;
-    private double upperValue;
-    private double lowerValue;
-    private double differenceValue;
     private Integer checkStatus;
     private String terminalType;
     private String categoryTag;
-    private int unchangedDifferenceNum;
-    private int upDifferenceNum;
-    private int downDifferenceNum;
     private Integer openDialogStatus;
     private String operationType;
     private String createTime;
@@ -44,9 +28,6 @@ public class QZSettingSearchCriteria{
     private Integer optimizationType;
     private boolean resetPagingParam;
     private Boolean autoCrawlKeywordFlag;
-    private int upOneWeekDiff;
-    private int downOneWeekDiff;
-    private List<QZCategoryTag> targetQZCategoryTags;
 
     public String getCustomerUuids() {
         return customerUuids;
@@ -54,14 +35,6 @@ public class QZSettingSearchCriteria{
 
     public void setCustomerUuids(String customerUuids) {
         this.customerUuids = customerUuids;
-    }
-
-    public List<QZCategoryTag> getTargetQZCategoryTags() {
-        return targetQZCategoryTags;
-    }
-
-    public void setTargetQZCategoryTags(List<QZCategoryTag> targetQZCategoryTags) {
-        this.targetQZCategoryTags = targetQZCategoryTags;
     }
 
     public String getLoginName() {
@@ -152,22 +125,6 @@ public class QZSettingSearchCriteria{
         this.status = status;
     }
 
-    public int getDownNum() {
-        return downNum;
-    }
-
-    public void setUpperValue (double upperValue) {
-        this.upperValue = upperValue;
-    }
-
-    public int getUpNum() {
-        return upNum;
-    }
-
-    public void setLowerValue (double lowerValue) {
-        this.lowerValue = lowerValue;
-    }
-
     public Integer getCheckStatus () {
         return checkStatus;
     }
@@ -184,92 +141,12 @@ public class QZSettingSearchCriteria{
         this.terminalType = terminalType;
     }
 
-    public int getUnchangedNum () {
-        return unchangedNum;
-    }
-
-    public void setUnchangedNum (int unchangedNum) {
-        this.unchangedNum = unchangedNum;
-    }
-
-    public void setDownNum(int downNum) {
-        this.downNum = downNum;
-    }
-
-    public void setUpNum(int upNum) {
-        this.upNum = upNum;
-    }
-
-    public double getUpperValue() {
-        return upperValue;
-    }
-
-    public double getLowerValue() {
-        return lowerValue;
-    }
-
     public String getCategoryTag () {
         return categoryTag;
     }
 
     public void setCategoryTag (String categoryTag) {
         this.categoryTag = categoryTag;
-    }
-
-    public int getAtLeastStandardNum () {
-        return atLeastStandardNum;
-    }
-
-    public void setAtLeastStandardNum (int atLeastStandardNum) {
-        this.atLeastStandardNum = atLeastStandardNum;
-    }
-
-    public int getNeverStandardNum () {
-        return neverStandardNum;
-    }
-
-    public void setNeverStandardNum (int neverStandardNum) {
-        this.neverStandardNum = neverStandardNum;
-    }
-
-    public int getCloseStandardNum () {
-        return closeStandardNum;
-    }
-
-    public void setCloseStandardNum (int closeStandardNum) {
-        this.closeStandardNum = closeStandardNum;
-    }
-
-    public double getDifferenceValue () {
-        return differenceValue;
-    }
-
-    public void setDifferenceValue (double differenceValue) {
-        this.differenceValue = differenceValue;
-    }
-
-    public int getUnchangedDifferenceNum () {
-        return unchangedDifferenceNum;
-    }
-
-    public void setUnchangedDifferenceNum (int unchangedDifferenceNum) {
-        this.unchangedDifferenceNum = unchangedDifferenceNum;
-    }
-
-    public int getUpDifferenceNum () {
-        return upDifferenceNum;
-    }
-
-    public void setUpDifferenceNum (int upDifferenceNum) {
-        this.upDifferenceNum = upDifferenceNum;
-    }
-
-    public int getDownDifferenceNum () {
-        return downDifferenceNum;
-    }
-
-    public void setDownDifferenceNum (int downDifferenceNum) {
-        this.downDifferenceNum = downDifferenceNum;
     }
 
     public Integer getOpenDialogStatus () {
@@ -350,22 +227,6 @@ public class QZSettingSearchCriteria{
 
     public void setRenewalStatus(Integer renewalStatus) {
         this.renewalStatus = renewalStatus;
-    }
-
-    public int getUpOneWeekDiff() {
-        return upOneWeekDiff;
-    }
-
-    public void setUpOneWeekDiff(int upOneWeekDiff) {
-        this.upOneWeekDiff = upOneWeekDiff;
-    }
-
-    public int getDownOneWeekDiff() {
-        return downOneWeekDiff;
-    }
-
-    public void setDownOneWeekDiff(int downOneWeekDiff) {
-        this.downOneWeekDiff = downOneWeekDiff;
     }
 
     public Boolean getAutoCrawlKeywordFlag() {

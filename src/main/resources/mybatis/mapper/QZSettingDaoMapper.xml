@@ -118,7 +118,7 @@
             qs.fCrawlerStatus AS 'crawlerStatus',
             qs.fAutoCrawlKeywordFlag AS 'autoCrawlKeywordFlag'
         FROM t_qz_setting qs
-        JOIN t_customer c
+        RIGHT JOIN t_customer c
         ON qs.fCustomerUuid = c.fUuid
         LEFT JOIN t_userinfo u
         ON u.fLoginName = c.fUserID
@@ -185,12 +185,12 @@
                 AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
             <choose>
                 <when test="qzSettingSearchCriteria.checkStatus == 1">
-                    AND qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue}
-                    AND qk.fOneWeekDifference &lt;= #{qzSettingSearchCriteria.downOneWeekDiff}
+                    AND qk.fIncrease &lt;= -0.1
+                    AND qk.fOneWeekDifference &lt;= -5
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 2">
-                    AND qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue}
-                    AND qk.fOneWeekDifference &gt;= #{qzSettingSearchCriteria.upOneWeekDiff}
+                    AND qk.fIncrease &gt;= 0.1
+                    AND qk.fOneWeekDifference &gt;= 5
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 3">
                     AND qk.fAchieveLevel &gt; 0
@@ -216,7 +216,7 @@
                     )
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 5">
-                    AND qk.fDifferenceValue &lt;= #{qzSettingSearchCriteria.differenceValue}
+                    AND qk.fDifferenceValue &lt;= 0.1
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 6">
                     AND qk.fIncrease = 0
