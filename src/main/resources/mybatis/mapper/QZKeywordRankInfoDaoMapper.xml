@@ -58,20 +58,20 @@
 
     <select id="getCountNumOfRankInfo" resultType="com.keymanager.monitoring.criteria.QZSettingCountNumCriteria">
         SELECT
-            COUNT(qk.fIncrease = 0 OR NULL) AS 'unchangedNum',
             COUNT((qk.fIncrease &lt;= #{lowerValue} OR NULL) AND (qk.fOneWeekDifference &lt;= #{downOneWeekDiff} OR NULL)) AS 'downNum',
+            COUNT(qk.fIncrease = 0 OR NULL) AS 'unchangedNum',
             COUNT((qk.fIncrease &gt;= #{upperValue} OR NULL) AND (qk.fOneWeekDifference &gt;= #{upperOneWeekDiff} OR NULL)) AS 'upNum',
-            COUNT(qk.fAchieveLevel &gt; 0 OR NULL) AS 'atLeastStandardNum',
-            COUNT(qk.fAchieveLevel = 0 OR NULL) AS 'neverStandardNum',
-            COUNT(qk.fDifferenceValue &lt;= #{differenceValue} OR NULL) AS 'closeStandardNum',
+            COUNT(qk.fTodayDifference &lt;0 OR NULL) AS 'downDifferenceNum',
             COUNT(qk.fTodayDifference = 0 OR NULL) AS 'unchangedDifferenceNum',
             COUNT(qk.fTodayDifference &gt;0 OR NULL) AS 'upDifferenceNum',
-            COUNT(qk.fTodayDifference &lt;0 OR NULL) AS 'downDifferenceNum'
+            COUNT(qk.fAchieveLevel &gt; 0 OR NULL) AS 'atLeastStandardNum',
+            COUNT(qk.fAchieveLevel = 0 OR NULL) AS 'neverStandardNum',
+            COUNT(qk.fDifferenceValue &lt;= #{differenceValue} OR NULL) AS 'closeStandardNum'
         FROM t_qz_keyword_rank_info qk
         LEFT JOIN t_qz_setting qs
         ON qs.fUuid = qk.fQZSettingUuid
         LEFT JOIN t_qz_operation_type qot
-        ON qot.fQZSettingUuid = qk.fQZSettingUuid AND qot.fOperationtype = qk.fTerminalType
+        ON qot.fQZSettingUuid = qk.fQZSettingUuid
         WHERE qk.fTerminalType = #{criteria.terminalType}
         AND qot.fOperationtype = #{criteria.terminalType}
         AND qot.fIsDeleted = 0
@@ -92,57 +92,33 @@
         <if test="criteria.renewalStatus != null">AND qs.fRenewalStatus = #{criteria.renewalStatus}</if>
         <if test="criteria.hasMonitor != null">AND qs.fIsMonitor = #{criteria.hasMonitor}</if>
         <if test="criteria.hasReady != null">AND qs.fIsReady = #{criteria.hasReady}</if>
-        <if test="criteria.standardSpecies != null and criteria.standardSpecies != ''">
-            AND EXISTS (
-                SELECT 1
-                FROM t_qz_charge_rule qcr
-                WHERE qcr.fQZOperationTypeUuid = qot.fUuid
-                AND qcr.fStandardSpecies = #{criteria.standardSpecies}
-            )
-        </if>
+        <if test="criteria.standardSpecies != null and criteria.standardSpecies != ''">AND qk.fWebsiteType = #{criteria.standardSpecies}</if>
         <if test="criteria.optimizationType != null">AND qot.fOptimizationType = #{criteria.optimizationType}</if>
         <if test="criteria.renewalStatus != null">AND qs.fRenewalStatus = #{criteria.renewalStatus}</if>
         <if test="criteria.categoryTag != null and criteria.categoryTag != ''">
-            AND EXISTS (
-                SELECT 1
-                FROM t_qz_category_tag qc
-                WHERE qc.fQZSettingUuid = qs.fUuid
-                AND qc.fTagName = #{criteria.categoryTag}
-            )
+            AND EXISTS (SELECT 1 FROM t_qz_category_tag qc WHERE qc.fQZSettingUuid = qs.fUuid AND qc.fTagName = #{criteria.categoryTag})
         </if>
         <if test="criteria.operationType != null and criteria.operationType != ''">
             AND EXISTS (
-                SELECT 1
-                FROM t_machine_info mi
+                SELECT 1 FROM t_machine_info mi
                 WHERE mi.fUsingOperationType = #{criteria.operationType}
                 AND mi.fGroup = qot.fGroup
                 AND mi.fTerminalType = #{criteria.terminalType}
             )
         </if>
-        <if test="criteria.createTime != null and criteria.createTime != ''">
-            AND qs.fCreateTime &gt;= #{criteria.createTime}
+        <if test="criteria.createTime != null and criteria.createTime != ''">AND qs.fCreateTime &gt;= #{criteria.createTime}</if>
+        <if test="criteria.createTimePrefix != null and criteria.createTimePrefix != ''">AND qs.fCreateTime &lt;= #{criteria.createTimePrefix}</if>
+        <if test="criteria.loginName != null and criteria.loginName != ''">
+        AND EXISTS (SELECT 1 FROM t_customer c AND c.fUserID = #{criteria.loginName})
         </if>
-        <if test="criteria.createTimePrefix != null and criteria.createTimePrefix != ''">
-            AND qs.fCreateTime &lt;= #{criteria.createTimePrefix}
+        <if test="criteria.organizationID != null and criteria.organizationID != ''">
+            AND EXISTS (
+                SELECT 1 FROM t_userinfo ui
+                LEFT JOIN t_organization o
+                ON o.fUuid = ui.fOrganizationID
+                WHERE ui.fStatus = 0
+                AND o.fUuid = #{criteria.organizationID})
         </if>
-        AND EXISTS (
-            SELECT 1
-            FROM t_customer c
-            LEFT JOIN t_userinfo ui
-            ON ui.fLoginName = c.fUserID
-            WHERE qs.fCustomerUuid = c.fUuid
-            <if test="criteria.loginName != null and criteria.loginName != ''">
-                AND c.fUserID = #{criteria.loginName}
-            </if>
-            <if test="criteria.organizationID != null and criteria.organizationID != ''">
-                AND EXISTS (
-                    SELECT 1
-                    FROM t_organization o
-                    WHERE o.fUuid = ui.fOrganizationID
-                    AND o.fUuid = #{criteria.organizationID}
-                )
-            </if>
-        )
     </select>
 
     <select id="getQZKeywordRankInfoTypes" resultType="java.lang.String">

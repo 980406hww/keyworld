@@ -58,19 +58,19 @@ function searchRiseOrFall() {
                 case 'lower':
                     checkStatus = 1;
                     break;
-                case 'upper':
+                case "unchanged":
                     checkStatus = 2;
                     break;
-                case "atLeastStandard":
+                case 'upper':
                     checkStatus = 3;
                     break;
-                case 'neverStandard':
+                case "atLeastStandard":
                     checkStatus = 4;
                     break;
-                case 'closeStandard':
+                case 'neverStandard':
                     checkStatus = 5;
                     break;
-                case "unchanged":
+                case 'closeStandard':
                     checkStatus = 6;
                     break;
                 case 'lowerDifference':
@@ -228,7 +228,7 @@ function initCountNumOfQZKeywordRankInfo(){
     trimSearchCondition('1');
     var postData = {};
     var fieldArray = $("#chargeForm").serializeArray();
-    var excludeFieldArray = ["currentPageNumber", "pages", "pageSize", "total", "statusHidden"];
+    var excludeFieldArray = ["currentPageNumber", "pages", "pageSize", "total", "statusHidden", "checkStatus", "dataRangeType", "openDialogStatus", "reserPagingParam"];
     for (var i = 0; i < fieldArray.length; i++) {
         var field = fieldArray[i];
         if (excludeFieldArray.indexOf(field.name) === -1) {
