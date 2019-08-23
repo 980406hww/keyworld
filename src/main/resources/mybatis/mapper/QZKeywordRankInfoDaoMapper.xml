@@ -56,16 +56,14 @@
         LIMIT 1
     </select>
 
-    <select id="getCountNumOfRankInfo" resultType="com.keymanager.monitoring.criteria.QZSettingSearchCriteria">
+    <select id="getCountNumOfRankInfo" resultType="com.keymanager.monitoring.criteria.QZSettingCountNumCriteria">
         SELECT
             COUNT(qk.fIncrease = 0 OR NULL) AS 'unchangedNum',
-            COUNT((qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue} OR NULL) AND
-            (qk.fOneWeekDifference &lt;= #{qzSettingSearchCriteria.downOneWeekDiff} OR NULL)) AS 'downNum',
-            COUNT((qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue} OR NULL) AND
-            (qk.fOneWeekDifference &gt;= #{qzSettingSearchCriteria.upOneWeekDiff} OR NULL)) AS 'upNum',
+            COUNT((qk.fIncrease &lt;= (-#{upperValue}) OR NULL) AND (qk.fOneWeekDifference &lt;= (-#{oneWeekDiff}) OR NULL)) AS 'downNum',
+            COUNT((qk.fIncrease &gt;= #{upperValue} OR NULL) AND (qk.fOneWeekDifference &gt;= #{oneWeekDiff} OR NULL)) AS 'upNum',
             COUNT(qk.fAchieveLevel &gt; 0 OR NULL) AS 'atLeastStandardNum',
             COUNT(qk.fAchieveLevel = 0 OR NULL) AS 'neverStandardNum',
-            COUNT(qk.fDifferenceValue &lt;= #{qzSettingSearchCriteria.differenceValue} OR NULL) AS 'closeStandardNum',
+            COUNT(qk.fDifferenceValue &lt;= #{differenceValue} OR NULL) AS 'closeStandardNum',
             COUNT(qk.fTodayDifference = 0 OR NULL) AS 'unchangedDifferenceNum',
             COUNT(qk.fTodayDifference &gt;0 OR NULL) AS 'upDifferenceNum',
             COUNT(qk.fTodayDifference &lt;0 OR NULL) AS 'downDifferenceNum'
@@ -74,58 +72,58 @@
         ON qs.fUuid = qk.fQZSettingUuid
         LEFT JOIN t_qz_operation_type qot
         ON qot.fQZSettingUuid = qk.fQZSettingUuid AND qot.fOperationtype = qk.fTerminalType
-        WHERE qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
-        AND qot.fOperationtype = #{qzSettingSearchCriteria.terminalType}
+        WHERE qk.fTerminalType = #{criteria.terminalType}
+        AND qot.fOperationtype = #{criteria.terminalType}
         AND qot.fIsDeleted = 0
         AND qk.fDataProcessingStatus = 1
-        <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
-        <if test="qzSettingSearchCriteria.domain != null and qzSettingSearchCriteria.domain != ''">AND qs.fDomain = #{qzSettingSearchCriteria.domain}</if>
-        <if test="qzSettingSearchCriteria.searchEngine != 'All'">AND qs.fSearchEngine = #{qzSettingSearchCriteria.searchEngine}</if>
+        <if test="criteria.customerUuid != null and criteria.customerUuid != ''">AND qs.fCustomerUuid = #{criteria.customerUuid}</if>
+        <if test="criteria.domain != null and criteria.domain != ''">AND qs.fDomain = #{criteria.domain}</if>
+        <if test="criteria.searchEngine != 'All'">AND qs.fSearchEngine = #{criteria.searchEngine}</if>
         <choose>
-            <when test="qzSettingSearchCriteria.group == null or qzSettingSearchCriteria.group == ''">
+            <when test="criteria.group == null or criteria.group == ''">
                 AND qot.fGroup &gt; ''
             </when>
-            <when test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">
-                AND qot.fGroup = #{qzSettingSearchCriteria.group}
+            <when test="criteria.group != null and criteria.group != ''">
+                AND qot.fGroup = #{criteria.group}
             </when>
         </choose>
-        <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingSearchCriteria.updateStatus}</if>
-        <if test="qzSettingSearchCriteria.status != null">AND qs.fStatus = #{qzSettingSearchCriteria.status}</if>
-        <if test="qzSettingSearchCriteria.renewalStatus != null">AND qs.fRenewalStatus = #{qzSettingSearchCriteria.renewalStatus}</if>
-        <if test="qzSettingSearchCriteria.hasMonitor != null">AND qs.fIsMonitor = #{qzSettingSearchCriteria.hasMonitor}</if>
-        <if test="qzSettingSearchCriteria.hasReady != null">AND qs.fIsReady = #{qzSettingSearchCriteria.hasReady}</if>
-        <if test="qzSettingSearchCriteria.standardSpecies != null and qzSettingSearchCriteria.standardSpecies != ''">
+        <if test="criteria.updateStatus != null and criteria.updateStatus != ''">AND qs.fUpdateStatus = #{criteria.updateStatus}</if>
+        <if test="criteria.status != null">AND qs.fStatus = #{criteria.status}</if>
+        <if test="criteria.renewalStatus != null">AND qs.fRenewalStatus = #{criteria.renewalStatus}</if>
+        <if test="criteria.hasMonitor != null">AND qs.fIsMonitor = #{criteria.hasMonitor}</if>
+        <if test="criteria.hasReady != null">AND qs.fIsReady = #{criteria.hasReady}</if>
+        <if test="criteria.standardSpecies != null and criteria.standardSpecies != ''">
             AND EXISTS (
                 SELECT 1
                 FROM t_qz_charge_rule qcr
                 WHERE qcr.fQZOperationTypeUuid = qot.fUuid
-                AND qcr.fStandardSpecies = #{qzSettingSearchCriteria.standardSpecies}
+                AND qcr.fStandardSpecies = #{criteria.standardSpecies}
             )
         </if>
-        <if test="qzSettingSearchCriteria.optimizationType != null">AND qot.fOptimizationType = #{qzSettingSearchCriteria.optimizationType}</if>
-        <if test="qzSettingSearchCriteria.renewalStatus != null">AND qs.fRenewalStatus = #{qzSettingSearchCriteria.renewalStatus}</if>
-        <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
+        <if test="criteria.optimizationType != null">AND qot.fOptimizationType = #{criteria.optimizationType}</if>
+        <if test="criteria.renewalStatus != null">AND qs.fRenewalStatus = #{criteria.renewalStatus}</if>
+        <if test="criteria.categoryTag != null and criteria.categoryTag != ''">
             AND EXISTS (
                 SELECT 1
                 FROM t_qz_category_tag qc
                 WHERE qc.fQZSettingUuid = qs.fUuid
-                AND qc.fTagName = #{qzSettingSearchCriteria.categoryTag}
+                AND qc.fTagName = #{criteria.categoryTag}
             )
         </if>
-        <if test="qzSettingSearchCriteria.operationType != null and qzSettingSearchCriteria.operationType != ''">
+        <if test="criteria.operationType != null and criteria.operationType != ''">
             AND EXISTS (
                 SELECT 1
                 FROM t_machine_info mi
-                WHERE mi.fUsingOperationType = #{qzSettingSearchCriteria.operationType}
+                WHERE mi.fUsingOperationType = #{criteria.operationType}
                 AND mi.fGroup = qot.fGroup
-                AND mi.fTerminalType = #{qzSettingSearchCriteria.terminalType}
+                AND mi.fTerminalType = #{criteria.terminalType}
             )
         </if>
-        <if test="qzSettingSearchCriteria.createTime != null and qzSettingSearchCriteria.createTime != ''">
-            AND qs.fCreateTime &gt;= #{qzSettingSearchCriteria.createTime}
+        <if test="criteria.createTime != null and criteria.createTime != ''">
+            AND qs.fCreateTime &gt;= #{criteria.createTime}
         </if>
-        <if test="qzSettingSearchCriteria.createTimePrefix != null and qzSettingSearchCriteria.createTimePrefix != ''">
-            AND qs.fCreateTime &lt;= #{qzSettingSearchCriteria.createTimePrefix}
+        <if test="criteria.createTimePrefix != null and criteria.createTimePrefix != ''">
+            AND qs.fCreateTime &lt;= #{criteria.createTimePrefix}
         </if>
         AND EXISTS (
             SELECT 1
@@ -133,15 +131,15 @@
             LEFT JOIN t_userinfo ui
             ON ui.fLoginName = c.fUserID
             WHERE qs.fCustomerUuid = c.fUuid
-            <if test="qzSettingSearchCriteria.loginName != null and qzSettingSearchCriteria.loginName != ''">
-                AND c.fUserID = #{qzSettingSearchCriteria.loginName}
+            <if test="criteria.loginName != null and criteria.loginName != ''">
+                AND c.fUserID = #{criteria.loginName}
             </if>
-            <if test="qzSettingSearchCriteria.organizationID != null and qzSettingSearchCriteria.organizationID != ''">
+            <if test="criteria.organizationID != null and criteria.organizationID != ''">
                 AND EXISTS (
                     SELECT 1
                     FROM t_organization o
                     WHERE o.fUuid = ui.fOrganizationID
-                    AND o.fUuid = #{qzSettingSearchCriteria.organizationID}
+                    AND o.fUuid = #{criteria.organizationID}
                 )
             </if>
         )

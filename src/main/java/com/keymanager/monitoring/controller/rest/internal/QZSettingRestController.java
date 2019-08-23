@@ -38,9 +38,6 @@ public class QZSettingRestController extends SpringMVCBaseController {
 	private CustomerService customerService;
 
 	@Autowired
-	private QZKeywordRankInfoService qzKeywordRankInfoService;
-
-	@Autowired
 	private ConfigService configService;
 
 	@Autowired
@@ -198,7 +195,6 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		if (roles.contains("SEO")) {
 			isSEO = true;
 		}
-		qzKeywordRankInfoService.getCountNumOfRankInfo(qzSettingSearchCriteria);
 		Page<QZSetting> page = qzSettingService.searchQZSetting(new Page<QZSetting>(currentPageNumber, pageSize), qzSettingSearchCriteria);
 		Map<String, String> existSearchEngineMap = qzSettingService.searchQZSettingSearchEngineMap(qzSettingSearchCriteria, page.getRecords().size());
 		boolean isBaiduEngine = false;
@@ -256,7 +252,18 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 	}
 
-	@RequestMapping(value = "saveQZSettingCustomerKeywords", method = RequestMethod.POST)
+	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
+	@RequestMapping(value = "/searchCountNumOfQZKeywordRankInfo", method = RequestMethod.POST)
+	public ResponseEntity<?> searchCountNumOfQZKeywordRankInfo(QZSettingSearchCriteria qzSettingSearchCriteria) {
+		try {
+			return new ResponseEntity<Object>(qzSettingService.searchCountNumOfQZKeywordRankInfo(qzSettingSearchCriteria), HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/saveQZSettingCustomerKeywords", method = RequestMethod.POST)
 	public ResponseEntity<?> saveQZSettingCustomerKeywords(HttpServletRequest request, @RequestBody QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria) {
 		try {
 			String userName = (String) request.getSession().getAttribute("username");
@@ -268,7 +275,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		}
 	}
 
-	@RequestMapping(value = "excludeQZSettingCustomerKeywords", method = RequestMethod.POST)
+	@RequestMapping(value = "/excludeQZSettingCustomerKeywords", method = RequestMethod.POST)
 	public ResponseEntity<?> excludeQZSettingCustomerKeywords(HttpServletRequest request, @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
 		try {
 			String entryType = (String) request.getSession().getAttribute("entryType");
@@ -281,7 +288,7 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		}
 	}
 
-    @RequestMapping(value = "echoExcludeKeyword", method = RequestMethod.POST)
+    @RequestMapping(value = "/echoExcludeKeyword", method = RequestMethod.POST)
     public ResponseEntity<?> echoExcludeKeyword(HttpServletRequest request, @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
         try {
             CustomerExcludeKeyword customerExcludeKeyword = qzSettingService.echoExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria);
