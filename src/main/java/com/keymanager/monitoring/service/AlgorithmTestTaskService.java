@@ -13,7 +13,9 @@ import com.keymanager.monitoring.entity.AlgorithmTestPlan;
 import com.keymanager.monitoring.entity.AlgorithmTestTask;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
+
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,11 +43,11 @@ public class AlgorithmTestTaskService extends ServiceImpl<AlgorithmTestTaskDao, 
     private GroupDao groupDao;
 
     @Autowired
-    private CustomerKeywordDao customerKeywordDao;
+    private CustomerKeywordService customerKeywordService;
 
-    public Page<AlgorithmTestTask> selectAlgorithmTestTasksByAlgorithmTestPlanUuid(Page<AlgorithmTestTask> algorithmTestTaskPage,Long algorithmTestPlanUuid) {
+    public Page<AlgorithmTestTask> selectAlgorithmTestTasksByAlgorithmTestPlanUuid(Page<AlgorithmTestTask> algorithmTestTaskPage, Long algorithmTestPlanUuid) {
 
-        List<AlgorithmTestTask> algorithmTestTasks = algorithmTestTaskDao.selectAlgorithmTestTasksByAlgorithmTestPlanUuid(algorithmTestTaskPage,algorithmTestPlanUuid);
+        List<AlgorithmTestTask> algorithmTestTasks = algorithmTestTaskDao.selectAlgorithmTestTasksByAlgorithmTestPlanUuid(algorithmTestTaskPage, algorithmTestPlanUuid);
         algorithmTestTaskPage.setRecords(algorithmTestTasks);
         return algorithmTestTaskPage;
     }
@@ -61,7 +63,8 @@ public class AlgorithmTestTaskService extends ServiceImpl<AlgorithmTestTaskDao, 
             customerKeyword.setCustomerUuid(customer.getUuid());
             customerKeyword.setOptimizeGroupName(groupCriteria.getGroupName());
         }
-        customerKeywordDao.saveTestCustomerKeywords(customerKeywords);
+
+        customerKeywordService.addCustomerKeyword(customerKeywords, groupCriteria.getUserName());
         AlgorithmTestPlan algorithmTestPlan = new AlgorithmTestPlan();
         algorithmTestPlan.setUuid(externalAlgorithmTestTaskCriteria.getAlgorithmTestTask().getAlgorithmTestPlanUuid());
         algorithmTestPlan.setExcuteStatus(0);

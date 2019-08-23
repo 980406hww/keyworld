@@ -656,21 +656,4 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     }
 
 
-    @RequestMapping(value = "/saveTestCustomerKeywords", method = RequestMethod.POST)
-    public ResponseEntity<?> saveTestCustomerKeywords(@RequestBody ExternalCustomerKeywordCriteria externalCustomerKeywordCriteria) {
-        try {
-            String userName = externalCustomerKeywordCriteria.getUserName();
-            String password = externalCustomerKeywordCriteria.getPassword();
-            if (validUser(userName, password)) {
-                customerKeywordService.saveTestCustomerKeywords(externalCustomerKeywordCriteria.getCustomerKeywords());
-                return new ResponseEntity<Object>(true, HttpStatus.OK);
-            }
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            logger.error("saveTestCustomerKeywords:     " + ex.getMessage());
-        }
-        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-    }
-
 }
