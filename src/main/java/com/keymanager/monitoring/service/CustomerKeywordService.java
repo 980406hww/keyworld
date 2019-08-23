@@ -1883,9 +1883,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.getQZSettingKeywordCount(customerUuid, groupName);
     }
 
-    public void updateCustomerKeywordStatusByCustomerUuid(Long customerUuid, Integer status) {
-        customerKeywordDao.updateCustomerKeywordStatusByCustomerUuid(customerUuid, status);
-    }
 }
 
 

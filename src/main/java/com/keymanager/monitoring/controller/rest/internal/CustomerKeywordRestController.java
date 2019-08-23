@@ -663,17 +663,4 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
         }
     }
 
-	@RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordStatus")
-	@RequestMapping(value = "/updateCustomerKeywordStatusByCustomerUuid", method = RequestMethod.POST)
-	public ResponseEntity<?> updateCustomerKeywordStatusByCustomerUuid(@RequestBody Map<String, Object> requestMap) {
-		try {
-			Long customerUuid = Long.parseLong((String) requestMap.get("customerUuid"));
-			Integer status = (Integer) requestMap.get("status");
-			customerKeywordService.updateCustomerKeywordStatusByCustomerUuid(customerUuid, status);
-			return new ResponseEntity<Object>(true, HttpStatus.OK);
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-		}
-	}
 }

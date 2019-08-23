@@ -1694,9 +1694,4 @@
         AND ck.fOptimizeGroupName LIKE '${groupName}%'
     </select>
 
-    <update id="updateCustomerKeywordStatusByCustomerUuid">
-        UPDATE t_customer_keyword ck
-        SET ck.fStatus = #{status}
-        WHERE ck.fCustomerUuid = #{customerUuid}
-    </update>
 </mapper>
