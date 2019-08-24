@@ -14,7 +14,7 @@ public enum SuperUserSimpleKeywordDefinition {
 	OptimizeGroupName(10),
 	BearPawNumber(11),
 	Title(12),
-	Status(13),
+	runImmediate(13),
 	OrderNumber(14),
 	Remarks(15),
 	KeywordEffect(16);

@@ -14,16 +14,16 @@ import com.keymanager.util.Utils;
 import com.keymanager.util.excel.JXLExcelReader;
 
 public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
-	
+
 	public SuperUserSimpleKeywordExcelOperator() throws BiffException, IOException{
 		reader = new JXLExcelReader("C:/dev/KeywordManagementSystemShouji/WebRoot/SuperUserSimpleKeywordList.xls");
 		reader.setCurrentWorkSheetWithName("KeywordList");
 	}
-	
+
 	public SuperUserSimpleKeywordExcelOperator(InputStream inputStream) throws BiffException, IOException {
 		super(inputStream);
 	}
-	
+
 	@Override
 	public CustomerKeyword readRow(int rowIndex){
 		CustomerKeyword customerKeyword = new CustomerKeyword();
@@ -47,7 +47,7 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
 			customerKeyword.setSearchEngine(searchEngine);
 		}
 		customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
-		
+
 		customerKeyword.setCollectMethod(getCollectMethodValue(getStringValue(SuperUserSimpleKeywordDefinition.CollectMethod.getColumnIndex(), rowIndex)));
 		if(Utils.isNullOrEmpty(customerKeyword.getCollectMethod())){
 			return null;
@@ -55,18 +55,12 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
 		customerKeyword.setManualCleanTitle(true);
 		customerKeyword.setServiceProvider("baidutop123");
 
-        try {
-            String keywordEffect = getStringValue(SuperUserSimpleKeywordDefinition.KeywordEffect.getColumnIndex(), rowIndex);
-            customerKeyword.setKeywordEffect(keywordEffect);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            customerKeyword.setKeywordEffect("一般词");
-        }
 
 		Double pcFee = getDoubleValue(SuperUserSimpleKeywordDefinition.Fee.getColumnIndex(), rowIndex);
 		customerKeyword.setPositionFirstFee(pcFee);
 		customerKeyword.setPositionSecondFee(pcFee);
 		customerKeyword.setPositionThirdFee(pcFee);
-		
+
 		Integer indexCount = getIntValue(SuperUserSimpleKeywordDefinition.IndexCount.getColumnIndex(), rowIndex);
 		customerKeyword.setCurrentIndexCount(indexCount);
 
@@ -84,13 +78,9 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
 
 		customerKeyword.setBearPawNumber(getStringValue(SuperUserSimpleKeywordDefinition.BearPawNumber.getColumnIndex(), rowIndex).trim());
 		customerKeyword.setTitle(getStringValue(SuperUserSimpleKeywordDefinition.Title.getColumnIndex(), rowIndex).trim());
-		Integer status = getIntValue(SuperUserSimpleKeywordDefinition.Status.getColumnIndex(), rowIndex);
-		if (status == null){
-			customerKeyword.setStatus(1);
-		}else {
-			customerKeyword.setStatus(status);
-		}
-		customerKeyword.setOrderNumber(getStringValue(SuperUserSimpleKeywordDefinition.OrderNumber.getColumnIndex(), rowIndex).trim());
+        customerKeyword.setRunImmediate(getStringValue(SuperUserFullKeywordDefinition.RunImmediate.getColumnIndex(), rowIndex));
+
+        customerKeyword.setOrderNumber(getStringValue(SuperUserSimpleKeywordDefinition.OrderNumber.getColumnIndex(), rowIndex).trim());
 		customerKeyword.setRemarks(getStringValue(SuperUserSimpleKeywordDefinition.Remarks.getColumnIndex(), rowIndex));
 		return customerKeyword;
 	}

@@ -280,6 +280,17 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fCustomerKeywordSource")
     private String customerKeywordSource;
 
+    @TableField(exist = false)
+    private String runImmediate;
+
+    public String getRunImmediate() {
+        return runImmediate;
+    }
+
+    public void setRunImmediate(String runImmediate) {
+        this.runImmediate = runImmediate;
+    }
+
     public long getCustomerUuid() {
         return customerUuid;
     }
@@ -288,11 +299,11 @@ public class CustomerKeyword extends BaseEntity {
         this.customerUuid = customerUuid;
     }
 
-    public Long getQzSettingUuid () {
+    public Long getQzSettingUuid() {
         return qzSettingUuid;
     }
 
-    public void setQzSettingUuid (Long qzSettingUuid) {
+    public void setQzSettingUuid(Long qzSettingUuid) {
         this.qzSettingUuid = qzSettingUuid;
     }
 
@@ -713,8 +724,8 @@ public class CustomerKeyword extends BaseEntity {
         this.collectMethod = collectMethod;
     }
 
-    @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     public Date getStartOptimizedTime() {
         return startOptimizedTime;
     }
@@ -799,28 +810,30 @@ public class CustomerKeyword extends BaseEntity {
         this.status = status;
     }
 
-    public String getCollectMethodName(){
+    public String getCollectMethodName() {
         return StringUtils.isNotBlank(this.getCollectMethod()) ? CollectMethod.findByCode(this.getCollectMethod()).getName() : null;
     }
-    public String getSearchEngineUrl(){
+
+    public String getSearchEngineUrl() {
         String searchEngineUrl = Constants.SEARCH_ENGINE_URL_MAP.get(this.getSearchEngine() + "_" + this.getTerminalType()) + this.getKeyword();
-        if(this.getSearchEngine() != null){
-            if(this.getSearchEngine().equals(Constants.SEARCH_ENGINE_BAIDU)) {
+        if (this.getSearchEngine() != null) {
+            if (this.getSearchEngine().equals(Constants.SEARCH_ENGINE_BAIDU)) {
                 searchEngineUrl += "&pn=" + this.getPrepareBaiduPageNumber(this.getCurrentPosition());
-            } else if(this.getSearchEngine().equals(Constants.SEARCH_ENGINE_SOGOU)) {
-                if(this.getTerminalType().equals(TerminalTypeEnum.PC.name())) {
+            } else if (this.getSearchEngine().equals(Constants.SEARCH_ENGINE_SOGOU)) {
+                if (this.getTerminalType().equals(TerminalTypeEnum.PC.name())) {
                     searchEngineUrl += "&page=" + ((this.getCurrentPosition() / 10) + 1);
                 } else {
                     searchEngineUrl += "&p=" + ((this.getCurrentPosition() / 10) + 1);
                 }
-            } else if(this.getSearchEngine().equals(Constants.SEARCH_ENGINE_360)) {
+            } else if (this.getSearchEngine().equals(Constants.SEARCH_ENGINE_360)) {
                 searchEngineUrl += "&pn=" + ((this.getCurrentPosition() / 10) + 1);
-            } else if(this.getSearchEngine().equals(Constants.SEARCH_ENGINE_SM)) {
+            } else if (this.getSearchEngine().equals(Constants.SEARCH_ENGINE_SM)) {
                 searchEngineUrl += "&page=" + ((this.getCurrentPosition() / 10) + 1);
             }
         }
         return searchEngineUrl;
     }
+
     public int getPrepareBaiduPageNumber(int value) {
         int tmpValue = (value > 0 ? (value - 1) : 0);
         String valueString = tmpValue + "";
@@ -828,63 +841,68 @@ public class CustomerKeyword extends BaseEntity {
         return tmpValue - Integer.parseInt(lastDigit);
     }
 
-    public String getPositionFirstFeeString() {return Utils.removeDoubleZeros(positionFirstFee)==null?"":Utils.removeDoubleZeros(positionFirstFee);}
+    public String getPositionFirstFeeString() {
+        return Utils.removeDoubleZeros(positionFirstFee) == null ? "" : Utils.removeDoubleZeros(positionFirstFee);
+    }
 
     public String getPositionSecondFeeString() {
-        return Utils.removeDoubleZeros(positionSecondFee)==null?"":Utils.removeDoubleZeros(positionSecondFee);
+        return Utils.removeDoubleZeros(positionSecondFee) == null ? "" : Utils.removeDoubleZeros(positionSecondFee);
     }
 
     public String getPositionThirdFeeString() {
-        return Utils.removeDoubleZeros(positionThirdFee)==null?"":Utils.removeDoubleZeros(positionThirdFee);
+        return Utils.removeDoubleZeros(positionThirdFee) == null ? "" : Utils.removeDoubleZeros(positionThirdFee);
     }
 
     public String getPositionForthFeeString() {
-        return Utils.removeDoubleZeros(positionForthFee)==null?"":Utils.removeDoubleZeros(positionForthFee);
+        return Utils.removeDoubleZeros(positionForthFee) == null ? "" : Utils.removeDoubleZeros(positionForthFee);
     }
 
     public String getPositionFifthFeeString() {
-        return Utils.removeDoubleZeros(positionFifthFee)==null?"":Utils.removeDoubleZeros(positionFifthFee);
+        return Utils.removeDoubleZeros(positionFifthFee) == null ? "" : Utils.removeDoubleZeros(positionFifthFee);
     }
 
     public String getPositionFirstPageFeeString() {
-        return Utils.removeDoubleZeros(positionFirstPageFee)==null?"":Utils.removeDoubleZeros(positionFirstPageFee);
+        return Utils.removeDoubleZeros(positionFirstPageFee) == null ? "" : Utils.removeDoubleZeros(positionFirstPageFee);
     }
 
-    public String getFeeString(){
+    public String getFeeString() {
         StringBuilder fee = new StringBuilder("");
         String pcFeeString = this.pcFeeString();
         boolean first = true;
-        if(!Utils.isNullOrEmpty(pcFeeString)){
+        if (!Utils.isNullOrEmpty(pcFeeString)) {
             fee.append("" + pcFeeString);
             first = false;
         }
         return fee.toString();
     }
-    public String pcFeeString(){
+
+    public String pcFeeString() {
         StringBuilder fee = new StringBuilder("");
-        if(this.getPositionFirstFee() != null && this.getPositionFirstFee() > 0){
+        if (this.getPositionFirstFee() != null && this.getPositionFirstFee() > 0) {
             fee.append(this.getPositionFirstFeeString() + ";");
         }
-        if(this.getPositionSecondFee() != null && this.getPositionSecondFee() > 0){
+        if (this.getPositionSecondFee() != null && this.getPositionSecondFee() > 0) {
             fee.append(this.getPositionSecondFeeString() + ";");
         }
-        if(this.getPositionThirdFee() != null && this.getPositionThirdFee() > 0){
+        if (this.getPositionThirdFee() != null && this.getPositionThirdFee() > 0) {
             fee.append(this.getPositionThirdFeeString() + ";");
         }
-        if(this.getPositionForthFee() != null && this.getPositionForthFee() > 0){
+        if (this.getPositionForthFee() != null && this.getPositionForthFee() > 0) {
             fee.append(this.getPositionForthFeeString() + ";");
         }
-        if(this.getPositionFifthFee() != null && this.getPositionFifthFee() > 0){
+        if (this.getPositionFifthFee() != null && this.getPositionFifthFee() > 0) {
             fee.append(this.getPositionFifthFeeString() + ";");
         }
-        if(this.getPositionFirstPageFee() != null && this.getPositionFirstPageFee() > 0){
+        if (this.getPositionFirstPageFee() != null && this.getPositionFirstPageFee() > 0) {
             fee.append(this.getPositionFirstPageFeeString() + ";");
         }
         return fee.toString();
     }
-    public String captureIndexString(String type){
+
+    public String captureIndexString(String type) {
         return String.format("%s__col__%s__col__%s", this.getUuid(), type, this.getKeyword());
     }
+
     public void setAutoUpdateNegativeTime(Timestamp autoUpdateNegativeTime) {
         this.autoUpdateNegativeTime = autoUpdateNegativeTime;
     }
