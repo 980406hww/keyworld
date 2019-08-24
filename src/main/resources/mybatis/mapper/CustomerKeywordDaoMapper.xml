@@ -1715,40 +1715,32 @@
         AND ck.fOptimizeGroupName LIKE '${groupName}%'
     </select>
 
-    <select id="getCustomerKeywordCountByCustomerUuidAndTerminalType" resultType="java.lang.Integer">
-        SELECT COUNT(1)
-        FROM t_customer_keyword ck
-        WHERE ck.fCustomerUuid = #{customerUuid}
-        AND ck.fStatus = 1
-        AND ck.fTerminalType = #{terminalType}
+    <select id="searchKeywordAmountCountList">
+        SELECT
+        ck.fUuid	AS	'uuid',
+        c.fUserID AS 'userID',
+        c.fContactPerson AS 'contactPerson',
+        ck.fTerminalType	AS	'terminalType',
+        ck.fCustomerUuid	AS	'customerUuid',
+        ck.fKeyword	AS	'keyword',
+        ck.fSearchEngine	AS	'searchEngine',
+        COUNT(1) AS 'keywordCount',
+        SUM(IF(ck.fCurrentPosition &lt;= 3, 1,0)) AS 'topThree',
+        SUM(IF(ck.fCurrentPosition &lt;= 10, 1,0)) AS 'topTen'
+        FROM
+        t_customer_keyword ck,
+        t_customer c
+        WHERE c.fUuid = ck.fCustomerUuid
+        AND ck.fType = 'pt'
+        <if test="customerKeywordCriteria.keyword != null and customerKeywordCriteria.keyword != ''">
+            AND ck.fKeyword like concat(#{keywordAmountCountCriteria.keyword}, '%')
+        </if>
+        <if test="customerKeywordCriteria.searchEngine != null and customerKeywordCriteria.searchEngine != ''">
+            AND ck.fSearchEngine = #{keywordAmountCountCriteria.searchEngine}
+        </if>
+        <if test="customerKeywordCriteria.userName != null and customerKeywordCriteria.userName != ''">
+            AND c.fUserID = #{customerKeywordCriteria.userName}
+        </if>
+        GROUP BY ck.fKeyword, ck.fSearchEngine, ck.fTerminalType
     </select>
-
-    <insert id="saveTestCustomerKeywords">
-        INSERT INTO t_customer_keyword ( fCustomerUuid, fTerminalType, fKeyword,fUrl, fType, fBearPawNumber,
-            fOriginalUrl, fTitle, fSearchEngine, fCurrentPosition, fServiceProvider, fOptimizeGroupName,
-            fOptimizePlanCount, fMachineGroup, fRemarks, fStatus, fCaptureStatus, fCustomerKeywordSource )
-        VALUES
-        <foreach collection="customerKeywords" item="customerKeyword" index="index" separator=",">
-            (
-                #{customerKeyword.customerUuid},
-                #{customerKeyword.terminalType},
-                #{customerKeyword.keyword},
-                #{customerKeyword.url},
-                #{customerKeyword.type},
-                #{customerKeyword.bearPawNumber},
-                #{customerKeyword.originalUrl},
-                #{customerKeyword.title},
-                #{customerKeyword.searchEngine},
-                #{customerKeyword.currentPosition},
-                #{customerKeyword.serviceProvider},
-                #{customerKeyword.optimizeGroupName},
-                #{customerKeyword.optimizePlanCount},
-                #{customerKeyword.machineGroup},
-                #{customerKeyword.remarks},
-                #{customerKeyword.status},
-                #{customerKeyword.captureStatus},
-                #{customerKeyword.customerKeywordSource}
-            )
-        </foreach>
-    </insert>
 </mapper>

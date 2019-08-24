@@ -6,6 +6,7 @@ import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria;
+import com.keymanager.monitoring.criteria.KeywordAmountCountCriteria;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.ServiceProvider;
@@ -667,21 +668,20 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 
 
 	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywordLists")
-	@RequestMapping(value="/searchKeywordAmountCount" , method= RequestMethod.GET)
-	public ModelAndView searchKeywordAmountCount(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request){
+	@RequestMapping(value="/searchKeywordAmountCountLists" , method= RequestMethod.GET)
+	public ModelAndView searchKeywordAmountCountLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request){
 		String entryType = (String)request.getSession().getAttribute("entryType");
 		if(!SecurityUtils.getSubject().hasRole(entryType.toUpperCase() + "Special")){
 			SecurityUtils.getSubject().logout();
 		}
-		CustomerKeywordCriteria customerKeywordCriteria = new CustomerKeywordCriteria();
-		customerKeywordCriteria.setStatus("1");
-		customerKeywordCriteria.setEntryType("pt");
-		return constructKeywordAmountCountModelAndView(request, customerKeywordCriteria, currentPageNumber, pageSize);
+		KeywordAmountCountCriteria keywordAmountCountCriteria = new KeywordAmountCountCriteria();
+		keywordAmountCountCriteria.setEntryType("pt");
+		return constructKeywordAmountCountModelAndView(request, keywordAmountCountCriteria, currentPageNumber, pageSize);
 	}
 
 	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywordLists")
-	@RequestMapping(value = "/searchKeywordAmountCount", method = RequestMethod.POST)
-	public ModelAndView searchKeywordAmountCount(CustomerKeywordCriteria customerKeywordCriteria, HttpServletRequest request) {
+	@RequestMapping(value = "/searchKeywordAmountCountLists", method = RequestMethod.POST)
+	public ModelAndView searchKeywordAmountCountLists(KeywordAmountCountCriteria keywordAmountCountCriteria, HttpServletRequest request) {
 		try {
 			String currentPageNumber = request.getParameter("currentPageNumber");
 			String pageSize = request.getParameter("pageSize");
@@ -691,43 +691,38 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 			if(StringUtils.isEmpty(pageSize)){
 				pageSize = "50";
 			}
-			customerKeywordCriteria.setEntryType("pt");
-			return constructKeywordAmountCountModelAndView(request, customerKeywordCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
+			keywordAmountCountCriteria.setEntryType("pt");
+			return constructKeywordAmountCountModelAndView(request, keywordAmountCountCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return new ModelAndView("/customerkeyword/keywordAmountCount");
 		}
 	}
 
-	private ModelAndView constructKeywordAmountCountModelAndView(HttpServletRequest request, CustomerKeywordCriteria customerKeywordCriteria, int currentPage, int pageSize) {
+	private ModelAndView constructKeywordAmountCountModelAndView(HttpServletRequest request, KeywordAmountCountCriteria keywordAmountCountCriteria, int currentPage, int pageSize) {
 		long startMilleSeconds = System.currentTimeMillis();
 		HttpSession session = request.getSession();
 		ModelAndView modelAndView = new ModelAndView("/customerkeyword/keywordAmountCount");
+		String terminalType = TerminalTypeMapping.getTerminalType(request);
 		String userName = (String) session.getAttribute("username");
 		UserInfo user = userInfoService.getUserInfo(userName);
 		List<UserInfo> activeUsers = userInfoService.findActiveUsers();
-		String entryType = (String) session.getAttribute("entryType");
-		String terminalType = TerminalTypeMapping.getTerminalType(request);
-		String orderElement = request.getParameter("orderingElement");
-		initOrderElement(orderElement, customerKeywordCriteria);
-		customerKeywordCriteria.setEntryType(entryType);
-		customerKeywordCriteria.setTerminalType(terminalType);
 		boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
 		if(!isDepartmentManager) {
-			customerKeywordCriteria.setUserName(userName);
+			keywordAmountCountCriteria.setUserName(userName);
 		}
 		if(request.getMethod().equals("POST")) {
-			Page<CustomerKeyword> page = customerKeywordService.searchCustomerKeywordLists(new Page<CustomerKeyword>(currentPage, pageSize), customerKeywordCriteria);
+			Page<CustomerKeyword> page = customerKeywordService.searchKeywordAmountCountPage(new Page<CustomerKeyword>(currentPage, pageSize), keywordAmountCountCriteria);
 			modelAndView.addObject("page", page);
 		}
-		modelAndView.addObject("customerKeywordCriteria", customerKeywordCriteria);
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("activeUsers", activeUsers);
-		modelAndView.addObject("orderElement",orderElement);
+		modelAndView.addObject("keywordAmountCountCriteria", keywordAmountCountCriteria);
 		modelAndView.addObject("CustomerKeywordSourceMap", CustomerKeywordSourceEnum.toMap());
 		modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));
 		modelAndView.addObject("isDepartmentManager",isDepartmentManager);
-		performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywordLists", (System.currentTimeMillis() - startMilleSeconds), null);
+		performanceService.addPerformanceLog(terminalType + ":searchKeywordAmountCountLists", (System.currentTimeMillis() - startMilleSeconds), null);
 		return modelAndView;
 	}
+
 }

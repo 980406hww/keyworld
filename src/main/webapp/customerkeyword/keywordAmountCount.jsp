@@ -36,17 +36,14 @@
 <body>
 <div id="customerKeywordTopDiv">
     <%@include file="/menu.jsp" %>
-    <form id="searchCustomerKeywordForm" style="font-size:12px; width: 100%;" action="/internal/customerKeyword/searchKeywordAmountCount" method="post">
+    <form id="searchCustomerKeywordForm" style="font-size:12px; width: 100%;" action="/internal/customerKeyword/searchKeywordAmountCountLists" method="post">
         <div id="searchCustomerKeywordTable">
             <input type="hidden" name="currentPageNumber" id="currentPageNumberHidden" value="${page.current}"/>
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-            <input type="hidden" id="sevenDaysNoReachStandard" name="sevenDaysNoReachStandard" value="${customerKeywordCriteria.sevenDaysNoReachStandard}"/>
-            <input type="hidden" id="fifteenDaysNoReachStandard" name="fifteenDaysNoReachStandard" value="${customerKeywordCriteria.fifteenDaysNoReachStandard}"/>
-            <input type="hidden" id="thirtyDaysNoReachStandard" name="thirtyDaysNoReachStandard" value="${customerKeywordCriteria.thirtyDaysNoReachStandard}"/>
-            <input id="customerUuid" name="customerUuid" type="hidden" value="${customerKeywordCriteria.customerUuid}">
-            关键字:&nbsp;<input type="text" name="keyword" id="keyword" value="${customerKeywordCriteria.keyword}" style="width:100px;">&nbsp;
+            <%--<input id="customerUuid" name="customerUuid" type="hidden" value="${keywordAmountCountCriteria.customerUuid}">--%>
+            关键字:&nbsp;<input type="text" name="keyword" id="keyword" value="${keywordAmountCountCriteria.keyword}" style="width:100px;">&nbsp;
 
            <c:if test="${isDepartmentManager}">
                 用户名称:
@@ -74,44 +71,16 @@
                 <input type="button" onclick="updateCustomerKeywordStatus(0)" value=" 暂停关键字 ">&nbsp;
                 <input type="button" onclick="updateCustomerKeywordStatus(1)" value=" 激活关键字 ">&nbsp;
             </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
-                <input type="button" onclick="updateOptimizeGroupName('total')" value=" 修改当前关键字优化组 ">&nbsp;
-            </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
-                <input type="button" onclick="updateOptimizeGroupName('selected')" value=" 修改选中关键字优化组 ">&nbsp;
-            </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordMachineGroup">
-                <input type="button" onclick="updateMachineGroupName('total')" value=" 修改当前关键字机器分组 ">&nbsp;
-            </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordMachineGroup">
-                <input type="button" onclick="updateMachineGroupName('selected')" value=" 修改选中关键字机器分组 ">&nbsp;
-            </shiro:hasPermission>
+
             <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
                 <input type="button" onclick="deleteCustomerKeywords()" value=" 删除所选 ">
-            </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
-                <c:if test="${sessionScope.get('entryType') eq 'qz'}">
-                    <input type="button" onclick="deleteDuplicateQZKeyword()" value="删除所有重复关键字">
-                </c:if>
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
                 <input type="button" onclick="CustomerKeywordBatchUpdate('${sessionScope.entryType}')" value=" 批量修改 ">
             </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
-                <input type="button" onclick="updateBearPawNumber('total','${customerKeywordCriteria.customerUuid}')" value=" 修改当前熊掌号 ">
-                <input type="button" onclick="updateBearPawNumber('selected','${customerKeywordCriteria.customerUuid}')" value=" 修改选中熊掌号 ">
-            </shiro:hasPermission>
+
             <br/>
-            <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
-                <c:if test="${customerKeywordCriteria.entryType eq 'pt' or customerKeywordCriteria.entryType eq 'bc'}">
-                <div id="noReachStandardDiv" align="right">
-                    未达标统计:
-                    <a target="_blank" href="javascript:resetPageNumber(30)">超过30天(${customerKeywordCriteria.thirtyDaysNoReachStandard})</a>
-                    | <a target="_blank" href="javascript:resetPageNumber(15)">超过15天(${customerKeywordCriteria.fifteenDaysNoReachStandard})</a>
-                    | <a target="_blank" href="javascript:resetPageNumber(7)">超过7天(${customerKeywordCriteria.sevenDaysNoReachStandard})</a>
-                </div>
-                </c:if>
-            </shiro:hasPermission>
+
         </div>
     </form>
     <table style="font-size:12px; width: 100%;" id="headerTable">
@@ -245,99 +214,20 @@
         initNoPositionChecked();
         alignTableHeader();
         if(${isDepartmentManager}) {
-            $("#userName").val("${customerKeywordCriteria.userName}");
+            $("#userName").val("${keywordAmountCountCriteria.userName}");
         }
         window.onresize = function(){
             $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
             alignTableHeader();
         }
-        if(${customerKeywordCriteria.entryType eq 'bc' or customerKeywordCriteria.entryType eq 'pt'}) {
-            if(${customerKeywordCriteria.sevenDaysNoReachStandard == null}) {
-                searchCustomerKeywordForNoReachStandard('${customerKeywordCriteria.entryType}','${customerKeywordCriteria.terminalType}');
-            }
-        }
+
     });
-    function initNoPositionChecked() {
-        if(${customerKeywordCriteria.noPosition == 1}){
-            $("#noPosition").prop("checked",true);
-        }else{
-            $("#noPosition").prop("checked",false);
-        }
-        if(${customerKeywordCriteria.displayStop == 1}){
-            $("#displayStop").prop("checked",true);
-        }else{
-            $("#displayStop").prop("checked",false);
-        }
-        if(${customerKeywordCriteria.pushPay == 1}){
-            $("#pushPay").prop("checked",true);
-        }else{
-            $("#pushPay").prop("checked",false);
-        }
-        if(${customerKeywordCriteria.groupNameFuzzyQuery == 1}){
-            $("#groupNameFuzzyQuery").prop("checked",true);
-        }else{
-            $("#groupNameFuzzyQuery").prop("checked",false);
-        }
-        noPositionValue();
-        displayStopValue();
-        pushPayValue();
-        groupNameFuzzyQueryValue();
-    }
 
-    //催缴
-    function pushPayValue() {
-        if($("#pushPay").is(":checked")){
-            $("#pushPay").val("1")
-        }else {
-            $("#pushPay").val("0");
-        }
-    }
-    //显示下架
-    function displayStopValue() {
-        if($("#displayStop").is(":checked")){
-            $("#displayStop").val("1")
-        }else {
-            $("#displayStop").val("0");
-        }
-    }
-
-    function groupNameFuzzyQueryValue() {
-        if ($("#groupNameFuzzyQuery").is(":checked")){
-            $("#groupNameFuzzyQuery").val("1");
-        } else {
-            $("#groupNameFuzzyQuery").val("0");
-        }
-    }
-
-    /**
-     * 检索条件，机器分组是否模糊查询
-     */
-    function machineGroupFuzzyQueryValue() {
-        if ($("#machineGroupFuzzyQuery").is(":checked")){
-            $("#machineGroupFuzzyQuery").val("1");
-        } else {
-            $("#machineGroupFuzzyQuery").val("0");
-        }
-    }
-
-
-
-    //显示排名为0
-    function noPositionValue() {
-        if($("#noPosition").is(":checked")){
-            $("#noPosition").val("1")
-        }else {
-            $("#noPosition").val("0");
-        }
-    }
 
     function initPaging() {
         var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
         var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
-        searchCustomerKeywordTable.find("#searchEngine").val('${customerKeywordCriteria.searchEngine}');
-        searchCustomerKeywordTable.find("#customerKeywordSource").val('${customerKeywordCriteria.customerKeywordSource}');
-        searchCustomerKeywordTable.find("#orderingElement").val("${orderElement == null ? '0' : orderElement}");
-        searchCustomerKeywordTable.find("#status").val(${customerKeywordCriteria.status});
+        searchCustomerKeywordTable.find("#searchEngine").val('${keywordAmountCountCriteria.searchEngine}');
         var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
         var currentPageNumber = searchCustomerKeywordForm.find('#currentPageNumberHidden').val();
         var showCustomerBottomDiv = $('#showCustomerBottomDiv');

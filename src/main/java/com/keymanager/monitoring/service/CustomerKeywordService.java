@@ -1911,6 +1911,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.getQZSettingKeywordCount(customerUuid, groupName);
     }
 
+    public Page<CustomerKeyword> searchKeywordAmountCountPage(Page<CustomerKeyword> customerKeywordPage, KeywordAmountCountCriteria keywordAmountCountCriteria) {
+        long startMilleSeconds = System.currentTimeMillis();
+        List<CustomerKeyword> customerKeywords = customerKeywordDao.searchKeywordAmountCountList(customerKeywordPage, keywordAmountCountCriteria);
+        performanceService.addPerformanceLog(this.getClass() + ":searchCustomerKeywordLists", System.currentTimeMillis() - startMilleSeconds, null);
+        customerKeywordPage.setRecords(customerKeywords);
+        return customerKeywordPage;
+    }
 }
 
 
