@@ -259,45 +259,61 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public OptimizationVO fetchCustomerKeywordForOptimization(MachineInfo machineInfo) throws InterruptedException {
+    public OptimizationVO fetchCustomerKeywordForOptimization(MachineInfo machineInfo) throws Exception {
         if (!machineInfo.getValid()) {
             return null;
         }
 
-        String key = machineInfo.getTerminalType() + "####" + (machineInfo.getMachineGroup() == null ? "Default" : machineInfo.getMachineGroup());
-        LinkedBlockingQueue arrayBlockingQueue = machineGroupQueueMap.get(key);
-        if (arrayBlockingQueue != null) {
-            Object obj = arrayBlockingQueue.poll();
-            if (obj != null) {
-                OptimizationKeywordVO keywordVO = (OptimizationKeywordVO) obj;
-                if (StringUtils.isNotBlank(keywordVO.getOptimizeGroup())) {
-                    OperationCombine operationCombine = operationCombineService.getOperationCombine(keywordVO.getOptimizeGroup(), machineInfo.getTerminalType());
-                    GroupSetting groupSetting = groupSettingService.getGroupSetting(operationCombine);
-                    OptimizationMachineVO optimizationMachineVO = new OptimizationMachineVO();
-                    optimizationMachineVO.setDisableStatistics(groupSetting.getDisableStatistics());
-                    optimizationMachineVO.setDisableVisitWebsite(groupSetting.getDisableVisitWebsite());
-                    optimizationMachineVO.setEntryPageMinCount(groupSetting.getEntryPageMinCount());
-                    optimizationMachineVO.setEntryPageMaxCount(groupSetting.getEntryPageMaxCount());
-                    optimizationMachineVO.setPageRemainMinTime(groupSetting.getPageRemainMinTime());
-                    optimizationMachineVO.setPageRemainMaxTime(groupSetting.getPageRemainMaxTime());
-                    optimizationMachineVO.setInputDelayMinTime(groupSetting.getInputDelayMinTime());
-                    optimizationMachineVO.setInputDelayMaxTime(groupSetting.getInputDelayMaxTime());
-                    optimizationMachineVO.setSlideDelayMinTime(groupSetting.getSlideDelayMinTime());
-                    optimizationMachineVO.setSlideDelayMaxTime(groupSetting.getSlideDelayMaxTime());
-                    optimizationMachineVO.setTitleRemainMinTime(groupSetting.getTitleRemainMinTime());
-                    optimizationMachineVO.setTitleRemainMaxTime(groupSetting.getTitleRemainMaxTime());
-                    optimizationMachineVO.setOptimizeKeywordCountPerIP(groupSetting.getOptimizeKeywordCountPerIP());
-                    optimizationMachineVO.setRandomlyClickNoResult(groupSetting.getRandomlyClickNoResult());
-                    optimizationMachineVO.setMaxUserCount(groupSetting.getMaxUserCount());
-                    optimizationMachineVO.setPage(groupSetting.getPage());
-                    optimizationMachineVO.setOperationType(groupSetting.getOperationType());
-                    optimizationMachineVO.setClearCookie(groupSetting.getClearCookie());
-                    OptimizationVO optimizationVO = new OptimizationVO();
-                    optimizationVO.setKeywordVO(keywordVO);
-                    optimizationVO.setMachineVO(optimizationMachineVO);
-                    return optimizationVO;
+        StringBuilder errorFlag = new StringBuilder("");
+        try {
+            String key = machineInfo.getTerminalType() + "####" + (machineInfo.getMachineGroup() == null ? "Default" : machineInfo.getMachineGroup());
+            errorFlag.append("1");
+            LinkedBlockingQueue arrayBlockingQueue = machineGroupQueueMap.get(key);
+            errorFlag.append("2");
+            if (arrayBlockingQueue != null) {
+                Object obj = arrayBlockingQueue.poll();
+                errorFlag.append("3");
+                if (obj != null) {
+                    OptimizationKeywordVO keywordVO = (OptimizationKeywordVO) obj;
+                    errorFlag.append("4");
+                    if (StringUtils.isNotBlank(keywordVO.getOptimizeGroup())) {
+                        errorFlag.append("5");
+                        OperationCombine operationCombine = operationCombineService.getOperationCombine(keywordVO.getOptimizeGroup(), machineInfo.getTerminalType());
+                        if(operationCombine != null) {
+                            errorFlag.append("6");
+                            GroupSetting groupSetting = groupSettingService.getGroupSetting(operationCombine);
+                            errorFlag.append("7");
+                            OptimizationMachineVO optimizationMachineVO = new OptimizationMachineVO();
+                            optimizationMachineVO.setDisableStatistics(groupSetting.getDisableStatistics());
+                            optimizationMachineVO.setDisableVisitWebsite(groupSetting.getDisableVisitWebsite());
+                            optimizationMachineVO.setEntryPageMinCount(groupSetting.getEntryPageMinCount());
+                            optimizationMachineVO.setEntryPageMaxCount(groupSetting.getEntryPageMaxCount());
+                            optimizationMachineVO.setPageRemainMinTime(groupSetting.getPageRemainMinTime());
+                            optimizationMachineVO.setPageRemainMaxTime(groupSetting.getPageRemainMaxTime());
+                            optimizationMachineVO.setInputDelayMinTime(groupSetting.getInputDelayMinTime());
+                            optimizationMachineVO.setInputDelayMaxTime(groupSetting.getInputDelayMaxTime());
+                            optimizationMachineVO.setSlideDelayMinTime(groupSetting.getSlideDelayMinTime());
+                            optimizationMachineVO.setSlideDelayMaxTime(groupSetting.getSlideDelayMaxTime());
+                            optimizationMachineVO.setTitleRemainMinTime(groupSetting.getTitleRemainMinTime());
+                            optimizationMachineVO.setTitleRemainMaxTime(groupSetting.getTitleRemainMaxTime());
+                            optimizationMachineVO.setOptimizeKeywordCountPerIP(groupSetting.getOptimizeKeywordCountPerIP());
+                            optimizationMachineVO.setRandomlyClickNoResult(groupSetting.getRandomlyClickNoResult());
+                            optimizationMachineVO.setMaxUserCount(groupSetting.getMaxUserCount());
+                            optimizationMachineVO.setPage(groupSetting.getPage());
+                            optimizationMachineVO.setOperationType(groupSetting.getOperationType());
+                            optimizationMachineVO.setClearCookie(groupSetting.getClearCookie());
+                            OptimizationVO optimizationVO = new OptimizationVO();
+                            optimizationVO.setKeywordVO(keywordVO);
+                            optimizationVO.setMachineVO(optimizationMachineVO);
+                            return optimizationVO;
+                        }
+                    }
                 }
             }
+        }catch (Exception ex){
+            ex.printStackTrace();
+            logger.error("fetchCustomerKeywordForOptimization:" + errorFlag.toString() + ex.getMessage());
+            throw ex;
         }
         return null;
     }

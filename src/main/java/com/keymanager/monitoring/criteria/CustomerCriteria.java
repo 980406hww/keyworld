@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.criteria;
 
 public class CustomerCriteria extends BaseCriteria{
+    private Long uuid;
     private String terminalType;
     private String entryType;
     private String contactPerson;
@@ -10,6 +11,15 @@ public class CustomerCriteria extends BaseCriteria{
     private String loginName;
     private Integer status;
     private String remark;
+    private String searchEngine;
+
+    public Long getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(Long uuid) {
+        this.uuid = uuid;
+    }
 
     public String getRemark() {
         return remark;
@@ -81,5 +91,13 @@ public class CustomerCriteria extends BaseCriteria{
 
     public void setTerminalType(String terminalType) {
         this.terminalType = terminalType;
+    }
+
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
     }
 }
