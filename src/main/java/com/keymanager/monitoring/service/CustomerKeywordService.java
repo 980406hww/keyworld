@@ -232,7 +232,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void cacheCrawlRankCustomerKeywords() {
-        // 检查全站任务是否爬取完成
+        // 检查普通任务是否爬取完成
         ExternalCaptureJobCriteria captureJobCriteria = new ExternalCaptureJobCriteria();
         captureJobCriteria.setRankJobArea("China");
         captureJobCriteria.setRankJobType("Common");
