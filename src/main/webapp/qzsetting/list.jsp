@@ -131,11 +131,11 @@
 					<label title="网站关键词(PC,Phone)一星期排名趋势涨幅&lt;0, 且下降至少N个词">骤降 (0)</label>
 				</li>
 				<li name="unchanged">
-					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 6}">checked</c:if>>
+					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 2}">checked</c:if>>
 					<label title="网站关键词(PC,Phone)一星期排名趋势涨幅不变">无变化 (0)</label>
 				</li>
 				<li name="upper">
-					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 2}">checked</c:if>>
+					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 3}">checked</c:if>>
 					<label title="网站关键词(PC,Phone)一星期排名趋势涨幅&gt;0, 且上涨至少N个词">暴涨 (0)</label>
 				</li>
 				<li name="lowerDifference">
@@ -151,15 +151,15 @@
 					<label title="网站关键词(PC,Phone)今天前10上升">上升 (0)</label>
 				</li>
 				<li name="atLeastStandard">
-					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 3}">checked</c:if>>
+					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 4}">checked</c:if>>
 					<label title="标识最少有一条规则达标">达标 (0)</label>
 				</li>
 				<li name="neverStandard">
-					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 4}">checked</c:if>>
+					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 5}">checked</c:if>>
 					<label title="标识一条规则都未达标">未达标 (0)</label>
 				</li>
 				<li name="closeStandard">
-					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 5}">checked</c:if>>
+					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 6}">checked</c:if>>
 					<label title="标识下条规则接近达标, 未完成度&lt;0">接近达标 (0)</label>
 				</li>
 			</ul>
