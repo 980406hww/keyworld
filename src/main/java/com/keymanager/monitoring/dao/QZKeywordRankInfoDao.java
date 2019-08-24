@@ -22,9 +22,11 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
 
     QZKeywordRankInfo getQZKeywordRankInfo(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType, @Param("websiteType") String websiteType);
 
-    QZSettingCountNumCriteria getCountNumOfRankInfo(@Param("upperValue") double upperValue,
+    QZSettingCountNumCriteria getCountNumOfRankInfo(@Param("lowerValue") double lowerValue,
+                                                    @Param("upperValue") double upperValue,
                                                     @Param("differenceValue") double differenceValue,
-                                                    @Param("oneWeekDiff") int oneWeekDiff,
+                                                    @Param("downOneWeekDiff") int downOneWeekDiff,
+                                                    @Param("upperOneWeekDiff") int upperOneWeekDiff,
                                                     @Param("criteria") QZSettingSearchCriteria criteria);
 
     List<String> getQZKeywordRankInfoTypes (@Param("qzSettingUuid") Long qzSettingUuid);

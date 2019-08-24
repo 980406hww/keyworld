@@ -3,16 +3,11 @@ package com.keymanager.monitoring.criteria;
 public class QZSettingCountNumCriteria {
 
     private double upperValue;
-    private double lowerValue;
     private double differenceValue;
-
     private int upOneWeekDiff;
-    private int downOneWeekDiff;
-
     private int unchangedDifferenceNum;
     private int upDifferenceNum;
     private int downDifferenceNum;
-
     private int unchangedNum;
     private int downNum;
     private int upNum;
@@ -26,14 +21,6 @@ public class QZSettingCountNumCriteria {
 
     public void setUpperValue(double upperValue) {
         this.upperValue = upperValue;
-    }
-
-    public double getLowerValue() {
-        return lowerValue;
-    }
-
-    public void setLowerValue(double lowerValue) {
-        this.lowerValue = lowerValue;
     }
 
     public double getDifferenceValue() {
@@ -50,14 +37,6 @@ public class QZSettingCountNumCriteria {
 
     public void setUpOneWeekDiff(int upOneWeekDiff) {
         this.upOneWeekDiff = upOneWeekDiff;
-    }
-
-    public int getDownOneWeekDiff() {
-        return downOneWeekDiff;
-    }
-
-    public void setDownOneWeekDiff(int downOneWeekDiff) {
-        this.downOneWeekDiff = downOneWeekDiff;
     }
 
     public int getUnchangedDifferenceNum() {

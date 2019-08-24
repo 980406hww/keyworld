@@ -172,23 +172,15 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		String entryType = (String) request.getSession().getAttribute("entryType");
 		customerCriteria.setEntryType(entryType);
 		boolean isSEO = false;
-		boolean hasFilterUserName = false;
 		Set<String> roles = getCurrentUser().getRoles();
 		if(!roles.contains("DepartmentManager")) {
-			if (roles.contains("Operation") || roles.contains("Technical")) {
-                hasFilterUserName = true;
-			} else {
-				String loginName = (String) request.getSession().getAttribute("username");
-				customerCriteria.setLoginName(loginName);
-				qzSettingSearchCriteria.setLoginName(loginName);
-			}
+			String loginName = (String) request.getSession().getAttribute("username");
+			customerCriteria.setLoginName(loginName);
+			qzSettingSearchCriteria.setLoginName(loginName);
 		} else {
-            hasFilterUserName = true;
-		}
-		if (hasFilterUserName) {
 			if (qzSettingSearchCriteria.getUserInfoID() != null) {
-                UserInfo userInfo = userInfoService.selectById(qzSettingSearchCriteria.getUserInfoID());
-                customerCriteria.setLoginName(userInfo.getLoginName());
+				UserInfo userInfo = userInfoService.selectById(qzSettingSearchCriteria.getUserInfoID());
+				customerCriteria.setLoginName(userInfo.getLoginName());
 				qzSettingSearchCriteria.setLoginName(userInfo.getLoginName());
 			}
 		}
@@ -250,17 +242,6 @@ public class QZSettingRestController extends SpringMVCBaseController {
 			logger.error(e.getMessage());
 		}
 		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-	}
-
-	@RequiresPermissions("/internal/qzsetting/searchQZSettings")
-	@RequestMapping(value = "/searchCountNumOfQZKeywordRankInfo", method = RequestMethod.POST)
-	public ResponseEntity<?> searchCountNumOfQZKeywordRankInfo(QZSettingSearchCriteria qzSettingSearchCriteria) {
-		try {
-			return new ResponseEntity<Object>(qzSettingService.searchCountNumOfQZKeywordRankInfo(qzSettingSearchCriteria), HttpStatus.OK);
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-		return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
 	}
 
 	@RequestMapping(value = "/saveQZSettingCustomerKeywords", method = RequestMethod.POST)

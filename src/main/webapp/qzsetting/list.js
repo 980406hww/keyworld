@@ -58,19 +58,19 @@ function searchRiseOrFall() {
                 case 'lower':
                     checkStatus = 1;
                     break;
-                case 'upper':
+                case "unchanged":
                     checkStatus = 2;
                     break;
-                case "atLeastStandard":
+                case 'upper':
                     checkStatus = 3;
                     break;
-                case 'neverStandard':
+                case "atLeastStandard":
                     checkStatus = 4;
                     break;
-                case 'closeStandard':
+                case 'neverStandard':
                     checkStatus = 5;
                     break;
-                case "unchanged":
+                case 'closeStandard':
                     checkStatus = 6;
                     break;
                 case 'lowerDifference':
@@ -209,7 +209,7 @@ function initQZKeywordRankInfo() {
 }
 function searchCountNumOfQZKeywordRankInfo(postData, callback) {
     $.ajax({
-        url: '/internal/qzsetting/searchCountNumOfQZKeywordRankInfo',
+        url: '/internal/qzkeywordrank/searchCountNumOfQZKeywordRankInfo',
         type: 'POST',
         data: JSON.stringify(postData),
         headers: {
@@ -228,7 +228,7 @@ function initCountNumOfQZKeywordRankInfo(){
     trimSearchCondition('1');
     var postData = {};
     var fieldArray = $("#chargeForm").serializeArray();
-    var excludeFieldArray = ["currentPageNumber", "pages", "pageSize", "total", "statusHidden"];
+    var excludeFieldArray = ["currentPageNumber", "pages", "pageSize", "total", "statusHidden", "checkStatus", "dataRangeType", "openDialogStatus", "reserPagingParam"];
     for (var i = 0; i < fieldArray.length; i++) {
         var field = fieldArray[i];
         if (excludeFieldArray.indexOf(field.name) === -1) {
@@ -236,10 +236,21 @@ function initCountNumOfQZKeywordRankInfo(){
         }
     }
     searchCountNumOfQZKeywordRankInfo(postData, function (data) {
-        var div = $(".mytabs").find("div:first-child");
-        console.log(data);
-        console.log(div.find("label[name='lower']").attr("title"));
-        console.log(div.find("label[name='lower']").html());
+        var div = $(".mytabs").find("div.conn")[0];
+        $(div).find("li[name='lower']  label")[0].title = $(div).find("li[name='lower']  label")[0].title.replace("0", data.upperValue).replace("N", data.upOneWeekDiff);
+        $(div).find("li[name='lower']  label").text($(div).find("li[name='lower']  label").text().replace("0", data.downNum));
+        $(div).find("li[name='unchanged']  label").text($(div).find("li[name='unchanged']  label").text().replace("0", data.unchangedNum));
+        $(div).find("li[name='upper']  label")[0].title = $(div).find("li[name='upper']  label")[0].title.replace("0", data.upperValue).replace("N", data.upOneWeekDiff);
+        $(div).find("li[name='upper']  label").text($(div).find("li[name='upper']  label").text().replace("0", data.upNum));
+
+        $(div).find("li[name='lowerDifference']  label").text($(div).find("li[name='lowerDifference']  label").text().replace("0", data.downDifferenceNum));
+        $(div).find("li[name='unchangedDifference']  label").text($(div).find("li[name='unchangedDifference']  label").text().replace("0", data.unchangedDifferenceNum));
+        $(div).find("li[name='upperDifference']  label").text($(div).find("li[name='upperDifference']  label").text().replace("0", data.upDifferenceNum));
+
+        $(div).find("li[name='atLeastStandard']  label").text($(div).find("li[name='atLeastStandard']  label").text().replace("0", data.atLeastStandardNum));
+        $(div).find("li[name='neverStandard']  label").text($(div).find("li[name='neverStandard']  label").text().replace("0", data.neverStandardNum));
+        $(div).find("li[name='closeStandard']  label")[0].title = $(div).find("li[name='closeStandard']  label")[0].title.replace("0", data.differenceValue);
+        $(div).find("li[name='closeStandard']  label").text($(div).find("li[name='closeStandard']  label").text().replace("0", data.closeStandardNum));
     });
 }
 function searchQZKeywordRankInfo(postData, callback) {
@@ -1192,7 +1203,8 @@ function trimSearchCondition(days) {
         chargeForm.find("#hasReady").val(null);
     }
 }
-function trimSearchConditionSubmit() {
+function trimSearchConditionSubmit(days) {
+    trimSearchCondition(days);
     $("#chargeForm").submit();
 }
 function showMoreSearchCondition() {

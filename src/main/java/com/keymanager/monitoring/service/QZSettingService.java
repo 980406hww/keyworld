@@ -436,10 +436,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		return rankInfoVoMap;
 	}
 
-    public QZSettingCountNumCriteria searchCountNumOfQZKeywordRankInfo(QZSettingSearchCriteria qzSettingSearchCriteria) {
-	    return qzKeywordRankInfoService.searchCountNumOfQZKeywordRankInfo(qzSettingSearchCriteria);
-	}
-
 	public Map<String,Integer> getChargeRemindData() {
 		Map<String,Integer> dateRangeTypeMap = new HashMap<String, Integer>();
 		List<DateRangeTypeVO> chargeRemindDataList = qzSettingDao.getChargeRemindData();

@@ -167,12 +167,10 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         double differenceValue = Double.parseDouble(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_DIFFERENCEVALUE_VALUE).getValue());
         int oneWeekDiff = Integer.parseInt(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_ONE_WEEK_DIFF).getValue());
 
-        QZSettingCountNumCriteria qzSettingCountNumCriteria = qzKeywordRankInfoDao.getCountNumOfRankInfo(upperValue, differenceValue, oneWeekDiff, criteria);
+        QZSettingCountNumCriteria qzSettingCountNumCriteria = qzKeywordRankInfoDao.getCountNumOfRankInfo(-upperValue, upperValue, differenceValue, -oneWeekDiff, oneWeekDiff, criteria);
         qzSettingCountNumCriteria.setUpperValue(upperValue);
-        qzSettingCountNumCriteria.setLowerValue(-upperValue);
         qzSettingCountNumCriteria.setDifferenceValue(differenceValue);
         qzSettingCountNumCriteria.setUpOneWeekDiff(oneWeekDiff);
-        qzSettingCountNumCriteria.setDownOneWeekDiff(-oneWeekDiff);
         return qzSettingCountNumCriteria;
     }
 

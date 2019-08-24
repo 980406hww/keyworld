@@ -126,59 +126,41 @@
 						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="getAvailableQZSettings()" value="查看更新队列(${availableQZSettingCount})">&nbsp;
 					</li>
 				</shiro:hasPermission>
-				<li>
-					<label name="lower" title="网站关键词(PC,Phone)一星期排名趋势涨幅&lt;0, 且下降至少0个词">
-						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 1}">checked</c:if>>
-						骤降 (0)
-					</label>
+				<li name="lower">
+					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 1}">checked</c:if>>
+					<label title="网站关键词(PC,Phone)一星期排名趋势涨幅&lt;0, 且下降至少N个词">骤降 (0)</label>
 				</li>
-				<li>
-					<label name="unchanged" title="网站关键词(PC,Phone)一星期排名趋势涨幅不变">
-						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 6}">checked</c:if>>
-						无变化 (0)
-					</label>
+				<li name="unchanged">
+					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 6}">checked</c:if>>
+					<label title="网站关键词(PC,Phone)一星期排名趋势涨幅不变">无变化 (0)</label>
 				</li>
-				<li>
-					<label name="upper" title="网站关键词(PC,Phone)一星期排名趋势涨幅&gt;0, 且上涨至少0个词">
-						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 2}">checked</c:if>>
-						暴涨 (0)
-					</label>
+				<li name="upper">
+					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 2}">checked</c:if>>
+					<label title="网站关键词(PC,Phone)一星期排名趋势涨幅&gt;0, 且上涨至少N个词">暴涨 (0)</label>
 				</li>
-				<li>
-					<label name="lowerDifference" title="网站关键词(PC,Phone)今天前10下降">
-						<input type="radio" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 7}">checked</c:if>>
-						下降 (0)
-					</label>
+				<li name="lowerDifference">
+					<input type="radio" name="checkbox" <c:if test="${qzSettingSearchCriteria.checkStatus == 7}">checked</c:if>>
+					<label title="网站关键词(PC,Phone)今天前10下降">下降 (0)</label>
 				</li>
-				<li>
-					<label name="unchangedDifference" title="网站关键词(PC,Phone)今天前10不变">
-						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 8}">checked</c:if>>
-						不变 (0)
-					</label>
+				<li name="unchangedDifference">
+					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 8}">checked</c:if>>
+					<label title="网站关键词(PC,Phone)今天前10不变">不变 (0)</label>
 				</li>
-				<li>
-					<label name="upperDifference" title="网站关键词(PC,Phone)今天前10上升">
-						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 9}">checked</c:if>>
-						上升 (0)
-					</label>
+				<li name="upperDifference">
+					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 9}">checked</c:if>>
+					<label title="网站关键词(PC,Phone)今天前10上升">上升 (0)</label>
 				</li>
-				<li>
-					<label name="atLeastStandard" title="标识最少有一条规则达标">
-						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 3}">checked</c:if>>
-						达标 (0)
-					</label>
+				<li name="atLeastStandard">
+					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 3}">checked</c:if>>
+					<label title="标识最少有一条规则达标">达标 (0)</label>
 				</li>
-				<li>
-					<label name="neverStandard" title="标识一条规则都未达标">
-						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 4}">checked</c:if>>
-						未达标 (0)
-					</label>
+				<li name="neverStandard">
+					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 4}">checked</c:if>>
+					<label title="标识一条规则都未达标">未达标 (0)</label>
 				</li>
-				<li>
-					<label name="closeStandard" title="标识下条规则接近达标, 未完成度&lt;0">
-						<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 5}">checked</c:if>>
-						接近达标 (0)
-					</label>
+				<li name="closeStandard">
+					<input type="radio" <c:if test="${qzSettingSearchCriteria.checkStatus == 5}">checked</c:if>>
+					<label title="标识下条规则接近达标, 未完成度&lt;0">接近达标 (0)</label>
 				</li>
 			</ul>
 		</div>

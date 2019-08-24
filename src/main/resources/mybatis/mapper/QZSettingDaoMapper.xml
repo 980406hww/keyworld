@@ -118,7 +118,7 @@
             qs.fCrawlerStatus AS 'crawlerStatus',
             qs.fAutoCrawlKeywordFlag AS 'autoCrawlKeywordFlag'
         FROM t_qz_setting qs
-        RIGHT JOIN t_customer c
+        JOIN t_customer c
         ON qs.fCustomerUuid = c.fUuid
         LEFT JOIN t_userinfo u
         ON u.fLoginName = c.fUserID
@@ -129,24 +129,15 @@
         <if test="qzSettingSearchCriteria.organizationID != null and qzSettingSearchCriteria.organizationID != ''">AND o.fUuid = #{qzSettingSearchCriteria.organizationID}</if>
         <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
         <if test="qzSettingSearchCriteria.domain != null and qzSettingSearchCriteria.domain != ''">AND qs.fDomain = #{qzSettingSearchCriteria.domain}</if>
+        <if test="qzSettingSearchCriteria.searchEngine != 'All'">AND qs.fSearchEngine = #{qzSettingSearchCriteria.searchEngine}</if>
         <choose>
-            <when test="qzSettingSearchCriteria.searchEngine != 'All'">
-                AND qs.fSearchEngine = #{qzSettingSearchCriteria.searchEngine}
-            </when>
-            <otherwise></otherwise>
-        </choose>
-        <choose>
-            <when test="qzSettingSearchCriteria.terminalType == 'PC' and (qzSettingSearchCriteria.group == null or qzSettingSearchCriteria.group == '')">
+            <when test="qzSettingSearchCriteria.terminalType == 'PC'">
                 AND qs.fPcGroup &gt; ''
+                <if test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">AND qs.fPcGroup = #{qzSettingSearchCriteria.group}</if>
             </when>
-            <when test="qzSettingSearchCriteria.terminalType == 'PC' and qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">
-                AND qs.fPcGroup = #{qzSettingSearchCriteria.group}
-            </when>
-            <when test="qzSettingSearchCriteria.terminalType == 'Phone' and (qzSettingSearchCriteria.group == null or qzSettingSearchCriteria.group == '')">
+            <when test="qzSettingSearchCriteria.terminalType == 'Phone'">
                 AND qs.fPhoneGroup &gt; ''
-            </when>
-            <when test="qzSettingSearchCriteria.terminalType == 'Phone' and qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">
-                AND qs.fPhoneGroup = #{qzSettingSearchCriteria.group}
+                <if test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">AND qs.fPhoneGroup = #{qzSettingSearchCriteria.group}</if>
             </when>
         </choose>
         <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingSearchCriteria.updateStatus}</if>
@@ -158,12 +149,11 @@
         <if test="qzSettingSearchCriteria.standardSpecies != null and qzSettingSearchCriteria.standardSpecies != ''">
             AND EXISTS (
                 SELECT 1
-                FROM t_qz_charge_rule qcr
-                LEFT JOIN t_qz_operation_type qot
-                ON qcr.fQZOperationTypeUuid = qot.fUuid
-                WHERE qs.fUuid = qot.fQZSettingUuid
-                AND qot.fOperationtype = #{qzSettingSearchCriteria.terminalType}
-                AND qcr.fStandardSpecies = #{qzSettingSearchCriteria.standardSpecies}
+                FROM t_qz_keyword_rank_info qk
+                WHERE qk.fQZSettingUuid = qs.fUuid
+                AND qk.fDataProcessingStatus = 1
+                AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
+                AND qk.fWebsiteType = #{qzSettingSearchCriteria.standardSpecies}
             )
         </if>
         <if test="qzSettingSearchCriteria.optimizationType != null">
@@ -185,47 +175,30 @@
                 AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
             <choose>
                 <when test="qzSettingSearchCriteria.checkStatus == 1">
-                    AND qk.fIncrease &lt;= #{qzSettingSearchCriteria.lowerValue}
-                    AND qk.fOneWeekDifference &lt;= #{qzSettingSearchCriteria.downOneWeekDiff}
+                    AND qk.fIncrease &lt;= -0.1
+                    AND qk.fOneWeekDifference &lt;= -5
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 2">
-                    AND qk.fIncrease &gt;= #{qzSettingSearchCriteria.upperValue}
-                    AND qk.fOneWeekDifference &gt;= #{qzSettingSearchCriteria.upOneWeekDiff}
+                    AND qk.fIncrease = 0
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 3">
-                    AND qk.fAchieveLevel &gt; 0
-                    AND EXISTS (
-                        SELECT 1
-                        FROM t_qz_operation_type qot
-                        WHERE qot.fQZSettingUuid = qk.fQZSettingUuid
-                        AND qot.fOperationtype = qk.fTerminalType
-                        AND qot.fOperationtype = #{qzSettingSearchCriteria.terminalType}
-                        AND qot.fIsDeleted = 0
-                        AND qot.fStandardTime &gt; ''
-                    )
+                    AND qk.fIncrease &gt;= 0.1
+                    AND qk.fOneWeekDifference &gt;= 5
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 4">
-                    AND qk.fAchieveLevel = 0
-                    AND EXISTS (
-                        SELECT 1
-                        FROM t_qz_operation_type qot
-                        WHERE qot.fQZSettingUuid = qk.fQZSettingUuid
-                        AND qot.fOperationtype = qk.fTerminalType
-                        AND qot.fOperationtype = #{qzSettingSearchCriteria.terminalType}
-                        AND qot.fIsDeleted = 0
-                    )
+                    AND qk.fAchieveLevel &gt; 0
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 5">
-                    AND qk.fDifferenceValue &lt;= #{qzSettingSearchCriteria.differenceValue}
+                    AND qk.fAchieveLevel = 0
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 6">
-                    AND qk.fIncrease = 0
+                    AND qk.fDifferenceValue &lt;= 0.1
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 7">
                     AND qk.fTodayDifference &lt; 0
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 8">
-                    AND (qk.fTodayDifference = 0 OR qk.fTodayDifference IS NULL)
+                    AND qk.fTodayDifference = 0
                 </when>
                 <when test="qzSettingSearchCriteria.checkStatus == 9">
                     AND qk.fTodayDifference &gt; 0
@@ -237,16 +210,20 @@
             AND EXISTS (SELECT 1 FROM t_qz_category_tag qc WHERE qc.fQZSettingUuid = qs.fUuid AND qc.fTagName = #{qzSettingSearchCriteria.categoryTag})
         </if>
         <if test="qzSettingSearchCriteria.operationType != null and qzSettingSearchCriteria.operationType != ''">
-            AND EXISTS (SELECT 1 FROM t_machine_info mi WHERE mi.fUsingOperationType = #{qzSettingSearchCriteria.operationType}
-            <choose>
-                <when test="qzSettingSearchCriteria.terminalType == 'PC'">
-                    AND mi.fGroup = qs.fPcGroup
-                </when>
-                <otherwise>
-                    AND mi.fGroup = qs.fPhoneGroup
-                </otherwise>
-            </choose>
-            AND mi.fTerminalType = #{qzSettingSearchCriteria.terminalType})
+            AND EXISTS (
+                SELECT 1
+                FROM t_machine_info mi
+                WHERE mi.fUsingOperationType = #{qzSettingSearchCriteria.operationType}
+                <choose>
+                    <when test="qzSettingSearchCriteria.terminalType == 'PC'">
+                        AND mi.fGroup = qs.fPcGroup
+                    </when>
+                    <otherwise>
+                        AND mi.fGroup = qs.fPhoneGroup
+                    </otherwise>
+                </choose>
+                AND mi.fTerminalType = #{qzSettingSearchCriteria.terminalType}
+            )
         </if>
         <if test="qzSettingSearchCriteria.createTime != null and qzSettingSearchCriteria.createTime != ''">AND qs.fCreateTime &gt;= #{qzSettingSearchCriteria.createTime}</if>
         <if test="qzSettingSearchCriteria.createTimePrefix != null and qzSettingSearchCriteria.createTimePrefix != ''">AND qs.fCreateTime &lt;= #{qzSettingSearchCriteria.createTimePrefix}</if>

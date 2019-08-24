@@ -1,9 +1,5 @@
 package com.keymanager.monitoring.criteria;
 
-import com.keymanager.monitoring.entity.QZCategoryTag;
-
-import java.util.List;
-
 public class QZSettingSearchCriteria{
     private String loginName;
     private String customerUuid;
@@ -32,7 +28,6 @@ public class QZSettingSearchCriteria{
     private Integer optimizationType;
     private boolean resetPagingParam;
     private Boolean autoCrawlKeywordFlag;
-    private List<QZCategoryTag> targetQZCategoryTags;
 
     public String getCustomerUuids() {
         return customerUuids;
@@ -40,14 +35,6 @@ public class QZSettingSearchCriteria{
 
     public void setCustomerUuids(String customerUuids) {
         this.customerUuids = customerUuids;
-    }
-
-    public List<QZCategoryTag> getTargetQZCategoryTags() {
-        return targetQZCategoryTags;
-    }
-
-    public void setTargetQZCategoryTags(List<QZCategoryTag> targetQZCategoryTags) {
-        this.targetQZCategoryTags = targetQZCategoryTags;
     }
 
     public String getLoginName() {
