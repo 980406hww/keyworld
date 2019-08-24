@@ -1,9 +1,9 @@
 package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.keymanager.monitoring.criteria.GroupCriteria;
 import com.keymanager.monitoring.criteria.OperationCombineCriteria;
 import com.keymanager.monitoring.entity.Group;
-import com.keymanager.monitoring.vo.GroupVO;
 import com.keymanager.monitoring.vo.OperationCombineVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -35,4 +35,6 @@ public interface GroupDao extends BaseMapper<Group> {
                                                    @Param("groupName") String groupName);
 
     Group findExistingGroup (@Param("optimizeGroupName") String optimizeGroupName);
+
+    void saveExternalGroup(@Param("groupCriteria")GroupCriteria groupCriteria);
 }

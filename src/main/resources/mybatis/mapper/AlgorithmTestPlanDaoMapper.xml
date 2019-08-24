@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.AlgorithmTestPlanDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keymanager.monitoring.entity.AlgorithmTestPlan">
+        <id column="fUuid" property="uuid" />
+        <result column="fAlgorithmTestPlanName" property="algorithmTestPlanName" />
+        <result column="fOperationCombineName" property="operationCombineName" />
+        <result column="fTerminalType" property="terminalType" />
+        <result column="fSearchEngine" property="searchEngine" />
+        <result column="fMachineGroup" property="machineGroup" />
+        <result column="fTestIntervalDay" property="testIntervalDay" />
+        <result column="fTestKeywordCount" property="testKeywordCount" />
+        <result column="fTestkeywordRankBegin" property="testkeywordRankBegin" />
+        <result column="fTestkeywordRankEnd" property="testkeywordRankEnd" />
+        <result column="fOptimizePlanCount" property="optimizePlanCount" />
+        <result column="fStatus" property="status" />
+        <result column="fExecuteQueryTime" property="executeQueryTime" />
+        <result column="fExcuteStatus" property="excuteStatus" />
+        <result column="fCreateBy" property="createBy" />
+        <result column="fCreateTime" property="createTime" />
+        <result column="fUpdateTime" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        atp.fUuid AS uuid,
+        atp.fAlgorithmTestPlanName AS algorithmTestPlanName,
+        atp.fOperationCombineName AS operationCombineName,
+        atp.fTerminalType AS terminalType,
+        atp.fSearchEngine AS searchEngine,
+        atp.fMachineGroup AS machineGroup,
+        atp.fTestIntervalDay AS testIntervalDay,
+        atp.fTestKeywordCount AS testKeywordCount,
+        atp.fTestkeywordRankBegin AS testkeywordRankBegin,
+        atp.fTestkeywordRankEnd AS testkeywordRankEnd,
+        atp.fOptimizePlanCount AS optimizePlanCount,
+        atp.fStatus AS status,
+        atp.fExecuteQueryTime AS executeQueryTime,
+        atp.fExcuteStatus AS excuteStatus,
+        atp.fCreateBy AS createBy,
+        atp.fCreateTime AS createTime,
+        atp.fUpdateTime AS updateTime
+    </sql>
+
+    <select id="searchAlgorithmTestPlans" resultType="com.keymanager.monitoring.entity.AlgorithmTestPlan">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        t_algorithm_test_plan atp
+        <where>
+            <if test="algorithmTestPlanSearchCriteria.algorithmTestPlanName!=null and algorithmTestPlanSearchCriteria.algorithmTestPlanName!=''">
+                AND atp.fAlgorithmTestPlanName LIKE concat(#{algorithmTestPlanSearchCriteria.algorithmTestPlanName},'%')
+            </if>
+            <if test="algorithmTestPlanSearchCriteria.operationCombineName!=null and algorithmTestPlanSearchCriteria.operationCombineName!=''">
+                AND atp.fOperationCombineName LIKE concat(#{algorithmTestPlanSearchCriteria.operationCombineName},'%')
+            </if>
+            <if test="algorithmTestPlanSearchCriteria.machineGroup!=null and algorithmTestPlanSearchCriteria.machineGroup!=''">
+                AND atp.fMachineGroup LIKE concat(#{algorithmTestPlanSearchCriteria.machineGroup},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOneAvailableAlgorithmTestPlan" resultType="com.keymanager.monitoring.entity.AlgorithmTestPlan">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_algorithm_test_plan atp
+        WHERE atp.fstatus = 1
+        AND  (atp.fExcuteStatus= 0 AND (atp.fExecuteQueryTime IS NULL OR atp.fExecuteQueryTime &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL fTestIntervalDay-1 DAY))
+            OR(atp.fExcuteStatus = 1 AND atp.fExecuteQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE))
+        )
+        LIMIT 1
+    </select>
+
+    <select id="updateExcuteQueryTime">
+        UPDATE t_algorithm_test_plan atp
+        SET atp.fExecuteQueryTime = NOW() ,fExcuteStatus = 1
+        WHERE atp.fUuid = #{uuid}
+    </select>
+
+    <update id="updateAlgorithmTestPlansStatus">
+        UPDATE t_algorithm_test_plan SET fStatus = #{status}
+        WHERE fUuid IN
+        <foreach item="uuid" collection="uuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
+
+</mapper>

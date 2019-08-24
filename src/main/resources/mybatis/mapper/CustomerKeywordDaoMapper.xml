@@ -38,7 +38,7 @@
         <if test="customerKeywordCriteria.entryType != null and customerKeywordCriteria.entryType != ''">AND ck.fType = #{customerKeywordCriteria.entryType}</if>
         <if test="customerKeywordCriteria.gtPosition != null and (customerKeywordCriteria.noPosition == null or customerKeywordCriteria.noPosition == '') "> AND ck.fCurrentPosition &gt;= #{customerKeywordCriteria.gtPosition}</if>
         <if test="customerKeywordCriteria.ltPosition != null and (customerKeywordCriteria.noPosition == null or customerKeywordCriteria.noPosition == '') "> AND ck.fCurrentPosition &lt;= #{customerKeywordCriteria.ltPosition}</if>
-        <if test="customerKeywordCriteria.noPosition == 1 ">AND ck.fCurrentPosition =  0    </if>
+        <if test="customerKeywordCriteria.noPosition == 1 ">AND ck.fCurrentPosition = 0 </if>
         <if test="customerKeywordCriteria.orderNumber != null and customerKeywordCriteria.orderNumber != ''">AND ck.fOrderNumber  like '%${customerKeywordCriteria.orderNumber}%'</if>
         <if test="customerKeywordCriteria.pushPay != null and customerKeywordCriteria.pushPay != ''">AND ((ck.fCollectMethod = 'PerDay' AND ck.fEffectiveToTime is not null) OR (ck.fEffectiveToTime &lt;= DATE_ADD(CURDATE(),INTERVAL 3 DAY))) </if>
         <if test="customerKeywordCriteria.terminalType != null and customerKeywordCriteria.terminalType != ''">AND fTerminalType =  #{customerKeywordCriteria.terminalType} </if>
@@ -229,8 +229,10 @@
 
     <select id="getCustomerKeywordsCount" resultType="java.util.Map">
         SELECT ck.fCustomerUuid as 'customerUuid', COUNT(1) as 'totalCount', SUM(IF(ck.fStatus = 1, 1, 0)) AS 'activeCount'
-        FROM t_customer_keyword ck WHERE ck.fTerminalType = #{terminalType}
-        and ck.fType = #{entryType} and ck.fTerminalType = #{terminalType} and ck.fCustomerUuid IN
+        FROM t_customer_keyword ck
+        WHERE ck.fTerminalType = #{terminalType}
+        AND ck.fType = #{entryType}
+        AND ck.fCustomerUuid IN
         <foreach item="item" index="index" collection="customerUuids" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -251,7 +253,6 @@
                 AND fOriginalUrl like concat('%', #{originalUrl});
             </otherwise>
         </choose>
-
     </select>
 
     <select id="getSameCustomerKeywordCount" resultType="java.lang.Integer">
@@ -668,7 +669,7 @@
     </select>
 
     <update id="updateOptimizationQueryTime">
-        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(fQueryTime, INTERVAL (fQueryInterval + ROUND(RAND(1000)*1000))  SECOND ),
+        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(fQueryTime, INTERVAL (fQueryInterval + ROUND(RAND(10)*10))  SECOND ),
         fInvalidFlag = if(fInvalidRefreshCount > 8, 1, 0)
         WHERE fUuid IN
         <foreach item="uuid" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
@@ -677,7 +678,7 @@
     </update>
 
     <update id="updateOptimizationQueryTimeSingle">
-        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(fQueryTime, INTERVAL (fQueryInterval + ROUND(RAND(1000)*1000))  SECOND ),
+        UPDATE t_customer_keyword set fQueryDate = CURRENT_DATE(), fQueryCount = fQueryCount + 1, fInvalidRefreshCount = fInvalidRefreshCount + 1, fQueryTime = DATE_ADD(fQueryTime, INTERVAL (fQueryInterval + ROUND(RAND(10)*10))  SECOND ),
         fInvalidFlag = if(fInvalidRefreshCount > #{maxInvalidCount}, 1, 0)
         WHERE fUuid = #{customerKeywordUuid}
     </update>
@@ -820,7 +821,7 @@
     </select>
 
     <update id="resetInvalidRefreshCount" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria">
-        UPDATE t_customer_keyword SET fInvalidRefreshCount = 0, fInvalidFlag = 0 WHERE fType = #{customerKeywordRefreshStatInfoCriteria.entryType} and fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
+        UPDATE t_customer_keyword SET fInvalidRefreshCount = 0, fInvalidFlag = 0, fQueryTime = CURRENT_DATE() WHERE fType = #{customerKeywordRefreshStatInfoCriteria.entryType} and fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
         <if test="customerKeywordRefreshStatInfoCriteria.customerName!=null and customerKeywordRefreshStatInfoCriteria.customerName!=''">AND EXISTS (SELECT 1 FROM t_customer c WHERE c.fUuid = fCustomerUuid AND c.fContactPerson LIKE concat('%', #{customerKeywordRefreshStatInfoCriteria.customerName}, '%'))</if>
         <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">
             <choose>
@@ -1398,14 +1399,19 @@
         <if test="keywordChecks.operateRecommendKeyword==1"> ,fOperateRecommendKeyword = #{keywordStatus.operateRecommendKeyword}</if>
         <if test="keywordChecks.operateSearchAfterSelectKeyword==1"> ,fOperateSearchAfterSelectKeyword = #{keywordStatus.operateSearchAfterSelectKeyword}</if>
         <if test="keywordChecks.clickUrl==1"> ,fClickUrl = #{keywordStatus.clickUrl}</if>
+        <if test="keywordChecks.failedCause == 1"> ,fFailedCause = NULL</if>
         WHERE fUuid IN
         <foreach item="keywordID" collection="keywordIDs" open="(" separator="," close=")">
             #{keywordID}
         </foreach>
     </update>
 
-    <select id="getCustomerUuids" resultType="Long">
-        SELECT DISTINCT ck.fCustomerUuid FROM t_customer_keyword ck WHERE ck.fType = #{entryType} AND ck.fTerminalType = #{terminalType} AND ck.fStatus = 1
+    <select id="getCustomerUuids" resultType="java.lang.Long">
+        SELECT DISTINCT ck.fCustomerUuid
+        FROM t_customer_keyword ck
+        WHERE ck.fType =  #{entryType}
+        AND ck.fTerminalType = #{terminalType}
+        AND ck.fStatus = 1
     </select>
 
     <update id="excludeCustomerKeyword" parameterType="com.keymanager.monitoring.entity.CustomerKeyword">
@@ -1655,7 +1661,6 @@
         WHERE ck.fCustomerUuid = #{customerUuid}
         AND ck.fStatus = 1
         AND ck.fOptimizeGroupName LIKE '${groupName}%'
-        AND ck.fCapturePositionQueryTime &gt;= CURRENT_DATE()
     </select>
 
     <select id="getCrawlRankKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeyWordCrawlRankVO">
@@ -1667,19 +1672,27 @@
             ck.fUrl AS 'url',
             ck.fSearchEngine AS 'searchEngine',
             ck.fBearPawNumber AS 'bearPawNumber'
-        FROM t_customer c
-        LEFT JOIN t_customer_keyword ck
-        ON ck.fCustomerUuid = c.fUuid
-        WHERE ck.fTerminalType = 'PC'
-        AND ck.fType = 'qz'
+        FROM t_customer_keyword ck
+        WHERE ck.fType = 'qz'
         AND ck.fStatus = 1
         AND ck.fSearchEngine = '百度'
-        AND ck.fMachineGroup &lt;&gt; 'Pause'
-        AND (
-            (ck.fCaptureStatus = 0 AND ck.fCapturePositionQueryTime &lt;= CURRENT_DATE())
-            OR
-            (ck.fCaptureStatus = 1 AND ck.fCapturePositionQueryTime &lt;=  DATE_SUB(NOW(), INTERVAL 30 MINUTE))
-        )
+        AND ck.fMachineGroup != 'Pause'
+        AND (ck.fCaptureStatus = 0 AND ck.fCapturePositionQueryTime &lt;= CURRENT_DATE())
+        UNION ALL
+        SELECT
+            ck.fUuid AS 'uuid',
+            ck.fTerminalType AS 'terminalType',
+            ck.fTitle AS 'title',
+            ck.fKeyword AS 'keyword',
+            ck.fUrl AS 'url',
+            ck.fSearchEngine AS 'searchEngine',
+            ck.fBearPawNumber AS 'bearPawNumber'
+        FROM t_customer_keyword ck
+        WHERE ck.fType = 'qz'
+        AND ck.fStatus = 1
+        AND ck.fSearchEngine = '百度'
+        AND ck.fMachineGroup != 'Pause'
+        AND (ck.fCaptureStatus = 1 AND ck.fCapturePositionQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE))
         LIMIT 3000
     </select>
 
@@ -1709,4 +1722,33 @@
         AND ck.fStatus = 1
         AND ck.fTerminalType = #{terminalType}
     </select>
+
+    <insert id="saveTestCustomerKeywords">
+        INSERT INTO t_customer_keyword ( fCustomerUuid, fTerminalType, fKeyword,fUrl, fType, fBearPawNumber,
+            fOriginalUrl, fTitle, fSearchEngine, fCurrentPosition, fServiceProvider, fOptimizeGroupName,
+            fOptimizePlanCount, fMachineGroup, fRemarks, fStatus, fCaptureStatus, fCustomerKeywordSource )
+        VALUES
+        <foreach collection="customerKeywords" item="customerKeyword" index="index" separator=",">
+            (
+                #{customerKeyword.customerUuid},
+                #{customerKeyword.terminalType},
+                #{customerKeyword.keyword},
+                #{customerKeyword.url},
+                #{customerKeyword.type},
+                #{customerKeyword.bearPawNumber},
+                #{customerKeyword.originalUrl},
+                #{customerKeyword.title},
+                #{customerKeyword.searchEngine},
+                #{customerKeyword.currentPosition},
+                #{customerKeyword.serviceProvider},
+                #{customerKeyword.optimizeGroupName},
+                #{customerKeyword.optimizePlanCount},
+                #{customerKeyword.machineGroup},
+                #{customerKeyword.remarks},
+                #{customerKeyword.status},
+                #{customerKeyword.captureStatus},
+                #{customerKeyword.customerKeywordSource}
+            )
+        </foreach>
+    </insert>
 </mapper>

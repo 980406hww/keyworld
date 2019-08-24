@@ -255,4 +255,5 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     int getQZSettingKeywordCount(@Param("customerUuid") int customerUuid, @Param("groupName") String groupName);
 
     Integer getCustomerKeywordCountByCustomerUuidAndTerminalType(@Param("customerUuid") Long customerUuid, @Param("terminalType") String terminalType);
+    void saveTestCustomerKeywords(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
 }

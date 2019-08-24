@@ -97,4 +97,9 @@
         FROM t_group g
         WHERE g.fGroupName = #{optimizeGroupName}
     </select>
+
+    <insert id="saveExternalGroup">
+        INSERT INTO t_group (fGroupName, fOperationCombineUuid, fCreateBy)
+        VALUES(#{groupCriteria.groupName}, (SELECT fuuid FROM t_operation_combine WHERE fOperationCombineName =#{groupCriteria.operationCombineName}), #{groupCriteria.createBy})
+    </insert>
 </mapper>

@@ -3,11 +3,9 @@ package com.keymanager.monitoring.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldStrategy;
-import net.sf.json.JSONObject;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @TableName(value = "t_qz_setting")
 public class QZSetting extends BaseEntity{
@@ -91,9 +89,6 @@ public class QZSetting extends BaseEntity{
 	@TableField(exist = false)
 	private List<QZOperationType> qzOperationTypes; //qzOperationTypes为全站表子类  一对多
 
-	@TableField(exist = false)
-	private Map<String, Map<String, JSONObject>> qzKeywordRankInfoMap; // QZKeywordRankInfo为全站表子类 一对多
-
 	@TableField(value = "fCrawlerTime")
 	private Date crawlerTime;
 
@@ -105,12 +100,6 @@ public class QZSetting extends BaseEntity{
 
 	@TableField(exist = false)
 	private List<String> standardSpecies; // 达标种类 (PC_aiZhan 或者 PC_5118), (Phone_aiZhan 或者 Phone_5118)
-
-	@TableField(exist = false)
-	private Integer totalPrice;
-
-	@TableField(exist = false)
-	private Date standardTime;
 
 	public String getUserID() {
 		return userID;
@@ -296,14 +285,6 @@ public class QZSetting extends BaseEntity{
 		this.phoneKeywordExceedMaxCount = phoneKeywordExceedMaxCount;
 	}
 
-	public Map<String, Map<String, JSONObject>> getQzKeywordRankInfoMap () {
-		return qzKeywordRankInfoMap;
-	}
-
-	public void setQzKeywordRankInfoMap (Map<String, Map<String, JSONObject>> qzKeywordRankInfoMap) {
-		this.qzKeywordRankInfoMap = qzKeywordRankInfoMap;
-	}
-
 	public Date getCrawlerTime() {
 		return crawlerTime;
 	}
@@ -334,22 +315,6 @@ public class QZSetting extends BaseEntity{
 
 	public void setStandardSpecies (List<String> standardSpecies) {
 		this.standardSpecies = standardSpecies;
-	}
-
-	public Integer getTotalPrice () {
-		return totalPrice;
-	}
-
-	public void setTotalPrice (Integer totalPrice) {
-		this.totalPrice = totalPrice;
-	}
-
-	public Date getStandardTime () {
-		return standardTime;
-	}
-
-	public void setStandardTime (Date standardTime) {
-		this.standardTime = standardTime;
 	}
 
 	public boolean getfIsMonitor () {

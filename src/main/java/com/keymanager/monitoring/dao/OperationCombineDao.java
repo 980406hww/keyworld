@@ -36,4 +36,6 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
 
     List<OperationCombine> searchOperationCombines(@Param("page") Page<OperationCombine> page,
                                                    @Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
+
+    void updateOperationCombineName(@Param("uuid") long uuid, @Param("operationCombineName") String operationCombineName);
 }
