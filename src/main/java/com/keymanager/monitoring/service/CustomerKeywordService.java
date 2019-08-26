@@ -1952,6 +1952,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             } while (blockingQueue.size() > 0 && rankVos.size() < 10);
             return rankVos;
         }
+        blockingQueue = customerKeywordCrawlPTRankQueueMap.get(null);
+        if (blockingQueue != null && blockingQueue.size() > 0) {
+            do {
+                rankVos.add((CustomerKeyWordCrawlRankVO) blockingQueue.poll());
+            } while (blockingQueue.size() > 0 && rankVos.size() < 10);
+            return rankVos;
+        }
         if (customerKeywordCrawlQZRankQueue.size() > 0) {
             do {
                 rankVos.add((CustomerKeyWordCrawlRankVO) customerKeywordCrawlQZRankQueue.poll());
