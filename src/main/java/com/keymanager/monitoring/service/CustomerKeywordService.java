@@ -295,8 +295,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                     } else {
                                         break;
                                     }
-                                    updateOptimizationQueryTime(customerKeywordUuids);
                                 }
+                                customerKeywordDao.updateCrawlRankKeywordTimeByUuids(customerKeywordUuids);
                             }
                         } while (currentSize + offerSize < 10000 && CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos));
                     }
