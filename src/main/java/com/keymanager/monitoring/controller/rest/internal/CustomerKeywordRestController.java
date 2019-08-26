@@ -684,7 +684,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
     }
 
 
-	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywordLists")
+	@RequiresPermissions("/internal/customerKeyword/searchKeywordAmountCountLists")
 	@RequestMapping(value="/searchKeywordAmountCountLists" , method= RequestMethod.GET)
 	public ModelAndView searchKeywordAmountCountLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request){
 		String entryType = (String)request.getSession().getAttribute("entryType");
@@ -696,7 +696,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		return constructKeywordAmountCountModelAndView(request, keywordAmountCountCriteria, currentPageNumber, pageSize);
 	}
 
-	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywordLists")
+	@RequiresPermissions("/internal/customerKeyword/searchKeywordAmountCountLists")
 	@RequestMapping(value = "/searchKeywordAmountCountLists", method = RequestMethod.POST)
 	public ModelAndView searchKeywordAmountCountLists(KeywordAmountCountCriteria keywordAmountCountCriteria, HttpServletRequest request) {
 		try {
@@ -724,10 +724,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		String userName = (String) session.getAttribute("username");
 		UserInfo user = userInfoService.getUserInfo(userName);
 		List<UserInfo> activeUsers = userInfoService.findActiveUsers();
-		boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
-		if(!isDepartmentManager) {
-			keywordAmountCountCriteria.setUserName(userName);
-		}
 		keywordAmountCountCriteria.setTerminalType(terminalType);
 		if(request.getMethod().equals("POST")) {
 			Page<keywordAmountCountVo> page = customerKeywordService.searchKeywordAmountCountPage(new Page<keywordAmountCountVo>(currentPage, pageSize), keywordAmountCountCriteria);
@@ -738,7 +734,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		modelAndView.addObject("keywordAmountCountCriteria", keywordAmountCountCriteria);
 		modelAndView.addObject("CustomerKeywordSourceMap", CustomerKeywordSourceEnum.toMap());
 		modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));
-		modelAndView.addObject("isDepartmentManager",isDepartmentManager);
 		performanceService.addPerformanceLog(terminalType + ":searchKeywordAmountCountLists", (System.currentTimeMillis() - startMilleSeconds), null);
 		return modelAndView;
 	}

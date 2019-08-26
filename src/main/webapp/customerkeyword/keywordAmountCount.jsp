@@ -43,18 +43,13 @@
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
             关键字:&nbsp;<input type="text" name="keyword" id="keyword" value="${keywordAmountCountCriteria.keyword}" style="width:100px;">&nbsp;
-
-            <c:if test="${isDepartmentManager}">
-                用户名称:
-                <select name="userName" id="userName">
-                    <option value="">所有</option>
-                    <option value="${user.loginName}">只显示自己</option>
-                    <c:forEach items="${activeUsers}" var="activeUser">
-                        <option value="${activeUser.loginName}">${activeUser.userName}</option>
-                    </c:forEach>
-                </select>
-            </c:if>
-
+            用户名称:
+            <select name="userName" id="userName">
+                <option value="">所有</option>
+                <c:forEach items="${activeUsers}" var="activeUser">
+                    <option value="${activeUser.loginName}">${activeUser.userName}</option>
+                </c:forEach>
+            </select>
             搜索引擎:
             <select name="searchEngine" id="searchEngine">
                 <option value="">全部</option>
@@ -63,7 +58,7 @@
                 </c:forEach>
             </select>
 
-            <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
+            <shiro:hasPermission name="/internal/customerKeyword/searchKeywordAmountCountLists">
                 <input type="submit" onclick="resetPageNumber(0)" value=" 查询 ">&nbsp;
             </shiro:hasPermission>
             <br/>
@@ -145,9 +140,6 @@
         $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
         initPaging();
         alignTableHeader();
-        if(${isDepartmentManager}) {
-            $("#userName").val("${keywordAmountCountCriteria.userName}");
-        }
         window.onresize = function(){
             $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
             alignTableHeader();
@@ -159,6 +151,7 @@
         var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
         var searchCustomerKeywordTable = searchCustomerKeywordForm.find("#searchCustomerKeywordTable");
         searchCustomerKeywordTable.find("#searchEngine").val('${keywordAmountCountCriteria.searchEngine}');
+        $("#userName").val("${keywordAmountCountCriteria.userName}");
         var pages = searchCustomerKeywordForm.find('#pagesHidden').val();
         var currentPageNumber = searchCustomerKeywordForm.find('#currentPageNumberHidden').val();
         var showCustomerBottomDiv = $('#showCustomerBottomDiv');
@@ -193,8 +186,6 @@
 
     <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywords">
         function searchCustomerKeywords(keyword, ltPosition) {
-            console.log(keyword);
-            console.log(ltPosition);
             $("#searchKeywordForm #keyword").val(keyword);
             $("#searchKeywordForm #ltPosition").val(ltPosition);
             $("#searchKeywordForm").submit();
