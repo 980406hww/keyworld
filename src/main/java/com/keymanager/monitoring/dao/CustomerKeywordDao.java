@@ -254,5 +254,5 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     int getQZSettingKeywordCount(@Param("customerUuid") int customerUuid, @Param("groupName") String groupName);
 
-    List<CustomerKeyword> searchKeywordAmountCountList(Page<CustomerKeyword> customerKeywordPage, @Param("keywordAmountCountCriteria") KeywordAmountCountCriteria keywordAmountCountCriteria);
+    List<keywordAmountCountVo> searchKeywordAmountCountList(Page<keywordAmountCountVo> customerKeywordPage, @Param("keywordAmountCountCriteria") KeywordAmountCountCriteria keywordAmountCountCriteria);
 }

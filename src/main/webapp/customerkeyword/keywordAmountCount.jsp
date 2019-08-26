@@ -42,10 +42,9 @@
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-            <%--<input id="customerUuid" name="customerUuid" type="hidden" value="${keywordAmountCountCriteria.customerUuid}">--%>
             关键字:&nbsp;<input type="text" name="keyword" id="keyword" value="${keywordAmountCountCriteria.keyword}" style="width:100px;">&nbsp;
 
-           <c:if test="${isDepartmentManager}">
+            <c:if test="${isDepartmentManager}">
                 用户名称:
                 <select name="userName" id="userName">
                     <option value="">所有</option>
@@ -67,46 +66,19 @@
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
                 <input type="submit" onclick="resetPageNumber(0)" value=" 查询 ">&nbsp;
             </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                <input type="button" onclick="updateCustomerKeywordStatus(0)" value=" 暂停关键字 ">&nbsp;
-                <input type="button" onclick="updateCustomerKeywordStatus(1)" value=" 激活关键字 ">&nbsp;
-            </shiro:hasPermission>
-
-            <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
-                <input type="button" onclick="deleteCustomerKeywords()" value=" 删除所选 ">
-            </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
-                <input type="button" onclick="CustomerKeywordBatchUpdate('${sessionScope.entryType}')" value=" 批量修改 ">
-            </shiro:hasPermission>
-
             <br/>
-
         </div>
     </form>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
             <td width="10" style="padding-left: 7px;"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
-            <c:if test="${isDepartmentManager == true}">
-            <td align="center" width=60>用户名称</td>
-            </c:if>
-            <td align="center" width=80>联系人</td>
-            <td align="center" width=80>关键字</td>
-            <td align="center" width=100>URL</td>
-            <td align="center" width=100>熊掌号</td>
-            <td align="center" width=150>标题</td>
-            <td align="center" width=30>指数</td>
-            <td align="center" width=50>原排名</td>
-            <td align="center" width=50>现排名</td>
-            <td align="center" width=50>搜索引擎</td>
-            <td align="center" width=40>计价方式</td>
-            <td align="center" width=30>要刷</td>
-            <td align="center" width=30>已刷</td>
-            <td align="center" width=30>无效</td>
-            <td align="center" width=60>报价</td>
-            <td align="center" width=100>订单号</td>
-            <td align="center" width=60>付费状态</td>
-            <td align="center" width=100>备注</td>
-            <td align="center" width=100>失败原因</td>
+            <td align="center" width=70>关键字</td>
+            <td align="center" width=70>搜索引擎</td>
+            <td align="center" width=70>单词总数</td>
+            <td align="center" width=70>用户总数</td>
+            <td align="center" width=70>客户总数</td>
+            <td align="center" width=70>前三数量</td>
+            <td align="center" width=70>前十数量</td>
         </tr>
     </table>
 </div>
@@ -116,57 +88,21 @@
         <c:forEach items="${page.records}" var="customerKeyword">
             <tr height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
                 <td width="10" style="padding-left: 7px;">
-                    <input type="checkbox" name="uuid" value="${customerKeyword.uuid}" onclick="decideSelectAll()"/>
+                    <input type="checkbox" name="uuid" value="${customerKeyword.keyword}" onclick="decideSelectAll()"/>
                 </td>
-                <c:if test="${isDepartmentManager == true}">
-                <td align="center" width=60>
-                    ${customerKeyword.userID}
+                <td align="center" width=70>
+                    <a href="javascript:searchCustomerKeywords('${customerKeyword.keyword}','')"> ${customerKeyword.keyword}</a>
                 </td>
-                </c:if>
-                <td align="center" width=80>
-                    <a href="#" onclick="searchCustomerKeywords('/internal/customerKeyword/searchCustomerKeywords/${customerKeyword.customerUuid}')">${customerKeyword.contactPerson}</a>
+                <td align="center" width=70>${customerKeyword.searchEngine} </td>
+                <td align="center" width=70>${customerKeyword.keywordCount}</td>
+                <td align="center" width=70>${customerKeyword.customerCount}</td>
+                <td align="center" width=70>${customerKeyword.userCount}</td>
+                <td align="center" width=70>
+                    <a href="javascript:searchCustomerKeywords('${customerKeyword.keyword}','3')"> ${customerKeyword.topThree}</a>
                 </td>
-                <td align="center" width=80>
-                    ${customerKeyword.keyword}
+                <td align="center" width="70">
+                    <a href="javascript:searchCustomerKeywords('${customerKeyword.keyword}','10')"> ${customerKeyword.topTen}</a>
                 </td>
-
-                <td align="center" width=100 class="floatTd" title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}" >
-                        ${customerKeyword.url==null?'':customerKeyword.url}
-                </td>
-                <td align="center" width=100>
-                        ${customerKeyword.bearPawNumber == null ? "" : customerKeyword.bearPawNumber}
-                </td>
-                <td align="center" width=150>
-                    ${customerKeyword.title == null ? "" : customerKeyword.title.trim()}
-                </td>
-                <td align="center" width=30>
-                    <div style="height:16px;">
-                        <a href="/internal/customerKeywordPositionIndexLog/historyPositionAndIndex/${customerKeyword.uuid}/30"
-                             target="_blank" title="查看历史排名" class="floatTd">${customerKeyword.currentIndexCount}</a>
-                    </div>
-                </td>
-                <td align="center" width=50>
-                    <div style="height:16px;">${customerKeyword.initialPosition}
-                    </div>
-                </td>
-                <td align="center" width=50 class="floatTd" title="排名采集城市: ${customerKeyword.capturePositionCity}">
-                    <div style="height:16px;">
-                        <a href="${customerKeyword.searchEngineUrl}" target="_blank">${customerKeyword.currentPosition}</a>
-                    </div>
-                </td>
-                <td align="center" width=50>${customerKeyword.searchEngine}</td>
-                <td align="center" class="floatTd" width=40 title="优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount}" >
-                        ${customerKeyword.collectMethodName}
-                </td>
-
-                <td align="center" width=30>${customerKeyword.optimizePlanCount}</td>
-                <td align="center" width=30>${customerKeyword.optimizedCount} </td>
-                <td align="center" width=30>${customerKeyword.invalidRefreshCount}</td>
-                <td align="center" width=60>${customerKeyword.feeString}</td>
-                <td align="center" width=100>${customerKeyword.orderNumber}</td>
-                <td align="center" width="60">${customerKeyword.paymentStatus}</td>
-                <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
-                <td align="center" width=100>${customerKeyword.failedCause == null ? "" : customerKeyword.failedCause} </td>
             </tr>
         </c:forEach>
     </table>
@@ -192,17 +128,14 @@
     </select>
     </div>
 </div>
-<div id="targetGroupNameDialog" style="text-align: center;left: 40%;display: none;">
-    <form id="targetGroupNameFrom" style="text-align: center;margin-top: 10px;">
-        目标优化组名:<input type="text" id="groupName" name="groupName" style="width:150px">
-    </form>
-</div>
-<div id="targetMachineGroupDialog" style="text-align: center;left: 40%;display: none;">
-    <form id="targetMachineGroupForm" style="text-align: center;margin-top: 10px;">
-        目标机器分组名:<input type="text" id="machineGroup" name="machineGroup" style="width:150px">
-    </form>
-</div>
-<%@ include file="/customerkeyword/customerKeywordCommon.jsp" %>
+
+
+
+<form id="searchKeywordForm" style="display: none;" method="post" target="_blank"
+      action="/internal/customerKeyword/searchCustomerKeywordLists">
+    <input type="hidden" name="keyword" id="keyword"/>
+    <input type="hidden" name="ltPosition" id="ltPosition" value=""/>
+</form>
 
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath }/customerkeyword/customerKeywordCommon.js"></script>
@@ -211,7 +144,6 @@
     $(function () {
         $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
         initPaging();
-        initNoPositionChecked();
         alignTableHeader();
         if(${isDepartmentManager}) {
             $("#userName").val("${keywordAmountCountCriteria.userName}");
@@ -222,7 +154,6 @@
         }
 
     });
-
 
     function initPaging() {
         var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
@@ -261,9 +192,13 @@
     }
 
     <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywords">
-    function searchCustomerKeywords(url) {
-        window.open(url);
-    }
+        function searchCustomerKeywords(keyword, ltPosition) {
+            console.log(keyword);
+            console.log(ltPosition);
+            $("#searchKeywordForm #keyword").val(keyword);
+            $("#searchKeywordForm #ltPosition").val(ltPosition);
+            $("#searchKeywordForm").submit();
+        }
     </shiro:hasPermission>
 </script>
 </body>

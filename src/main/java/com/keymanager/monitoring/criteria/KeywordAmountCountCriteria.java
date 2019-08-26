@@ -6,6 +6,7 @@ public class KeywordAmountCountCriteria {
     private String keyword;
     private String searchEngine;
     private String entryType;
+    private String terminalType;
 
     public String getEntryType() {
         return entryType;
@@ -37,5 +38,13 @@ public class KeywordAmountCountCriteria {
 
     public void setSearchEngine(String searchEngine) {
         this.searchEngine = searchEngine;
+    }
+
+    public String getTerminalType() {
+        return terminalType;
+    }
+
+    public void setTerminalType(String terminalType) {
+        this.terminalType = terminalType;
     }
 }
