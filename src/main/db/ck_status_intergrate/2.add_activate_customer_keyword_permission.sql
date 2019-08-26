@@ -1,7 +1,7 @@
 #激活关键字权限
 INSERT INTO t_resource ( fResourceName, fUrl, fOpenMode, fIconCls, fParentID, fSequence, fStatus, fOpened, fResourceType ,fCreateTime) VALUES
 	( '激活关键字', '/internal/customerKeyword/activateCustomerKeywords','ajax', '',
-		(SELECT r.fUuid FROM t_resource r WHERE r.fUrl != '#' AND r.fResourceName = "客户关键字管理"), 0, 0, 1, 1, NOW() )
+		(SELECT r.fUuid FROM t_resource r WHERE r.fUrl = '#' AND r.fResourceName = "客户关键字管理"), 0, 0, 1, 1, NOW() )
 
 
 
