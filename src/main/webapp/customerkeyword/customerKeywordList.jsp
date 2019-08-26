@@ -114,12 +114,17 @@
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
         <a href="javascript:showGroupNameChangeDialog({'title': '修改客户关键字分组', 'customerUuid':'${customerKeywordCriteria.customerUuid}'})">修改所有优化组</a> |
         <a href="javascript:updateSpecifiedCustomerKeywordGroupName()">修改选中优化组</a> |
-        <a href="javascript:stopOptimization(${customerKeywordCriteria.customerUuid})">下架所有关键字</a>|
     </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+        <a href="javascript:stopOptimization('${customerKeywordCriteria.customerUuid}',3)">下架所有关键字</a>|
+        <a href="javascript:updateCustomerKeywordStatus(3)">下架选中关键字</a>|
+        <a href="javascript:stopOptimization('${customerKeywordCriteria.customerUuid}',0)">暂停所有关键字</a>|
         <a href="javascript:updateCustomerKeywordStatus(0)">暂停选中关键字</a> |
-        <a href="javascript:updateCustomerKeywordStatus(1)">激活选中关键字</a> |
     </shiro:hasPermission>
+        <shiro:hasPermission name="/internal/customerKeyword/activateCustomerKeywords">
+            <a href="javascript:activateAllCustomerKeywords('${customerKeywordCriteria.customerUuid}')">激活所有关键字</a>|
+            <a href="javascript:activateSelectCustomerKeywords()">激活选中关键字</a> |
+        </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
         <a href="javascript:delAllItems('EmptyTitleAndUrl','${customerKeywordCriteria.customerUuid}')">删除标题和网址为空的关键字</a> |
         <a href="javascript:delAllItems('EmptyTitle','${customerKeywordCriteria.customerUuid}')">删除标题为空的关键字</a> |
@@ -154,7 +159,8 @@
                 <option value=''>所有</option>
                 <option value='1'>激活</option>
                 <option value='2'>新增</option>
-                <option value='0'>过期</option>
+                <option value='0'>暂不操作</option>
+                <option value='3'>下架</option>
             </select>
             优化组名:
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
@@ -167,7 +173,7 @@
             关键字来源:
             <select name="customerKeywordSource" id="customerKeywordSource">
                 <option value="">所有</option>
-                <c:forEach items="${CustomerKeywordSourceMap}" var="entry">
+                <c:forEach items="${customerKeywordSourceMap}" var="entry">
                     <option value="${entry.value}">${entry.key}</option>
                 </c:forEach>
             </select>
@@ -179,7 +185,6 @@
             <input type="text" name="gtPosition" id="gtPosition" placeholder=">=" value="${customerKeywordCriteria.gtPosition}" style="width:40px;"/>
             <input type="text" name="ltPosition" id="ltPosition" placeholder="<=" value="${customerKeywordCriteria.ltPosition}" style="width:40px;"/>
             <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()" />显示0 &nbsp;
-            <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}" <c:if test="${customerKeywordCriteria.displayStop=='1'}">checked</c:if>/>显示下架 &nbsp;
             无效点击数:
             <input type="text" name="invalidRefreshCount" id="invalidRefreshCount"
                    value="${customerKeywordCriteria.invalidRefreshCount}" style="width:20px;">
@@ -261,10 +266,7 @@
     </form>
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="#eeeeee" height=30>
-            <td width=10 style="
-
-
-            padding-left:7px;"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
+            <td width=10 style="padding-left:7px;"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=100>关键字</td>
             <td align="center" width=200>URL</td>
             <td align="center" width=150>熊掌号</td>
@@ -281,6 +283,7 @@
             <c:if test="${sessionScope.get('entryType') != 'qz'}"><td align="center" width=60>报价</td></c:if>
             <td align="center" width=80>开始优化日期</td>
             <td align="center" width=80>最后优化时间</td>
+            <td align="center" width=70>状态</td>
             <td align="center" width=50>订单号</td>
             <td align="center" width=100>备注</td>
             <td align="center" width=100>失败原因</td>
@@ -298,7 +301,7 @@
                 <td align="center" width=100>
                     <font color="<%--<%=keywordColor%>--%>">${customerKeyword.keyword}</font>
                 </td>
-                <td  align="center" width=200 class="wrap floatTd"
+                <td  align="center" width=200 class="wrap floatTd" style="text-align: left;"
                      title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}">
                     <div style="height:16px;">
                             ${customerKeyword.url==null?'':customerKeyword.url}
@@ -307,7 +310,7 @@
                 <td align="center" width=150>
                         ${customerKeyword.bearPawNumber == null ? "" : customerKeyword.bearPawNumber}
                 </td>
-                <td align="center" width=250>
+                <td align="center" width=250 style="text-align: left;">
                         ${customerKeyword.title == null ? "" : customerKeyword.title.trim()}
                 </td>
                 <td align="center" width=30>
@@ -334,6 +337,7 @@
                 <c:if test="${sessionScope.get('entryType') != 'qz'}"><td align="center" width=60>${customerKeyword.feeString}</td></c:if>
                 <td align="center" width=80><fmt:formatDate value="${customerKeyword.startOptimizedTime}" pattern="yyyy-MM-dd"/></td>
                 <td align="center" width=80><fmt:formatDate value="${customerKeyword.lastOptimizeDateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
+                <td align="center" width=70 style="color:${customerKeywordStautsMap.get(customerKeyword.status).get("color")}">${customerKeywordStautsMap.get(customerKeyword.status).get("desc")} </td>
                 <td align="center" width=50>${customerKeyword.orderNumber}</td>
                 <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
                 <td align="center" width=100>${customerKeyword.failedCause == null ? "" : customerKeyword.failedCause}</td>
@@ -555,7 +559,6 @@
     <input type="hidden" name="gtPosition" id="gtPositionHidden" value="" />
     <input type="hidden" name="ltPosition" id="ltPositionHidden" value="" />
     <input type="hidden" name="noPosition" id="noPositionHidden" value="" />
-    <input type="hidden" name="displayStop" id="displayStopHidden" value="" />
     <input type="hidden" name="invalidRefreshCount" id="invalidRefreshCountHidden" value="" />
     <input type="hidden" name="searchEngine" id="searchEngineHidden" value="" />
     <input type="hidden" name="orderingElement" id="orderingElementHidden" value="" />

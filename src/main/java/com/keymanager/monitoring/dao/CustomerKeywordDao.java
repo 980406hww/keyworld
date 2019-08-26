@@ -190,7 +190,9 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void batchUpdatePosition(@Param("terminalType")String terminalType, @Param("entryType")String entryType, @Param("searchEngine")String searchEngine, @Param("reachStandardPosition")int reachStandardPosition, @Param("positionVOs")List<PositionVO> positionVOs);
 
     String getBearPawNumberByCustomerUuid(@Param("customerUuid")int customerUuid, @Param("entryType")String entryType, @Param("terminalType")String terminalType);
+
     void batchUpdateRequireDalete(@Param("requireDeleteKeywordVOs")List<RequireDeleteKeywordVO> requireDeleteKeywordVOs);
+
     void updateCustomerKeywordQueryTime(@Param("customerKeywordUuid")Long customerKeywordUuid, @Param("capturePositionQueryTime")Date capturePositionQueryTime);
 
     void updateKeywordCustomerUuid(@Param("keywordUuids")List<String> keywordUuids,@Param("customerUuid")String customerUuid, @Param("terminalType")String terminalType);
@@ -252,7 +254,7 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     int getQZSettingKeywordCount(@Param("customerUuid") int customerUuid, @Param("groupName") String groupName);
 
-    void saveTestCustomerKeywords(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
+    List<keywordAmountCountVo> searchKeywordAmountCountList(Page<keywordAmountCountVo> customerKeywordPage, @Param("keywordAmountCountCriteria") KeywordAmountCountCriteria keywordAmountCountCriteria);
 
     List<String> getCities();
 }

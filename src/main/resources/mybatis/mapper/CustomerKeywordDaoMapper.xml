@@ -74,21 +74,14 @@
         <if test="customerKeywordCriteria.titleFlag == 2">
             AND ck.fTitle > ''
         </if>
-        <choose>
-            <when test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
-                <if test="customerKeywordCriteria.groupNameFuzzyQuery == null or customerKeywordCriteria.groupNameFuzzyQuery == ''">
-                    AND ck.fOptimizeGroupName = #{customerKeywordCriteria.optimizeGroupName}
-                </if>
-                <if test="customerKeywordCriteria.groupNameFuzzyQuery == 1">
-                    AND ck.fOptimizeGroupName like '${customerKeywordCriteria.optimizeGroupName}%'
-                </if>
-            </when>
-            <otherwise>
-                <if test="customerKeywordCriteria.displayStop == null or customerKeywordCriteria.displayStop == ''">
-                    AND (ck.fOptimizeGroupName != 'stop')
-                </if>
-            </otherwise>
-        </choose>
+        <if test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
+            <if test="customerKeywordCriteria.groupNameFuzzyQuery == null or customerKeywordCriteria.groupNameFuzzyQuery == ''">
+                AND ck.fOptimizeGroupName = #{customerKeywordCriteria.optimizeGroupName}
+            </if>
+            <if test="customerKeywordCriteria.groupNameFuzzyQuery == 1">
+                AND ck.fOptimizeGroupName like '${customerKeywordCriteria.optimizeGroupName}%'
+            </if>
+        </if>
         <if test="customerKeywordCriteria.machineGroup != null and customerKeywordCriteria.machineGroup != ''">
             <if test="customerKeywordCriteria.machineGroupFuzzyQuery == null or customerKeywordCriteria.machineGroupFuzzyQuery == ''">
                 AND ck.fMachineGroup = #{customerKeywordCriteria.machineGroup}
@@ -157,16 +150,9 @@
         <if test="customerKeywordCriteria.titleFlag == 2">
             AND ck.fTitle > ''
         </if>
-        <choose>
-            <when test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
-                AND ck.fOptimizeGroupName  like '${customerKeywordCriteria.optimizeGroupName}%'
-            </when>
-            <otherwise>
-                <if test="customerKeywordCriteria.displayStop == null or customerKeywordCriteria.displayStop == ''">
-                    AND (ck.fOptimizeGroupName != 'stop')
-                </if>
-            </otherwise>
-        </choose>
+        <if test="customerKeywordCriteria.optimizeGroupName != null and customerKeywordCriteria.optimizeGroupName != ''">
+            AND ck.fOptimizeGroupName  like '${customerKeywordCriteria.optimizeGroupName}%'
+        </if>
         <if test="customerKeywordCriteria.machineGroup != null and customerKeywordCriteria.machineGroup != ''">
             <if test="customerKeywordCriteria.machineGroupFuzzyQuery == null or customerKeywordCriteria.machineGroupFuzzyQuery == ''">
                 AND ck.fMachineGroup = #{customerKeywordCriteria.machineGroup}
@@ -338,6 +324,7 @@
         ck.fOriginalUrl	AS	'originalUrl',
         ck.fBearPawNumber AS 'bearPawNumber',
         ck.fTitle	AS	'title',
+        ck.fStatus	AS	'status',
         ck.fSearchEngine	AS	'searchEngine',
         ck.fCity            AS 'city',
         ck.fCollectMethod	AS	'collectMethod',
@@ -386,7 +373,6 @@
         WHERE ck.fCustomerUuid = #{customerKeywordCriteria.customerUuid}
         AND ck.fStatus = 1
         AND fTerminalType =  #{customerKeywordCriteria.terminalType}
-        AND (ck.fOptimizeGroupName != 'stop')
         ORDER BY ck.fSequence
     </select>
 
@@ -400,6 +386,7 @@
         ck.fOriginalUrl	AS	'originalUrl',
         ck.fBearPawNumber AS 'bearPawNumber',
         ck.fTitle	AS	'title',
+        ck.fStatus	AS	'status',
         ck.fCapturePositionCity AS 'capturePositionCity',
         ck.fSearchEngine	AS	'searchEngine',
         ck.fCity            AS  'city',
@@ -760,7 +747,7 @@
                 </foreach>
             </when>
             <otherwise>
-                AND (ck.fOptimizeGroupName IS NULL OR ck.fOptimizeGroupName <![CDATA[<>]]> 'stop')
+                AND ck.fOptimizeGroupName IS NULL
             </otherwise>
         </choose>
         LIMIT 1
@@ -770,7 +757,8 @@
         SELECT
         ck.fUuid AS 'uuid'
         FROM t_customer_keyword ck
-        WHERE ck.fTerminalType = #{terminalType} and ck.fStatus = 1
+        WHERE ck.fTerminalType = #{terminalType}
+        AND ck.fStatus = 1
         AND fCaptureStatus = #{captureStatus}
         <if test="startTime != null and captureStatus == 0">
             AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
@@ -784,9 +772,6 @@
         </if>
         <if test="groupName != null">
             AND ck.fOptimizeGroupName = #{groupName}
-        </if>
-        <if test="groupName == null">
-            AND (ck.fOptimizeGroupName IS NULL OR ck.fOptimizeGroupName <![CDATA[<>]]> 'stop')
         </if>
         LIMIT 10
     </select>
@@ -1040,7 +1025,6 @@
         AND u.fEmail > ''
         AND ck.fStatus = 1
         AND ck.fCurrentPosition &gt; 0
-        AND ck.fOptimizeGroupName &lt;&gt; 'stop'
         AND (ck.fOptimizedCount = 0 OR ck.fInvalidRefreshCount &gt;= 8)
         GROUP BY u.fLoginName
     </select>
@@ -1055,7 +1039,6 @@
         WHERE c.fUuid = ck.fCustomerUuid
         AND ck.fStatus = 1
         AND ck.fCurrentPosition &gt; 0
-        AND ck.fOptimizeGroupName &lt;&gt; 'stop'
         AND ck.fType = 'qz'
         AND c.fUserID = #{userID}
         AND (ck.fOptimizedCount = 0 OR ck.fInvalidRefreshCount &gt;= 8)
@@ -1074,7 +1057,6 @@
         WHERE c.fUuid = ck.fCustomerUuid
         AND ck.fStatus = 1
         AND ck.fCurrentPosition &gt; 0
-        AND ck.fOptimizeGroupName &lt;&gt; 'stop'
         AND ck.fType IN ('fm', 'pt', 'bc')
         AND c.fUserID = #{userID}
         AND (ck.fOptimizedCount = 0 OR ck.fInvalidRefreshCount &gt;= 8)
@@ -1221,6 +1203,7 @@
         AND fBearPawNumber &gt; ''
         LIMIT 1
     </select>
+
     <update id="batchUpdateRequireDalete">
         <foreach item="item" index="index" collection="requireDeleteKeywordVOs" open="" separator=";" close="">
             UPDATE t_customer_keyword
@@ -1418,7 +1401,7 @@
 
     <update id="excludeCustomerKeyword" parameterType="com.keymanager.monitoring.entity.CustomerKeyword">
         UPDATE  t_customer_keyword ck
-        SET ck.fOptimizeGroupName = 'zanting'
+        SET ck.fStatus = 3
         WHERE 1=1
         <if test="qzSettingExcludeCustomerKeywordsCriteria.customerUuid != null and qzSettingExcludeCustomerKeywordsCriteria.customerUuid != ''">
           AND ck.fCustomerUuid = #{qzSettingExcludeCustomerKeywordsCriteria.customerUuid}
@@ -1678,9 +1661,7 @@
             ck.fBearPawNumber AS 'bearPawNumber'
         FROM t_customer_keyword ck
         WHERE ck.fType = #{type}
-        AND ck.fStatus = 1
         AND ck.fSearchEngine = '百度'
-        AND ck.fMachineGroup != 'Pause'
         AND ck.fCaptureStatus = 0
         AND ck.fCapturePositionQueryTime &lt; CURRENT_DATE()
         <if test="city != null">AND ck.fCity = #{city}</if>
@@ -1697,9 +1678,7 @@
             ck.fBearPawNumber AS 'bearPawNumber'
         FROM t_customer_keyword ck
         WHERE ck.fType = #{type}
-        AND ck.fStatus = 1
         AND ck.fSearchEngine = '百度'
-        AND ck.fMachineGroup != 'Pause'
         AND ck.fCaptureStatus = 1
         AND ck.fCapturePositionQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
         <if test="city != null">AND ck.fCity = #{city}</if>
@@ -1716,6 +1695,7 @@
             #{uuid}
         </foreach>
     </update>
+
     <select id="getQZSettingKeywordCount" resultType="java.lang.Integer">
         SELECT COUNT(1)
         FROM t_customer_keyword ck
@@ -1724,34 +1704,34 @@
         AND ck.fOptimizeGroupName LIKE '${groupName}%'
     </select>
 
-    <insert id="saveTestCustomerKeywords">
-        INSERT INTO t_customer_keyword ( fCustomerUuid, fTerminalType, fKeyword,fUrl, fType, fBearPawNumber,
-            fOriginalUrl, fTitle, fSearchEngine, fCurrentPosition, fServiceProvider, fOptimizeGroupName,
-            fOptimizePlanCount, fMachineGroup, fRemarks, fStatus, fCaptureStatus, fCustomerKeywordSource )
-        VALUES
-        <foreach collection="customerKeywords" item="customerKeyword" index="index" separator=",">
-            (
-                #{customerKeyword.customerUuid},
-                #{customerKeyword.terminalType},
-                #{customerKeyword.keyword},
-                #{customerKeyword.url},
-                #{customerKeyword.type},
-                #{customerKeyword.bearPawNumber},
-                #{customerKeyword.originalUrl},
-                #{customerKeyword.title},
-                #{customerKeyword.searchEngine},
-                #{customerKeyword.currentPosition},
-                #{customerKeyword.serviceProvider},
-                #{customerKeyword.optimizeGroupName},
-                #{customerKeyword.optimizePlanCount},
-                #{customerKeyword.machineGroup},
-                #{customerKeyword.remarks},
-                #{customerKeyword.status},
-                #{customerKeyword.captureStatus},
-                #{customerKeyword.customerKeywordSource}
-            )
-        </foreach>
-    </insert>
+    <select id="searchKeywordAmountCountList" parameterType="com.keymanager.monitoring.criteria.KeywordAmountCountCriteria" resultType="com.keymanager.monitoring.vo.keywordAmountCountVo">
+        SELECT
+        ck.fTerminalType	AS	'terminalType',
+        ck.fCustomerUuid	AS	'customerUuid',
+        ck.fKeyword	AS	'keyword',
+        ck.fSearchEngine	AS	'searchEngine',
+        COUNT(1) AS 'keywordCount',
+        SUM(IF(ck.fCurrentPosition &lt;= 3, 1, 0)) AS 'topThree',
+        SUM(IF(ck.fCurrentPosition &lt;= 10, 1, 0)) AS 'topTen',
+        COUNT( DISTINCT ck.fCustomerUuid) AS 'customerCount',
+        COUNT(DISTINCT c.fUserID) AS 'userCount'
+        FROM
+        t_customer_keyword ck,
+        t_customer c
+        WHERE c.fUuid = ck.fCustomerUuid
+        AND ck.fType = 'pt'
+        AND ck.fTerminalType = #{keywordAmountCountCriteria.terminalType}
+        <if test="keywordAmountCountCriteria.keyword != null and keywordAmountCountCriteria.keyword != ''">
+            AND ck.fKeyword like concat(#{keywordAmountCountCriteria.keyword}, '%')
+        </if>
+        <if test="keywordAmountCountCriteria.searchEngine != null and keywordAmountCountCriteria.searchEngine != ''">
+            AND ck.fSearchEngine = #{keywordAmountCountCriteria.searchEngine}
+        </if>
+        <if test="keywordAmountCountCriteria.userName != null and keywordAmountCountCriteria.userName != ''">
+            AND c.fUserID = #{keywordAmountCountCriteria.userName}
+        </if>
+        GROUP BY ck.fKeyword, ck.fSearchEngine
+    </select>
 
     <select id="getCities" resultType="java.lang.String">
         SELECT fCity
