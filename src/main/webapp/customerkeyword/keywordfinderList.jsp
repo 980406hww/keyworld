@@ -25,7 +25,7 @@
             #customerKeywordTable tr:nth-child(odd){background:#EEEEEE;}
 
             #customerKeywordTable td{
-                text-align: center;
+                text-align: left;
             }
             #saveCustomerKeywordDialog ul{list-style: none;margin: 0px;padding: 0px;}
             #saveCustomerKeywordDialog li{margin: 5px 0;}

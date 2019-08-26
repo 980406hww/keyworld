@@ -23,7 +23,7 @@
             #customerKeywordTable tr:nth-child(odd){background:#EEEEEE;}
 
             #customerKeywordTable td{
-                text-align: center;
+                text-align: left;
             }
 
             .tip-yellow {
