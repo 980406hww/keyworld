@@ -7,20 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CacheCrawlRankCustomerKeywordSchedule {
+public class CacheCrawlRankCustomerQZKeywordSchedule {
 
-    private static Logger logger = LoggerFactory.getLogger(CacheCrawlRankCustomerKeywordSchedule.class);
+    private static Logger logger = LoggerFactory.getLogger(CacheCrawlRankCustomerQZKeywordSchedule.class);
 
     @Autowired
     private CustomerKeywordService customerKeywordService;
 
     public void runTask() {
-        logger.info("============= " + " Cache crawl rank Customer Keyword Task " + "===================");
+        logger.info("============= " + " Cache crawl rank Customer QZ Keyword Task " + "===================");
         try {
-            customerKeywordService.cacheCrawlRankCustomerKeywords();
+            customerKeywordService.cacheCrawlRankCustomerQZKeywords();
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("Cache crawl rank Customer Keyword is error" + e.getMessage());
+            logger.error("Cache crawl rank Customer QZ Keyword is error" + e.getMessage());
         }
     }
 }

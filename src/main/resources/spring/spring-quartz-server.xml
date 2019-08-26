@@ -8,7 +8,8 @@
 		<property name="triggers">
 			<list>
 				<ref bean="cronTriggerCacheCustomerKeyword" />
-				<ref bean="cronTriggerCacheCrawlRankCustomerKeyword" />
+				<ref bean="cronTriggerCacheCrawlRankCustomerQZKeyword" />
+				<ref bean="cronTriggerCacheCrawlRankCustomerPTKeyword" />
 				<ref bean="cronTriggerCacheCheckingEnteredCustomerKeyword" />
 			</list>
 		</property>
@@ -34,14 +35,26 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
-	<!--缓存需抓取排名的关键字信息到队列中-->
-	<bean id="cronTriggerCacheCrawlRankCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="cronTriggerCacheCrawlRankCustomerKeywordSchedule"/>
+	<!--缓存全站抓取排名的关键字信息到队列中-->
+	<bean id="cronTriggerCacheCrawlRankCustomerQZKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerCacheCrawlRankCustomerQZKeywordSchedule"/>
 		<property name="cronExpression" value="0 0/3 * * * ?" />
 	</bean>
 
-	<bean id="cronTriggerCacheCrawlRankCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="cacheCrawlRankCustomerKeywordSchedule" />
+	<bean id="cronTriggerCacheCrawlRankCustomerQZKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cacheCrawlRankCustomerQZKeywordSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--缓存单词抓取排名的关键字信息到队列中-->
+	<bean id="cronTriggerCacheCrawlRankCustomerPTKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerCacheCrawlRankCustomerPTKeywordSchedule"/>
+		<property name="cronExpression" value="0 0/3 8-23 * * ?" />
+	</bean>
+
+	<bean id="cronTriggerCacheCrawlRankCustomerPTKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cacheCrawlRankCustomerPTKeywordSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

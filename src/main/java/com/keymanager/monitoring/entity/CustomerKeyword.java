@@ -66,6 +66,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fSearchEngine")
     private String searchEngine;
 
+    @TableField(value = "fCity")
+    private String city;
+
     @TableField(value = "fInitialIndexCount")
     private Integer initialIndexCount;
 
@@ -406,6 +409,14 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setSearchEngine(String searchEngine) {
         this.searchEngine = searchEngine;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public Integer getInitialIndexCount() {

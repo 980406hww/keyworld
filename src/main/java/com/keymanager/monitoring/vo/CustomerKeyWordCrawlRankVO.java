@@ -3,6 +3,8 @@ package com.keymanager.monitoring.vo;
 public class CustomerKeyWordCrawlRankVO {
     private long uuid;
     private String terminalType;
+    private String type;
+    private String city;
     private String searchEngine;
     private String keyword;
     private String url;
@@ -63,5 +65,21 @@ public class CustomerKeyWordCrawlRankVO {
 
     public void setBearPawNumber(String bearPawNumber) {
         this.bearPawNumber = bearPawNumber;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

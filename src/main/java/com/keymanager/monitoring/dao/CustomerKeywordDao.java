@@ -246,11 +246,13 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     CustomerKeywordRankingCountVO getCustomerKeywordRankingCount(@Param("customerUuid") int customerUuid, @Param("groupName") String groupName);
     
-    List<CustomerKeyWordCrawlRankVO> getCrawlRankKeywords();
+    List<CustomerKeyWordCrawlRankVO> getCrawlRankKeywords(@Param("type") String type, @Param("city") String city);
     
     void updateCrawlRankKeywordTimeByUuids (@Param("uuids")List<Long> uuids);
 
     int getQZSettingKeywordCount(@Param("customerUuid") int customerUuid, @Param("groupName") String groupName);
 
     void saveTestCustomerKeywords(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
+
+    List<String> getCities();
 }
