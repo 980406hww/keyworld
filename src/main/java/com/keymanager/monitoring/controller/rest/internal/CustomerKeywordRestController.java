@@ -6,6 +6,7 @@ import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria;
+import com.keymanager.monitoring.criteria.KeywordAmountCountCriteria;
 import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.ServiceProvider;
@@ -16,12 +17,29 @@ import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.enums.KeywordEffectEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordAndUrlCvsExportWriter;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordInfoExcelWriter;
-import com.keymanager.monitoring.service.*;
+import com.keymanager.monitoring.service.ConfigService;
+import com.keymanager.monitoring.service.CustomerExcludeKeywordService;
+import com.keymanager.monitoring.service.CustomerKeywordService;
+import com.keymanager.monitoring.service.CustomerService;
+import com.keymanager.monitoring.service.IUserInfoService;
+import com.keymanager.monitoring.service.PerformanceService;
+import com.keymanager.monitoring.service.ServiceProviderService;
+import com.keymanager.monitoring.service.UserRoleService;
 import com.keymanager.monitoring.vo.CodeNameVo;
 import com.keymanager.monitoring.vo.KeywordStatusBatchUpdateVO;
+import com.keymanager.monitoring.vo.keywordAmountCountVo;
 import com.keymanager.monitoring.vo.machineGroupQueueVO;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -30,14 +48,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.util.*;
 
 @RestController
 @RequestMapping(value = "/internal/customerKeyword")
@@ -663,31 +681,64 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
         }
     }
 
-	@RequiresPermissions("/internal/customerKeyword/activateCustomerKeywords")
-	@RequestMapping(value = "/activateSelectCustomerKeywords", method = RequestMethod.POST)
-	public ResponseEntity<?> activateAllCustomerKeywords(@RequestBody Map<String, Object> requestMap) {
-		try {
-			List<Long> customerKeywordUuids = (List<Long>) requestMap.get("uuids");
-			customerKeywordService.updateCustomerKeywordStatus(customerKeywordUuids, 1);
-			return new ResponseEntity<Object>(true, HttpStatus.OK);
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-		}
-	}
+    @RequiresPermissions("/internal/customerKeyword/searchKeywordAmountCountLists")
+    @RequestMapping(value = "/searchKeywordAmountCountLists", method = RequestMethod.GET)
+    public ModelAndView searchKeywordAmountCountLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
+        String entryType = (String) request.getSession().getAttribute("entryType");
+        if (!SecurityUtils.getSubject().hasRole(entryType.toUpperCase() + "Special")) {
+            SecurityUtils.getSubject().logout();
+        }
+        KeywordAmountCountCriteria keywordAmountCountCriteria = new KeywordAmountCountCriteria();
+        keywordAmountCountCriteria.setEntryType("pt");
+        return constructKeywordAmountCountModelAndView(request, keywordAmountCountCriteria, currentPageNumber, pageSize);
+    }
 
-	@RequiresPermissions("/internal/customerKeyword/activateCustomerKeywords")
-	@RequestMapping(value = "/activateAllCustomerKeywords", method = RequestMethod.POST)
-	public ResponseEntity<?> activateSelectCustomerKeywords(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
-		try {
-			String terminalType = TerminalTypeMapping.getTerminalType(request);
-			String entryType = (String) request.getSession().getAttribute("entryType");
-			String customerUuid = (String) requestMap.get("customerUuid");
-			customerKeywordService.changeCustomerKeywordStatus(terminalType, entryType, Long.parseLong(customerUuid), 1);
-			return new ResponseEntity<Object>(true, HttpStatus.OK);
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-		}
-	}
+    @RequiresPermissions("/internal/customerKeyword/searchKeywordAmountCountLists")
+    @RequestMapping(value = "/searchKeywordAmountCountLists", method = RequestMethod.POST)
+    public ModelAndView searchKeywordAmountCountLists(KeywordAmountCountCriteria keywordAmountCountCriteria, HttpServletRequest request) {
+        try {
+            String currentPageNumber = request.getParameter("currentPageNumber");
+            String pageSize = request.getParameter("pageSize");
+            if (StringUtils.isEmpty(currentPageNumber)) {
+                currentPageNumber = "1";
+            }
+            if (StringUtils.isEmpty(pageSize)) {
+                pageSize = "50";
+            }
+            keywordAmountCountCriteria.setEntryType("pt");
+            return constructKeywordAmountCountModelAndView(request, keywordAmountCountCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ModelAndView("/customerkeyword/keywordAmountCount");
+        }
+    }
+
+
+    private ModelAndView constructKeywordAmountCountModelAndView(HttpServletRequest request, KeywordAmountCountCriteria keywordAmountCountCriteria, int currentPage, int pageSize) {
+        long startMilleSeconds = System.currentTimeMillis();
+        HttpSession session = request.getSession();
+        ModelAndView modelAndView = new ModelAndView("/customerkeyword/keywordAmountCount");
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        String userName = (String) session.getAttribute("username");
+        UserInfo user = userInfoService.getUserInfo(userName);
+        List<UserInfo> activeUsers = userInfoService.findActiveUsers();
+//		boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+//		if(!isDepartmentManager) {
+//			keywordAmountCountCriteria.setUserName(userName);
+//		}
+        keywordAmountCountCriteria.setTerminalType(terminalType);
+        if (request.getMethod().equals("POST")) {
+            Page<keywordAmountCountVo> page = customerKeywordService.searchKeywordAmountCountPage(new Page<keywordAmountCountVo>(currentPage, pageSize), keywordAmountCountCriteria);
+            modelAndView.addObject("page", page);
+        }
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("activeUsers", activeUsers);
+        modelAndView.addObject("keywordAmountCountCriteria", keywordAmountCountCriteria);
+        modelAndView.addObject("CustomerKeywordSourceMap", CustomerKeywordSourceEnum.toMap());
+        modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));
+        modelAndView.addObject("isDepartmentManager", true);
+        performanceService.addPerformanceLog(terminalType + ":searchKeywordAmountCountLists", (System.currentTimeMillis() - startMilleSeconds), null);
+        return modelAndView;
+    }
+
 }

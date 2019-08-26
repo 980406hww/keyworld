@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.GroupSettingCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
-import com.keymanager.monitoring.criteria.QZSettingSearchGroupInfoCriteria;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.vo.DateRangeTypeVO;
 import com.keymanager.monitoring.vo.ExternalQzSettingVO;
@@ -43,7 +42,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     void updateCrawlerStatus(@Param("uuids")Long[] uuids);
 
-    int getQZSettingGroupInfo (@Param("qzSettingSearchGroupInfoCriteria") QZSettingSearchGroupInfoCriteria qzSettingSearchGroupInfoCriteria);
+    int getQZSettingGroupInfo (@Param("qzSettingUuid") long qzSettingUuid, @Param("terminalType") String terminalType, @Param("optimizeGroupName") String optimizeGroupName);
 
     List<String> getAvailableOptimizationGroups (@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
@@ -56,5 +55,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     void updateQZSettingRenewalStatus(@Param("uuids") List<Long> uuids, @Param("renewalStatus") Integer renewalStatus);
 
     List<QZSetting> searchAllQZSettingForGenerateRankingCurve();
+
+    ExternalQzSettingVO selectQZSettingForAutoOperate();
 }
 

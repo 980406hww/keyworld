@@ -2,9 +2,9 @@ $(function () {
     $("#showUserNoteBookDialog").dialog("close");
     var showUserMessageDialog = $("#showUserMessageDialog");
     var openDialogStatus =  showUserMessageDialog.find("input[name='openDialogStatus']").val();
-    if (openDialogStatus == 1) {
+    if (openDialogStatus === 1) {
         $("#customerKeywordBtnInput").click();
-    } else if (openDialogStatus == 2) {
+    } else if (openDialogStatus === 2) {
         var customerUuid =  showUserMessageDialog.find("input[name='customerUuid']").val();
         var contactPerson =  $("div.datalist ul li:first-child").find("input[name='contactPerson']").val();
         openMessageBox("全站设置", customerUuid, contactPerson);
@@ -100,13 +100,13 @@ function getUserMessage(type, customerUuid, contactPerson) {
             showUserMessageForm.find("#contactPerson").text(contactPerson);
             var date = data.updateTime != null ? new Date(data.updateTime).format("yyyy-MM-dd") : new Date().format("yyyy-MM-dd");
             showUserMessageForm.find("label").text(date);
-            var status = data.status == 1 ? "处理完毕" : "未处理";
+            var status = data.status === 1 ? "处理完毕" : "未处理";
             showUserMessageForm.find("#messageStatus").text(status);
-            if (data != null) {
+            if (data !== null) {
                 showUserMessageForm.find("input[name='messageUuid']").val(data.uuid);
                 showUserMessageForm.find("#senderUserName").text(data.senderUserName);
                 showUserMessageForm.find("#user_select option").each(function () {
-                    if ($(this).val() == data.receiverUserName) {
+                    if ($(this).val() === data.receiverUserName) {
                         this.selected = true;
                         $("#user_select_ms span:last-child").text($(this).text());
                     }
@@ -171,18 +171,18 @@ function saveUserMessage(type, customerUuid, status) {
     var postData = {};
     var uuid = showUserMessageForm.find("input[name='messageUuid']").val();
     if (status) {
-        if (uuid == "") {
+        if (uuid === "") {
             alert("新增留言，不能修改处理状态");
             return false;
         }
-        if(confirm("确定修改处理状态？") == false) {
+        if(confirm("确定修改处理状态？") === false) {
             return false;
         }
         postData.uuid = uuid;
         postData.updateStatus = 1;
         postData.status = status;
     } else {
-        if (uuid != "") {
+        if (uuid !== "") {
             postData.uuid = uuid;
         }
         var receiverUserNames = showUserMessageForm.find("#user_select").multiselect("getChecked").map(function () {
@@ -194,7 +194,7 @@ function saveUserMessage(type, customerUuid, status) {
         }
         postData.receiverUserNames = receiverUserNames;
         var content = showUserMessageForm.find("input[name='content']").val();
-        if (content == '') {
+        if (content === '') {
             alert("请输入处理内容");
             return false;
         }
@@ -292,7 +292,7 @@ function getUserNoteBooks(customerUuid, searchAll, terminalType) {
 
 function showAddUserNoteDiv() {
     var uuid = $("#addUserNote").find("input[name='userNoteBookUuid']").val();
-    if (uuid != "") {
+    if (uuid !== "") {
         $("#addUserNote").find("input[name='userNoteBookUuid']").val("");
         $("#addUserNote").find("textarea").val("");
         $("#showUserNoteBookDialog").find("#addUserNote").css("display", "block");
@@ -308,12 +308,12 @@ function saveUserNoteBook() {
     var terminalType = $("#userNoteBookDialogToolBar").find("input[name='terminalType']").val();
     postData.terminalType = terminalType;
     var uuid = $("#addUserNoteTable").find("input[name='userNoteBookUuid']").val();
-    if (uuid == "") {
+    if (uuid === "") {
         uuid = null;
     }
     postData.uuid = uuid;
     var content = $("#addUserNoteTable").find("textarea").val();
-    if (content == '') {
+    if (content === '') {
         alert("请输入内容");
         return;
     }
@@ -351,27 +351,8 @@ function searchUserNoteBooks(searchAll) {
     getUserNoteBooks(customerUuid, searchAll, terminalType);
 }
 
-function showUserNoteBookP (self) {
-    var index;
-    if ($(self).val() == "展开内容") {
-        var btn = $(self).parent().parent().parent().find("input[value='收起内容']");
-        if (btn.length > 0) {
-            btn[0].value = "展开内容";
-            index = $(btn).parent().parent().find("td[name='index']").text();
-            $("#userNoteBookTable").find("#note_book_"+index).css("display", "none");
-        }
-        $(self).val("收起内容");
-        index = $(self).parent().parent().find("td[name='index']").text();
-        $("#userNoteBookTable").find("#note_book_"+index).css("display", "block");
-    } else  if ($(self).val() == "收起内容") {
-        $(self).val("展开内容");
-        index = $(self).parent().parent().find("td[name='index']").text();
-        $("#userNoteBookTable").find("#note_book_"+index).css("display", "none");
-    }
-}
-
 function updateUserNoteBook(self) {
-    if ($(self).val() == "修改内容") {
+    if ($(self).val() === "修改内容") {
         var btn = $(self).parent().parent().parent().find("input[value='取消修改']");
         if (btn.length > 0) {
             btn[0].value = "修改内容";
@@ -405,6 +386,6 @@ Date.prototype.format = function (format) {
         format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
     for (var k in o)
         if (new RegExp("(" + k + ")").test(format))
-            format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+            format = format.replace(RegExp.$1, RegExp.$1.length === 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
     return format;
 };

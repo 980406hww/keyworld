@@ -111,14 +111,6 @@ public class QZKeywordRankInfo extends BaseEntity {
     @TableField(value = "fOneWeekDifference")
     private Integer oneWeekDifference;
 
-    /* 前10数 */
-    @TableField(exist = false)
-    private int topTenNum;
-
-    /* 前50数 */
-    @TableField(exist = false)
-    private int topFiftyNum;
-
     @TableField(exist = false)
     private String createMonthDay;
 
@@ -256,22 +248,6 @@ public class QZKeywordRankInfo extends BaseEntity {
 
     public void setIncrease (Double increase) {
         this.increase = increase;
-    }
-
-    public int getTopTenNum () {
-        return topTenNum;
-    }
-
-    public void setTopTenNum (int topTenNum) {
-        this.topTenNum = topTenNum;
-    }
-
-    public int getTopFiftyNum () {
-        return topFiftyNum;
-    }
-
-    public void setTopFiftyNum (int topFiftyNum) {
-        this.topFiftyNum = topFiftyNum;
     }
 
     public String getBaiduRecordFullDate() {

@@ -1201,6 +1201,7 @@
         AND fBearPawNumber &gt; ''
         LIMIT 1
     </select>
+
     <update id="batchUpdateRequireDalete">
         <foreach item="item" index="index" collection="requireDeleteKeywordVOs" open="" separator=";" close="">
             UPDATE t_customer_keyword
@@ -1690,6 +1691,35 @@
         WHERE ck.fCustomerUuid = #{customerUuid}
         AND ck.fStatus = 1
         AND ck.fOptimizeGroupName LIKE '${groupName}%'
+    </select>
+
+    <select id="searchKeywordAmountCountList" parameterType="com.keymanager.monitoring.criteria.KeywordAmountCountCriteria" resultType="com.keymanager.monitoring.vo.keywordAmountCountVo">
+        SELECT
+        ck.fTerminalType	AS	'terminalType',
+        ck.fCustomerUuid	AS	'customerUuid',
+        ck.fKeyword	AS	'keyword',
+        ck.fSearchEngine	AS	'searchEngine',
+        COUNT(1) AS 'keywordCount',
+        SUM(IF(ck.fCurrentPosition &lt;= 3, 1, 0)) AS 'topThree',
+        SUM(IF(ck.fCurrentPosition &lt;= 10, 1, 0)) AS 'topTen',
+        COUNT( DISTINCT ck.fCustomerUuid) AS 'customerCount',
+        COUNT(DISTINCT c.fUserID) AS 'userCount'
+        FROM
+        t_customer_keyword ck,
+        t_customer c
+        WHERE c.fUuid = ck.fCustomerUuid
+        AND ck.fType = 'pt'
+        AND ck.fTerminalType = #{keywordAmountCountCriteria.terminalType}
+        <if test="keywordAmountCountCriteria.keyword != null and keywordAmountCountCriteria.keyword != ''">
+            AND ck.fKeyword like concat(#{keywordAmountCountCriteria.keyword}, '%')
+        </if>
+        <if test="keywordAmountCountCriteria.searchEngine != null and keywordAmountCountCriteria.searchEngine != ''">
+            AND ck.fSearchEngine = #{keywordAmountCountCriteria.searchEngine}
+        </if>
+        <if test="keywordAmountCountCriteria.userName != null and keywordAmountCountCriteria.userName != ''">
+            AND c.fUserID = #{keywordAmountCountCriteria.userName}
+        </if>
+        GROUP BY ck.fKeyword, ck.fSearchEngine
     </select>
 
 </mapper>

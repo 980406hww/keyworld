@@ -184,6 +184,10 @@
         )
     </update>
 
+    <insert id="saveExternalCustomer" parameterType="com.keymanager.monitoring.entity.Customer" useGeneratedKeys="true" keyProperty="uuid" keyColumn="fUuid">
+        INSERT INTO t_customer (fUserID, fEntryType, fContactPerson, fType, fSearchEngine, fRemark, fStatus)
+        VALUES(#{loginName},#{entryType},#{contactPerson}, #{type}, #{searchEngine},#{remark},#{status})
+    </insert>
     <select id="getActiveDailyReportIdentifyUserIDs" resultType="java.lang.String">
         SELECT DISTINCT c.fUserID
         FROM t_customer c
