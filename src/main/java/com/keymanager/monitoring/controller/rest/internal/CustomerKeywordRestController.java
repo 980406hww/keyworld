@@ -663,4 +663,31 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
         }
     }
 
+	@RequiresPermissions("/internal/customerKeyword/activateCustomerKeywords")
+	@RequestMapping(value = "/activateSelectCustomerKeywords", method = RequestMethod.POST)
+	public ResponseEntity<?> activateAllCustomerKeywords(@RequestBody Map<String, Object> requestMap) {
+		try {
+			List<Long> customerKeywordUuids = (List<Long>) requestMap.get("uuids");
+			customerKeywordService.updateCustomerKeywordStatus(customerKeywordUuids, 1);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@RequiresPermissions("/internal/customerKeyword/activateCustomerKeywords")
+	@RequestMapping(value = "/activateAllCustomerKeywords", method = RequestMethod.POST)
+	public ResponseEntity<?> activateSelectCustomerKeywords(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+		try {
+			String terminalType = TerminalTypeMapping.getTerminalType(request);
+			String entryType = (String) request.getSession().getAttribute("entryType");
+			String customerUuid = (String) requestMap.get("customerUuid");
+			customerKeywordService.changeCustomerKeywordStatus(terminalType, entryType, Long.parseLong(customerUuid), 1);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
 }

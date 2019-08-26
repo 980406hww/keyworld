@@ -119,10 +119,12 @@
         <a href="javascript:stopOptimization('${customerKeywordCriteria.customerUuid}',3)">下架所有关键字</a>|
         <a href="javascript:updateCustomerKeywordStatus(3)">下架选中关键字</a>|
         <a href="javascript:stopOptimization('${customerKeywordCriteria.customerUuid}',0)">暂停所有关键字</a>|
-        <a href="javascript:stopOptimization('${customerKeywordCriteria.customerUuid}',1)">激活所有关键字</a>|
         <a href="javascript:updateCustomerKeywordStatus(0)">暂停选中关键字</a> |
-        <a href="javascript:updateCustomerKeywordStatus(1)">激活选中关键字</a> |
     </shiro:hasPermission>
+        <shiro:hasPermission name="/internal/customerKeyword/activateCustomerKeywords">
+            <a href="javascript:activateAllCustomerKeywords('${customerKeywordCriteria.customerUuid}')">激活所有关键字</a>|
+            <a href="javascript:activateSelectCustomerKeywords()">激活选中关键字</a> |
+        </shiro:hasPermission>
     <shiro:hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
         <a href="javascript:delAllItems('EmptyTitleAndUrl','${customerKeywordCriteria.customerUuid}')">删除标题和网址为空的关键字</a> |
         <a href="javascript:delAllItems('EmptyTitle','${customerKeywordCriteria.customerUuid}')">删除标题为空的关键字</a> |

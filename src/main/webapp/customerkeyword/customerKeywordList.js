@@ -379,8 +379,6 @@ function updateCustomerKeywordStatus(status) {
     }
     if(status == 0){
         msg = "确定暂停选中的所有关键字吗?"
-    }else if (status == 1){
-        msg = "确定激活选中的所有关键字吗?"
     }else if (status ==3){
         msg = "确定下架选中的所有关键字吗?"
     }
@@ -400,8 +398,41 @@ function updateCustomerKeywordStatus(status) {
                 type: 'POST',
                 success: function (status) {
                     if (status) {
-                        $().toastmessage('showSuccessToast', "操作成功");
-                        window.location.reload();
+                        $().toastmessage('showSuccessToast', "操作成功", true);
+                    } else {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            });
+        }
+    })
+}
+
+function activateSelectCustomerKeywords() {
+    var customerKeyword = {};
+    var customerKeywordUuids = getUuids();
+    if (customerKeywordUuids.trim() === '') {
+        $.messager.alert(() => {},"请选中要操作的关键词！");
+        return;
+    }
+    $.messager.confirm('提示','确定激活选中的关键字吗?',function(r){
+        if(r){
+            customerKeyword.uuids = customerKeywordUuids.split(",");
+            $.ajax({
+                url: '/internal/customerKeyword/activateSelectCustomerKeywords',
+                data: JSON.stringify(customerKeyword),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (status) {
+                    if (status) {
+                        $().toastmessage('showSuccessToast', "操作成功", true);
                     } else {
                         $().toastmessage('showErrorToast', "操作失败");
                     }
@@ -417,9 +448,7 @@ function updateCustomerKeywordStatus(status) {
 function stopOptimization(customerUuid,status){
     if(status == 0){
         msg = "确定暂停该用户的所有关键字吗?"
-    }else if (status == 1){
-        msg = "确定激活该用户的所有关键字吗?"
-    }else if (status ==3){
+    } else if (status ==3){
         msg = "确定下架该用户的所有关键字吗?"
     }
     $.messager.confirm('提示',msg,function(r){
@@ -427,6 +456,33 @@ function stopOptimization(customerUuid,status){
             $.ajax({
                 url:'/internal/customerKeyword/changeCustomerKeywordStatus',
                 data:JSON.stringify({"customerUuid": customerUuid, "status": status}),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result) {
+                        $().toastmessage('showSuccessToast', "操作成功",true);
+                    } else {
+                        $().toastmessage('showErrorToast', "操作失败",true);
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败",true);
+                }
+            });
+        }
+    })
+}
+
+function activateAllCustomerKeywords(customerUuid){
+    $.messager.confirm('提示','确定激活该用户的所有关键字吗?',function(r){
+        if(r){
+            $.ajax({
+                url:'/internal/customerKeyword/activateAllCustomerKeywords',
+                data:JSON.stringify({"customerUuid": customerUuid}),
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
