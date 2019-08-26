@@ -1945,14 +1945,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public synchronized List<CustomerKeyWordCrawlRankVO> getCrawlRankKeyword(String city) {
         List<CustomerKeyWordCrawlRankVO> rankVos = new ArrayList<>();
-        if (!Utils.isNullOrEmpty(city)) {
-            ArrayBlockingQueue blockingQueue = customerKeywordCrawlPTRankQueueMap.get(city);
-            if (blockingQueue != null && blockingQueue.size() > 0) {
-                do {
-                    rankVos.add((CustomerKeyWordCrawlRankVO) blockingQueue.poll());
-                } while (blockingQueue.size() > 0 && rankVos.size() < 10);
-                return rankVos;
-            }
+        ArrayBlockingQueue blockingQueue = customerKeywordCrawlPTRankQueueMap.get(city);
+        if (blockingQueue != null && blockingQueue.size() > 0) {
+            do {
+                rankVos.add((CustomerKeyWordCrawlRankVO) blockingQueue.poll());
+            } while (blockingQueue.size() > 0 && rankVos.size() < 10);
+            return rankVos;
         }
         if (customerKeywordCrawlQZRankQueue.size() > 0) {
             do {

@@ -1664,7 +1664,10 @@
         AND ck.fSearchEngine = '百度'
         AND ck.fCaptureStatus = 0
         AND ck.fCapturePositionQueryTime &lt; CURRENT_DATE()
-        <if test="city != null">AND ck.fCity = #{city}</if>
+        <choose>
+            <when test="city != null">AND ck.fCity = #{city}</when>
+            <when test="city == null and type == 'pt'">AND ck.fCity IS NULL </when>
+        </choose>
         UNION ALL
         SELECT
             ck.fUuid          AS 'uuid',
@@ -1681,7 +1684,10 @@
         AND ck.fSearchEngine = '百度'
         AND ck.fCaptureStatus = 1
         AND ck.fCapturePositionQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
-        <if test="city != null">AND ck.fCity = #{city}</if>
+        <choose>
+            <when test="city != null">AND ck.fCity = #{city}</when>
+            <when test="city == null and type == 'pt'">AND ck.fCity IS NULL </when>
+        </choose>
         LIMIT 3000
     </select>
 
@@ -1738,7 +1744,6 @@
         FROM t_customer_keyword ck
         WHERE ck.fType = 'pt'
         AND ck.fStatus = 1
-        AND ck.fCity > ''
         GROUP BY ck.fCity
     </select>
 </mapper>
