@@ -194,11 +194,12 @@
             <td align="center" width=50>原排名</td>
             <td align="center" width=50>现排名</td>
             <td align="center" width=50>搜索引擎</td>
+            <td align="center" width=50>目标城市</td>
             <td align="center" width=40>计价方式</td>
             <td align="center" width=30>要刷</td>
             <td align="center" width=30>已刷</td>
             <td align="center" width=30>无效</td>
-            <td align="center" width=60>报价</td>
+            <c:if test="${sessionScope.get('entryType') != 'qz'}"><td align="center" width=60>报价</td></c:if>
             <td align="center" width=100>订单号</td>
             <td align="center" width=60>付费状态</td>
             <td align="center" width=100>备注</td>
@@ -242,8 +243,7 @@
                     </div>
                 </td>
                 <td align="center" width=50>
-                    <div style="height:16px;">${customerKeyword.initialPosition}
-                    </div>
+                    <div style="height:16px;">${customerKeyword.initialPosition}</div>
                 </td>
                 <td align="center" width=50 class="floatTd" title="排名采集城市: ${customerKeyword.capturePositionCity}">
                     <div style="height:16px;">
@@ -251,14 +251,14 @@
                     </div>
                 </td>
                 <td align="center" width=50>${customerKeyword.searchEngine}</td>
+                <td align="center" width=50>${customerKeyword.city}</td>
                 <td align="center" class="floatTd" width=40 title="优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount}" >
                         ${customerKeyword.collectMethodName}
                 </td>
-
                 <td align="center" width=30>${customerKeyword.optimizePlanCount}</td>
                 <td align="center" width=30>${customerKeyword.optimizedCount} </td>
                 <td align="center" width=30>${customerKeyword.invalidRefreshCount}</td>
-                <td align="center" width=60>${customerKeyword.feeString}</td>
+                <c:if test="${sessionScope.get('entryType') != 'qz'}"><td align="center" width=60>${customerKeyword.feeString}</td></c:if>
                 <td align="center" width=100>${customerKeyword.orderNumber}</td>
                 <td align="center" width="60">${customerKeyword.paymentStatus}</td>
                 <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>

@@ -110,6 +110,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     @Autowired
     private OperationCombineService operationCombineService;
 
+    @Autowired
+    private CustomerExcludeKeywordService customerExcludeKeywordService;
+
     private final static Map<String, LinkedBlockingQueue> machineGroupQueueMap = new HashMap<String, LinkedBlockingQueue>();
 
     private final static ArrayBlockingQueue customerKeywordCrawlQZRankQueue = new ArrayBlockingQueue(30000);
@@ -1951,6 +1954,21 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.getQZSettingKeywordCount(customerUuid, groupName);
     }
 
+    public void saveCustomerKeyword(CustomerKeyword customerKeyword, String userName) {
+        String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(customerKeyword.getCustomerUuid(),
+                customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
+        if (null != customerExcludeKeywords) {
+            Set<String> excludeKeyword = new HashSet<>();
+            excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
+            if (!excludeKeyword.isEmpty()){
+                if (excludeKeyword.contains(customerKeyword.getKeyword())){
+                    customerKeyword.setOptimizeGroupName("zanting");
+                }
+            }
+        }
+        customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.UI.name());
+        addCustomerKeyword(customerKeyword, userName);
+    }
 }
 
 

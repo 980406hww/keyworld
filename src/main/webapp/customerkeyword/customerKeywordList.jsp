@@ -273,11 +273,12 @@
             <td align="center" width=50>原排名</td>
             <td align="center" width=50>现排名</td>
             <td align="center" width=50>搜索引擎</td>
-            <td align="center" width=40>计价方式</td>
+            <td align="center" width=50>目标城市</td>
+            <td align="center" width=50>计价方式</td>
             <td align="center" width=30>要刷</td>
             <td align="center" width=30>已刷</td>
             <td align="center" width=30>无效</td>
-            <td align="center" width=60>报价</td>
+            <c:if test="${sessionScope.get('entryType') != 'qz'}"><td align="center" width=60>报价</td></c:if>
             <td align="center" width=80>开始优化日期</td>
             <td align="center" width=80>最后优化时间</td>
             <td align="center" width=50>订单号</td>
@@ -325,11 +326,12 @@
                     </div>
                 </td>
                 <td align="center" width=50>${customerKeyword.searchEngine}</td>
-                <td align="center" width=40 class="floatTd" title="优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount})">${customerKeyword.collectMethodName}</td>
+                <td align="center" width=50>${customerKeyword.city}</td>
+                <td align="center" width=50 class="floatTd" title="优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount})">${customerKeyword.collectMethodName}</td>
                 <td align="center" width=30>${customerKeyword.optimizePlanCount}</td>
                 <td align="center" width=30>${customerKeyword.optimizedCount} </td>
                 <td align="center" width=30>${customerKeyword.invalidRefreshCount}</td>
-                <td align="center" width=60>${customerKeyword.feeString}</td>
+                <c:if test="${sessionScope.get('entryType') != 'qz'}"><td align="center" width=60>${customerKeyword.feeString}</td></c:if>
                 <td align="center" width=80><fmt:formatDate value="${customerKeyword.startOptimizedTime}" pattern="yyyy-MM-dd"/></td>
                 <td align="center" width=80><fmt:formatDate value="${customerKeyword.lastOptimizeDateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
                 <td align="center" width=50>${customerKeyword.orderNumber}</td>

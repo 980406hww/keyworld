@@ -62,9 +62,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 	private PerformanceService performanceService;
 
 	@Autowired
-    private CustomerExcludeKeywordService customerExcludeKeywordService;
-
-	@Autowired
 	private ConfigService configService;
 
 	@RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
@@ -287,22 +284,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 				String entryType = (String) request.getSession().getAttribute("entryType");
 				customerKeyword.setTerminalType(terminalType);
 				customerKeyword.setType(entryType);
-				String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(customerKeyword.getCustomerUuid(), customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
-				if (null != customerExcludeKeywords) {
-					Set<String> excludeKeyword = new HashSet<>();
-					excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
-					if (!excludeKeyword.isEmpty()){
-						if (excludeKeyword.contains(customerKeyword.getKeyword())){
-							customerKeyword.setOptimizeGroupName("zanting");
-							customerKeyword.setMachineGroup("Pause");
-						}
-					}
-				}
-				customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.UI.name());
-				if("".equals(customerKeyword.getMachineGroup())){
-					customerKeyword.setMachineGroup(null);
-				}
-				customerKeywordService.addCustomerKeyword(customerKeyword, userName);
+				customerKeywordService.saveCustomerKeyword(customerKeyword, userName);
 				return new ResponseEntity<Object>(true, HttpStatus.OK);
 			} else {
 				customerKeywordService.updateCustomerKeywordFromUI(customerKeyword, userName);

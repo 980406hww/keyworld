@@ -163,8 +163,9 @@ function saveCustomerKeyword(customerKeyword, customerUuid) {
     customerKeyword.sequence = $.trim(saveCustomerKeywordDialog.find("#sequence").val());
     customerKeyword.title = $.trim(saveCustomerKeywordDialog.find("#title").val());
     customerKeyword.optimizeGroupName = $.trim(saveCustomerKeywordDialog.find("#optimizeGroupName").val());
-
     customerKeyword.machineGroup = $.trim(saveCustomerKeywordDialog.find("#machineGroup").val());
+    var city = $.trim(saveCustomerKeywordDialog.find("#city").val());
+    customerKeyword.city = city === "" ? null : city;
     customerKeyword.collectMethod = $.trim(saveCustomerKeywordDialog.find("#collectMethod").val());
     customerKeyword.serviceProvider = $.trim(saveCustomerKeywordDialog.find("#serviceProvider").val());
     customerKeyword.orderNumber = $.trim(saveCustomerKeywordDialog.find("#orderNumber").val());
@@ -251,13 +252,14 @@ function modifyCustomerKeyword(customerKeywordUuid, customerUuid) {
                 saveCustomerKeywordDialog.find("#title").val(customerKeyword.title);
                 saveCustomerKeywordDialog.find("#optimizeGroupName").val(customerKeyword.optimizeGroupName);
                 saveCustomerKeywordDialog.find("#machineGroup").val(customerKeyword.machineGroup);
+                saveCustomerKeywordDialog.find("#city").val(customerKeyword.city);
                 saveCustomerKeywordDialog.find("#collectMethod").val(customerKeyword.collectMethod);
                 saveCustomerKeywordDialog.find("#orderNumber").val(customerKeyword.orderNumber);
                 saveCustomerKeywordDialog.find("#paymentStatus").val(customerKeyword.paymentStatus);
 
-                if(customerKeyword.clickUrl == "clickPositiveUrl") {
+                if(customerKeyword.clickUrl === "clickPositiveUrl") {
                     $("#clickPositiveUrl").prop("checked", true);
-                } else if(customerKeyword.clickUrl == "clickCommonUrl") {
+                } else if(customerKeyword.clickUrl === "clickCommonUrl") {
                     $("#clickCommonUrl").prop("checked", true);
                 } else {
                     $("#clickPositiveUrl").prop("checked", false);
@@ -315,7 +317,7 @@ function CustomerKeywordBatchUpdate(entryType) {
         width: 410,
         maxHeight: 605,
         modal: true,
-        onBeforeClose:function(){
+        onBeforeClose: function(){
             $("#KeywordDiv").show();
         },
         buttons: [
@@ -334,10 +336,10 @@ function CustomerKeywordBatchUpdate(entryType) {
                 text: '保存',
                 iconCls: 'icon-ok',
                 handler: function () {
-                    if(isChecked("keyword")=="1" && $("#saveCustomerKeywordDialog").find("input[name='keyword']").val()==""){
+                    if (isChecked("keyword") == "1" && $("#saveCustomerKeywordDialog").find("input[name='keyword']").val() == "") {
                         alert("关键字不能为空");
                         return;
-                    }else {
+                    } else {
                         saveChangeSetting(CustomerUuids, false);
                     }
                 }
@@ -386,15 +388,17 @@ function checkItem(self) {
 function saveChangeSetting(CustomerUuids, updateFailedCauseFlag){
     var KeywordDialogDiv = $("#saveCustomerKeywordDialog");
     var keywordStatus = {};
-    keywordStatus.keyword = KeywordDialogDiv.find("#keyword").val();
-    keywordStatus.title = KeywordDialogDiv.find("#title").val();
-    keywordStatus.bearPawNumber = KeywordDialogDiv.find("#bearPawNumber").val();
-    keywordStatus.url = KeywordDialogDiv.find("#url").val();
-    keywordStatus.originalUrl = KeywordDialogDiv.find("#originalUrl").val();
+    keywordStatus.keyword = KeywordDialogDiv.find("#keyword").val().trim();
+    keywordStatus.title = KeywordDialogDiv.find("#title").val().trim();
+    keywordStatus.bearPawNumber = KeywordDialogDiv.find("#bearPawNumber").val().trim();
+    keywordStatus.url = KeywordDialogDiv.find("#url").val().trim();
+    keywordStatus.originalUrl = KeywordDialogDiv.find("#originalUrl").val().trim();
     keywordStatus.optimizePlanCount = KeywordDialogDiv.find("#optimizePlanCount").val();
-    keywordStatus.optimizeGroupName = KeywordDialogDiv.find("#optimizeGroupName").val();
-    keywordStatus.machineGroup =KeywordDialogDiv.find("#machineGroup").val();
-    keywordStatus.initialIndexCount = KeywordDialogDiv.find("#initialIndexCount").val();
+    keywordStatus.optimizeGroupName = KeywordDialogDiv.find("#optimizeGroupName").val().trim();
+    keywordStatus.machineGroup = KeywordDialogDiv.find("#machineGroup").val().trim();
+    var city = KeywordDialogDiv.find("#city").val().trim();
+    keywordStatus.city = city === "" ? null : city;
+    keywordStatus.initialIndexCount = KeywordDialogDiv.find("#initialIndexCount").val().trim();
     keywordStatus.initialPosition = KeywordDialogDiv.find("#initialPosition").val();
     keywordStatus.positionFirstFee = KeywordDialogDiv.find("#positionFirstFee").val();
     keywordStatus.positionSecondFee = KeywordDialogDiv.find("#positionSecondFee").val();
@@ -407,15 +411,15 @@ function saveChangeSetting(CustomerUuids, updateFailedCauseFlag){
     keywordStatus.collectMethod = KeywordDialogDiv.find("#collectMethod").val();
     keywordStatus.searchEngine = KeywordDialogDiv.find("#searchEngine").val();
     keywordStatus.sequence = KeywordDialogDiv.find("#sequence").val();
-    keywordStatus.orderNumber = KeywordDialogDiv.find("#orderNumber").val();
+    keywordStatus.orderNumber = KeywordDialogDiv.find("#orderNumber").val().trim();
     keywordStatus.paymentStatus = KeywordDialogDiv.find("#paymentStatus").val();
-    keywordStatus.clickUrl = $("input[name='clickUrl']:checked").val();
-    keywordStatus.recommendKeywords = KeywordDialogDiv.find("#recommendKeywords").val();
-    keywordStatus.negativeKeywords = KeywordDialogDiv.find("#negativeKeywords").val();
-    keywordStatus.excludeKeywords = KeywordDialogDiv.find("#excludeKeywords").val();
-    keywordStatus.showPage = KeywordDialogDiv.find("#showPage").val();
+    keywordStatus.clickUrl = KeywordDialogDiv.find("input[name='clickUrl']:checked").val();
+    keywordStatus.recommendKeywords = KeywordDialogDiv.find("#recommendKeywords").val().trim();
+    keywordStatus.negativeKeywords = KeywordDialogDiv.find("#negativeKeywords").val().trim();
+    keywordStatus.excludeKeywords = KeywordDialogDiv.find("#excludeKeywords").val().trim();
+    keywordStatus.showPage = KeywordDialogDiv.find("#showPage").val().trim();
     keywordStatus.relatedKeywordPercentage = KeywordDialogDiv.find("#relatedKeywordPercentage").val();
-    keywordStatus.remarks = KeywordDialogDiv.find("#remarks").val();
+    keywordStatus.remarks = KeywordDialogDiv.find("#remarks").val().trim();
     keywordStatus.positionFirstCost = KeywordDialogDiv.find("#positionFirstCost").val();
     keywordStatus.positionSecondCost = KeywordDialogDiv.find("#positionSecondCost").val();
     keywordStatus.positionThirdCost = KeywordDialogDiv.find("#positionThirdCost").val();
@@ -428,27 +432,28 @@ function saveChangeSetting(CustomerUuids, updateFailedCauseFlag){
     if(CustomerUuids != null) {
         var fCustomerUuids = CustomerUuids;
         var keywordChecks = {};
-        keywordChecks.keyword =isChecked("keyword");
+        keywordChecks.keyword = isChecked("keyword");
         keywordChecks.title = isChecked("title");
         keywordChecks.bearPawNumber = isChecked("bearPawNumber");
         keywordChecks.url = isChecked("url");
         keywordChecks.originalUrl = isChecked("originalUrl");
         keywordChecks.optimizePlanCount = isChecked("optimizePlanCount");
-        keywordChecks.optimizeGroupName =isChecked("optimizeGroupName");
-        keywordChecks.machineGroup =isChecked("machineGroup");
+        keywordChecks.optimizeGroupName = isChecked("optimizeGroupName");
+        keywordChecks.machineGroup = isChecked("machineGroup");
+        keywordChecks.city = isChecked("city");
         keywordChecks.initialIndexCount = isChecked("initialIndexCount");
-        keywordChecks.initialPosition =isChecked("initialPosition");
-        keywordChecks.positionFirstFee =isChecked("positionFirstFee");
+        keywordChecks.initialPosition = isChecked("initialPosition");
+        keywordChecks.positionFirstFee = isChecked("positionFirstFee");
         keywordChecks.positionSecondFee = isChecked("positionSecondFee");
         keywordChecks.positionThirdFee = isChecked("positionThirdFee");
         keywordChecks.positionForthFee = isChecked("positionForthFee");
         keywordChecks.positionFifthFee = isChecked("positionFifthFee");
-        keywordChecks.positionFirstPageFee =isChecked("positionFirstPageFee");
+        keywordChecks.positionFirstPageFee = isChecked("positionFirstPageFee");
         keywordChecks.serviceProvider = isChecked("serviceProvider");
         keywordChecks.keywordEffect = isChecked("keywordEffect");
-        keywordChecks.collectMethod =isChecked("collectMethod");
-        keywordChecks.searchEngine =isChecked("searchEngine");
-        keywordChecks.sequence =isChecked("sequence");
+        keywordChecks.collectMethod = isChecked("collectMethod");
+        keywordChecks.searchEngine = isChecked("searchEngine");
+        keywordChecks.sequence = isChecked("sequence");
         keywordChecks.orderNumber = isChecked("orderNumber");
         keywordChecks.paymentStatus = isChecked("paymentStatus");
         keywordChecks.clickUrl = isChecked($("input[name='clickUrl']:checked").val());
@@ -457,14 +462,14 @@ function saveChangeSetting(CustomerUuids, updateFailedCauseFlag){
         keywordChecks.excludeKeywords = isChecked("excludeKeywords");
         keywordChecks.showPage =  isChecked("showPage");
         keywordChecks.relatedKeywordPercentage = isChecked("relatedKeywordPercentage");
-        keywordChecks.remarks =isChecked("remarks");
+        keywordChecks.remarks = isChecked("remarks");
         keywordChecks.positionFirstCost = isChecked("positionFirstCost");
         keywordChecks.positionSecondCost = isChecked("positionSecondCost");
         keywordChecks.positionThirdCost = isChecked("positionThirdCost");
         keywordChecks.positionForthCost = isChecked("positionForthCost");
         keywordChecks.positionFifthCost = isChecked("positionFifthCost");
         keywordChecks.operateSelectKeyword = isChecked("operateSelectKeyword") === '1' ? 1 : 0;
-        keywordChecks.operateRelatedKeyword =isChecked("operateRelatedKeyword") === '1' ? 1 : 0;
+        keywordChecks.operateRelatedKeyword = isChecked("operateRelatedKeyword") === '1' ? 1 : 0;
         keywordChecks.operateRecommendKeyword = isChecked("operateRecommendKeyword") === '1' ? 1 : 0;
         keywordChecks.operateSearchAfterSelectKeyword = isChecked("operateSearchAfterSelectKeyword") === '1' ? 1 : 0;
         if (updateFailedCauseFlag) {
@@ -497,7 +502,7 @@ function saveChangeSetting(CustomerUuids, updateFailedCauseFlag){
             }
         });
     } else {
-        keywordStatus.CustomerUuid = settingDialogDiv.find("#uuid").val();
+        keywordStatus.CustomerUuid = KeywordDialogDiv.find("#uuid").val();
         $.ajax({
             url: '/internal/customerKeyword/saveCustomerKeyword',
             data: JSON.stringify(keywordStatus),

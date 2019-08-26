@@ -339,6 +339,7 @@
         ck.fBearPawNumber AS 'bearPawNumber',
         ck.fTitle	AS	'title',
         ck.fSearchEngine	AS	'searchEngine',
+        ck.fCity            AS 'city',
         ck.fCollectMethod	AS	'collectMethod',
         ck.fInitialPosition	AS	'initialPosition',
         ck.fCurrentIndexCount	AS	'currentIndexCount',
@@ -401,6 +402,7 @@
         ck.fTitle	AS	'title',
         ck.fCapturePositionCity AS 'capturePositionCity',
         ck.fSearchEngine	AS	'searchEngine',
+        ck.fCity            AS  'city',
         ck.fInitialPosition	AS	'initialPosition',
         ck.fCurrentIndexCount	AS	'currentIndexCount',
         ck.fCurrentPosition	AS	'currentPosition',
@@ -1379,6 +1381,7 @@
         <if test="keywordChecks.keywordEffect==1"> ,fKeywordEffect = #{keywordStatus.keywordEffect}</if>
         <if test="keywordChecks.collectMethod==1"> ,fCollectMethod = #{keywordStatus.collectMethod}</if>
         <if test="keywordChecks.searchEngine==1"> ,fSearchEngine = #{keywordStatus.searchEngine}</if>
+        <if test="keywordChecks.city==1"> ,fCity = #{keywordStatus.city}</if>
         <if test="keywordChecks.sequence==1"> ,fSequence = #{keywordStatus.sequence}</if>
         <if test="keywordChecks.orderNumber==1"> ,fOrderNumber = #{keywordStatus.orderNumber}</if>
         <if test="keywordChecks.paymentStatus==1"> ,fPaymentStatus = #{keywordStatus.paymentStatus}</if>

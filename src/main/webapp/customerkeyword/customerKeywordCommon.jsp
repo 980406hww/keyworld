@@ -8,20 +8,14 @@
                 <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">关键字:</span><input type="text" name="keyword" id="keyword" value="" style="width:300px;"/></li>
                 <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
             </div>
-            <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">标题:</span><input type="text" name="title" id="title" value="" style="width:300px;">
-            </li>
-            <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">域名:</span><input type="text" name="url" id="url" value="" style="width:300px;">
-            </li>
-            <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">熊掌号:</span><input type="text" name="bearPawNumber" id="bearPawNumber" value="" style="width:300px;">
-            </li>
-            <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">原始域名:</span><input type="text" name="originalUrl" id="originalUrl" value="" style="width:300px;">
-            </li>
-            <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">要刷数量:</span><input type="text" name="optimizePlanCount" id="optimizePlanCount" value="" style="width:300px;">
-            </li>
-            <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >优化组名:</span><input name="optimizeGroupName" id="optimizeGroupName" type="text" style="width:300px;"   value=""></li>
-            <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >机器分组:</span><input name="machineGroup" id="machineGroup" type="text" style="width:300px;"   value="Default"></li>
-
-
+            <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">标题:</span><input type="text" name="title" id="title" value="" style="width:300px;"></li>
+            <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">域名:</span><input type="text" name="url" id="url" value="" style="width:300px;"></li>
+            <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">熊掌号:</span><input type="text" name="bearPawNumber" id="bearPawNumber" value="" style="width:300px;"></li>
+            <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">原始域名:</span><input type="text" name="originalUrl" id="originalUrl" value="" style="width:300px;"></li>
+            <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >优化组名:</span><input name="optimizeGroupName" id="optimizeGroupName" type="text" style="width:200px;" value=""></li>
+            <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >机器分组:</span><input name="machineGroup" id="machineGroup" type="text" style="width:200px;" value="Default"></li>
+            <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >目标城市:</span><input name="city" id="city" type="text" style="width:200px;"></li>
+            <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">要刷数量:</span><input type="text" name="optimizePlanCount" id="optimizePlanCount" value="" size="5" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)"></li>
             <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >指数:</span><input type="text" id="initialIndexCount" size="5" name="initialIndexCount" value="100" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)"></li>
             <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >排名:</span><input type="text" id="initialPosition" size="5" name="initialPosition" value="10" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)" ></li>
             <li onclick="checkItem(this)"><span style="margin-left: 3px">关键词作用:</span>
@@ -88,9 +82,9 @@
                         <option value="${serviceProvider.serviceProviderName}" <c:if test="${serviceProvider.serviceProviderName=='baidutop123'}">selected="selected"</c:if>>${serviceProvider.serviceProviderName}</option>
                     </c:forEach>
                 </select></li>
-            <li  onclick="checkItem(this)"><span class="customerKeywordSpanClass" >订单号:</span><input name="orderNumber" id="orderNumber" type="text" style="width:300px;"/></li>
+            <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >订单号:</span><input name="orderNumber" id="orderNumber" type="text" style="width:300px;"/></li>
             <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
-            <li  style="float:left" ><span class="customerKeywordSpanClassa" onclick="checkItem(this)">收费方式:
+            <li style="float:left" ><span class="customerKeywordSpanClassa" onclick="checkItem(this)">收费方式:
                 <select name="collectMethod" id="collectMethod" onChange="setEffectiveToTime()">
                     <option value="PerMonth" selected>按月</option>
                     <option value="PerTenDay">十天</option>
@@ -114,7 +108,7 @@
             </li>
 
             <hr style="height: 1px; border:none; border-top:1px dashed #CCCCCC;"/>
-            <li  style="float:left">
+            <li style="float:left">
                 <span class="customerKeywordSpanClassa" onclick="checkItem(this)">收费状态:<select name="paymentStatus" id="paymentStatus">
                 <option value="0"></option>
                 <option value="1">担保中</option>
@@ -124,7 +118,7 @@
             </select>
                     </span>
             </li>
-            <li  style="float:left;"  >
+            <li style="float:left;"  >
                 <span style="text-align: right;margin-left: 30px;" class="customerKeywordSpanClassa"  onclick="checkItem(this)" >
                 <input type="radio" id="clickPositiveUrl" name="clickUrl" value="clickPositiveUrl">点击正面链接
                 </span>
