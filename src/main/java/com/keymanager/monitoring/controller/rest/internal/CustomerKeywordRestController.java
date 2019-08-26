@@ -684,7 +684,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
     }
 
 
-    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywordLists")
+    @RequiresPermissions("/internal/customerKeyword/searchKeywordAmountCountLists")
     @RequestMapping(value = "/searchKeywordAmountCountLists", method = RequestMethod.GET)
     public ModelAndView searchKeywordAmountCountLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
         String entryType = (String) request.getSession().getAttribute("entryType");
@@ -696,7 +696,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
         return constructKeywordAmountCountModelAndView(request, keywordAmountCountCriteria, currentPageNumber, pageSize);
     }
 
-    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywordLists")
+    @RequiresPermissions("/internal/customerKeyword/searchKeywordAmountCountLists")
     @RequestMapping(value = "/searchKeywordAmountCountLists", method = RequestMethod.POST)
     public ModelAndView searchKeywordAmountCountLists(KeywordAmountCountCriteria keywordAmountCountCriteria, HttpServletRequest request) {
         try {
