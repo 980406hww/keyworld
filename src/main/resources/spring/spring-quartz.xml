@@ -334,7 +334,7 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
-	<!--自动触发每天的报表-->
+	<!--每天下午6点生成算法测试数据统计-->
 	<bean id="cronTriggerAutoSaveTestDataStatisticsSchedule" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronAutoSaveTestDataStatisticsSchedule"/>
 		<property name="cronExpression" value="0 0 18 * * ?" />
