@@ -18,6 +18,8 @@
         <result column="fStatus" property="status" />
         <result column="fExecuteQueryTime" property="executeQueryTime" />
         <result column="fExcuteStatus" property="excuteStatus" />
+        <result column="fExcuteType" property="excuteType" />
+        <result column="fExcuteCount" property="excuteCount" />
         <result column="fCreateBy" property="createBy" />
         <result column="fCreateTime" property="createTime" />
         <result column="fUpdateTime" property="updateTime" />
@@ -39,6 +41,8 @@
         atp.fStatus AS status,
         atp.fExecuteQueryTime AS executeQueryTime,
         atp.fExcuteStatus AS excuteStatus,
+        atp.fExcuteType AS excuteType,
+        atp.fExcuteCount AS excuteCount,
         atp.fCreateBy AS createBy,
         atp.fCreateTime AS createTime,
         atp.fUpdateTime AS updateTime
@@ -59,13 +63,14 @@
             <if test="algorithmTestPlanSearchCriteria.machineGroup!=null and algorithmTestPlanSearchCriteria.machineGroup!=''">
                 AND atp.fMachineGroup LIKE concat(#{algorithmTestPlanSearchCriteria.machineGroup},'%')
             </if>
-        </where>
+        </where>c
     </select>
 
     <select id="selectOneAvailableAlgorithmTestPlan" resultType="com.keymanager.monitoring.entity.AlgorithmTestPlan">
         SELECT <include refid="Base_Column_List"/>
         FROM t_algorithm_test_plan atp
         WHERE atp.fstatus = 1
+        AND ((atp.fExcuteType = 0 AND atp.fExcuteCount = 0 ) OR atp.fExcuteType = 1)
         AND  (atp.fExcuteStatus= 0 AND (atp.fExecuteQueryTime IS NULL OR atp.fExecuteQueryTime &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL fTestIntervalDay-1 DAY))
             OR(atp.fExcuteStatus = 1 AND atp.fExecuteQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE))
         )
