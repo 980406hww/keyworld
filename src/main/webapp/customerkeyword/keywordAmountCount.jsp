@@ -73,7 +73,7 @@
             <td width="10" style="padding-left: 7px;"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=70>关键字</td>
             <td align="center" width=70>搜索引擎</td>
-            <td align="center" width=70>单词总数</td>
+            <td align="center" width=70 onclick="sortTable()">单词总数</td>
             <td align="center" width=70>用户总数</td>
             <td align="center" width=70>客户总数</td>
             <td align="center" width=70>前三数量</td>
@@ -84,6 +84,19 @@
 
 <div id="showCustomerTableDiv" style="margin-bottom: 30px">
     <table id="customerKeywordTable" style="font-size:12px;">
+        <thead hidden>
+            <tr height=30 style="background-color: #ADD1FF; text-align: center">
+                <td width="10" style="padding-left: 7px;"></td>
+                <td align="center" width=70></td>
+                <td align="center" width=70></td>
+                <td align="center" width=70></td>
+                <td align="center" width=70></td>
+                <td align="center" width=70></td>
+                <td align="center" width=70></td>
+                <td align="center" width=70></td>
+            </tr>
+        </thead>
+        <tbody>
         <c:forEach items="${page.records}" var="customerKeyword">
             <tr height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
                 <td width="10" style="padding-left: 7px;">
@@ -104,6 +117,7 @@
                 </td>
             </tr>
         </c:forEach>
+        </tbody>
     </table>
 </div>
 
@@ -137,8 +151,7 @@
 </form>
 
 <%@ include file="/commons/loadjs.jsp" %>
-<script src="${staticPath }/customerkeyword/customerKeywordCommon.js"></script>
-<script src="${staticPath }/customerkeyword/keywordfinderList.js"></script>
+<script src="${staticPath }/js/jquery.tablesorter.js"></script>
 <script language="javascript">
     $(function () {
         $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
@@ -151,6 +164,21 @@
             $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
             alignTableHeader();
         }
+
+        $("#customerKeywordTable").tablesorter({
+            headers: {0: {sorter: false},
+                1: {sorter: false},
+                2: {sorter: false},
+                4: {sorter: false},
+                5: {sorter: false},
+                6: {sorter: false},
+                7: {sorter: false}},
+            sortInitialOrder: 'desc',
+            sortReset: true,
+            sortRestart : true,
+            emptyTo: 'bottom',
+            sortList:[[3,1]]
+        });
 
     });
 
