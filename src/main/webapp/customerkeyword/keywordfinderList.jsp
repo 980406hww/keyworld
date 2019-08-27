@@ -248,7 +248,7 @@
                 <td align="center" width=50>
                     <div style="height:16px;">${customerKeyword.initialPosition}</div>
                 </td>
-                <td align="center" width=50 class="floatTd" title="排名采集城市: ${customerKeyword.capturePositionCity}">
+                <td align="center" width=50 class="floatTd" title="排名采集城市: ${customerKeyword.capturePositionCity}&#13;排名采集时间: <fmt:formatDate value="${customerKeyword.capturePositionQueryTime}" pattern="yyyy-MM-dd HH:mm:ss"/>">
                     <div style="height:16px;">
                         <a href="${customerKeyword.searchEngineUrl}" target="_blank">${customerKeyword.currentPosition}</a>
                     </div>

@@ -374,12 +374,12 @@ function updateCustomerKeywordStatus(status) {
     var customerKeyword = {};
     var customerKeywordUuids = getUuids();
     if (customerKeywordUuids.trim() === '') {
-        $.messager.alert(() => {},"请选中要操作的关键词！");
+        $.messager.alert('提示',"请选中要操作的关键词！", 'warning');
         return;
     }
-    if(status == 0){
+    if(status === 0){
         msg = "确定暂停选中的所有关键字吗?"
-    }else if (status ==3){
+    }else if (status === 3){
         msg = "确定下架选中的所有关键字吗?"
     }
 
@@ -415,7 +415,7 @@ function activateSelectCustomerKeywords() {
     var customerKeyword = {};
     var customerKeywordUuids = getUuids();
     if (customerKeywordUuids.trim() === '') {
-        $.messager.alert(() => {},"请选中要操作的关键词！");
+        $.messager.alert('提示',"请选中要操作的关键词！", 'warning');
         return;
     }
     $.messager.confirm('提示','确定激活选中的关键字吗?',function(r){
@@ -446,9 +446,9 @@ function activateSelectCustomerKeywords() {
 }
 //暂停所有关键字
 function stopOptimization(customerUuid,status){
-    if(status == 0){
+    if(status === 0){
         msg = "确定暂停该用户的所有关键字吗?"
-    } else if (status ==3){
+    } else if (status === 3){
         msg = "确定下架该用户的所有关键字吗?"
     }
     $.messager.confirm('提示',msg,function(r){
@@ -573,7 +573,7 @@ function changeSearchEngine(searchEngineCriteria) {
 //关键字Excel上传(简化版)
 function uploadCustomerKeywords(customerUuid, excelType){
     $('#uploadExcelForm')[0].reset();
-    if(excelType=='SuperUserSimple'){
+    if(excelType === 'SuperUserSimple'){
         $('#uploadExcelForm').find("#excelType").html("(简易版)");
     }else{
         $('#uploadExcelForm').find("#excelType").html("(完整版)");
@@ -596,7 +596,7 @@ function uploadCustomerKeywords(customerUuid, excelType){
                 var newFileName = uploadFile.split('.');
                 newFileName = newFileName[newFileName.length - 1];
                 for (var i = 0; i < fileTypes.length; i++) {
-                    if (fileTypes[i] == newFileName) {
+                    if (fileTypes[i] === newFileName) {
                         fileTypeFlag = true;
                         break;
                     }

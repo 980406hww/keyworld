@@ -554,7 +554,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
         }
 
-        if (customerKeyword.getRunImmediate().equals("否")) {
+        if ("否".equals(customerKeyword.getRunImmediate())) {
             customerKeyword.setStatus(2);
         }
 
@@ -1946,6 +1946,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public synchronized List<CustomerKeyWordCrawlRankVO> getCrawlRankKeyword(String city) {
         List<CustomerKeyWordCrawlRankVO> rankVos = new ArrayList<>();
         ArrayBlockingQueue blockingQueue = customerKeywordCrawlPTRankQueueMap.get(city);
+        if (blockingQueue != null && blockingQueue.size() > 0) {
+            do {
+                rankVos.add((CustomerKeyWordCrawlRankVO) blockingQueue.poll());
+            } while (blockingQueue.size() > 0 && rankVos.size() < 10);
+            return rankVos;
+        }
+        blockingQueue = customerKeywordCrawlPTRankQueueMap.get(null);
         if (blockingQueue != null && blockingQueue.size() > 0) {
             do {
                 rankVos.add((CustomerKeyWordCrawlRankVO) blockingQueue.poll());
