@@ -136,8 +136,8 @@
                     <shiro:hasPermission name="/internal/algorithmAutoTest/deleteAlgorithmTestPlan">
                         <a href="javascript:deleteAlgorithmTestPlan('${algorithmTestPlan.uuid}')">删除</a>
                     </shiro:hasPermission>
-                    <shiro:hasPermission name="/internal/algorithmAutoTest/saveAlgorithmTestPlan">
-                        <a href="javascript:searchTestDataStatistics('${algorithmTestPlan.uuid}')">查看测试数据分析</a>
+                    <shiro:hasPermission name="/internal/algorithmAutoTest/showTestDataStatistics">
+                        <a href="javascript:searchTestDataStatistics('${algorithmTestPlan.uuid}')">查看测试数据统计</a>
                     </shiro:hasPermission>
                 </td>
             </tr>

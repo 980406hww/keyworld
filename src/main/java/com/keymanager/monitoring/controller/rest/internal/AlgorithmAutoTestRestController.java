@@ -165,7 +165,8 @@ public class AlgorithmAutoTestRestController {
             return mv;
         }
     }
-    @RequiresPermissions("/internal/algorithmAutoTest/showAlgorithmTestTask")
+
+    @RequiresPermissions("/internal/algorithmAutoTest/showTestDataStatistics")
     @RequestMapping(value = "/showTestDataStatistics", method = RequestMethod.POST)
     public ModelAndView showTestDataStatistics(Long algorithmTestPlanUuid, @RequestParam(defaultValue = "1") String currentPageNumber, @RequestParam(defaultValue = "50") String pageSize) {
         ModelAndView mv = new ModelAndView();
