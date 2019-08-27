@@ -14,8 +14,8 @@ import java.util.Date;
  * @author lhc
  * @since 2019-08-27
  */
-@TableName("t_algorithm_test_result_statistics")
-public class AlgorithmTestResultStatistics {
+@TableName("t_algorithm_test_data_statistics")
+public class AlgorithmTestDataStatistics {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,17 +25,23 @@ public class AlgorithmTestResultStatistics {
     @TableId(value = "fUuid", type = IdType.AUTO)
     private Integer uuid;
 
+     /**
+     * 算法测试计划ID
+     */
+    @TableField("fAlgorithmTestPlanUuid")
+    private String algorithmTestPlanUuid;
+
     /**
-     * 算法测试任务表id
+     * 算法测试任务ID
      */
     @TableField("fAlgorithmTestTaskUuid")
-    private Integer algorithmTestTaskUuid;
+    private String algorithmTestTaskUuid;
 
     /**
      * 用户联系人名称
      */
     @TableField("fContactPerson")
-    private Integer contactPerson;
+    private String contactPerson;
     /**
      * 首页个数
      */
@@ -80,19 +86,27 @@ public class AlgorithmTestResultStatistics {
         this.uuid = uuid;
     }
 
-    public Integer getAlgorithmTestTaskUuid() {
+    public String getAlgorithmTestPlanUuid() {
+        return algorithmTestPlanUuid;
+    }
+
+    public void setAlgorithmTestPlanUuid(String algorithmTestPlanUuid) {
+        this.algorithmTestPlanUuid = algorithmTestPlanUuid;
+    }
+
+    public String getAlgorithmTestTaskUuid() {
         return algorithmTestTaskUuid;
     }
 
-    public void setAlgorithmTestTaskUuid(Integer algorithmTestTaskUuid) {
+    public void setAlgorithmTestTaskUuid(String algorithmTestTaskUuid) {
         this.algorithmTestTaskUuid = algorithmTestTaskUuid;
     }
 
-    public Integer getContactPerson() {
+    public String getContactPerson() {
         return contactPerson;
     }
 
-    public void setContactPerson(Integer contactPerson) {
+    public void setContactPerson(String contactPerson) {
         this.contactPerson = contactPerson;
     }
 

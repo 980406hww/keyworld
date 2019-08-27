@@ -1,7 +1,10 @@
 package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.keymanager.monitoring.entity.AlgorithmTestResultStatistics;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.monitoring.entity.AlgorithmTestDataStatistics;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 
 /**
@@ -12,6 +15,9 @@ import com.keymanager.monitoring.entity.AlgorithmTestResultStatistics;
  * @author lhc
  * @since 2019-08-27
  */
-public interface AlgorithmTestResultStatisticsDao extends BaseMapper<AlgorithmTestResultStatistics> {
+public interface AlgorithmTestResultStatisticsDao extends BaseMapper<AlgorithmTestDataStatistics> {
+    void saveAlgorithmTaskDataDaily();
 
+    List<AlgorithmTestDataStatistics> selectAlgorithmTestResultStatisticsByAlgorithmTestPlanUuid(
+            Page<AlgorithmTestDataStatistics> algorithmTestResultStatisticsPage, @Param("algorithmTestPlanUuid") Long algorithmTestPlanUuid);
 }

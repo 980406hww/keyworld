@@ -50,21 +50,23 @@
     <table style="font-size:12px; width: 100%;" id="headerTable">
         <tr bgcolor="" height="30">
             <td align="center" width=10><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
-            <td align="center" width=70>测试计划名称</td>
-            <td align="center" width=70>操作组合名称</td>
-            <td align="center" width=70>终端类型</td>
-            <td align="center" width=70>搜索引擎</td>
+            <td align="center" width=100>测试计划名称</td>
+            <td align="center" width=100>操作组合名称</td>
+            <td align="center" width=60>终端类型</td>
+            <td align="center" width=60>搜索引擎</td>
             <td align="center" width=70>机器分组</td>
-            <td align="center" width=70>测试间隔日期(天)</td>
-            <td align="center" width=70>测试词数</td>
-            <td align="center" width=70>测试词排名区间</td>
-            <td align="center" width=70>刷量</td>
-            <td align="center" width=70>状态</td>
-            <td align="center" width=70>上次执行时间</td>
-            <td align="center" width=70>创建人</td>
-            <td align="center" width=70>创建时间</td>
-            <td align="center" width=70>修改时间</td>
-            <td align="center" width=80>操作</td>
+            <td align="center" width=50>执行类型</td>
+            <td align="center" width=50>已执行次数</td>
+            <td align="center" width=50>测试间隔日期(天)</td>
+            <td align="center" width=50>测试词数</td>
+            <td align="center" width=50>测试词排名区间</td>
+            <td align="center" width=50>刷量</td>
+            <td align="center" width=50>状态</td>
+            <td align="center" width=80>上次执行时间</td>
+            <td align="center" width=60>创建人</td>
+            <td align="center" width=80>创建时间</td>
+            <td align="center" width=80>修改时间</td>
+            <td align="center" width=130>操作</td>
         </tr>
     </table>
 </div>
@@ -73,26 +75,37 @@
         <c:forEach items="${page.records}" var="algorithmTestPlan" varStatus="status">
             <tr align="center" onmouseover="doOver(this);" onmouseout="doOut(this);" height=30  <c:if test="${status.index%2==0}">bgcolor="#eeeeee"</c:if> >
                 <td width=10 align="center"><input type="checkbox" name="uuid" value="${algorithmTestPlan.uuid}" onclick="decideSelectAll()"/></td>
-                <td width=70>
-                    <a href="javascript:searchAlgorithmTestTasks('${algorithmTestPlan.uuid}')">${algorithmTestPlan.algorithmTestPlanName}</a>
+                <td width=100>
+                    <a href="javascript:searchAlgorithmTestTasks('${algorithmTestPlan.uuid}')" title="查看计划执行结果">${algorithmTestPlan.algorithmTestPlanName}</a>
                 </td>
-                <td width=70>
-                    <a href="javascript:searchGroupSettings('${algorithmTestPlan.operationCombineName}')">${algorithmTestPlan.operationCombineName}</a>
+                <td width=100>
+                    <a href="javascript:searchGroupSettings('${algorithmTestPlan.operationCombineName}')" title="查看操作组合">${algorithmTestPlan.operationCombineName}</a>
                 </td>
-                <td width=70>
+                <td width=60>
                     ${algorithmTestPlan.terminalType}
                 </td>
-                <td width=70>
+                <td width=60>
                     ${algorithmTestPlan.searchEngine}
                 </td>
                 <td width=70>
-                    <a href="javascript:searchMachineInfos('${algorithmTestPlan.machineGroup}')">${algorithmTestPlan.machineGroup}</a>
+                    <a href="javascript:searchMachineInfos('${algorithmTestPlan.machineGroup}')" title="查看机器分组">${algorithmTestPlan.machineGroup}</a>
                 </td>
-                <td width=70>${algorithmTestPlan.testIntervalDay}</td>
-                <td width=70>${algorithmTestPlan.testKeywordCount}</td>
-                <td width=70>${algorithmTestPlan.testkeywordRankBegin}-${algorithmTestPlan.testkeywordRankEnd}</td>
-                <td width=70>${algorithmTestPlan.optimizePlanCount}</td>
-                <td width=70>
+                <td width=50>
+                    <c:choose>
+                        <c:when test="${algorithmTestPlan.excuteType eq 0}">
+                            执行一次
+                        </c:when>
+                        <c:otherwise>
+                            执行多次
+                        </c:otherwise>
+                    </c:choose>
+                </td>
+                <td width=50>${algorithmTestPlan.excuteCount}</td>
+                <td width=50>${algorithmTestPlan.testIntervalDay}</td>
+                <td width=50>${algorithmTestPlan.testKeywordCount}</td>
+                <td width=50>${algorithmTestPlan.testkeywordRankBegin}-${algorithmTestPlan.testkeywordRankEnd}</td>
+                <td width=50>${algorithmTestPlan.optimizePlanCount}</td>
+                <td width=50>
                     <c:choose>
                         <c:when test="${algorithmTestPlan.status eq 1}">
                             激活
@@ -102,11 +115,11 @@
                         </c:otherwise>
                     </c:choose>
                 </td>
-                <td width=70><fmt:formatDate value="${algorithmTestPlan.executeQueryTime}" pattern="yyyy-MM-dd HH:mm"/></td>
-                <td width=70>${algorithmTestPlan.createBy}</td>
-                <td width=70><fmt:formatDate value="${algorithmTestPlan.createTime}" pattern="yyyy-MM-dd HH:mm"/></td>
-                <td width=70><fmt:formatDate value="${algorithmTestPlan.updateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
-                <td width=80>
+                <td width=80><fmt:formatDate value="${algorithmTestPlan.executeQueryTime}" pattern="yyyy-MM-dd HH:mm"/></td>
+                <td width=60>${algorithmTestPlan.createBy}</td>
+                <td width=80><fmt:formatDate value="${algorithmTestPlan.createTime}" pattern="yyyy-MM-dd HH:mm"/></td>
+                <td width=80><fmt:formatDate value="${algorithmTestPlan.updateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
+                <td width=130>
                     <shiro:hasPermission name="/internal/algorithmAutoTest/saveAlgorithmTestPlan">
                         <a href="javascript:updateAlgorithmTestPlan('${algorithmTestPlan.uuid}')">修改</a>
                     </shiro:hasPermission>
@@ -122,6 +135,9 @@
                     </shiro:hasPermission>
                     <shiro:hasPermission name="/internal/algorithmAutoTest/deleteAlgorithmTestPlan">
                         <a href="javascript:deleteAlgorithmTestPlan('${algorithmTestPlan.uuid}')">删除</a>
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="/internal/algorithmAutoTest/saveAlgorithmTestPlan">
+                        <a href="javascript:searchTestDataStatistics('${algorithmTestPlan.uuid}')">查看测试数据分析</a>
                     </shiro:hasPermission>
                 </td>
             </tr>
@@ -158,6 +174,13 @@
             <li>
                 <span>机器分组:</span>
                 <input id="machineGroup" name="machineGroup" title="优化组名" style="width: 200px;" value=""/>
+            </li>
+            <li>
+                <span>执行次数:</span>
+                <select name="excuteType" id="excuteType" style="width: 200px;">
+                    <option value="0">执行一次</option>
+                    <option value="1">执行多次</option>
+                </select>
             </li>
             <li id="end">
                 <span>测试间隔天数:</span>
@@ -216,10 +239,18 @@
       action="/internal/groupsetting/searchGroupSettings">
     <input type="hidden" name="operationCombineName" id="operationCombineName" value=""/>
 </form>
+
 <form id="searchAlgorithmTestTaskForm" style="display: none;" method="post" target="_blank"
       action="/internal/algorithmAutoTest/showAlgorithmTestTask">
     <input type="hidden" name="algorithmTestPlanUuid" id="algorithmTestPlanUuid" value=""/>
     <input type="hidden" name="currentPage" id="currentPage" value="${page.current}"/>
+    <input type="hidden" name="pageSize" id="pageSize" value="${page.size}"/>
+</form>
+
+<form id="searchTestDataStatisticsForm" style="display: none;" method="post" target="_blank"
+      action="/internal/algorithmAutoTest/showTestDataStatistics">
+    <input type="hidden" name="algorithmTestPlanUuid" id="algorithmTestPlanUuid" value=""/>
+    <input type="hidden" name="currentPage" id="currentPage" value="1"/>
     <input type="hidden" name="pageSize" id="pageSize" value="${page.size}"/>
 </form>
 
@@ -247,6 +278,12 @@
             $("#searchAlgorithmTestTaskForm").find("#algorithmTestPlanUuid").val(uuid);
             $("#searchAlgorithmTestTaskForm").submit();
         }
+    </shiro:hasPermission>
+    <shiro:hasPermission name="/internal/algorithmAutoTest/showAlgorithmTestTask">
+    function searchTestDataStatistics(uuid) {
+        $("#searchTestDataStatisticsForm").find("#algorithmTestPlanUuid").val(uuid);
+        $("#searchTestDataStatisticsForm").submit();
+    }
     </shiro:hasPermission>
 </script>
 </body>

@@ -63,7 +63,7 @@
             <if test="algorithmTestPlanSearchCriteria.machineGroup!=null and algorithmTestPlanSearchCriteria.machineGroup!=''">
                 AND atp.fMachineGroup LIKE concat(#{algorithmTestPlanSearchCriteria.machineGroup},'%')
             </if>
-        </where>c
+        </where>
     </select>
 
     <select id="selectOneAvailableAlgorithmTestPlan" resultType="com.keymanager.monitoring.entity.AlgorithmTestPlan">
@@ -77,9 +77,9 @@
         LIMIT 1
     </select>
 
-    <select id="updateExcuteQueryTime">
+    <select id="updateExcuteQueryTimeAndExcuteCount">
         UPDATE t_algorithm_test_plan atp
-        SET atp.fExecuteQueryTime = NOW() ,fExcuteStatus = 1
+        SET atp.fExecuteQueryTime = NOW() ,atp.fExcuteStatus = 1, atp.fExcuteCount = atp.fExcuteCount+1
         WHERE atp.fUuid = #{uuid}
     </select>
 
