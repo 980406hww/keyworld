@@ -225,6 +225,48 @@
             $("#searchKeywordForm").submit();
         }
     </shiro:hasPermission>
+    function changePaging(currentPage, pageSize) {
+        var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
+        searchCustomerKeywordForm.find("#currentPageNumberHidden").val(currentPage);
+        searchCustomerKeywordForm.find("#pageSizeHidden").val(pageSize);
+        searchCustomerKeywordForm.submit();
+    }
+
+    function resetPageNumber(days) {
+        var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
+        var keyword = searchCustomerKeywordForm.find("#keyword").val();
+        searchCustomerKeywordForm.find("#currentPageNumberHidden").val(1);
+        if(days != 0) {
+            searchCustomerKeywordForm.submit();
+        }
+    }
+
+    function selectAll(self) {
+        var a = document.getElementsByName("uuid");
+        if (self.checked) {
+            for (var i = 0; i < a.length; i++) {
+                a[i].checked = true;
+            }
+        } else {
+            for (var i = 0; i < a.length; i++) {
+                a[i].checked = false;
+            }
+        }
+    }
+    function decideSelectAll() {
+        var a = document.getElementsByName("uuid");
+        var select=0;
+        for(var i = 0; i < a.length; i++){
+            if (a[i].checked == true){
+                select++;
+            }
+        }
+        if(select == a.length){
+            $("#selectAllChecked").prop("checked",true);
+        }else {
+            $("#selectAllChecked").prop("checked",false);
+        }
+    }
 </script>
 </body>
 </html>
