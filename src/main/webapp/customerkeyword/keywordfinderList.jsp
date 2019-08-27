@@ -317,6 +317,7 @@
         alignTableHeader();
         if(${isDepartmentManager}) {
             $("#userName").val("${customerKeywordCriteria.userName}");
+            console.log("${customerKeywordCriteria.userName}")
         }
         window.onresize = function(){
             $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
@@ -345,7 +346,6 @@
             $("#groupNameFuzzyQuery").prop("checked",false);
         }
         noPositionValue();
-        displayStopValue();
         pushPayValue();
         groupNameFuzzyQueryValue();
     }
