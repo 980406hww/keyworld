@@ -73,7 +73,7 @@
             <td width="10" style="padding-left: 7px;"><input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/></td>
             <td align="center" width=70>关键字</td>
             <td align="center" width=70>搜索引擎</td>
-            <td align="center" width=70 onclick="sortTable()">单词总数</td>
+            <td align="center" width=70>单词总数</td>
             <td align="center" width=70>用户总数</td>
             <td align="center" width=70>客户总数</td>
             <td align="center" width=70>前三数量</td>

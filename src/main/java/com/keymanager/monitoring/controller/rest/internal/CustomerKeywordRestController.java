@@ -706,10 +706,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
         String userName = (String) session.getAttribute("username");
         UserInfo user = userInfoService.getUserInfo(userName);
         List<UserInfo> activeUsers = userInfoService.findActiveUsers();
-//		boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
-//		if(!isDepartmentManager) {
-//			keywordAmountCountCriteria.setUserName(userName);
-//		}
         keywordAmountCountCriteria.setTerminalType(terminalType);
         if ("POST".equals(request.getMethod())) {
             Page<keywordAmountCountVo> page = customerKeywordService.searchKeywordAmountCountPage(new Page<keywordAmountCountVo>(currentPage, pageSize), keywordAmountCountCriteria);
