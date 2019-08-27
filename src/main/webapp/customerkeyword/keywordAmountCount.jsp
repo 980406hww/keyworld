@@ -43,17 +43,16 @@
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
             关键字:&nbsp;<input type="text" name="keyword" id="keyword" value="${keywordAmountCountCriteria.keyword}" style="width:100px;">&nbsp;
-
-            <c:if test="${isDepartmentManager}">
                 用户名称:
                 <select name="userName" id="userName">
                     <option value="">所有</option>
                     <option value="${user.loginName}">只显示自己</option>
-                    <c:forEach items="${activeUsers}" var="activeUser">
-                        <option value="${activeUser.loginName}">${activeUser.userName}</option>
-                    </c:forEach>
+                    <c:if test="${isDepartmentManager}">
+                        <c:forEach items="${activeUsers}" var="activeUser">
+                            <option value="${activeUser.loginName}">${activeUser.userName}</option>
+                        </c:forEach>
+                    </c:if>
                 </select>
-            </c:if>
             搜索引擎:
             <select name="searchEngine" id="searchEngine">
                 <option value="">全部</option>
@@ -157,14 +156,11 @@
         $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
         initPaging();
         alignTableHeader();
-        if(${isDepartmentManager}) {
-            $("#userName").val("${keywordAmountCountCriteria.userName}");
-        }
+        $("#userName").val("${keywordAmountCountCriteria.userName}");
         window.onresize = function(){
             $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
             alignTableHeader();
-        }
-
+        };
         $("#customerKeywordTable").tablesorter({
             headers: {0: {sorter: false},
                 1: {sorter: false},
