@@ -346,7 +346,8 @@
         ck.fPaymentStatus	AS	'paymentStatus',
         ck.fOrderNumber	AS	'orderNumber',
         ck.fRemarks	AS	'remarks',
-        ck.fFailedCause AS 'failedCause'
+        ck.fFailedCause AS 'failedCause',
+        ck.fCapturePositionQueryTime AS 'capturePositionQueryTime'
         FROM
         t_customer_keyword ck,
         t_customer c
@@ -411,7 +412,8 @@
         ck.fCollectMethod	AS	'collectMethod',
         ck.fOrderNumber	AS	'orderNumber',
         ck.fRemarks	AS	'remarks',
-        ck.fFailedCause AS 'failedCause'
+        ck.fFailedCause AS 'failedCause',
+        ck.fCapturePositionQueryTime AS 'capturePositionQueryTime'
         FROM
         t_customer_keyword ck,
         t_customer c
