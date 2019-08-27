@@ -25,7 +25,7 @@
             #customerKeywordTable tr:nth-child(odd){background:#EEEEEE;}
 
             #customerKeywordTable td{
-                text-align: left;
+                text-align: center;
             }
             #saveCustomerKeywordDialog ul{list-style: none;margin: 0px;padding: 0px;}
             #saveCustomerKeywordDialog li{margin: 5px 0;}
@@ -83,25 +83,12 @@
 
 <div id="showCustomerTableDiv" style="margin-bottom: 30px">
     <table id="customerKeywordTable" style="font-size:12px;">
-        <thead hidden>
-            <tr height=30 style="background-color: #ADD1FF; text-align: center">
-                <td width="10" style="padding-left: 7px;"></td>
-                <td align="center" width=70></td>
-                <td align="center" width=70></td>
-                <td align="center" width=70></td>
-                <td align="center" width=70></td>
-                <td align="center" width=70></td>
-                <td align="center" width=70></td>
-                <td align="center" width=70></td>
-            </tr>
-        </thead>
-        <tbody>
         <c:forEach items="${page.records}" var="customerKeyword">
             <tr height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
                 <td width="10" style="padding-left: 7px;">
                     <input type="checkbox" name="uuid" value="${customerKeyword.keyword}" onclick="decideSelectAll()"/>
                 </td>
-                <td align="center" width=70>
+                <td align="center" width=70 style="text-align: left">
                     <a href="javascript:searchCustomerKeywords('${customerKeyword.keyword}','')"> ${customerKeyword.keyword}</a>
                 </td>
                 <td align="center" width=70>${customerKeyword.searchEngine} </td>
@@ -116,7 +103,6 @@
                 </td>
             </tr>
         </c:forEach>
-        </tbody>
     </table>
 </div>
 
@@ -161,21 +147,6 @@
             $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
             alignTableHeader();
         };
-        $("#customerKeywordTable").tablesorter({
-            headers: {0: {sorter: false},
-                1: {sorter: false},
-                2: {sorter: false},
-                4: {sorter: false},
-                5: {sorter: false},
-                6: {sorter: false},
-                7: {sorter: false}},
-            sortInitialOrder: 'desc',
-            sortReset: true,
-            sortRestart : true,
-            emptyTo: 'bottom',
-            sortList:[[3,1]]
-        });
-
     });
 
     function initPaging() {

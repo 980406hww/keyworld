@@ -1743,6 +1743,7 @@
             AND c.fUserID = #{keywordAmountCountCriteria.userName}
         </if>
         GROUP BY ck.fKeyword, ck.fSearchEngine
+        ORDER BY keywordCount DESC
     </select>
 
     <select id="getCities" resultType="java.lang.String">
