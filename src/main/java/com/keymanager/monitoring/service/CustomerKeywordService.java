@@ -554,7 +554,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
         }
 
-        if (customerKeyword.getRunImmediate().equals("否")) {
+        if ("否".equals(customerKeyword.getRunImmediate())) {
             customerKeyword.setStatus(2);
         }
 
