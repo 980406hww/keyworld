@@ -337,7 +337,7 @@
                 <c:if test="${sessionScope.get('entryType') != 'qz'}"><td align="center" width=60>${customerKeyword.feeString}</td></c:if>
                 <td align="center" width=80><fmt:formatDate value="${customerKeyword.startOptimizedTime}" pattern="yyyy-MM-dd"/></td>
                 <td align="center" width=80><fmt:formatDate value="${customerKeyword.lastOptimizeDateTime}" pattern="yyyy-MM-dd HH:mm"/></td>
-                <td align="center" width=70 style="color:${customerKeywordStautsMap.get(customerKeyword.status).get("color")}">${customerKeywordStautsMap.get(customerKeyword.status).get("desc")} </td>
+                <td align="center" width=70 style="color:${customerKeywordStatusMap.get(customerKeyword.status).get("color")}">${customerKeywordStatusMap.get(customerKeyword.status).get("desc")} </td>
                 <td align="center" width=50>${customerKeyword.orderNumber}</td>
                 <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
                 <td align="center" width=100>${customerKeyword.failedCause == null ? "" : customerKeyword.failedCause}</td>

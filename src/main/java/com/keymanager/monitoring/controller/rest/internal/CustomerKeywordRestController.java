@@ -12,7 +12,7 @@ import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.ServiceProvider;
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
-import com.keymanager.monitoring.enums.CustomerKeywordStautsEnum;
+import com.keymanager.monitoring.enums.CustomerKeywordStatusEnum;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.enums.KeywordEffectEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordAndUrlCvsExportWriter;
@@ -133,7 +133,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		modelAndView.addObject("customer", customer);
         modelAndView.addObject("customerKeywordSourceMap", CustomerKeywordSourceEnum.toMap());
 		modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));
-		modelAndView.addObject("customerKeywordStautsMap", CustomerKeywordStautsEnum.changeToMap());
+		modelAndView.addObject("customerKeywordStatusMap", CustomerKeywordStatusEnum.changeToMap());
 		modelAndView.addObject("serviceProviders",serviceProviders);
         modelAndView.addObject("keywordEffects", KeywordEffectEnum.values());
 		modelAndView.addObject("orderElement",orderElement);
@@ -443,7 +443,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		modelAndView.addObject("activeUsers", activeUsers);
 		modelAndView.addObject("orderElement",orderElement);
         modelAndView.addObject("customerKeywordSourceMap", CustomerKeywordSourceEnum.toMap());
-        modelAndView.addObject("customerKeywordStautsMap", CustomerKeywordStautsEnum.changeToMap());
+        modelAndView.addObject("customerKeywordStautsMap", CustomerKeywordStatusEnum.changeToMap());
 		modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));
 		modelAndView.addObject("isDepartmentManager",isDepartmentManager);
 		performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywordLists", (System.currentTimeMillis() - startMilleSeconds), null);
@@ -660,6 +660,34 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
         }
     }
 
+	@RequiresPermissions("/internal/customerKeyword/activateCustomerKeywords")
+	@RequestMapping(value = "/activateSelectCustomerKeywords", method = RequestMethod.POST)
+	public ResponseEntity<?> activateAllCustomerKeywords(@RequestBody Map<String, Object> requestMap) {
+		try {
+			List<Long> customerKeywordUuids = (List<Long>) requestMap.get("uuids");
+			customerKeywordService.updateCustomerKeywordStatus(customerKeywordUuids, 1);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@RequiresPermissions("/internal/customerKeyword/activateCustomerKeywords")
+	@RequestMapping(value = "/activateAllCustomerKeywords", method = RequestMethod.POST)
+	public ResponseEntity<?> activateSelectCustomerKeywords(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+		try {
+			String terminalType = TerminalTypeMapping.getTerminalType(request);
+			String entryType = (String) request.getSession().getAttribute("entryType");
+			String customerUuid = (String) requestMap.get("customerUuid");
+			customerKeywordService.changeCustomerKeywordStatus(terminalType, entryType, Long.parseLong(customerUuid), 1);
+			return new ResponseEntity<Object>(true, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+		}
+	}
+
     @RequiresPermissions("/internal/customerKeyword/searchKeywordAmountCountLists")
     @RequestMapping(value = "/searchKeywordAmountCountLists", method = RequestMethod.GET)
     public ModelAndView searchKeywordAmountCountLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
@@ -693,7 +721,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
             return new ModelAndView("/customerkeyword/keywordAmountCount");
         }
     }
-
 
     private ModelAndView constructKeywordAmountCountModelAndView(HttpServletRequest request, KeywordAmountCountCriteria keywordAmountCountCriteria, int currentPage, int pageSize) {
         long startMilleSeconds = System.currentTimeMillis();

@@ -264,7 +264,7 @@
                 <c:if test="${sessionScope.get('entryType') ne 'qz'}">
                     <td align="center" width=60>${customerKeyword.feeString}</td>
                 </c:if>
-                <td align="center" width=70 style="color:${customerKeywordStautsMap.get(customerKeyword.status).get("color")}">${customerKeywordStautsMap.get(customerKeyword.status).get("desc")} </td>
+                <td align="center" width=70 style="color:${customerKeywordStatusMap.get(customerKeyword.status).get("color")}">${customerKeywordStatusMap.get(customerKeyword.status).get("desc")} </td>
                 <td align="center" width=100>${customerKeyword.orderNumber}</td>
                 <td align="center" width="60">${customerKeyword.paymentStatus}</td>
                 <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
