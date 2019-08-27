@@ -564,6 +564,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (Utils.isNullOrEmpty(customerKeyword.getMachineGroup())) {
             customerKeyword.setMachineGroup(customerKeyword.getType());
         }
+        int queryInterval = 24 * 60 * 60;
+        if (null != customerKeyword.getOptimizePlanCount() && customerKeyword.getOptimizePlanCount() > 0) {
+            queryInterval = queryInterval / customerKeyword.getOptimizePlanCount();
+        }
+        customerKeyword.setQueryInterval(queryInterval);
         customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
         customerKeyword.setCapturePositionQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));
         customerKeyword.setStartOptimizedTime(new Date());
@@ -582,6 +587,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         } else {
             customerKeyword.setStatus(2);
         }
+        int queryInterval = 24 * 60 * 60;
+        if (null != customerKeyword.getOptimizePlanCount() && customerKeyword.getOptimizePlanCount() > 0) {
+            queryInterval = queryInterval / customerKeyword.getOptimizePlanCount();
+        }
+        customerKeyword.setQueryInterval(queryInterval);
         customerKeyword.setUpdateTime(new Date());
         customerKeywordDao.updateById(customerKeyword);
     }

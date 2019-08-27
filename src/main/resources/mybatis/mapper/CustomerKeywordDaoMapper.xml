@@ -1067,13 +1067,13 @@
     <update id="editCustomerOptimizePlanCount">
         UPDATE t_customer_keyword
         <if test="settingType == 'setCurrentCount'">
-            SET fOptimizePlanCount = IF((fOptimizePlanCount + (#{optimizePlanCount})) > 0, (fOptimizePlanCount + (#{optimizePlanCount})), 0),
-            fOptimizeRemainingCount = IF(fOptimizePlanCount - fOptimizedCount > 0, fOptimizePlanCount - fOptimizedCount, 0)
+            SET fOptimizePlanCount = IF((fOptimizePlanCount + (#{optimizePlanCount})) > 0, (fOptimizePlanCount + (#{optimizePlanCount})), 0)
         </if>
         <if test="settingType == 'setSpecificCount'">
-            SET fOptimizePlanCount = #{optimizePlanCount},
-            fOptimizeRemainingCount = IF(#{optimizePlanCount} - fOptimizedCount > 0, #{optimizePlanCount} - fOptimizedCount, 0)
+            SET fOptimizePlanCount = #{optimizePlanCount}
         </if>
+        , fOptimizeRemainingCount = IF(#{optimizePlanCount} - fOptimizedCount > 0, #{optimizePlanCount} - fOptimizedCount, 0)
+        , fQueryInterval = IF(fOptimizePlanCount > 0, (24 * 60 * 60 / fOptimizePlanCount), 24 * 60 * 60)
         WHERE fUuid IN
         <foreach item="uuid"  collection="uuids" open="(" separator="," close=")">
             #{uuid}
@@ -1083,13 +1083,13 @@
     <update id="editOptimizePlanCountByCustomerUuid">
         UPDATE t_customer_keyword
         <if test="settingType == 'setCurrentCount'">
-            SET fOptimizePlanCount = IF((fOptimizePlanCount + (#{optimizePlanCount})) > 0, (fOptimizePlanCount + (#{optimizePlanCount})), 0),
-            fOptimizeRemainingCount = IF(fOptimizePlanCount - fOptimizedCount > 0, fOptimizePlanCount - fOptimizedCount, 0)
+            SET fOptimizePlanCount = IF((fOptimizePlanCount + (#{optimizePlanCount})) > 0, (fOptimizePlanCount + (#{optimizePlanCount})), 0)
         </if>
         <if test="settingType == 'setSpecificCount'">
-            SET fOptimizePlanCount = #{optimizePlanCount},
-            fOptimizeRemainingCount = IF(#{optimizePlanCount} - fOptimizedCount > 0, #{optimizePlanCount} - fOptimizedCount, 0)
+            SET fOptimizePlanCount = #{optimizePlanCount}
         </if>
+        , fOptimizeRemainingCount = IF(#{optimizePlanCount} - fOptimizedCount > 0, #{optimizePlanCount} - fOptimizedCount, 0)
+        , fQueryInterval = IF(fOptimizePlanCount > 0, (24 * 60 * 60 / fOptimizePlanCount), 24 * 60 * 60)
         WHERE fTerminalType = #{terminalType}
         AND fType = #{entryType}
         AND fCustomerUuid = #{customerUuid}
@@ -1351,7 +1351,11 @@
         <if test="keywordChecks.bearPawNumber==1"> ,fBearPawNumber = #{keywordStatus.bearPawNumber}</if>
         <if test="keywordChecks.url==1"> ,fUrl = #{keywordStatus.url}</if>
         <if test="keywordChecks.originalUrl==1"> ,fOriginalUrl = #{keywordStatus.originalUrl}</if>
-        <if test="keywordChecks.optimizePlanCount==1"> ,fOptimizePlanCount = #{keywordStatus.optimizePlanCount}</if>
+        <if test="keywordChecks.optimizePlanCount==1">
+            , fOptimizePlanCount = #{keywordStatus.optimizePlanCount}
+            , fOptimizeRemainingCount = IF(#{keywordStatus.optimizePlanCount} - fOptimizedCount > 0, #{keywordStatus.optimizePlanCount} - fOptimizedCount, 0)
+            , fQueryInterval = IF(fOptimizePlanCount > 0, (24 * 60 * 60 / fOptimizePlanCount), 24 * 60 * 60)
+        </if>
         <if test="keywordChecks.optimizeGroupName==1"> ,fOptimizeGroupName = #{keywordStatus.optimizeGroupName}</if>
         <if test="keywordChecks.machineGroup==1"> ,fMachineGroup = #{keywordStatus.machineGroup}</if>
         <if test="keywordChecks.initialIndexCount==1"> ,fInitialIndexCount = #{keywordStatus.initialIndexCount}</if>

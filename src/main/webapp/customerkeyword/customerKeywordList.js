@@ -698,7 +698,7 @@ function showOptimizePlanCountDialog() {
 function editOptimizePlanCount(customerUuid, uuids) {
     var settingType = $("#optimizePlanCountDialog").find("input[name=settingType]:checked").val();
     var optimizePlanCount = $("#optimizePlanCountDialog").find("#optimizePlanCount").val();
-    if(optimizePlanCount == "") {
+    if(optimizePlanCount === "") {
         alert("请输入刷量");
         return;
     }
