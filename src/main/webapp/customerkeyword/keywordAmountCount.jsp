@@ -43,17 +43,16 @@
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
             关键字:&nbsp;<input type="text" name="keyword" id="keyword" value="${keywordAmountCountCriteria.keyword}" style="width:100px;">&nbsp;
-
-            <c:if test="${isDepartmentManager}">
                 用户名称:
                 <select name="userName" id="userName">
                     <option value="">所有</option>
                     <option value="${user.loginName}">只显示自己</option>
-                    <c:forEach items="${activeUsers}" var="activeUser">
-                        <option value="${activeUser.loginName}">${activeUser.userName}</option>
-                    </c:forEach>
+                    <c:if test="${isDepartmentManager}">
+                        <c:forEach items="${activeUsers}" var="activeUser">
+                            <option value="${activeUser.loginName}">${activeUser.userName}</option>
+                        </c:forEach>
+                    </c:if>
                 </select>
-            </c:if>
             搜索引擎:
             <select name="searchEngine" id="searchEngine">
                 <option value="">全部</option>
@@ -84,6 +83,19 @@
 
 <div id="showCustomerTableDiv" style="margin-bottom: 30px">
     <table id="customerKeywordTable" style="font-size:12px;">
+        <thead hidden>
+            <tr height=30 style="background-color: #ADD1FF; text-align: center">
+                <td width="10" style="padding-left: 7px;"></td>
+                <td align="center" width=70></td>
+                <td align="center" width=70></td>
+                <td align="center" width=70></td>
+                <td align="center" width=70></td>
+                <td align="center" width=70></td>
+                <td align="center" width=70></td>
+                <td align="center" width=70></td>
+            </tr>
+        </thead>
+        <tbody>
         <c:forEach items="${page.records}" var="customerKeyword">
             <tr height=30 onmouseover="doOver(this);" onmouseout="doOut(this);" height=30>
                 <td width="10" style="padding-left: 7px;">
@@ -104,6 +116,7 @@
                 </td>
             </tr>
         </c:forEach>
+        </tbody>
     </table>
 </div>
 
@@ -137,20 +150,31 @@
 </form>
 
 <%@ include file="/commons/loadjs.jsp" %>
-<script src="${staticPath }/customerkeyword/customerKeywordCommon.js"></script>
-<script src="${staticPath }/customerkeyword/keywordfinderList.js"></script>
+<script src="${staticPath }/js/jquery.tablesorter.js"></script>
 <script language="javascript">
     $(function () {
         $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
         initPaging();
         alignTableHeader();
-        if(${isDepartmentManager}) {
-            $("#userName").val("${keywordAmountCountCriteria.userName}");
-        }
+        $("#userName").val("${keywordAmountCountCriteria.userName}");
         window.onresize = function(){
             $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
             alignTableHeader();
-        }
+        };
+        $("#customerKeywordTable").tablesorter({
+            headers: {0: {sorter: false},
+                1: {sorter: false},
+                2: {sorter: false},
+                4: {sorter: false},
+                5: {sorter: false},
+                6: {sorter: false},
+                7: {sorter: false}},
+            sortInitialOrder: 'desc',
+            sortReset: true,
+            sortRestart : true,
+            emptyTo: 'bottom',
+            sortList:[[3,1]]
+        });
 
     });
 
@@ -197,6 +221,48 @@
             $("#searchKeywordForm").submit();
         }
     </shiro:hasPermission>
+    function changePaging(currentPage, pageSize) {
+        var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
+        searchCustomerKeywordForm.find("#currentPageNumberHidden").val(currentPage);
+        searchCustomerKeywordForm.find("#pageSizeHidden").val(pageSize);
+        searchCustomerKeywordForm.submit();
+    }
+
+    function resetPageNumber(days) {
+        var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
+        var keyword = searchCustomerKeywordForm.find("#keyword").val();
+        searchCustomerKeywordForm.find("#currentPageNumberHidden").val(1);
+        if(days != 0) {
+            searchCustomerKeywordForm.submit();
+        }
+    }
+
+    function selectAll(self) {
+        var a = document.getElementsByName("uuid");
+        if (self.checked) {
+            for (var i = 0; i < a.length; i++) {
+                a[i].checked = true;
+            }
+        } else {
+            for (var i = 0; i < a.length; i++) {
+                a[i].checked = false;
+            }
+        }
+    }
+    function decideSelectAll() {
+        var a = document.getElementsByName("uuid");
+        var select=0;
+        for(var i = 0; i < a.length; i++){
+            if (a[i].checked == true){
+                select++;
+            }
+        }
+        if(select == a.length){
+            $("#selectAllChecked").prop("checked",true);
+        }else {
+            $("#selectAllChecked").prop("checked",false);
+        }
+    }
 </script>
 </body>
 </html>

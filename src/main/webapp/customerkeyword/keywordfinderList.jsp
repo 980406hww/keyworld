@@ -345,7 +345,6 @@
             $("#groupNameFuzzyQuery").prop("checked",false);
         }
         noPositionValue();
-        displayStopValue();
         pushPayValue();
         groupNameFuzzyQueryValue();
     }

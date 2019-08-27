@@ -1723,8 +1723,8 @@
         ck.fKeyword	AS	'keyword',
         ck.fSearchEngine	AS	'searchEngine',
         COUNT(1) AS 'keywordCount',
-        SUM(IF(ck.fCurrentPosition &lt;= 3, 1, 0)) AS 'topThree',
-        SUM(IF(ck.fCurrentPosition &lt;= 10, 1, 0)) AS 'topTen',
+        SUM(IF(ck.fCurrentPosition BETWEEN 1 AND 3, 1, 0)) AS 'topThree',
+        SUM(IF(ck.fCurrentPosition BETWEEN 1 AND 10, 1, 0)) AS 'topTen',
         COUNT( DISTINCT ck.fCustomerUuid) AS 'customerCount',
         COUNT(DISTINCT c.fUserID) AS 'userCount'
         FROM
