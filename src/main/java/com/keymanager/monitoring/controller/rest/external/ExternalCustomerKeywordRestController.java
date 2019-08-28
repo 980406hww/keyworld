@@ -3,14 +3,35 @@ package com.keymanager.monitoring.controller.rest.external;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.BaseCriteria;
-import com.keymanager.monitoring.criteria.ExternalCustomerKeywordCriteria;
-import com.keymanager.monitoring.entity.*;
-import com.keymanager.monitoring.service.*;
-import com.keymanager.monitoring.vo.*;
-import com.keymanager.util.*;
+import com.keymanager.monitoring.criteria.KeywordIndexCriteria;
+import com.keymanager.monitoring.entity.Config;
+import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.entity.MachineInfo;
+import com.keymanager.monitoring.entity.NegativeList;
+import com.keymanager.monitoring.service.ConfigService;
+import com.keymanager.monitoring.service.CustomerKeywordService;
+import com.keymanager.monitoring.service.MachineInfoService;
+import com.keymanager.monitoring.service.PerformanceService;
+import com.keymanager.monitoring.vo.CustomerKeywordEnteredVO;
+import com.keymanager.monitoring.vo.CustomerKeywordForOptimizationSimple;
+import com.keymanager.monitoring.vo.ExternalCustomerKeywordVO;
+import com.keymanager.monitoring.vo.OptimizationVO;
+import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
+import com.keymanager.monitoring.vo.SearchEngineResultItemsVO;
+import com.keymanager.monitoring.vo.SearchEngineResultVO;
+import com.keymanager.monitoring.vo.customerSourceVO;
+import com.keymanager.util.AESUtils;
+import com.keymanager.util.Constants;
+import com.keymanager.util.TerminalTypeMapping;
+import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import net.sf.json.JSONArray;
 import net.sf.json.JsonConfig;
 import org.apache.commons.collections.CollectionUtils;
@@ -24,9 +45,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
 
 @RestController
 @RequestMapping(value = "/external/customerkeyword")
@@ -635,5 +653,32 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
+    @RequestMapping(value = "/getTenCustomerKeywordsForCaptureIndex", method = RequestMethod.POST)
+    public ResponseEntity<?> getTenCustomerKeywordsForCaptureIndex(@RequestBody BaseCriteria baseCriteria) throws Exception {
+        try {
+            if (validUser(baseCriteria.getUserName(), baseCriteria.getPassword())) {
+                List<ExternalCustomerKeywordVO> customerKeywords = customerKeywordService.getTenCustomerKeywordsForCaptureIndex();
+                return new ResponseEntity<Object>(customerKeywords, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+            logger.error("getTenCustomerKeywordsForCaptureIndex:     " + ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/updateKeywordsIndex", method = RequestMethod.POST)
+    public ResponseEntity<?> updateKeywordsIndex(@RequestBody KeywordIndexCriteria keywordIndexCriteria) throws Exception {
+        try {
+            if (validUser(keywordIndexCriteria.getUserName(), keywordIndexCriteria.getPassword())) {
+                customerKeywordService.updateCustomerKeywordIndexByKeywords(keywordIndexCriteria);
+                return new ResponseEntity<Object>(true, HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+            logger.error("updateKeywordsIndex:    " + ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
 
 }

@@ -1753,4 +1753,35 @@
         AND ck.fStatus = 1
         GROUP BY ck.fCity
     </select>
+
+    <select id="getTenCustomerKeywordsForCaptureIndex" resultType="com.keymanager.monitoring.vo.ExternalCustomerKeywordVO">
+        SELECT
+        ck.fUuid AS 'uuid',
+        ck.fKeyword	AS	'keyword',
+        ck.fTerminalType AS 'terminalType'
+        FROM t_customer_keyword ck
+        WHERE ck.fCurrentIndexCount = -1
+        AND ck.fType = 'qz'
+        AND ck.fCaptureIndexQueryTime IS NULL
+        ORDER BY ck.fCreateTime
+        LIMIT 10
+    </select>
+
+    <select id="updateCaptureIndexQueryTimeByKeywords">
+        UPDATE t_customer_keyword
+        SET fCaptureIndexQueryTime = NOW()
+        WHERE fUuid IN
+        <foreach item="customerKeyword" collection="customerKeywords" open="(" separator="," close=")">
+            #{customerKeyword.uuid}
+        </foreach>
+    </select>
+
+    <update id="batchUpdateIndexAndOptimizePlanCount">
+        <foreach collection="customerKeywords" item="customerKeyword" index="index" open="" close="" separator=";">
+            UPDATE t_customer_keyword ck
+            SET ck.fCurrentIndexCount = #{customerKeyword.currentIndexCount},
+            ck.fOptimizePlanCount = #{customerKeyword.optimizePlanCount}
+            WHERE ck.fUuid = #{customerKeyword.uuid}
+        </foreach>
+    </update>
 </mapper>

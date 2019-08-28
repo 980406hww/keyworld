@@ -2009,6 +2009,43 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.UI.name());
         addCustomerKeyword(customerKeyword, userName);
     }
+
+    public List<ExternalCustomerKeywordVO> getTenCustomerKeywordsForCaptureIndex() {
+        List<ExternalCustomerKeywordVO> customerKeywords = customerKeywordDao.getTenCustomerKeywordsForCaptureIndex();
+        if (CollectionUtils.isNotEmpty(customerKeywords)) {
+            customerKeywordDao.updateCaptureIndexQueryTimeByKeywords(customerKeywords);
+            return customerKeywords;
+        }
+        return null;
+    }
+
+    public void updateCustomerKeywordIndexByKeywords(KeywordIndexCriteria keywordIndexCriteria) {
+        if (CollectionUtils.isNotEmpty(keywordIndexCriteria.getCustomerKeywords())){
+            List<CustomerKeyword> customerKeywords = new ArrayList<>();
+            for (ExternalCustomerKeywordVO externalCustomerKeywordVO : keywordIndexCriteria.getCustomerKeywords()) {
+                CustomerKeyword customerKeyword = new CustomerKeyword();
+                customerKeyword.setUuid(externalCustomerKeywordVO.getUuid());
+                Integer index = (TerminalTypeEnum.PC.name().equals(externalCustomerKeywordVO.getTerminalType()))
+                        ? externalCustomerKeywordVO.getPcIndex() : externalCustomerKeywordVO.getPhoneIndex();
+                customerKeyword.setCurrentIndexCount(index);
+                if (index == null || index == 0) {
+                    customerKeyword.setOptimizePlanCount(8);
+                } else if (index > 0 && index <= 30) {
+                    customerKeyword.setOptimizePlanCount(10);
+                } else if (index > 30 && index <= 200) {
+                    customerKeyword.setOptimizePlanCount(12 + (int) Math.ceil(index * 0.03));
+                } else {
+                    if (index >= 1000) {
+                        customerKeyword.setOptimizePlanCount(35);
+                    } else {
+                        customerKeyword.setOptimizePlanCount(12 + (int) Math.ceil(index * 0.02));
+                    }
+                }
+                customerKeywords.add(customerKeyword);
+            }
+            customerKeywordDao.batchUpdateIndexAndOptimizePlanCount(customerKeywords);
+        }
+    }
 }
 
 
