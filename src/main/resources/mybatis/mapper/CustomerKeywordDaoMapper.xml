@@ -1780,6 +1780,9 @@
         <foreach collection="customerKeywords" item="customerKeyword" index="index" open="" close="" separator=";">
             UPDATE t_customer_keyword ck
             SET ck.fCurrentIndexCount = #{customerKeyword.currentIndexCount},
+            <if test="customerKeyword.currentIndexCount == -1">
+                SET ck.fCaptureIndexQueryTime = NULL,
+            </if>
             ck.fOptimizePlanCount = #{customerKeyword.optimizePlanCount}
             WHERE ck.fUuid = #{customerKeyword.uuid}
         </foreach>

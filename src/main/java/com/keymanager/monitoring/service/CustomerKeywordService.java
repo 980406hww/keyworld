@@ -298,7 +298,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                 }
                                 customerKeywordDao.updateCrawlRankKeywordTimeByUuids(customerKeywordUuids);
                             }
-                        } while (currentSize + offerSize < 10000 && CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos));
+                        }
+                        while (currentSize + offerSize < 10000 && CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos));
                     }
                 }
             }
@@ -325,7 +326,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     if (StringUtils.isNotBlank(keywordVO.getOptimizeGroup())) {
                         errorFlag.append("5");
                         OperationCombine operationCombine = operationCombineService.getOperationCombine(keywordVO.getOptimizeGroup(), machineInfo.getTerminalType());
-                        if(operationCombine != null) {
+                        if (operationCombine != null) {
                             errorFlag.append("6");
                             GroupSetting groupSetting = groupSettingService.getGroupSetting(operationCombine);
                             errorFlag.append("7");
@@ -356,7 +357,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     }
                 }
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("fetchCustomerKeywordForOptimization:" + errorFlag.toString() + ex.getMessage());
             throw ex;
@@ -497,7 +498,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             do {
                 customerKeywordDao.addCustomerKeywords(new ArrayList<>(addCustomerKeywords.subList(fromIndex, toIndex >
                         addCustomerKeywords.size() ? addCustomerKeywords.size() : toIndex)));
-                fromIndex += 1000; toIndex += 1000;
+                fromIndex += 1000;
+                toIndex += 1000;
             } while (addCustomerKeywords.size() > fromIndex);
         }
     }
@@ -1993,15 +1995,15 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordPage.setRecords(keywordAmountCountVos);
         return customerKeywordPage;
     }
-    
+
     public void saveCustomerKeyword(CustomerKeyword customerKeyword, String userName) {
         String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(customerKeyword.getCustomerUuid(),
                 customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
         if (null != customerExcludeKeywords) {
             Set<String> excludeKeyword = new HashSet<>();
             excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
-            if (!excludeKeyword.isEmpty()){
-                if (excludeKeyword.contains(customerKeyword.getKeyword())){
+            if (!excludeKeyword.isEmpty()) {
+                if (excludeKeyword.contains(customerKeyword.getKeyword())) {
                     customerKeyword.setStatus(0);
                 }
             }
@@ -2020,15 +2022,16 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void updateCustomerKeywordIndexByKeywords(KeywordIndexCriteria keywordIndexCriteria) {
-        if (CollectionUtils.isNotEmpty(keywordIndexCriteria.getCustomerKeywords())){
+        if (CollectionUtils.isNotEmpty(keywordIndexCriteria.getCustomerKeywords())) {
             List<CustomerKeyword> customerKeywords = new ArrayList<>();
             for (ExternalCustomerKeywordVO externalCustomerKeywordVO : keywordIndexCriteria.getCustomerKeywords()) {
                 CustomerKeyword customerKeyword = new CustomerKeyword();
                 customerKeyword.setUuid(externalCustomerKeywordVO.getUuid());
-                Integer index = (TerminalTypeEnum.PC.name().equals(externalCustomerKeywordVO.getTerminalType()))
-                        ? externalCustomerKeywordVO.getPcIndex() : externalCustomerKeywordVO.getPhoneIndex();
+//                Integer index = (TerminalTypeEnum.PC.name().equals(externalCustomerKeywordVO.getTerminalType()))
+//                        ? externalCustomerKeywordVO.getPcIndex() : externalCustomerKeywordVO.getPhoneIndex();
+                Integer index = externalCustomerKeywordVO.getAllIndex();
                 customerKeyword.setCurrentIndexCount(index);
-                if (index == null || index == 0) {
+                if (index == null || index == 0 || index == -2 || index == -1) {
                     customerKeyword.setOptimizePlanCount(8);
                 } else if (index > 0 && index <= 30) {
                     customerKeyword.setOptimizePlanCount(10);
