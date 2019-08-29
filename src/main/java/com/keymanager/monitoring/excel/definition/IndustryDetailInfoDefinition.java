@@ -7,7 +7,8 @@ public enum IndustryDetailInfoDefinition {
     QQ(2),
     Telephone(3),
     Weight(4),
-    Remark(5);
+    identifyCustomer(5),
+    Remark(6);
 
     private int columnIndex;
 

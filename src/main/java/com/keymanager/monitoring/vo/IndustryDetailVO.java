@@ -12,6 +12,8 @@ public class IndustryDetailVO {
 
     private Integer weight;
 
+    private String identifyCustomer;
+
     private String remark;
 
     public String getIndustryName() {
@@ -52,6 +54,14 @@ public class IndustryDetailVO {
 
     public void setWeight(Integer weight) {
         this.weight = weight;
+    }
+
+    public String getIdentifyCustomer() {
+        return identifyCustomer;
+    }
+
+    public void setIdentifyCustomer(String identifyCustomer) {
+        this.identifyCustomer = identifyCustomer;
     }
 
     public String getRemark() {

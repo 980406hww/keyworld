@@ -57,6 +57,7 @@ public class IndustryDetailInfoExcelWriter {
         writer.addLabelCell(IndustryDetailInfoDefinition.QQ.getColumnIndex(), rowIndex, view.getQq());
         writer.addLabelCell(IndustryDetailInfoDefinition.Telephone.getColumnIndex(), rowIndex, view.getTelephone());
         writer.addLabelCell(IndustryDetailInfoDefinition.Weight.getColumnIndex(), rowIndex, view.getWeight());
+        writer.addLabelCell(IndustryDetailInfoDefinition.identifyCustomer.getColumnIndex(), rowIndex, view.getIdentifyCustomer());
         writer.addLabelCell(IndustryDetailInfoDefinition.Remark.getColumnIndex(), rowIndex, view.getRemark());
     }
 
