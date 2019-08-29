@@ -491,11 +491,18 @@
         </choose>
     </update>
 
-    <select id="findQZSetting" resultType="java.lang.Boolean">
-        SELECT COUNT(1)
+    <select id="findQZCustomer" resultType="java.lang.String">
+        SELECT CONCAT(c.fUserID, '##', c.fContactPerson)
         FROM t_qz_setting qs
-        WHERE  qs.fSearchEngine = #{searchEngine}
-        AND qs.fDomain = #{domain}
+        LEFT JOIN t_customer c
+        ON c.fUuid = qs.fCustomerUuid
+        WHERE qs.fDomain LIKE '#{domain}%'
+        UNION ALL
+        SELECT CONCAT(c.fUserID, '##', c.fContactPerson)
+        FROM t_customer c
+        WHERE c.fEntryType = 'qz'
+        AND c.fContactPerson LIKE '#{domain}%'
+        LIMIT 1;
     </select>
 
 </mapper>

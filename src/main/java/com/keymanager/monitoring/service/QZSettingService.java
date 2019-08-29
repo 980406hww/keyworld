@@ -853,7 +853,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-	public boolean findQZSetting(String searchEngine, String domain) {
-		return qzSettingDao.findQZSetting(searchEngine, domain);
+	public String findQZCustomer(String domain) {
+		return qzSettingDao.findQZCustomer(domain);
 	}
 }

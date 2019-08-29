@@ -55,6 +55,6 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     void updateQZSettingRenewalStatus(@Param("uuids") List<Long> uuids, @Param("renewalStatus") Integer renewalStatus);
 
-    boolean findQZSetting(@Param("searchEngine") String searchEngine, @Param("domain") String domain);
+    String findQZCustomer(@Param("domain") String domain);
 }
 

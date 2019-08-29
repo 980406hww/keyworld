@@ -137,34 +137,20 @@ function saveIndustry(uuid, loginName) {
         return;
     }
     industryInfo.targetUrl = industryForm.find("#targetUrl").val();
-    if(industryInfo.targetUrl != null || industryInfo.targetUrl != ""){
-        if(industryInfo.targetUrl.search("http://")){
+    industryInfo.pageNum = industryForm.find("#pageNum").val();
+    industryInfo.pagePerNum = industryForm.find("#pagePerNum").val();
+    if(industryInfo.targetUrl !== ""){
+        if(industryInfo.targetUrl.indexOf("http://") === -1 || industryInfo.targetUrl.indexOf("https://") === -1){
             industryInfo.targetUrl = "http://" + industryInfo.targetUrl
         }
     }
-    industryInfo.pageNum = industryForm.find("#pageNum").val();
     if (industryInfo.pageNum === '') {
         $.messager.alert('提示', '请输入爬取页数！！', 'warning');
-        industryForm.find("#pageNum").focus();
         return;
-    } else {
-        if (!(/^[1-9]\d{0,3}$/.test(parseInt(industryInfo.pageNum)))) {
-            $.messager.alert('提示', '请输入正确的爬取页数！！', 'warning');
-            industryForm.find("#pageNum").focus();
-            return;
-        }
     }
-    industryInfo.pagePerNum = industryForm.find("#pagePerNum").val();
-    if (industryInfo.pageNum === '') {
+    if (industryInfo.pagePerNum === '') {
         $.messager.alert('提示', '请输入每页条数！！', 'warning');
-        industryForm.find("#pagePerNum").focus();
         return;
-    } else {
-        if (!(/^[1-9]\d{0,3}$/.test(parseInt(industryInfo.pagePerNum)))) {
-            $.messager.alert('提示', '请输入正确的每页条数！！', 'warning');
-            industryForm.find("#pagePerNum").focus();
-            return;
-        }
     }
     industryInfo.searchEngine = industryForm.find("#searchEngine").val();
     industryInfo.status = industryForm.find("#status").val();
@@ -194,6 +180,8 @@ function showIndustryDialog(uuid, loginName) {
     if (uuid == null) {
         $('#industryForm')[0].reset();
         $('#industryForm').find('#searchEngine').val("百度");
+        $('#industryForm #pageNum').spinner('setValue', 2);
+        $('#industryForm #pagePerNum').spinner('setValue', 10);
     }
     $("#industryDialog").show();
     $("#industryDialog").dialog({
@@ -285,9 +273,16 @@ function initIndustryDialog(industryInfo) {
     industryForm.find("#industryName").val(industryInfo.industryName);
     industryForm.find("#searchEngine").val(industryInfo.searchEngine);
     industryForm.find("#targetUrl").val(industryInfo.targetUrl);
-    industryForm.find("#pageNum").val(industryInfo.pageNum);
-    industryForm.find("#pagePerNum").val(industryInfo.pagePerNum);
+    industryForm.find('#pageNum').spinner('setValue', industryInfo.pageNum);
+    industryForm.find('#pagePerNum').spinner('setValue', industryInfo.pagePerNum);
     industryForm.find("#status").val(industryInfo.status);
+}
+
+function setPageNumAndPagePerNumByTargetUrl(url){
+    if (url !== '') {
+        $("#industryForm #pageNum").spinner('setValue', 0);
+        $("#industryForm #pagePerNum").spinner('setValue', 0);
+    }
 }
 
 function changePaging(currentPage, pageSize) {
@@ -302,13 +297,13 @@ function resetPageNumber() {
     var industryName = searchIndustryFormObj.find("#industryName").val();
     var searchEngine = searchIndustryFormObj.find("#searchEngine").val();
     var status = searchIndustryFormObj.find("#status").val();
-    if(industryName != "") {
+    if(industryName !== "") {
         searchIndustryFormObj.find("#industryName").val($.trim(industryName));
     }
-    if(searchEngine != "") {
+    if(searchEngine !== "") {
         searchIndustryFormObj.find("#searchEngine").val($.trim(searchEngine));
     }
-    if(status != "") {
+    if(status !== "") {
         searchIndustryFormObj.find("#status").val($.trim(status));
     }
     searchIndustryFormObj.find("#currentPageNumberHidden").val(1);

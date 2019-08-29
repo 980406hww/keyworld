@@ -19,7 +19,7 @@ public class IndustryDetailInfoExcelWriter {
     public IndustryDetailInfoExcelWriter() throws BiffException, IOException {
         super();
         writer = new JXLExcelWriter(getTemplateFile());
-        writer.setCurrentWorkSheetWithName("industryDetailInfo");
+        writer.setCurrentWorkSheetWithName("Sheet1");
     }
 
     public void saveAs(String outputFileName) throws Exception{

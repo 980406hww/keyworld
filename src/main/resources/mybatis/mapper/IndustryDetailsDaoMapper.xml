@@ -10,6 +10,7 @@
         tid.fQQ         AS 'qq',
         tid.fTelephone  AS 'telephone',
         tid.fWeight     AS 'weight',
+        tid.fIdentifyCustomer  AS 'identifyCustomer',
         tid.fRemark     AS 'remark',
         tid.fLevel      AS 'level',
         tid.fCreateTime AS 'createTime',
@@ -75,6 +76,7 @@
             tid.fQQ           AS 'qq',
             tid.fTelephone    AS 'telephone',
             tid.fWeight       AS 'weight',
+            tid.fIdentifyCustomer  AS 'identifyCustomer',
             tid.fRemark       AS 'remark'
         FROM t_industry_detail tid
         LEFT JOIN t_industry_info tii

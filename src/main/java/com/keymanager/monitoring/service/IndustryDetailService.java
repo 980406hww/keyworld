@@ -92,17 +92,19 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
             updateFlag = true;
             existingIndustryDetail.setUpdateTime(new Date());
         }
-        existingIndustryDetail.setTelephone(criteria.getPhones().replace("[", "")
-                .replace("]", "").replaceAll("'", ""));
-        existingIndustryDetail.setQq(criteria.getQqs().replace("[", "")
-                .replace("]", "").replaceAll("'", ""));
+        existingIndustryDetail.setTelephone(criteria.getPhones().replace("[", "").replace("]", "")
+                .replaceAll("'", ""));
+        existingIndustryDetail.setQq(criteria.getQqs().replace("[", "").replace("]", "")
+                .replaceAll("'", ""));
         existingIndustryDetail.setTitle(criteria.getTitle());
         existingIndustryDetail.setWeight(criteria.getWeight());
         existingIndustryDetail.setLevel(criteria.getLevel());
-        String domain = criteria.getWebsite().replace("http://","").replace("https://","").replace("www.","").split("/")[0];
-        boolean hasQZSetting = qzSettingService.findQZSetting(criteria.getSearchEngine(), domain);
-        if (hasQZSetting) {
-            existingIndustryDetail.setRemark("系统存在此客户(" + criteria.getSearchEngine() + ")");
+        String domain = criteria.getWebsite().replace("http://","").replace("https://","")
+                .replace("www.","").split("/")[0];
+        String qzCustomerStr = qzSettingService.findQZCustomer(domain);
+        if (null != qzCustomerStr) {
+            String[] customerStr = qzCustomerStr.split("##");
+            existingIndustryDetail.setIdentifyCustomer(customerStr[0] + "已有该网站客户" + customerStr[1]);
         }
         if (updateFlag) {
             industryDetailDao.updateById(existingIndustryDetail);
