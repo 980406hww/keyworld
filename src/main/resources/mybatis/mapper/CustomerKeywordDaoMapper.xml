@@ -567,11 +567,11 @@
     </select>
 
     <update id="resetOptimizationInfoForNoOptimizeDate" timeout="200000">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fQueryInterval = (24*60*60)/fOptimizePlanCount, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate IS NULL
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeTodayCount = fOptimizePlanCount * ROUND((RAND()*0.7+0.5),1), fQueryInterval = (24*60*60)/fOptimizeTodayCount, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate IS NULL
     </update>
 
     <update id="resetOptimizationInfo">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fQueryInterval = (24*60*60)/fOptimizePlanCount, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate <![CDATA[<]]> CURRENT_DATE() LIMIT 200000
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeTodayCount = fOptimizePlanCount * ROUND((RAND()*0.7+0.5),1), fQueryInterval = (24*60*60)/fOptimizeTodayCount, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate <![CDATA[<]]> CURRENT_DATE() LIMIT 200000
     </update>
 
     <select id="searchRemainingOptimizationCount" resultType="java.util.Map">
@@ -660,14 +660,15 @@
     </select>
 
     <update id="updateOptimizationQueryTime">
-        <foreach item="item" index="index" collection="customerKeywordQueryRangeVOs" open="" separator=";" close="">
-            UPDATE t_customer_keyword
-            SET fQueryDate = CURRENT_DATE(),
-            fQueryCount = fQueryCount + 1,
-            fInvalidRefreshCount = fInvalidRefreshCount + 1,
-            fQueryTime = DATE_ADD(fQueryTime, INTERVAL #{item.queryInterval}  SECOND ),
-            fInvalidFlag = if(fInvalidRefreshCount > 8, 1, 0)
-            WHERE fUuid = #{item.uuid}
+        UPDATE t_customer_keyword
+        SET fQueryDate = CURRENT_DATE(),
+        fQueryCount = fQueryCount + 1,
+        fInvalidRefreshCount = fInvalidRefreshCount + 1,
+        fQueryTime = DATE_ADD(fQueryTime, INTERVAL (IF ((ROUND(RAND(),1) &lt; 0.5), ROUND(fQueryInterval * ROUND(RAND() + 1)), ROUND(fQueryInterval * ROUND(RAND() * 0.4 + 0.1)))) SECOND ),
+        fInvalidFlag = if(fInvalidRefreshCount > 8, 1, 0)
+        WHERE fUuid IN
+        <foreach item="uuid" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
+            #{uuid}
         </foreach>
     </update>
 

@@ -120,7 +120,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     private final static Map<String, ArrayBlockingQueue> customerKeywordCrawlPTRankQueueMap = new HashMap<String, ArrayBlockingQueue>();
 
     private final static ArrayBlockingQueue checkingEnteredKeywordQueue = new ArrayBlockingQueue<>(5000);
-    private final static Random random = new Random();
+
     public void cacheCustomerKeywords() {
         List<String> machineGroups = customerKeywordDao.getMachineGroups();
         if (CollectionUtils.isNotEmpty(machineGroups)) {
@@ -139,24 +139,17 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     do {
                         optimizationKeywordVOS = customerKeywordDao.fetchCustomerKeywordsForCache(terminalTypeAndMachineGroups[0], terminalTypeAndMachineGroups[1], ((machineCount * 10) > 5000 ? 5000 : (machineCount * 10)));
                         if (CollectionUtils.isNotEmpty(optimizationKeywordVOS)) {
-
-                            List<CustomerKeywordQueryRangeVO> customerKeywordQueryRangeVOS = new ArrayList<>();
-
-                            Map<Long,OptimizationKeywordVO>  refOptimizationKeywordVOMap = new HashMap<>();
+                            List<Long> customerKeywordUuids = new ArrayList<Long>();
                             if (optimizationKeywordVOS.size() > machineCount) {
                                 for (OptimizationKeywordVO optimizationKeywordVO : optimizationKeywordVOS) {
                                     if (blockingQueue.offer(optimizationKeywordVO)) {
                                         offerCount++;
-                                        CustomerKeywordQueryRangeVO customerKeywordQueryRangeVO = new CustomerKeywordQueryRangeVO();
-                                        customerKeywordQueryRangeVO.setUuid(optimizationKeywordVO.getUuid());
-                                        customerKeywordQueryRangeVO.setQueryInterval(getRandomQueryInterval(optimizationKeywordVO.getQueryInterval()));
-                                        customerKeywordQueryRangeVOS.add(customerKeywordQueryRangeVO);
-                                        refOptimizationKeywordVOMap.put(optimizationKeywordVO.getUuid(),optimizationKeywordVO);
+                                        customerKeywordUuids.add(optimizationKeywordVO.getUuid());
                                     } else {
                                         break;
                                     }
                                 }
-                                updateOptimizationQueryTime(customerKeywordQueryRangeVOS);
+                                updateOptimizationQueryTime(customerKeywordUuids);
                             } else {
                                 int count = 0;
                                 int repeatTimes = 0;
@@ -197,32 +190,20 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                     break;
                                 }
                                 while (customerKeywordUuidAndRepeatCount.size() > 0) {
-                                    OptimizationKeywordVO optimizationKeywordVO = null;
-                                    for (Long uuid : customerKeywordUuidAndRepeatCount.keySet()){
-                                        optimizationKeywordVO = refOptimizationKeywordVOMap.get(uuid);
-                                        CustomerKeywordQueryRangeVO customerKeywordQueryRangeVO = new CustomerKeywordQueryRangeVO();
-                                        customerKeywordQueryRangeVO.setUuid(optimizationKeywordVO.getUuid());
-                                        customerKeywordQueryRangeVO.setQueryInterval(getRandomQueryInterval(optimizationKeywordVO.getQueryInterval()));
-                                        customerKeywordQueryRangeVOS.add(customerKeywordQueryRangeVO);
-                                    }
-
-                                    updateOptimizationQueryTime(customerKeywordQueryRangeVOS);
-                                    customerKeywordQueryRangeVOS.clear();
+                                    customerKeywordUuids.addAll(customerKeywordUuidAndRepeatCount.keySet());
+                                    updateOptimizationQueryTime(customerKeywordUuids);
+                                    customerKeywordUuids.clear();
                                     for (Long customerKeywordUuid : customerKeywordUuidAndRepeatCount.keySet()) {
                                         if (customerKeywordUuidAndRepeatCount.get(customerKeywordUuid) < 2) {
-                                            optimizationKeywordVO = refOptimizationKeywordVOMap.get(customerKeywordUuid);
-                                            CustomerKeywordQueryRangeVO customerKeywordQueryRangeVO = new CustomerKeywordQueryRangeVO();
-                                            customerKeywordQueryRangeVO.setUuid(optimizationKeywordVO.getUuid());
-                                            customerKeywordQueryRangeVO.setQueryInterval(getRandomQueryInterval(optimizationKeywordVO.getQueryInterval()));
-                                            customerKeywordQueryRangeVOS.add(customerKeywordQueryRangeVO);
+                                            customerKeywordUuids.add(customerKeywordUuid);
                                         } else {
                                             customerKeywordUuidAndRepeatCount.put(customerKeywordUuid, (customerKeywordUuidAndRepeatCount.get(customerKeywordUuid) - 1));
                                         }
                                     }
-                                    for (CustomerKeywordQueryRangeVO customerKeywordQueryRangeVO : customerKeywordQueryRangeVOS) {
-                                        customerKeywordUuidAndRepeatCount.remove(customerKeywordQueryRangeVO.getUuid());
+                                    for (Long customerKeywordUuid : customerKeywordUuids) {
+                                        customerKeywordUuidAndRepeatCount.remove(customerKeywordUuid);
                                     }
-                                    customerKeywordQueryRangeVOS.clear();
+                                    customerKeywordUuids.clear();
                                 }
                                 if (!CollectionUtils.isNotEmpty(optimizationKeywordVOS)) {
                                     break;
@@ -1418,7 +1399,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.resetOptimizationInfoForNoOptimizeDate();
     }
 
-    public void updateOptimizationQueryTime(List<CustomerKeywordQueryRangeVO> customerKeywordUuids) {
+    public void updateOptimizationQueryTime(List<Long> customerKeywordUuids) {
         customerKeywordDao.updateOptimizationQueryTime(customerKeywordUuids);
     }
 
@@ -2028,14 +2009,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.UI.name());
         addCustomerKeyword(customerKeyword, userName);
     }
-
-    private int getRandomQueryInterval(int oldQueryInterval){
-        int queryInterval = (Math.random() > 0.5)
-                ? new Double(Math.ceil(oldQueryInterval*(random.nextFloat()+1))).intValue()
-                : new Double(Math.ceil(oldQueryInterval*(random.nextFloat()*0.4+0.1))).intValue();
-        return queryInterval;
-    }
-
 }
 
 
