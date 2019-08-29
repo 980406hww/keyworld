@@ -12,7 +12,8 @@
         tii.fPageNum      AS 'pageNum',
         tii.fPagePerNum   AS 'pagePerNum',
         tii.fStatus       AS 'status',
-        tii.fCreateTime   AS 'createTime'
+        tii.fCreateTime   AS 'createTime',
+        tii.fUpdateTime   AS 'updateTime'
     </sql>
 
     <select id="searchIndustries" resultType="com.keymanager.monitoring.entity.IndustryInfo">

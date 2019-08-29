@@ -137,6 +137,11 @@ function saveIndustry(uuid, loginName) {
         return;
     }
     industryInfo.targetUrl = industryForm.find("#targetUrl").val();
+    if(industryInfo.targetUrl != null || industryInfo.targetUrl != ""){
+        if(industryInfo.targetUrl.search("http://")){
+            industryInfo.targetUrl = "http://" + industryInfo.targetUrl
+        }
+    }
     industryInfo.pageNum = industryForm.find("#pageNum").val();
     if (industryInfo.pageNum === '') {
         $.messager.alert('提示', '请输入爬取页数！！', 'warning');
@@ -503,3 +508,5 @@ function downloadIndustryInfo() {
         }
     });
 }
+
+
