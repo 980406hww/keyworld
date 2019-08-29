@@ -108,6 +108,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fOptimizedCount")
     private int optimizedCount;
 
+    @TableField(value = "fOptimizeTodayCount")
+    private int optimizeTodayCount;
+
     @TableField(value = "fOptimizeRemainingCount")
     private int optimizeRemainingCount;
 
@@ -532,6 +535,14 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setOptimizedCount(int optimizedCount) {
         this.optimizedCount = optimizedCount;
+    }
+
+    public int getOptimizeTodayCount() {
+        return optimizeTodayCount;
+    }
+
+    public void setOptimizeTodayCount(int optimizeTodayCount) {
+        this.optimizeTodayCount = optimizeTodayCount;
     }
 
     public Double getOptimizedPercentage() {
