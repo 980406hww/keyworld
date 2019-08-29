@@ -2031,11 +2031,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 //                        ? externalCustomerKeywordVO.getPcIndex() : externalCustomerKeywordVO.getPhoneIndex();
                 Integer index = externalCustomerKeywordVO.getAllIndex();
                 customerKeyword.setCurrentIndexCount(index);
-                if (index == null || index == 0 || index == -2 || index == -1) {
+                if (index == null || index <= 0) {
                     customerKeyword.setOptimizePlanCount(8);
-                } else if (index > 0 && index <= 30) {
+                } else if (index <= 30) {
                     customerKeyword.setOptimizePlanCount(10);
-                } else if (index > 30 && index <= 200) {
+                } else if (index <= 200) {
                     customerKeyword.setOptimizePlanCount(12 + (int) Math.ceil(index * 0.03));
                 } else {
                     if (index >= 1000) {
