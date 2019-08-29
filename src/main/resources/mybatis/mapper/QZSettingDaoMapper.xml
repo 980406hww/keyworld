@@ -171,7 +171,6 @@
                 SELECT 1
                 FROM t_qz_keyword_rank_info qk
                 WHERE qk.fQZSettingUuid = qs.fUuid
-                AND qk.fDataProcessingStatus = 1
                 AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
             <choose>
                 <when test="qzSettingSearchCriteria.checkStatus == 1">
@@ -204,6 +203,7 @@
                     AND qk.fTodayDifference &gt; 0
                 </when>
             </choose>
+                AND qk.fDataProcessingStatus = 1
             )
         </if>
         <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
@@ -246,7 +246,7 @@
 
             </otherwise>
         </choose>
-        ORDER BY qs.fUpdateEndTime
+        ORDER BY qs.fUpdateTime
     </select>
 
     <select id="searchQZSettingsByUuids" resultType="com.keymanager.monitoring.entity.QZSetting">
@@ -385,12 +385,10 @@
     <select id="getQZSettingGroupInfo" resultType="java.lang.Integer">
         SELECT COUNT(1)
         FROM t_customer_keyword ck
-        LEFT JOIN t_qz_setting qs
-        ON qs.fCustomerUuid = ck.fCustomerUuid
-        WHERE qs.fUuid = #{qzSettingUuid}
+        WHERE ck.fOptimizeGroupName = #{optimizeGroupName}
+        AND ck.fType = 'qz'
+        AND ck.fTerminalType = #{terminalType}
         AND ck.fStatus = 1
-        <if test="terminalType != ''">AND ck.fTerminalType = #{terminalType}</if>
-        <if test="optimizeGroupName != ''">AND ck.fOptimizeGroupName LIKE '${optimizeGroupName}%'</if>
     </select>
 
     <select id="getAvailableOptimizationGroups" resultType="java.lang.String">

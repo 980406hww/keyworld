@@ -716,7 +716,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	}
 
 	private void getQZSettingGroupInfo(Map<String, Object> rankInfoVoMap, long uuid, String terminalType, String optimizeGroupName) {
-		rankInfoVoMap.put("customerKeywordCount", qzSettingDao.getQZSettingGroupInfo(uuid, terminalType, optimizeGroupName));
+		rankInfoVoMap.put("customerKeywordCount", qzSettingDao.getQZSettingGroupInfo(terminalType, optimizeGroupName));
 		rankInfoVoMap.put("operationCombineName", operationCombineService.getOperationCombineName(optimizeGroupName));
 		rankInfoVoMap.put("categoryTagNames", qzCategoryTagService.findTagNames(uuid));
 		rankInfoVoMap.put("standardTime", qzOperationTypeService.getStandardTime(uuid, terminalType));
