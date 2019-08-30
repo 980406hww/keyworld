@@ -2,6 +2,7 @@ package com.keymanager.monitoring.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.monitoring.common.result.Menu;
 import com.keymanager.monitoring.common.result.Tree;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.monitoring.dao.ResourceDao;
@@ -172,4 +173,21 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceDao, Resource> impl
 		roleResourceDao.deleteByResourceId(resourceId);
 		return super.deleteById(resourceId);
 	}
+
+    @Override
+    public List<Menu> selectAuthorizationResource(String loginName, Long parentId) {
+        List<Menu> menus = new ArrayList<>();
+        List<Resource> resources = resourceDao.selectAuthorizationResource(loginName, parentId);
+        for (Resource resource : resources) {
+            Menu menu = new Menu();
+            menu.setTitle(resource.getResourceName());
+            menu.setIcon("");
+            menu.setSpread(false);
+            menu.setHref(resource.getUrl());
+            List<Menu> children = selectAuthorizationResource(loginName, resource.getId());
+            menu.setChildren(children);
+            menus.add(menu);
+        }
+        return menus;
+    }
 }

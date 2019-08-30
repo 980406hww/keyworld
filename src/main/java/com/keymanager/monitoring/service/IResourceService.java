@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.keymanager.monitoring.common.result.Menu;
 import com.keymanager.monitoring.common.result.Tree;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.monitoring.entity.Resource;
@@ -24,4 +25,5 @@ public interface IResourceService extends IService<Resource> {
 
     List<Tree> selectTree(ShiroUser shiroUser);
 
+    List<Menu> selectAuthorizationResource(String loginName, Long parentId);
 }

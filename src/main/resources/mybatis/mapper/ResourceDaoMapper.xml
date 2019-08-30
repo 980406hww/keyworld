@@ -34,4 +34,28 @@
         AND s.fResourceType = 0
         ORDER BY s.fSequence
     </select>
+
+    <select id="selectAuthorizationResource" resultType="com.keymanager.monitoring.entity.Resource">
+        SELECT
+        <include refid="colID"/>
+        FROM t_resource s
+        WHERE s.fUuid IN (SELECT
+        rr.fResourceID
+        FROM t_userinfo u,
+        t_user_role ur,
+        t_role_resource rr
+        WHERE u.fLoginName = #{loginName}
+        AND u.fUuid = ur.fUserID
+        AND ur.fRoleID = rr.fRoleID)
+        <choose>
+            <when test="parentId == null">
+                AND s.fParentID IS NULL
+            </when>
+            <otherwise>
+                AND s.fParentID = #{parentId}
+            </otherwise>
+        </choose>
+        AND s.fResourceType = 0
+        ORDER BY s.fSequence
+    </select>
 </mapper>
