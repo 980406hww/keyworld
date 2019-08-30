@@ -21,8 +21,11 @@
     <%@include file="/menu.jsp" %>
     <div style="text-align: right; margin: 10px 5px;">
         <div style="margin: 5px 0px 0px 5px;">
+<%--            <shiro:hasPermission name="/internal/industry/downloadIndustryInfo">--%>
+                <a target="_blank" href="javascript:downloadIndustryInfo()">导出网站联系信息</a>
+<%--            </shiro:hasPermission>--%>
             <shiro:hasPermission name="/internal/industry/uploadIndustryInfos">
-                <a target="_blank" href="javascript:uploadIndustryInfos('SuperIndustrySimple')">Excel上传</a>
+                | <a target="_blank" href="javascript:uploadIndustryInfos('SuperIndustrySimple')">Excel上传</a>
             </shiro:hasPermission>
             <shiro:hasPermission name="/SuperIndustrySimpleList.xls">
                 | <a target="_blank" href="/SuperIndustrySimpleList.xls">模板下载</a>
@@ -116,16 +119,22 @@
                 </td>
                 <td width=40 style="text-align: center">${industryInfo.pageNum}</td>
                 <td width=40 style="text-align: center">${industryInfo.pagePerNum}</td>
-                <td width=60 style="text-align: center" name="status">
+                <td width=60 style="text-align: center" name="status" title="更新时间：<fmt:formatDate value="${industryInfo.updateTime}" pattern="yyyy-MM-dd HH:mm"/>">
                     <c:choose>
                         <c:when test="${industryInfo.status == 2}">
-                            <span style="color: forestgreen;">爬取完成</span>
+                            <span style="color: forestgreen; text-align: center;">
+                                爬取完成
+                            </span>
                         </c:when>
                         <c:when test="${industryInfo.status == 1}">
-                            <span style="color: darkorange;">爬取中</span>
+                            <span style="color: darkorange; text-align: center;" >
+                                爬取中
+                            </span>
                         </c:when>
                         <c:otherwise>
-                            <span style="color: red;">未爬取</span>
+                            <span style="color: red; text-align: center;">
+                                未爬取
+                            </span>
                         </c:otherwise>
                     </c:choose>
                 </td>
@@ -170,15 +179,15 @@
             </tr>
             <tr>
                 <td align="right" width="60">起始网址: </td>
-                <td><input type="text" name="targetUrl" id="targetUrl" style="width:180px;" placeholder="起始网址"></td>
+                <td><input type="text" name="targetUrl" id="targetUrl" onkeyup="setPageNumAndPagePerNumByTargetUrl(this.val)" style="width:180px;" placeholder="起始网址"></td>
             </tr>
             <tr>
                 <td align="right" width="60">爬取页数: </td>
-                <td><input type="text" name="pageNum" id="pageNum" style="width:180px;" value="2" placeholder="爬取页数(数字)"></td>
+                <td><input type="text" class="easyui-numberspinner" data-options="min:0,increment:1" name="pageNum" id="pageNum" style="width:180px;"></td>
             </tr>
             <tr>
                 <td align="right" width="60">每页条数: </td>
-                <td><input type="text" name="pagePerNum" id="pagePerNum" style="width:180px;" value="10" placeholder="每页条数(数字)"></td>
+                <td><input type="text" class="easyui-numberspinner" data-options="min:0,increment:10" name="pagePerNum" id="pagePerNum" style="width:180px;"></td>
             </tr>
             <tr>
                 <td align="right" width="60">爬取状态: </td>

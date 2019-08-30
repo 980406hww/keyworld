@@ -57,7 +57,7 @@ public class AlgorithmTestPlanService extends ServiceImpl<AlgorithmTestPlanDao, 
 
     public synchronized AlgorithmTestPlan selectOneAvailableAlgorithmTestPlan() {
         AlgorithmTestPlan algorithmTestPlan = algorithmTestPlanDao.selectOneAvailableAlgorithmTestPlan();
-        algorithmTestPlanDao.updateExcuteQueryTime(algorithmTestPlan.getUuid());
+        algorithmTestPlanDao.updateExcuteQueryTimeAndExcuteCount(algorithmTestPlan.getUuid());
         return algorithmTestPlan;
     }
 

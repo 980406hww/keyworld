@@ -105,6 +105,17 @@ public class AlgorithmTestPlan{
     private Integer excuteStatus;
 
     /**
+     * 执行类型 0:一次、1:多次
+     */
+    @TableField("fExcuteType")
+    private Integer excuteType;
+
+    /**
+     * 执行次数
+     */
+    @TableField("fExcuteCount")
+    private Integer excuteCount;
+    /**
      * 创建人
      */
     @TableField("fCreateBy")
@@ -256,5 +267,21 @@ public class AlgorithmTestPlan{
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getExcuteType() {
+        return excuteType;
+    }
+
+    public void setExcuteType(Integer excuteType) {
+        this.excuteType = excuteType;
+    }
+
+    public Integer getExcuteCount() {
+        return excuteCount;
+    }
+
+    public void setExcuteCount(Integer excuteCount) {
+        this.excuteCount = excuteCount;
     }
 }

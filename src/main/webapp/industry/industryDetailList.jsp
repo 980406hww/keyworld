@@ -64,7 +64,8 @@
             <td align="center" width=100>QQ</td>
             <td align="center" width=120>电话</td>
             <td align="center" width=40>权重</td>
-            <td align="center" width=150>备注</td>
+            <td align="center" width=100>客户标注</td>
+            <td align="center" width=150>销售备注</td>
             <td align="center" width=40>层级</td>
             <td align="center" width=60>修改时间</td>
             <td align="center" width=60>创建时间</td>
@@ -86,6 +87,7 @@
                 <td width=100 valign="top">${industryDetail.qq}</td>
                 <td width=120 valign="top">${industryDetail.telephone}</td>
                 <td width=40 style="text-align: center">${industryDetail.weight}</td>
+                <td width=100 style="text-align: center">${industryDetail.identifyCustomer}</td>
                 <td width=150>
                     <input type="hidden" name="hiddenRemark" value="${industryDetail.remark}">
                     <input type="text" style="width: 100%;" value="${industryDetail.remark}" onblur="updateIndustryDetailRemark(this)">
