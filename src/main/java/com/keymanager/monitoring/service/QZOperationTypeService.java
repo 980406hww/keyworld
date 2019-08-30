@@ -8,6 +8,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -52,5 +53,9 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
 
     public void updateStandardTimeByUuid(Long uuid, int updateFlag, int lastAchieve) {
         qzOperationTypeDao.updateStandardTimeByUuid(uuid, updateFlag, lastAchieve);
+    }
+
+    public Date getStandardTime(long qzSettingUuid, String terminalType) {
+		return qzOperationTypeDao.getStandardTime(qzSettingUuid, terminalType);
     }
 }

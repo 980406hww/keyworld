@@ -3,6 +3,7 @@ package com.keymanager.monitoring.controller.rest.external;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.BaseCriteria;
+import com.keymanager.monitoring.criteria.ExternalCustomerKeywordCriteria;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.service.*;
 import com.keymanager.monitoring.vo.*;
@@ -231,33 +232,6 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/getCustomerKeyword", method = RequestMethod.GET)
-    public ResponseEntity<?> getCustomerKeywordForOptimization(HttpServletRequest request) throws Exception {
-        long startMilleSeconds = System.currentTimeMillis();
-        String clientID = request.getParameter("clientID");
-        String userName = request.getParameter("userName");
-        if(StringUtils.isBlank(userName)){
-            userName = request.getParameter("username");
-        }
-        String password = request.getParameter("password");
-        String version = request.getParameter("version");
-        try {
-            if (validUser(userName, password)) {
-                MachineInfo machineInfo = machineInfoService.selectById(clientID);
-                String terminalType = machineInfo.getTerminalType();
-
-                CustomerKeywordForOptimization customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimization(terminalType, clientID, version, true);
-                machineInfoService.updateMachineInfoVersion(clientID, version, customerKeywordForOptimization != null);
-                performanceService.addPerformanceLog(terminalType + ":getCustomerKeyword", System.currentTimeMillis() - startMilleSeconds, null);
-                return ResponseEntity.status(HttpStatus.OK).body(customerKeywordForOptimization);
-            }
-        }catch (Exception ex){
-            ex.printStackTrace();
-            logger.error("getCustomerKeyword:    " + ex.getMessage());
-        }
-        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-    }
-
     @RequestMapping(value = "/getCustomerKeywordZip", method = RequestMethod.GET)
     public ResponseEntity<?> getCustomerKeywordForOptimizationZip(HttpServletRequest request) throws Exception {
         long startMilleSeconds = System.currentTimeMillis();
@@ -294,7 +268,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     }
 
     @RequestMapping(value = "/fetchCustomerKeywordZip", method = RequestMethod.GET)
-    public ResponseEntity<?> fetchCustoemrKeywordForOptimization(HttpServletRequest request) throws Exception {
+    public ResponseEntity<?> fetchCustomerKeywordForOptimization(HttpServletRequest request) throws Exception {
         long startMilleSeconds = System.currentTimeMillis();
         String clientID = request.getParameter("clientID");
         String userName = request.getParameter("userName");
@@ -303,18 +277,25 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         }
         String password = request.getParameter("password");
         String version = request.getParameter("version");
+        StringBuilder errorFlag = new StringBuilder("");
         try {
             if (validUser(userName, password)) {
                 MachineInfo machineInfo = machineInfoService.selectById(clientID);
                 String s = "";
                 if(machineInfo != null) {
                     String terminalType = machineInfo.getTerminalType();
-                    OptimizationVO optimizationVO = customerKeywordService.fetchCustoemrKeywordForOptimization(machineInfo);
+                    errorFlag.append("1");
+                    OptimizationVO optimizationVO = customerKeywordService.fetchCustomerKeywordForOptimization(machineInfo);
+                    errorFlag.append("2");
                     if (optimizationVO != null) {
                         machineInfoService.updateMachineInfoVersion(clientID, version, optimizationVO != null);
+                        errorFlag.append("3");
                         byte[] compress = AESUtils.compress(AESUtils.encrypt(optimizationVO).getBytes());
+                        errorFlag.append("4");
                         s = AESUtils.parseByte2HexStr(compress);
+                        errorFlag.append("5");
                         performanceService.addPerformanceLog(terminalType + ":fetchCustomerKeywordZip", System.currentTimeMillis() - startMilleSeconds, null);
+                        errorFlag.append("6");
                     }
                 }else{
                     logger.error("fetchCustomerKeywordZip,     Not found clientID:" + clientID);
@@ -323,7 +304,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             }
         }catch (Exception ex){
             ex.printStackTrace();
-            logger.error("fetchCustomerKeywordZip:     " + clientID + ex.getMessage());
+            logger.error("fetchCustomerKeywordZip: " + errorFlag.toString() + "clientID:" + clientID + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
@@ -653,4 +634,6 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
+
+
 }

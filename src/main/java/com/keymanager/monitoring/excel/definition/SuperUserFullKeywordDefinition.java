@@ -18,8 +18,9 @@ public enum SuperUserFullKeywordDefinition {
 	OptimizeGroupName(14),
 	BearPawNumber(15),
 	Title(16),
-	OrderNumber(17),
-	Remarks(18);
+	RunImmediate(17),
+	OrderNumber(18),
+	Remarks(19);
 	private int columnIndex;
 	
 	private SuperUserFullKeywordDefinition(int columnIndex){

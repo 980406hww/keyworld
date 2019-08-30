@@ -3,6 +3,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportExcelWriter;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.entity.Customer;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/internal/dailyReport")
@@ -48,7 +50,12 @@ public class DailyReportRestController extends SpringMVCBaseController {
 	public ResponseEntity<?> triggerReportGeneration(HttpServletRequest request) throws Exception{
 		String returnValue = null;
 		try {
-			dailyReportService.removeDailyReportInToday();
+			String username = null;
+			Set<String> roles = getCurrentUser().getRoles();
+			if(!roles.contains("DepartmentManager")) {
+				username = (String) request.getSession().getAttribute("username");
+			}
+			dailyReportService.removeDailyReportInToday(username);
 			returnValue = "{\"status\":true}";
 		}catch(Exception ex){
 			logger.error(ex.getMessage());
@@ -61,8 +68,9 @@ public class DailyReportRestController extends SpringMVCBaseController {
 	@RequestMapping(value = "/searchCurrentDateCompletedReports", method = RequestMethod.GET)
 	public ResponseEntity<?> searchCurrentDateCompletedReports(HttpServletRequest request) throws Exception{
 		try {
-			String terminalType = TerminalTypeMapping.getTerminalType(request);
-			List<DailyReport> dailyReports = dailyReportService.searchCurrentDateCompletedReports(terminalType);
+			String userName = (String) request.getSession().getAttribute("username");
+			String entryType = (String) request.getSession().getAttribute("entryType");
+			List<DailyReport> dailyReports = dailyReportService.searchCurrentDateCompletedReports(EntryTypeEnum.bc.name().equalsIgnoreCase(entryType) ? null : userName);
 			return new ResponseEntity<Object>(dailyReports, HttpStatus.OK);
 		}catch (Exception ex) {
 			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);

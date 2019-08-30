@@ -7,13 +7,13 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface DailyReportDao extends BaseMapper<DailyReport> {
-    List<DailyReport> findByStatus(@Param("status") String status);
+    DailyReport findByStatus(@Param("status") String status);
 
-    List<DailyReport> searchCurrentDateCompletedReports(@Param("terminalType") String terminalType);
+    List<DailyReport> searchCurrentDateCompletedReports(@Param("userName") String userName);
 
     long selectLastId();
 
     void deleteDailyReportFromAWeekAgo();
 
-    DailyReport fetchDailyReportTriggeredInToday(@Param("triggerMode") String triggerMode);
+    List<DailyReport> fetchDailyReportTriggeredInToday(@Param("userID") String userID, @Param("triggerMode") String triggerMode);
 }

@@ -54,7 +54,8 @@
                 <option value=''>所有</option>
                 <option value='1'>激活</option>
                 <option value='2'>新增</option>
-                <option value='0'>过期</option>
+                <option value='0'>暂不操作</option>
+                <option value='3'>下架</option>
             </select>&nbsp;
             优化组名:
             <input type="text" name="optimizeGroupName" id="optimizeGroupName"
@@ -77,7 +78,7 @@
             关键字来源:
             <select name="customerKeywordSource" id="customerKeywordSource">
                 <option value="">所有</option>
-                <c:forEach items="${CustomerKeywordSourceMap}" var="entry">
+                <c:forEach items="${customerKeywordSourceMap}" var="entry">
                     <option value="${entry.value}">${entry.key}</option>
                 </c:forEach>
             </select>
@@ -103,7 +104,6 @@
             </select>
 
             <input id="pushPay" name="pushPay" type="checkbox"  onclick="pushPayValue()" value="${customerKeywordCriteria.pushPay}"/>催缴 &nbsp;
-            <input id="displayStop" name="displayStop" type="checkbox"  onclick="displayStopValue()" value="${customerKeywordCriteria.displayStop}"/>显示下架 &nbsp;
             <input id="requireDelete" name="requireDelete" type="checkbox"  ${customerKeywordCriteria.requireDelete == true ? "checked=true" : ""}/>要求删除 &nbsp;
             <input id="noPosition" name="noPosition" type="checkbox"  onclick="noPositionValue()"/>显示排名为0 &nbsp;
             要刷:<input type="text" name="gtOptimizePlanCount" id="gtOptimizePlanCount" placeholder=">=" value="${customerKeywordCriteria.gtOptimizePlanCount}" style="width:40px;"/>
@@ -194,11 +194,15 @@
             <td align="center" width=50>原排名</td>
             <td align="center" width=50>现排名</td>
             <td align="center" width=50>搜索引擎</td>
+            <td align="center" width=50>目标城市</td>
             <td align="center" width=40>计价方式</td>
             <td align="center" width=30>要刷</td>
             <td align="center" width=30>已刷</td>
             <td align="center" width=30>无效</td>
-            <td align="center" width=60>报价</td>
+            <c:if test="${sessionScope.get('entryType') ne 'qz'}">
+                <td align="center" width=60>报价</td>
+            </c:if>
+            <td align="center" width=70>状态</td>
             <td align="center" width=100>订单号</td>
             <td align="center" width=60>付费状态</td>
             <td align="center" width=100>备注</td>
@@ -219,14 +223,14 @@
                     ${customerKeyword.userID}
                 </td>
                 </c:if>
-                <td align="center" width=80>
+                <td align="center" width=80 style="text-align: left;">
                     <a href="#" onclick="searchCustomerKeywords('/internal/customerKeyword/searchCustomerKeywords/${customerKeyword.customerUuid}')">${customerKeyword.contactPerson}</a>
                 </td>
-                <td align="center" width=80>
+                <td align="center" width=80 style="text-align: left;">
                     ${customerKeyword.keyword}
                 </td>
 
-                <td align="center" width=100 class="floatTd" title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}" >
+                <td align="center" width=100 class="floatTd" style="text-align: left;" title="原始URL:${customerKeyword.originalUrl != null ?customerKeyword.originalUrl : customerKeyword.url}" >
                         ${customerKeyword.url==null?'':customerKeyword.url}
                 </td>
                 <td align="center" width=100>
@@ -242,23 +246,25 @@
                     </div>
                 </td>
                 <td align="center" width=50>
-                    <div style="height:16px;">${customerKeyword.initialPosition}
-                    </div>
+                    <div style="height:16px;">${customerKeyword.initialPosition}</div>
                 </td>
-                <td align="center" width=50 class="floatTd" title="排名采集城市: ${customerKeyword.capturePositionCity}">
+                <td align="center" width=50 class="floatTd" title="排名采集城市: ${customerKeyword.capturePositionCity}&#13;排名采集时间: <fmt:formatDate value="${customerKeyword.capturePositionQueryTime}" pattern="yyyy-MM-dd HH:mm:ss"/>">
                     <div style="height:16px;">
                         <a href="${customerKeyword.searchEngineUrl}" target="_blank">${customerKeyword.currentPosition}</a>
                     </div>
                 </td>
                 <td align="center" width=50>${customerKeyword.searchEngine}</td>
+                <td align="center" width=50>${customerKeyword.city}</td>
                 <td align="center" class="floatTd" width=40 title="优化日期：<fmt:formatDate value="${customerKeyword.optimizeDate}" pattern="yyyy-MM-dd"/> ，要刷：${customerKeyword.optimizePlanCount}，已刷：${customerKeyword.optimizedCount}" >
                         ${customerKeyword.collectMethodName}
                 </td>
-
                 <td align="center" width=30>${customerKeyword.optimizePlanCount}</td>
                 <td align="center" width=30>${customerKeyword.optimizedCount} </td>
                 <td align="center" width=30>${customerKeyword.invalidRefreshCount}</td>
-                <td align="center" width=60>${customerKeyword.feeString}</td>
+                <c:if test="${sessionScope.get('entryType') ne 'qz'}">
+                    <td align="center" width=60>${customerKeyword.feeString}</td>
+                </c:if>
+                <td align="center" width=70 style="color:${customerKeywordStatusMap.get(customerKeyword.status).get("color")}">${customerKeywordStatusMap.get(customerKeyword.status).get("desc")} </td>
                 <td align="center" width=100>${customerKeyword.orderNumber}</td>
                 <td align="center" width="60">${customerKeyword.paymentStatus}</td>
                 <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
@@ -328,11 +334,6 @@
         }else{
             $("#noPosition").prop("checked",false);
         }
-        if(${customerKeywordCriteria.displayStop == 1}){
-            $("#displayStop").prop("checked",true);
-        }else{
-            $("#displayStop").prop("checked",false);
-        }
         if(${customerKeywordCriteria.pushPay == 1}){
             $("#pushPay").prop("checked",true);
         }else{
@@ -344,7 +345,6 @@
             $("#groupNameFuzzyQuery").prop("checked",false);
         }
         noPositionValue();
-        displayStopValue();
         pushPayValue();
         groupNameFuzzyQueryValue();
     }
@@ -355,14 +355,6 @@
             $("#pushPay").val("1")
         }else {
             $("#pushPay").val("0");
-        }
-    }
-    //显示下架
-    function displayStopValue() {
-        if($("#displayStop").is(":checked")){
-            $("#displayStop").val("1")
-        }else {
-            $("#displayStop").val("0");
         }
     }
 

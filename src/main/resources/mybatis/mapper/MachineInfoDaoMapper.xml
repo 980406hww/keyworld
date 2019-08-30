@@ -140,6 +140,7 @@
         FROM
         t_machine_info mi
         WHERE mi.fTerminalType = #{machineInfoCriteria.terminalType}
+        AND mi.fMachineGroup = #{machineInfoCriteria.machineGroup}
         AND (mi.fContinuousFailCount &gt; 5 OR mi.fTenMinsLastVisitTime &lt; NOW()) and mi.fValid = 1
         <if test="machineInfoCriteria.groupName != null and machineInfoCriteria.groupName != ''">AND mi.fGroup = #{machineInfoCriteria.groupName}</if>
         <if test="machineInfoCriteria.switchGroups != null"> AND mi.fSwitchGroupName IN
@@ -536,4 +537,23 @@
         </where>
         GROUP BY mi.fMachineGroup, mi.fTerminalType ORDER BY mi.fMachineGroup
     </select>
+
+    <update id="updateMachine">
+        UPDATE t_machine_info
+        <set>
+            <if test="city!=null and city!=''">
+                fCity=#{city},
+            </if>
+             <if test="version!=null and version!=''">
+                fVersion=#{version},
+            </if>
+             <if test="freeSpace!=null and freeSpace!=''">
+                 fFreeSpace=#{freeSpace},
+            </if>
+             <if test="runningProgramType!=null and runningProgramType!=''">
+                 fRunningProgramType=#{runningProgramType},
+            </if>
+        </set>
+        WHERE fClientID = #{clientID}
+    </update>
 </mapper>

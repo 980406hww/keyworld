@@ -56,7 +56,7 @@ public class GroupSettingRestController extends SpringMVCBaseController {
             String pageSize = request.getParameter("pageSize");
             if (null == currentPageNumber && null == pageSize) {
                 currentPageNumber = "1";
-                pageSize = "10";
+                pageSize = "25";
             }
             return constructGroupSettingModelAndView(request, groupSettingCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
         } catch (Exception e) {

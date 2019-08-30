@@ -15,39 +15,66 @@
             <input type="hidden" name="pageSize" id="pageSizeHidden" value="${page.size}"/>
             <input type="hidden" name="pages" id="pagesHidden" value="${page.pages}"/>
             <input type="hidden" name="total" id="totalHidden" value="${page.total}"/>
-            网站名称:<input type="text" name="websiteName" id="websiteName" value="${websiteCriteria.websiteName}" style="width: 100px;">&nbsp;&nbsp;
-            域名:<input type="text" name="domain" id="domain" value="${websiteCriteria.domain}" style="width: 100px;">&nbsp;&nbsp;
-            失败次数:<input type="text" name="accessFailCount" id="accessFailCount" value="${websiteCriteria.accessFailCount}" style="width: 40px;">&nbsp;&nbsp;
-            含有指定友链:<input type="text" name="friendlyLinkUrl" id="friendlyLinkUrl" style="width: 180px;" value="${(websiteCriteria.friendlyLinkUrl == null || websiteCriteria.friendlyLinkUrl == '') ? 'http://': websiteCriteria.friendlyLinkUrl}" placeholder="请填写准确友链链接url">&nbsp;&nbsp;
-            含有指定广告:<input type="text" name="advertisingTagname" id="advertisingTagname" style="width: 120px;" value="${websiteCriteria.advertisingTagname}" placeholder="请填写准确广告标识">&nbsp;&nbsp;
-            销售更新状态:<select id="updateSalesInfoSign" name="updateSalesInfoSign" style="width: 100px;">
+            网站名称:<input type="text" name="websiteName" id="websiteName" value="${websiteCriteria.websiteName}" style="width: 100px;">
+            &nbsp;&nbsp;域名:<input type="text" name="domain" id="domain" value="${websiteCriteria.domain}" style="width: 100px;">
+            &nbsp;&nbsp;失败次数:<input type="text" name="accessFailCount" id="accessFailCount" value="${websiteCriteria.accessFailCount}" style="width: 40px;">
+            &nbsp;&nbsp;含有指定友链:<input type="text" name="friendlyLinkUrl" id="friendlyLinkUrl" style="width: 180px;" value="${(websiteCriteria.friendlyLinkUrl == null || websiteCriteria.friendlyLinkUrl == '') ? 'http://': websiteCriteria.friendlyLinkUrl}" placeholder="请填写准确友链链接url">
+            &nbsp;&nbsp;含有指定广告:<input type="text" name="advertisingTagname" id="advertisingTagname" style="width: 120px;" value="${websiteCriteria.advertisingTagname}" placeholder="请填写准确广告标识">
+            &nbsp;&nbsp;销售更新状态:<select id="updateSalesInfoSign" name="updateSalesInfoSign" style="width: 100px;">
                 <option value="" selected="selected">请选择</option>
                 <c:forEach items="${putSalesInfoSignMap}" var="putSalesInfoSign">
                     <option value="${putSalesInfoSign.key}" <c:if test="${putSalesInfoSign.key eq websiteCriteria.updateSalesInfoSign}">selected="selected"</c:if>>${putSalesInfoSign.value}</option>
                 </c:forEach>
             </select>
-            友链更新状态:
+            &nbsp;&nbsp;友链更新状态:
             <select id="synchronousFriendlyLinkSign" name="synchronousFriendlyLinkSign" style="width: 100px;" title="">
                 <option value="" selected="selected">请选择</option>
                 <c:forEach items="${websiteSynchronousSignMap}" var="websiteSynchronousSign">
                     <option value="${websiteSynchronousSign.key}" <c:if test="${websiteSynchronousSign.key eq websiteCriteria.synchronousFriendlyLinkSign}">selected="selected"</c:if>>${websiteSynchronousSign.value}</option>
                 </c:forEach>
             </select>
-            广告更新状态:
+            &nbsp;&nbsp;广告更新状态:
             <select id="synchronousAdvertisingSign" name="synchronousAdvertisingSign" style="width: 100px;" title="">
                 <option value="" selected="selected">请选择</option>
                 <c:forEach items="${websiteSynchronousSignMap}" var="websiteSynchronousSign">
                     <option value="${websiteSynchronousSign.key}" <c:if test="${websiteSynchronousSign.key eq websiteCriteria.synchronousAdvertisingSign}">selected="selected"</c:if>>${websiteSynchronousSign.value}</option>
                 </c:forEach>
             </select>
-            所属行业类型:
+            &nbsp;&nbsp;后台登录状态:
+            <select id="backgroundLoginStatus" name="backgroundLoginStatus" style="width: 100px;" title="">
+                <option value="" selected="selected">请选择</option>
+                <option value="0" <c:if test="${0 eq websiteCriteria.backgroundLoginStatus}">selected="selected"</c:if>>正常</option>
+                <option value="1" <c:if test="${1 eq websiteCriteria.backgroundLoginStatus}">selected="selected"</c:if>>url地址错误</option>
+                <option value="2" <c:if test="${2 eq websiteCriteria.backgroundLoginStatus}">selected="selected"</c:if>>用户名密码</option>
+            </select>
+            &nbsp;&nbsp;数据库状态:<input id="databaseStatus_bak" value="${websiteCriteria.databaseStatus}" hidden/>
+
+            <select id="databaseStatus" name="databaseStatus" style="width: 100px;" title="">
+
+                <option value="" selected="selected">请选择</option>
+                <option value="0" >正常</option>
+                <option value="1" >访问失败</option>
+            </select>
+            &nbsp;&nbsp;index文件状态:
+            <select id="indexFileStatus" name="indexFileStatus" style="width: 100px;" title="">
+                <option value="" selected="selected">请选择</option>
+                <option value="0" <c:if test="${0 eq websiteCriteria.indexFileStatus}">selected="selected"</c:if>>正常</option>
+                <option value="1" <c:if test="${1 eq websiteCriteria.indexFileStatus}">selected="selected"</c:if>>异常</option>
+            </select>
+            &nbsp;&nbsp;sftp服务状态:
+            <select id="sftpStatus" name="sftpStatus" style="width: 100px;" title="">
+                <option value="" selected="selected">请选择</option>
+                <option value="0" <c:if test="${0 eq websiteCriteria.sftpStatus}">selected="selected"</c:if>>正常</option>
+                <option value="1" <c:if test="${1 eq websiteCriteria.sftpStatus}">selected="selected"</c:if>>异常</option>
+            </select>
+            &nbsp;&nbsp;所属行业类型:
             <select id="industryType" name="industryType" style="width: 100px;" title="">
                 <option value="" selected="selected">请选择</option>
                 <c:forEach items="${industryTypeMap}" var="industryType">
                     <option value="${industryType.key}" <c:if test="${industryType.key eq websiteCriteria.industryType}">selected="selected"</c:if>>${industryType.value}</option>
                 </c:forEach>
             </select>
-            销售网站类型:
+            &nbsp;&nbsp;销售网站类型:
             <select id="websiteType" name="websiteType" style="width: 100px;" title="">
                 <option value="" selected="selected">请选择</option>
                 <c:forEach items="${websiteTypeMap}" var="websiteType">
@@ -56,37 +83,37 @@
             </select>
             <br>
             <shiro:hasPermission name="/internal/website/searchWebsites">
-            <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
+                <input type="submit" value=" 查询 " onclick="resetPageNumber()">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/website/saveWebsite">
-            <input type="button" value=" 添加 " onclick="showWebsiteDialog(null)">&nbsp;&nbsp;
+                <input type="button" value=" 添加 " onclick="showWebsiteDialog(null)">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/friendlyLink/synchronousFriendlyLink">
-            <input type="button" value=" 同步所选友链信息 " onclick="synchronousFriendlyLink()">&nbsp;&nbsp;
+                <input type="button" value=" 同步所选友链信息 " onclick="synchronousFriendlyLink()">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/advertising/synchronousAdvertising">
-            <input type="button" value=" 同步所选广告信息 " onclick="synchronousAdvertising()">&nbsp;&nbsp;
+                <input type="button" value=" 同步所选广告信息 " onclick="synchronousAdvertising()">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/friendlyLink/saveFriendlyLinks">
-            <input type="button" value=" 指定网站增加友链 " onclick="showBatchAddFriendlyLinkDialog(null)">&nbsp;&nbsp;
+                <input type="button" value=" 指定网站增加友链 " onclick="showBatchAddFriendlyLinkDialog(null)">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/advertising/saveAdvertisings">
-            <input type="button" value=" 指定网站增加广告 " onclick="showBatchAddAdvertisingDialog(null)">&nbsp;&nbsp;
+                <input type="button" value=" 指定网站增加广告 " onclick="showBatchAddAdvertisingDialog(null)">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/friendlyLink/saveFriendlyLink">
-            <input type="button" value=" 指定网站修改友链 " onclick="batchModifyFriendlyLink('${websiteCriteria.friendlyLinkUrl}')">&nbsp;&nbsp;
+                <input type="button" value=" 指定网站修改友链 " onclick="batchModifyFriendlyLink('${websiteCriteria.friendlyLinkUrl}')">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/advertising/saveAdvertising">
-            <input type="button" value=" 指定网站修改广告 " onclick="batchModifyAdvertising('${websiteCriteria.advertisingTagname}')">&nbsp;&nbsp;
+                <input type="button" value=" 指定网站修改广告 " onclick="batchModifyAdvertising('${websiteCriteria.advertisingTagname}')">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/friendlyLink/deleteFriendlyLinks">
-            <input type="button" value=" 指定网站删除友链 " onclick="batchDelFriendlyLink('${websiteCriteria.friendlyLinkUrl}')">&nbsp;&nbsp;
+                <input type="button" value=" 指定网站删除友链 " onclick="batchDelFriendlyLink('${websiteCriteria.friendlyLinkUrl}')">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/advertising/deleteAdvertisings">
-            <input type="button" value=" 指定网站删除广告 " onclick="batchDelAdvertising('${websiteCriteria.advertisingTagname}')">&nbsp;&nbsp;
+                <input type="button" value=" 指定网站删除广告 " onclick="batchDelAdvertising('${websiteCriteria.advertisingTagname}')">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/website/putSalesInfoToWebsite">
-            <input type="button" onclick="putSalesInfoToWebsite()" value=" 推送销售信息至站点 ">&nbsp;&nbsp;
+                <input type="button" onclick="putSalesInfoToWebsite()" value=" 推送销售信息至站点 ">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/website/deleteWebsites">
                 <input type="button" onclick="deleteWebsites()" value=" 删除所选 ">&nbsp;&nbsp;
@@ -94,7 +121,7 @@
         </form>
     </div>
     <table style="font-size:12px; width: 100%;" id="headerTable">
-        <tr bgcolor="" height="22">
+        <tr height="22">
             <td width="35" align="center" rowspan="2">
                 <input type="checkbox" onclick="selectAll(this)" id="selectAllChecked"/>
             </td>
@@ -104,13 +131,13 @@
             <td width="80" align="center" rowspan="2">发现故障时间</td>
             <td width="80" align="center" rowspan="2">最近访问时间</td>
             <td width="80" align="center" rowspan="2">更新时间</td>
-            <td width="270" align="center" colspan="7">域名信息</td>
-            <td width="210" colspan="6" align="center">后台信息</td>
-            <td width="210" colspan="3" align="center">数据库信息</td>
-            <td width="210" colspan="3" align="center">服务器信息</td>
+            <td width="490" align="center" colspan="7">域名信息</td>
+            <td width="490" colspan="7" align="center">后台信息</td>
+            <td width="280" colspan="4" align="center">数据库信息</td>
+            <td width="420" colspan="6" align="center">服务器信息</td>
             <td width="80" align="center" rowspan="2">操作</td>
         </tr>
-        <tr height="23">
+        <tr height="23" style="background-color: #ADD1FF">
             <td width="70" align="center">网站域名</td>
             <td width="70" align="center">销售网站类型</td>
             <td width="70" align="center">友情链接</td>
@@ -124,12 +151,17 @@
             <td width="70" align="center">更新销售信息状态</td>
             <td width="70" align="center">更新友链信息状态</td>
             <td width="70" align="center">更新广告信息状态</td>
+            <td width="70" align="center">后台登录状态</td>
             <td width="70" align="center">数据库名称</td>
             <td width="70" align="center">用户名</td>
             <td width="70" align="center">密码</td>
+            <td width="70" align="center">数据库登录状态</td>
             <td width="70" align="center">IP</td>
             <td width="70" align="center">用户名</td>
             <td width="70" align="center">密码</td>
+            <td width="70" align="center">端口</td>
+            <td width="70" align="center">index文件状态</td>
+            <td width="70" align="center">sftp服务状态</td>
         </tr>
     </table>
 </div>
@@ -157,13 +189,49 @@
             <td width=70 align="center">${putSalesInfoSignMap.get(website.updateSalesInfoSign)}</td>
             <td width=70 align="center">${putSalesInfoSignMap.get(website.synchronousFriendlyLinkSign)}</td>
             <td width=70 align="center">${putSalesInfoSignMap.get(website.synchronousAdvertisingSign)}</td>
+            <td width=70 align="center">
+                <c:if test="${website.backgroundLoginStatus eq 0}">
+                    正常
+                </c:if>
+                <c:if test="${website.backgroundLoginStatus eq 1}">
+                    url地址错误
+                </c:if>
+                <c:if test="${website.backgroundLoginStatus eq 2}">
+                    用户名密码不正确
+                </c:if>
+            </td>
             <td width=70>${website.databaseName}</td>
             <td width=70>${website.databaseUserName}</td>
             <td width=70>${website.databasePassword}</td>
+            <td width=70 align="center">
+                <c:if test="${website.databaseStatus eq '0'}">
+                    正常
+                </c:if>
+                <c:if test="${website.databaseStatus ne '0'}">
+                    ${website.databaseStatus}
+                </c:if>
+            </td>
             <td width=70>${website.serverIP}</td>
             <td width=70>${website.serverUserName}</td>
             <td width=70>${website.serverPassword}</td>
-            <td style="text-align: center;" width="80">
+            <td width=70>${website.serverPort}</td>
+            <td width=70 align="center">
+                <c:if test="${website.indexFileStatus eq 0}">
+                    正常
+                </c:if>
+                <c:if test="${website.indexFileStatus ne 0}">
+                    异常
+                </c:if>
+            </td>
+            <td width=70 align="center">
+                <c:if test="${website.sftpStatus eq 0}">
+                    正常
+                </c:if>
+                <c:if test="${website.sftpStatus eq 1}">
+                    异常
+                </c:if>
+            </td>
+            <td style="text-align: center;" width="75">
                 <shiro:hasPermission name="/internal/website/saveWebsite">
                 <a href="javascript:editWebsiteInfo('${website.uuid}')">修改</a>
                 </shiro:hasPermission>
@@ -536,11 +604,21 @@
 <script src="${staticPath }/website/website.js"></script>
 <script language="javascript">
     $(function () {
-        $("#centerDiv").css("margin-top", $("#topDiv").height()+15);
+        $("#centerDiv").css("margin-top", $("#topDiv").height());
         window.onresize = function(){
-            $("#centerDiv").css("margin-top", $("#topDiv").height()+15);
+            $("#centerDiv").css("margin-top", $("#topDiv").height());
         }
     });
+
+    window.onload = selectDatabaseStatus;
+
+    function selectDatabaseStatus(){
+        var databaseStatus = $("#databaseStatus_bak").val();
+        if (null == databaseStatus) {
+            databaseStatus = '';
+        }
+        $("#databaseStatus").val(databaseStatus);
+    }
 
     function searchFriendlyLinks(url) {
         window.open(url);

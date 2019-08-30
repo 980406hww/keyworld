@@ -1,7 +1,6 @@
 package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.keymanager.monitoring.criteria.QZSettingSearchChargeRuleCriteria;
 import com.keymanager.monitoring.entity.QZChargeRule;
 import com.keymanager.monitoring.vo.QZChargeRuleStandardInfoVO;
 import com.keymanager.monitoring.vo.QZChargeRuleVO;

@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.keymanager.monitoring.criteria.QZSettingCountNumCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.entity.QZKeywordRankInfo;
 import org.apache.ibatis.annotations.Param;
@@ -13,13 +14,20 @@ import java.util.List;
  **/
 public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
 
-    List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType")String terminalType);
+    List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo (@Param("qzSettingUuid") Long qzSettingUuid,
+                                                             @Param("terminalType")String terminalType,
+                                                             @Param("websiteType")String websiteType);
 
     void deleteByQZSettingUuid (@Param("qzSettingUuid") Long qzSettingUuid);
 
     QZKeywordRankInfo getQZKeywordRankInfo(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType, @Param("websiteType") String websiteType);
 
-    QZSettingSearchCriteria getCountNumOfRankInfo(@Param("qzSettingSearchCriteria") QZSettingSearchCriteria qzSettingSearchCriteria);
+    QZSettingCountNumCriteria getCountNumOfRankInfo(@Param("lowerValue") double lowerValue,
+                                                    @Param("upperValue") double upperValue,
+                                                    @Param("differenceValue") double differenceValue,
+                                                    @Param("downOneWeekDiff") int downOneWeekDiff,
+                                                    @Param("upperOneWeekDiff") int upperOneWeekDiff,
+                                                    @Param("criteria") QZSettingSearchCriteria criteria);
 
     List<String> getQZKeywordRankInfoTypes (@Param("qzSettingUuid") Long qzSettingUuid);
 

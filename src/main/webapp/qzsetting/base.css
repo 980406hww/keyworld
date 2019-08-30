@@ -30,7 +30,7 @@ ul {
 }
 
 .mytabs {
-    width: 1820px;
+    width: 1900px;
     margin: 15px auto 0px auto;
     box-shadow: 0 0 2px 2px hsla(0, 0%, 89%, .2);
 }
@@ -130,7 +130,21 @@ ul {
     font-size: 14px;
 }
 
-.mytabs .conn:last-child li.category input, .mytabs .conn:last-child li.userName input, .mytabs .conn:last-child li.group input {
+.mytabs .conn:last-child li.customerInfo input {
+    width: 180px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 14px;
+}
+
+.mytabs .conn:last-child li.category input {
+    width: 120px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 14px;
+}
+
+.mytabs .conn:last-child li.userName input, .mytabs .conn:last-child li.group input {
     width: 150px;
     height: 25px;
     line-height: 25px;
@@ -154,7 +168,7 @@ ul {
 }
 
 .datalist {
-    width: 1820px;
+    width: 1900px;
     margin: 0px auto 40px auto;
     overflow: visible;
 }
@@ -268,7 +282,7 @@ ul {
 }
 
 .datalist-list .header span.fmtStandardDate, .datalist-list .header span.fmtCreateDate {
-    max-width: 130px;
+    max-width: 170px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -282,17 +296,11 @@ ul {
     color: #0c7df5;
 }
 
-.datalist-list .header span.fmtCreateDate {
-    position: absolute;
-    left: 900px;
-    z-index: 1;
-}
-
 .datalist-list .header span.tagNames {
     position: absolute;
-    left: 570px;
+    left: 1090px;
     z-index: 1;
-    width: 330px;
+    width: 300px;
     color: #000000;
     max-width: 600px;
     overflow: hidden;
@@ -323,34 +331,41 @@ ul {
 }
 
 .datalist-list .body .data-info-wrap {
-    width: 621px;
+    width: 452px;
     float: left;
     height: 150px;
     text-align: center
 }
 
 .datalist-list .body .rank-wrap {
-    width: 741px;
+    width: 680px;
     float: left;
     height: 150px;
     border-left: 1px solid #e6e6e6;
 }
 
 .datalist-list .body .rank-wrap1 {
-    width: 456px;
+    width: 440px;
     float: left;
     height: 150px;
     border-left: 1px solid #e6e6e6;
 }
 
-.datalist-list .body .rank-wrap > div, .datalist-list .body .rank-wrap1 > div {
+.datalist-list .body .rank-wrap2 {
+    width: 320px;
+    float: left;
+    height: 150px;
+    border-left: 1px solid #e6e6e6;
+}
+
+.datalist-list .body .rank-wrap > div, .datalist-list .body .rank-wrap1 > div, .datalist-list .body .rank-wrap2 > div {
     float: left;
     font-size: 12px;
     height: 150px;
     display: block;
 }
 
-.datalist-list .body .rank-wrap > div, .datalist-list .body .rank-wrap1 > div {
+.datalist-list .body .rank-wrap > div, .datalist-list .body .rank-wrap1 > div, .datalist-list .body .rank-wrap2 > div  {
     padding: 0 5px;
 }
 
@@ -366,7 +381,7 @@ ul {
     font-size: 12px;
     display: block;
     float: left;
-    width: 50%;
+    width: 45%;
     text-align: left;
 }
 
@@ -374,7 +389,7 @@ ul {
     font-size: 12px;
     display: block;
     float: left;
-    width: 50%;
+    width: 55%;
     text-align: left;
 }
 
@@ -457,7 +472,7 @@ ul {
 
 .datalist-list .body .other-rank {
     float: left;
-    width: 255px;
+    width: 84px;
 }
 
 .datalist-list .body .other-rank_2 {
@@ -557,12 +572,17 @@ ul {
 
 .rank-wrap .col-4 {
     float: left;
-    width: 18%;
+    width: 22%;
     text-align: left;
 }
 
-.rank-wrap .col-1, .rank-wrap .col-2 {
-    width: 41%;
+.rank-wrap .col-1 {
+    width: 35%;
+    text-align: left;
+}
+
+.rank-wrap .col-2 {
+    width: 43%;
     text-align: left;
 }
 
@@ -585,6 +605,11 @@ ul {
 .rank-wrap1 .col-1 h1 {
     text-align: center;
     padding-top: 65px;
+}
+
+.rank-wrap2 .col-1 {
+    width: 100%;
+    text-align: left;
 }
 
 #moreSearchCondition {

@@ -369,47 +369,141 @@ function showSearchEngineChangeDialog(searchEngineCriteria) {
     $("#changeSearchEngineDialog").dialog("open");
     $('#changeSearchEngineDialog').window("resize",{top:$(document).scrollTop() + 200});
 }
+
 function updateCustomerKeywordStatus(status) {
     var customerKeyword = {};
     var customerKeywordUuids = getUuids();
     if (customerKeywordUuids.trim() === '') {
-        alert("请选中要操作的关键词！");
+        $.messager.alert('提示',"请选中要操作的关键词！", 'warning');
         return;
     }
-
-    if(status == 0) {
-        if (confirm("确认要暂停选中的关键字吗?") == false) return;
-    } else {
-        if (confirm("确认要上线选中的关键字吗?") == false) return;
+    if(status === 0){
+        msg = "确定暂停选中的所有关键字吗?"
+    }else if (status === 3){
+        msg = "确定下架选中的所有关键字吗?"
     }
-    customerKeyword.uuids = customerKeywordUuids.split(",");
-    customerKeyword.status = status;
-    $.ajax({
-        url: '/internal/customerKeyword/updateCustomerKeywordStatus',
-        data: JSON.stringify(customerKeyword),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        timeout: 5000,
-        type: 'POST',
-        success: function (status) {
-            if (status) {
-                $().toastmessage('showSuccessToast', "操作成功");
-                window.location.reload();
-            } else {
-                $().toastmessage('showErrorToast', "操作失败");
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "操作失败");
+
+    $.messager.confirm('提示',msg,function(r){
+        if(r){
+            customerKeyword.uuids = customerKeywordUuids.split(",");
+            customerKeyword.status = status;
+            $.ajax({
+                url: '/internal/customerKeyword/updateCustomerKeywordStatus',
+                data: JSON.stringify(customerKeyword),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (status) {
+                    if (status) {
+                        $().toastmessage('showSuccessToast', "操作成功", true);
+                    } else {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            });
         }
-    });
+    })
 }
-//下架
-function stopOptimization(customerUuid){
-    changeGroupName({"customerUuid": customerUuid, "targetGroupName": "stop"});
+
+function activateSelectCustomerKeywords() {
+    var customerKeyword = {};
+    var customerKeywordUuids = getUuids();
+    if (customerKeywordUuids.trim() === '') {
+        $.messager.alert('提示',"请选中要操作的关键词！", 'warning');
+        return;
+    }
+    $.messager.confirm('提示','确定激活选中的关键字吗?',function(r){
+        if(r){
+            customerKeyword.uuids = customerKeywordUuids.split(",");
+            $.ajax({
+                url: '/internal/customerKeyword/activateSelectCustomerKeywords',
+                data: JSON.stringify(customerKeyword),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (status) {
+                    if (status) {
+                        $().toastmessage('showSuccessToast', "操作成功", true);
+                    } else {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            });
+        }
+    })
 }
+//暂停所有关键字
+function stopOptimization(customerUuid,status){
+    if(status === 0){
+        msg = "确定暂停该用户的所有关键字吗?"
+    } else if (status === 3){
+        msg = "确定下架该用户的所有关键字吗?"
+    }
+    $.messager.confirm('提示',msg,function(r){
+        if(r){
+            $.ajax({
+                url:'/internal/customerKeyword/changeCustomerKeywordStatus',
+                data:JSON.stringify({"customerUuid": customerUuid, "status": status}),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result) {
+                        $().toastmessage('showSuccessToast', "操作成功",true);
+                    } else {
+                        $().toastmessage('showErrorToast', "操作失败",true);
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败",true);
+                }
+            });
+        }
+    })
+}
+
+function activateAllCustomerKeywords(customerUuid){
+    $.messager.confirm('提示','确定激活该用户的所有关键字吗?',function(r){
+        if(r){
+            $.ajax({
+                url:'/internal/customerKeyword/activateAllCustomerKeywords',
+                data:JSON.stringify({"customerUuid": customerUuid}),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result) {
+                        $().toastmessage('showSuccessToast', "操作成功",true);
+                    } else {
+                        $().toastmessage('showErrorToast', "操作失败",true);
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败",true);
+                }
+            });
+        }
+    })
+}
+
 function updateSpecifiedCustomerKeywordGroupName() {
     var customerKeywordUuids = getUuids();
     if (customerKeywordUuids.trim() === '') {
@@ -419,6 +513,7 @@ function updateSpecifiedCustomerKeywordGroupName() {
     var changeGroupCriteria = {"title" : "修改选中关键字优化组", "customerKeywordUuids":customerKeywordUuids.split(",")};
     showGroupNameChangeDialog(changeGroupCriteria);
 }
+
 function changeGroupName(customerKeywordUpdateGroupCriteria) {
     $.ajax({
         url:'/internal/customerKeyword/updateCustomerKeywordGroupName',
@@ -441,6 +536,7 @@ function changeGroupName(customerKeywordUpdateGroupCriteria) {
         }
     });
 }
+
 function updateSpecifiedCustomerKeywordSearchEngine() {
     var customerKeywordUuids = getUuids();
     if (customerKeywordUuids.trim() === '') {
@@ -450,6 +546,7 @@ function updateSpecifiedCustomerKeywordSearchEngine() {
     var changeSearchEngineCriteria = {"title" : "修改选中关键字搜索引擎", "customerKeywordUuids":customerKeywordUuids.split(",")};
     showSearchEngineChangeDialog(changeSearchEngineCriteria);
 }
+
 function changeSearchEngine(searchEngineCriteria) {
     $.ajax({
         url:'/internal/customerKeyword/updateCustomerKeywordSearchEngine',
@@ -476,7 +573,7 @@ function changeSearchEngine(searchEngineCriteria) {
 //关键字Excel上传(简化版)
 function uploadCustomerKeywords(customerUuid, excelType){
     $('#uploadExcelForm')[0].reset();
-    if(excelType=='SuperUserSimple'){
+    if(excelType === 'SuperUserSimple'){
         $('#uploadExcelForm').find("#excelType").html("(简易版)");
     }else{
         $('#uploadExcelForm').find("#excelType").html("(完整版)");
@@ -499,7 +596,7 @@ function uploadCustomerKeywords(customerUuid, excelType){
                 var newFileName = uploadFile.split('.');
                 newFileName = newFileName[newFileName.length - 1];
                 for (var i = 0; i < fileTypes.length; i++) {
-                    if (fileTypes[i] == newFileName) {
+                    if (fileTypes[i] === newFileName) {
                         fileTypeFlag = true;
                         break;
                     }
@@ -548,6 +645,7 @@ function uploadCustomerKeywords(customerUuid, excelType){
     $("#uploadExcelDailog").dialog("open");
     $('#uploadExcelDailog').window("resize",{top:$(document).scrollTop() + 100});
 }
+
 //导出结果
 function downloadCustomerKeywordInfo() {
     var customerKeywordCrilteriaArray = $("#searchCustomerKeywordForm").serializeArray();
@@ -556,14 +654,6 @@ function downloadCustomerKeywordInfo() {
         downloadCustomerKeywordInfoForm.find("#"+val.name+"Hidden").val(val.value == '' ? null : val.value);
     });
     downloadCustomerKeywordInfoForm.submit();
-}
-//显示下架
-function displayStopValue() {
-    if($("#displayStop").is(":checked")){
-        $("#displayStop").val("1")
-    }else {
-        $("#displayStop").val("");
-    }
 }
 
 function showOptimizePlanCountDialog() {
@@ -604,10 +694,11 @@ function showOptimizePlanCountDialog() {
     });
     $('#optimizePlanCountDialog').window("resize",{top:$(document).scrollTop() + 150});
 }
+
 function editOptimizePlanCount(customerUuid, uuids) {
     var settingType = $("#optimizePlanCountDialog").find("input[name=settingType]:checked").val();
     var optimizePlanCount = $("#optimizePlanCountDialog").find("#optimizePlanCount").val();
-    if(optimizePlanCount == "") {
+    if(optimizePlanCount === "") {
         alert("请输入刷量");
         return;
     }
@@ -731,7 +822,6 @@ function deleteDuplicateCustomerKeyword(customerUuid) {
         }
     });
 }
-
 
 /**
  * 批量修改关键字机器分组

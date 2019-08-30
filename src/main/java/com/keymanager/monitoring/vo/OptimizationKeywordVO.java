@@ -9,6 +9,8 @@ public class OptimizationKeywordVO {
     private String optimizeGroup;
     private String entryType;
     private String bearPawNumber;
+
+
     private String title;
     private int optimizedCount;
     private int queryInterval;

@@ -32,7 +32,6 @@ public class CustomerKeywordCriteria extends BaseCriteria{
     private String qq;
     private String userName;
     private String pushPay;//催缴
-    private String displayStop;//显示下架
     private String orderNumber;//订单号
     private String remarks;//备注
     private String failedCause; // 失败原因
@@ -262,14 +261,6 @@ public class CustomerKeywordCriteria extends BaseCriteria{
 
     public void setPushPay(String pushPay) {
         this.pushPay = pushPay;
-    }
-
-    public String getDisplayStop() {
-        return displayStop;
-    }
-
-    public void setDisplayStop(String displayStop) {
-        this.displayStop = displayStop;
     }
 
     public String getOrderNumber() {

@@ -471,19 +471,10 @@
 								<input type="text" name="optimizeKeywordCountPerIP" id="optimizeKeywordCountPerIP" value="1"/>个词换IP
 							</td>
 						</tr>
-                        <tr name="trItem" onclick="checkItem(this)">
-                            <th>无效点击数限制</th>
-                            <td>
-                                <input type="text" name="maxInvalidCount" id="maxInvalidCount" value="${maxInvalidCount}"/>
-                            </td>
-                        </tr>
-					</table>
-				</td>
-				<td style="vertical-align:top;">
-					<table id="td_4" style="font-size:12px">
 						<tr>
+							<td></td>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="randomlyClickNoResult" name="randomlyClickNoResult" type="checkbox" value="1">没结果则随机点</input>
+								<input id="randomlyClickNoResult" name="randomlyClickNoResult" type="checkbox" value="1">&nbsp;没结果则随机点</input>
 							</td>
 						</tr>
 					</table>
@@ -567,6 +558,12 @@
 								</select>条
 							</td>
 						</tr>
+						<tr name="trItem" onclick="checkItem(this)">
+							<th>无效点击数</th>
+							<td>
+								<input type="text" name="maxInvalidCount" id="maxInvalidCount" value="${maxInvalidCount}"/>
+							</td>
+						</tr>
 					</table>
 				</td>
 				<td style="vertical-align:top;">
@@ -620,19 +617,10 @@
 								<input type="text" name="optimizeKeywordCountPerIP" id="optimizeKeywordCountPerIP" value="1"/>个词换IP
 							</td>
 						</tr>
-                        <tr name="trItem" onclick="checkItem(this)">
-                            <th>无效点击数限制</th>
-                            <td>
-                                <input type="text" name="maxInvalidCount" id="maxInvalidCount" value="${maxInvalidCount}"/>
-                            </td>
-                        </tr>
-					</table>
-				</td>
-				<td style="vertical-align:top;">
-					<table id="td_4" style="font-size:12px">
 						<tr>
+							<td></td>
 							<td name="trItem" onclick="checkItem(this)">
-								<input id="randomlyClickNoResult" name="randomlyClickNoResult" type="checkbox" value="1">没结果则随机点</input>
+								<input id="randomlyClickNoResult" name="randomlyClickNoResult" type="checkbox" value="1">&nbsp;没结果则随机点</input>
 							</td>
 						</tr>
 					</table>
