@@ -336,7 +336,7 @@ function CustomerKeywordBatchUpdate(entryType) {
                 text: '保存',
                 iconCls: 'icon-ok',
                 handler: function () {
-                    if (isChecked("keyword") == "1" && $("#saveCustomerKeywordDialog").find("input[name='keyword']").val() == "") {
+                    if (isChecked("keyword") === "1" && $("#saveCustomerKeywordDialog").find("input[name='keyword']").val() === "") {
                         alert("关键字不能为空");
                         return;
                     } else {

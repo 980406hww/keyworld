@@ -601,16 +601,12 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                             if (TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())){
                                 if (!pcExcludeKeyword.isEmpty()){
                                     if (pcExcludeKeyword.contains(customerKeyword.getKeyword())){
-//                                        customerKeyword.setOptimizeGroupName("zanting");
-//                                        customerKeyword.setMachineGroup("Pause");
 										customerKeyword.setStatus(0);
                                     }
                                 }
                             } else {
                                 if (!phoneExcludeKeyword.isEmpty()){
                                     if (phoneExcludeKeyword.contains(customerKeyword.getKeyword())){
-//                                      customerKeyword.setOptimizeGroupName("zanting");
-//										customerKeyword.setMachineGroup("Pause");
 										customerKeyword.setStatus(0);
                                     }
                                 }
@@ -720,7 +716,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	}
 
 	private void getQZSettingGroupInfo(Map<String, Object> rankInfoVoMap, long uuid, String terminalType, String optimizeGroupName) {
-		rankInfoVoMap.put("customerKeywordCount", qzSettingDao.getQZSettingGroupInfo(uuid, terminalType, optimizeGroupName));
+		rankInfoVoMap.put("customerKeywordCount", qzSettingDao.getQZSettingGroupInfo(terminalType, optimizeGroupName));
 		rankInfoVoMap.put("operationCombineName", operationCombineService.getOperationCombineName(optimizeGroupName));
 		rankInfoVoMap.put("categoryTagNames", qzCategoryTagService.findTagNames(uuid));
 		rankInfoVoMap.put("standardTime", qzOperationTypeService.getStandardTime(uuid, terminalType));
@@ -754,8 +750,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				customerKeyword.setMachineGroup(qzSettingSaveCustomerKeywordsCriteria.getMachineGroupName());
 				if (!excludeKeyword.isEmpty()){
 					if (excludeKeyword.contains(keyword)){
-//						customerKeyword.setOptimizeGroupName("zanting");
-//						customerKeyword.setMachineGroup("Pause");
 						customerKeyword.setStatus(0);
 					}
 				}
@@ -1018,5 +1012,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public ExternalQzSettingVO selectQZSettingForAutoOperate () {
 		return qzSettingDao.selectQZSettingForAutoOperate();
+	}
+
+	public String findQZCustomer(String domain) {
+		return qzSettingDao.findQZCustomer(domain);
 	}
 }

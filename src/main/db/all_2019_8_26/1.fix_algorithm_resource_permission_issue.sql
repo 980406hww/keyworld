@@ -1,4 +1,4 @@
-#在algorithm_auto_test分支上的资源权限SQL有问题,查看任务的资源sql写了两条，漏了修改计划状态的资源sql
+﻿#在algorithm_auto_test分支上的资源权限SQL有问题,查看任务的资源sql写了两条，漏了修改计划状态的资源sql
 
 #删除重复的查看任务资源和权限
 DELETE FROM t_role_resource WHERE fResourceID IN (SELECT fUuid FROM t_resource WHERE fUrl = '/internal/algorithmAutoTest/showAlgorithmTestTask');
@@ -13,7 +13,7 @@ INSERT INTO t_resource ( fResourceName, fUrl, fOpenMode, fIconCls, fParentID, fS
 #添加查看计划任务执行情况权限
 INSERT INTO t_resource ( fResourceName, fUrl, fOpenMode, fIconCls, fParentID, fSequence, fStatus, fOpened, fResourceType ,fCreateTime) VALUES
     ( '查看任务历史', '/internal/algorithmAutoTest/showAlgorithmTestTask','ajax', '',
-        (SELECT r.fUuid FROM t_resource r WHERE r.fUrl != '#' AND r.fResourceName = "测试计划管理"), 0, 0, 1, 1, NOW() )
+        (SELECT r.fUuid FROM t_resource r WHERE r.fUrl != '#' AND r.fResourceName = "测试计划管理"), 0, 0, 1, 1, NOW() );
 
 # 补全权限给Technical角色
 INSERT INTO t_role_resource(fRoleID, fResourceId) SELECT tem_role.fUuid, tem_resource.fUuid FROM (

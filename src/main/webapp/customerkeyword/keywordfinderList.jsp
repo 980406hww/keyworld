@@ -248,7 +248,7 @@
                 <td align="center" width=50>
                     <div style="height:16px;">${customerKeyword.initialPosition}</div>
                 </td>
-                <td align="center" width=50 class="floatTd" title="排名采集城市: ${customerKeyword.capturePositionCity}">
+                <td align="center" width=50 class="floatTd" title="排名采集城市: ${customerKeyword.capturePositionCity}&#13;排名采集时间: <fmt:formatDate value="${customerKeyword.capturePositionQueryTime}" pattern="yyyy-MM-dd HH:mm:ss"/>">
                     <div style="height:16px;">
                         <a href="${customerKeyword.searchEngineUrl}" target="_blank">${customerKeyword.currentPosition}</a>
                     </div>
@@ -264,7 +264,7 @@
                 <c:if test="${sessionScope.get('entryType') ne 'qz'}">
                     <td align="center" width=60>${customerKeyword.feeString}</td>
                 </c:if>
-                <td align="center" width=70 style="color:${customerKeywordStautsMap.get(customerKeyword.status).get("color")}">${customerKeywordStautsMap.get(customerKeyword.status).get("desc")} </td>
+                <td align="center" width=70 style="color:${customerKeywordStatusMap.get(customerKeyword.status).get("color")}">${customerKeywordStatusMap.get(customerKeyword.status).get("desc")} </td>
                 <td align="center" width=100>${customerKeyword.orderNumber}</td>
                 <td align="center" width="60">${customerKeyword.paymentStatus}</td>
                 <td align="center" width=100>${customerKeyword.remarks==null?"":customerKeyword.remarks} </td>
@@ -345,7 +345,6 @@
             $("#groupNameFuzzyQuery").prop("checked",false);
         }
         noPositionValue();
-        displayStopValue();
         pushPayValue();
         groupNameFuzzyQueryValue();
     }

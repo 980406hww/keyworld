@@ -554,7 +554,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
         }
 
-        if (customerKeyword.getRunImmediate().equals("否")) {
+        if ("否".equals(customerKeyword.getRunImmediate())) {
             customerKeyword.setStatus(2);
         }
 
@@ -564,6 +564,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (Utils.isNullOrEmpty(customerKeyword.getMachineGroup())) {
             customerKeyword.setMachineGroup(customerKeyword.getType());
         }
+        int queryInterval = 24 * 60 * 60;
+        if (null != customerKeyword.getOptimizePlanCount() && customerKeyword.getOptimizePlanCount() > 0) {
+            queryInterval = queryInterval / customerKeyword.getOptimizePlanCount();
+        }
+        customerKeyword.setQueryInterval(queryInterval);
         customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
         customerKeyword.setCapturePositionQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));
         customerKeyword.setStartOptimizedTime(new Date());
@@ -582,6 +587,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         } else {
             customerKeyword.setStatus(2);
         }
+        int queryInterval = 24 * 60 * 60;
+        if (null != customerKeyword.getOptimizePlanCount() && customerKeyword.getOptimizePlanCount() > 0) {
+            queryInterval = queryInterval / customerKeyword.getOptimizePlanCount();
+        }
+        customerKeyword.setQueryInterval(queryInterval);
         customerKeyword.setUpdateTime(new Date());
         customerKeywordDao.updateById(customerKeyword);
     }
@@ -1952,6 +1962,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             } while (blockingQueue.size() > 0 && rankVos.size() < 10);
             return rankVos;
         }
+        blockingQueue = customerKeywordCrawlPTRankQueueMap.get(null);
+        if (blockingQueue != null && blockingQueue.size() > 0) {
+            do {
+                rankVos.add((CustomerKeyWordCrawlRankVO) blockingQueue.poll());
+            } while (blockingQueue.size() > 0 && rankVos.size() < 10);
+            return rankVos;
+        }
         if (customerKeywordCrawlQZRankQueue.size() > 0) {
             do {
                 rankVos.add((CustomerKeyWordCrawlRankVO) customerKeywordCrawlQZRankQueue.poll());
@@ -1985,7 +2002,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
             if (!excludeKeyword.isEmpty()){
                 if (excludeKeyword.contains(customerKeyword.getKeyword())){
-//                    customerKeyword.setOptimizeGroupName("zanting");
                     customerKeyword.setStatus(0);
                 }
             }

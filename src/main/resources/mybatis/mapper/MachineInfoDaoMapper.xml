@@ -140,6 +140,7 @@
         FROM
         t_machine_info mi
         WHERE mi.fTerminalType = #{machineInfoCriteria.terminalType}
+        AND mi.fMachineGroup = #{machineInfoCriteria.machineGroup}
         AND (mi.fContinuousFailCount &gt; 5 OR mi.fTenMinsLastVisitTime &lt; NOW()) and mi.fValid = 1
         <if test="machineInfoCriteria.groupName != null and machineInfoCriteria.groupName != ''">AND mi.fGroup = #{machineInfoCriteria.groupName}</if>
         <if test="machineInfoCriteria.switchGroups != null"> AND mi.fSwitchGroupName IN
