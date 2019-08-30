@@ -3,8 +3,10 @@ package com.keymanager.monitoring.controller.rest.internal;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.AlgorithmTestPlanSearchCriteria;
 import com.keymanager.monitoring.entity.AlgorithmTestPlan;
+import com.keymanager.monitoring.entity.AlgorithmTestDataStatistics;
 import com.keymanager.monitoring.entity.AlgorithmTestTask;
 import com.keymanager.monitoring.service.AlgorithmTestPlanService;
+import com.keymanager.monitoring.service.AlgorithmTestResultStatisticsService;
 import com.keymanager.monitoring.service.AlgorithmTestTaskService;
 import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.util.TerminalTypeMapping;
@@ -39,6 +41,9 @@ public class AlgorithmAutoTestRestController {
 
     @Autowired
     private AlgorithmTestTaskService algorithmTestTaskService;
+
+    @Autowired
+    private AlgorithmTestResultStatisticsService algorithmTestResultStatisticsService;
 
     @Autowired
     private ConfigService configService;
@@ -153,6 +158,22 @@ public class AlgorithmAutoTestRestController {
         try {
             Page<AlgorithmTestTask> algorithmTestTaskPage = algorithmTestTaskService.selectAlgorithmTestTasksByAlgorithmTestPlanUuid(new Page<AlgorithmTestTask>(Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize)), algorithmTestPlanUuid);
             mv.addObject("page",algorithmTestTaskPage);
+            mv.addObject("algorithmTestPlanUuid",algorithmTestPlanUuid);
+            return mv;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return mv;
+        }
+    }
+
+    @RequiresPermissions("/internal/algorithmAutoTest/showTestDataStatistics")
+    @RequestMapping(value = "/showTestDataStatistics", method = RequestMethod.POST)
+    public ModelAndView showTestDataStatistics(Long algorithmTestPlanUuid, @RequestParam(defaultValue = "1") String currentPageNumber, @RequestParam(defaultValue = "50") String pageSize) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("algorithmAutoTest/algorithmTestDataStatistics");
+        try {
+            Page<AlgorithmTestDataStatistics> algorithmTestResultStatisticsPage = algorithmTestResultStatisticsService.selectAlgorithmTestResultStatisticsByAlgorithmTestPlanUuid(new Page<AlgorithmTestDataStatistics>(Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize)), algorithmTestPlanUuid);
+            mv.addObject("page",algorithmTestResultStatisticsPage);
             mv.addObject("algorithmTestPlanUuid",algorithmTestPlanUuid);
             return mv;
         } catch (Exception e) {
