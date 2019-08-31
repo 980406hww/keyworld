@@ -41,7 +41,6 @@ public class ExternalLayerUIAdminTestRestController {
     @RequestMapping("/menu")
     public ResponseEntity selectMenus(){
         List<Menu> menus = resourceService2.selectAuthorizationResource("duchengfu",null);
-        ResponseEntity responseEntity = new ResponseEntity(menus, HttpStatus.OK);
-        return responseEntity;
+        return new ResponseEntity(menus, HttpStatus.OK);
     }
 }
