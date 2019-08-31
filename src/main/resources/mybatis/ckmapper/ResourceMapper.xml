@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.keymanager.monitoring.dao.ResourceDao">
+<mapper namespace="com.keymanager.ckadmin.dao.ResourceDao2">
 
     <!-- 通用查询结果列-->
     <sql id="colID">
@@ -19,7 +19,7 @@
         s.fCreateTime AS `createTime`
     </sql>
 
-    <select id="selectAuthorizationMenu" resultType="com.keymanager.monitoring.entity.Resource">
+    <select id="selectAuthorizationResource" resultType="com.keymanager.ckadmin.entity.Resource">
         SELECT
         <include refid="colID"/>
         FROM t_resource s
@@ -31,8 +31,15 @@
         WHERE u.fLoginName = #{loginName}
         AND u.fUuid = ur.fUserID
         AND ur.fRoleID = rr.fRoleID)
+        <choose>
+            <when test="parentId == null">
+                AND s.fParentID IS NULL
+            </when>
+            <otherwise>
+                AND s.fParentID = #{parentId}
+            </otherwise>
+        </choose>
         AND s.fResourceType = 0
         ORDER BY s.fSequence
     </select>
-
 </mapper>

@@ -1,9 +1,9 @@
-package com.keymanager.monitoring.controller.rest.external;
+package com.keymanager.ckadmin.controller.external;
 
-import com.keymanager.monitoring.common.result.Menu;
-import com.keymanager.monitoring.service.IResourceService;
+import com.keymanager.ckadmin.common.result.Menu;
+import com.keymanager.ckadmin.service.ResourceInterface;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +21,8 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value = "/external/layer")
 public class ExternalLayerUIAdminTestRestController {
 
-    @Autowired
-    private IResourceService resourceService;
+    @Resource(name = "resourceService2")
+    private ResourceInterface resourceService2;
 
     @RequestMapping("/index")
     public ModelAndView toIndex(){
@@ -40,7 +40,8 @@ public class ExternalLayerUIAdminTestRestController {
 
     @RequestMapping("/menu")
     public ResponseEntity selectMenus(){
-        List<Menu> menus = resourceService.selectAuthorizationResource("duchengfu",null);
-        return new ResponseEntity(menus, HttpStatus.OK);
+        List<Menu> menus = resourceService2.selectAuthorizationResource("duchengfu",null);
+        ResponseEntity responseEntity = new ResponseEntity(menus, HttpStatus.OK);
+        return responseEntity;
     }
 }

@@ -25,7 +25,7 @@
 
 	<!-- aspectj aop启用CGliB代理 -->
 	<aop:aspectj-autoproxy expose-proxy="true" proxy-target-class="true"/>
-	<context:component-scan base-package="com.keymanager.monitoring.controller;com.keymanager.monitoring.common.scan"/>
+	<context:component-scan base-package="com.keymanager.monitoring.controller;com.keymanager.monitoring.common.scan; com.keymanager.ckadmin"/>
 
 	<mvc:default-servlet-handler />
 	<!-- 配置哪些是静态资源，缺省Servlet 直接返回 -->

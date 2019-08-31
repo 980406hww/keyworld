@@ -2,7 +2,7 @@
 var useModel = ["form", "okUtils", "table", "laytpl", "laydate",
   "element", "jquery", "countUp", "echartsData"];//需要引入的模块
 layui.config({
-  base: "static/ok-admin/js/"
+  base: "/static/ok-admin/js/"
 }).use(useModel, function () {
   var $form = layui.form,
     countUp = layui.countUp,
@@ -40,33 +40,7 @@ layui.config({
     mapChina.setOption(echartsData.mapChina);//地图
     
     /**表格**/
-    table.render({
-      method: "GET",
-      url: "../data/user.json",//
-      elem: '#userData', //指定原始表格元素选择器（推荐id选择器）
-      height: 340, //容器高度
-      page: true,
-      limit: 7,
-      parseData: function (res) {
-        res.data.list.forEach(function (i, j) {
-          var dateTime = new Date(i.u_endtime);
-          i.u_endtime = dateTime.getFullYear() + "-" + dateTime.getMonth() + "-" + dateTime.getDay();
-        });
-        return {
-          "code": res.code,
-          "count": res.data.count,
-          "data": res.data.list //解析数据列表
-        }
-      },
-      cols: [[
-        {field: "id", title: "id", width: 50},
-        {field: "u_name", title: "姓名"},
-        {field: "u_sex", title: "性别", width: 80},
-        {field: "u_email", title: "邮箱"},
-        {field: "u_endtime", title: "时间",},//templet: '#titleDate'
-        {field: "u_grade", title: "等级"}
-      ]], //设置表头
-    });
+
     
     /**日历**/
     laydate.render({

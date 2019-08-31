@@ -50,7 +50,12 @@
    		<property name="dataSource" ref="dataSource" />
 		<property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
 		<property name="typeAliasesPackage" value="com.keymanager.monitoring.entity;" />
-		<property name="mapperLocations" value="classpath:mybatis/mapper/*Mapper.xml" />
+        <property name="mapperLocations" >
+            <array>
+                <value>classpath:mybatis/mapper/*Mapper.xml</value>
+                <value>classpath:mybatis/ckmapper/*Mapper.xml</value>
+            </array>
+        </property>
 		<property name="plugins">
             <array>
                 <!-- 分页插件配置 -->
@@ -72,7 +77,12 @@
     <!--mapper.xml 热加载-测试时可用 -->
     <bean class="com.baomidou.mybatisplus.spring.MybatisMapperRefresh">
         <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
-        <constructor-arg name="mapperLocations"  value="classpath:mybatis/mapper/*Mapper.xml" />
+        <constructor-arg name="mapperLocations"  >
+            <array>
+                <value>classpath:mybatis/mapper/*Mapper.xml</value>
+                <value>classpath:mybatis/ckmapper/*Mapper.xml</value>
+            </array>
+        </constructor-arg>
         <constructor-arg name="delaySeconds" value="10"/>
         <constructor-arg name="sleepSeconds" value="20"/>
         <constructor-arg name="enabled" value="true"/>
@@ -80,7 +90,7 @@
     
     <!-- MyBatis 动态扫描  -->
 	<bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.keymanager.monitoring.dao" />
+		<property name="basePackage" value="com.keymanager.monitoring.dao, com.keymanager.ckadmin.dao" />
 	</bean>
 
 	  <!-- 配置事务管理 -->
@@ -117,7 +127,7 @@
     <!-- 配置切面 -->
     <aop:aspectj-autoproxy proxy-target-class="true" />
     <aop:config>
-        <aop:pointcut id="transactionPointcut" expression="execution(* com.keymanager.monitoring.service..*.*(..))"/>
+        <aop:pointcut id="transactionPointcut" expression="execution(* com.keymanager.*.service..*.*(..))"/>
         <aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice"/>
     </aop:config>
 

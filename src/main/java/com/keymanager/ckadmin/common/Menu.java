@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.common.result;
+package com.keymanager.ckadmin.common;
 
 import java.util.List;
 
