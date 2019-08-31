@@ -108,10 +108,12 @@
         });
 
         form.on('submit(search)', function () {
+           // var formData = new FormData($("searchForm"))
+           // console.log($("#searchFrom").serialize())
             var algorithmTestPlanName = $("#searchForm #algorithmTestPlanName").val();
             table.reload('tableId',{
                 // method:'post',
-                // url: '${ctx.path}/internal/algorithmAutoTest/getAlgorithmTestPlans',
+                url: '${ctx.path}/internal/algorithmAutoTest/getAlgorithmTestPlans',
                 where:{
                     'algorithmTestPlanName':algorithmTestPlanName,
                 },

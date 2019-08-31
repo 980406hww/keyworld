@@ -1,5 +1,7 @@
 package com.keymanager.ckadmin.common.result;
 
+import java.util.Date;
+
 /**
  * @ClassName RequsetBean
  * @Description TODO
@@ -11,6 +13,24 @@ public class RequsetBean {
     private Integer page;
     private Integer limit;
     private String algorithmTestPlanName;
+    private Date startTime;
+    private Date endtime;
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime(Date endtime) {
+        this.endtime = endtime;
+    }
 
     public String getAlgorithmTestPlanName() {
         return algorithmTestPlanName;

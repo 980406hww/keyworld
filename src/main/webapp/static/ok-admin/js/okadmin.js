@@ -6,10 +6,8 @@ layui.use(['element', 'layer', 'okUtils', 'okTab'], function () {
     layer = layui.layer,
     okTab = layui.okTab({
       url: "/external/layer/menu",
-      openTabNum: 8, //允许同时选项卡的个数
-      parseData:function (data) {//如果返回的结果和navs.json中的数据结构一致可省略这个方法
-        return data;
-      }
+      openTabNum: 30, //允许同时选项卡的个数
+
     });
 
   okTab.render(function () {
@@ -128,6 +126,77 @@ layui.use(['element', 'layer', 'okUtils', 'okTab'], function () {
       res("返回值");
     });
   }
+
+  /**
+   * 系统公告
+   */
+  $(document).on("click", "#notice", noticeFun);
+  !function () {
+    let notice = sessionStorage.getItem("notice");
+    if (notice != "true") {
+      noticeFun();
+    }
+  }();
+
+  function noticeFun() {
+    var srcWidth = okUtils.getBodyWidth();
+    layer.open({
+      type: 0,
+      title: "系统公告",
+      btn: "我知道啦",
+      btnAlign: 'c',
+      content: "ok-admin v2.0上线啦(^し^)<br />" +
+        "在此郑重承诺该模板<span style='color:#5cb85c'>永久免费</span>为大家提供" +
+        "<br />若有更好的建议欢迎<span id='noticeQQ'>加入QQ群</span>一起聊",
+      yes: function(index){
+        if (srcWidth > 800) {
+          layer.tips('公告跑到这里去啦', '#notice', {
+            tips: [1, '#000'],
+            time: 2000
+          });
+        }
+        sessionStorage.setItem("notice", "true");
+        layer.close(index);
+      },
+      cancel: function(index){
+        if (srcWidth > 800) {
+          layer.tips('公告跑到这里去啦', '#notice', {
+            tips: [1, '#000'],
+            time: 2000
+          });
+        }
+      }
+    });
+  }
+
+  /**
+   * 捐赠作者
+   */
+  $(".layui-footer button.donate").click(function () {
+    layer.tab({
+      area: ["330px", "350px"],
+      tab: [{
+        title: "支付宝",
+        content: "<img src='images/zfb.jpg' width='200' height='300' style='margin-left: 60px'>"
+      }, {
+        title: "微信",
+        content: "<img src='images/wx.jpg' width='200' height='300' style='margin-left: 60px'>"
+      }]
+    });
+  });
+
+  /**
+   * QQ群交流
+   */
+  $("body").on("click", ".layui-footer button.communication,#noticeQQ", function () {
+    layer.tab({
+      area: ["330px", "350px"],
+      tab: [{
+        title: "QQ群",
+        content: "<img src='images/qq.jpeg' width='200' height='300' style='margin-left: 60px'>"
+      }]
+    });
+  });
 
   /**
    * 退出操作

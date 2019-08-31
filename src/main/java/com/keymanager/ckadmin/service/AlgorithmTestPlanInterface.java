@@ -1,6 +1,8 @@
 package com.keymanager.ckadmin.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
+import com.keymanager.ckadmin.common.result.RequsetBean;
 import com.keymanager.ckadmin.entity.AlgorithmTestPlan;
 
 /**
@@ -14,4 +16,5 @@ import com.keymanager.ckadmin.entity.AlgorithmTestPlan;
 public interface AlgorithmTestPlanInterface extends IService<AlgorithmTestPlan> {
 
 
+    Page<AlgorithmTestPlan> searchAlgorithmTestPlans(Page<AlgorithmTestPlan> page, RequsetBean requsetBean);
 }
