@@ -691,21 +691,16 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
     @RequiresPermissions("/internal/customerKeyword/searchKeywordAmountCountLists")
     @RequestMapping(value = "/searchKeywordAmountCountLists", method = RequestMethod.GET)
     public ModelAndView searchKeywordAmountCountLists(@RequestParam(defaultValue = "1") int currentPageNumber, @RequestParam(defaultValue = "50") int pageSize, HttpServletRequest request) {
-        String entryType = (String) request.getSession().getAttribute("entryType");
-        if (!SecurityUtils.getSubject().hasRole(entryType.toUpperCase() + "Special")) {
+        if (!SecurityUtils.getSubject().hasRole(((String) request.getSession().getAttribute("entryType")).toUpperCase() + "Special")) {
             SecurityUtils.getSubject().logout();
         }
-
-        KeywordAmountCountCriteria keywordAmountCountCriteria = new KeywordAmountCountCriteria();
-        keywordAmountCountCriteria.setEntryType(entryType);
-        return constructKeywordAmountCountModelAndView(request, keywordAmountCountCriteria, currentPageNumber, pageSize);
+        return constructKeywordAmountCountModelAndView(request, new KeywordAmountCountCriteria(), currentPageNumber, pageSize);
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchKeywordAmountCountLists")
     @RequestMapping(value = "/searchKeywordAmountCountLists", method = RequestMethod.POST)
     public ModelAndView searchKeywordAmountCountLists(KeywordAmountCountCriteria keywordAmountCountCriteria, HttpServletRequest request) {
         try {
-			String entryType = (String) request.getSession().getAttribute("entryType");
             String currentPageNumber = request.getParameter("currentPageNumber");
             String pageSize = request.getParameter("pageSize");
             if (StringUtils.isEmpty(currentPageNumber)) {
@@ -714,7 +709,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
             if (StringUtils.isEmpty(pageSize)) {
                 pageSize = "50";
             }
-            keywordAmountCountCriteria.setEntryType(entryType);
             return constructKeywordAmountCountModelAndView(request, keywordAmountCountCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize));
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -730,6 +724,8 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
         	return modelAndView;
 		}
         String terminalType = TerminalTypeMapping.getTerminalType(request);
+        String entryType = (String) request.getSession().getAttribute("entryType");
+        keywordAmountCountCriteria.setEntryType(entryType);
         String userName = (String) session.getAttribute("username");
         UserInfo user = userInfoService.getUserInfo(userName);
         List<UserInfo> activeUsers = userInfoService.findActiveUsers();

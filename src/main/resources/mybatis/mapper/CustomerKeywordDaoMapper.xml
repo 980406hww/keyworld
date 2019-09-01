@@ -725,7 +725,7 @@
 
     <update id="adjustOptimizePlanCount">
         UPDATE t_customer_keyword
-        SET fOptimizePlanCount = #{optimizationPlanCount}, fOptimizeRemainingCount = #{optimizationPlanCount}, fQueryInterval = #{queryInterval}
+        SET fOptimizePlanCount = #{optimizationPlanCount}, fOptimizeRemainingCount = #{optimizationPlanCount}, fQueryInterval = #{queryInterval}, fOptimizeTodayCount = #{optimizeTodayCount}
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 
@@ -1076,8 +1076,9 @@
         <if test="settingType == 'setSpecificCount'">
             SET fOptimizePlanCount = #{optimizePlanCount}
         </if>
+        , fOptimizeTodayCount = IF(fOptimizePlanCount > 0, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
         , fOptimizeRemainingCount = IF(#{optimizePlanCount} - fOptimizedCount > 0, #{optimizePlanCount} - fOptimizedCount, 0)
-        , fQueryInterval = IF(fOptimizePlanCount > 0, (24 * 60 * 60 / fOptimizePlanCount), 24 * 60 * 60)
+        , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
         WHERE fUuid IN
         <foreach item="uuid"  collection="uuids" open="(" separator="," close=")">
             #{uuid}
@@ -1092,8 +1093,9 @@
         <if test="settingType == 'setSpecificCount'">
             SET fOptimizePlanCount = #{optimizePlanCount}
         </if>
+        , fOptimizeTodayCount = IF(fOptimizePlanCount > 0, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
         , fOptimizeRemainingCount = IF(#{optimizePlanCount} - fOptimizedCount > 0, #{optimizePlanCount} - fOptimizedCount, 0)
-        , fQueryInterval = IF(fOptimizePlanCount > 0, (24 * 60 * 60 / fOptimizePlanCount), 24 * 60 * 60)
+        , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
         WHERE fTerminalType = #{terminalType}
         AND fType = #{entryType}
         AND fCustomerUuid = #{customerUuid}
@@ -1358,7 +1360,8 @@
         <if test="keywordChecks.optimizePlanCount==1">
             , fOptimizePlanCount = #{keywordStatus.optimizePlanCount}
             , fOptimizeRemainingCount = IF(#{keywordStatus.optimizePlanCount} - fOptimizedCount > 0, #{keywordStatus.optimizePlanCount} - fOptimizedCount, 0)
-            , fQueryInterval = IF(fOptimizePlanCount > 0, (24 * 60 * 60 / fOptimizePlanCount), 24 * 60 * 60)
+            , fOptimizeTodayCount = IF(fOptimizePlanCount > 0, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
+            , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
         </if>
         <if test="keywordChecks.optimizeGroupName==1"> ,fOptimizeGroupName = #{keywordStatus.optimizeGroupName}</if>
         <if test="keywordChecks.machineGroup==1"> ,fMachineGroup = #{keywordStatus.machineGroup}</if>
