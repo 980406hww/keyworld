@@ -4,10 +4,10 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.IndustryDetailCriteria;
 import com.keymanager.monitoring.entity.IndustryDetail;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.keymanager.monitoring.vo.IndustryDetailVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -34,5 +34,5 @@ public interface IndustryDetailDao extends BaseMapper<IndustryDetail> {
 
     void removeUselessIndustryDetail(@Param("industryID") long industryID);
 
-    List<IndustryDetailVO> getIndustryInfos(@Param("uuid") long uuid);
+    List<Map> getIndustryInfos(@Param("uuid") long uuid);
 }

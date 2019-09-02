@@ -25,34 +25,20 @@ public class CustomerCollectFeeExcelWriter {
 	}
 	
 	public void saveAs(String outputFileName) throws Exception{
-		writer.saveAs(getWebRootPath() + outputFileName);
+		writer.saveAs(Utils.getWebRootPath() + outputFileName);
 	}
 	
-  public byte[] getExcelContentBytes() throws Exception {
-  	return writer.getExcelContentBytes();
-  }
+  	public byte[] getExcelContentBytes() throws Exception {
+  		return writer.getExcelContentBytes();
+  	}
   	
 	private File getTemplateFile(){
-		String SERVLET_CONTEXT_PATH = getWebRootPath();
+		String SERVLET_CONTEXT_PATH = Utils.getWebRootPath();
 
 		// 这里 SERVLET_CONTEXT_PATH 就是WebRoot的路径
-		String path = SERVLET_CONTEXT_PATH + "/" + fileName;
+		String path = SERVLET_CONTEXT_PATH + fileName;
 		path = path.replaceAll("%20", " ");
 		return new File(path); 
-	}
-
-	private String getWebRootPath() {
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		if (classLoader == null) {
-			classLoader = ClassLoader.getSystemClassLoader();
-		}
-		java.net.URL url = classLoader.getResource("");
-		String ROOT_CLASS_PATH = url.getPath() + "/";
-		File rootFile = new File(ROOT_CLASS_PATH);
-		String WEB_INFO_DIRECTORY_PATH = rootFile.getParent() + "/";
-		File webInfoDir = new File(WEB_INFO_DIRECTORY_PATH);
-		String SERVLET_CONTEXT_PATH = webInfoDir.getParent() + "/";
-		return SERVLET_CONTEXT_PATH;
 	}
 	
 	private void writeRow(int rowIndex, CustomerKeywordPositionView view) throws ExcelWriteException{

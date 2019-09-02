@@ -21,9 +21,9 @@
     <%@include file="/menu.jsp" %>
     <div style="text-align: right; margin: 10px 5px;">
         <div style="margin: 5px 0px 0px 5px;">
-<%--            <shiro:hasPermission name="/internal/industry/downloadIndustryInfo">--%>
-                <a target="_blank" href="javascript:downloadIndustryInfo()">导出网站联系信息</a>
-<%--            </shiro:hasPermission>--%>
+            <shiro:hasPermission name="/internal/industry/saveIndustry">
+                <a href="javascript:downloadIndustryInfo()">导出网站联系信息</a>
+            </shiro:hasPermission>
             <shiro:hasPermission name="/internal/industry/uploadIndustryInfos">
                 | <a target="_blank" href="javascript:uploadIndustryInfos('SuperIndustrySimple')">Excel上传</a>
             </shiro:hasPermission>
@@ -151,6 +151,11 @@
         </c:forEach>
     </table>
 </div>
+
+<form id="IndustryDetailInfoCsvExportFrom" method="post" action="/internal/industry/downloadIndustryInfo">
+    <input type="hidden" name="industryUuids" id="industryUuids" value="">
+</form>
+
 <%-- excel上传 --%>
 <div id="uploadExcelDialog"  style="display: none;text-align: left;height: 60px; left: 40%;" title="Excel上传" class="easyui-dialog">
     <form method="post" id="uploadExcelForm" style="margin-top: 10px"  enctype="multipart/form-data" >

@@ -424,11 +424,11 @@ public class Utils {
 			classLoader = ClassLoader.getSystemClassLoader();
 		}
 		java.net.URL url = classLoader.getResource("");
-		String ROOT_CLASS_PATH = url.getPath() + "/";
+		String ROOT_CLASS_PATH = url.getPath() + "\\";
 		File rootFile = new File(ROOT_CLASS_PATH);
-		String WEB_INFO_DIRECTORY_PATH = rootFile.getParent() + "/";
+		String WEB_INFO_DIRECTORY_PATH = rootFile.getParent() + "\\";
 		File webInfoDir = new File(WEB_INFO_DIRECTORY_PATH);
-		String SERVLET_CONTEXT_PATH = webInfoDir.getParent() + "/";
+		String SERVLET_CONTEXT_PATH = webInfoDir.getParent() + "\\";
 		return SERVLET_CONTEXT_PATH;
 	}
 
