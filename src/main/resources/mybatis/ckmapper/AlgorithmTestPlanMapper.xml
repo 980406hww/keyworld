@@ -50,8 +50,8 @@
         FROM
         t_algorithm_test_plan atp
         <where>
-            <if test="queryCondition.algorithmTestPlanName!=null and algorithmTestPlanSearchCriteria.algorithmTestPlanName!=''">
-                AND atp.fAlgorithmTestPlanName LIKE concat(#{algorithmTestPlanSearchCriteria.algorithmTestPlanName},'%')
+            <if test="queryCondition.algorithmTestPlanName!=null and queryCondition.algorithmTestPlanName!=''">
+                AND atp.fAlgorithmTestPlanName LIKE concat(#{queryCondition.algorithmTestPlanName},'%')
             </if>
            <!-- <if test="algorithmTestPlanSearchCriteria.operationCombineName!=null and algorithmTestPlanSearchCriteria.operationCombineName!=''">
                 AND atp.fOperationCombineName LIKE concat(#{algorithmTestPlanSearchCriteria.operationCombineName},'%')

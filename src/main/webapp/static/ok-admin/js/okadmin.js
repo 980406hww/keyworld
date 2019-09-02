@@ -5,7 +5,7 @@ layui.use(['element', 'layer', 'okUtils', 'okTab'], function () {
     $ = layui.jquery,
     layer = layui.layer,
     okTab = layui.okTab({
-      url: "/external/layer/menu",
+      url: "/internal/layer/menu",
       openTabNum: 30, //允许同时选项卡的个数
 
     });

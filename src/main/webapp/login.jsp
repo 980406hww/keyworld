@@ -29,6 +29,11 @@
   <![endif]-->
 </head>
 <body class="hold-transition login-page" style="overflow-y: hidden;">
+<script>
+	if(window !=top){
+		top.location.href=location.href;
+	};
+</script>
 	<div class="login-box">
 		<div class="login-box-body">
 			<div class="row" style="padding-left: 20px; padding-right: 20px; margin-bottom: 20px;">

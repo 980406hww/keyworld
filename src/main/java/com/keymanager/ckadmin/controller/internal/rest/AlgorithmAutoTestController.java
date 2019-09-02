@@ -44,7 +44,6 @@ public class AlgorithmAutoTestController {
     public String getAlgorithmTestPlans(@RequestBody RequsetBean requsetBean){
         Page<AlgorithmTestPlan> page = new Page(requsetBean.getPage(),requsetBean.getLimit());
         //List<AlgorithmTestPlan> algorithmTestPlans = algorithmTestPlanService2.selectList(null);
-
         page = algorithmTestPlanService2.searchAlgorithmTestPlans(page, requsetBean);
         List<AlgorithmTestPlan> algorithmTestPlans = page.getRecords();
         ResultBean resultBean = new ResultBean();
@@ -55,6 +54,5 @@ public class AlgorithmAutoTestController {
         String s = JSON.toJSONString(resultBean);
         return s;
     }
-
 }
 

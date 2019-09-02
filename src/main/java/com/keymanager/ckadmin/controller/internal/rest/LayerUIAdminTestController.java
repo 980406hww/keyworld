@@ -1,4 +1,4 @@
-package com.keymanager.ckadmin.controller.external;
+package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.keymanager.ckadmin.common.result.Menu;
 import com.keymanager.ckadmin.service.ResourceInterface;
@@ -18,8 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
  * @Version 1.0
  */
 @RestController
-@RequestMapping(value = "/external/layer")
-public class ExternalLayerUIAdminTestRestController {
+@RequestMapping(value = "/internal/layer")
+public class LayerUIAdminTestController {
 
     @Resource(name = "resourceService2")
     private ResourceInterface resourceService2;

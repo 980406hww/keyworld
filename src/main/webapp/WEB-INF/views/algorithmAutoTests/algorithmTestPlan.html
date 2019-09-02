@@ -25,32 +25,27 @@
         </a>
     </div>
     <!--模糊搜索区域-->
-    <div class="layui-row">
-        <form class="layui-form layui-col-md12 ok-search" id="searchForm">
-            <input class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime">
-            <input class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
-            <input class="layui-input" placeholder="请输入标题" id="algorithmTestPlanName" autocomplete="off">
-            <button class="layui-btn" lay-submit="" lay-filter="search">
-                <i class="layui-icon layui-icon-search"></i>
-            </button>
-        </form>
-    </div>
+<!--    <div class="layui-row">-->
+<!--        <form class="layui-form layui-col-md12 ok-search" id="searchForm">-->
+<!--            <input class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime">-->
+<!--            <input class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">-->
+<!--            <input class="layui-input" placeholder="请输入标题" id="algorithmTestPlanName" autocomplete="off">-->
+<!--            <button class="layui-btn" lay-submit="" lay-filter="search">-->
+<!--                <i class="layui-icon layui-icon-search"></i>-->
+<!--            </button>-->
+<!--        </form>-->
+<!--    </div>-->
     <!--工具栏-->
     <okToolbar>
-        <button class="layui-btn layui-btn-normal" id="batchEnabled">
-            <i class="iconfont icon-shangsheng"></i>批量上架
-        </button>
-        <button class="layui-btn layui-btn-warm" id="batchDisabled">
-            <i class="iconfont icon-web-icon-"></i>批量下架
-        </button>
-        <button class="layui-btn layui-btn-danger" id="batchDel">
-            <i class="layui-icon layui-icon-delete"></i>批量删除
-        </button>
-        <button class="layui-btn" id="addUser">
-            <i class="layui-icon">&#xe61f;</i>添加文章
-        </button>
-        <span>共有数据：<i id="countNum"></i> 条</span>
+        <div class="demoTable">
+            搜索商户：
+            <div class="layui-inline">
+                <input class="layui-input" name="keyword" id="algorithmTestPlanName" autocomplete="off">
+            </div>
+            <button class="layui-btn" data-type="reload">搜索</button>
+        </div>
     </okToolbar>
+
     <!--数据表格-->
     <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
 </div>
@@ -91,15 +86,15 @@
             even: true,//隔行背景
             contentType: 'application/json',
             cols: [[
-                {type: 'checkbox'},
-                {field: 'uuid', title: 'ID', width: 80, sort: true},
-                {field: 'algorithmTestPlanName', title: '测试计划名称', width: 200},
-                {field: 'operationCombineName', title: '链接', width: 200, },
-                {field: 'terminalType', title: '阅读量', width: 80},
-                {field: 'searchEngine', title: '发布者', width: 100},
-                {field: 'machineGroup', title: '置顶', width: 100, },
-                {field: 'testIntervalDay', title: '状态', width: 100,},
-                {title: '操作', width: 200, templet: '#operationTpl', align: 'center'}
+                {type: 'checkbox', fixed: "left", width: '3%'},
+                {field: 'uuid', title: 'ID', sort: true,  width: '7%'},
+                {field: 'algorithmTestPlanName', title: '测试计划名称', width: '15%'},
+                {field: 'operationCombineName', title: '链接',  width: '15%'},
+                {field: 'terminalType', title: '阅读量',  width: '10%'},
+                {field: 'searchEngine', title: '发布者',  width: '10%'},
+                {field: 'machineGroup', title: '置顶',  width: '10%'},
+                {field: 'testIntervalDay', title: '状态', width: '10%'},
+                {title: '操作', templet: '#operationTpl', align: 'center',  width: '20%'}
             ]],
             done: function (res, curr, count) {
                 console.log(res)
@@ -107,21 +102,20 @@
             }
         });
 
-        form.on('submit(search)', function () {
-           // var formData = new FormData($("searchForm"))
-           // console.log($("#searchFrom").serialize())
-            var algorithmTestPlanName = $("#searchForm #algorithmTestPlanName").val();
-            table.reload('tableId',{
-                // method:'post',
-                url: '${ctx.path}/internal/algorithmAutoTest/getAlgorithmTestPlans',
-                where:{
-                    'algorithmTestPlanName':algorithmTestPlanName,
-                },
-                page: {
-                    curr: 1
-                }
-            });
+        var active = {
+            reload: function(){
+                var algorithmTestPlanName = $('#algorithmTestPlanName');
 
+                table.reload('tableId', {
+                    where: {
+                        algorithmTestPlanName: algorithmTestPlanName.val()
+                    }
+                });
+            }
+        };
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
         });
 
     })
