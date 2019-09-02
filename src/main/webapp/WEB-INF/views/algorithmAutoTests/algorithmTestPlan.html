@@ -67,12 +67,12 @@
                     </div>
                 </div>
             </div>
-            <button class="layui-btn" data-type="reload">搜索</button>
-            <button class="layui-btn" id="add-model">添加</button>
+
         </div>
 
     <!--工具栏-->
     <okToolbar>
+        <button class="layui-btn" id="add-model">添加</button>
         <button class="layui-btn layui-btn-normal" id="batchEnabled">
             <i class="iconfont icon-shangsheng"></i>批量上架
         </button>
@@ -147,8 +147,9 @@
 
         var active = {
             reload: function () {
-                var algorithmTestPlanName = $('#algorithmTestPlanName');
-
+                var algorithmTestPlanName = $('#algorithmTestPlanName').val().trim();
+                var operationCombineName = $('#operationCombineName').val().trim();
+                var machineGroup = $('#machineGroup').val().trim();
                 table.reload('tableId', {
                     where: {
                         algorithmTestPlanName: algorithmTestPlanName,

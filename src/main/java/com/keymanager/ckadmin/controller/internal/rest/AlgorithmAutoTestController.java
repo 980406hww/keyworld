@@ -3,19 +3,17 @@ package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.keymanager.ckadmin.common.result.RequsetBean;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.criteria.AlgorithmTestCriteria;
 import com.keymanager.ckadmin.entity.AlgorithmTestPlan;
 import com.keymanager.ckadmin.service.AlgorithmTestPlanInterface;
-
+import com.keymanager.ckadmin.service.ConfigInterface;
+import com.keymanager.util.TerminalTypeMapping;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
-import com.keymanager.ckadmin.service.ConfigInterface;
-import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,10 +73,10 @@ public class AlgorithmAutoTestController {
     }
 
     @RequestMapping(value = "getAlgorithmTestPlans")
-    public String getAlgorithmTestPlans(@RequestBody RequsetBean requsetBean) {
-        Page<AlgorithmTestPlan> page = new Page(requsetBean.getPage(), requsetBean.getLimit());
+    public String getAlgorithmTestPlans(@RequestBody AlgorithmTestCriteria algorithmTestCriteria) {
+        Page<AlgorithmTestPlan> page = new Page(algorithmTestCriteria.getPage(), algorithmTestCriteria.getLimit());
         //List<AlgorithmTestPlan> algorithmTestPlans = algorithmTestPlanService2.selectList(null);
-        page = algorithmTestPlanService2.searchAlgorithmTestPlans(page, requsetBean);
+        page = algorithmTestPlanService2.searchAlgorithmTestPlans(page, algorithmTestCriteria);
         List<AlgorithmTestPlan> algorithmTestPlans = page.getRecords();
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(0);
