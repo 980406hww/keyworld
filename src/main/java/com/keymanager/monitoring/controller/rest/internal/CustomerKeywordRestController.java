@@ -720,9 +720,6 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
         long startMilleSeconds = System.currentTimeMillis();
         HttpSession session = request.getSession();
         ModelAndView modelAndView = new ModelAndView("/customerkeyword/keywordAmountCount");
-        if(! "pt".equals(keywordAmountCountCriteria.getEntryType())){
-        	return modelAndView;
-		}
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         String entryType = (String) request.getSession().getAttribute("entryType");
         keywordAmountCountCriteria.setEntryType(entryType);
@@ -731,7 +728,7 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
         List<UserInfo> activeUsers = userInfoService.findActiveUsers();
 		boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
         keywordAmountCountCriteria.setTerminalType(terminalType);
-        if ("POST".equals(request.getMethod())) {
+        if ("POST".equals(request.getMethod()) && "pt".equals(entryType)) {
             Page<keywordAmountCountVo> page = customerKeywordService.searchKeywordAmountCountPage(new Page<keywordAmountCountVo>(currentPage, pageSize), keywordAmountCountCriteria);
             modelAndView.addObject("page", page);
         }
