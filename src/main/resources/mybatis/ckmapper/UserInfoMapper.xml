@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.UserInfoDao2">
+
+    <!-- 通用查询结果列-->
+    <sql id="colID">
+        u.fUuid AS 'uuid',
+        u.fLoginName AS 'loginName',
+        u.fUserName AS 'userName',
+        u.fPassword AS 'password',
+        u.fSex AS 'sex',
+        u.fQQ AS 'qq',
+        u.fEmail AS "email",
+        u.fSalt AS 'salt',
+        u.fStatus AS 'status',
+        u.fResetPasswordApplicationTime AS "resetPasswordApplicationTime",
+        u.fUpdateTime AS 'updateTime',
+        u.fCreateTime AS 'createTime'
+    </sql>
+
+
+
+    <select id="findActiveUsers" resultType="com.keymanager.ckadmin.entity.UserInfo">
+        SELECT
+        <include refid="colID"/>
+        FROM
+        t_userinfo u
+        WHERE u.fStatus = 0
+        AND u.fLoginName != #{externalLoginName};
+    </select>
+
+    <select id="selectUserInfos" resultType="com.keymanager.ckadmin.entity.UserInfo">
+        SELECT
+            ui.fUuid AS 'uuid',
+            ui.fUserName AS "userName"
+        FROM t_userinfo ui
+        WHERE ui.fStatus = 0
+        AND ui.fOrganizationID = #{organizationID}
+    </select>
+
+</mapper>

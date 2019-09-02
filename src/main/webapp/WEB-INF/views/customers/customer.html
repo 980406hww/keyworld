@@ -30,34 +30,55 @@
                     <div class="layui-colla-item">
                         <h2 class="layui-colla-title">条件筛选<i class="layui-icon layui-colla-icon"></i></h2>
                         <div class="layui-colla-content" id="searchContent">
-                            <div class="" id="searchForm">
+                            <div class="layui-form" id="searchForm">
 
                                 <div class="layui-form-item">
                                     <div class="layui-inline">
-                                        <div class="layui-input-inline" style="width: 150px;">
-                                            <input type="text" name="algorithmTestPlanName" id="algorithmTestPlanName" placeholder="测试计划名称" autocomplete="off"
+
+                                        <div class="layui-input-inline" >
+                                            <select name="loginName" id="loginName"  lay-filter="loginNameFilter" lay-search>
+                                                <option value="">请选择所属用户</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <div class="layui-input-inline" >
+                                            <input type="text" name="contactPerson" id="contactPerson" placeholder="联系人" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-inline">
+                                        <div class="layui-input-inline" >
+                                            <input type="text" name="type" id="type" placeholder="分组" autocomplete="off"
                                                    class="layui-input">
                                         </div>
                                     </div>
 
                                     <div class="layui-inline">
                                         <div class="layui-input-inline" style="width: 150px;">
-                                            <input type="text" name="algorithmTestPlanName" id="operationCombineName" placeholder="操作组合名称" autocomplete="off"
+                                            <input type="text" name="qq" id="qq" placeholder="QQ" autocomplete="off"
                                                    class="layui-input">
                                         </div>
                                     </div>
-
                                     <div class="layui-inline">
                                         <div class="layui-input-inline" style="width: 150px;">
-                                            <input type="text" name="algorithmTestPlanName" id="machineGroup" placeholder="机器分组" autocomplete="off"
+                                            <input type="text" name="telphone" id="telphone" placeholder="联系电话" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <div class="layui-input-inline" style="width: 150px;">
+                                            <input type="text" name="remark" id="remark" placeholder="备注" autocomplete="off"
                                                    class="layui-input">
                                         </div>
                                     </div>
 
                                     <div class="layui-inline">
-                                        <div class="layui-input-block">
+                                        <div class="layui-input-inline">
                                             <button class="layui-btn" data-type="reload" id="searchBtn">立即提交</button>
-                                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+
                                         </div>
                                     </div>
                                 </div>
@@ -131,12 +152,12 @@
                 {field: 'loginName', title: '用户名称', sort: true, width: '8%'},
                 {field: 'contactPerson', title: '联系人', width: '10%'},
                 {field: 'type', title: '分组', width: '5%'},
-                {field: 'keywordCount', title: '关键字信息', width: '10%'},
+                {field: 'keywordCount', title: '关键字信息', width: '10%', templet:'#keywordInfo'},
                 {field: 'qq', title: 'QQ', width: '7%'},
                 {field: 'saleRemark', title: '销售备注', width: '10%'},
                 {field: 'remark', title: '备注', width: '10%'},
-                {field: 'status', title: '客户状态', width: '8%'},
-                {field: 'dailyReportIdentify', title: '是否产生日报表', width: '5%'},
+                {field: 'status', title: '客户状态', width: '8%', templet:'#customerStatus'},
+                {field: 'dailyReportIdentify', title: '是否产生日报表', width: '12%', templet:'#customerDailyReportIdentify'},
                 {field: 'createTime', title: '创建时间', width: '10%', templet:'#toDateTime'},
                 {title: '操作', templet: '#operationTpl', align: 'center', width: '14%'}
             ]],
@@ -148,21 +169,27 @@
 
         var active = {
             reload: function () {
-                console.log("reload")
-                var algorithmTestPlanName = $('#algorithmTestPlanName').val();
-                var operationCombineName = $('#operationCombineName').val();
-                var machineGroup = $('#machineGroup').val();
+                var loginName = $('#searchForm #loginName').val().trim();
+                var contactPerson = $('#searchForm #contactPerson').val().trim();
+                var type = $('#searchForm #type').val().trim();
+                var qq = $('#searchForm #qq').val().trim();
+                var telphone = $('#searchForm #telphone').val().trim();
+                var remark = $('#searchForm #remark').val().trim();
 
-                table.reload('tableId', {
+                table.reload('customerTable', {
                     where: {
-                        algorithmTestPlanName: algorithmTestPlanName,
-                        operationCombineName: operationCombineName,
-                        machineGroup: machineGroup
+                        loginName : loginName,
+                        contactPerson : contactPerson,
+                        type : type,
+                        qq : qq,
+                        telphone : telphone,
+                        remark : remark
                     }
                 });
                 $("#searchContent").removeClass("layui-show")
             }
         };
+
         $('#searchForm #searchBtn').on('click', function () {
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
@@ -176,10 +203,45 @@
     {{layui.util.toDateString(d.createTime)}}
 </script>
 
-<script type="text/html" id="urlTpl">
+<script type="text/html" id="keywordInfo">
+    {{# if(d.keywordCount > 0){
+            if(d.keywordCount == d.activeKeywordCount){ }}
+                <span style="color: green;">激活</span>
+                <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+                    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 0)">暂停关键字</a>
+                </@shiro.hasPermission>
+        {{# }else if(d.keywordCount > 0 && d.activeKeywordCount > 0){ }}
+                <span style="color: yellowgreen;">部分暂停</span>
+                <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+                    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 0)">暂停关键字</a>
+                    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 1)">激活关键字</a>
+                </@shiro.hasPermission>
+        {{# }else{  }}
+                <span style="color: red;">暂停</span>
+                <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+                    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 1)">激活关键字</a>
+                </@shiro.hasPermission>
+        {{# }
+        }else{ }}
+        暂无关键字
+        {{#} }}
+</script>
 
-    <span style="color: green;">激活</span>
 
+<script type="text/html" id="customerStatus">
+    {{#  if(d.status==1){  }}
+            激活
+    {{#  }else{  }}
+            暂停
+    {{#  }  }}
+</script>
+
+<script type="text/html" id="customerDailyReportIdentify">
+    {{#  if(d.dailyReportIdentify){  }}
+    是
+    {{#  }else{  }}
+    否
+    {{#  }  }}
 </script>
 <script type="text/html" id="operationTpl">
     <a href="javascript:;" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>

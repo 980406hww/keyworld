@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.CustomerKeywordDao2">
+
+    <select id="getCustomerKeywordsCount" resultType="java.util.Map">
+        SELECT ck.fCustomerUuid as 'customerUuid', COUNT(1) as 'totalCount', SUM(IF(ck.fStatus = 1, 1, 0)) AS 'activeCount'
+        FROM t_customer_keyword ck
+        WHERE ck.fTerminalType = #{terminalType}
+        AND ck.fType = #{entryType}
+        AND ck.fCustomerUuid IN
+        <foreach item="item" index="index" collection="customerUuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+         GROUP BY ck.fCustomerUuid
+    </select>
+
+</mapper>

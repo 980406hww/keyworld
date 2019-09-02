@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.entity.Customer;
+import com.keymanager.ckadmin.entity.UserInfo;
 import com.keymanager.ckadmin.service.CustomerInterface;
+import com.keymanager.ckadmin.service.UserInfoInterface;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.List;
 import javax.annotation.Resource;
@@ -31,6 +33,9 @@ public class CustomerController {
 
     @Resource(name = "customerService2")
     private CustomerInterface customerService2;
+
+    @Resource(name = "userInfoSerice2")
+    private UserInfoInterface userInfoService2;
 
     @RequiresPermissions("/internal/customer/toCustomers")
     @RequestMapping(value = "/toCustomers", method = RequestMethod.GET)
@@ -59,5 +64,12 @@ public class CustomerController {
         resultBean.setData(customers);
         String s = JSON.toJSONString(resultBean);
         return s;
+    }
+
+    @RequestMapping("/getActiveUsers")
+    public List<UserInfo> getActiveUsers(){
+        List<UserInfo> activeUsers = userInfoService2.findActiveUsers();
+
+        return activeUsers;
     }
 }
