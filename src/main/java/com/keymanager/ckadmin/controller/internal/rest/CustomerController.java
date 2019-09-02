@@ -45,7 +45,7 @@ public class CustomerController {
         return mv;
     }
 
-    @RequestMapping(value = "getCustomers")
+    @RequestMapping(value = "/getCustomers")
     public String getAlgorithmTestPlans(HttpServletRequest request, @RequestBody CustomerCriteria customerCriteria) {
         HttpSession session = request.getSession();
         String loginName = (String) session.getAttribute("username");
