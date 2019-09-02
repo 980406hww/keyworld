@@ -111,7 +111,7 @@ function getSelectedIDs() {
 function getUsefulSelectedIDs() {
     var uuids = '';
     $.each($("input[name=industryUuid]:checkbox:checked"), function () {
-        if ($(this).parent().parent().find("td[name='status'] span").text() === '爬取完成') {
+        if ($(this).parent().parent().find("td[name='status'] span").text().trim() === "爬取完成") {
             if (uuids === '') {
                 uuids = $(this).val();
             } else {
@@ -140,8 +140,8 @@ function saveIndustry(uuid, loginName) {
     industryInfo.pageNum = industryForm.find("#pageNum").val();
     industryInfo.pagePerNum = industryForm.find("#pagePerNum").val();
     if(industryInfo.targetUrl !== ""){
-        if(industryInfo.targetUrl.indexOf("http://") === -1 || industryInfo.targetUrl.indexOf("https://") === -1){
-            industryInfo.targetUrl = "http://" + industryInfo.targetUrl
+        if(industryInfo.targetUrl.indexOf("http") === -1){
+            industryInfo.targetUrl = "http://" + industryInfo.targetUrl;
         }
     }
     if (industryInfo.pageNum === '') {
