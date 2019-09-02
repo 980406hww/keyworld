@@ -3,7 +3,7 @@ package com.keymanager.ckadmin.service.impl;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.ckadmin.common.result.RequsetBean;
+import com.keymanager.ckadmin.criteria.AlgorithmTestCriteria;
 import com.keymanager.ckadmin.dao.AlgorithmTestPlanDao2;
 import com.keymanager.ckadmin.entity.AlgorithmTestPlan;
 import com.keymanager.ckadmin.service.AlgorithmTestPlanInterface;
@@ -27,8 +27,8 @@ public class AlgorithmTestPlanService2 extends ServiceImpl<AlgorithmTestPlanDao2
     private AlgorithmTestPlanDao2 algorithmTestPlanDao2;
 
     @Override
-    public Page<AlgorithmTestPlan> searchAlgorithmTestPlans(Page<AlgorithmTestPlan> page, RequsetBean requsetBean) {
-        List<AlgorithmTestPlan> algorithmTestPlanList = algorithmTestPlanDao2.searchAlgorithmTestPlans(page,requsetBean);
+    public Page<AlgorithmTestPlan> searchAlgorithmTestPlans(Page<AlgorithmTestPlan> page, AlgorithmTestCriteria algorithmTestCriteria) {
+        List<AlgorithmTestPlan> algorithmTestPlanList = algorithmTestPlanDao2.searchAlgorithmTestPlans(page,algorithmTestCriteria);
         page.setRecords(algorithmTestPlanList);
         return page;
     }

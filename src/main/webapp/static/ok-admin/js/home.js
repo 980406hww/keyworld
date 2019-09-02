@@ -40,7 +40,7 @@ layui.config({
     mapChina.setOption(echartsData.mapChina);//地图
     
     /**表格**/
-    table.render({
+   /* table.render({
       method: "GET",
       url: "../data/user.json",//
       elem: '#userData', //指定原始表格元素选择器（推荐id选择器）
@@ -66,7 +66,7 @@ layui.config({
         {field: "u_endtime", title: "时间",},//templet: '#titleDate'
         {field: "u_grade", title: "等级"}
       ]], //设置表头
-    });
+    });*/
     
     /**日历**/
     laydate.render({

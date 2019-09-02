@@ -34,24 +34,6 @@
             </li>
         </ul>
         <ul class="layui-nav layui-layout-right">
-            <li class="no-line layui-nav-item layui-hide-xs">
-                <a id="notice" class="flex-vc pr10 pl10" href="javascript:;">
-                    <i class="ok-iconbell icon-head-i"></i><cite>系统公告</cite>
-                </a>
-            </li>
-
-            <li class="no-line layui-nav-item layui-hide-xs">
-                <a id="lock" class="flex-vc pr10 pl10" href="javascript:;">
-                    <i class="ok-iconlock_outline icon-head-i"></i><cite>锁屏</cite>
-                </a>
-            </li>
-
-            <li class="layui-nav-item layui-hide-xs">
-                <a id="fullScreen" class=" pr10 pl10" href="javascript:;">
-                    <i class="layui-icon layui-icon-screen-full"></i>
-                </a>
-            </li>
-
             <li class="no-line layui-nav-item">
                 <a href="javascript:;">
                     <img src="${ctx.basePath}/static/ok-admin/images/head.png" class="layui-nav-img">
@@ -65,7 +47,7 @@
                     <dd>
                         <hr/>
                     </dd>
-                    <dd><a href="javascript:void(0)" id="lout">退出登录</a></dd>
+                    <dd><a href="javascript:void(0)" id="logout">退出登录</a></dd>
                 </dl>
             </li>
         </ul>
@@ -129,12 +111,7 @@
         </div>
     </div>
 
-    <!--底部信息-->
-    <div class="layui-footer okadmin-text-center">
-        Copyright ©2019-©2020 ok-admin v2.0 All Rights Reserved
-        <button class="layui-btn layui-btn-danger layui-btn-xs donate">捐赠作者</button>
-        <button class="layui-btn layui-btn-danger layui-btn-xs communication">QQ群交流</button>
-    </div>
+
 </div>
 <form action="/logout" method="post" id="logoutForm">
 

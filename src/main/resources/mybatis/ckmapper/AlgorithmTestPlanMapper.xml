@@ -50,15 +50,15 @@
         FROM
         t_algorithm_test_plan atp
         <where>
-            <if test="queryCondition.algorithmTestPlanName!=null and queryCondition.algorithmTestPlanName!=''">
-                AND atp.fAlgorithmTestPlanName LIKE concat(#{queryCondition.algorithmTestPlanName},'%')
+            <if test="algorithmTestCriteria.algorithmTestPlanName!=null and algorithmTestCriteria.algorithmTestPlanName!=''">
+                AND atp.fAlgorithmTestPlanName LIKE concat(#{algorithmTestCriteria.algorithmTestPlanName},'%')
             </if>
-           <!-- <if test="algorithmTestPlanSearchCriteria.operationCombineName!=null and algorithmTestPlanSearchCriteria.operationCombineName!=''">
-                AND atp.fOperationCombineName LIKE concat(#{algorithmTestPlanSearchCriteria.operationCombineName},'%')
+            <if test="algorithmTestCriteria.operationCombineName!=null and algorithmTestCriteria.operationCombineName!=''">
+                AND atp.fOperationCombineName LIKE concat(#{algorithmTestCriteria.operationCombineName},'%')
             </if>
-            <if test="algorithmTestPlanSearchCriteria.machineGroup!=null and algorithmTestPlanSearchCriteria.machineGroup!=''">
-                AND atp.fMachineGroup LIKE concat(#{algorithmTestPlanSearchCriteria.machineGroup},'%')
-            </if>-->
+            <if test="algorithmTestCriteria.machineGroup!=null and algorithmTestCriteria.machineGroup!=''">
+                AND atp.fMachineGroup LIKE concat(#{algorithmTestCriteria.machineGroup},'%')
+            </if>
         </where>
     </select>
 
