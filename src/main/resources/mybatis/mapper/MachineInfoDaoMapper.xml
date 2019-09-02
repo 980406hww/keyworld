@@ -512,7 +512,7 @@
         <if test="machineInfoCriteria.orderBy != null and machineInfoCriteria.orderBy != ''"> ORDER BY ${machineInfoCriteria.orderBy}</if>
     </update>
 
-    <select id="searchMachineInfoFormMachineGroupWorkInfo" parameterType="com.keymanager.monitoring.criteria.MachineGroupWorkInfoCriteria" resultType="com.keymanager.monitoring.entity.MachineGroupWorkInfo">
+    <select id="searchMachineInfoFormMachineGroupWorkInfo" resultType="com.keymanager.monitoring.entity.MachineGroupWorkInfo">
         SELECT
         cs.fMachineGroup AS "machineGroup",
         cs.fTerminalType AS "terminalType",

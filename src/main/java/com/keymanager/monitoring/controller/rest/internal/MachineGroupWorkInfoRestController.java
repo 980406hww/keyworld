@@ -20,15 +20,15 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/internal/machinegroupworkinfo")
 public class MachineGroupWorkInfoRestController {
+
     private static Logger logger = LoggerFactory.getLogger(MachineGroupWorkInfoRestController.class);
+
     @Autowired
     private ConfigService configService;
     @Autowired
     private UserRoleService userRoleService;
     @Autowired
     private IUserInfoService userInfoService;
-    @Autowired
-    private MachineInfoService machineInfoService;
     @Autowired
     private MachineGroupWorkInfoService machineGroupWorkInfoService;
 
@@ -38,8 +38,7 @@ public class MachineGroupWorkInfoRestController {
     public ModelAndView searchMachineGroupWorkInfos(HttpServletRequest request) {
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         ModelAndView modelAndView = new ModelAndView("/machineGroupWorkInfo/list");
-        MachineGroupWorkInfoCriteria machineGroupWorkInfoCriteria = new MachineGroupWorkInfoCriteria();
-        modelAndView.addObject("machineGroupWorkInfoCriteria", machineGroupWorkInfoCriteria);
+        modelAndView.addObject("machineGroupWorkInfoCriteria", new MachineGroupWorkInfoCriteria());
         modelAndView.addObject("searchEngineMap", configService.getSearchEngineMap(terminalType));
         return modelAndView;
     }
