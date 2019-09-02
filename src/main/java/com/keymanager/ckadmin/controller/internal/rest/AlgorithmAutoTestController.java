@@ -3,12 +3,19 @@ package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.ckadmin.common.result.RequsetBean;
 import com.keymanager.ckadmin.common.result.ResultBean;
-import com.keymanager.ckadmin.criteria.AlgorithmTestCriteria;
 import com.keymanager.ckadmin.entity.AlgorithmTestPlan;
 import com.keymanager.ckadmin.service.AlgorithmTestPlanInterface;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import com.keymanager.ckadmin.service.ConfigInterface;
+import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +38,8 @@ public class AlgorithmAutoTestController {
     @Resource(name = "algorithmTestPlanService2")
     private AlgorithmTestPlanInterface algorithmTestPlanService2;
 
+    @Resource(name = "configService2")
+    private ConfigInterface configService2;
 
     @RequiresPermissions("/internal/algorithmAutoTest/searchAlgorithmTestPlans")
     @RequestMapping(value = "/toAlgorithmTestPlans", method = RequestMethod.GET)
@@ -40,14 +49,40 @@ public class AlgorithmAutoTestController {
         return mv;
     }
 
+    @RequiresPermissions("/internal/algorithmAutoTest/toAlgorithmTestPlanAdd")
+    @RequestMapping(value = "/toAlgorithmTestPlanAdd", method = RequestMethod.GET)
+    public ModelAndView toAlgorithmTestPlanAdd() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("algorithmAutoTests/algorithmTestPlanAdd");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/algorithmAutoTest/getAlgorithmTestPlanAddData")
+    @RequestMapping(value = "/getAlgorithmTestPlanAddData", method = RequestMethod.GET)
+    public Map<String, Object> getAlgorithmTestPlanAddData(HttpServletRequest request) {
+        Map<String, Object> mapData = new HashMap<>();
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        mapData.put("terminalType", terminalType);
+        mapData.put("searchEngineMap", configService2.getSearchEngineMap(terminalType));
+        return mapData;
+    }
+
+    @RequiresPermissions("/internal/algorithmAutoTest/toAlgorithmTestPlanAddData")
+    @RequestMapping(value = "/toAlgorithmTestPlanAddData", method = RequestMethod.POST)
+    public String toAlgorithmTestPlanAddData(AlgorithmTestPlan algorithmTestPlan) {
+        System.out.println(algorithmTestPlan);
+        return "";
+    }
+
     @RequestMapping(value = "getAlgorithmTestPlans")
-    public String getAlgorithmTestPlans(@RequestBody AlgorithmTestCriteria algorithmTestCriteria){
-        Page<AlgorithmTestPlan> page = new Page(algorithmTestCriteria.getPage(),algorithmTestCriteria.getLimit());
-        page = algorithmTestPlanService2.searchAlgorithmTestPlans(page, algorithmTestCriteria);
+    public String getAlgorithmTestPlans(@RequestBody RequsetBean requsetBean) {
+        Page<AlgorithmTestPlan> page = new Page(requsetBean.getPage(), requsetBean.getLimit());
+        //List<AlgorithmTestPlan> algorithmTestPlans = algorithmTestPlanService2.selectList(null);
+        page = algorithmTestPlanService2.searchAlgorithmTestPlans(page, requsetBean);
         List<AlgorithmTestPlan> algorithmTestPlans = page.getRecords();
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(0);
-        resultBean.setCount(page.getTotal());
+        resultBean.setCount(algorithmTestPlans.size());
         resultBean.setMsg("");
         resultBean.setData(algorithmTestPlans);
         String s = JSON.toJSONString(resultBean);
