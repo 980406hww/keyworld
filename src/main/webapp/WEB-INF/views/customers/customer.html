@@ -70,7 +70,9 @@
 
     <!--工具栏-->
     <okToolbar>
-        <button class="layui-btn layui-btn-normal" id="batchEnabled">
+
+
+    <button class="layui-btn layui-btn-normal" id="batchEnabled">
             <i class="iconfont icon-shangsheng"></i>批量上架
         </button>
         <button class="layui-btn layui-btn-warm" id="batchDisabled">
@@ -86,7 +88,7 @@
     </okToolbar>
 
     <!--数据表格-->
-    <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+    <table class="layui-hide" id="customerTable" lay-filter="tableFilter"></table>
 </div>
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
@@ -116,27 +118,30 @@
         });
 
         table.render({
-            elem: '#tableId',
+            elem: '#customerTable',
             method: 'post',
-            url: '${ctx.path}/internal/algorithmAutoTest/getAlgorithmTestPlans',
+            url: '${ctx.path}/internal/customer/getCustomers',
             // limit: 10,
             page: true,
-            id: 'tableId',
+            id: 'customerTable',
             even: true,//隔行背景
             contentType: 'application/json',
             cols: [[
                 {type: 'checkbox', fixed: "left", width: '3%'},
-                {field: 'uuid', title: 'ID', sort: true, width: '7%'},
-                {field: 'algorithmTestPlanName', title: '测试计划名称', width: '15%'},
-                {field: 'operationCombineName', title: '链接', width: '15%'},
-                {field: 'terminalType', title: '阅读量', width: '10%'},
-                {field: 'searchEngine', title: '发布者', width: '10%'},
-                {field: 'machineGroup', title: '置顶', width: '10%'},
-                {field: 'testIntervalDay', title: '状态', width: '10%'},
-                {title: '操作', templet: '#operationTpl', align: 'center', width: '20%'}
+                {field: 'loginName', title: '用户名称', sort: true, width: '8%'},
+                {field: 'contactPerson', title: '联系人', width: '10%'},
+                {field: 'type', title: '分组', width: '5%'},
+                {field: 'keywordCount', title: '关键字信息', width: '10%'},
+                {field: 'qq', title: 'QQ', width: '7%'},
+                {field: 'saleRemark', title: '销售备注', width: '10%'},
+                {field: 'remark', title: '备注', width: '10%'},
+                {field: 'status', title: '客户状态', width: '8%'},
+                {field: 'dailyReportIdentify', title: '是否产生日报表', width: '5%'},
+                {field: 'createTime', title: '创建时间', width: '10%', templet:'#toDateTime'},
+                {title: '操作', templet: '#operationTpl', align: 'center', width: '14%'}
             ]],
             done: function (res, curr, count) {
-                console.log(res)
+                // console.log(res)
                 $("#countNum").text(count);
             }
         });
@@ -167,7 +172,15 @@
 
 </script>
 <!--模板-->
+<script type="text/html" id="toDateTime">
+    {{layui.util.toDateString(d.createTime)}}
+</script>
 
+<script type="text/html" id="urlTpl">
+
+    <span style="color: green;">激活</span>
+
+</script>
 <script type="text/html" id="operationTpl">
     <a href="javascript:;" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>
     <a href="javascript:;" title="删除" lay-event="del"><i class="layui-icon">&#xe640;</i></a>

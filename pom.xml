@@ -268,7 +268,23 @@
 			<artifactId>freemarker</artifactId>
 			<version>2.3.21</version>
 		</dependency>
-		
+		<!--freemarker shiro标签支持-->
+		<dependency>
+			<groupId>net.mingsoft</groupId>
+			<artifactId>shiro-freemarker-tags</artifactId>
+			<version>1.0.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.freemarker</groupId>
+					<artifactId>freemarker</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.shiro</groupId>
+					<artifactId>shiro-all</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 		<dependency>    
 	        <groupId>javax.mail</groupId>    
 	        <artifactId>mail</artifactId>    
@@ -320,12 +336,7 @@
 			<version>1.5.1</version>
 		</dependency>
 
-		<!-- freemarker视图模板引擎 -->
-		<dependency>
-			<groupId>org.freemarker</groupId>
-			<artifactId>freemarker</artifactId>
-			<version>2.3.28</version>
-		</dependency>
+
 
 	</dependencies>
 	

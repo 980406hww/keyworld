@@ -43,12 +43,11 @@ public class AlgorithmAutoTestController {
     @RequestMapping(value = "getAlgorithmTestPlans")
     public String getAlgorithmTestPlans(@RequestBody AlgorithmTestCriteria algorithmTestCriteria){
         Page<AlgorithmTestPlan> page = new Page(algorithmTestCriteria.getPage(),algorithmTestCriteria.getLimit());
-        //List<AlgorithmTestPlan> algorithmTestPlans = algorithmTestPlanService2.selectList(null);
         page = algorithmTestPlanService2.searchAlgorithmTestPlans(page, algorithmTestCriteria);
         List<AlgorithmTestPlan> algorithmTestPlans = page.getRecords();
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(0);
-        resultBean.setCount(algorithmTestPlans.size());
+        resultBean.setCount(page.getTotal());
         resultBean.setMsg("");
         resultBean.setData(algorithmTestPlans);
         String s = JSON.toJSONString(resultBean);
