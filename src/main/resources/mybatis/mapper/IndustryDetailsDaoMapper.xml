@@ -69,7 +69,7 @@
         DELETE FROM t_industry_detail WHERE fIndustryID = #{industryID} AND fQQ = '' AND fTelephone = ''
     </delete>
 
-    <select id="getIndustryInfos" resultType="com.keymanager.monitoring.vo.IndustryDetailVO">
+    <select id="getIndustryInfos" resultType="java.util.Map">
         SELECT
             tii.fIndustryName AS 'industryName',
             tid.fWebsite      AS 'website',

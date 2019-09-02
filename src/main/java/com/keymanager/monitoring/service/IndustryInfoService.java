@@ -9,7 +9,6 @@ import com.keymanager.monitoring.entity.IndustryInfo;
 import com.keymanager.monitoring.dao.IndustryInfoDao;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.excel.operator.AbstractExcelReader;
-import com.keymanager.monitoring.vo.IndustryDetailVO;
 import com.keymanager.monitoring.vo.IndustryInfoVO;
 import com.keymanager.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,7 +130,7 @@ public class IndustryInfoService extends ServiceImpl<IndustryInfoDao, IndustryIn
         }
     }
 
-    public List<IndustryDetailVO> getIndustryInfos(List<String> uuids) {
+    public List<Map> getIndustryInfos(List<String> uuids) {
         return industryDetailService.getIndustryInfos(uuids);
     }
 }

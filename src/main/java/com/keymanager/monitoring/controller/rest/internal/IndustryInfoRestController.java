@@ -1,21 +1,17 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
-
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.IndustryCriteria;
 import com.keymanager.monitoring.entity.IndustryInfo;
 import com.keymanager.monitoring.entity.UserInfo;
-import com.keymanager.monitoring.excel.operator.IndustryDetailInfoExcelWriter;
+import com.keymanager.monitoring.excel.operator.IndustryDetailInfoCsvExportWriter;
 import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.IUserInfoService;
 import com.keymanager.monitoring.service.IndustryInfoService;
 import com.keymanager.monitoring.service.UserRoleService;
-import com.keymanager.monitoring.vo.IndustryDetailVO;
 import com.keymanager.util.TerminalTypeMapping;
-import com.keymanager.util.Utils;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.ListUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -200,26 +196,21 @@ public class IndustryInfoRestController extends SpringMVCBaseController {
         return false;
     }
 
+    @RequiresPermissions("/internal/industry/saveIndustry")
     @PostMapping("/downloadIndustryInfo")
-    public ResponseEntity<?> downloadIndustryInfo(@RequestBody Map<String, Object> requestMap, HttpServletResponse response) {
+    public ResponseEntity<?> downloadIndustryInfo(@RequestParam("industryUuids") String industryUuids, HttpServletResponse response) {
         try {
-            List<String> uuids = (List<String>) requestMap.get("uuids");
-            List<IndustryDetailVO> industryDetailVos = industryInfoService.getIndustryInfos(uuids);
+            List<String> uuids = Arrays.asList(industryUuids.split(","));
+            List<Map> industryDetailVos = industryInfoService.getIndustryInfos(uuids);
             if (CollectionUtils.isNotEmpty(industryDetailVos)) {
-                IndustryDetailInfoExcelWriter excelWriter = new IndustryDetailInfoExcelWriter();
-                excelWriter.writeDataToExcel(industryDetailVos);
-                String fileName = "行业详细联系信息" + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd") + ".xls";
-                fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
-                byte[] buffer = excelWriter.getExcelContentBytes();
-                downExcelFile(response, fileName, buffer);
+                IndustryDetailInfoCsvExportWriter.exportCsv(industryDetailVos);
+                IndustryDetailInfoCsvExportWriter.downloadZip(response);
             }
-
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
             logger.error(e.getMessage());
         }
-        return new ResponseEntity<Object>(false, HttpStatus.OK);
+        return new ResponseEntity<Object>(true, HttpStatus.OK);
     }
 }
 

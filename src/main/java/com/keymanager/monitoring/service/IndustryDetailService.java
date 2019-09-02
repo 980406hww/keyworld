@@ -5,14 +5,10 @@ import com.keymanager.monitoring.criteria.IndustryDetailCriteria;
 import com.keymanager.monitoring.dao.IndustryDetailDao;
 import com.keymanager.monitoring.entity.IndustryDetail;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.monitoring.vo.IndustryDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -121,11 +117,11 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
         industryDetailDao.removeUselessIndustryDetail(industryID);
     }
 
-    public List<IndustryDetailVO> getIndustryInfos(List<String> uuids) {
-        List<IndustryDetailVO> industryDetailVos = new ArrayList<>();
+    public List<Map> getIndustryInfos(List<String> uuids) {
+        List<Map> dataMap = new ArrayList<>();
         for (String uuid : uuids) {
-            industryDetailVos.addAll(industryDetailDao.getIndustryInfos(Long.valueOf(uuid)));
+            dataMap.addAll(industryDetailDao.getIndustryInfos(Long.valueOf(uuid)));
         }
-        return industryDetailVos;
+        return dataMap;
     }
 }

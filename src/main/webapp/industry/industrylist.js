@@ -478,30 +478,9 @@ function downloadIndustryInfo() {
         $.messager.alert('提示', '请选择要要导出网站联系信息的行业！！', 'info');
         return;
     }
-    parent.$.messager.confirm('询问', "确认要导出这些行业的网站联系信息吗？", function(b) {
-        if (b) {
-            var postData = {};
-            postData.uuids = uuids.split(",");
-            $.ajax({
-                url: '/internal/industry/downloadIndustryInfo',
-                data: JSON.stringify(postData),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                timeout: 5000,
-                type: 'POST',
-                success: function (result) {
-                    if (!result) {
-                        $().toastmessage('showErrorToast', "操作失败");
-                    }
-                },
-                error: function () {
-                    $().toastmessage('showErrorToast', "操作失败");
-                }
-            });
-        }
-    });
+    var IndustryDetailInfoCsvExportFrom = $("#IndustryDetailInfoCsvExportFrom");
+    IndustryDetailInfoCsvExportFrom.find("#industryUuids").val(uuids);
+    IndustryDetailInfoCsvExportFrom.submit();
 }
 
 

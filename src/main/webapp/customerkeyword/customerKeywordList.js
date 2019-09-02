@@ -133,8 +133,8 @@ function keywordAndURLExport() {
     var customerKeywordCrilteriaArray = $("#searchCustomerKeywordForm").serializeArray();
     var customerKeywordAndUrlCsvExportFrom = $("#customerKeywordAndUrlCsvExportFrom");
     $.each(customerKeywordCrilteriaArray, function (idx, val) {
-        if (val.name == "customerUuid") {
-            customerKeywordAndUrlCsvExportFrom.find("#" + val.name + "Temp").val(val.value == '' ? null : val.value);
+        if (val.name === "customerUuid") {
+            customerKeywordAndUrlCsvExportFrom.find("#" + val.name + "Temp").val(val.value === '' ? null : val.value);
         }
     });
     customerKeywordAndUrlCsvExportFrom.submit();
