@@ -27,11 +27,13 @@ import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JsonConfig;
 import org.apache.commons.collections.CollectionUtils;
@@ -99,14 +101,14 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 String terminalType = TerminalTypeMapping.getTerminalType(request);
                 if (StringUtils.isEmpty(groupName)) {
                     //just baidu have whole site
-                    if(Constants.SEARCH_ENGINE_BAIDU.equals(searchEngine)) {
+                    if (Constants.SEARCH_ENGINE_BAIDU.equals(searchEngine)) {
                         customerKeywordForCaptureTitles = customerKeywordService.searchCustomerKeywordsForCaptureTitle(terminalType, searchEngine, 1);
                     }
                 } else {
-                    customerKeywordForCaptureTitles = (customerKeywordService.searchCustomerKeywordsForCaptureTitle(groupName, terminalType,searchEngine,1));
+                    customerKeywordForCaptureTitles = (customerKeywordService.searchCustomerKeywordsForCaptureTitle(groupName, terminalType, searchEngine, 1));
                 }
                 CustomerKeywordForCaptureTitle customerKeywordForCaptureTitle = null;
-                if (CollectionUtils.isNotEmpty(customerKeywordForCaptureTitles)){
+                if (CollectionUtils.isNotEmpty(customerKeywordForCaptureTitles)) {
                     customerKeywordForCaptureTitle = customerKeywordForCaptureTitles.get(0);
                 } else {
                     customerKeywordForCaptureTitle = new CustomerKeywordForCaptureTitle();
@@ -114,7 +116,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 }
                 return new ResponseEntity<Object>(customerKeywordForCaptureTitle, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("getKeywordForCaptureTitle:  " + ex.getMessage());
         }
@@ -128,7 +130,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 customerKeywordService.updateCustomerKeywordTitle(searchEngineResultItemVO);
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("updateCustomerKeywordForCaptureTitle:    " + ex.getMessage());
         }
@@ -143,7 +145,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 customerKeywordService.updateCustomerKeywordsTitle(searchEngineResultItemsVO.getSearchEngineResultItemVOs());
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("updateCustomerKeywordsForCaptureTitle:     " + ex.getMessage());
         }
@@ -165,23 +167,23 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 Integer batchCount = Integer.parseInt(countConfig.getValue());
                 if (StringUtils.isEmpty(groupName)) {
                     //just baidu have whole site
-                    if(Constants.SEARCH_ENGINE_BAIDU.equals(searchEngine)) {
+                    if (Constants.SEARCH_ENGINE_BAIDU.equals(searchEngine)) {
                         customerKeywordForCaptureTitles = customerKeywordService.searchCustomerKeywordsForCaptureTitle(terminalType, searchEngine, batchCount);
                     }
                 } else {
-                    customerKeywordForCaptureTitles = (customerKeywordService.searchCustomerKeywordsForCaptureTitle(groupName, terminalType,searchEngine,batchCount));
+                    customerKeywordForCaptureTitles = (customerKeywordService.searchCustomerKeywordsForCaptureTitle(groupName, terminalType, searchEngine, batchCount));
                 }
                 if (customerKeywordForCaptureTitles == null) {
                     customerKeywordForCaptureTitles = new ArrayList<CustomerKeywordForCaptureTitle>();
                 }
-                if(CollectionUtils.isEmpty(customerKeywordForCaptureTitles)){
+                if (CollectionUtils.isEmpty(customerKeywordForCaptureTitles)) {
                     CustomerKeywordForCaptureTitle customerKeywordForCaptureTitle = new CustomerKeywordForCaptureTitle();
                     customerKeywordForCaptureTitle.setKeyword("end");
                     customerKeywordForCaptureTitles.add(customerKeywordForCaptureTitle);
                 }
                 return new ResponseEntity<Object>(customerKeywordForCaptureTitles, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("getKeywordsForCaptureTitle:   " + ex.getMessage());
         }
@@ -195,7 +197,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 CustomerKeyword customerKeyword = customerKeywordService.getCustomerKeywordsForCaptureIndex();
                 return new ResponseEntity<Object>(customerKeyword, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("getCustomerKeywordsForCaptureIndex:     " + ex.getMessage());
         }
@@ -209,7 +211,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 customerKeywordService.updateCustomerKeywordIndex(baiduIndexCriteria);
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("updateKeywordIndex:    " + ex.getMessage());
         }
@@ -223,7 +225,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 List<String> groups = customerKeywordService.getGroups(null);
                 return new ResponseEntity<Object>(groups, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("getGroups:     " + ex.getMessage());
         }
@@ -243,7 +245,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 performanceService.addPerformanceLog(terminalType + ":getCustomerKeywordSummaryInfos", System.currentTimeMillis() - startMilleSeconds, "Record Count: " + (customerKeywordList != null ? customerKeywordList.size() : 0));
                 return new ResponseEntity<Object>(customerKeywordList, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("getCustomerKeywordSummaryInfos:      " + ex.getMessage());
         }
@@ -255,7 +257,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         long startMilleSeconds = System.currentTimeMillis();
         String clientID = request.getParameter("clientID");
         String userName = request.getParameter("userName");
-        if(StringUtils.isBlank(userName)){
+        if (StringUtils.isBlank(userName)) {
             userName = request.getParameter("username");
         }
         String password = request.getParameter("password");
@@ -264,7 +266,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             if (validUser(userName, password)) {
                 MachineInfo machineInfo = machineInfoService.selectById(clientID);
                 String s = "";
-                if(machineInfo != null) {
+                if (machineInfo != null) {
                     String terminalType = machineInfo.getTerminalType();
                     CustomerKeywordForOptimizationSimple customerKeywordForOptimization = customerKeywordService.searchCustomerKeywordsForOptimizationZip(terminalType, clientID, version, true);
                     if (customerKeywordForOptimization != null) {
@@ -273,12 +275,12 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                         s = AESUtils.parseByte2HexStr(compress);
                         performanceService.addPerformanceLog(terminalType + ":getCustomerKeyword", System.currentTimeMillis() - startMilleSeconds, null);
                     }
-                }else{
+                } else {
                     logger.error("getCustomerKeywordZip,     Not found clientID:" + clientID);
                 }
                 return ResponseEntity.status(HttpStatus.OK).body(s);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("getCustomerKeywordZip:     " + clientID + ex.getMessage());
         }
@@ -290,7 +292,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         long startMilleSeconds = System.currentTimeMillis();
         String clientID = request.getParameter("clientID");
         String userName = request.getParameter("userName");
-        if(StringUtils.isBlank(userName)){
+        if (StringUtils.isBlank(userName)) {
             userName = request.getParameter("username");
         }
         String password = request.getParameter("password");
@@ -300,7 +302,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             if (validUser(userName, password)) {
                 MachineInfo machineInfo = machineInfoService.selectById(clientID);
                 String s = "";
-                if(machineInfo != null) {
+                if (machineInfo != null) {
                     String terminalType = machineInfo.getTerminalType();
                     errorFlag.append("1");
                     OptimizationVO optimizationVO = customerKeywordService.fetchCustomerKeywordForOptimization(machineInfo);
@@ -315,12 +317,12 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                         performanceService.addPerformanceLog(terminalType + ":fetchCustomerKeywordZip", System.currentTimeMillis() - startMilleSeconds, null);
                         errorFlag.append("6");
                     }
-                }else{
+                } else {
                     logger.error("fetchCustomerKeywordZip,     Not found clientID:" + clientID);
                 }
                 return ResponseEntity.status(HttpStatus.OK).body(s);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("fetchCustomerKeywordZip: " + errorFlag.toString() + "clientID:" + clientID + ex.getMessage());
         }
@@ -331,7 +333,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     public ResponseEntity<?> updateOptimizedCount(HttpServletRequest request) throws Exception {
         long startMilleSeconds = System.currentTimeMillis();
         String userName = request.getParameter("userName");
-        if(StringUtils.isBlank(userName)){
+        if (StringUtils.isBlank(userName)) {
             userName = request.getParameter("username");
         }
         String password = request.getParameter("password");
@@ -352,7 +354,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             if (validUser(userName, password)) {
                 MachineInfo machineInfo = machineInfoService.selectById(clientID);
                 String terminalType = machineInfo.getTerminalType();
-                if(StringUtils.isNotBlank(position)) {
+                if (StringUtils.isNotBlank(position)) {
                     customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, Integer.parseInt(position), null, null, null);
                 }
                 customerKeywordService.updateOptimizationResult(terminalType, customerKeywordUuid, Integer.parseInt(count.trim()), ip, city, clientID,
@@ -361,7 +363,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("updateOptimizedCount:     " + ex.getMessage());
         }
@@ -378,7 +380,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 customerKeywordService.batchUpdateOptimizedCount(customerKeywordUuids);
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("batchUpdateOptimizedCount:      " + ex.getMessage());
         }
@@ -394,7 +396,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 customerKeywordService.adjustOptimizationCount();
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("adjustOptimizationCount:     " + ex.getMessage());
         }
@@ -414,21 +416,21 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         Date startTime = new Date((Long) requestMap.get("startTime"));
         try {
             if (validUser(userName, password)) {
-                if(position > -1) {
+                if (position > -1) {
                     customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp(), ip, city);
                 } else {
                     customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
                 }
-                if(StringUtil.isNotNullNorEmpty(clientID)) {
+                if (StringUtil.isNotNullNorEmpty(clientID)) {
                     machineInfoService.updateMachineInfoForCapturePosition(clientID);
                 }
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("updateCustomerKeywordPosition:        " + ex.getMessage());
         }
-        return new ResponseEntity<Object>(false,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/getCustomerKeywordForCapturePosition", method = RequestMethod.POST)
@@ -439,20 +441,20 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
         List<String> groupNames = (List<String>) requestMap.get("groupNames");
 
-        Date startTime =  new Date((Long) requestMap.get("startTime"));
+        Date startTime = new Date((Long) requestMap.get("startTime"));
         Integer customerUuid = (requestMap.get("customerUuid") == null) ? null : (Integer) requestMap.get("customerUuid");
         Integer captureRankJobUuid = (Integer) requestMap.get("captureRankJobUuid");
         try {
             if (validUser(userName, password)) {
                 CustomerKeywordForCapturePosition capturePosition = customerKeywordService.getCustomerKeywordForCapturePosition(terminalType,
                         groupNames, customerUuid != null ? customerUuid.longValue() : null, startTime, captureRankJobUuid.longValue());
-                if(capturePosition == null) {
+                if (capturePosition == null) {
                     capturePosition = new CustomerKeywordForCapturePosition();
                     capturePosition.setKeyword("end");
                 }
                 return new ResponseEntity<Object>(capturePosition, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("getCustomerKeywordForCapturePosition:        " + ex.getMessage());
         }
@@ -469,9 +471,10 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         Integer customerUuid = (requestMap.get("customerUuid") == null) ? null : (Integer) requestMap.get("customerUuid");
         Integer captureRankJobUuid = (Integer) requestMap.get("captureRankJobUuid");
         Integer qzSettingUuid = (Integer) requestMap.get("qzSettingUuid");
+        Boolean saveTopThree = requestMap.get("saveTopThree") == null ? true : (Boolean) requestMap.get("saveTopThree");
         try {
             if (validUser(userName, password)) {
-                List<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = customerKeywordService.getCustomerKeywordForCapturePositionTemp(qzSettingUuid != null ? qzSettingUuid.longValue() : null, terminalType, groupName, customerUuid != null ? customerUuid.longValue() : null, startTime, captureRankJobUuid.longValue());
+                List<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = customerKeywordService.getCustomerKeywordForCapturePositionTemp(qzSettingUuid != null ? qzSettingUuid.longValue() : null, terminalType, groupName, customerUuid != null ? customerUuid.longValue() : null, startTime, captureRankJobUuid.longValue(), saveTopThree);
                 if (customerKeywordForCapturePositions.size() == 0) {
                     CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
                     customerKeywordForCapturePosition.setKeyword("end");
@@ -494,7 +497,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 customerKeywordService.addCustomerKeywords(searchEngineResultVO, terminalType, searchEngineResultVO.getUserName());
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("saveCustomerKeywords:    " + ex.getMessage());
         }
@@ -509,7 +512,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 customerKeywordService.autoUpdateNegativeCustomerKeywords(searchEngineResultVO, terminalType, searchEngineResultVO.getUserName());
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("autoUpdateCustomerKeywords:     " + ex.getMessage());
         }
@@ -524,7 +527,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 SearchEngineResultVO result = customerKeywordService.getCustomerKeywordForAutoUpdateNegative(terminalType, searchEngineResultVO.getGroup());
                 return new ResponseEntity<Object>(result, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("getCustomerKeywordForAutoUpdateNegative:      " + ex.getMessage());
         }
@@ -539,7 +542,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 customerKeywordService.updateAutoUpdateNegativeTimeAs4MinutesAgo(terminalType, searchEngineResultVO.getGroup());
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("updateAutoUpdateNegativeTimeAs4MinutesAgo:     " + ex.getMessage());
         }
@@ -553,15 +556,15 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             String password = (String) requestMap.get("password");
             Integer customerUuid = (Integer) requestMap.get("customerUuid");
             if (validUser(userName, password)) {
-                if(customerUuid != null){
-                    String [] keywords = customerKeywordService.searchCustomerNegativeKeywords(customerUuid.longValue());
-                    return new ResponseEntity<Object>(keywords,HttpStatus.OK);
-                }else {
-                    return new ResponseEntity<Object>(null,HttpStatus.OK);
+                if (customerUuid != null) {
+                    String[] keywords = customerKeywordService.searchCustomerNegativeKeywords(customerUuid.longValue());
+                    return new ResponseEntity<Object>(keywords, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<Object>(null, HttpStatus.OK);
                 }
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("searchCustomerNegativeKeywords:     " + ex.getMessage());
         }
@@ -577,7 +580,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(HttpStatus.OK);
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("getCustomerSource:     " + ex.getMessage());
         }
@@ -585,7 +588,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     }
 
     @RequestMapping(value = "/getCustomerSources", method = RequestMethod.POST)
-    public ResponseEntity<?> getCustomerSources(@RequestBody Map<String, Object> requestMap){
+    public ResponseEntity<?> getCustomerSources(@RequestBody Map<String, Object> requestMap) {
         try {
             String userName = (String) requestMap.get("userName");
             String password = (String) requestMap.get("password");
@@ -593,7 +596,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 List<customerSourceVO> customerSources = customerKeywordService.getCustomerSource();
                 return new ResponseEntity<Object>(customerSources, HttpStatus.OK);
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("getCustomerSources:    " + ex.getMessage());
         }
@@ -612,7 +615,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(customerKeywords, HttpStatus.OK);
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("findAllNegativeCustomerKeyword:      " + ex.getMessage());
         }
@@ -660,7 +663,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 List<ExternalCustomerKeywordVO> customerKeywords = customerKeywordService.getTenCustomerKeywordsForCaptureIndex();
                 return new ResponseEntity<Object>(customerKeywords, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("getTenCustomerKeywordsForCaptureIndex:     " + ex.getMessage());
         }
@@ -674,7 +677,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 customerKeywordService.updateCustomerKeywordIndexByKeywords(keywordIndexCriteria);
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("updateKeywordsIndex:    " + ex.getMessage());
         }
