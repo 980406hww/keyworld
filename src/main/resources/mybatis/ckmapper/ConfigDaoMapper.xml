@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.ConfigDao2">
+    <select id="getConfig" resultType="com.keymanager.ckadmin.entity.Config">
+        SELECT c.fConfigType as 'configType', c.fKey as 'key', c.fValue as 'value' FROM t_config c
+        WHERE c.fConfigType = #{configType} AND c.fKey = #{key}
+    </select>
+
+    <update id="updateConfig" parameterType="com.keymanager.ckadmin.entity.Config">
+        UPDATE t_config
+        SET fValue = #{config.value}
+        WHERE fConfigType = #{config.configType}
+        AND fKey = #{config.key}
+    </update>
+
+    <select id="findConfigs" resultType="com.keymanager.ckadmin.entity.Config">
+        SELECT
+            c.fConfigType as 'configType',
+            c.fKey as 'key',
+            c.fValue as 'value'
+        FROM t_config c
+        WHERE  c.fConfigType = #{configType}
+    </select>
+</mapper>

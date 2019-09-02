@@ -25,16 +25,16 @@
         </a>
     </div>
     <!--模糊搜索区域-->
-<!--    <div class="layui-row">-->
-<!--        <form class="layui-form layui-col-md12 ok-search" id="searchForm">-->
-<!--            <input class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime">-->
-<!--            <input class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">-->
-<!--            <input class="layui-input" placeholder="请输入标题" id="algorithmTestPlanName" autocomplete="off">-->
-<!--            <button class="layui-btn" lay-submit="" lay-filter="search">-->
-<!--                <i class="layui-icon layui-icon-search"></i>-->
-<!--            </button>-->
-<!--        </form>-->
-<!--    </div>-->
+    <!--    <div class="layui-row">-->
+    <!--        <form class="layui-form layui-col-md12 ok-search" id="searchForm">-->
+    <!--            <input class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime">-->
+    <!--            <input class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">-->
+    <!--            <input class="layui-input" placeholder="请输入标题" id="algorithmTestPlanName" autocomplete="off">-->
+    <!--            <button class="layui-btn" lay-submit="" lay-filter="search">-->
+    <!--                <i class="layui-icon layui-icon-search"></i>-->
+    <!--            </button>-->
+    <!--        </form>-->
+    <!--    </div>-->
     <!--工具栏-->
     <okToolbar>
         <div class="demoTable">
@@ -43,6 +43,7 @@
                 <input class="layui-input" name="keyword" id="algorithmTestPlanName" autocomplete="off">
             </div>
             <button class="layui-btn" data-type="reload">搜索</button>
+            <button class="layui-btn" id="add-model">添加</button>
         </div>
     </okToolbar>
 
@@ -59,12 +60,13 @@
         NProgress.done();
     }
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
         var laydate = layui.laydate;
+        var okLayer = layui.okLayer;
 
         laydate.render({
             elem: '#startTime',
@@ -78,23 +80,23 @@
 
         table.render({
             elem: '#tableId',
-            method:'post',
+            method: 'post',
             url: '${ctx.path}/internal/algorithmAutoTest/getAlgorithmTestPlans',
-           // limit: 10,
+            // limit: 10,
             page: true,
             id: 'tableId',
             even: true,//隔行背景
             contentType: 'application/json',
             cols: [[
                 {type: 'checkbox', fixed: "left", width: '3%'},
-                {field: 'uuid', title: 'ID', sort: true,  width: '7%'},
+                {field: 'uuid', title: 'ID', sort: true, width: '7%'},
                 {field: 'algorithmTestPlanName', title: '测试计划名称', width: '15%'},
-                {field: 'operationCombineName', title: '链接',  width: '15%'},
-                {field: 'terminalType', title: '阅读量',  width: '10%'},
-                {field: 'searchEngine', title: '发布者',  width: '10%'},
-                {field: 'machineGroup', title: '置顶',  width: '10%'},
+                {field: 'operationCombineName', title: '链接', width: '15%'},
+                {field: 'terminalType', title: '阅读量', width: '10%'},
+                {field: 'searchEngine', title: '发布者', width: '10%'},
+                {field: 'machineGroup', title: '置顶', width: '10%'},
                 {field: 'testIntervalDay', title: '状态', width: '10%'},
-                {title: '操作', templet: '#operationTpl', align: 'center',  width: '20%'}
+                {title: '操作', templet: '#operationTpl', align: 'center', width: '20%'}
             ]],
             done: function (res, curr, count) {
                 console.log(res)
@@ -103,7 +105,7 @@
         });
 
         var active = {
-            reload: function(){
+            reload: function () {
                 var algorithmTestPlanName = $('#algorithmTestPlanName');
 
                 table.reload('tableId', {
@@ -113,11 +115,16 @@
                 });
             }
         };
-        $('.demoTable .layui-btn').on('click', function(){
+        $('.demoTable .layui-btn').on('click', function () {
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
         });
 
+        $('#add-model').click(function () {
+            okLayer.open("添加", "/internal/algorithmAutoTest/toAlgorithmTestPlanAdd", "90%", "90%", null, function () {
+                table.reload();
+            })
+        });
     })
 
 </script>
@@ -126,10 +133,12 @@
     <a href="{{d.url}}" target="_blank">{{d.url}}</a>
 </script>
 <script type="text/html" id="topTpl">
-    <input type="checkbox" name="isTop" value="{{d.isTop}}" lay-skin="switch" lay-text="是|否" {{ d.isTop== true ? 'checked' : ''}}>
+    <input type="checkbox" name="isTop" value="{{d.isTop}}" lay-skin="switch" lay-text="是|否" {{ d.isTop== true
+           ? 'checked' : ''}}>
 </script>
 <script type="text/html" id="statusTpl">
-    <input type="checkbox" name="top" value="{{d.status}}" lay-skin="switch" lay-text="上架|下架" {{ d.status== true ? 'checked' : ''}}>
+    <input type="checkbox" name="top" value="{{d.status}}" lay-skin="switch" lay-text="上架|下架" {{ d.status== true
+           ? 'checked' : ''}}>
 </script>
 <script type="text/html" id="operationTpl">
     <a href="javascript:;" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>

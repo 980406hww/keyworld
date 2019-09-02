@@ -32,7 +32,7 @@ if (!Object.assign) {
     "okGVerify": "okmodules/okGVerify",
     "qrcode": "okmodules/qrcode",
     "jQqrcode": "okmodules/jQqrcode",
-    "okAddlink": "okmodules/okAddlink",
+    "okAddlink": "okmodules/okAddlink"
   };
   var modulePath=Object.assign({
     layer: "modules/layer",
@@ -56,9 +56,10 @@ if (!Object.assign) {
     code: "modules/code",
     jquery: "modules/jquery",
     mobile: "modules/mobile",
-    "layui.all": "../layui.all"
+    "layui.all": "../layui.all",
+    okLayer: "okmodules/okLayer"
   },okmodules);
-  
+
   var t = document, o = {modules: {}, status: {}, timeout: 10, event: {}}, n = function () {
     this.v = "2.5.4"
   }, r = function () {
@@ -92,11 +93,11 @@ if (!Object.assign) {
         return ++m > 1e3 * o.timeout / 4 ? i(f + " is not a valid module") : void (o.status[f] ? c() : setTimeout(r, 4))
       }())
     }
-    
+
     function c() {
       l.push(layui[f]), e.length > 1 ? y.use(e.slice(1), n, l) : "function" == typeof n && n.apply(layui, l)
     }
-    
+
     var y = this, p = o.dir = o.dir ? o.dir : r, d = t.getElementsByTagName("head")[0];
     e = "string" == typeof e ? [e] : e, window.jQuery && jQuery.fn.on && (y.each(e, function (t, o) {
       "jquery" === o && e.splice(t, 1)
