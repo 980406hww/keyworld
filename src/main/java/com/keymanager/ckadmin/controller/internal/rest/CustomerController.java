@@ -17,8 +17,6 @@ import javax.validation.Valid;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -79,7 +77,6 @@ public class CustomerController {
     @RequestMapping("/getActiveUsers")
     public List<UserInfo> getActiveUsers() {
         List<UserInfo> activeUsers = userInfoService2.findActiveUsers();
-
         return activeUsers;
     }
 
@@ -113,52 +110,63 @@ public class CustomerController {
 
     @RequiresPermissions("/internal/customer/delCustomer")
     @RequestMapping(value = "/delCustomer2/{uuid}", method = RequestMethod.GET)
-    public ResponseEntity<?> delCustomer(@PathVariable("uuid") Long uuid) {
+    public ResultBean delCustomer(@PathVariable("uuid") Long uuid) {
         try {
             customerService2.deleteCustomer(uuid);
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
+            return new ResultBean(200, "删除成功");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.OK);
+            return new ResultBean(400, "删除失败");
         }
     }
 
     @RequiresPermissions("/internal/customer/deleteCustomers")
     @RequestMapping(value = "/deleteCustomers2", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteCustomers(@RequestBody Map<String, Object> requestMap) {
+    public ResultBean deleteCustomers(@RequestBody Map<String, Object> requestMap) {
         try {
             List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
             customerService2.deleteAll(uuids);
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
+            return new ResultBean(200, "删除成功");
         } catch (Exception e) {
-            return new ResponseEntity<Object>(false, HttpStatus.OK);
+            logger.error(e.getMessage());
+            return new ResultBean(400, "删除失败");
         }
     }
 
+    /**
+     * 更新客户日报表
+     * @param requestMap
+     * @return
+     */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @RequestMapping(value = "/updateCustomerDailyReportIdentify2", method = RequestMethod.POST)
-    public ResponseEntity<?> updateCustomerDailyReportIdentify(@RequestBody Map requestMap) {
+    public ResultBean updateCustomerDailyReportIdentify(@RequestBody Map requestMap) {
         try {
             List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
             customerService2.updateCustomerDailyReportIdentify(uuids);
-            return new ResponseEntity<>(true, HttpStatus.OK);
+            return new ResultBean(200, "更新成功");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+            return new ResultBean(400, "更新失败");
         }
     }
 
+    /**
+     * 改变客户是否产生日报表标志位值
+     * @param requestMap
+     * @return
+     */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @RequestMapping(value = "/changeCustomerDailyReportIdentify2", method = RequestMethod.POST)
-    public ResponseEntity<?> changeCustomerDailyReportIdentify(@RequestBody Map requestMap) {
+    public ResultBean changeCustomerDailyReportIdentify(@RequestBody Map requestMap) {
         try {
             long uuid = Long.valueOf((String) requestMap.get("customerUuid"));
             boolean identify = Boolean.valueOf((String) requestMap.get("identify"));
             customerService2.changeCustomerDailyReportIdentify(uuid, identify);
-            return new ResponseEntity<>(true, HttpStatus.OK);
+            return new ResultBean(200, "更新成功");
         } catch (NumberFormatException e) {
             logger.error(e.getMessage());
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+            return new ResultBean(400, "更新失败");
         }
     }
 

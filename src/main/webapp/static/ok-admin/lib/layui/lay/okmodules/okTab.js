@@ -272,6 +272,7 @@ layui.define(["element", "jquery"], function (exports) {
                }
             }
          }
+         temp += '<i class="layui-icon">&#xe66b;</i>';
          temp += '<cite>' + data.title + '</cite>';
          temp += '<span class="layui-nav-more"></span>';
          temp += '</a>';
@@ -305,6 +306,7 @@ layui.define(["element", "jquery"], function (exports) {
                }
             }
          }
+         temp += '<i class="layui-icon">&#xe700;</i>';
          temp += ('<cite>{0}</cite></a>').format(data.title);
          return;
       }

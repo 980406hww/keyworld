@@ -25,11 +25,11 @@ layui.define(["layer"], function (exports) {
                 type: 2,
                 maxmin: true,
                 shade: 0.5,
-                anim: okLayer.animChoose(),
+                anim: 0,
                 area: [width, height],
                 content: content,
                 zIndex: layer.zIndex,
-                skin: okLayer.skinChoose(),
+                skin: '',
 				success: successFunction,
                 end: endFunction
             });
