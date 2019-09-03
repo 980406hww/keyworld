@@ -18,7 +18,7 @@
                 <a><cite>其他</cite></a>
                 <a><cite>测试计划列表</cite></a>
             </span>
-            <input hidden value='${Session["entryType"]}' id="entryType">
+        <input hidden value='${Session["entryType"]}' id="entryType">
         <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
             <i class="layui-icon layui-icon-refresh"></i>
         </a>
@@ -35,22 +35,23 @@
 
                             <div class="layui-form-item">
                                 <div class="layui-inline">
-                                    <div class="layui-input-inline" >
-                                        <select name="loginName" id="loginName"  lay-filter="loginNameFilter" lay-search>
+                                    <div class="layui-input-inline">
+                                        <select name="loginName" id="loginName" lay-filter="loginNameFilter" lay-search>
                                             <option value="">请选择所属用户</option>
                                         </select>
 
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <div class="layui-input-inline" >
-                                        <input type="text" name="contactPerson" id="contactPerson" placeholder="联系人" autocomplete="off"
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="contactPerson" id="contactPerson" placeholder="联系人"
+                                               autocomplete="off"
                                                class="layui-input">
                                     </div>
                                 </div>
 
                                 <div class="layui-inline">
-                                    <div class="layui-input-inline" >
+                                    <div class="layui-input-inline">
                                         <input type="text" name="type" id="type" placeholder="分组" autocomplete="off"
                                                class="layui-input">
                                     </div>
@@ -64,7 +65,8 @@
                                 </div>
                                 <div class="layui-inline">
                                     <div class="layui-input-inline" style="width: 150px;">
-                                        <input type="text" name="telphone" id="telphone" placeholder="联系电话" autocomplete="off"
+                                        <input type="text" name="telphone" id="telphone" placeholder="联系电话"
+                                               autocomplete="off"
                                                class="layui-input">
                                     </div>
                                 </div>
@@ -108,7 +110,7 @@
     </okToolbar>
 
     <!--数据表格-->
-    <table class="layui-hide layui-table-sm" id="customerTable" lay-filter="customerTableFilter"></table>
+    <table class="layui-hide layui-table-sm" id="customerTable" lay-filter="tableFilter"></table>
 </div>
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
@@ -118,14 +120,16 @@
     NProgress.start();
     window.onload = function () {
         NProgress.done();
-    }
+    };
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'layer'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
         var laydate = layui.laydate;
+        var okLayer = layui.okLayer;
         var layer = layui.layer;
 
         laydate.render({
@@ -138,8 +142,7 @@
             type: "datetime"
         });
 
-
-        table.render({
+        let myTable = table.render({
             elem: '#customerTable',
             method: 'post',
             url: '${ctx.path}/internal/customer/getCustomers',
@@ -154,13 +157,13 @@
                 {field: 'loginName', title: '用户名称', sort: true, width: '8%'},
                 {field: 'contactPerson', title: '联系人', width: '10%'},
                 {field: 'type', title: '分组', width: '5%'},
-                {field: 'keywordCount', title: '关键字信息', width: '15%', templet:'#keywordInfo'},
+                {field: 'keywordCount', title: '关键字信息', width: '15%', templet: '#keywordInfo'},
                 {field: 'qq', title: 'QQ', width: '7%'},
                 {field: 'saleRemark', title: '销售备注', width: '6%'},
                 {field: 'remark', title: '备注', width: '5%'},
-                {field: 'status', title: '客户状态', width: '5%', templet:'#customerStatus'},
-                {field: 'dailyReportIdentify', title: '是否产生日报表', width: '10%', templet:'#customerDailyReportIdentify'},
-                {field: 'createTime', title: '创建时间', width: '10%', templet:'#toDateTime'},
+                {field: 'status', title: '客户状态', width: '5%', templet: '#customerStatus'},
+                {field: 'dailyReportIdentify', title: '是否产生日报表', width: '10%', templet: '#customerDailyReportIdentify'},
+                {field: 'createTime', title: '创建时间', width: '10%', templet: '#toDateTime'},
                 {title: '操作', templet: '#operationTpl', align: 'center', width: '16%'}
             ]],
             done: function (res, curr, count) {
@@ -170,12 +173,12 @@
         });
 
         //监听工具条
-        table.on('tool(customerTableFilter)', function(obj){
+        table.on('tool(tableFilter)', function (obj) {
             var data = obj.data;
-            if(obj.event === 'detail'){
-                //layer.msg('ID：'+ data.uuid + ' 的查看操作');
-            } else if(obj.event === 'del'){
-                layer.confirm('真的删除该客户吗', function(index){
+            if (obj.event === 'edit') {
+                editCustomer(obj.data);
+            } else if (obj.event === 'del') {
+                layer.confirm('真的删除该客户吗', function (index) {
                     // obj.del();
                     // console.log(data.uuid)
                     $.ajax({
@@ -186,7 +189,7 @@
                                 layer.msg('操作成功', {
                                     icon: 6,
                                     time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                                }, function(){
+                                }, function () {
                                     active['reload'].call(this);
                                 });
                             } else {
@@ -201,10 +204,19 @@
 
                     layer.close(index);
                 });
-            } else if(obj.event === 'edit'){
-                layer.alert('编辑行：<br>'+ JSON.stringify(data))
+            } else if (obj.event === 'edit') {
+                layer.alert('编辑行：<br>' + JSON.stringify(data))
             }
         });
+
+        // 编辑表格获得表格数据
+        function editCustomer(data) {
+            okLayer.open("编辑", "/internal/customer/toCustomersAdd", "90%", "90%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initForm(data);
+            }, function () {
+                myTable.reload();
+            })
+        }
 
         var active = {
             reload: function () {
@@ -217,15 +229,15 @@
 
                 table.reload('customerTable', {
                     where: {
-                        loginName : loginName,
-                        contactPerson : contactPerson,
-                        type : type,
-                        qq : qq,
-                        telphone : telphone,
-                        remark : remark
+                        loginName: loginName,
+                        contactPerson: contactPerson,
+                        type: type,
+                        qq: qq,
+                        telphone: telphone,
+                        remark: remark
                     },
-                    page:{
-                        curr:1 //从第一页开始
+                    page: {
+                        curr: 1 //从第一页开始
                     }
                 });
                 $("#searchContent").removeClass("layui-show")
@@ -245,19 +257,25 @@
                 $("#loginName").empty();
                 $("#loginName").append('<option value="">请选择所属用户</option>');
                 $.each(data, function (index, item) {
-                    $('#loginName').append('<option value="'+item.loginName+'">'+item.userName+'</option>');// 下拉菜单里添加元素
+                    $('#loginName').append('<option value="' + item.loginName + '">' + item.userName + '</option>');// 下拉菜单里添加元素
                 });
                 form.render("select");
             }
         });
 
-        window.changeCustomerKeywordStatus = function changeCustomerKeywordStatus(customerUuid, status){
-            if(status === 0){
+        // 添加按钮点击事件
+        $('#addUser').click(function () {
+            okLayer.open("添加用户", "/internal/customer/toCustomersAdd", "90%", "90%", null, function () {
+                myTable.reload();
+            });
+        });
+        window.changeCustomerKeywordStatus = function changeCustomerKeywordStatus(customerUuid, status) {
+            if (status === 0) {
                 msg = "确定暂停所有关键字吗?"
-            }else if (status === 1){
+            } else if (status === 1) {
                 msg = "确定激活所有关键字吗?"
             }
-            layer.confirm(msg, {icon: 3, title:'关键字状态'}, function(index){
+            layer.confirm(msg, {icon: 3, title: '关键字状态'}, function (index) {
                 //do something
                 var data = {};
                 data.customerUuid = customerUuid;
@@ -276,7 +294,7 @@
                             layer.msg('操作成功', {
                                 icon: 6,
                                 time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                            }, function(){
+                            }, function () {
                                 active['reload'].call(this);
                             });
                         } else {
@@ -294,14 +312,14 @@
 
     });
 
-    function viewSitesdRank(contactPerson,type) {
+    function viewSitesdRank(contactPerson, type) {
         var index = contactPerson.indexOf("整站");
-        if(index > -1) {
+        if (index > -1) {
             contactPerson = contactPerson.substr(0, index);
         }
-        if(type == 'aizhan'){
+        if (type == 'aizhan') {
             window.open("https://baidurank.aizhan.com/baidu/" + contactPerson);
-        }else if(type == '5118'){
+        } else if (type == '5118') {
             window.open("http://5118.com/seo/baidurank/" + contactPerson);
         }
     }
@@ -314,40 +332,40 @@
 
 <script type="text/html" id="keywordInfo">
     {{# if(d.keywordCount > 0){
-            if(d.keywordCount == d.activeKeywordCount){ }}
-                <span style="color: green;">激活</span>
-                <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 0)">暂停关键字</a>
-                </@shiro.hasPermission>
-        {{# }else if(d.keywordCount > 0 && d.activeKeywordCount > 0){ }}
-                <span style="color: yellowgreen;">部分暂停</span>
-                <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 0)">暂停关键字</a>
-                    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 1)">激活关键字</a>
-                </@shiro.hasPermission>
-        {{# }else{  }}
-                <span style="color: red;">暂停</span>
-                <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 1)">激活关键字</a>
-                </@shiro.hasPermission>
-        {{# }
-        }else{ }}
-        暂无关键字
-        {{#} }}
+    if(d.keywordCount == d.activeKeywordCount){ }}
+    <span style="color: green;">激活</span>
+    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 0)">暂停关键字</a>
+    </@shiro.hasPermission>
+    {{# }else if(d.keywordCount > 0 && d.activeKeywordCount > 0){ }}
+    <span style="color: yellowgreen;">部分暂停</span>
+    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 0)">暂停关键字</a>
+    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 1)">激活关键字</a>
+    </@shiro.hasPermission>
+    {{# }else{  }}
+    <span style="color: red;">暂停</span>
+    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 1)">激活关键字</a>
+    </@shiro.hasPermission>
+    {{# }
+    }else{ }}
+    暂无关键字
+    {{#} }}
 </script>
 
 <script type="text/html" id="customerStatus">
     {{#  if(d.status==1){  }}
-            激活
+    激活
     {{#  }else{  }}
-            暂停
+    暂停
     {{#  }  }}
 </script>
 
 <script type="text/html" id="customerDailyReportIdentify">
-    <select  id= "CDRI" style="width: 100px;" onchange="changeCustomerDailyReportIdentify(this, '{{d.status}}');">
-        <option value="true" >是</option>
-        <option value="false" >否</option>
+    <select id="CDRI" style="width: 100px;" onchange="changeCustomerDailyReportIdentify(this, '{{d.status}}');">
+        <option value="true">是</option>
+        <option value="false">否</option>
     </select>
     <!--{{#  if(d.dailyReportIdentify){  }}
     是
@@ -357,33 +375,37 @@
 </script>
 
 <script type="text/html" id="operationTpl">
+
     <@shiro.hasPermission name="/internal/customer/saveCustomer">
-        <button type="button" class="layui-btn layui-btn-xs" lay-event="detail">修改</button>
+    <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customer/delCustomer">
-        <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+    <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
     </@shiro.hasPermission>
     {{#
     var entryType = document.getElementById("entryType").value;
     if( 'qz'=== entryType){ }}
-        <button type="button" class="layui-btn layui-btn-normal layui-btn-xs" onclick="viewSitesdRank('{{d.contactPerson}}','aizhan')">爱站排名</button>
-        <button type="button" class="layui-btn layui-btn-normal layui-btn-xs" onclick="viewSitesdRank('{{d.contactPerson}}','5118')">5118排名</button>
+    <button type="button" class="layui-btn layui-btn-normal layui-btn-xs"
+            onclick="viewSitesdRank('{{d.contactPerson}}','aizhan')">爱站排名
+    </button>
+    <button type="button" class="layui-btn layui-btn-normal layui-btn-xs"
+            onclick="viewSitesdRank('{{d.contactPerson}}','5118')">5118排名
+    </button>
     {{# }else if('bc' === entryType){ }}
-        <@shiro.hasPermission name="/internal/customerChargeType/saveCustomerChargeType">
-            <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">客户规则</button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeywords">
-            <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">快速加词</button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/customer/uploadDailyReportTemplate">
-            <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">上传日报表模板</button>
-        </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/customerChargeType/saveCustomerChargeType">
+    <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">客户规则</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeywords">
+    <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">快速加词</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/customer/uploadDailyReportTemplate">
+    <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">上传日报表模板</button>
+    </@shiro.hasPermission>
     {{# } }}
     <@shiro.hasPermission name="/internal/negativeStandardSetting/searchNegativeStandardSetting">
     <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">负面达标设置</button>
     </@shiro.hasPermission>
 </script>
-
 
 </body>
 </html>
