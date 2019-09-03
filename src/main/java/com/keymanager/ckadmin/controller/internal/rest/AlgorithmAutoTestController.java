@@ -52,6 +52,7 @@ public class AlgorithmAutoTestController {
     }
 
     // 前往添加修改页面
+    @RequiresPermissions("/internal/algorithmAutoTest/saveAlgorithmTestPlan")
     @RequestMapping(value = "/toAlgorithmTestPlanAdd", method = RequestMethod.GET)
     public ModelAndView toAlgorithmTestPlanAdd() {
         ModelAndView mv = new ModelAndView();
@@ -60,6 +61,7 @@ public class AlgorithmAutoTestController {
     }
 
     //获得初始数据
+    @RequiresPermissions("/internal/algorithmAutoTest/saveAlgorithmTestPlan")
     @RequestMapping(value = "/getAlgorithmTestPlanAddData", method = RequestMethod.GET)
     public ResultBean getAlgorithmTestPlanAddData(HttpServletRequest request) {
         Map<String, Object> mapData = new HashMap<>();
@@ -73,6 +75,7 @@ public class AlgorithmAutoTestController {
     }
 
     //添加
+    @RequiresPermissions("/internal/algorithmAutoTest/saveAlgorithmTestPlan")
     @RequestMapping(value = "/postAlgorithmTestPlanAddData", method = RequestMethod.POST)
     public ResultBean toAlgorithmTestPlanAddData(@Valid AlgorithmTestPlan algorithmTestPlan, HttpServletRequest request, BindingResult result) {
         ResultBean resultBean = new ResultBean();
@@ -89,6 +92,7 @@ public class AlgorithmAutoTestController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/algorithmAutoTest/searchAlgorithmTestPlans")
     @RequestMapping(value = "getAlgorithmTestPlans")
     public ResultBean getAlgorithmTestPlans(@RequestBody AlgorithmTestCriteria algorithmTestCriteria) {
         Page<AlgorithmTestPlan> page = new Page(algorithmTestCriteria.getPage(), algorithmTestCriteria.getLimit());

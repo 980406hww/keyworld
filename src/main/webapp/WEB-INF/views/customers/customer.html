@@ -15,8 +15,8 @@
     <!--面包屑导航区域-->
     <div class="ok-body-breadcrumb">
             <span class="layui-breadcrumb">
-                <a><cite>其他</cite></a>
-                <a><cite>测试计划列表</cite></a>
+                <a><cite>客户管理</cite></a>
+                <a><cite>客户列表</cite></a>
             </span>
         <input hidden value='${Session["entryType"]}' id="entryType">
         <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
@@ -95,24 +95,25 @@
     <!--工具栏-->
     <okToolbar>
         <@shiro.hasPermission name="/internal/customer/deleteCustomers">
-            <button class="layui-btn layui-btn-danger layui-btn-xs" id="batchDel" data-type="batchDeleteCustomer">
-                <i class="layui-icon layui-icon-delete"></i>删除所选
-            </button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/customer/saveCustomer">
-            <button class="layui-btn layui-btn-danger layui-btn-xs" id="batchUpdateDailyReport" data-type="batchUpdateDailyReport">
-                <i class="layui-icon layui-icon-delete"></i>触发所选客户日报表
-            </button>
-        </@shiro.hasPermission>
-
-        <button class="layui-btn layui-btn-xs" id="addUser">
-            <i class="layui-icon">&#xe61f;</i>添加文章
+        <button class="layui-btn layui-btn-danger layui-btn-xs" id="batchDel" data-type="batchDeleteCustomer">
+            <i class="layui-icon layui-icon-delete"></i>删除所选
         </button>
-        <span>共有数据：<i id="countNum"></i> 条</span>
-    </okToolbar>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/customer/saveCustomer">
+    <button class="layui-btn layui-btn-warn layui-btn-xs" id="batchUpdateDailyReport"
+            data-type="batchUpdateDailyReport">
+        触发所选客户日报表
+    </button>
+    </@shiro.hasPermission>
 
-    <!--数据表格-->
-    <table class="layui-hide layui-table-sm" id="customerTable" lay-filter="tableFilter"></table>
+<button class="layui-btn layui-btn-xs" id="addUser">
+    <i class="layui-icon">&#xe61f;</i>添加客户
+</button>
+<span>共有数据：<i id="countNum"></i> 条</span>
+</okToolbar>
+
+<!--数据表格-->
+<table class="layui-hide layui-table-sm" id="customerTable" lay-filter="tableFilter"></table>
 </div>
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
@@ -134,7 +135,7 @@
         var okLayer = layui.okLayer;
         var layer = layui.layer;
 
-        let myTable = table.render({
+        table.render({
             elem: '#customerTable',
             method: 'post',
             url: '${ctx.path}/internal/customer/getCustomers',
@@ -167,47 +168,48 @@
         table.on('tool(tableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
-                editCustomer(obj.data);
+                editCustomer(data);
             } else if (obj.event === 'del') {
-                layer.confirm('真的删除该客户吗', function (index) {
-                    // obj.del();
-                    // console.log(data.uuid)
-                    $.ajax({
-                        url: '/internal/customer/delCustomer2/' + data.uuid,
-                        type: 'Get',
-                        success: function (result) {
-                            if (result) {
-                                layer.msg('操作成功', {
-                                    icon: 6,
-                                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                                }, function () {
-                                    active['reload'].call(this);
-                                });
-                            } else {
-                                layer.msg('操作失败', {icon: 5});
-                            }
-                        },
-                        error: function () {
-                            layer.msg('操作失败', {icon: 5});
-
-                        }
-                    });
-
-                    layer.close(index);
-                });
-            } else if (obj.event === 'edit') {
-                layer.alert('编辑行：<br>' + JSON.stringify(data))
+                delOneCustomer(data);
             }
         });
 
         // 编辑表格获得表格数据
         function editCustomer(data) {
+            console.log(data)
             okLayer.open("编辑", "/internal/customer/toCustomersAdd", "90%", "90%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             }, function () {
-                myTable.reload();
+                active['reload'].call(this);
+                // myTable.reload();
             })
         }
+
+        //删除单个客户
+        function delOneCustomer(data) {
+            layer.confirm('真的删除该客户吗', function (index) {
+                $.ajax({
+                    url: '/internal/customer/delCustomer2/' + data.uuid,
+                    type: 'Get',
+                    success: function (result) {
+                        if (result) {
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            layer.msg('操作失败', {icon: 5});
+                        }
+                    },
+                    error: function () {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                });
+                layer.close(index);
+            });
+        };
 
         var active = {
             reload: function () {
@@ -233,87 +235,95 @@
                 });
                 $("#searchContent").removeClass("layui-show")
             },
-            batchDeleteCustomer: function(){ //获取选中数据
+            batchDeleteCustomer: function () { //获取选中数据
                 var checkStatus = table.checkStatus('customerTable')
-                    ,data = checkStatus.data;
+                    , data = checkStatus.data;
                 var uuidArr = [];
-                $.each(data, function(index, item){
+                $.each(data, function (index, item) {
                     uuidArr.push(item.uuid);
                 });
-                if(uuidArr.length <= 0){
+                if (uuidArr.length <= 0) {
                     layer.msg('请选择要操作的客户', {icon: 5});
                     return
                 }
-                var postData = {};
-                postData.uuids = uuidArr;
-                $.ajax({
-                    url: '/internal/customer/deleteCustomers2',
-                    data: JSON.stringify(postData),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (result) {
-                        if (result) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                            }, function(){
-                                active['reload'].call(this);
-                            });
-                        } else {
+                layer.confirm("确定要删除所选客户吗", {icon: 3, title: '删除所选'}, function (index) {
+                    var postData = {};
+                    postData.uuids = uuidArr;
+                    $.ajax({
+                        url: '/internal/customer/deleteCustomers2',
+                        data: JSON.stringify(postData),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        timeout: 5000,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result) {
+                                layer.msg('操作成功', {
+                                    icon: 6,
+                                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                }, function () {
+                                    active['reload'].call(this);
+                                });
+                            } else {
+                                layer.msg('操作失败', {icon: 5});
+                            }
+                        },
+                        error: function () {
                             layer.msg('操作失败', {icon: 5});
-                        }
-                    },
-                    error: function () {
-                        layer.msg('操作失败', {icon: 5});
 
-                    }
+                        }
+                    });
+                    layer.close(index);
                 });
+
             },
-            batchUpdateDailyReport: function(){ //获取选中数据
+            batchUpdateDailyReport: function () { //获取选中数据
                 var checkStatus = table.checkStatus('customerTable')
-                    ,data = checkStatus.data;
+                    , data = checkStatus.data;
                 var uuidArr = [];
-                $.each(data, function(index, item){
-                    if(item.status === 1){
+                $.each(data, function (index, item) {
+                    if (item.status === 1) {
                         uuidArr.push(item.uuid);
                     }
                 });
-                if(uuidArr.length <= 0){
+                if (uuidArr.length <= 0) {
                     layer.msg('请选择要操作的客户', {icon: 5});
                     return
                 }
-                var postData = {};
-                postData.uuids = uuidArr;
-                $.ajax({
-                    url: '/internal/customer/updateCustomerDailyReportIdentify2',
-                    data: JSON.stringify(postData),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (result) {
-                        if (result) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                            }, function(){
-                                active['reload'].call(this);
-                            });
-                        } else {
+                layer.confirm("确定更新所选客户日报表吗", {icon: 3, title: '删除所选'}, function (index) {
+                    var postData = {};
+                    postData.uuids = uuidArr;
+                    $.ajax({
+                        url: '/internal/customer/updateCustomerDailyReportIdentify2',
+                        data: JSON.stringify(postData),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        timeout: 5000,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result) {
+                                layer.msg('操作成功', {
+                                    icon: 6,
+                                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                }, function () {
+                                    active['reload'].call(this);
+                                });
+                            } else {
+                                layer.msg('操作失败', {icon: 5});
+                            }
+                        },
+                        error: function () {
                             layer.msg('操作失败', {icon: 5});
-                        }
-                    },
-                    error: function () {
-                        layer.msg('操作失败', {icon: 5});
 
-                    }
+                        }
+                    });
+                    layer.close(index);
                 });
+
             },
         };
 
@@ -347,7 +357,8 @@
         // 添加按钮点击事件
         $('#addUser').click(function () {
             okLayer.open("添加用户", "/internal/customer/toCustomersAdd", "90%", "90%", null, function () {
-                myTable.reload();
+                // myTable.reload();
+                active['reload'].call(this);
             });
         });
         window.changeCustomerKeywordStatus = function changeCustomerKeywordStatus(customerUuid, status) {
@@ -356,7 +367,7 @@
             } else if (status === 1) {
                 msg = "确定激活所有关键字吗?"
             }
-            layer.confirm(msg, {icon: 3, title:'关键字状态'}, function(index){
+            layer.confirm(msg, {icon: 3, title: '关键字状态'}, function (index) {
                 var data = {};
                 data.customerUuid = customerUuid;
                 data.status = status;
@@ -390,7 +401,8 @@
             });
         };
 
-        window.changeCustomerDailyReportIdentify = function changeCustomerDailyReportIdentify(uuid, status, oldIdentify,newIdentify, self){
+        window.changeCustomerDailyReportIdentify = function changeCustomerDailyReportIdentify(uuid, status, oldIdentify,
+            newIdentify, self) {
             var select = $(self);
             if (status !== '1') {
                 layer.msg('请激活客户', {icon: 5});
@@ -442,26 +454,26 @@
 
 <script type="text/html" id="keywordInfo">
     {{# if(d.keywordCount > 0){
-            if(d.keywordCount == d.activeKeywordCount){ }}
-                <span style="color: green;">激活</span>
-                <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 0)">暂停关键字</a>
-                </@shiro.hasPermission>
-        {{# }else if(d.keywordCount > 0 && d.activeKeywordCount > 0){ }}
-                <span style="color: yellowgreen;">部分暂停</span>
-                <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 0)">暂停关键字</a>
-                    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 1)">激活关键字</a>
-                </@shiro.hasPermission>
-        {{# }else{  }}
-                <span style="color: red;">暂停</span>
-                <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 1)">激活关键字</a>
-                </@shiro.hasPermission>
-        {{# }
-        }else{ }}
-        暂无关键字
-        {{#} }}
+    if(d.keywordCount == d.activeKeywordCount){ }}
+    <span style="color: green;">激活</span>
+    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 0)">暂停关键字</a>
+    </@shiro.hasPermission>
+    {{# }else if(d.keywordCount > 0 && d.activeKeywordCount > 0){ }}
+    <span style="color: yellowgreen;">部分暂停</span>
+    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 0)">暂停关键字</a>
+    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 1)">激活关键字</a>
+    </@shiro.hasPermission>
+    {{# }else{  }}
+    <span style="color: red;">暂停</span>
+    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 1)">激活关键字</a>
+    </@shiro.hasPermission>
+    {{# }
+    }else{ }}
+    暂无关键字
+    {{#} }}
 </script>
 
 <script type="text/html" id="customerStatus">
@@ -473,13 +485,15 @@
 </script>
 
 <script type="text/html" id="customerDailyReportIdentify">
-    <select value="{{d.dailyReportIdentify}}" lay-ignore style="width: 100px;font-size: 12px; height: 25px" onchange="changeCustomerDailyReportIdentify('{{d.uuid}}', '{{d.status}}','{{d.dailyReportIdentify}}', this.value, this);">
+    <select value="{{d.dailyReportIdentify}}" lay-ignore style="width: 100px;font-size: 12px; height: 25px"
+            onchange="changeCustomerDailyReportIdentify('{{d.uuid}}', '{{d.status}}','{{d.dailyReportIdentify}}', this.value, this);">
         <option value="true" selected>是</option>
         <option value="false"
-        {{#  if(d.dailyReportIdentify){ }}
-            selected
-        {{# } }}
-        >否</option>
+                {{# if(!d.dailyReportIdentify){ }}
+                selected
+                {{# } }}
+        >否
+        </option>
 
     </select>
 </script>
@@ -487,16 +501,20 @@
 <script type="text/html" id="operationTpl">
 
     <@shiro.hasPermission name="/internal/customer/saveCustomer">
-        <button type="button" class="layui-btn layui-btn-xs" lay-event="detail">修改</button>
+        <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customer/delCustomer">
         <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
     </@shiro.hasPermission>
     {{#
-    var entryType = document.getElementById("entryType").value;
-    if( 'qz'=== entryType){ }}
-        <button type="button" class="layui-btn layui-btn-normal layui-btn-xs" onclick="viewSitesdRank('{{d.contactPerson}}','aizhan')">爱站排名</button>
-        <button type="button" class="layui-btn layui-btn-normal layui-btn-xs" onclick="viewSitesdRank('{{d.contactPerson}}','5118')">5118排名</button>
+        var entryType = document.getElementById("entryType").value;
+        if( 'qz'=== entryType){ }}
+        <button type="button" class="layui-btn layui-btn-normal layui-btn-xs"
+                onclick="viewSitesdRank('{{d.contactPerson}}','aizhan')">爱站排名
+        </button>
+        <button type="button" class="layui-btn layui-btn-normal layui-btn-xs"
+                onclick="viewSitesdRank('{{d.contactPerson}}','5118')">5118排名
+        </button>
     {{# }else if('bc' === entryType){ }}
         <@shiro.hasPermission name="/internal/customerChargeType/saveCustomerChargeType">
             <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">客户规则</button>

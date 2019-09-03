@@ -152,12 +152,10 @@
         });
 
         if (initData != null) {
-            console.log(initData);
             layui.form.val("addFilter", initData);
         }
 
         form.on("submit(add)", function (data) {
-            console.log(data);
             $.ajax({
                 url: '/internal/algorithmAutoTest/postAlgorithmTestPlanAddData',
                 type: 'post',
@@ -175,7 +173,6 @@
                         okLayer.msg.greenTick(res.msg, function () {
                         });
                     }
-
                 }
             });
             return false;
