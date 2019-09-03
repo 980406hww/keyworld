@@ -14,6 +14,11 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,6 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping("/internal/customer")
 public class CustomerController {
+    private Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
     @Resource(name = "customerService2")
     private CustomerInterface customerService2;
@@ -59,6 +65,7 @@ public class CustomerController {
         List<Customer> customers = page.getRecords();
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(0);
+        resultBean.setEntryType(entryType);
         resultBean.setCount(page.getTotal());
         resultBean.setMsg("");
         resultBean.setData(customers);
@@ -69,7 +76,19 @@ public class CustomerController {
     @RequestMapping("/getActiveUsers")
     public List<UserInfo> getActiveUsers(){
         List<UserInfo> activeUsers = userInfoService2.findActiveUsers();
-
         return activeUsers;
     }
+
+    @RequiresPermissions("/internal/customer/delCustomer")
+    @RequestMapping(value = "/delCustomer2/{uuid}", method = RequestMethod.GET)
+    public ResponseEntity<?> delCustomer(@PathVariable("uuid") Long uuid) {
+        try {
+            customerService2.deleteCustomer(uuid);
+            return new ResponseEntity<Object>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.OK);
+        }
+    }
+
 }

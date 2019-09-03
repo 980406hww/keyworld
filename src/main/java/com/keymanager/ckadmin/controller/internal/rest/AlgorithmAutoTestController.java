@@ -1,7 +1,6 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.AlgorithmTestCriteria;
@@ -73,9 +72,8 @@ public class AlgorithmAutoTestController {
     }
 
     @RequestMapping(value = "getAlgorithmTestPlans")
-    public String getAlgorithmTestPlans(@RequestBody AlgorithmTestCriteria algorithmTestCriteria) {
+    public ResultBean getAlgorithmTestPlans(@RequestBody AlgorithmTestCriteria algorithmTestCriteria) {
         Page<AlgorithmTestPlan> page = new Page(algorithmTestCriteria.getPage(), algorithmTestCriteria.getLimit());
-        //List<AlgorithmTestPlan> algorithmTestPlans = algorithmTestPlanService2.selectList(null);
         page = algorithmTestPlanService2.searchAlgorithmTestPlans(page, algorithmTestCriteria);
         List<AlgorithmTestPlan> algorithmTestPlans = page.getRecords();
         ResultBean resultBean = new ResultBean();
@@ -83,8 +81,7 @@ public class AlgorithmAutoTestController {
         resultBean.setCount(algorithmTestPlans.size());
         resultBean.setMsg("");
         resultBean.setData(algorithmTestPlans);
-        String s = JSON.toJSONString(resultBean);
-        return s;
+        return resultBean;
     }
 }
 

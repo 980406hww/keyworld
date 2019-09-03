@@ -14,4 +14,14 @@
          GROUP BY ck.fCustomerUuid
     </select>
 
+    <update id="changeCustomerKeywordStatus">
+        UPDATE t_customer_keyword SET fStatus = #{status}
+        WHERE fTerminalType = #{terminalType}
+        AND fType = #{entryType}
+        AND fCustomerUuid = #{customerUuid}
+    </update>
+
+    <delete id="deleteCustomerKeywordsByCustomerUuid">
+        delete from t_customer_keyword where fCustomerUuid = #{customerUuid}
+    </delete>
 </mapper>

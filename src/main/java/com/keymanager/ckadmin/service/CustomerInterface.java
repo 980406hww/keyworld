@@ -18,4 +18,6 @@ public interface CustomerInterface extends IService<Customer> {
 
     Page<Customer> searchCustomers(Page<Customer> page,
             CustomerCriteria customerCriteria);
+
+    void deleteCustomer(long uuid);
 }

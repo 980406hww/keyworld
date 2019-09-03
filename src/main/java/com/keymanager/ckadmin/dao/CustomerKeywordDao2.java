@@ -13,4 +13,9 @@ CustomerKeywordDao2 extends BaseMapper<com.keymanager.ckadmin.entity.CustomerKey
     List<Map> getCustomerKeywordsCount(@Param("customerUuids") List<Long> customerUuids,
             @Param("terminalType") String terminalType, @Param
             ("entryType") String entryType);
+
+    void changeCustomerKeywordStatus(@Param("terminalType") String terminalType, @Param("entryType") String entryType,
+            @Param("customerUuid") Long customerUuid, @Param("status") Integer status);
+
+    void deleteCustomerKeywordsByCustomerUuid(long customerUuid);
 }

@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-@Service("customerkeywordService2")
+@Service("customerKeywordService2")
 public class CustomerKeywordService2 extends ServiceImpl<CustomerKeywordDao2, CustomerKeyword> implements
         CustomerKeywordInterface {
     private static Logger logger = LoggerFactory.getLogger(CustomerKeywordService2.class);
@@ -24,6 +24,16 @@ public class CustomerKeywordService2 extends ServiceImpl<CustomerKeywordDao2, Cu
         return customerKeywordDao2.getCustomerKeywordsCount(customerUuids, terminalType, entryType);
     }
 
+    @Override
+    public void changeCustomerKeywordStatus(String terminalType, String entryType, Long customerUuid, Integer status) {
+        customerKeywordDao2.changeCustomerKeywordStatus(terminalType, entryType, customerUuid, status);
+    }
+
+    @Override
+    public void deleteCustomerKeywords(long customerUuid) {
+        logger.info("deleteCustomerKeywords:" + customerUuid);
+        customerKeywordDao2.deleteCustomerKeywordsByCustomerUuid(customerUuid);
+    }
 
 }
 

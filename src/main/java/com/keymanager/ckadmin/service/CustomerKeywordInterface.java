@@ -17,4 +17,8 @@ public interface CustomerKeywordInterface extends IService<CustomerKeyword> {
 
 
     List<Map> getCustomerKeywordsCount(List<Long> customerUuids, String terminalType, String entryType);
+
+    void changeCustomerKeywordStatus(String terminalType, String entryType, Long customerUuid, Integer status);
+
+    void deleteCustomerKeywords(long customerUuid);
 }

@@ -32,8 +32,8 @@ public class CustomerService2 extends ServiceImpl<CustomerDao2, Customer> implem
     @Resource(name = "customerDao2")
     private CustomerDao2 customerDao2;
 
-    @Resource(name = "customerkeywordService2")
-    private CustomerKeywordInterface customerkeywordService2;
+    @Resource(name = "customerKeywordService2")
+    private CustomerKeywordInterface customerKeywordService2;
 
    /* @Override
     public Page<AlgorithmTestPlan> searchAlgorithmTestPlans(Page<AlgorithmTestPlan> page, AlgorithmTestCriteria algorithmTestCriteria) {
@@ -50,7 +50,7 @@ public class CustomerService2 extends ServiceImpl<CustomerDao2, Customer> implem
             for(Customer customer : customerList){
                 customerUuids.add(customer.getUuid());
             }
-            List<Map> customerKeywordCountMap = customerkeywordService2.getCustomerKeywordsCount(customerUuids, customerCriteria.getTerminalType(),customerCriteria.getEntryType());
+            List<Map> customerKeywordCountMap = customerKeywordService2.getCustomerKeywordsCount(customerUuids, customerCriteria.getTerminalType(),customerCriteria.getEntryType());
             Map<Integer, Map> customerUuidKeywordCountMap = new HashMap<Integer, Map>();
             for(Map map : customerKeywordCountMap){
                 customerUuidKeywordCountMap.put((Integer)map.get("customerUuid"), map);
@@ -78,5 +78,11 @@ public class CustomerService2 extends ServiceImpl<CustomerDao2, Customer> implem
         }
         page.setRecords(customerList);
         return page;
+    }
+
+    @Override
+    public void deleteCustomer(long uuid) {
+        customerDao2.deleteById(uuid);
+        customerKeywordService2.deleteCustomerKeywords(uuid);
     }
 }
