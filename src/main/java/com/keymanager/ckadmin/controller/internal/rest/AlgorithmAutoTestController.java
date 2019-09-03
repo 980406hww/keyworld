@@ -9,14 +9,20 @@ import com.keymanager.ckadmin.entity.AlgorithmTestPlan;
 import com.keymanager.ckadmin.service.AlgorithmTestPlanInterface;
 import com.keymanager.ckadmin.service.ConfigInterface;
 import com.keymanager.util.TerminalTypeMapping;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,7 +53,7 @@ public class AlgorithmAutoTestController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/algorithmAutoTest/toAlgorithmTestPlanAdd")
+    // 前往添加修改页面
     @RequestMapping(value = "/toAlgorithmTestPlanAdd", method = RequestMethod.GET)
     public ModelAndView toAlgorithmTestPlanAdd() {
         ModelAndView mv = new ModelAndView();
@@ -55,21 +61,34 @@ public class AlgorithmAutoTestController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/algorithmAutoTest/getAlgorithmTestPlanAddData")
+    //获得初始数据
     @RequestMapping(value = "/getAlgorithmTestPlanAddData", method = RequestMethod.GET)
-    public Map<String, Object> getAlgorithmTestPlanAddData(HttpServletRequest request) {
+    public ResultBean getAlgorithmTestPlanAddData(HttpServletRequest request) {
         Map<String, Object> mapData = new HashMap<>();
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         mapData.put("terminalType", terminalType);
         mapData.put("searchEngineMap", configService2.getSearchEngineMap(terminalType));
-        return mapData;
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        resultBean.setData(mapData);
+        return resultBean;
     }
 
-    @RequiresPermissions("/internal/algorithmAutoTest/toAlgorithmTestPlanAddData")
-    @RequestMapping(value = "/toAlgorithmTestPlanAddData", method = RequestMethod.POST)
-    public String toAlgorithmTestPlanAddData(AlgorithmTestPlan algorithmTestPlan) {
-        System.out.println(algorithmTestPlan);
-        return "";
+    //添加
+    @RequestMapping(value = "/postAlgorithmTestPlanAddData", method = RequestMethod.POST)
+    public ResultBean toAlgorithmTestPlanAddData(@Valid AlgorithmTestPlan algorithmTestPlan, HttpServletRequest request, BindingResult result) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        if (result.hasFieldErrors()) {
+            resultBean.setCode(400);
+            resultBean.setMsg("数据校验失败");
+            return resultBean;
+        }
+        HttpSession session = request.getSession();
+        String loginName = (String) session.getAttribute("username");
+        algorithmTestPlan.setCreateBy(loginName);
+        algorithmTestPlanService2.saveAlgorithmTestPlan(algorithmTestPlan);
+        return resultBean;
     }
 
     @RequestMapping(value = "getAlgorithmTestPlans")

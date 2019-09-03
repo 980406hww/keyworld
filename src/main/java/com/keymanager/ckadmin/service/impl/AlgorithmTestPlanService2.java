@@ -7,8 +7,11 @@ import com.keymanager.ckadmin.criteria.AlgorithmTestCriteria;
 import com.keymanager.ckadmin.dao.AlgorithmTestPlanDao2;
 import com.keymanager.ckadmin.entity.AlgorithmTestPlan;
 import com.keymanager.ckadmin.service.AlgorithmTestPlanInterface;
+
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,8 +31,19 @@ public class AlgorithmTestPlanService2 extends ServiceImpl<AlgorithmTestPlanDao2
 
     @Override
     public Page<AlgorithmTestPlan> searchAlgorithmTestPlans(Page<AlgorithmTestPlan> page, AlgorithmTestCriteria algorithmTestCriteria) {
-        List<AlgorithmTestPlan> algorithmTestPlanList = algorithmTestPlanDao2.searchAlgorithmTestPlans(page,algorithmTestCriteria);
+        List<AlgorithmTestPlan> algorithmTestPlanList = algorithmTestPlanDao2.searchAlgorithmTestPlans(page, algorithmTestCriteria);
         page.setRecords(algorithmTestPlanList);
         return page;
+    }
+
+    @Override
+    public void saveAlgorithmTestPlan(AlgorithmTestPlan algorithmTestPlan) {
+        if (algorithmTestPlan.getUuid() == null) {
+            algorithmTestPlan.setStatus(1);
+            algorithmTestPlanDao2.insert(algorithmTestPlan);
+        } else {
+            algorithmTestPlan.setUpdateTime(new Date());
+            algorithmTestPlanDao2.updateById(algorithmTestPlan);
+        }
     }
 }

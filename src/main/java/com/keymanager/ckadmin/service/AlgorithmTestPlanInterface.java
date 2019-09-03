@@ -16,4 +16,6 @@ import com.keymanager.ckadmin.entity.AlgorithmTestPlan;
 public interface AlgorithmTestPlanInterface extends IService<AlgorithmTestPlan> {
 
     Page<AlgorithmTestPlan> searchAlgorithmTestPlans(Page<AlgorithmTestPlan> page, AlgorithmTestCriteria algorithmTestCriteria);
+
+    void saveAlgorithmTestPlan(AlgorithmTestPlan algorithmTestPlan);
 }
