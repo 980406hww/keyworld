@@ -32,10 +32,10 @@ layui.define(["element", "jquery"], function (exports) {
             parseData:''//这是一个方法处理url请求地址的返回值(该方法必须提供一个返回值)
          }
       };
-   var savedTabs=localStorage.getItem("nav_title_tabs_data");
+   /*var savedTabs=localStorage.getItem("nav_title_tabs_data");
    if (savedTabs && savedTabs.length>0) {
       $("#mainnav").html(savedTabs);
-   }
+   }*/
    /**
     * 导航初始化的操作(只执行一次)
     * @param option 配置tabConfig参数
@@ -137,17 +137,17 @@ layui.define(["element", "jquery"], function (exports) {
          that.positionTab(elMove, thatElem);
          var url=thatElem.find("strong").data("url");
          location.hash=url?url:'';
-         that.saveStatus();
+         // that.saveStatus();
       });
       element.on("tabDelete({0})".format(filter),function(data){
-         that.saveStatus();
+         // that.saveStatus();
       });
    };
 
    //保存TAB的当前选项卡
-   okTab.prototype.saveStatus = function () {
+   /*okTab.prototype.saveStatus = function () {
       localStorage.setItem("nav_title_tabs_data",$("#mainnav").html());
-   };
+   };*/
 
    //删除tab页的操作（此处为点击关闭按钮的操作）
    okTab.prototype.tabDelete = function () {
