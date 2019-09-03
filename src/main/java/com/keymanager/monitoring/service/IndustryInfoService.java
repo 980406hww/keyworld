@@ -82,7 +82,7 @@ public class IndustryInfoService extends ServiceImpl<IndustryInfoDao, IndustryIn
         industryInfoDao.deleteIndustries(Arrays.asList(uuids.split(",")));
     }
 
-    public Map getValidIndustryInfo() {
+    public synchronized Map getValidIndustryInfo() {
         IndustryInfoVO industryInfoVo = industryInfoDao.getValidIndustryInfo();
         if (null != industryInfoVo) {
             IndustryInfo industryInfo = industryInfoDao.selectById(industryInfoVo.getUuid());
