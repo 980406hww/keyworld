@@ -12,18 +12,19 @@
 <div class="ok-body">
     <!--面包屑导航区域-->
     <div class="ok-body-breadcrumb">
-        <span class="layui-breadcrumb">
+        <span class="layui-breadcrumb" style="visibility: visible;">
             <a><cite>首页</cite></a>
+            <span lay-separator="">/</span>
             <a><cite>其他</cite></a>
+            <span lay-separator="">/</span>
             <a><cite>测试计划管理</cite></a>
         </span>
     </div>
     <!--form表单-->
-    <form class="layui-form layui-form-pane ok-form" action="/internal/algorithmAutoTest/toAlgorithmTestPlanAddData"
-          method="post">
+    <form class="layui-form layui-form-pane ok-form" lay-filter="addFilter">
         <div class="layui-form-item">
             <label class="layui-form-label">测试计划名称</label>
-            <input type="hidden" name="algorithmTestPlanUuid">
+            <input type="hidden" name="uuid">
             <div class="layui-input-block">
                 <input type="text" name="algorithmTestPlanName" placeholder="请输入测试计划名称" autocomplete="off"
                        class="layui-input" lay-verify="required">
@@ -108,6 +109,14 @@
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
+
+    let initData = null;
+
+    function initForm(data) {
+        var jsonString = JSON.stringify(data);
+        initData = JSON.parse(jsonString);
+    }
+
     layui.use(["form", "okLayer", "jquery"], function () {
         let form = layui.form;
         let okLayer = layui.okLayer;
@@ -122,14 +131,19 @@
                 // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
                 // 客户端会主观认为服务端返回的就是 JSON 格式的字符串
                 let html = "";
-                for (let item in res.searchEngineMap) {
+                for (let item in res.data.searchEngineMap) {
                     html += "<option value='";
                     html += item;
                     html += "'";
-                    if (item == '百度')
-                        html += "selected = 'selected'";
+                    if (initData == null) {
+                        if (item == '百度')
+                            html += "selected = 'selected'";
+                    } else {
+                        if (item == initData.searchEngine)
+                            html += "selected = 'selected'";
+                    }
                     html += ">";
-                    html += res.searchEngineMap[item];
+                    html += res.data.searchEngineMap[item];
                     html += "</option>";
                 }
                 document.getElementById('searchEngine').innerHTML = html;
@@ -137,13 +151,34 @@
             }
         });
 
-        // form.val('add', {'terminalType': 'P', 'searchEngine': '百度'});
+        if (initData != null) {
+            console.log(initData);
+            layui.form.val("addFilter", initData);
+        }
 
         form.on("submit(add)", function (data) {
             console.log(data);
-            okLayer.msg.greenTick("添加成功", function () {
-                parent.layer.close(parent.layer.getFrameIndex(window.name));
+            $.ajax({
+                url: '/internal/algorithmAutoTest/postAlgorithmTestPlanAddData',
+                type: 'post',
+                // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
+                data: data.field,
+                dataType: 'json',
+                success: function (res) {
+                    // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
+                    // 客户端会主观认为服务端返回的就是 JSON 格式的字符串
+                    if (res.code == 200) {
+                        okLayer.msg.greenTick("保存成功", function () {
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        okLayer.msg.greenTick(res.msg, function () {
+                        });
+                    }
+
+                }
             });
+            return false;
         });
     })
 
