@@ -33,10 +33,10 @@
                     <div class="layui-colla-content" id="searchContent">
                         <div class="layui-form layui-form-pane" id="searchForm">
 
-                            <div class="layui-form-item">
+                            <div class="layui-form-item" lay-filter="loginNameFilter">
                                 <div class="layui-inline">
                                     <div class="layui-input-inline" >
-                                        <select name="loginName" id="loginName"  lay-filter="loginNameFilter" lay-search>
+                                        <select name="loginName" id="loginName"   lay-search>
                                             <option value="">请选择所属用户</option>
                                         </select>
 
@@ -92,15 +92,17 @@
 
     <!--工具栏-->
     <okToolbar>
-        <button class="layui-btn layui-btn-normal layui-btn-xs" id="batchEnabled">
-            <i class="iconfont icon-shangsheng"></i>批量上架
-        </button>
-        <button class="layui-btn layui-btn-warm layui-btn-xs" id="batchDisabled">
-            <i class="iconfont icon-web-icon-"></i>批量下架
-        </button>
-        <button class="layui-btn layui-btn-danger layui-btn-xs" id="batchDel">
-            <i class="layui-icon layui-icon-delete"></i>批量删除
-        </button>
+        <@shiro.hasPermission name="/internal/customer/deleteCustomers">
+            <button class="layui-btn layui-btn-danger layui-btn-xs" id="batchDel" data-type="batchDeleteCustomer">
+                <i class="layui-icon layui-icon-delete"></i>删除所选
+            </button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/customer/saveCustomer">
+            <button class="layui-btn layui-btn-danger layui-btn-xs" id="batchUpdateDailyReport" data-type="batchUpdateDailyReport">
+                <i class="layui-icon layui-icon-delete"></i>触发所选客户日报表
+            </button>
+        </@shiro.hasPermission>
+
         <button class="layui-btn layui-btn-xs" id="addUser">
             <i class="layui-icon">&#xe61f;</i>添加文章
         </button>
@@ -128,24 +130,13 @@
         var laydate = layui.laydate;
         var layer = layui.layer;
 
-        laydate.render({
-            elem: '#startTime',
-            type: "datetime"
-        });
-
-        laydate.render({
-            elem: '#endTime',
-            type: "datetime"
-        });
-
-
         table.render({
             elem: '#customerTable',
             method: 'post',
             url: '${ctx.path}/internal/customer/getCustomers',
             limit: 50,
             page: true,
-            size: 'sm',
+            // size: 'sm',
             id: 'customerTable',
             even: true,//隔行背景
             contentType: 'application/json',
@@ -159,12 +150,14 @@
                 {field: 'saleRemark', title: '销售备注', width: '6%'},
                 {field: 'remark', title: '备注', width: '5%'},
                 {field: 'status', title: '客户状态', width: '5%', templet:'#customerStatus'},
-                {field: 'dailyReportIdentify', title: '是否产生日报表', width: '10%', templet:'#customerDailyReportIdentify'},
+                {field: 'dailyReportIdentify', title: '是否产生日报表',sort: true, width: '10%', templet:'#customerDailyReportIdentify'},
                 {field: 'createTime', title: '创建时间', width: '10%', templet:'#toDateTime'},
                 {title: '操作', templet: '#operationTpl', align: 'center', width: '16%'}
             ]],
             done: function (res, curr, count) {
                 // console.log(res)
+                form.render("select");
+
                 $("#countNum").text(count);
             }
         });
@@ -229,10 +222,100 @@
                     }
                 });
                 $("#searchContent").removeClass("layui-show")
-            }
+            },
+            batchDeleteCustomer: function(){ //获取选中数据
+                var checkStatus = table.checkStatus('customerTable')
+                    ,data = checkStatus.data;
+                var uuidArr = [];
+                $.each(data, function(index, item){
+                    uuidArr.push(item.uuid);
+                });
+                if(uuidArr.length <= 0){
+                    layer.msg('请选择要操作的客户', {icon: 5});
+                    return
+                }
+                var postData = {};
+                postData.uuids = uuidArr;
+                $.ajax({
+                    url: '/internal/customer/deleteCustomers2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result) {
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function(){
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            layer.msg('操作失败', {icon: 5});
+                        }
+                    },
+                    error: function () {
+                        layer.msg('操作失败', {icon: 5});
+
+                    }
+                });
+            },
+            batchUpdateDailyReport: function(){ //获取选中数据
+                var checkStatus = table.checkStatus('customerTable')
+                    ,data = checkStatus.data;
+                var uuidArr = [];
+                $.each(data, function(index, item){
+                    if(item.status === 1){
+                        uuidArr.push(item.uuid);
+                    }
+                });
+                if(uuidArr.length <= 0){
+                    layer.msg('请选择要操作的客户', {icon: 5});
+                    return
+                }
+                var postData = {};
+                postData.uuids = uuidArr;
+                $.ajax({
+                    url: '/internal/customer/updateCustomerDailyReportIdentify2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result) {
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function(){
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            layer.msg('操作失败', {icon: 5});
+                        }
+                    },
+                    error: function () {
+                        layer.msg('操作失败', {icon: 5});
+
+                    }
+                });
+            },
         };
 
         $('#searchForm #searchBtn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+        $('#batchDel').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+        $('#batchUpdateDailyReport').on('click', function () {
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
         });
@@ -258,7 +341,6 @@
                 msg = "确定激活所有关键字吗?"
             }
             layer.confirm(msg, {icon: 3, title:'关键字状态'}, function(index){
-                //do something
                 var data = {};
                 data.customerUuid = customerUuid;
                 data.status = status;
@@ -290,7 +372,36 @@
                 });
                 layer.close(index);
             });
-        }
+        };
+
+        window.changeCustomerDailyReportIdentify = function changeCustomerDailyReportIdentify(uuid, status, oldIdentify,newIdentify, self){
+            var select = $(self);
+            if (status !== '1') {
+                layer.msg('请激活客户', {icon: 5});
+                return;
+            }
+            var postData = {};
+            postData.customerUuid = uuid;
+            postData.identify = newIdentify;
+            $.ajax({
+                url: '/internal/customer/changeCustomerDailyReportIdentify2',
+                type: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(postData),
+                success: function (result) {
+                    if (result) {
+                        layer.msg('操作成功', {icon: 6});
+                    }
+                },
+                error: function () {
+                    layer.msg('操作失败', {icon: 5});
+                    select.val(oldIdentify);
+                }
+            });
+        };
 
     });
 
@@ -305,6 +416,7 @@
             window.open("http://5118.com/seo/baidurank/" + contactPerson);
         }
     }
+
 
 </script>
 <!--模板-->
@@ -345,15 +457,15 @@
 </script>
 
 <script type="text/html" id="customerDailyReportIdentify">
-    <select  id= "CDRI" style="width: 100px;" onchange="changeCustomerDailyReportIdentify(this, '{{d.status}}');">
-        <option value="true" >是</option>
-        <option value="false" >否</option>
+    <select value="{{d.dailyReportIdentify}}" lay-ignore style="width: 100px;font-size: 12px; height: 25px" onchange="changeCustomerDailyReportIdentify('{{d.uuid}}', '{{d.status}}','{{d.dailyReportIdentify}}', this.value, this);">
+        <option value="true" selected>是</option>
+        <option value="false"
+        {{#  if(d.dailyReportIdentify){ }}
+            selected
+        {{# } }}
+        >否</option>
+
     </select>
-    <!--{{#  if(d.dailyReportIdentify){  }}
-    是
-    {{#  }else{  }}
-    否
-    {{#  }  }}-->
 </script>
 
 <script type="text/html" id="operationTpl">

@@ -21,4 +21,7 @@ public interface CustomerDao2 extends BaseMapper<Customer> {
 
     List<Customer> searchCustomers(Page<Customer> page,
             @Param("customerCriteria") CustomerCriteria customerCriteria);
+
+    void updateCustomerDailyReportIdentify (@Param("uuids")List<Integer> uuids);
+
 }

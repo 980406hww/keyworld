@@ -10,6 +10,7 @@ import com.keymanager.ckadmin.service.CustomerInterface;
 import com.keymanager.ckadmin.service.UserInfoInterface;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -90,5 +91,42 @@ public class CustomerController {
             return new ResponseEntity<Object>(false, HttpStatus.OK);
         }
     }
+
+    @RequiresPermissions("/internal/customer/deleteCustomers")
+    @RequestMapping(value = "/deleteCustomers2" , method = RequestMethod.POST)
+    public ResponseEntity<?> deleteCustomers(@RequestBody Map<String, Object> requestMap){
+        try {
+            List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
+            customerService2.deleteAll(uuids);
+            return new ResponseEntity<Object>(true , HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<Object>(false , HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "/updateCustomerDailyReportIdentify2", method = RequestMethod.POST)
+    public ResponseEntity<?> updateCustomerDailyReportIdentify(@RequestBody Map requestMap) {
+        try {
+            List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
+            customerService2.updateCustomerDailyReportIdentify(uuids);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+    @RequestMapping(value = "/changeCustomerDailyReportIdentify2", method = RequestMethod.POST)
+    public ResponseEntity<?> changeCustomerDailyReportIdentify(@RequestBody Map requestMap) {
+        try {
+            long uuid = Long.valueOf((String) requestMap.get("customerUuid"));
+            boolean identify = Boolean.valueOf((String) requestMap.get("identify"));
+            customerService2.changeCustomerDailyReportIdentify(uuid, identify);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 }

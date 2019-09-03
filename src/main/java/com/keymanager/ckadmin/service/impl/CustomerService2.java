@@ -10,6 +10,7 @@ import com.keymanager.ckadmin.service.CustomerInterface;
 import com.keymanager.ckadmin.service.CustomerKeywordInterface;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,5 +85,25 @@ public class CustomerService2 extends ServiceImpl<CustomerDao2, Customer> implem
     public void deleteCustomer(long uuid) {
         customerDao2.deleteById(uuid);
         customerKeywordService2.deleteCustomerKeywords(uuid);
+    }
+
+    @Override
+    public void deleteAll(List<Integer> uuids) {
+        for (Integer uuid : uuids) {
+            deleteCustomer(Long.valueOf(uuid));
+        }
+    }
+
+    @Override
+    public void updateCustomerDailyReportIdentify(List<Integer> uuids) {
+        customerDao2.updateCustomerDailyReportIdentify(uuids);
+    }
+
+    @Override
+    public void changeCustomerDailyReportIdentify(long uuid, boolean identify) {
+        Customer customer = customerDao2.selectById(uuid);
+        customer.setDailyReportIdentify(identify);
+        customer.setUpdateTime(new Date());
+        customerDao2.updateById(customer);
     }
 }

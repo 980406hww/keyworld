@@ -18,4 +18,6 @@ CustomerKeywordDao2 extends BaseMapper<com.keymanager.ckadmin.entity.CustomerKey
             @Param("customerUuid") Long customerUuid, @Param("status") Integer status);
 
     void deleteCustomerKeywordsByCustomerUuid(long customerUuid);
+
+
 }

@@ -84,7 +84,15 @@
         GROUP BY fType
     </select>
 
-
+    <update id="updateCustomerDailyReportIdentify">
+        UPDATE t_customer
+        SET fUpdateTime = NOW(), fDailyReportIdentify = 1
+        WHERE fUuid IN(
+        <foreach collection="uuids" item="uuid" separator=",">
+            #{uuid}
+        </foreach>
+        )
+    </update>
 
 
 
