@@ -98,18 +98,18 @@
     <!--工具栏-->
     <okToolbar>
         <@shiro.hasPermission name="/internal/customer/deleteCustomers">
-        <button class="layui-btn layui-btn-danger layui-btn-xs" id="batchDel" data-type="batchDeleteCustomer">
+        <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" data-type="batchDeleteCustomer">
             <i class="layui-icon layui-icon-delete"></i>删除所选
         </button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customer/saveCustomer">
-    <button class="layui-btn layui-btn-warn layui-btn-xs" id="batchUpdateDailyReport"
+    <button class="layui-btn layui-btn-warn layui-btn-sm" id="batchUpdateDailyReport"
             data-type="batchUpdateDailyReport">
         触发所选客户日报表
     </button>
     </@shiro.hasPermission>
 
-<button class="layui-btn layui-btn-xs" id="addUser">
+<button class="layui-btn layui-btn-sm" id="addUser">
     <i class="layui-icon">&#xe61f;</i>添加客户
 </button>
 </okToolbar>

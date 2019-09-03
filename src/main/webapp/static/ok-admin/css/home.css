@@ -14,8 +14,8 @@
     box-sizing: border-box;
 }
 .home .layui-card{
-    -webkit-box-shadow: 0 0 20px rgba(0,0,0,.08);
-    box-shadow: 0 0 20px rgba(0,0,0,.08);
+    -webkit-box-shadow: 0 0 5px rgba(0,0,0,.08);
+    box-shadow: 0 0 5px rgba(0,0,0,.08);
     border-radius: 5px;
 }
 .cart-data .stat-text{
