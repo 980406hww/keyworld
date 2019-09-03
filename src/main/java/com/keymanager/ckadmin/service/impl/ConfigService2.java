@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service
+@Service("configService2")
 public class ConfigService2 implements ConfigInterface {
     @Resource(name = "configDao2")
     private ConfigDao2 configDao2;

@@ -10,7 +10,6 @@ import com.keymanager.ckadmin.service.CustomerInterface;
 import com.keymanager.ckadmin.service.UserInfoInterface;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -75,11 +74,37 @@ public class CustomerController {
     }
 
     @RequestMapping("/getActiveUsers")
-    public List<UserInfo> getActiveUsers(){
+    public List<UserInfo> getActiveUsers() {
         List<UserInfo> activeUsers = userInfoService2.findActiveUsers();
+
         return activeUsers;
     }
 
+    //跳转添加或修改用户页面
+    @RequiresPermissions("/internal/customer/toCustomers")
+    @RequestMapping(value = "/toCustomersAdd", method = RequestMethod.GET)
+    public ModelAndView toCustomersAdd() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("customers/customerAdd");
+        return mv;
+    }
+
+    //添加用户
+    @RequiresPermissions("/internal/customer/toCustomers")
+    @RequestMapping(value = "/postCustomersAdd", method = RequestMethod.POST)
+    public ResultBean postCustomersAdd(@Valid Customer customer, BindingResult result, HttpSession session) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        if (result.hasFieldErrors()) {
+            resultBean.setCode(400);
+            resultBean.setMsg("数据校验失败");
+            return resultBean;
+        }
+        String loginName = (String) session.getAttribute("username");
+        customerService2.saveCustomer(customer, loginName);
+        resultBean.setMsg("添加成功");
+        return resultBean;
+    }
     @RequiresPermissions("/internal/customer/delCustomer")
     @RequestMapping(value = "/delCustomer2/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> delCustomer(@PathVariable("uuid") Long uuid) {

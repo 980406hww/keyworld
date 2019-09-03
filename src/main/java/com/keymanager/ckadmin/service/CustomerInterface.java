@@ -18,7 +18,9 @@ public interface CustomerInterface extends IService<Customer> {
 
 
     Page<Customer> searchCustomers(Page<Customer> page,
-            CustomerCriteria customerCriteria);
+                                   CustomerCriteria customerCriteria);
+
+    void saveCustomer(Customer customer, String loginName);
 
     void deleteCustomer(long uuid);
 
