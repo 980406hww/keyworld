@@ -95,7 +95,6 @@
     let uuid_ = null;
 
     function initForm(data) {
-        console.log(data);
         uuid_ = data;
     }
 
@@ -110,8 +109,7 @@
                 type: 'get',
                 dataType: 'json',
                 success: function (res) {
-                    console.log(res);
-                    if (res.code == 200) {
+                    if (res.code === 200) {
                         if (res.data.dailyReportIdentify) {
                             res.data.dailyReportIdentify = 1
                         } else {

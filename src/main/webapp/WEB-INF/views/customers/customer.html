@@ -113,7 +113,6 @@
     };
     // layui相关
     layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
-
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
@@ -143,6 +142,8 @@
                 {field: 'keywordCount', title: '关键字信息', width: '15%', templet: '#keywordInfo'},
                 {field: 'qq', title: 'QQ', width: '7%'},
                 {field: 'saleRemark', title: '销售备注', width: '6%'},
+                // hide: true 设置默认隐藏
+                // {field: 'saleRemark', title: '销售备注', width: '6%', hide: true},
                 {field: 'remark', title: '备注', width: '5%'},
                 {field: 'status', title: '客户状态', width: '5%', templet: '#customerStatus'},
                 {field: 'dailyReportIdentify', title: '是否产生日报表', width: '10%', templet: '#customerDailyReportIdentify'},
@@ -251,13 +252,11 @@
                     },
                     error: function () {
                         layer.msg('操作失败', {icon: 5});
-
                     }
                 });
                 layer.close(index);
             });
-
-        };
+        }
 
         function batchUpdateDailyReport() { //获取选中数据
             var checkStatus = table.checkStatus('customerTable')
@@ -302,7 +301,7 @@
                 });
                 layer.close(index);
             });
-        };
+        }
 
         $.ajax({
             url: '${ctx.path}/internal/customer/getActiveUsers',
@@ -317,10 +316,11 @@
                 form.render("select");
             }
         });
+
         // 编辑表格获得表格数据
         function editCustomer(data) {
             okLayer.open("编辑", "/internal/customer/toCustomersAdd", "90%", "90%", function (layero) {
-                window[layero.find("iframe")[0]["name"]].initForm(data);
+                window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
             },function(){
                 if(sign){
                     active['reload'].call(this);
@@ -364,8 +364,7 @@
                 });
                 layer.close(index);
             });
-        };
-
+        }
 
         // 添加客户
         function toAddCustomer(){
@@ -375,7 +374,7 @@
                     sign = false;
                 }
             });
-        };
+        }
 
         //更新关键字状态
         window.changeCustomerKeywordStatus = function changeCustomerKeywordStatus(customerUuid, status) {
