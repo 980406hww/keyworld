@@ -105,7 +105,7 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
 <script>
-    var sign= false;
+    var sign = false;
     // 进度条加载提示
     NProgress.start();
     window.onload = function () {
@@ -168,7 +168,7 @@
                     break;
             }
         });
-        
+
         table.on('toolbar(tableFilter)',function(obj){
             var data = obj.data,event = obj.event;
            switch (event) {
@@ -181,12 +181,11 @@
                case 'addUser':
                    toAddCustomer();
                    break
-           } 
+           }
         });
 
         var active = {
             reload: function () {
-
                 table.reload('customerTable', {
                     where: $.parseJSON(formToJson($("#searchForm").serialize())),
                     page: {

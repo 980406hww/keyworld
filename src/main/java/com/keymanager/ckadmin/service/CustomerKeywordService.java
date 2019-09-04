@@ -13,7 +13,7 @@ import java.util.Map;
  * @author lhc
  * @since 2019-08-16
  */
-public interface CustomerKeywordInterface extends IService<CustomerKeyword> {
+public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
 
     List<Map> getCustomerKeywordsCount(List<Long> customerUuids, String terminalType, String entryType);
@@ -21,4 +21,6 @@ public interface CustomerKeywordInterface extends IService<CustomerKeyword> {
     void changeCustomerKeywordStatus(String terminalType, String entryType, Long customerUuid, Integer status);
 
     void deleteCustomerKeywords(long customerUuid);
+
+    int getCustomerKeywordCount(String terminalType, String entryType, long customerUuid);
 }

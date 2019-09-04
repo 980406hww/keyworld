@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.keymanager.ckadmin.dao.AlgorithmTestPlanDao2">
+<mapper namespace="com.keymanager.ckadmin.dao.AlgorithmTestPlanDao">
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.keymanager.ckadmin.entity.AlgorithmTestPlan">
-        <id column="fUuid" property="uuid" />
-        <result column="fAlgorithmTestPlanName" property="algorithmTestPlanName" />
-        <result column="fOperationCombineName" property="operationCombineName" />
-        <result column="fTerminalType" property="terminalType" />
-        <result column="fSearchEngine" property="searchEngine" />
-        <result column="fMachineGroup" property="machineGroup" />
-        <result column="fTestIntervalDay" property="testIntervalDay" />
-        <result column="fTestKeywordCount" property="testKeywordCount" />
-        <result column="fTestkeywordRankBegin" property="testkeywordRankBegin" />
-        <result column="fTestkeywordRankEnd" property="testkeywordRankEnd" />
-        <result column="fOptimizePlanCount" property="optimizePlanCount" />
-        <result column="fStatus" property="status" />
-        <result column="fExecuteQueryTime" property="executeQueryTime" />
-        <result column="fExcuteStatus" property="excuteStatus" />
-        <result column="fCreateBy" property="createBy" />
-        <result column="fCreateTime" property="createTime" />
-        <result column="fUpdateTime" property="updateTime" />
+        <id column="fUuid" property="uuid"/>
+        <result column="fAlgorithmTestPlanName" property="algorithmTestPlanName"/>
+        <result column="fOperationCombineName" property="operationCombineName"/>
+        <result column="fTerminalType" property="terminalType"/>
+        <result column="fSearchEngine" property="searchEngine"/>
+        <result column="fMachineGroup" property="machineGroup"/>
+        <result column="fTestIntervalDay" property="testIntervalDay"/>
+        <result column="fTestKeywordCount" property="testKeywordCount"/>
+        <result column="fTestkeywordRankBegin" property="testkeywordRankBegin"/>
+        <result column="fTestkeywordRankEnd" property="testkeywordRankEnd"/>
+        <result column="fOptimizePlanCount" property="optimizePlanCount"/>
+        <result column="fStatus" property="status"/>
+        <result column="fExecuteQueryTime" property="executeQueryTime"/>
+        <result column="fExcuteStatus" property="excuteStatus"/>
+        <result column="fCreateBy" property="createBy"/>
+        <result column="fCreateTime" property="createTime"/>
+        <result column="fUpdateTime" property="updateTime"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -63,11 +63,13 @@
     </select>
 
     <select id="selectOneAvailableAlgorithmTestPlan" resultType="com.keymanager.ckadmin.entity.AlgorithmTestPlan">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM t_algorithm_test_plan atp
         WHERE atp.fstatus = 1
-        AND  (atp.fExcuteStatus= 0 AND (atp.fExecuteQueryTime IS NULL OR atp.fExecuteQueryTime &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL fTestIntervalDay-1 DAY))
-            OR(atp.fExcuteStatus = 1 AND atp.fExecuteQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE))
+        AND (atp.fExcuteStatus= 0 AND (atp.fExecuteQueryTime IS NULL OR atp.fExecuteQueryTime &lt;=
+        DATE_SUB(CURRENT_DATE(), INTERVAL fTestIntervalDay-1 DAY))
+        OR(atp.fExcuteStatus = 1 AND atp.fExecuteQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE))
         )
         LIMIT 1
     </select>

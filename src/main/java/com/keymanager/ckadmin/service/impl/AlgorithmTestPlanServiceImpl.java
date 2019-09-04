@@ -4,9 +4,9 @@ package com.keymanager.ckadmin.service.impl;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.AlgorithmTestCriteria;
-import com.keymanager.ckadmin.dao.AlgorithmTestPlanDao2;
+import com.keymanager.ckadmin.dao.AlgorithmTestPlanDao;
 import com.keymanager.ckadmin.entity.AlgorithmTestPlan;
-import com.keymanager.ckadmin.service.AlgorithmTestPlanInterface;
+import com.keymanager.ckadmin.service.AlgorithmTestPlanService;
 
 import java.util.Date;
 import java.util.List;
@@ -23,15 +23,15 @@ import org.springframework.stereotype.Service;
  * @since 2019-08-16
  */
 @Service("algorithmTestPlanService2")
-public class AlgorithmTestPlanService2 extends ServiceImpl<AlgorithmTestPlanDao2, AlgorithmTestPlan> implements
-        AlgorithmTestPlanInterface {
+public class AlgorithmTestPlanServiceImpl extends ServiceImpl<AlgorithmTestPlanDao, AlgorithmTestPlan> implements
+        AlgorithmTestPlanService {
 
     @Resource(name = "algorithmTestPlanDao2")
-    private AlgorithmTestPlanDao2 algorithmTestPlanDao2;
+    private AlgorithmTestPlanDao algorithmTestPlanDao;
 
     @Override
     public Page<AlgorithmTestPlan> searchAlgorithmTestPlans(Page<AlgorithmTestPlan> page, AlgorithmTestCriteria algorithmTestCriteria) {
-        List<AlgorithmTestPlan> algorithmTestPlanList = algorithmTestPlanDao2.searchAlgorithmTestPlans(page, algorithmTestCriteria);
+        List<AlgorithmTestPlan> algorithmTestPlanList = algorithmTestPlanDao.searchAlgorithmTestPlans(page, algorithmTestCriteria);
         page.setRecords(algorithmTestPlanList);
         return page;
     }
@@ -40,10 +40,10 @@ public class AlgorithmTestPlanService2 extends ServiceImpl<AlgorithmTestPlanDao2
     public void saveAlgorithmTestPlan(AlgorithmTestPlan algorithmTestPlan) {
         if (algorithmTestPlan.getUuid() == null) {
             algorithmTestPlan.setStatus(1);
-            algorithmTestPlanDao2.insert(algorithmTestPlan);
+            algorithmTestPlanDao.insert(algorithmTestPlan);
         } else {
             algorithmTestPlan.setUpdateTime(new Date());
-            algorithmTestPlanDao2.updateById(algorithmTestPlan);
+            algorithmTestPlanDao.updateById(algorithmTestPlan);
         }
     }
 }

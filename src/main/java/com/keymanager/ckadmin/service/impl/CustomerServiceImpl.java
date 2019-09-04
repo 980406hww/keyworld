@@ -4,13 +4,12 @@ package com.keymanager.ckadmin.service.impl;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
-import com.keymanager.ckadmin.dao.CustomerDao2;
+import com.keymanager.ckadmin.dao.CustomerDao;
 import com.keymanager.ckadmin.entity.Customer;
-import com.keymanager.ckadmin.service.CustomerInterface;
-import com.keymanager.ckadmin.service.CustomerKeywordInterface;
+import com.keymanager.ckadmin.service.CustomerService;
+import com.keymanager.ckadmin.service.CustomerKeywordService;
 
 import java.math.BigDecimal;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,31 +29,31 @@ import org.springframework.stereotype.Service;
  * @since 2019-08-16
  */
 @Service("customerService2")
-public class CustomerService2 extends ServiceImpl<CustomerDao2, Customer> implements
-        CustomerInterface {
+public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> implements
+        CustomerService {
 
     @Resource(name = "customerDao2")
-    private CustomerDao2 customerDao2;
+    private CustomerDao customerDao;
 
     @Resource(name = "customerKeywordService2")
-    private CustomerKeywordInterface customerKeywordService2;
+    private CustomerKeywordService customerKeywordService;
 
-   /* @Override
+/*    @Override
     public Page<AlgorithmTestPlan> searchAlgorithmTestPlans(Page<AlgorithmTestPlan> page, AlgorithmTestCriteria algorithmTestCriteria) {
-        List<AlgorithmTestPlan> algorithmTestPlanList = algorithmTestPlanDao2.searchAlgorithmTestPlans(page,algorithmTestCriteria);
+        List<AlgorithmTestPlan> algorithmTestPlanList = algorithmTestPlanDao.searchAlgorithmTestPlans(page,algorithmTestCriteria);
         page.setRecords(algorithmTestPlanList);
         return page;
     }*/
 
     @Override
     public Page<Customer> searchCustomers(Page<Customer> page, CustomerCriteria customerCriteria) {
-        List<Customer> customerList = customerDao2.searchCustomers(page, customerCriteria);
+        List<Customer> customerList = customerDao.searchCustomers(page, customerCriteria);
         if (CollectionUtils.isNotEmpty(customerList)) {
             List<Long> customerUuids = new ArrayList<Long>();
             for (Customer customer : customerList) {
                 customerUuids.add(customer.getUuid());
             }
-            List<Map> customerKeywordCountMap = customerKeywordService2.getCustomerKeywordsCount(customerUuids, customerCriteria.getTerminalType(),customerCriteria.getEntryType());
+            List<Map> customerKeywordCountMap = customerKeywordService.getCustomerKeywordsCount(customerUuids, customerCriteria.getTerminalType(), customerCriteria.getEntryType());
             Map<Integer, Map> customerUuidKeywordCountMap = new HashMap<Integer, Map>();
             for (Map map : customerKeywordCountMap) {
                 customerUuidKeywordCountMap.put((Integer) map.get("customerUuid"), map);
@@ -92,18 +91,18 @@ public class CustomerService2 extends ServiceImpl<CustomerDao2, Customer> implem
         } else {//添加
             customer.setUpdateTime(new Date());
             customer.setLoginName(loginName);
-            customerDao2.insert(customer);
+            customerDao.insert(customer);
         }
     }
 
     @Override
     public void deleteCustomer(long uuid) {
-        customerDao2.deleteById(uuid);
-        customerKeywordService2.deleteCustomerKeywords(uuid);
+        customerDao.deleteById(uuid);
+        customerKeywordService.deleteCustomerKeywords(uuid);
     }
 
     private void updateCustomer(Customer customer, String loginName) {
-        Customer oldCustomer = customerDao2.selectById(customer.getUuid());
+        Customer oldCustomer = customerDao.selectById(customer.getUuid());
         if (oldCustomer != null) {
             if (oldCustomer.getLoginName().equals(loginName)) {
                 oldCustomer.setQq(customer.getQq());
@@ -121,9 +120,10 @@ public class CustomerService2 extends ServiceImpl<CustomerDao2, Customer> implem
             oldCustomer.setLoginName(customer.getLoginName());
             oldCustomer.setEntryType(customer.getEntryType());
             oldCustomer.setUpdateTime(new Date());
-            customerDao2.updateById(oldCustomer);
+            customerDao.updateById(oldCustomer);
         }
     }
+
     @Override
     public void deleteAll(List<Integer> uuids) {
         for (Integer uuid : uuids) {
@@ -133,14 +133,30 @@ public class CustomerService2 extends ServiceImpl<CustomerDao2, Customer> implem
 
     @Override
     public void updateCustomerDailyReportIdentify(List<Integer> uuids) {
-        customerDao2.updateCustomerDailyReportIdentify(uuids);
+        customerDao.updateCustomerDailyReportIdentify(uuids);
     }
 
     @Override
     public void changeCustomerDailyReportIdentify(long uuid, boolean identify) {
-        Customer customer = customerDao2.selectById(uuid);
+        Customer customer = customerDao.selectById(uuid);
         customer.setDailyReportIdentify(identify);
         customer.setUpdateTime(new Date());
-        customerDao2.updateById(customer);
+        customerDao.updateById(customer);
+    }
+
+    @Override
+    public Customer getCustomerWithKeywordCount(String terminalType, String entryType, long customerUuid, String loginName) {
+        Customer customer = customerDao.selectById(customerUuid);
+        if (customer != null) {
+            if (!customer.getLoginName().equals(loginName)) {
+                customer.setEmail(null);
+                customer.setQq(null);
+                customer.setTelphone(null);
+                customer.setSaleRemark(null);
+            }
+            customer.setKeywordCount(customerKeywordService.getCustomerKeywordCount(terminalType, entryType, customerUuid));
+        }
+        return customer;
+
     }
 }

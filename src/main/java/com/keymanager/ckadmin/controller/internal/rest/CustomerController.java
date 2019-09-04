@@ -5,15 +5,17 @@ import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.UserInfo;
-import com.keymanager.ckadmin.service.CustomerInterface;
-import com.keymanager.ckadmin.service.UserInfoInterface;
+import com.keymanager.ckadmin.service.CustomerService;
+import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.util.TerminalTypeMapping;
+
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,10 +40,10 @@ public class CustomerController {
     private Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
     @Resource(name = "customerService2")
-    private CustomerInterface customerService2;
+    private CustomerService customerService;
 
-    @Resource(name = "userInfoSerice2")
-    private UserInfoInterface userInfoService2;
+    @Resource(name = "userInfoService2")
+    private UserInfoService userInfoService;
 
     @RequiresPermissions("/internal/customer/searchCustomers")
     @RequestMapping(value = "/toCustomers", method = RequestMethod.GET)
@@ -54,7 +56,7 @@ public class CustomerController {
     @RequiresPermissions("/internal/customer/searchCustomers")
     @RequestMapping(value = "/getCustomers")
     public ResultBean getAlgorithmTestPlans(HttpServletRequest request,
-            @RequestBody CustomerCriteria customerCriteria) {
+                                            @RequestBody CustomerCriteria customerCriteria) {
         HttpSession session = request.getSession();
         String loginName = (String) session.getAttribute("username");
         String entryType = (String) session.getAttribute("entryType");
@@ -62,7 +64,7 @@ public class CustomerController {
         customerCriteria.setEntryType(entryType);
         customerCriteria.setTerminalType(terminalType);
         Page<Customer> page = new Page(customerCriteria.getPage(), customerCriteria.getLimit());
-        page = customerService2.searchCustomers(page, customerCriteria);
+        page = customerService.searchCustomers(page, customerCriteria);
         List<Customer> customers = page.getRecords();
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(0);
@@ -75,7 +77,7 @@ public class CustomerController {
 
     @RequestMapping("/getActiveUsers")
     public List<UserInfo> getActiveUsers() {
-        List<UserInfo> activeUsers = userInfoService2.findActiveUsers();
+        List<UserInfo> activeUsers = userInfoService.findActiveUsers();
         return activeUsers;
     }
 
@@ -86,6 +88,26 @@ public class CustomerController {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("customers/customerAdd");
         return mv;
+    }
+
+    //获得用户信息
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @RequestMapping(value = "/getCustomersMsgById/{uuid}", method = RequestMethod.GET)
+    public ResultBean toCustomersAdd(@PathVariable Long uuid, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean();
+        HttpSession session = request.getSession();
+        String entryType = (String) session.getAttribute("entryType");
+        String loginName = (String) session.getAttribute("username");
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        Customer customer = customerService.getCustomerWithKeywordCount(terminalType, entryType, uuid, loginName);
+        if (customer != null) {
+            resultBean.setCode(200);
+            resultBean.setData(customer);
+            return resultBean;
+        }
+        resultBean.setCode(400);
+        resultBean.setMsg("未找到数据，或出现系统异常");
+        return resultBean;
     }
 
     //添加用户
@@ -102,7 +124,7 @@ public class CustomerController {
         String loginName = (String) session.getAttribute("username");
         String entryType = (String) session.getAttribute("entryType");
         customer.setEntryType(entryType);
-        customerService2.saveCustomer(customer, loginName);
+        customerService.saveCustomer(customer, loginName);
         resultBean.setMsg("添加成功");
         return resultBean;
     }
@@ -113,7 +135,7 @@ public class CustomerController {
     public ResultBean deleteCustomers(@RequestBody Map<String, Object> requestMap) {
         try {
             List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
-            customerService2.deleteAll(uuids);
+            customerService.deleteAll(uuids);
             return new ResultBean(200, "删除成功");
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -123,13 +145,16 @@ public class CustomerController {
 
     /**
      * 更新客户日报表
+     *
+     * @param requestMap
+     * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @RequestMapping(value = "/updateCustomerDailyReportIdentify2", method = RequestMethod.POST)
     public ResultBean updateCustomerDailyReportIdentify(@RequestBody Map requestMap) {
         try {
             List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
-            customerService2.updateCustomerDailyReportIdentify(uuids);
+            customerService.updateCustomerDailyReportIdentify(uuids);
             return new ResultBean(200, "更新成功");
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -139,6 +164,9 @@ public class CustomerController {
 
     /**
      * 改变客户是否产生日报表标志位值
+     *
+     * @param requestMap
+     * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @RequestMapping(value = "/changeCustomerDailyReportIdentify2", method = RequestMethod.POST)
@@ -146,7 +174,7 @@ public class CustomerController {
         try {
             long uuid = Long.valueOf((String) requestMap.get("customerUuid"));
             boolean identify = Boolean.valueOf((String) requestMap.get("identify"));
-            customerService2.changeCustomerDailyReportIdentify(uuid, identify);
+            customerService.changeCustomerDailyReportIdentify(uuid, identify);
             return new ResultBean(200, "更新成功");
         } catch (NumberFormatException e) {
             logger.error(e.getMessage());

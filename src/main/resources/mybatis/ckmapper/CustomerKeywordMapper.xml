@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.keymanager.ckadmin.dao.CustomerKeywordDao2">
+<mapper namespace="com.keymanager.ckadmin.dao.CustomerKeywordDao">
 
     <select id="getCustomerKeywordsCount" resultType="java.util.Map">
-        SELECT ck.fCustomerUuid as 'customerUuid', COUNT(1) as 'totalCount', SUM(IF(ck.fStatus = 1, 1, 0)) AS 'activeCount'
+        SELECT ck.fCustomerUuid as 'customerUuid', COUNT(1) as 'totalCount', SUM(IF(ck.fStatus = 1, 1, 0)) AS
+        'activeCount'
         FROM t_customer_keyword ck
         WHERE ck.fTerminalType = #{terminalType}
         AND ck.fType = #{entryType}
@@ -11,7 +12,7 @@
         <foreach item="item" index="index" collection="customerUuids" open="(" separator="," close=")">
             #{item}
         </foreach>
-         GROUP BY ck.fCustomerUuid
+        GROUP BY ck.fCustomerUuid
     </select>
 
     <update id="changeCustomerKeywordStatus">
@@ -24,4 +25,8 @@
     <delete id="deleteCustomerKeywordsByCustomerUuid">
         delete from t_customer_keyword where fCustomerUuid = #{customerUuid}
     </delete>
+
+    <select id="getCustomerKeywordCount" resultType="int">
+        SELECT COUNT(1) FROM t_customer_keyword ck WHERE ck.fType = #{entryType} and ck.fTerminalType = #{terminalType} and ck.fCustomerUuid = #{customerUuid}
+    </select>
 </mapper>

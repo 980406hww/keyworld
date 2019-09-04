@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.entity.Customer;
+
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
  * @author lhc
  * @since 2019-08-16
  */
-public interface CustomerInterface extends IService<Customer> {
+public interface CustomerService extends IService<Customer> {
 
 
     Page<Customer> searchCustomers(Page<Customer> page,
@@ -26,8 +27,9 @@ public interface CustomerInterface extends IService<Customer> {
 
     void deleteAll(List<Integer> uuids);
 
-
     void updateCustomerDailyReportIdentify(List<Integer> uuids);
 
     void changeCustomerDailyReportIdentify(long uuid, boolean identify);
+
+    Customer getCustomerWithKeywordCount(String terminalType, String entryType, long customerUuid, String loginName);
 }

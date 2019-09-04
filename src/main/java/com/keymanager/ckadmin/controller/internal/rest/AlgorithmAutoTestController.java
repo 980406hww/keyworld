@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.AlgorithmTestCriteria;
 import com.keymanager.ckadmin.entity.AlgorithmTestPlan;
-import com.keymanager.ckadmin.service.AlgorithmTestPlanInterface;
-import com.keymanager.ckadmin.service.ConfigInterface;
+import com.keymanager.ckadmin.service.AlgorithmTestPlanService;
+import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.util.TerminalTypeMapping;
 
 import java.util.HashMap;
@@ -38,10 +38,10 @@ public class AlgorithmAutoTestController {
             AlgorithmAutoTestController.class);
 
     @Resource(name = "algorithmTestPlanService2")
-    private AlgorithmTestPlanInterface algorithmTestPlanService2;
+    private AlgorithmTestPlanService algorithmTestPlanService;
 
     @Resource(name = "configService2")
-    private ConfigInterface configService2;
+    private ConfigService configService;
 
     @RequiresPermissions("/internal/algorithmAutoTest/searchAlgorithmTestPlans")
     @RequestMapping(value = "/toAlgorithmTestPlans", method = RequestMethod.GET)
@@ -67,7 +67,7 @@ public class AlgorithmAutoTestController {
         Map<String, Object> mapData = new HashMap<>();
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         mapData.put("terminalType", terminalType);
-        mapData.put("searchEngineMap", configService2.getSearchEngineMap(terminalType));
+        mapData.put("searchEngineMap", configService.getSearchEngineMap(terminalType));
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
         resultBean.setData(mapData);
@@ -88,7 +88,7 @@ public class AlgorithmAutoTestController {
         HttpSession session = request.getSession();
         String loginName = (String) session.getAttribute("username");
         algorithmTestPlan.setCreateBy(loginName);
-        algorithmTestPlanService2.saveAlgorithmTestPlan(algorithmTestPlan);
+        algorithmTestPlanService.saveAlgorithmTestPlan(algorithmTestPlan);
         return resultBean;
     }
 
@@ -96,7 +96,7 @@ public class AlgorithmAutoTestController {
     @RequestMapping(value = "getAlgorithmTestPlans")
     public ResultBean getAlgorithmTestPlans(@RequestBody AlgorithmTestCriteria algorithmTestCriteria) {
         Page<AlgorithmTestPlan> page = new Page(algorithmTestCriteria.getPage(), algorithmTestCriteria.getLimit());
-        page = algorithmTestPlanService2.searchAlgorithmTestPlans(page, algorithmTestCriteria);
+        page = algorithmTestPlanService.searchAlgorithmTestPlans(page, algorithmTestCriteria);
         List<AlgorithmTestPlan> algorithmTestPlans = page.getRecords();
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(0);
