@@ -18,7 +18,6 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -108,17 +107,6 @@ public class CustomerController {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/customer/delCustomer")
-    @RequestMapping(value = "/delCustomer2/{uuid}", method = RequestMethod.GET)
-    public ResultBean delCustomer(@PathVariable("uuid") Long uuid) {
-        try {
-            customerService2.deleteCustomer(uuid);
-            return new ResultBean(200, "删除成功");
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new ResultBean(400, "删除失败");
-        }
-    }
 
     @RequiresPermissions("/internal/customer/deleteCustomers")
     @RequestMapping(value = "/deleteCustomers2", method = RequestMethod.POST)
@@ -135,8 +123,6 @@ public class CustomerController {
 
     /**
      * 更新客户日报表
-     * @param requestMap
-     * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @RequestMapping(value = "/updateCustomerDailyReportIdentify2", method = RequestMethod.POST)
@@ -153,8 +139,6 @@ public class CustomerController {
 
     /**
      * 改变客户是否产生日报表标志位值
-     * @param requestMap
-     * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @RequestMapping(value = "/changeCustomerDailyReportIdentify2", method = RequestMethod.POST)
