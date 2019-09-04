@@ -1,12 +1,14 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.UserInfo;
 import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.UserInfoService;
+import com.keymanager.ckadmin.util.ReflectUtils;
 import com.keymanager.util.TerminalTypeMapping;
 
 import java.util.List;
@@ -58,21 +60,34 @@ public class CustomerController {
     @RequestMapping(value = "/getCustomers")
     public ResultBean getAlgorithmTestPlans(HttpServletRequest request,
                                             @RequestBody CustomerCriteria customerCriteria) {
-        HttpSession session = request.getSession();
-        String loginName = (String) session.getAttribute("username");
-        String entryType = (String) session.getAttribute("entryType");
-        String terminalType = TerminalTypeMapping.getTerminalType(request);
-        customerCriteria.setEntryType(entryType);
-        customerCriteria.setTerminalType(terminalType);
-        Page<Customer> page = new Page(customerCriteria.getPage(), customerCriteria.getLimit());
-        page = customerService.searchCustomers(page, customerCriteria);
-        List<Customer> customers = page.getRecords();
         ResultBean resultBean = new ResultBean();
-        resultBean.setCode(0);
-        resultBean.setEntryType(entryType);
-        resultBean.setCount(page.getTotal());
-        resultBean.setMsg("");
-        resultBean.setData(customers);
+        try {
+            HttpSession session = request.getSession();
+            String entryType = (String) session.getAttribute("entryType");
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            customerCriteria.setEntryType(entryType);
+            customerCriteria.setTerminalType(terminalType);
+            Page<Customer> page = new Page(customerCriteria.getPage(), customerCriteria.getLimit());
+            String orderByField = ReflectUtils.getTableFieldValue(Customer.class, customerCriteria.getOrderBy());
+            if (StringUtils.isNotEmpty(orderByField)){
+                page.setOrderByField(orderByField);
+            }
+            if (customerCriteria.getOrderMode() != null && customerCriteria.getOrderMode() == 0){
+                page.setAsc(false);
+            }
+            page = customerService.searchCustomers(page, customerCriteria);
+            List<Customer> customers = page.getRecords();
+            resultBean.setCode(0);
+            resultBean.setEntryType(entryType);
+            resultBean.setCount(page.getTotal());
+            resultBean.setMsg("");
+            resultBean.setData(customers);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
         return resultBean;
     }
 
@@ -96,18 +111,26 @@ public class CustomerController {
     @RequestMapping(value = "/getCustomersMsgById/{uuid}", method = RequestMethod.GET)
     public ResultBean toCustomersAdd(@PathVariable Long uuid, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
-        HttpSession session = request.getSession();
-        String entryType = (String) session.getAttribute("entryType");
-        String loginName = (String) session.getAttribute("username");
-        String terminalType = TerminalTypeMapping.getTerminalType(request);
-        Customer customer = customerService.getCustomerWithKeywordCount(terminalType, entryType, uuid, loginName);
-        if (customer != null) {
-            resultBean.setCode(200);
-            resultBean.setData(customer);
+        try {
+            HttpSession session = request.getSession();
+            String entryType = (String) session.getAttribute("entryType");
+            String loginName = (String) session.getAttribute("username");
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            Customer customer = customerService.getCustomerWithKeywordCount(terminalType, entryType, uuid, loginName);
+            if (customer != null) {
+                resultBean.setCode(200);
+                resultBean.setData(customer);
+                return resultBean;
+            }
+            resultBean.setCode(400);
+            resultBean.setMsg("未找到数据，或出现系统异常");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
             return resultBean;
         }
-        resultBean.setCode(400);
-        resultBean.setMsg("未找到数据，或出现系统异常");
+
         return resultBean;
     }
 
@@ -116,17 +139,24 @@ public class CustomerController {
     @RequestMapping(value = "/postCustomersAdd", method = RequestMethod.POST)
     public ResultBean postCustomersAdd(@Valid Customer customer, BindingResult result, HttpSession session) {
         ResultBean resultBean = new ResultBean();
-        resultBean.setCode(200);
-        if (result.hasFieldErrors()) {
+        try {
+            resultBean.setCode(200);
+            if (result.hasFieldErrors()) {
+                resultBean.setCode(400);
+                resultBean.setMsg("数据校验失败");
+                return resultBean;
+            }
+            String loginName = (String) session.getAttribute("username");
+            String entryType = (String) session.getAttribute("entryType");
+            customer.setEntryType(entryType);
+            customerService.saveCustomer(customer, loginName);
+            resultBean.setMsg("添加成功");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("数据校验失败");
+            resultBean.setMsg("未知错误");
             return resultBean;
         }
-        String loginName = (String) session.getAttribute("username");
-        String entryType = (String) session.getAttribute("entryType");
-        customer.setEntryType(entryType);
-        customerService.saveCustomer(customer, loginName);
-        resultBean.setMsg("添加成功");
         return resultBean;
     }
 

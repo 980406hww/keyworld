@@ -52,7 +52,6 @@
         <if test="customerCriteria.remark != null and customerCriteria.remark != ''">AND c.fRemark like LIKE
             CONCAT(#{customerCriteria.remark},'%')
         </if>
-        ORDER BY c.fUpdateTime DESC
     </select>
 
     <select id="getActiveCustomerSimpleInfo" resultType="com.keymanager.ckadmin.entity.Customer">

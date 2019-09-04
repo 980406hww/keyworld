@@ -8,8 +8,11 @@ package com.keymanager.ckadmin.criteria.base;
  * @Version 1.0
  */
 public class BaseCriteria {
+
     private Integer page;
     private Integer limit;
+    private String orderBy;
+    private Integer orderMode = 1;
 
     public Integer getPage() {
         return page;
@@ -25,5 +28,21 @@ public class BaseCriteria {
 
     public void setLimit(Integer limit) {
         this.limit = limit;
+    }
+
+    public String getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(String orderBy) {
+        this.orderBy = orderBy;
+    }
+
+    public Integer getOrderMode() {
+        return orderMode;
+    }
+
+    public void setOrderMode(Integer orderMode) {
+        this.orderMode = orderMode;
     }
 }
