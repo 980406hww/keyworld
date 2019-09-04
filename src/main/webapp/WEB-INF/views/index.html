@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,10 +36,10 @@
                     <@shiro.principal property="name"/>
                 </a>
                 <dl id="userInfo" class="layui-nav-child">
-                    <dd><a lay-id="u-1" href="javascript:;" >个人中心<span
+                    <dd><a lay-id="u-1" href="javascript:;">个人中心<span
                             class="layui-badge-dot"></span></a></dd>
-                    <dd><a lay-id="u-2" href="javascript:;" >基本资料</a></dd>
-                    <dd><a lay-id="u-3" href="javascript:;" >安全设置</a></dd>
+                    <dd><a lay-id="u-2" href="javascript:;">基本资料</a></dd>
+                    <dd><a lay-id="u-3" href="javascript:;">安全设置</a></dd>
                     <dd>
                         <hr/>
                     </dd>
@@ -78,7 +77,8 @@
         <div class="layui-tab ok-tab" id="mainnav" lay-filter="ok-tab" lay-allowClose="true" lay-unauto>
             <!--<div class="okadmin-pagetabs"></div>-->
             <div data-id="left" id="okLeftMove" class="layui-icon okadmin-tabs-control layui-icon-prev okNavMove"></div>
-            <div data-id="right" id="okRightMove" class="layui-icon okadmin-tabs-control layui-icon-next okNavMove"></div>
+            <div data-id="right" id="okRightMove"
+                 class="layui-icon okadmin-tabs-control layui-icon-next okNavMove"></div>
             <div class="layui-icon okadmin-tabs-control ok-right-nav-menu" style="right: 0;">
                 <ul class="okadmin-nav">
                     <li class="no-line okadmin-nav-item">
@@ -101,29 +101,18 @@
 
             <div class="layui-tab-content ok-tab-content">
                 <div class="layui-tab-item layui-show">
-                    <iframe src='${ctx.basePath}/internal/layer/home.html' frameborder="0" scrolling="yes" width="100%" height="100%"></iframe>
+                    <iframe src='${ctx.basePath}/internal/layer/home.html' frameborder="0" scrolling="yes" width="100%"
+                            height="100%"></iframe>
                 </div>
             </div>
         </div>
     </div>
 
 </div>
-<form action="/logout" method="post" id="logoutForm">
 
-</form>
-<div class="yy"></div>
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/js/okadmin.js"></script>
 
-<script>
-    layui.use([ 'jquery',], function () {
-        var $ = layui.jquery;
-        $("#lout").click(function(){
-            document.getElementById('test_form');
-            $("#logoutForm").submit();
-        })
-    });
-</script>
 </body>
 </html>

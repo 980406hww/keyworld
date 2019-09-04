@@ -58,6 +58,7 @@
 /*其他子页面*/
 /*子页面面包屑导航样式*/
 .ok-body-breadcrumb {
+    margin-left: 10px;
     position: relative;
     line-height: 39px;
     height: 32px;

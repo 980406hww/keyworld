@@ -146,7 +146,8 @@
                     html += res.data.searchEngineMap[item];
                     html += "</option>";
                 }
-                document.getElementById('searchEngine').innerHTML = html;
+                $("#searchEngine").empty();
+                $("#searchEngine").append(html);
                 form.render('select');
             }
         });
