@@ -21,7 +21,7 @@ public class CustomerKeywordAndUrlCvsExportWriter {
 
     private static String getTemplatePath() {
         String SERVLET_CONTEXT_PATH = Utils.getWebRootPath();
-        String path = SERVLET_CONTEXT_PATH + "keyword_url.csv";
+        String path = SERVLET_CONTEXT_PATH + "/" + "keyword_url.csv";
         path = path.replaceAll("%20", " ");
         return path;
     }

@@ -34,7 +34,7 @@ public class CustomerKeywordInfoExcelWriter {
 		String SERVLET_CONTEXT_PATH = Utils.getWebRootPath();
 
 		// 这里 SERVLET_CONTEXT_PATH 就是WebRoot的路径
-		String path = SERVLET_CONTEXT_PATH + fileName;
+		String path = SERVLET_CONTEXT_PATH + "/" + fileName;
 		path = path.replaceAll("%20", " ");
 		return new File(path); 
 	}

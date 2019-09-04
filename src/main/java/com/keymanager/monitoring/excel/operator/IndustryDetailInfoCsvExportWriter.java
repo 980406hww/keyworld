@@ -21,7 +21,7 @@ public class IndustryDetailInfoCsvExportWriter {
 
     private static String getTemplatePath() {
         String SERVLET_CONTEXT_PATH = Utils.getWebRootPath();
-        String path = SERVLET_CONTEXT_PATH + "industry_detail_info.csv";
+        String path = SERVLET_CONTEXT_PATH + "/" + "industry_detail_info.csv";
         path = path.replaceAll("%20", " ");
         return path;
     }
