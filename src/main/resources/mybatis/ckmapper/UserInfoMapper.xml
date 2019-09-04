@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.keymanager.ckadmin.dao.UserInfoDao2">
+<mapper namespace="com.keymanager.ckadmin.dao.UserInfoDao">
 
     <!-- 通用查询结果列-->
     <sql id="colID">
@@ -17,7 +17,6 @@
         u.fUpdateTime AS 'updateTime',
         u.fCreateTime AS 'createTime'
     </sql>
-
 
 
     <select id="findActiveUsers" resultType="com.keymanager.ckadmin.entity.UserInfo">

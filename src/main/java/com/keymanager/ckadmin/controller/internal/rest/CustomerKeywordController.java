@@ -1,7 +1,7 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.keymanager.ckadmin.common.result.ResultBean;
-import com.keymanager.ckadmin.service.CustomerKeywordInterface;
+import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -29,7 +29,7 @@ public class CustomerKeywordController {
     private static Logger logger = LoggerFactory.getLogger(CustomerKeywordController.class);
 
     @Resource(name = "customerKeywordService2")
-    private CustomerKeywordInterface customerKeywordService2;
+    private CustomerKeywordService customerKeywordService;
 
     @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordStatus")
     @RequestMapping(value = "/changeCustomerKeywordStatus2", method = RequestMethod.POST)
@@ -39,7 +39,7 @@ public class CustomerKeywordController {
             String entryType = (String) request.getSession().getAttribute("entryType");
             String customerUuid = (String) requestMap.get("customerUuid");
             Integer status = (Integer) requestMap.get("status");
-            customerKeywordService2.changeCustomerKeywordStatus(terminalType, entryType, Long.parseLong(customerUuid), status);
+            customerKeywordService.changeCustomerKeywordStatus(terminalType, entryType, Long.parseLong(customerUuid), status);
             return new ResultBean(200,"success");
         } catch (Exception e) {
             logger.error(e.getMessage());

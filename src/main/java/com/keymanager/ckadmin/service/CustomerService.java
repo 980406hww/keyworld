@@ -15,7 +15,7 @@ import java.util.List;
  * @author lhc
  * @since 2019-08-16
  */
-public interface CustomerInterface extends IService<Customer> {
+public interface CustomerService extends IService<Customer> {
 
 
     Page<Customer> searchCustomers(Page<Customer> page,

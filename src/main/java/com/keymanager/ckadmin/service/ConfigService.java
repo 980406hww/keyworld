@@ -3,7 +3,7 @@ package com.keymanager.ckadmin.service;
 import com.keymanager.ckadmin.entity.Config;
 import java.util.Map;
 
-public interface ConfigInterface {
+public interface ConfigService {
 
     Map<String, String> getSearchEngineMap(String terminalType);
 

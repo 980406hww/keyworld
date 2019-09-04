@@ -1,9 +1,9 @@
 package com.keymanager.ckadmin.service.impl;
 
-import com.keymanager.ckadmin.dao.ConfigDao2;
+import com.keymanager.ckadmin.dao.ConfigDao;
 
 import com.keymanager.ckadmin.entity.Config;
-import com.keymanager.ckadmin.service.ConfigInterface;
+import com.keymanager.ckadmin.service.ConfigService;
 
 import com.keymanager.ckadmin.util.Constants;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,14 +15,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service("configService2")
-public class ConfigService2 implements ConfigInterface {
+public class ConfigServiceImpl implements ConfigService {
     @Resource(name = "configDao2")
-    private ConfigDao2 configDao2;
+    private ConfigDao configDao;
 
     @Override
     @Cacheable(value = "configList", key = "#configType + #key")
     public Config getConfig(String configType, String key) {
-        return configDao2.getConfig(configType, key);
+        return configDao.getConfig(configType, key);
     }
 
     @Override

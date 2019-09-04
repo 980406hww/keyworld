@@ -13,7 +13,7 @@ import com.keymanager.ckadmin.entity.AlgorithmTestPlan;
  * @author lhc
  * @since 2019-08-16
  */
-public interface AlgorithmTestPlanInterface extends IService<AlgorithmTestPlan> {
+public interface AlgorithmTestPlanService extends IService<AlgorithmTestPlan> {
 
     Page<AlgorithmTestPlan> searchAlgorithmTestPlans(Page<AlgorithmTestPlan> page, AlgorithmTestCriteria algorithmTestCriteria);
 

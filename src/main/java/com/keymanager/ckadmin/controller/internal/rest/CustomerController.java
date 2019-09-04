@@ -5,8 +5,8 @@ import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.UserInfo;
-import com.keymanager.ckadmin.service.CustomerInterface;
-import com.keymanager.ckadmin.service.UserInfoInterface;
+import com.keymanager.ckadmin.service.CustomerService;
+import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.util.TerminalTypeMapping;
 
 import java.util.List;
@@ -41,10 +41,10 @@ public class CustomerController {
     private Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
     @Resource(name = "customerService2")
-    private CustomerInterface customerService2;
+    private CustomerService customerService;
 
-    @Resource(name = "userInfoSerice2")
-    private UserInfoInterface userInfoService2;
+    @Resource(name = "userInfoService2")
+    private UserInfoService userInfoService;
 
     @RequiresPermissions("/internal/customer/searchCustomers")
     @RequestMapping(value = "/toCustomers", method = RequestMethod.GET)
@@ -65,7 +65,7 @@ public class CustomerController {
         customerCriteria.setEntryType(entryType);
         customerCriteria.setTerminalType(terminalType);
         Page<Customer> page = new Page(customerCriteria.getPage(), customerCriteria.getLimit());
-        page = customerService2.searchCustomers(page, customerCriteria);
+        page = customerService.searchCustomers(page, customerCriteria);
         List<Customer> customers = page.getRecords();
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(0);
@@ -78,7 +78,7 @@ public class CustomerController {
 
     @RequestMapping("/getActiveUsers")
     public List<UserInfo> getActiveUsers() {
-        List<UserInfo> activeUsers = userInfoService2.findActiveUsers();
+        List<UserInfo> activeUsers = userInfoService.findActiveUsers();
         return activeUsers;
     }
 
@@ -100,7 +100,7 @@ public class CustomerController {
         String entryType = (String) session.getAttribute("entryType");
         String loginName = (String) session.getAttribute("username");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
-        Customer customer = customerService2.getCustomerWithKeywordCount(terminalType, entryType, uuid, loginName);
+        Customer customer = customerService.getCustomerWithKeywordCount(terminalType, entryType, uuid, loginName);
         if (customer != null) {
             resultBean.setCode(200);
             resultBean.setData(customer);
@@ -125,7 +125,7 @@ public class CustomerController {
         String loginName = (String) session.getAttribute("username");
         String entryType = (String) session.getAttribute("entryType");
         customer.setEntryType(entryType);
-        customerService2.saveCustomer(customer, loginName);
+        customerService.saveCustomer(customer, loginName);
         resultBean.setMsg("添加成功");
         return resultBean;
     }
@@ -134,7 +134,7 @@ public class CustomerController {
     @RequestMapping(value = "/delCustomer2/{uuid}", method = RequestMethod.GET)
     public ResultBean delCustomer(@PathVariable("uuid") Long uuid) {
         try {
-            customerService2.deleteCustomer(uuid);
+            customerService.deleteCustomer(uuid);
             return new ResultBean(200, "删除成功");
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -147,7 +147,7 @@ public class CustomerController {
     public ResultBean deleteCustomers(@RequestBody Map<String, Object> requestMap) {
         try {
             List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
-            customerService2.deleteAll(uuids);
+            customerService.deleteAll(uuids);
             return new ResultBean(200, "删除成功");
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -166,7 +166,7 @@ public class CustomerController {
     public ResultBean updateCustomerDailyReportIdentify(@RequestBody Map requestMap) {
         try {
             List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
-            customerService2.updateCustomerDailyReportIdentify(uuids);
+            customerService.updateCustomerDailyReportIdentify(uuids);
             return new ResultBean(200, "更新成功");
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -186,7 +186,7 @@ public class CustomerController {
         try {
             long uuid = Long.valueOf((String) requestMap.get("customerUuid"));
             boolean identify = Boolean.valueOf((String) requestMap.get("identify"));
-            customerService2.changeCustomerDailyReportIdentify(uuid, identify);
+            customerService.changeCustomerDailyReportIdentify(uuid, identify);
             return new ResultBean(200, "更新成功");
         } catch (NumberFormatException e) {
             logger.error(e.getMessage());

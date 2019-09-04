@@ -6,7 +6,7 @@ import com.keymanager.ckadmin.criteria.AlgorithmTestCriteria;
 import com.keymanager.ckadmin.entity.AlgorithmTestPlan;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /**
  * <p>
@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
  * @author lhc
  * @since 2019-08-16
  */
-@Component("algorithmTestPlanDao2")
-public interface AlgorithmTestPlanDao2 extends BaseMapper<AlgorithmTestPlan> {
+@Repository("algorithmTestPlanDao2")
+public interface AlgorithmTestPlanDao extends BaseMapper<AlgorithmTestPlan> {
 
     List<AlgorithmTestPlan> searchAlgorithmTestPlans(Page<AlgorithmTestPlan> page, @Param("algorithmTestCriteria") AlgorithmTestCriteria algorithmTestCriteria);
 }

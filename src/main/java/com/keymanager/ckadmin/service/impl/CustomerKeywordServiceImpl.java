@@ -1,9 +1,9 @@
 package com.keymanager.ckadmin.service.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.ckadmin.dao.CustomerKeywordDao2;
+import com.keymanager.ckadmin.dao.CustomerKeywordDao;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
-import com.keymanager.ckadmin.service.CustomerKeywordInterface;
+import com.keymanager.ckadmin.service.CustomerKeywordService;
 
 import java.util.List;
 import java.util.Map;
@@ -14,32 +14,32 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service("customerKeywordService2")
-public class CustomerKeywordService2 extends ServiceImpl<CustomerKeywordDao2, CustomerKeyword> implements
-        CustomerKeywordInterface {
-    private static Logger logger = LoggerFactory.getLogger(CustomerKeywordService2.class);
+public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, CustomerKeyword> implements
+        CustomerKeywordService {
+    private static Logger logger = LoggerFactory.getLogger(CustomerKeywordServiceImpl.class);
 
     @Resource(name = "customerKeywordDao2")
-    private CustomerKeywordDao2 customerKeywordDao2;
+    private CustomerKeywordDao customerKeywordDao;
 
     @Override
     public List<Map> getCustomerKeywordsCount(List<Long> customerUuids, String terminalType, String entryType) {
-        return customerKeywordDao2.getCustomerKeywordsCount(customerUuids, terminalType, entryType);
+        return customerKeywordDao.getCustomerKeywordsCount(customerUuids, terminalType, entryType);
     }
 
     @Override
     public void changeCustomerKeywordStatus(String terminalType, String entryType, Long customerUuid, Integer status) {
-        customerKeywordDao2.changeCustomerKeywordStatus(terminalType, entryType, customerUuid, status);
+        customerKeywordDao.changeCustomerKeywordStatus(terminalType, entryType, customerUuid, status);
     }
 
     @Override
     public void deleteCustomerKeywords(long customerUuid) {
         logger.info("deleteCustomerKeywords:" + customerUuid);
-        customerKeywordDao2.deleteCustomerKeywordsByCustomerUuid(customerUuid);
+        customerKeywordDao.deleteCustomerKeywordsByCustomerUuid(customerUuid);
     }
 
     @Override
     public int getCustomerKeywordCount(String terminalType, String entryType, long customerUuid) {
-        return customerKeywordDao2.getCustomerKeywordCount(terminalType, entryType, customerUuid);
+        return customerKeywordDao.getCustomerKeywordCount(terminalType, entryType, customerUuid);
     }
 
 }

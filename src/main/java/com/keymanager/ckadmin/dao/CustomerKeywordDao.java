@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component("customerKeywordDao2")
+@Repository("customerKeywordDao2")
 public interface
-CustomerKeywordDao2 extends BaseMapper<com.keymanager.ckadmin.entity.CustomerKeyword> {
+CustomerKeywordDao extends BaseMapper<com.keymanager.ckadmin.entity.CustomerKeyword> {
 
     List<Map> getCustomerKeywordsCount(@Param("customerUuids") List<Long> customerUuids,
                                        @Param("terminalType") String terminalType, @Param

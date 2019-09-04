@@ -11,7 +11,7 @@ import java.util.List;
  * Resource 表数据服务层接口
  *
  */
-public interface ResourceInterface extends IService<Resource> {
+public interface ResourceService extends IService<Resource> {
 
     List<Menu> selectAuthorizationResource(String loginName, Long parentId);
 }
