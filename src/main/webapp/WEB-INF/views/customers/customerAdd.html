@@ -92,15 +92,11 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
 
-    let initData = null;
+    let uuid_ = null;
+
     function initForm(data) {
-        if (data.dailyReportIdentify) {
-            data.dailyReportIdentify = 1
-        } else {
-            data.dailyReportIdentify = 0
-        }
-        var jsonString = JSON.stringify(data);
-        initData = JSON.parse(jsonString);
+        console.log(data);
+        uuid_ = data;
     }
 
     layui.use(["form", "okLayer", "jquery"], function () {
@@ -108,9 +104,28 @@
         let okLayer = layui.okLayer;
         let $ = layui.jquery;
 
-        if (initData != null) {
-            layui.form.val("addCustomer", initData);
+        if (uuid_ != null) {
+            $.ajax({
+                url: '/internal/customer/getCustomersMsgById/' + uuid_,
+                type: 'get',
+                dataType: 'json',
+                success: function (res) {
+                    console.log(res);
+                    if (res.code == 200) {
+                        if (res.data.dailyReportIdentify) {
+                            res.data.dailyReportIdentify = 1
+                        } else {
+                            res.data.dailyReportIdentify = 0
+                        }
+                        layui.form.val("addCustomer", res.data);
+                    } else {
+                        okLayer.msg.greenTick(res.msg, function () {
+                        });
+                    }
+                }
+            });
         }
+
         form.on("submit(commitCustomer)", function (data) {
             $.ajax({
                 url: '/internal/customer/postCustomersAdd',

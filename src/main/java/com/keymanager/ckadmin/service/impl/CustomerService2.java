@@ -54,7 +54,7 @@ public class CustomerService2 extends ServiceImpl<CustomerDao2, Customer> implem
             for (Customer customer : customerList) {
                 customerUuids.add(customer.getUuid());
             }
-            List<Map> customerKeywordCountMap = customerKeywordService2.getCustomerKeywordsCount(customerUuids, customerCriteria.getTerminalType(),customerCriteria.getEntryType());
+            List<Map> customerKeywordCountMap = customerKeywordService2.getCustomerKeywordsCount(customerUuids, customerCriteria.getTerminalType(), customerCriteria.getEntryType());
             Map<Integer, Map> customerUuidKeywordCountMap = new HashMap<Integer, Map>();
             for (Map map : customerKeywordCountMap) {
                 customerUuidKeywordCountMap.put((Integer) map.get("customerUuid"), map);
@@ -124,6 +124,7 @@ public class CustomerService2 extends ServiceImpl<CustomerDao2, Customer> implem
             customerDao2.updateById(oldCustomer);
         }
     }
+
     @Override
     public void deleteAll(List<Integer> uuids) {
         for (Integer uuid : uuids) {
@@ -142,5 +143,21 @@ public class CustomerService2 extends ServiceImpl<CustomerDao2, Customer> implem
         customer.setDailyReportIdentify(identify);
         customer.setUpdateTime(new Date());
         customerDao2.updateById(customer);
+    }
+
+    @Override
+    public Customer getCustomerWithKeywordCount(String terminalType, String entryType, long customerUuid, String loginName) {
+        Customer customer = customerDao2.selectById(customerUuid);
+        if (customer != null) {
+            if (!customer.getLoginName().equals(loginName)) {
+                customer.setEmail(null);
+                customer.setQq(null);
+                customer.setTelphone(null);
+                customer.setSaleRemark(null);
+            }
+            customer.setKeywordCount(customerKeywordService2.getCustomerKeywordCount(terminalType, entryType, customerUuid));
+        }
+        return customer;
+
     }
 }

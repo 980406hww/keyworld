@@ -8,12 +8,14 @@ import com.keymanager.ckadmin.entity.UserInfo;
 import com.keymanager.ckadmin.service.CustomerInterface;
 import com.keymanager.ckadmin.service.UserInfoInterface;
 import com.keymanager.util.TerminalTypeMapping;
+
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +57,7 @@ public class CustomerController {
     @RequiresPermissions("/internal/customer/searchCustomers")
     @RequestMapping(value = "/getCustomers")
     public ResultBean getAlgorithmTestPlans(HttpServletRequest request,
-            @RequestBody CustomerCriteria customerCriteria) {
+                                            @RequestBody CustomerCriteria customerCriteria) {
         HttpSession session = request.getSession();
         String loginName = (String) session.getAttribute("username");
         String entryType = (String) session.getAttribute("entryType");
@@ -87,6 +89,26 @@ public class CustomerController {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("customers/customerAdd");
         return mv;
+    }
+
+    //获得用户信息
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @RequestMapping(value = "/getCustomersMsgById/{uuid}", method = RequestMethod.GET)
+    public ResultBean toCustomersAdd(@PathVariable Long uuid, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean();
+        HttpSession session = request.getSession();
+        String entryType = (String) session.getAttribute("entryType");
+        String loginName = (String) session.getAttribute("username");
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        Customer customer = customerService2.getCustomerWithKeywordCount(terminalType, entryType, uuid, loginName);
+        if (customer != null) {
+            resultBean.setCode(200);
+            resultBean.setData(customer);
+            return resultBean;
+        }
+        resultBean.setCode(400);
+        resultBean.setMsg("未找到数据，或出现系统异常");
+        return resultBean;
     }
 
     //添加用户
@@ -135,6 +157,7 @@ public class CustomerController {
 
     /**
      * 更新客户日报表
+     *
      * @param requestMap
      * @return
      */
@@ -153,6 +176,7 @@ public class CustomerController {
 
     /**
      * 改变客户是否产生日报表标志位值
+     *
      * @param requestMap
      * @return
      */

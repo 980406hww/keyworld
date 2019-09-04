@@ -48,8 +48,7 @@
                                 <div class="layui-inline">
                                     <div class="layui-input-inline">
                                         <input type="text" name="contactPerson" id="contactPerson" placeholder="联系人"
-                                               autocomplete="off"
-                                               class="layui-input">
+                                               autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
 
@@ -107,7 +106,7 @@
             data-type="batchUpdateDailyReport">
         触发所选客户日报表
     </button>
-    </@shiro.hasPermission>
+</@shiro.hasPermission>
 
 <button class="layui-btn layui-btn-sm" id="addUser">
     <i class="layui-icon">&#xe61f;</i>添加客户
@@ -121,7 +120,7 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
 <script>
-    var sign= false;
+    var sign = false;
     // 进度条加载提示
     NProgress.start();
     window.onload = function () {
@@ -185,10 +184,10 @@
         // 编辑表格获得表格数据
         function editCustomer(data) {
             okLayer.open("编辑", "/internal/customer/toCustomersAdd", "90%", "90%", function (layero) {
-                window[layero.find("iframe")[0]["name"]].initForm(data);
-
-            },function(){
-                if(sign){
+                let uuid = data.uuid;
+                window[layero.find("iframe")[0]["name"]].initForm(uuid);
+            }, function () {
+                if (sign) {
                     active['reload'].call(this);
                     sign = false;
                 }
@@ -414,7 +413,7 @@
 
         //
         window.changeCustomerDailyReportIdentify = function changeCustomerDailyReportIdentify(uuid, status, oldIdentify,
-            newIdentify, self) {
+                                                                                              newIdentify, self) {
             var select = $(self);
             if (status !== '1') {
                 layer.msg('请激活客户', {icon: 5});
@@ -513,30 +512,30 @@
 <script type="text/html" id="operationTpl">
 
     <@shiro.hasPermission name="/internal/customer/saveCustomer">
-        <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
+    <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customer/delCustomer">
-        <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+    <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
     </@shiro.hasPermission>
     {{#
-        var entryType = document.getElementById("entryType").value;
-        if( 'qz'=== entryType){ }}
-        <button type="button" class="layui-btn layui-btn-normal layui-btn-xs"
-                onclick="viewSitesdRank('{{d.contactPerson}}','aizhan')">爱站排名
-        </button>
-        <button type="button" class="layui-btn layui-btn-normal layui-btn-xs"
-                onclick="viewSitesdRank('{{d.contactPerson}}','5118')">5118排名
-        </button>
+    var entryType = document.getElementById("entryType").value;
+    if( 'qz'=== entryType){ }}
+    <button type="button" class="layui-btn layui-btn-normal layui-btn-xs"
+            onclick="viewSitesdRank('{{d.contactPerson}}','aizhan')">爱站排名
+    </button>
+    <button type="button" class="layui-btn layui-btn-normal layui-btn-xs"
+            onclick="viewSitesdRank('{{d.contactPerson}}','5118')">5118排名
+    </button>
     {{# }else if('bc' === entryType){ }}
-        <@shiro.hasPermission name="/internal/customerChargeType/saveCustomerChargeType">
-            <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">客户规则</button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeywords">
-            <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">快速加词</button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/customer/uploadDailyReportTemplate">
-            <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">上传日报表模板</button>
-        </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/customerChargeType/saveCustomerChargeType">
+    <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">客户规则</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeywords">
+    <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">快速加词</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/customer/uploadDailyReportTemplate">
+    <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">上传日报表模板</button>
+    </@shiro.hasPermission>
     {{# } }}
     <@shiro.hasPermission name="/internal/negativeStandardSetting/searchNegativeStandardSetting">
     <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">负面达标设置</button>

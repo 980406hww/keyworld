@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.dao.CustomerKeywordDao2;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.service.CustomerKeywordInterface;
+
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,11 @@ public class CustomerKeywordService2 extends ServiceImpl<CustomerKeywordDao2, Cu
     public void deleteCustomerKeywords(long customerUuid) {
         logger.info("deleteCustomerKeywords:" + customerUuid);
         customerKeywordDao2.deleteCustomerKeywordsByCustomerUuid(customerUuid);
+    }
+
+    @Override
+    public int getCustomerKeywordCount(String terminalType, String entryType, long customerUuid) {
+        return customerKeywordDao2.getCustomerKeywordCount(terminalType, entryType, customerUuid);
     }
 
 }
