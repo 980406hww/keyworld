@@ -24,23 +24,26 @@ public class SQLFilterUtils {
         str = StringUtils.replace(str, "\"", "");
         str = StringUtils.replace(str, ";", "");
         str = StringUtils.replace(str, "\\", "");
+        str = StringUtils.replace(str, "null", "");
+        str = StringUtils.replace(str, "=", "");
 
         //转换成小写
         str = str.toLowerCase();
 
         //非法字符
-        String sqlReg=".*(update|drop|truncate|alter|set|delete|insert|exec|master|or|and|union|declare|count|grant|group|--).*";
+        String sqlReg=".*(master|truncate|insert|delete|update|declare|drop|grant|--).*";
         Pattern p = Pattern.compile(sqlReg);
         Matcher m=p.matcher(str);
         return m.matches();
     }
 
     public static void main(String[] args) {
-        String str= "customercriteria{contactperson=update, type=, qq=, telphone=, loginname=, remark=, entrytype=null, status=null, terminaltype=null}";
+        String str= "productkeywordcriteria{keyword=null, terminaltype=null, searchengin=null, status=null}";
         String sqlReg=".*(update|drop|truncate|alter|set|delete|insert|exec|master|or|and|union|declare|count|grant|group|--).*";
         Pattern p = Pattern.compile(sqlReg);
         Matcher m=p.matcher(str);
         System.out.println(m.matches());
+        System.out.println(m.group());
     }
 
 }
