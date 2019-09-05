@@ -93,35 +93,43 @@
 <script>
 
     let uuid_ = null;
-
+    let layui_ = null;
     function initForm(data) {
         uuid_ = data;
+        if (layui_ != null){
+            setForm(layui_,uuid_);
+        }
     }
 
-    layui.use(["form", "okLayer", "jquery"], function () {
+    function setForm(l,u){
+        l.jquery.ajax({
+            url: '/internal/customer/getCustomersMsgById/' + u,
+            type: 'get',
+            dataType: 'json',
+            success: function (res) {
+                if (res.code === 200) {
+                    if (res.data.dailyReportIdentify) {
+                        res.data.dailyReportIdentify = 1
+                    } else {
+                        res.data.dailyReportIdentify = 0
+                    }
+                    layui.form.val("addCustomer", res.data);
+                } else {
+                    l.layer.msg(res.msg);
+                }
+            }
+        });
+    }
+
+    layui.use(["form", "okLayer", "jquery", "layer"], function () {
         let form = layui.form;
         let okLayer = layui.okLayer;
         let $ = layui.jquery;
 
         if (uuid_ != null) {
-            $.ajax({
-                url: '/internal/customer/getCustomersMsgById/' + uuid_,
-                type: 'get',
-                dataType: 'json',
-                success: function (res) {
-                    if (res.code === 200) {
-                        if (res.data.dailyReportIdentify) {
-                            res.data.dailyReportIdentify = 1
-                        } else {
-                            res.data.dailyReportIdentify = 0
-                        }
-                        layui.form.val("addCustomer", res.data);
-                    } else {
-                        okLayer.msg.greenTick(res.msg, function () {
-                        });
-                    }
-                }
-            });
+            setForm(layui,uuid_);
+        } else {
+            layui_ = layui;
         }
 
         form.on("submit(commitCustomer)", function (data) {
@@ -141,8 +149,7 @@
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        okLayer.msg.redCross(res.msg, function () {
-                        });
+                        layui.layer.msg(res.msg);
                     }
                 }
             });

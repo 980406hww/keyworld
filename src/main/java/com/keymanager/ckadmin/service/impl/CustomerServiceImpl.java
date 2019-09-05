@@ -114,11 +114,11 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
             oldCustomer.setAlipay(customer.getAlipay());
             oldCustomer.setPaidFee(customer.getPaidFee());
             oldCustomer.setRemark(customer.getRemark());
-            oldCustomer.setType(customer.getType());
+//            oldCustomer.setType(customer.getType());
             oldCustomer.setStatus(customer.getStatus());
             oldCustomer.setDailyReportIdentify(customer.getDailyReportIdentify());
             oldCustomer.setLoginName(customer.getLoginName());
-            oldCustomer.setEntryType(customer.getEntryType());
+//            oldCustomer.setEntryType(customer.getEntryType());
             oldCustomer.setUpdateTime(new Date());
             customerDao.updateById(oldCustomer);
         }
@@ -157,6 +157,5 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
             customer.setKeywordCount(customerKeywordService.getCustomerKeywordCount(terminalType, entryType, customerUuid));
         }
         return customer;
-
     }
 }

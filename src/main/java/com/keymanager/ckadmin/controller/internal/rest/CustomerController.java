@@ -136,7 +136,6 @@ public class CustomerController {
             resultBean.setMsg("未知错误");
             return resultBean;
         }
-
         return resultBean;
     }
 
@@ -153,8 +152,8 @@ public class CustomerController {
             return resultBean;
         }
         String loginName = (String) session.getAttribute("username");
-        String entryType = (String) session.getAttribute("entryType");
-        customer.setEntryType(entryType);
+//        String entryType = (String) session.getAttribute("entryType");
+//        customer.setEntryType(entryType);
         try {
             customerService.saveCustomer(customer, loginName);
         } catch (Exception e) {
