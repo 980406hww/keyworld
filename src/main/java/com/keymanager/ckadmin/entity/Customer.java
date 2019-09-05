@@ -3,228 +3,234 @@ package com.keymanager.ckadmin.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.keymanager.monitoring.entity.BaseEntity;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @TableName(value = "t_customer")
-public class Customer extends BaseEntity{
-	protected static final long serialVersionUID = -1101942701283949852L;
+public class Customer extends BaseEntity {
 
-	@TableField(value = "fUserID")
-	private String loginName;
+    protected static final long serialVersionUID = -1101942701283949852L;
 
-	@TableField(value = "fExternalAccount")
-	private String externalAccount;
+    @TableField(value = "fUserID")
+    private String loginName;
 
-	@TableField(value = "fSearchEngine")
-	private String searchEngine;
+    @TableField(value = "fExternalAccount")
+    private String externalAccount;
 
-	@TableField(value = "fEntryType")
-	private String entryType;
+    @TableField(value = "fSearchEngine")
+    private String searchEngine;
 
-	@TableField(value = "fContactPerson")
-	private String contactPerson;
+    @TableField(value = "fEntryType")
+    private String entryType;
 
-	@TableField(value = "fQQ")
-	private String qq;
+    @NotNull
+    @TableField(value = "fContactPerson")
+    private String contactPerson;
 
-	@TableField(value = "fEmail")
-	private String email;
+    @Pattern(regexp = "()|(^[1-9]\\d{4,14}$)", message = "QQ号格式不符")
+    @TableField(value = "fQQ")
+    private String qq;
 
-	@TableField(value = "fTelphone")
-	private String telphone;
+    @TableField(value = "fEmail")
+    private String email;
 
-	@TableField(value = "fAlipay")
-	private String alipay;
+    @Pattern(regexp = "()|(^(13[0-9]|14[5-9]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[13589])\\d{8}$)", message = "手机号格式不符")
+    @TableField(value = "fTelphone")
+    private String telphone;
 
-	@TableField(value = "fPaidFee")
-	private int paidFee;
+    @TableField(value = "fAlipay")
+    private String alipay;
 
-	@TableField(value = "fSaleRemark")
-	private String saleRemark;
+    @TableField(value = "fPaidFee")
+    private int paidFee;
 
-	@TableField(value = "fRemark")
-	private String remark;
+    @TableField(value = "fSaleRemark")
+    private String saleRemark;
 
-	@TableField(value = "fDailyReportIdentify")
-	private boolean dailyReportIdentify;
+    @TableField(value = "fRemark")
+    private String remark;
 
-	@TableField(value = "fActiveHour")
-	private String activeHour;
+    @TableField(value = "fDailyReportIdentify")
+    private boolean dailyReportIdentify;
 
-	@TableField(value = "fInActiveHour")
-	private String inActiveHour;
+    @TableField(value = "fActiveHour")
+    private String activeHour;
 
-	@TableField(value = "fType")
-	private String type;
+    @TableField(value = "fInActiveHour")
+    private String inActiveHour;
 
-	@TableField(exist=false)
-	private int keywordCount;
+    @TableField(value = "fType")
+    private String type;
 
-	@TableField(exist=false)
-	private int activeKeywordCount;
+    @TableField(exist = false)
+    private int keywordCount;
 
-	@TableField(value = "fStatus")
-	private int status;
+    @TableField(exist = false)
+    private int activeKeywordCount;
 
-	@TableField(value = "fUpdateInterval")
-	private String updateInterval;
+    @TableField(value = "fStatus")
+    private int status;
 
-	public String getLoginName() {
-		return loginName;
-	}
+    @TableField(value = "fUpdateInterval")
+    private String updateInterval;
 
-	public void setLoginName(String loginName) {
-		this.loginName = loginName;
-	}
+    public String getLoginName() {
+        return loginName;
+    }
 
-	public String getExternalAccount() {
-		return externalAccount;
-	}
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
 
-	public void setExternalAccount(String externalAccount) {
-		this.externalAccount = externalAccount;
-	}
+    public String getExternalAccount() {
+        return externalAccount;
+    }
 
-	public String getSearchEngine() {
-		return searchEngine;
-	}
+    public void setExternalAccount(String externalAccount) {
+        this.externalAccount = externalAccount;
+    }
 
-	public void setSearchEngine(String searchEngine) {
-		this.searchEngine = searchEngine;
-	}
+    public String getSearchEngine() {
+        return searchEngine;
+    }
 
-	public String getEntryType() {
-		return entryType;
-	}
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
+    }
 
-	public void setEntryType(String entryType) {
-		this.entryType = entryType;
-	}
+    public String getEntryType() {
+        return entryType;
+    }
 
-	public String getContactPerson() {
-		return contactPerson;
-	}
+    public void setEntryType(String entryType) {
+        this.entryType = entryType;
+    }
 
-	public void setContactPerson(String contactPerson) {
-		this.contactPerson = contactPerson;
-	}
+    public String getContactPerson() {
+        return contactPerson;
+    }
 
-	public String getQq() {
-		return qq;
-	}
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
+    }
 
-	public void setQq(String qq) {
-		this.qq = qq;
-	}
+    public String getQq() {
+        return qq;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setQq(String qq) {
+        this.qq = qq;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public String getTelphone() {
-		return telphone;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setTelphone(String telphone) {
-		this.telphone = telphone;
-	}
+    public String getTelphone() {
+        return telphone;
+    }
 
-	public String getAlipay() {
-		return alipay;
-	}
+    public void setTelphone(String telphone) {
+        this.telphone = telphone;
+    }
 
-	public void setAlipay(String alipay) {
-		this.alipay = alipay;
-	}
+    public String getAlipay() {
+        return alipay;
+    }
 
-	public int getPaidFee() {
-		return paidFee;
-	}
+    public void setAlipay(String alipay) {
+        this.alipay = alipay;
+    }
 
-	public void setPaidFee(int paidFee) {
-		this.paidFee = paidFee;
-	}
+    public int getPaidFee() {
+        return paidFee;
+    }
 
-	public String getSaleRemark() {
-		return saleRemark;
-	}
+    public void setPaidFee(int paidFee) {
+        this.paidFee = paidFee;
+    }
 
-	public void setSaleRemark(String saleRemark) {
-		this.saleRemark = saleRemark;
-	}
+    public String getSaleRemark() {
+        return saleRemark;
+    }
 
-	public String getRemark() {
-		return remark;
-	}
+    public void setSaleRemark(String saleRemark) {
+        this.saleRemark = saleRemark;
+    }
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
+    public String getRemark() {
+        return remark;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public int getKeywordCount() {
-		return keywordCount;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public void setKeywordCount(int keywordCount) {
-		this.keywordCount = keywordCount;
-	}
+    public int getKeywordCount() {
+        return keywordCount;
+    }
 
-	public int getStatus() {
-		return status;
-	}
+    public void setKeywordCount(int keywordCount) {
+        this.keywordCount = keywordCount;
+    }
 
-	public void setStatus(int status) {
-		this.status = status;
-	}
+    public int getStatus() {
+        return status;
+    }
 
-	public int getActiveKeywordCount() {
-		return activeKeywordCount;
-	}
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
-	public void setActiveKeywordCount(int activeKeywordCount) {
-		this.activeKeywordCount = activeKeywordCount;
-	}
+    public int getActiveKeywordCount() {
+        return activeKeywordCount;
+    }
 
-	public String getActiveHour() {
-		return activeHour;
-	}
+    public void setActiveKeywordCount(int activeKeywordCount) {
+        this.activeKeywordCount = activeKeywordCount;
+    }
 
-	public void setActiveHour(String activeHour) {
-		this.activeHour = activeHour;
-	}
+    public String getActiveHour() {
+        return activeHour;
+    }
 
-	public String getInActiveHour() {
-		return inActiveHour;
-	}
+    public void setActiveHour(String activeHour) {
+        this.activeHour = activeHour;
+    }
 
-	public void setInActiveHour(String inActiveHour) {
-		this.inActiveHour = inActiveHour;
-	}
+    public String getInActiveHour() {
+        return inActiveHour;
+    }
 
-	public String getUpdateInterval() {
-		return updateInterval;
-	}
+    public void setInActiveHour(String inActiveHour) {
+        this.inActiveHour = inActiveHour;
+    }
 
-	public void setUpdateInterval(String updateInterval) {
-		this.updateInterval = updateInterval;
-	}
+    public String getUpdateInterval() {
+        return updateInterval;
+    }
 
-	public boolean getDailyReportIdentify () {
-		return dailyReportIdentify;
-	}
+    public void setUpdateInterval(String updateInterval) {
+        this.updateInterval = updateInterval;
+    }
 
-	public void setDailyReportIdentify (boolean dailyReportIdentify) {
-		this.dailyReportIdentify = dailyReportIdentify;
-	}
+    public boolean getDailyReportIdentify() {
+        return dailyReportIdentify;
+    }
+
+    public void setDailyReportIdentify(boolean dailyReportIdentify) {
+        this.dailyReportIdentify = dailyReportIdentify;
+    }
 }

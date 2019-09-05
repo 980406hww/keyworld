@@ -33,14 +33,14 @@
             <label class="layui-form-label">QQ</label>
             <div class="layui-input-block">
                 <input type="text" name="qq" placeholder="请输入QQ" autocomplete="off"
-                       class="layui-input">
+                       class="layui-input" lay-verify="qq">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">联系电话</label>
             <div class="layui-input-block">
                 <input type="text" name="telphone" placeholder="请输入联系电话" autocomplete="off"
-                       class="layui-input">
+                       class="layui-input" lay-verify="telPhone">
             </div>
         </div>
         <div class="layui-form-item">
@@ -147,6 +147,19 @@
                 }
             });
             return false;
+        });
+
+        form.verify({
+            qq: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (value !== '' && !/^[1-9]\d{4,14}$/.test(value)) {
+                    return '请输入正确格式QQ';
+                }
+            },
+            telPhone:function (value, item) {
+                if (value !== '' && !/^(13[0-9]|14[5-9]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[13589])\d{8}$/.test(value)) {
+                    return '请输入正确格式QQ';
+                }
+            }
         });
     })
 
