@@ -754,6 +754,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 					}
 				}
 				customerKeyword.setKeyword(keyword);
+				customerKeyword.setInitialPosition(100);
+				customerKeyword.setOptimizePlanCount(10);
 				customerKeywords.add(customerKeyword);
 			}
 			customerKeywordService.addCustomerKeyword(customerKeywords, userName);
