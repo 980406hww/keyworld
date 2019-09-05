@@ -9,15 +9,14 @@ import com.keymanager.ckadmin.entity.UserInfo;
 import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.util.ReflectUtils;
+import com.keymanager.ckadmin.util.SQLFilterUtils;
 import com.keymanager.util.TerminalTypeMapping;
-
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,8 +58,13 @@ public class CustomerController {
     @RequiresPermissions("/internal/customer/searchCustomers")
     @RequestMapping(value = "/getCustomers")
     public ResultBean getAlgorithmTestPlans(HttpServletRequest request,
-                                            @RequestBody CustomerCriteria customerCriteria) {
+        @RequestBody CustomerCriteria customerCriteria) {
         ResultBean resultBean = new ResultBean();
+        if (SQLFilterUtils.sqlInject(customerCriteria.toString())) {
+            resultBean.setCode(400);
+            resultBean.setMsg("查询参数错误或包含非法字符，请检查后重试！");
+            return resultBean;
+        }
         try {
             HttpSession session = request.getSession();
             String entryType = (String) session.getAttribute("entryType");
@@ -68,11 +72,12 @@ public class CustomerController {
             customerCriteria.setEntryType(entryType);
             customerCriteria.setTerminalType(terminalType);
             Page<Customer> page = new Page(customerCriteria.getPage(), customerCriteria.getLimit());
-            String orderByField = ReflectUtils.getTableFieldValue(Customer.class, customerCriteria.getOrderBy());
-            if (StringUtils.isNotEmpty(orderByField)){
+            String orderByField = ReflectUtils
+                .getTableFieldValue(Customer.class, customerCriteria.getOrderBy());
+            if (StringUtils.isNotEmpty(orderByField)) {
                 page.setOrderByField(orderByField);
             }
-            if (customerCriteria.getOrderMode() != null && customerCriteria.getOrderMode() == 0){
+            if (customerCriteria.getOrderMode() != null && customerCriteria.getOrderMode() == 0) {
                 page.setAsc(false);
             }
             page = customerService.searchCustomers(page, customerCriteria);

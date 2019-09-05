@@ -91,4 +91,19 @@ public class CustomerCriteria extends BaseCriteria {
     public void setTerminalType(String terminalType) {
         this.terminalType = terminalType;
     }
+
+    @Override
+    public String toString() {
+        return "CustomerCriteria{" +
+            "contactPerson='" + contactPerson + '\'' +
+            ", type='" + type + '\'' +
+            ", qq='" + qq + '\'' +
+            ", telphone='" + telphone + '\'' +
+            ", loginName='" + loginName + '\'' +
+            ", remark='" + remark + '\'' +
+            ", entryType='" + entryType + '\'' +
+            ", status=" + status +
+            ", terminalType='" + terminalType + '\'' +
+            '}';
+    }
 }
