@@ -158,7 +158,7 @@
             cols: [[
                 {filed: 'uuid', type: 'checkbox', fixed: "left", width: '3%'},
                 {field: 'loginName', title: '用户名称', sort: true, width: '8%'},
-                {field: 'contactPerson', title: '联系人', width: '10%'},
+                {field: 'contactPerson', title: '联系人', width: '10%', templet: '#toProductKeyword'},
                 {field: 'type', title: '分组', width: '5%'},
                 {field: 'keywordCount', title: '关键字信息', width: '15%', templet: '#keywordInfo'},
                 {field: 'qq', title: 'QQ', width: '7%'},
@@ -487,6 +487,27 @@
         }
     }
 
+    function updateOrNewTab(url, tit, id) {
+        var update = false;
+        var contentIframe = ("<iframe src='" + url + "' lay-id='"+id+"'" +
+            "frameborder='0' scrolling='yes' width='100%' height='100%'>" +
+            "</iframe>");
+        parent.layui.$('.layui-tab-title li').each(function () {
+            if (id === this.getAttribute('lay-id')){
+                update = true;
+            }
+        });
+        if (!update){
+            parent.layui.element.tabAdd('ok-tab', {
+                    title: tit,
+                    content: contentIframe,
+                    id: id
+                }
+            );
+        }
+
+        parent.layui.element.tabChange('ok-tab', id)
+    }
 
 </script>
 
@@ -513,6 +534,10 @@
 <!--模板-->
 <script type="text/html" id="toDateTime">
     {{layui.util.toDateString(d.createTime)}}
+</script>
+
+<script type="text/html" id="toProductKeyword">
+    <a href="javascript:updateOrNewTab('/internal/productKeyword/searchProductKeywordsByCustomerUuid/{{d.uuid}}','{{d.contactPerson}}-关键字列表', '{{d.uuid}}')">{{d.contactPerson}}</a>
 </script>
 
 <script type="text/html" id="keywordInfo">

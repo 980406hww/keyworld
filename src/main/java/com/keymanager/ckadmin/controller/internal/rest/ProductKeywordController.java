@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.ProductkeywordCriteria;
-import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.ProductKeyword;
 import com.keymanager.ckadmin.service.ProductKeywordService;
 import com.keymanager.ckadmin.util.ReflectUtils;
@@ -17,6 +16,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +50,7 @@ public class ProductKeywordController {
 
     @RequiresPermissions("/internal/productKeyword/searchProductKeywords")
     @PostMapping(value = "/searchProductKeywords")
-    public ResultBean getAlgorithmTestPlans(HttpServletRequest request,
+    public ResultBean searchProductKeywords(HttpServletRequest request,
         @RequestBody ProductkeywordCriteria productkeywordCriteria) {
         ResultBean resultBean = new ResultBean();
         if (SQLFilterUtils.sqlInject(productkeywordCriteria.toString())) {
@@ -62,7 +62,7 @@ public class ProductKeywordController {
 
             Page<ProductKeyword> page = new Page(productkeywordCriteria.getPage(), productkeywordCriteria.getLimit());
             String orderByField = ReflectUtils
-                .getTableFieldValue(Customer.class, productkeywordCriteria.getOrderBy());
+                .getTableFieldValue(ProductKeyword.class, productkeywordCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {
                 page.setOrderByField(orderByField);
             }
@@ -82,6 +82,16 @@ public class ProductKeywordController {
             return resultBean;
         }
         return resultBean;
+    }
+
+    @RequiresPermissions("/internal/productKeyword/searchProductKeywords")
+    @GetMapping(value = "/searchProductKeywordsByCustomerUuid/{customerUuid}")
+    public ModelAndView searchProductKeywordsByCustomerUuid(HttpServletRequest request,
+        @PathVariable("customerUuid") Long customerUuid) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("productKeywords/productKeyword");
+        request.setAttribute("custommerUuid",customerUuid);
+        return mv;
     }
 
 }

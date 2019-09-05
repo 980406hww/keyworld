@@ -36,10 +36,8 @@
                     <div class="layui-colla-content" id="searchContent">
                         <form class="layui-form layui-form-pane" id="searchForm">
                             <div class="layui-form-item" lay-filter="loginNameFilter">
-                                <input hidden value='<#if Request.customerUuid?exists>
-                                    ${Request.customerUuid}
-                                    </#if>' id="customerUuid" name="customerUuid">
-
+                                <input hidden value='<#if Request.customerUuid?exists>${Request.customerUuid}</#if>'
+                                       id="customerUuid" name="customerUuid">
                                 <div class="layui-inline">
                                     <div class="layui-input-inline">
                                         <input type="text" name="keyword" id="keyword" placeholder="关键字"
@@ -146,13 +144,14 @@
             id: 'productKeywordTable',
             even: true,//隔行背景
             // toolbar: true,
+            where:$.parseJSON(formToJson($("#searchForm").serialize())),
             toolbar: "#toolbarTpl",
             // defaultToolbar: ['filter', 'print', 'exports'], 对应列筛选 打印 导出
             defaultToolbar: ['filter'],
             contentType: 'application/json',
             cols: [[
                 {filed: 'uuid', type: 'checkbox', fixed: "left", width: '3%'},
-                {field: 'contactPerson', title: '用户名称', sort: true, width: '8%'},
+                {field: 'contactPerson', title: '用户名称', sort: true, width: '8%', templet: '#toCUstomerProductKeyword'},
                 {field: 'keyword', title: '关键字', width: '10%'},
                 {field: 'url', title: '链接', width: '5%'},
                 {field: 'originalUrl', title: '原始链接', width: '15%', },
@@ -234,7 +233,27 @@
 
     });
 
+    function updateOrNewTab(url, tit, id) {
+        var update = false;
+        var contentIframe = ("<iframe src='" + url + "' lay-id='"+id+"'" +
+            "frameborder='0' scrolling='yes' width='100%' height='100%'>" +
+            "</iframe>");
+        parent.layui.$('.layui-tab-title li').each(function () {
+            if (id === this.getAttribute('lay-id')){
+                update = true;
+            }
+        });
+        if (!update){
+            parent.layui.element.tabAdd('ok-tab', {
+                    title: tit,
+                    content: contentIframe,
+                    id: id
+                }
+            );
+        }
 
+        parent.layui.element.tabChange('ok-tab', id)
+    }
 
 
 </script>
@@ -264,9 +283,11 @@
     {{layui.util.toDateString(d.createTime)}}
 </script>
 
+<script type="text/html" id="toCUstomerProductKeyword">
+    <a href="javascript:updateOrNewTab('/internal/productKeyword/searchProductKeywordsByCustomerUuid/{{d.customerUuid}}','{{d.contactPerson}}-关键字列表', '{{d.customerUuid}}')">{{d.contactPerson}}</a>
+</script>
 
 <script type="text/html" id="operationTpl">
-
     <@shiro.hasPermission name="/internal/customer/saveCustomer">
         <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
     </@shiro.hasPermission>
