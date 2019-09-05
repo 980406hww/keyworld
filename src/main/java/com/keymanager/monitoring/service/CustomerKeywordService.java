@@ -561,8 +561,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
 
         if (customerKeyword.getCurrentPosition() == null) {
-            customerKeyword.setCurrentPosition(10);
+            customerKeyword.setCurrentPosition(100);
         }
+
+        if (EntryTypeEnum.qz.name().equals(customerKeyword.getType())) {
+            customerKeyword.setCurrentIndexCount(-1);
+        }
+
         if (Utils.isNullOrEmpty(customerKeyword.getMachineGroup())) {
             customerKeyword.setMachineGroup(customerKeyword.getType());
         }
