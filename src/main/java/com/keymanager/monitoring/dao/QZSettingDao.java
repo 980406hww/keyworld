@@ -40,15 +40,16 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     void updateQzSetting(@Param("qzSetting") QZSetting qzSetting);
 
-    void updateCrawlerStatus(@Param("uuids")Long[] uuids);
+    void updateCrawlerStatus(@Param("uuids") List<Long> uuids);
 
     int getQZSettingGroupInfo (@Param("terminalType") String terminalType, @Param("optimizeGroupName") String optimizeGroupName);
 
     List<String> getAvailableOptimizationGroups (@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
     void startMonitorImmediately (@Param("uuids") String uuids);
-    
-    List<ExternalQzSettingVO> getQZSettingTask(@Param("crawlerHour")Integer crawlerHour, @Param("taskNumber")Integer taskNumber);
+
+    List<ExternalQzSettingVO> getQZSettingTask(@Param("crawlerHour") Integer crawlerHour,
+        @Param("taskNumber") Integer taskNumber);
 
     List<QZSettingVO> searchQZSettingSearchEngines(@Param("customerUuid") String customerUuid, @Param("domain") String domain);
 

@@ -16,6 +16,7 @@ import com.keymanager.monitoring.vo.ExternalQzSettingVO;
 import com.keymanager.monitoring.vo.QZChargeRuleVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.PaginationRewriteQueryTotalInterceptor;
+import java.util.ArrayList;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -58,22 +59,27 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         qzKeywordRankInfoDao.deleteByQZSettingUuid(uuid);
     }
 
-    public synchronized List<ExternalQzSettingVO> getQZSettingTask(){
-        Config taskNumber = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING, Constants.CONFIG_KEY_QZ_TASKNUMBER);
-        Config config = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_CRAWLER_HOUR);
-        List<ExternalQzSettingVO> qzSettingTasks = qzSettingService.getQZSettingTask(Integer.parseInt(config.getValue()),Integer.parseInt(taskNumber.getValue()));
-        if (CollectionUtils.isNotEmpty(qzSettingTasks)){
-            Long[] uuids = new Long[qzSettingTasks.size()];
-            for (int i = 0; i < qzSettingTasks.size(); i++) {
-                uuids[i] = qzSettingTasks.get(i).getUuid();
+    public synchronized List<ExternalQzSettingVO> getQZSettingTask() {
+        Config taskNumber = configService
+            .getConfig(Constants.CONFIG_TYPE_QZSETTING, Constants.CONFIG_KEY_QZ_TASKNUMBER);
+        Config config = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK,
+            Constants.CONFIG_KEY_CRAWLER_HOUR);
+
+        List<ExternalQzSettingVO> qzSettingTasks = qzSettingService
+            .getQZSettingTask(Integer.parseInt(config.getValue()),
+                Integer.parseInt(taskNumber.getValue()));
+
+        if (CollectionUtils.isNotEmpty(qzSettingTasks)) {
+            List<Long> uuids = new ArrayList<>();
+            for (ExternalQzSettingVO qzSettingVo : qzSettingTasks) {
+                List<String> types = qzKeywordRankInfoDao
+                    .getQZKeywordRankInfoTypes(qzSettingVo.getUuid());
+                if (CollectionUtils.isNotEmpty(types)) {
+                    qzSettingVo.setTypeList(types);
+                }
+                uuids.add(qzSettingVo.getUuid());
             }
             qzSettingService.updateCrawlerStatus(uuids);
-            for (ExternalQzSettingVO qzSettingVO : qzSettingTasks) {
-                List<String> types = qzKeywordRankInfoDao.getQZKeywordRankInfoTypes(qzSettingVO.getUuid());
-                if (CollectionUtils.isNotEmpty(types)) {
-                    qzSettingVO.setTypeList(types);
-                }
-            }
         }
         return qzSettingTasks;
     }
@@ -142,7 +148,8 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
                 qzKeywordRankInfo.setCurrentPrice(Integer.parseInt(standard.get("currentPrice").toString()));
 
                 QZOperationType qzOperationType = qzOperationTypeService.searchQZOperationTypeByQZSettingAndTerminalType(qzSettingUuid, externalQzKeywordRankInfoVo.getTerminalType());
-                int isStandardFlag = 0; // 0 代表没有达标, 1 代表已经达标, 2 代表第一次达标
+                // 0 代表没有达标, 1 代表已经达标, 2 代表第一次达标
+                int isStandardFlag = 0;
                 if (qzKeywordRankInfo.getAchieveLevel() > 0) {
                     qzKeywordRankInfo.setAchieveTime(new Date());
                     isStandardFlag = qzOperationType.getStandardTime() == null ? 2 : 1;

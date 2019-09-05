@@ -36,7 +36,6 @@
         <if test="websiteType != null">
             AND qzkri.fWebSiteType = #{websiteType}
         </if>
-        ORDER BY qzkri.fCreateTime
     </select>
 
     <delete id="deleteByQZSettingUuid" parameterType="java.lang.Long">
@@ -46,13 +45,19 @@
 
     <select id="getQZKeywordRankInfo" resultType="com.keymanager.monitoring.entity.QZKeywordRankInfo">
         SELECT
-            tqkri.fUuid AS 'uuid',
-            CONCAT("'", IF(MONTH(tqkri.fCreateTime) &lt; 10, CONCAT('0', MONTH(tqkri.fCreateTime)), MONTH(tqkri.fCreateTime)), '-', IF(DAY(tqkri.fCreateTime) &lt; 10, CONCAT('0', DAY(tqkri.fCreateTime)), DAY(tqkri.fCreateTime)), "'") AS 'createMonthDay'
+        tqkri.fUuid AS 'uuid',
+        CONCAT("'", IF(MONTH(tqkri.fCreateTime) &lt; 10, CONCAT('0', MONTH(tqkri.fCreateTime)),
+        MONTH(tqkri.fCreateTime)), '-', IF(DAY(tqkri.fCreateTime) &lt; 10, CONCAT('0',
+        DAY(tqkri.fCreateTime)), DAY(tqkri.fCreateTime)), "'") AS 'createMonthDay'
         FROM t_qz_keyword_rank_info tqkri
-        WHERE 1 = 1
-        <if test="qzSettingUuid != null"> AND tqkri.fQZSettingUuid = #{qzSettingUuid} </if>
-        <if test="terminalType != null and terminalType != ''"> AND tqkri.fTerminalType = #{terminalType} </if>
-        <if test="websiteType != null and websiteType != ''"> AND tqkri.fWebsiteType = #{websiteType} </if>
+        WHERE tqkri.fDataProcessingStatus = 1
+        <if test="qzSettingUuid != null">AND tqkri.fQZSettingUuid = #{qzSettingUuid}</if>
+        <if test="terminalType != null and terminalType != ''">
+            AND tqkri.fTerminalType = #{terminalType}
+        </if>
+        <if test="websiteType != null and websiteType != ''">
+            AND tqkri.fWebsiteType = #{websiteType}
+        </if>
         LIMIT 1
     </select>
 
@@ -128,7 +133,12 @@
         SELECT CONCAT(qk.fTerminalType, '_', qk.fWebsiteType, '_', qk.fDataProcessingStatus)
         FROM t_qz_keyword_rank_info qk
         WHERE qk.fQZSettingUuid = #{qzSettingUuid}
-        AND qk.fWebsiteType <![CDATA[<>]]> 'designationWord'
+        AND qk.fWebsiteType = "aiZhan"
+        UNION ALL
+        SELECT CONCAT(qk.fTerminalType, '_', qk.fWebsiteType, '_', qk.fDataProcessingStatus)
+        FROM t_qz_keyword_rank_info qk
+        WHERE qk.fQZSettingUuid = #{qzSettingUuid}
+        AND qk.fWebsiteType = "5118"
         GROUP BY qk.fTerminalType
     </select>
 
