@@ -42,14 +42,14 @@
                                         <select name="loginName" id="loginName" lay-filter="loginNameFilter" lay-search>
                                             <option value="">请选择所属用户</option>
                                         </select>
-
                                     </div>
                                 </div>
                                 <div class="layui-inline">
                                     <div class="layui-input-inline">
                                         <input type="text" name="contactPerson" id="contactPerson" placeholder="联系人"
-                                               autocomplete="off"
-                                               class="layui-input">
+                                               autocomplete="off" class="layui-input">
+<!--                                        <i style="color: red; position: absolute; right: 8px;top: 8px;cursor: pointer"-->
+<!--                                           class="layui-icon layui-unselect layui-tab-close" id="clearContactPerson">ဆ</i>-->
                                     </div>
                                 </div>
 
@@ -97,7 +97,6 @@
                                             <option value="">请选择排序方式</option>
                                             <option value="1">升序</option>
                                             <option value="0">降序</option>
-
                                         </select>
                                     </div>
                                 </div>
@@ -387,6 +386,10 @@
                 layer.close(index);
             });
         }
+
+        $('#clearContactPerson').click(function () {
+           $('#contactPerson').val('');
+        });
 
         // 添加客户
         function toAddCustomer(){
