@@ -10,6 +10,7 @@ import com.keymanager.ckadmin.service.ProductKeywordService;
 import com.keymanager.ckadmin.util.ReflectUtils;
 import com.keymanager.ckadmin.util.SQLFilterUtils;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -93,5 +95,21 @@ public class ProductKeywordController {
         request.setAttribute("custommerUuid",customerUuid);
         return mv;
     }
+
+    @RequiresPermissions("/internal/productKeyword/deleteProductKeyword")
+    @RequestMapping(value = "/deleteProductKeyword", method = RequestMethod.POST)
+    public ResultBean deleteCustomers(@RequestBody Map<String, Object> requestMap) {
+        try {
+            Long uuid = (Long) requestMap.get("uuid");
+            productKeywordService.deleteOne(uuid);
+            return new ResultBean(200, "删除成功");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResultBean(400, "删除失败");
+        }
+    }
+
+
+
 
 }

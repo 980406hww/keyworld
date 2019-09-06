@@ -489,9 +489,8 @@
 
     function updateOrNewTab(url, tit, id) {
         var update = false;
-        var contentIframe = ("<iframe src='" + url + "' lay-id='"+id+"'" +
-            "frameborder='0' scrolling='yes' width='100%' height='100%'>" +
-            "</iframe>");
+        var contentIframe = ("<iframe src='" + url + "' lay-id='" + id
+            + "'frameborder='0' scrolling='yes' width='100%' height='100%'></iframe>");
         parent.layui.$('.layui-tab-title li').each(function () {
             if (id === this.getAttribute('lay-id')){
                 update = true;

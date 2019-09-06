@@ -20,4 +20,6 @@ import org.springframework.stereotype.Repository;
 public interface ProductKeywordDao extends BaseMapper<ProductKeyword> {
 
     List<ProductKeyword> searchProductKeywords(Page<ProductKeyword> page, @Param("productkeywordCriteria") ProductkeywordCriteria productkeywordCriteria);
+
+    void deleteProductKeywordsByUuids(@Param("uuids") List<Integer> uuids);
 }

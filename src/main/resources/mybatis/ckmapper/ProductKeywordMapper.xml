@@ -79,5 +79,11 @@
 
     </select>
 
+    <delete id="deleteProductKeywordsByUuids">
+        DELETE FROM t_product_keyword WHERE fUuid IN
+        <foreach item="item" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
 
 </mapper>

@@ -28,8 +28,19 @@ public class ProductKeywordServiceImpl extends
     @Override
     public Page<ProductKeyword> searchProductKeywords(Page<ProductKeyword> page,
         ProductkeywordCriteria productkeywordCriteria) {
-        List<ProductKeyword> productKeywords = productKeywordDao.searchProductKeywords(page, productkeywordCriteria);
+        List<ProductKeyword> productKeywords = productKeywordDao
+            .searchProductKeywords(page, productkeywordCriteria);
         page.setRecords(productKeywords);
         return page;
+    }
+
+    @Override
+    public void deleteAll(List<Integer> uuids) {
+        productKeywordDao.deleteProductKeywordsByUuids(uuids);
+    }
+
+    @Override
+    public void deleteOne(Long uuid) {
+        this.deleteById(uuid);
     }
 }
