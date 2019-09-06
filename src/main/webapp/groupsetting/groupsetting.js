@@ -146,16 +146,17 @@ function trimSearchCondition() {
 function showOperationCombineDialog() {
     var changeSettingDialog = $("#changeSettingDialog");
     changeSettingDialog.find('#changeSettingDialogForm')[0].reset();
-    $("#changeSettingDialog").find("#settingOperationCombineName").removeAttr("disabled");
-    $("#changeSettingDialog").find("#settingGroup").removeAttr("disabled");
-    $("#changeSettingDialog").find("i").text(100);
+    changeSettingDialog.find("#settingOperationCombineName").removeAttr("disabled");
+    changeSettingDialog.find("#settingGroup").removeAttr("disabled");
+    changeSettingDialog.find("i").text(100);
+    changeSettingDialog.find("#maxInvalidCount").removeAttr("disabled");
     changeSettingDialog.show();
     changeSettingDialog.dialog({
         resizable: false,
-        width: 650,
+        width: 500,
         maxHeight: 550,
         title: "新增操作组合(只需指定一个操作类型, 如果还有其他操作类型, 后续添加即可)",
-        modal: false,
+        modal: true,
         buttons: [{
             text: '保存',
             iconCls: 'icon-ok',
@@ -170,18 +171,20 @@ function showOperationCombineDialog() {
                 $("#changeSettingDialogForm")[0].reset();
                 $("#changeSettingDialog").find("i").text(100);
                 resetTrItemColor();
+                changeSettingDialog.find("#maxInvalidCount").attr("disabled", true);
             }
         }],
         onClose: function () {
             $('#changeSettingDialogForm')[0].reset();
             $("#changeSettingDialog").find("i").text(100);
             resetTrItemColor();
+            changeSettingDialog.find("#maxInvalidCount").attr("disabled", true);
         }
     });
     changeSettingDialog.dialog("open");
     changeSettingDialog.window("resize", {
         top: $(document).scrollTop() + 150,
-        left: $(document).scrollLeft() + $(window).width() / 2 - 325
+        left: $(document).scrollLeft() + $(window).width() / 2 - 250
     });
 }
 
@@ -285,7 +288,7 @@ function getGroupSettingCount(operationCombineUuid, operationCombineName) {
 type: 操作类型 增加还是修改 id: 操作设置id或者操作组合id  operationCombineName:操作组合名称
 remainingAccount: 剩余百分比   operationCombineUuid: 操作组合id
  */
-function showGroupSettingDialog(type, id, operationCombineName, remainingAccount, operationCombineUuid) {
+function showGroupSettingDialog(liIndex, type, id, operationCombineName, remainingAccount, operationCombineUuid) {
     var changeSettingDialog = $("#changeSettingDialog");
     changeSettingDialog.find('#changeSettingDialogForm')[0].reset();
     if (type === "add") {
@@ -296,14 +299,16 @@ function showGroupSettingDialog(type, id, operationCombineName, remainingAccount
     changeSettingDialog.find('#remainAccount').val(remainingAccount);
     changeSettingDialog.find("i").text(remainingAccount);
     var title;
-    if (type == "add") {
+    if (type === "add") {
         title = "新增操作类型";
         changeSettingDialog.find('#operationCombineUuid').val(operationCombineUuid);
-    } else if (type == "update") {
+    } else if (type === "update") {
         title = "修改操作类型 (需要修改的信息请标红!!!)";
         changeSettingDialog.find('#groupSettingUuid').val(id);
         findGroupSetting(id);
     }
+    var maxInvalidCount = $("#li_" + liIndex).find("div.header .maxInvalidCountStr").text();
+    changeSettingDialog.find("#maxInvalidCount").val(maxInvalidCount);
     changeSettingDialog.show();
     changeSettingDialog.dialog({
         resizable: false,
@@ -622,7 +627,8 @@ function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
     } else if (type === "addOperationCombine") { // 增加操作组合
         operationCombine.terminalType = $("#chargeForm").find("#terminalType").val();
         operationCombine.groupSetting = groupSetting;
-        operationCombine.maxInvalidCount = dialogDiv.find("#maxInvalidCount").val();
+        var maxInvalidCount = dialogDiv.find("#maxInvalidCount").val();
+        operationCombine.maxInvalidCount = maxInvalidCount === "" ? 8 : maxInvalidCount;
         $.ajax({
             url: '/internal/operationCombine/saveOperationCombine',
             data: JSON.stringify(operationCombine),

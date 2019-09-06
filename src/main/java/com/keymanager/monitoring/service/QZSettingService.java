@@ -166,7 +166,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			qzSetting.setUpdateTime(new Date());
 			qzSetting.setRenewalStatus(1);
 			qzSettingDao.insert(qzSetting);
-			Long qzSettingUuid  = new Long(qzSettingDao.selectLastId());//插入qzSetting是的uuid
+			// 插入qzSetting是的uuid
+			Long qzSettingUuid = (long) qzSettingDao.selectLastId();
 			for (QZOperationType qzOperationType : qzSetting.getQzOperationTypes()){
 				qzOperationType.setQzSettingUuid(qzSettingUuid);
 				qzOperationTypeService.insert(qzOperationType);
@@ -217,7 +218,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				//添加一条
 				newOperationType.setQzSettingUuid(qzSettingUuid);
 				qzOperationTypeService.insert(newOperationType);
-				Long uuid = Long.valueOf(qzOperationTypeService.selectLastId());
+				Long uuid = (long) qzOperationTypeService.selectLastId();
 				if (isMonitor && newOperationType.getQzChargeRules().iterator().next().getStandardSpecies().equals(Constants.
 						QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
 					captureRankJobService.qzAddCaptureRankJob(newOperationType.getGroup(), qzSettingUuid, customerUuid, newOperationType.getOperationType(), userName);
@@ -259,7 +260,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		oldOperationType.setSubDomainName(newOperationType.getSubDomainName());
 		oldOperationType.setMonitorRemark(newOperationType.getMonitorRemark());
 		oldOperationType.setMaxKeywordCount(newOperationType.getMaxKeywordCount());
-		oldOperationType.setIsDeleted(0); //只要是发生改变那么就让它的状态为0
+		// 只要是发生改变那么就让它的状态为0
+		oldOperationType.setIsDeleted(0);
 		qzOperationTypeService.updateById(oldOperationType);
 
 		boolean isDeleteDesignationWord = false;
@@ -797,13 +799,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
         }
     }
 
-	public void updateCrawlerStatus (Long[] uuids) {
-		qzSettingDao.updateCrawlerStatus(uuids);
-	}
+    public void updateCrawlerStatus(List<Long> uuids) {
+        qzSettingDao.updateCrawlerStatus(uuids);
+    }
 
-	public List<ExternalQzSettingVO> getQZSettingTask (int crawlerHour, int taskNumber) {
-		return qzSettingDao.getQZSettingTask(crawlerHour, taskNumber);
-	}
+    public List<ExternalQzSettingVO> getQZSettingTask(int crawlerHour, int taskNumber) {
+        return qzSettingDao.getQZSettingTask(crawlerHour, taskNumber);
+    }
 
 	public void updateQzSetting (QZSetting qzSetting) {
 		qzSettingDao.updateQzSetting(qzSetting);
@@ -828,7 +830,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		Map<String, String> map = new LinkedHashMap<>();
 		map.put(Constants.ALL_SEARCH_ENGINE, TerminalTypeEnum.PC.name());
 		map.put(Constants.ALL_SEARCH_ENGINE + TerminalTypeEnum.Phone.name(), TerminalTypeEnum.Phone.name());
-		if ((!"".equals(criteria.getDomain()) || !"".equals(criteria.getCustomerUuid())) && record == 1) {
+		boolean displayExistTabFlag = (!"".equals(criteria.getDomain()) || !"".equals(criteria.getCustomerUuid())) && record == 1;
+		if (displayExistTabFlag) {
 			List<QZSettingVO> qzSettingVos = qzSettingDao.searchQZSettingSearchEngines(criteria.getCustomerUuid(), criteria.getDomain());
 			for (QZSettingVO qzSettingVo : qzSettingVos) {
 				if (null != qzSettingVo.getPcGroup()) {
@@ -865,70 +868,72 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-    public void generateRankingCurve() {
-        List<QZSetting> allQZSettings = qzSettingDao.searchAllQZSettingForGenerateRankingCurve();
-        if (CollectionUtils.isNotEmpty(allQZSettings)) {
-            for (QZSetting qzSetting : allQZSettings) {
-                if (null != qzSetting) {
-                    String terminalType = null;
-                    if (null != qzSetting.getPcGroup()) {
-                        terminalType = "PC";
-                        generateRankingCurveRankInfo(qzSetting, terminalType);
-                    }
-                    if (null != qzSetting.getPhoneGroup()) {
-                        terminalType = "Phone";
-                        generateRankingCurveRankInfo(qzSetting, terminalType);
-                    }
-                }
-            }
-        }
-    }
+	public void generateRankingCurve() {
+		List<QZSetting> settings = qzSettingDao.searchAllQZSettingForGenerateRankingCurve();
+		if (CollectionUtils.isNotEmpty(settings)) {
+			for (QZSetting qzSetting : settings) {
+				if (null != qzSetting) {
+					String terminalType;
+					if (null != qzSetting.getPcGroup()) {
+						terminalType = "PC";
+						generateRankingCurveRankInfo(qzSetting, terminalType);
+					}
+					if (null != qzSetting.getPhoneGroup()) {
+						terminalType = "Phone";
+						generateRankingCurveRankInfo(qzSetting, terminalType);
+					}
+				}
+			}
+		}
+	}
 
-    private void generateRankingCurveRankInfo(QZSetting qzSetting, String terminalType) {
-        QZKeywordRankInfo rankInfo;
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+	private void generateRankingCurveRankInfo(QZSetting qzSetting, String terminalType) {
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
 
-        CustomerKeywordRankingCountVO countVo = customerKeywordService.getCustomerKeywordRankingCount(qzSetting.getCustomerUuid(),
-				terminalType.equals("PC") ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup());
-        List<QZKeywordRankInfo> list = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "xt");
-        if (CollectionUtils.isNotEmpty(list)) {
-            rankInfo = list.iterator().next();
-            String dateStr = rankInfo.getDate();
-            if (StringUtil.isNullOrEmpty(dateStr)) {
-                fillRankInfo(rankInfo, countVo, 1);
-                rankInfo.setDate("['" + sdf.format(date) + "']");
-            } else {
-                String[] dateStrings = dateStr.substring(1, dateStr.length() - 1).split(", ");
-                String nowDate = dateStrings[0];
-                if (nowDate.equals("'" + sdf.format(date) + "'")) {
-                    // 为当天数据, 替换数据
-                    if (dateStrings.length == 1) {
-                        rankInfo.setTopTen("[" + countVo.getTopTenNum() + "]");
-                        rankInfo.setTopTwenty("[" + countVo.getTopTwentyNum() + "]");
-                        rankInfo.setTopThirty("[" + countVo.getTopThirtyNum() + "]");
-                        rankInfo.setTopForty("[" + countVo.getTopFortyNum() + "]");
-                        rankInfo.setTopFifty("[" + countVo.getTopFiftyNum() + "]");
-                    } else {
-                        fillRankInfo(rankInfo, countVo, 0);
-                    }
-                } else {
-                    // 不为当天, 添加数据
-                    fillRankInfo(rankInfo, countVo, 1);
-                    rankInfo.setDate(fillData(rankInfo.getDate(), "'" + sdf.format(date) + "'", 1));
-                }
-            }
-        } else {
-            rankInfo = new QZKeywordRankInfo();
-            rankInfo.setQzSettingUuid(qzSetting.getUuid());
-            rankInfo.setTerminalType(terminalType);
-            rankInfo.setWebsiteType("xt");
-            rankInfo.setDataProcessingStatus(false);
-            fillRankInfo(rankInfo, countVo, 1);
-            rankInfo.setDate("['" + sdf.format(date) + "']");
-        }
-        qzKeywordRankInfoService.saveQZKeywordRankInfo(rankInfo);
-    }
+		CustomerKeywordRankingCountVO countVo = customerKeywordService
+			.getCustomerKeywordRankingCount(qzSetting.getCustomerUuid(),
+				"PC".equals(terminalType) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup());
+		List<QZKeywordRankInfo> rankInfos = qzKeywordRankInfoService
+			.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "xt");
+
+		if (CollectionUtils.isNotEmpty(rankInfos)) {
+			if (rankInfos.size() > 1) {
+				handlingQKErrorData(qzSetting, terminalType);
+				saveQZRankingCurveRankInfo(qzSetting.getUuid(), terminalType, countVo, null);
+			} else {
+				QZKeywordRankInfo rankInfo = rankInfos.iterator().next();
+				String dateStr = rankInfo.getDate();
+				if (StringUtil.isNullOrEmpty(dateStr)) {
+					fillRankInfo(rankInfo, countVo, 1);
+					rankInfo.setDate("['" + sdf.format(date) + "']");
+				} else {
+					String[] dateStrings = dateStr.substring(1, dateStr.length() - 1).split(", ");
+					String nowDate = dateStrings[0];
+					if (nowDate.equals("'" + sdf.format(date) + "'")) {
+						// 为当天数据, 替换数据
+						if (dateStrings.length == 1) {
+							rankInfo.setTopTen("[" + countVo.getTopTenNum() + "]");
+							rankInfo.setTopTwenty("[" + countVo.getTopTwentyNum() + "]");
+							rankInfo.setTopThirty("[" + countVo.getTopThirtyNum() + "]");
+							rankInfo.setTopForty("[" + countVo.getTopFortyNum() + "]");
+							rankInfo.setTopFifty("[" + countVo.getTopFiftyNum() + "]");
+						} else {
+							fillRankInfo(rankInfo, countVo, 0);
+						}
+					} else {
+						// 不为当天, 添加数据
+						fillRankInfo(rankInfo, countVo, 1);
+						rankInfo
+							.setDate(fillData(rankInfo.getDate(), "'" + sdf.format(date) + "'", 1));
+					}
+				}
+				qzKeywordRankInfoService.saveQZKeywordRankInfo(rankInfo);
+			}
+		} else {
+			saveQZRankingCurveRankInfo(qzSetting.getUuid(), terminalType, countVo, null);
+		}
+	}
 
     private void fillRankInfo(QZKeywordRankInfo rankInfo, CustomerKeywordRankingCountVO countVo, int fillMode) {
         rankInfo.setTopTen(fillData(rankInfo.getTopTen(), countVo.getTopTenNum() + "", fillMode));
@@ -952,12 +957,33 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
         return sb.toString();
     }
 
+	private void saveQZRankingCurveRankInfo(long qzSettingUuid, String terminalType,
+		CustomerKeywordRankingCountVO countVo, Integer qzSettingKeywordCount) {
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+
+		QZKeywordRankInfo rankInfo = new QZKeywordRankInfo();
+		rankInfo.setQzSettingUuid(qzSettingUuid);
+		rankInfo.setTerminalType(terminalType);
+		rankInfo.setWebsiteType("xt");
+		rankInfo.setDataProcessingStatus(false);
+
+		if (null == qzSettingKeywordCount) {
+			fillRankInfo(rankInfo, countVo, 1);
+			rankInfo.setDate("['" + sdf.format(date) + "']");
+		} else {
+			rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'", 1));
+			rankInfo.setBaiduRecordFullDate("['" + sdf.format(date) + "']");
+		}
+		qzKeywordRankInfoService.saveQZKeywordRankInfo(rankInfo);
+	}
+
     public void generateQZSettingKeywordCountCurve() {
 		List<QZSetting> qzSettings = qzSettingDao.searchAllQZSettingForGenerateRankingCurve();
 		if (CollectionUtils.isNotEmpty(qzSettings)) {
 			for (QZSetting qzSetting : qzSettings) {
 				if (null != qzSetting) {
-					String terminalType = null;
+					String terminalType;
 					if (null != qzSetting.getPcGroup()) {
 						terminalType = "PC";
 						generateQZSettingKeywordCountCurveRankInfo(qzSetting, terminalType);
@@ -971,44 +997,78 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-	private void generateQZSettingKeywordCountCurveRankInfo(QZSetting qzSetting, String terminalType) {
-		QZKeywordRankInfo rankInfo;
+	private void generateQZSettingKeywordCountCurveRankInfo(QZSetting qzSetting,
+		String terminalType) {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		int qzSettingKeywordCount = customerKeywordService.getQZSettingKeywordCount(qzSetting.getCustomerUuid(), terminalType.equals("PC") ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup());
-		List<QZKeywordRankInfo> list = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "xt");
-		if (CollectionUtils.isNotEmpty(list)) {
-			rankInfo = list.iterator().next();
-			String dateStr = rankInfo.getBaiduRecordFullDate();
-			if (StringUtil.isNullOrEmpty(dateStr)) {
-				rankInfo.setBaiduRecord("['" + qzSettingKeywordCount + "']");
-				rankInfo.setBaiduRecordFullDate("['" + sdf.format(date) + "']");
+
+		int qzSettingKeywordCount = customerKeywordService
+			.getQZSettingKeywordCount(qzSetting.getCustomerUuid(), "PC"
+				.equals(terminalType) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup());
+		List<QZKeywordRankInfo> rankInfos = qzKeywordRankInfoService
+			.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "xt");
+
+		if (CollectionUtils.isNotEmpty(rankInfos)) {
+			if (rankInfos.size() > 1) {
+				handlingQKErrorData(qzSetting, terminalType);
 			} else {
-				String[] dateStrings = dateStr.substring(1, dateStr.length() - 1).split(", ");
-				String nowDate = dateStrings[0];
-				if (nowDate.equals("'" + sdf.format(date) + "'")) {
-					// 为当天数据, 替换数据
-                    if (dateStrings.length == 1) {
-                        rankInfo.setBaiduRecord("['" + qzSettingKeywordCount + "']");
-                    } else {
-                        rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'", 0));
-                    }
+				QZKeywordRankInfo rankInfo = rankInfos.iterator().next();
+				String dateStr = rankInfo.getBaiduRecordFullDate();
+				if (StringUtil.isNullOrEmpty(dateStr)) {
+					rankInfo.setBaiduRecord("['" + qzSettingKeywordCount + "']");
+					rankInfo.setBaiduRecordFullDate("['" + sdf.format(date) + "']");
 				} else {
-					// 不为当天, 添加数据
-					rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'", 1));
-					rankInfo.setBaiduRecordFullDate(fillData(rankInfo.getBaiduRecordFullDate(), "'" + sdf.format(date) + "'", 1));
+					String[] dateStrings = dateStr.substring(1, dateStr.length() - 1).split(", ");
+					String nowDate = dateStrings[0];
+					if (nowDate.equals("'" + sdf.format(date) + "'")) {
+						// 为当天数据, 替换数据
+						if (dateStrings.length == 1) {
+							rankInfo.setBaiduRecord("['" + qzSettingKeywordCount + "']");
+						} else {
+							rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(),
+								"'" + qzSettingKeywordCount + "'", 0));
+						}
+					} else {
+						// 不为当天, 添加数据
+						rankInfo.setBaiduRecord(
+							fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'",
+								1));
+						rankInfo.setBaiduRecordFullDate(fillData(rankInfo.getBaiduRecordFullDate(),
+							"'" + sdf.format(date) + "'", 1));
+					}
 				}
+				qzKeywordRankInfoService.saveQZKeywordRankInfo(rankInfo);
 			}
 		} else {
-			rankInfo = new QZKeywordRankInfo();
-			rankInfo.setQzSettingUuid(qzSetting.getUuid());
-			rankInfo.setTerminalType(terminalType);
-			rankInfo.setWebsiteType("xt");
-			rankInfo.setDataProcessingStatus(false);
-			rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'", 1));
-			rankInfo.setBaiduRecordFullDate("['" + sdf.format(date) + "']");
+			saveQZRankingCurveRankInfo(qzSetting.getUuid(), terminalType, null,
+				qzSettingKeywordCount);
 		}
-		qzKeywordRankInfoService.saveQZKeywordRankInfo(rankInfo);
+
+	}
+
+	private void handlingQKErrorData(QZSetting qzSetting, String terminalType) {
+		List<QZKeywordRankInfo> rankInfos = qzKeywordRankInfoService
+			.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, null);
+		for (QZKeywordRankInfo keywordRankInfo : rankInfos) {
+			qzKeywordRankInfoService.deleteById(keywordRankInfo.getUuid());
+			if (!"xt".equals(keywordRankInfo.getWebsiteType())) {
+				QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
+				qzKeywordRankInfo.setQzSettingUuid(keywordRankInfo.getQzSettingUuid());
+				qzKeywordRankInfo.setTerminalType(keywordRankInfo.getTerminalType());
+				qzKeywordRankInfo.setWebsiteType(keywordRankInfo.getWebsiteType());
+				qzKeywordRankInfo
+					.setDataProcessingStatus(keywordRankInfo.getDataProcessingStatus());
+				qzKeywordRankInfo.setCreateTopTenNum(keywordRankInfo.getCreateTopTenNum());
+				qzKeywordRankInfo
+					.setCreateTopFiftyNum(keywordRankInfo.getCreateTopFiftyNum());
+				qzKeywordRankInfoService.insert(qzKeywordRankInfo);
+
+				QZSetting setting = qzSettingDao.selectById(qzSetting.getUuid());
+				setting.setCrawlerStatus("new");
+				setting.setUpdateTime(new Date());
+				qzSettingDao.updateById(setting);
+			}
+		}
 	}
 
 	public ExternalQzSettingVO selectQZSettingForAutoOperate () {
