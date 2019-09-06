@@ -43,7 +43,7 @@ function enterIn(e) {
     var e = e || event,
         keyCode = e.which || e.keyCode;
     if (keyCode == 13) {
-        trimSearchConditionSubmit('1');
+        trimSearchCondition('1');
     }
 }
 function searchRiseOrFall() {
@@ -92,7 +92,7 @@ function searchRiseOrFall() {
                 $(this).prop("checked", false);
             }
         });
-        trimSearchConditionSubmit('1');
+        trimSearchCondition('1');
     });
 }
 function detectedMoreSearchConditionDivShow() {
@@ -159,7 +159,7 @@ function checkTerminalType(searchEngine, terminalType) {
         $("#chargeForm").find("#searchEngine").val($.trim(html.substr(0, html.indexOf('P'))));
     }
     $("#chargeForm").find("#terminalType").val($.trim(terminalType));
-    trimSearchConditionSubmit('1');
+    trimSearchCondition('1');
 }
 function initQZKeywordRankInfo() {
     var terminalType = $("#chargeForm").find("input[name='terminalType']").val();
@@ -225,7 +225,6 @@ function searchCountNumOfQZKeywordRankInfo(postData, callback) {
     });
 }
 function initCountNumOfQZKeywordRankInfo(){
-    trimSearchCondition('1');
     var postData = {};
     var fieldArray = $("#chargeForm").serializeArray();
     var excludeFieldArray = ["currentPageNumber", "pages", "pageSize", "total", "statusHidden", "checkStatus", "dataRangeType", "openDialogStatus", "reserPagingParam"];
@@ -1107,7 +1106,7 @@ function trimSearchCondition(days) {
         }
     }
     if (text !== "") {
-        if (text.indexOf('部') === text.length-1 || text.indexOf('办') === text.length-1) {
+        if (text.indexOf('部') > -1 || text.indexOf('办') > -1) {
             chargeForm.find("#userInfoID").val(null);
             chargeForm.find("#organizationID").val(id);
         } else {
@@ -1202,9 +1201,6 @@ function trimSearchCondition(days) {
     } else {
         chargeForm.find("#hasReady").val(null);
     }
-}
-function trimSearchConditionSubmit(days) {
-    trimSearchCondition(days);
     $("#chargeForm").submit();
 }
 function showMoreSearchCondition() {

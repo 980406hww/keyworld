@@ -15,13 +15,13 @@ import java.util.zip.ZipOutputStream;
 /**
  * @author wjianwu 2019/6/28 10:35
  */
-public class CustomerKeywordAndUrlCvsExportWriter {
+public class IndustryDetailInfoCsvExportWriter {
 
     private final static String path = getTemplatePath();
 
     private static String getTemplatePath() {
         String SERVLET_CONTEXT_PATH = Utils.getWebRootPath();
-        String path = SERVLET_CONTEXT_PATH + "/" + "keyword_url.csv";
+        String path = SERVLET_CONTEXT_PATH + "/" + "industry_detail_info.csv";
         path = path.replaceAll("%20", " ");
         return path;
     }
@@ -29,7 +29,6 @@ public class CustomerKeywordAndUrlCvsExportWriter {
     public static boolean exportCsv(List<Map> dataList) {
         File file = new File(path);
         boolean isSuccess;
-
         FileOutputStream out = null;
         OutputStreamWriter osw = null;
         BufferedWriter bw = null;
@@ -42,11 +41,25 @@ public class CustomerKeywordAndUrlCvsExportWriter {
             bw = new BufferedWriter(osw);
             bw.write(0xFEFF);
             // 标题
-            bw.append("关键字").append(",").append("url").append("\r");
+            bw.append("行业名称").append(",")
+                    .append("url").append(",")
+                    .append("QQ").append(",")
+                    .append("电话").append(",")
+                    .append("权重").append(",")
+                    .append("客户标注").append(",")
+                    .append("销售备注").append(",")
+                    .append("\r");
             // 数据
             if (dataList != null && !dataList.isEmpty()) {
                 for (Map data : dataList) {
-                    bw.append(String.valueOf(data.get("keyword"))).append(",").append(String.valueOf(data.get("url"))).append("\r");
+                    bw.append(String.valueOf(data.get("industryName"))).append(",")
+                            .append(String.valueOf(data.get("website"))).append(",")
+                            .append(data.get("qq") == null ? "" : String.valueOf(data.get("qq")).replaceAll(",", ";")).append(",")
+                            .append(data.get("telephone") == null ? "" : String.valueOf(data.get("telephone")).replaceAll(",", ";")).append(",")
+                            .append(String.valueOf(data.get("weight"))).append(",")
+                            .append(data.get("identifyCustomer") == null ? "" : String.valueOf(data.get("identifyCustomer"))).append(",")
+                            .append(data.get("remark") == null ? "" : String.valueOf(data.get("remark")).replaceAll(",", ";")).append(",")
+                            .append("\r");
                 }
             }
             isSuccess = true;
@@ -64,7 +77,7 @@ public class CustomerKeywordAndUrlCvsExportWriter {
         FileUtil.download(response, path);
     }
 
-    public static void downloadZip(HttpServletResponse response, String customerName, String terminalType) {
-        FileUtil.downloadZip(response, path, customerName, terminalType);
+    public static void downloadZip(HttpServletResponse response) {
+        FileUtil.downloadZip(response, path, null, null);
     }
 }

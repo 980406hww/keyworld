@@ -8,8 +8,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 
 /**
  * <p>
@@ -24,6 +23,9 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
 
     @Autowired
     private IndustryDetailDao industryDetailDao;
+
+    @Autowired
+    private QZSettingService qzSettingService;
 
     public void delIndustryDetailsByIndustryID (long industryID) {
         industryDetailDao.delIndustryDetailsByIndustryID(industryID);
@@ -76,8 +78,7 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
     }
 
     public void updateIndustryInfoDetail(IndustryDetailCriteria criteria) {
-        IndustryDetail existingIndustryDetail = industryDetailDao.findExistingIndustryDetail(criteria.getIndustryID(),
-                criteria.getWebsite());
+        IndustryDetail existingIndustryDetail = industryDetailDao.findExistingIndustryDetail(criteria.getIndustryID(), criteria.getWebsite());
         boolean updateFlag = false;
         if (null == existingIndustryDetail) {
             existingIndustryDetail = new IndustryDetail();
@@ -87,13 +88,20 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
             updateFlag = true;
             existingIndustryDetail.setUpdateTime(new Date());
         }
-        existingIndustryDetail.setTelephone(criteria.getPhones().replace("[", "")
-                .replace("]", "").replaceAll("'", ""));
-        existingIndustryDetail.setQq(criteria.getQqs().replace("[", "")
-                .replace("]", "").replaceAll("'", ""));
+        existingIndustryDetail.setTelephone(criteria.getPhones().replace("[", "").replace("]", "")
+                .replaceAll("'", ""));
+        existingIndustryDetail.setQq(criteria.getQqs().replace("[", "").replace("]", "")
+                .replaceAll("'", ""));
         existingIndustryDetail.setTitle(criteria.getTitle());
         existingIndustryDetail.setWeight(criteria.getWeight());
         existingIndustryDetail.setLevel(criteria.getLevel());
+        String domain = criteria.getWebsite().replace("http://","").replace("https://","")
+                .replace("www.","").split("/")[0];
+        String qzCustomerStr = qzSettingService.findQZCustomer(domain);
+        if (null != qzCustomerStr) {
+            String[] customerStr = qzCustomerStr.split("##");
+            existingIndustryDetail.setIdentifyCustomer(customerStr[0] + "已有该网站客户" + customerStr[1]);
+        }
         if (updateFlag) {
             industryDetailDao.updateById(existingIndustryDetail);
         } else {
@@ -107,5 +115,13 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
 
     public void removeUselessIndustryDetail(long industryID) {
         industryDetailDao.removeUselessIndustryDetail(industryID);
+    }
+
+    public List<Map> getIndustryInfos(List<String> uuids) {
+        List<Map> dataMap = new ArrayList<>();
+        for (String uuid : uuids) {
+            dataMap.addAll(industryDetailDao.getIndustryInfos(Long.valueOf(uuid)));
+        }
+        return dataMap;
     }
 }

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -32,4 +33,6 @@ public interface IndustryDetailDao extends BaseMapper<IndustryDetail> {
     int findIndustryDetailCount(@Param("industryID") long industryID);
 
     void removeUselessIndustryDetail(@Param("industryID") long industryID);
+
+    List<Map> getIndustryInfos(@Param("uuid") long uuid);
 }

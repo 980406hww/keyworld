@@ -1,10 +1,15 @@
 package com.keymanager.util;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class FileUtil {
     public static boolean createDir(String destDirName) {
@@ -182,8 +187,6 @@ public class FileUtil {
      *
      * @param filePathAndName
      *            String 文件路径及名称 如c:/fqf.txt
-     * @param fileContent
-     *            String
      * @return boolean
      */
     public static void delFile(String filePathAndName) {
@@ -204,10 +207,8 @@ public class FileUtil {
     /**
      * 删除文件夹
      *
-     * @param filePathAndName
+     * @param folderPath
      *            String 文件夹路径及名称 如c:/fqf
-     * @param fileContent
-     *            String
      * @return boolean
      */
     public static void delFolder(String folderPath) {
@@ -253,6 +254,94 @@ public class FileUtil {
                 delAllFile(path + "/" + tempList[i]);// 先删除文件夹里面的文件
                 delFolder(path + "/" + tempList[i]);// 再删除空文件夹
             }
+        }
+    }
+
+    public static void closeOutputStream(OutputStream os) {
+        try {
+            if (os != null) {
+                os.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void closeWriter(Writer w) {
+        try {
+            if (w != null) {
+                w.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *  下载文件
+     *
+     * @param response
+     * @param path
+     */
+    public static void download(HttpServletResponse response, String path) {
+        try {
+            // path是指欲下载的文件的路径。
+            File file = new File(path);
+            // 取得文件名。
+            String filename = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd-hh.mm.ss") + "_" + file.getName();
+            // 以流的形式下载文件。
+            InputStream fis = new BufferedInputStream(new FileInputStream(path));
+            byte[] buffer = new byte[fis.available()];
+            fis.read(buffer);
+            fis.close();
+            // 清空response
+            response.reset();
+            // 设置response的Header
+            response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.getBytes()));
+            response.addHeader("Content-Length", "" + file.length());
+            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+            response.setContentType("application/vnd.ms-excel;charset=gb2312");
+            toClient.write(buffer);
+            toClient.flush();
+            toClient.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * 下载压缩包文件
+     * @param response
+     * @param customerName
+     * @param terminalType
+     */
+    public static void downloadZip(HttpServletResponse response, String path, String customerName, String terminalType) {
+        File file = new File(path);
+        //定义写出流
+        ZipOutputStream zos = null;
+        BufferedOutputStream bos = null;
+        try {
+            response.setContentType("application/zip");
+            response.setCharacterEncoding("utf-8");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + new String(((terminalType == null ? "" : terminalType + "_")
+                    + (customerName == null ? "" :customerName + "_") + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd")
+                    + ".zip").getBytes("GBK"), "iso8859-1") + "\"");
+            OutputStream stream = response.getOutputStream();
+            bos = new BufferedOutputStream(stream, 64 * 1024);
+            zos = new ZipOutputStream(bos);
+            zos.setLevel(1);
+            //为要添加的文件设置文件名称
+            zos.putNextEntry(new ZipEntry(file.getName()));
+            Writer w = new OutputStreamWriter(zos, StandardCharsets.UTF_8);
+            //这个地方可以单条数据进行写入，也可以把读取到的文件byte[]明确的转为字符串直接写入
+            w.write(FileUtils.readFileToString(file, "UTF-8"));
+            w.flush();
+            w.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeOutputStream(zos);
+            closeOutputStream(bos);
         }
     }
 

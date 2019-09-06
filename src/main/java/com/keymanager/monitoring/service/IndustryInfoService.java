@@ -82,18 +82,21 @@ public class IndustryInfoService extends ServiceImpl<IndustryInfoDao, IndustryIn
         industryInfoDao.deleteIndustries(Arrays.asList(uuids.split(",")));
     }
 
-    public Map getValidIndustryInfo() {
+    public synchronized Map getValidIndustryInfo() {
         IndustryInfoVO industryInfoVo = industryInfoDao.getValidIndustryInfo();
-        IndustryInfo industryInfo = industryInfoDao.selectById(industryInfoVo.getUuid());
-        industryInfo.setStatus(1);
-        industryInfo.setUpdateTime(new Date());
-        industryInfoDao.updateById(industryInfo);
+        if (null != industryInfoVo) {
+            IndustryInfo industryInfo = industryInfoDao.selectById(industryInfoVo.getUuid());
+            industryInfo.setStatus(1);
+            industryInfo.setUpdateTime(new Date());
+            industryInfoDao.updateById(industryInfo);
 
-        Config telConfig = configService.getConfig(Constants.CONFIG_TYPE_INDUSTRY_TEL_REG, Constants.CONFIG_KEY_INDUSTRY_TEL_REG);
-        Config qqConfig = configService.getConfig(Constants.CONFIG_TYPE_INDUSTRY_QQ_REG, Constants.CONFIG_KEY_INDUSTRY_QQ_REG);
-        industryInfoVo.setTelReg(telConfig.getValue());
-        industryInfoVo.setQqReg(qqConfig.getValue());
-        return BeanUtils.toMap(industryInfoVo);
+            Config telConfig = configService.getConfig(Constants.CONFIG_TYPE_INDUSTRY_TEL_REG, Constants.CONFIG_KEY_INDUSTRY_TEL_REG);
+            Config qqConfig = configService.getConfig(Constants.CONFIG_TYPE_INDUSTRY_QQ_REG, Constants.CONFIG_KEY_INDUSTRY_QQ_REG);
+            industryInfoVo.setTelReg(telConfig.getValue());
+            industryInfoVo.setQqReg(qqConfig.getValue());
+            return BeanUtils.toMap(industryInfoVo);
+        }
+        return null;
     }
 
     public void updateIndustryInfoDetail(IndustryDetailCriteria criteria) {
@@ -110,6 +113,7 @@ public class IndustryInfoService extends ServiceImpl<IndustryInfoDao, IndustryIn
         industryInfoDao.updateById(industryInfo);
     }
 
+    // excel 上传
     public boolean handleExcel(InputStream inputStream, String excelType, String terminalType, String userName)
             throws Exception {
         AbstractExcelReader reader = AbstractExcelReader.createExcelOperator(inputStream, excelType);
@@ -124,5 +128,9 @@ public class IndustryInfoService extends ServiceImpl<IndustryInfoDao, IndustryIn
             industryInfo.setStatus(0);
             this.saveIndustryInfo(industryInfo, userName);
         }
+    }
+
+    public List<Map> getIndustryInfos(List<String> uuids) {
+        return industryDetailService.getIndustryInfos(uuids);
     }
 }

@@ -76,7 +76,7 @@
 					<input type="text" title="请输入网站域名" name="domain" placeholder="请输入网站域名" onkeydown="enterIn(event);" value="${qzSettingSearchCriteria.domain}">
 				</li>
 				<li>
-					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchConditionSubmit('1')" value=" 搜索 " >
+					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="trimSearchCondition('1')" value=" 搜索 " >
 					&nbsp;&nbsp;
 					<input class="ui-button ui-widget ui-corner-all" type="button" onclick="showMoreSearchCondition()" value=" 更多搜索 " >
 				</li>

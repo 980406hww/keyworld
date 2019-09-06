@@ -1,15 +1,17 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
-
 import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.IndustryCriteria;
 import com.keymanager.monitoring.entity.IndustryInfo;
 import com.keymanager.monitoring.entity.UserInfo;
+import com.keymanager.monitoring.excel.operator.IndustryDetailInfoCsvExportWriter;
 import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.IUserInfoService;
 import com.keymanager.monitoring.service.IndustryInfoService;
 import com.keymanager.monitoring.service.UserRoleService;
 import com.keymanager.util.TerminalTypeMapping;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +39,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/internal/industry")
-public class IndustryInfoRestController {
+public class IndustryInfoRestController extends SpringMVCBaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(IndustryInfoRestController.class);
 
@@ -191,6 +194,23 @@ public class IndustryInfoRestController {
             return false;
         }
         return false;
+    }
+
+    @RequiresPermissions("/internal/industry/saveIndustry")
+    @PostMapping("/downloadIndustryInfo")
+    public ResponseEntity<?> downloadIndustryInfo(@RequestParam("industryUuids") String industryUuids, HttpServletResponse response) {
+        try {
+            List<String> uuids = Arrays.asList(industryUuids.split(","));
+            List<Map> industryDetailVos = industryInfoService.getIndustryInfos(uuids);
+            if (CollectionUtils.isNotEmpty(industryDetailVos)) {
+                IndustryDetailInfoCsvExportWriter.exportCsv(industryDetailVos);
+                IndustryDetailInfoCsvExportWriter.downloadZip(response);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
+        return new ResponseEntity<Object>(true, HttpStatus.OK);
     }
 }
 

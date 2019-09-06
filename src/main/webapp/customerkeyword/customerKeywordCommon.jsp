@@ -17,7 +17,7 @@
             <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >目标城市:</span><input name="city" id="city" type="text" style="width:200px;"></li>
             <li onclick="checkItem(this)" ><span class="customerKeywordSpanClass">要刷数量:</span><input type="text" name="optimizePlanCount" id="optimizePlanCount" value="" size="5" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)"></li>
             <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >指数:</span><input type="text" id="initialIndexCount" size="5" name="initialIndexCount" value="100" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)"></li>
-            <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >排名:</span><input type="text" id="initialPosition" size="5" name="initialPosition" value="10" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)" ></li>
+            <li onclick="checkItem(this)"><span class="customerKeywordSpanClass" >排名:</span><input type="text" id="initialPosition" size="5" name="initialPosition" value="100" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)" ></li>
             <li onclick="checkItem(this)"><span style="margin-left: 3px">关键词作用:</span>
                 <select name="keywordEffect" id="keywordEffect" style="width: 100px" title="">
                     <c:forEach items="${keywordEffects}" var="keywordEffect">

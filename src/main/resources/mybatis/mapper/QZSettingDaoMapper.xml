@@ -171,7 +171,6 @@
                 SELECT 1
                 FROM t_qz_keyword_rank_info qk
                 WHERE qk.fQZSettingUuid = qs.fUuid
-                AND qk.fDataProcessingStatus = 1
                 AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
             <choose>
                 <when test="qzSettingSearchCriteria.checkStatus == 1">
@@ -204,6 +203,7 @@
                     AND qk.fTodayDifference &gt; 0
                 </when>
             </choose>
+                AND qk.fDataProcessingStatus = 1
             )
         </if>
         <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
@@ -246,7 +246,7 @@
 
             </otherwise>
         </choose>
-        ORDER BY qs.fUpdateEndTime
+        ORDER BY qs.fUpdateTime
     </select>
 
     <select id="searchQZSettingsByUuids" resultType="com.keymanager.monitoring.entity.QZSetting">
@@ -353,23 +353,33 @@
 
     <select id="getQZSettingTask" resultType="com.keymanager.monitoring.vo.ExternalQzSettingVO">
         SELECT
-            qs.fUuid AS 'uuid',
+            qs.fUuid   AS 'uuid',
             qs.fDomain AS 'domain'
         FROM t_qz_setting qs
-        WHERE 1 = 1
-        AND (qs.fCrawlerStatus = 'new'
-            OR (qs.fCrawlerStatus = 'processing' AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL 10 MINUTE))
-            OR qs.fCrawlerTime IS NULL
-            OR (qs.fCrawlerStatus = 'finish' AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL #{crawlerHour} HOUR))
-        )
+        WHERE qs.fCrawlerStatus = 'new'
+        UNION ALL
+        SELECT
+            qs.fUuid   AS 'uuid',
+            qs.fDomain AS 'domain'
+        FROM t_qz_setting qs
+        WHERE qs.fCrawlerStatus = 'processing' AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL 10 MINUTE)
+        UNION ALL
+        SELECT
+            qs.fUuid   AS 'uuid',
+            qs.fDomain AS 'domain'
+        FROM t_qz_setting qs
+        WHERE qs.fCrawlerStatus = 'finish' AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL #{crawlerHour} HOUR)
         AND EXISTS(
             SELECT 1
             FROM t_qz_keyword_rank_info qk
             WHERE qk.fQZSettingUuid = qs.fUuid
-            AND qk.fWebsiteType <![CDATA[<>]]> 'designationWord'
-            AND qk.fWebsiteType <![CDATA[<>]]> 'xt'
+            AND qk.fWebsiteType = '5118'
+            UNION ALL
+            SELECT 1
+            FROM t_qz_keyword_rank_info qk
+            WHERE qk.fQZSettingUuid = qs.fUuid
+            AND qk.fWebsiteType = 'aiZhan'
         )
-        ORDER BY qs.fCreateTime DESC
         LIMIT #{taskNumber}
     </select>
 
@@ -377,7 +387,7 @@
         update t_qz_setting
         SET fCrawlerStatus = 'processing', fCrawlerTime = NOW()
         WHERE fUuid IN
-        <foreach collection="uuids" item="uuid" index="index"  open="(" separator="," close=")">
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
             #{uuid}
         </foreach>
     </update>
@@ -385,12 +395,10 @@
     <select id="getQZSettingGroupInfo" resultType="java.lang.Integer">
         SELECT COUNT(1)
         FROM t_customer_keyword ck
-        LEFT JOIN t_qz_setting qs
-        ON qs.fCustomerUuid = ck.fCustomerUuid
-        WHERE qs.fUuid = #{qzSettingUuid}
+        WHERE ck.fOptimizeGroupName = #{optimizeGroupName}
+        AND ck.fType = 'qz'
+        AND ck.fTerminalType = #{terminalType}
         AND ck.fStatus = 1
-        <if test="terminalType != ''">AND ck.fTerminalType = #{terminalType}</if>
-        <if test="optimizeGroupName != ''">AND ck.fOptimizeGroupName LIKE '${optimizeGroupName}%'</if>
     </select>
 
     <select id="getAvailableOptimizationGroups" resultType="java.lang.String">
@@ -470,6 +478,20 @@
             </otherwise>
         </choose>
     </update>
+
+    <select id="findQZCustomer" resultType="java.lang.String">
+        SELECT CONCAT(c.fUserID, '##', c.fContactPerson)
+        FROM t_qz_setting qs
+        LEFT JOIN t_customer c
+        ON c.fUuid = qs.fCustomerUuid
+        WHERE qs.fDomain LIKE '${domain}%'
+        UNION ALL
+        SELECT CONCAT(c.fUserID, '##', c.fContactPerson)
+        FROM t_customer c
+        WHERE c.fEntryType = 'qz'
+        AND c.fContactPerson LIKE '${domain}%'
+        LIMIT 1;
+    </select>
 
     <select id="searchAllQZSettingForGenerateRankingCurve" resultType="com.keymanager.monitoring.entity.QZSetting">
         SELECT

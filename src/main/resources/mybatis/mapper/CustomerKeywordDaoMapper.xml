@@ -503,13 +503,12 @@
 
     <select id="selectAllKeywordAndUrl" resultType="java.util.Map">
         SELECT
-        fKeyword AS 'keyword',
-        fUrl AS 'url'
+            fKeyword AS 'keyword',
+            fUrl     AS 'url'
         FROM
         t_customer_keyword
         WHERE fCustomerUuid = #{customerUuid}
         AND fTerminalType = #{terminalType}
-        AND fStatus = 1
     </select>
 
     <delete id="deleteCustomerKeywordsByCustomerUuid">
@@ -725,7 +724,11 @@
 
     <update id="adjustOptimizePlanCount">
         UPDATE t_customer_keyword
-        SET fOptimizePlanCount = #{optimizationPlanCount}, fOptimizeRemainingCount = #{optimizationPlanCount}, fQueryInterval = #{queryInterval}
+        SET fOptimizePlanCount = #{optimizationPlanCount}
+        , fOptimizeRemainingCount = #{optimizationPlanCount}
+        , fQueryInterval = #{queryInterval}
+        , fOptimizeTodayCount = #{optimizeTodayCount}
+        , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 
@@ -768,7 +771,9 @@
         AND fCaptureStatus = #{captureStatus}
         <if test="startTime != null and captureStatus == 0">
             AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
-            AND !(ck.fCapturePositionQueryTime > CURRENT_DATE() AND ck.fCurrentPosition &lt; 4 AND ck.fCurrentPosition &gt; 0)
+            <if test="saveTopThree == true">
+                AND !(ck.fCapturePositionQueryTime > CURRENT_DATE() AND ck.fCurrentPosition &lt; 4 AND ck.fCurrentPosition &gt; 0)
+            </if>
         </if>
         <if test="startTime != null and captureStatus == 1">
             AND ck.fCapturePositionQueryTime <![CDATA[<]]> DATE_SUB( NOW(), INTERVAL 3 MINUTE )
@@ -814,8 +819,20 @@
     </select>
 
     <update id="resetInvalidRefreshCount" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria">
-        UPDATE t_customer_keyword SET fInvalidRefreshCount = 0, fInvalidFlag = 0, fQueryTime = CURRENT_DATE() WHERE fType = #{customerKeywordRefreshStatInfoCriteria.entryType} and fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
-        <if test="customerKeywordRefreshStatInfoCriteria.customerName!=null and customerKeywordRefreshStatInfoCriteria.customerName!=''">AND EXISTS (SELECT 1 FROM t_customer c WHERE c.fUuid = fCustomerUuid AND c.fContactPerson LIKE concat('%', #{customerKeywordRefreshStatInfoCriteria.customerName}, '%'))</if>
+        UPDATE t_customer_keyword
+        SET fInvalidRefreshCount = 0,
+        fInvalidFlag = 0,
+        fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
+        WHERE fType = #{customerKeywordRefreshStatInfoCriteria.entryType}
+        AND fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
+        <if test="customerKeywordRefreshStatInfoCriteria.customerName != null and customerKeywordRefreshStatInfoCriteria.customerName != ''">
+        AND EXISTS (
+                SELECT 1
+                FROM t_customer c
+                WHERE c.fUuid = fCustomerUuid
+                AND c.fContactPerson LIKE concat('%', #{customerKeywordRefreshStatInfoCriteria.customerName}, '%')
+            )
+        </if>
         <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">
             <choose>
                 <when test="customerKeywordRefreshStatInfoCriteria.fullMatchGroup == true">
@@ -1076,8 +1093,10 @@
         <if test="settingType == 'setSpecificCount'">
             SET fOptimizePlanCount = #{optimizePlanCount}
         </if>
+        , fOptimizeTodayCount = IF(fOptimizePlanCount > 0, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
         , fOptimizeRemainingCount = IF(#{optimizePlanCount} - fOptimizedCount > 0, #{optimizePlanCount} - fOptimizedCount, 0)
-        , fQueryInterval = IF(fOptimizePlanCount > 0, (24 * 60 * 60 / fOptimizePlanCount), 24 * 60 * 60)
+        , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
+        , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
         WHERE fUuid IN
         <foreach item="uuid"  collection="uuids" open="(" separator="," close=")">
             #{uuid}
@@ -1092,8 +1111,10 @@
         <if test="settingType == 'setSpecificCount'">
             SET fOptimizePlanCount = #{optimizePlanCount}
         </if>
+        , fOptimizeTodayCount = IF(fOptimizePlanCount > 0, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
         , fOptimizeRemainingCount = IF(#{optimizePlanCount} - fOptimizedCount > 0, #{optimizePlanCount} - fOptimizedCount, 0)
-        , fQueryInterval = IF(fOptimizePlanCount > 0, (24 * 60 * 60 / fOptimizePlanCount), 24 * 60 * 60)
+        , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
+        , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
         WHERE fTerminalType = #{terminalType}
         AND fType = #{entryType}
         AND fCustomerUuid = #{customerUuid}
@@ -1358,7 +1379,9 @@
         <if test="keywordChecks.optimizePlanCount==1">
             , fOptimizePlanCount = #{keywordStatus.optimizePlanCount}
             , fOptimizeRemainingCount = IF(#{keywordStatus.optimizePlanCount} - fOptimizedCount > 0, #{keywordStatus.optimizePlanCount} - fOptimizedCount, 0)
-            , fQueryInterval = IF(fOptimizePlanCount > 0, (24 * 60 * 60 / fOptimizePlanCount), 24 * 60 * 60)
+            , fOptimizeTodayCount = IF(fOptimizePlanCount > 0, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
+            , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
+            , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
         </if>
         <if test="keywordChecks.optimizeGroupName==1"> ,fOptimizeGroupName = #{keywordStatus.optimizeGroupName}</if>
         <if test="keywordChecks.machineGroup==1"> ,fMachineGroup = #{keywordStatus.machineGroup}</if>
@@ -1482,6 +1505,7 @@
             fOptimizeGroupName,
             fMachineGroup,
             fOptimizePlanCount,
+            fOptimizeTodayCount,
             fOptimizeRemainingCount,
             fLastReachStandardDate,
             fPositionFirstFee,
@@ -1525,10 +1549,13 @@
                 #{customerKeyword.serviceProvider},
                 #{customerKeyword.optimizeGroupName},
                 #{customerKeyword.machineGroup},
-                <choose>
-                    <when test="customerKeyword.optimizePlanCount != null">#{customerKeyword.optimizePlanCount},</when>
-                    <when test="customerKeyword.optimizePlanCount == null">0,</when>
-                </choose>
+            <choose>
+                <when test="customerKeyword.optimizePlanCount != null">
+                    #{customerKeyword.optimizePlanCount},
+                </when>
+                <when test="customerKeyword.optimizePlanCount == null">10,</when>
+            </choose>
+                #{customerKeyword.optimizeTodayCount},
                 #{customerKeyword.optimizeRemainingCount},
                 #{customerKeyword.lastReachStandardDate},
                 <choose>
@@ -1757,4 +1784,41 @@
         AND ck.fStatus = 1
         GROUP BY ck.fCity
     </select>
+
+    <select id="getTenCustomerKeywordsForCaptureIndex" resultType="com.keymanager.monitoring.vo.ExternalCustomerKeywordVO">
+        SELECT
+        ck.fUuid AS 'uuid',
+        ck.fKeyword	AS	'keyword',
+        ck.fTerminalType AS 'terminalType'
+        FROM t_customer_keyword ck
+        WHERE ck.fCurrentIndexCount = -1
+        AND ck.fType = 'qz'
+        AND ck.fCaptureIndexQueryTime IS NULL
+        ORDER BY ck.fCreateTime
+        LIMIT 10
+    </select>
+
+    <select id="updateCaptureIndexQueryTimeByKeywords">
+        UPDATE t_customer_keyword
+        SET fCaptureIndexQueryTime = NOW()
+        WHERE fUuid IN
+        <foreach item="customerKeyword" collection="customerKeywords" open="(" separator="," close=")">
+            #{customerKeyword.uuid}
+        </foreach>
+    </select>
+
+    <update id="batchUpdateIndexAndOptimizePlanCount">
+        <foreach collection="customerKeywords" item="customerKeyword" index="index" open="" close="" separator=";">
+            UPDATE t_customer_keyword
+            SET fCurrentIndexCount = #{customerKeyword.currentIndexCount}
+            <if test="customerKeyword.currentIndexCount == -1">
+                , fCaptureIndexQueryTime = NULL
+            </if>
+            , fOptimizePlanCount = #{customerKeyword.optimizePlanCount}
+            , fOptimizeTodayCount = fOptimizePlanCount * ROUND(RAND() * 0.7 + 0.5)
+            , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
+            , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
+            WHERE ck.fUuid = #{customerKeyword.uuid}
+        </foreach>
+    </update>
 </mapper>

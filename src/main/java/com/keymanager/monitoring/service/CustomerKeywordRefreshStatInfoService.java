@@ -65,8 +65,7 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
     }
 
     private List<CustomerKeywordTerminalRefreshStatRecord> getCustomerKeywordStatInfoRecords(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
-        List<CustomerKeywordTerminalRefreshStatRecord> customerKeywordTerminalRefreshStatRecords = customerKeywordRefreshStatInfoDao.searchCustomerKeywordStatInfos(customerKeywordRefreshStatInfoCriteria);
-        return customerKeywordTerminalRefreshStatRecords;
+        return customerKeywordRefreshStatInfoDao.searchCustomerKeywordStatInfos(customerKeywordRefreshStatInfoCriteria);
     }
 
     public List<String> searchKeywordUrlByGroup(String terminalType, String entryType, List<String> groups) throws Exception {

@@ -49,7 +49,12 @@ public class IndustryDetail extends BaseEntity {
     @TableField(value = "fWeight")
     private Integer weight;
     /**
-     * 备注
+     * 客户标注
+     */
+    @TableField(value = "fIdentifyCustomer")
+    private String identifyCustomer;
+    /**
+     * 销售备注
      */
     @TableField(value = "fRemark")
     private String remark;
@@ -105,6 +110,14 @@ public class IndustryDetail extends BaseEntity {
 
     public void setWeight (Integer weight) {
         this.weight = weight;
+    }
+
+    public String getIdentifyCustomer() {
+        return identifyCustomer;
+    }
+
+    public void setIdentifyCustomer(String identifyCustomer) {
+        this.identifyCustomer = identifyCustomer;
     }
 
     public String getRemark () {

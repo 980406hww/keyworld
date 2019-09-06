@@ -64,8 +64,7 @@ public class MachineGroupWorkInfoService {
     }
 
     private List<MachineGroupWorkInfo> getMachineGroupWorkInfos(MachineGroupWorkInfoCriteria machineGroupWorkInfoCriteria) {
-        List<MachineGroupWorkInfo> machineGroupWorkInfos = machineGroupWorkInfoDao.getMachineGroupWorkInfos(machineGroupWorkInfoCriteria);
-        return machineGroupWorkInfos;
+        return  machineGroupWorkInfoDao.getMachineGroupWorkInfos(machineGroupWorkInfoCriteria);
     }
 
     public List<MachineGroupWorkInfo> getHistoryMachineGroupWorkInfo (MachineGroupWorkInfoCriteria machineGroupWorkInfoCriteria) {

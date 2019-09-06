@@ -29,6 +29,8 @@
 				<ref bean="cronTriggerSwitchClientStatusGroup" />
 				<ref bean="cronTriggerGenerateRankingCurve" />
 				<ref bean="cronTriggerGenerateQZSettingKeywordCountCurve" />
+				<ref bean="cronTriggerAutoSaveTestDataStatisticsSchedule"/>
+
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -328,6 +330,18 @@
 
 	<bean id="cronJobDetailGenerateQZSettingKeywordCountCurve" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="generateQZSettingKeywordCountCurveSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--每天下午6点生成算法测试数据统计-->
+	<bean id="cronTriggerAutoSaveTestDataStatisticsSchedule" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronAutoSaveTestDataStatisticsSchedule"/>
+		<property name="cronExpression" value="0 0 18 * * ?" />
+	</bean>
+
+	<bean id="cronAutoSaveTestDataStatisticsSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="autoSaveTestDataStatisticsSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

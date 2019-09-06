@@ -430,8 +430,49 @@ public class Utils {
 		return SERVLET_CONTEXT_PATH;
 	}
 
+	public static Double getRoundValue(Double doubleValue, int decimalPoint) {
+		if (decimalPoint <= 0) {
+			return null;
+		}
+		if (!doubleValue.toString().contains(".")){
+			return doubleValue;
+		}
+		int pointPos = doubleValue.toString().indexOf(".") + 1;
+		if (pointPos + decimalPoint + 1 > doubleValue.toString().length()) {
+			return doubleValue;
+		}
+
+		int value = Integer.parseInt(doubleValue.toString().substring(pointPos + decimalPoint, pointPos + decimalPoint + 1));
+		Double value1 = Double.parseDouble(doubleValue.toString().substring(0, pointPos + decimalPoint));
+		if (value < 5) {
+			return value1;
+		} else {
+			String valueString = value1.toString();
+			if (valueString.length() < pointPos + decimalPoint) {
+				valueString = valueString + "0";
+			}
+			String subValue = valueString.substring(0, pointPos);
+			int i = Integer.parseInt(valueString.substring(pointPos , pointPos + decimalPoint));
+
+			if (value1 < 0) {
+				if (i == 0) {
+					value1 = Double.parseDouble(subValue + 1);
+				} else {
+					value1 = Double.parseDouble(subValue + (i + 1));
+				}
+			} else {
+				if (i == 9) {
+					value1 = Double.parseDouble(subValue) + 1;
+				} else {
+					value1 = Double.parseDouble(subValue + (i + 1));
+				}
+			}
+			return value1;
+		}
+	}
+
 	public static void main(String[] args) {
-		System.out.println(Utils.removeDigital("abc032"));
+//		System.out.println(Utils.removeDigital("abc032"));
 //		System.out.println(Utils.prepareBaiduPageNumber(0));
 //		System.out.println(Utils.prepareBaiduPageNumber(10));
 //		System.out.println(Utils.prepareBaiduPageNumber(21));
@@ -440,5 +481,9 @@ public class Utils {
 //		// System.out.println(calculateOptimizePlanCount(3000, 2, 0));
 //		System.out.println(getCurrentTimestamp());
 //		System.out.println(addDay(getCurrentTimestamp(), 2));
+		for (int i = 0; i < 200; i++) {
+			System.out.println("结果： " + Utils.getRoundValue((Math.random() * 0.7 + 0.5), 2));
+			System.out.println("结果： " + Utils.getRoundValue(-(Math.random() * 0.7 + 0.5), 2));
+		}
 	}
 }
