@@ -312,19 +312,19 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	}
 
 	private void updateQZKeywordRankInfo(List<QZKeywordRankInfo> existingQZKeywordRankInfos, List<QZOperationType> qzOperationTypes, QZSetting qzSetting){
-		Map<String, Map<String, QZKeywordRankInfo>> existingQZKeywordRankInfoMap = new HashMap<>();
+		Map<String, Map<String, QZKeywordRankInfo>> existingQZKeywordRankInfoMap = new HashMap<>(2);
 		for (QZKeywordRankInfo qzKeywordRankInfo : existingQZKeywordRankInfos) {
             Map<String, QZKeywordRankInfo> qzKeywordRankInfoMap = existingQZKeywordRankInfoMap.get(qzKeywordRankInfo.getTerminalType());
             if (null != qzKeywordRankInfoMap){
 		        qzKeywordRankInfoMap.put(qzKeywordRankInfo.getWebsiteType(), qzKeywordRankInfo);
             } else {
-                qzKeywordRankInfoMap = new HashMap<>();
+                qzKeywordRankInfoMap = new HashMap<>(4);
                 qzKeywordRankInfoMap.put(qzKeywordRankInfo.getWebsiteType(), qzKeywordRankInfo);
             }
             existingQZKeywordRankInfoMap.put(qzKeywordRankInfo.getTerminalType(), qzKeywordRankInfoMap);
 		}
 
-		Map<String, String> standardSpeciesMap = new HashMap<>();
+		Map<String, String> standardSpeciesMap = new HashMap<>(2);
 		for (QZOperationType qzOperationType : qzOperationTypes) {
             Map<String, QZKeywordRankInfo> qzKeywordRankInfoMap = existingQZKeywordRankInfoMap.get(qzOperationType.getOperationType());
             String standardSpecies = null;
@@ -332,16 +332,17 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
             if (null != qzKeywordRankInfoMap) {
 				if (CollectionUtils.isNotEmpty(qzOperationType.getQzChargeRules())) {
 					QZChargeRule qzChargeRule = qzOperationType.getQzChargeRules().iterator().next();
-					QZKeywordRankInfo qzKeywordRankInfo = qzKeywordRankInfoMap.get(qzChargeRule.getStandardSpecies());
+					String newStandardSpecies = qzChargeRule.getStandardSpecies();
+					QZKeywordRankInfo qzKeywordRankInfo = qzKeywordRankInfoMap.get(newStandardSpecies);
 					if (null != qzKeywordRankInfo && qzKeywordRankInfo.getDataProcessingStatus()) {
-						existingStandardSpeciesSet.add(qzChargeRule.getStandardSpecies());
-						if (qzChargeRule.getStandardSpecies().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)
+						existingStandardSpeciesSet.add(newStandardSpecies);
+						if (newStandardSpecies.equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)
 								&& qzSetting.getSearchEngine().equals(Constants.SEARCH_ENGINE_BAIDU)) {
 							existingStandardSpeciesSet.add("aiZhan");
 						}
 					} else {
-						if (!"other".equals(qzChargeRule.getStandardSpecies())) {
-							standardSpecies = qzChargeRule.getStandardSpecies();
+						if (!"other".equals(newStandardSpecies)) {
+							standardSpecies = newStandardSpecies;
 						}
 					}
 				} else {
