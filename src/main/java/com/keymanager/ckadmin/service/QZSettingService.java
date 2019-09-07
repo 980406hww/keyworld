@@ -6,7 +6,10 @@ import com.keymanager.ckadmin.criteria.ProductkeywordCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.entity.ProductKeyword;
 import com.keymanager.ckadmin.entity.QZSetting;
+import com.keymanager.ckadmin.vo.QZSearchEngineVO;
+import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -19,4 +22,8 @@ import java.util.List;
 public interface QZSettingService extends IService<QZSetting> {
 
     Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingCriteria qzSettingCriteria);
+
+    List<QZSearchEngineVO> searchQZSettingSearchEngineMap(
+        QZSettingCriteria criteria, Integer record);
+
 }

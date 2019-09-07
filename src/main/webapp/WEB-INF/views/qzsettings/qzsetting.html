@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <style>
         .layui-table-cell {
-            height:auto;
+            height: auto;
             overflow:visible;
             text-overflow:inherit;
         }
@@ -25,20 +25,25 @@
             margin: 0 0;
             padding: 0 0
         }
+
         .layui-tab-content {
             padding: 0
         }
+        .layui-table-body .layui-table-col-special {
+            height: 223px;
+        }
         .layui-table-col-special .header {
             width: 100%;
-            height: 40px;
+            height: 42px;
             border-bottom: 1px solid #e6e6e6;
         }
+
         .layui-table-col-special .header span .contactPerson-name,  .layui-table-col-special .header .header span .organization-name, .layui-table-col-special .header .header span domain{
-            max-width: 100px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+
         .layui-table-col-special .body {
             height: 150px
         }
@@ -78,41 +83,12 @@
 
 <div class="layui-fluid">
     <div class="layadmin-caller">
-        <div class="layui-tab layui-tab-card caller-tab" lay-filter="docDemoTabBrief">
+        <div class="layui-tab layui-tab-card caller-tab" lay-filter="searchEngineTab">
             <ul class="layui-tab-title">
-                <li class="layui-this">PC</li>
-                <li>Phone</li>
-                <li>联系地址</li>
+
             </ul>
             <div class="layui-tab-content" >
-                <div class="layui-tab-item layui-show">
-                    <div class="caller-contar">
-                        <div class="caller-item">
-                            <img src="${ctx.basePath}/static/ok-admin/lib/style/res/template/portrait.png" alt="" class="caller-img caller-fl">
-                            <div class="caller-main caller-fl">
-                                <p><strong>胡歌</strong> <em>最近联系：1 小时前</em></p>
-                                <p class="caller-adds"><i class="layui-icon layui-icon-location"></i>浙江省广州市越秀区中山六路109</p>
-                                <div class="caller-iconset">
-                                    <i class="layui-icon layui-icon-login-wechat"></i>
-                                    <i class="layui-icon layui-icon-login-qq"></i>
-                                    <i class="layui-icon layui-icon-login-weibo"></i>
-                                </div>
-                            </div>
-                            <button class="layui-btn layui-btn-sm caller-fr">
-                                <i class="layui-icon layui-icon-ok"></i>
-                                已收藏
-                            </button>
-                        </div>
 
-                    </div>
-
-                </div>
-                <div class="layui-tab-item">
-
-                    <table class="layui-hide" id="qzSettingTable" lay-filter="tableFilter">
-                    </table>
-                </div>
-                <div class="layui-tab-item">3</div>
             </div>
         </div>
 
@@ -144,26 +120,72 @@
         var form = layui.form;
         var $ = layui.jquery;
 
-        get_qzsettting();
-        function get_qzsettting(){
+        element.on('tab(searchEngineTab)', function (data) {
+            let tableName =  this.getAttribute('lay-id');
+            let st = tableName.split("-")[0];
+            let searchEngine = st.substr(0,st.indexOf('P'));
+            let terminalType = st.substr(st.indexOf('P'),st.length);
+            get_qzsettting(tableName, searchEngine, terminalType)
+        });
+
+        function addSearchEngineTab(title, content, id){
+            element.tabAdd('searchEngineTab', {
+                title: title
+                ,content: content
+                ,id: id
+            })
+        }
+        /*动态加载tab栏*/
+        $.ajax({
+            url: '/internal/qzsetting/getQZSettingSearchEngineMap',
+            type: 'get',
+            // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
+            dataType: 'json',
+            success: function (res) {
+                let data = res.data;
+                console.log(res.data);
+                for (let item in data) {
+                    if (data[item].terminalType === 'PC') {
+                        let tablename = data[item].searchEngineName + data[item].terminalType + '-Table';
+
+                        let content = '<div class="layui-tab-item layui-show"><table class="layui-hide" id="' + tablename
+                            + '" lay-filter="tableFilter"></div>';
+                        addSearchEngineTab(data[item].searchEngineName + data[item].terminalType, content, tablename)
+                    } else {
+                        let tablename = data[item].searchEngineName + '-Table';
+                        let content = '<div class="layui-tab-item layui-show"><table class="layui-hide" id="' + tablename
+                            + '" lay-filter="tableFilter"></div>';
+                        addSearchEngineTab(data[item].searchEngineName, content, tablename)
+                    }
+                }
+            }
+        });
+
+
+        function get_qzsettting(tableName, searchEngine, terminalType){
+            var tableElem = '#'+tableName;
             table.render({
-                elem: '#qzSettingTable',
+                elem: tableElem,
                 method: 'post',
                 url: '/internal/qzsetting/getQZSettings',
                 limit: 50,
                 page: true,
                 size: 'sm',
-                id: 'qzSettingTable',
+                id: ''+tableName,
                 contentType: 'application/json',
+                where: {
+                    searchEngine: searchEngine,
+                    terminalType: terminalType
+                },
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', fixed: "left", width: '2%'},
                     {filed: 'uuid', title: '记录', width: '98%', templet: '#item'},
 
                 ]],
-                height: $(document).height() - $('#qzSettingTable').offset().top - 160,
+                height: $(document).height() - $('#'+tableName).offset().top - 160,
 
                 done: function (res, curr, count) {
-                    console.log(res)
+                    // console.log(res)
                 }
             });
         }
@@ -197,7 +219,7 @@
             <div class="layui-col-md1">
                 <span class="to-5118"><a href="https://www.5118.com/seo/{{d.domain}}" target="_blank" title="查看5118,需要登录">5118</a></span>
             </div>
-            <div class="layui-col-md1">
+            <!--<div class="layui-col-md1">
                 <span>
                     达标监控:<br>
                     <a href="javascript:;">
@@ -208,7 +230,7 @@
                         {{# } }}
                     </a>
                 </span>
-            </div>
+            </div>-->
             <div class="layui-col-md1">
                 <span>
                     自动采词:<br>
@@ -221,7 +243,7 @@
                     </a>
                 </span>
             </div>
-            <div class="layui-col-md1">
+           <!-- <div class="layui-col-md1">
                 <span>
                     达标计划:<br>
                     <a href="javascript:;">
@@ -232,7 +254,7 @@
                         {{# } }}
                     </a>
                 </span>
-            </div>
+            </div>-->
             <div class="layui-col-md1">
                 <span>
                     爬取状态:<br>

@@ -10,15 +10,19 @@ import com.keymanager.ckadmin.criteria.base.BaseCriteria;
  * @Version 1.0
  */
 public class QZSettingCriteria extends BaseCriteria {
-    private String ternimalType;
+    private String loginName;
+    private String customerUuid;
+    private String terminalType;
     private String searchEngine;
+    private String domain;
+    private String group;
 
-    public String getTernimalType() {
-        return ternimalType;
+    public String getTerminalType() {
+        return terminalType;
     }
 
-    public void setTernimalType(String ternimalType) {
-        this.ternimalType = ternimalType;
+    public void setTerminalType(String terminalType) {
+        this.terminalType = terminalType;
     }
 
     public String getSearchEngine() {
@@ -27,5 +31,37 @@ public class QZSettingCriteria extends BaseCriteria {
 
     public void setSearchEngine(String searchEngine) {
         this.searchEngine = searchEngine;
+    }
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
+
+    public String getCustomerUuid() {
+        return customerUuid;
+    }
+
+    public void setCustomerUuid(String customerUuid) {
+        this.customerUuid = customerUuid;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 }

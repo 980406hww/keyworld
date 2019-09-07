@@ -64,10 +64,10 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fUpdateStatus", strategy = FieldStrategy.IGNORED)
 	private String updateStatus;
 
-	@TableField(value = "fIsMonitor")
+	@TableField(exist = false)
 	private boolean fIsMonitor;
 
-	@TableField(value = "fIsReady")
+	@TableField(exist = false)
 	private boolean fIsReady;
 
 	@TableField(value = "fUpdateStartTime")
