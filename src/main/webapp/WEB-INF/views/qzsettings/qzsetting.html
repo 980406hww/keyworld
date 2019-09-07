@@ -12,10 +12,11 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/style/template.css" media="all">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <style>
-        .layui-table-cell {
-            height: auto;
+        .layui-tab-item .layui-table-cell {
+            height:auto;
             overflow:visible;
             text-overflow:inherit;
+            white-space:normal;
         }
 
         .layadmin-caller {background: #fff;padding: 0;}
@@ -23,22 +24,24 @@
         .layui-fluid {
             position: relative;
             margin: 0 0;
-            padding: 0 0
+            padding: 0 0;
         }
 
         .layui-tab-content {
             padding: 0
         }
         .layui-table-body .layui-table-col-special {
-            height: 223px;
+            height: 225px;
         }
         .layui-table-col-special .header {
             width: 100%;
-            height: 42px;
+            height: 44px;
             border-bottom: 1px solid #e6e6e6;
         }
 
-        .layui-table-col-special .header span .contactPerson-name,  .layui-table-col-special .header .header span .organization-name, .layui-table-col-special .header .header span domain{
+        .layui-table-col-special .header span .contactPerson-name,
+        .layui-table-col-special .header span .organization-name,
+        .layui-table-col-special .header span .domain{
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -80,7 +83,37 @@
         <i class="layui-icon layui-icon-refresh"></i>
     </a>
 </div>
+<div class="layui-card ">
+    <div class="layui-card-body ">
+        <div class="layui-collapse" lay-filter="test">
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">条件筛选<i class="layui-icon layui-colla-icon"></i></h2>
+                <div class="layui-colla-content" id="searchContent">
+                    <form class="layui-form layui-form-pane" id="searchForm">
 
+                        <div class="layui-form-item" lay-filter="loginNameFilter">
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <select name="domain" id="domain" lay-filter="domainFilter" lay-search>
+                                        <option value="">请输入域名</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="layui-fluid">
     <div class="layadmin-caller">
         <div class="layui-tab layui-tab-card caller-tab" lay-filter="searchEngineTab">
@@ -92,25 +125,9 @@
             </div>
         </div>
 
-<!--        <div id="demo1"></div>-->
     </div>
 </div>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
-<script>
-    layui.config({
-        base: '/static/ok-admin/lib/' //静态资源所在路径
-    }).extend({
-        index: 'lib/index' //主入口模块
-    }).use(['index', 'laypage','layer'], function(){
-        var laypage = layui.laypage,layer = layui.layer;
-        laypage.render({
-            elem: 'demo1'
-            ,count: 70 //数据总数
-
-        });
-
-    });
-</script>
 <script>
 
     // layui相关
@@ -120,13 +137,7 @@
         var form = layui.form;
         var $ = layui.jquery;
 
-        element.on('tab(searchEngineTab)', function (data) {
-            let tableName =  this.getAttribute('lay-id');
-            let st = tableName.split("-")[0];
-            let searchEngine = st.substr(0,st.indexOf('P'));
-            let terminalType = st.substr(st.indexOf('P'),st.length);
-            get_qzsettting(tableName, searchEngine, terminalType)
-        });
+
 
         function addSearchEngineTab(title, content, id){
             element.tabAdd('searchEngineTab', {
@@ -139,11 +150,11 @@
         $.ajax({
             url: '/internal/qzsetting/getQZSettingSearchEngineMap',
             type: 'get',
+            asyns: false,
             // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
             dataType: 'json',
             success: function (res) {
                 let data = res.data;
-                console.log(res.data);
                 for (let item in data) {
                     if (data[item].terminalType === 'PC') {
                         let tablename = data[item].searchEngineName + data[item].terminalType + '-Table';
@@ -158,9 +169,17 @@
                         addSearchEngineTab(data[item].searchEngineName, content, tablename)
                     }
                 }
+                element.tabChange('searchEngineTab', '百度PC-Table');
             }
         });
 
+        element.on('tab(searchEngineTab)', function (data) {
+            let tableName =  this.getAttribute('lay-id');
+            let st = tableName.split("-")[0];
+            let searchEngine = st.substr(0,st.indexOf('P'));
+            let terminalType = st.substr(st.indexOf('P'),st.length);
+            get_qzsettting(tableName, searchEngine, terminalType)
+        });
 
         function get_qzsettting(tableName, searchEngine, terminalType){
             var tableElem = '#'+tableName;
@@ -185,14 +204,11 @@
                 height: $(document).height() - $('#'+tableName).offset().top - 160,
 
                 done: function (res, curr, count) {
-                    // console.log(res)
                 }
             });
         }
         table.on('checkbox(tableFilter)', function(obj){
-            console.log(obj.checked); //当前是否选中状态
-            console.log(obj.data); //选中行的相关数据
-            console.log(obj.type); //如果触发的是全选，则为：all，如果触发的是单选，则为：one
+
         });
 
 
@@ -214,23 +230,11 @@
                 <span class="organization-name" title="{{d.organizationName}}"><a href="javascript:;">{{d.organizationName}}</a></span>
             </div>
             <div class="layui-col-md1">
-                <span class="to-aizhan"><a href="https://www.aizhan.com/cha/{{d.domain}}" target="_blank" title="查看爱站">爱站</a></span>
+                <span><a href="https://www.aizhan.com/cha/{{d.domain}}" target="_blank" title="查看爱站">爱站</a></span>
             </div>
             <div class="layui-col-md1">
-                <span class="to-5118"><a href="https://www.5118.com/seo/{{d.domain}}" target="_blank" title="查看5118,需要登录">5118</a></span>
+                <span><a href="https://www.5118.com/seo/{{d.domain}}" target="_blank" title="查看5118,需要登录">5118</a></span>
             </div>
-            <!--<div class="layui-col-md1">
-                <span>
-                    达标监控:<br>
-                    <a href="javascript:;">
-                        {{#  if(d.fIsMonitor) { }}
-                            是
-                        {{#  }else{ }}
-                            否
-                        {{# } }}
-                    </a>
-                </span>
-            </div>-->
             <div class="layui-col-md1">
                 <span>
                     自动采词:<br>
@@ -243,18 +247,6 @@
                     </a>
                 </span>
             </div>
-           <!-- <div class="layui-col-md1">
-                <span>
-                    达标计划:<br>
-                    <a href="javascript:;">
-                        {{#  if(d.fIsReady) { }}
-                            是
-                        {{#  }else{ }}
-                            否
-                        {{# } }}
-                    </a>
-                </span>
-            </div>-->
             <div class="layui-col-md1">
                 <span>
                     爬取状态:<br>
