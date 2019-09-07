@@ -1,6 +1,6 @@
 /*主体内容样式*/
 .ok-body {
-    padding: 0px
+    padding: 10px
 }
 
 /*welcome页面*/
@@ -58,7 +58,6 @@
 /*其他子页面*/
 /*子页面面包屑导航样式*/
 .ok-body-breadcrumb {
-    margin-left: 10px;
     position: relative;
     line-height: 39px;
     height: 32px;
