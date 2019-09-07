@@ -1948,10 +1948,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return customerKeywordDao.getAvailableOptimizationGroups(groupSettingCriteria);
     }
 
-    public void updateCustomerKeywordEffect(long customerUuid, String terminalType, String optimizeGroupName) {
-        customerKeywordDao.updateCustomerKeywordEffect(customerUuid, terminalType, optimizeGroupName);
-    }
-
     public void updateMachineGroup(CustomerKeywordCriteria customerKeywordCriteria) {
         customerKeywordDao.updateMachineGroup(customerKeywordCriteria);
     }

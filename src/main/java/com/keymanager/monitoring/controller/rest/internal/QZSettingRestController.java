@@ -280,34 +280,6 @@ public class QZSettingRestController extends SpringMVCBaseController {
         }
     }
 
-    @RequiresPermissions("/internal/qzsetting/startMonitorImmediately")
-    @RequestMapping(value = "/startMonitorImmediately", method = RequestMethod.POST)
-    public ResponseEntity<?> startMonitorImmediately(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
-        String uuids = (String) requestMap.get("uuids");
-		String userName = (String) request.getSession().getAttribute("username");
-        boolean returnValue = false;
-        try {
-            qzSettingService.startMonitorImmediately(uuids, userName);
-            returnValue = true;
-        } catch(Exception ex) {
-            logger.error(ex.getMessage());
-        }
-        return new ResponseEntity<Object>(returnValue, HttpStatus.OK);
-    }
-
-    @RequiresPermissions("/internal/qzsetting/updateQZKeywordEffectImmediately")
-    @RequestMapping(value = "/updateQZKeywordEffectImmediately", method = RequestMethod.POST)
-    public ResponseEntity<?> updateQZKeywordEffectImmediately (@RequestBody Map<String, Object> requestMap) {
-		String uuids = (String) requestMap.get("uuids");
-		try {
-			qzSettingService.updateQZKeywordEffectImmediately(uuids);
-			return new ResponseEntity<Object>(true, HttpStatus.OK);
-		} catch (Exception ex) {
-			logger.error(ex.getMessage());
-			return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-		}
-	}
-
 	@RequiresPermissions("/internal/qzsetting/updateStatus")
 	@RequestMapping(value = "/updateQZSettingRenewalStatus", method = RequestMethod.POST)
 	public ResponseEntity<?> updateQZSettingRenewalStatus(@RequestBody Map<String, Object> requestMap) {

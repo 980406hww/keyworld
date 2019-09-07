@@ -92,17 +92,7 @@
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
 					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="immediatelyUpdateQZSettings('updateSettings')" value=" 马上更新 " >&nbsp;
-					</li>
-				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
-					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="immediatelyUpdateQZSettings('startMonitor')" value=" 达标监控 " >&nbsp;
-					</li>
-				</shiro:hasPermission>
-				<shiro:hasPermission name="/internal/qzsetting/updateQZKeywordEffectImmediately">
-					<li>
-						<input class="ui-button ui-widget ui-corner-all" type="button" title="更改操作词的作用为指定词" onclick="immediatelyUpdateQZSettings('updateQZKeywordEffect')" value=" 更改为指定词 " >&nbsp;
+						<input class="ui-button ui-widget ui-corner-all" type="button" onclick="immediatelyUpdateQZSettings()" value=" 马上更新 " >&nbsp;
 					</li>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="/internal/qzsetting/updateStatus">
@@ -170,7 +160,7 @@
 					<span>客户: </span>
 					<input type="text" list="customer_list" name="customerInfo" value="${qzSettingSearchCriteria.customerInfo}">
 				</li>
-				<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
+				<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
 				<li class="userName condition">
 					<span>用户名称: </span>
 					<span>
@@ -238,7 +228,7 @@
 						</c:forEach>
 					</select>
 				</li>
-				<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
+				<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
 					<li>
 						<span>达标监控: </span>
 						<select name="hasMonitor" style="width: 80px;">
@@ -698,7 +688,7 @@
                     </c:forEach>
                 </select>
             </td>
-			<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
+			<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
 				<td style="width:65px" align="right">达标监控</td>
 				<td>
 					<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
@@ -926,7 +916,7 @@
 		</tr>
 	</table>
 	<table style="font-size:12px" cellspacing="5">
-		<shiro:hasPermission name="/internal/qzsetting/startMonitorImmediately">
+		<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
 			<c:if test="${not isSEO}">
 				<c:if test="${isBaiduEngine}">
 					<tr>

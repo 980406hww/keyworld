@@ -1549,46 +1549,19 @@ function delSelectedQZSettings(self) {
         }
     });
 }
-function immediatelyUpdateQZSettings(type) {
+function immediatelyUpdateQZSettings() {
     var uuids = getSelectedUsefulIDs();
-    if(uuids === ''){
+    if (uuids === '') {
         $.messager.alert('提示', '请选择正确的要操作的站点信息, 必须包含至少一个是指定词的站点！！', 'info');
         return false;
     }
-    var urlType = '';
-    switch (type) {
-        case "updateSettings":
-            urlType = "updateImmediately";
-            break;
-        case "startMonitor":
-            urlType = "startMonitorImmediately";
-            break;
-        case "updateQZKeywordEffect":
-            urlType = "updateQZKeywordEffectImmediately";
-            break;
-        default:
-            break;
-    }
-    updateImmediately(uuids, urlType)
-}
-function updateImmediately(uuids, urlType) {
-    switch (urlType) {
-        case "updateImmediately":
-            if (!confirm("确实要马上更新这些站点设置吗?")) return false;
-            break;
-        case "startMonitorImmediately":
-            if (!confirm("确实要启动这些站点所有终端的达标监控吗?")) return false;
-            break;
-        case "updateQZKeywordEffectImmediately":
-            if (!confirm("确认修改这些站点所有终端下操作的关键词的作用为指定词吗?")) return false;
-            break;
-        default:
-            break;
+    if (!confirm("确实要马上更新这些站点设置吗?")) {
+        return false;
     }
     var postData = {};
     postData.uuids = uuids;
     $.ajax({
-        url: '/internal/qzsetting/' + urlType,
+        url: '/internal/qzsetting/updateImmediately',
         data: JSON.stringify(postData),
         headers: {
             'Accept': 'application/json',
@@ -1596,9 +1569,9 @@ function updateImmediately(uuids, urlType) {
         },
         type: 'POST',
         success: function (data) {
-            if(data){
+            if (data) {
                 $().toastmessage('showSuccessToast', "操作成功", true);
-            }else{
+            } else {
                 $().toastmessage('showErrorToast', "操作失败");
             }
         },

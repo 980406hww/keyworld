@@ -442,13 +442,6 @@
         </choose>
     </select>
 
-    <update id="startMonitorImmediately" parameterType="java.lang.String">
-        UPDATE t_qz_setting  qs
-        SET qs.fUpdateTime = NOW(),
-        qs.fIsMonitor = 1
-        WHERE qs.fUuid IN (${uuids})
-    </update>
-
     <select id="searchQZSettingSearchEngines" resultType="com.keymanager.monitoring.vo.QZSettingVO">
         SELECT
             qs.fSearchEngine  AS 'searchEngine',

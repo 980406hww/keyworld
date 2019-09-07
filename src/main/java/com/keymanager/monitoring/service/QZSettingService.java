@@ -777,28 +777,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		return qzSettingDao.getAvailableOptimizationGroups(groupSettingCriteria);
     }
 
-    public void startMonitorImmediately(String uuids, String userName){
-        if(StringUtils.isNotEmpty(uuids)){
-            String[] qzSettingUuids = uuids.split(",");
-            for (String uuid : qzSettingUuids) {
-				QZSetting qzSetting = qzSettingDao.selectById(Long.valueOf(uuid));
-				if (null != qzSetting.getPcGroup()) {
-					CaptureRankJob existCaptureRankJob = captureRankJobService.findExistCaptureRankJob(Long.valueOf(uuid), TerminalTypeEnum.PC.name());
-					if (null == existCaptureRankJob) {
-						captureRankJobService.qzAddCaptureRankJob(qzSetting.getPcGroup(), Long.valueOf(uuid), qzSetting.getCustomerUuid(), TerminalTypeEnum.PC.name(), userName);
-					}
-				}
-				if (null != qzSetting.getPhoneGroup()) {
-					CaptureRankJob existCaptureRankJob = captureRankJobService.findExistCaptureRankJob(Long.valueOf(uuid), TerminalTypeEnum.Phone.name());
-					if (null == existCaptureRankJob) {
-						captureRankJobService.qzAddCaptureRankJob(qzSetting.getPhoneGroup(), Long.valueOf(uuid), qzSetting.getCustomerUuid(), TerminalTypeEnum.Phone.name(), userName);
-					}
-				}
-            }
-            qzSettingDao.startMonitorImmediately(uuids);
-        }
-    }
-
     public void updateCrawlerStatus(List<Long> uuids) {
         qzSettingDao.updateCrawlerStatus(uuids);
     }
@@ -809,21 +787,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public void updateQzSetting (QZSetting qzSetting) {
 		qzSettingDao.updateQzSetting(qzSetting);
-	}
-
-	public void updateQZKeywordEffectImmediately (String uuids) {
-		if(StringUtils.isNotEmpty(uuids)) {
-            String[] qzSettingUuids = uuids.split(",");
-            for (String uuid : qzSettingUuids) {
-                QZSetting qzSetting = qzSettingDao.selectById(Long.valueOf(uuid));
-				if (null != qzSetting.getPcGroup()) {
-					customerKeywordService.updateCustomerKeywordEffect(qzSetting.getCustomerUuid(), TerminalTypeEnum.PC.name(), qzSetting.getPcGroup());
-				}
-				if (null != qzSetting.getPhoneGroup()) {
-					customerKeywordService.updateCustomerKeywordEffect(qzSetting.getCustomerUuid(), TerminalTypeEnum.Phone.name(), qzSetting.getPhoneGroup());
-				}
-            }
-		}
 	}
 
 	public Map<String, String> searchQZSettingSearchEngineMap(QZSettingSearchCriteria criteria, int record) {
@@ -1011,6 +974,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		if (CollectionUtils.isNotEmpty(rankInfos)) {
 			if (rankInfos.size() > 1) {
 				handlingQKErrorData(qzSetting, terminalType);
+				saveQZRankingCurveRankInfo(qzSetting.getUuid(), terminalType, null,
+					qzSettingKeywordCount);
 			} else {
 				QZKeywordRankInfo rankInfo = rankInfos.iterator().next();
 				String dateStr = rankInfo.getBaiduRecordFullDate();

@@ -1654,16 +1654,6 @@
         </choose>
     </update>
 
-    <update id="updateCustomerKeywordEffect">
-        UPDATE t_customer_keyword
-        SET fKeywordEffect = 'Appointment'
-        WHERE fCustomerUuid = #{customerUuid}
-        AND fOptimizeGroupName = #{optimizeGroupName}
-        AND fTerminalType = #{terminalType}
-        AND fStatus = 1
-        AND fKeywordEffect <![CDATA[<>]]> 'Appointment'
-    </update>
-
     <update id="updateMachineGroup" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordCriteria">
             UPDATE t_customer_keyword ck
             SET ck.fMachineGroup = #{customerKeywordCriteria.targetMachineGroup},
