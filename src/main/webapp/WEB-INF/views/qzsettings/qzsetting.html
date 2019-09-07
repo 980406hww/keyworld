@@ -1,0 +1,446 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>搜索</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/style/admin.css" media="all">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/style/template.css" media="all">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <style>
+        .layui-table-cell {
+            height:auto;
+            overflow:visible;
+            text-overflow:inherit;
+        }
+
+        .layadmin-caller {background: #fff;padding: 0;}
+
+        .layui-fluid {
+            position: relative;
+            margin: 0 0;
+            padding: 0 0
+        }
+        .layui-tab-content {
+            padding: 0
+        }
+        .layui-table-col-special .header {
+            width: 100%;
+            height: 40px;
+            border-bottom: 1px solid #e6e6e6;
+        }
+        .layui-table-col-special .header span .contactPerson-name,  .layui-table-col-special .header .header span .organization-name, .layui-table-col-special .header .header span domain{
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .layui-table-col-special .body {
+            height: 150px
+        }
+
+        .layui-table-col-special .body .user-id .line1, .layui-table-col-special .body .standard-info .line1 {
+            text-align: center;
+            height: 120px !important;
+            margin-top: 50px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #000;
+        }
+
+        .layui-table-col-special .body .other-rank .line1, .layui-table-col-special .body .other-rank_2 .line1 {
+            text-align: center;
+            height: 60px !important;
+            margin-top: 20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #000;
+        }
+    </style>
+</head>
+<body class="ok-body">
+<!--面包屑导航区域-->
+<div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>全站信息设置</cite></a>
+                <a><cite>全站信息列表</cite></a>
+            </span>
+
+
+    <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon layui-icon-refresh"></i>
+    </a>
+</div>
+
+<div class="layui-fluid">
+    <div class="layadmin-caller">
+        <div class="layui-tab layui-tab-card caller-tab" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">PC</li>
+                <li>Phone</li>
+                <li>联系地址</li>
+            </ul>
+            <div class="layui-tab-content" >
+                <div class="layui-tab-item layui-show">
+                    <div class="caller-contar">
+                        <div class="caller-item">
+                            <img src="${ctx.basePath}/static/ok-admin/lib/style/res/template/portrait.png" alt="" class="caller-img caller-fl">
+                            <div class="caller-main caller-fl">
+                                <p><strong>胡歌</strong> <em>最近联系：1 小时前</em></p>
+                                <p class="caller-adds"><i class="layui-icon layui-icon-location"></i>浙江省广州市越秀区中山六路109</p>
+                                <div class="caller-iconset">
+                                    <i class="layui-icon layui-icon-login-wechat"></i>
+                                    <i class="layui-icon layui-icon-login-qq"></i>
+                                    <i class="layui-icon layui-icon-login-weibo"></i>
+                                </div>
+                            </div>
+                            <button class="layui-btn layui-btn-sm caller-fr">
+                                <i class="layui-icon layui-icon-ok"></i>
+                                已收藏
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="layui-tab-item">
+
+                    <table class="layui-hide" id="qzSettingTable" lay-filter="tableFilter">
+                    </table>
+                </div>
+                <div class="layui-tab-item">3</div>
+            </div>
+        </div>
+
+<!--        <div id="demo1"></div>-->
+    </div>
+</div>
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/static/ok-admin/lib/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'laypage','layer'], function(){
+        var laypage = layui.laypage,layer = layui.layer;
+        laypage.render({
+            elem: 'demo1'
+            ,count: 70 //数据总数
+
+        });
+
+    });
+</script>
+<script>
+
+    // layui相关
+    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+
+        get_qzsettting();
+        function get_qzsettting(){
+            table.render({
+                elem: '#qzSettingTable',
+                method: 'post',
+                url: '/internal/qzsetting/getQZSettings',
+                limit: 50,
+                page: true,
+                size: 'sm',
+                id: 'qzSettingTable',
+                contentType: 'application/json',
+                cols: [[
+                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '2%'},
+                    {filed: 'uuid', title: '记录', width: '98%', templet: '#item'},
+
+                ]],
+                height: $(document).height() - $('#qzSettingTable').offset().top - 160,
+
+                done: function (res, curr, count) {
+                    console.log(res)
+                }
+            });
+        }
+        table.on('checkbox(tableFilter)', function(obj){
+            console.log(obj.checked); //当前是否选中状态
+            console.log(obj.data); //选中行的相关数据
+            console.log(obj.type); //如果触发的是全选，则为：all，如果触发的是单选，则为：one
+        });
+
+
+    });
+
+</script>
+
+<script type="text/html" id="item">
+    <div class="layui-row header" >
+        <!--    头部信息栏    -->
+        <div class="layui-col-md7">
+            <div class="layui-col-md1">
+                <span class="contactPerson-name" title="{{d.contactPerson}}"><a href="javascript:;">{{d.contactPerson}}</a></span>
+            </div>
+            <div class="layui-col-md1">
+                <span class="domain" title="{{d.domain}}"><a href="javascript:;">{{d.domain}}</a></span>
+            </div>
+            <div class="layui-col-md1">
+                <span class="organization-name" title="{{d.organizationName}}"><a href="javascript:;">{{d.organizationName}}</a></span>
+            </div>
+            <div class="layui-col-md1">
+                <span class="to-aizhan"><a href="https://www.aizhan.com/cha/{{d.domain}}" target="_blank" title="查看爱站">爱站</a></span>
+            </div>
+            <div class="layui-col-md1">
+                <span class="to-5118"><a href="https://www.5118.com/seo/{{d.domain}}" target="_blank" title="查看5118,需要登录">5118</a></span>
+            </div>
+            <div class="layui-col-md1">
+                <span>
+                    达标监控:<br>
+                    <a href="javascript:;">
+                        {{#  if(d.fIsMonitor) { }}
+                            是
+                        {{#  }else{ }}
+                            否
+                        {{# } }}
+                    </a>
+                </span>
+            </div>
+            <div class="layui-col-md1">
+                <span>
+                    自动采词:<br>
+                    <a href="javascript:;">
+                        {{#  if(d.autoCrawlKeywordFlag) { }}
+                            是
+                        {{#  }else{ }}
+                            否
+                        {{# } }}
+                    </a>
+                </span>
+            </div>
+            <div class="layui-col-md1">
+                <span>
+                    达标计划:<br>
+                    <a href="javascript:;">
+                        {{#  if(d.fIsReady) { }}
+                            是
+                        {{#  }else{ }}
+                            否
+                        {{# } }}
+                    </a>
+                </span>
+            </div>
+            <div class="layui-col-md1">
+                <span>
+                    爬取状态:<br>
+                    <a href="javascript:;">
+                        {{#  if(d.crawlerStatus === 'new') { }}
+                            未爬取
+                        {{#  }else if(d.crawlerStatus === 'processing') { }}
+                            爬取中
+                        {{# }else{ }}
+                            爬取完成
+                        {{# } }}
+                    </a>
+                </span>
+            </div>
+            <div class="layui-col-md1">
+                <span>
+                    爬取状态:<br>
+                    <a href="javascript:;">
+                        {{#  if(d.status === '1') { }}
+                            激活
+                        {{#  }else if(d.status === '0') { }}
+                            新增
+                        {{# }else{ }}
+                            暂停
+                        {{# } }}
+                    </a>
+                </span>
+            </div>
+            <div class="layui-col-md1">
+                <span>
+                    达标时间:<br>
+                    <a href="javascript:;">{{layui.util.toDateString(d.standardTime,'yyyy-MM-dd')}}</a>
+                </span>
+            </div>
+            <div class="layui-col-md1">
+                <span>
+                    创建时间:<br>
+                    <a href="javascript:;">{{layui.util.toDateString(d.createTime,'yyyy-MM-dd')}}</a>
+                </span>
+            </div>
+
+        </div>
+        <!--    分组    -->
+        <div class="layui-col-md2">分组</div>
+        <!--     操作栏   -->
+        <div class="layui-col-md3">
+            <div class="layui-col-md2">
+                <span>
+                   <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}',' {{d.LAY_TABLE_INDEX + 1}}')">排除关键字</a>
+                </span>
+            </div>
+            <div class="layui-col-md2">
+<!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
+                <span>
+                   <a class="blue" href="javascript:showKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}','{{d.bearPawNumber}}', '{{d.LAY_TABLE_INDEX + 1}}')">指定关键字</a>
+                </span>
+<!--                </@shiro.hasPermission>-->
+
+            </div>
+            <div class="layui-col-md2">
+
+                <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
+                <span>
+                   <a class="blue" href="javascript:openMessageBox('全站设置','{{d.customerUuid}}','{{d.contactPerson}}')">用户留言</a>
+                </span>
+                <!--                </@shiro.hasPermission>-->
+            </div>
+            <div class="layui-col-md2">
+
+                <!--                <@shiro.hasPermission name="/internal/usernotebook/searchUserNoteBooks">-->
+                <span>
+                   <a class="blue" href="javascript:openNoteBookDialog('{{d.customerUuid}}','{{ $(\'#terminalType\') }}')">记事本</a>
+                </span>
+                <!--                </@shiro.hasPermission>-->
+            </div>
+            <div class="layui-col-md1">
+
+                <!--                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
+                <span>
+                   <a class="blue" href="javascript:showChargeDialog('{{d.uuid}}','{{d.contactPerson}}','{{d.domain.trim()}}',this)">收费</a>
+                </span>
+                <!--                </@shiro.hasPermission>-->
+            </div>
+            <div class="layui-col-md1">
+
+                <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
+                <span>
+                   <a class="blue" href="javascript:;" onclick="showSettingDialog($(this))">修改</a>
+                </span>
+                <!--                </@shiro.hasPermission>-->
+            </div>
+            <div class="layui-col-md1">
+
+                <!--                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
+                <span>
+                   <a class="blue" href="javascript:delQZSetting('{{d.uuid}}')">删除</a>
+                </span>
+                <!--                </@shiro.hasPermission>-->
+            </div>
+            <div class="layui-col-md2">
+
+                <!--                <@shiro.hasPermission name="/internal/qzchargelog/chargesList">-->
+                <span>
+                   <a class="blue" href="javascript:showChargeLog('{{d.uuid}}',this)">收费记录</a>
+                </span>
+                <!--                </@shiro.hasPermission>-->
+            </div>
+
+        </div>
+    </div>
+    <div class="layui-row body" >
+        <!--   身体左侧基本信息     -->
+        <div class="layui-col-md3">
+            <div class="layui-col-md2 user-id">
+                <div class="layui-col-md12 line1">
+                    <div class="layui-col-md12">
+                        <a href="javascript:;">
+                            <span class="line1" title="{{d.userID}}">{{d.userID}}</span>
+                        </a>
+                    </div>
+                    <div class="layui-col-md12">
+                        <span>用户名称</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md2 standard-info">
+                <div class="layui-col-md12 line1">
+                    <div class="layui-col-md12">
+                        <span>
+                            <a href="javascript:;" qzsettinguuid="{{d.uuid}}">
+                            {{#  if(d.organizationName !== '优化部') { }}
+                                <font style="background-color: palevioletred;font-size: 14px;">￥ 0</font>
+                            {{#  } }}
+                            </a>
+                        </span>
+                    </div>
+                    <div class="layui-col-md12">
+                        <span>全站达标信息</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md3 other-rank">
+                <div class="layui-col-md12 line1">
+                    <div class="layui-col-md12">
+                        <span>
+                              <a target="_blank" href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.LAY_TABLE_INDEX + 1}}');">0</a>
+                         </span>
+
+                    </div>
+                    <div class="layui-col-md12">
+                        <span>操作词数</span>
+                    </div>
+
+                </div>
+                <div class="layui-col-md12 line1">
+                    <div class="layui-col-md12">
+                        <span>
+                            <a href="javascript:;">
+                                {{#  if(d.renewalStatus === 1) { }}
+                                    <span style="color: green;">续费</span>
+                                {{# }else{ }}
+                                    <span style="color: red;">暂停续费</span>
+                                {{# } }}
+                            </a>
+                        </span>
+
+                    </div>
+                    <div class="layui-col-md12">
+                        <span>续费状态</span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="layui-col-md4 other-rank_2">
+                <div class="layui-col-md12 line1">
+                    <div class="layui-col-md12">
+                        <a href="javascript:;">
+                            <a href="javascript:;">暂无</a>
+                        </a>
+                    </div>
+                    <div class="layui-col-md12">
+                        <span>优化分组</span>
+                    </div>
+                </div>
+                <div class="layui-col-md12 line1">
+                    <div class="layui-col-md12">
+                        <input type="hidden" name="operationCombineName" value="">
+                        <select name="operationCombineName" lay-ignore onchange="changeQZSettingGroupOperationCombineUuid(this, '{{d.LAY_TABLE_INDEX + 1}}', '{{ $(\'#loginName\') }}', '{{ $(\'#isSEO\') }}');" style="width: 100%;">
+                            <option value=""></option>
+                            <option value="">test1</option>
+                            <option value="">test2</option>
+                        </select>
+                    </div>
+                    <div class="layui-col-md12 operationCombineSpan">
+                        <span>操作组合</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--   身体右侧曲线    -->
+        <div class="layui-col-md8">
+            曲线
+        </div>
+
+    </div>
+
+</script>
+</body>
+</html>
