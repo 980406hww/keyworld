@@ -228,24 +228,6 @@
 						</c:forEach>
 					</select>
 				</li>
-				<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
-					<li>
-						<span>达标监控: </span>
-						<select name="hasMonitor" style="width: 80px;">
-							<option value="" <c:if test="${qzSettingSearchCriteria.hasMonitor == null}">selected</c:if>>全部</option>
-							<option value="1" <c:if test="${qzSettingSearchCriteria.hasMonitor == true}">selected</c:if>>是</option>
-							<option value="0" <c:if test="${qzSettingSearchCriteria.hasMonitor == false}">selected</c:if>>否</option>
-						</select>
-					</li>
-					<li>
-						<span>达标计划: </span>
-						<select name="hasReady" style="width: 80px;">
-							<option value="" <c:if test="${qzSettingSearchCriteria.hasReady == null}">selected</c:if>>全部</option>
-							<option value="1" <c:if test="${qzSettingSearchCriteria.hasReady == true}">selected</c:if>>是</option>
-							<option value="0" <c:if test="${qzSettingSearchCriteria.hasReady == false}">selected</c:if>>否</option>
-						</select>
-					</li>
-				</shiro:hasPermission>
 				<li>
 					<span>采集状态: </span>
 					<select name="status">
@@ -308,8 +290,6 @@
 	<input type="hidden" name="categoryTag" id="categoryTag" value="${qzSettingSearchCriteria.categoryTag}"/>
 	<input type="hidden" name="createTime" id="createTime" value="${qzSettingSearchCriteria.createTime}"/>
     <input type="hidden" name="createTimePrefix" id="createTimePrefix" value="${qzSettingSearchCriteria.createTimePrefix}"/>
-    <input type="hidden" name="hasReady" id="hasReady" value="${qzSettingSearchCriteria.hasReady}"/>
-    <input type="hidden" name="hasMonitor" id="hasMonitor" value="${qzSettingSearchCriteria.hasMonitor}"/>
     <input type="hidden" name="standardSpecies" id="standardSpecies" value="${qzSettingSearchCriteria.standardSpecies}"/>
     <input type="hidden" name="optimizationType" id="optimizationType" value="${qzSettingSearchCriteria.optimizationType}"/>
 </form>
@@ -336,13 +316,7 @@
 							<span class="to-aizhan"><a href="https://www.aizhan.com/cha/${qzSetting.domain}" target="_blank" title="查看爱站">爱站</a></span>
 							<span class="to-5118"><a href="https://www.5118.com/seo/${qzSetting.domain}" target="_blank" title="查看5118,需要登录">5118</a></span>
 							<span class="fmtStandardDate">
-								达标监控:<a href="javascript:;">${qzSetting.fIsMonitor == true ? "是" : "否"}</a>
-							</span>
-							<span class="fmtStandardDate">
 								自动采词:<a href="javascript:;">${qzSetting.autoCrawlKeywordFlag == true ? "是" : "否"}</a>
-							</span>
-							<span class="fmtStandardDate">
-								达标计划:<a href="javascript:;">${qzSetting.fIsReady == true ? "是" : "否"}</a>
 							</span>
 							<span class="fmtStandardDate">
 								爬取状态:
@@ -662,42 +636,22 @@
 			<td>
 				<input type="text" name="bearPawNumber" id="bearPawNumber" style="width:240px" />
 			</td>
-			<td style="width:65px" align="right"><c:if test="${not isSEO}">达标计划</c:if></td>
+			<td style="width:65px" align="right">搜索引擎</td>
 			<td>
-				<c:if test="${not isSEO}">
-					<select name="qzSettingJoinReady" id="qzSettingJoinReady" style="width:240px">
-						<option value="1">是</option>
-						<option value="0" selected>否</option>
-					</select>
-				</c:if>
+				<select name="searchEngine" id="searchEngine" style="width:240px">
+					<c:forEach items="${searchEngineMap}" var="entry">
+						<c:choose>
+							<c:when test="${entry.key eq qzSettingSearchCriteria.searchEngine}">
+								<option value="${entry.value}" selected>${entry.key}</option>
+							</c:when>
+							<c:otherwise>
+								<option value="${entry.value}">${entry.key}</option>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</select>
 			</td>
 		</tr>
-        <tr>
-            <td style="width:65px" align="right">搜索引擎</td>
-            <td>
-                <select name="searchEngine" id="searchEngine" style="width:240px">
-                    <c:forEach items="${searchEngineMap}" var="entry">
-                        <c:choose>
-                            <c:when test="${entry.key eq qzSettingSearchCriteria.searchEngine}">
-                                <option value="${entry.value}" selected>${entry.key}</option>
-                            </c:when>
-                            <c:otherwise>
-                                <option value="${entry.value}">${entry.key}</option>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
-                </select>
-            </td>
-			<shiro:hasPermission name="/internal/qzsetting/updateImmediately">
-				<td style="width:65px" align="right">达标监控</td>
-				<td>
-					<select name="qzSettingStartMonitor" id="qzSettingStartMonitor"  style="width:240px">
-						<option value="1">是</option>
-						<option value="0" selected>否</option>
-					</select>
-				</td>
-			</shiro:hasPermission>
-        </tr>
 	</table>
 	<table style="font-size:12px" cellspacing="5">
 		<tr>

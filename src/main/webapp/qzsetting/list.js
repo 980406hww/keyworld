@@ -109,11 +109,6 @@ function detectedMoreSearchConditionDivShow() {
     var updateStatus = moreSearchCondition.find("select[name='updateStatus']").val();
     var createTime = moreSearchCondition.find("ul li.createTime input[name='createTime']").val();
     var createTimePrefix = moreSearchCondition.find("ul li.createTime input[name='createTimePrefix']").val();
-    var hasMonitor = moreSearchCondition.find("select[name='hasMonitor']").val();
-    if (hasMonitor === undefined) {
-        hasMonitor = "";
-    }
-    var hasReady = moreSearchCondition.find("select[name='hasReady']").val();
     var userInfoID = $("#chargeForm").find("#userInfoID").val();
     var organizationID = $("#chargeForm").find("#organizationID").val();
     var hasText = false;
@@ -136,8 +131,10 @@ function detectedMoreSearchConditionDivShow() {
         });
         $("#userNameTree").textbox('setValue', treeValue);
     }
-    var values = customerInfo + categoryTag + group + status + renewalStatus + autoCrawlKeywordFlag + standardSpecies +
-        optimizationType + updateStatus + createTime + createTimePrefix + operationType + hasMonitor + hasReady + userInfoID + organizationID;
+    var values = customerInfo + categoryTag + group + status + renewalStatus
+        + autoCrawlKeywordFlag + standardSpecies +
+        optimizationType + updateStatus + createTime + createTimePrefix
+        + operationType + userInfoID + organizationID;
     if (values !== "") {
         moreSearchCondition.css("display", "block");
     }
@@ -659,10 +656,6 @@ function generateQZDesignationWordTrendCharts(domElement, data) {
         domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
         return;
     }
-    if ($.trim($(domElement).parent().parent().find("a[name='fIsMonitor']").text()) === "否") {
-        domElement.innerHTML = "<h1 style='text-align: center'> 请进行达标监控 </h1>";
-        return;
-    }
     var designationWordTrendCharts = echarts.init(domElement);
     var option;
     var parentElement = $(domElement).parent()[0];
@@ -1134,11 +1127,10 @@ function trimSearchCondition(days) {
     var updateStatus = $(".conn").find("select[name='updateStatus']").val();
     var createTime = $(".conn").find(".createTime").find("input[name='createTime']").val();
     var createTimePrefix = $(".conn").find(".createTime").find("input[name='createTimePrefix']").val();
-    var hasMonitor = $(".conn li").find("select[name='hasMonitor']").val();;
-    var hasReady = $(".conn li").find("select[name='hasReady']").val();;
 
-    var str = text + customerUuid + domain + categoryTag + group + operationType + status + standardSpecies + optimizationType
-        + updateStatus + createTime + createTimePrefix + hasMonitor + hasReady;
+    var str = text + customerUuid + domain + categoryTag + group + operationType
+        + status + standardSpecies + optimizationType
+        + updateStatus + createTime + createTimePrefix;
     if (str !== '') {
         resetPagingParam = true;
     }
@@ -1190,16 +1182,6 @@ function trimSearchCondition(days) {
         chargeForm.find("#createTimePrefix").val($.trim(createTimePrefix));
     } else {
         chargeForm.find("#createTimePrefix").val(null);
-    }
-    if (hasMonitor !== "" && hasMonitor !== undefined) {
-        chargeForm.find("#hasMonitor").val(hasMonitor);
-    } else {
-        chargeForm.find("#hasMonitor").val(null);
-    }
-    if (hasReady !== "" && hasReady !== undefined) {
-        chargeForm.find("#hasReady").val(hasReady);
-    } else {
-        chargeForm.find("#hasReady").val(null);
     }
     $("#chargeForm").submit();
 }
@@ -1549,34 +1531,36 @@ function delSelectedQZSettings(self) {
         }
     });
 }
+
 function immediatelyUpdateQZSettings() {
     var uuids = getSelectedUsefulIDs();
     if (uuids === '') {
         $.messager.alert('提示', '请选择正确的要操作的站点信息, 必须包含至少一个是指定词的站点！！', 'info');
         return false;
     }
-    if (!confirm("确实要马上更新这些站点设置吗?")) {
-        return false;
-    }
-    var postData = {};
-    postData.uuids = uuids;
-    $.ajax({
-        url: '/internal/qzsetting/updateImmediately',
-        data: JSON.stringify(postData),
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        type: 'POST',
-        success: function (data) {
-            if (data) {
-                $().toastmessage('showSuccessToast', "操作成功", true);
-            } else {
-                $().toastmessage('showErrorToast', "操作失败");
-            }
-        },
-        error: function () {
-            $().toastmessage('showErrorToast', "操作失败");
+    parent.$.messager.confirm('确认', "确认收费?", function (b) {
+        if (b) {
+            var postData = {};
+            postData.uuids = uuids;
+            $.ajax({
+                url: '/internal/qzsetting/updateImmediately',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: 'POST',
+                success: function (data) {
+                    if (data) {
+                        $().toastmessage('showSuccessToast', "操作成功", true);
+                    } else {
+                        $().toastmessage('showErrorToast', "操作失败");
+                    }
+                },
+                error: function () {
+                    $().toastmessage('showErrorToast', "操作失败");
+                }
+            });
         }
     });
 }
@@ -2090,8 +2074,6 @@ function initSettingDialog(qzSetting, self) {
         settingDialogDiv.find("#qzSettingIgnoreNoOrder").val(qzSetting.ignoreNoOrder ? "1" : "0");
         settingDialogDiv.find("#qzSettingInterval").val(qzSetting.updateInterval != null ? qzSetting.updateInterval : "");
     }
-    settingDialogDiv.find("#qzSettingStartMonitor").val(qzSetting.fIsMonitor ? "1" : "0");
-    settingDialogDiv.find("#qzSettingJoinReady").val(qzSetting.fIsReady ? "1" : "0");
     settingDialogDiv.find("#qzSettingEntryType").val(qzSetting.type != null ? qzSetting.type : "");
     var organizationName = $(self).parent().parent().find("span.organization-name a").text();
     var flag = true;
@@ -2203,16 +2185,6 @@ function saveChangeSetting(self, refresh) {
         qzSetting.ignoreNoIndex = true;
         qzSetting.ignoreNoOrder = true;
         qzSetting.updateInterval = 2;
-    }
-    if (settingDialogDiv.find("#qzSettingStartMonitor").length > 0) {
-        qzSetting.fIsMonitor = settingDialogDiv.find("#qzSettingStartMonitor").val() === "1" ? true : false;
-    } else {
-        qzSetting.fIsMonitor = false;
-    }
-    if (settingDialogDiv.find("#qzSettingJoinReady").length > 0) {
-        qzSetting.fIsReady = settingDialogDiv.find("#qzSettingJoinReady").val() === "1" ? true : false;
-    } else {
-        qzSetting.fIsReady = false;
     }
     qzSetting.pcGroup = settingDialogDiv.find("#groupPC").val().trim();
     qzSetting.phoneGroup = settingDialogDiv.find("#groupPhone").val().trim();

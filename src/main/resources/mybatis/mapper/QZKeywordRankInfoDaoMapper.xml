@@ -93,8 +93,6 @@
         <if test="criteria.updateStatus != null and criteria.updateStatus != ''">AND qs.fUpdateStatus = #{criteria.updateStatus}</if>
         <if test="criteria.status != null">AND qs.fStatus = #{criteria.status}</if>
         <if test="criteria.renewalStatus != null">AND qs.fRenewalStatus = #{criteria.renewalStatus}</if>
-        <if test="criteria.hasMonitor != null">AND qs.fIsMonitor = #{criteria.hasMonitor}</if>
-        <if test="criteria.hasReady != null">AND qs.fIsReady = #{criteria.hasReady}</if>
         <if test="criteria.standardSpecies != null and criteria.standardSpecies != ''">AND qk.fWebsiteType = #{criteria.standardSpecies}</if>
         <if test="criteria.optimizationType != null">AND qot.fOptimizationType = #{criteria.optimizationType}</if>
         <if test="criteria.renewalStatus != null">AND qs.fRenewalStatus = #{criteria.renewalStatus}</if>

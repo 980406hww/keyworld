@@ -62,12 +62,6 @@ public class QZSetting extends BaseEntity{
 	@TableField(value = "fUpdateStatus", strategy = FieldStrategy.IGNORED)
 	private String updateStatus;
 
-	@TableField(value = "fIsMonitor")
-	private boolean fIsMonitor;
-
-	@TableField(value = "fIsReady")
-	private boolean fIsReady;
-
 	@TableField(value = "fUpdateStartTime")
 	private Date updateStartTime;
 
@@ -82,24 +76,32 @@ public class QZSetting extends BaseEntity{
 
 	@TableField(value = "fStatus")
 	private int status;
-
+	/**
+	 * 续费状态 1：续费  0：暂停续费
+	 */
 	@TableField(value = "fRenewalStatus")
-	private int renewalStatus; // 续费状态 1：续费  0：暂停续费
-
+	private int renewalStatus;
+	/**
+	 * qzOperationTypes为全站表子类  一对多
+	 */
 	@TableField(exist = false)
-	private List<QZOperationType> qzOperationTypes; //qzOperationTypes为全站表子类  一对多
+	private List<QZOperationType> qzOperationTypes;
 
 	@TableField(value = "fCrawlerTime")
 	private Date crawlerTime;
 
 	@TableField(value = "fCrawlerStatus")
 	private String crawlerStatus;
-
+	/**
+	 * QZCategoryTag为全站表子类 一对多
+	 */
 	@TableField(exist = false)
-	private List<QZCategoryTag> qzCategoryTags; // QZCategoryTag为全站表子类 一对多
-
+	private List<QZCategoryTag> qzCategoryTags;
+	/**
+	 * 达标种类 (PC_aiZhan 或者 PC_5118), (Phone_aiZhan 或者 Phone_5118)
+	 */
 	@TableField(exist = false)
-	private List<String> standardSpecies; // 达标种类 (PC_aiZhan 或者 PC_5118), (Phone_aiZhan 或者 Phone_5118)
+	private List<String> standardSpecies;
 
 	public String getUserID() {
 		return userID;
@@ -315,22 +317,6 @@ public class QZSetting extends BaseEntity{
 
 	public void setStandardSpecies (List<String> standardSpecies) {
 		this.standardSpecies = standardSpecies;
-	}
-
-	public boolean getfIsMonitor () {
-		return fIsMonitor;
-	}
-
-	public void setfIsMonitor (boolean fIsMonitor) {
-		this.fIsMonitor = fIsMonitor;
-	}
-
-	public boolean getfIsReady () {
-		return fIsReady;
-	}
-
-	public void setfIsReady (boolean fIsReady) {
-		this.fIsReady = fIsReady;
 	}
 
 	public int getRenewalStatus() {
