@@ -10,7 +10,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-@Repository("QZSettingDao2")
+@Repository("qzSettingDao2")
 public interface QZSettingDao extends BaseMapper<QZSetting> {
 
 

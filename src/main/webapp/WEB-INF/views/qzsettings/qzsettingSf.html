@@ -29,7 +29,7 @@
 </head>
 <div>
   <!--form表单-->
-  <form class="layui-form layui-form-pane ok-form" lay-filter="addCustomer">
+  <form class="layui-form layui-form-pane ok-form" lay-filter="qzSettingSf">
     <div class="ok-body">
       <input type="hidden" name="qzSettingUuid"/>
       <div class="layui-form-item">
@@ -59,60 +59,58 @@
             </div>
           </div>
           <div id="comQzsettingBox" class="qzsetting-box">
-            <input type="hidden" name="qzOperationTypeUuid"/>
+            <input type="hidden" name="pcQzOperationTypeUuid"/>
             <div class="layui-form-item">
               <label class="layui-form-label">初始词量</label>
               <div class="layui-input-block">
-                <input type="text" name="initialKeywordCount" placeholder="请输入初始词量"
+                <input type="text" name="pcInitialKeywordCount" placeholder="请输入初始词量"
                        autocomplete="off" disabled
-                       class="layui-input" lay-verify="required">
+                       class="layui-input">
               </div>
             </div>
             <div class="layui-form-item">
               <label class="layui-form-label">当前词量</label>
               <div class="layui-input-block">
-                <input type="text" name="currentKeywordCount" placeholder="请输入当前词量"
+                <input type="text" name="pcCurrentKeywordCount" placeholder="请输入当前词量"
                        autocomplete="off" disabled
-                       class="layui-input" lay-verify="required">
+                       class="layui-input">
               </div>
             </div>
             <div class="layui-form-item">
               <label class="layui-form-label">应收金额</label>
               <div class="layui-input-block">
-                <input type="text" name="receivableAmount" placeholder="请输入应收金额"
+                <input type="text" name="pcReceivableAmount" placeholder="请输入应收金额"
                        autocomplete="off" disabled
-                       class="layui-input" lay-verify="required">
+                       class="layui-input">
               </div>
             </div>
             <div class="layui-form-item">
               <label class="layui-form-label">计划收费日期</label>
               <div class="layui-input-block">
-                <input type="text" name="planChargeDate" placeholder="请选择计划收费日期"
+                <input type="text" name="pcPlanChargeDate" placeholder="请选择计划收费日期"
                        autocomplete="off" id="layui-date-one" class="layui-input"
-                       lay-verify="required" disabled>
+                       disabled>
               </div>
             </div>
             <div class="layui-form-item">
               <label class="layui-form-label">下次收费日期</label>
               <div class="layui-input-block">
-                <input type="text" name="nextChargeDate" placeholder="请选择下次收费日期"
-                       autocomplete="off" id="layui-date-two" class="layui-input"
-                       lay-verify="required">
+                <input type="text" name="pcNextChargeDate" placeholder="请选择下次收费日期"
+                       autocomplete="off" id="layui-date-two" class="layui-input">
               </div>
             </div>
             <div class="layui-form-item">
               <label class="layui-form-label">实收金额</label>
               <div class="layui-input-block">
-                <input type="text" name="actualAmount" placeholder="请输入实收金额" id="pc-i"
-                       autocomplete="off" class="layui-input" lay-verify="required">
+                <input type="text" name="pcActualAmount" placeholder="请输入实收金额" id="pc-i"
+                       autocomplete="off" class="layui-input">
               </div>
             </div>
             <div class="layui-form-item">
               <label class="layui-form-label">实际收费日期</label>
               <div class="layui-input-block">
-                <input type="text" name="actualChargeDate" placeholder="请选择实际收费日期"
-                       autocomplete="off" id="layui-date-three" class="layui-input"
-                       lay-verify="required">
+                <input type="text" name="pcActualChargeDate" placeholder="请选择实际收费日期"
+                       autocomplete="off" id="layui-date-three" class="layui-input">
               </div>
             </div>
           </div>
@@ -126,45 +124,44 @@
             </div>
           </div>
           <div id="phoneQzsettingBox" class="qzsetting-box">
-            <input type="hidden" name="qzOperationTypeUuid"/>
+            <input type="hidden" name="phoneQzOperationTypeUuid"/>
             <div class="layui-form-item">
               <label class="layui-form-label">初始词量</label>
               <div class="layui-input-block">
-                <input type="text" name="initialKeywordCount" placeholder="请输入初始词量"
+                <input type="text" name="phoneInitialKeywordCount" placeholder="请输入初始词量"
                        autocomplete="off" disabled
-                       class="layui-input" lay-verify="required">
+                       class="layui-input">
               </div>
             </div>
             <div class="layui-form-item">
               <label class="layui-form-label">当前词量</label>
               <div class="layui-input-block">
-                <input type="text" name="currentKeywordCount" placeholder="请输入当前词量"
+                <input type="text" name="phoneCurrentKeywordCount" placeholder="请输入当前词量"
                        autocomplete="off" disabled
-                       class="layui-input" lay-verify="required">
+                       class="layui-input">
               </div>
             </div>
             <div class="layui-form-item">
               <label class="layui-form-label">应收金额</label>
               <div class="layui-input-block">
-                <input type="text" name="receivableAmount" placeholder="请输入应收金额"
+                <input type="text" name="phoneReceivableAmount" placeholder="请输入应收金额"
                        autocomplete="off" disabled
-                       class="layui-input" lay-verify="required">
+                       class="layui-input">
               </div>
             </div>
             <div class="layui-form-item">
               <label class="layui-form-label">计划收费日期</label>
               <div class="layui-input-block">
-                <input type="text" name="planChargeDate" placeholder="请选择计划收费日期"
+                <input type="text" name="phonePlanChargeDate" placeholder="请选择计划收费日期"
                        autocomplete="off" id="layui-date-four" class="layui-input"
-                       lay-verify="required" disabled>
+                       disabled>
               </div>
             </div>
             <div class="layui-form-item">
               <label class="layui-form-label">下次收费日期</label>
               <div class="layui-input-block">
-                <input type="text" name="nextChargeDate" placeholder="请选择下次收费日期"
-                       autocomplete="off" id="layui-date-five" class="layui-input"
-                       lay-verify="required">
+                <input type="text" name="phoneNextChargeDate" placeholder="请选择下次收费日期"
+                       autocomplete="off" id="layui-date-five" class="layui-input">
               </div>
             </div>
             <div class="layui-form-item">
@@ -172,15 +169,14 @@
               <div class="layui-input-block">
                 <input type="text" name="actualAmount" placeholder="请输入实收金额"
                        autocomplete="off" id="phone-i"
-                       class="layui-input" lay-verify="required">
+                       class="layui-input">
               </div>
             </div>
             <div class="layui-form-item">
               <label class="layui-form-label">实际收费日期</label>
               <div class="layui-input-block">
-                <input type="text" name="actualChargeDate" placeholder="请选择实际收费日期"
-                       autocomplete="off" id="layui-date-six" class="layui-input"
-                       lay-verify="required">
+                <input type="text" name="phoneActualChargeDate" placeholder="请选择实际收费日期"
+                       autocomplete="off" id="layui-date-six" class="layui-input">
               </div>
             </div>
           </div>
@@ -208,30 +204,50 @@
 
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script>
-
-  let uuid_ = null;
+  let data_ = null;
   let layui_ = null;
+  let comQzsettingBox = document.getElementById('comQzsettingBox');
+  let phoneQzsettingBox = document.getElementById('phoneQzsettingBox')
 
   function initForm(data) {
-    uuid_ = data;
+    data_ = data;
     if (layui_ != null) {
-      setForm(layui_, uuid_);
+      setForm(layui_, data_);
     }
   }
 
-  function setForm(l, u) {
+  function setForm(l, d) {
     l.jquery.ajax({
-      url: '/internal/customer/getCustomersMsgById/' + u,
+      url: '/internal/qzchargelog/getQZChargeLogs/' + d.uuid,
       type: 'get',
       dataType: 'json',
       success: function (res) {
+        console.log(res);
         if (res.code === 200) {
-          if (res.data.dailyReportIdentify) {
-            res.data.dailyReportIdentify = 1
+          if (res.data.operationType === 'PC') {
+            d.pcCurrentKeywordCount = res.data.currentKeywordCount == null ? ''
+                : res.data.currentKeywordCount;
+            d.pcInitialKeywordCount = res.data.initialKeywordCount == null ? ''
+                : res.data.initialKeywordCount;
+            d.phone = 0;
+            d.pcPlanChargeDate = res.data.planChargeDate;
+            d.pcQzOperationTypeUuid = res.data.qzOperationTypeUuid;
+            d.pcReceivableAmount = res.data.receivableAmount == null ? ''
+                : res.data.receivableAmount;
+            phoneQzsettingBox.style.display = 'none';
           } else {
-            res.data.dailyReportIdentify = 0
+            d.phoneCurrentKeywordCount = res.data.currentKeywordCount == null ? ''
+                : res.data.currentKeywordCount;
+            d.phoneInitialKeywordCount = res.data.initialKeywordCount == null ? ''
+                : res.data.initialKeywordCount;
+            d.computer = 0;
+            d.phonePlanChargeDate = res.data.planChargeDate;
+            d.phoneQzOperationTypeUuid = res.data.qzOperationTypeUuid;
+            d.phoneReceivableAmount = res.data.receivableAmount == null ? ''
+                : res.data.receivableAmount;
+            comQzsettingBox.style.display = 'none';
           }
-          layui.form.val("addCustomer", res.data);
+          l.form.val("qzSettingSf", JSON.parse(JSON.stringify(d)));
         } else {
           l.layer.msg(res.msg);
         }
@@ -263,13 +279,12 @@
     let layer = layui.layer;
     let laydate = layui.laydate;
 
-    if (uuid_ != null) {
-      setForm(layui, uuid_);
+    if (data_ != null) {
+      setForm(layui, data_);
     } else {
       layui_ = layui;
     }
 
-    let comQzsettingBox = document.getElementById('comQzsettingBox');
     //监听指定开关
     form.on('switch(computer)', function (data) {
       if (this.checked) {
@@ -279,8 +294,6 @@
       }
       // layer.tips('温馨提示：请注意开关状态的文字可以随意定义，而不仅仅是ON|OFF', data.othis)
     });
-
-    let phoneQzsettingBox = document.getElementById('phoneQzsettingBox');
     //监听指定开关
     form.on('switch(phone)', function (data) {
       if (this.checked) {
@@ -292,8 +305,9 @@
 
     form.on("submit(commitCustomer)", function (data) {
       console.log(data);
+      let d = data.field;
       // $.ajax({
-      //   url: '/internal/customer/postCustomersAdd',
+      //   url: '/internal/qzchargelog/saveQZChargeLogs',
       //   type: 'post',
       //   // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
       //   data: data.field,
@@ -304,8 +318,8 @@
       //     if (res.code === 200) {
       //       okLayer.msg.greenTick("保存成功", function () {
       //         parent.window.sign = true;
-      //         // parent.window.myTable.reload();
-      //         parent.layer.close(parent.layer.getFrameIndex(window.name));
+      //         // parent.layer.close(parent.layer.getFrameIndex(window.name));
+      //         okLayer.close();
       //       });
       //     } else {
       //       layui.layer.msg(res.msg);
@@ -322,10 +336,10 @@
     //常规用法
     laydate.render({elem: '#layui-date-one'});
     laydate.render({elem: '#layui-date-two'});
-    laydate.render({elem: '#layui-date-three'});
+    laydate.render({elem: '#layui-date-three', value: new Date()});
     laydate.render({elem: '#layui-date-four'});
     laydate.render({elem: '#layui-date-five'});
-    laydate.render({elem: '#layui-date-six'});
+    laydate.render({elem: '#layui-date-six', value: new Date()});
 
     form.verify({
       qq: [

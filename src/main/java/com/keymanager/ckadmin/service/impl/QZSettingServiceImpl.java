@@ -26,11 +26,11 @@ import org.springframework.stereotype.Service;
  * @author lhc
  * @since 2019-09-05
  */
-@Service("QZSettingService2")
+@Service("qzSettingService2")
 public class QZSettingServiceImpl extends
     ServiceImpl<QZSettingDao, QZSetting> implements QZSettingService {
 
-    @Resource(name = "QZSettingDao2")
+    @Resource(name = "qzSettingDao2")
     private QZSettingDao qzSettingDao;
 
     @Override

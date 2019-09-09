@@ -275,23 +275,23 @@ public class AlgorithmTestPlan {
     @Override
     public String toString() {
         return "AlgorithmTestPlan{" +
-                "uuid=" + uuid +
-                ", algorithmTestPlanName='" + algorithmTestPlanName + '\'' +
-                ", operationCombineName='" + operationCombineName + '\'' +
-                ", terminalType='" + terminalType + '\'' +
-                ", searchEngine='" + searchEngine + '\'' +
-                ", machineGroup='" + machineGroup + '\'' +
-                ", testIntervalDay=" + testIntervalDay +
-                ", testKeywordCount=" + testKeywordCount +
-                ", testkeywordRankBegin='" + testkeywordRankBegin + '\'' +
-                ", testkeywordRankEnd='" + testkeywordRankEnd + '\'' +
-                ", optimizePlanCount=" + optimizePlanCount +
-                ", status=" + status +
-                ", executeQueryTime=" + executeQueryTime +
-                ", excuteStatus=" + excuteStatus +
-                ", createBy='" + createBy + '\'' +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                '}';
+            "uuid=" + uuid +
+            ", algorithmTestPlanName='" + algorithmTestPlanName + '\'' +
+            ", operationCombineName='" + operationCombineName + '\'' +
+            ", terminalType='" + terminalType + '\'' +
+            ", searchEngine='" + searchEngine + '\'' +
+            ", machineGroup='" + machineGroup + '\'' +
+            ", testIntervalDay=" + testIntervalDay +
+            ", testKeywordCount=" + testKeywordCount +
+            ", testkeywordRankBegin='" + testkeywordRankBegin + '\'' +
+            ", testkeywordRankEnd='" + testkeywordRankEnd + '\'' +
+            ", optimizePlanCount=" + optimizePlanCount +
+            ", status=" + status +
+            ", executeQueryTime=" + executeQueryTime +
+            ", excuteStatus=" + excuteStatus +
+            ", createBy='" + createBy + '\'' +
+            ", createTime=" + createTime +
+            ", updateTime=" + updateTime +
+            '}';
     }
 }
