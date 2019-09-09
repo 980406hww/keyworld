@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,10 +36,11 @@ public class QZSettingController {
 
     @Resource(name = "QZSettingService2")
     private QZSettingService qzSettingService;
+
     //跳转添加或修改用户页面
 //    @RequiresPermissions("/internal/productKeyword/searchProductKeywords")
     @GetMapping(value = "/toQZSetttings")
-    public ModelAndView toCustomersAdd() {
+    public ModelAndView toQZSetttings() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("qzsettings/qzsetting");
         return mv;
@@ -69,11 +71,12 @@ public class QZSettingController {
     public ResultBean getQZSettingSearchEngineMap(QZSettingCriteria qzSettingCriteria) {
         ResultBean resultBean = new ResultBean();
         try {
-            List<QZSearchEngineVO> qzSearchEngine = qzSettingService.searchQZSettingSearchEngineMap(qzSettingCriteria, 0);
+            List<QZSearchEngineVO> qzSearchEngine = qzSettingService
+                .searchQZSettingSearchEngineMap(qzSettingCriteria, 0);
             resultBean.setCode(0);
             resultBean.setMsg("获取搜索引擎映射列表成功");
             resultBean.setData(qzSearchEngine);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg("未知错误");
@@ -82,5 +85,20 @@ public class QZSettingController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @RequestMapping(value = "/toQzsettingSf", method = RequestMethod.GET)
+    public ModelAndView toQzsettingSf() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("qzsettings/qzsettingSf");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @RequestMapping(value = "/toQzsettingAdd", method = RequestMethod.GET)
+    public ModelAndView toQzsettingAdd() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("qzsettings/qzsettingAdd");
+        return mv;
+    }
 
 }
