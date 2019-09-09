@@ -1367,7 +1367,7 @@
         GROUP BY fKeyword,fUrl, fCustomerUuid
         HAVING COUNT(1) > 1
     </select>
-    
+
     <update id="batchUpdateKeywordStatus">
         UPDATE t_customer_keyword
         SET fTerminalType = fTerminalType
@@ -1794,7 +1794,15 @@
         WHERE ck.fCurrentIndexCount = -1
         AND ck.fType = 'qz'
         AND ck.fCaptureIndexQueryTime IS NULL
-        ORDER BY ck.fCreateTime
+        UNION ALL
+         SELECT
+        ck.fUuid AS 'uuid',
+        ck.fKeyword	AS	'keyword',
+        ck.fTerminalType AS 'terminalType'
+        FROM t_customer_keyword ck
+        WHERE ck.fCurrentIndexCount = -1
+        AND ck.fType = 'qz'
+        AND ck.fCaptureIndexQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
         LIMIT 10
     </select>
 
