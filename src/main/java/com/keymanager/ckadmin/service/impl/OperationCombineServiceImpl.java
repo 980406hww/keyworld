@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.dao.OperationCombineDao;
 import com.keymanager.ckadmin.entity.OperationCombine;
 import com.keymanager.ckadmin.service.OperationCombineService;
+import java.util.List;
+import java.util.Map;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +19,10 @@ public class OperationCombineServiceImpl extends
     @Override
     public String getOperationCombineName(String optimizeGroupName) {
         return operationCombineDao.getOperationCombineName(optimizeGroupName);
+    }
+
+    @Override
+    public List<Map<String, Object>> getOperationCombineNames(String terminalType) {
+        return operationCombineDao.getOperationCombineNames(terminalType);
     }
 }

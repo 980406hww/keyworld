@@ -422,8 +422,6 @@
         <div class="layui-collapse" lay-filter="test">
             <div class="layui-colla-item">
                 <h2 class="layui-colla-title">条件筛选<i class="layui-icon layui-colla-icon"></i></h2>
-                <button class="layui-btn" id="add-qz">添加</button>
-                <button class="layui-btn" id="add-qz-sf">收费</button>
                 <div class="layui-colla-content" id="searchContent">
                     <form class="layui-form layui-form-pane" id="searchForm">
                         <div class="layui-form-item" lay-filter="loginNameFilter">
@@ -519,7 +517,7 @@
         });
 
         function get_qzsettting(tableName, searchEngine, terminalType) {
-            var tableElem = '#' + tableName;
+            let tableElem = '#' + tableName;
             table.render({
                 elem: tableElem,
                 method: 'post',
@@ -559,7 +557,7 @@
                                 td.find("#fmtStandardDate a").text(
                                     result.data["standardTime"] === null ? "无" : toDateFormat(
                                         new Date(result.data["standardTime"])));
-                                var font = td.find(".standard-info").find("span.line1 a font");
+                                let font = td.find(".standard-info").find("div.line1 a font");
                                 font.text("￥ " + result.data["price"]);
                                 if (result.data["price"] > 0) {
                                     font.css("background-color", "mediumseagreen");
@@ -1406,27 +1404,6 @@
         table.on('checkbox(tableFilter)', function (obj) {
 
         });
-
-
-        document.getElementById('add-qz').onclick = toAddQzsetting;
-        document.getElementById('add-qz-sf').onclick = toAddQzsettingSf;
-
-        // 添加
-        function toAddQzsetting() {
-            okLayer.open("其他 / 前往全站设置信息 / 添加", "/internal/qzsetting/toQzsettingAdd", "90%", "90%", null, function () {
-            });
-        }
-        // 收费
-        function toAddQzsettingSf(data) {
-            okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toQzsettingSf", "90%", "90%", function (layero) {
-                window[layero.find("iframe")[0]["name"]].initForm({uuid:5,qzSettingCustomer:'abcdefg',qzSettingDomain:'www.baidu.com'});
-            },function(){
-                if(sign){
-                    // active['reload'].call(this);
-                    sign = false;
-                }
-            })
-        }
     });
 </script>
 

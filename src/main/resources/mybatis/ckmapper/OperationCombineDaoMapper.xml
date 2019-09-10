@@ -54,9 +54,10 @@
         ORDER BY toc.fCreateTime DESC
     </select>
 
-    <select id="getOperationCombineNames" resultType="java.lang.String">
+    <select id="getOperationCombineNames" resultType="java.util.Map">
         SELECT
-            CONCAT(toc.fOperationCombineName, '_____', toc.fUuid)
+            toc.fUuid AS 'uuid',
+            toc.fOperationCombineName AS 'operationCombineName'
         FROM t_operation_combine toc
         WHERE EXISTS(
             SELECT 1

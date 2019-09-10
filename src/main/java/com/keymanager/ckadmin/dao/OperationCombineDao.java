@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.entity.OperationCombine;
 import java.util.List;
+import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository("operationCombineDao2")
 public interface OperationCombineDao extends BaseMapper<OperationCombine> {
 
-    List<String> getOperationCombineNames(@Param("terminalType") String terminalType);
+    List<Map<String, Object>> getOperationCombineNames(@Param("terminalType") String terminalType);
 
     void saveOperationCombine(@Param("operationCombineName") String operationCombineName,
         @Param("terminalType") String terminalType,
