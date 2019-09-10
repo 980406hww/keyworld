@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
+import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import java.util.List;
 import java.util.Map;
 
@@ -22,4 +23,6 @@ CustomerKeywordDao extends BaseMapper<com.keymanager.ckadmin.entity.CustomerKeyw
     void deleteCustomerKeywordsByCustomerUuid(long customerUuid);
 
     int getCustomerKeywordCount(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
+
+    void excludeCustomerKeyword(@Param("qzSettingExcludeCustomerKeywordsCriteria") QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
 }

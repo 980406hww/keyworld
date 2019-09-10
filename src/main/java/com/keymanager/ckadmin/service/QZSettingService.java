@@ -28,4 +28,6 @@ public interface QZSettingService extends IService<QZSetting> {
     Map<String, Object> getQZKeywordRankInfo(long uuid, String terminalType, String optimizeGroupName);
 
     CustomerExcludeKeyword echoExcludeKeyword(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
+
+    void excludeQZSettingCustomerKeywords(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
 }

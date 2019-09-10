@@ -9,6 +9,7 @@ import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.CustomerExcludeKeywordService;
+import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.QZSettingService;
 
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
@@ -29,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import javax.annotation.Resources;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +63,9 @@ public class QZSettingServiceImpl extends
 
     @Resource(name = "customerExcludeKeywordService2")
     private CustomerExcludeKeywordService customerExcludeKeywordService;
+
+    @Resource(name = "customerKeywordService2")
+    private CustomerKeywordService customerKeywordService;
 
     @Override
     public Page<QZSetting> searchQZSetting(Page<QZSetting> page,
@@ -195,5 +200,12 @@ public class QZSettingServiceImpl extends
     public CustomerExcludeKeyword echoExcludeKeyword(
         QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
         return customerExcludeKeywordService.echoExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria);
+    }
+
+    @Override
+    public void excludeQZSettingCustomerKeywords (QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+        qzSettingExcludeCustomerKeywordsCriteria.setDomain(qzSettingExcludeCustomerKeywordsCriteria.getDomain().replace("http://","").replace("https://","").replace("www.","").split("/")[0]);
+        customerKeywordService.excludeCustomerKeyword(qzSettingExcludeCustomerKeywordsCriteria);
+        customerExcludeKeywordService.excludeCustomerKeywords(qzSettingExcludeCustomerKeywordsCriteria);
     }
 }

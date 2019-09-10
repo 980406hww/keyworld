@@ -28,4 +28,20 @@
     <select id="getCustomerKeywordCount" resultType="int">
         SELECT COUNT(1) FROM t_customer_keyword ck WHERE ck.fType = #{entryType} and ck.fTerminalType = #{terminalType} and ck.fCustomerUuid = #{customerUuid}
     </select>
+
+    <update id="excludeCustomerKeyword">
+        UPDATE  t_customer_keyword ck
+        SET ck.fStatus = 3
+        WHERE 1=1
+        <if test="qzSettingExcludeCustomerKeywordsCriteria.customerUuid != null and qzSettingExcludeCustomerKeywordsCriteria.customerUuid != ''">
+            AND ck.fCustomerUuid = #{qzSettingExcludeCustomerKeywordsCriteria.customerUuid}
+        </if>
+        AND ck.fType = #{qzSettingExcludeCustomerKeywordsCriteria.type}
+        AND ck.fTerminalType = #{qzSettingExcludeCustomerKeywordsCriteria.terminalType}
+        AND ck.fKeyword IN
+        <foreach item = "keyword" collection = "qzSettingExcludeCustomerKeywordsCriteria.keywords" open="(" separator="," close=")">
+            #{keyword}
+        </foreach>
+        AND ck.fUrl LIKE CONCAT(#{qzSettingExcludeCustomerKeywordsCriteria.domain},'%')
+    </update>
 </mapper>

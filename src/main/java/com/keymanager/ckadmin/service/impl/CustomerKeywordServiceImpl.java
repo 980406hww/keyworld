@@ -1,6 +1,7 @@
 package com.keymanager.ckadmin.service.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.dao.CustomerKeywordDao;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
@@ -40,6 +41,12 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public int getCustomerKeywordCount(String terminalType, String entryType, long customerUuid) {
         return customerKeywordDao.getCustomerKeywordCount(terminalType, entryType, customerUuid);
+    }
+
+    @Override
+    public void excludeCustomerKeyword(
+        QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+        customerKeywordDao.excludeCustomerKeyword(qzSettingExcludeCustomerKeywordsCriteria);
     }
 
 }

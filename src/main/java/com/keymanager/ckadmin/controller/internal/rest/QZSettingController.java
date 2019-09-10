@@ -166,6 +166,24 @@ public class QZSettingController {
         }
         return resultBean;
 
+    }
+
+    @PostMapping(value = "/excludeQZSettingCustomerKeywords2")
+    public ResultBean excludeQZSettingCustomerKeywords2(HttpServletRequest request, @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            String entryType = (String) request.getSession().getAttribute("entryType");
+            qzSettingExcludeCustomerKeywordsCriteria.setType(entryType);
+            qzSettingService.excludeQZSettingCustomerKeywords(qzSettingExcludeCustomerKeywordsCriteria);
+            resultBean.setCode(200);
+            resultBean.setMsg("更新排除词成功");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
 
     }
 }
