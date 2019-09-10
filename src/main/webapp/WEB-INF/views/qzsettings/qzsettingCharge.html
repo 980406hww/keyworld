@@ -57,7 +57,7 @@
       <div class="layui-row">
         <div class="layui-col-md6 padding-ten-right">
           <div class="layui-form-item" pane>
-            <label class="computer layui-form-label">电脑</label>
+            <label class="layui-form-label">电脑</label>
             <div class="layui-input-block">
               <input type="checkbox" checked name="computer" lay-skin="switch" lay-filter="computer"
                      lay-text="Select|Deselect" id="computer">
@@ -78,7 +78,7 @@
               <div class="layui-input-block">
                 <input type="text" name="pcCurrentKeywordCount" placeholder="请输入当前词量"
                        autocomplete="off" disabled
-                       class="computer-input layui-input">
+                       class="layui-input">
               </div>
             </div>
             <div class="layui-form-item">
@@ -86,14 +86,14 @@
               <div class="layui-input-block">
                 <input type="text" name="pcReceivableAmount" placeholder="请输入应收金额"
                        autocomplete="off" disabled
-                       class="computer-input layui-input">
+                       class="layui-input">
               </div>
             </div>
             <div class="layui-form-item">
               <label class="computer layui-form-label">计划收费日期</label>
               <div class="layui-input-block">
                 <input type="text" name="pcPlanChargeDate" placeholder="请选择计划收费日期"
-                       autocomplete="off" id="layui-date-one" class="computer-input layui-input"
+                       autocomplete="off" id="layui-date-one" class="layui-input"
                        disabled>
               </div>
             </div>
@@ -122,7 +122,7 @@
         </div>
         <div class="layui-col-md6 padding-ten-left">
           <div class="layui-form-item" pane>
-            <label class="phone layui-form-label">手机</label>
+            <label class="layui-form-label">手机</label>
             <div class="layui-input-block">
               <input type="checkbox" checked name="phone" lay-skin="switch" lay-filter="phone"
                      lay-text="Select|Deselect" id="phone">
@@ -135,7 +135,7 @@
               <div class="layui-input-block">
                 <input type="text" name="phoneCurrentKeywordCount" placeholder="请输入当前词量"
                        autocomplete="off" disabled
-                       class="phone-input layui-input">
+                       class="layui-input">
               </div>
             </div>
             <div class="layui-form-item">
@@ -143,14 +143,14 @@
               <div class="layui-input-block">
                 <input type="text" name="phoneReceivableAmount" placeholder="请输入应收金额"
                        autocomplete="off" disabled
-                       class="phone-input layui-input">
+                       class="layui-input">
               </div>
             </div>
             <div class="layui-form-item">
               <label class="phone layui-form-label">计划收费日期</label>
               <div class="layui-input-block">
                 <input type="text" name="phonePlanChargeDate" placeholder="请选择计划收费日期"
-                       autocomplete="off" id="layui-date-four" class="phone-input layui-input"
+                       autocomplete="off" id="layui-date-four" class="layui-input"
                        disabled>
               </div>
             </div>
@@ -202,9 +202,7 @@
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script>
   let data_ = null;
-  let layui_ = null;
-  let comQzsettingBox = document.getElementById('comQzsettingBox');
-  let phoneQzsettingBox = document.getElementById('phoneQzsettingBox')
+  let layui_ = null
 
   function initForm(data) {
     data_ = data;
@@ -223,7 +221,7 @@
     }
     for (let i = 0; i < computers.length; i++) {
       computers[i].classList.add('my-dis');
-      if (i !== 6) {
+      if (i < 3) {
         computersInput[i].classList.add('layui-disabled');
         computersInput[i].setAttribute('disabled', '');
       }
@@ -236,7 +234,7 @@
     }
     for (let i = 0; i < computers.length; i++) {
       computers[i].classList.remove('my-dis');
-      if (i !== 6) {
+      if (i < 3) {
         computersInput[i].classList.remove('layui-disabled');
         computersInput[i].removeAttribute('disabled');
       }
@@ -251,9 +249,9 @@
     if (f) {
       phone.setAttribute('disabled', '');
     }
-    for (let i = 0; i < computers.length; i++) {
+    for (let i = 0; i < phones.length; i++) {
       phones[i].classList.add('my-dis');
-      if (i !== 6) {
+      if (i < 3) {
         phonesInput[i].classList.add('layui-disabled');
         phonesInput[i].setAttribute('disabled', '');
       }
@@ -264,9 +262,9 @@
     if (f) {
       phone.removeAttribute('disabled');
     }
-    for (let i = 0; i < computers.length; i++) {
+    for (let i = 0; i < phones.length; i++) {
       phones[i].classList.remove('my-dis');
-      if (i !== 6) {
+      if (i < 3) {
         phonesInput[i].classList.remove('layui-disabled');
         phonesInput[i].removeAttribute('disabled');
       }
@@ -301,7 +299,6 @@
             d.phoneQzOperationTypeUuid = res.data.qzOperationTypeUuid;
             d.phoneReceivableAmount = res.data.receivableAmount == null ? ''
                 : res.data.receivableAmount;
-            phoneQzsettingBox.style.display = 'block';
             selectPhone(true);
           }
           l.form.val("qzSettingSf", JSON.parse(JSON.stringify(d)));
@@ -371,7 +368,7 @@
         }
         d.actualAmount = data.field.pcActualAmount;
         d.nextChargeDate = data.field.pcNextChargeDate;
-      } else {
+      } else if (data.field.phone === 'on') {
         d.qzOperationTypeUuid = data.field.phoneQzOperationTypeUuid;
         d.planChargeDate = data.field.phonePlanChargeDate;
         d.actualChargeDate = data.field.phoneActualChargeDate;
