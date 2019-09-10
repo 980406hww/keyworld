@@ -3,15 +3,12 @@ package com.keymanager.ckadmin.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldStrategy;
-import com.keymanager.monitoring.entity.BaseEntity;
-import com.keymanager.monitoring.entity.QZCategoryTag;
-import com.keymanager.monitoring.entity.QZOperationType;
 import java.util.Date;
 import java.util.List;
 
 @TableName(value = "t_qz_setting")
 public class QZSetting extends BaseEntity {
-
+    
     @TableField(value = "fCustomerUuid")
     private int customerUuid;
 
@@ -63,6 +60,8 @@ public class QZSetting extends BaseEntity {
     @TableField(value = "fUpdateStatus", strategy = FieldStrategy.IGNORED)
     private String updateStatus;
 
+    @TableField(exist = false)
+    private boolean fIsMonitor;
     @TableField(value = "fUpdateStartTime")
     private Date updateStartTime;
 

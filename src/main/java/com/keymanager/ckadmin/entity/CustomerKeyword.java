@@ -4,10 +4,9 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldStrategy;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.keymanager.ckadmin.enums.TerminalTypeEnum;
+import com.keymanager.ckadmin.util.StringUtils;
 import com.keymanager.enums.CollectMethod;
-import com.keymanager.monitoring.common.utils.StringUtils;
-import com.keymanager.monitoring.entity.BaseEntity;
-import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import java.sql.Timestamp;
@@ -16,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @TableName(value = "t_customer_keyword")
 public class CustomerKeyword extends BaseEntity {
+
     private static final long serialVersionUID = -1101942701283949852L;
 
     @TableField(value = "fCustomerUuid")
@@ -833,14 +833,17 @@ public class CustomerKeyword extends BaseEntity {
     }
 
     public String getCollectMethodName() {
-        return StringUtils.isNotBlank(this.getCollectMethod()) ? CollectMethod.findByCode(this.getCollectMethod()).getName() : null;
+        return StringUtils.isNotBlank(this.getCollectMethod()) ? CollectMethod
+            .findByCode(this.getCollectMethod()).getName() : null;
     }
 
     public String getSearchEngineUrl() {
-        String searchEngineUrl = Constants.SEARCH_ENGINE_URL_MAP.get(this.getSearchEngine() + "_" + this.getTerminalType()) + this.getKeyword();
+        String searchEngineUrl = Constants.SEARCH_ENGINE_URL_MAP
+            .get(this.getSearchEngine() + "_" + this.getTerminalType()) + this.getKeyword();
         if (this.getSearchEngine() != null) {
             if (this.getSearchEngine().equals(Constants.SEARCH_ENGINE_BAIDU)) {
-                searchEngineUrl += "&pn=" + this.getPrepareBaiduPageNumber(this.getCurrentPosition());
+                searchEngineUrl +=
+                    "&pn=" + this.getPrepareBaiduPageNumber(this.getCurrentPosition());
             } else if (this.getSearchEngine().equals(Constants.SEARCH_ENGINE_SOGOU)) {
                 if (this.getTerminalType().equals(TerminalTypeEnum.PC.name())) {
                     searchEngineUrl += "&page=" + ((this.getCurrentPosition() / 10) + 1);
@@ -864,27 +867,33 @@ public class CustomerKeyword extends BaseEntity {
     }
 
     public String getPositionFirstFeeString() {
-        return Utils.removeDoubleZeros(positionFirstFee) == null ? "" : Utils.removeDoubleZeros(positionFirstFee);
+        return Utils.removeDoubleZeros(positionFirstFee) == null ? ""
+            : Utils.removeDoubleZeros(positionFirstFee);
     }
 
     public String getPositionSecondFeeString() {
-        return Utils.removeDoubleZeros(positionSecondFee) == null ? "" : Utils.removeDoubleZeros(positionSecondFee);
+        return Utils.removeDoubleZeros(positionSecondFee) == null ? ""
+            : Utils.removeDoubleZeros(positionSecondFee);
     }
 
     public String getPositionThirdFeeString() {
-        return Utils.removeDoubleZeros(positionThirdFee) == null ? "" : Utils.removeDoubleZeros(positionThirdFee);
+        return Utils.removeDoubleZeros(positionThirdFee) == null ? ""
+            : Utils.removeDoubleZeros(positionThirdFee);
     }
 
     public String getPositionForthFeeString() {
-        return Utils.removeDoubleZeros(positionForthFee) == null ? "" : Utils.removeDoubleZeros(positionForthFee);
+        return Utils.removeDoubleZeros(positionForthFee) == null ? ""
+            : Utils.removeDoubleZeros(positionForthFee);
     }
 
     public String getPositionFifthFeeString() {
-        return Utils.removeDoubleZeros(positionFifthFee) == null ? "" : Utils.removeDoubleZeros(positionFifthFee);
+        return Utils.removeDoubleZeros(positionFifthFee) == null ? ""
+            : Utils.removeDoubleZeros(positionFifthFee);
     }
 
     public String getPositionFirstPageFeeString() {
-        return Utils.removeDoubleZeros(positionFirstPageFee) == null ? "" : Utils.removeDoubleZeros(positionFirstPageFee);
+        return Utils.removeDoubleZeros(positionFirstPageFee) == null ? ""
+            : Utils.removeDoubleZeros(positionFirstPageFee);
     }
 
     public String getFeeString() {

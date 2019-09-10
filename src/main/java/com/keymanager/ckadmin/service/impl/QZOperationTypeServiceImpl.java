@@ -5,6 +5,7 @@ import com.keymanager.ckadmin.dao.QZOperationTypeDao;
 import com.keymanager.ckadmin.entity.QZOperationType;
 import com.keymanager.ckadmin.service.QZOperationTypeService;
 import java.util.Date;
+import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -18,5 +19,9 @@ public class QZOperationTypeServiceImpl extends
     @Override
     public Date getStandardTime(long qzSettingUuid, String terminalType) {
         return qzOperationTypeDao.getStandardTime(qzSettingUuid, terminalType);
+    
+    @Override
+    public List<QZOperationType> searchQZOperationTypesByQZSettingUuid(Long uuid) {
+        return qzOperationTypeDao.searchQZOperationTypesByQZSettingUuid(uuid);
     }
 }

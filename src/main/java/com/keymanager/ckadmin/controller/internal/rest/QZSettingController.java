@@ -7,7 +7,6 @@ import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Resource;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -33,7 +32,7 @@ public class QZSettingController {
 
     private static Logger logger = LoggerFactory.getLogger(QZSettingController.class);
 
-    @Resource(name = "QZSettingService2")
+    @Resource(name = "qzSettingService2")
     private QZSettingService qzSettingService;
 
     /**
