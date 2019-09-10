@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.math.BigDecimal;
 import java.util.Date;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * Created by shunshikj01 on 2017/7/17.
@@ -14,8 +15,10 @@ public class QZChargeLog extends BaseEntity {
     @TableField("fQZOperationTypeUuid")
     private Long qzOperationTypeUuid;//整站操作类型信息ID
     @TableField("fPlanChargeDate")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date planChargeDate;//计划收费日期
     @TableField("fActualChargeDate")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date actualChargeDate;//实际收费日期
     @TableField("fReceivableAmount")
     private BigDecimal receivableAmount;//应收金额
@@ -28,6 +31,7 @@ public class QZChargeLog extends BaseEntity {
     @TableField(exist = false)
     private String userName;//收费人姓名
     @TableField(exist = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date nextChargeDate;
 
     public QZChargeLog() {

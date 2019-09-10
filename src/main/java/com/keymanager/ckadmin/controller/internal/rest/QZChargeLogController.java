@@ -3,9 +3,7 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.entity.QZChargeLog;
 import com.keymanager.ckadmin.service.QZChargeLogService;
-import java.util.List;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,13 +36,12 @@ public class QZChargeLogController {
     //插入一条收费流水表
     @RequiresPermissions("/internal/qzchargelog/save")
     @RequestMapping(value = "/saveQZChargeLogs", method = RequestMethod.POST)
-    public ResultBean saveQZChargeLogs(@RequestBody List<QZChargeLog> qzChargeLogs,
-        HttpSession session) {
+    public ResultBean saveQZChargeLogs(@RequestBody QZChargeLog qzChargeLog, HttpSession session) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
         try {
             String loginName = (String) session.getAttribute("username");
-            qzChargeLogService.saveQZChargeLog(qzChargeLogs, loginName);
+            qzChargeLogService.saveQZChargeLog(qzChargeLog, loginName);
         } catch (Exception e) {
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
