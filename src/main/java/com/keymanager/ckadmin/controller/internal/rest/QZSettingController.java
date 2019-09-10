@@ -2,26 +2,29 @@ package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.controller.internal.SpringMVCBaseController;
+import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
+import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
 import com.keymanager.ckadmin.entity.QZSetting;
+import com.keymanager.ckadmin.entity.UserInfo;
 import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -34,7 +37,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @RestController
 @RequestMapping("/internal/qzsetting")
-public class QZSettingController {
+public class QZSettingController extends SpringMVCBaseController {
 
     private static Logger logger = LoggerFactory.getLogger(QZSettingController.class);
 
@@ -151,10 +154,12 @@ public class QZSettingController {
     }
 
     @PostMapping(value = "/echoExcludeKeyword2")
-    public ResultBean echoExcludeKeyword(HttpServletRequest request, @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+    public ResultBean echoExcludeKeyword(HttpServletRequest request,
+        @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
         ResultBean resultBean = new ResultBean();
         try {
-            CustomerExcludeKeyword customerExcludeKeyword = qzSettingService.echoExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria);
+            CustomerExcludeKeyword customerExcludeKeyword = qzSettingService
+                .echoExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria);
             resultBean.setCode(200);
             resultBean.setMsg("获取排除词成功");
             resultBean.setData(customerExcludeKeyword);
@@ -165,7 +170,27 @@ public class QZSettingController {
             return resultBean;
         }
         return resultBean;
-
-
     }
+
+//    // 获得初始用户列表
+//    @GetMapping(value = "/getSaveQZSettingsCustomerMsg")
+//    public ResultBean getSaveQZSettingsMsg(HttpSession session) {
+//        ResultBean resultBean = new ResultBean();
+//        CustomerCriteria customerCriteria = new CustomerCriteria();
+//        String entryType = (String) session.getAttribute("entryType");
+//        customerCriteria.setEntryType(entryType);
+//        Set<String> roles = getCurrentUser().getRoles();
+//        if (!roles.contains("DepartmentManager")) {
+//            String loginName = (String) session.getAttribute("username");
+//            customerCriteria.setLoginName(loginName);
+//        } else {
+//            if (qzSettingSearchCriteria.getUserInfoID() != null) {
+//                UserInfo userInfo = userInfoService
+//                    .selectById(qzSettingSearchCriteria.getUserInfoID());
+//                customerCriteria.setLoginName(userInfo.getLoginName());
+//            }
+//        }
+//        List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
+//        return resultBean;
+//    }
 }
