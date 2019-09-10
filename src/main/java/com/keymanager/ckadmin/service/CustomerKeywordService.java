@@ -26,4 +26,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     int getCustomerKeywordCount(String terminalType, String entryType, long customerUuid);
 
     void excludeCustomerKeyword(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
+
+    void addCustomerKeyword(List<CustomerKeyword> customerKeywords, String userName);
 }

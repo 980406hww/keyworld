@@ -12,4 +12,6 @@ import java.util.List;
 public interface UserInfoService extends IService<UserInfo> {
 
     List<UserInfo> findActiveUsers();
+
+    Long getUuidByLoginName(String userName);
 }

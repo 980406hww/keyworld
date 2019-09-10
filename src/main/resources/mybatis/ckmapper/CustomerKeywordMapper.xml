@@ -44,4 +44,186 @@
         </foreach>
         AND ck.fUrl LIKE CONCAT(#{qzSettingExcludeCustomerKeywordsCriteria.domain},'%')
     </update>
+
+    <insert id="addCustomerKeywords">
+        INSERT INTO t_customer_keyword (
+        fTerminalType,
+        fCustomerUuid,
+        fQZSettingUuid,
+        fKeyword,
+        fUrl,
+        fType,
+        fBearPawNumber,
+        fOriginalUrl,
+        fTitle,
+        fSequence,
+        fAutoUpdateNegativeDateTime,
+        fSearchEngine,
+        fInitialIndexCount,
+        fCurrentIndexCount,
+        fCurrentPosition,
+        fQueryDate,
+        fQueryTime,
+        fServiceProvider,
+        fOptimizeGroupName,
+        fMachineGroup,
+        fOptimizePlanCount,
+        fOptimizeTodayCount,
+        fOptimizeRemainingCount,
+        fLastReachStandardDate,
+        fPositionFirstFee,
+        fPositionSecondFee,
+        fPositionThirdFee,
+        fPositionForthFee,
+        fPositionFifthFee,
+        fPositionFirstPageFee,
+        fCapturePositionQueryTime,
+        fCollectMethod,
+        fStartOptimizedTime,
+        fOrderNumber,
+        fStatus,
+        fManualCleanTitle,
+        fKeywordEffect,
+        fCustomerKeywordSource,
+        fRemarks,
+        fUpdateTime,
+        fCreateTime
+        )
+        VALUES
+        <foreach collection="customerKeywords" item="customerKeyword" separator=",">
+            (
+            #{customerKeyword.terminalType},
+            #{customerKeyword.customerUuid},
+            #{customerKeyword.qzSettingUuid},
+            #{customerKeyword.keyword},
+            #{customerKeyword.url},
+            #{customerKeyword.type},
+            #{customerKeyword.bearPawNumber},
+            #{customerKeyword.originalUrl},
+            #{customerKeyword.title},
+            #{customerKeyword.sequence},
+            #{customerKeyword.autoUpdateNegativeDateTime},
+            #{customerKeyword.searchEngine},
+            #{customerKeyword.initialIndexCount},
+            #{customerKeyword.currentIndexCount},
+            #{customerKeyword.currentPosition},
+            #{customerKeyword.queryDate},
+            #{customerKeyword.queryTime},
+            #{customerKeyword.serviceProvider},
+            #{customerKeyword.optimizeGroupName},
+            #{customerKeyword.machineGroup},
+            <choose>
+                <when test="customerKeyword.optimizePlanCount != null">
+                    #{customerKeyword.optimizePlanCount},
+                </when>
+                <when test="customerKeyword.optimizePlanCount == null">10,</when>
+            </choose>
+            #{customerKeyword.optimizeTodayCount},
+            #{customerKeyword.optimizeRemainingCount},
+            #{customerKeyword.lastReachStandardDate},
+            <choose>
+                <when test="customerKeyword.positionFirstFee != null">#{customerKeyword.positionFirstFee},</when>
+                <when test="customerKeyword.positionFirstFee == null">0.00,</when>
+            </choose>
+            <choose>
+                <when test="customerKeyword.positionSecondFee != null">#{customerKeyword.positionSecondFee},</when>
+                <when test="customerKeyword.positionSecondFee == null">0.00,</when>
+            </choose>
+            <choose>
+                <when test="customerKeyword.positionThirdFee != null">#{customerKeyword.positionThirdFee},</when>
+                <when test="customerKeyword.positionThirdFee == null">0.00,</when>
+            </choose>
+            <choose>
+                <when test="customerKeyword.positionForthFee != null">#{customerKeyword.positionForthFee},</when>
+                <when test="customerKeyword.positionForthFee == null">0.00,</when>
+            </choose>
+            <choose>
+                <when test="customerKeyword.positionFifthFee != null">#{customerKeyword.positionFifthFee},</when>
+                <when test="customerKeyword.positionFifthFee == null">0.00,</when>
+            </choose>
+            <choose>
+                <when test="customerKeyword.positionFirstPageFee != null">#{customerKeyword.positionFirstPageFee},</when>
+                <when test="customerKeyword.positionFirstPageFee == null">0.00,</when>
+            </choose>
+            #{customerKeyword.capturePositionQueryTime},
+            #{customerKeyword.collectMethod},
+            #{customerKeyword.startOptimizedTime},
+            #{customerKeyword.orderNumber},
+            #{customerKeyword.status},
+            <choose>
+                <when test="customerKeyword.manualCleanTitle != null">#{customerKeyword.manualCleanTitle},</when>
+                <when test="customerKeyword.manualCleanTitle == null">0,</when>
+            </choose>
+            #{customerKeyword.keywordEffect},
+            #{customerKeyword.customerKeywordSource},
+            #{customerKeyword.remarks},
+            #{customerKeyword.updateTime},
+            #{customerKeyword.createTime}
+            )
+        </foreach>
+    </insert>
+
+    <select id="getSameCustomerKeywordCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_customer_keyword
+        WHERE fKeyword = #{keyword}
+        AND fTerminalType = #{terminalType}
+        AND fCustomerUuid = #{customerUuid}
+        <choose>
+            <when test="url == 'NoUrl'">
+                AND fTitle = #{title}
+            </when>
+            <otherwise>
+                AND fUrl = #{url}
+            </otherwise>
+        </choose>
+    </select>
+
+    <update id="updateSameCustomerKeywordSource">
+        UPDATE t_customer_keyword
+        SET fCustomerKeywordSource = #{customerKeywordSource}
+        WHERE fKeyword = #{keyword}
+        AND fTerminalType = #{terminalType}
+        AND fCustomerUuid = #{customerUuid}
+        <choose>
+            <when test="url == 'NoUrl'">
+                AND fTitle = #{title}
+            </when>
+            <otherwise>
+                AND fUrl = #{url}
+            </otherwise>
+        </choose>
+    </update>
+
+    <select id="getSimilarCustomerKeywordCount" resultType="int">
+        SELECT Count(1) FROM t_customer_keyword
+        WHERE fKeyword = #{keyword}
+        AND fTerminalType = #{terminalType}
+        AND fCustomerUuid = #{customerUuid}
+        <choose>
+            <when test="originalUrl == 'NoUrl'">
+                AND fTitle = #{title}
+            </when>
+            <otherwise>
+                AND fOriginalUrl <![CDATA[ > ]]> ''
+                AND fOriginalUrl like concat('%', #{originalUrl});
+            </otherwise>
+        </choose>
+    </select>
+
+    <update id="updateSimilarCustomerKeywordSource">
+        UPDATE t_customer_keyword
+        SET fCustomerKeywordSource = #{customerKeywordSource}
+        WHERE fKeyword = #{keyword}
+        AND fTerminalType = #{terminalType}
+        AND fCustomerUuid = #{customerUuid}
+        <choose>
+            <when test="originalUrl == 'NoUrl'">
+                AND fTitle = #{title}
+            </when>
+            <otherwise>
+                AND fOriginalUrl <![CDATA[ > ]]> ''
+                AND fOriginalUrl like concat('%', #{originalUrl});
+            </otherwise>
+        </choose>
+    </update>
 </mapper>
