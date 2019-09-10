@@ -45,6 +45,7 @@
             overflow: visible;
             text-overflow: inherit;
             white-space: normal;
+            padding: 0px !important;
         }
 
         .layadmin-caller {
@@ -58,8 +59,12 @@
             padding: 0 0;
         }
 
+        .layui-table td {
+            padding: 0 !important;
+        }
+
         .layui-tab-content {
-            padding: 0
+            padding: 0;
         }
 
         .layui-table-body .layui-table-col-special {
@@ -180,17 +185,18 @@
         .layui-table-col-special .body .user-id .line1,
         .layui-table-col-special .body .standard-info .line1 {
             text-align: center;
-            height: 120px !important;
+            height: 100px !important;
             margin-top: 50px;
             overflow: hidden;
             text-overflow: ellipsis;
             color: #000;
+            font-size: 14px;
         }
 
         .layui-table-col-special .body .other-rank .line1,
         .layui-table-col-special .body .other-rank_2 .line1 {
             text-align: center;
-            height: 60px !important;
+            height: 55px !important;
             margin-top: 20px;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -198,7 +204,7 @@
         }
 
         .layui-table-col-special .body .rank-wrap {
-            width: 400px;
+            width: 468px;
             float: left;
             height: 150px;
             border-left: 1px solid #e6e6e6;
@@ -328,11 +334,11 @@
             display: block;
         }
 
-        .layui-table-col-special .body .user-id span:last-child,
+        /*.layui-table-col-special .body .user-id span:last-child,
         .layui-table-col-special .body .standard-info span:last-child {
             margin-top: 10px;
             color: #999;
-        }
+        }*/
 
         .layui-table-col-special .body .user-id span.line1,
         .layui-table-col-special .body .standard-info span.line1 {
@@ -362,115 +368,14 @@
             border-left: 1px solid #e6e6e6;
         }
 
-        .layui-table-col-special .body .other-rank .row,
-        .layui-table-col-special .body .other-rank_2 .row {
-            height: 75px;
-        }
-
-        .layui-table-col-special .body .other-rank .row .line1,
-        .layui-table-col-special .body .other-rank_2 .row .line1 {
-            display: inline-block;
-            width: 100%;
-            word-wrap: break-word;
-            white-space: normal;
-        }
-
-        .layui-table-col-special .body .other-rank .row .line1 a,
-        .layui-table-col-special .body .other-rank_2 .row .line1 a {
-            font-size: 14px;
-            color: #000;
-        }
-
-        .layui-table-col-special .body .other-rank .row .line1 a:hover,
-        .layui-table-col-special .body .other-rank_2 .row .line1 a:hover {
-            color: #0c7df5;
-        }
-
-        .layui-table-col-special .body .other-rank .row span:last-child a,
-        .layui-table-col-special .body .other-rank_2 .row span:last-child a {
-            display: inline-block;
-            width: 90%;
-            word-wrap: break-word;
-            white-space: normal;
-            color: #999;
-        }
-
-        .layui-table-col-special .body .other-rank .row:last-child,
-        .layui-table-col-special .body .other-rank_2 .row:last-child {
-            display: block;
-            height: 74px;
-            border-top: 1px solid #e6e6e6;
-        }
-
-        .layui-table-col-special .body .other-rank .row > div,
-        .layui-table-col-special .body .other-rank_2 .row > div {
-            display: block;
-            float: left;
-            height: 74px;
-            border-right: 1px solid #e6e6e6;
-        }
-
-        .layui-table-col-special .body .other-rank .row > div {
-            width: 84px;
-        }
-
-        .layui-table-col-special .body .other-rank_2 .row > div {
-            width: 180px;
-        }
-
-        .layui-table-col-special .body .other-rank .row > div:last-child,
-        .layui-table-col-special .body .other-rank_2 .row > div:last-child {
-            border: 0;
-        }
-
-        .layui-table-col-special .body .other-rank .row span,
-        .layui-table-col-special .body .other-rank_2 .row span {
-            display: block;
-        }
-
-        .layui-table-col-special .body .other-rank .row span.line1,
-        .layui-table-col-special .body .other-rank_2 .row span.line1 {
-            font-size: 18px;
-            margin-top: 10px;
-            height: 60%;
-        }
-
-        .layui-table-col-special .body .other-rank .row span:last-child,
-        .layui-table-col-special .body .other-rank_2 .row span:last-child {
-            height: 30%;
-        }
-
-        .layui-table-col-special .body .other-rank .row span.line1:hover,
-        .layui-table-col-special .body .other-rank_2 .row span.line1:hover {
-            color: #0c7df5;
-        }
-
-        .layui-table-col-special .body .other-rank_2 .row:last-child div.showOperationCombineName {
-            margin-top: 10px;
-            height: 60%;
-        }
-
-        .layui-table-col-special .body .other-rank_2 .row:last-child div.showOperationCombineName span a {
-            font-size: 14px;
-            color: #000;
-        }
-
-        .layui-table-col-special .body .other-rank_2 .row:last-child div.showOperationCombineName span a:hover {
-            color: #0c7df5;
-        }
-
-        .layui-table-col-special .body .other-rank_2 .row:last-child div.operationCombineSpan span {
-            height: 30%;
-        }
-
         .rank-wrap .col-4 {
             float: left;
-            width: 33%;
+            width: 29%;
             text-align: left;
         }
 
         .rank-wrap .col-2 {
-            width: 67%;
+            width: 71%;
             text-align: left;
         }
 
@@ -630,8 +535,8 @@
                     terminalType: terminalType
                 },
                 cols: [[
-                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '2%'},
-                    {filed: 'uuid', title: '记录', width: '98%', templet: '#item'}
+                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
+                    {filed: 'uuid', title: '记录', width: '1608', templet: '#item'}
                 ]],
                 // height: $(document).height() - $('#' + tableName).offset().top - 160,
                 height: 'full-160',
@@ -783,50 +688,89 @@
                         boundaryGap: true,
                         data: data.date
                     },
-                    yAxis: {
-                        show: true,
-                        type: 'value',
-                        axisLine: {
-                            show: false,
-                            lineStyle: {
-                                color: '#404A59'
-                            }
-                        },
-                        splitLine: {
+                    yAxis: [
+                        {
                             show: true,
-                            lineStyle: {
-                                color: '#DCDCDC',
-                                width: 1,
-                                type: 'solid'
+                            type: 'value',
+                            name: '关键字排名曲线',
+                            position: 'left',
+                            axisLine: {
+                                show: false,
+                                lineStyle: {
+                                    color: '#404A59'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#DCDCDC',
+                                    width: 1,
+                                    type: 'solid'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                fontStyle: 'italic',
+                                textStyle: {
+                                    color: '#000'
+                                }
                             }
                         },
-                        axisTick: {
-                            show: false
-                        },
-                        axisLabel: {
-                            fontStyle: 'italic',
-                            textStyle: {
-                                color: '#000'
+                        {
+                            show: true,
+                            type: 'value',
+                            name: '收录曲线',
+                            position: 'right',
+                            axisLine: {
+                                show: false,
+                                lineStyle: {
+                                    color: '#404A59'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#DCDCDC',
+                                    width: 1,
+                                    type: 'solid'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                fontStyle: 'italic',
+                                textStyle: {
+                                    color: '#000'
+                                }
                             }
                         }
-                    },
+                    ],
                     series: [
                         {
                             name: '收录',
                             smooth: true,
                             type: 'line',
-                            symbolSize: 1,
+                            yAxisIndex: 1,
+                            symbolSize: 3,
                             symbol: 'none',
                             data: data.baiduRecord,
                             lineStyle: {
                                 type: "solid",
-                                width: 1
+                                width: 1,
+                                normal: {
+                                    type: 'dashed',
+                                    width: 3
+                                }
                             }
                         },
                         {
                             name: '前10名',
                             smooth: true,
                             type: 'line',
+                            yAxisIndex: 0,
                             symbolSize: 1,
                             symbol: 'none',
                             data: data.topTen,
@@ -839,6 +783,7 @@
                             name: '前20名',
                             smooth: true,
                             type: 'line',
+                            yAxisIndex: 0,
                             symbolSize: 1,
                             symbol: 'none',
                             data: data.topTwenty,
@@ -851,6 +796,7 @@
                             name: '前30名',
                             smooth: true,
                             type: 'line',
+                            yAxisIndex: 0,
                             symbolSize: 1,
                             symbol: 'none',
                             data: data.topThirty,
@@ -863,6 +809,7 @@
                             name: '前40名',
                             smooth: true,
                             type: 'line',
+                            yAxisIndex: 0,
                             symbolSize: 1,
                             symbol: 'none',
                             data: data.topForty,
@@ -875,6 +822,7 @@
                             name: '前50名',
                             smooth: true,
                             type: 'line',
+                            yAxisIndex: 0,
                             symbolSize: 1,
                             symbol: 'none',
                             data: data.topFifty,
@@ -930,49 +878,89 @@
                         boundaryGap: true,
                         data: data.date
                     },
-                    yAxis: {
-                        axisLine: {
-                            show: false,
-                            lineStyle: {
-                                color: '#404A59'
-                            }
-                        },
-                        splitLine: {
+                    yAxis: [
+                        {
                             show: true,
-                            lineStyle: {
-                                color: '#DCDCDC',
-                                width: 1,
-                                type: 'solid'
+                            type: 'value',
+                            name: '关键字排名曲线',
+                            position: 'left',
+                            axisLine: {
+                                show: false,
+                                lineStyle: {
+                                    color: '#404A59'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#DCDCDC',
+                                    width: 1,
+                                    type: 'solid'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                fontStyle: 'italic',
+                                textStyle: {
+                                    color: '#000'
+                                }
                             }
                         },
-                        axisTick: {
-                            show: false
-                        },
-                        axisLabel: {
-                            fontStyle: 'italic',
-                            textStyle: {
-                                color: '#000'
+                        {
+                            show: true,
+                            type: 'value',
+                            name: '收录曲线',
+                            position: 'right',
+                            axisLine: {
+                                show: false,
+                                lineStyle: {
+                                    color: '#404A59'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#DCDCDC',
+                                    width: 1,
+                                    type: 'solid'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                fontStyle: 'italic',
+                                textStyle: {
+                                    color: '#000'
+                                }
                             }
-                        },
-                        type: 'value'
-                    },
+                        }
+                    ],
                     series: [
                         {
                             name: '收录',
                             smooth: true,
                             type: 'line',
-                            symbolSize: 1,
+                            yAxisIndex: 1,
+                            symbolSize: 3,
                             symbol: 'none',
                             data: data.baiduRecord,
                             lineStyle: {
                                 type: "solid",
-                                width: 1
+                                width: 1,
+                                normal: {
+                                    type: 'dashed',
+                                    width: 3
+                                }
                             }
                         },
                         {
                             name: '前10名',
                             smooth: true,
                             type: 'line',
+                            yAxisIndex: 0,
                             symbolSize: 1,
                             symbol: 'none',
                             data: data.topTen,
@@ -985,6 +973,7 @@
                             name: '前20名',
                             smooth: true,
                             type: 'line',
+                            yAxisIndex: 0,
                             symbolSize: 1,
                             symbol: 'none',
                             data: data.topTwenty,
@@ -997,6 +986,7 @@
                             name: '前50名',
                             smooth: true,
                             type: 'line',
+                            yAxisIndex: 0,
                             symbolSize: 1,
                             symbol: 'none',
                             data: data.topFifty,
@@ -1009,6 +999,7 @@
                             name: '前100名',
                             smooth: true,
                             type: 'line',
+                            yAxisIndex: 0,
                             symbolSize: 1,
                             symbol: 'none',
                             data: data.topHundred,
@@ -1562,7 +1553,7 @@
             <div class="layui-col-md12 line1">
                 <div class="layui-col-md12">
                     <a href="javascript:;">
-                        <span class="line1" title="{{d.userID}}">{{d.userID}}</span>
+                        <span title="{{d.userID}}">{{d.userID}}</span>
                     </a>
                 </div>
                 <div class="layui-col-md12">
