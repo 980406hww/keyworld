@@ -5,7 +5,6 @@ import com.keymanager.ckadmin.entity.QZChargeLog;
 import com.keymanager.ckadmin.service.QZChargeLogService;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +33,6 @@ public class QZChargeLogController {
     }
 
     //插入一条收费流水表
-    @RequiresPermissions("/internal/qzchargelog/save")
     @RequestMapping(value = "/saveQZChargeLogs", method = RequestMethod.POST)
     public ResultBean saveQZChargeLogs(@RequestBody QZChargeLog qzChargeLog, HttpSession session) {
         ResultBean resultBean = new ResultBean();
@@ -50,7 +48,6 @@ public class QZChargeLogController {
     }
 //
 //    //查看收费记录
-//    @RequiresPermissions("/internal/qzchargelog/chargesList")
 //    @RequestMapping(value = "/chargesList/{uuid}", method = RequestMethod.GET)
 //    public ResponseEntity<?> chargesList(@PathVariable("uuid") Long uuid) {
 //        return new ResponseEntity<Object>(qzChargeLogService.chargesList(uuid), HttpStatus.OK);
