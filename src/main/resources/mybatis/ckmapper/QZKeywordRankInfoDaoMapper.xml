@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.QZKeywordRankInfoDao">
+
+    <select id="searchExistingQZKeywordRankInfo"
+        resultType="com.keymanager.ckadmin.entity.QZKeywordRankInfo">
+        SELECT
+        qzkri.fUuid AS 'uuid',
+        qzkri.fQZSettingUuid AS 'qzSettingUuid',
+        qzkri.fTerminalType AS 'terminalType',
+        qzkri.fWebSiteType AS 'websiteType',
+        qzkri.fDataProcessingStatus AS 'dataProcessingStatus',
+        qzkri.fTopTen AS 'topTen',
+        qzkri.fTopTwenty AS 'topTwenty',
+        qzkri.fTopThirty AS 'topThirty',
+        qzkri.fTopForty AS 'topForty',
+        qzkri.fTopFifty AS 'topFifty',
+        qzkri.fTopHundred AS 'topHundred',
+        qzkri.fCreateTopTenNum AS 'createTopTenNum',
+        qzkri.fCreateTopFiftyNum AS 'createTopFiftyNum',
+        qzkri.fDate AS 'date',
+        qzkri.fFullDate AS 'fullDate',
+        qzkri.fIncrease AS 'increase',
+        qzkri.fIpRoute AS 'ipRoute',
+        qzkri.fRecord AS 'baiduRecord',
+        qzkri.fAchieveLevel AS 'achieveLevel',
+        qzkri.fSumSeries AS 'sumSeries',
+        qzkri.fDifferenceValue AS 'differenceValue',
+        qzkri.fCurrentPrice AS 'currentPrice',
+        qzkri.fBaiduRecordFullDate AS 'baiduRecordFullDate',
+        qzkri.fAchieveTime AS 'achieveTime'
+        FROM t_qz_keyword_rank_info qzkri
+        WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}
+        <if test="terminalType != null">
+            AND qzkri.fTerminalType = #{terminalType}
+        </if>
+        <if test="websiteType != null">
+            AND qzkri.fWebSiteType = #{websiteType}
+        </if>
+    </select>
+
+    <delete id="deleteByQZSettingUuid" parameterType="java.lang.Long">
+        DELETE FROM t_qz_keyword_rank_info
+        WHERE fQZSettingUuid = #{qzSettingUuid}
+    </delete>
+
+    <select id="getQZKeywordRankInfo" resultType="com.keymanager.ckadmin.entity.QZKeywordRankInfo">
+        SELECT
+        tqkri.fUuid AS 'uuid',
+        CONCAT("'", IF(MONTH(tqkri.fCreateTime) &lt; 10, CONCAT('0', MONTH(tqkri.fCreateTime)),
+        MONTH(tqkri.fCreateTime)), '-', IF(DAY(tqkri.fCreateTime) &lt; 10, CONCAT('0',
+        DAY(tqkri.fCreateTime)), DAY(tqkri.fCreateTime)), "'") AS 'createMonthDay'
+        FROM t_qz_keyword_rank_info tqkri
+        WHERE tqkri.fDataProcessingStatus = 1
+        <if test="qzSettingUuid != null">AND tqkri.fQZSettingUuid = #{qzSettingUuid}</if>
+        <if test="terminalType != null and terminalType != ''">
+            AND tqkri.fTerminalType = #{terminalType}
+        </if>
+        <if test="websiteType != null and websiteType != ''">
+            AND tqkri.fWebsiteType = #{websiteType}
+        </if>
+        LIMIT 1
+    </select>
+
+    <select id="getCountNumOfRankInfo"
+        resultType="com.keymanager.ckadmin.criteria.QZSettingCountNumCriteria">
+        SELECT
+        COUNT((qk.fIncrease &lt;= #{lowerValue} OR NULL) AND (qk.fOneWeekDifference &lt;=
+        #{downOneWeekDiff} OR NULL)) AS 'downNum',
+        COUNT(qk.fIncrease = 0 OR NULL) AS 'unchangedNum',
+        COUNT((qk.fIncrease &gt;= #{upperValue} OR NULL) AND (qk.fOneWeekDifference &gt;=
+        #{upperOneWeekDiff} OR NULL)) AS 'upNum',
+        COUNT(qk.fTodayDifference &lt;0 OR NULL) AS 'downDifferenceNum',
+        COUNT(qk.fTodayDifference = 0 OR NULL) AS 'unchangedDifferenceNum',
+        COUNT(qk.fTodayDifference &gt;0 OR NULL) AS 'upDifferenceNum',
+        COUNT(qk.fAchieveLevel &gt; 0 OR NULL) AS 'atLeastStandardNum',
+        COUNT(qk.fAchieveLevel = 0 OR NULL) AS 'neverStandardNum',
+        COUNT(qk.fDifferenceValue &lt;= #{differenceValue} OR NULL) AS 'closeStandardNum'
+        FROM t_qz_keyword_rank_info qk
+        LEFT JOIN t_qz_setting qs
+        ON qs.fUuid = qk.fQZSettingUuid
+        LEFT JOIN t_qz_operation_type qot
+        ON qot.fQZSettingUuid = qk.fQZSettingUuid
+        WHERE qk.fTerminalType = #{criteria.terminalType}
+        AND qot.fOperationtype = #{criteria.terminalType}
+        AND qot.fIsDeleted = 0
+        AND qk.fDataProcessingStatus = 1
+        <if test="criteria.customerUuid != null and criteria.customerUuid != ''">AND
+            qs.fCustomerUuid = #{criteria.customerUuid}
+        </if>
+        <if test="criteria.domain != null and criteria.domain != ''">AND qs.fDomain =
+            #{criteria.domain}
+        </if>
+        <if test="criteria.searchEngine != 'All'">AND qs.fSearchEngine = #{criteria.searchEngine}
+        </if>
+        <choose>
+            <when test="criteria.group != null and criteria.group != ''">
+                AND qot.fGroup = #{criteria.group}
+            </when>
+            <otherwise></otherwise>
+        </choose>
+        <if test="criteria.updateStatus != null and criteria.updateStatus != ''">AND
+            qs.fUpdateStatus = #{criteria.updateStatus}
+        </if>
+        <if test="criteria.status != null">AND qs.fStatus = #{criteria.status}</if>
+        <if test="criteria.renewalStatus != null">AND qs.fRenewalStatus =
+            #{criteria.renewalStatus}
+        </if>
+        <if test="criteria.hasMonitor != null">AND qs.fIsMonitor = #{criteria.hasMonitor}</if>
+        <if test="criteria.hasReady != null">AND qs.fIsReady = #{criteria.hasReady}</if>
+        <if test="criteria.standardSpecies != null and criteria.standardSpecies != ''">AND
+            qk.fWebsiteType = #{criteria.standardSpecies}
+        </if>
+        <if test="criteria.optimizationType != null">AND qot.fOptimizationType =
+            #{criteria.optimizationType}
+        </if>
+        <if test="criteria.renewalStatus != null">AND qs.fRenewalStatus =
+            #{criteria.renewalStatus}
+        </if>
+        <if test="criteria.categoryTag != null and criteria.categoryTag != ''">
+            AND EXISTS (SELECT 1 FROM t_qz_category_tag qc WHERE qc.fQZSettingUuid = qs.fUuid AND
+            qc.fTagName = #{criteria.categoryTag})
+        </if>
+        <if test="criteria.operationType != null and criteria.operationType != ''">
+            AND EXISTS (
+            SELECT 1 FROM t_machine_info mi
+            WHERE mi.fUsingOperationType = #{criteria.operationType}
+            AND mi.fGroup = qot.fGroup
+            AND mi.fTerminalType = #{criteria.terminalType}
+            )
+        </if>
+        <if test="criteria.createTime != null and criteria.createTime != ''">AND qs.fCreateTime &gt;=
+            #{criteria.createTime}
+        </if>
+        <if test="criteria.createTimePrefix != null and criteria.createTimePrefix != ''">AND
+            qs.fCreateTime &lt;= #{criteria.createTimePrefix}
+        </if>
+        <if test="criteria.loginName != null and criteria.loginName != ''">
+            AND EXISTS (SELECT 1 FROM t_customer c WHERE c.fUuid = qs.fCustomerUuid AND c.fUserID =
+            #{criteria.loginName})
+        </if>
+        <if test="criteria.organizationID != null and criteria.organizationID != ''">
+            AND EXISTS (
+            SELECT 1
+            FROM t_customer c
+            LEFT JOIN t_userinfo ui
+            ON c.fUserID = ui.fLoginName
+            LEFT JOIN t_organization o
+            ON ui.fOrganizationID = o.fUuid
+            WHERE c.fUuid = qs.fCustomerUuid
+            AND ui.fStatus = 0
+            AND o.fUuid = #{criteria.organizationID}
+            )
+        </if>
+    </select>
+
+    <select id="getQZKeywordRankInfoTypes" resultType="java.lang.String">
+        SELECT CONCAT(qk.fTerminalType, '_', qk.fWebsiteType, '_', qk.fDataProcessingStatus)
+        FROM t_qz_keyword_rank_info qk
+        WHERE qk.fQZSettingUuid = #{qzSettingUuid}
+        AND qk.fWebsiteType = "aiZhan"
+        UNION ALL
+        SELECT CONCAT(qk.fTerminalType, '_', qk.fWebsiteType, '_', qk.fDataProcessingStatus)
+        FROM t_qz_keyword_rank_info qk
+        WHERE qk.fQZSettingUuid = #{qzSettingUuid}
+        AND qk.fWebsiteType = "5118"
+        GROUP BY qk.fTerminalType
+    </select>
+
+    <select id="selectByQZSettingUuid" resultType="com.keymanager.ckadmin.entity.QZKeywordRankInfo">
+        SELECT
+            qk.fUuid AS 'uuid',
+            qk.fQZSettingUuid AS 'qzSettingUuid',
+            qk.fTerminalType AS 'terminalType',
+            qk.fWebsiteType AS 'websiteType',
+            qk.fDataProcessingStatus AS 'dataProcessingStatus',
+            qk.fDate AS 'date',
+            qk.fTopTen AS 'topTen',
+            qk.fTopTwenty AS 'topTwenty',
+            qk.fTopThirty AS 'topThirty',
+            qk.fTopForty AS 'topForty',
+            qk.fTopFifty AS 'topFifty',
+            qk.fCreateTopTenNum AS 'createTopTenNum',
+            qk.fCreateTopFiftyNum AS 'createTopFiftyNum'
+        FROM t_qz_keyword_rank_info qk
+        WHERE qk.fQZSettingUuid = #{qzSettingUuid}
+        AND qk.fTerminalType = #{terminalType}
+        AND qk.fWebsiteType = 'designationWord'
+    </select>
+
+    <select id="searchExistingExtraQZKeywordRankInfo"
+        resultType="com.keymanager.ckadmin.entity.QZKeywordRankInfo">
+        SELECT qzkri.fUuid AS 'uuid'
+        FROM t_qz_keyword_rank_info qzkri
+        WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}
+        AND EXISTS(SELECT 1 FROM t_qz_setting qs WHERE qs.fUuid = qzkri.fQZSettingUuid)
+        AND qzkri.fTerminalType = #{terminalType}
+        AND qzkri.fWebsiteType = 'aiZhan'
+    </select>
+</mapper>

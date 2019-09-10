@@ -58,4 +58,13 @@
         <if test="domain != null and domain != ''">AND qs.fDomain = #{domain}</if>
     </select>
 
+    <select id="getQZSettingGroupInfo" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM t_customer_keyword ck
+        WHERE ck.fOptimizeGroupName = #{optimizeGroupName}
+        AND ck.fType = 'qz'
+        AND ck.fTerminalType = #{terminalType}
+        AND ck.fStatus = 1
+    </select>
+
 </mapper>

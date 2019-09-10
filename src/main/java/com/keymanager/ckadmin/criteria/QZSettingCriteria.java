@@ -10,6 +10,7 @@ import com.keymanager.ckadmin.criteria.base.BaseCriteria;
  * @Version 1.0
  */
 public class QZSettingCriteria extends BaseCriteria {
+
     private String loginName;
     private String customerUuid;
     private String terminalType;

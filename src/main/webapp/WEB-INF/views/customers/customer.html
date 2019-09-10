@@ -1,5 +1,5 @@
-<#import "/commons/global.html" as ctx>
 <!DOCTYPE html>
+<#import "/commons/global.html" as ctx>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -496,9 +496,9 @@
         if (index > -1) {
             contactPerson = contactPerson.substr(0, index);
         }
-        if (type == 'aizhan') {
+        if (type === 'aizhan') {
             window.open("https://baidurank.aizhan.com/baidu/" + contactPerson);
-        } else if (type == '5118') {
+        } else if (type === '5118') {
             window.open("http://5118.com/seo/baidurank/" + contactPerson);
         }
     }
