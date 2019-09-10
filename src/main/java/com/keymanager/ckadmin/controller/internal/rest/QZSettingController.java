@@ -46,6 +46,26 @@ public class QZSettingController {
     }
 
     /**
+     * 跳转添加或修改用户页面
+     */
+    @GetMapping(value = "/toQZSettingAdd")
+    public ModelAndView toQZSettingAdd() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("qzsettings/qzsettingAdd");
+        return mv;
+    }
+
+    /**
+     * 跳转添加或修改用户页面
+     */
+    @GetMapping(value = "/toQZSettingCharge")
+    public ModelAndView toQZSettingCharge() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("qzsettings/qzsettingCharge");
+        return mv;
+    }
+
+    /**
      * 获取全站数据
      */
     @PostMapping("/getQZSettings")
