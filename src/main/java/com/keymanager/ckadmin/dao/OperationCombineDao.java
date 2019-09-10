@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  * @Author zhoukai
  * @Date 2019/6/24 13:59
  **/
-@Repository("OperationCombineDao2")
+@Repository("operationCombineDao2")
 public interface OperationCombineDao extends BaseMapper<OperationCombine> {
 
     List<String> getOperationCombineNames(@Param("terminalType") String terminalType);

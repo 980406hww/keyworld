@@ -7,11 +7,11 @@ import com.keymanager.ckadmin.service.OperationCombineService;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-@Service("OperationCombineService2")
+@Service("operationCombineService2")
 public class OperationCombineServiceImpl extends
     ServiceImpl<OperationCombineDao, OperationCombine> implements OperationCombineService {
 
-    @Resource(name = "OperationCombineDao2")
+    @Resource(name = "operationCombineDao2")
     private OperationCombineDao operationCombineDao;
 
     @Override

@@ -8,11 +8,11 @@ import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-@Service("QZKeywordRankInfoService2")
+@Service("qzKeywordRankInfoService2")
 public class QZKeywordRankInfoServiceImpl extends
     ServiceImpl<QZKeywordRankInfoDao, QZKeywordRankInfo> implements QZKeywordRankInfoService {
 
-    @Resource(name = "QZKeywordRankInfoDao2")
+    @Resource(name = "qzKeywordRankInfoDao2")
     private QZKeywordRankInfoDao qzKeywordRankInfoDao;
 
     @Override

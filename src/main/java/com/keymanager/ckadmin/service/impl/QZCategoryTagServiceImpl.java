@@ -8,11 +8,11 @@ import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-@Service("QZCategoryTagService2")
+@Service("qzCategoryTagService2")
 public class QZCategoryTagServiceImpl extends
     ServiceImpl<QZCategoryTagDao, QZCategoryTag> implements QZCategoryTagService {
 
-    @Resource(name = "QZCategoryTagDao2")
+    @Resource(name = "qzCategoryTagDao2")
     private QZCategoryTagDao qzCategoryTagDao;
 
     @Override

@@ -9,16 +9,17 @@ import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-@Service("QZOperationTypeService2")
+@Service("qzOperationTypeService2")
 public class QZOperationTypeServiceImpl extends
     ServiceImpl<QZOperationTypeDao, QZOperationType> implements QZOperationTypeService {
 
-    @Resource(name = "QZOperationTypeDao2")
+    @Resource(name = "qzOperationTypeDao2")
     private QZOperationTypeDao qzOperationTypeDao;
 
     @Override
     public Date getStandardTime(long qzSettingUuid, String terminalType) {
         return qzOperationTypeDao.getStandardTime(qzSettingUuid, terminalType);
+    }
     
     @Override
     public List<QZOperationType> searchQZOperationTypesByQZSettingUuid(Long uuid) {

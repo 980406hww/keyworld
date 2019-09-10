@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  * @Author zhoukai
  * @Date 2018/12/6 11:18
  **/
-@Repository("QZKeywordRankInfoDao2")
+@Repository("qzKeywordRankInfoDao2")
 public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
 
     List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo(

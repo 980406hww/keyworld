@@ -10,12 +10,16 @@ import org.springframework.stereotype.Repository;
 @Repository("qzOperationTypeDao2")
 public interface QZOperationTypeDao extends BaseMapper<QZOperationType> {
 
-    //通过uuid查询操作类型表
+    /**
+     * 通过uuid查询操作类型表
+     * @param qzSettingUuid
+     * @return
+     */
     List<QZOperationType> searchQZOperationTypesByQZSettingUuid(
         @Param("qzSettingUuid") Long qzSettingUuid);
 
     /**
-     * 通过uuid查询操作类型表
+     * 查询多条操作类型信息
      * @param qzSettingUuid
      * @return
      */

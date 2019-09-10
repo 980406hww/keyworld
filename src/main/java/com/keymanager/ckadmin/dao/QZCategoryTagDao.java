@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
  * @Author zhoukai
  * @Date 2018/12/27 9:16
  **/
-@Repository("QZCategoryTagDao2")
+@Repository("qzCategoryTagDao2")
 public interface QZCategoryTagDao extends BaseMapper<QZCategoryTag> {
 
     List<QZCategoryTag> searchCategoryTagByQZSettingUuid(

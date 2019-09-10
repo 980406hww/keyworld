@@ -44,16 +44,16 @@ public class QZSettingServiceImpl extends
     @Resource(name = "qzSettingDao2")
     private QZSettingDao qzSettingDao;
 
-    @Resource(name = "QZKeywordRankInfoService2")
+    @Resource(name = "qzKeywordRankInfoService2")
     private QZKeywordRankInfoService qzKeywordRankInfoService;
 
-    @Resource(name = "QZOperationTypeService2")
+    @Resource(name = "qzOperationTypeService2")
     private QZOperationTypeService qzOperationTypeService;
 
-    @Resource(name = "QZCategoryTagService2")
+    @Resource(name = "qzCategoryTagService2")
     private QZCategoryTagService qzCategoryTagService;
 
-    @Resource(name = "OperationCombineService2")
+    @Resource(name = "operationCombineService2")
     private OperationCombineService operationCombineService;
 
     @Override
