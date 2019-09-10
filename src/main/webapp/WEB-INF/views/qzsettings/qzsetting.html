@@ -40,7 +40,7 @@
             vertical-align: middle
         }
 
-        .layui-tab-item .layui-table-cell {
+        .layui-table-cell {
             height: auto;
             overflow: visible;
             text-overflow: inherit;
@@ -63,7 +63,7 @@
         }
 
         .layui-table-body .layui-table-col-special {
-            height: 195px;
+            height: 214px;
         }
 
         .layui-table-col-special .header {
@@ -173,9 +173,9 @@
             color: #f60;
         }
 
-        .layui-table-col-special .body {
+        /*.layui-table-col-special .body {
             height: 150px
-        }
+        }*/
 
         .layui-table-col-special .body .user-id .line1,
         .layui-table-col-special .body .standard-info .line1 {
@@ -499,6 +499,21 @@
             width: 100%;
             text-align: left;
         }
+        .layui-unselect {
+            height:30px;
+        }
+
+        .layui-table-tool {
+            position: relative;
+            z-index: 890;
+            width: 100%;
+            min-height: 30px;
+            line-height: 30px;
+            padding: 10px 5px;
+            border-width: 0 0 1px
+        }
+
+
     </style>
 </head>
 <body class="ok-body">
@@ -517,10 +532,11 @@
         <div class="layui-collapse" lay-filter="test">
             <div class="layui-colla-item">
                 <h2 class="layui-colla-title">条件筛选<i class="layui-icon layui-colla-icon"></i></h2>
-                <button class="layui-btn" id="add-qz">添加</button>
-                <button class="layui-btn" id="add-qz-sf">收费</button>
                 <div class="layui-colla-content" id="searchContent">
                     <form class="layui-form layui-form-pane" id="searchForm">
+
+                        <input hidden name="searchEngine" id="searchEngine" value=""/>
+                        <input hidden name="terminalType" id="terminalType" value=""/>
                         <div class="layui-form-item" lay-filter="loginNameFilter">
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
@@ -546,16 +562,11 @@
         </div>
     </div>
 </div>
-<div class="layui-fluid">
-    <div class="layadmin-caller">
-        <div class="layui-tab layui-tab-card caller-tab" lay-filter="searchEngineTab">
-            <ul class="layui-tab-title">
-            </ul>
-            <div class="layui-tab-content">
-            </div>
-        </div>
-    </div>
-</div>
+
+<!--数据表格-->
+<table class="layui-hide" id="qzSettingTable" lay-filter="tableFilter">
+
+</table>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
 <script>
@@ -569,61 +580,48 @@
             , okLayer = layui.okLayer
             , layer = layui.layer;
 
-        function addSearchEngineTab(title, content, id) {
-            element.tabAdd('searchEngineTab', {
-                title: title
-                , content: content
-                , id: id
-            })
+        get_qzsettting('百度', 'PC')
+
+        function getTerminalSearchEngineMap() {
+            /*动态加载tab栏*/
+            $.ajax({
+                url: '/internal/qzsetting/getQZSettingSearchEngineMap',
+                type: 'get',
+                asyns: false,
+                // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
+                dataType: 'json',
+                success: function (res) {
+                    let data = res.data;
+                    let terminalSearchEngine = $('#terminalSearchEngine');
+                    terminalSearchEngine.empty();
+                    $.each(data, function (index, item) {
+                        let ttse;
+                        if (item.terminalType === 'PC') {
+                            ttse = item.searchEngineName + item.terminalType;
+                        } else {
+                            ttse = item.searchEngineName;
+                        }
+                        terminalSearchEngine.append('<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
+                    });
+                    terminalSearchEngine.val( ($('#searchEngine').val()+ $('#terminalType').val())==''? '百度PC':($('#searchEngine').val()+ $('#terminalType').val()));
+                    form.render("select");
+                }
+            });
         }
 
-        /*动态加载tab栏*/
-        $.ajax({
-            url: '/internal/qzsetting/getQZSettingSearchEngineMap',
-            type: 'get',
-            asyns: false,
-            // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
-            dataType: 'json',
-            success: function (res) {
-                let data = res.data;
-                for (let item in data) {
-                    let title;
-                    let tablename;
-                    if (data[item].terminalType === 'PC') {
-                        tablename = data[item].searchEngineName + data[item].terminalType
-                            + '-Table';
-                        title = data[item].searchEngineName + data[item].terminalType;
-                    } else {
-                        tablename = data[item].searchEngineName + '-Table';
-                        title = data[item].searchEngineName;
-                    }
-                    let content = '<div class="layui-tab-item layui-show"><table class="layui-hide" id="'
-                        + tablename + '" lay-filter="tableFilter"></div>';
-                    addSearchEngineTab(title, content, tablename)
-                }
-                element.tabChange('searchEngineTab', '百度PC-Table');
-            }
-        });
-
-        element.on('tab(searchEngineTab)', function (data) {
-            let tableName = this.getAttribute('lay-id');
-            let st = tableName.split("-")[0];
-            let searchEngine = st.substr(0, st.indexOf('P'));
-            let terminalType = st.substr(st.indexOf('P'), st.length);
-            get_qzsettting(tableName, searchEngine, terminalType)
-        });
-
-        function get_qzsettting(tableName, searchEngine, terminalType) {
-            var tableElem = '#' + tableName;
+        function get_qzsettting(searchEngine, terminalType) {
             table.render({
-                elem: tableElem,
+                elem: '#qzSettingTable',
                 method: 'post',
                 url: '/internal/qzsetting/getQZSettings',
                 limit: 25,
                 limits: [10, 25, 50, 75, 100, 500, 1000],
                 page: true,
                 size: 'sm',
-                id: '' + tableName,
+                id: 'qzSettingTable',
+                toolbar: "#toolbarTpl",
+                defaultToolbar: ['filter'],
+
                 contentType: 'application/json',
                 where: {
                     searchEngine: searchEngine,
@@ -634,10 +632,12 @@
                     {filed: 'uuid', title: '记录', width: '98%', templet: '#item'}
                 ]],
                 // height: $(document).height() - $('#' + tableName).offset().top - 160,
-                height: 'full-160',
+                height: 'full-120',
                 loading: true,
                 done: function (res, curr, count) {
-                    let table = $("#" + tableName).parent().find(".layui-table-main").find("table");
+                    getTerminalSearchEngineMap(searchEngine, terminalType);
+
+                    let table = $("#qzSettingTable").parent().find(".layui-table-main").find("table");
                     $.each(res.data, function (idx, val) {
                         let td = table.find("tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
                             "td[data-field='1']");
@@ -695,6 +695,48 @@
                     });
                 }
             });
+        }
+
+
+
+        form.on('select(terminalSearchEngineFilter)', function(data){
+            let st = data.value;
+            let searchEngine = st.substr(0, st.indexOf('P'));
+            let terminalType = st.substr(st.indexOf('P'), st.length);
+            $('#searchEngine').val(searchEngine);
+            $('#terminalType').val(terminalType);
+            active['reload'].call(this)
+        });
+
+        var active = {
+            reload: function () {
+                table.reload('qzSettingTable', {
+                    where: $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true))),
+                    page: {
+                        curr: 1 //从第一页开始
+                    }
+                });
+                $("#searchContent").removeClass("layui-show")
+            },
+        };
+
+        form.on("submit(search)", function (data) {
+            table.reload('qzSettingTable', {
+                where: data.field,
+                page: {
+                    curr: 1 //从第一页开始
+                }
+            });
+            $("#searchContent").removeClass("layui-show")
+            return false;
+        });
+
+        function formToJson(data) {
+            // console.log(data)
+            data=data.replace(/&/g,"\",\"");
+            data=data.replace(/=/g,"\":\"");
+            data="{\""+data+"\"}";
+            return data;
         }
 
         function getQZKeywordRankInfo(postData, callback) {
@@ -1416,10 +1458,6 @@
 
         });
 
-
-        document.getElementById('add-qz').onclick = toAddQzsetting;
-        document.getElementById('add-qz-sf').onclick = toAddQzsettingSf;
-
         // 添加
         function toAddQzsetting() {
             okLayer.open("其他 / 前往全站设置信息 / 添加", "/internal/qzsetting/toQzsettingAdd", "90%", "90%", null, function () {
@@ -1436,7 +1474,31 @@
                 }
             })
         }
+
+        /*window.showExcludeCustomerKeywordDialog = function(uuid, contactPerson, domain, pcGroup, phoneGroup) {
+            let tabelName = $(".layui-tab-title .layui-this").attr("lay-id");
+            let optimizedGroupName = phoneGroup;
+            if(tabelName.indexOf('PC')){
+                optimizedGroupName = pcGroup;
+            }
+            console.log(uuid, contactPerson, domain, optimizedGroupName);
+
+        }*/
     });
+</script>
+
+
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+
+        <div class="layui-input-inline" style="width: 120px; height: 30px">
+            <select name="terminalSearchEngine" id="terminalSearchEngine" lay-filter="terminalSearchEngineFilter"></select>
+        </div>
+
+        <button class="layui-btn layui-btn-sm" id="addUser" lay-event="addUser">
+            <i class="layui-icon">&#xe61f;</i>添加客户
+        </button>
+
 </script>
 
 <script type="text/html" id="item">
@@ -1507,7 +1569,7 @@
             <div class="handle">
                 <span>
                <a class="blue"
-                  href="javascript:showExcludeCustomerKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}',' {{d.LAY_TABLE_INDEX }}')">排除关键字</a>
+                  href="javascript:showExcludeCustomerKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">排除关键字</a>
             </span>
 
                 <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
