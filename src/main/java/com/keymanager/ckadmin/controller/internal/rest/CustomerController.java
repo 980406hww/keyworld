@@ -114,22 +114,6 @@ public class CustomerController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/customer/saveCustomer")
-    @RequestMapping(value = "/toQzsetting", method = RequestMethod.GET)
-    public ModelAndView toQzsetting() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("qzsetting/qzsetting");
-        return mv;
-    }
-
-    @RequiresPermissions("/internal/customer/saveCustomer")
-    @RequestMapping(value = "/toQzsettingAdd", method = RequestMethod.GET)
-    public ModelAndView toQzsettingAdd() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("qzsetting/qzsettingAdd");
-        return mv;
-    }
-
     /**
      * 获得用户信息
      * @param uuid

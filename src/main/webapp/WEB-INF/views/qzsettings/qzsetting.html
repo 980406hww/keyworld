@@ -517,9 +517,10 @@
         <div class="layui-collapse" lay-filter="test">
             <div class="layui-colla-item">
                 <h2 class="layui-colla-title">条件筛选<i class="layui-icon layui-colla-icon"></i></h2>
+                <button class="layui-btn" id="add-qz">添加</button>
+                <button class="layui-btn" id="add-qz-sf">收费</button>
                 <div class="layui-colla-content" id="searchContent">
                     <form class="layui-form layui-form-pane" id="searchForm">
-
                         <div class="layui-form-item" lay-filter="loginNameFilter">
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
@@ -530,7 +531,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="layui-form-item">
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
@@ -550,10 +550,8 @@
     <div class="layadmin-caller">
         <div class="layui-tab layui-tab-card caller-tab" lay-filter="searchEngineTab">
             <ul class="layui-tab-title">
-
             </ul>
             <div class="layui-tab-content">
-
             </div>
         </div>
     </div>
@@ -566,7 +564,9 @@
         var element = layui.element
             , table = layui.table
             , form = layui.form
-            , $ = layui.jquery;
+            , $ = layui.jquery
+            , okLayer = layui.okLayer
+            , layer = layui.layer;
 
         function addSearchEngineTab(title, content, id) {
             element.tabAdd('searchEngineTab', {
@@ -1414,6 +1414,20 @@
         table.on('checkbox(tableFilter)', function (obj) {
 
         });
+
+        $('#add-qz').click(toAddQzsetting);
+        $('#add-qz-sf').click(toAddQzsettingSf);
+
+        // 添加
+        function toAddQzsetting() {
+            okLayer.open("其他 / 前往全站设置信息 / 添加", "/internal/qzsetting/toQzsettingAdd", "90%", "90%", null, function () {
+            });
+        }
+        // 收费
+        function toAddQzsettingSf() {
+            okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toQzsettingSf", "90%", "90%", null, function () {
+            });
+        }
     });
 </script>
 
