@@ -3,9 +3,12 @@ package com.keymanager.ckadmin.service.impl;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
+import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.dao.QZSettingDao;
+import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
+import com.keymanager.ckadmin.service.CustomerExcludeKeywordService;
 import com.keymanager.ckadmin.service.QZSettingService;
 
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
@@ -55,6 +58,9 @@ public class QZSettingServiceImpl extends
 
     @Resource(name = "operationCombineService2")
     private OperationCombineService operationCombineService;
+
+    @Resource(name = "customerExcludeKeywordService2")
+    private CustomerExcludeKeywordService customerExcludeKeywordService;
 
     @Override
     public Page<QZSetting> searchQZSetting(Page<QZSetting> page,
@@ -183,5 +189,11 @@ public class QZSettingServiceImpl extends
         rankInfoVoMap.put("categoryTagNames", qzCategoryTagService.findTagNames(uuid));
         rankInfoVoMap
             .put("standardTime", qzOperationTypeService.getStandardTime(uuid, terminalType));
+    }
+
+    @Override
+    public CustomerExcludeKeyword echoExcludeKeyword(
+        QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+        return customerExcludeKeywordService.echoExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria);
     }
 }

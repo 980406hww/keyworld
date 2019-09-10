@@ -3,19 +3,25 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
+import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
+import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -46,7 +52,7 @@ public class QZSettingController {
     }
 
     /**
-     * 跳转添加或修改用户页面
+     * 跳转添加或修改全站页面
      */
     @GetMapping(value = "/toQZSettingAdd")
     public ModelAndView toQZSettingAdd() {
@@ -56,7 +62,7 @@ public class QZSettingController {
     }
 
     /**
-     * 跳转添加或修改用户页面
+     * 跳转添加或修改全站收费页面
      */
     @GetMapping(value = "/toQZSettingCharge")
     public ModelAndView toQZSettingCharge() {
@@ -132,5 +138,34 @@ public class QZSettingController {
             return resultBean;
         }
         return resultBean;
+    }
+
+    /**
+     * 跳转添加或修改排除关键字页面
+     */
+    @GetMapping(value = "/toExcludeCustomerKeyword")
+    public ModelAndView toExcludeCustomerKeyword() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("qzsettings/excludeCustomerKeyword");
+        return mv;
+    }
+
+    @PostMapping(value = "/echoExcludeKeyword2")
+    public ResultBean echoExcludeKeyword(HttpServletRequest request, @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            CustomerExcludeKeyword customerExcludeKeyword = qzSettingService.echoExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria);
+            resultBean.setCode(200);
+            resultBean.setMsg("获取排除词成功");
+            resultBean.setData(customerExcludeKeyword);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+
+
     }
 }
