@@ -89,11 +89,11 @@ public class QZSettingServiceImpl extends
         map.put(Constants.ALL_SEARCH_ENGINE + TerminalTypeEnum.Phone.name(),
             TerminalTypeEnum.Phone.name());
         boolean displayExistTabFlag =
-            (!"".equals(criteria.getDomain()) || !"".equals(criteria.getCustomerUuid()))
+            (!"".equals(criteria.getDomain()) || !"".equals(criteria.getCustomerInfo()))
                 && record == 1;
         if (displayExistTabFlag) {
             List<QZSettingVO> qzSettingVos = qzSettingDao
-                .searchQZSettingSearchEngines(criteria.getCustomerUuid(), criteria.getDomain());
+                .searchQZSettingSearchEngines(criteria.getCustomerInfo(), criteria.getDomain());
             for (QZSettingVO qzSettingVo : qzSettingVos) {
                 if (null != qzSettingVo.getPcGroup()) {
                     map.put(qzSettingVo.getSearchEngine(), TerminalTypeEnum.PC.name());

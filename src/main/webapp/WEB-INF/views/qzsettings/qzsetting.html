@@ -441,8 +441,8 @@
                 <div class="layui-colla-content" id="searchContent">
                     <form class="layui-form layui-form-pane" id="searchForm">
 
-                        <input hidden name="searchEngine" id="searchEngine" value=""/>
-                        <input hidden name="terminalType" id="terminalType" value=""/>
+                        <input hidden name="searchEngine" id="searchEngine" value="百度"/>
+                        <input hidden name="terminalType" id="terminalType" value="PC"/>
                         <div class="layui-form-item" lay-filter="loginNameFilter">
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
@@ -552,59 +552,6 @@
             }
         }
 
-        form.on("submit(search)", function (data) {
-            var tableName =  $(".layui-tab-title .layui-this").attr("lay-id");
-            var st = tableName.split("-")[0];
-            var searchEngine = st.substr(0,st.indexOf('P'));
-            var terminalType = st.substr(st.indexOf('P'),st.length);
-            var domain = data.field.domain.replace(/\s*/g,"")
-            var customerUuid = data.field.customerInfo.replace(/\s*/g,"")
-            var userInfoID = data.field.userInfoID
-            var organizationID = data.field.organizationID
-            if(userInfoID == null || userInfoID == ''){
-                layer.msg("请选择具体用户")
-                return false;
-            }
-            console.log(data.field)
-            if(domain != null && domain != ''){
-                if(domain.indexOf(".") == -1){
-                    layer.msg("域名不符合规范")
-                    return false;
-                }
-            }
-            search_qzsettting(tableName, searchEngine, terminalType, domain, userInfoID, customerUuid)
-            return false;
-        });
-
-        function search_qzsettting(tableName, searchEngine, terminalType, domain, userInfoID, customerUuid){
-            var tableElem = '#'+tableName;
-            table.render({
-                elem: tableElem,
-                method: 'post',
-                url: '/internal/qzsetting/getQZSettings',
-                limit: 50,
-                page: true,
-                size: 'sm',
-                id: ''+tableName,
-                contentType: 'application/json',
-                where: {
-                    searchEngine: searchEngine,
-                    terminalType: terminalType,
-                    domain: domain,
-                    customerUuid: customerUuid,
-                    userInfoID: userInfoID,
-                },
-                cols: [[
-                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '2%'},
-                    {filed: 'uuid', title: '记录', width: '98%', templet: '#item'},
-                ]],
-                height: $(document).height() - $('#'+tableName).offset().top - 160,
-
-                done: function (res, curr, count) {
-                }
-            });
-        }
-
         $.ajax({
             url: '${ctx.path}/internal/qzsetting/getActiveCustomer',
             dataType: 'json',
@@ -661,7 +608,28 @@
             get_qzsettting(tableName, searchEngine, terminalType)
         });
 
-        function get_qzsettting(searchEngine, terminalType) {
+        form.on("submit(search)", function (data) {
+            var searchEngine = data.field.searchEngine
+            var terminalType = data.field.terminalType
+            var domain = data.field.domain.replace(/\s*/g,"")
+            var customerInfo = data.field.customerInfo.replace(/\s*/g,"")
+            var userInfoID = data.field.userInfoID
+            var organizationID = data.field.organizationID
+            if(userInfoID == null || userInfoID == ''){
+                layer.msg("请选择具体用户")
+                return false;
+            }
+            if(domain != null && domain != ''){
+                if(domain.indexOf(".") == -1){
+                    layer.msg("域名不符合规范")
+                    return false;
+                }
+            }
+            get_qzsettting(searchEngine, terminalType, domain, userInfoID, customerInfo)
+            return false;
+        });
+
+        function get_qzsettting(searchEngine, terminalType, domain, userInfoID, customerInfo) {
             table.render({
                 elem: '#qzSettingTable',
                 method: 'post',
@@ -676,7 +644,10 @@
                 contentType: 'application/json',
                 where: {
                     searchEngine: searchEngine,
-                    terminalType: terminalType
+                    terminalType: terminalType,
+                    domain: domain,
+                    customerInfo: customerInfo,
+                    userInfoID: userInfoID,
                 },
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
