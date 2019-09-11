@@ -40,6 +40,24 @@ public class MachineInfoCriteria extends BaseCriteria {
     private String targetMachineGroup;
     private String targetGroup;
 
+    private Integer gtMemory;
+    private Integer ltMemory;
+
+    public Integer getGtMemory() {
+        return gtMemory;
+    }
+
+    public void setGtMemory(Integer gtMemory) {
+        this.gtMemory = gtMemory;
+    }
+
+    public Integer getLtMemory() {
+        return ltMemory;
+    }
+
+    public void setLtMemory(Integer ltMemory) {
+        this.ltMemory = ltMemory;
+    }
 
     public boolean getHaveHiddenColumns() {
         return haveHiddenColumns;
