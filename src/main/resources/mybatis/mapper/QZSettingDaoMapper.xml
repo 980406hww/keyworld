@@ -110,8 +110,6 @@
                 </when>
             </choose>
             qs.fType AS 'type',
-            qs.fIsMonitor AS 'fIsMonitor',
-            qs.fIsReady AS 'fIsReady',
             qs.fCreateTime AS 'createTime',
             qs.fStatus AS 'status',
             qs.fRenewalStatus AS 'renewalStatus',
@@ -144,8 +142,6 @@
         <if test="qzSettingSearchCriteria.status != null">AND qs.fStatus = #{qzSettingSearchCriteria.status}</if>
         <if test="qzSettingSearchCriteria.renewalStatus != null">AND qs.fRenewalStatus = #{qzSettingSearchCriteria.renewalStatus}</if>
         <if test="qzSettingSearchCriteria.autoCrawlKeywordFlag != null">AND qs.fAutoCrawlKeywordFlag = #{qzSettingSearchCriteria.autoCrawlKeywordFlag}</if>
-        <if test="qzSettingSearchCriteria.hasMonitor != null">AND qs.fIsMonitor = #{qzSettingSearchCriteria.hasMonitor}</if>
-        <if test="qzSettingSearchCriteria.hasReady != null">AND qs.fIsReady = #{qzSettingSearchCriteria.hasReady}</if>
         <if test="qzSettingSearchCriteria.standardSpecies != null and qzSettingSearchCriteria.standardSpecies != ''">
             AND EXISTS (
                 SELECT 1
@@ -441,13 +437,6 @@
             </otherwise>
         </choose>
     </select>
-
-    <update id="startMonitorImmediately" parameterType="java.lang.String">
-        UPDATE t_qz_setting  qs
-        SET qs.fUpdateTime = NOW(),
-        qs.fIsMonitor = 1
-        WHERE qs.fUuid IN (${uuids})
-    </update>
 
     <select id="searchQZSettingSearchEngines" resultType="com.keymanager.monitoring.vo.QZSettingVO">
         SELECT
