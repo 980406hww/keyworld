@@ -71,6 +71,9 @@ public class QZSettingServiceImpl extends
     @Resource(name = "captureRankJobService2")
     private CaptureRankJobService captureRankJobService;
 
+    @Resource(name = "customerService2")
+    private CustomerService customerService;
+
     @Override
     public Page<QZSetting> searchQZSetting(Page<QZSetting> page,
         QZSettingCriteria qzSettingCriteria) {
@@ -585,5 +588,22 @@ public class QZSettingServiceImpl extends
         for (Integer uuid : uuids) {
             deleteOne(Long.valueOf(uuid));
         }
+    }
+
+    @Override
+    public QZSetting getQZSetting(Long uuid) {
+        QZSetting qzSetting = qzSettingDao.selectById(uuid);
+        if (qzSetting != null) {
+            Customer customer = customerService.getCustomer(qzSetting.getCustomerUuid());
+            if (customer != null) {
+                qzSetting.setContactPerson(customer.getContactPerson());
+            }
+            List<QZOperationType> qzOperationTypes = qzOperationTypeService
+                .searchQZOperationTypesIsDelete(qzSetting.getUuid());
+            qzSetting.setQzOperationTypes(qzOperationTypes);
+            qzSetting.setQzCategoryTags(
+                qzCategoryTagService.searchCategoryTagByQZSettingUuid(qzSetting.getUuid()));
+        }
+        return qzSetting;
     }
 }

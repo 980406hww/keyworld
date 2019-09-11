@@ -75,14 +75,14 @@ public class QZSettingController extends SpringMVCBaseController {
 //    @RequiresPermissions("/internal/productKeyword/searchProductKeywords")
 
     @GetMapping(value = "/getActiveCustomer")
-    public List<Customer> getActiveCustomer(){
+    public List<Customer> getActiveCustomer() {
         CustomerCriteria customerCriteria = new CustomerCriteria();
         List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
         return customerList;
     }
 
     @GetMapping(value = "/getUserInfo")
-    public List<UserInfo> getUserInfo(){
+    public List<UserInfo> getUserInfo() {
         List<UserInfo> activeUsers = userInfoService.findActiveUsers();
         return activeUsers;
     }
@@ -126,7 +126,7 @@ public class QZSettingController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean();
         try {
             Page<QZSetting> page = new Page<>(qzSettingCriteria.getPage(),
-                    qzSettingCriteria.getLimit());
+                qzSettingCriteria.getLimit());
             page = qzSettingService.searchQZSetting(page, qzSettingCriteria);
             resultBean.setCode(0);
             resultBean.setMsg("success");
@@ -174,7 +174,7 @@ public class QZSettingController extends SpringMVCBaseController {
             String terminalType = (String) requestMap.get("terminalType");
             String optimizeGroupName = (String) requestMap.get("optimizeGroupName");
             Map<String, Object> rankMap = qzSettingService
-                    .getQZKeywordRankInfo(uuid, terminalType, optimizeGroupName);
+                .getQZKeywordRankInfo(uuid, terminalType, optimizeGroupName);
             resultBean.setCode(200);
             resultBean.setMsg("获取曲线信息成功");
             resultBean.setData(rankMap);
@@ -249,11 +249,13 @@ public class QZSettingController extends SpringMVCBaseController {
     }
 
     @PostMapping(value = "/saveQZSettingCustomerKeywords2")
-    public ResultBean saveQZSettingCustomerKeywords(HttpServletRequest request, @RequestBody QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria) {
+    public ResultBean saveQZSettingCustomerKeywords(HttpServletRequest request,
+        @RequestBody QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria) {
         ResultBean resultBean = new ResultBean();
         try {
             String userName = (String) request.getSession().getAttribute("username");
-            qzSettingService.saveQZSettingCustomerKeywords(qzSettingSaveCustomerKeywordsCriteria, userName);
+            qzSettingService
+                .saveQZSettingCustomerKeywords(qzSettingSaveCustomerKeywordsCriteria, userName);
             resultBean.setCode(200);
             resultBean.setMsg("添加关键字成功");
         } catch (Exception e) {
@@ -283,7 +285,7 @@ public class QZSettingController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/qzsetting/deleteQZSettings")
     @PostMapping(value = "/deleteQZSettings2")
-    public ResultBean deleteQZSettings(@RequestBody Map<String, Object> requestMap){
+    public ResultBean deleteQZSettings(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
         try {
             List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
@@ -344,9 +346,22 @@ public class QZSettingController extends SpringMVCBaseController {
         return resultBean;
     }
 
+    @RequestMapping(value = "/getQZSettingsMsg/{uuid}", method = RequestMethod.GET)
+    public ResultBean getQZSettingsMsg(@PathVariable Long uuid) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        try {
+            resultBean.setData(qzSettingService.getQZSetting(uuid));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
     /**
-     * addImportantCustomerKeyword.html
-     * 跳转添加或修改重点关键字页面
+     * addImportantCustomerKeyword.html 跳转添加或修改重点关键字页面
      */
     @GetMapping(value = "/toAddImportantCustomerKeyword")
     public ModelAndView toAddImportantCustomerKeyword() {

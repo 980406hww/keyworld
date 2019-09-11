@@ -88,7 +88,7 @@
             line-height: 44px
         }
 
-        .layui-table-col-special .header span input{
+        .layui-table-col-special .header span input {
             align-self: center;
             margin: 15px 5px;
         }
@@ -403,8 +403,9 @@
             width: 100%;
             text-align: left;
         }
+
         .layui-unselect {
-            height:30px;
+            height: 30px;
         }
 
         .layui-table-tool {
@@ -487,7 +488,8 @@
 
 </table>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
-<script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
+<script type="text/javascript"
+        src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
 <script>
     var sign = false;
     // layui相关
@@ -521,9 +523,12 @@
                         } else {
                             ttse = item.searchEngineName;
                         }
-                        terminalSearchEngine.append('<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
+                        terminalSearchEngine.append(
+                            '<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
                     });
-                    terminalSearchEngine.val( ($('#searchEngine').val() + $('#terminalType').val()) === '' ? '百度PC' : ($('#searchEngine').val() + $('#terminalType').val()));
+                    terminalSearchEngine.val(
+                        ($('#searchEngine').val() + $('#terminalType').val()) === '' ? '百度PC' : ($(
+                            '#searchEngine').val() + $('#terminalType').val()));
                     form.render("select");
                 }
             });
@@ -573,12 +578,6 @@
         form.on("submit(search)", function (data) {
             data.field.domain.replace(/\s*/g,"");
             data.field.customerInfo.replace(/\s*/g,"");
-            if(data.field.customerInfo !== null && data.field.customerInfo !== '') {
-                if (data.field.customerInfo.indexOf(".") === -1) {
-                    show_layer_msg("请选择具体用户", 5);
-                    return false;
-                }
-            }
             if(data.field.domain != null && data.field.domain !== ''){
                 if(data.field.domain.indexOf(".") === -1){
                     show_layer_msg("域名不符合规范", 5);
@@ -614,9 +613,11 @@
                     terminalType = terminalType === '' ? 'PC' : terminalType;
                     getTerminalSearchEngineMap();
                     get_operation_combine_list(terminalType);
-                    let qz_setting_table = $("#qzSettingTable").parent().find(".layui-table-main").find("table");
+                    let qz_setting_table = $("#qzSettingTable").parent().find(
+                        ".layui-table-main").find("table");
                     $.each(res.data, function (idx, val) {
-                        let td = qz_setting_table.find("tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
+                        let td = qz_setting_table.find(
+                            "tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
                             "td[data-field='1']");
                         let optimizeGroupName = td.find(
                             "input[name='" + terminalType + "Group']").val();
@@ -625,7 +626,8 @@
                         postData.terminalType = terminalType;
                         postData.optimizeGroupName = optimizeGroupName;
                         getQZKeywordRankInfo(postData, function (result) {
-                            td.find(".other-rank_2").find("#optimizationGroup").text(optimizeGroupName);
+                            td.find(".other-rank_2").find("#optimizationGroup").text(
+                                optimizeGroupName);
                             if (result.data != null) {
                                 initQZKeywordRankInfo(result.data, td);
                             }
@@ -689,8 +691,9 @@
                 success: function (res) {
                     let operation_combine_select = $("#update_qz_operation_combine");
                     operation_combine_select.append("<option value='null'>置空</option>");
-                    $.each(res.data, function(i ,v) {
-                        var option=$("<option value='"+v.uuid+"'>"+v.operationCombineName+"</option>");
+                    $.each(res.data, function (i, v) {
+                        var option = $("<option value='" + v.uuid + "'>" + v.operationCombineName
+                            + "</option>");
                         operation_combine_select.append(option);
                     });
                     form.render("select");
@@ -698,7 +701,7 @@
             });
         }
 
-        form.on('select(terminalSearchEngineFilter)', function(data){
+        form.on('select(terminalSearchEngineFilter)', function (data) {
             let val = data.val;
             let searchEngine = val.substr(0, val.indexOf('P'));
             let terminalType = val.substr(val.indexOf('P'), val.length);
@@ -710,7 +713,8 @@
         var active = {
             reload: function () {
                 table.reload('qzSettingTable', {
-                    where: $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true))),
+                    where: $.parseJSON(
+                        formToJson(decodeURIComponent($("#searchForm").serialize(), true))),
                     page: {
                         curr: 1 //从第一页开始
                     }
@@ -720,9 +724,9 @@
         };
 
         function formToJson(data) {
-            data=data.replace(/&/g,"\",\"");
-            data=data.replace(/=/g,"\":\"");
-            data="{\""+data+"\"}";
+            data = data.replace(/&/g, "\",\"");
+            data = data.replace(/=/g, "\":\"");
+            data = "{\"" + data + "\"}";
             return data;
         }
 
@@ -1523,7 +1527,7 @@
 
         });
 
-        table.on('toolbar(tableFilter)',function(obj){
+        table.on('toolbar(tableFilter)', function (obj) {
             var data = obj.data, event = obj.event;
             switch (event) {
                 case 'add_qz':
@@ -1538,38 +1542,66 @@
         });
 
         function add_qz() {
-            okLayer.open("其他 / 前往全站设置信息 / 添加", "/internal/qzsetting/toQZSettingAdd", "90%", "90%", null, function () {
-            });
+            okLayer.open("其他 / 前往全站设置信息 / 添加", "/internal/qzsetting/toQZSettingAdd", "90%", "90%",
+                null, function () {
+                    if (sign) {
+                        active['reload'].call(this);
+                        sign = false;
+                    }
+                });
         }
 
         // 收费
-        window.showChargeDialog = function(uuid, contactPearson, domain) {
-            okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toQZSettingCharge", "60%", "90%", function (layero) {
-                window[layero.find("iframe")[0]["name"]].initForm({uuid:uuid, qzSettingCustomer:contactPearson, qzSettingDomain:domain});
-            },function(){
-                if(sign){
-                    active['reload'].call(this);
-                    sign = false;
-                }
-            })
+        window.showChargeDialog = function (uuid, contactPearson, domain) {
+            okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toQZSettingCharge", "90%",
+                "90%", function (layero) {
+                    window[layero.find("iframe")[0]["name"]].initForm(
+                        {uuid: uuid, qzSettingCustomer: contactPearson, qzSettingDomain: domain});
+                }, function () {
+                    if (sign) {
+                        active['reload'].call(this);
+                        sign = false;
+                    }
+                })
         };
 
-        window.showExcludeCustomerKeywordDialog = function(uuid, customerUuid, domain, pcGroup, phoneGroup) {
+        // 修改
+        window.updateChargeDialog = function (uuid) {
+            okLayer.open("其他 / 前往全站设置信息 / 修改", "/internal/qzsetting/toQZSettingAdd", "90%",
+                "90%", function (layero) {
+                    window[layero.find("iframe")[0]["name"]].initForm(uuid);
+                }, function () {
+                    if (sign) {
+                        active['reload'].call(this);
+                        sign = false;
+                    }
+                })
+        };
+
+        window.showExcludeCustomerKeywordDialog = function (uuid, customerUuid, domain, pcGroup,
+            phoneGroup) {
             let terminalType = $("#terminalSearchEngine").val();
-            terminalType = terminalType.substr(terminalType.indexOf("P"),terminalType.length);
+            terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
             let optimizedGroupName = phoneGroup;
-            if(terminalType === 'PC'){
+            if (terminalType === 'PC') {
                 optimizedGroupName = pcGroup;
             }
-            okLayer.open("其他 / 前往全站设置信息 / 排除关键字", "/internal/qzsetting/toExcludeCustomerKeyword", "60%", "90%", function (layero) {
-                window[layero.find("iframe")[0]["name"]].initForm({qzSettingUuid:uuid, customerUuid:customerUuid, domain:domain, terminalType:terminalType, optimizedGroupName:optimizedGroupName});
-            },function(){
+            okLayer.open("其他 / 前往全站设置信息 / 排除关键字", "/internal/qzsetting/toExcludeCustomerKeyword",
+                "90%", "90%", function (layero) {
+                    window[layero.find("iframe")[0]["name"]].initForm({
+                        qzSettingUuid: uuid,
+                        customerUuid: customerUuid,
+                        domain: domain,
+                        terminalType: terminalType,
+                        optimizedGroupName: optimizedGroupName
+                    });
+                }, function () {
 
-            })
+                })
         };
 
         // 修改选中站点优化组关联的操作组合
-        form.on('select(operationCombineFilter)', function(data){
+        form.on('select(operationCombineFilter)', function (data) {
             let checkStatus = table.checkStatus('qzSettingTable');
             if (checkStatus.data.length === 0) {
                 $("#update_qz_operation_combine").val('');
@@ -1578,8 +1610,8 @@
             }
             layer.confirm("确定要修改所选站点优化组关联的操作组合吗？", {icon: 3, title: '修改操作组合'}, function (index) {
                 let groupName = '';
-                $.each(checkStatus.data, function(i, v){
-                    if(v.pcGroup !== null) {
+            $.each(checkStatus.data, function (i, v) {
+                if (v.pcGroup !== null) {
                         groupName += "," + v.pcGroup;
                     } else {
                         groupName += "," + v.phoneGroup;
@@ -1626,32 +1658,8 @@
             });
         }
 
-        window.showAddKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
-            let terminalType = $("#terminalSearchEngine").val();
-            terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
-            let optimizedGroupName = phoneGroup;
-            if (terminalType === 'PC') {
-                optimizedGroupName = pcGroup;
-            }
-            okLayer.open("其他 / 全站设置信息 / 添加关键字", "/internal/qzsetting/toAddCustomerKeyword",
-                "60%", "90%", function (layero) {
-                    window[layero.find("iframe")[0]["name"]].initForm({
-                        qzSettingUuid: uuid,
-                        customerUuid: customerUuid,
-                        domain: domain,
-                        bearPawNumber: bearPawNumber,
-                        searchEngine: searchEngine,
-                        type: type,
-                        terminalType: terminalType,
-                        optimizedGroupName: optimizedGroupName
-                    });
-                }, function () {
-
-                }
-            );
-        };
-
-        window.showAddImportantKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
+        window.showKeywordDialog = function (uuid, customerUuid, domain, bearPawNumber,
+            searchEngine, pcGroup, phoneGroup) {
             let terminalType = $("#terminalSearchEngine").val();
             terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
             let optimizedGroupName = phoneGroup;
@@ -1754,7 +1762,8 @@
 <script type="text/html" id="toolbarTpl">
 
     <div class="layui-input-inline" style="width: 120px; height: 30px">
-        <select name="terminalSearchEngine" id="terminalSearchEngine" lay-filter="terminalSearchEngineFilter"></select>
+        <select name="terminalSearchEngine" id="terminalSearchEngine"
+                lay-filter="terminalSearchEngineFilter"></select>
     </div>
 
     <div class="layui-input-inline" style="width: 200px; height: 30px">
@@ -1767,7 +1776,8 @@
         <i class="layui-icon">&#xe61f;</i>添加
     </button>
 
-    <button class="layui-btn layui-btn-sm" id="batchDeleteQZSetting" lay-event="batchDeleteQZSetting">
+    <button class="layui-btn layui-btn-sm" id="batchDeleteQZSetting"
+            lay-event="batchDeleteQZSetting">
         <i class="layui-icon">&#xe61f;</i>删除所选
     </button>
 
@@ -1876,8 +1886,9 @@
 
                 <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
                 <span>
-                    <a class="blue" href="javascript:;" onclick="showSettingDialog($(this))">修改</a>
-                </span>
+               <a class="blue"
+                  href="javascript:updateChargeDialog('{{d.uuid}}',this)">修改</a>
+            </span>
                 <!--                </@shiro.hasPermission>-->
 
                 <!--                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
