@@ -4,11 +4,11 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
+import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
-import com.keymanager.monitoring.criteria.QZSettingSaveCustomerKeywordsCriteria;
 
 import java.util.List;
 import java.util.Map;
@@ -194,10 +194,10 @@ public class QZSettingController {
     /**
      * 跳转添加或修改指定关键字页面
      */
-    @GetMapping(value = "/toAppointCustomerKeyword")
-    public ModelAndView toAppointCustomerKeyword() {
+    @GetMapping(value = "/toAddCustomerKeyword")
+    public ModelAndView toAddCustomerKeyword() {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("qzsettings/appointCustomerKeyword");
+        mv.setViewName("qzsettings/addCustomerKeyword");
         return mv;
     }
 
@@ -208,7 +208,7 @@ public class QZSettingController {
             String userName = (String) request.getSession().getAttribute("username");
             qzSettingService.saveQZSettingCustomerKeywords(qzSettingSaveCustomerKeywordsCriteria, userName);
             resultBean.setCode(200);
-            resultBean.setMsg("更新排除词成功");
+            resultBean.setMsg("添加关键字成功");
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
@@ -249,7 +249,17 @@ public class QZSettingController {
             resultBean.setMsg("未知错误");
         }
         return resultBean;
+    }
 
+    /**
+     * addImportantCustomerKeyword.html
+     * 跳转添加或修改重点关键字页面
+     */
+    @GetMapping(value = "/toAddImportantCustomerKeyword")
+    public ModelAndView toAddImportantCustomerKeyword() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("qzsettings/addImportantCustomerKeyword");
+        return mv;
     }
 
 }

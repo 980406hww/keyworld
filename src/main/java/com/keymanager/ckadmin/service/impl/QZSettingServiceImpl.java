@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
+import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.dao.QZSettingDao;
 import com.keymanager.ckadmin.entity.*;
+import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.*;
 
@@ -13,8 +15,6 @@ import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.vo.QZSettingVO;
 import com.keymanager.ckadmin.vo.QZKeywordRankInfoVO;
 import com.keymanager.enums.CollectMethod;
-import com.keymanager.monitoring.criteria.QZSettingSaveCustomerKeywordsCriteria;
-import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
 import com.keymanager.util.Constants;
 import com.keymanager.util.common.StringUtil;
 import java.util.ArrayList;
@@ -220,7 +220,7 @@ public class QZSettingServiceImpl extends
         for (String terminalType : qzSettingSaveCustomerKeywordsCriteria.getTerminalTypes()) {
             List<CustomerKeyword> customerKeywords = new ArrayList<>();
             String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid(), qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid(), terminalType, qzSettingSaveCustomerKeywordsCriteria.getDomain());
-            Set<String> excludeKeyword = new HashSet<String>();
+            Set<String> excludeKeyword = new HashSet<>();
             if (null != customerExcludeKeywords) {
                 excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
             }

@@ -33,23 +33,24 @@
             <input type="hidden" name="qzSettingUuid" id="qzSettingUuid"/>
             <input type="hidden" name="customerUuid" id="customerUuid"/>
             <input type="hidden" name="terminalType" id="terminalType"/>
-            <input type="hidden" name="searchEngineTmp" id="searchEngineTmp"/>
+            <input type="hidden" name="type" id="type"/>
             <div class="layui-row">
                 <div class="layui-form-item">
                     <label class="layui-form-label">域名</label>
                     <div class="layui-input-block">
                         <input type="text" name="domain" id="domain" placeholder=""
                                autocomplete="off"
-                               class="layui-input" readonly>
+                               class="layui-input" readonly disabled>
                     </div>
                 </div>
             </div>
 
-            <div class="layui-row">
+            <!--  qzSettingEntryType -->
+            <!--<div class="layui-row">
                 <div class="layui-form-item">
-                    <label class="layui-form-label">入口</label>
+                    <label class="layui-form-label">类型</label>
                     <div class="layui-input-block">
-                        <select name="qzSettingEntryType" id="qzSettingEntryType" style="width:240px">
+                        <select name="type" id="type" style="width:240px" readonly disabled>
                             <option value="qz" selected>全站</option>
                             <option value="pt">普通</option>
                             <option value="fm">负面</option>
@@ -57,16 +58,21 @@
                         </select>
                     </div>
                 </div>
-            </div>
+            </div>-->
 
 
             <div class="layui-form-item">
                 <label class="layui-form-label">搜索引擎</label>
                 <div class="layui-input-block">
+                    <input type="text" name="searchEngine" id="searchEngine" placeholder=""
+                           autocomplete="off"
+                           class="layui-input" readonly disabled>
+                </div>
+                <!--<div class="layui-input-block">
                     <select name="searchEngine" id="searchEngine">
 
                     </select>
-                </div>
+                </div>-->
             </div>
 
             <div class="layui-row">
@@ -75,7 +81,7 @@
                     <div class="layui-input-block">
                         <input type="text" name="bearPawNumber" id="bearPawNumber" placeholder=""
                                autocomplete="off"
-                               class="layui-input" readonly>
+                               class="layui-input" readonly disabled>
                     </div>
                 </div>
             </div>
@@ -85,7 +91,7 @@
                     <div class="layui-input-block">
                         <input type="text" name="optimizedGroupName" id="optimizedGroupName" placeholder=""
                                autocomplete="off"
-                               class="layui-input" readonly>
+                               class="layui-input" readonly disabled>
                     </div>
                 </div>
             </div>
@@ -95,7 +101,7 @@
                     <div class="layui-input-block">
                         <input type="text" name="machineGroup" id="machineGroup" placeholder=""
                                autocomplete="off" value="qz"
-                               class="layui-input" readonly>
+                               class="layui-input" readonly disabled>
                     </div>
                 </div>
             </div>
@@ -111,7 +117,7 @@
                 <div class="layui-input-block">
                     <textarea name="customerKeywordDialogContent" id="customerKeywordDialogContent"
                               placeholder="" class="layui-textarea"
-                              lay-verify="required"></textarea>
+                              lay-verify="required" style="height: 320px"></textarea>
                 </div>
             </div>
 
@@ -147,11 +153,11 @@
         $("#qzSettingUuid").val(data.qzSettingUuid);
         $("#customerUuid").val(data.customerUuid);
         $("#domain").val(data.domain);
-        $("#searchEngineTmp").val(data.searchEngine);
+        $("#searchEngine").val(data.searchEngine);
         $("#terminalType").val(data.terminalType);
         $("#bearPawNumber").val(data.bearPawNumber);
+        $("#type").val(data.type);
         $("#optimizedGroupName").val(data.optimizedGroupName);
-        // echoExcludeKeyword($, data.qzSettingUuid, data.terminalType)
     }
 
     layui.use(["form", "okLayer", "jquery", "layer"], function () {
@@ -165,25 +171,6 @@
         } else {
             layui_ = layui;
         }
-        $.ajax({
-            url: '${ctx.path}/internal/common/getSearchEngines',
-            dataType: 'json',
-            type: 'post',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            data: JSON.stringify({'terminalType': 'All'}),
-            success: function (data) {
-                var searchEngine = $("#searchEngine");
-                var searchEngineVal = $("#searchEngineTmp").val();
-                $.each(data.data, function (index, item) {
-                    searchEngine.append('<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
-                });
-                searchEngine.val(searchEngineVal);
-                form.render("select");
-            }
-        });
 
         form.on("submit(save)", function (data) {
             var postData = data.field;
