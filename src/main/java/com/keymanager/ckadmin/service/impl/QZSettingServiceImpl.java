@@ -6,9 +6,11 @@ import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.dao.QZSettingDao;
 import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
+import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.CustomerExcludeKeywordService;
+import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.QZSettingService;
 
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
@@ -19,16 +21,23 @@ import com.keymanager.ckadmin.vo.QZKeywordRankInfoVO;
 import com.keymanager.ckadmin.service.QZCategoryTagService;
 import com.keymanager.ckadmin.service.OperationCombineService;
 import com.keymanager.ckadmin.service.QZOperationTypeService;
+import com.keymanager.enums.CollectMethod;
+import com.keymanager.monitoring.criteria.QZSettingSaveCustomerKeywordsCriteria;
+import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
 import com.keymanager.util.Constants;
 import com.keymanager.util.common.StringUtil;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Resource;
+import javax.annotation.Resources;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +70,9 @@ public class QZSettingServiceImpl extends
 
     @Resource(name = "customerExcludeKeywordService2")
     private CustomerExcludeKeywordService customerExcludeKeywordService;
+
+    @Resource(name = "customerKeywordService2")
+    private CustomerKeywordService customerKeywordService;
 
     @Override
     public Page<QZSetting> searchQZSetting(Page<QZSetting> page,
@@ -196,4 +208,54 @@ public class QZSettingServiceImpl extends
         QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
         return customerExcludeKeywordService.echoExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria);
     }
+
+    @Override
+    public void excludeQZSettingCustomerKeywords (QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+        qzSettingExcludeCustomerKeywordsCriteria.setDomain(qzSettingExcludeCustomerKeywordsCriteria.getDomain().replace("http://","").replace("https://","").replace("www.","").split("/")[0]);
+        customerKeywordService.excludeCustomerKeyword(qzSettingExcludeCustomerKeywordsCriteria);
+        customerExcludeKeywordService.excludeCustomerKeywords(qzSettingExcludeCustomerKeywordsCriteria);
+    }
+
+    @Override
+    public void saveQZSettingCustomerKeywords (
+        QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria, String userName) {
+        for (String terminalType : qzSettingSaveCustomerKeywordsCriteria.getTerminalTypes()) {
+            List<CustomerKeyword> customerKeywords = new ArrayList<>();
+            String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid(), qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid(), terminalType, qzSettingSaveCustomerKeywordsCriteria.getDomain());
+            Set<String> excludeKeyword = new HashSet<String>();
+            if (null != customerExcludeKeywords) {
+                excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
+            }
+            for (String keyword : qzSettingSaveCustomerKeywordsCriteria.getKeywords()) {
+                CustomerKeyword customerKeyword = new CustomerKeyword();
+                customerKeyword.setQzSettingUuid(qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid());
+                customerKeyword.setCustomerUuid(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid());
+                customerKeyword.setType(qzSettingSaveCustomerKeywordsCriteria.getType());
+                customerKeyword.setSearchEngine(qzSettingSaveCustomerKeywordsCriteria.getSearchEngine());
+                customerKeyword.setTerminalType(terminalType);
+                customerKeyword.setUrl(qzSettingSaveCustomerKeywordsCriteria.getDomain());
+                customerKeyword.setKeywordEffect(qzSettingSaveCustomerKeywordsCriteria.getKeywordEffect());
+                customerKeyword.setServiceProvider("baidutop123");
+                customerKeyword.setManualCleanTitle(true);
+                customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
+                customerKeyword.setCurrentIndexCount(-1);
+                customerKeyword.setPositionFirstFee(-1d);
+                customerKeyword.setBearPawNumber(qzSettingSaveCustomerKeywordsCriteria.getBearPawNumber());
+                customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Specify.name());
+                customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
+                customerKeyword.setMachineGroup(qzSettingSaveCustomerKeywordsCriteria.getMachineGroupName());
+                if (!excludeKeyword.isEmpty()){
+                    if (excludeKeyword.contains(keyword)){
+                        customerKeyword.setStatus(0);
+                    }
+                }
+                customerKeyword.setKeyword(keyword);
+                customerKeyword.setOptimizePlanCount(10);
+                customerKeywords.add(customerKeyword);
+            }
+            customerKeywordService.addCustomerKeyword(customerKeywords, userName);
+        }
+    }
+
+
 }
