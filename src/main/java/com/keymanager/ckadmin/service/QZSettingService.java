@@ -34,6 +34,8 @@ public interface QZSettingService extends IService<QZSetting> {
 
     void saveQZSettingCustomerKeywords(QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria, String userName);
 
+    void saveQZSetting(QZSetting qzSetting, String userName);
+
     void deleteOne(Long uuid);
 
     void deleteAll(List<Integer> uuids);

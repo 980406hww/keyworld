@@ -13,5 +13,5 @@ public interface QZChargeRuleDao extends BaseMapper<QZChargeRule> {
     List<QZChargeRule> searchQZChargeRuleByqzOperationTypeUuids(
         @Param("qzOperationTypeUuid") Long qzOperationTypeUuid);
 
-    void deleteByQZOperationTypeUuid(@Param("qzOperationTypeUuid") Long qzOperationTypeUuid);
+    void deleteByQZOperationTypeUuid(@Param("qzOperationTypeUuid") Long QZOperationTypeUuid);
 }

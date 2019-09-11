@@ -3,7 +3,6 @@ package com.keymanager.ckadmin.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldStrategy;
-import com.keymanager.monitoring.entity.BaseEntity;
 
 import java.sql.Time;
 import java.util.Date;
@@ -12,18 +11,18 @@ import java.util.Date;
  * Created by shunshikj24 on 2017/9/26.
  */
 @TableName(value = "t_capture_rank_job")
-public class CaptureRankJob extends BaseEntity{
+public class CaptureRankJob extends BaseEntity {
 
-    @TableField(value = "fGroupNames",strategy = FieldStrategy.IGNORED)
+    @TableField(value = "fGroupNames", strategy = FieldStrategy.IGNORED)
     private String groupNames;
 
-    @TableField(value = "fCustomerUuid",strategy = FieldStrategy.IGNORED)
+    @TableField(value = "fCustomerUuid", strategy = FieldStrategy.IGNORED)
     private Long customerUuid;
 
     @TableField(value = "fQZSettingUuid")
     private Long qzSettingUuid;
 
-    @TableField(exist=false)
+    @TableField(exist = false)
     private String contactPerson;
 
     @TableField(value = "fOperationType")
@@ -129,14 +128,14 @@ public class CaptureRankJob extends BaseEntity{
         this.groupNames = groupNames;
     }
 
-    public Long getQzSettingUuid () {
+    public Long getQzSettingUuid() {
         return qzSettingUuid;
     }
 
-    public void setQzSettingUuid (Long qzSettingUuid) {
+    public void setQzSettingUuid(Long qzSettingUuid) {
         this.qzSettingUuid = qzSettingUuid;
     }
-    
+
     public Integer getCaptureDaysInterval() {
         return captureDaysInterval;
     }
@@ -144,7 +143,7 @@ public class CaptureRankJob extends BaseEntity{
     public void setCaptureDaysInterval(Integer captureDaysInterval) {
         this.captureDaysInterval = captureDaysInterval;
     }
-    
+
     public String getOperationType() {
         return operationType;
     }

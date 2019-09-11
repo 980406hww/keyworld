@@ -8,5 +8,6 @@ public interface QZChargeRuleService extends IService<QZChargeRule> {
 
     List<QZChargeRule> searchQZChargeRuleByqzOperationTypeUuids(Long qzOperationTypeUuid);
 
-    void deleteByQZOperationTypeUuid(Long uuid);
+    //通过QZOperationTypeUuid删除
+    void deleteByQZOperationTypeUuid(Long QZOperationTypeUuid);
 }

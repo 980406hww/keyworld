@@ -8,5 +8,8 @@ public interface QZCategoryTagService extends IService<QZCategoryTag> {
 
     List<String> findTagNames(long qzSettingUuid);
 
-    List<QZCategoryTag> searchCategoryTagByQZSettingUuid(Long uuid);
+    List<QZCategoryTag> searchCategoryTagByQZSettingUuid(Long qzSettingUuid);
+
+    void updateQZCategoryTag(List<QZCategoryTag> existingQZCategoryTags,
+        List<QZCategoryTag> updateQZCategoryTags, long qzSettingUuid);
 }

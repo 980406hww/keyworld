@@ -6,12 +6,14 @@ import com.keymanager.ckadmin.controller.internal.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
-import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
 import com.keymanager.ckadmin.entity.QZSetting;
-import com.keymanager.ckadmin.entity.UserInfo;
+import com.keymanager.ckadmin.service.ConfigService;
+import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
+import com.keymanager.util.TerminalTypeMapping;
+import java.util.HashMap;
 import com.keymanager.monitoring.criteria.QZSettingSaveCustomerKeywordsCriteria;
 
 import java.util.List;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -47,6 +50,10 @@ public class QZSettingController extends SpringMVCBaseController {
 
     @Resource(name = "qzSettingService2")
     private QZSettingService qzSettingService;
+    @Resource(name = "customerService2")
+    private CustomerService customerService;
+    @Resource(name = "configService2")
+    private ConfigService configService;
 
     /**
      * 跳转添加或修改用户页面
@@ -178,12 +185,14 @@ public class QZSettingController extends SpringMVCBaseController {
     }
 
     @PostMapping(value = "/excludeQZSettingCustomerKeywords2")
-    public ResultBean excludeQZSettingCustomerKeywords2(HttpServletRequest request, @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+    public ResultBean excludeQZSettingCustomerKeywords2(HttpServletRequest request,
+        @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
         ResultBean resultBean = new ResultBean();
         try {
             String entryType = (String) request.getSession().getAttribute("entryType");
             qzSettingExcludeCustomerKeywordsCriteria.setType(entryType);
-            qzSettingService.excludeQZSettingCustomerKeywords(qzSettingExcludeCustomerKeywordsCriteria);
+            qzSettingService
+                .excludeQZSettingCustomerKeywords(qzSettingExcludeCustomerKeywordsCriteria);
             resultBean.setCode(200);
             resultBean.setMsg("更新排除词成功");
         } catch (Exception e) {
@@ -211,7 +220,8 @@ public class QZSettingController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean();
         try {
             String userName = (String) request.getSession().getAttribute("username");
-            qzSettingService.saveQZSettingCustomerKeywords(qzSettingSaveCustomerKeywordsCriteria, userName);
+            qzSettingService
+                .saveQZSettingCustomerKeywords(qzSettingSaveCustomerKeywordsCriteria, userName);
             resultBean.setCode(200);
             resultBean.setMsg("更新排除词成功");
         } catch (Exception e) {
@@ -256,27 +266,51 @@ public class QZSettingController extends SpringMVCBaseController {
         return resultBean;
     }
 
-//    // 获得初始用户列表
-//    @GetMapping(value = "/getSaveQZSettingsCustomerMsg")
-//    public ResultBean getSaveQZSettingsMsg(HttpSession session) {
-//        ResultBean resultBean = new ResultBean();
-//        CustomerCriteria customerCriteria = new CustomerCriteria();
-//        String entryType = (String) session.getAttribute("entryType");
-//        customerCriteria.setEntryType(entryType);
-//        Set<String> roles = getCurrentUser().getRoles();
-//        if (!roles.contains("DepartmentManager")) {
-//            String loginName = (String) session.getAttribute("username");
-//            customerCriteria.setLoginName(loginName);
-//        } else {
-//            if (qzSettingSearchCriteria.getUserInfoID() != null) {
-//                UserInfo userInfo = userInfoService
-//                    .selectById(qzSettingSearchCriteria.getUserInfoID());
-//                customerCriteria.setLoginName(userInfo.getLoginName());
-//            }
-//        }
-//        List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
-//        return resultBean;
-//    }
+    // 获得初始用户列表
+    @GetMapping(value = "/getSaveQZSettingsMsg")
+    public ResultBean getSaveQZSettingsMsg(HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        CustomerCriteria customerCriteria = new CustomerCriteria();
+        String entryType = (String) request.getSession().getAttribute("entryType");
+        customerCriteria.setEntryType(entryType);
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        Map<String, Object> map = new HashMap<>(2);
+        try {
+            map.put("customers", customerService.getActiveCustomerSimpleInfo(customerCriteria));
+            map.put("search", configService.getSearchEngineMap(terminalType));
+        } catch (Exception e) {
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+            return resultBean;
+        }
+        resultBean.setData(map);
+        return resultBean;
     }
 
+    @RequestMapping(value = "/saveQZSetting", method = RequestMethod.POST)
+    public ResultBean saveQZSetting(@RequestBody QZSetting qzSetting, HttpSession session) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        try {
+            if (qzSetting.getUuid() == null) {
+                Set<String> roles = getCurrentUser().getRoles();
+                if (roles.contains("DepartmentManager")) {
+                    qzSetting.setStatus(1);
+                } else {
+                    qzSetting.setStatus(2);
+                }
+            }
+            String userName = (String) session.getAttribute("username");
+            qzSettingService.saveQZSetting(qzSetting, userName);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
 }
+
+
