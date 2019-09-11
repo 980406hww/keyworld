@@ -14,8 +14,17 @@ public class QZSettingCriteria extends BaseCriteria {
     private String customerUuid;
     private String terminalType;
     private String searchEngine;
-    private String domain;
     private String group;
+    private String domain;
+    private String userInfoID;
+
+    public String getUserInfoID() {
+        return userInfoID;
+    }
+
+    public void setUserInfoID(String userInfoID) {
+        this.userInfoID = userInfoID;
+    }
 
     public String getTerminalType() {
         return terminalType;

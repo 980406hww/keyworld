@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.OrganizationDao">
+
+    <!-- 通用查询结果列-->
+    <sql id="colID">
+        fUuid AS `id`,
+        fOrganizationName AS `organizationName`,
+        fAddress AS `address`,
+        fCode AS `code`,
+        fIcon AS `icon`,
+        fParentID AS `pid`,
+        fSequence AS `sequence`,
+        fUpdateTime AS `updateTime`,
+        fCreateTime AS `createTime`
+    </sql>
+
+    <select id="selectOrganization" resultType="com.keymanager.ckadmin.entity.Organization">
+        SELECT
+            fUuid AS 'id',
+            fOrganizationName AS 'organizationName',
+            fIcon AS 'icon',
+            fParentId AS 'pid'
+        FROM t_organization
+        ORDER BY fSequence
+    </select>
+
+    <select id="selectOrganizationUserFul" resultType="com.keymanager.ckadmin.entity.Organization">
+        SELECT
+            fUuid AS 'id',
+            fOrganizationName AS 'organizationName',
+            fIcon AS 'icon',
+            fParentId AS 'pid'
+        FROM t_organization
+        WHERE fOrganizationName NOT IN ('负面销售部', '财务部', '运维部', '外部')
+        ORDER BY fSequence
+    </select>
+</mapper>

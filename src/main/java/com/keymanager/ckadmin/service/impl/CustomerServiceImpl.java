@@ -10,6 +10,7 @@ import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 
 import java.math.BigDecimal;
+import java.sql.Wrapper;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -157,5 +158,10 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
             customer.setKeywordCount(customerKeywordService.getCustomerKeywordCount(terminalType, entryType, customerUuid));
         }
         return customer;
+    }
+
+    @Override
+    public List<Customer> getActiveCustomerSimpleInfo(CustomerCriteria customerCriteria) {
+        return customerDao.getActiveCustomerSimpleInfo(customerCriteria);
     }
 }

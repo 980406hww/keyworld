@@ -25,4 +25,6 @@ public interface CustomerDao extends BaseMapper<Customer> {
         @Param("customerCriteria") CustomerCriteria customerCriteria);
 
     void updateCustomerDailyReportIdentify(@Param("uuids") List<Integer> uuids);
+
+    List<Customer> getActiveCustomerSimpleInfo(@Param("customerCriteria") CustomerCriteria customerCriteria);
 }
