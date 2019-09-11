@@ -387,9 +387,9 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String position = request.getParameter("position");
         String runningProgramType = request.getParameter("runningProgramType");
 
-        Integer cpuCount = request.getParameter("cpuCount") == null ? null
+        int cpuCount = request.getParameter("cpuCount") == null ? 0
             : Integer.parseInt(request.getParameter("cpuCount"));
-        Integer memory = request.getParameter("memory") == null ? null
+        int memory = request.getParameter("memory") == null ? 0
             : Integer.parseInt(request.getParameter("memory"));
 
         String ip = getIP(request);

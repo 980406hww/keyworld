@@ -1450,7 +1450,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public void updateOptimizationResult(String terminalType, Long customerKeywordUuid, int count, String ip, String city, String clientID, String status, String freeSpace, String version, String runningProgramType,Integer cpuCount,Integer memory) {
+    public void updateOptimizationResult(String terminalType, Long customerKeywordUuid, int count, String ip, String city, String clientID, String status, String freeSpace, String version, String runningProgramType,int cpuCount,int memory) {
         customerKeywordDao.updateOptimizationResult(customerKeywordUuid, count);
         machineInfoService.logMachineInfoTime(terminalType, clientID, status, freeSpace, version, city, count, runningProgramType,cpuCount,memory);
 //        customerKeywordIPService.addCustomerKeywordIP(customerKeywordUuid, city, ip);
