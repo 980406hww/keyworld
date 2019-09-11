@@ -99,6 +99,7 @@
         }
 
         .layui-table-col-special .header span.contactPerson-name,
+        .layui-table-col-special .header span.tagNames,
         .layui-table-col-special .header span.organization-name {
             max-width: 110px;
             overflow: hidden;
@@ -1551,7 +1552,7 @@
 
         function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames, operationCombineName) {
             div.parent().find(".other-rank .line1").find("#customerKeywordCount").text(customerKeywordCount);
-            if (categoryTagNames) {
+            if (categoryTagNames.length > 0) {
                 var tagNameStr = "";
                 var span = $(div).parent().parent().parent().find(".header span.tagNames");
                 $.each(categoryTagNames, function (idx, val) {
@@ -1559,6 +1560,8 @@
                 });
                 $(span).find("label.tagNameStr").html(
                     tagNameStr.substring(0, tagNameStr.length - 1));
+                $(span).find("label.tagNameStr").attr('title',  tagNameStr.substring(0, tagNameStr.length - 1))
+
             }
 
             if (operationCombineName !== null) {
@@ -1900,7 +1903,7 @@
         <div class="layui-col-md1">
             <span class="tagNames"
                   ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label
-                    class="tagNameStr">暂无</label></span>
+                    class="tagNameStr" title="">暂无</label></span>
         </div>
         <!--     操作栏   -->
         <div class="layui-col-md4">
