@@ -172,7 +172,7 @@
                 {field: 'createTime', title: '创建时间', sort: true, width: '10%', templet: '#toDateTime'},
                 {title: '操作', templet: '#operationTpl', align: 'center', width: '16%'}
             ]],
-            height: $(document).height() - $('#customerTable').offset().top - 100,
+            height: 'full-115',
 
             done: function (res, curr, count) {
                 $("#countNum").text(count);

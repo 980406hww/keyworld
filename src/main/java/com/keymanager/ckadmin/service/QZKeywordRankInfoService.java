@@ -8,4 +8,9 @@ public interface QZKeywordRankInfoService extends IService<QZKeywordRankInfo> {
 
     List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo(long qzSettingUuid, String terminalType,
         String websiteType);
+
+    void addQZKeywordRankInfo(Long uuid, String terminalType, String standardSpecies,
+        boolean dataProcessingStatus);
+
+    void deleteByQZSettingUuid(Long uuid);
 }

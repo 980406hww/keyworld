@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
  */
 @Service("customerService2")
 public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> implements
-        CustomerService {
+    CustomerService {
 
     @Resource(name = "customerDao2")
     private CustomerDao customerDao;
@@ -54,7 +54,9 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
             for (Customer customer : customerList) {
                 customerUuids.add(customer.getUuid());
             }
-            List<Map> customerKeywordCountMap = customerKeywordService.getCustomerKeywordsCount(customerUuids, customerCriteria.getTerminalType(), customerCriteria.getEntryType());
+            List<Map> customerKeywordCountMap = customerKeywordService
+                .getCustomerKeywordsCount(customerUuids, customerCriteria.getTerminalType(),
+                    customerCriteria.getEntryType());
             Map<Integer, Map> customerUuidKeywordCountMap = new HashMap<Integer, Map>();
             for (Map map : customerKeywordCountMap) {
                 customerUuidKeywordCountMap.put((Integer) map.get("customerUuid"), map);
@@ -146,7 +148,8 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     }
 
     @Override
-    public Customer getCustomerWithKeywordCount(String terminalType, String entryType, long customerUuid, String loginName) {
+    public Customer getCustomerWithKeywordCount(String terminalType, String entryType,
+        long customerUuid, String loginName) {
         Customer customer = customerDao.selectById(customerUuid);
         if (customer != null) {
             if (!customer.getLoginName().equals(loginName)) {
@@ -155,7 +158,8 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
                 customer.setTelphone(null);
                 customer.setSaleRemark(null);
             }
-            customer.setKeywordCount(customerKeywordService.getCustomerKeywordCount(terminalType, entryType, customerUuid));
+            customer.setKeywordCount(customerKeywordService
+                .getCustomerKeywordCount(terminalType, entryType, customerUuid));
         }
         return customer;
     }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.ckadmin.dao.QZSettingDao">
     <select id="searchQZSettings" resultType="com.keymanager.ckadmin.entity.QZSetting">
         SELECT
@@ -51,18 +52,19 @@
         ORDER BY qs.fUpdateTime
     </select>
 
-    <select id="searchQZSettingSearchEngines" resultType="com.keymanager.ckadmin.vo.QZSettingVO">
-        SELECT
-        qs.fSearchEngine  AS 'searchEngine',
-        qs.fPcGroup       AS 'pcGroup',
-        qs.fPhoneGroup    AS 'phoneGroup'
-        FROM t_qz_setting qs
-        WHERE 1 = 1
-        <if test="customerUuid != null and customerUuid != ''">AND qs.fCustomerUuid = #{customerUuid}</if>
-        <if test="domain != null and domain != ''">AND qs.fDomain = #{domain}</if>
-    </select>
+  <select id="searchQZSettingSearchEngines" resultType="com.keymanager.ckadmin.vo.QZSettingVO">
+    SELECT
+    qs.fSearchEngine AS 'searchEngine',
+    qs.fPcGroup AS 'pcGroup',
+    qs.fPhoneGroup AS 'phoneGroup'
+    FROM t_qz_setting qs
+    WHERE 1 = 1
+    <if test="customerUuid != null and customerUuid != ''">AND qs.fCustomerUuid = #{customerUuid}
+    </if>
+    <if test="domain != null and domain != ''">AND qs.fDomain = #{domain}</if>
+  </select>
 
-    <select id="getQZSettingGroupInfo" resultType="java.lang.Integer">
+  <select id="getQZSettingGroupInfo" resultType="java.lang.Integer">
         SELECT COUNT(1)
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName = #{optimizeGroupName}
@@ -71,4 +73,13 @@
         AND ck.fStatus = 1
     </select>
 
+  <select id="selectLastId" resultType="int">
+        select LAST_INSERT_ID()
+    </select>
+
+  <update id="updateQZSettingGroup" parameterType="com.keymanager.monitoring.entity.QZSetting">
+        UPDATE t_qz_setting
+        SET fPcGroup = #{qzSetting.pcGroup},fPhoneGroup = #{qzSetting.phoneGroup}
+        WHERE fUuid = #{qzSetting.uuid}
+    </update>
 </mapper>

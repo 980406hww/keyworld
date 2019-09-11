@@ -22,5 +22,9 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     int getQZSettingGroupInfo(@Param("terminalType") String terminalType,
         @Param("optimizeGroupName") String optimizeGroupName);
+
+    int selectLastId();
+
+    void updateQZSettingGroup(@Param("qzSetting") QZSetting qzSetting);
 }
 

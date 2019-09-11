@@ -9,7 +9,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 @Service("qzChargeRuleService2")
-public class QZChargeRuleServiceImpl extends ServiceImpl<QZChargeRuleDao, QZChargeRule> implements QZChargeRuleService {
+public class QZChargeRuleServiceImpl extends ServiceImpl<QZChargeRuleDao, QZChargeRule> implements
+    QZChargeRuleService {
 
     @Resource(name = "qzChargeRuleDao2")
     private QZChargeRuleDao qzChargeRuleDao;
@@ -17,5 +18,11 @@ public class QZChargeRuleServiceImpl extends ServiceImpl<QZChargeRuleDao, QZChar
     @Override
     public List<QZChargeRule> searchQZChargeRuleByqzOperationTypeUuids(Long qzOperationTypeUuid) {
         return qzChargeRuleDao.searchQZChargeRuleByqzOperationTypeUuids(qzOperationTypeUuid);
+    }
+
+    @Override
+    //通过QZOperationTypeUuid删除
+    public void deleteByQZOperationTypeUuid(Long QZOperationTypeUuid) {
+        qzChargeRuleDao.deleteByQZOperationTypeUuid(QZOperationTypeUuid);
     }
 }
