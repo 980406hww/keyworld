@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping(value = "/external/clientstatus")
 public class ExternalMachineInfoRestController extends SpringMVCBaseController {
+
     private static Logger logger = LoggerFactory.getLogger(ExternalMachineInfoRestController.class);
 
     @Autowired
@@ -136,7 +137,8 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/getStoppedClientStatusesZip", method = RequestMethod.GET)
-    public ResponseEntity<?> getStoppedClientStatusesZip(HttpServletRequest request) throws Exception {
+    public ResponseEntity<?> getStoppedClientStatusesZip(HttpServletRequest request)
+        throws Exception {
         String userName = request.getParameter("userName");
         if (StringUtils.isBlank(userName)) {
             userName = request.getParameter("username");
@@ -156,7 +158,8 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/updateClientStatusRestartStatus", method = RequestMethod.GET)
-    public ResponseEntity<?> updateClientStatusRestartStatus(HttpServletRequest request) throws Exception {
+    public ResponseEntity<?> updateClientStatusRestartStatus(HttpServletRequest request)
+        throws Exception {
         String userName = request.getParameter("userName");
         if (StringUtils.isBlank(userName)) {
             userName = request.getParameter("username");
@@ -214,7 +217,8 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/getClientStatusForStartUp", method = RequestMethod.GET)
-    public ResponseEntity<?> getClientStatusForStartUp(HttpServletRequest request) throws Exception {
+    public ResponseEntity<?> getClientStatusForStartUp(HttpServletRequest request)
+        throws Exception {
         String userName = request.getParameter("userName");
         if (StringUtils.isBlank(userName)) {
             userName = request.getParameter("username");
@@ -223,7 +227,8 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         try {
             if (validUser(userName, password)) {
                 Integer downloadingClientCount = machineInfoService.getDownloadingMachineCount();
-                Config config = configService.getConfig(Constants.CONFIG_TYPE_START_UP, Constants.CONFIG_KEY_DOWNLOADING_CLIENT_COUNT);
+                Config config = configService.getConfig(Constants.CONFIG_TYPE_START_UP,
+                    Constants.CONFIG_KEY_DOWNLOADING_CLIENT_COUNT);
                 int maxDownloadingClientCount = Integer.parseInt(config.getValue());
                 if (downloadingClientCount >= maxDownloadingClientCount) {
                     return new ResponseEntity<Object>(null, HttpStatus.OK);
@@ -250,7 +255,8 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
             if (validUser(userName, password)) {
                 long startMilleSeconds = System.currentTimeMillis();
                 String clientOpenStatus = machineInfoService.getMachineStartUpStatus(clientID);
-                performanceService.addPerformanceLog("getClientStartUpStatus", System.currentTimeMillis() - startMilleSeconds, "");
+                performanceService.addPerformanceLog("getClientStartUpStatus",
+                    System.currentTimeMillis() - startMilleSeconds, "");
                 return new ResponseEntity<Object>(clientOpenStatus, HttpStatus.OK);
             }
         } catch (Exception ex) {
@@ -260,7 +266,8 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/updateClientStartUpStatus", method = RequestMethod.GET)
-    public ResponseEntity<?> updateClientStartUpStatus(HttpServletRequest request) throws Exception {
+    public ResponseEntity<?> updateClientStartUpStatus(HttpServletRequest request)
+        throws Exception {
         String userName = request.getParameter("userName");
         if (StringUtils.isBlank(userName)) {
             userName = request.getParameter("username");
@@ -329,7 +336,8 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         String clientID = request.getParameter("clientID");
         try {
             if (validUser(userName, password)) {
-                ClientStatusForOptimization clientStatus = machineInfoService.getClientStatusForOptimization(clientID);
+                ClientStatusForOptimization clientStatus = machineInfoService
+                    .getClientStatusForOptimization(clientID);
                 byte[] compress = AESUtils.compress(AESUtils.encrypt(clientStatus).getBytes());
                 String s = AESUtils.parseByte2HexStr(compress);
                 return new ResponseEntity<Object>(s, HttpStatus.OK);
@@ -352,9 +360,16 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
         String version = request.getParameter("version");
         String freeSpace = request.getParameter("freeSpace");
         String runningProgramType = request.getParameter("runningProgramType");
+
+        int cpuCount = request.getParameter("cpuCount") == null ? 0
+            : Integer.parseInt(request.getParameter("cpuCount"));
+        int memory = request.getParameter("memory") == null ? 0
+            : Integer.parseInt(request.getParameter("memory"));
+
         try {
             if (validUser(userName, password)) {
-                machineInfoService.updateMachine(clientID, city,version,freeSpace,runningProgramType);
+                machineInfoService
+                    .updateMachine(clientID, city, version, freeSpace, runningProgramType,cpuCount,memory);
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         } catch (Exception ex) {

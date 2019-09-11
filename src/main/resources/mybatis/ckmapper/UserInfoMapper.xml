@@ -38,4 +38,11 @@
         AND ui.fOrganizationID = #{organizationID}
     </select>
 
+    <select id="getUuidByLoginName" parameterType="java.lang.String" resultType="java.lang.Long">
+        SELECT
+        fUuid AS "uuid"
+        FROM t_userinfo
+        WHERE fLoginName = #{loginName}
+    </select>
+
 </mapper>

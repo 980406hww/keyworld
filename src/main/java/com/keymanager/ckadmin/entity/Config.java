@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 
 @TableName(value = "t_config")
 public class Config {
+
     @TableField(value = "fConfigType")
     private String configType;
 

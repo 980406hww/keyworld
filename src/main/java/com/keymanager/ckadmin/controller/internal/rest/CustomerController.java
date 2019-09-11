@@ -71,7 +71,7 @@ public class CustomerController {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
             customerCriteria.setEntryType(entryType);
             customerCriteria.setTerminalType(terminalType);
-            Page<Customer> page = new Page(customerCriteria.getPage(), customerCriteria.getLimit());
+            Page<Customer> page = new Page<>(customerCriteria.getPage(), customerCriteria.getLimit());
             String orderByField = ReflectUtils
                 .getTableFieldValue(Customer.class, customerCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {
@@ -102,7 +102,10 @@ public class CustomerController {
         return activeUsers;
     }
 
-    //跳转添加或修改用户页面
+    /**
+     * 跳转添加或修改用户页面
+     * @return
+     */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @RequestMapping(value = "/toCustomersAdd", method = RequestMethod.GET)
     public ModelAndView toCustomersAdd() {
@@ -111,23 +114,12 @@ public class CustomerController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/customer/saveCustomer")
-    @RequestMapping(value = "/toQzsetting", method = RequestMethod.GET)
-    public ModelAndView toQzsetting() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("qzsetting/qzsetting");
-        return mv;
-    }
-
-    @RequiresPermissions("/internal/customer/saveCustomer")
-    @RequestMapping(value = "/toQzsettingAdd", method = RequestMethod.GET)
-    public ModelAndView toQzsettingAdd() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("qzsetting/qzsettingAdd");
-        return mv;
-    }
-
-    //获得用户信息
+    /**
+     * 获得用户信息
+     * @param uuid
+     * @param request
+     * @return
+     */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @RequestMapping(value = "/getCustomersMsgById/{uuid}", method = RequestMethod.GET)
     public ResultBean toCustomersAdd(@PathVariable Long uuid, HttpServletRequest request) {
@@ -155,7 +147,13 @@ public class CustomerController {
         return resultBean;
     }
 
-    //添加用户
+    /**
+     * 添加用户
+     * @param customer
+     * @param result
+     * @param session
+     * @return
+     */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @RequestMapping(value = "/postCustomersAdd", method = RequestMethod.POST)
     public ResultBean postCustomersAdd(@Valid Customer customer, BindingResult result,

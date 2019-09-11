@@ -24,6 +24,10 @@
       border-radius: 2px 0 0 2px;
       border: solid 1px #e6e6e6;
     }
+
+    .my-dis {
+      color: #d2d2d2 !important;
+    }
   </style>
 </head>
 <div>
@@ -31,22 +35,29 @@
   <form class="layui-form layui-form-pane ok-form" lay-filter="addCustomer">
     <div class="ok-body">
       <input type="hidden" name="qzSettingUuid"/>
+      <div class="layui-form-item">
+        <label class="layui-form-label">客户</label>
+        <div class="layui-input-block">
+          <select name="qzSettingCustomer" lay-verify="required" lay-search>
+            <option value="">请选择</option>
+            <option value="0">老杜</option>
+            <option value="1">是我</option>
+          </select>
+        </div>
+      </div>
       <div class="layui-row">
         <div class="layui-col-md6 padding-ten-right">
           <div class="layui-form-item">
-            <label class="layui-form-label">客户</label>
+            <label class="layui-form-label">域名</label>
             <div class="layui-input-block">
-              <select name="qzSettingCustomer" lay-verify="required" lay-search>
-                <option value="">请选择</option>
-                <option value="0">老杜</option>
-                <option value="1">是我</option>
-              </select>
+              <input type="text" name="qzSettingDomain" placeholder="请输入域名：例如baidu.com,不能填写www.baidu.com,map.baidu.com等" autocomplete="off"
+                     class="layui-input" lay-verify="required|domain">
             </div>
           </div>
           <div class="layui-form-item">
-            <label class="layui-form-label">域名</label>
+            <label class="layui-form-label">熊掌号</label>
             <div class="layui-input-block">
-              <input type="text" name="qzSettingDomain" placeholder="请输入域名" autocomplete="off"
+              <input type="text" name="bearPawNumber" placeholder="请输入熊掌号" autocomplete="off"
                      class="layui-input" lay-verify="required">
             </div>
           </div>
@@ -61,26 +72,20 @@
             </div>
           </div>
           <div class="layui-form-item">
-            <label class="layui-form-label">熊掌号</label>
+            <label class="layui-form-label">搜索引擎</label>
             <div class="layui-input-block">
-              <input type="text" name="bearPawNumber" placeholder="请输入熊掌号" autocomplete="off"
-                     class="layui-input" lay-verify="required">
+              <select name="searchEngine">
+                <option value="1">百度</option>
+                <option value="2">谷歌</option>
+              </select>
             </div>
           </div>
         </div>
       </div>
-      <div class="layui-form-item">
-        <label class="layui-form-label">搜索引擎</label>
-        <div class="layui-input-block">
-          <select name="searchEngine">
-            <option value="1">百度</option>
-            <option value="2">谷歌</option>
-          </select>
-        </div>
-      </div>
-      <fieldset class="layui-elem-field layui-field-title">
-        <legend>收费规则</legend>
-      </fieldset>
+      <!--      <fieldset class="layui-elem-field layui-field-title">-->
+      <!--        <legend>收费规则</legend>-->
+      <!--      </fieldset>-->
+      <hr>
       <div class="layui-row">
         <div class="layui-col-md6 padding-ten-right">
           <div class="layui-form-item" pane>
@@ -91,61 +96,72 @@
             </div>
           </div>
           <div id="comQzsettingBoxSelect" class="layui-form-item" pane>
-            <label class="layui-form-label">达标优化类型</label>
+            <label class="computer layui-form-label">达标优化类型</label>
             <div class="layui-input-block">
               <input type="radio" name="optimizationComType" lay-filter="optimizationComType"
-                     value="1" title="主优化" checked>
+                     value="1" title="主优化" class="computer-input" checked>
               <input type="radio" name="optimizationComType" lay-filter="optimizationComType"
-                     value="2" title="次优化">
+                     value="2" title="次优化" class="computer-input">
               <input type="radio" name="optimizationComType" lay-filter="optimizationComType"
-                     value="0" title="辅助优化">
+                     value="0" title="辅助优化" class="computer-input">
             </div>
           </div>
           <div id="comQzsettingBox" class="qzsetting-box">
-            <div class="layui-form-item">
-              <label class="layui-form-label">分组</label>
-              <div class="layui-input-block">
-                <input type="text" name="comGroup" placeholder="请输入分组" autocomplete="off"
-                       class="layui-input" lay-verify="required">
+            <div class="layui-row">
+              <div class="layui-col-md6 padding-ten-right">
+                <div class="layui-form-item">
+                  <label class="computer layui-form-label">优化分组</label>
+                  <div class="layui-input-block">
+                    <input type="text" name="comGroup" placeholder="请输入分组" autocomplete="off"
+                           class="computer-input layui-input">
+                  </div>
+                </div>
+                <div class="layui-form-item">
+                  <label class="computer layui-form-label">当前词量</label>
+                  <div class="layui-input-block">
+                    <input type="text" name="comCurrentKeywordCount" placeholder="请输入当前词量"
+                           autocomplete="off"
+                           class="computer-input layui-input">
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="layui-form-item">
-              <label class="layui-form-label">电脑域名</label>
-              <div class="layui-input-block">
-                <input type="text" name="comSubDomainName" placeholder="请输入电脑域名" autocomplete="off"
-                       class="layui-input" lay-verify="required">
-              </div>
-            </div>
-            <div class="layui-form-item">
-              <label class="layui-form-label">当前词量</label>
-              <div class="layui-input-block">
-                <input type="text" name="comCurrentKeywordCount" placeholder="请输入当前词量"
-                       autocomplete="off"
-                       class="layui-input" lay-verify="required">
-              </div>
-            </div>
-            <div class="layui-form-item">
-              <label class="layui-form-label">限制词量</label>
-              <div class="layui-input-block">
-                <input type="text" name="comMaxKeywordCount" placeholder="请输入限制词量"
-                       autocomplete="off"
-                       class="layui-input" value="300" lay-verify="required">
+              <div class="layui-col-md6 padding-ten-left">
+                <div class="layui-form-item">
+                  <label class="computer layui-form-label">电脑域名</label>
+                  <div class="layui-input-block">
+                    <input type="text" name="comSubDomainName" placeholder="请输入电脑域名"
+                           autocomplete="off"
+                           class="computer-input layui-input">
+                  </div>
+                </div>
+                <div class="layui-form-item">
+                  <label class="computer layui-form-label">词数限制</label>
+                  <div class="layui-input-block">
+                    <input type="text" name="comMaxKeywordCount" placeholder="请输入限制词量"
+                           autocomplete="off"
+                           class="computer-input layui-input" value="300">
+                  </div>
+                </div>
               </div>
             </div>
             <div class="layui-form-item layui-form-text">
-              <label class="layui-form-label">达标备注</label>
+              <label class="computer layui-form-label">达标备注</label>
               <div class="layui-input-block">
               <textarea name="comMonitorRemark" placeholder="请填写电脑端达标备注, 如：首月30-50个词 客供词 3000"
-                        class="layui-textarea"></textarea>
+                        class="computer-input layui-textarea"></textarea>
               </div>
             </div>
             <div id="comStandardSpecies" class="layui-form-item" pane>
-              <label class="layui-form-label">达标种类</label>
+              <label class="computer layui-form-label">达标种类</label>
               <div class="layui-input-block">
-                <input type="radio" name="comStandardSpecies" value="aiZhan" title="爱站" checked>
-                <input type="radio" name="comStandardSpecies" value="5118" title="5118">
-                <input type="radio" name="comStandardSpecies" value="designationWord" title="指定词">
-                <input type="radio" name="comStandardSpecies" value="other" title="其他">
+                <input type="radio" name="comStandardSpecies" value="aiZhan" title="爱站"
+                       class="computer-input" checked>
+                <input type="radio" name="comStandardSpecies" value="5118" title="5118"
+                       class="computer-input">
+                <input type="radio" name="comStandardSpecies" value="designationWord" title="指定词"
+                       class="computer-input">
+                <input type="radio" name="comStandardSpecies" value="other" title="其他"
+                       class="computer-input">
               </div>
             </div>
           </div>
@@ -159,70 +175,78 @@
             </div>
           </div>
           <div id="phoneQzsettingBoxSelect" class="layui-form-item" pane>
-            <label class="layui-form-label">达标优化类型</label>
+            <label class="phone layui-form-label">达标优化类型</label>
             <div class="layui-input-block">
               <input type="radio" name="optimizationPhoneType" lay-filter="optimizationPhoneType"
-                     value="1" title="主优化" checked>
+                     value="1" title="主优化" class="phone-input" checked>
               <input type="radio" name="optimizationPhoneType" lay-filter="optimizationPhoneType"
-                     value="2" title="次优化">
+                     value="2" title="次优化" class="phone-input">
               <input type="radio" name="optimizationPhoneType" lay-filter="optimizationPhoneType"
-                     value="0" title="辅助优化">
+                     value="0" title="辅助优化" class="phone-input">
             </div>
           </div>
           <div id="phoneQzsettingBox" class="qzsetting-box">
-            <div class="layui-form-item">
-              <label class="layui-form-label">分组</label>
-              <div class="layui-input-block">
-                <input type="text" name="phoneGroup" placeholder="请输入分组" autocomplete="off"
-                       class="layui-input" lay-verify="required">
+            <div class="layui-row">
+              <div class="layui-col-md6 padding-ten-right">
+                <div class="layui-form-item">
+                  <label class="phone layui-form-label">优化分组</label>
+                  <div class="layui-input-block">
+                    <input type="text" name="phoneGroup" placeholder="请输入分组" autocomplete="off"
+                           class="phone-input layui-input">
+                  </div>
+                </div>
+                <div class="layui-form-item">
+                  <label class="phone layui-form-label">当前词量</label>
+                  <div class="layui-input-block">
+                    <input type="text" name="phoneCurrentKeywordCount" placeholder="请输入当前词量"
+                           autocomplete="off"
+                           class="phone-input layui-input">
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="layui-form-item">
-              <label class="layui-form-label">电脑域名</label>
-              <div class="layui-input-block">
-                <input type="text" name="phoneSubDomainName" placeholder="请输入电脑域名"
-                       autocomplete="off"
-                       class="layui-input" lay-verify="required">
-              </div>
-            </div>
-            <div class="layui-form-item">
-              <label class="layui-form-label">当前词量</label>
-              <div class="layui-input-block">
-                <input type="text" name="phoneCurrentKeywordCount" placeholder="请输入当前词量"
-                       autocomplete="off"
-                       class="layui-input" lay-verify="required">
-              </div>
-            </div>
-            <div class="layui-form-item">
-              <label class="layui-form-label">限制词量</label>
-              <div class="layui-input-block">
-                <input type="text" name="phoneMaxKeywordCount" placeholder="请输入限制词量"
-                       autocomplete="off"
-                       class="layui-input" value="300" lay-verify="required">
+              <div class="layui-col-md6 padding-ten-left">
+                <div class="layui-form-item">
+                  <label class="phone layui-form-label">电脑域名</label>
+                  <div class="layui-input-block">
+                    <input type="text" name="phoneSubDomainName" placeholder="请输入电脑域名"
+                           autocomplete="off"
+                           class="phone-input layui-input">
+                  </div>
+                </div>
+                <div class="phone layui-form-item">
+                  <label class="layui-form-label">词数限制</label>
+                  <div class="layui-input-block">
+                    <input type="text" name="phoneMaxKeywordCount" placeholder="请输入限制词量"
+                           autocomplete="off"
+                           class="phone-input layui-input" value="300">
+                  </div>
+                </div>
               </div>
             </div>
             <div class="layui-form-item layui-form-text">
-              <label class="layui-form-label">达标备注</label>
+              <label class="phone layui-form-label">达标备注</label>
               <div class="layui-input-block">
               <textarea name="phoneMonitorRemark" placeholder="请填写电脑端达标备注, 如：首月30-50个词 客供词 3000"
-                        class="layui-textarea"></textarea>
+                        class="phone-input layui-textarea"></textarea>
               </div>
             </div>
             <div id="phoneStandardSpecies" class="layui-form-item" pane>
-              <label class="layui-form-label">达标种类</label>
+              <label class="phone layui-form-label">达标种类</label>
               <div class="layui-input-block">
-                <input type="radio" name="phoneStandardSpecies" value="aiZhan" title="爱站" checked>
-                <input type="radio" name="phoneStandardSpecies" value="5118" title="5118">
-                <input type="radio" name="phoneStandardSpecies" value="designationWord" title="指定词">
-                <input type="radio" name="phoneStandardSpecies" value="other" title="其他">
+                <input type="radio" name="phoneStandardSpecies" value="aiZhan" title="爱站"
+                       class="phone-input" checked>
+                <input type="radio" name="phoneStandardSpecies" value="5118" title="5118"
+                       class="phone-input">
+                <input type="radio" name="phoneStandardSpecies" value="designationWord" title="指定词"
+                       class="phone-input">
+                <input type="radio" name="phoneStandardSpecies" value="other" title="其他"
+                       class="phone-input">
               </div>
             </div>
           </div>
         </div>
       </div>
-      <fieldset class="layui-elem-field layui-field-title">
-        <legend>爬取规则</legend>
-      </fieldset>
+      <hr>
       <div class="layui-row" style="margin-bottom: 48px">
         <div class="layui-col-md6 padding-ten-right">
           <div class="layui-form-item">
@@ -271,13 +295,15 @@
           </div>
         </div>
       </div>
-
     </div>
     <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
       <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
         <button class="layui-btn" lay-submit lay-filter="commitCustomer">确定</button>
         <button type="reset" class="layui-btn layui-btn-primary" style="margin-right: 20px">
           重置
+        </button>
+        <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">
+          取消
         </button>
       </div>
     </div>
@@ -318,6 +344,75 @@
     });
   }
 
+  let computers = document.getElementsByClassName('computer');
+  let computersInput = document.getElementsByClassName('computer-input');
+
+  function selectPhone(f) {
+    for (let i = 0; i < computersInput.length; i++) {
+      if (f) {
+        i = 8;
+        computers[6].classList.add('my-dis');
+        f = false;
+      }
+      if (i < 7) {
+        computers[i].classList.add('my-dis');
+      }
+      computersInput[i].classList.add('layui-disabled');
+      computersInput[i].setAttribute('disabled', '');
+    }
+  }
+
+  function deselectPhone(f) {
+    for (let i = 0; i < computersInput.length; i++) {
+      if (f) {
+        i = 8;
+        computers[6].classList.remove('my-dis');
+        f = false;
+      }
+      if (i < 7) {
+        computers[i].classList.remove('my-dis');
+      }
+      computersInput[i].classList.remove('layui-disabled');
+      computersInput[i].removeAttribute('disabled');
+
+    }
+  }
+
+  let phones = document.getElementsByClassName('phone');
+  let phonesInput = document.getElementsByClassName('phone-input');
+
+  function selectComputer(f) {
+    for (let i = 0; i < phonesInput.length; i++) {
+      if (f) {
+        i = 8;
+        phones[6].classList.add('my-dis');
+        f = false;
+      }
+      if (i < 7) {
+        phones[i].classList.add('my-dis');
+      }
+      phonesInput[i].classList.add('layui-disabled');
+      phonesInput[i].setAttribute('disabled', '');
+
+    }
+  }
+
+  function deselectComputer(f) {
+    for (let i = 0; i < phonesInput.length; i++) {
+      if (f) {
+        i = 8;
+        phones[6].classList.remove('my-dis');
+        f = false;
+      }
+      if (i < 7) {
+        phones[i].classList.remove('my-dis');
+      }
+      phonesInput[i].classList.remove('layui-disabled');
+      phonesInput[i].removeAttribute('disabled');
+
+    }
+  }
+
   layui.use(["form", "okLayer", "jquery", "layer"], function () {
     let form = layui.form;
     let okLayer = layui.okLayer;
@@ -330,16 +425,12 @@
       layui_ = layui;
     }
 
-    let comQzsettingBoxSelect = document.getElementById('comQzsettingBoxSelect');
-    let comQzsettingBox = document.getElementById('comQzsettingBox');
     //监听指定开关
     form.on('switch(computer)', function (data) {
       if (this.checked) {
-        comQzsettingBoxSelect.style.display = 'block';
-        comQzsettingBox.style.display = 'block';
+        deselectPhone(false);
       } else {
-        comQzsettingBoxSelect.style.display = 'none';
-        comQzsettingBox.style.display = 'none';
+        selectPhone(false);
       }
       // layer.tips('温馨提示：请注意开关状态的文字可以随意定义，而不仅仅是ON|OFF', data.othis)
     });
@@ -349,11 +440,9 @@
     //监听指定开关
     form.on('switch(phone)', function (data) {
       if (this.checked) {
-        phoneQzsettingBoxSelect.style.display = 'block';
-        phoneQzsettingBox.style.display = 'block';
+        deselectComputer(false);
       } else {
-        phoneQzsettingBoxSelect.style.display = 'none';
-        phoneQzsettingBox.style.display = 'none';
+        selectComputer(false);
       }
     });
 
@@ -362,16 +451,16 @@
     form.on('radio(optimizationComType)', function (data) {
       switch (data.value) {
         case '1':
-          comStandardSpecies.style.display = 'block';
+          deselectPhone(true);
           break;
         case '2':
-          comStandardSpecies.style.display = 'block';
+          deselectPhone(true);
           break;
         case '0':
-          comStandardSpecies.style.display = 'none';
+          selectPhone(true);
           break;
         default:
-          comStandardSpecies.style.display = 'none';
+          selectPhone(true);
       }
     });
 
@@ -380,23 +469,30 @@
     form.on('radio(optimizationPhoneType)', function (data) {
       switch (data.value) {
         case '1':
-          phoneStandardSpecies.style.display = 'block';
+          deselectComputer(true);
           break;
         case '2':
-          phoneStandardSpecies.style.display = 'block';
+          deselectComputer(true);
           break;
         case '0':
-          phoneStandardSpecies.style.display = 'none';
+          selectComputer(true);
           break;
         default:
-          phoneStandardSpecies.style.display = 'none';
+          selectComputer(true);
       }
     });
 
     form.on("submit(commitCustomer)", function (data) {
+      let d = data.field;
+      if (d.computer === 'on' && d.optimizationComType === '1') {
 
+      } else if (d.phone === 'on' && d.optimizationPhoneType === '1') {
+
+      } else {
+        okLayer.msg.redCry('必须选择电脑或手机中至少一个且只有拥有一个主优化', null);
+        return false;
+      }
       console.log(data);
-
       // $.ajax({
       //   url: '/internal/customer/postCustomersAdd',
       //   type: 'post',
@@ -420,14 +516,14 @@
       return false;
     });
 
+    $('#close').click(function () {
+      okLayer.close();
+    });
+
     form.verify({
-      qq: [
-        /(^$)|(^[1-9]\d{4,14}$)/,
-        "请输入正确格式QQ"
-      ],
-      telPhone: [
-        /(^$)|(^(13[0-9]|14[5-9]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[13589])\d{8}$)/,
-        "请输入正确格式手机号码"
+      domain: [
+        /^([\u4e00-\u9fa50-9]+|[a-z0-9]+)\.([\u4e00-\u9fa5]+|[a-z]+|ac.cn|bj.cn|sh.cn|tj.cn|cq.cn|he.cn|sn.cn|sx.cn|nm.cn|ln.cn|jl.cn|hl.cn|js.cn|zj.cn|ah.cn|fj.cn|jx.cn|sd.cn|ha.cn|hb.cn|hn.cn|gd.cn|gx.cn|hi.cn|sc.cn|gz.cn|yn.cn|gs.cn|qh.cn|nx.cn|xj.cn|tw.cn|hk.cn|mo.cn|xz.cn|com.cn|net.cn|org.cn|gov.cn|.com.hk)$/,
+        "请正确输入域名,例如baidu.com,不能填写www.baidu.com,map.baidu.com等"
       ]
     });
   })

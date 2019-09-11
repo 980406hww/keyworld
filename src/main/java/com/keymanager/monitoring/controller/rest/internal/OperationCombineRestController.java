@@ -24,9 +24,9 @@ import java.util.Map;
  **/
 @RestController
 @RequestMapping(value = "/internal/operationCombine")
-public class OperationCombineController {
+public class OperationCombineRestController {
 
-    private static Logger logger = LoggerFactory.getLogger(GroupSettingRestController.class);
+    private static Logger logger = LoggerFactory.getLogger(OperationCombineRestController.class);
 
     @Autowired
     private OperationCombineService operationCombineService;

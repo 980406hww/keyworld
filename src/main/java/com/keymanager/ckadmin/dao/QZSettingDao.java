@@ -10,7 +10,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-@Repository("QZSettingDao2")
+@Repository("qzSettingDao2")
 public interface QZSettingDao extends BaseMapper<QZSetting> {
 
 
@@ -20,5 +20,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     List<QZSettingVO> searchQZSettingSearchEngines(@Param("customerUuid") String customerUuid,
         @Param("domain") String domain);
 
+    int getQZSettingGroupInfo(@Param("terminalType") String terminalType,
+        @Param("optimizeGroupName") String optimizeGroupName);
 }
 

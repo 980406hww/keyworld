@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>添加</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
+    <style>
+        .padding-ten-left {
+            padding-left: 2px;
+        }
+
+        .padding-ten-right {
+            padding-right: 2px;
+        }
+
+        .layui-btn {
+            width: 150px;
+        }
+
+        .qzsetting-box {
+            padding: 10px 10px 5px 10px;
+            border-radius: 2px 0 0 2px;
+            border: solid 1px #e6e6e6;
+        }
+    </style>
+</head>
+<div>
+    <!--form表单-->
+    <form class="layui-form layui-form-pane ok-form" lay-filter="excludeExcludeKeyword">
+        <div class="ok-body">
+            <input type="hidden" name="excludeKeywordUuid" id="excludeKeywordUuid"/>
+            <input type="hidden" name="qzSettingUuid" id="qzSettingUuid"/>
+            <input type="hidden" name="customerUuid" id="customerUuid"/>
+            <input type="hidden" name="optimizedGroupName" id="optimizedGroupName"/>
+            <div class="layui-row">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">域名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="domain" id="domain" placeholder="请输入域名"
+                               autocomplete="off"
+                               class="layui-input" readonly>
+                    </div>
+                </div>
+
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">终端类型</label>
+                <div class="layui-input-block">
+                    <select name="terminalType" id="terminalType">
+                        <option value="PC">PC</option>
+                        <option value="Phone">Phone</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">关键字</label>
+                <div class="layui-input-block">
+                    <textarea name="customerKeywordDialogContent" id="customerKeywordDialogContent"
+                              placeholder="" class="layui-textarea"
+                              lay-verify="required"></textarea>
+                </div>
+            </div>
+
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="save">确定</button>
+
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">
+                    取消
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--js逻辑-->
+
+<script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script>
+
+    let data_ = null;
+    let layui_ = null;
+
+    function initForm(data) {
+        data_ = data;
+        if (layui_ != null) {
+            setForm(layui_, data_);
+        }
+    }
+
+    function setForm(layui_, data) {
+        var $ = layui_.$;
+        var form = layui_.form;
+        $("#qzSettingUuid").val(data.qzSettingUuid);
+        $("#customerUuid").val(data.customerUuid);
+        $("#terminalType").val(data.terminalType);
+        form.render("select");
+        $("#domain").val(data.domain);
+        $("#optimizedGroupName").val(data.optimizedGroupName);
+        echoExcludeKeyword($, data.qzSettingUuid, data.terminalType)
+    }
+
+    function echoExcludeKeyword($, qzSettingUuid, terminalType) {
+        var postData = {};
+        postData.qzSettingUuid = qzSettingUuid;
+        postData.terminalType = terminalType;
+        $.ajax({
+            url: '/internal/qzsetting/echoExcludeKeyword2',
+            type: 'POST',
+            data: JSON.stringify(postData),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function (result) {
+                if (result.code === 200 && result.data != null) {
+                    result.data.keyword = result.data.keyword.replace(/[,]/g, "\n");
+                    $("#excludeKeywordUuid").val(result.data.uuid);
+                    $("#customerKeywordDialogContent").val(result.data.keyword);
+                }
+            },
+            error: function (result) {
+                l.layer.msg(result.msg);
+            }
+        });
+    }
+
+    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+        let form = layui.form;
+        let okLayer = layui.okLayer;
+        let $ = layui.jquery;
+        let layer = layui.layer;
+
+        if (data_ != null) {
+            setForm(layui, data_);
+        } else {
+            layui_ = layui;
+        }
+
+        form.on("submit(save)", function (data) {
+            var postData = data.field;
+            let keywordStr = postData.customerKeywordDialogContent;
+            keywordStr = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "");
+            if (keywordStr.substring(keywordStr.length - 1) === ',') {
+                keywordStr = keywordStr.substring(0, keywordStr.length - 1);
+            }
+            var keywords = keywordStr.split(',');
+            keywords = keywords.filter(function (keyword, index) {
+                return keywords.indexOf(keyword) === index && keyword !== '';
+            });
+            postData.keywords = keywords;
+            delete postData.customerKeywordDialogContent;
+            $.ajax({
+                url: '/internal/qzsetting/excludeQZSettingCustomerKeywords2',
+                type: 'post',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        okLayer.msg.greenTick("保存成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        layui.layer.msg(res.msg);
+                    }
+                }
+            });
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+    })
+
+</script>
+</body>
+</html>

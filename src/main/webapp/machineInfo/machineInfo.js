@@ -84,6 +84,8 @@ function resetPageNumber() {
     var vpsBackendSystemComputerID = machineInfoFormObj.find("#vpsBackendSystemComputerID").val();
     var switchGroupName = machineInfoFormObj.find("#switchGroupName").val();
     var startUpStatus = machineInfoFormObj.find("#startUpStatus").val();
+    var gtMemory = machineInfoFormObj.find("#gtMemory").val();
+    var ltMemory = machineInfoFormObj.find("#ltMemory").val();
     if(clientId != "") {
         machineInfoFormObj.find("#clientID").val($.trim(clientId));
     }
@@ -116,6 +118,12 @@ function resetPageNumber() {
     }
     if(startUpStatus != "") {
         machineInfoFormObj.find("#startUpStatus").val($.trim(startUpStatus));
+    }
+    if(gtMemory != "") {
+    machineInfoFormObj.find("#gtMemory").val($.trim(gtMemory));
+    }
+    if(ltMemory != "") {
+    machineInfoFormObj.find("#ltMemory").val($.trim(ltMemory));
     }
     $("#searchMachineInfoForm").find("#currentPageNumberHidden").val(1);
 }

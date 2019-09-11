@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.QZOperationTypeDao">
+
+    <!--查询判断对应的操作类型表中是否存在IsDelete为0-->
+    <select id="searchQZOperationTypesByQZSettingUuid"
+        resultType="com.keymanager.ckadmin.entity.QZOperationType">
+        SELECT
+            qopty.fUuid             AS 'uuid',
+            qopty.fQZSettingUuid    AS 'qzSettingUuid',
+            qopty.fOperationtype          AS 'operationType',
+            qopty.fInitialKeywordCount    AS 'initialKeywordCount',
+            qopty.fCurrentKeywordCount    AS 'currentKeywordCount',
+            qopty.fGroup            AS 'group',
+            qopty.fReachTargetDate  AS 'reachTargetDate',
+            qopty.fNextChargeDate   AS 'nextChargeDate',
+            qopty.fUpdateTime       AS 'updateTime',
+            qopty.fCreateTime       AS 'createTime',
+            qopty.fStandardTime     AS 'standardTime',
+            qopty.fIsDeleted        AS 'isDeleted',
+            qopty.fMaxKeywordCount  AS 'maxKeywordCount'
+        FROM t_qz_operation_type  qopty
+        WHERE qopty.fQZSettingUuid = #{qzSettingUuid} AND qopty.fIsDeleted = 0
+    </select>
+    <!--查询多条操作类型信息-->
+    <select id="searchQZOperationTypesIsDelete"
+        resultType="com.keymanager.ckadmin.entity.QZOperationType">
+      SELECT
+       qopty.fUuid                   AS 'uuid',
+       qopty.fQZSettingUuid          AS 'qzSettingUuid',
+       qopty.fOperationtype          AS 'operationType',
+       qopty.fOptimizationType       AS 'optimizationType',
+       qopty.fStandardType           AS 'standardType',
+       qopty.fCurrentKeywordCount    AS 'currentKeywordCount',
+       qopty.fGroup            AS 'group',
+       qopty.fSubDomainName    AS 'subDomainName',
+       qopty.fMonitorRemark    AS 'monitorRemark',
+       qopty.fReachTargetDate  AS 'reachTargetDate',
+       qopty.fNextChargeDate   AS 'nextChargeDate',
+       qopty.fUpdateTime       AS 'updateTime',
+       qopty.fCreateTime       AS 'createTime',
+       qopty.fStandardTime     AS 'standardTime',
+       qopty.fIsDeleted        AS 'isDeleted',
+       qopty.fMaxKeywordCount  AS 'maxKeywordCount'
+      FROM t_qz_operation_type  qopty
+      WHERE  qopty.fQZSettingUuid  = #{qzSettingUuid} AND qopty.fIsDeleted = 0
+    </select>
+    <!--返回上一级插入的主键-->
+    <select id="selectLastId" resultType="int">
+        select LAST_INSERT_ID()
+    </select>
+    <!--删除 -->
+    <delete id="deleteByQZSettingUuid">
+        DELETE FROM t_qz_operation_type WHERE fQZSettingUuid = #{qzSettingUuid}
+    </delete>
+
+    <update id="updateQZOperationTypeStandardTime">
+        UPDATE t_qz_operation_type
+        SET fUpdateTime = NOW()
+        <choose>
+            <when test="isStandardFlag == 2">
+                , fStandardTime = NOW()
+            </when>
+            <when test="isStandardFlag == 0">
+                , fStandardTime = NULL
+            </when>
+        </choose>
+        WHERE fUuid = #{uuid}
+        <if test="isStandardFlag == 1">
+            AND fStandardTime IS NULL
+        </if>
+    </update>
+
+    <select id="searchQZOperationTypeByQZSettingAndTerminalType"
+        resultType="com.keymanager.ckadmin.entity.QZOperationType">
+        SELECT
+            fUuid AS 'uuid',
+            fStandardTime AS 'standardTime'
+        FROM t_qz_operation_type
+        WHERE fQZSettingUuid = #{qzSettingUuid}
+        AND fOperationType = #{operationType}
+        AND fIsDeleted = 0
+        LIMIT 1
+    </select>
+
+    <update id="updateStandardTimeByUuid">
+        UPDATE t_qz_operation_type
+        SET fUpdateTime = NOW()
+        <choose>
+            <when test="updateFlag == 1 and lastAchieve == 0">
+                , fStandardTime = NOW()
+            </when>
+            <when test="updateFlag == 0">
+                , fStandardTime = NULL
+            </when>
+        </choose>
+        WHERE fUuid = #{uuid}
+    </update>
+
+    <select id="getStandardTime" resultType="java.util.Date">
+        SELECT fStandardTime
+        FROM t_qz_operation_type
+        WHERE fQZSettingUuid = #{qzSettingUuid}
+        AND fOperationtype = #{terminalType}
+        LIMIT 1
+    </select>
+
+    <select id="getAllOperationChargeKeywordCountByQZSettingUuid" resultType="String">
+        SELECT
+            CONCAT(qzot.fOperationtype,"_",qzcr.fStandardSpecies)
+        FROM t_qz_operation_type qzot , t_qz_charge_rule qzcr
+        WHERE qzot.fQZSettingUuid = #{qzSettingUuid}
+        AND qzot.fUuid = qzcr.fQZOperationTypeUuid
+        GROUP BY qzot.fUuid
+    </select>
+</mapper>

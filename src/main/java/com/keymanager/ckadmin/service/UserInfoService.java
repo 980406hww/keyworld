@@ -15,6 +15,8 @@ public interface UserInfoService extends IService<UserInfo> {
 
     List<UserInfo> findActiveUsers();
 
+    Long getUuidByLoginName(String userName);
+
     List<Tree> selectUserInfoTrees ();
 
     Object selectUserInfoTrees2();

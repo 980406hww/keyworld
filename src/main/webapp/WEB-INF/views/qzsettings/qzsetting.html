@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,20 +5,57 @@
     <title>搜索</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css" media="all">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css"
+          media="all">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/style/admin.css" media="all">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/style/template.css" media="all">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/style/template.css"
+          media="all">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <style>
-        .layui-tab-item .layui-table-cell {
-            height:auto;
-            overflow:visible;
-            text-overflow:inherit;
-            white-space:normal;
+        *, :after, :before {
+            box-sizing: border-box
         }
 
-        .layadmin-caller {background: #fff;padding: 0;}
+        html {
+            background-color: white;
+        }
+
+        a {
+            background-color: transparent;
+            text-decoration: none
+        }
+
+        a:active, a:hover {
+            outline: 0
+        }
+
+        a:hover {
+            color: #0c7df5
+        }
+
+        input[type=checkbox] {
+            box-sizing: border-box;
+            padding: 0
+        }
+
+        label {
+            vertical-align: middle
+        }
+
+        .layui-table-cell {
+            height: auto;
+            overflow: visible;
+            text-overflow: inherit;
+            white-space: normal;
+            padding: 0 !important;
+        }
+
+        .layadmin-caller {
+            background: #fff;
+            padding: 0;
+        }
 
         .layui-fluid {
             position: relative;
@@ -27,58 +63,372 @@
             padding: 0 0;
         }
 
+        .layui-table td {
+            padding: 0 !important;
+        }
+
         .layui-tab-content {
-            padding: 0
+            padding: 0;
         }
+
         .layui-table-body .layui-table-col-special {
-            height: 225px;
+            height: 195px;
         }
+
         .layui-table-col-special .header {
             width: 100%;
             height: 44px;
             border-bottom: 1px solid #e6e6e6;
         }
 
-        .layui-table-col-special .header span .contactPerson-name,
-        .layui-table-col-special .header span .organization-name,
-        .layui-table-col-special .header span .domain{
+        .layui-table-col-special .header span {
+            display: block;
+            float: left;
+            height: 44px;
+            line-height: 44px
+        }
+
+        .layui-table-col-special .header span input{
+            align-self: center;
+            margin: 15px 5px;
+        }
+
+        .layui-table-col-special .header span a {
+            font-size: 12px;
+            margin: 0 5px;
+        }
+
+        .layui-table-col-special .header span.contactPerson-name,
+        .layui-table-col-special .header span.organization-name {
+            max-width: 110px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+
+        .layui-table-col-special .header span.contactPerson-name a,
+        .layui-table-col-special .header span.organization-name a {
+            font-weight: 700;
+            color: #000000;
+        }
+
+
+        .layui-table-col-special .header span.domain {
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .layui-table-col-special .header span.domain a {
+            color: #000000;
+        }
+
+        .layui-table-col-special .header span.to-aizhan {
+            width: 35px;
+            max-width: 35px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .layui-table-col-special .header span.to-aizhan a:hover,
+        .layui-table-col-special .header span.to-5118 a:hover {
+            color: #0c7df5;
+        }
+
+        .layui-table-col-special .header span.to-5118 {
+            width: 40px;
+            max-width: 40px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .layui-table-col-special .header span.fmtStandardDate,
+        .layui-table-col-special .header span.fmtCreateDate {
+            max-width: 170px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .layui-table-col-special .header span.fmtStandardDate a,
+        .layui-table-col-special .header span.fmtCreateDate a {
+            color: #000000;
+        }
+
+        .layui-table-col-special .header span.fmtStandardDate a:hover,
+        .layui-table-col-special .header span.fmtCreateDate a:hover {
+            color: #0c7df5;
+        }
+
+        .layui-table-col-special .header .handle a {
+            display: block;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .layui-table-col-special .header .handle {
+            float: right;
+            font-size: 14px;
+        }
+
+        .layui-table-col-special .header .handle a.blue {
+            color: #1a81ea;
+        }
+
+        .layui-table-col-special .header .handle a.blue:hover {
+            color: #f60;
         }
 
         .layui-table-col-special .body {
             height: 150px
         }
 
-        .layui-table-col-special .body .user-id .line1, .layui-table-col-special .body .standard-info .line1 {
+        .layui-table-col-special .body .user-id .line1,
+        .layui-table-col-special .body .standard-info .line1 {
             text-align: center;
-            height: 120px !important;
+            height: 100px !important;
             margin-top: 50px;
             overflow: hidden;
             text-overflow: ellipsis;
             color: #000;
+            font-size: 14px;
         }
 
-        .layui-table-col-special .body .other-rank .line1, .layui-table-col-special .body .other-rank_2 .line1 {
+        .layui-table-col-special .body .other-rank .line1,
+        .layui-table-col-special .body .other-rank_2 .line1 {
             text-align: center;
-            height: 60px !important;
+            height: 55px !important;
             margin-top: 20px;
             overflow: hidden;
             text-overflow: ellipsis;
             color: #000;
         }
+
+        .layui-table-col-special .body .rank-wrap {
+            width: 468px;
+            float: left;
+            height: 150px;
+            border-left: 1px solid #e6e6e6;
+        }
+
+        .layui-table-col-special .body .rank-wrap1 {
+            width: 400px;
+            float: left;
+            height: 150px;
+            border-left: 1px solid #e6e6e6;
+        }
+
+        .layui-table-col-special .body .rank-wrap2 {
+            width: 320px;
+            float: left;
+            height: 150px;
+            border-left: 1px solid #e6e6e6;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div,
+        .layui-table-col-special .body .rank-wrap1 > div,
+        .layui-table-col-special .body .rank-wrap2 > div {
+            float: left;
+            font-size: 12px;
+            height: 150px;
+            display: block;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div,
+        .layui-table-col-special .body .rank-wrap1 > div,
+        .layui-table-col-special .body .rank-wrap2 > div {
+            padding: 0 5px;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div:last-child,
+        .layui-table-col-special .body .rank-wrap1 > div:last-child {
+            border-left: 1px dashed #e6e6e6;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div .row4,
+        .layui-table-col-special .body .rank-wrap1 > div .row4 {
+            line-height: 2;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div span:first-child,
+        .layui-table-col-special .body .rank-wrap1 > div span:first-child {
+            font-size: 12px;
+            display: block;
+            float: left;
+            width: 42%;
+            text-align: left;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div span:last-child,
+        .layui-table-col-special .body .rank-wrap1 > div span:last-child {
+            font-size: 12px;
+            display: block;
+            float: left;
+            width: 58%;
+            text-align: left;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div span:last-child,
+        .layui-table-col-special .body .rank-wrap1 > div span:last-child {
+            text-align: center;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div span.red,
+        .layui-table-col-special .body .rank-wrap1 > div span.red {
+            color: palevioletred;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div span.green,
+        .layui-table-col-special .body .rank-wrap1 > div span.green {
+            color: mediumseagreen;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div span a,
+        .layui-table-col-special .body .rank-wrap1 > div span a {
+            font-size: 12px;
+            text-decoration: none;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div span a.red,
+        .layui-table-col-special .body .rank-wrap1 > div span a.red {
+            color: palevioletred;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div span a.green,
+        .layui-table-col-special .body .rank-wrap1 > div span a.green {
+            color: mediumseagreen;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div span .red,
+        .layui-table-col-special .body .rank-wrap1 > div span .red {
+            color: palevioletred;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div span .green,
+        .layui-table-col-special .body .rank-wrap1 > div span .green {
+            color: mediumseagreen;
+        }
+
+        .layui-table-col-special .body .user-id {
+            width: 84px;
+        }
+
+        .layui-table-col-special .body .standard-info {
+            width: 80px;
+        }
+
+        .layui-table-col-special .body .user-id,
+        .layui-table-col-special .body .standard-info {
+            float: left;
+            border-right: 1px solid #e6e6e6;
+            height: 150px;
+            display: block;
+        }
+
+        .layui-table-col-special .body .user-id a,
+        .layui-table-col-special .body .standard-info a {
+            clear: both;
+        }
+
+        .layui-table-col-special .body .user-id span,
+        .layui-table-col-special .body .standard-info span {
+            display: block;
+        }
+
+        .layui-table-col-special .body .user-id span.line1,
+        .layui-table-col-special .body .standard-info span.line1 {
+            font-size: 14px;
+            /*margin-top: 45px;*/
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #000;
+        }
+
+        .layui-table-col-special .body .user-id span.line1:hover {
+            color: #0c7df5;
+        }
+
+        .layui-table-col-special .body .standard-info a {
+            color: #000;
+        }
+
+        .layui-table-col-special .body .other-rank {
+            float: left;
+            width: 84px;
+        }
+
+        .layui-table-col-special .body .other-rank_2 {
+            float: left;
+            width: 152px;
+            border-left: 1px solid #e6e6e6;
+        }
+
+        .rank-wrap .col-4 {
+            float: left;
+            width: 29%;
+            text-align: left;
+        }
+
+        .rank-wrap .col-2 {
+            width: 71%;
+            text-align: left;
+        }
+
+        .rank-wrap .col-1 h1, .rank-wrap .col-2 h1 {
+            text-align: center;
+            padding-top: 65px;
+        }
+
+        .rank-wrap1 .col-5 {
+            float: left;
+            width: 33%;
+            text-align: left;
+        }
+
+        .rank-wrap1 .col-1 {
+            width: 67%;
+            text-align: left;
+        }
+
+        .rank-wrap1 .col-1 h1 {
+            text-align: center;
+            padding-top: 65px;
+        }
+
+        .rank-wrap2 .col-1 {
+            width: 100%;
+            text-align: left;
+        }
+        .layui-unselect {
+            height:30px;
+        }
+
+        .layui-table-tool {
+            position: relative;
+            z-index: 890;
+            width: 100%;
+            min-height: 30px;
+            line-height: 30px;
+            padding: 10px 5px;
+            border-width: 0 0 1px
+        }
+
+        .layui-form-select input {
+            height: 30px;
+        }
+
     </style>
 </head>
 <body class="ok-body">
 <!--面包屑导航区域-->
 <div class="ok-body-breadcrumb">
-            <span class="layui-breadcrumb">
-                <a><cite>全站信息设置</cite></a>
-                <a><cite>全站信息列表</cite></a>
-            </span>
-
-
+    <span class="layui-breadcrumb">
+        <a><cite>全站信息设置</cite></a>
+        <a><cite>全站信息列表</cite></a>
+    </span>
     <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
         <i class="layui-icon layui-icon-refresh"></i>
     </a>
@@ -91,6 +441,8 @@
                 <div class="layui-colla-content" id="searchContent">
                     <form class="layui-form layui-form-pane" id="searchForm">
 
+                        <input hidden name="searchEngine" id="searchEngine" value=""/>
+                        <input hidden name="terminalType" id="terminalType" value=""/>
                         <div class="layui-form-item" lay-filter="loginNameFilter">
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
@@ -112,11 +464,12 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="layui-form-item">
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
-                                    <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索</button>
+                                    <button class="layui-btn" lay-submit="" lay-filter="search"
+                                            id="searchBtn">搜索
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -126,29 +479,53 @@
         </div>
     </div>
 </div>
-<div class="layui-fluid">
-    <div class="layadmin-caller">
-        <div class="layui-tab layui-tab-card caller-tab" lay-filter="searchEngineTab">
-            <ul class="layui-tab-title">
 
-            </ul>
-            <div class="layui-tab-content" >
+<!--数据表格-->
+<table class="layui-hide" id="qzSettingTable" lay-filter="tableFilter">
 
-            </div>
-        </div>
-
-    </div>
-</div>
+</table>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
 <script>
-
+    var sign = false;
     // layui相关
     layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'treeSelect'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
+        var okLayer = layui.okLayer;
         var treeSelect = layui.treeSelect;
+        var layer = layui.layer;
+
+        get_qzsettting('百度', 'PC');
+
+        function getTerminalSearchEngineMap() {
+            /*动态加载tab栏*/
+            $.ajax({
+                url: '/internal/qzsetting/getQZSettingSearchEngineMap',
+                type: 'get',
+                asyns: false,
+                // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
+                dataType: 'json',
+                success: function (res) {
+                    let data = res.data;
+                    let terminalSearchEngine = $('#terminalSearchEngine');
+                    terminalSearchEngine.empty();
+                    $.each(data, function (index, item) {
+                        let ttse;
+                        if (item.terminalType === 'PC') {
+                            ttse = item.searchEngineName + item.terminalType;
+                        } else {
+                            ttse = item.searchEngineName;
+                        }
+                        terminalSearchEngine.append('<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
+                    });
+                    terminalSearchEngine.val( ($('#searchEngine').val() + $('#terminalType').val()) === '' ? '百度PC' : ($('#searchEngine').val() + $('#terminalType').val()));
+                    form.render("select");
+                }
+            });
+        }
 
         treeSelect.render({
             elem: '#tree',
@@ -284,282 +661,1398 @@
             get_qzsettting(tableName, searchEngine, terminalType)
         });
 
-        function get_qzsettting(tableName, searchEngine, terminalType,){
-            var tableElem = '#'+tableName;
+        function get_qzsettting(searchEngine, terminalType) {
             table.render({
-                elem: tableElem,
+                elem: '#qzSettingTable',
                 method: 'post',
                 url: '/internal/qzsetting/getQZSettings',
-                limit: 50,
+                limit: 25,
+                limits: [10, 25, 50, 75, 100, 500, 1000],
                 page: true,
                 size: 'sm',
-                id: ''+tableName,
+                id: 'qzSettingTable',
+                toolbar: "#toolbarTpl",
+                defaultToolbar: [],
                 contentType: 'application/json',
                 where: {
                     searchEngine: searchEngine,
-                    terminalType: terminalType,
+                    terminalType: terminalType
                 },
                 cols: [[
-                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '2%'},
-                    {filed: 'uuid', title: '记录', width: '98%', templet: '#item'},
-
+                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
+                    {filed: 'uuid', title: '记录', width: '1638', templet: '#item'}
                 ]],
-                height: $(document).height() - $('#'+tableName).offset().top - 160,
-
+                height: 'full-120',
+                loading: true,
                 done: function (res, curr, count) {
+                    let terminalType = $('#terminalType').val();
+                    terminalType = terminalType === '' ? 'PC' : terminalType;
+                    getTerminalSearchEngineMap();
+                    get_operation_combine_list(terminalType);
+                    let qz_setting_table = $("#qzSettingTable").parent().find(".layui-table-main").find("table");
+                    $.each(res.data, function (idx, val) {
+                        let td = qz_setting_table.find("tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
+                            "td[data-field='1']");
+                        let optimizeGroupName = td.find(
+                            "input[name='" + terminalType + "Group']").val();
+                        let postData = {};
+                        postData.uuid = val.uuid;
+                        postData.terminalType = terminalType;
+                        postData.optimizeGroupName = optimizeGroupName;
+                        getQZKeywordRankInfo(postData, function (result) {
+                            td.find(".other-rank_2").find("#optimizationGroup").text(optimizeGroupName);
+                            if (result.data != null) {
+                                initQZKeywordRankInfo(result.data, td);
+                            }
+                        });
+                    });
                 }
             });
         }
-        table.on('checkbox(tableFilter)', function(obj){
+
+        function initQZKeywordRankInfo(data, td) {
+            td.find("#fmtStandardDate a").text(
+                data["standardTime"] === null ? "无" : toDateFormat(
+                    new Date(data["standardTime"])));
+            let font = td.find(".standard-info").find("div.line1 a font");
+            font.text("￥ " + data["price"]);
+            if (data["price"] > 0) {
+                font.css("background-color", "mediumseagreen");
+            }
+
+            initQZSettingKeywordCount(td.find(".other-rank_2"),
+                data["customerKeywordCount"],
+                data["categoryTagNames"],
+                data["operationCombineName"]);
+
+            if (data['aiZhan'] !== undefined) {
+                generateQZKeywordTrendCharts(
+                    td.find("#keywordTrendCharts")[0],
+                    data['aiZhan']);
+            }
+
+            if (data['5118'] !== undefined) {
+                generateQZKeywordTrendCharts(
+                    td.find("#keywordTrendCharts")[0], data['5118']);
+            }
+
+            if (data['designationWord'] === undefined) {
+                td.find("div.rank-wrap1").css("display", "none");
+            } else {
+                // 指定词曲线
+                generateQZDesignationWordTrendCharts(
+                    td.find("#designationWordCharts")[0],
+                    data['designationWord']);
+            }
+
+            if (data['xt'] === undefined) {
+                td.find("div.rank-wrap2").css("display", "none");
+            } else {
+                // 排名-操作词数图表
+                generateQZXTKeywordTrendCharts(td.find("#xtCharts")[0],
+                    data['xt']);
+            }
+        }
+
+        function get_operation_combine_list(terminalType) {
+            /*动态加载操作组合列表*/
+            $.ajax({
+                url: '/internal/operationcombine/getOperationCombines/' + terminalType,
+                type: 'post',
+                asyns: true,
+                dataType: 'json',
+                success: function (res) {
+                    let operation_combine_select = $("#update_qz_operation_combine");
+                    operation_combine_select.append("<option value='null'>置空</option>");
+                    $.each(res.data, function(i ,v) {
+                        var option=$("<option value='"+v.uuid+"'>"+v.operationCombineName+"</option>");
+                        operation_combine_select.append(option);
+                    });
+                    form.render("select");
+                }
+            });
+        }
+
+        form.on('select(terminalSearchEngineFilter)', function(data){
+            auto_reload_with_query_conditions(data.value);
+        });
+
+        var active = {
+            reload: function () {
+                table.reload('qzSettingTable', {
+                    where: $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true))),
+                    page: {
+                        curr: 1 //从第一页开始
+                    }
+                });
+                $("#searchContent").removeClass("layui-show")
+            }
+        };
+
+        form.on("submit(search)", function (data) {
+            table.reload('qzSettingTable', {
+                where: data.field,
+                page: {
+                    curr: 1 //从第一页开始
+                }
+            });
+            $("#searchContent").removeClass("layui-show");
+            return false;
+        });
+
+        function formToJson(data) {
+            data=data.replace(/&/g,"\",\"");
+            data=data.replace(/=/g,"\":\"");
+            data="{\""+data+"\"}";
+            return data;
+        }
+
+        function auto_reload_with_query_conditions(val) {
+            let searchEngine = val.substr(0, val.indexOf('P'));
+            let terminalType = val.substr(val.indexOf('P'), val.length);
+            $('#searchEngine').val(searchEngine);
+            $('#terminalType').val(terminalType);
+            active['reload'].call(this);
+        }
+
+        function getQZKeywordRankInfo(postData, callback) {
+            $.ajax({
+                url: '/internal/qzsetting/getQZKeywordRankInfo',
+                type: 'POST',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (result) {
+                    callback(result);
+                },
+                error: function () {
+                    show_layer_msg('获取全站曲线信息失败！！', 2, '异常提醒');
+                }
+            });
+        }
+
+        function generateQZKeywordTrendCharts(domElement, data) {
+            if (domElement === undefined) {
+                return;
+            }
+            if (data.date == null) {
+                domElement.innerHTML = "<h5 style='text-align: center'> 暂无数据 </h5>";
+                return;
+            }
+            var keywordTrendCharts = echarts.init(domElement);
+            var option;
+            var parentElement = $(domElement).parent()[0];
+            $(parentElement).find("#Top10").text(data.topTen[data.topTen.length - 1]);
+            $(parentElement).find("#Top50").text(data.topFifty[data.topFifty.length - 1]);
+            $(parentElement).find("#TopCreate10").text(data.createTopTenNum);
+            $(parentElement).find("#TopCreate50").text(data.createTopFiftyNum);
+            if (data.dataProcessingStatus) {
+                $(parentElement).find("#IsStandard").text(data.achieveLevel === 0 ? "否" : "是");
+                $(parentElement).find("#StandardTime").text(
+                    data.achieveTime === null ? "无" : toDateFormat(new Date(data.achieveTime)));
+            } else {
+                $(parentElement).find("#IsStandard").parent().parent().css("display", "none");
+                $(parentElement).find("#StandardTime").parent().parent().css("display", "none");
+            }
+            if (data.websiteType === "aiZhan") {
+                option = {
+                    color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
+                    title: {
+                        text: '爱站 - 关键词排名趋势',
+                        textStyle: {
+                            color: '#999',
+                            fontFamily: "Arial",
+                            fontWeight: 400,
+                            fontSize: 12
+                        },
+                        x: 'center',
+                        bottom: -3
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    grid: {
+                        left: '0%',
+                        right: '1%',
+                        top: '3%',
+                        bottom: '0%',
+                        containLabel: true
+                    },
+                    toolbox: {
+                        show: false,
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    xAxis: {
+                        show: false,
+                        type: 'category',
+                        axisLine: {
+                            show: false,
+                            lineStyle: {
+                                color: '#404A59'
+                            }
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        boundaryGap: true,
+                        data: data.date
+                    },
+                    yAxis: [
+                        {
+                            show: true,
+                            type: 'value',
+                            name: '关键字排名曲线',
+                            position: 'left',
+                            axisLine: {
+                                show: false,
+                                lineStyle: {
+                                    color: '#404A59'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#DCDCDC',
+                                    width: 1,
+                                    type: 'solid'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                fontStyle: 'italic',
+                                textStyle: {
+                                    color: '#000'
+                                }
+                            }
+                        },
+                        {
+                            show: true,
+                            type: 'value',
+                            name: '收录曲线',
+                            position: 'right',
+                            axisLine: {
+                                show: false,
+                                lineStyle: {
+                                    color: '#404A59'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#DCDCDC',
+                                    width: 1,
+                                    type: 'solid'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                fontStyle: 'italic',
+                                textStyle: {
+                                    color: '#000'
+                                }
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '收录',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 1,
+                            symbolSize: 3,
+                            symbol: 'none',
+                            data: data.baiduRecord,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1,
+                                normal: {
+                                    type: 'dashed',
+                                    width: 3
+                                }
+                            }
+                        },
+                        {
+                            name: '前10名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topTen,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        },
+                        {
+                            name: '前20名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topTwenty,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        },
+                        {
+                            name: '前30名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topThirty,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        },
+                        {
+                            name: '前40名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topForty,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        },
+                        {
+                            name: '前50名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topFifty,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        }
+                    ]
+                };
+            } else if (data.websiteType === "5118") {
+                option = {
+                    color: ['#228B22', '#0000FF', '#FF6100', '#FF0000'],
+                    title: {
+                        text: data.websiteType + ' - 关键词排名趋势',
+                        textStyle: {
+                            color: '#999',
+                            fontFamily: "Arial",
+                            fontWeight: 400,
+                            fontSize: 12
+                        },
+                        x: 'center',
+                        bottom: -3
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    grid: {
+                        left: '0%',
+                        right: '1%',
+                        top: '3%',
+                        bottom: '0%',
+                        containLabel: true
+                    },
+                    toolbox: {
+                        show: false,
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    xAxis: {
+                        show: false,
+                        type: 'category',
+                        axisLine: {
+                            show: false,
+                            lineStyle: {
+                                color: '#404A59'
+                            }
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        boundaryGap: true,
+                        data: data.date
+                    },
+                    yAxis: [
+                        {
+                            show: true,
+                            type: 'value',
+                            name: '关键字排名曲线',
+                            position: 'left',
+                            axisLine: {
+                                show: false,
+                                lineStyle: {
+                                    color: '#404A59'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#DCDCDC',
+                                    width: 1,
+                                    type: 'solid'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                fontStyle: 'italic',
+                                textStyle: {
+                                    color: '#000'
+                                }
+                            }
+                        },
+                        {
+                            show: true,
+                            type: 'value',
+                            name: '收录曲线',
+                            position: 'right',
+                            axisLine: {
+                                show: false,
+                                lineStyle: {
+                                    color: '#404A59'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#DCDCDC',
+                                    width: 1,
+                                    type: 'solid'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                fontStyle: 'italic',
+                                textStyle: {
+                                    color: '#000'
+                                }
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '收录',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 1,
+                            symbolSize: 3,
+                            symbol: 'none',
+                            data: data.baiduRecord,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1,
+                                normal: {
+                                    type: 'dashed',
+                                    width: 3
+                                }
+                            }
+                        },
+                        {
+                            name: '前10名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topTen,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        },
+                        {
+                            name: '前20名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topTwenty,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        },
+                        {
+                            name: '前50名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topFifty,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        },
+                        {
+                            name: '前100名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topHundred,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        }
+                    ]
+                };
+            }
+            keywordTrendCharts.setOption(option);
+        }
+
+        function generateQZDesignationWordTrendCharts(domElement, data) {
+            if (domElement === undefined) {
+                return;
+            }
+            if (data.date == null) {
+                domElement.innerHTML = "<h5 style='text-align: center'> 暂无数据 </h5>";
+                return;
+            }
+            var designationWordTrendCharts = echarts.init(domElement);
+            var option;
+            var parentElement = $(domElement).parent()[0];
+            $(parentElement).find("#Top10").text(data.topTen[data.topTen.length - 1]);
+            $(parentElement).find("#Top50").text(data.topFifty[data.topFifty.length - 1]);
+            $(parentElement).find("#TopCreate10").text(data.createTopTenNum);
+            $(parentElement).find("#TopCreate50").text(data.createTopFiftyNum);
+            $(parentElement).find("#IsStandard").text(data.achieveLevel === 0 ? "否" : "是");
+            $(parentElement).find("#StandardTime").text(
+                data.achieveTime === null ? "无" : toDateFormat(new Date(data.achieveTime)));
+            option = {
+                color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
+                title: {
+                    text: '指定词排名趋势',
+                    textStyle: {
+                        color: '#999',
+                        fontFamily: "Arial",
+                        fontWeight: 400,
+                        fontSize: 12
+                    },
+                    x: 'center',
+                    bottom: -3
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                grid: {
+                    left: '0%',
+                    right: '1%',
+                    top: '3%',
+                    bottom: '0%',
+                    containLabel: true
+                },
+                toolbox: {
+                    show: false,
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    show: false,
+                    type: 'category',
+                    axisLine: {
+                        show: false,
+                        lineStyle: {
+                            color: '#404A59'
+                        }
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    boundaryGap: true,
+                    data: data.date
+                },
+                yAxis: {
+                    show: true,
+                    type: 'value',
+                    axisLine: {
+                        show: false,
+                        lineStyle: {
+                            color: '#404A59'
+                        }
+                    },
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            color: '#DCDCDC',
+                            width: 1,
+                            type: 'solid'
+                        }
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        fontStyle: 'italic',
+                        textStyle: {
+                            color: '#000'
+                        }
+                    }
+                },
+                series: [
+                    {
+                        name: '前10名',
+                        smooth: true,
+                        type: 'line',
+                        symbolSize: 1,
+                        symbol: 'none',
+                        data: data.topTen,
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    },
+                    {
+                        name: '前20名',
+                        smooth: true,
+                        type: 'line',
+                        symbolSize: 1,
+                        symbol: 'none',
+                        data: data.topTwenty,
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    },
+                    {
+                        name: '前30名',
+                        smooth: true,
+                        type: 'line',
+                        symbolSize: 1,
+                        symbol: 'none',
+                        data: data.topThirty,
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    },
+                    {
+                        name: '前40名',
+                        smooth: true,
+                        type: 'line',
+                        symbolSize: 1,
+                        symbol: 'none',
+                        data: data.topForty,
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    },
+                    {
+                        name: '前50名',
+                        smooth: true,
+                        type: 'line',
+                        symbolSize: 1,
+                        symbol: 'none',
+                        data: data.topFifty,
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    }
+                ]
+            };
+            designationWordTrendCharts.setOption(option);
+        }
+
+        function generateQZXTKeywordTrendCharts(domElement, data) {
+            if (domElement === undefined) {
+                return;
+            }
+            if (data.date == null) {
+                domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
+                return;
+            }
+            var keywordRecordCharts = echarts.init(domElement);
+            var colors = ['#228B22', '#0000FF', '#FF6100', '#FF0000', '#d14a61', '#675bba'];
+            var option = {
+                color: colors,
+                title: {
+                    text: '排名 - 操作词数图表',
+                    textStyle: {
+                        color: '#999',
+                        fontFamily: "Arial",
+                        fontWeight: 400,
+                        fontSize: 12
+                    },
+                    x: 'center',
+                    bottom: -1
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                grid: {
+                    left: '0%',
+                    right: '1%',
+                    top: '3%',
+                    bottom: '0%',
+                    containLabel: true
+                },
+                xAxis: [
+                    {
+                        show: false,
+                        type: 'category',
+                        axisLine: {
+                            show: false,
+                            lineStyle: {
+                                color: '#404A59'
+                            }
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        boundaryGap: true,
+                        data: data.date
+                    }
+                ],
+                yAxis: [
+                    {
+                        show: true,
+                        type: 'value',
+                        name: '站点操作词数',
+                        position: 'right',
+                        axisLine: {
+                            show: false,
+                            lineStyle: {
+                                color: '#404A59'
+                            }
+                        },
+                        splitLine: {
+                            show: true,
+                            lineStyle: {
+                                color: '#DCDCDC',
+                                width: 1,
+                                type: 'solid'
+                            }
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        axisLabel: {
+                            fontStyle: 'italic',
+                            textStyle: {
+                                color: '#000'
+                            }
+                        }
+                    },
+                    {
+                        show: true,
+                        type: 'value',
+                        name: 'Top排名词数',
+                        position: 'left',
+                        axisLine: {
+                            show: false,
+                            lineStyle: {
+                                color: '#404A59'
+                            }
+                        },
+                        splitLine: {
+                            show: true,
+                            lineStyle: {
+                                color: '#DCDCDC',
+                                width: 1,
+                                type: 'solid'
+                            }
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        axisLabel: {
+                            fontStyle: 'italic',
+                            textStyle: {
+                                color: '#000'
+                            }
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name: '操作词数',
+                        type: 'line',
+                        smooth: true,
+                        symbolSize: 3,
+                        symbol: 'none',
+                        lineStyle: {
+                            normal: {
+                                type: 'dashed',
+                                width: 3
+                            }
+                        },
+                        yAxisIndex: 0,
+                        data: data.baiduRecord
+                    },
+                    {
+                        name: '排名前10',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: data.topTen,
+                        smooth: true,
+                        symbolSize: 1,
+                        symbol: 'none',
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    },
+                    {
+                        name: '排名前20',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: data.topTwenty,
+                        smooth: true,
+                        symbolSize: 1,
+                        symbol: 'none',
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    },
+                    {
+                        name: '排名前30',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: data.topThirty,
+                        smooth: true,
+                        symbolSize: 1,
+                        symbol: 'none',
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    },
+                    {
+                        name: '排名前40',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: data.topForty,
+                        smooth: true,
+                        symbolSize: 1,
+                        symbol: 'none',
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    },
+                    {
+                        name: '排名前50',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: data.topFifty,
+                        smooth: true,
+                        symbolSize: 1,
+                        symbol: 'none',
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    }
+                ]
+            };
+            keywordRecordCharts.setOption(option);
+        }
+
+        function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames, operationCombineName) {
+            div.parent().find(".other-rank .line1").find("#customerKeywordCount").text(customerKeywordCount);
+            if (categoryTagNames.length > 0) {
+                var tagNameStr = "";
+                var span = $(div).parent().parent().parent().find(".header span.tagNames");
+                $.each(categoryTagNames, function (idx, val) {
+                    tagNameStr += val + ",";
+                });
+                $(span).find("label.tagNameStr").html(
+                    tagNameStr.substring(0, tagNameStr.length - 1));
+            }
+
+            if (operationCombineName !== null) {
+                div.find("#operationCombine").text(operationCombineName);
+            }
+        }
+
+        function toTimeFormat(time) {
+            var date = toDateFormat(time);
+            var hours = time.getHours() < 10 ? ("0" + time.getHours()) : time.getHours();
+            var minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
+            var seconds = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds();
+            return date + " " + hours + ":" + minutes + ":" + seconds;
+        }
+
+        function toDateFormat(time) {
+            return time.getFullYear() + "-" +
+                (time.getMonth() + 1) + "-" +
+                time.getDate();
+        }
+
+        table.on('checkbox(tableFilter)', function (obj) {
 
         });
 
+        table.on('toolbar(tableFilter)',function(obj){
+            var data = obj.data, event = obj.event;
+            switch (event) {
+                case 'add_qz':
+                    add_qz();
+                    break;
+                case 'batchUpdateDailyReport':
+                    batchUpdateDailyReport();
+                    break;
+                case 'addUser':
+                    toAddCustomer();
+                    break;
+                default:
+                    break;
+            }
+        });
 
+        function add_qz() {
+            okLayer.open("其他 / 前往全站设置信息 / 添加", "/internal/qzsetting/toQZSettingAdd", "90%", "90%", null, function () {
+            });
+        }
 
+        // 收费
+        window.showChargeDialog = function(uuid, contactPearson, domain) {
+            okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toQZSettingCharge", "90%", "90%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initForm({uuid:uuid, qzSettingCustomer:contactPearson, qzSettingDomain:domain});
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            })
+        };
+
+        window.showExcludeCustomerKeywordDialog = function(uuid, customerUuid, domain, pcGroup, phoneGroup) {
+            let terminalType = $("#terminalSearchEngine").val();
+            terminalType = terminalType.substr(terminalType.indexOf("P"),terminalType.length);
+            let optimizedGroupName = phoneGroup;
+            if(terminalType === 'PC'){
+                optimizedGroupName = pcGroup;
+            }
+            okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toExcludeCustomerKeyword", "90%", "90%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initForm({qzSettingUuid:uuid, customerUuid:customerUuid, domain:domain, terminalType:terminalType, optimizedGroupName:optimizedGroupName});
+            },function(){
+
+            })
+        };
+
+        // 修改选中站点优化组关联的操作组合
+        form.on('select(operationCombineFilter)', function(data){
+            let checkStatus = table.checkStatus('qzSettingTable');
+            if (checkStatus.data.length === 0) {
+                $("#update_qz_operation_combine").val('');
+                show_layer_msg('请选择要修改优化组关联的操作组合的站点！！', 2, "提示");
+                return false;
+            }
+            let groupName = '';
+            $.each(checkStatus.data, function(i, v){
+                if(v.pcGroup !== null) {
+                    groupName += "," + v.pcGroup;
+                } else {
+                    groupName += "," + v.phoneGroup;
+                }
+            });
+
+            let postData = {};
+            postData.operationCombineUuid = (data.value === 'null' || data.value === '') ? null : data.value;
+            postData.groupName = groupName.substr(1);
+            $.ajax({
+                url: '/internal/group/updateGroupOperationCombineUuid',
+                type: 'POST',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (result) {
+                    if (result.code === 200) {
+                        show_layer_msg('修改站点优化组关联的操作组合成功！！', 1, '提示');
+                        auto_reload_with_query_conditions($("#terminalSearchEngine").val());
+                    } else {
+                        show_layer_msg('修改站点优化组关联的操作组合失败！！', 2, '异常提醒');
+                    }
+                },
+                error: function () {
+                    show_layer_msg('修改站点优化组关联的操作组合失败！！', 2, '异常提醒');
+                }
+            });
+        });
+
+        function show_layer_msg(msg, icon, title) {
+            layer.msg(msg, {
+                icon: icon,
+                title: title,
+                anim: 5,
+                time: 2000,
+                isOutAnim: false
+            });
+        }
+
+        window.showKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber,searchEngine, pcGroup, phoneGroup) {
+            let terminalType = $("#terminalSearchEngine").val();
+            terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
+            let optimizedGroupName = phoneGroup;
+            if (terminalType === 'PC') {
+                optimizedGroupName = pcGroup;
+            }
+            okLayer.open("其他 / 全站设置信息 / 指定关键字", "/internal/qzsetting/toAppointCustomerKeyword",
+                "90%", "90%", function (layero) {
+                    window[layero.find("iframe")[0]["name"]].initForm({
+                        qzSettingUuid: uuid,
+                        customerUuid: customerUuid,
+                        domain: domain,
+                        bearPawNumber: bearPawNumber,
+                        searchEngine: searchEngine,
+                        terminalType: terminalType,
+                        optimizedGroupName: optimizedGroupName
+                    });
+                }, function () {
+
+                });
+        }
 
     });
+</script>
+
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+
+    <div class="layui-input-inline" style="width: 120px; height: 30px">
+        <select name="terminalSearchEngine" id="terminalSearchEngine" lay-filter="terminalSearchEngineFilter"></select>
+    </div>
+
+    <div class="layui-input-inline" style="width: 200px; height: 30px">
+        <select id="update_qz_operation_combine" lay-filter="operationCombineFilter" lay-search>
+            <option value="">修改所选站点操作组合</option>
+        </select>
+    </div>
+
+    <button class="layui-btn layui-btn-sm" id="add_qz" lay-event="add_qz">
+        <i class="layui-icon">&#xe61f;</i>添加
+    </button>
 
 </script>
 
 <script type="text/html" id="item">
-    <div class="layui-row header" >
+    <div class="layui-row header">
         <!--    头部信息栏    -->
         <div class="layui-col-md7">
-            <div class="layui-col-md1">
-                <span class="contactPerson-name" title="{{d.contactPerson}}"><a href="javascript:;">{{d.contactPerson}}</a></span>
-            </div>
-            <div class="layui-col-md1">
-                <span class="domain" title="{{d.domain}}"><a href="javascript:;">{{d.domain}}</a></span>
-            </div>
-            <div class="layui-col-md1">
-                <span class="organization-name" title="{{d.organizationName}}"><a href="javascript:;">{{d.organizationName}}</a></span>
-            </div>
-            <div class="layui-col-md1">
-                <span><a href="https://www.aizhan.com/cha/{{d.domain}}" target="_blank" title="查看爱站">爱站</a></span>
-            </div>
-            <div class="layui-col-md1">
-                <span><a href="https://www.5118.com/seo/{{d.domain}}" target="_blank" title="查看5118,需要登录">5118</a></span>
-            </div>
-            <div class="layui-col-md1">
-                <span>
-                    自动采词:<br>
-                    <a href="javascript:;">
-                        {{#  if(d.autoCrawlKeywordFlag) { }}
-                            是
-                        {{#  }else{ }}
-                            否
-                        {{# } }}
-                    </a>
-                </span>
-            </div>
-            <div class="layui-col-md1">
-                <span>
-                    爬取状态:<br>
-                    <a href="javascript:;">
-                        {{#  if(d.crawlerStatus === 'new') { }}
-                            未爬取
-                        {{#  }else if(d.crawlerStatus === 'processing') { }}
-                            爬取中
-                        {{# }else{ }}
-                            爬取完成
-                        {{# } }}
-                    </a>
-                </span>
-            </div>
-            <div class="layui-col-md1">
-                <span>
-                    爬取状态:<br>
-                    <a href="javascript:;">
-                        {{#  if(d.status === '1') { }}
-                            激活
-                        {{#  }else if(d.status === '0') { }}
-                            新增
-                        {{# }else{ }}
-                            暂停
-                        {{# } }}
-                    </a>
-                </span>
-            </div>
-            <div class="layui-col-md1">
-                <span>
-                    达标时间:<br>
-                    <a href="javascript:;">{{layui.util.toDateString(d.standardTime,'yyyy-MM-dd')}}</a>
-                </span>
-            </div>
-            <div class="layui-col-md1">
-                <span>
-                    创建时间:<br>
-                    <a href="javascript:;">{{layui.util.toDateString(d.createTime,'yyyy-MM-dd')}}</a>
-                </span>
-            </div>
-
+            <input type="hidden" name="PCGroup" value="{{d.pcGroup}}">
+            <input type="hidden" name="PhoneGroup" value="{{d.phoneGroup}}">
+            <span class="contactPerson-name" title="{{d.contactPerson}}"><a href="javascript:;">{{d.contactPerson}}</a></span>
+            <span class="domain" title="{{d.domain}}"><a
+                    href="javascript:;">{{d.domain}}</a></span>
+            <span class="organization-name" title="{{d.organizationName}}"><a href="javascript:;">{{d.organizationName}}</a></span>
+            <span><a href="https://www.aizhan.com/cha/{{d.domain}}" target="_blank"
+                     title="查看爱站">爱站</a></span>
+            <span><a href="https://www.5118.com/seo/{{d.domain}}" target="_blank"
+                     title="查看5118,需要登录">5118</a></span>
+            <span>
+                自动采词:
+                <a href="javascript:;">
+                    {{#  if(d.autoCrawlKeywordFlag) { }}
+                        是
+                    {{#  }else{ }}
+                        否
+                    {{# } }}
+                </a>
+            </span>
+            <span>
+                爬取状态:
+                <a href="javascript:;">
+                    {{#  if(d.crawlerStatus === 'new') { }}
+                        未爬取
+                    {{#  }else if(d.crawlerStatus === 'processing') { }}
+                        爬取中
+                    {{# }else{ }}
+                        爬取完成
+                    {{# } }}
+                </a>
+            </span>
+            <span>
+                采集状态:
+                <a href="javascript:;">
+                    {{#  if(d.status === 1) { }}
+                        激活
+                    {{#  }else if(d.status === 0) { }}
+                        新增
+                    {{# }else{ }}
+                        暂停
+                    {{# } }}
+                </a>
+            </span>
+            <span>
+                达标时间:
+                <a href="javascript:;">{{layui.util.toDateString(d.standardTime,'yyyy-MM-dd')}}</a>
+            </span>
+            <span>
+                创建时间:
+                <a href="javascript:;">{{layui.util.toDateString(d.createTime,'yyyy-MM-dd')}}</a>
+            </span>
         </div>
-        <!--    分组    -->
-        <div class="layui-col-md2">分组</div>
+        <!--    分组标签    -->
+        <div class="layui-col-md1">
+            <span class="tagNames"
+                  ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label
+                    class="tagNameStr">暂无</label></span>
+        </div>
         <!--     操作栏   -->
-        <div class="layui-col-md3">
-            <div class="layui-col-md2">
+        <div class="layui-col-md4">
+            <div class="handle">
                 <span>
-                   <a class="blue" href="javascript:showExcludeCustomerKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}',' {{d.LAY_TABLE_INDEX + 1}}')">排除关键字</a>
-                </span>
-            </div>
-            <div class="layui-col-md2">
-<!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
-                <span>
-                   <a class="blue" href="javascript:showKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}','{{d.bearPawNumber}}', '{{d.LAY_TABLE_INDEX + 1}}')">指定关键字</a>
-                </span>
-<!--                </@shiro.hasPermission>-->
-
-            </div>
-            <div class="layui-col-md2">
+               <a class="blue"
+                  href="javascript:showExcludeCustomerKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">排除关键字</a>
+            </span>
 
                 <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
                 <span>
-                   <a class="blue" href="javascript:openMessageBox('全站设置','{{d.customerUuid}}','{{d.contactPerson}}')">用户留言</a>
-                </span>
+               <a class="blue"
+                  href="javascript:showKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}','{{d.bearPawNumber}}','{{d.searchEngine}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">指定关键字</a>
+            </span>
                 <!--                </@shiro.hasPermission>-->
-            </div>
-            <div class="layui-col-md2">
-
-                <!--                <@shiro.hasPermission name="/internal/usernotebook/searchUserNoteBooks">-->
-                <span>
-                   <a class="blue" href="javascript:openNoteBookDialog('{{d.customerUuid}}','{{ $(\'#terminalType\') }}')">记事本</a>
-                </span>
-                <!--                </@shiro.hasPermission>-->
-            </div>
-            <div class="layui-col-md1">
-
-                <!--                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
-                <span>
-                   <a class="blue" href="javascript:showChargeDialog('{{d.uuid}}','{{d.contactPerson}}','{{d.domain.trim()}}',this)">收费</a>
-                </span>
-                <!--                </@shiro.hasPermission>-->
-            </div>
-            <div class="layui-col-md1">
 
                 <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
                 <span>
-                   <a class="blue" href="javascript:;" onclick="showSettingDialog($(this))">修改</a>
-                </span>
+               <a class="blue"
+                  href="javascript:openMessageBox('全站设置','{{d.customerUuid}}','{{d.contactPerson}}')">用户留言</a>
+            </span>
                 <!--                </@shiro.hasPermission>-->
-            </div>
-            <div class="layui-col-md1">
+
+                <span>
+               <a class="blue"
+                  href="javascript:openNoteBookDialog('{{d.customerUuid}}','{{ $(\'#terminalType\') }}')">记事本</a>
+            </span>
 
                 <!--                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
                 <span>
-                   <a class="blue" href="javascript:delQZSetting('{{d.uuid}}')">删除</a>
-                </span>
+               <a class="blue"
+                  href="javascript:showChargeDialog('{{d.uuid}}','{{d.contactPerson}}','{{d.domain.trim()}}',this)">收费</a>
+            </span>
                 <!--                </@shiro.hasPermission>-->
-            </div>
-            <div class="layui-col-md2">
+
+                <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
+                <span>
+               <a class="blue" href="javascript:;" onclick="showSettingDialog($(this))">修改</a>
+            </span>
+                <!--                </@shiro.hasPermission>-->
+
+                <!--                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
+                <span>
+               <a class="blue" href="javascript:delQZSetting('{{d.uuid}}')">删除</a>
+            </span>
+                <!--                </@shiro.hasPermission>-->
 
                 <!--                <@shiro.hasPermission name="/internal/qzchargelog/chargesList">-->
                 <span>
-                   <a class="blue" href="javascript:showChargeLog('{{d.uuid}}',this)">收费记录</a>
-                </span>
+               <a class="blue" href="javascript:showChargeLog('{{d.uuid}}',this)">收费记录</a>
+            </span>
                 <!--                </@shiro.hasPermission>-->
             </div>
-
         </div>
     </div>
-    <div class="layui-row body" >
+    <div class="layui-row body">
         <!--   身体左侧基本信息     -->
-        <div class="layui-col-md3">
-            <div class="layui-col-md2 user-id">
-                <div class="layui-col-md12 line1">
-                    <div class="layui-col-md12">
-                        <a href="javascript:;">
-                            <span class="line1" title="{{d.userID}}">{{d.userID}}</span>
+        <div class="layui-col-md2 user-id">
+            <div class="layui-col-md12 line1">
+                <div class="layui-col-md12">
+                    <a href="javascript:;">
+                        <span title="{{d.userID}}">{{d.userID}}</span>
+                    </a>
+                </div>
+                <div class="layui-col-md12">
+                    <span>用户</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-md2 standard-info">
+            <div class="layui-col-md12 line1">
+                <div class="layui-col-md12">
+                    <span>
+                        <a href="javascript:;" qzsettinguuid="{{d.uuid}}">
+                        {{#  if(d.organizationName !== '优化部') { }}
+                            <font
+                                    style="background-color: palevioletred;font-size: 14px;">￥ 0</font>
+                        {{#  } }}
                         </a>
-                    </div>
-                    <div class="layui-col-md12">
-                        <span>用户名称</span>
-                    </div>
+                    </span>
+                </div>
+                <div class="layui-col-md12">
+                    <span>达标信息</span>
                 </div>
             </div>
+        </div>
 
-            <div class="layui-col-md2 standard-info">
-                <div class="layui-col-md12 line1">
-                    <div class="layui-col-md12">
-                        <span>
-                            <a href="javascript:;" qzsettinguuid="{{d.uuid}}">
-                            {{#  if(d.organizationName !== '优化部') { }}
-                                <font style="background-color: palevioletred;font-size: 14px;">￥ 0</font>
-                            {{#  } }}
-                            </a>
-                        </span>
-                    </div>
-                    <div class="layui-col-md12">
-                        <span>全站达标信息</span>
-                    </div>
+        <div class="layui-col-md3 other-rank">
+            <div class="layui-col-md12 line1">
+                <div class="layui-col-md12">
+                    <span>
+                          <a target="_blank" id="customerKeywordCount"
+                             href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.LAY_TABLE_INDEX }}');">0</a>
+                     </span>
+                </div>
+                <div class="layui-col-md12">
+                    <span>操作词数</span>
                 </div>
             </div>
-
-            <div class="layui-col-md3 other-rank">
-                <div class="layui-col-md12 line1">
-                    <div class="layui-col-md12">
-                        <span>
-                              <a target="_blank" href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.LAY_TABLE_INDEX + 1}}');">0</a>
-                         </span>
-
-                    </div>
-                    <div class="layui-col-md12">
-                        <span>操作词数</span>
-                    </div>
-
-                </div>
-                <div class="layui-col-md12 line1">
-                    <div class="layui-col-md12">
-                        <span>
-                            <a href="javascript:;">
-                                {{#  if(d.renewalStatus === 1) { }}
-                                    <span style="color: green;">续费</span>
-                                {{# }else{ }}
-                                    <span style="color: red;">暂停续费</span>
-                                {{# } }}
-                            </a>
-                        </span>
-
-                    </div>
-                    <div class="layui-col-md12">
-                        <span>续费状态</span>
-                    </div>
-
-                </div>
-            </div>
-            <div class="layui-col-md4 other-rank_2">
-                <div class="layui-col-md12 line1">
-                    <div class="layui-col-md12">
+            <div class="layui-col-md12 line1">
+                <div class="layui-col-md12">
+                    <span>
                         <a href="javascript:;">
-                            <a href="javascript:;">暂无</a>
+                            {{#  if(d.renewalStatus === 1) { }}
+                                <span style="color: green;">续费</span>
+                            {{# }else{ }}
+                                <span style="color: red;">暂停续费</span>
+                            {{# } }}
                         </a>
-                    </div>
-                    <div class="layui-col-md12">
-                        <span>优化分组</span>
-                    </div>
+                    </span>
+
                 </div>
-                <div class="layui-col-md12 line1">
-                    <div class="layui-col-md12">
-                        <input type="hidden" name="operationCombineName" value="">
-                        <select name="operationCombineName" lay-ignore onchange="changeQZSettingGroupOperationCombineUuid(this, '{{d.LAY_TABLE_INDEX + 1}}', '{{ $(\'#loginName\') }}', '{{ $(\'#isSEO\') }}');" style="width: 100%;">
-                            <option value=""></option>
-                            <option value="">test1</option>
-                            <option value="">test2</option>
-                        </select>
-                    </div>
-                    <div class="layui-col-md12 operationCombineSpan">
-                        <span>操作组合</span>
-                    </div>
+                <div class="layui-col-md12">
+                    <span>续费状态</span>
+                </div>
+
+            </div>
+        </div>
+        <div class="layui-col-md4 other-rank_2">
+            <div class="layui-col-md12 line1">
+                <div class="layui-col-md12" id="optimizationGroup">
+                    <a href="javascript:;">暂无</a>
+                </div>
+                <div class="layui-col-md12">
+                    <span>优化分组</span>
+                </div>
+            </div>
+            <div class="layui-col-md12 line1">
+                <div class="layui-col-md12" id="operationCombine">
+                    <a href="javascript:;">暂无</a>
+                </div>
+                <div class="layui-col-md12 operationCombineSpan">
+                    <span>操作组合</span>
                 </div>
             </div>
         </div>
         <!--   身体右侧曲线    -->
-        <div class="layui-col-md8">
-            曲线
+        <!--排名曲线-->
+        <div class="layui-col-md2 rank-wrap2">
+            <div class="layui-col-md2 col-1" id="xtCharts"
+                 style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
         </div>
-
+        <!--5118/爱站曲线-->
+        {{# if(d.searchEngine === '百度') { }}
+        <div class="layui-col-md5 rank-wrap">
+            <!--<div class="col-1" id="keywordRecordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>-->
+            <div class="layui-col-md3 col-2" id="keywordTrendCharts"
+                 style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+            <div class="layui-col-md2 col-4 top50-link">
+                <div class="row4">
+                    <span>前10</span>
+                    <span class="top10">
+                            <a href="javascript:;" id="Top10">0</a>
+                        </span>
+                </div>
+                <div class="row4">
+                    <span>前50</span>
+                    <span class="top50">
+                            <a href="javascript:;" id="Top50">0</a>
+                        </span>
+                </div>
+                <div class="row4">
+                    <span>初始前10</span>
+                    <span class="top10">
+                            <a href="javascript:;" id="TopCreate10">0</a>
+                        </span>
+                </div>
+                <div class="row4">
+                    <span>初始前50</span>
+                    <span class="top50">
+                            <a href="javascript:;" id="TopCreate50">0</a>
+                        </span>
+                </div>
+                <div class="row4">
+                    <span>曲线达标</span>
+                    <span class="isStandard">
+                            <a href="javascript:;" id="IsStandard">否</a>
+                        </span>
+                </div>
+                <div class="row4">
+                    <span>达标时间</span>
+                    <span class="standardTime">
+                            <a href="javascript:;" id="StandardTime">无</a>
+                        </span>
+                </div>
+            </div>
+        </div>
+        {{# }}}
+        <!--指定词曲线-->
+        <div class="layui-col-md5 rank-wrap1">
+            <div class="layui-col-md3 col-1" id="designationWordCharts"
+                 style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+            <div class="layui-col-md2 col-5 top50-link">
+                <div class="row4">
+                    <span>前10</span>
+                    <span class="top10">
+                        <a href="javascript:;" id="Top10">0</a>
+                    </span>
+                </div>
+                <div class="row4">
+                    <span>前50</span>
+                    <span class="top50">
+                        <a href="javascript:;" id="Top50">0</a>
+                    </span>
+                </div>
+                <div class="row4">
+                    <span>初始前10</span>
+                    <span class="top10">
+                        <a href="javascript:;" id="TopCreate10">0</a>
+                    </span>
+                </div>
+                <div class="row4">
+                    <span>初始前50</span>
+                    <span class="top50">
+                        <a href="javascript:;" id="TopCreate50">0</a>
+                    </span>
+                </div>
+                <div class="row4">
+                    <span>曲线达标</span>
+                    <span class="isStandard">
+                        <a href="javascript:;" id="IsStandard">否</a>
+                    </span>
+                </div>
+                <div class="row4">
+                    <span>达标时间</span>
+                    <span class="standardTime">
+                        <a href="javascript:;" id="StandardTime">无</a>
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
-
 </script>
 </body>
 </html>

@@ -2,7 +2,6 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.service.GroupService;
-import com.keymanager.monitoring.vo.GroupVO;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ import java.util.Map;
 @RequestMapping(value = "/internal/group")
 public class GroupRestController {
 
-    private static Logger logger = LoggerFactory.getLogger(GroupSettingRestController.class);
+    private static Logger logger = LoggerFactory.getLogger(GroupRestController.class);
 
     @Autowired
     private GroupService groupService;
