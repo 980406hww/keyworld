@@ -27,7 +27,12 @@ public class OrganizationServiceImpl
 
     @Override
     public List<UserTree> selectUserFulTree2 () {
-        List<Organization> organizationList = organizationDao.selectOrganizationUserFul();
+        List<Organization> organizationList = new ArrayList<>();
+        Organization organization = new Organization();
+        organization.setOrganizationName("请选择用户");
+        organization.setId(0L);
+        organizationList.add(organization);
+        organizationList.addAll(organizationDao.selectOrganizationUserFul());
         return this.treeFixDataInfo2(organizationList);
     }
 

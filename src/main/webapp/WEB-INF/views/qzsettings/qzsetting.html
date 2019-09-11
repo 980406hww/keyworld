@@ -444,6 +444,8 @@
 
                         <input hidden name="searchEngine" id="searchEngine" value="百度"/>
                         <input hidden name="terminalType" id="terminalType" value="PC"/>
+                        <input type="text" hidden name="userInfoID" id="userInfoID" value="">
+                        <input type="text" hidden name="organizationID" id="organizationID" value="">
                         <div class="layui-form-item" lay-filter="loginNameFilter">
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
@@ -459,9 +461,8 @@
                             </div>
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
-                                    <input type="text" hidden name="userInfoID" id="userInfoID" >
-                                    <input type="text" hidden name="organizationID" id="organizationID" >
-                                    <input type="text"  id="tree" lay-filter="tree" class="layui-input">
+
+                                    <input type="text"  id="tree" lay-filter="tree" class="layui-input" >
                                 </div>
                             </div>
                         </div>
@@ -499,7 +500,7 @@
         var treeSelect = layui.treeSelect;
         var layer = layui.layer;
 
-        get_qzsettting('百度', 'PC');
+        get_qzsettting({searchEngine:'百度',terminalType: 'PC'});
 
         function getTerminalSearchEngineMap() {
             /*动态加载tab栏*/
@@ -534,9 +535,11 @@
             type: 'get',
             placeholder: '用户名称',
             click: function(d){
-                if (d.current.children) {
+                $("#organizationID").val("");
+                $("#userInfoID").val("");
+                if (d.current.level === 0 && d.current.id !== 0) {
                     $("#organizationID").val(d.current.id)
-                }else{
+                }else if (d.current.level === 1) {
                     $("#userInfoID").val(d.current.id)
                 }
             },
@@ -546,12 +549,12 @@
 
         window.checkDomain = function() {
             var domain = $("#domain").val().replace(/\s*/g,"")
-            if(domain != null && domain != ''){
-                if(domain.indexOf(".") == -1){
+            if(domain != null && domain !== ''){
+                if(domain.indexOf(".") === -1){
                     layer.msg("域名不符合规范")
                 }
             }
-        }
+        };
 
         $.ajax({
             url: '${ctx.path}/internal/qzsetting/getActiveCustomer',
@@ -567,70 +570,21 @@
             }
         });
 
-        function addSearchEngineTab(title, content, id){
-            element.tabAdd('searchEngineTab', {
-                title: title
-                ,content: content
-                ,id: id
-            })
-        }
-        /*动态加载tab栏*/
-        $.ajax({
-            url: '/internal/qzsetting/getQZSettingSearchEngineMap',
-            type: 'get',
-            asyns: false,
-            // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
-            dataType: 'json',
-            success: function (res) {
-                let data = res.data;
-                for (let item in data) {
-                    if (data[item].terminalType === 'PC') {
-                        let tablename = data[item].searchEngineName + data[item].terminalType + '-Table';
-
-                        let content = '<div class="layui-tab-item layui-show"><table class="layui-hide" id="' + tablename
-                            + '" lay-filter="tableFilter"></div>';
-                        addSearchEngineTab(data[item].searchEngineName + data[item].terminalType, content, tablename)
-                    } else {
-                        let tablename = data[item].searchEngineName + '-Table';
-                        let content = '<div class="layui-tab-item layui-show"><table class="layui-hide" id="' + tablename
-                            + '" lay-filter="tableFilter"></div>';
-                        addSearchEngineTab(data[item].searchEngineName, content, tablename)
-                    }
-                }
-                element.tabChange('searchEngineTab', '百度PC-Table');
-            }
-        });
-
-        element.on('tab(searchEngineTab)', function (data) {
-            let tableName =  this.getAttribute('lay-id');
-            let st = tableName.split("-")[0];
-            let searchEngine = st.substr(0,st.indexOf('P'));
-            let terminalType = st.substr(st.indexOf('P'),st.length);
-            get_qzsettting(tableName, searchEngine, terminalType)
-        });
-
         form.on("submit(search)", function (data) {
-            var searchEngine = data.field.searchEngine
-            var terminalType = data.field.terminalType
-            var domain = data.field.domain.replace(/\s*/g,"")
-            var customerInfo = data.field.customerInfo.replace(/\s*/g,"")
-            var userInfoID = data.field.userInfoID
-            var organizationID = data.field.organizationID
-            if(userInfoID == null || userInfoID == ''){
-                layer.msg("请选择具体用户")
-                return false;
-            }
-            if(domain != null && domain != ''){
-                if(domain.indexOf(".") == -1){
-                    layer.msg("域名不符合规范")
+            data.field.domain.replace(/\s*/g,"")
+            data.field.customerInfo.replace(/\s*/g,"")
+
+            if(data.field.domain !== null && data.field.domain !== ''){
+                if(data.field.domain.indexOf(".") === -1){
+                    layer.msg('域名不符合规范', {icon: 5});
                     return false;
                 }
             }
-            get_qzsettting(searchEngine, terminalType, domain, userInfoID, customerInfo)
+            get_qzsettting(data.field);
             return false;
         });
 
-        function get_qzsettting(searchEngine, terminalType, domain, userInfoID, customerInfo) {
+        function get_qzsettting(whereCondition) {
             table.render({
                 elem: '#qzSettingTable',
                 method: 'post',
@@ -643,13 +597,7 @@
                 toolbar: "#toolbarTpl",
                 defaultToolbar: [],
                 contentType: 'application/json',
-                where: {
-                    searchEngine: searchEngine,
-                    terminalType: terminalType,
-                    domain: domain,
-                    customerInfo: customerInfo,
-                    userInfoID: userInfoID,
-                },
+                where: whereCondition,
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
                     {filed: 'uuid', title: '记录', width: '1638', templet: '#item'}
@@ -761,16 +709,6 @@
             }
         };
 
-        form.on("submit(search)", function (data) {
-            table.reload('qzSettingTable', {
-                where: data.field,
-                page: {
-                    curr: 1 //从第一页开始
-                }
-            });
-            $("#searchContent").removeClass("layui-show");
-            return false;
-        });
 
         function formToJson(data) {
             data=data.replace(/&/g,"\",\"");
