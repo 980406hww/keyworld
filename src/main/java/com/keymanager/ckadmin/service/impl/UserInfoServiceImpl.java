@@ -32,4 +32,9 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
         return userInfoDao.findActiveUsers(config.getValue());
     }
 
+    @Override
+    public Long getUuidByLoginName(String loginName) {
+        return userInfoDao.getUuidByLoginName(loginName);
+    }
+
 }

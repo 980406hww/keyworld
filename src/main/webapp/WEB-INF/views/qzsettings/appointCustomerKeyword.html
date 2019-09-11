@@ -30,28 +30,80 @@
     <!--form表单-->
     <form class="layui-form layui-form-pane ok-form" lay-filter="excludeExcludeKeyword">
         <div class="ok-body">
-            <input type="hidden" name="excludeKeywordUuid" id="excludeKeywordUuid"/>
             <input type="hidden" name="qzSettingUuid" id="qzSettingUuid"/>
             <input type="hidden" name="customerUuid" id="customerUuid"/>
-            <input type="hidden" name="optimizedGroupName" id="optimizedGroupName"/>
+            <input type="hidden" name="terminalType" id="terminalType"/>
+            <input type="hidden" name="searchEngineTmp" id="searchEngineTmp"/>
             <div class="layui-row">
                 <div class="layui-form-item">
                     <label class="layui-form-label">域名</label>
                     <div class="layui-input-block">
-                        <input type="text" name="domain" id="domain" placeholder="请输入域名"
+                        <input type="text" name="domain" id="domain" placeholder=""
                                autocomplete="off"
                                class="layui-input" readonly>
                     </div>
                 </div>
-
             </div>
+
+            <div class="layui-row">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">入口</label>
+                    <div class="layui-input-block">
+                        <select name="qzSettingEntryType" id="qzSettingEntryType" style="width:240px">
+                            <option value="qz" selected>全站</option>
+                            <option value="pt">普通</option>
+                            <option value="fm">负面</option>
+                            <option value="bc">其他</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="layui-form-item">
-                <label class="layui-form-label">终端类型</label>
+                <label class="layui-form-label">搜索引擎</label>
                 <div class="layui-input-block">
-                    <select name="terminalType" id="terminalType">
-                        <option value="PC">PC</option>
-                        <option value="Phone">Phone</option>
+                    <select name="searchEngine" id="searchEngine">
+
                     </select>
+                </div>
+            </div>
+
+            <div class="layui-row">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">熊掌号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="bearPawNumber" id="bearPawNumber" placeholder=""
+                               autocomplete="off"
+                               class="layui-input" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">优化组</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="optimizedGroupName" id="optimizedGroupName" placeholder=""
+                               autocomplete="off"
+                               class="layui-input" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">机器分组</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="machineGroup" id="machineGroup" placeholder=""
+                               autocomplete="off" value="qz"
+                               class="layui-input" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" pane>
+                <label class="layui-form-label">PC和Phone同步加词</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="synchronousAddition" id="synchronousAddition" lay-skin="switch"
+                           lay-text="同步加词|不同步加词">
                 </div>
             </div>
             <div class="layui-form-item layui-form-text">
@@ -67,7 +119,6 @@
         <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
             <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
                 <button class="layui-btn" lay-submit lay-filter="save">确定</button>
-
                 <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">
                     取消
                 </button>
@@ -95,36 +146,12 @@
         var form = layui_.form;
         $("#qzSettingUuid").val(data.qzSettingUuid);
         $("#customerUuid").val(data.customerUuid);
-        $("#terminalType").val(data.terminalType);
-        form.render("select");
         $("#domain").val(data.domain);
+        $("#searchEngineTmp").val(data.searchEngine);
+        $("#terminalType").val(data.terminalType);
+        $("#bearPawNumber").val(data.bearPawNumber);
         $("#optimizedGroupName").val(data.optimizedGroupName);
-        echoExcludeKeyword($, data.qzSettingUuid, data.terminalType)
-    }
-
-    function echoExcludeKeyword($, qzSettingUuid, terminalType) {
-        var postData = {};
-        postData.qzSettingUuid = qzSettingUuid;
-        postData.terminalType = terminalType;
-        $.ajax({
-            url: '/internal/qzsetting/echoExcludeKeyword2',
-            type: 'POST',
-            data: JSON.stringify(postData),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            success: function (result) {
-                if (result.code === 200 && result.data != null) {
-                    result.data.keyword = result.data.keyword.replace(/[,]/g, "\n");
-                    $("#excludeKeywordUuid").val(result.data.uuid);
-                    $("#customerKeywordDialogContent").val(result.data.keyword);
-                }
-            },
-            error: function (result) {
-                l.layer.msg(result.msg);
-            }
-        });
+        // echoExcludeKeyword($, data.qzSettingUuid, data.terminalType)
     }
 
     layui.use(["form", "okLayer", "jquery", "layer"], function () {
@@ -138,9 +165,29 @@
         } else {
             layui_ = layui;
         }
+        $.ajax({
+            url: '${ctx.path}/internal/common/getSearchEngines',
+            dataType: 'json',
+            type: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({'terminalType': 'All'}),
+            success: function (data) {
+                var searchEngine = $("#searchEngine");
+                var searchEngineVal = $("#searchEngineTmp").val();
+                $.each(data.data, function (index, item) {
+                    searchEngine.append('<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
+                });
+                searchEngine.val(searchEngineVal);
+                form.render("select");
+            }
+        });
 
         form.on("submit(save)", function (data) {
             var postData = data.field;
+            var terminalTypes = [];
             let keywordStr = postData.customerKeywordDialogContent;
             keywordStr = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "");
             if (keywordStr.substring(keywordStr.length - 1) === ',') {
@@ -151,9 +198,18 @@
                 return keywords.indexOf(keyword) === index && keyword !== '';
             });
             postData.keywords = keywords;
+
+            if(postData.synchronousAddition) {
+                terminalTypes = ['PC', 'Phone'];
+            }else {
+                terminalTypes.push(postData.terminalType);
+            }
+            postData.terminalTypes = terminalTypes;
             delete postData.customerKeywordDialogContent;
+            delete postData.searchEngineTmp;
+            delete postData.terminalType;
             $.ajax({
-                url: '/internal/qzsetting/excludeQZSettingCustomerKeywords2',
+                url: '/internal/qzsetting/saveQZSettingCustomerKeywords2',
                 type: 'post',
                 data: JSON.stringify(postData),
                 headers: {

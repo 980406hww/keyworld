@@ -8,6 +8,7 @@ import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
+import com.keymanager.monitoring.criteria.QZSettingSaveCustomerKeywordsCriteria;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -166,6 +167,53 @@ public class QZSettingController {
         }
         return resultBean;
 
+    }
+
+    @PostMapping(value = "/excludeQZSettingCustomerKeywords2")
+    public ResultBean excludeQZSettingCustomerKeywords2(HttpServletRequest request, @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            String entryType = (String) request.getSession().getAttribute("entryType");
+            qzSettingExcludeCustomerKeywordsCriteria.setType(entryType);
+            qzSettingService.excludeQZSettingCustomerKeywords(qzSettingExcludeCustomerKeywordsCriteria);
+            resultBean.setCode(200);
+            resultBean.setMsg("更新排除词成功");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
 
     }
+
+    /**
+     * 跳转添加或修改指定关键字页面
+     */
+    @GetMapping(value = "/toAppointCustomerKeyword")
+    public ModelAndView toAppointCustomerKeyword() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("qzsettings/appointCustomerKeyword");
+        return mv;
+    }
+
+    @RequestMapping(value = "/saveQZSettingCustomerKeywords2", method = RequestMethod.POST)
+    public ResultBean saveQZSettingCustomerKeywords(HttpServletRequest request, @RequestBody QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            String userName = (String) request.getSession().getAttribute("username");
+            qzSettingService.saveQZSettingCustomerKeywords(qzSettingSaveCustomerKeywordsCriteria, userName);
+            resultBean.setCode(200);
+            resultBean.setMsg("更新排除词成功");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+
+    }
+
 }

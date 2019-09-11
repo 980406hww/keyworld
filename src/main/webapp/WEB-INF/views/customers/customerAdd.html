@@ -159,7 +159,8 @@
     });
 
       $('#close').click(function () {
-          okLayer.close();
+        parent.layer.close(parent.layer.getFrameIndex(window.name));
+        return false;
       });
 
     form.verify({
