@@ -22,4 +22,9 @@ public class QZKeywordRankInfoServiceImpl extends
             .searchExistingQZKeywordRankInfo(qzSettingUuid, terminalType, websiteType);
     }
 
+    @Override
+    public void deleteByQZSettingUuid (Long uuid) {
+        qzKeywordRankInfoDao.deleteByQZSettingUuid(uuid);
+    }
+
 }

@@ -13,16 +13,19 @@ import com.keymanager.ckadmin.entity.UserInfo;
 import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.monitoring.criteria.QZSettingSaveCustomerKeywordsCriteria;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -83,7 +86,7 @@ public class QZSettingController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean();
         try {
             Page<QZSetting> page = new Page<>(qzSettingCriteria.getPage(),
-                qzSettingCriteria.getLimit());
+                    qzSettingCriteria.getLimit());
             page = qzSettingService.searchQZSetting(page, qzSettingCriteria);
             resultBean.setCode(0);
             resultBean.setMsg("success");
@@ -106,7 +109,7 @@ public class QZSettingController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean();
         try {
             List<QZSearchEngineVO> qzSearchEngine = qzSettingService
-                .searchQZSettingSearchEngineMap(qzSettingCriteria, 0);
+                    .searchQZSettingSearchEngineMap(qzSettingCriteria, 0);
             resultBean.setCode(0);
             resultBean.setMsg("获取搜索引擎映射列表成功");
             resultBean.setData(qzSearchEngine);
@@ -131,7 +134,7 @@ public class QZSettingController extends SpringMVCBaseController {
             String terminalType = (String) requestMap.get("terminalType");
             String optimizeGroupName = (String) requestMap.get("optimizeGroupName");
             Map<String, Object> rankMap = qzSettingService
-                .getQZKeywordRankInfo(uuid, terminalType, optimizeGroupName);
+                    .getQZKeywordRankInfo(uuid, terminalType, optimizeGroupName);
             resultBean.setCode(200);
             resultBean.setMsg("获取曲线信息成功");
             resultBean.setData(rankMap);
@@ -203,7 +206,7 @@ public class QZSettingController extends SpringMVCBaseController {
         return mv;
     }
 
-    @RequestMapping(value = "/saveQZSettingCustomerKeywords2", method = RequestMethod.POST)
+    @PostMapping(value = "/saveQZSettingCustomerKeywords2")
     public ResultBean saveQZSettingCustomerKeywords(HttpServletRequest request, @RequestBody QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria) {
         ResultBean resultBean = new ResultBean();
         try {
@@ -215,7 +218,40 @@ public class QZSettingController extends SpringMVCBaseController {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg("未知错误");
-            return resultBean;
+        }
+        return resultBean;
+
+    }
+
+    @RequiresPermissions("/internal/qzsetting/delete")
+    @PostMapping(value = "/delete2/{uuid}")
+    public ResultBean deleteQZSetting(@PathVariable("uuid") Long uuid) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            qzSettingService.deleteOne(uuid);
+            resultBean.setCode(200);
+            resultBean.setMsg("删除站点成功");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/qzsetting/deleteQZSettings")
+    @PostMapping(value = "/deleteQZSettings2")
+    public ResultBean deleteQZSettings(@RequestBody Map<String, Object> requestMap){
+        ResultBean resultBean = new ResultBean();
+        try {
+            List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
+            qzSettingService.deleteAll(uuids);
+            resultBean.setCode(200);
+            resultBean.setMsg("删除站点成功");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
         }
         return resultBean;
     }

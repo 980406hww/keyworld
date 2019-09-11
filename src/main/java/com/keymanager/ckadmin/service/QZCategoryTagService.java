@@ -7,4 +7,6 @@ import java.util.List;
 public interface QZCategoryTagService extends IService<QZCategoryTag> {
 
     List<String> findTagNames(long qzSettingUuid);
+
+    List<QZCategoryTag> searchCategoryTagByQZSettingUuid(Long uuid);
 }

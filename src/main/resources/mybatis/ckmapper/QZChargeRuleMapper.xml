@@ -16,4 +16,8 @@
         WHERE  qchru.fQZOperationTypeUuid  = #{qzOperationTypeUuid}
         order by qchru.fStartKeywordCount
     </select>
+
+    <delete id="deleteByQZOperationTypeUuid" >
+        DELETE  FROM  t_qz_charge_rule WHERE  fQZOperationTypeUuid  = #{qzOperationTypeUuid}
+    </delete>
 </mapper>

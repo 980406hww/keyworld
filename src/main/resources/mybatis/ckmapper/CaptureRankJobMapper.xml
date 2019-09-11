@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.CaptureRankJobDao">
+    <sql id="colID">
+        c.fUuid AS `uuid`,
+        c.fGroupNames AS `groupNames`,
+        c.fCustomerUuid AS `customerUuid`,
+        c.fQZSettingUuid AS `qzSettingUuid`,
+        c.fOperationType AS `operationType`,
+        c.fExectionType AS `exectionType`,
+        c.fExectionTime AS `exectionTime`,
+        c.fExectionStatus  AS `exectionStatus`,
+        c.fRankJobType AS `rankJobType`,
+        c.fRankJobArea AS `rankJobArea`,
+        c.fRankJobCity AS `rankJobCity`,
+        c.fCaptureRankJobStatus  AS `captureRankJobStatus`,
+        c.fStartTime AS `startTime`,
+        c.fEndTime AS `endTime`,
+        c.fCreateBy AS `createBy`,
+        c.fUpdateBy AS `updateBy`,
+        c.fCreateTime AS `createTime`,
+        c.fUpdateTime AS `updateTime`,
+        c.fLastExecutionDate AS `lastExecutionDate`,
+        c.fRowNumber AS `rowNumber`,
+        c.fExecutionCycle AS `executionCycle`,
+        c.fCaptureInterval AS `captureInterval`,
+        c.fCaptureDaysInterval AS `captureDaysInterval`,
+        c.fPageSize AS `pageSize`
+    </sql>
+
+    <delete id="deleteCaptureRankJob">
+        DELETE FROM t_capture_rank_job
+        WHERE fQZSettingUuid = #{qzSettingUuid}
+        <if test="operationType != null">
+            AND fOperationType = #{operationType}
+        </if>
+    </delete>
+
+
+</mapper>

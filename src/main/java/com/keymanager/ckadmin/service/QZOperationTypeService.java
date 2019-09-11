@@ -10,4 +10,6 @@ public interface QZOperationTypeService extends IService<QZOperationType> {
     Date getStandardTime(long qzSettingUuid, String terminalType);
     
     List<QZOperationType> searchQZOperationTypesByQZSettingUuid(Long uuid);
+
+    void deleteByQZSettingUuid(Long uuid);
 }
