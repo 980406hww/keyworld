@@ -19,4 +19,10 @@ public class QZCategoryTagServiceImpl extends
     public List<String> findTagNames(long qzSettingUuid) {
         return qzCategoryTagDao.findTagNames(qzSettingUuid);
     }
+
+    @Override
+    public List<QZCategoryTag> searchCategoryTagByQZSettingUuid (Long qzSettingUuid) {
+        return qzCategoryTagDao.searchCategoryTagByQZSettingUuid(qzSettingUuid);
+    }
+
 }

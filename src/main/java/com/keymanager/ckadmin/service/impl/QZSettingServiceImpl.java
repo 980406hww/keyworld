@@ -5,22 +5,13 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.dao.QZSettingDao;
-import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
-import com.keymanager.ckadmin.entity.CustomerKeyword;
-import com.keymanager.ckadmin.entity.QZSetting;
+import com.keymanager.ckadmin.entity.*;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
-import com.keymanager.ckadmin.service.CustomerExcludeKeywordService;
-import com.keymanager.ckadmin.service.CustomerKeywordService;
-import com.keymanager.ckadmin.service.QZSettingService;
+import com.keymanager.ckadmin.service.*;
 
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.vo.QZSettingVO;
-import com.keymanager.ckadmin.entity.QZKeywordRankInfo;
-import com.keymanager.ckadmin.service.QZKeywordRankInfoService;
 import com.keymanager.ckadmin.vo.QZKeywordRankInfoVO;
-import com.keymanager.ckadmin.service.QZCategoryTagService;
-import com.keymanager.ckadmin.service.OperationCombineService;
-import com.keymanager.ckadmin.service.QZOperationTypeService;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.monitoring.criteria.QZSettingSaveCustomerKeywordsCriteria;
 import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
@@ -73,6 +64,13 @@ public class QZSettingServiceImpl extends
 
     @Resource(name = "customerKeywordService2")
     private CustomerKeywordService customerKeywordService;
+
+    @Resource(name = "qzChargeRuleService2")
+    private QZChargeRuleService qzChargeRuleService;
+
+    @Resource(name = "captureRankJobService2")
+    private CaptureRankJobService captureRankJobService;
+
 
     @Override
     public Page<QZSetting> searchQZSetting(Page<QZSetting> page,
@@ -257,5 +255,32 @@ public class QZSettingServiceImpl extends
         }
     }
 
+    @Override
+    public void deleteOne(Long uuid){
+        //根据数据库中的uuid去查询
+        List<QZOperationType> qzOperationTypes =  qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(uuid);
+        if(CollectionUtils.isNotEmpty(qzOperationTypes)){
+            for(QZOperationType qzOperationType : qzOperationTypes){
+                qzChargeRuleService.deleteByQZOperationTypeUuid(qzOperationType.getUuid());
+            }
+            qzOperationTypeService.deleteByQZSettingUuid(uuid);
+        }
+        qzKeywordRankInfoService.deleteByQZSettingUuid(uuid);
+        List<QZCategoryTag> qzCategoryTags = qzCategoryTagService.searchCategoryTagByQZSettingUuid(uuid);
+        if (CollectionUtils.isNotEmpty(qzCategoryTags)) {
+            for (QZCategoryTag qzCategoryTag : qzCategoryTags) {
+                qzCategoryTagService.deleteById(qzCategoryTag.getUuid());
+            }
+        }
+        captureRankJobService.deleteCaptureRankJob(uuid, null);
+        qzSettingDao.deleteById(uuid);
+    }
+
+    @Override
+    public void deleteAll(List<Integer> uuids){
+        for(Integer uuid : uuids){
+            deleteOne(Long.valueOf(uuid));
+        }
+    }
 
 }

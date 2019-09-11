@@ -7,4 +7,6 @@ import java.util.List;
 public interface QZChargeRuleService extends IService<QZChargeRule> {
 
     List<QZChargeRule> searchQZChargeRuleByqzOperationTypeUuids(Long qzOperationTypeUuid);
+
+    void deleteByQZOperationTypeUuid(Long uuid);
 }

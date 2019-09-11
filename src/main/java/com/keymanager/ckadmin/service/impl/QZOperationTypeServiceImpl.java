@@ -25,4 +25,10 @@ public class QZOperationTypeServiceImpl extends
     public List<QZOperationType> searchQZOperationTypesByQZSettingUuid(Long uuid) {
         return qzOperationTypeDao.searchQZOperationTypesByQZSettingUuid(uuid);
     }
+
+    @Override
+    public  void deleteByQZSettingUuid(Long qzSettingUuid){
+        qzOperationTypeDao.deleteByQZSettingUuid(qzSettingUuid);
+    }
+
 }
