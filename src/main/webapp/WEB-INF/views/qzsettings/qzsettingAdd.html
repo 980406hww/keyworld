@@ -586,6 +586,32 @@
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script>
 
+    let uuid_ = null;
+    let layui_ = null
+
+    function initForm(data) {
+        uuid_ = data;
+        if (layui_ != null) {
+            setForm(layui_, uuid_);
+        }
+    }
+
+    function setForm(l, u) {
+        l.jquery.ajax({
+            url: '/internal/qzsetting/getQZSettingsMsg/' + u,
+            type: 'get',
+            dataType: 'json',
+            success: function (res) {
+                console.log(res);
+                if (res.code === 200) {
+
+                } else {
+                    l.layer.msg(res.msg);
+                }
+            }
+        });
+    }
+
     var tbody_com = null;
     var tbody_phone = null;
 
@@ -663,6 +689,12 @@
         let okLayer = layui.okLayer;
         let $ = layui.jquery;
         let layer = layui.layer;
+
+        if (uuid_ != null) {
+            setForm(layui, uuid_);
+        } else {
+            layui_ = layui;
+        }
 
         $.ajax({
             url: '/internal/qzsetting/getSaveQZSettingsMsg',
@@ -953,7 +985,7 @@
         });
 
         $('#close').click(function () {
-            okLayer.close();
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
         });
 
         form.verify({

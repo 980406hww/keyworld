@@ -167,4 +167,9 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     public List<Customer> getActiveCustomerSimpleInfo(CustomerCriteria customerCriteria) {
         return customerDao.getActiveCustomerSimpleInfo(customerCriteria);
     }
+
+    @Override
+    public Customer getCustomer(int customerUuid) {
+        return customerDao.selectById(customerUuid);
+    }
 }

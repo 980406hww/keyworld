@@ -93,7 +93,7 @@ public class QZSettingController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean();
         try {
             Page<QZSetting> page = new Page<>(qzSettingCriteria.getPage(),
-                    qzSettingCriteria.getLimit());
+                qzSettingCriteria.getLimit());
             page = qzSettingService.searchQZSetting(page, qzSettingCriteria);
             resultBean.setCode(0);
             resultBean.setMsg("success");
@@ -116,7 +116,7 @@ public class QZSettingController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean();
         try {
             List<QZSearchEngineVO> qzSearchEngine = qzSettingService
-                    .searchQZSettingSearchEngineMap(qzSettingCriteria, 0);
+                .searchQZSettingSearchEngineMap(qzSettingCriteria, 0);
             resultBean.setCode(0);
             resultBean.setMsg("获取搜索引擎映射列表成功");
             resultBean.setData(qzSearchEngine);
@@ -141,7 +141,7 @@ public class QZSettingController extends SpringMVCBaseController {
             String terminalType = (String) requestMap.get("terminalType");
             String optimizeGroupName = (String) requestMap.get("optimizeGroupName");
             Map<String, Object> rankMap = qzSettingService
-                    .getQZKeywordRankInfo(uuid, terminalType, optimizeGroupName);
+                .getQZKeywordRankInfo(uuid, terminalType, optimizeGroupName);
             resultBean.setCode(200);
             resultBean.setMsg("获取曲线信息成功");
             resultBean.setData(rankMap);
@@ -216,7 +216,8 @@ public class QZSettingController extends SpringMVCBaseController {
     }
 
     @PostMapping(value = "/saveQZSettingCustomerKeywords2")
-    public ResultBean saveQZSettingCustomerKeywords(HttpServletRequest request, @RequestBody QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria) {
+    public ResultBean saveQZSettingCustomerKeywords(HttpServletRequest request,
+        @RequestBody QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria) {
         ResultBean resultBean = new ResultBean();
         try {
             String userName = (String) request.getSession().getAttribute("username");
@@ -251,7 +252,7 @@ public class QZSettingController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/qzsetting/deleteQZSettings")
     @PostMapping(value = "/deleteQZSettings2")
-    public ResultBean deleteQZSettings(@RequestBody Map<String, Object> requestMap){
+    public ResultBean deleteQZSettings(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
         try {
             List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
@@ -304,6 +305,20 @@ public class QZSettingController extends SpringMVCBaseController {
             String userName = (String) session.getAttribute("username");
             qzSettingService.saveQZSetting(qzSetting, userName);
             return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    @RequestMapping(value = "/getQZSettingsMsg/{uuid}", method = RequestMethod.GET)
+    public ResultBean getQZSettingsMsg(@PathVariable Long uuid) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        try {
+            resultBean.setData(qzSettingService.getQZSetting(uuid));
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
