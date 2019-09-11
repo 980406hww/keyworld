@@ -1,0 +1,46 @@
+package com.keymanager.ckadmin.entity;
+
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.keymanager.monitoring.entity.BaseEntity;
+
+/**
+ * @Author zhoukai
+ * @Date 2019/9/10 17:39
+ **/
+@TableName(value = "t_group")
+public class Group extends BaseEntity {
+
+    @TableField(value = "fGroupName")
+    private String groupName;
+
+    @TableField(value = "fOperationCombineUuid")
+    private Long operationCombineUuid;
+
+    @TableField(value = "fCreateBy")
+    private String createBy;
+
+    public String getGroupName () {
+        return groupName;
+    }
+
+    public void setGroupName (String groupName) {
+        this.groupName = groupName;
+    }
+
+    public Long getOperationCombineUuid () {
+        return operationCombineUuid;
+    }
+
+    public void setOperationCombineUuid (Long operationCombineUuid) {
+        this.operationCombineUuid = operationCombineUuid;
+    }
+
+    public String getCreateBy () {
+        return createBy;
+    }
+
+    public void setCreateBy (String createBy) {
+        this.createBy = createBy;
+    }
+}

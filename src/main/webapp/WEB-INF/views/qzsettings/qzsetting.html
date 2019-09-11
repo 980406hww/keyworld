@@ -18,6 +18,10 @@
             box-sizing: border-box
         }
 
+        html {
+            background-color: white;
+        }
+
         a {
             background-color: transparent;
             text-decoration: none
@@ -45,7 +49,7 @@
             overflow: visible;
             text-overflow: inherit;
             white-space: normal;
-            padding: 0px !important;
+            padding: 0 !important;
         }
 
         .layadmin-caller {
@@ -178,9 +182,9 @@
             color: #f60;
         }
 
-        /*.layui-table-col-special .body {
+        .layui-table-col-special .body {
             height: 150px
-        }*/
+        }
 
         .layui-table-col-special .body .user-id .line1,
         .layui-table-col-special .body .standard-info .line1 {
@@ -334,12 +338,6 @@
             display: block;
         }
 
-        /*.layui-table-col-special .body .user-id span:last-child,
-        .layui-table-col-special .body .standard-info span:last-child {
-            margin-top: 10px;
-            color: #999;
-        }*/
-
         .layui-table-col-special .body .user-id span.line1,
         .layui-table-col-special .body .standard-info span.line1 {
             font-size: 14px;
@@ -418,6 +416,9 @@
             border-width: 0 0 1px
         }
 
+        .layui-form-select input {
+            height: 30px;
+        }
 
     </style>
 </head>
@@ -485,7 +486,7 @@
             , okLayer = layui.okLayer
             , layer = layui.layer;
 
-        get_qzsettting('百度', 'PC')
+        get_qzsettting('百度', 'PC');
 
         function getTerminalSearchEngineMap() {
             /*动态加载tab栏*/
@@ -508,7 +509,7 @@
                         }
                         terminalSearchEngine.append('<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
                     });
-                    terminalSearchEngine.val( ($('#searchEngine').val()+ $('#terminalType').val())==''? '百度PC':($('#searchEngine').val()+ $('#terminalType').val()));
+                    terminalSearchEngine.val( ($('#searchEngine').val() + $('#terminalType').val()) === '' ? '百度PC' : ($('#searchEngine').val() + $('#terminalType').val()));
                     form.render("select");
                 }
             });
@@ -525,8 +526,7 @@
                 size: 'sm',
                 id: 'qzSettingTable',
                 toolbar: "#toolbarTpl",
-                defaultToolbar: ['filter'],
-
+                defaultToolbar: [],
                 contentType: 'application/json',
                 where: {
                     searchEngine: searchEngine,
@@ -534,17 +534,18 @@
                 },
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
-                    {filed: 'uuid', title: '记录', width: '1608', templet: '#item'}
+                    {filed: 'uuid', title: '记录', width: '1638', templet: '#item'}
                 ]],
-                // height: $(document).height() - $('#' + tableName).offset().top - 160,
                 height: 'full-120',
                 loading: true,
                 done: function (res, curr, count) {
-                    getTerminalSearchEngineMap(searchEngine, terminalType);
-
-                    let table = $("#qzSettingTable").parent().find(".layui-table-main").find("table");
+                    let terminalType = $('#terminalType').val();
+                    terminalType = terminalType === '' ? 'PC' : terminalType;
+                    getTerminalSearchEngineMap();
+                    get_operation_combine_list(terminalType);
+                    let qz_setting_table = $("#qzSettingTable").parent().find(".layui-table-main").find("table");
                     $.each(res.data, function (idx, val) {
-                        let td = table.find("tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
+                        let td = qz_setting_table.find("tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
                             "td[data-field='1']");
                         let optimizeGroupName = td.find(
                             "input[name='" + terminalType + "Group']").val();
@@ -553,48 +554,9 @@
                         postData.terminalType = terminalType;
                         postData.optimizeGroupName = optimizeGroupName;
                         getQZKeywordRankInfo(postData, function (result) {
-                            td.find(".other-rank_2").find("div.line1 a").text(
-                                optimizeGroupName);
+                            td.find(".other-rank_2").find("#optimizationGroup").text(optimizeGroupName);
                             if (result.data != null) {
-                                td.find("#fmtStandardDate a").text(
-                                    result.data["standardTime"] === null ? "无" : toDateFormat(
-                                        new Date(result.data["standardTime"])));
-                                let font = td.find(".standard-info").find("div.line1 a font");
-                                font.text("￥ " + result.data["price"]);
-                                if (result.data["price"] > 0) {
-                                    font.css("background-color", "mediumseagreen");
-                                }
-                                initQZSettingKeywordCount(td.find(".other-rank_2"),
-                                    result.data["customerKeywordCount"],
-                                    result.data["categoryTagNames"],
-                                    result.data["operationCombineName"]);
-                                if (result.data['aiZhan'] !== undefined) {
-                                    generateQZKeywordTrendCharts(
-                                        td.find("#keywordTrendCharts")[0],
-                                        result.data['aiZhan']);
-                                }
-
-                                if (result.data['5118'] !== undefined) {
-                                    generateQZKeywordTrendCharts(
-                                        td.find("#keywordTrendCharts")[0], result.data['5118']);
-                                }
-
-                                if (result.data['designationWord'] === undefined) {
-                                    td.find("div.rank-wrap1").css("display", "none");
-                                } else {
-                                    // 指定词曲线
-                                    generateQZDesignationWordTrendCharts(
-                                        td.find("#designationWordCharts")[0],
-                                        result.data['designationWord']);
-                                }
-
-                                if (result.data['xt'] === undefined) {
-                                    td.find("div.rank-wrap2").css("display", "none");
-                                } else {
-                                    // 排名-操作词数图表
-                                    generateQZXTKeywordTrendCharts(td.find("#xtCharts")[0],
-                                        result.data['xt']);
-                                }
+                                initQZKeywordRankInfo(result.data, td);
                             }
                         });
                     });
@@ -602,15 +564,71 @@
             });
         }
 
+        function initQZKeywordRankInfo(data, td) {
+            td.find("#fmtStandardDate a").text(
+                data["standardTime"] === null ? "无" : toDateFormat(
+                    new Date(data["standardTime"])));
+            let font = td.find(".standard-info").find("div.line1 a font");
+            font.text("￥ " + data["price"]);
+            if (data["price"] > 0) {
+                font.css("background-color", "mediumseagreen");
+            }
 
+            initQZSettingKeywordCount(td.find(".other-rank_2"),
+                data["customerKeywordCount"],
+                data["categoryTagNames"],
+                data["operationCombineName"]);
+
+            if (data['aiZhan'] !== undefined) {
+                generateQZKeywordTrendCharts(
+                    td.find("#keywordTrendCharts")[0],
+                    data['aiZhan']);
+            }
+
+            if (data['5118'] !== undefined) {
+                generateQZKeywordTrendCharts(
+                    td.find("#keywordTrendCharts")[0], data['5118']);
+            }
+
+            if (data['designationWord'] === undefined) {
+                td.find("div.rank-wrap1").css("display", "none");
+            } else {
+                // 指定词曲线
+                generateQZDesignationWordTrendCharts(
+                    td.find("#designationWordCharts")[0],
+                    data['designationWord']);
+            }
+
+            if (data['xt'] === undefined) {
+                td.find("div.rank-wrap2").css("display", "none");
+            } else {
+                // 排名-操作词数图表
+                generateQZXTKeywordTrendCharts(td.find("#xtCharts")[0],
+                    data['xt']);
+            }
+        }
+
+        function get_operation_combine_list(terminalType) {
+            /*动态加载操作组合列表*/
+            $.ajax({
+                url: '/internal/operationcombine/getOperationCombines/' + terminalType,
+                type: 'post',
+                asyns: true,
+                dataType: 'json',
+                success: function (res) {
+                    let operation_combine_select = $("#update_qz_operation_combine");
+                    operation_combine_select.append("<option value='null'>置空</option>");
+                    $.each(res.data, function(i ,v) {
+                        var option=$("<option value='"+v.uuid+"'>"+v.operationCombineName+"</option>");
+                        operation_combine_select.append(option);
+                    });
+                    form.render("select");
+                }
+            });
+        }
 
         form.on('select(terminalSearchEngineFilter)', function(data){
-            let st = data.value;
-            let searchEngine = st.substr(0, st.indexOf('P'));
-            let terminalType = st.substr(st.indexOf('P'), st.length);
-            $('#searchEngine').val(searchEngine);
-            $('#terminalType').val(terminalType);
-            active['reload'].call(this)
+            auto_reload_with_query_conditions(data.value);
         });
 
         var active = {
@@ -622,7 +640,7 @@
                     }
                 });
                 $("#searchContent").removeClass("layui-show")
-            },
+            }
         };
 
         form.on("submit(search)", function (data) {
@@ -632,16 +650,23 @@
                     curr: 1 //从第一页开始
                 }
             });
-            $("#searchContent").removeClass("layui-show")
+            $("#searchContent").removeClass("layui-show");
             return false;
         });
 
         function formToJson(data) {
-            // console.log(data)
             data=data.replace(/&/g,"\",\"");
             data=data.replace(/=/g,"\":\"");
             data="{\""+data+"\"}";
             return data;
+        }
+
+        function auto_reload_with_query_conditions(val) {
+            let searchEngine = val.substr(0, val.indexOf('P'));
+            let terminalType = val.substr(val.indexOf('P'), val.length);
+            $('#searchEngine').val(searchEngine);
+            $('#terminalType').val(terminalType);
+            active['reload'].call(this);
         }
 
         function getQZKeywordRankInfo(postData, callback) {
@@ -657,7 +682,7 @@
                     callback(result);
                 },
                 error: function () {
-                    $().toastmessage('showErrorToast', "获取全站曲线信息失败！！！");
+                    show_layer_msg('获取全站曲线信息失败！！', 2, '异常提醒');
                 }
             });
         }
@@ -1407,8 +1432,7 @@
             keywordRecordCharts.setOption(option);
         }
 
-        function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames,
-            operationCombineName) {
+        function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames, operationCombineName) {
             div.parent().find(".other-rank .line1").find("#customerKeywordCount").text(customerKeywordCount);
             if (categoryTagNames.length > 0) {
                 var tagNameStr = "";
@@ -1421,13 +1445,7 @@
             }
 
             if (operationCombineName !== null) {
-                div.find("select[name='operationCombineName'] option:not(:first)").each(
-                    function () {
-                        if ($(this).val().split("_____")[0] === operationCombineName) {
-                            $(this)[0].selected = true;
-                            div.find("input[name='operationCombineName']").val($(this).val());
-                        }
-                    });
+                div.find("#operationCombine").text(operationCombineName);
             }
         }
 
@@ -1450,7 +1468,7 @@
         });
 
         table.on('toolbar(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            var data = obj.data, event = obj.event;
             switch (event) {
                 case 'add_qz':
                     add_qz();
@@ -1460,10 +1478,12 @@
                     break;
                 case 'addUser':
                     toAddCustomer();
-                    break
+                    break;
+                default:
+                    break;
             }
         });
-
+        
         function add_qz() {
             okLayer.open("其他 / 前往全站设置信息 / 添加", "/internal/qzsetting/toQZSettingAdd", "90%", "90%", null, function () {
             });
@@ -1488,25 +1508,86 @@
             if(terminalType === 'PC'){
                 optimizedGroupName = pcGroup;
             }
-            okLayer.open("其他 / 全站设置信息 / 排除关键字", "/internal/qzsetting/toExcludeCustomerKeyword", "90%", "90%", function (layero) {
+            okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toExcludeCustomerKeyword", "90%", "90%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm({qzSettingUuid:uuid, customerUuid:customerUuid, domain:domain, terminalType:terminalType, optimizedGroupName:optimizedGroupName});
             },function(){
 
             })
         };
 
-        window.showKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber,searchEngine, pcGroup, phoneGroup){
+        // 修改选中站点优化组关联的操作组合
+        form.on('select(operationCombineFilter)', function(data){
+            let checkStatus = table.checkStatus('qzSettingTable');
+            if (checkStatus.data.length === 0) {
+                $("#update_qz_operation_combine").val('');
+                show_layer_msg('请选择要修改优化组关联的操作组合的站点！！', 2, "提示");
+                return false;
+            }
+            let groupName = '';
+            $.each(checkStatus.data, function(i, v){
+                if(v.pcGroup !== null) {
+                    groupName += "," + v.pcGroup;
+                } else {
+                    groupName += "," + v.phoneGroup;
+                }
+            });
+
+            let postData = {};
+            postData.operationCombineUuid = (data.value === 'null' || data.value === '') ? null : data.value;
+            postData.groupName = groupName.substr(1);
+            $.ajax({
+                url: '/internal/group/updateGroupOperationCombineUuid',
+                type: 'POST',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (result) {
+                    if (result.code === 200) {
+                        show_layer_msg('修改站点优化组关联的操作组合成功！！', 1, '提示');
+                        auto_reload_with_query_conditions($("#terminalSearchEngine").val());
+                    } else {
+                        show_layer_msg('修改站点优化组关联的操作组合失败！！', 2, '异常提醒');
+                    }
+                },
+                error: function () {
+                    show_layer_msg('修改站点优化组关联的操作组合失败！！', 2, '异常提醒');
+                }
+            });
+        });
+
+        function show_layer_msg(msg, icon, title) {
+            layer.msg(msg, {
+                icon: icon,
+                title: title,
+                anim: 5,
+                time: 2000,
+                isOutAnim: false
+            });
+        }
+
+        window.showKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber,searchEngine, pcGroup, phoneGroup) {
             let terminalType = $("#terminalSearchEngine").val();
-            terminalType = terminalType.substr(terminalType.indexOf("P"),terminalType.length);
+            terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
             let optimizedGroupName = phoneGroup;
-            if(terminalType === 'PC'){
+            if (terminalType === 'PC') {
                 optimizedGroupName = pcGroup;
             }
-            okLayer.open("其他 / 全站设置信息 / 指定关键字", "/internal/qzsetting/toAppointCustomerKeyword", "90%", "90%", function (layero) {
-                window[layero.find("iframe")[0]["name"]].initForm({qzSettingUuid:uuid, customerUuid:customerUuid, domain:domain, bearPawNumber:bearPawNumber, searchEngine:searchEngine, terminalType:terminalType, optimizedGroupName:optimizedGroupName});
-            },function(){
+            okLayer.open("其他 / 全站设置信息 / 指定关键字", "/internal/qzsetting/toAppointCustomerKeyword",
+                "90%", "90%", function (layero) {
+                    window[layero.find("iframe")[0]["name"]].initForm({
+                        qzSettingUuid: uuid,
+                        customerUuid: customerUuid,
+                        domain: domain,
+                        bearPawNumber: bearPawNumber,
+                        searchEngine: searchEngine,
+                        terminalType: terminalType,
+                        optimizedGroupName: optimizedGroupName
+                    });
+                }, function () {
 
-            })
+                });
         }
     });
 </script>
@@ -1514,13 +1595,19 @@
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
 
-        <div class="layui-input-inline" style="width: 120px; height: 30px">
-            <select name="terminalSearchEngine" id="terminalSearchEngine" lay-filter="terminalSearchEngineFilter"></select>
-        </div>
+    <div class="layui-input-inline" style="width: 120px; height: 30px">
+        <select name="terminalSearchEngine" id="terminalSearchEngine" lay-filter="terminalSearchEngineFilter"></select>
+    </div>
 
-        <button class="layui-btn layui-btn-sm" id="add_qz" lay-event="add_qz">
-            <i class="layui-icon">&#xe61f;</i>添加
-        </button>
+    <div class="layui-input-inline" style="width: 200px; height: 30px">
+        <select id="update_qz_operation_combine" lay-filter="operationCombineFilter" lay-search>
+            <option value="">修改所选站点操作组合</option>
+        </select>
+    </div>
+
+    <button class="layui-btn layui-btn-sm" id="add_qz" lay-event="add_qz">
+        <i class="layui-icon">&#xe61f;</i>添加
+    </button>
 
 </script>
 
@@ -1707,7 +1794,7 @@
         </div>
         <div class="layui-col-md4 other-rank_2">
             <div class="layui-col-md12 line1">
-                <div class="layui-col-md12">
+                <div class="layui-col-md12" id="optimizationGroup">
                     <a href="javascript:;">暂无</a>
                 </div>
                 <div class="layui-col-md12">
@@ -1715,15 +1802,8 @@
                 </div>
             </div>
             <div class="layui-col-md12 line1">
-                <div class="layui-col-md12">
-                    <input type="hidden" name="operationCombineName" value="">
-                    <select name="operationCombineName" lay-ignore
-                            onchange="changeQZSettingGroupOperationCombineUuid(this, '{{d.LAY_TABLE_INDEX}}', '{{ $(\'#loginName\') }}', '{{ $(\'#isSEO\') }}');"
-                            style="width: 100%;">
-                        <option value=""></option>
-                        <option value="">test1</option>
-                        <option value="">test2</option>
-                    </select>
+                <div class="layui-col-md12" id="operationCombine">
+                    <a href="javascript:;">暂无</a>
                 </div>
                 <div class="layui-col-md12 operationCombineSpan">
                     <span>操作组合</span>
