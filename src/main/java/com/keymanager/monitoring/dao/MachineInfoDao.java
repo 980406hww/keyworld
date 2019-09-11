@@ -19,7 +19,7 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
     void updateMachineInfoVersion(@Param("clientID") String clientID, @Param("version") String version, @Param("hasKeyword") boolean hasKeyword);
 
     void updateOptimizationResult(@Param("clientID") String clientID, @Param("status") String status, @Param("version") String version,
-                                  @Param("freeSpace") String freeSpace, @Param("city") String city, @Param("count") int count, @Param("runningProgramType") String runningProgramType);
+                                  @Param("freeSpace") String freeSpace, @Param("city") String city, @Param("count") int count, @Param("runningProgramType") String runningProgramType,@Param("cpuCount") int cpuCount,@Param("memory") int memory);
 
     List<MachineInfo> searchMachineInfosOrByHost(@Param("terminalType") String terminalType, @Param("comfirm") String comfirm);
 
@@ -97,5 +97,5 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     List<MachineInfoMachineGroupSummaryVO> searchMachineInfoMachineGroupSummaryVO(@Param("machineGroup") String machineGroup, @Param("terminalType") String terminalType);
 
-    void updateMachine(@Param("clientID")String clientID, @Param("city")String city, @Param("version")String version,@Param("freeSpace") String freeSpace,@Param("runningProgramType") String runningProgramType);
+    void updateMachine(@Param("clientID")String clientID, @Param("city")String city, @Param("version")String version,@Param("freeSpace") String freeSpace,@Param("runningProgramType") String runningProgramType,@Param("cpuCount") int cpuCount,@Param("memory") int memory);
 }

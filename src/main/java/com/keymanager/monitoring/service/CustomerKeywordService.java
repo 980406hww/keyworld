@@ -247,20 +247,26 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             if (customerKeywordCrawlQZRankQueue.size() < 15000) {
                 List<CustomerKeyWordCrawlRankVO> customerKeyWordCrawlRankVos = null;
                 do {
-                    customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords("qz", null);
+                    customerKeyWordCrawlRankVos = customerKeywordDao
+                        .getCrawlRankKeywords("qz", 1, null);
                     if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos)) {
-                        List<Long> customerKeywordUuids = new ArrayList<>();
-                        for (CustomerKeyWordCrawlRankVO customerKeyWordCrawlRankVo : customerKeyWordCrawlRankVos) {
-                            if (customerKeywordCrawlQZRankQueue.offer(customerKeyWordCrawlRankVo)) {
-                                customerKeywordUuids.add(customerKeyWordCrawlRankVo.getUuid());
-                            } else {
-                                break;
+                        customerKeyWordCrawlRankVos = customerKeywordDao
+                            .getCrawlRankKeywords("qz", 0, null);
+                        if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos)) {
+                            List<Long> customerKeywordUuids = new ArrayList<>();
+                            for (CustomerKeyWordCrawlRankVO customerKeyWordCrawlRankVo : customerKeyWordCrawlRankVos) {
+                                if (customerKeywordCrawlQZRankQueue.offer(customerKeyWordCrawlRankVo)) {
+                                    customerKeywordUuids.add(customerKeyWordCrawlRankVo.getUuid());
+                                } else {
+                                    break;
+                                }
                             }
+                            customerKeywordDao.updateCrawlRankKeywordTimeByUuids(customerKeywordUuids);
                         }
-                        customerKeywordDao.updateCrawlRankKeywordTimeByUuids(customerKeywordUuids);
                     }
                 }
-                while (customerKeywordCrawlQZRankQueue.size() < 30000 && CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos));
+                while (customerKeywordCrawlQZRankQueue.size() < 30000 && CollectionUtils
+                    .isNotEmpty(customerKeyWordCrawlRankVos));
             }
         }
     }
@@ -285,21 +291,28 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     if (currentSize < 5000) {
                         List<CustomerKeyWordCrawlRankVO> customerKeyWordCrawlRankVos = null;
                         do {
-                            customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords("pt", city);
+                            customerKeyWordCrawlRankVos = customerKeywordDao
+                                .getCrawlRankKeywords("pt", 1, city);
                             if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos)) {
-                                List<Long> customerKeywordUuids = new ArrayList<>();
-                                for (CustomerKeyWordCrawlRankVO customerKeyWordCrawlRankVo : customerKeyWordCrawlRankVos) {
-                                    if (blockingQueue.offer(customerKeyWordCrawlRankVo)) {
-                                        offerSize++;
-                                        customerKeywordUuids.add(customerKeyWordCrawlRankVo.getUuid());
-                                    } else {
-                                        break;
+                                customerKeyWordCrawlRankVos = customerKeywordDao
+                                    .getCrawlRankKeywords("pt", 0, city);
+                                if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos)) {
+                                    List<Long> customerKeywordUuids = new ArrayList<>();
+                                    for (CustomerKeyWordCrawlRankVO customerKeyWordCrawlRankVo : customerKeyWordCrawlRankVos) {
+                                        if (blockingQueue.offer(customerKeyWordCrawlRankVo)) {
+                                            offerSize++;
+                                            customerKeywordUuids
+                                                .add(customerKeyWordCrawlRankVo.getUuid());
+                                        } else {
+                                            break;
+                                        }
                                     }
+                                    customerKeywordDao.updateCrawlRankKeywordTimeByUuids(customerKeywordUuids);
                                 }
-                                customerKeywordDao.updateCrawlRankKeywordTimeByUuids(customerKeywordUuids);
                             }
                         }
-                        while (currentSize + offerSize < 10000 && CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos));
+                        while (currentSize + offerSize < 10000 && CollectionUtils
+                            .isNotEmpty(customerKeyWordCrawlRankVos));
                     }
                 }
             }
@@ -1437,9 +1450,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public void updateOptimizationResult(String terminalType, Long customerKeywordUuid, int count, String ip, String city, String clientID, String status, String freeSpace, String version, String runningProgramType) {
+    public void updateOptimizationResult(String terminalType, Long customerKeywordUuid, int count, String ip, String city, String clientID, String status, String freeSpace, String version, String runningProgramType,Integer cpuCount,Integer memory) {
         customerKeywordDao.updateOptimizationResult(customerKeywordUuid, count);
-        machineInfoService.logMachineInfoTime(terminalType, clientID, status, freeSpace, version, city, count, runningProgramType);
+        machineInfoService.logMachineInfoTime(terminalType, clientID, status, freeSpace, version, city, count, runningProgramType,cpuCount,memory);
 //        customerKeywordIPService.addCustomerKeywordIP(customerKeywordUuid, city, ip);
     }
 

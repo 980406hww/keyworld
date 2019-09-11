@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.MachineInfoDao">
 
-    <sql id="selectCol">
+  <sql id="selectCol">
         mi.fClientID AS "clientID",
         mi.fTerminalType AS "terminalType",
         mi.fClientIDPrefix AS "clientIDPrefix",
@@ -43,87 +44,133 @@
         mi.fRunningProgramType AS "runningProgramType",
         mi.fUpgradeFailedReason AS "upgradeFailedReason",
         mi.fRemainingKeyword AS "remainingKeyword",
-        mi.fCreateTime AS "createTime"
+        mi.fCreateTime AS "createTime",
+        mi.fCpuCount AS "cpuCount",
+        mi.fMemory AS "memory"
     </sql>
 
-    <update id="updateMachineInfoTargetVersion">
-        UPDATE t_machine_info SET fTargetVersion = #{targetVersion}
-        WHERE fClientID IN
-        <foreach item="item" collection="clientIDs" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </update>
-    
-    <update id="updateMachineInfoTargetVPSPassword">
-        UPDATE t_machine_info SET fTargetVPSPassword = #{targetVPSPassword}
-        WHERE fClientID IN
-        <foreach item="item" collection="clientIDs" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </update>
-    
+  <update id="updateMachineInfoTargetVersion">
+    UPDATE t_machine_info SET fTargetVersion = #{targetVersion}
+    WHERE fClientID IN
+    <foreach item="item" collection="clientIDs" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </update>
 
-    <delete id="deleteMachineInfos">
-        DELETE FROM t_machine_info WHERE fClientID IN
-        <foreach item="item" collection="clientIDs" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </delete>
+  <update id="updateMachineInfoTargetVPSPassword">
+    UPDATE t_machine_info SET fTargetVPSPassword = #{targetVPSPassword}
+    WHERE fClientID IN
+    <foreach item="item" collection="clientIDs" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </update>
 
-    <select id="searchMachineInfos" parameterType="com.keymanager.monitoring.criteria.MachineInfoCriteria" resultType="com.keymanager.monitoring.entity.MachineInfo">
-        SELECT
-        <include refid="selectCol" />
-        FROM
-        t_machine_info mi
-        WHERE mi.fTerminalType = #{machineInfoCriteria.terminalType}
-        <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''"> AND mi.fClientID like '%${machineInfoCriteria.clientID}%'</if>
 
-        <if test="machineInfoCriteria.machineGroup != null and machineInfoCriteria.machineGroup != ''">
-            <choose>
-                <when test="machineInfoCriteria.machineGroupFuzzyQuery == null or machineInfoCriteria.machineGroupFuzzyQuery == ''">
-                    AND mi.fMachineGroup = #{machineInfoCriteria.machineGroup}
-                </when>
-                <otherwise>
-                    AND mi.fMachineGroup like '%${machineInfoCriteria.machineGroup}%'
-                </otherwise>
-            </choose>
-        </if>
-        <if test="machineInfoCriteria.upgradeFailedReason != null and machineInfoCriteria.upgradeFailedReason != ''"> AND mi.fUpgradeFailedReason like '%${machineInfoCriteria.upgradeFailedReason}%'</if>
-        <if test="machineInfoCriteria.version != null and machineInfoCriteria.version != ''"> AND mi.fVersion like concat(#{machineInfoCriteria.version},'%')</if>
-        <if test="machineInfoCriteria.targetVersion != null and machineInfoCriteria.targetVersion != ''"> AND mi.fTargetVersion like concat(#{machineInfoCriteria.targetVersion},'%')</if>
-        <if test="machineInfoCriteria.city != null and machineInfoCriteria.city != ''"> AND mi.fCity like concat(#{machineInfoCriteria.city},'%')</if>
-        <if test="machineInfoCriteria.valid != null and machineInfoCriteria.valid != ''"> AND mi.fValid = #{machineInfoCriteria.valid}</if>
-        <if test="machineInfoCriteria.hasProblem != null"> AND (mi.fContinuousFailCount &gt; 5 OR mi.fTenMinsLastVisitTime &lt; NOW()) and mi.fValid = 1</if>
-        <if test="machineInfoCriteria.renewal != null"> AND mi.fRenewalDate &lt; DATE_ADD(CURRENT_DATE(), INTERVAL -3 DAY) and mi.fValid = 1</if>
-        <if test="machineInfoCriteria.noMachineGroup != null"> AND (mi.fMachineGroup is null or mi.fMachineGroup = '')</if>
-        <if test="machineInfoCriteria.hasMachineGroup != null"> AND mi.fMachineGroup > ''</if>
-        <if test="machineInfoCriteria.startUpStatus != null and machineInfoCriteria.startUpStatus != ''"> AND mi.fStartUpStatus = #{machineInfoCriteria.startUpStatus}</if>
-        <if test="machineInfoCriteria.runningProgramType != null and machineInfoCriteria.runningProgramType != ''"> AND mi.fRunningProgramType = #{machineInfoCriteria.runningProgramType}</if>
-        <if test="machineInfoCriteria.noVNC != null"> AND (mi.fHost is null or mi.fHost = '')</if>
-        <if test="machineInfoCriteria.noUpgrade != null"> AND (mi.fVersion &lt;&gt; mi.fTargetVersion)</if>
-        <if test="machineInfoCriteria.noChangePassword != null"> AND (mi.fPassword &lt;&gt; mi.fTargetVPSPassword)</if>
-        <if test="machineInfoCriteria.startUpClient != null"> AND mi.fDownloadProgramType > ''</if>
-        <if test="machineInfoCriteria.vpsBackendSystemComputerID != null and machineInfoCriteria.vpsBackendSystemComputerID != ''"> AND (mi.fVPSBackendSystemComputerID = #{machineInfoCriteria.vpsBackendSystemComputerID})</if>
-        <if test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''"> AND mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName}</if>
-        <if test="machineInfoCriteria.switchGroups != null"> AND mi.fSwitchGroupName IN
-            <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")" separator=",">
-                #{switchGroup}
-            </foreach>
-        </if>
-        <if test="machineInfoCriteria.orderBy != null and machineInfoCriteria.orderBy != ''"> ORDER BY ${machineInfoCriteria.orderBy}</if>
-    </select>
+  <delete id="deleteMachineInfos">
+    DELETE FROM t_machine_info WHERE fClientID IN
+    <foreach item="item" collection="clientIDs" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
 
-    <select id="getMachineInfosForSwitchGroup" resultType="com.keymanager.monitoring.entity.MachineInfo">
-        SELECT
-        <include refid="selectCol" />
-        FROM
-        t_machine_info mi
-        WHERE mi.fTerminalType = #{terminalType}
-        AND mi.fValid = 1
-        AND  mi.fAllowSwitchGroup = 1
-    </select>
+  <select id="searchMachineInfos"
+    parameterType="com.keymanager.monitoring.criteria.MachineInfoCriteria"
+    resultType="com.keymanager.monitoring.entity.MachineInfo">
+    SELECT
+    <include refid="selectCol"/>
+    FROM
+    t_machine_info mi
+    WHERE mi.fTerminalType = #{machineInfoCriteria.terminalType}
+    <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''">AND
+      mi.fClientID like '%${machineInfoCriteria.clientID}%'
+    </if>
 
-    <select id="getMachineInfosForRenewal" resultType="com.keymanager.monitoring.entity.MachineInfo">
+    <if test="machineInfoCriteria.machineGroup != null and machineInfoCriteria.machineGroup != ''">
+      <choose>
+        <when
+          test="machineInfoCriteria.machineGroupFuzzyQuery == null or machineInfoCriteria.machineGroupFuzzyQuery == ''">
+          AND mi.fMachineGroup = #{machineInfoCriteria.machineGroup}
+        </when>
+        <otherwise>
+          AND mi.fMachineGroup like '%${machineInfoCriteria.machineGroup}%'
+        </otherwise>
+      </choose>
+    </if>
+    <if
+      test="machineInfoCriteria.upgradeFailedReason != null and machineInfoCriteria.upgradeFailedReason != ''">
+      AND mi.fUpgradeFailedReason like '%${machineInfoCriteria.upgradeFailedReason}%'
+    </if>
+    <if test="machineInfoCriteria.version != null and machineInfoCriteria.version != ''">AND
+      mi.fVersion like concat(#{machineInfoCriteria.version},'%')
+    </if>
+    <if
+      test="machineInfoCriteria.targetVersion != null and machineInfoCriteria.targetVersion != ''">
+      AND mi.fTargetVersion like concat(#{machineInfoCriteria.targetVersion},'%')
+    </if>
+    <if test="machineInfoCriteria.city != null and machineInfoCriteria.city != ''">AND mi.fCity like
+      concat(#{machineInfoCriteria.city},'%')
+    </if>
+    <if test="machineInfoCriteria.valid != null and machineInfoCriteria.valid != ''">AND mi.fValid =
+      #{machineInfoCriteria.valid}
+    </if>
+    <if test="machineInfoCriteria.hasProblem != null">AND (mi.fContinuousFailCount &gt; 5 OR
+      mi.fTenMinsLastVisitTime &lt; NOW()) and mi.fValid = 1
+    </if>
+    <if test="machineInfoCriteria.renewal != null">AND mi.fRenewalDate &lt; DATE_ADD(CURRENT_DATE(),
+      INTERVAL -3 DAY) and mi.fValid = 1
+    </if>
+    <if test="machineInfoCriteria.noMachineGroup != null">AND (mi.fMachineGroup is null or
+      mi.fMachineGroup = '')
+    </if>
+    <if test="machineInfoCriteria.hasMachineGroup != null">AND mi.fMachineGroup > ''</if>
+    <if
+      test="machineInfoCriteria.startUpStatus != null and machineInfoCriteria.startUpStatus != ''">
+      AND mi.fStartUpStatus = #{machineInfoCriteria.startUpStatus}
+    </if>
+    <if
+      test="machineInfoCriteria.runningProgramType != null and machineInfoCriteria.runningProgramType != ''">
+      AND mi.fRunningProgramType = #{machineInfoCriteria.runningProgramType}
+    </if>
+    <if test="machineInfoCriteria.noVNC != null">AND (mi.fHost is null or mi.fHost = '')</if>
+    <if test="machineInfoCriteria.noUpgrade != null">AND (mi.fVersion &lt;&gt; mi.fTargetVersion)
+    </if>
+    <if test="machineInfoCriteria.noChangePassword != null">AND (mi.fPassword &lt;&gt;
+      mi.fTargetVPSPassword)
+    </if>
+    <if test="machineInfoCriteria.startUpClient != null">AND mi.fDownloadProgramType > ''</if>
+    <if
+      test="machineInfoCriteria.vpsBackendSystemComputerID != null and machineInfoCriteria.vpsBackendSystemComputerID != ''">
+      AND (mi.fVPSBackendSystemComputerID = #{machineInfoCriteria.vpsBackendSystemComputerID})
+    </if>
+    <if
+      test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''">
+      AND mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName}
+    </if>
+    <if test="machineInfoCriteria.gtMemory != null and machineInfoCriteria.gtMemory != ''"> AND mi.fMemory &gt;= #{machineInfoCriteria.gtMemory}</if>
+    <if test="machineInfoCriteria.ltMemory != null and machineInfoCriteria.ltMemory != ''"> AND mi.fMemory &lt;= #{machineInfoCriteria.ltMemory}</if>
+    <if test="machineInfoCriteria.switchGroups != null">AND mi.fSwitchGroupName IN
+      <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")"
+        separator=",">
+        #{switchGroup}
+      </foreach>
+    </if>
+    <if test="machineInfoCriteria.orderBy != null and machineInfoCriteria.orderBy != ''">ORDER BY
+      ${machineInfoCriteria.orderBy}
+    </if>
+  </select>
+
+  <select id="getMachineInfosForSwitchGroup"
+    resultType="com.keymanager.monitoring.entity.MachineInfo">
+    SELECT
+    <include refid="selectCol"/>
+    FROM
+    t_machine_info mi
+    WHERE mi.fTerminalType = #{terminalType}
+    AND mi.fValid = 1
+    AND mi.fAllowSwitchGroup = 1
+  </select>
+
+  <select id="getMachineInfosForRenewal" resultType="com.keymanager.monitoring.entity.MachineInfo">
         SELECT
             mi.fClientID as 'clientID',
             mi.fRenewalDate AS "renewalDate"
@@ -134,84 +181,95 @@
         ORDER BY fRenewalDate
     </select>
 
-    <select id="searchBadMachineInfo" parameterType="com.keymanager.monitoring.criteria.MachineInfoCriteria" resultType="com.keymanager.monitoring.entity.MachineInfo">
-        SELECT
-        <include refid="selectCol" />
-        FROM
-        t_machine_info mi
-        WHERE mi.fTerminalType = #{machineInfoCriteria.terminalType}
-        AND mi.fMachineGroup = #{machineInfoCriteria.machineGroup}
-        AND (mi.fContinuousFailCount &gt; 5 OR mi.fTenMinsLastVisitTime &lt; NOW()) and mi.fValid = 1
-        <if test="machineInfoCriteria.groupName != null and machineInfoCriteria.groupName != ''">AND mi.fGroup = #{machineInfoCriteria.groupName}</if>
-        <if test="machineInfoCriteria.switchGroups != null"> AND mi.fSwitchGroupName IN
-            <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")" separator=",">
-                #{switchGroup}
-            </foreach>
-        </if>
-    </select>
+  <select id="searchBadMachineInfo"
+    parameterType="com.keymanager.monitoring.criteria.MachineInfoCriteria"
+    resultType="com.keymanager.monitoring.entity.MachineInfo">
+    SELECT
+    <include refid="selectCol"/>
+    FROM
+    t_machine_info mi
+    WHERE mi.fTerminalType = #{machineInfoCriteria.terminalType}
+    AND mi.fMachineGroup = #{machineInfoCriteria.machineGroup}
+    AND (mi.fContinuousFailCount &gt; 5 OR mi.fTenMinsLastVisitTime &lt; NOW()) and mi.fValid = 1
+    <if test="machineInfoCriteria.groupName != null and machineInfoCriteria.groupName != ''">AND
+      mi.fGroup = #{machineInfoCriteria.groupName}
+    </if>
+    <if test="machineInfoCriteria.switchGroups != null">AND mi.fSwitchGroupName IN
+      <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")"
+        separator=",">
+        #{switchGroup}
+      </foreach>
+    </if>
+  </select>
 
-    <select id="getMachineInfoByMachineID" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.MachineInfo">
-        SELECT
-        <include refid="selectCol" />
-        FROM
-        t_machine_info mi
-        WHERE mi.fTerminalType = #{terminalType}
-        AND mi.fClientID = #{clientID}
-    </select>
+  <select id="getMachineInfoByMachineID" parameterType="java.lang.String"
+    resultType="com.keymanager.monitoring.entity.MachineInfo">
+    SELECT
+    <include refid="selectCol"/>
+    FROM
+    t_machine_info mi
+    WHERE mi.fTerminalType = #{terminalType}
+    AND mi.fClientID = #{clientID}
+  </select>
 
-    <update id="resetRestartStatusForProcessing">
+  <update id="resetRestartStatusForProcessing">
         UPDATE t_machine_info SET fRestartStatus = NULL WHERE (fRestartStatus = 'Processing' or fRestartStatus = 'Logging')
     </update>
 
-    <select id="searchMachineInfosOrByHost" parameterType="java.lang.String" resultType="com.keymanager.monitoring.entity.MachineInfo">
-        SELECT
-        <include refid="selectCol" />
-        FROM
-        t_machine_info mi
-        WHERE mi.fTerminalType = #{terminalType}
-        <if test="comfirm != null"> and (mi.fHost is not null or mi.fHost &lt;&gt; '')</if>
-    </select>
+  <select id="searchMachineInfosOrByHost" parameterType="java.lang.String"
+    resultType="com.keymanager.monitoring.entity.MachineInfo">
+    SELECT
+    <include refid="selectCol"/>
+    FROM
+    t_machine_info mi
+    WHERE mi.fTerminalType = #{terminalType}
+    <if test="comfirm != null">and (mi.fHost is not null or mi.fHost &lt;&gt; '')</if>
+  </select>
 
-    <update id="updateMachineInfoVersion">
-        UPDATE t_machine_info
-        SET fVersion = #{version}, fRestartCount = 0, fRestartStatus = null
-        <choose>
-            <when test="hasKeyword == 1">
-                ,fIdleTotalMinutes = IF(fIdleStartTime IS NULL, fIdleTotalMinutes, fIdleTotalMinutes + TIMESTAMPDIFF(MINUTE, fIdleStartTime, NOW())), fIdleStartTime = NULL
-            </when>
-            <when test="hasKeyword == 0">
-                ,fIdleStartTime = IF(fIdleStartTime IS NULL, NOW(), fIdleStartTime)
-            </when>
-        </choose>
-        WHERE fClientID = #{clientID}
-    </update>
+  <update id="updateMachineInfoVersion">
+    UPDATE t_machine_info
+    SET fVersion = #{version}, fRestartCount = 0, fRestartStatus = null
+    <choose>
+      <when test="hasKeyword == 1">
+        ,fIdleTotalMinutes = IF(fIdleStartTime IS NULL, fIdleTotalMinutes, fIdleTotalMinutes +
+        TIMESTAMPDIFF(MINUTE, fIdleStartTime, NOW())), fIdleStartTime = NULL
+      </when>
+      <when test="hasKeyword == 0">
+        ,fIdleStartTime = IF(fIdleStartTime IS NULL, NOW(), fIdleStartTime)
+      </when>
+    </choose>
+    WHERE fClientID = #{clientID}
+  </update>
 
-    <update id="updateOptimizationResult">
-        UPDATE t_machine_info
-        SET fRestartOrderingTime = NOW(),
-        fOptimizationStartDate = IF(fOptimizationStartDate IS NULL, CURRENT_DATE(), fOptimizationStartDate),
-        fOptimizationTotalCount = fOptimizationTotalCount + 1,
-        fOptimizationSucceedCount = fOptimizationSucceedCount + #{count},
-        fLastVisitTime = NOW(),
-        fTenMinsLastVisitTime = DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
-        <choose>
-            <when test="count == 0">
-                fContinuousFailCount = fContinuousFailCount + 1,
-            </when>
-            <when test="count == 1">
-                fContinuousFailCount = 0,
-            </when>
-        </choose>
-        fLastSendNotificationTime = NULL,
-        fStatus = #{status},
-        fFreeSpace = #{freeSpace},
-        fVersion = #{version},
-        fCity = #{city},
-        fRunningProgramType = #{runningProgramType}
-        WHERE fClientID = #{clientID}
-    </update>
+  <update id="updateOptimizationResult">
+    UPDATE t_machine_info
+    SET fRestartOrderingTime = NOW(),
+    fOptimizationStartDate = IF(fOptimizationStartDate IS NULL, CURRENT_DATE(),
+    fOptimizationStartDate),
+    fOptimizationTotalCount = fOptimizationTotalCount + 1,
+    fOptimizationSucceedCount = fOptimizationSucceedCount + #{count},
+    fLastVisitTime = NOW(),
+    fTenMinsLastVisitTime = DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
+    <choose>
+      <when test="count == 0">
+        fContinuousFailCount = fContinuousFailCount + 1,
+      </when>
+      <when test="count == 1">
+        fContinuousFailCount = 0,
+      </when>
+    </choose>
+    fLastSendNotificationTime = NULL,
+    fStatus = #{status},
+    fFreeSpace = #{freeSpace},
+    fVersion = #{version},
+    fCity = #{city},
+    fRunningProgramType = #{runningProgramType},
+    fCpuCount = #{cpuCount},
+    fMemory = #{memory}
+    WHERE fClientID = #{clientID}
+  </update>
 
-    <update id="updateMachineInfoForCapturePosition">
+  <update id="updateMachineInfoForCapturePosition">
         UPDATE t_machine_info
         SET fRestartOrderingTime = NOW(),
         fOptimizationStartDate = IF(fOptimizationStartDate IS NULL, CURRENT_DATE(), fOptimizationStartDate),
@@ -222,24 +280,26 @@
         WHERE fClientID = #{clientID}
     </update>
 
-    <select id="getMachineInfoForStartUp" resultType="com.keymanager.monitoring.entity.MachineInfo">
-        SELECT
-        <include refid="selectCol" />
-        FROM t_machine_info mi
-        WHERE (mi.fStartUpStatus = 'New' OR (mi.fStartUpStatus = 'Processing' AND mi.fStartUpTime &lt; DATE_SUB(NOW(), INTERVAL 30 MINUTE)))
-        ORDER BY mi.fStartUpTime
-        LIMIT 1
-    </select>
+  <select id="getMachineInfoForStartUp" resultType="com.keymanager.monitoring.entity.MachineInfo">
+    SELECT
+    <include refid="selectCol"/>
+    FROM t_machine_info mi
+    WHERE (mi.fStartUpStatus = 'New' OR (mi.fStartUpStatus = 'Processing' AND mi.fStartUpTime &lt;
+    DATE_SUB(NOW(), INTERVAL 30 MINUTE)))
+    ORDER BY mi.fStartUpTime
+    LIMIT 1
+  </select>
 
-    <select id="getMachineInfoID" parameterType="java.lang.String" resultType="java.lang.String">
+  <select id="getMachineInfoID" parameterType="java.lang.String" resultType="java.lang.String">
         SELECT fClientID as 'clientID' FROM t_machine_info WHERE fVPSBackendSystemComputerID = #{vpsBackendSystemComputerID}
     </select>
 
-    <select id="getDownloadingClientCount" resultType="java.lang.Integer">
+  <select id="getDownloadingClientCount" resultType="java.lang.Integer">
         SELECT COUNT(1) FROM t_machine_info WHERE fStartUpStatus = "Downloading"
     </select>
 
-    <select id="getUpgradingMachineCount" parameterType="com.keymanager.monitoring.entity.ClientUpgrade" resultType="int">
+  <select id="getUpgradingMachineCount"
+    parameterType="com.keymanager.monitoring.entity.ClientUpgrade" resultType="int">
         SELECT COUNT(1) FROM t_machine_info
         WHERE fVersion = #{clientUpgrade.version}
         AND fRunningProgramType = #{clientUpgrade.programType}
@@ -247,7 +307,8 @@
         AND fTerminalType = #{clientUpgrade.terminalType}
     </select>
 
-    <select id="getResidualMachineCount" parameterType="com.keymanager.monitoring.entity.ClientUpgrade" resultType="int">
+  <select id="getResidualMachineCount"
+    parameterType="com.keymanager.monitoring.entity.ClientUpgrade" resultType="int">
         SELECT COUNT(1) FROM t_machine_info
         WHERE fVersion = #{clientUpgrade.version}
         AND fRunningProgramType = #{clientUpgrade.programType}
@@ -255,74 +316,80 @@
         AND fTerminalType = #{clientUpgrade.terminalType}
     </select>
 
-    <update id="reopenMachineInfo">
-        UPDATE
-            t_machine_info
-        SET
-            fDownloadProgramType = #{downloadProgramType},
-            fSwitchGroupName = #{switchGroupName},
-            fStartUpStatus = 'New',
-            fStartUpTime = NULL,
-            fTargetVersion = NULL,
-            fVersion = NULL
-        WHERE fClientID IN
-        <foreach item="clientID" collection="clientIDs" open="(" separator="," close=")">
-            #{clientID}
-        </foreach>
-    </update>
+  <update id="reopenMachineInfo">
+    UPDATE
+    t_machine_info
+    SET
+    fDownloadProgramType = #{downloadProgramType},
+    fSwitchGroupName = #{switchGroupName},
+    fStartUpStatus = 'New',
+    fStartUpTime = NULL,
+    fTargetVersion = NULL,
+    fVersion = NULL
+    WHERE fClientID IN
+    <foreach item="clientID" collection="clientIDs" open="(" separator="," close=")">
+      #{clientID}
+    </foreach>
+  </update>
 
-    <update id="updateStartUpStatusForCompleted">
-        UPDATE t_machine_info SET fStartUpStatus = 'Completed'
-        WHERE fClientID IN
-        <foreach item="clientID" collection="clientIDs" open="(" separator="," close=")">
-            #{clientID}
-        </foreach>
-    </update>
+  <update id="updateStartUpStatusForCompleted">
+    UPDATE t_machine_info SET fStartUpStatus = 'Completed'
+    WHERE fClientID IN
+    <foreach item="clientID" collection="clientIDs" open="(" separator="," close=")">
+      #{clientID}
+    </foreach>
+  </update>
 
-    <select id="selectMaxIdByMachineID" resultType="java.lang.Integer" parameterType="java.lang.String">
+  <select id="selectMaxIdByMachineID" resultType="java.lang.Integer"
+    parameterType="java.lang.String">
         SELECT MAX(CAST(TRIM(LEADING #{clientID} FROM fClientID) AS DECIMAL)) AS clientID
         FROM t_machine_info
         WHERE fClientID LIKE '${clientID}%'
     </select>
 
-    <update id="batchUpdateMachineInfo">
-        UPDATE t_machine_info
-        SET fTerminalType = fTerminalType
-        <if test="mi.machineGroup==1"> ,fMachineGroup = #{machineInfo.machineGroup}</if>
-        <if test="mi.allowSwitchGroup==1"> ,fAllowSwitchGroup = #{machineInfo.allowSwitchGroup}</if>
-        <if test="mi.switchGroupName==1"> ,fSwitchGroupName = #{machineInfo.switchGroupName}</if>
-        <if test="mi.host==1"> ,fHost = #{machineInfo.host}</if>
-        <if test="mi.port==1"> ,fPort = #{machineInfo.port}</if>
-        <if test="mi.userName==1"> ,fUserName = #{machineInfo.userName}</if>
-        <if test="mi.broadbandAccount==1">,fBroadbandAccount = #{machineInfo.broadbandAccount}</if>
-        <if test="mi.broadbandPassword==1"> ,fBroadbandPassword = #{machineInfo.broadbandPassword}</if>
-        <if test="mi.vpsBackendSystemComputerID==1"> ,fVpsBackendSystemComputerID = #{machineInfo.vpsBackendSystemComputerID}</if>
-        <if test="mi.vpsBackendSystemPassword==1"> ,fVpsBackendSystemPassword = #{machineInfo.vpsBackendSystemPassword}</if>
-        WHERE fClientID IN
-        <foreach item="clientID" collection="clientIDs" open="(" separator="," close=")">
-            #{clientID}
-        </foreach>
-    </update>
+  <update id="batchUpdateMachineInfo">
+    UPDATE t_machine_info
+    SET fTerminalType = fTerminalType
+    <if test="mi.machineGroup==1">,fMachineGroup = #{machineInfo.machineGroup}</if>
+    <if test="mi.allowSwitchGroup==1">,fAllowSwitchGroup = #{machineInfo.allowSwitchGroup}</if>
+    <if test="mi.switchGroupName==1">,fSwitchGroupName = #{machineInfo.switchGroupName}</if>
+    <if test="mi.host==1">,fHost = #{machineInfo.host}</if>
+    <if test="mi.port==1">,fPort = #{machineInfo.port}</if>
+    <if test="mi.userName==1">,fUserName = #{machineInfo.userName}</if>
+    <if test="mi.broadbandAccount==1">,fBroadbandAccount = #{machineInfo.broadbandAccount}</if>
+    <if test="mi.broadbandPassword==1">,fBroadbandPassword = #{machineInfo.broadbandPassword}</if>
+    <if test="mi.vpsBackendSystemComputerID==1">,fVpsBackendSystemComputerID =
+      #{machineInfo.vpsBackendSystemComputerID}
+    </if>
+    <if test="mi.vpsBackendSystemPassword==1">,fVpsBackendSystemPassword =
+      #{machineInfo.vpsBackendSystemPassword}
+    </if>
+    WHERE fClientID IN
+    <foreach item="clientID" collection="clientIDs" open="(" separator="," close=")">
+      #{clientID}
+    </foreach>
+  </update>
 
-    <update id="batchChangeStatus">
-        UPDATE t_machine_info
-        SET fValid = #{valid}
-        WHERE fClientID IN
-        <foreach collection="clientIds" item="clientID" open="(" close=")" separator=",">
-            #{clientID}
-        </foreach>
-    </update>
+  <update id="batchChangeStatus">
+    UPDATE t_machine_info
+    SET fValid = #{valid}
+    WHERE fClientID IN
+    <foreach collection="clientIds" item="clientID" open="(" close=")" separator=",">
+      #{clientID}
+    </foreach>
+  </update>
 
-    <update id="batchChangeTerminalType">
-        UPDATE t_machine_info
-        SET fTerminalType = #{terminalType}
-        WHERE fClientID IN
-        <foreach collection="clientIds" item="clientID" open="(" close=")" separator=",">
-            #{clientID}
-        </foreach>
-    </update>
-    
-    <update id="updateMachineTargetVersion" parameterType="com.keymanager.monitoring.entity.ClientUpgrade">
+  <update id="batchChangeTerminalType">
+    UPDATE t_machine_info
+    SET fTerminalType = #{terminalType}
+    WHERE fClientID IN
+    <foreach collection="clientIds" item="clientID" open="(" close=")" separator=",">
+      #{clientID}
+    </foreach>
+  </update>
+
+  <update id="updateMachineTargetVersion"
+    parameterType="com.keymanager.monitoring.entity.ClientUpgrade">
         UPDATE t_machine_info
         SET fTargetVersion = #{clientUpgrade.targetVersion}
         WHERE fVersion = #{clientUpgrade.version}
@@ -332,30 +399,39 @@
         LIMIT #{clientUpgrade.maxUpgradeCount}
     </update>
 
-    <update id="updateVersion">
+  <update id="updateVersion">
         UPDATE t_machine_info SET fVersion = #{version}
         WHERE fClientID = #{clientID}
     </update>
 
-    <select id="searchMachineInfoForRefreshStat" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord">
-        SELECT
-        cs.fGroup AS "group",
-        cs.fTerminalType AS "terminalType",
-        SUM(IF(DATE_ADD(cs.fLastVisitTime, INTERVAL IF(10 > cs.fPageNo * 3, 15, cs.fPageNo * 3 + 5) MINUTE) &lt; NOW(), 1, 0)) AS 'unworkMachineCount',
-        SUM(cs.fIdleTotalMinutes) AS "idleTotalMinutes",
-        COUNT(1)  AS 'totalMachineCount'
-        FROM t_machine_info cs
-        WHERE cs.fValid = 1
-        <if test="customerKeywordRefreshStatInfoCriteria.terminalType!=null and customerKeywordRefreshStatInfoCriteria.terminalType!=''">AND cs.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}</if>
-        <if test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">
-            AND cs.fGroup like '${customerKeywordRefreshStatInfoCriteria.groupName}%'
-            AND EXISTS (SELECT 1 FROM t_customer_keyword ck WHERE ck.fType = #{customerKeywordRefreshStatInfoCriteria.entryType} AND ck.fOptimizeGroupName like '${customerKeywordRefreshStatInfoCriteria.groupName}%')
-        </if>
-        GROUP BY cs.fGroup, cs.fTerminalType
-        ORDER BY cs.fGroup
-    </select>
+  <select id="searchMachineInfoForRefreshStat"
+    parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria"
+    resultType="com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord">
+    SELECT
+    cs.fGroup AS "group",
+    cs.fTerminalType AS "terminalType",
+    SUM(IF(DATE_ADD(cs.fLastVisitTime, INTERVAL IF(10 > cs.fPageNo * 3, 15, cs.fPageNo * 3 + 5)
+    MINUTE) &lt; NOW(), 1, 0)) AS 'unworkMachineCount',
+    SUM(cs.fIdleTotalMinutes) AS "idleTotalMinutes",
+    COUNT(1) AS 'totalMachineCount'
+    FROM t_machine_info cs
+    WHERE cs.fValid = 1
+    <if
+      test="customerKeywordRefreshStatInfoCriteria.terminalType!=null and customerKeywordRefreshStatInfoCriteria.terminalType!=''">
+      AND cs.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
+    </if>
+    <if
+      test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">
+      AND cs.fGroup like '${customerKeywordRefreshStatInfoCriteria.groupName}%'
+      AND EXISTS (SELECT 1 FROM t_customer_keyword ck WHERE ck.fType =
+      #{customerKeywordRefreshStatInfoCriteria.entryType} AND ck.fOptimizeGroupName like
+      '${customerKeywordRefreshStatInfoCriteria.groupName}%')
+    </if>
+    GROUP BY cs.fGroup, cs.fTerminalType
+    ORDER BY cs.fGroup
+  </select>
 
-    <update id="updatePageNo">
+  <update id="updatePageNo">
         UPDATE t_machine_info
         SET
         fLastVisitTime = NOW(),
@@ -364,33 +440,42 @@
         WHERE fClientID = #{clientID}
     </update>
 
-    <update id="updateRestartStatus">
+  <update id="updateRestartStatus">
         UPDATE t_machine_info
         SET fRestartStatus = #{restartStatus}, fRestartTime = now(), fThreeMinsRestartTime = DATE_ADD(NOW(), INTERVAL 3 MINUTE ), fTenMinsRestartTime = DATE_ADD(NOW(), INTERVAL 10 MINUTE ), fRestartOrderingTime = now()
         WHERE fClientID = #{clientID}
     </update>
 
-    <select id="searchMachineInfoSummaryVO" resultType="com.keymanager.monitoring.vo.MachineInfoSummaryVO">
-        SELECT cs.fClientIDPrefix as clientIDPrefix, cs.fTerminalType as type, cs.fCity as city, COUNT(1) as 'count', fSwitchGroupName as 'switchGroupName'
-        FROM t_machine_info cs
-        <where> cs.fValid = 1
-            <if test="clientIDPrefix!=null and clientIDPrefix!=''">and cs.fClientIDPrefix LIKE '%${clientIDPrefix}%'</if>
-            <if test="city!=null and city!=''">and cs.fCity LIKE '%${city}%'</if>
-            <if test="switchGroupName!=null and switchGroupName!=''">and cs.fSwitchGroupName LIKE '%${switchGroupName}%'</if>
-        </where>
-        GROUP BY cs.fClientIDPrefix, cs.fTerminalType, cs.fCity ORDER BY cs.fClientIDPrefix
-    </select>
+  <select id="searchMachineInfoSummaryVO"
+    resultType="com.keymanager.monitoring.vo.MachineInfoSummaryVO">
+    SELECT cs.fClientIDPrefix as clientIDPrefix, cs.fTerminalType as type, cs.fCity as city,
+    COUNT(1) as 'count', fSwitchGroupName as 'switchGroupName'
+    FROM t_machine_info cs
+    <where>cs.fValid = 1
+      <if test="clientIDPrefix!=null and clientIDPrefix!=''">and cs.fClientIDPrefix LIKE
+        '%${clientIDPrefix}%'
+      </if>
+      <if test="city!=null and city!=''">and cs.fCity LIKE '%${city}%'</if>
+      <if test="switchGroupName!=null and switchGroupName!=''">and cs.fSwitchGroupName LIKE
+        '%${switchGroupName}%'
+      </if>
+    </where>
+    GROUP BY cs.fClientIDPrefix, cs.fTerminalType, cs.fCity ORDER BY cs.fClientIDPrefix
+  </select>
 
-    <select id="searchMachineInfoGroupSummaryVO" resultType="com.keymanager.monitoring.vo.MachineInfoGroupSummaryVO">
-        SELECT cs.fGroup as 'group', cs.fTerminalType as terminalType, COUNT(1) AS 'count' FROM t_machine_info cs
-        <where>
-            <if test="group!=null and group!=''">and cs.fGroup LIKE '%${group}%'</if>
-            <if test="terminalType!=null and terminalType!=''">and cs.fTerminalType = #{terminalType}</if>
-        </where>
-        GROUP BY cs.fGroup, cs.fTerminalType ORDER BY cs.fGroup
-    </select>
+  <select id="searchMachineInfoGroupSummaryVO"
+    resultType="com.keymanager.monitoring.vo.MachineInfoGroupSummaryVO">
+    SELECT cs.fGroup as 'group', cs.fTerminalType as terminalType, COUNT(1) AS 'count' FROM
+    t_machine_info cs
+    <where>
+      <if test="group!=null and group!=''">and cs.fGroup LIKE '%${group}%'</if>
+      <if test="terminalType!=null and terminalType!=''">and cs.fTerminalType = #{terminalType}</if>
+    </where>
+    GROUP BY cs.fGroup, cs.fTerminalType ORDER BY cs.fGroup
+  </select>
 
-    <select id="searchRestartingClientStatuses" resultType="com.keymanager.monitoring.entity.MachineInfo">
+  <select id="searchRestartingClientStatuses"
+    resultType="com.keymanager.monitoring.entity.MachineInfo">
         SELECT
         cs.fClientID AS "clientID",
         cs.fTerminalType AS "terminalType",
@@ -410,7 +495,8 @@
         AND fHost &gt; '' order by fRestartOrderingTime limit 1
     </select>
 
-    <select id="searchWaitingRestartingMachineInfos" resultType="com.keymanager.monitoring.entity.MachineInfo">
+  <select id="searchWaitingRestartingMachineInfos"
+    resultType="com.keymanager.monitoring.entity.MachineInfo">
         SELECT
         cs.fClientID AS "clientID",
         cs.fTerminalType AS "terminalType",
@@ -427,18 +513,18 @@
         AND fValid = 1 AND fHost &gt; '' order by fRestartOrderingTime limit 1
     </select>
 
-    <update id="updateRemainingKeywordIndicator">
-        UPDATE t_machine_info SET fRemainingKeyword = #{indicator} WHERE fGroup in
-        <foreach item="item" collection="groupNames" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </update>
+  <update id="updateRemainingKeywordIndicator">
+    UPDATE t_machine_info SET fRemainingKeyword = #{indicator} WHERE fGroup in
+    <foreach item="item" collection="groupNames" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </update>
 
-    <update id="updateAllRemainingKeywordIndicator">
+  <update id="updateAllRemainingKeywordIndicator">
         UPDATE t_machine_info SET fRemainingKeyword = #{indicator}
     </update>
 
-    <select id="searchClientForAllotCookie" resultType="com.keymanager.monitoring.vo.CookieVO">
+  <select id="searchClientForAllotCookie" resultType="com.keymanager.monitoring.vo.CookieVO">
         SELECT
             cs.fClientID AS 'clientID',
             cs.fSwitchGroupName AS 'switchGroupName',
@@ -462,98 +548,162 @@
         AND (cc.fCookieCount &lt; #{clientCookieCount} OR cc.fCookieCount IS NULL)
     </select>
 
-    <update id="resetOptimizationInfo">
+  <update id="resetOptimizationInfo">
         UPDATE t_machine_info SET fRemainingKeyword = 1, fIdleStartTime = null, fIdleTotalMinutes = 0
     </update>
 
-    <update id="updateMachineGroup" parameterType="com.keymanager.monitoring.criteria.MachineInfoCriteria">
-        UPDATE t_machine_info mi
-        SET mi.fMachineGroup = #{machineInfoCriteria.targetMachineGroup}
-        WHERE 1=1
-        <if test="machineInfoCriteria.clientIDs != null"> AND mi.fClientID IN
-            <foreach item = "item" collection = "machineInfoCriteria.clientIDs" open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''"> AND mi.fClientID like '${machineInfoCriteria.clientID}%'</if>
+  <update id="updateMachineGroup"
+    parameterType="com.keymanager.monitoring.criteria.MachineInfoCriteria">
+    UPDATE t_machine_info mi
+    SET mi.fMachineGroup = #{machineInfoCriteria.targetMachineGroup}
+    WHERE 1=1
+    <if test="machineInfoCriteria.clientIDs != null">AND mi.fClientID IN
+      <foreach item="item" collection="machineInfoCriteria.clientIDs" open="(" separator=","
+        close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''">AND
+      mi.fClientID like '${machineInfoCriteria.clientID}%'
+    </if>
 
-        <if test="machineInfoCriteria.machineGroup != null and machineInfoCriteria.machineGroup != ''">
-            <choose>
-                <when test="machineInfoCriteria.machineGroupFuzzyQuery == null or machineInfoCriteria.machineGroupFuzzyQuery == ''">
-                    AND mi.fMachineGroup = #{machineInfoCriteria.machineGroup}
-                </when>
-                <otherwise>
-                    AND mi.fMachineGroup like '%${machineInfoCriteria.machineGroup}%'
-                </otherwise>
-            </choose>
-        </if>
-        <if test="machineInfoCriteria.upgradeFailedReason != null and machineInfoCriteria.upgradeFailedReason != ''"> AND mi.fUpgradeFailedReason like '%${machineInfoCriteria.upgradeFailedReason}%'</if>
-        <if test="machineInfoCriteria.version != null and machineInfoCriteria.version != ''"> AND mi.fVersion like concat(#{machineInfoCriteria.version},'%')</if>
-        <if test="machineInfoCriteria.targetVersion != null and machineInfoCriteria.targetVersion != ''"> AND mi.fTargetVersion like concat(#{machineInfoCriteria.targetVersion},'%')</if>
-        <if test="machineInfoCriteria.city != null and machineInfoCriteria.city != ''"> AND mi.fCity like concat(#{machineInfoCriteria.city},'%')</if>
-        <if test="machineInfoCriteria.valid != null and machineInfoCriteria.valid != ''"> AND mi.fValid = #{machineInfoCriteria.valid}</if>
-        <if test="machineInfoCriteria.hasProblem != null"> AND (mi.fContinuousFailCount &gt; 5 OR mi.fTenMinsLastVisitTime &lt; NOW()) and mi.fValid = 1</if>
-        <if test="machineInfoCriteria.renewal != null"> AND mi.fRenewalDate &lt; DATE_ADD(CURRENT_DATE(), INTERVAL -3 DAY) and mi.fValid = 1</if>
-        <if test="machineInfoCriteria.noMachineGroup != null"> AND (mi.fMachineGroup is null or mi.fMachineGroup = '')</if>
-        <if test="machineInfoCriteria.hasMachineGroup != null"> AND mi.fMachineGroup > ''</if>
-        <if test="machineInfoCriteria.startUpStatus != null and machineInfoCriteria.startUpStatus != ''"> AND mi.fStartUpStatus = #{machineInfoCriteria.startUpStatus}</if>
-        <if test="machineInfoCriteria.runningProgramType != null and machineInfoCriteria.runningProgramType != ''"> AND mi.fRunningProgramType = #{machineInfoCriteria.runningProgramType}</if>
-        <if test="machineInfoCriteria.noVNC != null"> AND (mi.fHost is null or mi.fHost = '')</if>
-        <if test="machineInfoCriteria.noUpgrade != null"> AND (mi.fVersion &lt;&gt; mi.fTargetVersion)</if>
-        <if test="machineInfoCriteria.noChangePassword != null"> AND (mi.fPassword &lt;&gt; mi.fTargetVPSPassword)</if>
-        <if test="machineInfoCriteria.startUpClient != null"> AND mi.fDownloadProgramType > ''</if>
-        <if test="machineInfoCriteria.vpsBackendSystemComputerID != null and machineInfoCriteria.vpsBackendSystemComputerID != ''"> AND (mi.fVPSBackendSystemComputerID = #{machineInfoCriteria.vpsBackendSystemComputerID})</if>
-        <if test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''"> AND mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName}</if>
-        <if test="machineInfoCriteria.switchGroups != null"> AND mi.fSwitchGroupName IN
-            <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")" separator=",">
-                #{switchGroup}
-            </foreach>
-        </if>
-        <if test="machineInfoCriteria.orderBy != null and machineInfoCriteria.orderBy != ''"> ORDER BY ${machineInfoCriteria.orderBy}</if>
-    </update>
+    <if test="machineInfoCriteria.machineGroup != null and machineInfoCriteria.machineGroup != ''">
+      <choose>
+        <when
+          test="machineInfoCriteria.machineGroupFuzzyQuery == null or machineInfoCriteria.machineGroupFuzzyQuery == ''">
+          AND mi.fMachineGroup = #{machineInfoCriteria.machineGroup}
+        </when>
+        <otherwise>
+          AND mi.fMachineGroup like '%${machineInfoCriteria.machineGroup}%'
+        </otherwise>
+      </choose>
+    </if>
+    <if
+      test="machineInfoCriteria.upgradeFailedReason != null and machineInfoCriteria.upgradeFailedReason != ''">
+      AND mi.fUpgradeFailedReason like '%${machineInfoCriteria.upgradeFailedReason}%'
+    </if>
+    <if test="machineInfoCriteria.version != null and machineInfoCriteria.version != ''">AND
+      mi.fVersion like concat(#{machineInfoCriteria.version},'%')
+    </if>
+    <if
+      test="machineInfoCriteria.targetVersion != null and machineInfoCriteria.targetVersion != ''">
+      AND mi.fTargetVersion like concat(#{machineInfoCriteria.targetVersion},'%')
+    </if>
+    <if test="machineInfoCriteria.city != null and machineInfoCriteria.city != ''">AND mi.fCity like
+      concat(#{machineInfoCriteria.city},'%')
+    </if>
+    <if test="machineInfoCriteria.valid != null and machineInfoCriteria.valid != ''">AND mi.fValid =
+      #{machineInfoCriteria.valid}
+    </if>
+    <if test="machineInfoCriteria.hasProblem != null">AND (mi.fContinuousFailCount &gt; 5 OR
+      mi.fTenMinsLastVisitTime &lt; NOW()) and mi.fValid = 1
+    </if>
+    <if test="machineInfoCriteria.renewal != null">AND mi.fRenewalDate &lt; DATE_ADD(CURRENT_DATE(),
+      INTERVAL -3 DAY) and mi.fValid = 1
+    </if>
+    <if test="machineInfoCriteria.noMachineGroup != null">AND (mi.fMachineGroup is null or
+      mi.fMachineGroup = '')
+    </if>
+    <if test="machineInfoCriteria.hasMachineGroup != null">AND mi.fMachineGroup > ''</if>
+    <if
+      test="machineInfoCriteria.startUpStatus != null and machineInfoCriteria.startUpStatus != ''">
+      AND mi.fStartUpStatus = #{machineInfoCriteria.startUpStatus}
+    </if>
+    <if
+      test="machineInfoCriteria.runningProgramType != null and machineInfoCriteria.runningProgramType != ''">
+      AND mi.fRunningProgramType = #{machineInfoCriteria.runningProgramType}
+    </if>
+    <if test="machineInfoCriteria.noVNC != null">AND (mi.fHost is null or mi.fHost = '')</if>
+    <if test="machineInfoCriteria.noUpgrade != null">AND (mi.fVersion &lt;&gt; mi.fTargetVersion)
+    </if>
+    <if test="machineInfoCriteria.noChangePassword != null">AND (mi.fPassword &lt;&gt;
+      mi.fTargetVPSPassword)
+    </if>
+    <if test="machineInfoCriteria.startUpClient != null">AND mi.fDownloadProgramType > ''</if>
+    <if
+      test="machineInfoCriteria.vpsBackendSystemComputerID != null and machineInfoCriteria.vpsBackendSystemComputerID != ''">
+      AND (mi.fVPSBackendSystemComputerID = #{machineInfoCriteria.vpsBackendSystemComputerID})
+    </if>
+    <if
+      test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''">
+      AND mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName}
+    </if>
+    <if test="machineInfoCriteria.switchGroups != null">AND mi.fSwitchGroupName IN
+      <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")"
+        separator=",">
+        #{switchGroup}
+      </foreach>
+    </if>
+    <if test="machineInfoCriteria.orderBy != null and machineInfoCriteria.orderBy != ''">ORDER BY
+      ${machineInfoCriteria.orderBy}
+    </if>
+  </update>
 
-    <select id="searchMachineInfoFormMachineGroupWorkInfo" resultType="com.keymanager.monitoring.entity.MachineGroupWorkInfo">
-        SELECT
-        cs.fMachineGroup AS "machineGroup",
-        cs.fTerminalType AS "terminalType",
-        SUM(IF(DATE_ADD(cs.fLastVisitTime, INTERVAL IF(10 > cs.fPageNo * 3, 15, cs.fPageNo * 3 + 5) MINUTE) &lt; NOW(), 1, 0)) AS 'unworkMachineCount',
-        SUM(cs.fIdleTotalMinutes) AS "idleTotalMinutes",
-        COUNT(1)  AS 'totalMachineCount'
-        FROM t_machine_info cs
-        WHERE cs.fValid = 1
-        <if test="machineGroupWorkInfoCriteria.terminalType!=null and machineGroupWorkInfoCriteria.terminalType!=''">AND cs.fTerminalType = #{machineGroupWorkInfoCriteria.terminalType}</if>
-        <if test="machineGroupWorkInfoCriteria.machineGroup!=null and machineGroupWorkInfoCriteria.machineGroup!=''">
-            AND cs.fMachineGroup like '${machineGroupWorkInfoCriteria.machineGroup}%'
-            AND EXISTS (SELECT 1 FROM t_customer_keyword ck WHERE ck.fType = #{machineGroupWorkInfoCriteria.entryType} AND ck.fMachineGroup like '${machineGroupWorkInfoCriteria.machineGroup}%')
-        </if>
-        GROUP BY cs.fMachineGroup, cs.fTerminalType
-    </select>
+  <select id="searchMachineInfoFormMachineGroupWorkInfo"
+    resultType="com.keymanager.monitoring.entity.MachineGroupWorkInfo">
+    SELECT
+    cs.fMachineGroup AS "machineGroup",
+    cs.fTerminalType AS "terminalType",
+    SUM(IF(DATE_ADD(cs.fLastVisitTime, INTERVAL IF(10 > cs.fPageNo * 3, 15, cs.fPageNo * 3 + 5)
+    MINUTE) &lt; NOW(), 1, 0)) AS 'unworkMachineCount',
+    SUM(cs.fIdleTotalMinutes) AS "idleTotalMinutes",
+    COUNT(1) AS 'totalMachineCount'
+    FROM t_machine_info cs
+    WHERE cs.fValid = 1
+    <if
+      test="machineGroupWorkInfoCriteria.terminalType!=null and machineGroupWorkInfoCriteria.terminalType!=''">
+      AND cs.fTerminalType = #{machineGroupWorkInfoCriteria.terminalType}
+    </if>
+    <if
+      test="machineGroupWorkInfoCriteria.machineGroup!=null and machineGroupWorkInfoCriteria.machineGroup!=''">
+      AND cs.fMachineGroup like '${machineGroupWorkInfoCriteria.machineGroup}%'
+      AND EXISTS (SELECT 1 FROM t_customer_keyword ck WHERE ck.fType =
+      #{machineGroupWorkInfoCriteria.entryType} AND ck.fMachineGroup like
+      '${machineGroupWorkInfoCriteria.machineGroup}%')
+    </if>
+    GROUP BY cs.fMachineGroup, cs.fTerminalType
+  </select>
 
-    <select id="searchMachineInfoMachineGroupSummaryVO" resultType="com.keymanager.monitoring.vo.MachineInfoMachineGroupSummaryVO">
-        SELECT mi.fMachineGroup as 'machineGroup', mi.fTerminalType as terminalType, COUNT(1) AS 'count' FROM t_machine_info mi
-        <where>
-            <if test="machineGroup!=null and machineGroup!=''">and mi.fMachineGroup LIKE '%${machineGroup}%'</if>
-            <if test="terminalType!=null and terminalType!=''">and mi.fTerminalType = #{terminalType}</if>
-        </where>
-        GROUP BY mi.fMachineGroup, mi.fTerminalType ORDER BY mi.fMachineGroup
-    </select>
+  <select id="searchMachineInfoMachineGroupSummaryVO"
+    resultType="com.keymanager.monitoring.vo.MachineInfoMachineGroupSummaryVO">
+    SELECT mi.fMachineGroup as 'machineGroup', mi.fTerminalType as terminalType, COUNT(1) AS 'count'
+    FROM t_machine_info mi
+    <where>
+      <if test="machineGroup!=null and machineGroup!=''">and mi.fMachineGroup LIKE
+        '%${machineGroup}%'
+      </if>
+      <if test="terminalType!=null and terminalType!=''">and mi.fTerminalType = #{terminalType}</if>
+    </where>
+    GROUP BY mi.fMachineGroup, mi.fTerminalType ORDER BY mi.fMachineGroup
+  </select>
 
-    <update id="updateMachine">
-        UPDATE t_machine_info
-        <set>
-            <if test="city!=null and city!=''">
-                fCity=#{city},
-            </if>
-             <if test="version!=null and version!=''">
-                fVersion=#{version},
-            </if>
-             <if test="freeSpace!=null and freeSpace!=''">
-                 fFreeSpace=#{freeSpace},
-            </if>
-             <if test="runningProgramType!=null and runningProgramType!=''">
-                 fRunningProgramType=#{runningProgramType},
-            </if>
-        </set>
-        WHERE fClientID = #{clientID}
-    </update>
+  <update id="updateMachine">
+    UPDATE t_machine_info
+    <set>
+      <if test="city!=null and city!=''">
+        fCity=#{city},
+      </if>
+      <if test="version!=null and version!=''">
+        fVersion=#{version},
+      </if>
+      <if test="freeSpace!=null and freeSpace!=''">
+        fFreeSpace=#{freeSpace},
+      </if>
+      <if test="runningProgramType!=null and runningProgramType!=''">
+        fRunningProgramType=#{runningProgramType},
+      </if>
+      <if test="cpuCount!=null and cpuCount!=''">
+        fCpuCount=#{cpuCount},
+      </if>
+      <if test="memory!=null and memory!=''">
+        fMemory=#{memory},
+      </if>
+      fLastVisitTime = NOW(),
+      fTenMinsLastVisitTime = DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
+      fContinuousFailCount = 0,
+      fLastSendNotificationTime = NULL
+    </set>
+    WHERE fClientID = #{clientID}
+  </update>
 </mapper>
+

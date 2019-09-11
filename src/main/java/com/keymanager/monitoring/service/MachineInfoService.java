@@ -65,12 +65,12 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
     }
 
     public void logMachineInfoTime(String terminalType, String clientID, String status, String freeSpace, String version, String
-            city, int updateCount, String runningProgramType){
+            city, int updateCount, String runningProgramType,int cpuCount,int memory){
         MachineInfo machineInfo = machineInfoDao.selectById(clientID);
         if(machineInfo == null){
             addSummaryMachineInfo(terminalType, clientID, freeSpace, version, city);
         }else{
-            machineInfoDao.updateOptimizationResult(clientID, status, version, freeSpace, city, updateCount, runningProgramType);
+            machineInfoDao.updateOptimizationResult(clientID, status, version, freeSpace, city, updateCount, runningProgramType,cpuCount,memory);
         }
     }
 
@@ -890,7 +890,7 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         return machineInfoDao.searchMachineInfoMachineGroupSummaryVO(machineGroup,terminalType);
     }
 
-    public void updateMachine(String clientID, String city, String version, String freeSpace, String runningProgramType) {
-        machineInfoDao.updateMachine(clientID,city,version,freeSpace,runningProgramType);
+    public void updateMachine(String clientID, String city, String version, String freeSpace, String runningProgramType,int cpuCount,int memory) {
+        machineInfoDao.updateMachine(clientID,city,version,freeSpace,runningProgramType,cpuCount,memory);
     }
 }
