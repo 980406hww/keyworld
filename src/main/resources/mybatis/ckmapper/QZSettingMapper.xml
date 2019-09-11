@@ -2,57 +2,55 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.ckadmin.dao.QZSettingDao">
-  <select id="searchQZSettings" resultType="com.keymanager.ckadmin.entity.QZSetting">
-    SELECT
-    qs.fUuid AS 'uuid',
-    c.fUserID AS 'userID',
-    qs.fCustomerUuid AS 'customerUuid',
-    c.fContactPerson AS 'contactPerson',
-    o.fOrganizationName AS 'organizationName',
-    qs.fDomain AS 'domain',
-    qs.fSearchEngine AS 'searchEngine',
-    qs.fBearPawNumber AS 'bearPawNumber',
-    <choose>
-      <when test="qzSettingCriteria.terminalType == 'PC'">
-        qs.fPcGroup AS 'pcGroup',
-      </when>
-      <when test="qzSettingCriteria.terminalType == 'Phone'">
-        qs.fPhoneGroup AS 'phoneGroup',
-      </when>
-    </choose>
-    qs.fType AS 'type',
-    qs.fCreateTime AS 'createTime',
-    qs.fStatus AS 'status',
-    qs.fRenewalStatus AS 'renewalStatus',
-    qs.fCrawlerStatus AS 'crawlerStatus',
-    qs.fAutoCrawlKeywordFlag AS 'autoCrawlKeywordFlag'
-    FROM t_qz_setting qs
-    JOIN t_customer c
-    ON qs.fCustomerUuid = c.fUuid
-    LEFT JOIN t_userinfo u
-    ON u.fLoginName = c.fUserID
-    LEFT JOIN t_organization o
-    ON o.fUuid = u.fOrganizationID
-    WHERE 1 = 1
-    <if test="qzSettingCriteria.searchEngine != 'All'">AND qs.fSearchEngine =
-      #{qzSettingCriteria.searchEngine}
-    </if>
-    <choose>
-      <when test="qzSettingCriteria.terminalType == 'PC'">
-        AND qs.fPcGroup &gt; ''
-        <if test="qzSettingCriteria.group != null and qzSettingCriteria.group != ''">AND qs.fPcGroup
-          = #{qzSettingCriteria.group}
-        </if>
-      </when>
-      <when test="qzSettingCriteria.terminalType == 'Phone'">
-        AND qs.fPhoneGroup &gt; ''
-        <if test="qzSettingCriteria.group != null and qzSettingCriteria.group != ''">AND
-          qs.fPhoneGroup = #{qzSettingCriteria.group}
-        </if>
-      </when>
-    </choose>
-    ORDER BY qs.fUpdateTime
-  </select>
+    <select id="searchQZSettings" resultType="com.keymanager.ckadmin.entity.QZSetting">
+        SELECT
+        qs.fUuid AS 'uuid',
+        c.fUserID AS 'userID',
+        qs.fCustomerUuid AS 'customerUuid',
+        c.fContactPerson AS 'contactPerson',
+        o.fOrganizationName AS 'organizationName',
+        qs.fDomain AS 'domain',
+        qs.fSearchEngine  AS 'searchEngine',
+        qs.fBearPawNumber AS 'bearPawNumber',
+        <choose>
+            <when test="qzSettingCriteria.terminalType == 'PC'">
+                qs.fPcGroup AS 'pcGroup',
+            </when>
+            <when test="qzSettingCriteria.terminalType == 'Phone'">
+                qs.fPhoneGroup AS 'phoneGroup',
+            </when>
+        </choose>
+        qs.fType AS 'type',
+        qs.fCreateTime AS 'createTime',
+        qs.fStatus AS 'status',
+        qs.fRenewalStatus AS 'renewalStatus',
+        qs.fCrawlerStatus AS 'crawlerStatus',
+        qs.fAutoCrawlKeywordFlag AS 'autoCrawlKeywordFlag'
+        FROM t_qz_setting qs
+        JOIN t_customer c
+        ON qs.fCustomerUuid = c.fUuid
+        LEFT JOIN t_userinfo u
+        ON u.fLoginName = c.fUserID
+        LEFT JOIN t_organization o
+        ON o.fUuid = u.fOrganizationID
+        WHERE 1 = 1
+        <if test="qzSettingCriteria.domain != null and qzSettingCriteria.domain != ''">AND qs.fDomain = #{qzSettingCriteria.domain}</if>
+        <if test="qzSettingCriteria.userInfoID != null and qzSettingCriteria.userInfoID != ''">AND u.fUuid = #{qzSettingCriteria.userInfoID}</if>
+        <if test="qzSettingCriteria.organizationID != null and qzSettingCriteria.organizationID != ''">AND u.fOrganizationID = #{qzSettingCriteria.organizationID}</if>
+        <if test="qzSettingCriteria.customerInfo != null and qzSettingCriteria.customerInfo != ''">AND qs.fCustomerUuid = #{qzSettingCriteria.customerInfo}</if>
+        <if test="qzSettingCriteria.searchEngine != 'All'">AND qs.fSearchEngine = #{qzSettingCriteria.searchEngine}</if>
+        <choose>
+            <when test="qzSettingCriteria.terminalType == 'PC'">
+                AND qs.fPcGroup &gt; ''
+                <if test="qzSettingCriteria.group != null and qzSettingCriteria.group != ''">AND qs.fPcGroup = #{qzSettingCriteria.group}</if>
+            </when>
+            <when test="qzSettingCriteria.terminalType == 'Phone'">
+                AND qs.fPhoneGroup &gt; ''
+                <if test="qzSettingCriteria.group != null and qzSettingCriteria.group != ''">AND qs.fPhoneGroup = #{qzSettingCriteria.group}</if>
+            </when>
+        </choose>
+        ORDER BY qs.fUpdateTime
+    </select>
 
   <select id="searchQZSettingSearchEngines" resultType="com.keymanager.ckadmin.vo.QZSettingVO">
     SELECT

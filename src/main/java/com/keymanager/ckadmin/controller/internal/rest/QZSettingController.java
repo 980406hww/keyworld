@@ -2,19 +2,24 @@ package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.controller.internal.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
+import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
+import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
 import com.keymanager.ckadmin.entity.QZSetting;
+import com.keymanager.ckadmin.entity.UserInfo;
+import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.QZSettingService;
+import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.HashMap;
-import com.keymanager.monitoring.criteria.QZSettingSaveCustomerKeywordsCriteria;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +31,9 @@ import javax.servlet.http.HttpSession;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +42,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @ClassName QZSettingController
@@ -50,10 +61,32 @@ public class QZSettingController extends SpringMVCBaseController {
 
     @Resource(name = "qzSettingService2")
     private QZSettingService qzSettingService;
+
     @Resource(name = "customerService2")
     private CustomerService customerService;
+
     @Resource(name = "configService2")
     private ConfigService configService;
+
+    @Resource(name = "userInfoService2")
+    private UserInfoService userInfoService;
+
+    //跳转添加或修改用户页面
+//    @RequiresPermissions("/internal/productKeyword/searchProductKeywords")
+
+    @GetMapping(value = "/getActiveCustomer")
+    public List<Customer> getActiveCustomer(){
+        CustomerCriteria customerCriteria = new CustomerCriteria();
+        List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
+        return customerList;
+    }
+
+    @GetMapping(value = "/getUserInfo")
+    public List<UserInfo> getUserInfo(){
+        List<UserInfo> activeUsers = userInfoService.findActiveUsers();
+        return activeUsers;
+    }
+
 
     /**
      * 跳转添加或修改用户页面
@@ -208,10 +241,10 @@ public class QZSettingController extends SpringMVCBaseController {
     /**
      * 跳转添加或修改指定关键字页面
      */
-    @GetMapping(value = "/toAppointCustomerKeyword")
-    public ModelAndView toAppointCustomerKeyword() {
+    @GetMapping(value = "/toAddCustomerKeyword")
+    public ModelAndView toAddCustomerKeyword() {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("qzsettings/appointCustomerKeyword");
+        mv.setViewName("qzsettings/addCustomerKeyword");
         return mv;
     }
 
@@ -221,10 +254,9 @@ public class QZSettingController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean();
         try {
             String userName = (String) request.getSession().getAttribute("username");
-            qzSettingService
-                .saveQZSettingCustomerKeywords(qzSettingSaveCustomerKeywordsCriteria, userName);
+            qzSettingService.saveQZSettingCustomerKeywords(qzSettingSaveCustomerKeywordsCriteria, userName);
             resultBean.setCode(200);
-            resultBean.setMsg("更新排除词成功");
+            resultBean.setMsg("添加关键字成功");
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
@@ -326,6 +358,15 @@ public class QZSettingController extends SpringMVCBaseController {
         }
         return resultBean;
     }
+
+    /**
+     * addImportantCustomerKeyword.html
+     * 跳转添加或修改重点关键字页面
+     */
+    @GetMapping(value = "/toAddImportantCustomerKeyword")
+    public ModelAndView toAddImportantCustomerKeyword() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("qzsettings/addImportantCustomerKeyword");
+        return mv;
+    }
 }
-
-

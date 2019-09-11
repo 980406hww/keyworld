@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
+import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.dao.QZSettingDao;
 import com.keymanager.ckadmin.entity.*;
+import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.*;
 
@@ -13,8 +15,6 @@ import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.vo.QZSettingVO;
 import com.keymanager.ckadmin.vo.QZKeywordRankInfoVO;
 import com.keymanager.enums.CollectMethod;
-import com.keymanager.monitoring.criteria.QZSettingSaveCustomerKeywordsCriteria;
-import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
 import com.keymanager.util.Constants;
 import com.keymanager.util.common.StringUtil;
 import java.util.ArrayList;
@@ -89,11 +89,11 @@ public class QZSettingServiceImpl extends
         map.put(Constants.ALL_SEARCH_ENGINE + TerminalTypeEnum.Phone.name(),
             TerminalTypeEnum.Phone.name());
         boolean displayExistTabFlag =
-            (!"".equals(criteria.getDomain()) || !"".equals(criteria.getCustomerUuid()))
+            (!"".equals(criteria.getDomain()) || !"".equals(criteria.getCustomerInfo()))
                 && record == 1;
         if (displayExistTabFlag) {
             List<QZSettingVO> qzSettingVos = qzSettingDao
-                .searchQZSettingSearchEngines(criteria.getCustomerUuid(), criteria.getDomain());
+                .searchQZSettingSearchEngines(criteria.getCustomerInfo(), criteria.getDomain());
             for (QZSettingVO qzSettingVo : qzSettingVos) {
                 if (null != qzSettingVo.getPcGroup()) {
                     map.put(qzSettingVo.getSearchEngine(), TerminalTypeEnum.PC.name());
@@ -227,11 +227,8 @@ public class QZSettingServiceImpl extends
         String userName) {
         for (String terminalType : qzSettingSaveCustomerKeywordsCriteria.getTerminalTypes()) {
             List<CustomerKeyword> customerKeywords = new ArrayList<>();
-            String customerExcludeKeywords = customerExcludeKeywordService
-                .getCustomerExcludeKeyword(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid(),
-                    qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid(), terminalType,
-                    qzSettingSaveCustomerKeywordsCriteria.getDomain());
-            Set<String> excludeKeyword = new HashSet<String>();
+            String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid(), qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid(), terminalType, qzSettingSaveCustomerKeywordsCriteria.getDomain());
+            Set<String> excludeKeyword = new HashSet<>();
             if (null != customerExcludeKeywords) {
                 excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
             }

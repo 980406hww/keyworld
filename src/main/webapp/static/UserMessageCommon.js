@@ -62,7 +62,7 @@ function getActiveUsers(){
         url: '/internal/user/findActiveUsers',
         type: 'POST',
         success: function (userInfos) {
-            $.each(userInfos, function (idx, val) {
+            $.each(JSON.parse(userInfos), function (idx, val) {
                 $("#user_select").append("<option value='"+ val.loginName +"'>"+ val.userName +"</option>");
             });
             $("#user_select").multiselect({

@@ -45,6 +45,7 @@ if (!Object.assign) {
     upload: "modules/upload",
     transfer: "modules/transfer",
     tree: "modules/tree",
+    treeSelect: "modules/treeSelect",
     table: "modules/table",
     element: "modules/element",
     rate: "modules/rate",
