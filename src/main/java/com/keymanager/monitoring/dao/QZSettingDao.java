@@ -46,8 +46,6 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     List<String> getAvailableOptimizationGroups (@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
-    void startMonitorImmediately (@Param("uuids") String uuids);
-
     List<ExternalQzSettingVO> getQZSettingTask(@Param("crawlerHour") Integer crawlerHour,
         @Param("taskNumber") Integer taskNumber);
 
