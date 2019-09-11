@@ -15,7 +15,6 @@ import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.HashMap;
-import com.keymanager.monitoring.criteria.QZSettingSaveCustomerKeywordsCriteria;
 
 import java.util.List;
 import java.util.Map;
