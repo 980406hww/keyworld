@@ -111,11 +111,53 @@
             let m = e.parentElement.parentElement.parentElement;
             m.parentElement.removeChild(m);
         }
+
+        function appendTable(f) {
+            let t, v;
+            if (f) {
+                t = tbody_com;
+                v = v_com++;
+            } else {
+                t = tbody_phone;
+                v = v_phone++;
+            }
+            let html = `<tr>
+                                    <td>
+                                        <div class="my-col-one my-label my-left my-padding">`;
+            html += v;
+            html += `</div>
+                                    </td>
+                                    <td>
+                                        <div class="my-col-two my-label my-left">
+                                            <input type="text" class="layui-input my-input">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="my-col-three my-label my-left">
+                                            <input type="text" class="layui-input my-input">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="my-col-four my-label my-left">
+                                            <input type="text" class="layui-input my-input">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="my-col-five my-label my-btn my-left my-bottom">
+                                            <button type="button" onclick="removeElement(this)"
+                                                    class="layui-btn layui-btn-xs layui-btn-danger">
+                                                删除
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>`;
+            t.append(html);
+        }
     </script>
 </head>
 <div>
     <!--form表单-->
-    <form class="layui-form layui-form-pane ok-form" lay-filter="addCustomer">
+    <form class="layui-form layui-form-pane ok-form" lay-filter="addQZSetting">
         <div class="ok-body">
             <input type="hidden" name="uuid" value=""/>
             <div class="layui-form-item">
@@ -263,7 +305,7 @@
                             </div>
                         </div>
                         <div id="computerTable" class="layui-form-item">
-                            <table border="0" width="100%">
+                            <table border="0" width="100%" class="computer">
                                 <tbody id="computerTbody">
                                 <tr class="my-bg">
                                     <td colspan="3">
@@ -274,7 +316,7 @@
                                     </td>
                                     <td colspan="2">
                                         <div class="my-header-btn my-label">
-                                            <button id="computerBtn" type="button"
+                                            <button onclick="appendTable(true)" type="button"
                                                     class="layui-btn layui-btn-sm">
                                                 增加收费规则
                                             </button>
@@ -390,10 +432,10 @@
                             </div>
                             <div class="layui-col-md6 padding-ten-left">
                                 <div class="layui-form-item">
-                                    <label class="phone layui-form-label">电脑域名</label>
+                                    <label class="phone layui-form-label">手机域名</label>
                                     <div class="layui-input-block">
                                         <input type="text" name="phoneSubDomainName"
-                                               placeholder="请输入电脑域名"
+                                               placeholder="请输入手机域名"
                                                autocomplete="off"
                                                class="phone-input layui-input">
                                     </div>
@@ -436,7 +478,7 @@
                             </div>
                         </div>
                         <div id="phoneTable" class="layui-form-item">
-                            <table border="0" width="100%">
+                            <table border="0" width="100%" class="phone">
                                 <tbody id="phoneTbody">
                                 <tr class="my-bg">
                                     <td colspan="3">
@@ -447,7 +489,7 @@
                                     </td>
                                     <td colspan="2">
                                         <div class="my-header-btn my-label">
-                                            <button id="phoneBtn" type="button"
+                                            <button onclick="appendTable(false)" type="button"
                                                     class="layui-btn layui-btn-sm">
                                                 增加收费规则
                                             </button>
@@ -585,12 +627,14 @@
 
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script>
-
     let uuid_ = null;
-    let layui_ = null
+    let layui_ = null;
+    let flag_ = true;
 
     function initForm(data) {
         uuid_ = data;
+        selectPhone();
+        selectComputer();
         if (layui_ != null) {
             setForm(layui_, uuid_);
         }
@@ -604,7 +648,64 @@
             success: function (res) {
                 console.log(res);
                 if (res.code === 200) {
-
+                    let d = res.data, d_n = {};
+                    getInitData({uuid: d.customerUuid, contactPerson: d.contactPerson},
+                        d.searchEngine);
+                    d_n.uuid = d.uuid;
+                    d_n.domain = d.domain;
+                    d_n.tagNames = listToStr(d.qzCategoryTags);
+                    d_n.bearPawNumber = d.bearPawNumber;
+                    d_n.ignoreNoIndex = d.ignoreNoIndex ? 'true' : 'false';
+                    d_n.ignoreNoOrder = d.ignoreNoOrder ? 'true' : 'false';
+                    d_n.updateInterval = d.updateInterval;
+                    d_n.autoCrawlKeywordFlag = d.autoCrawlKeywordFlag ? 'true' : 'false';
+                    d_n.computer = false;
+                    d_n.phone = false;
+                    for (let i = 0; i < d.qzOperationTypes.length; i++) {
+                        switch (d.qzOperationTypes[i].operationType) {
+                            case "PC":
+                                deselectPhone();
+                                d_n.computer = true;
+                                d_n.optimizationComType = d.qzOperationTypes[i].optimizationType;
+                                if (d_n.optimizationComType === '0') {
+                                    selectPhone(true);
+                                }
+                                d_n.pcGroup = d.qzOperationTypes[i].group;
+                                d_n.comSubDomainName = d.qzOperationTypes[i].subDomainName;
+                                d_n.comCurrentKeywordCount = d.qzOperationTypes[i].currentKeywordCount;
+                                d_n.comMaxKeywordCount = d.qzOperationTypes[i].maxKeywordCount;
+                                d_n.comMonitorRemark = d.qzOperationTypes[i].monitorRemark;
+                                let html_c = listToHtml(d.qzOperationTypes[i].qzChargeRules);
+                                if (html_c !== ``) {
+                                    d_n.comStandardSpecies = d.qzOperationTypes[i].qzChargeRules[0].standardSpecies;
+                                    html_c = getHeader(d_n.comStandardSpecies, true) + html_c;
+                                    document.getElementById('computerTbody').innerHTML = html_c;
+                                }
+                                break;
+                            case "Phone":
+                                deselectComputer();
+                                d_n.phone = true;
+                                d_n.optimizationPhoneType = d.qzOperationTypes[i].optimizationType;
+                                if (d_n.optimizationPhoneType === '0') {
+                                    selectComputer(true);
+                                }
+                                d_n.phoneGroup = d.qzOperationTypes[i].group;
+                                d_n.phoneSubDomainName = d.qzOperationTypes[i].subDomainName;
+                                d_n.phoneCurrentKeywordCount = d.qzOperationTypes[i].currentKeywordCount;
+                                d_n.phoneMaxKeywordCount = d.qzOperationTypes[i].maxKeywordCount;
+                                d_n.phoneMonitorRemark = d.qzOperationTypes[i].monitorRemark;
+                                let html_p = listToHtml(d.qzOperationTypes[i].qzChargeRules);
+                                if (html_p !== ``) {
+                                    d_n.phoneStandardSpecies = d.qzOperationTypes[i].qzChargeRules[0].standardSpecies;
+                                    html_p = getHeader(d_n.phoneStandardSpecies, false) + html_p;
+                                    document.getElementById('phoneTbody').innerHTML = html_p;
+                                }
+                                break;
+                        }
+                    }
+                    console.log(d_n);
+                    l.form.val("addQZSetting", d_n);
+                    flag_ = false;
                 } else {
                     l.layer.msg(res.msg);
                 }
@@ -612,76 +713,242 @@
         });
     }
 
+    function listToStr(l) {
+        let str = '';
+        for (let i = 0; i < l.length; i++) {
+            str += l[i].tagName;
+            if (i !== l.length - 1) {
+                str += ','
+            }
+        }
+        return str;
+    }
+
+    function listToHtml(l) {
+        let html = ``;
+        for (let j = 0; j < l.length; j++) {
+            html += `<tr>
+                                    <td>
+                                        <div class="my-col-one my-label my-left my-padding">`;
+            html += (j + 1);
+            html += `</div>
+                                    </td>
+                                    <td>
+                                        <div class="my-col-two my-label my-left">
+                                            <input type="text" class="layui-input my-input" value="`;
+            html += l[j].startKeywordCount;
+            html += `">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="my-col-three my-label my-left">
+                                            <input type="text" class="layui-input my-input" value="`;
+            html += l[j].endKeywordCount;
+            html += `">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="my-col-four my-label my-left">
+                                            <input type="text" class="layui-input my-input" value="`;
+            html += l[j].amount;
+            html += `">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="my-col-five my-label my-btn my-left my-bottom">
+                                            <button type="button" onclick="removeElement(this)"
+                                                    class="layui-btn layui-btn-xs layui-btn-danger">
+                                                删除
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>`;
+        }
+        return html;
+    }
+
+    function getHeader(v, f) {
+        let header_ = `                                <tr class="my-bg">
+                                    <td colspan="3">
+                                        <div id="phoneTitle"
+                                             class="my-header-title my-label my-padding">`;
+        switch (v) {
+            case 'aiZhan':
+                header_ += '爱站收费规则';
+                break;
+            case '5118':
+                header_ += '5118收费规则';
+                break;
+            case 'designationWord':
+                header_ += '指定词收费规则';
+                break;
+            case 'other':
+                header_ += '其他收费规则';
+                break;
+        }
+        header_ += `</div>
+                                    </td>
+                                    <td colspan="2">
+                                        <div class="my-header-btn my-label">`;
+        if (f) {
+            header_ += `<button onclick="appendTable(true)" type="button"
+                                                    class="layui-btn layui-btn-sm">
+                                                增加收费规则
+                                            </button>`;
+        } else {
+            header_ += `<button onclick="appendTable(false)" type="button"
+                                                    class="layui-btn layui-btn-sm">
+                                                增加收费规则
+                                            </button>`;
+        }
+        header_ += `</div>
+                                    </td>
+                                </tr>
+                                <tr class="my-bg">
+                                    <td>
+                                        <div class="my-col-one my-label my-left my-padding">
+                                            达标阶段
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="my-col-two my-label my-left my-padding">
+                                            起始达标词数
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="my-col-three my-label my-left my-padding">
+                                            终止达标次数
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="my-col-four my-label my-left my-padding">`;
+        if (f) {
+            header_ += '电脑端价格';
+        } else {
+            header_ += '手机端价格';
+        }
+        header_ += `</div>
+                                    </td>
+                                    <td>
+                                        <div
+                                            class="my-col-five my-label my-left my-padding my-bottom">
+                                            操作
+                                        </div>
+                                    </td>
+                                </tr>`;
+        return header_;
+    }
+
     var tbody_com = null;
     var tbody_phone = null;
 
-    let computers = document.getElementsByClassName('computer');
-    let computersInput = document.getElementsByClassName('computer-input');
+    // let computers = document.getElementsByClassName('computer');
+    // let computersInput = document.getElementsByClassName('computer-input');
+    let comQzsettingBoxSelect = document.getElementById('comQzsettingBoxSelect');
+    let comQzsettingBox = document.getElementById('comQzsettingBox');
+    let comStandardSpecies = document.getElementById('comStandardSpecies');
+    let computerTable = document.getElementById('computerTable');
 
     function selectPhone(f) {
-        for (let i = 0; i < computersInput.length; i++) {
-            if (f) {
-                i = 8;
-                computers[6].classList.add('my-dis');
-                f = false;
-            }
-            if (i < 7) {
-                computers[i].classList.add('my-dis');
-            }
-            computersInput[i].classList.add('layui-disabled');
-            computersInput[i].setAttribute('disabled', '');
+        if (f) {
+            comStandardSpecies.style.display = 'none';
+            computerTable.style.display = 'none';
+        } else {
+            comQzsettingBox.style.display = 'none';
+            comQzsettingBoxSelect.style.display = 'none';
         }
+        // for (let i = 0; i < computersInput.length; i++) {
+        //     if (f) {
+        //         i = 8;
+        //         computers[6].classList.add('my-dis');
+        //         computers[7].classList.add('my-dis');
+        //         f = false;
+        //     }
+        //     if (i < 8) {
+        //         computers[i].classList.add('my-dis');
+        //     }
+        //     computersInput[i].classList.add('layui-disabled');
+        //     computersInput[i].setAttribute('disabled', '');
+        // }
     }
 
     function deselectPhone(f) {
-        for (let i = 0; i < computersInput.length; i++) {
-            if (f) {
-                i = 8;
-                computers[6].classList.remove('my-dis');
-                f = false;
-            }
-            if (i < 7) {
-                computers[i].classList.remove('my-dis');
-            }
-            computersInput[i].classList.remove('layui-disabled');
-            computersInput[i].removeAttribute('disabled');
-
+        if (f) {
+            comStandardSpecies.style.display = 'block';
+            computerTable.style.display = 'block';
+        } else {
+            comQzsettingBox.style.display = 'block';
+            comQzsettingBoxSelect.style.display = 'block';
         }
+        // for (let i = 0; i < computersInput.length; i++) {
+        //     if (f) {
+        //         i = 8;
+        //         computers[6].classList.remove('my-dis');
+        //         computers[7].classList.remove('my-dis');
+        //         f = false;
+        //     }
+        //     if (i < 8) {
+        //         computers[i].classList.remove('my-dis');
+        //     }
+        //     computersInput[i].classList.remove('layui-disabled');
+        //     computersInput[i].removeAttribute('disabled');
+        //
+        // }
     }
 
-    let phones = document.getElementsByClassName('phone');
-    let phonesInput = document.getElementsByClassName('phone-input');
+    // let phones = document.getElementsByClassName('phone');
+    // let phonesInput = document.getElementsByClassName('phone-input');
+    let phoneQzsettingBoxSelect = document.getElementById('phoneQzsettingBoxSelect');
+    let phoneQzsettingBox = document.getElementById('phoneQzsettingBox');
+    let phoneStandardSpecies = document.getElementById('phoneStandardSpecies');
+    let phoneTable = document.getElementById('phoneTable');
 
     function selectComputer(f) {
-        for (let i = 0; i < phonesInput.length; i++) {
-            if (f) {
-                i = 8;
-                phones[6].classList.add('my-dis');
-                f = false;
-            }
-            if (i < 7) {
-                phones[i].classList.add('my-dis');
-            }
-            phonesInput[i].classList.add('layui-disabled');
-            phonesInput[i].setAttribute('disabled', '');
-
+        if (f) {
+            phoneStandardSpecies.style.display = 'none';
+            phoneTable.style.display = 'none';
+        } else {
+            phoneQzsettingBox.style.display = 'none';
+            phoneQzsettingBoxSelect.style.display = 'none';
         }
+        // for (let i = 0; i < phonesInput.length; i++) {
+        //     if (f) {
+        //         i = 8;
+        //         phones[6].classList.add('my-dis');
+        //         phones[7].classList.add('my-dis');
+        //         f = false;
+        //     }
+        //     if (i < 8) {
+        //         phones[i].classList.add('my-dis');
+        //     }
+        //     phonesInput[i].classList.add('layui-disabled');
+        //     phonesInput[i].setAttribute('disabled', '');
+        //
+        // }
     }
 
     function deselectComputer(f) {
-        for (let i = 0; i < phonesInput.length; i++) {
-            if (f) {
-                i = 8;
-                phones[6].classList.remove('my-dis');
-                f = false;
-            }
-            if (i < 7) {
-                phones[i].classList.remove('my-dis');
-            }
-            phonesInput[i].classList.remove('layui-disabled');
-            phonesInput[i].removeAttribute('disabled');
-
+        if (f) {
+            phoneStandardSpecies.style.display = 'block';
+            phoneTable.style.display = 'block';
+        } else {
+            phoneQzsettingBox.style.display = 'block';
+            phoneQzsettingBoxSelect.style.display = 'block';
         }
+        // for (let i = 0; i < phonesInput.length; i++) {
+        //     if (f) {
+        //         i = 8;
+        //         phones[6].classList.remove('my-dis');
+        //         phones[7].classList.remove('my-dis');
+        //         f = false;
+        //     }
+        //     if (i < 8) {
+        //         phones[i].classList.remove('my-dis');
+        //     }
+        //     phonesInput[i].classList.remove('layui-disabled');
+        //     phonesInput[i].removeAttribute('disabled');
+        //
+        // }
     }
 
     layui.use(["form", "okLayer", "jquery", "layer"], function () {
@@ -696,40 +963,60 @@
             layui_ = layui;
         }
 
-        $.ajax({
-            url: '/internal/qzsetting/getSaveQZSettingsMsg',
-            type: 'get',
-            dataType: 'json',
-            success: function (res) {
-                console.log(res);
-                if (res.code === 200) {
-                    let html_c = ``;
-                    let customers = res.data.customers;
-                    let l = customers.length;
-                    for (let i = 0; i < l; i++) {
-                        html_c += `<option value="`;
-                        html_c += customers[i].uuid;
-                        html_c += `">`;
-                        html_c += customers[i].contactPerson;
-                        html_c += `</option>`;
+        window.getInitData = function (a, b = '百度') {
+            if (flag_) {
+                $.ajax({
+                    url: '/internal/qzsetting/getSaveQZSettingsMsg',
+                    type: 'get',
+                    dataType: 'json',
+                    success: function (res) {
+                        console.log(res);
+                        if (res.code === 200) {
+                            let customerList = document.getElementById('customerList');
+                            let searchList = document.getElementById('searchList');
+                            let html_c = `<option value="">请选择</option>`;
+                            if (a) {
+                                html_c += `<option value="`;
+                                html_c += a.uuid;
+                                html_c += `" selected>`;
+                                html_c += a.contactPerson;
+                                html_c += `</option>`;
+                                customerList.setAttribute('disabled', '');
+                            } else {
+                                let customers = res.data.customers;
+                                let l = customers.length;
+                                for (let i = 0; i < l; i++) {
+                                    html_c += `<option value="`;
+                                    html_c += customers[i].uuid;
+                                    html_c += `">`;
+                                    html_c += customers[i].contactPerson;
+                                    html_c += `</option>`;
+                                }
+                            }
+                            let html_s = ``;
+                            let search = res.data.search;
+                            for (let item in res.data.search) {
+                                html_s += `<option value="`;
+                                html_s += item;
+                                html_s += `"`;
+                                if (item === b) {
+                                    html_s += `selected`;
+                                }
+                                html_s += `>`;
+                                html_s += search[item];
+                                html_s += `</option>`;
+                            }
+
+                            customerList.innerHTML = html_c;
+                            searchList.innerHTML = html_s;
+                            form.render('select');
+                        } else {
+                            l.layer.msg(res.msg);
+                        }
                     }
-                    let html_s = ``;
-                    let search = res.data.search;
-                    for (let item in res.data.search) {
-                        html_s += `<option value="`;
-                        html_s += item;
-                        html_s += `">`;
-                        html_s += search[item];
-                        html_s += `</option>`;
-                    }
-                    $("#customerList").append(html_c);
-                    $("#searchList").append(html_s);
-                    form.render('select');
-                } else {
-                    l.layer.msg(res.msg);
-                }
+                });
             }
-        });
+        }
 
         tbody_com = $('#computerTbody');
         tbody_phone = $('#phoneTbody');
@@ -753,47 +1040,37 @@
             }
         });
 
-        let computerTable = document.getElementById('computerTable');
         //监听指定radio
         form.on('radio(optimizationComType)', function (data) {
             switch (data.value) {
                 case '1':
                     deselectPhone(true);
-                    computerTable.style.display = 'block';
                     break;
                 case '2':
                     deselectPhone(true);
-                    computerTable.style.display = 'block';
                     break;
                 case '0':
                     selectPhone(true);
-                    computerTable.style.display = 'none';
                     break;
                 default:
                     selectPhone(true);
-                    computerTable.style.display = 'none';
             }
         });
 
-        let phoneTable = document.getElementById('phoneTable');
         //监听指定radio
         form.on('radio(optimizationPhoneType)', function (data) {
             switch (data.value) {
                 case '1':
                     deselectComputer(true);
-                    phoneTable.style.display = 'block';
                     break;
                 case '2':
                     deselectComputer(true);
-                    phoneTable.style.display = 'block';
                     break;
                 case '0':
                     selectComputer(true);
-                    phoneTable.style.display = 'none';
                     break;
                 default:
                     selectComputer(true);
-                    phoneTable.style.display = 'none';
             }
         });
 
@@ -998,59 +1275,13 @@
                 "请正确输入标签,例如：阿卡索,MBA,算法"
             ]
         });
+
+        // 执行初始化数据方法
+        getInitData();
     });
 
     let v_com = 2;
     let v_phone = 2;
-
-    function appendTable(f) {
-        let t, v;
-        if (f) {
-            t = tbody_com;
-            v = v_com++;
-        } else {
-            t = tbody_phone;
-            v = v_phone++;
-        }
-        let html = `<tr>
-                                    <td>
-                                        <div class="my-col-one my-label my-left my-padding">`;
-        html += v;
-        html += `</div>
-                                    </td>
-                                    <td>
-                                        <div class="my-col-two my-label my-left">
-                                            <input type="text" class="layui-input my-input">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-col-three my-label my-left">
-                                            <input type="text" class="layui-input my-input">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-col-four my-label my-left">
-                                            <input type="text" class="layui-input my-input">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-col-five my-label my-btn my-left my-bottom">
-                                            <button type="button" onclick="removeElement(this)"
-                                                    class="layui-btn layui-btn-xs layui-btn-danger">
-                                                删除
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>`;
-        t.append(html);
-    }
-
-    document.getElementById('computerBtn').onclick = function () {
-        appendTable(true);
-    };
-    document.getElementById('phoneBtn').onclick = function () {
-        appendTable(false);
-    };
 </script>
 </body>
 </html>

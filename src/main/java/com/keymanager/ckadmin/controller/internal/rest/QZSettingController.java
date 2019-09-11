@@ -75,14 +75,14 @@ public class QZSettingController extends SpringMVCBaseController {
 //    @RequiresPermissions("/internal/productKeyword/searchProductKeywords")
 
     @GetMapping(value = "/getActiveCustomer")
-    public List<Customer> getActiveCustomer(){
+    public List<Customer> getActiveCustomer() {
         CustomerCriteria customerCriteria = new CustomerCriteria();
         List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
         return customerList;
     }
 
     @GetMapping(value = "/getUserInfo")
-    public List<UserInfo> getUserInfo(){
+    public List<UserInfo> getUserInfo() {
         List<UserInfo> activeUsers = userInfoService.findActiveUsers();
         return activeUsers;
     }
@@ -254,7 +254,8 @@ public class QZSettingController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean();
         try {
             String userName = (String) request.getSession().getAttribute("username");
-            qzSettingService.saveQZSettingCustomerKeywords(qzSettingSaveCustomerKeywordsCriteria, userName);
+            qzSettingService
+                .saveQZSettingCustomerKeywords(qzSettingSaveCustomerKeywordsCriteria, userName);
             resultBean.setCode(200);
             resultBean.setMsg("添加关键字成功");
         } catch (Exception e) {
@@ -360,8 +361,7 @@ public class QZSettingController extends SpringMVCBaseController {
     }
 
     /**
-     * addImportantCustomerKeyword.html
-     * 跳转添加或修改重点关键字页面
+     * addImportantCustomerKeyword.html 跳转添加或修改重点关键字页面
      */
     @GetMapping(value = "/toAddImportantCustomerKeyword")
     public ModelAndView toAddImportantCustomerKeyword() {
