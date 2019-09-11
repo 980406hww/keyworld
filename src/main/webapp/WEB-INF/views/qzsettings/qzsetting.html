@@ -99,6 +99,7 @@
         }
 
         .layui-table-col-special .header span.contactPerson-name,
+        .layui-table-col-special .header span.tagNames,
         .layui-table-col-special .header span.organization-name {
             max-width: 110px;
             overflow: hidden;
@@ -443,6 +444,8 @@
 
                         <input hidden name="searchEngine" id="searchEngine" value="百度"/>
                         <input hidden name="terminalType" id="terminalType" value="PC"/>
+                        <input type="text" hidden name="userInfoID" id="userInfoID" value="">
+                        <input type="text" hidden name="organizationID" id="organizationID" value="">
                         <div class="layui-form-item" lay-filter="loginNameFilter">
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
@@ -458,9 +461,8 @@
                             </div>
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
-                                    <input type="text" hidden name="userInfoID" id="userInfoID" >
-                                    <input type="text" hidden name="organizationID" id="organizationID" >
-                                    <input type="text"  id="tree" lay-filter="tree" class="layui-input">
+
+                                    <input type="text"  id="tree" lay-filter="tree" class="layui-input" >
                                 </div>
                             </div>
                         </div>
@@ -498,7 +500,7 @@
         var treeSelect = layui.treeSelect;
         var layer = layui.layer;
 
-        get_qzsettting('百度', 'PC');
+        get_qzsettting({searchEngine:'百度',terminalType: 'PC'});
 
         function getTerminalSearchEngineMap() {
             /*动态加载tab栏*/
@@ -533,9 +535,11 @@
             type: 'get',
             placeholder: '用户名称',
             click: function(d){
-                if (d.current.children) {
+                $("#organizationID").val("");
+                $("#userInfoID").val("");
+                if (d.current.level === 0 && d.current.id !== 0) {
                     $("#organizationID").val(d.current.id)
-                }else{
+                }else if (d.current.level === 1) {
                     $("#userInfoID").val(d.current.id)
                 }
             },
@@ -567,27 +571,25 @@
         });
 
         form.on("submit(search)", function (data) {
-            var searchEngine = data.field.searchEngine;
-            var terminalType = data.field.terminalType;
-            var domain = data.field.domain.replace(/\s*/g,"");
-            var customerInfo = data.field.customerInfo.replace(/\s*/g,"");
-            var userInfoID = data.field.userInfoID;
-            var organizationID = data.field.organizationID;
-            if(userInfoID == null || userInfoID === ''){
-                show_layer_msg("请选择具体用户", 5);
-                return false;
+            data.field.domain.replace(/\s*/g,"");
+            data.field.customerInfo.replace(/\s*/g,"");
+            if(data.field.customerInfo !== null && data.field.customerInfo !== '') {
+                if (data.field.customerInfo.indexOf(".") === -1) {
+                    show_layer_msg("请选择具体用户", 5);
+                    return false;
+                }
             }
-            if(domain != null && domain !== ''){
-                if(domain.indexOf(".") === -1){
+            if(data.field.domain != null && data.field.domain !== ''){
+                if(data.field.domain.indexOf(".") === -1){
                     show_layer_msg("域名不符合规范", 5);
                     return false;
                 }
             }
-            get_qzsettting(searchEngine, terminalType, domain, userInfoID, customerInfo)
+            get_qzsettting(data.field);
             return false;
         });
 
-        function get_qzsettting(searchEngine, terminalType, domain, userInfoID, customerInfo) {
+        function get_qzsettting(whereCondition) {
             table.render({
                 elem: '#qzSettingTable',
                 method: 'post',
@@ -600,13 +602,7 @@
                 toolbar: "#toolbarTpl",
                 defaultToolbar: [],
                 contentType: 'application/json',
-                where: {
-                    searchEngine: searchEngine,
-                    terminalType: terminalType,
-                    domain: domain,
-                    customerInfo: customerInfo,
-                    userInfoID: userInfoID
-                },
+                where: whereCondition,
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
                     {filed: 'uuid', title: '记录', width: '1638', templet: '#item'}
@@ -722,17 +718,6 @@
                 $("#searchContent").removeClass("layui-show")
             }
         };
-
-        form.on("submit(search)", function (data) {
-            table.reload('qzSettingTable', {
-                where: data.field,
-                page: {
-                    curr: 1 //从第一页开始
-                }
-            });
-            $("#searchContent").removeClass("layui-show");
-            return false;
-        });
 
         function formToJson(data) {
             data=data.replace(/&/g,"\",\"");
@@ -1503,7 +1488,7 @@
 
         function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames, operationCombineName) {
             div.parent().find(".other-rank .line1").find("#customerKeywordCount").text(customerKeywordCount);
-            if (categoryTagNames) {
+            if (categoryTagNames.length > 0) {
                 var tagNameStr = "";
                 var span = $(div).parent().parent().parent().find(".header span.tagNames");
                 $.each(categoryTagNames, function (idx, val) {
@@ -1511,6 +1496,8 @@
                 });
                 $(span).find("label.tagNameStr").html(
                     tagNameStr.substring(0, tagNameStr.length - 1));
+                $(span).find("label.tagNameStr").attr('title',  tagNameStr.substring(0, tagNameStr.length - 1))
+
             }
 
             if (operationCombineName !== null) {
@@ -1847,7 +1834,7 @@
         <div class="layui-col-md1">
             <span class="tagNames"
                   ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label
-                    class="tagNameStr">暂无</label></span>
+                    class="tagNameStr" title="">暂无</label></span>
         </div>
         <!--     操作栏   -->
         <div class="layui-col-md4">
