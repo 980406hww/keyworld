@@ -68,9 +68,6 @@ public class QZSettingController extends SpringMVCBaseController {
     @Resource(name = "configService2")
     private ConfigService configService;
 
-    @Resource(name = "customerService2")
-    private CustomerService customerService;
-
     @Resource(name = "userInfoService2")
     private UserInfoService userInfoService;
 
