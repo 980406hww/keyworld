@@ -1793,7 +1793,7 @@ function showChargeDialog(uuid, contactPerson, domain, self) {
                 resetChargeDialog();
                 var totalAmount = 0;
                 var showFlag = false;
-                $.each(chargeInfos, function(idx, val){
+                $.each(JSON.parse(chargeInfos), function(idx, val){
                     var checkbox = chargeDialogObj.find("#" + val.operationType);
                     if(val.qzOperationTypeUuid != null) {
                         // 存在此类操作类型
@@ -2057,6 +2057,7 @@ function showSettingDialog(self) {
     });
 }
 function initSettingDialog(qzSetting, self) {
+    qzSetting = JSON.parse(qzSetting);
     var PCType = false;
     var PhoneType = false;
     var PCOptimizationType = false;

@@ -22,4 +22,20 @@ public class QZKeywordRankInfoServiceImpl extends
             .searchExistingQZKeywordRankInfo(qzSettingUuid, terminalType, websiteType);
     }
 
+    @Override
+    public void addQZKeywordRankInfo(Long uuid, String terminalType, String standardSpecies,
+        boolean dataProcessingStatus) {
+        QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
+        qzKeywordRankInfo.setQzSettingUuid(uuid);
+        qzKeywordRankInfo.setTerminalType(terminalType);
+        qzKeywordRankInfo.setWebsiteType(standardSpecies);
+        qzKeywordRankInfo.setDataProcessingStatus(dataProcessingStatus);
+        qzKeywordRankInfoDao.insert(qzKeywordRankInfo);
+    }
+
+    @Override
+    public void deleteByQZSettingUuid(Long uuid) {
+        qzKeywordRankInfoDao.deleteByQZSettingUuid(uuid);
+    }
+
 }

@@ -19,7 +19,7 @@ public interface CustomerService extends IService<Customer> {
 
 
     Page<Customer> searchCustomers(Page<Customer> page,
-                                   CustomerCriteria customerCriteria);
+        CustomerCriteria customerCriteria);
 
     void saveCustomer(Customer customer, String loginName);
 
@@ -31,5 +31,8 @@ public interface CustomerService extends IService<Customer> {
 
     void changeCustomerDailyReportIdentify(long uuid, boolean identify);
 
-    Customer getCustomerWithKeywordCount(String terminalType, String entryType, long customerUuid, String loginName);
+    Customer getCustomerWithKeywordCount(String terminalType, String entryType, long customerUuid,
+        String loginName);
+
+    List<Customer> getActiveCustomerSimpleInfo(CustomerCriteria customerCriteria);
 }

@@ -12,11 +12,37 @@ import com.keymanager.ckadmin.criteria.base.BaseCriteria;
 public class QZSettingCriteria extends BaseCriteria {
 
     private String loginName;
-    private String customerUuid;
+    private String customerInfo;
     private String terminalType;
     private String searchEngine;
-    private String domain;
     private String group;
+    private String domain;
+    private String userInfoID;
+    private String organizationID;
+
+    public String getOrganizationID() {
+        return organizationID;
+    }
+
+    public void setOrganizationID(String organizationID) {
+        this.organizationID = organizationID;
+    }
+
+    public String getCustomerInfo() {
+        return customerInfo;
+    }
+
+    public void setCustomerInfo(String customerInfo) {
+        this.customerInfo = customerInfo;
+    }
+
+    public String getUserInfoID() {
+        return userInfoID;
+    }
+
+    public void setUserInfoID(String userInfoID) {
+        this.userInfoID = userInfoID;
+    }
 
     public String getTerminalType() {
         return terminalType;
@@ -40,14 +66,6 @@ public class QZSettingCriteria extends BaseCriteria {
 
     public void setLoginName(String loginName) {
         this.loginName = loginName;
-    }
-
-    public String getCustomerUuid() {
-        return customerUuid;
-    }
-
-    public void setCustomerUuid(String customerUuid) {
-        this.customerUuid = customerUuid;
     }
 
     public String getDomain() {

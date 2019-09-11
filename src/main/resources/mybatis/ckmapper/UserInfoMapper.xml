@@ -7,6 +7,7 @@
         u.fUuid AS 'uuid',
         u.fLoginName AS 'loginName',
         u.fUserName AS 'userName',
+        u.fOrganizationID As 'organizationID',
         u.fPassword AS 'password',
         u.fSex AS 'sex',
         u.fQQ AS 'qq',

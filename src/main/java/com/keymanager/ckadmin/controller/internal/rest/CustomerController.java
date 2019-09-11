@@ -71,7 +71,8 @@ public class CustomerController {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
             customerCriteria.setEntryType(entryType);
             customerCriteria.setTerminalType(terminalType);
-            Page<Customer> page = new Page<>(customerCriteria.getPage(), customerCriteria.getLimit());
+            Page<Customer> page = new Page<>(customerCriteria.getPage(),
+                customerCriteria.getLimit());
             String orderByField = ReflectUtils
                 .getTableFieldValue(Customer.class, customerCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {
@@ -104,6 +105,7 @@ public class CustomerController {
 
     /**
      * 跳转添加或修改用户页面
+     *
      * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
@@ -116,6 +118,7 @@ public class CustomerController {
 
     /**
      * 获得用户信息
+     *
      * @param uuid
      * @param request
      * @return
@@ -149,6 +152,7 @@ public class CustomerController {
 
     /**
      * 添加用户
+     *
      * @param customer
      * @param result
      * @param session
