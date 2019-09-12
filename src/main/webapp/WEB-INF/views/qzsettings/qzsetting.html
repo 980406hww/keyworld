@@ -488,12 +488,11 @@
 
 </table>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
-<script type="text/javascript"
-        src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
+<script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
 <script>
     var sign = false;
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'treeSelect'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'treeSelect', 'laydate'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
@@ -501,6 +500,12 @@
         var okLayer = layui.okLayer;
         var treeSelect = layui.treeSelect;
         var layer = layui.layer;
+        var laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#createTime',
+            range: true
+        });
 
         get_qzsettting({searchEngine:'百度',terminalType: 'PC'});
 
@@ -523,12 +528,9 @@
                         } else {
                             ttse = item.searchEngineName;
                         }
-                        terminalSearchEngine.append(
-                            '<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
+                        terminalSearchEngine.append('<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
                     });
-                    terminalSearchEngine.val(
-                        ($('#searchEngine').val() + $('#terminalType').val()) === '' ? '百度PC' : ($(
-                            '#searchEngine').val() + $('#terminalType').val()));
+                    terminalSearchEngine.val( ($('#searchEngine').val() + $('#terminalType').val()) === '' ? '百度PC' : ($('#searchEngine').val() + $('#terminalType').val()));
                     form.render("select");
                 }
             });
@@ -613,11 +615,9 @@
                     terminalType = terminalType === '' ? 'PC' : terminalType;
                     getTerminalSearchEngineMap();
                     get_operation_combine_list(terminalType);
-                    let qz_setting_table = $("#qzSettingTable").parent().find(
-                        ".layui-table-main").find("table");
+                    let qz_setting_table = $("#qzSettingTable").parent().find(".layui-table-main").find("table");
                     $.each(res.data, function (idx, val) {
-                        let td = qz_setting_table.find(
-                            "tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
+                        let td = qz_setting_table.find("tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
                             "td[data-field='1']");
                         let optimizeGroupName = td.find(
                             "input[name='" + terminalType + "Group']").val();
@@ -626,8 +626,7 @@
                         postData.terminalType = terminalType;
                         postData.optimizeGroupName = optimizeGroupName;
                         getQZKeywordRankInfo(postData, function (result) {
-                            td.find(".other-rank_2").find("#optimizationGroup").text(
-                                optimizeGroupName);
+                            td.find(".other-rank_2").find("#optimizationGroup").text(optimizeGroupName);
                             if (result.data != null) {
                                 initQZKeywordRankInfo(result.data, td);
                             }
@@ -691,9 +690,8 @@
                 success: function (res) {
                     let operation_combine_select = $("#update_qz_operation_combine");
                     operation_combine_select.append("<option value='null'>置空</option>");
-                    $.each(res.data, function (i, v) {
-                        var option = $("<option value='" + v.uuid + "'>" + v.operationCombineName
-                            + "</option>");
+                    $.each(res.data, function(i ,v) {
+                        var option=$("<option value='"+v.uuid+"'>"+v.operationCombineName+"</option>");
                         operation_combine_select.append(option);
                     });
                     form.render("select");
@@ -713,8 +711,7 @@
         var active = {
             reload: function () {
                 table.reload('qzSettingTable', {
-                    where: $.parseJSON(
-                        formToJson(decodeURIComponent($("#searchForm").serialize(), true))),
+                    where: $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true))),
                     page: {
                         curr: 1 //从第一页开始
                     }
@@ -1911,9 +1908,8 @@
 
                 <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
                 <span>
-               <a class="blue"
-                  href="javascript:updateChargeDialog('{{d.uuid}}',this)">修改</a>
-            </span>
+                    <a class="blue" href="javascript:;" onclick="showSettingDialog($(this))">修改</a>
+                </span>
                 <!--                </@shiro.hasPermission>-->
 
                 <!--                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
