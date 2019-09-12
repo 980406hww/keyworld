@@ -447,11 +447,13 @@
                         <input type="text" hidden name="userInfoID" id="userInfoID" value="">
                         <input type="text" hidden name="organizationID" id="organizationID" value="">
                         <div class="layui-form-item" lay-filter="loginNameFilter">
+                            <div class="layui-inline">域名</div>
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
                                     <input type="text" name="domain" id="domain" placeholder="请输入域名" autocomplete="off" onblur="checkDomain()" onmouseleave="checkDomain()" class="layui-input">
                                 </div>
                             </div>
+                            <div class="layui-inline">客户</div>
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
                                     <select name="customerInfo" id="customerInfo" lay-filter="customerInfoFilter" lay-search>
@@ -459,12 +461,76 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="layui-inline">用户</div>
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
-
                                     <input type="text"  id="tree" lay-filter="tree" class="layui-input" >
                                 </div>
                             </div>
+                            <div class="layui-inline">分类标签</div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <select name="categoryTag" id="categoryTag" lay-search>
+                                        <option value="">分类标签</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">组名</div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <input type="text" name="group" id="group" placeholder="请输入组名" autocomplete="off"class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">续费状态</div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <select name="renewalStatus" id="renewalStatus">
+                                        <option value selected>全部</option>
+                                        <option value="1">续费</option>
+                                        <option value="0">暂停续费</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">自动采词</div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <select name="autoCrawlKeywordFlag" id="autoCrawlKeywordFlag">
+                                        <option value selected>全部</option>
+                                        <option value="1">是</option>
+                                        <option value="0">否</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">达标种类</div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <select name="standardSpecies" id="standardSpecies">
+                                        <option value selected>全部</option>
+                                        <option value="aiZhan">爱站</option>
+                                        <option value="5118">5118</option>
+                                        <option value="designationWord">指定词</option>
+                                        <option value="other">其它</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">达标优化类型</div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <select name="optimizationType" id="optimizationType">
+                                        <option value selected>全部</option>
+                                        <option value="1">主优化</option>
+                                        <option value="2">次优化</option>
+                                        <option value="0">辅助优化</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">创建时间</div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" id="createTime" name="createTime" readonly placeholder="请选择日期">
+                                </div>
+                            </div>
+
                         </div>
                         <div class="layui-form-item">
                             <div class="layui-inline">
@@ -491,7 +557,7 @@
 <script>
     var sign = false;
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'treeSelect'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'treeSelect', 'laydate'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
@@ -499,6 +565,12 @@
         var okLayer = layui.okLayer;
         var treeSelect = layui.treeSelect;
         var layer = layui.layer;
+        var laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#createTime',
+            range: true
+        });
 
         get_qzsettting({searchEngine:'百度',terminalType: 'PC'});
 
@@ -571,8 +643,13 @@
         });
 
         form.on("submit(search)", function (data) {
+            console.log(data.field)
             data.field.domain.replace(/\s*/g,"")
             data.field.customerInfo.replace(/\s*/g,"")
+            var createTime = data.field.createTime
+            if(createTime){
+
+            }
 
             if(data.field.domain !== null && data.field.domain !== ''){
                 if(data.field.domain.indexOf(".") === -1){
