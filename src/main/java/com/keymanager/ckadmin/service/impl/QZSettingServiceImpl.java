@@ -6,14 +6,31 @@ import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.dao.QZSettingDao;
-import com.keymanager.ckadmin.entity.*;
+import com.keymanager.ckadmin.entity.CaptureRankJob;
+import com.keymanager.ckadmin.entity.Customer;
+import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
+import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.entity.QZCategoryTag;
+import com.keymanager.ckadmin.entity.QZChargeRule;
+import com.keymanager.ckadmin.entity.QZKeywordRankInfo;
+import com.keymanager.ckadmin.entity.QZOperationType;
+import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
-import com.keymanager.ckadmin.service.*;
-
+import com.keymanager.ckadmin.service.CaptureRankJobService;
+import com.keymanager.ckadmin.service.ConfigService;
+import com.keymanager.ckadmin.service.CustomerExcludeKeywordService;
+import com.keymanager.ckadmin.service.CustomerKeywordService;
+import com.keymanager.ckadmin.service.CustomerService;
+import com.keymanager.ckadmin.service.OperationCombineService;
+import com.keymanager.ckadmin.service.QZCategoryTagService;
+import com.keymanager.ckadmin.service.QZChargeRuleService;
+import com.keymanager.ckadmin.service.QZKeywordRankInfoService;
+import com.keymanager.ckadmin.service.QZOperationTypeService;
+import com.keymanager.ckadmin.service.QZSettingService;
+import com.keymanager.ckadmin.vo.QZKeywordRankInfoVO;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.vo.QZSettingVO;
-import com.keymanager.ckadmin.vo.QZKeywordRankInfoVO;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.util.Constants;
 import com.keymanager.util.common.StringUtil;
@@ -73,6 +90,9 @@ public class QZSettingServiceImpl extends
 
     @Resource(name = "customerService2")
     private CustomerService customerService;
+
+    @Resource(name = "configService2")
+    private ConfigService configService;
 
     @Override
     public Page<QZSetting> searchQZSetting(Page<QZSetting> page,
@@ -263,7 +283,12 @@ public class QZSettingServiceImpl extends
                     }
                 }
                 customerKeyword.setKeyword(keyword);
-                customerKeyword.setOptimizePlanCount(10);
+                if ("Important".equals(qzSettingSaveCustomerKeywordsCriteria.getKeywordEffect())) {
+                    Integer optimizePlanCount = Integer.valueOf(configService.getConfig("KeywordEffectOptimizePlanCount", "ImportantKeyword").getValue());
+                    customerKeyword.setOptimizePlanCount(optimizePlanCount);
+                } else {
+                    customerKeyword.setOptimizePlanCount(10);
+                }
                 customerKeywords.add(customerKeyword);
             }
             customerKeywordService.addCustomerKeyword(customerKeywords, userName);

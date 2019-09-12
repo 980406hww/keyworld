@@ -1681,30 +1681,7 @@
             );
         };
 
-        window.showAddImportantKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
-            let terminalType = $("#terminalSearchEngine").val();
-            terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
-            let optimizedGroupName = phoneGroup;
-            if (terminalType === 'PC') {
-                optimizedGroupName = pcGroup;
-            }
-            okLayer.open("其他 / 全站设置信息 / 添加重点关键字", "/internal/qzsetting/toAddImportantCustomerKeyword",
-                "60%", "90%", function (layero) {
-                    window[layero.find("iframe")[0]["name"]].initForm({
-                        qzSettingUuid: uuid,
-                        customerUuid: customerUuid,
-                        domain: domain,
-                        bearPawNumber: bearPawNumber,
-                        searchEngine: searchEngine,
-                        type: type,
-                        terminalType: terminalType,
-                        optimizedGroupName: optimizedGroupName
-                    });
-                }, function () {
 
-                }
-            );
-        };
 
         /**
          * 删除单个站点
@@ -1880,10 +1857,6 @@
                 <span>
                     <a class="blue"
                       href="javascript:showAddKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}','{{d.bearPawNumber}}','{{d.searchEngine}}', '{{d.type}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">添加词</a>
-                </span>
-                <span>
-                    <a class="blue"
-                       href="javascript:showAddImportantKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}','{{d.bearPawNumber}}','{{d.searchEngine}}', '{{d.type}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">添加重点词</a>
                 </span>
                 <!--                </@shiro.hasPermission>-->
 

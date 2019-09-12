@@ -2,17 +2,16 @@ package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
-import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.controller.internal.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
-import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
+import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.entity.UserInfo;
-import com.keymanager.ckadmin.service.CustomerService;
+import com.keymanager.ckadmin.enums.KeywordEffectEnum;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.QZSettingService;
@@ -20,20 +19,15 @@ import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,9 +36,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @ClassName QZSettingController
@@ -361,12 +352,18 @@ public class QZSettingController extends SpringMVCBaseController {
     }
 
     /**
-     * addImportantCustomerKeyword.html 跳转添加或修改重点关键字页面
+     * 获取关键字作用类别
      */
-    @GetMapping(value = "/toAddImportantCustomerKeyword")
-    public ModelAndView toAddImportantCustomerKeyword() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("qzsettings/addImportantCustomerKeyword");
-        return mv;
+    @GetMapping(value = "/getKyewordEffect")
+    public ResultBean getKyewordEffect() {
+        ResultBean resultBean = new ResultBean(200, "查询成功");
+        try {
+            resultBean.setData(KeywordEffectEnum.toList());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
     }
 }

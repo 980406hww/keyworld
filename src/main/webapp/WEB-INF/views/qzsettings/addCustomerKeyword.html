@@ -101,10 +101,20 @@
                     <div class="layui-input-block">
                         <input type="text" name="machineGroup" id="machineGroup" placeholder=""
                                autocomplete="off" value="qz"
-                               class="layui-input" readonly disabled>
+                               class="layui-input" >
                     </div>
                 </div>
             </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">关键字作用</label>
+
+                <div class="layui-input-block">
+                    <select name="keywordEffect" id="keywordEffect">
+
+                    </select>
+                </div>
+            </div>
+
             <div class="layui-form-item" pane>
                 <label class="layui-form-label">PC和Phone同步加词</label>
                 <div class="layui-input-block">
@@ -171,6 +181,22 @@
         } else {
             layui_ = layui;
         }
+        $.ajax({
+            url: '/internal/qzsetting/getKyewordEffect',
+            type: 'get',
+            dataType: 'json',
+            success: function (res) {
+                if (res.code === 200) {
+                    $("#keywordEffect").empty();
+                    $.each(res.data, function (index, item) {
+                        $('#keywordEffect').append('<option value="' + item.value + '">' + item.desc + '</option>');// 下拉菜单里添加元素
+                    });
+                    form.render("select");
+                } else {
+                    l.layer.msg(res.msg);
+                }
+            }
+        });
 
         form.on("submit(save)", function (data) {
             var postData = data.field;
