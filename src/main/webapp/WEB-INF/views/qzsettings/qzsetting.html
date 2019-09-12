@@ -427,6 +427,31 @@
             height: auto !important;
         }
     </style>
+    <script>
+        Date.prototype.format = function (fmt) {
+            let o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) {
+                fmt = fmt.replace(RegExp.$1,
+                    (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            }
+            for (let k in o) {
+                if (new RegExp("(" + k + ")").test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1,
+                        (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(
+                            ("" + o[k]).length)));
+                }
+            }
+            return fmt;
+        }
+    </script>
 </head>
 <body class="ok-body">
 <!--面包屑导航区域-->
@@ -493,6 +518,7 @@
 <script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
 <script>
     var sign = false;
+    var noteAddRow = true;
     // layui相关
     layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'treeSelect', 'laydate'], function () {
         var element = layui.element;
@@ -1661,12 +1687,11 @@
 
         }
 
-        window.appendTable = function () {
-            let oneRowI = `<tr>
+        let oneRowI = `<tr>
                             <td class="my-left" colspan="4">
                                 <div class="my-label">
                                      <input type="text" class="layui-input my-input"
-                                     placeholder="请在此输入你想要记录的内容">
+                                     placeholder="请在此输入你想要记录的内容" style="height: 36px">
                                 </div>
                             </td>
                             <td class="my-left my-bottom">
@@ -1678,7 +1703,13 @@
                                 </div>
                              </td>
                              </tr>`;
-            $('#noteBookTbody').append(oneRowI);
+
+        window.appendTable = function () {
+            if (noteAddRow) {
+                let noteBookTbody = document.getElementById('noteBookTbody');
+                noteBookTbody.innerHTML += oneRowI;
+                noteAddRow = false;
+            }
         };
 
         let oneRowU = `<tr>
@@ -1712,7 +1743,10 @@
                             </td>
                             </tr>`;
 
-        let noteBookHtml = `<div style="padding: 10px;">
+        // 记事本
+        window.openNoteBookDialog = function (uuid) {
+            noteAddRow = true;
+            let noteBookHtml = `<div style="padding: 10px;">
                             <table border="0" width="100%">
                                 <tbody id="noteBookTbody">
                                 <tr class="my-bg">
@@ -1766,19 +1800,83 @@
                                             操作
                                         </div>
                                     </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            </div>`;
-        // 记事本
-        window.openNoteBookDialog = function (uuid) {
-            layer.open({
-                type: 1,
-                title: '记事本',
-                content: noteBookHtml,
-                shadeClose: true,
-                resize: false,
-                area: '700px',
+                                </tr>`;
+            let noteBookHtmlFooter = `</tbody></table></div>`;
+            let d = {};
+            d.customerUuid = uuid;
+            d.searchAll = 0;
+            d.terminalType = document.getElementById('terminalType').value;
+            $.ajax({
+                url: '/internal/notebook/getUserNoteBooks',
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                data: JSON.stringify(d),
+                success: function (res) {
+                    console.log(res);
+                    if (res.code === 200) {
+                        if (res.data.length === 0) {
+                            noteBookHtml += oneRowI;
+                            noteAddRow = false;
+                        } else {
+                            for (let i = 0; i < res.data.length; i++) {
+                                noteBookHtml += `<tr>
+                                <td class="my-left">
+                                    <div class="my-label my-padding">`;
+                                noteBookHtml += i + 1;
+                                noteBookHtml += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                    <div class="my-label my-padding">`;
+                                noteBookHtml += res.data[i].notesPerson;
+                                noteBookHtml += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                    <div class="my-label my-padding">
+                                    <input type="hidden" value="`;
+                                noteBookHtml += res.data[i].uuid;
+                                noteBookHtml += `"><input type="hidden" value="`;
+                                noteBookHtml += res.data[i].customerUuid;
+                                noteBookHtml += `">`;
+                                noteBookHtml += res.data[i].content;
+                                noteBookHtml += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                    <div class="my-label my-padding">`;
+                                noteBookHtml += new Date(res.data[i].createTime).format(
+                                    'yyyy-MM-dd');
+                                noteBookHtml += `</div>
+                                </td>
+                                <td class="my-left my-bottom">
+                                    <div class="my-label my-btn">
+                                    <button type="button" onclick=""
+                                        class="layui-btn layui-btn-xs layui-btn-danger">
+                                    修改
+                                    </button>
+                                    </div>
+                                    </td>
+                                    </tr>`;
+                            }
+                        }
+                        noteBookHtml += noteBookHtmlFooter;
+                        layer.open({
+                            type: 1,
+                            title: '记事本',
+                            content: noteBookHtml,
+                            shadeClose: true,
+                            resize: false,
+                            area: '700px',
+                            offset: '180px'
+                        });
+                    } else {
+                        show_layer_msg(res.msg, 5);
+                    }
+                },
+                error: function () {
+                    show_layer_msg('未知错误，请稍后重试！！', 5);
+                }
             });
         };
 
@@ -2107,7 +2205,7 @@
 
                 <span>
                     <a class="blue"
-                      href="javascript:openNoteBookDialog('{{d.customerUuid}}','{{ $(\'#terminalType\') }}')">记事本</a>
+                      href="javascript:openNoteBookDialog('{{d.customerUuid}}')">记事本</a>
                 </span>
 
                 <!--                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
