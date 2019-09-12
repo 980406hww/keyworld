@@ -1527,8 +1527,10 @@
         table.on('toolbar(tableFilter)', function (obj) {
             var data = obj.data, event = obj.event;
             switch (event) {
-                case 'add_qz':
+                case 'addQz':
                     addQZSetting();
+                    break;
+                case 'updFZTags':
                     break;
                 case 'batchDeleteQZSetting':
                     batchDeleteQZSetting();
@@ -1794,8 +1796,12 @@
         </select>
     </div>
 
-    <button class="layui-btn layui-btn-sm" id="add_qz" lay-event="add_qz">
-        <i class="layui-icon">&#xe61f;</i>添加
+    <button style="margin-left: 10px" class="layui-btn layui-btn-sm" lay-event="addQz">
+        添加
+    </button>
+
+    <button class="layui-btn layui-btn-sm" lay-event="updFZTags">
+        修改分组标签
     </button>
 
     <button class="layui-btn layui-btn-sm layui-btn-danger" id="batchDeleteQZSetting"
