@@ -112,6 +112,9 @@
             m.parentElement.removeChild(m);
         }
 
+        let v_com = 2;
+        let v_phone = 2;
+
         function appendTable(f) {
             let t, v;
             if (f) {
@@ -129,17 +132,17 @@
                                     </td>
                                     <td>
                                         <div class="my-col-two my-label my-left">
-                                            <input type="text" class="layui-input my-input">
+                                            <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="my-col-three my-label my-left">
-                                            <input type="text" class="layui-input my-input">
+                                            <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="my-col-four my-label my-left">
-                                            <input type="text" class="layui-input my-input">
+                                            <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
@@ -185,7 +188,7 @@
                         <div class="layui-input-block">
                             <input type="text" name="bearPawNumber" placeholder="请输入熊掌号"
                                    autocomplete="off"
-                                   class="layui-input" lay-verify="required">
+                                   class="layui-input">
                         </div>
                     </div>
                 </div>
@@ -196,7 +199,7 @@
                             <input type="text" name="tagNames"
                                    placeholder="按正确方式输入：阿卡索,MBA,算法,每个词用逗号隔开"
                                    autocomplete="off"
-                                   class="layui-input" lay-verify="required|tagNames">
+                                   class="layui-input" lay-verify="tagNames">
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -250,7 +253,7 @@
                                 <div class="layui-form-item">
                                     <label class="computer layui-form-label">当前词量</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="comCurrentKeywordCount"
+                                        <input type="number" name="comCurrentKeywordCount"
                                                placeholder="请输入当前词量"
                                                autocomplete="off"
                                                class="computer-input layui-input">
@@ -270,7 +273,7 @@
                                 <div class="layui-form-item">
                                     <label class="computer layui-form-label">词数限制</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="comMaxKeywordCount"
+                                        <input type="number" name="comMaxKeywordCount"
                                                placeholder="请输入限制词量"
                                                autocomplete="off"
                                                class="computer-input layui-input" value="300">
@@ -359,17 +362,17 @@
                                     </td>
                                     <td>
                                         <div class="my-col-two my-label my-left">
-                                            <input type="text" class="layui-input my-input">
+                                            <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="my-col-three my-label my-left">
-                                            <input type="text" class="layui-input my-input">
+                                            <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="my-col-four my-label my-left">
-                                            <input type="text" class="layui-input my-input">
+                                            <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
@@ -423,7 +426,7 @@
                                 <div class="layui-form-item">
                                     <label class="phone layui-form-label">当前词量</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="phoneCurrentKeywordCount"
+                                        <input type="number" name="phoneCurrentKeywordCount"
                                                placeholder="请输入当前词量"
                                                autocomplete="off"
                                                class="phone-input layui-input">
@@ -443,7 +446,7 @@
                                 <div class="phone layui-form-item">
                                     <label class="layui-form-label">词数限制</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="phoneMaxKeywordCount"
+                                        <input type="number" name="phoneMaxKeywordCount"
                                                placeholder="请输入限制词量"
                                                autocomplete="off"
                                                class="phone-input layui-input" value="300">
@@ -532,17 +535,17 @@
                                     </td>
                                     <td>
                                         <div class="my-col-two my-label my-left">
-                                            <input type="text" class="layui-input my-input">
+                                            <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="my-col-three my-label my-left">
-                                            <input type="text" class="layui-input my-input">
+                                            <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="my-col-four my-label my-left">
-                                            <input type="text" class="layui-input my-input">
+                                            <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
@@ -646,7 +649,6 @@
             type: 'get',
             dataType: 'json',
             success: function (res) {
-                console.log(res);
                 if (res.code === 200) {
                     let d = res.data, d_n = {};
                     getInitData({uuid: d.customerUuid, contactPerson: d.contactPerson},
@@ -703,7 +705,6 @@
                                 break;
                         }
                     }
-                    console.log(d_n);
                     l.form.val("addQZSetting", d_n);
                     flag_ = false;
                 } else {
@@ -735,21 +736,21 @@
                                     </td>
                                     <td>
                                         <div class="my-col-two my-label my-left">
-                                            <input type="text" class="layui-input my-input" value="`;
+                                            <input type="number" class="layui-input my-input" value="`;
             html += l[j].startKeywordCount;
             html += `">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="my-col-three my-label my-left">
-                                            <input type="text" class="layui-input my-input" value="`;
+                                            <input type="number" class="layui-input my-input" value="`;
             html += l[j].endKeywordCount;
             html += `">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="my-col-four my-label my-left">
-                                            <input type="text" class="layui-input my-input" value="`;
+                                            <input type="number" class="layui-input my-input" value="`;
             html += l[j].amount;
             html += `">
                                         </div>
@@ -970,7 +971,6 @@
                     type: 'get',
                     dataType: 'json',
                     success: function (res) {
-                        console.log(res);
                         if (res.code === 200) {
                             let customerList = document.getElementById('customerList');
                             let searchList = document.getElementById('searchList');
@@ -1016,7 +1016,7 @@
                     }
                 });
             }
-        }
+        };
 
         tbody_com = $('#computerTbody');
         tbody_phone = $('#phoneTbody');
@@ -1271,7 +1271,7 @@
                 "请正确输入域名,例如baidu.com,不能填写www.baidu.com,map.baidu.com等"
             ],
             tagNames: [
-                /^[\u4e00-\u9fa5a-zA-Z,]+$/,
+                /(^$)|(^[\u4e00-\u9fa5a-zA-Z,]+$)/,
                 "请正确输入标签,例如：阿卡索,MBA,算法"
             ]
         });
@@ -1279,9 +1279,6 @@
         // 执行初始化数据方法
         getInitData();
     });
-
-    let v_com = 2;
-    let v_phone = 2;
 </script>
 </body>
 </html>
