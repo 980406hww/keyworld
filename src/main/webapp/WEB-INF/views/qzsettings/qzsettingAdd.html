@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <title>添加</title>
@@ -27,11 +27,6 @@
 
         .my-dis {
             color: #d2d2d2 !important;
-        }
-
-        .my-row {
-            display: flex;
-            justify-content: space-between;
         }
 
         .my-col-one {
@@ -770,9 +765,14 @@
 
     function getHeader(v, f) {
         let header_ = `                                <tr class="my-bg">
-                                    <td colspan="3">
-                                        <div id="phoneTitle"
+                                    <td colspan="3">`;
+        if (f) {
+            header_ += `<div id="computerTitle"
                                              class="my-header-title my-label my-padding">`;
+        } else {
+            header_ += `<div id="phoneTitle"
+                                             class="my-header-title my-label my-padding">`;
+        }
         switch (v) {
             case 'aiZhan':
                 header_ += '爱站收费规则';
@@ -1010,8 +1010,13 @@
                             customerList.innerHTML = html_c;
                             searchList.innerHTML = html_s;
                             form.render('select');
+                            if (a) {
+                                let customerInput = customerList.nextElementSibling.children[0].children[0];
+                                customerInput.classList.remove('layui-disabled');
+                                customerInput.setAttribute('disabled', '');
+                            }
                         } else {
-                            l.layer.msg(res.msg);
+                            layer.msg(res.msg);
                         }
                     }
                 });
@@ -1075,9 +1080,10 @@
         });
 
         let name = '收费规则';
-        let computerTitle = document.getElementById('computerTitle');
+
         //监听指定radio
         form.on('radio(comStandardSpecies)', function (data) {
+            let computerTitle = document.getElementById('computerTitle');
             switch (data.value) {
                 case 'aiZhan':
                     computerTitle.innerHTML = '爱站' + name;
@@ -1094,9 +1100,9 @@
             }
         });
 
-        let phoneTitle = document.getElementById('phoneTitle');
         //监听指定radio
         form.on('radio(phoneStandardSpecies)', function (data) {
+            let phoneTitle = document.getElementById('phoneTitle');
             switch (data.value) {
                 case 'aiZhan':
                     phoneTitle.innerHTML = '爱站' + name;
@@ -1166,10 +1172,10 @@
                                 okLayer.msg.redCry('电脑收费规则表必须填写完整', null);
                                 return false;
                             }
-                            if (!/^[0-9]+$/.test(comTd[j].children[0].children[0].value)) {
-                                okLayer.msg.redCry('电脑收费表格内必须为数字', null);
-                                return false;
-                            }
+                            // if (!/^[0-9]+$/.test(comTd[j].children[0].children[0].value)) {
+                            //     okLayer.msg.redCry('电脑收费表格内必须为数字', null);
+                            //     return false;
+                            // }
                             switch (j) {
                                 case 1:
                                     c.startKeywordCount = comTd[j].children[0].children[0].value;
@@ -1213,10 +1219,10 @@
                                 okLayer.msg.redCry('手机收费规则表必须填写完整', null);
                                 return false;
                             }
-                            if (!/^[0-9]+$/.test(phoneTd[j].children[0].children[0].value)) {
-                                okLayer.msg.redCry('手机收费表格内必须为数字', null);
-                                return false;
-                            }
+                            // if (!/^[0-9]+$/.test(phoneTd[j].children[0].children[0].value)) {
+                            //     okLayer.msg.redCry('手机收费表格内必须为数字', null);
+                            //     return false;
+                            // }
                             switch (j) {
                                 case 1:
                                     c.startKeywordCount = phoneTd[j].children[0].children[0].value;
