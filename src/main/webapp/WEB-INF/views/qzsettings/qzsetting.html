@@ -1587,7 +1587,7 @@
                 optimizedGroupName = pcGroup;
             }
             okLayer.open("其他 / 前往全站设置信息 / 排除关键字", "/internal/qzsetting/toExcludeCustomerKeyword",
-                "90%", "90%", function (layero) {
+                "60%", "90%", function (layero) {
                     window[layero.find("iframe")[0]["name"]].initForm({
                         qzSettingUuid: uuid,
                         customerUuid: customerUuid,
@@ -1658,8 +1658,33 @@
             });
         }
 
-        window.showKeywordDialog = function (uuid, customerUuid, domain, bearPawNumber,
-            searchEngine, pcGroup, phoneGroup) {
+
+        window.showAddKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
+            let terminalType = $("#terminalSearchEngine").val();
+            terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
+            let optimizedGroupName = phoneGroup;
+            if (terminalType === 'PC') {
+                optimizedGroupName = pcGroup;
+            }
+            okLayer.open("其他 / 全站设置信息 / 添加关键字", "/internal/qzsetting/toAddCustomerKeyword",
+                "60%", "90%", function (layero) {
+                    window[layero.find("iframe")[0]["name"]].initForm({
+                        qzSettingUuid: uuid,
+                        customerUuid: customerUuid,
+                        domain: domain,
+                        bearPawNumber: bearPawNumber,
+                        searchEngine: searchEngine,
+                        type: type,
+                        terminalType: terminalType,
+                        optimizedGroupName: optimizedGroupName
+                    });
+                }, function () {
+
+                }
+            );
+        };
+
+        window.showAddImportantKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
             let terminalType = $("#terminalSearchEngine").val();
             terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
             let optimizedGroupName = phoneGroup;
