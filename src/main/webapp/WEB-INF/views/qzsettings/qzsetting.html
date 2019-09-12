@@ -1600,18 +1600,18 @@
                 return false;
             }
             layer.confirm("确定要修改所选站点优化组关联的操作组合吗？", {icon: 3, title: '修改操作组合'}, function (index) {
-                let groupName = '';
+                let groupNameArr = [];
                 $.each(checkStatus.data, function (i, v) {
                 if (v.pcGroup !== null) {
-                        groupName += "," + v.pcGroup;
+                        groupNameArr.push(v.pcGroup);
                     } else {
-                        groupName += "," + v.phoneGroup;
+                        groupNameArr.push(v.phoneGroup);
                     }
                 });
 
                 let postData = {};
                 postData.operationCombineUuid = (data.value === 'null' || data.value === '') ? null : data.value;
-                postData.groupName = groupName.substr(1);
+                postData.groupNames = groupNameArr;
                 $.ajax({
                     url: '/internal/group/updateGroupOperationCombineUuid',
                     type: 'POST',

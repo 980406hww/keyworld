@@ -1,7 +1,9 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.controller.internal.SpringMVCBaseController;
 import com.keymanager.ckadmin.service.GroupService;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import org.slf4j.Logger;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/internal/group")
-public class GroupController {
+public class GroupController extends SpringMVCBaseController {
 
     private static Logger logger = LoggerFactory.getLogger(GroupController.class);
 
@@ -21,8 +23,7 @@ public class GroupController {
     private GroupService groupService;
 
     @PostMapping("/updateGroupOperationCombineUuid")
-    public ResultBean updateGroupOperationCombineUuid(
-        @RequestBody Map<String, Object> requestMap) {
+    public ResultBean updateGroupOperationCombineUuid(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
         try {
             Long operationCombineUuid = null;
@@ -30,8 +31,10 @@ public class GroupController {
                 operationCombineUuid = Long
                     .valueOf((String) requestMap.get("operationCombineUuid"));
             }
-            String groupName = (String) requestMap.get("groupName");
-            groupService.updateGroupOperationCombineUuid(operationCombineUuid, groupName);
+            List<String> groupNames = (List<String>) requestMap.get("groupNames");
+            String loginName = getCurrentUser().getLoginName();
+            groupService
+                .updateGroupOperationCombineUuid(operationCombineUuid, groupNames, loginName);
             resultBean.setCode(200);
             resultBean.setMsg("success");
         } catch (Exception e) {
@@ -42,5 +45,4 @@ public class GroupController {
         }
         return resultBean;
     }
-
 }
