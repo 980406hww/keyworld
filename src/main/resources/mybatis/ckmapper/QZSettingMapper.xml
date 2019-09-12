@@ -82,4 +82,12 @@
         SET fPcGroup = #{qzSetting.pcGroup},fPhoneGroup = #{qzSetting.phoneGroup}
         WHERE fUuid = #{qzSetting.uuid}
     </update>
+
+    <select id="getPCPhoneGroupByUuid" resultType="map">
+        SELECT
+            fPcGroup AS 'pcGroup',
+            fPhoneGroup AS 'phoneGroup'
+        FROM t_qz_setting
+        WHERE fUuid = #{uuid}
+    </select>
 </mapper>

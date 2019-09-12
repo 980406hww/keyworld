@@ -259,4 +259,11 @@
             </otherwise>
         </choose>
     </update>
+
+    <select id="getCustomerKeywordCountByOptimizeGroupName" resultType="int">
+        SELECT COUNT(1)
+        FROM t_customer_keyword
+        WHERE fOptimizeGroupName LIKE CONCAT(#{groupName}, '%')
+    </select>
+
 </mapper>

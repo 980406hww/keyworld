@@ -46,4 +46,6 @@ public interface QZSettingService extends IService<QZSetting> {
     void deleteAll(List<Integer> uuids);
 
     QZSetting getQZSetting(Long uuid);
+
+    Map<String, String> getPCPhoneGroupByUuid(Long uuid);
 }

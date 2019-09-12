@@ -6,4 +6,6 @@ import com.keymanager.ckadmin.entity.Group;
 public interface GroupService extends IService<Group> {
 
     void updateGroupOperationCombineUuid(Long operationCombineUuid, String groupName);
+
+    void deleteByGroupName(String groupName);
 }

@@ -17,17 +17,7 @@ import com.keymanager.ckadmin.entity.QZOperationType;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
-import com.keymanager.ckadmin.service.CaptureRankJobService;
-import com.keymanager.ckadmin.service.ConfigService;
-import com.keymanager.ckadmin.service.CustomerExcludeKeywordService;
-import com.keymanager.ckadmin.service.CustomerKeywordService;
-import com.keymanager.ckadmin.service.CustomerService;
-import com.keymanager.ckadmin.service.OperationCombineService;
-import com.keymanager.ckadmin.service.QZCategoryTagService;
-import com.keymanager.ckadmin.service.QZChargeRuleService;
-import com.keymanager.ckadmin.service.QZKeywordRankInfoService;
-import com.keymanager.ckadmin.service.QZOperationTypeService;
-import com.keymanager.ckadmin.service.QZSettingService;
+import com.keymanager.ckadmin.service.*;
 import com.keymanager.ckadmin.vo.QZKeywordRankInfoVO;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.vo.QZSettingVO;
@@ -93,6 +83,9 @@ public class QZSettingServiceImpl extends
 
     @Resource(name = "configService2")
     private ConfigService configService;
+
+    @Resource(name = "groupService2")
+    private GroupService groupService;
 
     @Override
     public Page<QZSetting> searchQZSetting(Page<QZSetting> page,
@@ -605,6 +598,15 @@ public class QZSettingServiceImpl extends
             }
         }
         captureRankJobService.deleteCaptureRankJob(uuid, null);
+        Map<String, String> groupMap = this.getPCPhoneGroupByUuid(uuid);
+        String pcGroup = groupMap.get("pcGroup");
+        if (pcGroup!= null && customerKeywordService.getCustomerKeywordCountByOptimizeGroupName(pcGroup) == 0) {
+            groupService.deleteByGroupName(pcGroup);
+        }
+        String phoneGroup = groupMap.get("phoneGroup");
+        if (phoneGroup != null && customerKeywordService.getCustomerKeywordCountByOptimizeGroupName(pcGroup) == 0) {
+            groupService.deleteByGroupName(phoneGroup);
+        }
         qzSettingDao.deleteById(uuid);
     }
 
@@ -630,5 +632,10 @@ public class QZSettingServiceImpl extends
                 qzCategoryTagService.searchCategoryTagByQZSettingUuid(qzSetting.getUuid()));
         }
         return qzSetting;
+    }
+
+    @Override
+    public Map<String, String> getPCPhoneGroupByUuid(Long uuid) {
+        return qzSettingDao.getPCPhoneGroupByUuid(uuid);
     }
 }

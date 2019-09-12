@@ -189,6 +189,10 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         return customerKeyword;
     }
 
+    @Override
+    public Integer getCustomerKeywordCountByOptimizeGroupName(String groupName) {
+        return customerKeywordDao.getCustomerKeywordCountByOptimizeGroupName(groupName);
+    }
 }
 
 

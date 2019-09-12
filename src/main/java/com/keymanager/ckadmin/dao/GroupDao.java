@@ -15,4 +15,6 @@ public interface GroupDao extends BaseMapper<Group> {
     void updateGroupOperationCombineUuid(
         @Param("operationCombineUuid") Long operationCombineUuid,
         @Param("groupName") String groupName);
+
+    void deleteByGroupName(@Param("groupName") String groupName);
 }

@@ -18,4 +18,9 @@ public class GroupServiceImpl extends ServiceImpl<GroupDao, Group> implements Gr
         String groupName) {
         groupDao.updateGroupOperationCombineUuid(operationCombineUuid, groupName);
     }
+
+    @Override
+    public void deleteByGroupName(String groupName) {
+        groupDao.deleteByGroupName(groupName);
+    }
 }

@@ -44,4 +44,6 @@ CustomerKeywordDao extends BaseMapper<com.keymanager.ckadmin.entity.CustomerKeyw
         @Param("originalUrl") String originalUrl, @Param("title") String title);
 
     void updateSimilarCustomerKeyword(@Param("customerKeyword") CustomerKeyword customerKeyword);
+
+    Integer getCustomerKeywordCountByOptimizeGroupName(@Param("groupName") String groupName);
 }

@@ -7,4 +7,9 @@
         SET fUpdateTime = NOW(), fOperationCombineUuid = #{operationCombineUuid}
         WHERE fGroupName = #{groupName}
     </update>
+
+    <delete id="deleteByGroupName">
+        DELETE FROM t_group
+        WHERE fGroupName = #{groupName}
+    </delete>
 </mapper>
