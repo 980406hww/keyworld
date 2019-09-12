@@ -422,6 +422,21 @@
             height: 30px;
         }
 
+        div.layui-row.body .col-1 h5,
+        div.layui-row.body .col-2 h5 {
+            margin-top: 65px;
+        }
+
+        #optimizationGroup span,
+        #operationCombine span {
+            display: inline-block;
+            width: 90%;
+            word-break: keep-all;
+            white-space: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
     </style>
 </head>
 <body class="ok-body">
@@ -626,7 +641,8 @@
                         postData.terminalType = terminalType;
                         postData.optimizeGroupName = optimizeGroupName;
                         getQZKeywordRankInfo(postData, function (result) {
-                            td.find(".other-rank_2").find("#optimizationGroup").text(optimizeGroupName);
+                            td.find(".other-rank_2").find("#optimizationGroup span").prop("title", optimizeGroupName);
+                            td.find(".other-rank_2").find("#optimizationGroup span a").text(optimizeGroupName);
                             if (result.data != null) {
                                 initQZKeywordRankInfo(result.data, td);
                             }
@@ -700,7 +716,7 @@
         }
 
         form.on('select(terminalSearchEngineFilter)', function (data) {
-            let val = data.val;
+            let val = data.value;
             let searchEngine = val.substr(0, val.indexOf('P'));
             let terminalType = val.substr(val.indexOf('P'), val.length);
             $('#searchEngine').val(searchEngine);
@@ -1502,7 +1518,8 @@
             }
 
             if (operationCombineName !== null) {
-                div.find("#operationCombine").text(operationCombineName);
+                div.find("#operationCombine span").prop("title", operationCombineName);
+                div.find("#operationCombine span a").text(operationCombineName);
             }
         }
 
@@ -1993,7 +2010,7 @@
         <div class="layui-col-md4 other-rank_2">
             <div class="layui-col-md12 line1">
                 <div class="layui-col-md12" id="optimizationGroup">
-                    <a href="javascript:;">暂无</a>
+                    <span><a href="javascript:;">暂无</a></span>
                 </div>
                 <div class="layui-col-md12">
                     <span>优化分组</span>
@@ -2001,7 +2018,7 @@
             </div>
             <div class="layui-col-md12 line1">
                 <div class="layui-col-md12" id="operationCombine">
-                    <a href="javascript:;">暂无</a>
+                    <span><a href="javascript:;">暂无</a></span>
                 </div>
                 <div class="layui-col-md12 operationCombineSpan">
                     <span>操作组合</span>
