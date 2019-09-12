@@ -6,17 +6,11 @@ import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.controller.internal.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
-import com.keymanager.ckadmin.entity.Customer;
+import com.keymanager.ckadmin.entity.*;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
-import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
-import com.keymanager.ckadmin.entity.QZSetting;
-import com.keymanager.ckadmin.entity.UserInfo;
+import com.keymanager.ckadmin.service.*;
 import com.keymanager.ckadmin.service.CustomerService;
-import com.keymanager.ckadmin.service.ConfigService;
-import com.keymanager.ckadmin.service.CustomerService;
-import com.keymanager.ckadmin.service.QZSettingService;
-import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.HashMap;
@@ -71,8 +65,17 @@ public class QZSettingController extends SpringMVCBaseController {
     @Resource(name = "userInfoService2")
     private UserInfoService userInfoService;
 
+    @Resource(name = "qzCategoryTagService2")
+    private QZCategoryTagService qzCategoryTagService;
+
     //跳转添加或修改用户页面
 //    @RequiresPermissions("/internal/productKeyword/searchProductKeywords")
+
+    @GetMapping(value = "/getCategoryTag")
+    public List<String> getCategoryTag(){
+        List<String> tagNameList = qzCategoryTagService.findTagNames(null);
+        return tagNameList;
+    }
 
     @GetMapping(value = "/getActiveCustomer")
     public List<Customer> getActiveCustomer() {

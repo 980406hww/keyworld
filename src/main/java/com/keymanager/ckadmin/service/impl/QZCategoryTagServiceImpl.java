@@ -18,7 +18,7 @@ public class QZCategoryTagServiceImpl extends
     private QZCategoryTagDao qzCategoryTagDao;
 
     @Override
-    public List<String> findTagNames(long qzSettingUuid) {
+    public List<String> findTagNames(Long qzSettingUuid) {
         return qzCategoryTagDao.findTagNames(qzSettingUuid);
     }
 

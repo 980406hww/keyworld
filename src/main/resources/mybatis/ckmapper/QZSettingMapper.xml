@@ -38,15 +38,44 @@
         <if test="qzSettingCriteria.userInfoID != null and qzSettingCriteria.userInfoID != ''">AND u.fUuid = #{qzSettingCriteria.userInfoID}</if>
         <if test="qzSettingCriteria.organizationID != null and qzSettingCriteria.organizationID != ''">AND u.fOrganizationID = #{qzSettingCriteria.organizationID}</if>
         <if test="qzSettingCriteria.customerInfo != null and qzSettingCriteria.customerInfo != ''">AND qs.fCustomerUuid = #{qzSettingCriteria.customerInfo}</if>
+        <if test="qzSettingCriteria.autoCrawlKeywordFlag != null and qzSettingCriteria.autoCrawlKeywordFlag != ''">AND qs.fAutoCrawlKeywordFlag = #{qzSettingCriteria.autoCrawlKeywordFlag}</if>
+        <if test="qzSettingCriteria.status != null and qzSettingCriteria.status != ''" >AND qs.fStatus = #{qzSettingCriteria.status}</if>
+        <if test="qzSettingCriteria.renewalStatus != null and qzSettingCriteria.renewalStatus != ''">AND qs.fRenewalStatus = #{qzSettingCriteria.renewalStatus}</if>
+        <if test="qzSettingCriteria.updateStatus != null and qzSettingCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingCriteria.updateStatus}</if>
         <if test="qzSettingCriteria.searchEngine != 'All'">AND qs.fSearchEngine = #{qzSettingCriteria.searchEngine}</if>
+        <if test="qzSettingCriteria.createTime != null and qzSettingCriteria.createTime != ''">AND qs.fCreateTime &gt;= #{qzSettingCriteria.createTime}</if>
+        <if test="qzSettingCriteria.createTimePrefix != null and qzSettingCriteria.createTimePrefix != ''">AND qs.fCreateTime &lt;= #{qzSettingCriteria.createTimePrefix}</if>
+        <if test="qzSettingCriteria.categoryTag != null and qzSettingCriteria.categoryTag != ''">
+            AND EXISTS (SELECT 1 FROM t_qz_category_tag qc WHERE qc.fQZSettingUuid = qs.fUuid AND qc.fTagName = #{qzSettingCriteria.categoryTag})
+        </if>
+        <if test="qzSettingCriteria.optimizationType != null and qzSettingCriteria.optimizationType != ''">
+            AND EXISTS (
+            SELECT 1
+            FROM t_qz_operation_type qot
+            WHERE qs.fUuid = qot.fQZSettingUuid
+            AND qot.fOperationtype = #{qzSettingCriteria.terminalType}
+            AND qot.fOptimizationType = #{qzSettingCriteria.optimizationType}
+            AND qot.fIsDeleted = 0
+            )
+        </if>
+        <if test="qzSettingCriteria.standardSpecies != null and qzSettingCriteria.standardSpecies != ''">
+            AND EXISTS (
+            SELECT 1
+            FROM t_qz_keyword_rank_info qk
+            WHERE qk.fQZSettingUuid = qs.fUuid
+            AND qk.fDataProcessingStatus = 1
+            AND qk.fTerminalType = #{qzSettingCriteria.terminalType}
+            AND qk.fWebsiteType = #{qzSettingCriteria.standardSpecies}
+            )
+        </if>
         <choose>
             <when test="qzSettingCriteria.terminalType == 'PC'">
                 AND qs.fPcGroup &gt; ''
-                <if test="qzSettingCriteria.group != null and qzSettingCriteria.group != ''">AND qs.fPcGroup = #{qzSettingCriteria.group}</if>
+                <if test="qzSettingCriteria.group != null and qzSettingCriteria.group != ''">AND qs.fPcGroup LIKE CONCAT('%',#{qzSettingCriteria.group},'%')</if>
             </when>
             <when test="qzSettingCriteria.terminalType == 'Phone'">
                 AND qs.fPhoneGroup &gt; ''
-                <if test="qzSettingCriteria.group != null and qzSettingCriteria.group != ''">AND qs.fPhoneGroup = #{qzSettingCriteria.group}</if>
+                <if test="qzSettingCriteria.group != null and qzSettingCriteria.group != ''">AND qs.fPhoneGroup LIKE CONCAT('%',#{qzSettingCriteria.group},'%')</if>
             </when>
         </choose>
         ORDER BY qs.fUpdateTime
