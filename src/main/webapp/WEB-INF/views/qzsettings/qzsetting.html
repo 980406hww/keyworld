@@ -1588,9 +1588,9 @@
             phoneGroup) {
             let terminalType = $("#terminalSearchEngine").val();
             terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
-            let optimizedGroupName = phoneGroup;
+            let optimizeGroupName = phoneGroup;
             if (terminalType === 'PC') {
-                optimizedGroupName = pcGroup;
+                optimizeGroupName = pcGroup;
             }
             okLayer.open("其他 / 前往全站设置信息 / 排除关键字", "/internal/qzsetting/toExcludeCustomerKeyword",
                 "60%", "90%", function (layero) {
@@ -1599,7 +1599,7 @@
                         customerUuid: customerUuid,
                         domain: domain,
                         terminalType: terminalType,
-                        optimizedGroupName: optimizedGroupName
+                        optimizeGroupName: optimizeGroupName
                     });
                 }, function () {
 
@@ -1667,9 +1667,9 @@
         window.showAddKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
             let terminalType = $("#terminalSearchEngine").val();
             terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
-            let optimizedGroupName = phoneGroup;
+            let optimizeGroupName = phoneGroup;
             if (terminalType === 'PC') {
-                optimizedGroupName = pcGroup;
+                optimizeGroupName = pcGroup;
             }
             okLayer.open("其他 / 全站设置信息 / 添加关键字", "/internal/qzsetting/toAddCustomerKeyword",
                 "60%", "90%", function (layero) {
@@ -1681,7 +1681,7 @@
                         searchEngine: searchEngine,
                         type: type,
                         terminalType: terminalType,
-                        optimizedGroupName: optimizedGroupName
+                        optimizeGroupName: optimizeGroupName
                     });
                 }, function () {
 
