@@ -700,7 +700,7 @@
         }
 
         form.on('select(terminalSearchEngineFilter)', function (data) {
-            let val = data.val;
+            let val = data.value;
             let searchEngine = val.substr(0, val.indexOf('P'));
             let terminalType = val.substr(val.indexOf('P'), val.length);
             $('#searchEngine').val(searchEngine);
@@ -1798,9 +1798,9 @@
         <i class="layui-icon">&#xe61f;</i>添加
     </button>
 
-    <button class="layui-btn layui-btn-sm" id="batchDeleteQZSetting"
+    <button class="layui-btn layui-btn-sm layui-btn-danger" id="batchDeleteQZSetting"
             lay-event="batchDeleteQZSetting">
-        <i class="layui-icon">&#xe61f;</i>删除所选
+        删除所选
     </button>
 
 </script>
