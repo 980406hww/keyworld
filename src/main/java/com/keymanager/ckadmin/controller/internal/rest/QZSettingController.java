@@ -62,8 +62,6 @@ public class QZSettingController extends SpringMVCBaseController {
     @Resource(name = "userInfoService2")
     private UserInfoService userInfoService;
 
-    //跳转添加或修改用户页面
-//    @RequiresPermissions("/internal/productKeyword/searchProductKeywords")
 
     @GetMapping(value = "/getActiveCustomer")
     public List<Customer> getActiveCustomer() {
@@ -78,10 +76,10 @@ public class QZSettingController extends SpringMVCBaseController {
         return activeUsers;
     }
 
-
     /**
      * 跳转添加或修改用户页面
      */
+    @RequiresPermissions("/internal/qzsetting/searchQZSettings")
     @GetMapping(value = "/toQZSetttings")
     public ModelAndView toQZSetttings() {
         ModelAndView mv = new ModelAndView();
@@ -92,6 +90,7 @@ public class QZSettingController extends SpringMVCBaseController {
     /**
      * 跳转添加或修改全站页面
      */
+    @RequiresPermissions("/internal/qzsetting/save")
     @GetMapping(value = "/toQZSettingAdd")
     public ModelAndView toQZSettingAdd() {
         ModelAndView mv = new ModelAndView();
@@ -112,6 +111,7 @@ public class QZSettingController extends SpringMVCBaseController {
     /**
      * 获取全站数据
      */
+    @RequiresPermissions("/internal/qzsetting/searchQZSettings")
     @PostMapping("/getQZSettings")
     public ResultBean getQZSettings(@RequestBody QZSettingCriteria qzSettingCriteria) {
         ResultBean resultBean = new ResultBean();
@@ -135,6 +135,7 @@ public class QZSettingController extends SpringMVCBaseController {
     /**
      * 获取搜索引擎映射列表
      */
+    @RequiresPermissions("/internal/qzsetting/searchQZSettings")
     @GetMapping("/getQZSettingSearchEngineMap")
     public ResultBean getQZSettingSearchEngineMap(QZSettingCriteria qzSettingCriteria) {
         ResultBean resultBean = new ResultBean();
@@ -208,6 +209,7 @@ public class QZSettingController extends SpringMVCBaseController {
 
     }
 
+    @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/excludeQZSettingCustomerKeywords2")
     public ResultBean excludeQZSettingCustomerKeywords2(HttpServletRequest request,
         @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
@@ -232,6 +234,7 @@ public class QZSettingController extends SpringMVCBaseController {
     /**
      * 跳转添加或修改指定关键字页面
      */
+    @RequiresPermissions("/internal/qzsetting/save")
     @GetMapping(value = "/toAddCustomerKeyword")
     public ModelAndView toAddCustomerKeyword() {
         ModelAndView mv = new ModelAndView();
@@ -239,6 +242,7 @@ public class QZSettingController extends SpringMVCBaseController {
         return mv;
     }
 
+    @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/saveQZSettingCustomerKeywords2")
     public ResultBean saveQZSettingCustomerKeywords(HttpServletRequest request,
         @RequestBody QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria) {
@@ -313,6 +317,7 @@ public class QZSettingController extends SpringMVCBaseController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/qzsetting/save")
     @RequestMapping(value = "/saveQZSetting", method = RequestMethod.POST)
     public ResultBean saveQZSetting(@RequestBody QZSetting qzSetting, HttpSession session) {
         ResultBean resultBean = new ResultBean();

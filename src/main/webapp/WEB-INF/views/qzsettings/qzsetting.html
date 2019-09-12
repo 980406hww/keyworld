@@ -422,6 +422,13 @@
             height: 30px;
         }
 
+        .layui-table-tool-temp .layui-btn + .layui-btn {
+            margin-left: 0px
+        }
+
+        .layui-table-tool-temp .layui-btn-sm {
+            padding: 0 5px;
+        }
     </style>
 </head>
 <body class="ok-body">
@@ -590,6 +597,7 @@
             return false;
         });
 
+        <@shiro.hasPermission name="/internal/qzsetting/searchQZSettings">
         function get_qzsettting(whereCondition) {
             table.render({
                 elem: '#qzSettingTable',
@@ -635,6 +643,7 @@
                 }
             });
         }
+        </@shiro.hasPermission>
 
         function initQZKeywordRankInfo(data, td) {
             td.find("#fmtStandardDate a").text(
@@ -1655,7 +1664,6 @@
             });
         }
 
-
         window.showAddKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
             let terminalType = $("#terminalSearchEngine").val();
             terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
@@ -1680,8 +1688,6 @@
                 }
             );
         };
-
-
 
         /**
          * 删除单个站点
@@ -1771,15 +1777,18 @@
         </select>
     </div>
 
+    <@shiro.hasPermission name="/internal/qzsetting/save">
     <button class="layui-btn layui-btn-sm" id="add_qz" lay-event="add_qz">
         <i class="layui-icon">&#xe61f;</i>添加
     </button>
+    </@shiro.hasPermission>
 
+    <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
     <button class="layui-btn layui-btn-sm layui-btn-danger" id="batchDeleteQZSetting"
             lay-event="batchDeleteQZSetting">
         删除所选
     </button>
-
+    </@shiro.hasPermission>
 </script>
 
 <script type="text/html" id="item">
@@ -1789,8 +1798,7 @@
             <input type="hidden" name="PCGroup" value="{{d.pcGroup}}">
             <input type="hidden" name="PhoneGroup" value="{{d.phoneGroup}}">
             <span class="contactPerson-name" title="{{d.contactPerson}}"><a href="javascript:;">{{d.contactPerson}}</a></span>
-            <span class="domain" title="{{d.domain}}"><a
-                    href="javascript:;">{{d.domain}}</a></span>
+            <span class="domain" title="{{d.domain}}"><a href="javascript:;">{{d.domain}}</a></span>
             <span class="organization-name" title="{{d.organizationName}}"><a href="javascript:;">{{d.organizationName}}</a></span>
             <span><a href="https://www.aizhan.com/cha/{{d.domain}}" target="_blank"
                      title="查看爱站">爱站</a></span>
@@ -1853,12 +1861,12 @@
                       href="javascript:showExcludeCustomerKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">排除关键字</a>
                 </span>
 
-                <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
+                <@shiro.hasPermission name="/internal/qzsetting/save">
                 <span>
                     <a class="blue"
                       href="javascript:showAddKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}','{{d.bearPawNumber}}','{{d.searchEngine}}', '{{d.type}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">添加词</a>
                 </span>
-                <!--                </@shiro.hasPermission>-->
+                </@shiro.hasPermission>
 
                 <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
                 <span>
@@ -1885,11 +1893,11 @@
                 </span>
                 <!--                </@shiro.hasPermission>-->
 
-                <!--                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
+                <@shiro.hasPermission name="/internal/qzsetting/delete">
                 <span>
                     <a class="blue" href="javascript:delQZSetting('{{d.uuid}}')">删除</a>
                 </span>
-                <!--                </@shiro.hasPermission>-->
+                </@shiro.hasPermission>
 
                 <!--                <@shiro.hasPermission name="/internal/qzchargelog/chargesList">-->
                 <span>
