@@ -426,6 +426,21 @@
             height: 30px;
         }
 
+        div.layui-row.body .col-1 h5,
+        div.layui-row.body .col-2 h5 {
+            margin-top: 65px;
+        }
+
+        #optimizationGroup span,
+        #operationCombine span {
+            display: inline-block;
+            width: 90%;
+            word-break: keep-all;
+            white-space: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
     </style>
 </head>
 <body class="ok-body">
@@ -775,7 +790,8 @@
                         postData.terminalType = terminalType;
                         postData.optimizeGroupName = optimizeGroupName;
                         getQZKeywordRankInfo(postData, function (result) {
-                            td.find(".other-rank_2").find("#optimizationGroup").text(optimizeGroupName);
+                            td.find(".other-rank_2").find("#optimizationGroup span").prop("title", optimizeGroupName);
+                            td.find(".other-rank_2").find("#optimizationGroup span a").text(optimizeGroupName);
                             if (result.data != null) {
                                 initQZKeywordRankInfo(result.data, td);
                             }
@@ -849,7 +865,7 @@
         }
 
         form.on('select(terminalSearchEngineFilter)', function (data) {
-            let val = data.val;
+            let val = data.value;
             let searchEngine = val.substr(0, val.indexOf('P'));
             let terminalType = val.substr(val.indexOf('P'), val.length);
             $('#searchEngine').val(searchEngine);
@@ -1651,7 +1667,8 @@
             }
 
             if (operationCombineName !== null) {
-                div.find("#operationCombine").text(operationCombineName);
+                div.find("#operationCombine span").prop("title", operationCombineName);
+                div.find("#operationCombine span a").text(operationCombineName);
             }
         }
 
@@ -1677,7 +1694,7 @@
             var data = obj.data, event = obj.event;
             switch (event) {
                 case 'add_qz':
-                    add_qz();
+                    addQZSetting();
                     break;
                 case 'batchDeleteQZSetting':
                     batchDeleteQZSetting();
@@ -1687,7 +1704,7 @@
             }
         });
 
-        function add_qz() {
+        function addQZSetting() {
             okLayer.open("其他 / 前往全站设置信息 / 添加", "/internal/qzsetting/toQZSettingAdd", "90%", "90%",
                 null, function () {
                     if (sign) {
@@ -1697,12 +1714,11 @@
                 });
         }
 
-        // 收费
-        window.showChargeDialog = function (uuid, contactPearson, domain) {
-            okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toQZSettingCharge", "90%",
+        // 修改
+        window.updateQZSetting = function (uuid) {
+            okLayer.open("其他 / 前往全站设置信息 / 修改", "/internal/qzsetting/toQZSettingAdd", "90%",
                 "90%", function (layero) {
-                    window[layero.find("iframe")[0]["name"]].initForm(
-                        {uuid: uuid, qzSettingCustomer: contactPearson, qzSettingDomain: domain});
+                    window[layero.find("iframe")[0]["name"]].initForm(uuid);
                 }, function () {
                     if (sign) {
                         active['reload'].call(this);
@@ -1711,11 +1727,12 @@
                 })
         };
 
-        // 修改
-        window.updateChargeDialog = function (uuid) {
-            okLayer.open("其他 / 前往全站设置信息 / 修改", "/internal/qzsetting/toQZSettingAdd", "90%",
+        // 收费
+        window.showChargeDialog = function (uuid, contactPearson, domain) {
+            okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toQZSettingCharge", "90%",
                 "90%", function (layero) {
-                    window[layero.find("iframe")[0]["name"]].initForm(uuid);
+                    window[layero.find("iframe")[0]["name"]].initForm(
+                        {uuid: uuid, qzSettingCustomer: contactPearson, qzSettingDomain: domain});
                 }, function () {
                     if (sign) {
                         active['reload'].call(this);
@@ -1733,7 +1750,7 @@
                 optimizedGroupName = pcGroup;
             }
             okLayer.open("其他 / 前往全站设置信息 / 排除关键字", "/internal/qzsetting/toExcludeCustomerKeyword",
-                "90%", "90%", function (layero) {
+                "60%", "90%", function (layero) {
                     window[layero.find("iframe")[0]["name"]].initForm({
                         qzSettingUuid: uuid,
                         customerUuid: customerUuid,
@@ -1804,8 +1821,33 @@
             });
         }
 
-        window.showKeywordDialog = function (uuid, customerUuid, domain, bearPawNumber,
-            searchEngine, pcGroup, phoneGroup) {
+
+        window.showAddKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
+            let terminalType = $("#terminalSearchEngine").val();
+            terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
+            let optimizedGroupName = phoneGroup;
+            if (terminalType === 'PC') {
+                optimizedGroupName = pcGroup;
+            }
+            okLayer.open("其他 / 全站设置信息 / 添加关键字", "/internal/qzsetting/toAddCustomerKeyword",
+                "60%", "90%", function (layero) {
+                    window[layero.find("iframe")[0]["name"]].initForm({
+                        qzSettingUuid: uuid,
+                        customerUuid: customerUuid,
+                        domain: domain,
+                        bearPawNumber: bearPawNumber,
+                        searchEngine: searchEngine,
+                        type: type,
+                        terminalType: terminalType,
+                        optimizedGroupName: optimizedGroupName
+                    });
+                }, function () {
+
+                }
+            );
+        };
+
+        window.showAddImportantKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
             let terminalType = $("#terminalSearchEngine").val();
             terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
             let optimizedGroupName = phoneGroup;
@@ -1922,9 +1964,9 @@
         <i class="layui-icon">&#xe61f;</i>添加
     </button>
 
-    <button class="layui-btn layui-btn-sm" id="batchDeleteQZSetting"
+    <button class="layui-btn layui-btn-sm layui-btn-danger" id="batchDeleteQZSetting"
             lay-event="batchDeleteQZSetting">
-        <i class="layui-icon">&#xe61f;</i>删除所选
+        删除所选
     </button>
 
 </script>
@@ -2032,7 +2074,7 @@
 
                 <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
                 <span>
-                    <a class="blue" href="javascript:;" onclick="showSettingDialog($(this))">修改</a>
+                    <a class="blue" href="javascript:" onclick="updateQZSetting('{{d.uuid}}')">修改</a>
                 </span>
                 <!--                </@shiro.hasPermission>-->
 
@@ -2117,7 +2159,7 @@
         <div class="layui-col-md4 other-rank_2">
             <div class="layui-col-md12 line1">
                 <div class="layui-col-md12" id="optimizationGroup">
-                    <a href="javascript:;">暂无</a>
+                    <span><a href="javascript:;">暂无</a></span>
                 </div>
                 <div class="layui-col-md12">
                     <span>优化分组</span>
@@ -2125,7 +2167,7 @@
             </div>
             <div class="layui-col-md12 line1">
                 <div class="layui-col-md12" id="operationCombine">
-                    <a href="javascript:;">暂无</a>
+                    <span><a href="javascript:;">暂无</a></span>
                 </div>
                 <div class="layui-col-md12 operationCombineSpan">
                     <span>操作组合</span>
