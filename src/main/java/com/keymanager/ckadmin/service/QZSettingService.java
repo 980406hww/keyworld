@@ -6,6 +6,7 @@ import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
+import com.keymanager.ckadmin.entity.QZCategoryTag;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import java.util.List;
@@ -46,4 +47,6 @@ public interface QZSettingService extends IService<QZSetting> {
     void deleteAll(List<Integer> uuids);
 
     QZSetting getQZSetting(Long uuid);
+
+    void updateQzCategoryTags(List<String> uuids, List<QZCategoryTag> targetQZCategoryTags);
 }

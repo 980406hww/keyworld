@@ -356,7 +356,7 @@
 
         // 编辑表格获得表格数据
         function editCustomer(data) {
-            okLayer.open("编辑", "/internal/customer/toCustomersAdd", "90%", "90%", function (layero) {
+            okLayer.open("首页 / 客户列表 / 修改用户", "/internal/customer/toCustomersAdd", "90%", "90%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
             },function(){
                 if(sign){
@@ -409,7 +409,7 @@
 
         // 添加客户
         function toAddCustomer(){
-            okLayer.open("添加用户", "/internal/customer/toCustomersAdd", "90%", "90%", null, function () {
+            okLayer.open("首页 / 客户列表 / 添加用户", "/internal/customer/toCustomersAdd", "90%", "90%", null, function () {
                 if(sign){
                     active['reload'].call(this);
                     sign = false;
@@ -542,7 +542,7 @@
     </@shiro.hasPermission>
 
     <button class="layui-btn layui-btn-sm" id="addUser" lay-event="addUser">
-        <i class="layui-icon">&#xe61f;</i>添加客户
+        添加客户
     </button>
     </div>
 </script>

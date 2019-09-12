@@ -1,20 +1,21 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.baomidou.mybatisplus.plugins.Page;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.controller.internal.SpringMVCBaseController;
-import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
+import com.keymanager.ckadmin.entity.QZCategoryTag;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.entity.UserInfo;
 import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.ConfigService;
-import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
@@ -31,7 +32,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,9 +42,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @ClassName QZSettingController
@@ -368,5 +365,24 @@ public class QZSettingController extends SpringMVCBaseController {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("qzsettings/addImportantCustomerKeyword");
         return mv;
+    }
+
+    @RequestMapping(value = "/updQzCategoryTags", method = RequestMethod.POST)
+    public ResultBean updateQzCategoryTags(@RequestBody Map<String, Object> map) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        List<String> uuids = (List<String>) map.get("uuids");
+        List<QZCategoryTag> targetQZCategoryTags = new ObjectMapper()
+            .convertValue(map.get("targetQZCategoryTags"),
+                new TypeReference<List<QZCategoryTag>>() {
+                });
+        try {
+            qzSettingService.updateQzCategoryTags(uuids, targetQZCategoryTags);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+            resultBean.setMsg(ex.getMessage());
+            resultBean.setCode(400);
+        }
+        return resultBean;
     }
 }

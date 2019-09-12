@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/style/template.css"
           media="all">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/layui/add-or-upd.css">
     <style>
         *, :after, :before {
             box-sizing: border-box
@@ -422,6 +423,9 @@
             height: 30px;
         }
 
+        .my-label{
+            height: auto !important;
+        }
     </style>
 </head>
 <body class="ok-body">
@@ -484,9 +488,7 @@
 </div>
 
 <!--数据表格-->
-<table class="layui-hide" id="qzSettingTable" lay-filter="tableFilter">
-
-</table>
+<table class="layui-hide" id="qzSettingTable" lay-filter="tableFilter"></table>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
 <script>
@@ -1531,6 +1533,7 @@
                     addQZSetting();
                     break;
                 case 'updFZTags':
+                    openUpdFZTags();
                     break;
                 case 'batchDeleteQZSetting':
                     batchDeleteQZSetting();
@@ -1539,6 +1542,83 @@
                     break;
             }
         });
+
+
+        let updFZTagsHtml = `                    <div style="width: 100%;margin-top: 10px;text-align: center">
+                <div class="layui-inline" style="width: 60px;line-height: 34px;text-align: center">新标签：</div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline" style="width: 300px">
+                        <input style="height: 34px" type="text" id="tagNames" placeholder="每个词用逗号隔开例如:阿卡索,MBA"
+                        autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>`;
+
+        function openUpdFZTags() {
+            let checkStatus = table.checkStatus('qzSettingTable').data;
+            if (checkStatus.length === 0) {
+                show_layer_msg('请选择需要修改站点！', 5);
+                return false;
+            }
+            layer.open({
+                type: 1,
+                title: '修改分组标签',
+                content: updFZTagsHtml,
+                shadeClose: true,
+                resize: false,
+                area: '420px',
+                btn: ['确认', '取消'],
+                yes: function (index) {
+                    let v = document.getElementById('tagNames').value;
+                    if (!/^[\u4e00-\u9fa5a-zA-Z,]+$/.test(v)) {
+                        show_layer_msg('请输入符合规则的标签数据！', 5);
+                        return false;
+                    }
+                    let d = {}, tags = [], ids = [], tagNames = v.split(',');
+                    for (let item in tagNames) {
+                        let a = {};
+                        a.tagName = tagNames[item];
+                        tags.push(a);
+                    }
+                    for (let i = 0; i < checkStatus.length; i++) {
+                        ids.push(checkStatus[i].uuid + "");
+                    }
+                    d.targetQZCategoryTags = tags;
+                    d.uuids = ids;
+                    layer.confirm('确认修改？', {
+                        icon: 3,
+                        title: '修改标签',
+                        btn: ['确认', '取消'] //可以无限个按钮
+                        , yes: function (index_) {
+                            $.ajax({
+                                url: '/internal/qzsetting/updQzCategoryTags',
+                                type: 'post',
+                                data: JSON.stringify(d),
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                success: function (res) {
+                                    if (res.code === 200) {
+                                        show_layer_msg('修改成功', 1);
+                                        active['reload'].call(this);
+                                        layer.close(index);
+                                        layer.close(index_);
+                                    } else {
+                                        layer.msg(res.msg);
+                                    }
+                                }
+                            });
+                        }, btn2: function (index) {
+                            layer.close(index);
+                        }
+                    });
+                }, btn2: function (index) {
+                    layer.close(index);
+                }, cancel: function () {
+                }
+            });
+        }
 
         function addQZSetting() {
             okLayer.open("其他 / 前往全站设置信息 / 添加", "/internal/qzsetting/toQZSettingAdd", "90%", "90%",
@@ -1575,6 +1655,131 @@
                         sign = false;
                     }
                 })
+        };
+
+        function commitNoteBook(){
+
+        }
+
+        window.appendTable = function () {
+            let oneRowI = `<tr>
+                            <td class="my-left" colspan="4">
+                                <div class="my-label">
+                                     <input type="text" class="layui-input my-input"
+                                     placeholder="请在此输入你想要记录的内容">
+                                </div>
+                            </td>
+                            <td class="my-left my-bottom">
+                                <div class="my-label my-btn">
+                                <button type="button" onclick="commitNoteBook()"
+                                    class="layui-btn layui-btn-xs">
+                                保存
+                                </button>
+                                </div>
+                             </td>
+                             </tr>`;
+            $('#noteBookTbody').append(oneRowI);
+        };
+
+        let oneRowU = `<tr>
+                        <td class="my-left">
+                            <div class="my-label my-padding">
+                            1
+                            </div>
+                            </td>
+                            <td class="my-left">
+                            <div class="my-label my-padding">
+                            sdfhjksadf
+                            </div>
+                            </td>
+                            <td class="my-left">
+                            <div class="my-label my-padding">
+                            撒地方很快就的身份卡萨丁撒地方很快就的身份卡萨丁撒地方很快就的身份卡萨丁
+                            </div>
+                            </td>
+                            <td class="my-left">
+                            <div class="my-label my-padding">
+                            2019-10-01 11:11:11
+                        </div>
+                        </td>
+                        <td class="my-left my-bottom">
+                            <div class="my-label my-btn">
+                            <button type="button" onclick=""
+                                class="layui-btn layui-btn-xs layui-btn-danger">
+                            修改
+                            </button>
+                            </div>
+                            </td>
+                            </tr>`;
+
+        let noteBookHtml = `<div style="padding: 10px;">
+                            <table border="0" width="100%">
+                                <tbody id="noteBookTbody">
+                                <tr class="my-bg">
+                                    <td colspan="3" class="my-header-title">
+                                        <div id="phoneTitle"
+                                             class="my-label my-padding">
+                                            记事本NoteBook
+                                        </div>
+                                    </td>
+                                    <td class="my-header-title">
+                                        <div class="my-label">
+                                            <button onclick="appendTable()" type="button"
+                                            style="padding: 0 36px" class="layui-btn layui-btn-xs">
+                                                增加
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="my-header-btn">
+                                        <div class="my-label">
+                                            <button onclick="" type="button" style="padding: 0 20px"
+                                                    class="layui-btn layui-btn-xs">
+                                                刷新
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="my-bg">
+                                    <td class="my-left" style="min-width: 70px">
+                                        <div class="my-label my-padding">
+                                            序号
+                                        </div>
+                                    </td>
+                                    <td class="my-left">
+                                        <div class="my-label my-padding">
+                                            记录者
+                                        </div>
+                                    </td>
+                                    <td class="my-left">
+                                        <div class="my-label my-padding">
+                                            内容
+                                        </div>
+                                    </td>
+                                    <td class="my-left" style="min-width: 120px">
+                                        <div class="my-label my-padding">
+                                            日期
+                                        </div>
+                                    </td>
+                                    <td class="my-left my-bottom">
+                                        <div
+                                            class="my-label my-padding">
+                                            操作
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            </div>`;
+        // 记事本
+        window.openNoteBookDialog = function (uuid) {
+            layer.open({
+                type: 1,
+                title: '记事本',
+                content: noteBookHtml,
+                shadeClose: true,
+                resize: false,
+                area: '700px',
+            });
         };
 
         window.showExcludeCustomerKeywordDialog = function (uuid, customerUuid, domain, pcGroup,

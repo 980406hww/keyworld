@@ -203,7 +203,7 @@
         </div>
         <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
             <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
-                <button class="layui-btn" lay-submit lay-filter="commitCustomer">确定</button>
+                <button class="layui-btn" lay-submit lay-filter="commitCharge">确定</button>
                 <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">
                     取消
                 </button>
@@ -371,7 +371,7 @@
             }
         });
 
-        form.on("submit(commitCustomer)", function (data) {
+        form.on("submit(commitCharge)", function (data) {
             let d = {};
             if (data.field.computer === 'on') {
                 d.qzOperationTypeUuid = data.field.pcQzOperationTypeUuid;
@@ -392,27 +392,37 @@
                 d.actualAmount = data.field.phoneActualAmount;
                 d.nextChargeDate = data.field.phoneNextChargeDate;
             }
-            $.ajax({
-                url: '/internal/qzchargelog/saveQZChargeLogs',
-                type: 'post',
-                // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
-                data: JSON.stringify(d),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                success: function (res) {
-                    // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
-                    // 客户端会主观认为服务端返回的就是 JSON 格式的字符串
-                    if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
-                            parent.window.sign = true;
-                            // parent.layer.close(parent.layer.getFrameIndex(window.name));
-                            okLayer.close();
-                        });
-                    } else {
-                        layui.layer.msg(res.msg);
-                    }
+            layer.confirm('确认保存？', {
+                icon: 3,
+                title: '保存数据',
+                btn: ['确认', '取消']
+                , yes: function (index) {
+                    $.ajax({
+                        url: '/internal/qzchargelog/saveQZChargeLogs',
+                        type: 'post',
+                        // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
+                        data: JSON.stringify(d),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        success: function (res) {
+                            // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
+                            // 客户端会主观认为服务端返回的就是 JSON 格式的字符串
+                            if (res.code === 200) {
+                                layer.close(index);
+                                okLayer.msg.greenTick("保存成功", function () {
+                                    parent.window.sign = true;
+                                    // parent.layer.close(parent.layer.getFrameIndex(window.name));
+                                    okLayer.close();
+                                });
+                            } else {
+                                layui.layer.msg(res.msg);
+                            }
+                        }
+                    });
+                }, btn2: function (index) {
+                    layer.close(index);
                 }
             });
             return false;
