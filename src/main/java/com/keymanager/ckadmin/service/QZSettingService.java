@@ -46,4 +46,8 @@ public interface QZSettingService extends IService<QZSetting> {
     void deleteAll(List<Integer> uuids);
 
     QZSetting getQZSetting(Long uuid);
+
+    void batchUpdateQZSettingUpdateStatus(String uuids);
+
+    void batchUpdateRenewalStatus(String uuids, int renewalStatus);
 }

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.controller.internal.SpringMVCBaseController;
-import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
@@ -14,7 +13,6 @@ import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.entity.UserInfo;
 import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.ConfigService;
-import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
@@ -70,9 +68,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     @Resource(name = "userInfoService2")
     private UserInfoService userInfoService;
-
-    //跳转添加或修改用户页面
-//    @RequiresPermissions("/internal/productKeyword/searchProductKeywords")
 
     @GetMapping(value = "/getActiveCustomer")
     public List<Customer> getActiveCustomer() {
@@ -300,7 +295,11 @@ public class QZSettingController extends SpringMVCBaseController {
         return resultBean;
     }
 
-    // 获得初始用户列表
+    /**
+     * 获得初始用户列表
+     * @param request
+     * @return
+     */
     @GetMapping(value = "/getSaveQZSettingsMsg")
     public ResultBean getSaveQZSettingsMsg(HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
@@ -322,7 +321,7 @@ public class QZSettingController extends SpringMVCBaseController {
         return resultBean;
     }
 
-    @RequestMapping(value = "/saveQZSetting", method = RequestMethod.POST)
+    @PostMapping(value = "/saveQZSetting")
     public ResultBean saveQZSetting(@RequestBody QZSetting qzSetting, HttpSession session) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
@@ -346,7 +345,7 @@ public class QZSettingController extends SpringMVCBaseController {
         return resultBean;
     }
 
-    @RequestMapping(value = "/getQZSettingsMsg/{uuid}", method = RequestMethod.GET)
+    @GetMapping(value = "/getQZSettingsMsg/{uuid}")
     public ResultBean getQZSettingsMsg(@PathVariable Long uuid) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
@@ -368,5 +367,46 @@ public class QZSettingController extends SpringMVCBaseController {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("qzsettings/addImportantCustomerKeyword");
         return mv;
+    }
+
+    /**
+     * 马上更新 - 批量
+     * @param requestMap
+     * @return
+     */
+    @PostMapping(value = "/batchUpdateQZSettingUpdateStatus")
+    public ResultBean batchUpdateQZSettingUpdateStatus(@RequestBody Map<String, String> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            String uuids = requestMap.get("uuids");
+            qzSettingService.batchUpdateQZSettingUpdateStatus(uuids);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    /**
+     * 暂停续费 || 下架整站 - 批量
+     * @param requestMap
+     * @return
+     */
+    @PostMapping(value = "/batchUpdateRenewalStatus")
+    public ResultBean batchUpdateRenewalStatus(@RequestBody Map<String, String> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            String uuids = requestMap.get("uuids");
+            int renewalStatus = Integer.parseInt(requestMap.get("renewalStatus"));
+            qzSettingService.batchUpdateRenewalStatus(uuids, renewalStatus);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
     }
 }

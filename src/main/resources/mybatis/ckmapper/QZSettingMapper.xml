@@ -52,19 +52,19 @@
         ORDER BY qs.fUpdateTime
     </select>
 
-  <select id="searchQZSettingSearchEngines" resultType="com.keymanager.ckadmin.vo.QZSettingVO">
-    SELECT
-    qs.fSearchEngine AS 'searchEngine',
-    qs.fPcGroup AS 'pcGroup',
-    qs.fPhoneGroup AS 'phoneGroup'
-    FROM t_qz_setting qs
-    WHERE 1 = 1
+    <select id="searchQZSettingSearchEngines" resultType="com.keymanager.ckadmin.vo.QZSettingVO">
+        SELECT
+        qs.fSearchEngine AS 'searchEngine',
+        qs.fPcGroup AS 'pcGroup',
+        qs.fPhoneGroup AS 'phoneGroup'
+        FROM t_qz_setting qs
+        WHERE 1 = 1
     <if test="customerUuid != null and customerUuid != ''">AND qs.fCustomerUuid = #{customerUuid}
     </if>
     <if test="domain != null and domain != ''">AND qs.fDomain = #{domain}</if>
   </select>
 
-  <select id="getQZSettingGroupInfo" resultType="java.lang.Integer">
+    <select id="getQZSettingGroupInfo" resultType="java.lang.Integer">
         SELECT COUNT(1)
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName = #{optimizeGroupName}
@@ -73,13 +73,26 @@
         AND ck.fStatus = 1
     </select>
 
-  <select id="selectLastId" resultType="int">
+    <select id="selectLastId" resultType="int">
         select LAST_INSERT_ID()
     </select>
 
-  <update id="updateQZSettingGroup" parameterType="com.keymanager.monitoring.entity.QZSetting">
+    <update id="updateQZSettingGroup" parameterType="com.keymanager.monitoring.entity.QZSetting">
         UPDATE t_qz_setting
         SET fPcGroup = #{qzSetting.pcGroup},fPhoneGroup = #{qzSetting.phoneGroup}
         WHERE fUuid = #{qzSetting.uuid}
+    </update>
+
+    <update id="batchUpdateQZSettingUpdateStatus">
+        UPDATE t_qz_setting
+        SET fUpdateStatus = NULL, fUpdateTime = NOW(), fUpdateEndTime = NULL
+        WHERE fAutoCrawlKeywordFlag IS TRUE
+        AND fUuid IN (${uuids})
+    </update>
+
+    <update id="batchUpdateRenewalStatus">
+        UPDATE t_qz_setting
+        SET fUpdateTime = NOW(), fRenewalStatus = #{renewalStatus}
+        WHERE fUuid IN (${uuids})
     </update>
 </mapper>

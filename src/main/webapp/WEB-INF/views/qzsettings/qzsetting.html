@@ -133,8 +133,8 @@
             white-space: nowrap;
         }
 
-        .layui-table-col-special .header span.to-aizhan a:hover,
-        .layui-table-col-special .header span.to-5118 a:hover {
+        .layui-table-col-special .header span.to-aizhan a,
+        .layui-table-col-special .header span.to-5118 a {
             color: #0c7df5;
         }
 
@@ -180,7 +180,7 @@
         }
 
         .layui-table-col-special .header .handle a.blue:hover {
-            color: #f60;
+            color: rgb(0, 150, 136);
         }
 
         .layui-table-col-special .body {
@@ -206,6 +206,11 @@
             overflow: hidden;
             text-overflow: ellipsis;
             color: #000;
+        }
+
+        .layui-table-col-special .body .other-rank .line1:first-child,
+        .layui-table-col-special .body .other-rank_2 .line1:first-child {
+            border-bottom: 1px solid #e6e6e6;
         }
 
         .layui-table-col-special .body .rank-wrap {
@@ -277,42 +282,6 @@
             text-align: center;
         }
 
-        .layui-table-col-special .body .rank-wrap > div span.red,
-        .layui-table-col-special .body .rank-wrap1 > div span.red {
-            color: palevioletred;
-        }
-
-        .layui-table-col-special .body .rank-wrap > div span.green,
-        .layui-table-col-special .body .rank-wrap1 > div span.green {
-            color: mediumseagreen;
-        }
-
-        .layui-table-col-special .body .rank-wrap > div span a,
-        .layui-table-col-special .body .rank-wrap1 > div span a {
-            font-size: 12px;
-            text-decoration: none;
-        }
-
-        .layui-table-col-special .body .rank-wrap > div span a.red,
-        .layui-table-col-special .body .rank-wrap1 > div span a.red {
-            color: palevioletred;
-        }
-
-        .layui-table-col-special .body .rank-wrap > div span a.green,
-        .layui-table-col-special .body .rank-wrap1 > div span a.green {
-            color: mediumseagreen;
-        }
-
-        .layui-table-col-special .body .rank-wrap > div span .red,
-        .layui-table-col-special .body .rank-wrap1 > div span .red {
-            color: palevioletred;
-        }
-
-        .layui-table-col-special .body .rank-wrap > div span .green,
-        .layui-table-col-special .body .rank-wrap1 > div span .green {
-            color: mediumseagreen;
-        }
-
         .layui-table-col-special .body .user-id {
             width: 84px;
         }
@@ -342,7 +311,6 @@
         .layui-table-col-special .body .user-id span.line1,
         .layui-table-col-special .body .standard-info span.line1 {
             font-size: 14px;
-            /*margin-top: 45px;*/
             overflow: hidden;
             text-overflow: ellipsis;
             color: #000;
@@ -1550,6 +1518,15 @@
                 case 'batchDeleteQZSetting':
                     batchDeleteQZSetting();
                     break;
+                case 'batchUpdateQZSettingUpdateStatus':
+                    batchUpdateQZSettingUpdateStatus();
+                    break;
+                case 'batchUpdateRenewalStatusToSuspend':
+                    batchUpdateRenewalStatus(0);
+                    break;
+                case 'batchUpdateRenewalStatusToSoldOut':
+                    batchUpdateRenewalStatus(3);
+                    break;
                 default:
                     break;
             }
@@ -1624,7 +1601,7 @@
             }
             layer.confirm("确定要修改所选站点优化组关联的操作组合吗？", {icon: 3, title: '修改操作组合'}, function (index) {
                 let groupName = '';
-            $.each(checkStatus.data, function (i, v) {
+                $.each(checkStatus.data, function (i, v) {
                 if (v.pcGroup !== null) {
                         groupName += "," + v.pcGroup;
                     } else {
@@ -1671,7 +1648,6 @@
                 }
             });
         }
-
 
         window.showAddKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
             let terminalType = $("#terminalSearchEngine").val();
@@ -1794,6 +1770,95 @@
             });
         }
 
+        /**
+         * 马上更新 - 批量
+         */
+        function batchUpdateQZSettingUpdateStatus() {
+            //获取选中数据
+            let checkStatus = table.checkStatus('qzSettingTable')
+                , data = checkStatus.data;
+            if (checkStatus.data.length === 0) {
+                show_layer_msg('请选择要操作的站点', 5);
+                return;
+            }
+            layer.confirm("确定要修改所选站点吗", {icon: 3, title: '修改所选'}, function (index) {
+                let uuids = "";
+                $.each(data, function (index, item) {
+                    uuids += (index === 0 ? "" : ",") + item.uuid;
+                });
+                var postData = {};
+                postData.uuids = uuids;
+                $.ajax({
+                    url: '/internal/qzsetting/batchUpdateQZSettingUpdateStatus',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
+                });
+                layer.close(index);
+            });
+        }
+
+        /**
+         * 暂停续费 || 下架整站 - 批量
+         */
+        function batchUpdateRenewalStatus(renewalStatus) {
+            let checkStatus = table.checkStatus('qzSettingTable')
+                , data = checkStatus.data;
+            if (checkStatus.data.length === 0) {
+                show_layer_msg('请选择要操作的站点', 5);
+                return;
+            }
+            let msg = 0;
+            if(renewalStatus === 0) {
+                msg = "确认选中的整站要暂停续费吗?";
+            } else if (renewalStatus === 3) {
+                msg = "确认要下架所选整站吗?";
+            }
+            layer.confirm(msg, {icon: 3, title: '修改所选'}, function (index) {
+                let uuids = "";
+                $.each(data, function (index, item) {
+                    uuids += (index === 0 ? "" : ",") + item.uuid;
+                });
+                var postData = {};
+                postData.uuids = uuids;
+                postData.renewalStatus = renewalStatus;
+                $.ajax({
+                    url: '/internal/qzsetting/batchUpdateRenewalStatus',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
+                });
+                layer.close(index);
+            });
+        }
     });
 </script>
 
@@ -1811,14 +1876,23 @@
         </select>
     </div>
 
-    <button class="layui-btn layui-btn-sm" id="add_qz" lay-event="add_qz">
-        <i class="layui-icon">&#xe61f;</i>添加
-    </button>
-
-    <button class="layui-btn layui-btn-sm layui-btn-danger" id="batchDeleteQZSetting"
-            lay-event="batchDeleteQZSetting">
-        删除所选
-    </button>
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-sm" id="add_qz" lay-event="add_qz">
+            <i class="layui-icon">&#xe61f;</i>添加
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" id="batchDeleteQZSetting" lay-event="batchDeleteQZSetting">
+            <i class="layui-icon layui-icon-delete"></i>删除所选
+        </button>
+        <button class="layui-btn layui-btn-sm" id="batchUpdateQZSettingUpdateStatus" lay-event="batchUpdateQZSettingUpdateStatus">
+            <i class="layui-icon"></i>马上更新
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-warm" id="batchUpdateRenewalStatusToSuspend" lay-event="batchUpdateRenewalStatusToSuspend">
+            <i class="layui-icon"></i>暂停续费
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" id="batchUpdateRenewalStatusToSoldOut" lay-event="batchUpdateRenewalStatusToSoldOut">
+            <i class="layui-icon"></i>下架整站
+        </button>
+    </div>
 
 </script>
 
@@ -1832,10 +1906,10 @@
             <span class="domain" title="{{d.domain}}"><a
                     href="javascript:;">{{d.domain}}</a></span>
             <span class="organization-name" title="{{d.organizationName}}"><a href="javascript:;">{{d.organizationName}}</a></span>
-            <span><a href="https://www.aizhan.com/cha/{{d.domain}}" target="_blank"
+            <span class="to-aizhan"><a href="https://www.aizhan.com/cha/{{d.domain}}" target="_blank"
                      title="查看爱站">爱站</a></span>
-            <span><a href="https://www.5118.com/seo/{{d.domain}}" target="_blank"
-                     title="查看5118,需要登录">5118</a></span>
+            <span class="to-5118"><a href="https://www.5118.com/seo/{{d.domain}}" target="_blank"
+                     title="查看5118">5118</a></span>
             <span>
                 自动采词:
                 <a href="javascript:;">
@@ -1994,19 +2068,26 @@
                         <a href="javascript:;">
                             {{#  if(d.renewalStatus === 1) { }}
                                 <span style="color: green;">续费</span>
-                            {{# }else{ }}
-                                <span style="color: red;">暂停续费</span>
+                            {{# }else if(d.renewalStatus === 0) { }}
+                                <span style="color: palevioletred;">暂停续费</span>
+                            {{# }else if(d.renewalStatus === 2) { }}
+                                <span style="color: mediumseagreen;">首次收费</span>
+                            {{# }else if(d.renewalStatus === 3) { }}
+                                <span style="color: red;">下架</span>
+                            {{# }else if(d.renewalStatus === 4) { }}
+                                <span style="color: mediumseagreen;">观测</span>
+                            {{# }else if(d.renewalStatus === 5) { }}
+                                <span style="color: mediumseagreen;">seo</span>
                             {{# } }}
                         </a>
                     </span>
-
                 </div>
                 <div class="layui-col-md12">
                     <span>续费状态</span>
                 </div>
-
             </div>
         </div>
+
         <div class="layui-col-md4 other-rank_2">
             <div class="layui-col-md12 line1">
                 <div class="layui-col-md12" id="optimizationGroup">
@@ -2034,7 +2115,6 @@
         <!--5118/爱站曲线-->
         {{# if(d.searchEngine === '百度') { }}
         <div class="layui-col-md5 rank-wrap">
-            <!--<div class="col-1" id="keywordRecordCharts" style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>-->
             <div class="layui-col-md3 col-2" id="keywordTrendCharts"
                  style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
             <div class="layui-col-md2 col-4 top50-link">

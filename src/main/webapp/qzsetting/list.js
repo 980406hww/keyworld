@@ -1535,10 +1535,10 @@ function delSelectedQZSettings(self) {
 function immediatelyUpdateQZSettings() {
     var uuids = getSelectedUsefulIDs();
     if (uuids === '') {
-        $.messager.alert('提示', '请选择正确的要操作的站点信息, 必须包含至少一个是指定词的站点！！', 'info');
+        $.messager.alert('提示', '请选择要修改的站点信息！！', 'info');
         return false;
     }
-    parent.$.messager.confirm('确认', "确认收费?", function (b) {
+    parent.$.messager.confirm('确认', "确认修改自运营的更新状态?", function (b) {
         if (b) {
             var postData = {};
             postData.uuids = uuids;

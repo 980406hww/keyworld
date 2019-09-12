@@ -606,4 +606,14 @@ public class QZSettingServiceImpl extends
         }
         return qzSetting;
     }
+
+    @Override
+    public void batchUpdateQZSettingUpdateStatus(String uuids) {
+        qzSettingDao.batchUpdateQZSettingUpdateStatus(uuids);
+    }
+
+    @Override
+    public void batchUpdateRenewalStatus(String uuids, int renewalStatus) {
+        qzSettingDao.batchUpdateRenewalStatus(uuids, renewalStatus);
+    }
 }
