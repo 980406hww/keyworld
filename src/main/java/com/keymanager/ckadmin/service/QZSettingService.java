@@ -26,18 +26,24 @@ public interface QZSettingService extends IService<QZSetting> {
     List<QZSearchEngineVO> searchQZSettingSearchEngineMap(
         QZSettingCriteria criteria, Integer record);
 
-    Map<String, Object> getQZKeywordRankInfo(long uuid, String terminalType, String optimizeGroupName);
+    Map<String, Object> getQZKeywordRankInfo(long uuid, String terminalType,
+        String optimizeGroupName);
 
-    CustomerExcludeKeyword echoExcludeKeyword(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
+    CustomerExcludeKeyword echoExcludeKeyword(
+        QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
 
-    void excludeQZSettingCustomerKeywords(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
+    void excludeQZSettingCustomerKeywords(
+        QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
 
     void saveQZSettingCustomerKeywords(
-        QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria, String userName);
+        QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria,
+        String userName);
 
     void saveQZSetting(QZSetting qzSetting, String userName);
 
     void deleteOne(Long uuid);
 
     void deleteAll(List<Integer> uuids);
+
+    QZSetting getQZSetting(Long uuid);
 }

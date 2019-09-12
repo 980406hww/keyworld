@@ -88,7 +88,7 @@
             line-height: 44px
         }
 
-        .layui-table-col-special .header span input{
+        .layui-table-col-special .header span input {
             align-self: center;
             margin: 15px 5px;
         }
@@ -403,8 +403,9 @@
             width: 100%;
             text-align: left;
         }
+
         .layui-unselect {
-            height:30px;
+            height: 30px;
         }
 
         .layui-table-tool {
@@ -447,13 +448,11 @@
                         <input type="text" hidden name="userInfoID" id="userInfoID" value="">
                         <input type="text" hidden name="organizationID" id="organizationID" value="">
                         <div class="layui-form-item" lay-filter="loginNameFilter">
-                            <div class="layui-inline">域名</div>
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
                                     <input type="text" name="domain" id="domain" placeholder="请输入域名" autocomplete="off" onblur="checkDomain()" onmouseleave="checkDomain()" class="layui-input">
                                 </div>
                             </div>
-                            <div class="layui-inline">客户</div>
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
                                     <select name="customerInfo" id="customerInfo" lay-filter="customerInfoFilter" lay-search>
@@ -461,76 +460,12 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="layui-inline">用户</div>
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
+
                                     <input type="text"  id="tree" lay-filter="tree" class="layui-input" >
                                 </div>
                             </div>
-                            <div class="layui-inline">分类标签</div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <select name="categoryTag" id="categoryTag" lay-search>
-                                        <option value="">分类标签</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">组名</div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <input type="text" name="group" id="group" placeholder="请输入组名" autocomplete="off"class="layui-input">
-                                </div>
-                            </div>
-                            <div class="layui-inline">续费状态</div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <select name="renewalStatus" id="renewalStatus">
-                                        <option value selected>全部</option>
-                                        <option value="1">续费</option>
-                                        <option value="0">暂停续费</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">自动采词</div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <select name="autoCrawlKeywordFlag" id="autoCrawlKeywordFlag">
-                                        <option value selected>全部</option>
-                                        <option value="1">是</option>
-                                        <option value="0">否</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">达标种类</div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <select name="standardSpecies" id="standardSpecies">
-                                        <option value selected>全部</option>
-                                        <option value="aiZhan">爱站</option>
-                                        <option value="5118">5118</option>
-                                        <option value="designationWord">指定词</option>
-                                        <option value="other">其它</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">达标优化类型</div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <select name="optimizationType" id="optimizationType">
-                                        <option value selected>全部</option>
-                                        <option value="1">主优化</option>
-                                        <option value="2">次优化</option>
-                                        <option value="0">辅助优化</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">创建时间</div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <input type="text" class="layui-input" id="createTime" name="createTime" readonly placeholder="请选择日期">
-                                </div>
-                            </div>
-
                         </div>
                         <div class="layui-form-item">
                             <div class="layui-inline">
@@ -620,10 +555,10 @@
         });
 
         window.checkDomain = function() {
-            var domain = $("#domain").val().replace(/\s*/g,"")
+            var domain = $("#domain").val().replace(/\s*/g,"");
             if(domain != null && domain !== ''){
                 if(domain.indexOf(".") === -1){
-                    layer.msg("域名不符合规范")
+                    show_layer_msg("域名不符合规范", 5);
                 }
             }
         };
@@ -643,17 +578,11 @@
         });
 
         form.on("submit(search)", function (data) {
-            console.log(data.field)
-            data.field.domain.replace(/\s*/g,"")
-            data.field.customerInfo.replace(/\s*/g,"")
-            var createTime = data.field.createTime
-            if(createTime){
-
-            }
-
-            if(data.field.domain !== null && data.field.domain !== ''){
+            data.field.domain.replace(/\s*/g,"");
+            data.field.customerInfo.replace(/\s*/g,"");
+            if(data.field.domain != null && data.field.domain !== ''){
                 if(data.field.domain.indexOf(".") === -1){
-                    layer.msg('域名不符合规范', {icon: 5});
+                    show_layer_msg("域名不符合规范", 5);
                     return false;
                 }
             }
@@ -770,8 +699,13 @@
             });
         }
 
-        form.on('select(terminalSearchEngineFilter)', function(data){
-            auto_reload_with_query_conditions(data.value);
+        form.on('select(terminalSearchEngineFilter)', function (data) {
+            let val = data.val;
+            let searchEngine = val.substr(0, val.indexOf('P'));
+            let terminalType = val.substr(val.indexOf('P'), val.length);
+            $('#searchEngine').val(searchEngine);
+            $('#terminalType').val(terminalType);
+            active['reload'].call(this);
         });
 
         var active = {
@@ -786,20 +720,11 @@
             }
         };
 
-
         function formToJson(data) {
-            data=data.replace(/&/g,"\",\"");
-            data=data.replace(/=/g,"\":\"");
-            data="{\""+data+"\"}";
+            data = data.replace(/&/g, "\",\"");
+            data = data.replace(/=/g, "\":\"");
+            data = "{\"" + data + "\"}";
             return data;
-        }
-
-        function auto_reload_with_query_conditions(val) {
-            let searchEngine = val.substr(0, val.indexOf('P'));
-            let terminalType = val.substr(val.indexOf('P'), val.length);
-            $('#searchEngine').val(searchEngine);
-            $('#terminalType').val(terminalType);
-            active['reload'].call(this);
         }
 
         function getQZKeywordRankInfo(postData, callback) {
@@ -815,7 +740,7 @@
                     callback(result);
                 },
                 error: function () {
-                    show_layer_msg('获取全站曲线信息失败！！', 2, '异常提醒');
+                    show_layer_msg('获取全站曲线信息失败！！', 5);
                 }
             });
         }
@@ -1599,7 +1524,7 @@
 
         });
 
-        table.on('toolbar(tableFilter)',function(obj){
+        table.on('toolbar(tableFilter)', function (obj) {
             var data = obj.data, event = obj.event;
             switch (event) {
                 case 'add_qz':
@@ -1614,114 +1539,124 @@
         });
 
         function add_qz() {
-            okLayer.open("其他 / 前往全站设置信息 / 添加", "/internal/qzsetting/toQZSettingAdd", "90%", "90%", null, function () {
-            });
+            okLayer.open("其他 / 前往全站设置信息 / 添加", "/internal/qzsetting/toQZSettingAdd", "90%", "90%",
+                null, function () {
+                    if (sign) {
+                        active['reload'].call(this);
+                        sign = false;
+                    }
+                });
         }
 
         // 收费
-        window.showChargeDialog = function(uuid, contactPearson, domain) {
-            okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toQZSettingCharge", "60%", "90%", function (layero) {
-                window[layero.find("iframe")[0]["name"]].initForm({uuid:uuid, qzSettingCustomer:contactPearson, qzSettingDomain:domain});
-            },function(){
-                if(sign){
-                    active['reload'].call(this);
-                    sign = false;
-                }
-            })
-        };
-
-        window.showExcludeCustomerKeywordDialog = function(uuid, customerUuid, domain, pcGroup, phoneGroup) {
-            let terminalType = $("#terminalSearchEngine").val();
-            terminalType = terminalType.substr(terminalType.indexOf("P"),terminalType.length);
-            let optimizedGroupName = phoneGroup;
-            if(terminalType === 'PC'){
-                optimizedGroupName = pcGroup;
-            }
-            okLayer.open("其他 / 前往全站设置信息 / 排除关键字", "/internal/qzsetting/toExcludeCustomerKeyword", "60%", "90%", function (layero) {
-                window[layero.find("iframe")[0]["name"]].initForm({qzSettingUuid:uuid, customerUuid:customerUuid, domain:domain, terminalType:terminalType, optimizedGroupName:optimizedGroupName});
-            },function(){
-
-            })
-        };
-
-        // 修改选中站点优化组关联的操作组合
-        form.on('select(operationCombineFilter)', function(data){
-            let checkStatus = table.checkStatus('qzSettingTable');
-            if (checkStatus.data.length === 0) {
-                $("#update_qz_operation_combine").val('');
-                show_layer_msg('请选择要修改优化组关联的操作组合的站点！！', 2, "提示");
-                return false;
-            }
-            let groupName = '';
-            $.each(checkStatus.data, function(i, v){
-                if(v.pcGroup !== null) {
-                    groupName += "," + v.pcGroup;
-                } else {
-                    groupName += "," + v.phoneGroup;
-                }
-            });
-
-            let postData = {};
-            postData.operationCombineUuid = (data.value === 'null' || data.value === '') ? null : data.value;
-            postData.groupName = groupName.substr(1);
-            $.ajax({
-                url: '/internal/group/updateGroupOperationCombineUuid',
-                type: 'POST',
-                data: JSON.stringify(postData),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                success: function (result) {
-                    if (result.code === 200) {
-                        show_layer_msg('修改站点优化组关联的操作组合成功！！', 1, '提示');
-                        auto_reload_with_query_conditions($("#terminalSearchEngine").val());
-                    } else {
-                        show_layer_msg('修改站点优化组关联的操作组合失败！！', 2, '异常提醒');
+        window.showChargeDialog = function (uuid, contactPearson, domain) {
+            okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toQZSettingCharge", "90%",
+                "90%", function (layero) {
+                    window[layero.find("iframe")[0]["name"]].initForm(
+                        {uuid: uuid, qzSettingCustomer: contactPearson, qzSettingDomain: domain});
+                }, function () {
+                    if (sign) {
+                        active['reload'].call(this);
+                        sign = false;
                     }
-                },
-                error: function () {
-                    show_layer_msg('修改站点优化组关联的操作组合失败！！', 2, '异常提醒');
-                }
-            });
-        });
+                })
+        };
 
-        function show_layer_msg(msg, icon, title) {
-            layer.msg(msg, {
-                icon: icon,
-                title: title,
-                anim: 5,
-                time: 2000,
-                isOutAnim: false
-            });
-        }
+        // 修改
+        window.updateChargeDialog = function (uuid) {
+            okLayer.open("其他 / 前往全站设置信息 / 修改", "/internal/qzsetting/toQZSettingAdd", "90%",
+                "90%", function (layero) {
+                    window[layero.find("iframe")[0]["name"]].initForm(uuid);
+                }, function () {
+                    if (sign) {
+                        active['reload'].call(this);
+                        sign = false;
+                    }
+                })
+        };
 
-        window.showAddKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
+        window.showExcludeCustomerKeywordDialog = function (uuid, customerUuid, domain, pcGroup,
+            phoneGroup) {
             let terminalType = $("#terminalSearchEngine").val();
             terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
             let optimizedGroupName = phoneGroup;
             if (terminalType === 'PC') {
                 optimizedGroupName = pcGroup;
             }
-            okLayer.open("其他 / 全站设置信息 / 添加关键字", "/internal/qzsetting/toAddCustomerKeyword",
-                "60%", "90%", function (layero) {
+            okLayer.open("其他 / 前往全站设置信息 / 排除关键字", "/internal/qzsetting/toExcludeCustomerKeyword",
+                "90%", "90%", function (layero) {
                     window[layero.find("iframe")[0]["name"]].initForm({
                         qzSettingUuid: uuid,
                         customerUuid: customerUuid,
                         domain: domain,
-                        bearPawNumber: bearPawNumber,
-                        searchEngine: searchEngine,
-                        type: type,
                         terminalType: terminalType,
                         optimizedGroupName: optimizedGroupName
                     });
                 }, function () {
 
-                }
-            );
+                })
         };
 
-        window.showAddImportantKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
+        // 修改选中站点优化组关联的操作组合
+        form.on('select(operationCombineFilter)', function (data) {
+            let checkStatus = table.checkStatus('qzSettingTable');
+            if (checkStatus.data.length === 0) {
+                $("#update_qz_operation_combine").val('');
+                show_layer_msg('请选择要修改优化组关联的操作组合的站点！！', 5);
+                return false;
+            }
+            layer.confirm("确定要修改所选站点优化组关联的操作组合吗？", {icon: 3, title: '修改操作组合'}, function (index) {
+                let groupName = '';
+            $.each(checkStatus.data, function (i, v) {
+                if (v.pcGroup !== null) {
+                        groupName += "," + v.pcGroup;
+                    } else {
+                        groupName += "," + v.phoneGroup;
+                    }
+                });
+
+                let postData = {};
+                postData.operationCombineUuid = (data.value === 'null' || data.value === '') ? null : data.value;
+                postData.groupName = groupName.substr(1);
+                $.ajax({
+                    url: '/internal/group/updateGroupOperationCombineUuid',
+                    type: 'POST',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功！！', 6, true);
+                        } else {
+                            show_layer_msg('操作失败！！', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试！！', 5);
+                    }
+                });
+                layer.close(index);
+            });
+        });
+
+        function show_layer_msg(msg, icon, status, title) {
+            layer.msg(msg, {
+                icon: icon,
+                title: title === undefined ? null : title,
+                anim: 5,
+                time: 2000,
+                isOutAnim: false
+            }, function () {
+                if (status) {
+                    active['reload'].call(this);
+                }
+            });
+        }
+
+        window.showKeywordDialog = function (uuid, customerUuid, domain, bearPawNumber,
+            searchEngine, pcGroup, phoneGroup) {
             let terminalType = $("#terminalSearchEngine").val();
             terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
             let optimizedGroupName = phoneGroup;
@@ -1752,7 +1687,6 @@
          */
         window.delQZSetting = function (uuid) {
             layer.confirm('真的删除该站点吗', function (index) {
-
                 $.ajax({
                     url: '/internal/qzsetting/delete2/' + uuid,
                     headers: {
@@ -1763,19 +1697,13 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                            }, function () {
-                                active['reload'].call(this);
-                            });
+                            show_layer_msg('操作成功', 6, true);
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            show_layer_msg('操作失败', 5);
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
-
+                        show_layer_msg('未知错误，请稍后重试', 5);
                     }
                 });
                 layer.close(index);
@@ -1785,7 +1713,8 @@
         /**
          * 删除多个站点
          */
-        function batchDeleteQZSetting() { //获取选中数据
+        function batchDeleteQZSetting() {
+            //获取选中数据
             var checkStatus = table.checkStatus('qzSettingTable')
                 , data = checkStatus.data;
             var uuidArr = [];
@@ -1793,7 +1722,7 @@
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的站点', {icon: 5});
+                show_layer_msg('请选择要操作的站点', 5);
                 return
             }
             layer.confirm("确定要删除所选站点吗", {icon: 3, title: '删除所选'}, function (index) {
@@ -1810,18 +1739,13 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                            }, function () {
-                                active['reload'].call(this);
-                            });
+                            show_layer_msg('操作成功', 6, true);
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            show_layer_msg('操作失败', 5);
                         }
                     },
                     error: function () {
-                        layer.msg('未知错误，请稍后重试', {icon: 5});
+                        show_layer_msg('未知错误，请稍后重试', 5);
                     }
                 });
                 layer.close(index);
@@ -1835,7 +1759,8 @@
 <script type="text/html" id="toolbarTpl">
 
     <div class="layui-input-inline" style="width: 120px; height: 30px">
-        <select name="terminalSearchEngine" id="terminalSearchEngine" lay-filter="terminalSearchEngineFilter"></select>
+        <select name="terminalSearchEngine" id="terminalSearchEngine"
+                lay-filter="terminalSearchEngineFilter"></select>
     </div>
 
     <div class="layui-input-inline" style="width: 200px; height: 30px">
@@ -1848,7 +1773,8 @@
         <i class="layui-icon">&#xe61f;</i>添加
     </button>
 
-    <button class="layui-btn layui-btn-sm" id="batchDeleteQZSetting" lay-event="batchDeleteQZSetting">
+    <button class="layui-btn layui-btn-sm" id="batchDeleteQZSetting"
+            lay-event="batchDeleteQZSetting">
         <i class="layui-icon">&#xe61f;</i>删除所选
     </button>
 

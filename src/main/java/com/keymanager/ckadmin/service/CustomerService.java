@@ -35,4 +35,6 @@ public interface CustomerService extends IService<Customer> {
         String loginName);
 
     List<Customer> getActiveCustomerSimpleInfo(CustomerCriteria customerCriteria);
+
+    Customer getCustomer(int customerUuid);
 }
