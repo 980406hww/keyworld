@@ -2,43 +2,34 @@ package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
-import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.controller.internal.SpringMVCBaseController;
-import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.entity.*;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.service.*;
+import com.keymanager.ckadmin.enums.KeywordEffectEnum;
 import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
+import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @ClassName QZSettingController
@@ -68,15 +59,12 @@ public class QZSettingController extends SpringMVCBaseController {
     @Resource(name = "qzCategoryTagService2")
     private QZCategoryTagService qzCategoryTagService;
 
-    //跳转添加或修改用户页面
-//    @RequiresPermissions("/internal/productKeyword/searchProductKeywords")
 
     @GetMapping(value = "/getCategoryTag")
     public List<String> getCategoryTag(){
         List<String> tagNameList = qzCategoryTagService.findTagNames(null);
         return tagNameList;
     }
-
     @GetMapping(value = "/getActiveCustomer")
     public List<Customer> getActiveCustomer() {
         CustomerCriteria customerCriteria = new CustomerCriteria();
@@ -90,10 +78,10 @@ public class QZSettingController extends SpringMVCBaseController {
         return activeUsers;
     }
 
-
     /**
      * 跳转添加或修改用户页面
      */
+    @RequiresPermissions("/internal/qzsetting/searchQZSettings")
     @GetMapping(value = "/toQZSetttings")
     public ModelAndView toQZSetttings() {
         ModelAndView mv = new ModelAndView();
@@ -104,6 +92,7 @@ public class QZSettingController extends SpringMVCBaseController {
     /**
      * 跳转添加或修改全站页面
      */
+    @RequiresPermissions("/internal/qzsetting/save")
     @GetMapping(value = "/toQZSettingAdd")
     public ModelAndView toQZSettingAdd() {
         ModelAndView mv = new ModelAndView();
@@ -124,6 +113,7 @@ public class QZSettingController extends SpringMVCBaseController {
     /**
      * 获取全站数据
      */
+    @RequiresPermissions("/internal/qzsetting/searchQZSettings")
     @PostMapping("/getQZSettings")
     public ResultBean getQZSettings(@RequestBody QZSettingCriteria qzSettingCriteria) {
         ResultBean resultBean = new ResultBean();
@@ -147,6 +137,7 @@ public class QZSettingController extends SpringMVCBaseController {
     /**
      * 获取搜索引擎映射列表
      */
+    @RequiresPermissions("/internal/qzsetting/searchQZSettings")
     @GetMapping("/getQZSettingSearchEngineMap")
     public ResultBean getQZSettingSearchEngineMap(QZSettingCriteria qzSettingCriteria) {
         ResultBean resultBean = new ResultBean();
@@ -220,6 +211,7 @@ public class QZSettingController extends SpringMVCBaseController {
 
     }
 
+    @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/excludeQZSettingCustomerKeywords2")
     public ResultBean excludeQZSettingCustomerKeywords2(HttpServletRequest request,
         @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
@@ -244,6 +236,7 @@ public class QZSettingController extends SpringMVCBaseController {
     /**
      * 跳转添加或修改指定关键字页面
      */
+    @RequiresPermissions("/internal/qzsetting/save")
     @GetMapping(value = "/toAddCustomerKeyword")
     public ModelAndView toAddCustomerKeyword() {
         ModelAndView mv = new ModelAndView();
@@ -251,6 +244,7 @@ public class QZSettingController extends SpringMVCBaseController {
         return mv;
     }
 
+    @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/saveQZSettingCustomerKeywords2")
     public ResultBean saveQZSettingCustomerKeywords(HttpServletRequest request,
         @RequestBody QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria) {
@@ -303,7 +297,11 @@ public class QZSettingController extends SpringMVCBaseController {
         return resultBean;
     }
 
-    // 获得初始用户列表
+    /**
+     * 获得初始用户列表
+     * @param request
+     * @return
+     */
     @GetMapping(value = "/getSaveQZSettingsMsg")
     public ResultBean getSaveQZSettingsMsg(HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
@@ -324,8 +322,9 @@ public class QZSettingController extends SpringMVCBaseController {
         resultBean.setData(map);
         return resultBean;
     }
-
-    @RequestMapping(value = "/saveQZSetting", method = RequestMethod.POST)
+    
+    @RequiresPermissions("/internal/qzsetting/save")
+    @PostMapping(value = "/saveQZSetting")
     public ResultBean saveQZSetting(@RequestBody QZSetting qzSetting, HttpSession session) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
@@ -349,7 +348,7 @@ public class QZSettingController extends SpringMVCBaseController {
         return resultBean;
     }
 
-    @RequestMapping(value = "/getQZSettingsMsg/{uuid}", method = RequestMethod.GET)
+    @GetMapping(value = "/getQZSettingsMsg/{uuid}")
     public ResultBean getQZSettingsMsg(@PathVariable Long uuid) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
@@ -362,14 +361,61 @@ public class QZSettingController extends SpringMVCBaseController {
         }
         return resultBean;
     }
+    
+    /**
+     * 获取关键字作用类别
+     */
+    @GetMapping(value = "/getKyewordEffect")
+    public ResultBean getKyewordEffect() {
+        ResultBean resultBean = new ResultBean(200, "查询成功");
+        try {
+            resultBean.setData(KeywordEffectEnum.toList());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
 
     /**
-     * addImportantCustomerKeyword.html 跳转添加或修改重点关键字页面
+     * 马上更新 - 批量
+     * @param requestMap
+     * @return
      */
-    @GetMapping(value = "/toAddImportantCustomerKeyword")
-    public ModelAndView toAddImportantCustomerKeyword() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("qzsettings/addImportantCustomerKeyword");
-        return mv;
+    @PostMapping(value = "/batchUpdateQZSettingUpdateStatus")
+    public ResultBean batchUpdateQZSettingUpdateStatus(@RequestBody Map<String, String> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            String uuids = requestMap.get("uuids");
+            qzSettingService.batchUpdateQZSettingUpdateStatus(uuids);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    /**
+     * 暂停续费 || 下架整站 - 批量
+     * @param requestMap
+     * @return
+     */
+    @PostMapping(value = "/batchUpdateRenewalStatus")
+    public ResultBean batchUpdateRenewalStatus(@RequestBody Map<String, String> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            String uuids = requestMap.get("uuids");
+            int renewalStatus = Integer.parseInt(requestMap.get("renewalStatus"));
+            qzSettingService.batchUpdateRenewalStatus(uuids, renewalStatus);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
     }
 }

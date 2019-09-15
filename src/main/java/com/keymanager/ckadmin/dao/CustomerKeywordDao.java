@@ -1,15 +1,14 @@
 package com.keymanager.ckadmin.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
 
 @Repository("customerKeywordDao2")
 public interface
@@ -34,21 +33,17 @@ CustomerKeywordDao extends BaseMapper<com.keymanager.ckadmin.entity.CustomerKeyw
     void addCustomerKeywords(
         @Param("customerKeywords") ArrayList<CustomerKeyword> customerKeywords);
 
-    Integer getSameCustomerKeywordCount(@Param("terminalType") String terminalType,
+    CustomerKeyword getOneSameCustomerKeyword(@Param("terminalType") String terminalType,
         @Param("customerUuid") long customerUuid, @Param("keyword") String keyword,
         @Param("url") String url, @Param("title") String title);
 
-    void updateSameCustomerKeywordSource(@Param("terminalType") String terminalType,
-        @Param("customerUuid") long customerUuid, @Param("keyword") String keyword,
-        @Param("url") String url, @Param("title") String title,
-        @Param("customerKeywordSource") String customerKeywordSource);
+    void updateSameCustomerKeyword(@Param("customerKeyword") CustomerKeyword customerKeyword);
 
-    int getSimilarCustomerKeywordCount(@Param("terminalType") String terminalType,
+    CustomerKeyword getOneSimilarCustomerKeyword(@Param("terminalType") String terminalType,
         @Param("customerUuid") long customerUuid, @Param("keyword") String keyword,
-        @Param("terminaloriginalUrlType") String originalUrl, @Param("String") String title);
+        @Param("originalUrl") String originalUrl, @Param("title") String title);
 
-    void updateSimilarCustomerKeywordSource(@Param("terminalType") String terminalType,
-        @Param("customerUuid") long customerUuid, @Param("keyword") String keyword,
-        @Param("url") String url, @Param("title") String title,
-        @Param("customerKeywordSource") String customerKeywordSource);
+    void updateSimilarCustomerKeyword(@Param("customerKeyword") CustomerKeyword customerKeyword);
+
+    Integer getCustomerKeywordCountByOptimizeGroupName(@Param("groupName") String groupName);
 }

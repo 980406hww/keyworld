@@ -28,4 +28,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void excludeCustomerKeyword(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
 
     void addCustomerKeyword(List<CustomerKeyword> customerKeywords, String userName);
+
+    Integer getCustomerKeywordCountByOptimizeGroupName(String groupName);
 }

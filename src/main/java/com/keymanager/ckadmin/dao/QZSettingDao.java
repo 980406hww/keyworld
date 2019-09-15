@@ -7,12 +7,13 @@ import com.keymanager.ckadmin.entity.QZSetting;
 
 import com.keymanager.ckadmin.vo.QZSettingVO;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository("qzSettingDao2")
 public interface QZSettingDao extends BaseMapper<QZSetting> {
-
 
     List<QZSetting> searchQZSettings(Page<QZSetting> page,
         @Param("qzSettingCriteria") QZSettingCriteria qzSettingCriteria);
@@ -26,5 +27,12 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     int selectLastId();
 
     void updateQZSettingGroup(@Param("qzSetting") QZSetting qzSetting);
+
+    void batchUpdateQZSettingUpdateStatus(@Param("uuids") String uuids);
+
+    void batchUpdateRenewalStatus(@Param("uuids") String uuids,
+        @Param("renewalStatus") int renewalStatus);
+    
+    Map<String, String> getPCPhoneGroupByUuid(@Param("uuid") Long uuid);
 }
 
