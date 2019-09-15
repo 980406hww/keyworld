@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/style/template.css"
           media="all">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/layui/add-or-upd.css">
     <style>
         *, :after, :before {
             box-sizing: border-box
@@ -389,6 +390,10 @@
         .layui-form-select input {
             height: 30px;
         }
+        
+        .my-label{
+            height: auto !important;
+        }
 
         .layui-input-inline input{
             height: 30px;
@@ -425,6 +430,31 @@
             z-index: -1;
         }*/
     </style>
+    <script>
+        Date.prototype.format = function (fmt) {
+            let o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) {
+                fmt = fmt.replace(RegExp.$1,
+                    (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            }
+            for (let k in o) {
+                if (new RegExp("(" + k + ")").test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1,
+                        (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(
+                            ("" + o[k]).length)));
+                }
+            }
+            return fmt;
+        }
+    </script>
 </head>
 <body class="ok-body">
 <!--面包屑导航区域-->
@@ -582,13 +612,12 @@
 </div>
 
 <!--数据表格-->
-<table class="layui-hide" id="qzSettingTable" lay-filter="tableFilter">
-
-</table>
+<table class="layui-hide" id="qzSettingTable" lay-filter="tableFilter"></table>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
 <script>
     var sign = false;
+    var noteAddRow = true;
     // layui相关
     layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'treeSelect', 'laydate','authtree'], function () {
         var element = layui.element;
@@ -890,7 +919,7 @@
                     callback(result);
                 },
                 error: function () {
-                    show_layer_msg('获取全站曲线信息失败', 5);
+                    show_layer_msg('获取全站曲线信息失败！！', 5);
                 }
             });
         }
@@ -1690,8 +1719,11 @@
         table.on('toolbar(tableFilter)', function (obj) {
             var data = obj.data, event = obj.event;
             switch (event) {
-                case 'add_qz':
+                case 'addQz':
                     addQZSetting();
+                    break;
+                case 'updFZTags':
+                    openUpdFZTags();
                     break;
                 case 'batchDeleteQZSetting':
                     batchDeleteQZSetting();
@@ -1709,6 +1741,83 @@
                     break;
             }
         });
+
+
+        let updFZTagsHtml = `                    <div style="width: 100%;margin-top: 10px;text-align: center">
+                <div class="layui-inline" style="width: 60px;line-height: 34px;text-align: center">新标签：</div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline" style="width: 300px">
+                        <input style="height: 34px" type="text" id="tagNames" placeholder="每个词用逗号隔开例如:阿卡索,MBA"
+                        autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>`;
+
+        function openUpdFZTags() {
+            let checkStatus = table.checkStatus('qzSettingTable').data;
+            if (checkStatus.length === 0) {
+                show_layer_msg('请选择需要修改站点！', 5);
+                return false;
+            }
+            layer.open({
+                type: 1,
+                title: '修改分组标签',
+                content: updFZTagsHtml,
+                shadeClose: true,
+                resize: false,
+                area: '420px',
+                btn: ['确认', '取消'],
+                yes: function (index) {
+                    let v = document.getElementById('tagNames').value;
+                    if (!/^[\u4e00-\u9fa5a-zA-Z,]+$/.test(v)) {
+                        show_layer_msg('请输入符合规则的标签数据！', 5);
+                        return false;
+                    }
+                    let d = {}, tags = [], ids = [], tagNames = v.split(',');
+                    for (let item in tagNames) {
+                        let a = {};
+                        a.tagName = tagNames[item];
+                        tags.push(a);
+                    }
+                    for (let i = 0; i < checkStatus.length; i++) {
+                        ids.push(checkStatus[i].uuid + "");
+                    }
+                    d.targetQZCategoryTags = tags;
+                    d.uuids = ids;
+                    layer.confirm('确认修改？', {
+                        icon: 3,
+                        title: '修改标签',
+                        btn: ['确认', '取消'] //可以无限个按钮
+                        , yes: function (index_) {
+                            $.ajax({
+                                url: '/internal/qzsetting/updQzCategoryTags',
+                                type: 'post',
+                                data: JSON.stringify(d),
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                success: function (res) {
+                                    if (res.code === 200) {
+                                        show_layer_msg('修改成功', 1);
+                                        active['reload'].call(this);
+                                        layer.close(index);
+                                        layer.close(index_);
+                                    } else {
+                                        layer.msg(res.msg);
+                                    }
+                                }
+                            });
+                        }, btn2: function (index) {
+                            layer.close(index);
+                        }
+                    });
+                }, btn2: function (index) {
+                    layer.close(index);
+                }, cancel: function () {
+                }
+            });
+        }
 
         function addQZSetting() {
             okLayer.open("其他 / 前往全站设置信息 / 添加", "/internal/qzsetting/toQZSettingAdd", "90%", "90%",
@@ -1745,6 +1854,203 @@
                         sign = false;
                     }
                 })
+        };
+
+        function commitNoteBook(){
+
+        }
+
+        let oneRowI = `<tr>
+                            <td class="my-left" colspan="4">
+                                <div class="my-label">
+                                     <input type="text" class="layui-input my-input"
+                                     placeholder="请在此输入你想要记录的内容" style="height: 36px">
+                                </div>
+                            </td>
+                            <td class="my-left my-bottom">
+                                <div class="my-label my-btn">
+                                <button type="button" onclick="commitNoteBook()"
+                                    class="layui-btn layui-btn-xs">
+                                保存
+                                </button>
+                                </div>
+                             </td>
+                             </tr>`;
+
+        window.appendTable = function () {
+            if (noteAddRow) {
+                let noteBookTbody = document.getElementById('noteBookTbody');
+                noteBookTbody.innerHTML += oneRowI;
+                noteAddRow = false;
+            }
+        };
+
+        let oneRowU = `<tr>
+                        <td class="my-left">
+                            <div class="my-label my-padding">
+                            1
+                            </div>
+                            </td>
+                            <td class="my-left">
+                            <div class="my-label my-padding">
+                            sdfhjksadf
+                            </div>
+                            </td>
+                            <td class="my-left">
+                            <div class="my-label my-padding">
+                            撒地方很快就的身份卡萨丁撒地方很快就的身份卡萨丁撒地方很快就的身份卡萨丁
+                            </div>
+                            </td>
+                            <td class="my-left">
+                            <div class="my-label my-padding">
+                            2019-10-01 11:11:11
+                        </div>
+                        </td>
+                        <td class="my-left my-bottom">
+                            <div class="my-label my-btn">
+                            <button type="button" onclick=""
+                                class="layui-btn layui-btn-xs layui-btn-danger">
+                            修改
+                            </button>
+                            </div>
+                            </td>
+                            </tr>`;
+
+        // 记事本
+        window.openNoteBookDialog = function (uuid) {
+            noteAddRow = true;
+            let noteBookHtml = `<div style="padding: 10px;">
+                            <table border="0" width="100%">
+                                <tbody id="noteBookTbody">
+                                <tr class="my-bg">
+                                    <td colspan="3" class="my-header-title">
+                                        <div id="phoneTitle"
+                                             class="my-label my-padding">
+                                            记事本NoteBook
+                                        </div>
+                                    </td>
+                                    <td class="my-header-title">
+                                        <div class="my-label">
+                                            <button onclick="appendTable()" type="button"
+                                            style="padding: 0 36px" class="layui-btn layui-btn-xs">
+                                                增加
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="my-header-btn">
+                                        <div class="my-label">
+                                            <button onclick="" type="button" style="padding: 0 20px"
+                                                    class="layui-btn layui-btn-xs">
+                                                刷新
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="my-bg">
+                                    <td class="my-left" style="min-width: 70px">
+                                        <div class="my-label my-padding">
+                                            序号
+                                        </div>
+                                    </td>
+                                    <td class="my-left">
+                                        <div class="my-label my-padding">
+                                            记录者
+                                        </div>
+                                    </td>
+                                    <td class="my-left">
+                                        <div class="my-label my-padding">
+                                            内容
+                                        </div>
+                                    </td>
+                                    <td class="my-left" style="min-width: 120px">
+                                        <div class="my-label my-padding">
+                                            日期
+                                        </div>
+                                    </td>
+                                    <td class="my-left my-bottom">
+                                        <div
+                                            class="my-label my-padding">
+                                            操作
+                                        </div>
+                                    </td>
+                                </tr>`;
+            let noteBookHtmlFooter = `</tbody></table></div>`;
+            let d = {};
+            d.customerUuid = uuid;
+            d.searchAll = 0;
+            d.terminalType = document.getElementById('terminalType').value;
+            $.ajax({
+                url: '/internal/notebook/getUserNoteBooks',
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                data: JSON.stringify(d),
+                success: function (res) {
+                    console.log(res);
+                    if (res.code === 200) {
+                        if (res.data.length === 0) {
+                            noteBookHtml += oneRowI;
+                            noteAddRow = false;
+                        } else {
+                            for (let i = 0; i < res.data.length; i++) {
+                                noteBookHtml += `<tr>
+                                <td class="my-left">
+                                    <div class="my-label my-padding">`;
+                                noteBookHtml += i + 1;
+                                noteBookHtml += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                    <div class="my-label my-padding">`;
+                                noteBookHtml += res.data[i].notesPerson;
+                                noteBookHtml += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                    <div class="my-label my-padding">
+                                    <input type="hidden" value="`;
+                                noteBookHtml += res.data[i].uuid;
+                                noteBookHtml += `"><input type="hidden" value="`;
+                                noteBookHtml += res.data[i].customerUuid;
+                                noteBookHtml += `">`;
+                                noteBookHtml += res.data[i].content;
+                                noteBookHtml += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                    <div class="my-label my-padding">`;
+                                noteBookHtml += new Date(res.data[i].createTime).format(
+                                    'yyyy-MM-dd');
+                                noteBookHtml += `</div>
+                                </td>
+                                <td class="my-left my-bottom">
+                                    <div class="my-label my-btn">
+                                    <button type="button" onclick=""
+                                        class="layui-btn layui-btn-xs layui-btn-danger">
+                                    修改
+                                    </button>
+                                    </div>
+                                    </td>
+                                    </tr>`;
+                            }
+                        }
+                        noteBookHtml += noteBookHtmlFooter;
+                        layer.open({
+                            type: 1,
+                            title: '记事本',
+                            content: noteBookHtml,
+                            shadeClose: true,
+                            resize: false,
+                            area: '700px',
+                            offset: '180px'
+                        });
+                    } else {
+                        show_layer_msg(res.msg, 5);
+                    }
+                },
+                error: function () {
+                    show_layer_msg('未知错误，请稍后重试！！', 5);
+                }
+            });
         };
 
         window.showExcludeCustomerKeywordDialog = function (uuid, customerUuid, domain, pcGroup,
@@ -2031,9 +2337,13 @@
 
     <div class="layui-btn-group">
     <@shiro.hasPermission name="/internal/qzsetting/save">
-        <button class="layui-btn layui-btn-sm" id="add_qz" lay-event="add_qz">
+    <button class="layui-btn layui-btn-sm" id="add_qz" lay-event="add_qz">
             <i class="layui-icon">&#xe61f;</i>添加
-        </button>
+    </button>
+
+    <button class="layui-btn layui-btn-sm" lay-event="updFZTags">
+        修改分组标签
+    </button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
     	<button class="layui-btn layui-btn-sm layui-btn-danger" id="batchDeleteQZSetting" lay-event="batchDeleteQZSetting">
@@ -2138,7 +2448,7 @@
 
                 <span>
                     <a class="blue"
-                      href="javascript:openNoteBookDialog('{{d.customerUuid}}','{{ $(\'#terminalType\') }}')">记事本</a>
+                      href="javascript:openNoteBookDialog('{{d.customerUuid}}')">记事本</a>
                 </span>
 
                 <!--                <@shiro.hasPermission name="/internal/qzchargelog/save">-->

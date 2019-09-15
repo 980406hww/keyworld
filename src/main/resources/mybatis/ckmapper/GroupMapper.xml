@@ -12,7 +12,7 @@
         WHERE g.fGroupName = #{groupName}
     </select>
     
-    delete id="deleteByGroupName">
+    <delete id="deleteByGroupName">
         DELETE FROM t_group
         WHERE fGroupName = #{groupName}
     </delete>

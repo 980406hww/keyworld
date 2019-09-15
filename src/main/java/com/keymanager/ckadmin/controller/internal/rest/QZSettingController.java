@@ -1,6 +1,8 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.baomidou.mybatisplus.plugins.Page;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.controller.internal.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
@@ -9,7 +11,6 @@ import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.service.*;
 import com.keymanager.ckadmin.enums.KeywordEffectEnum;
-import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.util.TerminalTypeMapping;
@@ -65,6 +66,7 @@ public class QZSettingController extends SpringMVCBaseController {
         List<String> tagNameList = qzCategoryTagService.findTagNames(null);
         return tagNameList;
     }
+    
     @GetMapping(value = "/getActiveCustomer")
     public List<Customer> getActiveCustomer() {
         CustomerCriteria customerCriteria = new CustomerCriteria();

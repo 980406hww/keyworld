@@ -1,179 +1,191 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>添加</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-  <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <meta charset="UTF-8">
+    <title>添加</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <style>
+        .layui-btn {
+            width: 150px;
+        }
+    </style>
 </head>
 <body>
+
 <div class="ok-body">
-  <!--面包屑导航区域-->
-  <div class="ok-body-breadcrumb">
-        <span class="layui-breadcrumb" style="visibility: visible;">
-            <a><cite>首页</cite></a>
-            <span lay-separator="">/</span>
-            <a><cite>前往客户列表</cite></a>
-            <span lay-separator="">/</span>
-            <a><cite>添加用户</cite></a>
-        </span>
-  </div>
-  <!--form表单-->
-  <form class="layui-form layui-form-pane ok-form" lay-filter="addCustomer">
-    <div class="layui-form-item">
-      <label class="layui-form-label">联系人</label>
-      <input type="hidden" name="uuid">
-      <div class="layui-input-block">
-        <input type="text" name="contactPerson" placeholder="请输入联系人" autocomplete="off"
-               class="layui-input" lay-verify="required">
-      </div>
-    </div>
-    <div class="layui-form-item">
-      <label class="layui-form-label">QQ</label>
-      <div class="layui-input-block">
-        <input type="text" name="qq" placeholder="请输入QQ" autocomplete="off"
-               class="layui-input" lay-verify="qq">
-      </div>
-    </div>
-    <div class="layui-form-item">
-      <label class="layui-form-label">联系电话</label>
-      <div class="layui-input-block">
-        <input type="text" name="telphone" placeholder="请输入联系电话" autocomplete="off"
-               class="layui-input" lay-verify="telPhone">
-      </div>
-    </div>
-    <div class="layui-form-item">
-      <label class="layui-form-label">客户类型</label>
-      <div class="layui-input-block">
-        <input type="text" name="type" placeholder="请输入客户类型" autocomplete="off" class="layui-input">
-      </div>
-    </div>
-    <div class="layui-form-item">
-      <label class="layui-form-label">客户状态</label>
-      <div class="layui-input-block">
-        <select name="status">
-          <option value="1">激活</option>
-          <option value="2">暂停</option>
-        </select>
-      </div>
-    </div>
-    <div class="layui-form-item">
-      <label class="layui-form-label">产生报表</label>
-      <div class="layui-input-block">
-        <select name="dailyReportIdentify">
-          <option value="0">否</option>
-          <option value="1">是</option>
-        </select>
-      </div>
-    </div>
-    <div class="layui-form-item layui-form-text">
-      <label class="layui-form-label">销售备注</label>
-      <div class="layui-input-block">
-        <textarea name="saleRemark" placeholder="请输入销售备注" class="layui-textarea"></textarea>
-      </div>
-    </div>
-    <div class="layui-form-item layui-form-text">
-      <label class="layui-form-label">备注</label>
-      <div class="layui-input-block">
-        <textarea name="remark" placeholder="请输入备注" class="layui-textarea"></textarea>
-      </div>
-    </div>
-    <div class="layui-form-item">
-      <div class="layui-input-block">
-        <button class="layui-btn" lay-submit lay-filter="commitCustomer">确定</button>
-        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-        <button id="close" class="layui-btn layui-btn-primary">取消</button>
-      </div>
-    </div>
-  </form>
+    <!--form表单-->
+    <form class="layui-form layui-form-pane ok-form" lay-filter="addCustomer">
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系人</label>
+            <input type="hidden" name="uuid">
+            <div class="layui-input-block">
+                <input type="text" name="contactPerson" placeholder="请输入联系人" autocomplete="off"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">QQ</label>
+            <div class="layui-input-block">
+                <input type="text" name="qq" placeholder="请输入QQ" autocomplete="off"
+                       class="layui-input" lay-verify="qq">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系电话</label>
+            <div class="layui-input-block">
+                <input type="text" name="telphone" placeholder="请输入联系电话" autocomplete="off"
+                       class="layui-input" lay-verify="telPhone">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">客户类型</label>
+            <div class="layui-input-block">
+                <input type="text" name="type" placeholder="请输入客户类型" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">客户状态</label>
+            <div class="layui-input-block">
+                <select name="status">
+                    <option value="1">激活</option>
+                    <option value="2">暂停</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">产生报表</label>
+            <div class="layui-input-block">
+                <select name="dailyReportIdentify">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">销售备注</label>
+            <div class="layui-input-block">
+                <textarea name="saleRemark" placeholder="请输入销售备注" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <textarea name="remark" placeholder="请输入备注" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="commitCustomer">确定</button>
+                <button type="reset" class="layui-btn layui-btn-primary">
+                    重置
+                </button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">
+                    取消
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
+
 <!--js逻辑-->
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
 
-  let uuid_ = null;
-  let layui_ = null;
+    let uuid_ = null;
+    let layui_ = null;
 
-  function initForm(data) {
-    uuid_ = data;
-    if (layui_ != null) {
-      setForm(layui_, uuid_);
+    function initForm(data) {
+        uuid_ = data;
+        if (layui_ != null) {
+            setForm(layui_, uuid_);
+        }
     }
-  }
 
-  function setForm(l, u) {
-    l.jquery.ajax({
-      url: '/internal/customer/getCustomersMsgById/' + u,
-      type: 'get',
-      dataType: 'json',
-      success: function (res) {
-        if (res.code === 200) {
-          if (res.data.dailyReportIdentify) {
-            res.data.dailyReportIdentify = 1
-          } else {
-            res.data.dailyReportIdentify = 0
-          }
-          layui.form.val("addCustomer", res.data);
+    function setForm(l, u) {
+        l.jquery.ajax({
+            url: '/internal/customer/getCustomersMsgById/' + u,
+            type: 'get',
+            dataType: 'json',
+            success: function (res) {
+                if (res.code === 200) {
+                    if (res.data.dailyReportIdentify) {
+                        res.data.dailyReportIdentify = 1
+                    } else {
+                        res.data.dailyReportIdentify = 0
+                    }
+                    layui.form.val("addCustomer", res.data);
+                } else {
+                    l.layer.msg(res.msg);
+                }
+            }
+        });
+    }
+
+    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+        let form = layui.form;
+        let okLayer = layui.okLayer;
+        let $ = layui.jquery;
+
+        if (uuid_ != null) {
+            setForm(layui, uuid_);
         } else {
-          l.layer.msg(res.msg);
+            layui_ = layui;
         }
-      }
-    });
-  }
 
-  layui.use(["form", "okLayer", "jquery", "layer"], function () {
-    let form = layui.form;
-    let okLayer = layui.okLayer;
-    let $ = layui.jquery;
-
-    if (uuid_ != null) {
-      setForm(layui, uuid_);
-    } else {
-      layui_ = layui;
-    }
-
-    form.on("submit(commitCustomer)", function (data) {
-      $.ajax({
-        url: '/internal/customer/postCustomersAdd',
-        type: 'post',
-        // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
-        data: data.field,
-        dataType: 'json',
-        success: function (res) {
-          // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
-          // 客户端会主观认为服务端返回的就是 JSON 格式的字符串
-          if (res.code === 200) {
-            okLayer.msg.greenTick("保存成功", function () {
-              parent.window.sign = true;
-              // parent.window.myTable.reload();
-              parent.layer.close(parent.layer.getFrameIndex(window.name));
+        form.on("submit(commitCustomer)", function (data) {
+            layer.confirm('确认保存？', {
+                icon: 3,
+                title: '保存数据',
+                btn: ['确认', '取消']
+                , yes: function (index) {
+                    $.ajax({
+                        url: '/internal/customer/postCustomersAdd',
+                        type: 'post',
+                        // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
+                        data: data.field,
+                        dataType: 'json',
+                        success: function (res) {
+                            // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
+                            // 客户端会主观认为服务端返回的就是 JSON 格式的字符串
+                            if (res.code === 200) {
+                                layer.close(index);
+                                okLayer.msg.greenTick("保存成功", function () {
+                                    parent.window.sign = true;
+                                    // parent.window.myTable.reload();
+                                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                                });
+                            } else {
+                                layui.layer.msg(res.msg);
+                            }
+                        }
+                    });
+                }, btn2: function (index) {
+                    layer.close(index);
+                }
             });
-          } else {
-            layui.layer.msg(res.msg);
-          }
-        }
-      });
-      return false;
-    });
+            return false;
+        });
 
-      $('#close').click(function () {
-        parent.layer.close(parent.layer.getFrameIndex(window.name));
-        return false;
-      });
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
 
-    form.verify({
-      qq: [
-        /(^$)|(^[1-9]\d{4,14}$)/,
-        "请输入正确格式QQ"
-      ],
-      telPhone: [
-        /(^$)|(^(13[0-9]|14[5-9]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[13589])\d{8}$)/,
-        "请输入正确格式手机号码"
-      ]
-    });
-  })
+        form.verify({
+            qq: [
+                /(^$)|(^[1-9]\d{4,14}$)/,
+                "请输入正确格式QQ"
+            ],
+            telPhone: [
+                /(^$)|(^(13[0-9]|14[5-9]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[13589])\d{8}$)/,
+                "请输入正确格式手机号码"
+            ]
+        });
+    })
 
 </script>
 </body>

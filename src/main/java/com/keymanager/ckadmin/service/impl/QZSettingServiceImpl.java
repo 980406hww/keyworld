@@ -240,7 +240,10 @@ public class QZSettingServiceImpl extends
         String userName) {
         for (String terminalType : qzSettingSaveCustomerKeywordsCriteria.getTerminalTypes()) {
             List<CustomerKeyword> customerKeywords = new ArrayList<>();
-            String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid(), qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid(), terminalType, qzSettingSaveCustomerKeywordsCriteria.getDomain());
+            String customerExcludeKeywords = customerExcludeKeywordService
+                .getCustomerExcludeKeyword(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid(),
+                    qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid(), terminalType,
+                    qzSettingSaveCustomerKeywordsCriteria.getDomain());
             Set<String> excludeKeyword = new HashSet<>();
             if (null != customerExcludeKeywords) {
                 excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
@@ -647,5 +650,15 @@ public class QZSettingServiceImpl extends
     @Override
     public void batchUpdateRenewalStatus(String uuids, int renewalStatus) {
         qzSettingDao.batchUpdateRenewalStatus(uuids, renewalStatus);
+    }
+    
+    @Override
+    public void updateQzCategoryTags(List<String> uuids, List<QZCategoryTag> targetQZCategoryTags) {
+        for (String uuid : uuids) {
+            List<QZCategoryTag> existingQZCategoryTags = qzCategoryTagService
+                .searchCategoryTagByQZSettingUuid(Long.parseLong(uuid));
+            qzCategoryTagService.updateQZCategoryTag(existingQZCategoryTags, targetQZCategoryTags,
+                Long.parseLong(uuid));
+        }
     }
 }

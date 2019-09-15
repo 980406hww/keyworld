@@ -1,0 +1,67 @@
+.padding-ten-left {
+  padding-left: 2px;
+}
+
+.padding-ten-right {
+  padding-right: 2px;
+}
+
+.qzsetting-box {
+  padding: 10px 10px 5px 10px;
+  border-radius: 2px 0 0 2px;
+  border: solid 1px #e6e6e6;
+}
+
+.my-dis {
+  color: #d2d2d2 !important;
+}
+
+.my-header-title {
+  border-top: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
+  border-left: 1px solid #e6e6e6;
+
+}
+
+.my-header-btn {
+  border: 1px solid #e6e6e6;
+  line-height: 35px !important;
+}
+
+.my-label {
+  height: 38px;
+  line-height: 20px;
+  text-align: center;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.my-bg {
+  background-color: #FBFBFB;
+}
+
+.my-padding {
+  padding: 8px 15px;
+}
+
+.my-left {
+  border-left: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.my-bottom {
+  border-right: 1px solid #e6e6e6;
+}
+
+.my-btn {
+  line-height: 35px !important;
+}
+
+.my-btn > button {
+  margin: 0 8px;
+  width: 60px;
+}
+
+.my-input {
+  border: 0;
+}

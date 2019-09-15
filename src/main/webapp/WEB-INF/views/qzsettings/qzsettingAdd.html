@@ -6,99 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
     <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="/static/layui/add-or-upd.css">
     <style>
-        .padding-ten-left {
-            padding-left: 2px;
-        }
-
-        .padding-ten-right {
-            padding-right: 2px;
-        }
-
         .layui-btn {
             width: 150px;
-        }
-
-        .qzsetting-box {
-            padding: 10px 10px 5px 10px;
-            border-radius: 2px 0 0 2px;
-            border: solid 1px #e6e6e6;
-        }
-
-        .my-dis {
-            color: #d2d2d2 !important;
-        }
-
-        .my-col-one {
-            flex: 23;
-        }
-
-        .my-col-two {
-            flex: 30;
-        }
-
-        .my-col-three {
-            flex: 30;
-        }
-
-        .my-col-four {
-            flex: 25;
-        }
-
-        .my-col-five {
-            flex: 15;
-        }
-
-        .my-header-title {
-            flex: 120;
-            border-top: 1px solid #e6e6e6;
-            border-bottom: 1px solid #e6e6e6;
-            border-left: 1px solid #e6e6e6;
-
-        }
-
-        .my-header-btn {
-            flex: 36;
-            border: 1px solid #e6e6e6;
-            line-height: 35px !important;
-        }
-
-        .my-label {
-            height: 38px;
-            line-height: 20px;
-            text-align: center;
-            overflow: hidden;
-            box-sizing: border-box;
-        }
-
-        .my-bg {
-            background-color: #FBFBFB;
-        }
-
-        .my-padding {
-            padding: 8px 15px;
-        }
-
-        .my-left {
-            border-left: 1px solid #e6e6e6;
-            border-bottom: 1px solid #e6e6e6;
-        }
-
-        .my-bottom {
-            border-right: 1px solid #e6e6e6;
-        }
-
-        .my-btn {
-            line-height: 35px !important;
-        }
-
-        .my-btn > button {
-            margin: 0 8px;
-            width: 60px;
-        }
-
-        .my-input {
-            border: 0;
         }
     </style>
     <script>
@@ -121,27 +32,27 @@
             }
             let html = `<tr>
                                     <td>
-                                        <div class="my-col-one my-label my-left my-padding">`;
+                                        <div class="my-label my-left my-padding">`;
             html += v;
             html += `</div>
                                     </td>
                                     <td>
-                                        <div class="my-col-two my-label my-left">
+                                        <div class="my-label my-left">
                                             <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-three my-label my-left">
+                                        <div class="my-label my-left">
                                             <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-four my-label my-left">
+                                        <div class="my-label my-left">
                                             <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-five my-label my-btn my-left my-bottom">
+                                        <div class="my-label my-btn my-left my-bottom">
                                             <button type="button" onclick="removeElement(this)"
                                                     class="layui-btn layui-btn-xs layui-btn-danger">
                                                 删除
@@ -323,55 +234,55 @@
                                 </tr>
                                 <tr class="my-bg">
                                     <td>
-                                        <div class="my-col-one my-label my-left my-padding">
+                                        <div class="my-label my-left my-padding">
                                             达标阶段
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-two my-label my-left my-padding">
+                                        <div class="my-label my-left my-padding">
                                             起始达标词数
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-three my-label my-left my-padding">
+                                        <div class="my-label my-left my-padding">
                                             终止达标次数
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-four my-label my-left my-padding">
+                                        <div class="my-label my-left my-padding">
                                             电脑端价格
                                         </div>
                                     </td>
                                     <td>
                                         <div
-                                            class="my-col-five my-label my-left my-padding my-bottom">
+                                            class="my-label my-left my-padding my-bottom">
                                             操作
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <div class="my-col-one my-label my-left my-padding">
+                                        <div class="my-label my-left my-padding">
                                             1
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-two my-label my-left">
+                                        <div class="my-label my-left">
                                             <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-three my-label my-left">
+                                        <div class="my-label my-left">
                                             <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-four my-label my-left">
+                                        <div class="my-label my-left">
                                             <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-five my-label my-btn my-left my-bottom">
+                                        <div class="my-label my-btn my-left my-bottom">
                                             <button type="button" onclick="removeElement(this)"
                                                     class="layui-btn layui-btn-xs layui-btn-danger">
                                                 删除
@@ -496,55 +407,55 @@
                                 </tr>
                                 <tr class="my-bg">
                                     <td>
-                                        <div class="my-col-one my-label my-left my-padding">
+                                        <div class="my-label my-left my-padding">
                                             达标阶段
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-two my-label my-left my-padding">
+                                        <div class="my-label my-left my-padding">
                                             起始达标词数
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-three my-label my-left my-padding">
+                                        <div class="my-label my-left my-padding">
                                             终止达标次数
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-four my-label my-left my-padding">
+                                        <div class="my-label my-left my-padding">
                                             手机端价格
                                         </div>
                                     </td>
                                     <td>
                                         <div
-                                            class="my-col-five my-label my-left my-padding my-bottom">
+                                            class="my-label my-left my-padding my-bottom">
                                             操作
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <div class="my-col-one my-label my-left my-padding">
+                                        <div class="my-label my-left my-padding">
                                             1
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-two my-label my-left">
+                                        <div class="my-label my-left">
                                             <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-three my-label my-left">
+                                        <div class="my-label my-left">
                                             <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-four my-label my-left">
+                                        <div class="my-label my-left">
                                             <input type="number" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-five my-label my-btn my-left my-bottom">
+                                        <div class="my-label my-btn my-left my-bottom">
                                             <button type="button" onclick="removeElement(this)"
                                                     class="layui-btn layui-btn-xs layui-btn-danger">
                                                 删除
@@ -610,8 +521,8 @@
         </div>
         <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
             <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
-                <button class="layui-btn" lay-submit lay-filter="commitCustomer">确定</button>
-                <button type="reset" class="layui-btn layui-btn-primary" style="margin-right: 20px">
+                <button class="layui-btn" lay-submit lay-filter="commitQZSetting">确定</button>
+                <button type="reset" class="layui-btn layui-btn-primary">
                     重置
                 </button>
                 <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">
@@ -725,33 +636,33 @@
         for (let j = 0; j < l.length; j++) {
             html += `<tr>
                                     <td>
-                                        <div class="my-col-one my-label my-left my-padding">`;
+                                        <div class="my-label my-left my-padding">`;
             html += (j + 1);
             html += `</div>
                                     </td>
                                     <td>
-                                        <div class="my-col-two my-label my-left">
+                                        <div class="my-label my-left">
                                             <input type="number" class="layui-input my-input" value="`;
             html += l[j].startKeywordCount;
             html += `">
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-three my-label my-left">
+                                        <div class="my-label my-left">
                                             <input type="number" class="layui-input my-input" value="`;
             html += l[j].endKeywordCount;
             html += `">
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-four my-label my-left">
+                                        <div class="my-label my-left">
                                             <input type="number" class="layui-input my-input" value="`;
             html += l[j].amount;
             html += `">
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-five my-label my-btn my-left my-bottom">
+                                        <div class="my-label my-btn my-left my-bottom">
                                             <button type="button" onclick="removeElement(this)"
                                                     class="layui-btn layui-btn-xs layui-btn-danger">
                                                 删除
@@ -807,22 +718,22 @@
                                 </tr>
                                 <tr class="my-bg">
                                     <td>
-                                        <div class="my-col-one my-label my-left my-padding">
+                                        <div class="my-label my-left my-padding">
                                             达标阶段
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-two my-label my-left my-padding">
+                                        <div class="my-label my-left my-padding">
                                             起始达标词数
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-three my-label my-left my-padding">
+                                        <div class="my-label my-left my-padding">
                                             终止达标次数
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="my-col-four my-label my-left my-padding">`;
+                                        <div class="my-label my-left my-padding">`;
         if (f) {
             header_ += '电脑端价格';
         } else {
@@ -832,7 +743,7 @@
                                     </td>
                                     <td>
                                         <div
-                                            class="my-col-five my-label my-left my-padding my-bottom">
+                                            class="my-label my-left my-padding my-bottom">
                                             操作
                                         </div>
                                     </td>
@@ -1119,7 +1030,7 @@
             }
         });
 
-        form.on("submit(commitCustomer)", function (data) {
+        form.on("submit(commitQZSetting)", function (data) {
             let d = data.field, p_d = {};
             if (!((d.computer === 'on' && d.optimizationComType === '1') || (d.phone === 'on'
                 && d.optimizationPhoneType === '1'))) {
@@ -1169,8 +1080,10 @@
                         c.standardSpecies = d.comStandardSpecies;
                         for (let j = 1; j < 4; j++) {
                             if (comTd[j].children[0].children[0].value === '') {
-                                okLayer.msg.redCry('电脑收费规则表必须填写完整', null);
-                                return false;
+                                if (!(i === comTr.length - 1 && j === 2)) {
+                                    okLayer.msg.redCry('电脑收费规则表必须填写完整', null);
+                                    return false;
+                                }
                             }
                             // if (!/^[0-9]+$/.test(comTd[j].children[0].children[0].value)) {
                             //     okLayer.msg.redCry('电脑收费表格内必须为数字', null);
@@ -1216,8 +1129,10 @@
                         c.standardSpecies = d.phoneStandardSpecies;
                         for (let j = 1; j < 4; j++) {
                             if (phoneTd[j].children[0].children[0].value === '') {
-                                okLayer.msg.redCry('手机收费规则表必须填写完整', null);
-                                return false;
+                                if (!(i === phoneTr.length - 1 && j === 2)) {
+                                    okLayer.msg.redCry('手机收费规则表必须填写完整', null);
+                                    return false;
+                                }
                             }
                             // if (!/^[0-9]+$/.test(phoneTd[j].children[0].children[0].value)) {
                             //     okLayer.msg.redCry('手机收费表格内必须为数字', null);
@@ -1242,26 +1157,36 @@
                 qzOperationTypes.push(b);
             }
             p_d.qzOperationTypes = qzOperationTypes;
-            $.ajax({
-                url: '/internal/qzsetting/saveQZSetting', ///internal/qzsetting/save
-                type: 'post',
-                data: JSON.stringify(p_d),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                success: function (res) {
-                    if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
-                            parent.window.sign = true;
-                            parent.layer.close(parent.layer.getFrameIndex(window.name));
-                        });
-                    } else {
-                        layui.layer.msg(res.msg);
-                    }
-                },
-                error: function () {
-                    layui.layer.msg("保存失败");
+            layer.confirm('确认保存？', {
+                icon: 3,
+                title: '保存数据',
+                btn: ['确认', '取消']
+                , yes: function (index) {
+                    $.ajax({
+                        url: '/internal/qzsetting/saveQZSetting', ///internal/qzsetting/save
+                        type: 'post',
+                        data: JSON.stringify(p_d),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        success: function (res) {
+                            if (res.code === 200) {
+                                layer.close(index);
+                                okLayer.msg.greenTick("保存成功", function () {
+                                    parent.window.sign = true;
+                                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                                });
+                            } else {
+                                layui.layer.msg(res.msg);
+                            }
+                        },
+                        error: function () {
+                            layui.layer.msg("保存失败");
+                        }
+                    });
+                }, btn2: function (index) {
+                    layer.close(index);
                 }
             });
             return false;
