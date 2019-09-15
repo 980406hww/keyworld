@@ -11,4 +11,9 @@
         FROM t_group g
         WHERE g.fGroupName = #{groupName}
     </select>
+    
+    delete id="deleteByGroupName">
+        DELETE FROM t_group
+        WHERE fGroupName = #{groupName}
+    </delete>
 </mapper>

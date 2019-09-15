@@ -163,67 +163,107 @@
         </foreach>
     </insert>
 
-    <select id="getSameCustomerKeywordCount" resultType="java.lang.Integer">
-        SELECT COUNT(1) FROM t_customer_keyword
-        WHERE fKeyword = #{keyword}
-        AND fTerminalType = #{terminalType}
-        AND fCustomerUuid = #{customerUuid}
+    <select id="getOneSameCustomerKeyword" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
+        SELECT
+        ck.fUuid	AS	'uuid',
+        ck.fTerminalType	AS	'terminalType',
+        ck.fCustomerUuid	AS	'customerUuid',
+        ck.fKeyword	AS	'keyword',
+        ck.fUrl	AS	'url',
+        ck.fOriginalUrl	AS	'originalUrl',
+        ck.fBearPawNumber AS 'bearPawNumber',
+        ck.fTitle	AS	'title',
+        ck.fStatus	AS	'status',
+        ck.fSearchEngine	AS	'searchEngine',
+        ck.fKeywordEffect AS 'keywordEffect',
+        ck.fOptimizePlanCount	AS	'optimizePlanCount'
+        FROM t_customer_keyword ck
+        WHERE ck.fKeyword = #{keyword}
+        AND ck.fTerminalType = #{terminalType}
+        AND ck.fCustomerUuid = #{customerUuid}
         <choose>
             <when test="url == 'NoUrl'">
-                AND fTitle = #{title}
+                AND ck.fTitle = #{title}
             </when>
             <otherwise>
-                AND fUrl = #{url}
+                AND ck.fUrl = #{url}
             </otherwise>
         </choose>
+        LIMIT 1
     </select>
 
-    <update id="updateSameCustomerKeywordSource">
+    <update id="updateSameCustomerKeyword">
         UPDATE t_customer_keyword
-        SET fCustomerKeywordSource = #{customerKeywordSource}
-        WHERE fKeyword = #{keyword}
-        AND fTerminalType = #{terminalType}
-        AND fCustomerUuid = #{customerUuid}
+        SET fCustomerKeywordSource = #{customerKeyword.customerKeywordSource},
+        fKeywordEffect = #{customerKeyword.keywordEffect},
+        fOptimizePlanCount = #{customerKeyword.optimizePlanCount}
+        WHERE fKeyword = #{customerKeyword.keyword}
+        AND fTerminalType = #{customerKeyword.terminalType}
+        AND fCustomerUuid = #{customerKeyword.customerUuid}
         <choose>
-            <when test="url == 'NoUrl'">
-                AND fTitle = #{title}
+            <when test="customerKeyword.url == 'NoUrl'">
+                AND fTitle = #{customerKeyword.title}
             </when>
             <otherwise>
-                AND fUrl = #{url}
+                AND fUrl = #{customerKeyword.url}
             </otherwise>
         </choose>
     </update>
 
-    <select id="getSimilarCustomerKeywordCount" resultType="int">
-        SELECT Count(1) FROM t_customer_keyword
-        WHERE fKeyword = #{keyword}
-        AND fTerminalType = #{terminalType}
-        AND fCustomerUuid = #{customerUuid}
+    <select id="getOneSimilarCustomerKeyword" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
+        SELECT
+        ck.fUuid	AS	'uuid',
+        ck.fTerminalType	AS	'terminalType',
+        ck.fCustomerUuid	AS	'customerUuid',
+        ck.fKeyword	AS	'keyword',
+        ck.fUrl	AS	'url',
+        ck.fOriginalUrl	AS	'originalUrl',
+        ck.fBearPawNumber AS 'bearPawNumber',
+        ck.fTitle	AS	'title',
+        ck.fStatus	AS	'status',
+        ck.fSearchEngine	AS	'searchEngine',
+        ck.fKeywordEffect AS 'keywordEffect',
+        ck.fOptimizePlanCount	AS	'optimizePlanCount'
+        FROM t_customer_keyword ck
+        WHERE ck.fKeyword = #{keyword}
+        AND ck.fTerminalType = #{terminalType}
+        AND ck.fCustomerUuid = #{customerUuid}
         <choose>
             <when test="originalUrl == 'NoUrl'">
-                AND fTitle = #{title}
+                AND ck.fTitle = #{title}
             </when>
             <otherwise>
-                AND fOriginalUrl <![CDATA[ > ]]> ''
-                AND fOriginalUrl like concat('%', #{originalUrl});
+                AND ck.fOriginalUrl <![CDATA[ > ]]> ''
+                AND ck.fOriginalUrl like concat('%', #{originalUrl})
             </otherwise>
         </choose>
+        LIMIT 1
     </select>
 
-    <update id="updateSimilarCustomerKeywordSource">
+    <update id="updateSimilarCustomerKeyword">
         UPDATE t_customer_keyword
-        SET fCustomerKeywordSource = #{customerKeywordSource}
-        WHERE fKeyword = #{keyword}
-        AND fTerminalType = #{terminalType}
-        AND fCustomerUuid = #{customerUuid}
+        SET fCustomerKeywordSource = #{customerKeyword.customerKeywordSource},
+        fKeywordEffect = #{customerKeyword.keywordEffect},
+        fOptimizePlanCount = #{customerKeyword.optimizePlanCount}
+        WHERE fKeyword = #{customerKeyword.keyword}
+        AND fTerminalType = #{customerKeyword.terminalType}
+        AND fCustomerUuid = #{customerKeyword.customerUuid}
+
         <choose>
-            <when test="originalUrl == 'NoUrl'">
+            <when test="customerKeyword.originalUrl == 'NoUrl'">
                 AND fTitle = #{title}
             </when>
             <otherwise>
                 AND fOriginalUrl <![CDATA[ > ]]> ''
-                AND fOriginalUrl like concat('%', #{originalUrl});
+                AND fOriginalUrl like concat('%', #{customerKeyword.originalUrl})
             </otherwise>
         </choose>
     </update>
+
+    <select id="getCustomerKeywordCountByOptimizeGroupName" resultType="int">
+        SELECT COUNT(1)
+        FROM t_customer_keyword
+        WHERE fOptimizeGroupName LIKE CONCAT(#{groupName}, '%')
+    </select>
+
 </mapper>

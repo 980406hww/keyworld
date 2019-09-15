@@ -33,4 +33,9 @@ public class GroupServiceImpl extends ServiceImpl<GroupDao, Group> implements Gr
             }
         }
     }
+
+    @Override
+    public void deleteByGroupName(String groupName) {
+        groupDao.deleteByGroupName(groupName);
+    }
 }

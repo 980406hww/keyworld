@@ -405,6 +405,21 @@
             text-overflow: ellipsis;
         }
 
+        .layui-table-tool-temp .layui-btn + .layui-btn {
+            margin-left: 0px
+        }
+
+        .layui-table-tool-temp .layui-btn-sm {
+            padding: 0 5px;
+        }
+
+        /*thead {
+            z-index: -1;
+        }
+
+        .layui-table-tool {
+            z-index: -1;
+        }*/
     </style>
 </head>
 <body class="ok-body">
@@ -573,6 +588,7 @@
             return false;
         });
 
+        <@shiro.hasPermission name="/internal/qzsetting/searchQZSettings">
         function get_qzsettting(whereCondition) {
             table.render({
                 elem: '#qzSettingTable',
@@ -619,6 +635,7 @@
                 }
             });
         }
+        </@shiro.hasPermission>
 
         function initQZKeywordRankInfo(data, td) {
             td.find("#fmtStandardDate a").text(
@@ -724,7 +741,7 @@
                     callback(result);
                 },
                 error: function () {
-                    show_layer_msg('获取全站曲线信息失败！！', 5);
+                    show_layer_msg('获取全站曲线信息失败', 5);
                 }
             });
         }
@@ -767,7 +784,10 @@
                         bottom: -3
                     },
                     tooltip: {
-                        trigger: 'axis'
+                        trigger: 'axis',
+                        position: function(point, params, dom, rect, size){
+                            return [point[0]+20,'-15%'];
+                        }
                     },
                     grid: {
                         left: '0%',
@@ -956,7 +976,10 @@
                         bottom: -3
                     },
                     tooltip: {
-                        trigger: 'axis'
+                        trigger: 'axis',
+                        position: function(point, params, dom, rect, size){
+                            return [point[0]+20,'-15%'];
+                        }
                     },
                     grid: {
                         left: '0%',
@@ -1153,7 +1176,10 @@
                     bottom: -3
                 },
                 tooltip: {
-                    trigger: 'axis'
+                    trigger: 'axis',
+                    position: function(point, params, dom, rect, size){
+                        return [point[0]+20,'-15%'];
+                    }
                 },
                 grid: {
                     left: '0%',
@@ -1300,7 +1326,10 @@
                     bottom: -1
                 },
                 tooltip: {
-                    trigger: 'axis'
+                    trigger: 'axis',
+                    position: function(point, params, dom, rect, size){
+                        return [point[0]+20,'-15%'];
+                    }
                 },
                 grid: {
                     left: '0%',
@@ -1543,7 +1572,7 @@
         }
 
         // 修改
-        window.updateQZSetting = function (uuid) {
+        window.showSettingDialog = function (uuid) {
             okLayer.open("其他 / 前往全站设置信息 / 修改", "/internal/qzsetting/toQZSettingAdd", "90%",
                 "90%", function (layero) {
                     window[layero.find("iframe")[0]["name"]].initForm(uuid);
@@ -1573,9 +1602,9 @@
             phoneGroup) {
             let terminalType = $("#terminalSearchEngine").val();
             terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
-            let optimizedGroupName = phoneGroup;
+            let optimizeGroupName = phoneGroup;
             if (terminalType === 'PC') {
-                optimizedGroupName = pcGroup;
+                optimizeGroupName = pcGroup;
             }
             okLayer.open("其他 / 前往全站设置信息 / 排除关键字", "/internal/qzsetting/toExcludeCustomerKeyword",
                 "60%", "90%", function (layero) {
@@ -1584,7 +1613,7 @@
                         customerUuid: customerUuid,
                         domain: domain,
                         terminalType: terminalType,
-                        optimizedGroupName: optimizedGroupName
+                        optimizeGroupName: optimizeGroupName
                     });
                 }, function () {
 
@@ -1652,9 +1681,9 @@
         window.showAddKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
             let terminalType = $("#terminalSearchEngine").val();
             terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
-            let optimizedGroupName = phoneGroup;
+            let optimizeGroupName = phoneGroup;
             if (terminalType === 'PC') {
-                optimizedGroupName = pcGroup;
+                optimizeGroupName = pcGroup;
             }
             okLayer.open("其他 / 全站设置信息 / 添加关键字", "/internal/qzsetting/toAddCustomerKeyword",
                 "60%", "90%", function (layero) {
@@ -1666,32 +1695,7 @@
                         searchEngine: searchEngine,
                         type: type,
                         terminalType: terminalType,
-                        optimizedGroupName: optimizedGroupName
-                    });
-                }, function () {
-
-                }
-            );
-        };
-
-        window.showAddImportantKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
-            let terminalType = $("#terminalSearchEngine").val();
-            terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
-            let optimizedGroupName = phoneGroup;
-            if (terminalType === 'PC') {
-                optimizedGroupName = pcGroup;
-            }
-            okLayer.open("其他 / 全站设置信息 / 添加重点关键字", "/internal/qzsetting/toAddImportantCustomerKeyword",
-                "60%", "90%", function (layero) {
-                    window[layero.find("iframe")[0]["name"]].initForm({
-                        qzSettingUuid: uuid,
-                        customerUuid: customerUuid,
-                        domain: domain,
-                        bearPawNumber: bearPawNumber,
-                        searchEngine: searchEngine,
-                        type: type,
-                        terminalType: terminalType,
-                        optimizedGroupName: optimizedGroupName
+                        optimizeGroupName: optimizeGroupName
                     });
                 }, function () {
 
@@ -1877,12 +1881,16 @@
     </div>
 
     <div class="layui-btn-group">
+    <@shiro.hasPermission name="/internal/qzsetting/save">
         <button class="layui-btn layui-btn-sm" id="add_qz" lay-event="add_qz">
             <i class="layui-icon">&#xe61f;</i>添加
         </button>
-        <button class="layui-btn layui-btn-sm layui-btn-danger" id="batchDeleteQZSetting" lay-event="batchDeleteQZSetting">
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
+    	<button class="layui-btn layui-btn-sm layui-btn-danger" id="batchDeleteQZSetting" lay-event="batchDeleteQZSetting">
             <i class="layui-icon layui-icon-delete"></i>删除所选
         </button>
+    </@shiro.hasPermission>
         <button class="layui-btn layui-btn-sm" id="batchUpdateQZSettingUpdateStatus" lay-event="batchUpdateQZSettingUpdateStatus">
             <i class="layui-icon"></i>马上更新
         </button>
@@ -1893,7 +1901,6 @@
             <i class="layui-icon"></i>下架整站
         </button>
     </div>
-
 </script>
 
 <script type="text/html" id="item">
@@ -1903,8 +1910,7 @@
             <input type="hidden" name="PCGroup" value="{{d.pcGroup}}">
             <input type="hidden" name="PhoneGroup" value="{{d.phoneGroup}}">
             <span class="contactPerson-name" title="{{d.contactPerson}}"><a href="javascript:;">{{d.contactPerson}}</a></span>
-            <span class="domain" title="{{d.domain}}"><a
-                    href="javascript:;">{{d.domain}}</a></span>
+            <span class="domain" title="{{d.domain}}"><a href="javascript:;">{{d.domain}}</a></span>
             <span class="organization-name" title="{{d.organizationName}}"><a href="javascript:;">{{d.organizationName}}</a></span>
             <span class="to-aizhan"><a href="https://www.aizhan.com/cha/{{d.domain}}" target="_blank"
                      title="查看爱站">爱站</a></span>
@@ -1967,16 +1973,12 @@
                       href="javascript:showExcludeCustomerKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">排除关键字</a>
                 </span>
 
-                <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
+                <@shiro.hasPermission name="/internal/qzsetting/save">
                 <span>
                     <a class="blue"
                       href="javascript:showAddKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}','{{d.bearPawNumber}}','{{d.searchEngine}}', '{{d.type}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">添加词</a>
                 </span>
-                <span>
-                    <a class="blue"
-                       href="javascript:showAddImportantKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}','{{d.bearPawNumber}}','{{d.searchEngine}}', '{{d.type}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">添加重点词</a>
-                </span>
-                <!--                </@shiro.hasPermission>-->
+                </@shiro.hasPermission>
 
                 <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
                 <span>
@@ -1999,15 +2001,15 @@
 
                 <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
                 <span>
-                    <a class="blue" href="javascript:" onclick="updateQZSetting('{{d.uuid}}')">修改</a>
+                    <a class="blue" href="javascript:" onclick="showSettingDialog('{{d.uuid}}')">修改</a>
                 </span>
                 <!--                </@shiro.hasPermission>-->
 
-                <!--                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
+                <@shiro.hasPermission name="/internal/qzsetting/delete">
                 <span>
                     <a class="blue" href="javascript:delQZSetting('{{d.uuid}}')">删除</a>
                 </span>
-                <!--                </@shiro.hasPermission>-->
+                </@shiro.hasPermission>
 
                 <!--                <@shiro.hasPermission name="/internal/qzchargelog/chargesList">-->
                 <span>
@@ -2018,7 +2020,7 @@
         </div>
     </div>
     <div class="layui-row body">
-        <!--   身体左侧基本信息     -->
+        <!--   身体左侧基本信息    -->
         <div class="layui-col-md2 user-id">
             <div class="layui-col-md12 line1">
                 <div class="layui-col-md12">

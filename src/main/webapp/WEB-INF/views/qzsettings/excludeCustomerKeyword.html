@@ -33,7 +33,7 @@
             <input type="hidden" name="excludeKeywordUuid" id="excludeKeywordUuid"/>
             <input type="hidden" name="qzSettingUuid" id="qzSettingUuid"/>
             <input type="hidden" name="customerUuid" id="customerUuid"/>
-            <input type="hidden" name="optimizedGroupName" id="optimizedGroupName"/>
+            <input type="hidden" name="optimizeGroupName" id="optimizeGroupName"/>
             <div class="layui-row">
                 <div class="layui-form-item">
                     <label class="layui-form-label">域名</label>
@@ -98,7 +98,7 @@
         $("#terminalType").val(data.terminalType);
         form.render("select");
         $("#domain").val(data.domain);
-        $("#optimizedGroupName").val(data.optimizedGroupName);
+        $("#optimizeGroupName").val(data.optimizeGroupName);
         echoExcludeKeyword($, data.qzSettingUuid, data.terminalType)
     }
 

@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.dao.CustomerKeywordDao;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.enums.KeywordEffectEnum;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
-
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
@@ -17,7 +17,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -102,20 +101,40 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         customerKeyword.setKeyword(customerKeyword.getKeyword().trim());
 
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
-            Integer sameCustomerKeywordCount = customerKeywordDao.getSameCustomerKeywordCount(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl(), customerKeyword.getTitle());
-            if (sameCustomerKeywordCount != null && sameCustomerKeywordCount > 0) {
+            CustomerKeyword customerKeyword1 = customerKeywordDao.getOneSameCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl(), customerKeyword.getTitle());
+            if (customerKeyword1 != null ) {
                 if (!CustomerKeywordSourceEnum.Capture.name().equals(customerKeyword.getCustomerKeywordSource())) {
-                    customerKeywordDao.updateSameCustomerKeywordSource(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl(), customerKeyword.getTitle(), customerKeyword.getCustomerKeywordSource());
+                    String oldKeywordEffect = customerKeyword1.getKeywordEffect();
+                    String keywordEffect = customerKeyword.getKeywordEffect();
+                    if (!oldKeywordEffect.equals(keywordEffect)){
+                        Map<String, Integer> levelMap = KeywordEffectEnum.toLevelMap();
+                        String newkeywordEffect = levelMap.get(oldKeywordEffect) < levelMap.get(keywordEffect) ? oldKeywordEffect : keywordEffect;
+                        customerKeyword.setKeywordEffect(newkeywordEffect);
+                        customerKeyword.setUpdateTime(new Date());
+                        customerKeywordDao.updateSameCustomerKeyword(customerKeyword);
+                    }
                 }
                 return null;
             }
         }
-        if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType()) && haveDuplicatedCustomerKeyword(customerKeyword.getTerminalType(),
-            customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), originalUrl, customerKeyword.getTitle())) {
-            if (!CustomerKeywordSourceEnum.Capture.name().equals(customerKeyword.getCustomerKeywordSource())) {
-                customerKeywordDao.updateSimilarCustomerKeywordSource(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl(), customerKeyword.getTitle(), customerKeyword.getCustomerKeywordSource());
+
+        if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType()) ) {
+            CustomerKeyword customerKeyword1 = customerKeywordDao.getOneSimilarCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getOriginalUrl(), customerKeyword.getTitle());
+            if (customerKeyword1 != null ) {
+                if (!CustomerKeywordSourceEnum.Capture.name().equals(customerKeyword.getCustomerKeywordSource())) {
+                    String oldKeywordEffect = customerKeyword1.getKeywordEffect();
+                    String keywordEffect = customerKeyword.getKeywordEffect();
+                    if (!oldKeywordEffect.equals(keywordEffect)){
+                        Map<String, Integer> levelMap = KeywordEffectEnum.toLevelMap();
+                        String newkeywordEffect = levelMap.get(oldKeywordEffect) < levelMap.get(keywordEffect) ? oldKeywordEffect : keywordEffect;
+                        customerKeyword.setKeywordEffect(newkeywordEffect);
+                        customerKeyword.setUpdateTime(new Date());
+                        customerKeywordDao.updateSimilarCustomerKeyword(customerKeyword);
+                    }
+                }
+                return null;
             }
-            return null;
+
         }
 
         customerKeyword.setKeyword(customerKeyword.getKeyword().trim());
@@ -170,16 +189,10 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         return customerKeyword;
     }
 
-    public boolean haveDuplicatedCustomerKeyword(String terminalType, long customerUuid, String keyword, String originalUrl, String title) {
-        int customerKeywordCount = 0;
-        try {
-            customerKeywordCount = customerKeywordDao.getSimilarCustomerKeywordCount(terminalType, customerUuid, keyword, originalUrl, title);
-        } catch (Exception ex) {
-//            ex.printStackTrace();
-        }
-        return customerKeywordCount > 0;
+    @Override
+    public Integer getCustomerKeywordCountByOptimizeGroupName(String groupName) {
+        return customerKeywordDao.getCustomerKeywordCountByOptimizeGroupName(groupName);
     }
-
 }
 
 

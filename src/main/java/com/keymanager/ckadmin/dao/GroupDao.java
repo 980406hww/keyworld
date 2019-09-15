@@ -13,4 +13,6 @@ import org.springframework.stereotype.Repository;
 public interface GroupDao extends BaseMapper<Group> {
 
     Group findGroupByGroupName (@Param("groupName") String groupName);
+
+    void deleteByGroupName(@Param("groupName") String groupName);
 }

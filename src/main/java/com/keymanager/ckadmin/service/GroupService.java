@@ -8,4 +8,6 @@ public interface GroupService extends IService<Group> {
 
     void updateGroupOperationCombineUuid(Long operationCombineUuid, List<String> groupName,
         String loginName);
+    
+    void deleteByGroupName(String groupName);
 }

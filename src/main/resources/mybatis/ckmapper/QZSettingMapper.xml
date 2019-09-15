@@ -54,15 +54,15 @@
 
     <select id="searchQZSettingSearchEngines" resultType="com.keymanager.ckadmin.vo.QZSettingVO">
         SELECT
-        qs.fSearchEngine AS 'searchEngine',
-        qs.fPcGroup AS 'pcGroup',
-        qs.fPhoneGroup AS 'phoneGroup'
+        	qs.fSearchEngine AS 'searchEngine',
+        	qs.fPcGroup AS 'pcGroup',
+        	qs.fPhoneGroup AS 'phoneGroup'
         FROM t_qz_setting qs
         WHERE 1 = 1
-    <if test="customerUuid != null and customerUuid != ''">AND qs.fCustomerUuid = #{customerUuid}
-    </if>
-    <if test="domain != null and domain != ''">AND qs.fDomain = #{domain}</if>
-  </select>
+    	<if test="customerUuid != null and customerUuid != ''">AND qs.fCustomerUuid = #{customerUuid}
+    	</if>
+    	<if test="domain != null and domain != ''">AND qs.fDomain = #{domain}</if>
+    </select>
 
     <select id="getQZSettingGroupInfo" resultType="java.lang.Integer">
         SELECT COUNT(1)
@@ -77,7 +77,7 @@
         select LAST_INSERT_ID()
     </select>
 
-    <update id="updateQZSettingGroup" parameterType="com.keymanager.monitoring.entity.QZSetting">
+    <update id="updateQZSettingGroup">
         UPDATE t_qz_setting
         SET fPcGroup = #{qzSetting.pcGroup},fPhoneGroup = #{qzSetting.phoneGroup}
         WHERE fUuid = #{qzSetting.uuid}
@@ -95,4 +95,12 @@
         SET fUpdateTime = NOW(), fRenewalStatus = #{renewalStatus}
         WHERE fUuid IN (${uuids})
     </update>
+
+    <select id="getPCPhoneGroupByUuid" resultType="map">
+        SELECT
+            fPcGroup AS 'pcGroup',
+            fPhoneGroup AS 'phoneGroup'
+        FROM t_qz_setting
+        WHERE fUuid = #{uuid}
+    </select>
 </mapper>
