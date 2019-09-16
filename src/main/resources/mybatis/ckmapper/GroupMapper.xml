@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.ckadmin.dao.GroupDao">
 
-    <select id="findGroupByGroupName" resultType="com.keymanager.monitoring.entity.Group">
+    <select id="findGroupByGroupName" resultType="com.keymanager.ckadmin.entity.Group">
         SELECT
             g.fUuid AS 'uuid',
             g.fGroupName AS 'groupName',
