@@ -97,6 +97,7 @@ public class QZSettingController extends SpringMVCBaseController {
     /**
      * 跳转添加或修改全站收费页面
      */
+    // TODO 收费权限
     @GetMapping(value = "/toQZSettingCharge")
     public ModelAndView toQZSettingCharge() {
         ModelAndView mv = new ModelAndView();
@@ -109,11 +110,18 @@ public class QZSettingController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/qzsetting/searchQZSettings")
     @PostMapping("/getQZSettings")
-    public ResultBean getQZSettings(@RequestBody QZSettingCriteria qzSettingCriteria) {
+    public ResultBean getQZSettings(@RequestBody QZSettingCriteria qzSettingCriteria,
+        HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         try {
             Page<QZSetting> page = new Page<>(qzSettingCriteria.getPage(),
                 qzSettingCriteria.getLimit());
+            Set<String> roles = getCurrentUser().getRoles();
+            if(!roles.contains("DepartmentManager")) {
+                String loginName = (String) request.getSession().getAttribute("username");
+                qzSettingCriteria.setLoginName(loginName);
+            }
+            request.getSession().getAttribute("username");
             page = qzSettingService.searchQZSetting(page, qzSettingCriteria);
             resultBean.setCode(0);
             resultBean.setMsg("success");
@@ -154,7 +162,7 @@ public class QZSettingController extends SpringMVCBaseController {
      * 获取曲线信息
      */
     @RequiresPermissions("/internal/qzsetting/searchQZSettings")
-    @GetMapping("/getQZKeywordRankInfo")
+    @PostMapping("/getQZKeywordRankInfo")
     public ResultBean getQZKeywordRankInfo(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
         try {
@@ -296,6 +304,7 @@ public class QZSettingController extends SpringMVCBaseController {
      * @param request
      * @return
      */
+    @RequiresPermissions("/internal/qzsetting/searchQZSettings")
     @GetMapping(value = "/getSaveQZSettingsMsg")
     public ResultBean getSaveQZSettingsMsg(HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
@@ -303,6 +312,11 @@ public class QZSettingController extends SpringMVCBaseController {
         CustomerCriteria customerCriteria = new CustomerCriteria();
         String entryType = (String) request.getSession().getAttribute("entryType");
         customerCriteria.setEntryType(entryType);
+        Set<String> roles = getCurrentUser().getRoles();
+        if(!roles.contains("DepartmentManager")) {
+            String loginName = (String) request.getSession().getAttribute("username");
+            customerCriteria.setLoginName(loginName);
+        }
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         Map<String, Object> map = new HashMap<>(2);
         try {
@@ -420,6 +434,7 @@ public class QZSettingController extends SpringMVCBaseController {
      * @param map
      * @return
      */
+    @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/updQzCategoryTags")
     public ResultBean updateQzCategoryTags(@RequestBody Map<String, Object> map) {
         ResultBean resultBean = new ResultBean();
