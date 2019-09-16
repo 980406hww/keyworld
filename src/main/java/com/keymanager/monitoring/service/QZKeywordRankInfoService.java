@@ -76,8 +76,8 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
                     .getQZKeywordRankInfoTypes(qzSettingVo.getUuid());
                 if (CollectionUtils.isNotEmpty(types)) {
                     qzSettingVo.setTypeList(types);
+                    uuids.add(qzSettingVo.getUuid());
                 }
-                uuids.add(qzSettingVo.getUuid());
             }
             qzSettingService.updateCrawlerStatus(uuids);
         }
