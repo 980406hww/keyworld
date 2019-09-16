@@ -323,6 +323,7 @@ public class QZSettingController extends SpringMVCBaseController {
             map.put("customers", customerService.getActiveCustomerSimpleInfo(customerCriteria));
             map.put("search", configService.getSearchEngineMap(terminalType));
         } catch (Exception e) {
+            logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
             return resultBean;
