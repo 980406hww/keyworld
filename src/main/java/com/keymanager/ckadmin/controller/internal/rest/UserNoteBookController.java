@@ -23,8 +23,7 @@ public class UserNoteBookController {
     @Resource(name = "userNoteBookService2")
     private UserNoteBookService userNoteBookService;
 
-    //    @RequiresPermissions("/internal/usernotebook/searchUserNoteBooks")
-    @RequiresPermissions("/internal/customer/searchCustomers")
+    @RequiresPermissions("/internal/usernotebook/searchUserNoteBooks")
     @RequestMapping(value = "/getUserNoteBooks", method = RequestMethod.POST)
     public ResultBean getUserNoteBooks(@RequestBody Map<String, Object> resultMap) {
         ResultBean resultBean = new ResultBean();
@@ -43,8 +42,7 @@ public class UserNoteBookController {
         return resultBean;
     }
 
-    //    @RequiresPermissions("/internal/usernotebook/searchUserNoteBooks")
-    @RequiresPermissions("/internal/customer/searchCustomers")
+    @RequiresPermissions("/internal/usernotebook/searchUserNoteBooks")
     @RequestMapping(value = "/saveUserNoteBook", method = RequestMethod.POST)
     public ResultBean saveUserNoteBook(@RequestBody Map<String, Object> resultMap,
         HttpSession session) {

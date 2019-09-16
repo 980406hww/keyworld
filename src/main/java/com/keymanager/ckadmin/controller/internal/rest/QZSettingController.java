@@ -97,6 +97,7 @@ public class QZSettingController extends SpringMVCBaseController {
     /**
      * 跳转添加或修改全站收费页面
      */
+    // TODO 收费权限
     @GetMapping(value = "/toQZSettingCharge")
     public ModelAndView toQZSettingCharge() {
         ModelAndView mv = new ModelAndView();
@@ -296,6 +297,7 @@ public class QZSettingController extends SpringMVCBaseController {
      * @param request
      * @return
      */
+    @RequiresPermissions("/internal/qzsetting/searchQZSettings")
     @GetMapping(value = "/getSaveQZSettingsMsg")
     public ResultBean getSaveQZSettingsMsg(HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
@@ -418,6 +420,7 @@ public class QZSettingController extends SpringMVCBaseController {
      * @param map
      * @return
      */
+    @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/updQzCategoryTags")
     public ResultBean updateQzCategoryTags(@RequestBody Map<String, Object> map) {
         ResultBean resultBean = new ResultBean();

@@ -2526,24 +2526,29 @@
                 </span>
                 </@shiro.hasPermission>
 
+                <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
+                <span>
+                    <a class="blue"
+                      href="javascript:openMessageBox('全站设置','{{d.customerUuid}}','{{d.contactPerson}}')">用户留言</a>
+                </span>
+                <!--                </@shiro.hasPermission>-->
+                <@shiro.hasPermission name="/internal/usernotebook/searchUserNoteBooks">
                 <span>
                     <a class="blue"
                       href="javascript:openNoteBookDialog('{{d.customerUuid}}')">记事本</a>
                 </span>
-
+                </@shiro.hasPermission>
                 <!--                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
                 <span>
                     <a class="blue"
                       href="javascript:showChargeDialog('{{d.uuid}}','{{d.contactPerson}}','{{d.domain.trim()}}',this)">收费</a>
                 </span>
                 <!--                </@shiro.hasPermission>-->
-
-                <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
+                <@shiro.hasPermission name="/internal/qzsetting/save">
                 <span>
                     <a class="blue" href="javascript:" onclick="showSettingDialog('{{d.uuid}}')">修改</a>
                 </span>
-                <!--                </@shiro.hasPermission>-->
-
+                </@shiro.hasPermission>
                 <@shiro.hasPermission name="/internal/qzsetting/delete">
                 <span>
                     <a class="blue" href="javascript:delQZSetting('{{d.uuid}}')">删除</a>
