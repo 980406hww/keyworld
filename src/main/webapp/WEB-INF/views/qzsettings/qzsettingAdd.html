@@ -69,17 +69,17 @@
     <form class="layui-form layui-form-pane ok-form" lay-filter="addQZSetting">
         <div class="ok-body">
             <input type="hidden" name="uuid" value=""/>
-            <div class="layui-form-item">
-                <label class="layui-form-label">客户</label>
-                <div class="layui-input-block">
-                    <select id="customerList" name="customerUuid" lay-verify="required"
-                            lay-search>
-                        <option value="">请选择</option>
-                    </select>
-                </div>
-            </div>
             <div class="layui-row">
                 <div class="layui-col-md6 padding-ten-right">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">客户</label>
+                        <div class="layui-input-block">
+                            <select id="customerList" name="customerUuid" lay-verify="required"
+                                    lay-search>
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">域名</label>
                         <div class="layui-input-block">
@@ -99,6 +99,15 @@
                     </div>
                 </div>
                 <div class="layui-col-md6 padding-ten-left">
+                    <div class="layui-form-item" pane>
+                        <label class="computer layui-form-label">站点状态</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="siteStatus"
+                                   value="2" title="首次收费" checked>
+                            <input type="radio" name="siteStatus"
+                                   value="-1" title="其他">
+                        </div>
+                    </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">标签</label>
                         <div class="layui-input-block">
@@ -539,9 +548,17 @@
     let uuid_ = null;
     let layui_ = null;
     let flag_ = true;
+    // 是否需要弹出收费
+    let sign_ = true;
 
+    /**
+     * 供上方调用
+     * 初始化数据使用
+     */
     function initForm(data) {
         uuid_ = data;
+        // 修改状态下无需弹出收费
+        sign_ = false;
         selectPhone();
         selectComputer();
         if (layui_ != null) {
@@ -549,6 +566,11 @@
         }
     }
 
+    /**
+     * 初始化数据
+     * @param l layui对象
+     * @param u 需要修改的站点uuid
+     */
     function setForm(l, u) {
         l.jquery.ajax({
             url: '/internal/qzsetting/getQZSettingsMsg/' + u,
@@ -557,8 +579,10 @@
             success: function (res) {
                 if (res.code === 200) {
                     let d = res.data, d_n = {};
+                    // 初始化用户列表和搜索引擎下拉框
                     getInitData({uuid: d.customerUuid, contactPerson: d.contactPerson},
                         d.searchEngine);
+                    d_n.siteStatus = d.renewalStatus;
                     d_n.uuid = d.uuid;
                     d_n.domain = d.domain;
                     d_n.tagNames = listToStr(d.qzCategoryTags);
@@ -612,6 +636,10 @@
                         }
                     }
                     l.form.val("addQZSetting", d_n);
+                    let siteStatusRadio = document.getElementsByName('siteStatus');
+                    for (let i = 0; i < siteStatusRadio.length; i++) {
+                        siteStatusRadio[i].setAttribute('disabled', '');
+                    }
                     flag_ = false;
                 } else {
                     l.layer.msg(res.msg);
@@ -863,11 +891,12 @@
         // }
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+    layui.use(["form", "okLayer", "jquery", "layer", "laydate"], function () {
         let form = layui.form;
         let okLayer = layui.okLayer;
         let $ = layui.jquery;
         let layer = layui.layer;
+        let laydate = layui.laydate;
 
         if (uuid_ != null) {
             setForm(layui, uuid_);
@@ -1030,6 +1059,76 @@
             }
         });
 
+        let chargeHtml = `<form class="layui-form layui-form-pane ok-form" lay-filter="charge">
+            <div class="layui-row ok-body">
+                <div class="layui-col-md6 padding-ten-right">
+                    <div class="layui-form-item layui-form-text" style="margin-bottom: 0">
+                        <label class="layui-form-label" style="text-align: center">电 脑 收 费</label>
+                    </div>
+                    <div id="comQzsettingBox" class="qzsetting-box"  style="border-top: 0">
+                        <input type="hidden" name="pcQzOperationTypeUuid"/>
+                        <div class="layui-form-item">
+                            <label class="computer layui-form-label">下次收费日期</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="pcNextChargeDate" placeholder="请选择下次收费日期"
+                                       autocomplete="off" id="layui-date-two" disabled
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="computer layui-form-label">实收金额</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="pcActualAmount" placeholder="请输入实收金额"
+                                       id="pc-i" autocomplete="off" class="layui-input" disabled>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="computer layui-form-label">实际收费日期</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="pcActualChargeDate" placeholder="请选择实际收费日期"
+                                       autocomplete="off" id="layui-date-three" disabled
+                                       class="computer-input layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6 padding-ten-left">
+                    <div class="layui-form-item layui-form-text" style="margin-bottom: 0">
+                        <label class="layui-form-label" style="text-align: center">手 机 收 费</label>
+                    </div>
+                    <div id="phoneQzsettingBox" class="qzsetting-box" style="border-top: 0">
+                        <input type="hidden" name="phoneQzOperationTypeUuid"/>
+                        <div class="layui-form-item">
+                            <label class="phone layui-form-label">下次收费日期</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="phoneNextChargeDate"
+                                       placeholder="请选择下次收费日期" disabled
+                                       autocomplete="off" id="layui-date-five"
+                                       class="phone-input layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="phone layui-form-label">实收金额</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="phoneActualAmount" placeholder="请输入实收金额"
+                                       autocomplete="off" id="phone-i" disabled
+                                       class="phone-input layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="phone layui-form-label">实际收费日期</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="phoneActualChargeDate"
+                                       placeholder="请选择实际收费日期" disabled
+                                       autocomplete="off" id="layui-date-six"
+                                       class="phone-input layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </form>`;
+
         form.on("submit(commitQZSetting)", function (data) {
             let d = data.field, p_d = {};
             if (!((d.computer === 'on' && d.optimizationComType === '1') || (d.phone === 'on'
@@ -1040,6 +1139,7 @@
             p_d.autoCrawlKeywordFlag = d.autoCrawlKeywordFlag;
             p_d.bearPawNumber = d.bearPawNumber;
             p_d.customerUuid = d.customerUuid;
+            p_d.renewalStatus = d.siteStatus;
             p_d.domain = d.domain;
             p_d.ignoreNoIndex = d.ignoreNoIndex;
             p_d.ignoreNoOrder = d.ignoreNoOrder;
@@ -1157,6 +1257,103 @@
                 qzOperationTypes.push(b);
             }
             p_d.qzOperationTypes = qzOperationTypes;
+            if (sign_ && p_d.renewalStatus !== '-1') {
+                layer.open({
+                    type: 1,
+                    title: '收费',
+                    content: chargeHtml,
+                    shadeClose: true,
+                    resize: false,
+                    area: '70%',
+                    offset: '23%',
+                    success: function () {
+                        laydate.render({elem: '#layui-date-two'});
+                        laydate.render({elem: '#layui-date-three', value: new Date()});
+                        laydate.render({elem: '#layui-date-five'});
+                        laydate.render({elem: '#layui-date-six', value: new Date()});
+                        if (d.computer === 'on' && d.optimizationComType !== '0') {
+                            document.getElementById('layui-date-two').removeAttribute('disabled');
+                            document.getElementById('pc-i').removeAttribute('disabled');
+                            document.getElementById('layui-date-three').removeAttribute('disabled');
+                        }
+                        if (d.phone === 'on' && d.optimizationPhoneType !== '0') {
+                            document.getElementById('layui-date-five').removeAttribute('disabled');
+                            document.getElementById('phone-i').removeAttribute('disabled');
+                            document.getElementById('layui-date-six').removeAttribute('disabled');
+                        }
+                    },
+                    btn: ['确认', '取消'],
+                    yes: function (index) {
+                        let pcNextChargeDate = document.getElementById('layui-date-two').value;
+                        let pcActualAmount = document.getElementById('pc-i').value;
+                        let pcActualChargeDate = document.getElementById('layui-date-three').value;
+
+                        let phoneNextChargeDate = document.getElementById('layui-date-five').value;
+                        let phoneActualAmount = document.getElementById('phone-i').value;
+                        let phoneActualChargeDate = document.getElementById('layui-date-six').value;
+                        if (d.computer === 'on' && d.optimizationComType !== '0') {
+                            if (pcActualAmount === '') {
+                                okLayer.msg.redCry('电脑实收金额必须填写', null);
+                                return false;
+                            }
+                        }
+                        if (d.phone === 'on' && d.optimizationPhoneType !== '0') {
+                            if (phoneActualAmount === '') {
+                                okLayer.msg.redCry('手机实收金额必须填写', null);
+                                return false;
+                            }
+                        }
+                        commit(p_d, function (init) {
+                            let p_d_c = [];
+                            for (let i = 0; i < init.length; i++) {
+                                if (init[i].operationType === 'PC') {
+                                    let c = {};
+                                    c.qzOperationTypeUuid = init[i].qzOperationTypeUuid;
+                                    c.actualChargeDate = pcActualChargeDate;
+                                    c.actualAmount = pcActualAmount;
+                                    c.nextChargeDate = pcNextChargeDate;
+                                    p_d_c.push(c);
+                                } else if (init[i].operationType === 'Phone') {
+                                    let c = {};
+                                    c.qzOperationTypeUuid = init[i].qzOperationTypeUuid;
+                                    c.actualChargeDate = phoneActualChargeDate;
+                                    c.actualAmount = phoneActualAmount;
+                                    c.nextChargeDate = phoneNextChargeDate;
+                                    p_d_c.push(c);
+                                }
+                            }
+                            $.ajax({
+                                url: '/internal/qzchargelog/saveQZChargeLogs',
+                                type: 'post',
+                                // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
+                                data: JSON.stringify(p_d_c),
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                success: function (res) {
+                                    // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
+                                    // 客户端会主观认为服务端返回的就是 JSON 格式的字符串
+                                    if (res.code === 200) {
+                                    } else {
+                                    }
+                                }, error: function () {
+                                    console.error("未知错误");
+                                }
+                            });
+                        });
+                    }, btn2: function (index) {
+                        layer.close(index);
+                    }
+                });
+            } else {
+                commit(p_d, function (init) {
+                });
+            }
+            return false;
+        });
+
+        function commit(p_d, call) {
             layer.confirm('确认保存？', {
                 icon: 3,
                 title: '保存数据',
@@ -1172,6 +1369,9 @@
                         },
                         success: function (res) {
                             if (res.code === 200) {
+                                if (res.data) {
+                                    call(res.data);
+                                }
                                 layer.close(index);
                                 okLayer.msg.greenTick("保存成功", function () {
                                     parent.window.sign = true;
@@ -1189,8 +1389,7 @@
                     layer.close(index);
                 }
             });
-            return false;
-        });
+        }
 
         $('#close').click(function () {
             parent.layer.close(parent.layer.getFrameIndex(window.name));

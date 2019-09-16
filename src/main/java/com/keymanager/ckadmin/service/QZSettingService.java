@@ -40,7 +40,7 @@ public interface QZSettingService extends IService<QZSetting> {
         QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria,
         String userName);
 
-    void saveQZSetting(QZSetting qzSetting, String userName);
+    Long saveQZSetting(QZSetting qzSetting, String userName);
 
     void deleteOne(Long uuid);
 
@@ -49,10 +49,12 @@ public interface QZSettingService extends IService<QZSetting> {
     QZSetting getQZSetting(Long uuid);
 
     void batchUpdateQZSettingUpdateStatus(String uuids);
-    
+
     void updateQzCategoryTags(List<String> uuids, List<QZCategoryTag> targetQZCategoryTags);
 
     void batchUpdateRenewalStatus(String uuids, int renewalStatus);
-    
+
+    void updRenewalStatus(Long uuid,int renewalStatus);
+
     Map<String, String> getPCPhoneGroupByUuid(Long uuid);
 }

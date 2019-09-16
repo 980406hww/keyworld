@@ -280,7 +280,9 @@ public class QZSettingServiceImpl extends
                 }
                 customerKeyword.setKeyword(keyword);
                 if ("Important".equals(qzSettingSaveCustomerKeywordsCriteria.getKeywordEffect())) {
-                    Integer optimizePlanCount = Integer.valueOf(configService.getConfig("KeywordEffectOptimizePlanCount", "ImportantKeyword").getValue());
+                    Integer optimizePlanCount = Integer.valueOf(configService
+                        .getConfig("KeywordEffectOptimizePlanCount", "ImportantKeyword")
+                        .getValue());
                     customerKeyword.setOptimizePlanCount(optimizePlanCount);
                 } else {
                     customerKeyword.setOptimizePlanCount(10);
@@ -292,7 +294,8 @@ public class QZSettingServiceImpl extends
     }
 
     @Override
-    public void saveQZSetting(QZSetting qzSetting, String userName) {
+    public Long saveQZSetting(QZSetting qzSetting, String userName) {
+        Long uuid = null;
         if (qzSetting.getUuid() != null) {
             //修改qzSetting表
             QZSetting existingQZSetting = qzSettingDao.selectById(qzSetting.getUuid());
@@ -334,8 +337,8 @@ public class QZSettingServiceImpl extends
             qzSettingDao.updateById(existingQZSetting);
         } else {
             qzSetting.setUpdateTime(new Date());
-            qzSetting.setRenewalStatus(1);
             qzSettingDao.insert(qzSetting);
+            uuid = qzSetting.getUuid();
             // 插入qzSetting是的uuid
             Long qzSettingUuid = (long) qzSettingDao.selectLastId();
             for (QZOperationType qzOperationType : qzSetting.getQzOperationTypes()) {
@@ -376,6 +379,7 @@ public class QZSettingServiceImpl extends
                 qzCategoryTagService.insert(qzCategoryTag);
             }
         }
+        return uuid;
     }
 
     private void updateQZKeywordRankInfo(List<QZKeywordRankInfo> existingQZKeywordRankInfos,
@@ -603,11 +607,13 @@ public class QZSettingServiceImpl extends
         captureRankJobService.deleteCaptureRankJob(uuid, null);
         Map<String, String> groupMap = this.getPCPhoneGroupByUuid(uuid);
         String pcGroup = groupMap.get("pcGroup");
-        if (pcGroup!= null && customerKeywordService.getCustomerKeywordCountByOptimizeGroupName(pcGroup) == 0) {
+        if (pcGroup != null
+            && customerKeywordService.getCustomerKeywordCountByOptimizeGroupName(pcGroup) == 0) {
             groupService.deleteByGroupName(pcGroup);
         }
         String phoneGroup = groupMap.get("phoneGroup");
-        if (phoneGroup != null && customerKeywordService.getCustomerKeywordCountByOptimizeGroupName(pcGroup) == 0) {
+        if (phoneGroup != null
+            && customerKeywordService.getCustomerKeywordCountByOptimizeGroupName(pcGroup) == 0) {
             groupService.deleteByGroupName(phoneGroup);
         }
         qzSettingDao.deleteById(uuid);
@@ -651,7 +657,15 @@ public class QZSettingServiceImpl extends
     public void batchUpdateRenewalStatus(String uuids, int renewalStatus) {
         qzSettingDao.batchUpdateRenewalStatus(uuids, renewalStatus);
     }
-    
+
+    @Override
+    public void updRenewalStatus(Long uuid, int renewalStatus) {
+        QZSetting qzSetting = new QZSetting();
+        qzSetting.setUuid(uuid);
+        qzSetting.setRenewalStatus(renewalStatus);
+        qzSettingDao.updateById(qzSetting);
+    }
+
     @Override
     public void updateQzCategoryTags(List<String> uuids, List<QZCategoryTag> targetQZCategoryTags) {
         for (String uuid : uuids) {
