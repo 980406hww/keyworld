@@ -159,6 +159,7 @@
         WHERE qk.fQZSettingUuid = #{qzSettingUuid}
         AND qk.fTerminalType = #{terminalType}
         AND qk.fWebsiteType = 'designationWord'
+        LIMIT 1
     </select>
 
     <select id="searchExistingExtraQZKeywordRankInfo" resultType="com.keymanager.monitoring.entity.QZKeywordRankInfo">
