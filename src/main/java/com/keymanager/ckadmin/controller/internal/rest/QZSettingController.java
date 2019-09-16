@@ -154,7 +154,7 @@ public class QZSettingController extends SpringMVCBaseController {
      * 获取曲线信息
      */
     @RequiresPermissions("/internal/qzsetting/searchQZSettings")
-    @PostMapping("/getQZKeywordRankInfo")
+    @GetMapping("/getQZKeywordRankInfo")
     public ResultBean getQZKeywordRankInfo(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
         try {
@@ -292,7 +292,7 @@ public class QZSettingController extends SpringMVCBaseController {
     }
 
     /**
-     * 获得初始用户列表
+     * 获得初始客户列表 - 搜索引擎
      * @param request
      * @return
      */
@@ -316,7 +316,7 @@ public class QZSettingController extends SpringMVCBaseController {
         resultBean.setData(map);
         return resultBean;
     }
-    
+
     @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/saveQZSetting")
     public ResultBean saveQZSetting(@RequestBody QZSetting qzSetting, HttpSession session) {
@@ -359,8 +359,8 @@ public class QZSettingController extends SpringMVCBaseController {
     /**
      * 获取关键字作用类别
      */
-    @GetMapping(value = "/getKyewordEffect")
-    public ResultBean getKyewordEffect() {
+    @GetMapping(value = "/getKeywordEffect")
+    public ResultBean getKeywordEffect() {
         ResultBean resultBean = new ResultBean(200, "查询成功");
         try {
             resultBean.setData(KeywordEffectEnum.toList());
@@ -377,6 +377,7 @@ public class QZSettingController extends SpringMVCBaseController {
      * @param requestMap
      * @return
      */
+    @RequiresPermissions("/internal/qzsetting/updateImmediately")
     @PostMapping(value = "/batchUpdateQZSettingUpdateStatus")
     public ResultBean batchUpdateQZSettingUpdateStatus(@RequestBody Map<String, String> requestMap) {
         ResultBean resultBean = new ResultBean();
@@ -397,6 +398,7 @@ public class QZSettingController extends SpringMVCBaseController {
      * @param requestMap
      * @return
      */
+    @RequiresPermissions("/internal/qzsetting/updateRenewalStatus")
     @PostMapping(value = "/batchUpdateRenewalStatus")
     public ResultBean batchUpdateRenewalStatus(@RequestBody Map<String, String> requestMap) {
         ResultBean resultBean = new ResultBean();
