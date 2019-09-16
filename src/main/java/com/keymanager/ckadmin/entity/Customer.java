@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.List;
 
 @TableName(value = "t_customer")
 public class Customer extends BaseEntity {
@@ -22,18 +23,18 @@ public class Customer extends BaseEntity {
 //    @TableField(value = "fEntryType")
 //    private String entryType;
 
-    @NotNull
+//    @NotNull
     @TableField(value = "fContactPerson")
     private String contactPerson;
 
-    @Pattern(regexp = "()|(^[1-9]\\d{4,14}$)", message = "QQ号格式不符")
+//    @Pattern(regexp = "()|(^[1-9]\\d{4,14}$)", message = "QQ号格式不符")
     @TableField(value = "fQQ")
     private String qq;
 
     @TableField(value = "fEmail")
     private String email;
 
-    @Pattern(regexp = "()|(^(13[0-9]|14[5-9]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[13589])\\d{8}$)", message = "手机号格式不符")
+//    @Pattern(regexp = "()|(^(13[0-9]|14[5-9]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[13589])\\d{8}$)", message = "手机号格式不符")
     @TableField(value = "fTelphone")
     private String telphone;
 
@@ -58,8 +59,8 @@ public class Customer extends BaseEntity {
 //    @TableField(value = "fInActiveHour")
 //    private String inActiveHour;
 
-//    @TableField(value = "fType")
-//    private String type;
+    @TableField(value = "fType")
+    private String type;
 
     @TableField(exist = false)
     private int keywordCount;
@@ -72,6 +73,12 @@ public class Customer extends BaseEntity {
 
     @TableField(value = "fUpdateInterval")
     private String updateInterval;
+
+    @TableField(exist = false)
+    private String[] customerBusinessList;
+
+    @TableField(exist = false)
+    private String  customerBusinessStr;
 
     public String getLoginName() {
         return loginName;
@@ -169,13 +176,13 @@ public class Customer extends BaseEntity {
         this.remark = remark;
     }
 
-//    public String getType() {
-//        return type;
-//    }
-//
-//    public void setType(String type) {
-//        this.type = type;
-//    }
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public int getKeywordCount() {
         return keywordCount;
@@ -231,5 +238,25 @@ public class Customer extends BaseEntity {
 
     public void setDailyReportIdentify(boolean dailyReportIdentify) {
         this.dailyReportIdentify = dailyReportIdentify;
+    }
+
+    public String[] getCustomerBusinessList() {
+        return customerBusinessList;
+    }
+
+    public void setCustomerBusinessList(String[] customerBusinessList) {
+        this.customerBusinessList = customerBusinessList;
+    }
+
+    public boolean isDailyReportIdentify() {
+        return dailyReportIdentify;
+    }
+
+    public String getCustomerBusinessStr() {
+        return customerBusinessStr;
+    }
+
+    public void setCustomerBusinessStr(String customerBusinessStr) {
+        this.customerBusinessStr = customerBusinessStr;
     }
 }

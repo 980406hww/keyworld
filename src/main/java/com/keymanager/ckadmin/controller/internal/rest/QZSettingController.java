@@ -440,4 +440,16 @@ public class QZSettingController extends SpringMVCBaseController {
         }
         return resultBean;
     }
+
+    /**
+     * 跳转添加或修改用户页面
+     */
+    @RequiresPermissions("/internal/qzsetting/searchQZSettings")
+    @GetMapping(value = "/toQZSetttingsWithCustomerUuid/{customerUuid}")
+    public ModelAndView toQZSetttingsWithCustomerUuid(@PathVariable Long customerUuid, HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView();
+        request.setAttribute("customerUuidTmp",customerUuid);
+        mv.setViewName("qzsettings/qzsetting");
+        return mv;
+    }
 }

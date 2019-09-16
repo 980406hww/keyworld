@@ -1,0 +1,92 @@
+
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+    <div class="layui-btn-container">
+        <@shiro.hasPermission name="/internal/customer/deleteCustomers">
+        <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="batchDeleteCustomer">
+            <i class="layui-icon layui-icon-delete"></i>删除所选
+        </button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/customer/saveCustomer">
+    <button class="layui-btn layui-btn-warn layui-btn-sm" id="batchUpdateDailyReport"
+            lay-event="batchUpdateDailyReport">
+        触发所选客户日报表
+    </button>
+    </@shiro.hasPermission>
+
+    <button class="layui-btn layui-btn-sm" id="addUser" lay-event="addUser">
+        添加客户
+    </button>
+    </div>
+</script>
+<!--模板-->
+<script type="text/html" id="toDateTime">
+    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+</script>
+
+<script type="text/html" id="toProductKeyword">
+    <a href="javascript:updateOrNewTab('/internal/productKeyword/searchProductKeywordsByCustomerUuid/{{d.uuid}}','{{d.contactPerson}}-关键字列表', '{{d.uuid}}')">{{d.contactPerson}}</a>
+</script>
+
+<script type="text/html" id="keywordInfo">
+    {{# if(d.keywordCount > 0){
+    if(d.keywordCount == d.activeKeywordCount){ }}
+    <span style="color: green;">激活</span>
+    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 0)">暂停关键字</a>
+    </@shiro.hasPermission>
+    {{# }else if(d.keywordCount > 0 && d.activeKeywordCount > 0){ }}
+    <span style="color: yellowgreen;">部分暂停</span>
+    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 0)">暂停关键字</a>
+    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 1)">激活关键字</a>
+    </@shiro.hasPermission>
+    {{# }else{  }}
+    <span style="color: red;">暂停</span>
+    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 1)">激活关键字</a>
+    </@shiro.hasPermission>
+    {{# }
+    }else{ }}
+    暂无关键字
+    {{#} }}
+</script>
+
+<script type="text/html" id="customerStatus">
+    {{#
+    if(d.status==1){  }}
+    激活
+    {{#  }else{  }}
+    暂停
+    {{#  }  }}
+</script>
+
+<script type="text/html" id="customerBusinessTpl">
+   {{ generate_customer_business_td(d) }}
+</script>
+
+<script type="text/html" id="customerDailyReportIdentify">
+    <select value="{{d.dailyReportIdentify}}" lay-ignore style="width: 100px;font-size: 12px; height: 25px"
+            onchange="changeCustomerDailyReportIdentify('{{d.uuid}}', '{{d.status}}','{{d.dailyReportIdentify}}', this.value, this);">
+        <option value="true" selected>是</option>
+        <option value="false"
+                {{# if(!d.dailyReportIdentify){ }}
+                selected
+                {{# } }}
+        >否
+        </option>
+
+    </select>
+</script>
+
+<script type="text/html" id="operationTpl">
+
+    <@shiro.hasPermission name="/internal/customer/saveCustomer">
+    <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/customer/delCustomer">
+    <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+    </@shiro.hasPermission>
+
+</script>
+

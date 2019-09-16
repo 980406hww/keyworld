@@ -17,9 +17,9 @@
 <div class="ok-body">
     <!--form表单-->
     <form class="layui-form layui-form-pane ok-form" lay-filter="addCustomer">
+        <input type="hidden" name="uuid">
         <div class="layui-form-item">
             <label class="layui-form-label">联系人</label>
-            <input type="hidden" name="uuid">
             <div class="layui-input-block">
                 <input type="text" name="contactPerson" placeholder="请输入联系人" autocomplete="off"
                        class="layui-input" lay-verify="required">
@@ -64,6 +64,16 @@
                 </select>
             </div>
         </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">业务类型</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="customerBusinessList" value="keyword" title="关键字">
+                <input type="checkbox" name="customerBusinessList" value="qzsetting" title="全站">
+                <input type="checkbox" name="customerBusinessList" value="fm" title="负面" >
+            </div>
+
+        </div>
+
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">销售备注</label>
             <div class="layui-input-block">
@@ -137,7 +147,18 @@
         }
 
         form.on("submit(commitCustomer)", function (data) {
-            layer.confirm('确认保存？', {
+
+            var customerBusinessStr = "";
+            var customerBusinessList= new Array();
+            $("input:checkbox[name='customerBusinessList']:checked").each(function(){
+                customerBusinessList.push($(this).val())
+            });
+            customerBusinessStr = customerBusinessList.join(",");
+            // data.field.customerBusinessList = customerBusinessList;
+            data.field.customerBusinessStr = customerBusinessStr;
+            console.log(data.field);
+
+           layer.confirm('确认保存？', {
                 icon: 3,
                 title: '保存数据',
                 btn: ['确认', '取消']
@@ -145,17 +166,14 @@
                     $.ajax({
                         url: '/internal/customer/postCustomersAdd',
                         type: 'post',
-                        // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
                         data: data.field,
                         dataType: 'json',
                         success: function (res) {
-                            // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
-                            // 客户端会主观认为服务端返回的就是 JSON 格式的字符串
+                            console.log(res);
                             if (res.code === 200) {
                                 layer.close(index);
                                 okLayer.msg.greenTick("保存成功", function () {
                                     parent.window.sign = true;
-                                    // parent.window.myTable.reload();
                                     parent.layer.close(parent.layer.getFrameIndex(window.name));
                                 });
                             } else {

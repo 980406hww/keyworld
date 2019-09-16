@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.CustomerBusinessDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keymanager.ckadmin.entity.CustomerBusiness">
+        <id column="fUuid" property="uuid" />
+        <result column="fCustomerUuid" property="customerUuid" />
+        <result column="fType" property="type" />
+        <result column="fCreateTime" property="createTime" />
+        <result column="fUpdateTime" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        fUuid AS uuid,
+        fCustomerUuid AS customerUuid,
+        fType AS type,
+        fCreateTime AS createTime,
+        fUpdateTime AS updateTime
+    </sql>
+
+    <insert id="saveCustomerBusiness">
+        INSERT INTO t_customer_business (fCustomerUuid, fType) VALUES
+
+        <foreach collection="customer.customerBusinessList" item="item" separator=",">
+        (#{customer.uuid}, #{item})
+        </foreach>
+
+    </insert>
+
+    <delete id="deleteByCustomerUuid">
+        DELETE FROM t_customer_business WHERE fCustomerUuid = #{customerUuid};
+    </delete>
+
+
+    <select id="getCustomerBusinessMap" resultType="java.util.Map">
+        SELECT cb.fCustomerUuid as 'customerUuid', group_concat(cb.`fType`) AS `customerBusinessStr`
+        FROM t_customer_business cb
+        WHERE cb.fCustomerUuid IN
+        <foreach item="item" index="index" collection="customerUuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY cb.fCustomerUuid
+    </select>
+</mapper>

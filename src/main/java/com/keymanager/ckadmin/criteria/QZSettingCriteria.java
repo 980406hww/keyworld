@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class QZSettingCriteria extends BaseCriteria {
 
+    private Long customerUuid;
     private String autoCrawlKeywordFlag;
     private String categoryTag;
     private String createTime;
@@ -31,6 +32,14 @@ public class QZSettingCriteria extends BaseCriteria {
     private String updateStatus;
     private String userInfoID;
     private String loginName;
+
+    public Long getCustomerUuid() {
+        return customerUuid;
+    }
+
+    public void setCustomerUuid(Long customerUuid) {
+        this.customerUuid = customerUuid;
+    }
 
     public String isAutoCrawlKeywordFlag() {
         return autoCrawlKeywordFlag;

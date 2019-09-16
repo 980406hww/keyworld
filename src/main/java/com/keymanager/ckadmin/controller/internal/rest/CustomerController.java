@@ -67,9 +67,9 @@ public class CustomerController {
         }
         try {
             HttpSession session = request.getSession();
-            String entryType = (String) session.getAttribute("entryType");
+//            String entryType = (String) session.getAttribute("entryType");
             String terminalType = TerminalTypeMapping.getTerminalType(request);
-            customerCriteria.setEntryType(entryType);
+//            customerCriteria.setEntryType(entryType);
             customerCriteria.setTerminalType(terminalType);
             Page<Customer> page = new Page<>(customerCriteria.getPage(),
                 customerCriteria.getLimit());
@@ -84,7 +84,7 @@ public class CustomerController {
             page = customerService.searchCustomers(page, customerCriteria);
             List<Customer> customers = page.getRecords();
             resultBean.setCode(0);
-            resultBean.setEntryType(entryType);
+//            resultBean.setEntryType(entryType);
             resultBean.setCount(page.getTotal());
             resultBean.setMsg("");
             resultBean.setData(customers);

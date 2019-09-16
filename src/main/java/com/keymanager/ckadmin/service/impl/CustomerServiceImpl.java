@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.dao.CustomerDao;
 import com.keymanager.ckadmin.entity.Customer;
+import com.keymanager.ckadmin.service.CustomerBusinessService;
 import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 
@@ -19,6 +20,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -39,45 +41,30 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     @Resource(name = "customerKeywordService2")
     private CustomerKeywordService customerKeywordService;
 
-/*    @Override
-    public Page<AlgorithmTestPlan> searchAlgorithmTestPlans(Page<AlgorithmTestPlan> page, AlgorithmTestCriteria algorithmTestCriteria) {
-        List<AlgorithmTestPlan> algorithmTestPlanList = algorithmTestPlanDao.searchAlgorithmTestPlans(page,algorithmTestCriteria);
-        page.setRecords(algorithmTestPlanList);
-        return page;
-    }*/
+    @Resource(name = "customerBusinessService2")
+    private CustomerBusinessService customerBusinessService;
 
     @Override
     public Page<Customer> searchCustomers(Page<Customer> page, CustomerCriteria customerCriteria) {
         List<Customer> customerList = customerDao.searchCustomers(page, customerCriteria);
+
         if (CollectionUtils.isNotEmpty(customerList)) {
             List<Long> customerUuids = new ArrayList<Long>();
             for (Customer customer : customerList) {
                 customerUuids.add(customer.getUuid());
             }
-            List<Map> customerKeywordCountMap = customerKeywordService
-                .getCustomerKeywordsCount(customerUuids, customerCriteria.getTerminalType(),
-                    customerCriteria.getEntryType());
-            Map<Integer, Map> customerUuidKeywordCountMap = new HashMap<Integer, Map>();
-            for (Map map : customerKeywordCountMap) {
-                customerUuidKeywordCountMap.put((Integer) map.get("customerUuid"), map);
+            List<Map> customerCustomerBusinessMapList = customerBusinessService.getCustomerBusinessMapList(customerUuids);
+            Map<Integer, Map> customerCustomerBusinessMap = new HashMap<>();
+            for (Map map : customerCustomerBusinessMapList) {
+                customerCustomerBusinessMap.put((Integer) map.get("customerUuid"), map);
             }
-            for (Customer customer : customerList) {
-                if (!customer.getLoginName().equals(customerCriteria.getLoginName())) {
-                    customer.setSaleRemark(null);
-                    customer.setTelphone(null);
-                    customer.setQq(null);
-                    customer.setEmail(null);
-                }
-                Map map = customerUuidKeywordCountMap.get(customer.getUuid().intValue());
+            for (Customer customer :customerList){
+                Map map = customerCustomerBusinessMap.get(customer.getUuid().intValue());
                 if (map != null) {
-                    Long totalCount = (Long) map.get("totalCount");
-                    if (totalCount != null) {
-                        customer.setKeywordCount(totalCount.intValue());
-                    }
-
-                    BigDecimal activeCount = (BigDecimal) map.get("activeCount");
-                    if (activeCount != null) {
-                        customer.setActiveKeywordCount(activeCount.intValue());
+                    String customerBusinessStr = (String) map.get("customerBusinessStr");
+                    if (customerBusinessStr != null) {
+                        customer.setCustomerBusinessStr(customerBusinessStr);
+                        customer.setCustomerBusinessList(customerBusinessStr.split(","));
                     }
                 }
             }
@@ -88,13 +75,21 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
 
     @Override
     public void saveCustomer(Customer customer, String loginName) {
+        customer.setCustomerBusinessList(customer.getCustomerBusinessStr().split(","));
         //修改
         if (null != customer.getUuid()) {
             updateCustomer(customer, loginName);
+            if (StringUtils.isNotBlank(customer.getCustomerBusinessStr())){
+                customer.setCustomerBusinessList(customer.getCustomerBusinessStr().split(","));
+                customerBusinessService.deleteByCustomerUuid(customer.getUuid());
+                customerBusinessService.saveCustomerBusiness(customer);
+            }
         } else {//添加
             customer.setUpdateTime(new Date());
             customer.setLoginName(loginName);
             customerDao.insert(customer);
+            customerBusinessService.saveCustomerBusiness(customer);
+
         }
     }
 

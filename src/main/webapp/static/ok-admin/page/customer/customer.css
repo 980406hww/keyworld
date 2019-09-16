@@ -1,0 +1,17 @@
+.layui-input-inline input{
+    height: 30px;
+}
+
+.layui-form-pane .layui-form-label {
+    width: 116px;
+    padding: 8px 15px;
+    height: 30px;
+    line-height: 13px;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 2px 0 0 2px;
+    text-align: center;
+    background-color: #FBFBFB;
+    overflow: hidden;
+    box-sizing: border-box
+}

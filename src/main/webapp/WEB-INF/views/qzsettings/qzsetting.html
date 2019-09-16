@@ -483,6 +483,8 @@
                 <div class="layui-colla-content" id="searchContent">
                     <form class="layui-form layui-form-pane" id="searchForm">
 
+                        <input hidden value='<#if Request.customerUuidTmp?exists>${Request.customerUuidTmp}</#if>'
+                               id="customerUuid" name="customerUuid">
                         <input hidden name="searchEngine" id="searchEngine" value="百度"/>
                         <input hidden name="terminalType" id="terminalType" value="PC"/>
                         <input type="text" hidden name="userInfoID" id="userInfoID" value="">
@@ -655,8 +657,12 @@
             elem: '#createTimes',
             range: true
         });
-
-        get_qzsettting({searchEngine:'百度',terminalType: 'PC'});
+        let customerUuid = $("#customerUuid").val();
+        let whereCondition = {searchEngine:'百度',terminalType: 'PC'};
+        if(customerUuid !==""){
+            whereCondition.customerUuid = customerUuid;
+        }
+        get_qzsetting(whereCondition);
 
         function getTerminalSearchEngineMap() {
             /*动态加载tab栏*/
@@ -788,7 +794,7 @@
         });
 
         <@shiro.hasPermission name="/internal/qzsetting/searchQZSettings">
-        function get_qzsettting(whereCondition) {
+        function get_qzsetting(whereCondition) {
             table.render({
                 elem: '#qzSettingTable',
                 method: 'post',
