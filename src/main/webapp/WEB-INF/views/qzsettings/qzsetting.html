@@ -749,10 +749,10 @@
             data.field.customerInfo.replace(/\s*/g,"");
             data.field.categoryTag.replace(/\s*/g,"");
 
-            if(data.field.createTimes != null || data.field.createTimes != ''){
-                var str = data.field.createTimes.split(" - ")
-                data.field.createTime = str[0]
-                data.field.createTimePrefix = str[1]
+            if(data.field.createTimes != null || data.field.createTimes !== ''){
+                var str = data.field.createTimes.split(" - ");
+                data.field.createTime = str[0];
+                data.field.createTimePrefix = str[1];
             }
 
             if(data.field.domain != null && data.field.domain !== ''){
@@ -1761,7 +1761,7 @@
             }
             layer.open({
                 type: 1,
-                title: '修改分组标签',
+                title: '修改标签',
                 content: updFZTagsHtml,
                 shadeClose: true,
                 resize: false,
@@ -2337,17 +2337,17 @@
 
     <div class="layui-btn-group">
     <@shiro.hasPermission name="/internal/qzsetting/save">
-    <button class="layui-btn layui-btn-sm" id="add_qz" lay-event="add_qz">
+    <button class="layui-btn layui-btn-sm" id="addQz" lay-event="addQz">
             <i class="layui-icon">&#xe61f;</i>添加
     </button>
 
     <button class="layui-btn layui-btn-sm" lay-event="updFZTags">
-        修改分组标签
+        <i class="layui-icon"></i>修改标签
     </button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
     	<button class="layui-btn layui-btn-sm layui-btn-danger" id="batchDeleteQZSetting" lay-event="batchDeleteQZSetting">
-            <i class="layui-icon layui-icon-delete"></i>删除所选
+            <i class="layui-icon"></i>删除所选
         </button>
     </@shiro.hasPermission>
         <button class="layui-btn layui-btn-sm" id="batchUpdateQZSettingUpdateStatus" lay-event="batchUpdateQZSettingUpdateStatus">
@@ -2418,10 +2418,10 @@
                 <a href="javascript:;">{{layui.util.toDateString(d.createTime,'yyyy-MM-dd')}}</a>
             </span>
         </div>
-        <!--    分组标签    -->
+        <!--    标签    -->
         <div class="layui-col-md1">
             <span class="tagNames"
-                  ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label
+                  ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>标签:</label>&nbsp;&nbsp;<label
                     class="tagNameStr" title="">暂无</label></span>
         </div>
         <!--     操作栏   -->
@@ -2435,7 +2435,7 @@
                 <@shiro.hasPermission name="/internal/qzsetting/save">
                 <span>
                     <a class="blue"
-                      href="javascript:showAddKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}','{{d.bearPawNumber}}','{{d.searchEngine}}', '{{d.type}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">添加词</a>
+                      href="javascript:showAddKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}','{{d.bearPawNumber}}','{{d.searchEngine}}', '{{d.type}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">添加关键字</a>
                 </span>
                 </@shiro.hasPermission>
 

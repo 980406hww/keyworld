@@ -432,7 +432,7 @@ public class Utils {
 
 	public static Double getRoundValue(Double doubleValue, int decimalPoint) {
 		if (decimalPoint <= 0) {
-			return null;
+			return 0.0;
 		}
 		if (!doubleValue.toString().contains(".")){
 			return doubleValue;

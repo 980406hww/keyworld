@@ -88,6 +88,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         if (StringUtil.isNullOrEmpty(customerKeyword.getOriginalUrl())) {
             customerKeyword.setOriginalUrl(customerKeyword.getUrl());
         }
+/*
         String originalUrl = customerKeyword.getOriginalUrl();
         if (!StringUtil.isNullOrEmpty(originalUrl)) {
             if (originalUrl.indexOf("www.") == 0) {
@@ -98,22 +99,13 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         } else {
             originalUrl = null;
         }
+*/
         customerKeyword.setKeyword(customerKeyword.getKeyword().trim());
 
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
             CustomerKeyword customerKeyword1 = customerKeywordDao.getOneSameCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl(), customerKeyword.getTitle());
             if (customerKeyword1 != null ) {
-                if (!CustomerKeywordSourceEnum.Capture.name().equals(customerKeyword.getCustomerKeywordSource())) {
-                    String oldKeywordEffect = customerKeyword1.getKeywordEffect();
-                    String keywordEffect = customerKeyword.getKeywordEffect();
-                    if (!oldKeywordEffect.equals(keywordEffect)){
-                        Map<String, Integer> levelMap = KeywordEffectEnum.toLevelMap();
-                        String newkeywordEffect = levelMap.get(oldKeywordEffect) < levelMap.get(keywordEffect) ? oldKeywordEffect : keywordEffect;
-                        customerKeyword.setKeywordEffect(newkeywordEffect);
-                        customerKeyword.setUpdateTime(new Date());
-                        customerKeywordDao.updateSameCustomerKeyword(customerKeyword);
-                    }
-                }
+                detectCustomerKeywordEffect(customerKeyword, customerKeyword1);
                 return null;
             }
         }
@@ -121,20 +113,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType()) ) {
             CustomerKeyword customerKeyword1 = customerKeywordDao.getOneSimilarCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getOriginalUrl(), customerKeyword.getTitle());
             if (customerKeyword1 != null ) {
-                if (!CustomerKeywordSourceEnum.Capture.name().equals(customerKeyword.getCustomerKeywordSource())) {
-                    String oldKeywordEffect = customerKeyword1.getKeywordEffect();
-                    String keywordEffect = customerKeyword.getKeywordEffect();
-                    if (!oldKeywordEffect.equals(keywordEffect)){
-                        Map<String, Integer> levelMap = KeywordEffectEnum.toLevelMap();
-                        String newkeywordEffect = levelMap.get(oldKeywordEffect) < levelMap.get(keywordEffect) ? oldKeywordEffect : keywordEffect;
-                        customerKeyword.setKeywordEffect(newkeywordEffect);
-                        customerKeyword.setUpdateTime(new Date());
-                        customerKeywordDao.updateSimilarCustomerKeyword(customerKeyword);
-                    }
-                }
+                detectCustomerKeywordEffect(customerKeyword, customerKeyword1);
                 return null;
             }
-
         }
 
         customerKeyword.setKeyword(customerKeyword.getKeyword().trim());
@@ -173,7 +154,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         }
         int queryInterval = 24 * 60 * 60;
         if (null != customerKeyword.getOptimizePlanCount() && customerKeyword.getOptimizePlanCount() > 0) {
-            int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(customerKeyword.getOptimizePlanCount() * (Math.random() * 0.7 + 0.5), 1));
+            int optimizeTodayCount = (int) Math.floor(Utils
+                .getRoundValue(customerKeyword.getOptimizePlanCount() * (Math.random() * 0.7 + 0.5),
+                    1));
             queryInterval = queryInterval / optimizeTodayCount;
             customerKeyword.setOptimizeTodayCount(optimizeTodayCount);
         }
@@ -192,6 +175,26 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public Integer getCustomerKeywordCountByOptimizeGroupName(String groupName) {
         return customerKeywordDao.getCustomerKeywordCountByOptimizeGroupName(groupName);
+    }
+
+    private void detectCustomerKeywordEffect(CustomerKeyword customerKeyword, CustomerKeyword customerKeyword1) {
+        if (!CustomerKeywordSourceEnum.Capture.name().equals(customerKeyword.getCustomerKeywordSource())) {
+            String oldKeywordEffect = customerKeyword1.getKeywordEffect();
+            String keywordEffect = customerKeyword.getKeywordEffect();
+            if (null != oldKeywordEffect) {
+                if (!oldKeywordEffect.equals(keywordEffect)){
+                    Map<String, Integer> levelMap = KeywordEffectEnum.toLevelMap();
+                    String newKeywordEffect = levelMap.get(oldKeywordEffect) < levelMap.get(keywordEffect) ? oldKeywordEffect : keywordEffect;
+                    customerKeyword.setKeywordEffect(newKeywordEffect);
+                    customerKeyword.setUpdateTime(new Date());
+                    customerKeywordDao.updateSameCustomerKeyword(customerKeyword);
+                }
+            } else {
+                customerKeyword.setKeywordEffect(keywordEffect);
+                customerKeyword.setUpdateTime(new Date());
+                customerKeywordDao.updateSameCustomerKeyword(customerKeyword);
+            }
+        }
     }
 }
 

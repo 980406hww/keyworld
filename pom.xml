@@ -304,11 +304,11 @@
 			<version>${ehcache.version}</version>
 		</dependency>
 
-		<dependency>
+		<!--<dependency>
 			<groupId>com.shunshikj.keywordmanagement</groupId>
 			<artifactId>keyword-management</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+		</dependency>-->
 
 		<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
 		<dependency>
