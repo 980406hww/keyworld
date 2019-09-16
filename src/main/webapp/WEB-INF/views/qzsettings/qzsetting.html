@@ -390,6 +390,10 @@
         .layui-form-select input {
             height: 30px;
         }
+
+        /*.layui-form-select{*/
+        /*    width: 120px;*/
+        /*}*/
         
         .my-label{
             height: auto !important;
@@ -397,6 +401,12 @@
 
         .layui-input-inline input{
             height: 30px;
+        }
+
+        .layui-text{
+            font-size: 15px;
+            display: inline;
+            line-height: 30px;
         }
 
         div.layui-row.body .col-1 h5,
@@ -420,6 +430,10 @@
 
         .layui-table-tool-temp .layui-btn-sm {
             padding: 0 5px;
+        }
+
+        .small{
+            width: 120px;
         }
 
         /*thead {
@@ -480,104 +494,85 @@
                         <input type="text" hidden name="userInfoID" id="userInfoID" value="">
                         <input type="text" hidden name="organizationID" id="organizationID" value="">
                         <div class="layui-form-item" lay-filter="loginNameFilter">
-                            <div class="layui-inline">域名</div>
+                            <div class="layui-text">域名</div>
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
                                     <input type="text" name="domain" id="domain" placeholder="请输入域名" autocomplete="off" onblur="checkDomain()" onmouseleave="checkDomain()" class="layui-input">
                                 </div>
                             </div>
-                            <div class="layui-inline">客户</div>
+                            <div class="layui-text">客户</div>
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
                                     <select name="customerInfo" id="customerInfo" lay-filter="customerInfoFilter" lay-search>
                                     </select>
                                 </div>
                             </div>
-<!--                            TODO-->
-<!--                            <div class="layui-inline">用户</div>-->
-<!--                            <div class="layui-inline">-->
-<!--                                <div class="layui-input-inline">-->
-<!--                                    <select id="LAY-auth-tree-index" lay-filter="tree"></select>-->
-<!--                                </div>-->
-<!--                            </div>-->
-                            <div class="layui-inline">用户</div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <input type="text"  id="tree" lay-filter="tree" class="layui-input" >
-                                </div>
+                            <div class="layui-text">用户</div>
+                            <div class="layui-inline small">
+                                <input type="text"  id="tree" lay-filter="tree" class="layui-input" >
                             </div>
-                            <div class="layui-inline">分类标签</div>
+                            <div class="layui-text">分类标签</div>
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
                                     <select name="categoryTag" id="categoryTag" lay-filter="categoryTagFilter" lay-search>
                                     </select>
                                 </div>
                             </div>
-                            <div class="layui-inline">组名</div>
+                            <div class="layui-text">组名</div>
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
                                     <input type="text" name="group" id="group" placeholder="请输入组名" autocomplete="off"class="layui-input">
                                 </div>
                             </div>
-                            <div class="layui-inline">续费状态</div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <select name="renewalStatus" id="renewalStatus">
-                                        <option value selected>全部</option>
-                                        <option value="1">续费</option>
-                                        <option value="0">未续费</option>
-                                        <option value="2">首次续费</option>
-                                        <option value="3">下架</option>
-                                        <option value="4">观测</option>
-                                        <option value="5">seo</option>
-                                    </select>
-                                </div>
+                            <div class="layui-text">续费状态</div>
+                            <div class="layui-inline small">
+                                <select name="renewalStatus" id="renewalStatus">
+                                    <option value selected>全部</option>
+                                    <option value="1">续费</option>
+                                    <option value="0">未续费</option>
+                                    <option value="2">首次续费</option>
+                                    <option value="3">下架</option>
+                                    <option value="4">观测</option>
+                                    <option value="5">seo</option>
+                                </select>
                             </div>
-                            <div class="layui-inline">自动采词</div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <select name="autoCrawlKeywordFlag" id="autoCrawlKeywordFlag">
-                                        <option value selected>全部</option>
-                                        <option value="1">是</option>
-                                        <option value="0">否</option>
-                                    </select>
-                                </div>
+                            <div class="layui-text">自动采词</div>
+                            <div class="layui-inline small">
+                                <select name="autoCrawlKeywordFlag" id="autoCrawlKeywordFlag">
+                                    <option value selected>全部</option>
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
                             </div>
-                            <div class="layui-inline">达标种类</div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <select name="standardSpecies" id="standardSpecies">
-                                        <option value selected>全部</option>
-                                        <option value="aiZhan">爱站</option>
-                                        <option value="5118">5118</option>
-                                        <option value="designationWord">指定词</option>
-                                        <option value="other">其它</option>
-                                    </select>
-                                </div>
+                            <div class="layui-text">达标种类</div>
+                            <div class="layui-inline small">
+                                <select name="standardSpecies" id="standardSpecies">
+                                    <option value selected>全部</option>
+                                    <option value="aiZhan">爱站</option>
+                                    <option value="5118">5118</option>
+                                    <option value="designationWord">指定词</option>
+                                    <option value="other">其它</option>
+                                </select>
                             </div>
-                            <div class="layui-inline">达标优化类型</div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <select name="optimizationType" id="optimizationType">
-                                        <option value selected>全部</option>
-                                        <option value="1">主优化</option>
-                                        <option value="2">次优化</option>
-                                        <option value="0">辅助优化</option>
-                                    </select>
-                                </div>
+                            <div class="layui-text">达标优化类型</div>
+                            <div class="layui-inline small">
+                                <select name="optimizationType" id="optimizationType">
+                                    <option value selected>全部</option>
+                                    <option value="1">主优化</option>
+                                    <option value="2">次优化</option>
+                                    <option value="0">辅助优化</option>
+                                </select>
                             </div>
-                            <div class="layui-inline">采集状态</div>
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <select name="status" id="status">
-                                        <option value selected>全部</option>
-                                        <option value="1">激活</option>
-                                        <option value="0">暂停</option>
-                                        <option value="2">新增</option>
-                                    </select>
-                                </div>
+                            <div class="layui-text">采集状态</div>
+                            <div class="layui-inline small">
+                                <select name="status" id="status">
+                                    <option value selected>全部</option>
+                                    <option value="1">激活</option>
+                                    <option value="0">暂停</option>
+                                    <option value="2">新增</option>
+                                </select>
                             </div>
-                            <div class="layui-inline">更新状态</div>
+                            <div class="layui-text">更新状态</div>
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
                                     <select name="updateStatus" id="updateStatus">
@@ -588,7 +583,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="layui-inline">创建时间</div>
+                            <div class="layui-text">创建时间</div>
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
                                     <input type="text" class="layui-input" id="createTimes" name="createTimes" readonly placeholder="请选择日期">
@@ -664,36 +659,19 @@
             });
         }
 
-        //  TODO
-        // $.ajax({
-        //     url: '/internal/user/trees2',
-        //     dataType: 'json',
-        //     success: function(data){
-        //         console.log(data)
-        //         var trees = authtree.listConvert(data,{
-        //             primaryKey: 'id',
-        //             startPid: 0,
-        //             parentKey: 'parentTId',
-        //             childKey: data.children,
-        //             nameKey: 'name',
-        //             valueKey: 'id'
-        //         });
-        //         authtree.render('#LAY-auth-tree-index', trees, {
-        //             inputname: 'authids[]',
-        //             layfilter: 'tree',
-        //             autowidth: true,
-        //             openall: true,
-        //             autochecked: false,
-        //         });
-        //         authtree.showAll(data)
-        //     }
-        // });
-
         treeSelect.render({
             elem: '#tree',
             data: '/internal/user/trees2',
             type: 'get',
             placeholder: '用户名称',
+            style: {
+                folder: {
+                    enable: false
+                },
+                line: {
+                    enable: true
+                }
+            },
             click: function(d){
                 $("#organizationID").val("");
                 $("#userInfoID").val("");
