@@ -1769,7 +1769,7 @@
                 btn: ['确认', '取消'],
                 yes: function (index) {
                     let v = document.getElementById('tagNames').value;
-                    if (!/^[\u4e00-\u9fa5a-zA-Z,]+$/.test(v)) {
+                    if (!/^[\u4e00-\u9fa50-9a-zA-Z,]+$/.test(v)) {
                         show_layer_msg('请输入符合规则的标签数据！', 5);
                         return false;
                     }
@@ -2337,7 +2337,7 @@
 
     <div class="layui-btn-group">
     <@shiro.hasPermission name="/internal/qzsetting/save">
-    <button class="layui-btn layui-btn-sm" id="add_qz" lay-event="add_qz">
+    <button class="layui-btn layui-btn-sm" id="add_qz" lay-event="addQz">
             <i class="layui-icon">&#xe61f;</i>添加
     </button>
 

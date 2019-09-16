@@ -24,12 +24,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -417,6 +412,31 @@ public class QZSettingController extends SpringMVCBaseController {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    /**
+     * 更新分组标签
+     * @param map
+     * @return
+     */
+    @RequiresPermissions("/internal/qzsetting/save")
+    @RequestMapping(value = "/updQzCategoryTags", method = RequestMethod.POST)
+    public ResultBean updateQzCategoryTags(@RequestBody Map<String, Object> map) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        List<String> uuids = (List<String>) map.get("uuids");
+        List<QZCategoryTag> targetQZCategoryTags = new ObjectMapper()
+                .convertValue(map.get("targetQZCategoryTags"),
+                        new TypeReference<List<QZCategoryTag>>() {
+                        });
+        try {
+            qzSettingService.updateQzCategoryTags(uuids, targetQZCategoryTags);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+            resultBean.setMsg(ex.getMessage());
+            resultBean.setCode(400);
         }
         return resultBean;
     }
