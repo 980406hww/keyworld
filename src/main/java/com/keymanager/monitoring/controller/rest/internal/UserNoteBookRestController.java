@@ -27,8 +27,7 @@ public class UserNoteBookRestController {
     @Autowired
     private UserNoteBookService userNoteBookService;
 
-//    @RequiresPermissions("/internal/usernotebook/searchUserNoteBooks")
-    @RequiresPermissions("/internal/customer/searchCustomers")
+    @RequiresPermissions("/internal/usernotebook/searchUserNoteBooks")
     @RequestMapping(value = "/searchUserNoteBooks", method = RequestMethod.POST)
     public ResponseEntity<?> getUserNoteBooks(@RequestBody Map<String, Object> resultMap, HttpServletRequest request) {
         try {
@@ -43,8 +42,7 @@ public class UserNoteBookRestController {
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-//    @RequiresPermissions("/internal/usernotebook/searchUserNoteBooks")
-    @RequiresPermissions("/internal/customer/searchCustomers")
+    @RequiresPermissions("/internal/usernotebook/searchUserNoteBooks")
     @RequestMapping(value = "/saveUserNoteBook", method = RequestMethod.POST)
     public ResponseEntity<?> saveUserNoteBook(@RequestBody Map<String, Object> resultMap, HttpServletRequest request) {
         try {
