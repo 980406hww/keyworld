@@ -17,7 +17,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         elem: '#customerTable',
         method: 'post',
         url: '/internal/customer/getCustomers',
-        limit: 50,
+        limit: 25,
+        limits: [10, 25, 50, 75, 100, 500, 1000],
         page: true,
         autoSort: false,
         size: 'sm',
@@ -227,7 +228,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
 
     // 编辑表格获得表格数据
     function editCustomer(data) {
-        okLayer.open("首页 / 客户列表 / 修改用户", "/internal/customer/toCustomersAdd", "90%", "90%", function (layero) {
+        okLayer.open("首页 / 客户列表 / 修改用户", "/internal/customer/toCustomersAdd", "60%", "90%", function (layero) {
             window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
         },function(){
             if(sign){
@@ -395,30 +396,30 @@ function updateOrNewTab(url, tit, id) {
     parent.layui.element.tabChange('ok-tab', id)
 }
 
-function generate_customer_business_td(data){
+function generate_customer_business_td(data) {
     let html = '';
     let customerBusinessList = data.customerBusinessList;
-    if(customerBusinessList !==null && customerBusinessList.length >0){
+    if (customerBusinessList !== null && customerBusinessList.length > 0) {
 
-        for (let index in customerBusinessList)  {
+        for (let index in customerBusinessList) {
             var parm = {};
-            let url = '',title='',id='';
+            let url = '', title = '', id = '';
             var contactPerson = data.contactPerson.replace(/\s+/g, "")
-            if (customerBusinessList[index] === 'keyword'){
-                url = '/internal/customerKeyword/searchCustomerKeywords/'+data.uuid;
+            if (customerBusinessList[index] === 'keyword') {
+                url = '/internal/customerKeyword/searchCustomerKeywords/' + data.uuid;
                 title = contactPerson + '-关键字信息';
                 id = contactPerson + '-关键字信息';
-                html += '<button type="button" class="layui-btn layui-btn-xs" onclick=updateOrNewTab("'+url+'","'+title+'","'+id+'")>关键字信息</button>'
-            } else if(customerBusinessList[index] === 'qzsetting'){
-                url = '/internal/qzsetting/toQZSetttingsWithCustomerUuid/'+data.uuid;
-                title =contactPerson + '-全站信息';
+                html += '<button type="button" class="layui-btn layui-btn-xs" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>关键字信息</button>'
+            } else if (customerBusinessList[index] === 'qzsetting') {
+                url = '/internal/qzsetting/toQZSetttingsWithCustomerUuid/' + data.uuid;
+                title = contactPerson + '-全站信息';
                 id = contactPerson + '-全站信息';
-                html += '<button type="button" class="layui-btn layui-btn-xs" onclick=updateOrNewTab("'+url+'","'+title+'","'+id+'")>全站信息</button>'
-            } else if(customerBusinessList[index] === 'fm'){
-                url = '/internal/productKeyword/searchProductKeywordsByCustomerUuid/'+data.uuid;
+                html += '<button type="button" class="layui-btn layui-btn-xs" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>全站信息</button>'
+            } else if (customerBusinessList[index] === 'fm') {
+                url = '/internal/productKeyword/searchProductKeywordsByCustomerUuid/' + data.uuid;
                 title = contactPerson + '-负面信息';
                 id = contactPerson + '-负面信息';
-                html += '<button type="button" class="layui-btn layui-btn-xs" onclick=updateOrNewTab("'+url+'","'+title+'","'+id+'")>负面信息</button>'
+                html += '<button type="button" class="layui-btn layui-btn-xs" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>负面信息</button>'
             }
         }
     }

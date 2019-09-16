@@ -24,5 +24,7 @@ public interface CustomerBusinessDao extends BaseMapper<CustomerBusiness> {
 
     void deleteByCustomerUuid(@Param("customerUuid") Long customerUuid);
 
-    List<Map> getCustomerBusinessMap(@Param("customerUuids")List<Long> customerUuids);
+    List<Map> getCustomerBusinessMap(@Param("customerUuids") List<Long> customerUuids);
+
+    String getCustomerBusinessStrByCustomerUuid(@Param("customerUuid") Long customerUuid);
 }

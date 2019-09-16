@@ -2,21 +2,22 @@
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
     <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" id="addUser" lay-event="addUser">
+            添加客户
+        </button>
+
         <@shiro.hasPermission name="/internal/customer/deleteCustomers">
         <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="batchDeleteCustomer">
             <i class="layui-icon layui-icon-delete"></i>删除所选
         </button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/customer/saveCustomer">
+        </@shiro.hasPermission>
+    <!--<@shiro.hasPermission name="/internal/customer/saveCustomer">
     <button class="layui-btn layui-btn-warn layui-btn-sm" id="batchUpdateDailyReport"
             lay-event="batchUpdateDailyReport">
         触发所选客户日报表
-    </button>
+    </button>-->
     </@shiro.hasPermission>
 
-    <button class="layui-btn layui-btn-sm" id="addUser" lay-event="addUser">
-        添加客户
-    </button>
     </div>
 </script>
 <!--模板-->

@@ -146,15 +146,21 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     public Customer getCustomerWithKeywordCount(String terminalType, String entryType,
         long customerUuid, String loginName) {
         Customer customer = customerDao.selectById(customerUuid);
+
         if (customer != null) {
-            if (!customer.getLoginName().equals(loginName)) {
+            String customerBusinessStr = customerBusinessService.getCustomerBusinessStrByCustomerUuid(customerUuid);
+            if (StringUtils.isNotBlank(customerBusinessStr)){
+                customer.setCustomerBusinessStr(customerBusinessStr);
+                customer.setCustomerBusinessList(customerBusinessStr.split(","));
+            }
+            /*if (!customer.getLoginName().equals(loginName)) {
                 customer.setEmail(null);
                 customer.setQq(null);
                 customer.setTelphone(null);
                 customer.setSaleRemark(null);
             }
             customer.setKeywordCount(customerKeywordService
-                .getCustomerKeywordCount(terminalType, entryType, customerUuid));
+                .getCustomerKeywordCount(terminalType, entryType, customerUuid));*/
         }
         return customer;
     }

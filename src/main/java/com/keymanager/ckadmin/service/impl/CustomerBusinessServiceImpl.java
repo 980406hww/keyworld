@@ -40,4 +40,9 @@ public class CustomerBusinessServiceImpl extends ServiceImpl<CustomerBusinessDao
     public List<Map> getCustomerBusinessMapList(List<Long> customerUuids) {
         return customerBusinessDao.getCustomerBusinessMap(customerUuids);
     }
+
+    @Override
+    public String getCustomerBusinessStrByCustomerUuid(long customerUuid) {
+        return customerBusinessDao.getCustomerBusinessStrByCustomerUuid(customerUuid);
+    }
 }

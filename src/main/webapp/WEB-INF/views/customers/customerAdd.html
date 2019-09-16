@@ -116,6 +116,8 @@
     }
 
     function setForm(l, u) {
+        var $ = l.jquery;
+        var form = l.form;
         l.jquery.ajax({
             url: '/internal/customer/getCustomersMsgById/' + u,
             type: 'get',
@@ -128,6 +130,15 @@
                         res.data.dailyReportIdentify = 0
                     }
                     layui.form.val("addCustomer", res.data);
+                    let customerBusinessList = res.data.customerBusinessList;
+                    for (let index in customerBusinessList) {
+                        $("input:checkbox[name='customerBusinessList']").each(function(){
+                            if($(this).val()===customerBusinessList[index]){
+                                $(this).attr("checked","true")
+                            }
+                        });
+                    }
+                    form.render();
                 } else {
                     l.layer.msg(res.msg);
                 }
@@ -147,18 +158,15 @@
         }
 
         form.on("submit(commitCustomer)", function (data) {
-
             var customerBusinessStr = "";
             var customerBusinessList= new Array();
             $("input:checkbox[name='customerBusinessList']:checked").each(function(){
                 customerBusinessList.push($(this).val())
             });
             customerBusinessStr = customerBusinessList.join(",");
-            // data.field.customerBusinessList = customerBusinessList;
             data.field.customerBusinessStr = customerBusinessStr;
-            console.log(data.field);
 
-           layer.confirm('确认保存？', {
+            layer.confirm('确认保存？', {
                 icon: 3,
                 title: '保存数据',
                 btn: ['确认', '取消']
@@ -169,7 +177,6 @@
                         data: data.field,
                         dataType: 'json',
                         success: function (res) {
-                            console.log(res);
                             if (res.code === 200) {
                                 layer.close(index);
                                 okLayer.msg.greenTick("保存成功", function () {

@@ -43,4 +43,11 @@
         </foreach>
         GROUP BY cb.fCustomerUuid
     </select>
+
+    <select id="getCustomerBusinessStrByCustomerUuid" resultType="String">
+        SELECT group_concat(cb.`fType`) AS `customerBusinessStr`
+        FROM t_customer_business cb
+        WHERE cb.fCustomerUuid = #{customerUuid}
+        GROUP BY cb.fCustomerUuid
+    </select>
 </mapper>

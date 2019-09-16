@@ -21,4 +21,6 @@ public interface CustomerBusinessService extends IService<CustomerBusiness> {
     void deleteByCustomerUuid(Long customerUuid);
 
     List<Map> getCustomerBusinessMapList(List<Long> customerUuids);
+
+    String getCustomerBusinessStrByCustomerUuid(long customerUuid);
 }
