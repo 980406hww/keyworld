@@ -1,9 +1,11 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.entity.UserNoteBook;
 import com.keymanager.ckadmin.service.UserNoteBookService;
 import java.util.Map;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,38 @@ public class UserNoteBookController {
         try {
             resultBean.setData(userNoteBookService
                 .findUserNoteBooks(customerUuid, terminalType, searchAll));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    //    @RequiresPermissions("/internal/usernotebook/searchUserNoteBooks")
+    @RequiresPermissions("/internal/customer/searchCustomers")
+    @RequestMapping(value = "/saveUserNoteBook", method = RequestMethod.POST)
+    public ResultBean saveUserNoteBook(@RequestBody Map<String, Object> resultMap,
+        HttpSession session) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        try {
+            UserNoteBook userNoteBook = new UserNoteBook();
+            String uuid = (String) resultMap.get("uuid");
+            if (null != uuid) {
+                userNoteBook.setUuid(Long.parseLong(uuid));
+            }
+            userNoteBook.setCustomerUuid(Long.parseLong((String) resultMap.get("customerUuid")));
+            userNoteBook.setContent((String) resultMap.get("content"));
+            userNoteBook.setNotesPerson((String) session.getAttribute("username"));
+            userNoteBook.setTerminalType((String) resultMap.get("terminalType"));
+            int affectedRows = userNoteBookService.saveUserNoteBook(userNoteBook);
+            if (affectedRows > 0) {
+                return resultBean;
+            } else {
+                resultBean.setCode(400);
+                return resultBean;
+            }
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

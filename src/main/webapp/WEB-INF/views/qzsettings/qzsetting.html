@@ -393,6 +393,7 @@
         
         .my-label{
             height: auto !important;
+            max-width: 330px;
         }
 
         .layui-input-inline input{
@@ -1877,20 +1878,53 @@
                 })
         };
 
-        function commitNoteBook(){
-
-        }
+        window.commitNoteBook = function(e) {
+            let this_ = e.parentElement.parentElement;
+            let td_l = this_.parentElement.children;
+            let d = {};
+            if (td_l.length > 2) {
+                this_ = this_.previousElementSibling.previousElementSibling.children[0].children;
+                console.log(this_);
+                d.uuid = this_[0].value;
+                d.content = this_[1].value;
+            } else {
+                d.content = this_.previousElementSibling.children[0].children[0].value;
+            }
+            d.customerUuid = document.getElementById('customerUuid').value;
+            d.terminalType = document.getElementById('terminalType').value;
+            console.log(d);
+            $.ajax({
+                url: '/internal/notebook/saveUserNoteBook',
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                data: JSON.stringify(d),
+                success: function (res) {
+                    if (res.code === 200) {
+                        refreshNotebook(d.customerUuid);
+                    } else {
+                        show_layer_msg(res.msg, 5);
+                    }
+                },
+                error: function () {
+                    show_layer_msg('未知错误，请稍后重试！！', 5);
+                }
+            });
+        };
 
         let oneRowI = `<tr>
                             <td class="my-left" colspan="4">
-                                <div class="my-label">
+                                <div class="my-label" style="max-width: none">
                                      <input type="text" class="layui-input my-input"
-                                     placeholder="请在此输入你想要记录的内容" style="height: 36px">
+                                     placeholder="请在此输入你想要记录的内容"
+                                     style="height: 36px;padding-right: 10px">
                                 </div>
                             </td>
                             <td class="my-left my-bottom">
                                 <div class="my-label my-btn">
-                                <button type="button" onclick="commitNoteBook()"
+                                <button type="button" onclick="commitNoteBook(this)"
                                     class="layui-btn layui-btn-xs">
                                 保存
                                 </button>
@@ -1906,46 +1940,89 @@
             }
         };
 
-        let oneRowU = `<tr>
-                        <td class="my-left">
-                            <div class="my-label my-padding">
-                            1
-                            </div>
-                            </td>
-                            <td class="my-left">
-                            <div class="my-label my-padding">
-                            sdfhjksadf
-                            </div>
-                            </td>
-                            <td class="my-left">
-                            <div class="my-label my-padding">
-                            撒地方很快就的身份卡萨丁撒地方很快就的身份卡萨丁撒地方很快就的身份卡萨丁
-                            </div>
-                            </td>
-                            <td class="my-left">
-                            <div class="my-label my-padding">
-                            2019-10-01 11:11:11
-                        </div>
-                        </td>
-                        <td class="my-left my-bottom">
-                            <div class="my-label my-btn">
-                            <button type="button" onclick=""
-                                class="layui-btn layui-btn-xs layui-btn-danger">
-                            修改
-                            </button>
-                            </div>
-                            </td>
-                            </tr>`;
+        window.updNoteBook = function (e) {
+            let this_ = e.parentElement.parentElement.parentElement;
+            let td_l = this_.children;
+            let index = td_l[0].children[0].innerText;
+            let name = td_l[1].children[0].innerText;
+            let uuid = td_l[2].children[0].children[0].value;
+            let old = td_l[2].children[0].innerText;
+            let date = td_l[3].children[0].innerText;
+            let html = `<td class="my-left">
+                                    <div class="my-label my-padding">`;
+            html += index;
+            html += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                    <div class="my-label my-padding">`;
+            html += name;
+            html += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                    <div class="my-label">
+                                    <input type="hidden" value="`;
+            html += uuid;
+            html += `">
+                                    <input type="text" class="layui-input my-input"
+                                     placeholder="请在此输入" style="height: 36px; width:330px" value="`;
+            html += old;
+            html += `">
+                                    </div>
+                                    </td>
+                                    <td class="my-left">
+                                    <div class="my-label my-padding">`;
+            html += date;
+            html += `</div>
+                                </td>
+                                <td class="my-left my-bottom">
+                                    <div class="my-label my-btn">
+                                    <button type="button" onclick="commitNoteBook(this)"
+                                    class="layui-btn layui-btn-xs"> 保存
+                                    </button>
+                                    </div>
+                                    </td>`;
+            this_.innerHTML = html;
+        };
+
+        window.refreshNotebook = function (uuid) {
+            noteAddRow = true;
+            if (!uuid) {
+                uuid = document.getElementById('customerUuid').value;
+            }
+            showData(uuid, function (noteBookHtml) {
+                let noteBookBody = document.getElementById('noteBookBody').parentElement;
+                noteBookBody.innerHTML = noteBookHtml;
+                document.getElementById('customerUuid').value = uuid;
+            });
+        };
 
         // 记事本
         window.openNoteBookDialog = function (uuid) {
             noteAddRow = true;
-            let noteBookHtml = `<div style="padding: 10px;">
+            showData(uuid, function (noteBookHtml) {
+                layer.open({
+                    type: 1,
+                    title: '记事本',
+                    content: noteBookHtml,
+                    shadeClose: true,
+                    resize: false,
+                    area: '700px',
+                    offset: '180px',
+                    success: function () {
+                        document.getElementById('customerUuid').value = uuid;
+                    }
+                });
+            });
+        };
+
+        function showData(uuid, call) {
+            let noteBookHtml = `<div style="padding: 10px;" id="noteBookBody">
                             <table border="0" width="100%">
                                 <tbody id="noteBookTbody">
                                 <tr class="my-bg">
                                     <td colspan="3" class="my-header-title">
-                                        <div id="phoneTitle"
+                                        <input type="hidden" id="customerUuid" value>
+                                        <div id="phoneTitle" style="max-width: none"
                                              class="my-label my-padding">
                                             记事本NoteBook
                                         </div>
@@ -1960,7 +2037,7 @@
                                     </td>
                                     <td class="my-header-btn">
                                         <div class="my-label">
-                                            <button onclick="" type="button" style="padding: 0 20px"
+                                            <button onclick="refreshNotebook()" type="button" style="padding: 0 20px"
                                                     class="layui-btn layui-btn-xs">
                                                 刷新
                                             </button>
@@ -2009,7 +2086,6 @@
                 },
                 data: JSON.stringify(d),
                 success: function (res) {
-                    console.log(res);
                     if (res.code === 200) {
                         if (res.data.length === 0) {
                             noteBookHtml += oneRowI;
@@ -2031,8 +2107,6 @@
                                     <div class="my-label my-padding">
                                     <input type="hidden" value="`;
                                 noteBookHtml += res.data[i].uuid;
-                                noteBookHtml += `"><input type="hidden" value="`;
-                                noteBookHtml += res.data[i].customerUuid;
                                 noteBookHtml += `">`;
                                 noteBookHtml += res.data[i].content;
                                 noteBookHtml += `</div>
@@ -2045,7 +2119,7 @@
                                 </td>
                                 <td class="my-left my-bottom">
                                     <div class="my-label my-btn">
-                                    <button type="button" onclick=""
+                                    <button type="button" onclick="updNoteBook(this)"
                                         class="layui-btn layui-btn-xs layui-btn-danger">
                                     修改
                                     </button>
@@ -2055,15 +2129,7 @@
                             }
                         }
                         noteBookHtml += noteBookHtmlFooter;
-                        layer.open({
-                            type: 1,
-                            title: '记事本',
-                            content: noteBookHtml,
-                            shadeClose: true,
-                            resize: false,
-                            area: '700px',
-                            offset: '180px'
-                        });
+                        call(noteBookHtml);
                     } else {
                         show_layer_msg(res.msg, 5);
                     }
@@ -2072,7 +2138,7 @@
                     show_layer_msg('未知错误，请稍后重试！！', 5);
                 }
             });
-        };
+        }
 
         window.showExcludeCustomerKeywordDialog = function (uuid, customerUuid, domain, pcGroup,
             phoneGroup) {

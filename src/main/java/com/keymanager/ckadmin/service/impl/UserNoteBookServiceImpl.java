@@ -20,4 +20,13 @@ public class UserNoteBookServiceImpl extends ServiceImpl<UserNoteBookDao, UserNo
         Integer searchAll) {
         return userNoteBookDao.findUserNoteBooks(customerUuid, terminalType, searchAll);
     }
+
+    @Override
+    public int saveUserNoteBook(UserNoteBook userNoteBook) {
+        if (null == userNoteBook.getUuid()) {
+            return userNoteBookDao.insert(userNoteBook);
+        } else {
+            return userNoteBookDao.updateById(userNoteBook);
+        }
+    }
 }
