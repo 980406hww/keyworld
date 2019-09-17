@@ -1,0 +1,2694 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>搜索</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css"
+          media="all">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/style/admin.css" media="all">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/style/template.css"
+          media="all">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/layui/add-or-upd.css">
+    <style>
+        *, :after, :before {
+            box-sizing: border-box
+        }
+
+        html {
+            background-color: white;
+        }
+
+        a {
+            background-color: transparent;
+            text-decoration: none
+        }
+
+        a:active, a:hover {
+            outline: 0
+        }
+
+        a:hover {
+            color: #0c7df5
+        }
+
+        input[type=checkbox] {
+            box-sizing: border-box;
+            padding: 0
+        }
+
+        label {
+            vertical-align: middle
+        }
+
+        .layui-table-cell {
+            height: auto;
+            overflow: visible;
+            text-overflow: inherit;
+            white-space: normal;
+            padding: 0 !important;
+        }
+
+        .layadmin-caller {
+            background: #fff;
+            padding: 0;
+        }
+
+        .layui-fluid {
+            position: relative;
+            margin: 0 0;
+            padding: 0 0;
+        }
+
+        .layui-table td {
+            padding: 0 !important;
+        }
+
+        .layui-tab-content {
+            padding: 0;
+        }
+
+        .layui-table-body .layui-table-col-special {
+            height: 195px;
+        }
+
+        .layui-table-col-special .header {
+            width: 100%;
+            height: 44px;
+            border-bottom: 1px solid #e6e6e6;
+        }
+
+        .layui-table-col-special .header span {
+            display: block;
+            float: left;
+            height: 44px;
+            line-height: 44px
+        }
+
+        .layui-table-col-special .header span input {
+            align-self: center;
+            margin: 15px 5px;
+        }
+
+        .layui-table-col-special .header span a {
+            font-size: 12px;
+            margin: 0 5px;
+        }
+
+        .layui-table-col-special .header span.contactPerson-name,
+        .layui-table-col-special .header span.tagNames,
+        .layui-table-col-special .header span.organization-name {
+            max-width: 110px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .layui-table-col-special .header span.contactPerson-name a,
+        .layui-table-col-special .header span.organization-name a {
+            font-weight: 700;
+            color: #000000;
+        }
+
+
+        .layui-table-col-special .header span.domain {
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .layui-table-col-special .header span.domain a {
+            color: #000000;
+        }
+
+        .layui-table-col-special .header span.to-aizhan {
+            width: 35px;
+            max-width: 35px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .layui-table-col-special .header span.to-aizhan a,
+        .layui-table-col-special .header span.to-5118 a {
+            color: #0c7df5;
+        }
+
+        .layui-table-col-special .header span.to-5118 {
+            width: 40px;
+            max-width: 40px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .layui-table-col-special .header span.fmtStandardDate,
+        .layui-table-col-special .header span.fmtCreateDate {
+            max-width: 170px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .layui-table-col-special .header span.fmtStandardDate a,
+        .layui-table-col-special .header span.fmtCreateDate a {
+            color: #000000;
+        }
+
+        .layui-table-col-special .header span.fmtStandardDate a:hover,
+        .layui-table-col-special .header span.fmtCreateDate a:hover {
+            color: #0c7df5;
+        }
+
+        .layui-table-col-special .header .handle a {
+            display: block;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .layui-table-col-special .header .handle {
+            float: right;
+            font-size: 14px;
+        }
+
+        .layui-table-col-special .header .handle a.blue {
+            color: #1a81ea;
+        }
+
+        .layui-table-col-special .header .handle a.blue:hover {
+            color: rgb(0, 150, 136);
+        }
+
+        .layui-table-col-special .body {
+            height: 150px
+        }
+
+        .layui-table-col-special .body .user-id .line1,
+        .layui-table-col-special .body .standard-info .line1 {
+            text-align: center;
+            height: 100px !important;
+            margin-top: 50px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #000;
+            font-size: 14px;
+        }
+
+        .layui-table-col-special .body .other-rank .line1,
+        .layui-table-col-special .body .other-rank_2 .line1 {
+            text-align: center;
+            height: 55px !important;
+            margin-top: 20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #000;
+        }
+
+        .layui-table-col-special .body .other-rank .line1:first-child,
+        .layui-table-col-special .body .other-rank_2 .line1:first-child {
+            border-bottom: 1px solid #e6e6e6;
+        }
+
+        .layui-table-col-special .body .rank-wrap {
+            width: 468px;
+            float: left;
+            height: 150px;
+            border-left: 1px solid #e6e6e6;
+        }
+
+        .layui-table-col-special .body .rank-wrap1 {
+            width: 400px;
+            float: left;
+            height: 150px;
+            border-left: 1px solid #e6e6e6;
+        }
+
+        .layui-table-col-special .body .rank-wrap2 {
+            width: 320px;
+            float: left;
+            height: 150px;
+            border-left: 1px solid #e6e6e6;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div,
+        .layui-table-col-special .body .rank-wrap1 > div,
+        .layui-table-col-special .body .rank-wrap2 > div {
+            float: left;
+            font-size: 12px;
+            height: 150px;
+            display: block;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div,
+        .layui-table-col-special .body .rank-wrap1 > div,
+        .layui-table-col-special .body .rank-wrap2 > div {
+            padding: 0 5px;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div:last-child,
+        .layui-table-col-special .body .rank-wrap1 > div:last-child {
+            border-left: 1px dashed #e6e6e6;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div .row4,
+        .layui-table-col-special .body .rank-wrap1 > div .row4 {
+            line-height: 2;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div span:first-child,
+        .layui-table-col-special .body .rank-wrap1 > div span:first-child {
+            font-size: 12px;
+            display: block;
+            float: left;
+            width: 42%;
+            text-align: left;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div span:last-child,
+        .layui-table-col-special .body .rank-wrap1 > div span:last-child {
+            font-size: 12px;
+            display: block;
+            float: left;
+            width: 58%;
+            text-align: left;
+        }
+
+        .layui-table-col-special .body .rank-wrap > div span:last-child,
+        .layui-table-col-special .body .rank-wrap1 > div span:last-child {
+            text-align: center;
+        }
+
+        .layui-table-col-special .body .user-id {
+            width: 84px;
+        }
+
+        .layui-table-col-special .body .standard-info {
+            width: 80px;
+        }
+
+        .layui-table-col-special .body .user-id,
+        .layui-table-col-special .body .standard-info {
+            float: left;
+            border-right: 1px solid #e6e6e6;
+            height: 150px;
+            display: block;
+        }
+
+        .layui-table-col-special .body .user-id a,
+        .layui-table-col-special .body .standard-info a {
+            clear: both;
+        }
+
+        .layui-table-col-special .body .user-id span,
+        .layui-table-col-special .body .standard-info span {
+            display: block;
+        }
+
+        .layui-table-col-special .body .user-id span.line1,
+        .layui-table-col-special .body .standard-info span.line1 {
+            font-size: 14px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #000;
+        }
+
+        .layui-table-col-special .body .user-id span.line1:hover {
+            color: #0c7df5;
+        }
+
+        .layui-table-col-special .body .standard-info a {
+            color: #000;
+        }
+
+        .layui-table-col-special .body .other-rank {
+            float: left;
+            width: 84px;
+        }
+
+        .layui-table-col-special .body .other-rank_2 {
+            float: left;
+            width: 152px;
+            border-left: 1px solid #e6e6e6;
+        }
+
+        .rank-wrap .col-4 {
+            float: left;
+            width: 29%;
+            text-align: left;
+        }
+
+        .rank-wrap .col-2 {
+            width: 71%;
+            text-align: left;
+        }
+
+        .rank-wrap .col-1 h1, .rank-wrap .col-2 h1 {
+            text-align: center;
+            padding-top: 65px;
+        }
+
+        .rank-wrap1 .col-5 {
+            float: left;
+            width: 33%;
+            text-align: left;
+        }
+
+        .rank-wrap1 .col-1 {
+            width: 67%;
+            text-align: left;
+        }
+
+        .rank-wrap1 .col-1 h1 {
+            text-align: center;
+            padding-top: 65px;
+        }
+
+        .rank-wrap2 .col-1 {
+            width: 100%;
+            text-align: left;
+        }
+
+        .layui-unselect {
+            height: 30px;
+        }
+
+        .layui-table-tool {
+            position: relative;
+            z-index: 890;
+            width: 100%;
+            min-height: 30px;
+            line-height: 30px;
+            padding: 10px 5px;
+            border-width: 0 0 1px
+        }
+
+        .layui-form-select input {
+            height: 30px;
+        }
+        
+        .my-label{
+            height: auto !important;
+        }
+
+        .layui-input-inline input{
+            height: 30px;
+        }
+
+        .layui-form-pane .layui-form-label {
+            width: 116px;
+            padding: 8px 15px;
+            height: 30px;
+            line-height: 13px;
+            border-width: 1px;
+            border-style: solid;
+            border-radius: 2px 0 0 2px;
+            text-align: center;
+            background-color: #FBFBFB;
+            overflow: hidden;
+            box-sizing: border-box
+        }
+
+        div.layui-row.body .col-1 h5,
+        div.layui-row.body .col-2 h5 {
+            margin-top: 65px;
+        }
+
+        #optimizationGroup span,
+        #operationCombine span {
+            display: inline-block;
+            width: 90%;
+            word-break: keep-all;
+            white-space: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .layui-table-tool-temp .layui-btn + .layui-btn {
+            margin-left: 0px
+        }
+
+        .layui-table-tool-temp .layui-btn-sm {
+            padding: 0 5px;
+        }
+
+
+    </style>
+    <script>
+        Date.prototype.format = function (fmt) {
+            let o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) {
+                fmt = fmt.replace(RegExp.$1,
+                    (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            }
+            for (let k in o) {
+                if (new RegExp("(" + k + ")").test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1,
+                        (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(
+                            ("" + o[k]).length)));
+                }
+            }
+            return fmt;
+        }
+    </script>
+</head>
+<body class="ok-body">
+<!--面包屑导航区域-->
+<div class="ok-body-breadcrumb">
+    <span class="layui-breadcrumb">
+        <a><cite>全站信息设置</cite></a>
+        <a><cite>全站信息列表</cite></a>
+    </span>
+    <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon layui-icon-refresh"></i>
+    </a>
+</div>
+<div class="layui-card ">
+    <div class="layui-card-body ">
+        <div class="layui-collapse" lay-filter="test">
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">条件筛选<i class="layui-icon layui-colla-icon"></i></h2>
+                <div class="layui-colla-content" id="searchContent">
+                    <form class="layui-form layui-form-pane" id="searchForm">
+
+                        <input hidden value='<#if Request.customerUuidTmp?exists>${Request.customerUuidTmp}</#if>'
+                               id="customerUuid" name="customerUuid">
+                        <input hidden name="searchEngine" id="searchEngine" value="百度"/>
+                        <input hidden name="terminalType" id="terminalType" value="PC"/>
+                        <input type="text" hidden name="userInfoID" id="userInfoID" value="">
+                        <input type="text" hidden name="organizationID" id="organizationID" value="">
+                        <div class="layui-form-item" lay-filter="loginNameFilter">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">域名</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="domain" id="domain" placeholder="请输入域名" autocomplete="off" onblur="checkDomain()" onmouseleave="checkDomain()" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">客户</label>
+                                <div class="layui-input-inline">
+                                    <select name="customerInfo" id="customerInfo" lay-filter="customerInfoFilter" lay-search>
+                                    </select>
+                                </div>
+                            </div>
+<!--                            TODO-->
+<!--                            <div class="layui-inline">用户</div>-->
+<!--                            <div class="layui-inline">-->
+<!--                                <div class="layui-input-inline">-->
+<!--                                    <select id="LAY-auth-tree-index" lay-filter="tree"></select>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">用户</label>
+                                <div class="layui-input-inline">
+                                    <input type="text"  id="tree" lay-filter="tree" class="layui-input" >
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">分类标签</label>
+                                <div class="layui-input-inline">
+                                    <select name="categoryTag" id="categoryTag" lay-filter="categoryTagFilter" lay-search>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">组名</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="group" id="group" placeholder="请输入组名" autocomplete="off"class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">续费状态</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="renewalStatus" id="renewalStatus">
+                                        <option value selected>全部</option>
+                                        <option value="1">续费</option>
+                                        <option value="0">未续费</option>
+                                        <option value="2">首次续费</option>
+                                        <option value="3">下架</option>
+                                        <option value="4">观测</option>
+                                        <option value="5">seo</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">自动采词</label>
+                                <div class="layui-input-inline">
+                                    <select name="autoCrawlKeywordFlag" id="autoCrawlKeywordFlag">
+                                        <option value selected>全部</option>
+                                        <option value="1">是</option>
+                                        <option value="0">否</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">达标种类</label>
+                                <div class="layui-input-inline">
+                                    <select name="standardSpecies" id="standardSpecies">
+                                        <option value selected>全部</option>
+                                        <option value="aiZhan">爱站</option>
+                                        <option value="5118">5118</option>
+                                        <option value="designationWord">指定词</option>
+                                        <option value="other">其它</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">达标优化类型</label>
+                                <div class="layui-input-inline">
+                                    <select name="optimizationType" id="optimizationType">
+                                        <option value selected>全部</option>
+                                        <option value="1">主优化</option>
+                                        <option value="2">次优化</option>
+                                        <option value="0">辅助优化</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">采集状态</label>
+                                <div class="layui-input-inline">
+                                    <select name="status" id="status">
+                                        <option value selected>全部</option>
+                                        <option value="1">激活</option>
+                                        <option value="0">暂停</option>
+                                        <option value="2">新增</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">更新状态</label>
+                                <div class="layui-input-inline">
+                                    <select name="updateStatus" id="updateStatus">
+                                        <option></option>
+                                        <option>Processing</option>
+                                        <option>Completed</option>
+                                        <option>DownloadTimesUsed</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">创建时间</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" id="createTimes" name="createTimes" readonly placeholder="请选择日期">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <button class="layui-btn" lay-submit="" lay-filter="search"
+                                            id="searchBtn">搜索
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--数据表格-->
+<table class="layui-hide" id="qzSettingTable" lay-filter="tableFilter"></table>
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
+<script>
+    var sign = false;
+    var noteAddRow = true;
+    // layui相关
+    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'treeSelect', 'laydate','authtree'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var okLayer = layui.okLayer;
+        var treeSelect = layui.treeSelect;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+        var authtree = layui.authtree;
+
+        laydate.render({
+            elem: '#createTimes',
+            range: true
+        });
+        let customerUuid = $("#customerUuid").val();
+        let whereCondition = {searchEngine:'百度',terminalType: 'PC'};
+        if(customerUuid !==""){
+            whereCondition.customerUuid = customerUuid;
+        }
+        get_qzsetting(whereCondition);
+
+        function getTerminalSearchEngineMap() {
+            /*动态加载tab栏*/
+            $.ajax({
+                url: '/internal/qzsetting/getQZSettingSearchEngineMap',
+                type: 'get',
+                asyns: false,
+                // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
+                dataType: 'json',
+                success: function (res) {
+                    let data = res.data;
+                    let terminalSearchEngine = $('#terminalSearchEngine');
+                    terminalSearchEngine.empty();
+                    $.each(data, function (index, item) {
+                        let ttse;
+                        if (item.terminalType === 'PC') {
+                            ttse = item.searchEngineName + item.terminalType;
+                        } else {
+                            ttse = item.searchEngineName;
+                        }
+                        terminalSearchEngine.append('<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
+                    });
+                    terminalSearchEngine.val( ($('#searchEngine').val() + $('#terminalType').val()) === '' ? '百度PC' : ($('#searchEngine').val() + $('#terminalType').val()));
+                    form.render("select");
+                }
+            });
+        }
+
+        //  TODO
+        // $.ajax({
+        //     url: '/internal/user/trees2',
+        //     dataType: 'json',
+        //     success: function(data){
+        //         console.log(data)
+        //         var trees = authtree.listConvert(data,{
+        //             primaryKey: 'id',
+        //             startPid: 0,
+        //             parentKey: 'parentTId',
+        //             childKey: data.children,
+        //             nameKey: 'name',
+        //             valueKey: 'id'
+        //         });
+        //         authtree.render('#LAY-auth-tree-index', trees, {
+        //             inputname: 'authids[]',
+        //             layfilter: 'tree',
+        //             autowidth: true,
+        //             openall: true,
+        //             autochecked: false,
+        //         });
+        //         authtree.showAll(data)
+        //     }
+        // });
+
+        treeSelect.render({
+            elem: '#tree',
+            data: '/internal/user/trees2',
+            type: 'get',
+            placeholder: '用户名称',
+            click: function(d){
+                $("#organizationID").val("");
+                $("#userInfoID").val("");
+                if (d.current.level === 0 && d.current.id !== 0) {
+                    $("#organizationID").val(d.current.id)
+                }else if (d.current.level === 1) {
+                    $("#userInfoID").val(d.current.id)
+                }
+            },
+            success: function (d) {
+            }
+        });
+
+        window.checkDomain = function() {
+            var domain = $("#domain").val().replace(/\s*/g,"");
+            if(domain != null && domain !== ''){
+                if(domain.indexOf(".") === -1){
+                    show_layer_msg("域名不符合规范", 5);
+                }
+            }
+        };
+
+        $.ajax({
+            url: '${ctx.path}/internal/qzsetting/getCategoryTag',
+            dataType: 'json',
+            type: 'get',
+            success: function (data) {
+                $("#categoryTag").empty();
+                $("#categoryTag").append('<option value="">请选择分类标签</option>');
+                $.each(data, function (index, item) {
+                    $('#categoryTag').append('<option value="' + item + '">' + item.trim() + '</option>');
+                });
+                form.render("select");
+            }
+        });
+
+        $.ajax({
+            url: '${ctx.path}/internal/qzsetting/getActiveCustomer',
+            dataType: 'json',
+            type: 'get',
+            success: function (data) {
+                $("#customerInfo").empty();
+                $("#customerInfo").append('<option value="">请选择客户</option>');
+                $.each(data, function (index, item) {
+                    $('#customerInfo').append('<option value="' + item.uuid + '">' + item.contactPerson.trim() + '</option>');
+                });
+                form.render("select");
+            }
+        });
+
+        form.on("submit(search)", function (data) {
+            data.field.domain.replace(/\s*/g,"");
+            data.field.customerInfo.replace(/\s*/g,"");
+            data.field.categoryTag.replace(/\s*/g,"");
+
+            if(data.field.createTimes != null || data.field.createTimes != ''){
+                var str = data.field.createTimes.split(" - ")
+                data.field.createTime = str[0]
+                data.field.createTimePrefix = str[1]
+            }
+
+            if(data.field.domain != null && data.field.domain !== ''){
+                if(data.field.domain.indexOf(".") === -1){
+                    show_layer_msg("域名不符合规范", 5);
+                    return false;
+                }
+            }
+
+            get_qzsettting(data.field);
+            return false;
+        });
+
+        <@shiro.hasPermission name="/internal/qzsetting/searchQZSettings">
+        function get_qzsetting(whereCondition) {
+            table.render({
+                elem: '#qzSettingTable',
+                method: 'post',
+                url: '/internal/qzsetting/getQZSettings',
+                limit: 25,
+                limits: [10, 25, 50, 75, 100, 500, 1000],
+                page: true,
+                size: 'sm',
+                id: 'qzSettingTable',
+                toolbar: "#toolbarTpl",
+                defaultToolbar: [],
+                contentType: 'application/json',
+                where: whereCondition,
+                cols: [[
+                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
+                    {filed: 'uuid', title: '记录', width: '1638', templet: '#item'}
+                ]],
+                height: 'full-100',
+                loading: true,
+                done: function (res, curr, count) {
+                    let terminalType = $('#terminalType').val();
+                    terminalType = terminalType === '' ? 'PC' : terminalType;
+                    getTerminalSearchEngineMap();
+                    get_operation_combine_list(terminalType);
+                    let qz_setting_table = $("#qzSettingTable").parent().find(".layui-table-main").find("table");
+                    $.each(res.data, function (idx, val) {
+                        let td = qz_setting_table.find("tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
+                            "td[data-field='1']");
+                        let optimizeGroupName = td.find(
+                            "input[name='" + terminalType + "Group']").val();
+                        let postData = {};
+                        postData.uuid = val.uuid;
+                        postData.terminalType = terminalType;
+                        postData.optimizeGroupName = optimizeGroupName;
+                        getQZKeywordRankInfo(postData, function (result) {
+                            td.find(".other-rank_2").find("#optimizationGroup span").prop("title", optimizeGroupName);
+                            td.find(".other-rank_2").find("#optimizationGroup span a").text(optimizeGroupName);
+                            if (result.data != null) {
+                                initQZKeywordRankInfo(result.data, td);
+                            }
+                        });
+                    });
+                }
+            });
+        }
+        </@shiro.hasPermission>
+
+        function initQZKeywordRankInfo(data, td) {
+            td.find("#fmtStandardDate a").text(
+                data["standardTime"] === null ? "无" : toDateFormat(
+                    new Date(data["standardTime"])));
+            let font = td.find(".standard-info").find("div.line1 a font");
+            font.text("￥ " + data["price"]);
+            if (data["price"] > 0) {
+                font.css("background-color", "mediumseagreen");
+            }
+
+            initQZSettingKeywordCount(td.find(".other-rank_2"),
+                data["customerKeywordCount"],
+                data["categoryTagNames"],
+                data["operationCombineName"]);
+
+            if (data['aiZhan'] !== undefined) {
+                generateQZKeywordTrendCharts(
+                    td.find("#keywordTrendCharts")[0],
+                    data['aiZhan']);
+            }
+
+            if (data['5118'] !== undefined) {
+                generateQZKeywordTrendCharts(
+                    td.find("#keywordTrendCharts")[0], data['5118']);
+            }
+
+            if (data['designationWord'] === undefined) {
+                td.find("div.rank-wrap1").css("display", "none");
+            } else {
+                // 指定词曲线
+                generateQZDesignationWordTrendCharts(
+                    td.find("#designationWordCharts")[0],
+                    data['designationWord']);
+            }
+
+            if (data['xt'] === undefined) {
+                td.find("div.rank-wrap2").css("display", "none");
+            } else {
+                // 排名-操作词数图表
+                generateQZXTKeywordTrendCharts(td.find("#xtCharts")[0],
+                    data['xt']);
+            }
+        }
+
+        function get_operation_combine_list(terminalType) {
+            /*动态加载操作组合列表*/
+            $.ajax({
+                url: '/internal/operationcombine/getOperationCombines/' + terminalType,
+                type: 'post',
+                asyns: true,
+                dataType: 'json',
+                success: function (res) {
+                    let operation_combine_select = $("#update_qz_operation_combine");
+                    operation_combine_select.append("<option value='null'>置空</option>");
+                    $.each(res.data, function(i ,v) {
+                        var option=$("<option value='"+v.uuid+"'>"+v.operationCombineName+"</option>");
+                        operation_combine_select.append(option);
+                    });
+                    form.render("select");
+                }
+            });
+        }
+
+        form.on('select(terminalSearchEngineFilter)', function (data) {
+            let val = data.value;
+            let searchEngine = val.substr(0, val.indexOf('P'));
+            let terminalType = val.substr(val.indexOf('P'), val.length);
+            $('#searchEngine').val(searchEngine);
+            $('#terminalType').val(terminalType);
+            active['reload'].call(this);
+        });
+
+        var active = {
+            reload: function () {
+                table.reload('qzSettingTable', {
+                    where: $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true))),
+                    page: {
+                        curr: 1 //从第一页开始
+                    }
+                });
+                $("#searchContent").removeClass("layui-show")
+            }
+        };
+
+        function formToJson(data) {
+            data = data.replace(/&/g, "\",\"");
+            data = data.replace(/=/g, "\":\"");
+            data = "{\"" + data + "\"}";
+            return data;
+        }
+
+        function getQZKeywordRankInfo(postData, callback) {
+            $.ajax({
+                url: '/internal/qzsetting/getQZKeywordRankInfo',
+                type: 'POST',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (result) {
+                    callback(result);
+                },
+                error: function () {
+                    show_layer_msg('获取全站曲线信息失败！！', 5);
+                }
+            });
+        }
+
+        function generateQZKeywordTrendCharts(domElement, data) {
+            if (domElement === undefined) {
+                return;
+            }
+            if (data.date == null) {
+                domElement.innerHTML = "<h5 style='text-align: center'> 暂无数据 </h5>";
+                return;
+            }
+            var keywordTrendCharts = echarts.init(domElement);
+            var option;
+            var parentElement = $(domElement).parent()[0];
+            $(parentElement).find("#Top10").text(data.topTen[data.topTen.length - 1]);
+            $(parentElement).find("#Top50").text(data.topFifty[data.topFifty.length - 1]);
+            $(parentElement).find("#TopCreate10").text(data.createTopTenNum);
+            $(parentElement).find("#TopCreate50").text(data.createTopFiftyNum);
+            if (data.dataProcessingStatus) {
+                $(parentElement).find("#IsStandard").text(data.achieveLevel === 0 ? "否" : "是");
+                $(parentElement).find("#StandardTime").text(
+                    data.achieveTime === null ? "无" : toDateFormat(new Date(data.achieveTime)));
+            } else {
+                $(parentElement).find("#IsStandard").parent().parent().css("display", "none");
+                $(parentElement).find("#StandardTime").parent().parent().css("display", "none");
+            }
+            if (data.websiteType === "aiZhan") {
+                option = {
+                    color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
+                    title: {
+                        text: '爱站 - 关键词排名趋势',
+                        textStyle: {
+                            color: '#999',
+                            fontFamily: "Arial",
+                            fontWeight: 400,
+                            fontSize: 12
+                        },
+                        x: 'center',
+                        bottom: -3
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        position: function(point, params, dom, rect, size){
+                            return [point[0]+20,'-15%'];
+                        }
+                    },
+                    grid: {
+                        left: '0%',
+                        right: '1%',
+                        top: '3%',
+                        bottom: '0%',
+                        containLabel: true
+                    },
+                    toolbox: {
+                        show: false,
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    xAxis: {
+                        show: false,
+                        type: 'category',
+                        axisLine: {
+                            show: false,
+                            lineStyle: {
+                                color: '#404A59'
+                            }
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        boundaryGap: true,
+                        data: data.date
+                    },
+                    yAxis: [
+                        {
+                            show: true,
+                            type: 'value',
+                            name: '关键字排名曲线',
+                            position: 'left',
+                            axisLine: {
+                                show: false,
+                                lineStyle: {
+                                    color: '#404A59'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#DCDCDC',
+                                    width: 1,
+                                    type: 'solid'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                fontStyle: 'italic',
+                                textStyle: {
+                                    color: '#000'
+                                }
+                            }
+                        },
+                        {
+                            show: true,
+                            type: 'value',
+                            name: '收录曲线',
+                            position: 'right',
+                            axisLine: {
+                                show: false,
+                                lineStyle: {
+                                    color: '#404A59'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#DCDCDC',
+                                    width: 1,
+                                    type: 'solid'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                fontStyle: 'italic',
+                                textStyle: {
+                                    color: '#000'
+                                }
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '收录',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 1,
+                            symbolSize: 3,
+                            symbol: 'none',
+                            data: data.baiduRecord,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1,
+                                normal: {
+                                    width: 3
+                                }
+                            }
+                        },
+                        {
+                            name: '前10名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topTen,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        },
+                        {
+                            name: '前20名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topTwenty,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        },
+                        {
+                            name: '前30名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topThirty,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        },
+                        {
+                            name: '前40名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topForty,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        },
+                        {
+                            name: '前50名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topFifty,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        }
+                    ]
+                };
+            } else if (data.websiteType === "5118") {
+                option = {
+                    color: ['#228B22', '#0000FF', '#FF6100', '#FF0000'],
+                    title: {
+                        text: data.websiteType + ' - 关键词排名趋势',
+                        textStyle: {
+                            color: '#999',
+                            fontFamily: "Arial",
+                            fontWeight: 400,
+                            fontSize: 12
+                        },
+                        x: 'center',
+                        bottom: -3
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        position: function(point, params, dom, rect, size){
+                            return [point[0]+20,'-15%'];
+                        }
+                    },
+                    grid: {
+                        left: '0%',
+                        right: '1%',
+                        top: '3%',
+                        bottom: '0%',
+                        containLabel: true
+                    },
+                    toolbox: {
+                        show: false,
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    xAxis: {
+                        show: false,
+                        type: 'category',
+                        axisLine: {
+                            show: false,
+                            lineStyle: {
+                                color: '#404A59'
+                            }
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        boundaryGap: true,
+                        data: data.date
+                    },
+                    yAxis: [
+                        {
+                            show: true,
+                            type: 'value',
+                            name: '关键字排名曲线',
+                            position: 'left',
+                            axisLine: {
+                                show: false,
+                                lineStyle: {
+                                    color: '#404A59'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#DCDCDC',
+                                    width: 1,
+                                    type: 'solid'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                fontStyle: 'italic',
+                                textStyle: {
+                                    color: '#000'
+                                }
+                            }
+                        },
+                        {
+                            show: true,
+                            type: 'value',
+                            name: '收录曲线',
+                            position: 'right',
+                            axisLine: {
+                                show: false,
+                                lineStyle: {
+                                    color: '#404A59'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#DCDCDC',
+                                    width: 1,
+                                    type: 'solid'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                fontStyle: 'italic',
+                                textStyle: {
+                                    color: '#000'
+                                }
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '收录',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 1,
+                            symbolSize: 3,
+                            symbol: 'none',
+                            data: data.baiduRecord,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1,
+                                normal: {
+                                    width: 3
+                                }
+                            }
+                        },
+                        {
+                            name: '前10名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topTen,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        },
+                        {
+                            name: '前20名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topTwenty,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        },
+                        {
+                            name: '前50名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topFifty,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        },
+                        {
+                            name: '前100名',
+                            smooth: true,
+                            type: 'line',
+                            yAxisIndex: 0,
+                            symbolSize: 1,
+                            symbol: 'none',
+                            data: data.topHundred,
+                            lineStyle: {
+                                type: "solid",
+                                width: 1
+                            }
+                        }
+                    ]
+                };
+            }
+            keywordTrendCharts.setOption(option);
+        }
+
+        function generateQZDesignationWordTrendCharts(domElement, data) {
+            if (domElement === undefined) {
+                return;
+            }
+            if (data.date == null) {
+                domElement.innerHTML = "<h5 style='text-align: center'> 暂无数据 </h5>";
+                return;
+            }
+            var designationWordTrendCharts = echarts.init(domElement);
+            var option;
+            var parentElement = $(domElement).parent()[0];
+            $(parentElement).find("#Top10").text(data.topTen[data.topTen.length - 1]);
+            $(parentElement).find("#Top50").text(data.topFifty[data.topFifty.length - 1]);
+            $(parentElement).find("#TopCreate10").text(data.createTopTenNum);
+            $(parentElement).find("#TopCreate50").text(data.createTopFiftyNum);
+            $(parentElement).find("#IsStandard").text(data.achieveLevel === 0 ? "否" : "是");
+            $(parentElement).find("#StandardTime").text(
+                data.achieveTime === null ? "无" : toDateFormat(new Date(data.achieveTime)));
+            option = {
+                color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
+                title: {
+                    text: '指定词排名趋势',
+                    textStyle: {
+                        color: '#999',
+                        fontFamily: "Arial",
+                        fontWeight: 400,
+                        fontSize: 12
+                    },
+                    x: 'center',
+                    bottom: -3
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    position: function(point, params, dom, rect, size){
+                        return [point[0]+20,'-15%'];
+                    }
+                },
+                grid: {
+                    left: '0%',
+                    right: '1%',
+                    top: '3%',
+                    bottom: '0%',
+                    containLabel: true
+                },
+                toolbox: {
+                    show: false,
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    show: false,
+                    type: 'category',
+                    axisLine: {
+                        show: false,
+                        lineStyle: {
+                            color: '#404A59'
+                        }
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    boundaryGap: true,
+                    data: data.date
+                },
+                yAxis: {
+                    show: true,
+                    type: 'value',
+                    axisLine: {
+                        show: false,
+                        lineStyle: {
+                            color: '#404A59'
+                        }
+                    },
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            color: '#DCDCDC',
+                            width: 1,
+                            type: 'solid'
+                        }
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        fontStyle: 'italic',
+                        textStyle: {
+                            color: '#000'
+                        }
+                    }
+                },
+                series: [
+                    {
+                        name: '前10名',
+                        smooth: true,
+                        type: 'line',
+                        symbolSize: 1,
+                        symbol: 'none',
+                        data: data.topTen,
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    },
+                    {
+                        name: '前20名',
+                        smooth: true,
+                        type: 'line',
+                        symbolSize: 1,
+                        symbol: 'none',
+                        data: data.topTwenty,
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    },
+                    {
+                        name: '前30名',
+                        smooth: true,
+                        type: 'line',
+                        symbolSize: 1,
+                        symbol: 'none',
+                        data: data.topThirty,
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    },
+                    {
+                        name: '前40名',
+                        smooth: true,
+                        type: 'line',
+                        symbolSize: 1,
+                        symbol: 'none',
+                        data: data.topForty,
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    },
+                    {
+                        name: '前50名',
+                        smooth: true,
+                        type: 'line',
+                        symbolSize: 1,
+                        symbol: 'none',
+                        data: data.topFifty,
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    }
+                ]
+            };
+            designationWordTrendCharts.setOption(option);
+        }
+
+        function generateQZXTKeywordTrendCharts(domElement, data) {
+            if (domElement === undefined) {
+                return;
+            }
+            if (data.date == null) {
+                domElement.innerHTML = "<h1 style='text-align: center'> 暂无数据 </h1>";
+                return;
+            }
+            var keywordRecordCharts = echarts.init(domElement);
+            var colors = ['#228B22', '#0000FF', '#FF6100', '#FF0000', '#d14a61', '#675bba'];
+            var option = {
+                color: colors,
+                title: {
+                    text: '排名 - 操作词数图表',
+                    textStyle: {
+                        color: '#999',
+                        fontFamily: "Arial",
+                        fontWeight: 400,
+                        fontSize: 12
+                    },
+                    x: 'center',
+                    bottom: -1
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    position: function(point, params, dom, rect, size){
+                        return [point[0]+20,'-15%'];
+                    }
+                },
+                grid: {
+                    left: '0%',
+                    right: '1%',
+                    top: '3%',
+                    bottom: '0%',
+                    containLabel: true
+                },
+                xAxis: [
+                    {
+                        show: false,
+                        type: 'category',
+                        axisLine: {
+                            show: false,
+                            lineStyle: {
+                                color: '#404A59'
+                            }
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        boundaryGap: true,
+                        data: data.date
+                    }
+                ],
+                yAxis: [
+                    {
+                        show: true,
+                        type: 'value',
+                        name: '站点操作词数',
+                        position: 'right',
+                        axisLine: {
+                            show: false,
+                            lineStyle: {
+                                color: '#404A59'
+                            }
+                        },
+                        splitLine: {
+                            show: true,
+                            lineStyle: {
+                                color: '#DCDCDC',
+                                width: 1,
+                                type: 'solid'
+                            }
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        axisLabel: {
+                            fontStyle: 'italic',
+                            textStyle: {
+                                color: '#000'
+                            }
+                        }
+                    },
+                    {
+                        show: true,
+                        type: 'value',
+                        name: 'Top排名词数',
+                        position: 'left',
+                        axisLine: {
+                            show: false,
+                            lineStyle: {
+                                color: '#404A59'
+                            }
+                        },
+                        splitLine: {
+                            show: true,
+                            lineStyle: {
+                                color: '#DCDCDC',
+                                width: 1,
+                                type: 'solid'
+                            }
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        axisLabel: {
+                            fontStyle: 'italic',
+                            textStyle: {
+                                color: '#000'
+                            }
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name: '操作词数',
+                        type: 'line',
+                        smooth: true,
+                        symbolSize: 3,
+                        symbol: 'none',
+                        lineStyle: {
+                            normal: {
+                                width: 3
+                            }
+                        },
+                        yAxisIndex: 0,
+                        data: data.baiduRecord
+                    },
+                    {
+                        name: '排名前10',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: data.topTen,
+                        smooth: true,
+                        symbolSize: 1,
+                        symbol: 'none',
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    },
+                    {
+                        name: '排名前20',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: data.topTwenty,
+                        smooth: true,
+                        symbolSize: 1,
+                        symbol: 'none',
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    },
+                    {
+                        name: '排名前30',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: data.topThirty,
+                        smooth: true,
+                        symbolSize: 1,
+                        symbol: 'none',
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    },
+                    {
+                        name: '排名前40',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: data.topForty,
+                        smooth: true,
+                        symbolSize: 1,
+                        symbol: 'none',
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    },
+                    {
+                        name: '排名前50',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: data.topFifty,
+                        smooth: true,
+                        symbolSize: 1,
+                        symbol: 'none',
+                        lineStyle: {
+                            type: "solid",
+                            width: 1
+                        }
+                    }
+                ]
+            };
+            keywordRecordCharts.setOption(option);
+        }
+
+        function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames, operationCombineName) {
+            div.parent().find(".other-rank .line1").find("#customerKeywordCount").text(customerKeywordCount);
+            if (categoryTagNames.length > 0) {
+                var tagNameStr = "";
+                var span = $(div).parent().parent().parent().find(".header span.tagNames");
+                $.each(categoryTagNames, function (idx, val) {
+                    tagNameStr += val + ",";
+                });
+                $(span).find("label.tagNameStr").html(
+                    tagNameStr.substring(0, tagNameStr.length - 1));
+                $(span).find("label.tagNameStr").attr('title',  tagNameStr.substring(0, tagNameStr.length - 1))
+
+            }
+
+            if (operationCombineName !== null) {
+                div.find("#operationCombine span").prop("title", operationCombineName);
+                div.find("#operationCombine span a").text(operationCombineName);
+            }
+        }
+
+        function toTimeFormat(time) {
+            var date = toDateFormat(time);
+            var hours = time.getHours() < 10 ? ("0" + time.getHours()) : time.getHours();
+            var minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
+            var seconds = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds();
+            return date + " " + hours + ":" + minutes + ":" + seconds;
+        }
+
+        function toDateFormat(time) {
+            return time.getFullYear() + "-" +
+                (time.getMonth() + 1) + "-" +
+                time.getDate();
+        }
+
+        table.on('checkbox(tableFilter)', function (obj) {
+
+        });
+
+        table.on('toolbar(tableFilter)', function (obj) {
+            var data = obj.data, event = obj.event;
+            switch (event) {
+                case 'addQz':
+                    addQZSetting();
+                    break;
+                case 'updFZTags':
+                    openUpdFZTags();
+                    break;
+                case 'batchDeleteQZSetting':
+                    batchDeleteQZSetting();
+                    break;
+                case 'batchUpdateQZSettingUpdateStatus':
+                    batchUpdateQZSettingUpdateStatus();
+                    break;
+                case 'batchUpdateRenewalStatusToSuspend':
+                    batchUpdateRenewalStatus(0);
+                    break;
+                case 'batchUpdateRenewalStatusToSoldOut':
+                    batchUpdateRenewalStatus(3);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+
+        let updFZTagsHtml = `                    <div style="width: 100%;margin-top: 10px;text-align: center">
+                <div class="layui-inline" style="width: 60px;line-height: 34px;text-align: center">新标签：</div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline" style="width: 300px">
+                        <input style="height: 34px" type="text" id="tagNames" placeholder="每个词用逗号隔开例如:阿卡索,MBA"
+                        autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>`;
+
+        function openUpdFZTags() {
+            let checkStatus = table.checkStatus('qzSettingTable').data;
+            if (checkStatus.length === 0) {
+                show_layer_msg('请选择需要修改站点！', 5);
+                return false;
+            }
+            layer.open({
+                type: 1,
+                title: '修改分组标签',
+                content: updFZTagsHtml,
+                shadeClose: true,
+                resize: false,
+                area: '420px',
+                btn: ['确认', '取消'],
+                yes: function (index) {
+                    let v = document.getElementById('tagNames').value;
+                    if (!/^[\u4e00-\u9fa50-9a-zA-Z,]+$/.test(v)) {
+                        show_layer_msg('请输入符合规则的标签数据！', 5);
+                        return false;
+                    }
+                    let d = {}, tags = [], ids = [], tagNames = v.split(',');
+                    for (let item in tagNames) {
+                        let a = {};
+                        a.tagName = tagNames[item];
+                        tags.push(a);
+                    }
+                    for (let i = 0; i < checkStatus.length; i++) {
+                        ids.push(checkStatus[i].uuid + "");
+                    }
+                    d.targetQZCategoryTags = tags;
+                    d.uuids = ids;
+                    layer.confirm('确认修改？', {
+                        icon: 3,
+                        title: '修改标签',
+                        btn: ['确认', '取消'] //可以无限个按钮
+                        , yes: function (index_) {
+                            $.ajax({
+                                url: '/internal/qzsetting/updQzCategoryTags',
+                                type: 'post',
+                                data: JSON.stringify(d),
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                success: function (res) {
+                                    if (res.code === 200) {
+                                        show_layer_msg('修改成功', 1);
+                                        active['reload'].call(this);
+                                        layer.close(index);
+                                        layer.close(index_);
+                                    } else {
+                                        layer.msg(res.msg);
+                                    }
+                                }
+                            });
+                        }, btn2: function (index) {
+                            layer.close(index);
+                        }
+                    });
+                }, btn2: function (index) {
+                    layer.close(index);
+                }, cancel: function () {
+                }
+            });
+        }
+
+        function addQZSetting() {
+            okLayer.open("其他 / 前往全站设置信息 / 添加", "/internal/qzsetting/toQZSettingAdd", "90%", "90%",
+                null, function () {
+                    if (sign) {
+                        active['reload'].call(this);
+                        sign = false;
+                    }
+                });
+        }
+
+        // 修改
+        window.showSettingDialog = function (uuid) {
+            okLayer.open("其他 / 前往全站设置信息 / 修改", "/internal/qzsetting/toQZSettingAdd", "90%",
+                "90%", function (layero) {
+                    window[layero.find("iframe")[0]["name"]].initForm(uuid);
+                }, function () {
+                    if (sign) {
+                        active['reload'].call(this);
+                        sign = false;
+                    }
+                })
+        };
+
+        // 收费
+        window.showChargeDialog = function (uuid, contactPearson, domain) {
+            okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toQZSettingCharge", "90%",
+                "90%", function (layero) {
+                    window[layero.find("iframe")[0]["name"]].initForm(
+                        {uuid: uuid, qzSettingCustomer: contactPearson, qzSettingDomain: domain});
+                }, function () {
+                    if (sign) {
+                        active['reload'].call(this);
+                        sign = false;
+                    }
+                })
+        };
+
+        function commitNoteBook(){
+
+        }
+
+        let oneRowI = `<tr>
+                            <td class="my-left" colspan="4">
+                                <div class="my-label">
+                                     <input type="text" class="layui-input my-input"
+                                     placeholder="请在此输入你想要记录的内容" style="height: 36px">
+                                </div>
+                            </td>
+                            <td class="my-left my-bottom">
+                                <div class="my-label my-btn">
+                                <button type="button" onclick="commitNoteBook()"
+                                    class="layui-btn layui-btn-xs">
+                                保存
+                                </button>
+                                </div>
+                             </td>
+                             </tr>`;
+
+        window.appendTable = function () {
+            if (noteAddRow) {
+                let noteBookTbody = document.getElementById('noteBookTbody');
+                noteBookTbody.innerHTML += oneRowI;
+                noteAddRow = false;
+            }
+        };
+
+        let oneRowU = `<tr>
+                        <td class="my-left">
+                            <div class="my-label my-padding">
+                            1
+                            </div>
+                            </td>
+                            <td class="my-left">
+                            <div class="my-label my-padding">
+                            sdfhjksadf
+                            </div>
+                            </td>
+                            <td class="my-left">
+                            <div class="my-label my-padding">
+                            撒地方很快就的身份卡萨丁撒地方很快就的身份卡萨丁撒地方很快就的身份卡萨丁
+                            </div>
+                            </td>
+                            <td class="my-left">
+                            <div class="my-label my-padding">
+                            2019-10-01 11:11:11
+                        </div>
+                        </td>
+                        <td class="my-left my-bottom">
+                            <div class="my-label my-btn">
+                            <button type="button" onclick=""
+                                class="layui-btn layui-btn-xs layui-btn-danger">
+                            修改
+                            </button>
+                            </div>
+                            </td>
+                            </tr>`;
+
+        // 记事本
+        window.openNoteBookDialog = function (uuid) {
+            noteAddRow = true;
+            let noteBookHtml = `<div style="padding: 10px;">
+                            <table border="0" width="100%">
+                                <tbody id="noteBookTbody">
+                                <tr class="my-bg">
+                                    <td colspan="3" class="my-header-title">
+                                        <div id="phoneTitle"
+                                             class="my-label my-padding">
+                                            记事本NoteBook
+                                        </div>
+                                    </td>
+                                    <td class="my-header-title">
+                                        <div class="my-label">
+                                            <button onclick="appendTable()" type="button"
+                                            style="padding: 0 36px" class="layui-btn layui-btn-xs">
+                                                增加
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="my-header-btn">
+                                        <div class="my-label">
+                                            <button onclick="" type="button" style="padding: 0 20px"
+                                                    class="layui-btn layui-btn-xs">
+                                                刷新
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="my-bg">
+                                    <td class="my-left" style="min-width: 70px">
+                                        <div class="my-label my-padding">
+                                            序号
+                                        </div>
+                                    </td>
+                                    <td class="my-left">
+                                        <div class="my-label my-padding">
+                                            记录者
+                                        </div>
+                                    </td>
+                                    <td class="my-left">
+                                        <div class="my-label my-padding">
+                                            内容
+                                        </div>
+                                    </td>
+                                    <td class="my-left" style="min-width: 120px">
+                                        <div class="my-label my-padding">
+                                            日期
+                                        </div>
+                                    </td>
+                                    <td class="my-left my-bottom">
+                                        <div
+                                            class="my-label my-padding">
+                                            操作
+                                        </div>
+                                    </td>
+                                </tr>`;
+            let noteBookHtmlFooter = `</tbody></table></div>`;
+            let d = {};
+            d.customerUuid = uuid;
+            d.searchAll = 0;
+            d.terminalType = document.getElementById('terminalType').value;
+            $.ajax({
+                url: '/internal/notebook/getUserNoteBooks',
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                data: JSON.stringify(d),
+                success: function (res) {
+                    console.log(res);
+                    if (res.code === 200) {
+                        if (res.data.length === 0) {
+                            noteBookHtml += oneRowI;
+                            noteAddRow = false;
+                        } else {
+                            for (let i = 0; i < res.data.length; i++) {
+                                noteBookHtml += `<tr>
+                                <td class="my-left">
+                                    <div class="my-label my-padding">`;
+                                noteBookHtml += i + 1;
+                                noteBookHtml += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                    <div class="my-label my-padding">`;
+                                noteBookHtml += res.data[i].notesPerson;
+                                noteBookHtml += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                    <div class="my-label my-padding">
+                                    <input type="hidden" value="`;
+                                noteBookHtml += res.data[i].uuid;
+                                noteBookHtml += `"><input type="hidden" value="`;
+                                noteBookHtml += res.data[i].customerUuid;
+                                noteBookHtml += `">`;
+                                noteBookHtml += res.data[i].content;
+                                noteBookHtml += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                    <div class="my-label my-padding">`;
+                                noteBookHtml += new Date(res.data[i].createTime).format(
+                                    'yyyy-MM-dd');
+                                noteBookHtml += `</div>
+                                </td>
+                                <td class="my-left my-bottom">
+                                    <div class="my-label my-btn">
+                                    <button type="button" onclick=""
+                                        class="layui-btn layui-btn-xs layui-btn-danger">
+                                    修改
+                                    </button>
+                                    </div>
+                                    </td>
+                                    </tr>`;
+                            }
+                        }
+                        noteBookHtml += noteBookHtmlFooter;
+                        layer.open({
+                            type: 1,
+                            title: '记事本',
+                            content: noteBookHtml,
+                            shadeClose: true,
+                            resize: false,
+                            area: '700px',
+                            offset: '180px'
+                        });
+                    } else {
+                        show_layer_msg(res.msg, 5);
+                    }
+                },
+                error: function () {
+                    show_layer_msg('未知错误，请稍后重试！！', 5);
+                }
+            });
+        };
+
+        window.showExcludeCustomerKeywordDialog = function (uuid, customerUuid, domain, pcGroup,
+            phoneGroup) {
+            let terminalType = $("#terminalSearchEngine").val();
+            terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
+            let optimizeGroupName = phoneGroup;
+            if (terminalType === 'PC') {
+                optimizeGroupName = pcGroup;
+            }
+            okLayer.open("其他 / 前往全站设置信息 / 排除关键字", "/internal/qzsetting/toExcludeCustomerKeyword",
+                "60%", "90%", function (layero) {
+                    window[layero.find("iframe")[0]["name"]].initForm({
+                        qzSettingUuid: uuid,
+                        customerUuid: customerUuid,
+                        domain: domain,
+                        terminalType: terminalType,
+                        optimizeGroupName: optimizeGroupName
+                    });
+                }, function () {
+
+                })
+        };
+
+        // 修改选中站点优化组关联的操作组合
+        form.on('select(operationCombineFilter)', function (data) {
+            let checkStatus = table.checkStatus('qzSettingTable');
+            if (checkStatus.data.length === 0) {
+                $("#update_qz_operation_combine").val('');
+                show_layer_msg('请选择要修改优化组关联的操作组合的站点！！', 5);
+                return false;
+            }
+            layer.confirm("确定要修改所选站点优化组关联的操作组合吗？", {icon: 3, title: '修改操作组合'}, function (index) {
+                let groupNameArr = [];
+                $.each(checkStatus.data, function (i, v) {
+                if (v.pcGroup !== null) {
+                        groupNameArr.push(v.pcGroup);
+                    } else {
+                        groupNameArr.push(v.phoneGroup);
+                    }
+                });
+
+                let postData = {};
+                postData.operationCombineUuid = (data.value === 'null' || data.value === '') ? null : data.value;
+                postData.groupNames = groupNameArr;
+                $.ajax({
+                    url: '/internal/group/updateGroupOperationCombineUuid',
+                    type: 'POST',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功！！', 6, true);
+                        } else {
+                            show_layer_msg('操作失败！！', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试！！', 5);
+                    }
+                });
+                layer.close(index);
+            });
+        });
+
+        function show_layer_msg(msg, icon, status, title) {
+            layer.msg(msg, {
+                icon: icon,
+                title: title === undefined ? null : title,
+                anim: 5,
+                time: 2000,
+                isOutAnim: false
+            }, function () {
+                if (status) {
+                    active['reload'].call(this);
+                }
+            });
+        }
+
+        window.showAddKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
+            let terminalType = $("#terminalSearchEngine").val();
+            terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
+            let optimizeGroupName = phoneGroup;
+            if (terminalType === 'PC') {
+                optimizeGroupName = pcGroup;
+            }
+            okLayer.open("其他 / 全站设置信息 / 添加关键字", "/internal/qzsetting/toAddCustomerKeyword",
+                "60%", "90%", function (layero) {
+                    window[layero.find("iframe")[0]["name"]].initForm({
+                        qzSettingUuid: uuid,
+                        customerUuid: customerUuid,
+                        domain: domain,
+                        bearPawNumber: bearPawNumber,
+                        searchEngine: searchEngine,
+                        type: type,
+                        terminalType: terminalType,
+                        optimizeGroupName: optimizeGroupName
+                    });
+                }, function () {
+
+                }
+            );
+        };
+
+        /**
+         * 删除单个站点
+         * @param uuid
+         */
+        window.delQZSetting = function (uuid) {
+            layer.confirm('真的删除该站点吗', function (index) {
+                $.ajax({
+                    url: '/internal/qzsetting/delete2/' + uuid,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
+                });
+                layer.close(index);
+            });
+        };
+
+        /**
+         * 删除多个站点
+         */
+        function batchDeleteQZSetting() {
+            //获取选中数据
+            var checkStatus = table.checkStatus('qzSettingTable')
+                , data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                show_layer_msg('请选择要操作的站点', 5);
+                return
+            }
+            layer.confirm("确定要删除所选站点吗", {icon: 3, title: '删除所选'}, function (index) {
+                var postData = {};
+                postData.uuids = uuidArr;
+                $.ajax({
+                    url: '/internal/qzsetting/deleteQZSettings2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
+                });
+                layer.close(index);
+            });
+        }
+
+        /**
+         * 马上更新 - 批量
+         */
+        function batchUpdateQZSettingUpdateStatus() {
+            //获取选中数据
+            let checkStatus = table.checkStatus('qzSettingTable')
+                , data = checkStatus.data;
+            if (checkStatus.data.length === 0) {
+                show_layer_msg('请选择要操作的站点', 5);
+                return;
+            }
+            layer.confirm("确定要修改所选站点吗", {icon: 3, title: '修改所选'}, function (index) {
+                let uuids = "";
+                $.each(data, function (index, item) {
+                    uuids += (index === 0 ? "" : ",") + item.uuid;
+                });
+                var postData = {};
+                postData.uuids = uuids;
+                $.ajax({
+                    url: '/internal/qzsetting/batchUpdateQZSettingUpdateStatus',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
+                });
+                layer.close(index);
+            });
+        }
+
+        /**
+         * 暂停续费 || 下架整站 - 批量
+         */
+        function batchUpdateRenewalStatus(renewalStatus) {
+            let checkStatus = table.checkStatus('qzSettingTable')
+                , data = checkStatus.data;
+            if (checkStatus.data.length === 0) {
+                show_layer_msg('请选择要操作的站点', 5);
+                return;
+            }
+            let msg = 0;
+            if(renewalStatus === 0) {
+                msg = "确认选中的整站要暂停续费吗?";
+            } else if (renewalStatus === 3) {
+                msg = "确认要下架所选整站吗?";
+            }
+            layer.confirm(msg, {icon: 3, title: '修改所选'}, function (index) {
+                let uuids = "";
+                $.each(data, function (index, item) {
+                    uuids += (index === 0 ? "" : ",") + item.uuid;
+                });
+                var postData = {};
+                postData.uuids = uuids;
+                postData.renewalStatus = renewalStatus;
+                $.ajax({
+                    url: '/internal/qzsetting/batchUpdateRenewalStatus',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
+                });
+                layer.close(index);
+            });
+        }
+    });
+</script>
+
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+
+    <div class="layui-input-inline" style="width: 120px; height: 30px">
+        <select name="terminalSearchEngine" id="terminalSearchEngine"
+                lay-filter="terminalSearchEngineFilter"></select>
+    </div>
+
+    <div class="layui-input-inline" style="width: 200px; height: 30px">
+        <select id="update_qz_operation_combine" lay-filter="operationCombineFilter" lay-search>
+            <option value="">修改所选站点操作组合</option>
+        </select>
+    </div>
+
+    <div class="layui-btn-group">
+    <@shiro.hasPermission name="/internal/qzsetting/save">
+    <button class="layui-btn layui-btn-sm" id="add_qz" lay-event="addQz">
+            <i class="layui-icon">&#xe61f;</i>添加
+    </button>
+
+    <button class="layui-btn layui-btn-sm" lay-event="updFZTags">
+        修改分组标签
+    </button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
+    	<button class="layui-btn layui-btn-sm layui-btn-danger" id="batchDeleteQZSetting" lay-event="batchDeleteQZSetting">
+            <i class="layui-icon layui-icon-delete"></i>删除所选
+        </button>
+    </@shiro.hasPermission>
+        <button class="layui-btn layui-btn-sm" id="batchUpdateQZSettingUpdateStatus" lay-event="batchUpdateQZSettingUpdateStatus">
+            <i class="layui-icon"></i>马上更新
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-warm" id="batchUpdateRenewalStatusToSuspend" lay-event="batchUpdateRenewalStatusToSuspend">
+            <i class="layui-icon"></i>暂停续费
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" id="batchUpdateRenewalStatusToSoldOut" lay-event="batchUpdateRenewalStatusToSoldOut">
+            <i class="layui-icon"></i>下架整站
+        </button>
+    </div>
+</script>
+
+<script type="text/html" id="item">
+    <div class="layui-row header">
+        <!--    头部信息栏    -->
+        <div class="layui-col-md7">
+            <input type="hidden" name="PCGroup" value="{{d.pcGroup}}">
+            <input type="hidden" name="PhoneGroup" value="{{d.phoneGroup}}">
+            <span class="contactPerson-name" title="{{d.contactPerson}}"><a href="javascript:;">{{d.contactPerson}}</a></span>
+            <span class="domain" title="{{d.domain}}"><a href="javascript:;">{{d.domain}}</a></span>
+            <span class="organization-name" title="{{d.organizationName}}"><a href="javascript:;">{{d.organizationName}}</a></span>
+            <span class="to-aizhan"><a href="https://www.aizhan.com/cha/{{d.domain}}" target="_blank"
+                     title="查看爱站">爱站</a></span>
+            <span class="to-5118"><a href="https://www.5118.com/seo/{{d.domain}}" target="_blank"
+                     title="查看5118">5118</a></span>
+            <span>
+                自动采词:
+                <a href="javascript:;">
+                    {{#  if(d.autoCrawlKeywordFlag) { }}
+                        是
+                    {{#  }else{ }}
+                        否
+                    {{# } }}
+                </a>
+            </span>
+            <span>
+                爬取状态:
+                <a href="javascript:;">
+                    {{#  if(d.crawlerStatus === 'new') { }}
+                        未爬取
+                    {{#  }else if(d.crawlerStatus === 'processing') { }}
+                        爬取中
+                    {{# }else{ }}
+                        爬取完成
+                    {{# } }}
+                </a>
+            </span>
+            <span>
+                采集状态:
+                <a href="javascript:;">
+                    {{#  if(d.status === 1) { }}
+                        激活
+                    {{#  }else if(d.status === 0) { }}
+                        新增
+                    {{# }else{ }}
+                        暂停
+                    {{# } }}
+                </a>
+            </span>
+            <span>
+                达标时间:
+                <a href="javascript:;">{{layui.util.toDateString(d.standardTime,'yyyy-MM-dd')}}</a>
+            </span>
+            <span>
+                创建时间:
+                <a href="javascript:;">{{layui.util.toDateString(d.createTime,'yyyy-MM-dd')}}</a>
+            </span>
+        </div>
+        <!--    分组标签    -->
+        <div class="layui-col-md1">
+            <span class="tagNames"
+                  ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label
+                    class="tagNameStr" title="">暂无</label></span>
+        </div>
+        <!--     操作栏   -->
+        <div class="layui-col-md4">
+            <div class="handle">
+                <span>
+                    <a class="blue"
+                      href="javascript:showExcludeCustomerKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">排除关键字</a>
+                </span>
+
+                <@shiro.hasPermission name="/internal/qzsetting/save">
+                <span>
+                    <a class="blue"
+                      href="javascript:showAddKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}','{{d.bearPawNumber}}','{{d.searchEngine}}', '{{d.type}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">添加词</a>
+                </span>
+                </@shiro.hasPermission>
+
+                <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
+                <span>
+                    <a class="blue"
+                      href="javascript:openMessageBox('全站设置','{{d.customerUuid}}','{{d.contactPerson}}')">用户留言</a>
+                </span>
+                <!--                </@shiro.hasPermission>-->
+
+                <span>
+                    <a class="blue"
+                      href="javascript:openNoteBookDialog('{{d.customerUuid}}')">记事本</a>
+                </span>
+
+                <!--                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
+                <span>
+                    <a class="blue"
+                      href="javascript:showChargeDialog('{{d.uuid}}','{{d.contactPerson}}','{{d.domain.trim()}}',this)">收费</a>
+                </span>
+                <!--                </@shiro.hasPermission>-->
+
+                <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
+                <span>
+                    <a class="blue" href="javascript:" onclick="showSettingDialog('{{d.uuid}}')">修改</a>
+                </span>
+                <!--                </@shiro.hasPermission>-->
+
+                <@shiro.hasPermission name="/internal/qzsetting/delete">
+                <span>
+                    <a class="blue" href="javascript:delQZSetting('{{d.uuid}}')">删除</a>
+                </span>
+                </@shiro.hasPermission>
+
+                <!--                <@shiro.hasPermission name="/internal/qzchargelog/chargesList">-->
+                <span>
+                    <a class="blue" href="javascript:showChargeLog('{{d.uuid}}',this)">收费记录</a>
+                </span>
+                <!--                </@shiro.hasPermission>-->
+            </div>
+        </div>
+    </div>
+    <div class="layui-row body">
+        <!--   身体左侧基本信息    -->
+        <div class="layui-col-md2 user-id">
+            <div class="layui-col-md12 line1">
+                <div class="layui-col-md12">
+                    <a href="javascript:;">
+                        <span title="{{d.userID}}">{{d.userID}}</span>
+                    </a>
+                </div>
+                <div class="layui-col-md12">
+                    <span>用户</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-md2 standard-info">
+            <div class="layui-col-md12 line1">
+                <div class="layui-col-md12">
+                    <span>
+                        <a href="javascript:;" qzsettinguuid="{{d.uuid}}">
+                        {{#  if(d.organizationName !== '优化部') { }}
+                            <font
+                                    style="background-color: palevioletred;font-size: 14px;">￥ 0</font>
+                        {{#  } }}
+                        </a>
+                    </span>
+                </div>
+                <div class="layui-col-md12">
+                    <span>达标信息</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-md3 other-rank">
+            <div class="layui-col-md12 line1">
+                <div class="layui-col-md12">
+                    <span>
+                          <a target="_blank" id="customerKeywordCount"
+                             href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.LAY_TABLE_INDEX }}');">0</a>
+                     </span>
+                </div>
+                <div class="layui-col-md12">
+                    <span>操作词数</span>
+                </div>
+            </div>
+            <div class="layui-col-md12 line1">
+                <div class="layui-col-md12">
+                    <span>
+                        <a href="javascript:;">
+                            {{#  if(d.renewalStatus === 1) { }}
+                                <span style="color: green;">续费</span>
+                            {{# }else if(d.renewalStatus === 0) { }}
+                                <span style="color: palevioletred;">暂停续费</span>
+                            {{# }else if(d.renewalStatus === 2) { }}
+                                <span style="color: mediumseagreen;">首次收费</span>
+                            {{# }else if(d.renewalStatus === 3) { }}
+                                <span style="color: red;">下架</span>
+                            {{# }else if(d.renewalStatus === 4) { }}
+                                <span style="color: mediumseagreen;">观测</span>
+                            {{# }else if(d.renewalStatus === 5) { }}
+                                <span style="color: mediumseagreen;">seo</span>
+                            {{# } }}
+                        </a>
+                    </span>
+                </div>
+                <div class="layui-col-md12">
+                    <span>续费状态</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-md4 other-rank_2">
+            <div class="layui-col-md12 line1">
+                <div class="layui-col-md12" id="optimizationGroup">
+                    <span><a href="javascript:;">暂无</a></span>
+                </div>
+                <div class="layui-col-md12">
+                    <span>优化分组</span>
+                </div>
+            </div>
+            <div class="layui-col-md12 line1">
+                <div class="layui-col-md12" id="operationCombine">
+                    <span><a href="javascript:;">暂无</a></span>
+                </div>
+                <div class="layui-col-md12 operationCombineSpan">
+                    <span>操作组合</span>
+                </div>
+            </div>
+        </div>
+        <!--   身体右侧曲线    -->
+        <!--排名曲线-->
+        <div class="layui-col-md2 rank-wrap2">
+            <div class="layui-col-md2 col-1" id="xtCharts"
+                 style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+        </div>
+        <!--5118/爱站曲线-->
+        {{# if(d.searchEngine === '百度') { }}
+        <div class="layui-col-md5 rank-wrap">
+            <div class="layui-col-md3 col-2" id="keywordTrendCharts"
+                 style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+            <div class="layui-col-md2 col-4 top50-link">
+                <div class="row4">
+                    <span>前10</span>
+                    <span class="top10">
+                            <a href="javascript:;" id="Top10">0</a>
+                        </span>
+                </div>
+                <div class="row4">
+                    <span>前50</span>
+                    <span class="top50">
+                            <a href="javascript:;" id="Top50">0</a>
+                        </span>
+                </div>
+                <div class="row4">
+                    <span>初始前10</span>
+                    <span class="top10">
+                            <a href="javascript:;" id="TopCreate10">0</a>
+                        </span>
+                </div>
+                <div class="row4">
+                    <span>初始前50</span>
+                    <span class="top50">
+                            <a href="javascript:;" id="TopCreate50">0</a>
+                        </span>
+                </div>
+                <div class="row4">
+                    <span>曲线达标</span>
+                    <span class="isStandard">
+                            <a href="javascript:;" id="IsStandard">否</a>
+                        </span>
+                </div>
+                <div class="row4">
+                    <span>达标时间</span>
+                    <span class="standardTime">
+                            <a href="javascript:;" id="StandardTime">无</a>
+                        </span>
+                </div>
+            </div>
+        </div>
+        {{# }}}
+        <!--指定词曲线-->
+        <div class="layui-col-md5 rank-wrap1">
+            <div class="layui-col-md3 col-1" id="designationWordCharts"
+                 style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
+            <div class="layui-col-md2 col-5 top50-link">
+                <div class="row4">
+                    <span>前10</span>
+                    <span class="top10">
+                        <a href="javascript:;" id="Top10">0</a>
+                    </span>
+                </div>
+                <div class="row4">
+                    <span>前50</span>
+                    <span class="top50">
+                        <a href="javascript:;" id="Top50">0</a>
+                    </span>
+                </div>
+                <div class="row4">
+                    <span>初始前10</span>
+                    <span class="top10">
+                        <a href="javascript:;" id="TopCreate10">0</a>
+                    </span>
+                </div>
+                <div class="row4">
+                    <span>初始前50</span>
+                    <span class="top50">
+                        <a href="javascript:;" id="TopCreate50">0</a>
+                    </span>
+                </div>
+                <div class="row4">
+                    <span>曲线达标</span>
+                    <span class="isStandard">
+                        <a href="javascript:;" id="IsStandard">否</a>
+                    </span>
+                </div>
+                <div class="row4">
+                    <span>达标时间</span>
+                    <span class="standardTime">
+                        <a href="javascript:;" id="StandardTime">无</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+</body>
+</html>
