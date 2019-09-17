@@ -720,6 +720,26 @@
             });
         }
 
+        // $.ajax({
+        //     url: '/internal/user/trees2',
+        //     dataType: 'json',
+        //     type: 'get',
+        //     success: function (data) {
+        //         console.log(data)
+        //         tree.render({
+        //             elem: '#tree',
+        //             data: data,
+        //             showCheckbox: true,
+        //             id: 'demoId1',
+        //             click: function(obj){
+        //                 var data = obj.data;
+        //                 // layer.msg('状态：'+ obj.state + '<br>节点数据：' + JSON.stringify(data));
+        //                 console.log(data)
+        //             }
+        //         });
+        //     }
+        // });
+
         treeSelect.render({
             elem: '#tree',
             data: '/internal/user/trees2',
@@ -2158,6 +2178,36 @@
             });
         }
 
+        table.on('tool(tableFilter)',function(obj){
+            var data = obj.data
+            var event = obj.event
+            switch (event) {
+                case 'showExcludeCustomerKeywordDialog':
+                    showExcludeCustomerKeywordDialog(data.uuid, data.customerUuid, data.domain.trim(), data.pcGroup, data.phoneGroup);
+                    break;
+                case 'showAddKeywordDialog':
+                    showAddKeywordDialog(data.uuid, data.customerUuid, data.domain.trim(), data.bearPawNumber, data.searchEngine, data.type, data.pcGroup, data.phoneGroup);
+                    break;
+                case 'showChargeLog':
+                    showChargeLog();
+                    break;
+                case 'showSettingDialog':
+                    showSettingDialog(data.uuid);
+                    break;
+                case 'delQZSetting':
+                    delQZSetting(data.uuid);
+                    break;
+                case 'showChargeDialog':
+                    showChargeDialog(data.uuid, data.contactPerson, data.domain.trim());
+                    break;
+            }
+
+        });
+
+        window.showChargeLog = function (){
+
+        };
+
         window.showExcludeCustomerKeywordDialog = function (uuid, customerUuid, domain, pcGroup,
             phoneGroup) {
             let terminalType = $("#terminalSearchEngine").val();
@@ -2473,33 +2523,36 @@
 
 <script type="text/html" id="item1">
     <div class="layui-row" style="">
-        <div class="layui-col-md3">
-            <div class="table-cell border-line">部门</div>
-            <div class="table-cell border-line">用户</div>
-            <div class="table-cell border-line">客户</div>
-            <div class="table-cell border-line">操作组合</div>
-            <div class="table-cell border-line">优化分组</div>
+        <div class="layui-col-md5">
+            <div class="table-cell border-line">部门: <strong>{{d.organizationName}}</strong></div>
+            <div class="table-cell border-line">用户: <strong>{{d.userID}}</strong></div>
+            <div class="table-cell border-line">客户: <strong>{{d.contactPerson}}</strong></div>
+            <div class="table-cell border-line">操作组合: <strong>暂无</strong></div>
+            <div class="table-cell border-line">优化分组: <strong>暂无</strong></div>
         </div>
-        <div class="layui-col-md3">
-            <div class="table-cell border-line">技术部</div>
-            <div class="table-cell border-line">fsa</div>
-            <div class="table-cell border-line">fas</div>
-            <div class="table-cell border-line">qedq_dsaaaaaaaaa</div>
-            <div class="table-cell border-line">fsa_ds</div>
-        </div>
-        <div class="layui-col-md3">
-            <div class="table-cell border-line">域名</div>
-            <div class="table-cell border-line">状态</div>
-            <div class="table-cell border-line">创建时间</div>
-            <div class="table-cell border-line">开始操作</div>
-            <div class="table-cell border-line">网站标签</div>
-        </div>
-        <div class="layui-col-md3">
-            <div class="table-cell border-line">sfa.com</div>
-            <div class="table-cell border-line">下架</div>
-            <div class="table-cell border-line">2019-5-6</div>
-            <div class="table-cell border-line">2019-5-6</div>
-            <div class="table-cell border-line">test</div>
+        <div class="layui-col-md7">
+            <div class="table-cell border-line">域名: <strong>{{d.domain}}</strong></div>
+            <div class="table-cell border-line">
+                状态:
+                <strong>
+                    {{#  if(d.renewalStatus === 1) { }}
+                    <span style="color: green;">续费</span>
+                    {{# }else if(d.renewalStatus === 0) { }}
+                    <span style="color: palevioletred;">暂停续费</span>
+                    {{# }else if(d.renewalStatus === 2) { }}
+                    <span style="color: mediumseagreen;">首次收费</span>
+                    {{# }else if(d.renewalStatus === 3) { }}
+                    <span style="color: red;">下架</span>
+                    {{# }else if(d.renewalStatus === 4) { }}
+                    <span style="color: mediumseagreen;">观测</span>
+                    {{# }else if(d.renewalStatus === 5) { }}
+                    <span style="color: mediumseagreen;">seo</span>
+                    {{# } }}
+                </strong>
+            </div>
+            <div class="table-cell border-line">创建时间: <strong>{{layui.util.toDateString(d.createTime,'yyyy-MM-dd')}}</strong></div>
+            <div class="table-cell border-line">操作词数: <strong>000</strong></div>
+            <div class="table-cell border-line">分组标签: <strong>sfbhsafbskabgksbsfafsaskjbsagjbsakj</strong></div>
         </div>
     </div>
 </script>
@@ -2528,15 +2581,31 @@
                 <div class="op-btn-cell">
                     <a href="">5118</a>&nbsp;|&nbsp;<a href="">爱站</a>
                 </div>
-                <div class="op-btn-cell"><button type="button" class="layui-btn layui-btn-xs"><i class="layui-icon">&#x1005;</i>排除关键字</button></div>
-                <div class="op-btn-cell"><button type="button" class="layui-btn layui-btn-xs"><i class="layui-icon">&#xe608;</i>添加关键字</button></div>
-                <div class="op-btn-cell"><button type="button" class="layui-btn layui-btn-xs"><i class="layui-icon">&#xe60a;</i>运营记录</button></div>
-                <div class="op-btn-cell"><button type="button" class="layui-btn layui-btn-xs"><i class="layui-icon">&#xe65e;</i>收费记录</button></div>
+                <div class="op-btn-cell">
+                    <button type="button" class="layui-btn layui-btn-xs" lay-event="showExcludeCustomerKeywordDialog">
+                        <i class="layui-icon">&#x1005;</i>排除关键字
+                    </button>
+                </div>
+                <div class="op-btn-cell">
+                    <button type="button" class="layui-btn layui-btn-xs" lay-event="showAddKeywordDialog">
+                        <i class="layui-icon">&#xe608;</i>添加关键字
+                    </button>
+                </div>
+                <div class="op-btn-cell">
+                    <button type="button" class="layui-btn layui-btn-xs" lay-event="showChargeLog">
+                        <i class="layui-icon">&#xe60a;</i>运营记录
+                    </button>
+                </div>
+                <div class="op-btn-cell">
+                    <button type="button" class="layui-btn layui-btn-xs" lay-event="showChargeLog">
+                        <i class="layui-icon">&#xe65e;</i>收费记录
+                    </button>
+                </div>
                 <div class="op-btn-cell">
                     <div class="layui-btn-group">
-                        <button type="button" class="layui-btn layui-btn-xs">修改</button>
-                        <button type="button" class="layui-btn layui-btn-xs">删除</button>
-                        <button type="button" class="layui-btn layui-btn-xs">收费</button>
+                        <button type="button" class="layui-btn layui-btn-xs" lay-event="showSettingDialog">修改</button>
+                        <button type="button" class="layui-btn layui-btn-xs" lay-event="delQZSetting">删除</button>
+                        <button type="button" class="layui-btn layui-btn-xs" lay-event="showChargeDialog">收费</button>
                     </div>
                 </div>
             </div>
