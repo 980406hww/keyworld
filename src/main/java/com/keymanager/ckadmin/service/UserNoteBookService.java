@@ -7,4 +7,6 @@ import java.util.List;
 public interface UserNoteBookService extends IService<UserNoteBook> {
 
     List<UserNoteBook> findUserNoteBooks(Long customerUuid, String terminalType, Integer searchAll);
+
+    int saveUserNoteBook(UserNoteBook userNoteBook);
 }

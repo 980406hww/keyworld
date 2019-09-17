@@ -6,6 +6,7 @@ import com.keymanager.ckadmin.service.GroupService;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,12 @@ public class GroupController extends SpringMVCBaseController {
     @Resource(name = "groupService2")
     private GroupService groupService;
 
+    /**
+     * 修改全站优化组关联的操作组合
+     * @param requestMap
+     * @return
+     */
+    @RequiresPermissions("/internal/group/updateGroupOperationCombineUuid")
     @PostMapping("/updateGroupOperationCombineUuid")
     public ResultBean updateGroupOperationCombineUuid(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
