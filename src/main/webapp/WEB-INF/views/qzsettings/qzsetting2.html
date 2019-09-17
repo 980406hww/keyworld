@@ -390,7 +390,7 @@
         .layui-form-select input {
             height: 30px;
         }
-        
+
         .my-label{
             height: auto !important;
         }
@@ -436,8 +436,48 @@
             padding: 0 5px;
         }
 
+        .layui-table-body .layui-table-col-special {
+            height: 200px;
+        }
 
+        .table-cell{
+            height: 40px;
+            font-size: 12px;
+            text-align: center;
+            line-height: 40px;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+        }
+
+        .border-line{
+            border-bottom: 1px solid rgba(52, 250, 197, 0.27);
+            border-right: 1px solid rgba(52, 250, 197, 0.27);
+        }
+
+        .graph-cell{
+            height: 160px;
+        }
+
+        .op-cell{
+            height: 200px;
+            font-size: 13px;
+            align-items: center;
+            line-height: 200px;
+            padding-top: 10px;
+            box-sizing: border-box;
+        }
+
+        .op-btn-cell{
+            width: 138px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            font-size: 13px;
+            margin-top: 7px;
+        }
     </style>
+
     <script>
         Date.prototype.format = function (fmt) {
             let o = {
@@ -502,18 +542,11 @@
                                     </select>
                                 </div>
                             </div>
-<!--                            TODO-->
-<!--                            <div class="layui-inline">用户</div>-->
-<!--                            <div class="layui-inline">-->
-<!--                                <div class="layui-input-inline">-->
-<!--                                    <select id="LAY-auth-tree-index" lay-filter="tree"></select>-->
-<!--                                </div>-->
-<!--                            </div>-->
 
                             <div class="layui-inline">
                                 <label class="layui-form-label">用户</label>
                                 <div class="layui-input-inline">
-                                    <input type="text"  id="tree" lay-filter="tree" class="layui-input" >
+                                    <input type="text" id="tree" lay-filter="tree" class="layui-input" >
                                 </div>
                             </div>
 
@@ -640,13 +673,14 @@
     var sign = false;
     var noteAddRow = true;
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'treeSelect', 'laydate','authtree'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'treeSelect', 'laydate','authtree','tree'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
         var okLayer = layui.okLayer;
         var treeSelect = layui.treeSelect;
+        var tree = layui.tree;
         var layer = layui.layer;
         var laydate = layui.laydate;
         var authtree = layui.authtree;
@@ -749,9 +783,9 @@
         });
 
         form.on("submit(search)", function (data) {
-            data.field.domain.replace(/\s*/g,"");
-            data.field.customerInfo.replace(/\s*/g,"");
-            data.field.categoryTag.replace(/\s*/g,"");
+            data.field.domain = data.field.domain.replace(/\s*/g,"");
+            data.field.customerInfo = data.field.customerInfo.replace(/\s*/g,"");
+            data.field.categoryTag = data.field.categoryTag.replace(/\s*/g,"");
 
             if(data.field.createTimes != null || data.field.createTimes !== ''){
                 var str = data.field.createTimes.split(" - ");
@@ -787,7 +821,10 @@
                 where: whereCondition,
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
-                    {filed: 'uuid', title: '记录', width: '1638', templet: '#item'}
+                    // {filed: 'uuid', title: '记录', width: '1638', templet: '#item', align: 'center'},
+                    {filed: 'info', title: '基本信息', width: '400', fixed: "left", templet: '#item1', align: 'center'},
+                    {filed: 'graph', title: '曲线图表', width: '1200', templet: '#item2', align: 'center'},
+                    {filed: 'op', title: '操作', width: '138', fixed: "right", templet: '#item3', align: 'center'}
                 ]],
                 height: 'full-100',
                 loading: true,
@@ -2363,6 +2400,79 @@
         <button class="layui-btn layui-btn-sm layui-btn-danger" id="batchUpdateRenewalStatusToSoldOut" lay-event="batchUpdateRenewalStatusToSoldOut">
             <i class="layui-icon"></i>下架整站
         </button>
+    </div>
+</script>
+
+<script type="text/html" id="item1">
+    <div class="layui-row" style="">
+        <div class="layui-col-md3">
+            <div class="table-cell border-line">部门</div>
+            <div class="table-cell border-line">用户</div>
+            <div class="table-cell border-line">客户</div>
+            <div class="table-cell border-line">操作组合</div>
+            <div class="table-cell border-line">优化分组</div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="table-cell border-line">技术部</div>
+            <div class="table-cell border-line">fsa</div>
+            <div class="table-cell border-line">fas</div>
+            <div class="table-cell border-line">qedq_dsaaaaaaaaa</div>
+            <div class="table-cell border-line">fsa_ds</div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="table-cell border-line">域名</div>
+            <div class="table-cell border-line">状态</div>
+            <div class="table-cell border-line">创建时间</div>
+            <div class="table-cell border-line">开始操作</div>
+            <div class="table-cell border-line">网站标签</div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="table-cell border-line">sfa.com</div>
+            <div class="table-cell border-line">下架</div>
+            <div class="table-cell border-line">2019-5-6</div>
+            <div class="table-cell border-line">2019-5-6</div>
+            <div class="table-cell border-line">test</div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="item2">
+    <div class="layui-row">
+        <div class="layui-col-md4">
+            <div class="graph-cell border-line"></div>
+            <div class="table-cell border-line">排名-操作词数图表</div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="graph-cell border-line"></div>
+            <div class="table-cell border-line">爱站-关键词排名收录趋势</div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="graph-cell border-line"></div>
+            <div class="table-cell border-line">指定词排名趋势</div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="item3">
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <div class="op-cell">
+                <div class="op-btn-cell">
+                    <a href="">5118</a>&nbsp;|&nbsp;<a href="">爱站</a>
+                </div>
+                <div class="op-btn-cell"><button type="button" class="layui-btn layui-btn-xs"><i class="layui-icon">&#x1005;</i>排除关键字</button></div>
+                <div class="op-btn-cell"><button type="button" class="layui-btn layui-btn-xs"><i class="layui-icon">&#xe608;</i>添加关键字</button></div>
+                <div class="op-btn-cell"><button type="button" class="layui-btn layui-btn-xs"><i class="layui-icon">&#xe60a;</i>运营记录</button></div>
+                <div class="op-btn-cell"><button type="button" class="layui-btn layui-btn-xs"><i class="layui-icon">&#xe65e;</i>收费记录</button></div>
+                <div class="op-btn-cell">
+                    <div class="layui-btn-group">
+                        <button type="button" class="layui-btn layui-btn-xs">修改</button>
+                        <button type="button" class="layui-btn layui-btn-xs">删除</button>
+                        <button type="button" class="layui-btn layui-btn-xs">收费</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </script>
 

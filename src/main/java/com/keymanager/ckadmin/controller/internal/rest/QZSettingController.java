@@ -79,7 +79,7 @@ public class QZSettingController extends SpringMVCBaseController {
     @GetMapping(value = "/toQZSetttings")
     public ModelAndView toQZSetttings() {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("qzsettings/qzsetting");
+        mv.setViewName("qzsettings/qzsetting2");
         return mv;
     }
 
