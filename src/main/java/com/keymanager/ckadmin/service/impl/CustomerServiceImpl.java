@@ -170,7 +170,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     }
 
     @Override
-    public Customer getCustomer(int customerUuid) {
+    public Customer getCustomer(Long customerUuid) {
         return customerDao.selectById(customerUuid);
     }
 }

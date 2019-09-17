@@ -390,9 +390,10 @@
         .layui-form-select input {
             height: 30px;
         }
-        
+
         .my-label{
             height: auto !important;
+            max-width: 330px;
         }
 
         .layui-input-inline input{
@@ -483,8 +484,6 @@
                 <div class="layui-colla-content" id="searchContent">
                     <form class="layui-form layui-form-pane" id="searchForm">
 
-                        <input hidden value='<#if Request.customerUuidTmp?exists>${Request.customerUuidTmp}</#if>'
-                               id="customerUuid" name="customerUuid">
                         <input hidden name="searchEngine" id="searchEngine" value="百度"/>
                         <input hidden name="terminalType" id="terminalType" value="PC"/>
                         <input type="text" hidden name="userInfoID" id="userInfoID" value="">
@@ -1769,8 +1768,100 @@
             }
         });
 
+        let chargeRecordHtml = `<div style="padding: 10px;" id="noteBookBody">
+                            <table border="0" width="100%">
+                                <tbody>
+                                <tr class="my-bg">
+                                    <td class="my-header-title" style="min-width: 120px">
+                                        <div class="my-label my-padding">
+                                            收费时间
+                                        </div>
+                                    </td>
+                                    <td class="my-header-title" style="min-width: 80px">
+                                        <div class="my-label my-padding">
+                                            终端类型
+                                        </div>
+                                    </td>
+                                    <td class="my-header-title" style="min-width: 80px">
+                                        <div class="my-label my-padding">
+                                            收费金额
+                                        </div>
+                                    </td>
+                                    <td class="my-header-title" style="min-width: 80px">
+                                        <div class="my-label my-padding">
+                                            收费人员
+                                        </div>
+                                    </td>
+                                    <td class="my-header-btn"  style="min-width: 240px">
+                                        <div
+                                            class="my-label my-padding">
+                                            创建时间
+                                        </div>
+                                    </td>
+                                </tr>`;
 
-        let updFZTagsHtml = `                    <div style="width: 100%;margin-top: 10px;text-align: center">
+        window.showChargeLog = function (uuid) {
+            $.ajax({
+                url: '/internal/qzchargelog/qzChargesLogsList/' + uuid,
+                type: 'GET',
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        let arr = res.data;
+                        let html = chargeRecordHtml;
+                        let date = new Date();
+                        for (let i = 0; i < arr.length; i++) {
+                            html += `<tr>
+                                    <td class="my-left">
+                                        <div class="my-label my-padding">`;
+                            html += new Date(arr[i].actualChargeDate).format('yyyy-MM-dd');
+                            html += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                        <div class="my-label my-padding">`;
+                            html += arr[i].operationType;
+                            html += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                        <div class="my-label my-padding">`;
+                            html += arr[i].actualAmount;
+                            html += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                        <div class="my-label my-padding">`;
+                            html += arr[i].userName;
+                            html += `</div>
+                                    </td>
+                                    <td class="my-left my-bottom">
+                                        <div
+                                            class="my-label my-padding">`;
+                            html += new Date(arr[i].createTime).format('yyyy-MM-dd hh:mm:ss');
+                            html += `</div>
+                                    </td>
+                                </tr>`;
+                        }
+                        html += noteBookHtmlFooter;
+                        layer.open({
+                            type: 1,
+                            title: '收费记录',
+                            content: html,
+                            shadeClose: true,
+                            resize: false,
+                            area: '700px',
+                        });
+                    } else if (res.code === 300) {
+                        show_layer_msg('暂无收费记录数据', 5);
+                    } else {
+                        show_layer_msg(res.msg, 5);
+                    }
+                },
+                error: function () {
+                    show_layer_msg('未知错误，请稍后再试', 5);
+                }
+            });
+        };
+
+        let updFZTagsHtml = `<div style="width: 100%;margin-top: 10px;text-align: center">
                 <div class="layui-inline" style="width: 60px;line-height: 34px;text-align: center">新标签：</div>
                 <div class="layui-inline">
                     <div class="layui-input-inline" style="width: 300px">
@@ -1863,18 +1954,23 @@
                     window[layero.find("iframe")[0]["name"]].initForm(uuid);
                 }, function () {
                     if (sign) {
-                        active['reload'].call(this);
+                        // active['reload'].call(this);
                         sign = false;
                     }
                 })
         };
 
         // 收费
-        window.showChargeDialog = function (uuid, contactPearson, domain) {
+        window.showChargeDialog = function (uuid, contactPearson, domain, renewalStatus) {
             okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toQZSettingCharge", "90%",
                 "90%", function (layero) {
                     window[layero.find("iframe")[0]["name"]].initForm(
-                        {uuid: uuid, qzSettingCustomer: contactPearson, qzSettingDomain: domain});
+                        {
+                            uuid: uuid,
+                            qzSettingCustomer: contactPearson,
+                            qzSettingDomain: domain,
+                            renewalStatus: renewalStatus
+                        });
                 }, function () {
                     if (sign) {
                         active['reload'].call(this);
@@ -1883,20 +1979,53 @@
                 })
         };
 
-        function commitNoteBook(){
-
-        }
+        window.commitNoteBook = function(e) {
+            let this_ = e.parentElement.parentElement;
+            let td_l = this_.parentElement.children;
+            let d = {};
+            if (td_l.length > 2) {
+                this_ = this_.previousElementSibling.previousElementSibling.children[0].children;
+                console.log(this_);
+                d.uuid = this_[0].value;
+                d.content = this_[1].value;
+            } else {
+                d.content = this_.previousElementSibling.children[0].children[0].value;
+            }
+            d.customerUuid = document.getElementById('customerUuid').value;
+            d.terminalType = document.getElementById('terminalType').value;
+            console.log(d);
+            $.ajax({
+                url: '/internal/notebook/saveUserNoteBook',
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                data: JSON.stringify(d),
+                success: function (res) {
+                    if (res.code === 200) {
+                        refreshNotebook(d.customerUuid);
+                    } else {
+                        show_layer_msg(res.msg, 5);
+                    }
+                },
+                error: function () {
+                    show_layer_msg('未知错误，请稍后重试！！', 5);
+                }
+            });
+        };
 
         let oneRowI = `<tr>
                             <td class="my-left" colspan="4">
-                                <div class="my-label">
+                                <div class="my-label" style="max-width: none">
                                      <input type="text" class="layui-input my-input"
-                                     placeholder="请在此输入你想要记录的内容" style="height: 36px">
+                                     placeholder="请在此输入你想要记录的内容"
+                                     style="height: 36px;padding-right: 10px">
                                 </div>
                             </td>
                             <td class="my-left my-bottom">
                                 <div class="my-label my-btn">
-                                <button type="button" onclick="commitNoteBook()"
+                                <button type="button" onclick="commitNoteBook(this)"
                                     class="layui-btn layui-btn-xs">
                                 保存
                                 </button>
@@ -1912,46 +2041,91 @@
             }
         };
 
-        let oneRowU = `<tr>
-                        <td class="my-left">
-                            <div class="my-label my-padding">
-                            1
-                            </div>
-                            </td>
-                            <td class="my-left">
-                            <div class="my-label my-padding">
-                            sdfhjksadf
-                            </div>
-                            </td>
-                            <td class="my-left">
-                            <div class="my-label my-padding">
-                            撒地方很快就的身份卡萨丁撒地方很快就的身份卡萨丁撒地方很快就的身份卡萨丁
-                            </div>
-                            </td>
-                            <td class="my-left">
-                            <div class="my-label my-padding">
-                            2019-10-01 11:11:11
-                        </div>
-                        </td>
-                        <td class="my-left my-bottom">
-                            <div class="my-label my-btn">
-                            <button type="button" onclick=""
-                                class="layui-btn layui-btn-xs layui-btn-danger">
-                            修改
-                            </button>
-                            </div>
-                            </td>
-                            </tr>`;
+        window.updNoteBook = function (e) {
+            let this_ = e.parentElement.parentElement.parentElement;
+            let td_l = this_.children;
+            let index = td_l[0].children[0].innerText;
+            let name = td_l[1].children[0].innerText;
+            let uuid = td_l[2].children[0].children[0].value;
+            let old = td_l[2].children[0].innerText;
+            let date = td_l[3].children[0].innerText;
+            let html = `<td class="my-left">
+                                    <div class="my-label my-padding">`;
+            html += index;
+            html += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                    <div class="my-label my-padding">`;
+            html += name;
+            html += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                    <div class="my-label">
+                                    <input type="hidden" value="`;
+            html += uuid;
+            html += `">
+                                    <input type="text" class="layui-input my-input"
+                                     placeholder="请在此输入" style="height: 36px; width:330px" value="`;
+            html += old;
+            html += `">
+                                    </div>
+                                    </td>
+                                    <td class="my-left">
+                                    <div class="my-label my-padding">`;
+            html += date;
+            html += `</div>
+                                </td>
+                                <td class="my-left my-bottom">
+                                    <div class="my-label my-btn">
+                                    <button type="button" onclick="commitNoteBook(this)"
+                                    class="layui-btn layui-btn-xs"> 保存
+                                    </button>
+                                    </div>
+                                    </td>`;
+            this_.innerHTML = html;
+        };
+
+        window.refreshNotebook = function (uuid) {
+            noteAddRow = true;
+            if (!uuid) {
+                uuid = document.getElementById('customerUuid').value;
+            }
+            showData(uuid, function (noteBookHtml) {
+                let noteBookBody = document.getElementById('noteBookBody').parentElement;
+                noteBookBody.innerHTML = noteBookHtml;
+                document.getElementById('customerUuid').value = uuid;
+            });
+        };
 
         // 记事本
         window.openNoteBookDialog = function (uuid) {
             noteAddRow = true;
-            let noteBookHtml = `<div style="padding: 10px;">
+            showData(uuid, function (noteBookHtml) {
+                layer.open({
+                    type: 1,
+                    title: '记事本',
+                    content: noteBookHtml,
+                    shadeClose: true,
+                    resize: false,
+                    area: '700px',
+                    offset: '180px',
+                    success: function () {
+                        document.getElementById('customerUuid').value = uuid;
+                    }
+                });
+            });
+        };
+
+        let noteBookHtmlFooter = `</tbody></table></div>`;
+
+        function showData(uuid, call) {
+            let noteBookHtml = `<div style="padding: 10px;" id="noteBookBody">
                             <table border="0" width="100%">
                                 <tbody id="noteBookTbody">
                                 <tr class="my-bg">
                                     <td colspan="3" class="my-header-title">
-                                        <div id="phoneTitle"
+                                        <input type="hidden" id="customerUuid" value>
+                                        <div id="phoneTitle" style="max-width: none"
                                              class="my-label my-padding">
                                             记事本NoteBook
                                         </div>
@@ -1966,7 +2140,7 @@
                                     </td>
                                     <td class="my-header-btn">
                                         <div class="my-label">
-                                            <button onclick="" type="button" style="padding: 0 20px"
+                                            <button onclick="refreshNotebook()" type="button" style="padding: 0 20px"
                                                     class="layui-btn layui-btn-xs">
                                                 刷新
                                             </button>
@@ -2001,7 +2175,6 @@
                                         </div>
                                     </td>
                                 </tr>`;
-            let noteBookHtmlFooter = `</tbody></table></div>`;
             let d = {};
             d.customerUuid = uuid;
             d.searchAll = 0;
@@ -2015,7 +2188,6 @@
                 },
                 data: JSON.stringify(d),
                 success: function (res) {
-                    console.log(res);
                     if (res.code === 200) {
                         if (res.data.length === 0) {
                             noteBookHtml += oneRowI;
@@ -2037,8 +2209,6 @@
                                     <div class="my-label my-padding">
                                     <input type="hidden" value="`;
                                 noteBookHtml += res.data[i].uuid;
-                                noteBookHtml += `"><input type="hidden" value="`;
-                                noteBookHtml += res.data[i].customerUuid;
                                 noteBookHtml += `">`;
                                 noteBookHtml += res.data[i].content;
                                 noteBookHtml += `</div>
@@ -2051,7 +2221,7 @@
                                 </td>
                                 <td class="my-left my-bottom">
                                     <div class="my-label my-btn">
-                                    <button type="button" onclick=""
+                                    <button type="button" onclick="updNoteBook(this)"
                                         class="layui-btn layui-btn-xs layui-btn-danger">
                                     修改
                                     </button>
@@ -2061,15 +2231,7 @@
                             }
                         }
                         noteBookHtml += noteBookHtmlFooter;
-                        layer.open({
-                            type: 1,
-                            title: '记事本',
-                            content: noteBookHtml,
-                            shadeClose: true,
-                            resize: false,
-                            area: '700px',
-                            offset: '180px'
-                        });
+                        call(noteBookHtml);
                     } else {
                         show_layer_msg(res.msg, 5);
                     }
@@ -2078,7 +2240,7 @@
                     show_layer_msg('未知错误，请稍后重试！！', 5);
                 }
             });
-        };
+        }
 
         window.showExcludeCustomerKeywordDialog = function (uuid, customerUuid, domain, pcGroup,
             phoneGroup) {
@@ -2364,17 +2526,17 @@
 
     <div class="layui-btn-group">
     <@shiro.hasPermission name="/internal/qzsetting/save">
-    <button class="layui-btn layui-btn-sm" id="add_qz" lay-event="addQz">
+    <button class="layui-btn layui-btn-sm" id="addQz" lay-event="addQz">
             <i class="layui-icon">&#xe61f;</i>添加
     </button>
 
     <button class="layui-btn layui-btn-sm" lay-event="updFZTags">
-        修改分组标签
+        <i class="layui-icon"></i>修改标签
     </button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
     	<button class="layui-btn layui-btn-sm layui-btn-danger" id="batchDeleteQZSetting" lay-event="batchDeleteQZSetting">
-            <i class="layui-icon layui-icon-delete"></i>删除所选
+            <i class="layui-icon"></i>删除所选
         </button>
     </@shiro.hasPermission>
         <button class="layui-btn layui-btn-sm" id="batchUpdateQZSettingUpdateStatus" lay-event="batchUpdateQZSettingUpdateStatus">
@@ -2445,10 +2607,10 @@
                 <a href="javascript:;">{{layui.util.toDateString(d.createTime,'yyyy-MM-dd')}}</a>
             </span>
         </div>
-        <!--    分组标签    -->
+        <!--    标签    -->
         <div class="layui-col-md1">
             <span class="tagNames"
-                  ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label
+                  ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>标签:</label>&nbsp;&nbsp;<label
                     class="tagNameStr" title="">暂无</label></span>
         </div>
         <!--     操作栏   -->
@@ -2465,7 +2627,6 @@
                       href="javascript:showAddKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}','{{d.bearPawNumber}}','{{d.searchEngine}}', '{{d.type}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">添加词</a>
                 </span>
                 </@shiro.hasPermission>
-
                 <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
                 <span>
                     <a class="blue"
@@ -2477,31 +2638,28 @@
                     <a class="blue"
                       href="javascript:openNoteBookDialog('{{d.customerUuid}}')">记事本</a>
                 </span>
-
-                <!--                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
+                </@shiro.hasPermission>
+                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
                 <span>
                     <a class="blue"
-                      href="javascript:showChargeDialog('{{d.uuid}}','{{d.contactPerson}}','{{d.domain.trim()}}',this)">收费</a>
+                      href="javascript:showChargeDialog('{{d.uuid}}','{{d.contactPerson}}','{{d.domain.trim()}}','{{d.renewalStatus}}')">收费</a>
                 </span>
-                <!--                </@shiro.hasPermission>-->
-
-                <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
+                </@shiro.hasPermission>-->
+                <@shiro.hasPermission name="/internal/qzsetting/save">
                 <span>
                     <a class="blue" href="javascript:" onclick="showSettingDialog('{{d.uuid}}')">修改</a>
                 </span>
-                <!--                </@shiro.hasPermission>-->
-
+                </@shiro.hasPermission>
                 <@shiro.hasPermission name="/internal/qzsetting/delete">
                 <span>
                     <a class="blue" href="javascript:delQZSetting('{{d.uuid}}')">删除</a>
                 </span>
                 </@shiro.hasPermission>
-
-                <!--                <@shiro.hasPermission name="/internal/qzchargelog/chargesList">-->
+                <@shiro.hasPermission name="/internal/qzchargelog/chargesList">
                 <span>
-                    <a class="blue" href="javascript:showChargeLog('{{d.uuid}}',this)">收费记录</a>
+                    <a class="blue" href="javascript:showChargeLog('{{d.uuid}}')">收费记录</a>
                 </span>
-                <!--                </@shiro.hasPermission>-->
+                 </@shiro.hasPermission>
             </div>
         </div>
     </div>

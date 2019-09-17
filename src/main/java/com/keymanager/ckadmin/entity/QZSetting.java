@@ -8,9 +8,9 @@ import java.util.List;
 
 @TableName(value = "t_qz_setting")
 public class QZSetting extends BaseEntity {
-    
+
     @TableField(value = "fCustomerUuid")
-    private int customerUuid;
+    private Long customerUuid;
 
     @TableField(exist = false)
     private String organizationName;
@@ -40,28 +40,28 @@ public class QZSetting extends BaseEntity {
     private String type;
 
     @TableField(value = "fAutoCrawlKeywordFlag")
-    private boolean autoCrawlKeywordFlag;
+    private Boolean autoCrawlKeywordFlag;
 
     @TableField(value = "fPcKeywordExceedMaxCount")
-    private boolean pcKeywordExceedMaxCount;
+    private Boolean pcKeywordExceedMaxCount;
 
     @TableField(value = "fPhoneKeywordExceedMaxCount")
-    private boolean phoneKeywordExceedMaxCount;
+    private Boolean phoneKeywordExceedMaxCount;
 
     @TableField(value = "fIgnoreNoIndex")
-    private boolean ignoreNoIndex;
+    private Boolean ignoreNoIndex;
 
     @TableField(value = "fIgnoreNoOrder")
-    private boolean ignoreNoOrder;
+    private Boolean ignoreNoOrder;
 
     @TableField(value = "fUpdateInterval")
-    private int updateInterval;
+    private Integer updateInterval;
 
     @TableField(value = "fUpdateStatus", strategy = FieldStrategy.IGNORED)
     private String updateStatus;
 
     @TableField(exist = false)
-    private boolean fIsMonitor;
+    private Boolean fIsMonitor;
     @TableField(value = "fUpdateStartTime")
     private Date updateStartTime;
 
@@ -75,7 +75,7 @@ public class QZSetting extends BaseEntity {
     private String captureCurrentKeywordStatus;
 
     @TableField(value = "fStatus")
-    private int status;
+    private Integer status;
     /**
      * 续费状态 1：续费  0：暂停续费
      */
@@ -92,6 +92,9 @@ public class QZSetting extends BaseEntity {
 
     @TableField(value = "fCrawlerStatus")
     private String crawlerStatus;
+
+    @TableField(value = "fCaptureTerminalType")
+    private String captureTerminalType;
     /**
      * QZCategoryTag为全站表子类 一对多
      */
@@ -103,19 +106,11 @@ public class QZSetting extends BaseEntity {
     @TableField(exist = false)
     private List<String> standardSpecies;
 
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
-
-    public int getCustomerUuid() {
+    public Long getCustomerUuid() {
         return customerUuid;
     }
 
-    public void setCustomerUuid(int customerUuid) {
+    public void setCustomerUuid(Long customerUuid) {
         this.customerUuid = customerUuid;
     }
 
@@ -125,6 +120,22 @@ public class QZSetting extends BaseEntity {
 
     public void setOrganizationName(String organizationName) {
         this.organizationName = organizationName;
+    }
+
+    public String getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     public String getDomain() {
@@ -167,11 +178,59 @@ public class QZSetting extends BaseEntity {
         this.phoneGroup = phoneGroup;
     }
 
-    public int getUpdateInterval() {
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Boolean getAutoCrawlKeywordFlag() {
+        return autoCrawlKeywordFlag;
+    }
+
+    public void setAutoCrawlKeywordFlag(Boolean autoCrawlKeywordFlag) {
+        this.autoCrawlKeywordFlag = autoCrawlKeywordFlag;
+    }
+
+    public Boolean getPcKeywordExceedMaxCount() {
+        return pcKeywordExceedMaxCount;
+    }
+
+    public void setPcKeywordExceedMaxCount(Boolean pcKeywordExceedMaxCount) {
+        this.pcKeywordExceedMaxCount = pcKeywordExceedMaxCount;
+    }
+
+    public Boolean getPhoneKeywordExceedMaxCount() {
+        return phoneKeywordExceedMaxCount;
+    }
+
+    public void setPhoneKeywordExceedMaxCount(Boolean phoneKeywordExceedMaxCount) {
+        this.phoneKeywordExceedMaxCount = phoneKeywordExceedMaxCount;
+    }
+
+    public Boolean getIgnoreNoIndex() {
+        return ignoreNoIndex;
+    }
+
+    public void setIgnoreNoIndex(Boolean ignoreNoIndex) {
+        this.ignoreNoIndex = ignoreNoIndex;
+    }
+
+    public Boolean getIgnoreNoOrder() {
+        return ignoreNoOrder;
+    }
+
+    public void setIgnoreNoOrder(Boolean ignoreNoOrder) {
+        this.ignoreNoOrder = ignoreNoOrder;
+    }
+
+    public Integer getUpdateInterval() {
         return updateInterval;
     }
 
-    public void setUpdateInterval(int updateInterval) {
+    public void setUpdateInterval(Integer updateInterval) {
         this.updateInterval = updateInterval;
     }
 
@@ -181,6 +240,14 @@ public class QZSetting extends BaseEntity {
 
     public void setUpdateStatus(String updateStatus) {
         this.updateStatus = updateStatus;
+    }
+
+    public Boolean getfIsMonitor() {
+        return fIsMonitor;
+    }
+
+    public void setfIsMonitor(Boolean fIsMonitor) {
+        this.fIsMonitor = fIsMonitor;
     }
 
     public Date getUpdateStartTime() {
@@ -199,46 +266,6 @@ public class QZSetting extends BaseEntity {
         this.updateEndTime = updateEndTime;
     }
 
-    public String getContactPerson() {
-        return contactPerson;
-    }
-
-    public void setContactPerson(String contactPerson) {
-        this.contactPerson = contactPerson;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public boolean isIgnoreNoIndex() {
-        return ignoreNoIndex;
-    }
-
-    public void setIgnoreNoIndex(boolean ignoreNoIndex) {
-        this.ignoreNoIndex = ignoreNoIndex;
-    }
-
-    public boolean isIgnoreNoOrder() {
-        return ignoreNoOrder;
-    }
-
-    public void setIgnoreNoOrder(boolean ignoreNoOrder) {
-        this.ignoreNoOrder = ignoreNoOrder;
-    }
-
-    public List<QZOperationType> getQzOperationTypes() {
-        return qzOperationTypes;
-    }
-
-    public void setQzOperationTypes(List<QZOperationType> qzOperationTypes) {
-        this.qzOperationTypes = qzOperationTypes;
-    }
-
     public Date getCaptureCurrentKeywordCountTime() {
         return captureCurrentKeywordCountTime;
     }
@@ -255,36 +282,29 @@ public class QZSetting extends BaseEntity {
         this.captureCurrentKeywordStatus = captureCurrentKeywordStatus;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public boolean isAutoCrawlKeywordFlag() {
-        return autoCrawlKeywordFlag;
+    public int getRenewalStatus() {
+        return renewalStatus;
     }
 
-    public void setAutoCrawlKeywordFlag(boolean autoCrawlKeywordFlag) {
-        this.autoCrawlKeywordFlag = autoCrawlKeywordFlag;
+    public void setRenewalStatus(int renewalStatus) {
+        this.renewalStatus = renewalStatus;
     }
 
-    public boolean isPcKeywordExceedMaxCount() {
-        return pcKeywordExceedMaxCount;
+    public List<QZOperationType> getQzOperationTypes() {
+        return qzOperationTypes;
     }
 
-    public void setPcKeywordExceedMaxCount(boolean pcKeywordExceedMaxCount) {
-        this.pcKeywordExceedMaxCount = pcKeywordExceedMaxCount;
-    }
-
-    public boolean isPhoneKeywordExceedMaxCount() {
-        return phoneKeywordExceedMaxCount;
-    }
-
-    public void setPhoneKeywordExceedMaxCount(boolean phoneKeywordExceedMaxCount) {
-        this.phoneKeywordExceedMaxCount = phoneKeywordExceedMaxCount;
+    public void setQzOperationTypes(
+        List<QZOperationType> qzOperationTypes) {
+        this.qzOperationTypes = qzOperationTypes;
     }
 
     public Date getCrawlerTime() {
@@ -311,19 +331,19 @@ public class QZSetting extends BaseEntity {
         this.qzCategoryTags = qzCategoryTags;
     }
 
+    public String getCaptureTerminalType() {
+        return captureTerminalType;
+    }
+
+    public void setCaptureTerminalType(String captureTerminalType) {
+        this.captureTerminalType = captureTerminalType;
+    }
+
     public List<String> getStandardSpecies() {
         return standardSpecies;
     }
 
     public void setStandardSpecies(List<String> standardSpecies) {
         this.standardSpecies = standardSpecies;
-    }
-
-    public int getRenewalStatus() {
-        return renewalStatus;
-    }
-
-    public void setRenewalStatus(int renewalStatus) {
-        this.renewalStatus = renewalStatus;
     }
 }

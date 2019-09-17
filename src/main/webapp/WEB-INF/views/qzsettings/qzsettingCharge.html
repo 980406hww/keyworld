@@ -52,6 +52,17 @@
                            class="layui-input" disabled>
                 </div>
             </div>
+            <div class="layui-form-item" pane>
+                <label class="layui-form-label">站点状态</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="siteStatus" value="1"
+                           title="续费中" lay-filter="siteStatus" checked>
+                    <input type="radio" name="siteStatus" value="0"
+                           title="暂停续费" lay-filter="siteStatus">
+                    <input type="radio" name="siteStatus" value="3"
+                           title="下架" lay-filter="siteStatus">
+                </div>
+            </div>
             <!--      <fieldset class="layui-elem-field layui-field-title">-->
             <!--        <legend>收费规则</legend>-->
             <!--      </fieldset>-->
@@ -60,7 +71,7 @@
                     <div class="layui-form-item" pane>
                         <label class="layui-form-label">电脑</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" checked name="computer" lay-skin="switch"
+                            <input type="checkbox" name="computer" lay-skin="switch"
                                    lay-filter="computer"
                                    lay-text="Select|Deselect" id="computer">
                         </div>
@@ -130,7 +141,7 @@
                     <div class="layui-form-item" pane>
                         <label class="layui-form-label">手机</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" checked name="phone" lay-skin="switch"
+                            <input type="checkbox" name="phone" lay-skin="switch"
                                    lay-filter="phone"
                                    lay-text="Select|Deselect" id="phone">
                         </div>
@@ -193,13 +204,13 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">合计</label>
-                <div class="layui-input-block">
-                    <input type="text" autocomplete="off" class="layui-input" disabled
-                           id="total" lay-verify="required">
-                </div>
-            </div>
+            <!--            <div class="layui-form-item">-->
+            <!--                <label class="layui-form-label">合计</label>-->
+            <!--                <div class="layui-input-block">-->
+            <!--                    <input type="text" autocomplete="off" class="layui-input" disabled-->
+            <!--                           id="total" lay-verify="required">-->
+            <!--                </div>-->
+            <!--            </div>-->
         </div>
         <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
             <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
@@ -217,9 +228,13 @@
 <script>
     let data_ = null;
     let layui_ = null;
+    let sign_c = false;
+    let sign_p = false;
 
     function initForm(data) {
         data_ = data;
+        selectPhone(true);
+        selectComputer(true);
         if (layui_ != null) {
             setForm(layui_, data_);
         }
@@ -292,30 +307,46 @@
             dataType: 'json',
             success: function (res) {
                 if (res.code === 200) {
-                    if (res.data.operationType === 'PC') {
-                        d.pcCurrentKeywordCount = res.data.currentKeywordCount == null ? ''
-                            : res.data.currentKeywordCount;
-                        d.pcInitialKeywordCount = res.data.initialKeywordCount == null ? ''
-                            : res.data.initialKeywordCount;
-                        d.phone = 0;
-                        d.pcPlanChargeDate = res.data.planChargeDate;
-                        d.pcQzOperationTypeUuid = res.data.qzOperationTypeUuid;
-                        d.pcReceivableAmount = res.data.receivableAmount == null ? ''
-                            : res.data.receivableAmount;
-                        selectComputer(true);
-                    } else {
-                        d.phoneCurrentKeywordCount = res.data.currentKeywordCount == null ? ''
-                            : res.data.currentKeywordCount;
-                        d.phoneInitialKeywordCount = res.data.initialKeywordCount == null ? ''
-                            : res.data.initialKeywordCount;
-                        d.computer = 0;
-                        d.phonePlanChargeDate = res.data.planChargeDate;
-                        d.phoneQzOperationTypeUuid = res.data.qzOperationTypeUuid;
-                        d.phoneReceivableAmount = res.data.receivableAmount == null ? ''
-                            : res.data.receivableAmount;
-                        selectPhone(true);
+                    d.siteStatus = d.renewalStatus;
+                    let arr = res.data;
+                    for (let i = 0; i < arr.length; i++) {
+                        if (arr[i].operationType === 'PC') {
+                            d.pcCurrentKeywordCount = arr[i].currentKeywordCount == null ? ''
+                                : arr[i].currentKeywordCount;
+                            d.pcInitialKeywordCount = arr[i].initialKeywordCount == null ? ''
+                                : arr[i].initialKeywordCount;
+                            d.computer = 1;
+                            d.pcPlanChargeDate = arr[i].planChargeDate;
+                            d.pcQzOperationTypeUuid = arr[i].qzOperationTypeUuid;
+                            d.pcReceivableAmount = arr[i].receivableAmount == null ? ''
+                                : arr[i].receivableAmount;
+                            deselectPhone(true);
+                            sign_c = true;
+                        } else if (arr[i].operationType === 'Phone') {
+                            d.phoneCurrentKeywordCount = arr[i].currentKeywordCount == null ? ''
+                                : arr[i].currentKeywordCount;
+                            d.phoneInitialKeywordCount = arr[i].initialKeywordCount == null ? ''
+                                : arr[i].initialKeywordCount;
+                            d.phone = 1;
+                            d.phonePlanChargeDate = arr[i].planChargeDate;
+                            d.phoneQzOperationTypeUuid = arr[i].qzOperationTypeUuid;
+                            d.phoneReceivableAmount = arr[i].receivableAmount == null ? ''
+                                : arr[i].receivableAmount;
+                            deselectComputer(true);
+                            sign_p = true;
+                        }
                     }
                     l.form.val("qzSettingSf", JSON.parse(JSON.stringify(d)));
+                    switch (d.siteStatus) {
+                        case '0':
+                            selectPhone(true);
+                            selectComputer(true);
+                            break;
+                        case '3':
+                            selectPhone(true);
+                            selectComputer(true);
+                            break;
+                    }
                 } else {
                     l.layer.msg(res.msg);
                 }
@@ -323,22 +354,23 @@
         });
     }
 
-    let pc_i = document.getElementById('pc-i');
-    let phone_i = document.getElementById('phone-i');
-    let total = document.getElementById('total');
+    // TODO 需要删除的注释
+    // let pc_i = document.getElementById('pc-i');
+    // let phone_i = document.getElementById('phone-i');
+    // let total = document.getElementById('total');
 
-    pc_i.onchange = setTotal;
-    phone_i.onchange = setTotal;
+    // pc_i.onchange = setTotal;
+    // phone_i.onchange = setTotal;
 
-    function setTotal() {
-        let pc_v = pc_i.value.trim();
-        let phone_v = phone_i.value.trim();
-        if (/(^$)|(^\d+$)/.test(pc_v) || /(^$)|(^\d+$)/.test(phone_v)) {
-            total.value = Number(pc_v) + Number(phone_v);
-        } else {
-            total.value = '';
-        }
-    }
+    // function setTotal() {
+    //     let pc_v = pc_i.value.trim();
+    //     let phone_v = phone_i.value.trim();
+    //     if (/(^$)|(^\d+$)/.test(pc_v) || /(^$)|(^\d+$)/.test(phone_v)) {
+    //         total.value = Number(pc_v) + Number(phone_v);
+    //     } else {
+    //         total.value = '';
+    //     }
+    // }
 
     layui.use(["form", "okLayer", "jquery", "layer", 'laydate'], function () {
         let form = layui.form;
@@ -353,6 +385,27 @@
             layui_ = layui;
         }
 
+        //监听指定radio
+        form.on('radio(siteStatus)', function (data) {
+            switch (data.value) {
+                case '1':
+                    if (sign_c) {
+                        deselectPhone(true);
+                    }
+                    if (sign_p) {
+                        deselectComputer(true);
+                    }
+                    break;
+                case '0':
+                    selectPhone(true);
+                    selectComputer(true);
+                    break;
+                case '3':
+                    selectPhone(true);
+                    selectComputer(true);
+                    break;
+            }
+        });
         //监听指定开关
         form.on('switch(computer)', function (data) {
             if (this.checked) {
@@ -372,8 +425,9 @@
         });
 
         form.on("submit(commitCharge)", function (data) {
-            let d = {};
+            let p_d = [];
             if (data.field.computer === 'on') {
+                let d = {};
                 d.qzOperationTypeUuid = data.field.pcQzOperationTypeUuid;
                 d.planChargeDate = data.field.pcPlanChargeDate;
                 d.actualChargeDate = data.field.pcActualChargeDate;
@@ -382,7 +436,10 @@
                 }
                 d.actualAmount = data.field.pcActualAmount;
                 d.nextChargeDate = data.field.pcNextChargeDate;
-            } else if (data.field.phone === 'on') {
+                p_d.push(d);
+            }
+            if (data.field.phone === 'on') {
+                let d = {};
                 d.qzOperationTypeUuid = data.field.phoneQzOperationTypeUuid;
                 d.planChargeDate = data.field.phonePlanChargeDate;
                 d.actualChargeDate = data.field.phoneActualChargeDate;
@@ -391,34 +448,65 @@
                 }
                 d.actualAmount = data.field.phoneActualAmount;
                 d.nextChargeDate = data.field.phoneNextChargeDate;
+                p_d.push(d);
             }
+            console.log(p_d);
             layer.confirm('确认保存？', {
                 icon: 3,
                 title: '保存数据',
                 btn: ['确认', '取消']
                 , yes: function (index) {
+                    let postData = {};
+                    postData.uuid = data_.uuid;
+                    postData.renewalStatus = data.field.siteStatus;
                     $.ajax({
-                        url: '/internal/qzchargelog/saveQZChargeLogs',
-                        type: 'post',
-                        // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
-                        data: JSON.stringify(d),
+                        url: '/internal/qzsetting/updRenewalStatus',
+                        data: JSON.stringify(postData),
                         headers: {
                             'Accept': 'application/json',
                             'Content-Type': 'application/json'
                         },
+                        type: 'POST',
                         success: function (res) {
-                            // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
-                            // 客户端会主观认为服务端返回的就是 JSON 格式的字符串
                             if (res.code === 200) {
-                                layer.close(index);
-                                okLayer.msg.greenTick("保存成功", function () {
-                                    parent.window.sign = true;
-                                    // parent.layer.close(parent.layer.getFrameIndex(window.name));
-                                    okLayer.close();
-                                });
+                                if (postData.renewalStatus === '1') {
+                                    $.ajax({
+                                        url: '/internal/qzchargelog/saveQZChargeLogs',
+                                        type: 'post',
+                                        // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
+                                        data: JSON.stringify(p_d),
+                                        headers: {
+                                            'Accept': 'application/json',
+                                            'Content-Type': 'application/json'
+                                        },
+                                        success: function (res) {
+                                            if (res.code === 200) {
+                                                layer.close(index);
+                                                okLayer.msg.greenTick("保存成功", function () {
+                                                    parent.window.sign = true;
+                                                    parent.layer.close(
+                                                        parent.layer.getFrameIndex(
+                                                            window.name));
+                                                });
+                                            } else {
+                                                layui.layer.msg(res.msg);
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    layer.close(index);
+                                    okLayer.msg.greenTick("保存成功", function () {
+                                        parent.window.sign = true;
+                                        parent.layer.close(
+                                            parent.layer.getFrameIndex(window.name));
+                                    });
+                                }
                             } else {
                                 layui.layer.msg(res.msg);
                             }
+                        },
+                        error: function () {
+                            layui.layer.msg('未知错误，请稍后重试', 5);
                         }
                     });
                 }, btn2: function (index) {
@@ -429,7 +517,7 @@
         });
 
         $('#close').click(function () {
-            okLayer.close();
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
         });
 
         //常规用法

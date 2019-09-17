@@ -76,16 +76,22 @@ public class QZChargeLogServiceImpl extends ServiceImpl<QZChargeLogDao, QZCharge
     }
 
     @Override
-    public void saveQZChargeLog(QZChargeLog qzChargeLog, String loginName) {
-        if (null != qzChargeLog && null != qzChargeLog.getQzOperationTypeUuid()) {
-            qzChargeLog.setLoginName(loginName);
-            qzChargeLogDao.insert(qzChargeLog);
-            //插入时 更新 下一次的收费日期
-            QZOperationType qzOperationType = qzOperationTypeService
-                .selectById(qzChargeLog.getQzOperationTypeUuid());
-            qzOperationType.setNextChargeDate(qzChargeLog.getNextChargeDate());
-            qzOperationTypeService.updateById(qzOperationType);
+    public void saveQZChargeLog(List<QZChargeLog> qzChargeLogs, String loginName) {
+        for (QZChargeLog qzChargeLog : qzChargeLogs) {
+            if (null != qzChargeLog && null != qzChargeLog.getQzOperationTypeUuid()) {
+                qzChargeLog.setLoginName(loginName);
+                qzChargeLogDao.insert(qzChargeLog);
+                //插入时 更新 下一次的收费日期
+                QZOperationType qzOperationType = qzOperationTypeService
+                    .selectById(qzChargeLog.getQzOperationTypeUuid());
+                qzOperationType.setNextChargeDate(qzChargeLog.getNextChargeDate());
+                qzOperationTypeService.updateById(qzOperationType);
+            }
         }
     }
 
+    @Override
+    public List<QZChargeLog> chargesList(Long uuid) {
+        return qzChargeLogDao.chargesList(uuid);
+    }
 }

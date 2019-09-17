@@ -10,5 +10,7 @@ public interface QZChargeLogService extends IService<QZChargeLog> {
 
     List<QZChargeInfoVO> getQZChargeLog(Long uuid);
 
-    void saveQZChargeLog(QZChargeLog qzChargeLog, String loginName);
+    void saveQZChargeLog(List<QZChargeLog> qzChargeLogs, String loginName);
+
+    List<QZChargeLog> chargesList(Long uuid);
 }

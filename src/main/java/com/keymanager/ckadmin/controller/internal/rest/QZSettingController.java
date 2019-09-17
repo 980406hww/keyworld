@@ -55,12 +55,14 @@ public class QZSettingController extends SpringMVCBaseController {
     @Resource(name = "qzCategoryTagService2")
     private QZCategoryTagService qzCategoryTagService;
 
+    @Resource(name = "qzChargeLogService2")
+    private QZChargeLogService qzChargeLogService;
 
     @GetMapping(value = "/getCategoryTag")
-    public List<String> getCategoryTag(){
+    public List<String> getCategoryTag() {
         return qzCategoryTagService.findTagNames(null);
     }
-    
+
     @GetMapping(value = "/getActiveCustomer")
     public List<Customer> getActiveCustomer() {
         CustomerCriteria customerCriteria = new CustomerCriteria();
@@ -79,7 +81,7 @@ public class QZSettingController extends SpringMVCBaseController {
     @GetMapping(value = "/toQZSetttings")
     public ModelAndView toQZSetttings() {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("qzsettings/qzsetting2");
+        mv.setViewName("qzsettings/qzsetting");
         return mv;
     }
 
@@ -300,7 +302,8 @@ public class QZSettingController extends SpringMVCBaseController {
     }
 
     /**
-     * 获得初始客户列表 - 搜索引擎
+     * 获得初始用户列表
+     *
      * @param request
      * @return
      */
@@ -347,7 +350,10 @@ public class QZSettingController extends SpringMVCBaseController {
                 }
             }
             String userName = (String) session.getAttribute("username");
-            qzSettingService.saveQZSetting(qzSetting, userName);
+            Long uuid = qzSettingService.saveQZSetting(qzSetting, userName);
+            if (null != uuid) {
+                resultBean.setData(qzChargeLogService.getQZChargeLog(uuid));
+            }
             return resultBean;
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -370,7 +376,7 @@ public class QZSettingController extends SpringMVCBaseController {
         }
         return resultBean;
     }
-    
+
     /**
      * 获取关键字作用类别
      */
@@ -389,12 +395,14 @@ public class QZSettingController extends SpringMVCBaseController {
 
     /**
      * 马上更新 - 批量
+     *
      * @param requestMap
      * @return
      */
     @RequiresPermissions("/internal/qzsetting/updateImmediately")
     @PostMapping(value = "/batchUpdateQZSettingUpdateStatus")
-    public ResultBean batchUpdateQZSettingUpdateStatus(@RequestBody Map<String, String> requestMap) {
+    public ResultBean batchUpdateQZSettingUpdateStatus(
+        @RequestBody Map<String, String> requestMap) {
         ResultBean resultBean = new ResultBean();
         try {
             String uuids = requestMap.get("uuids");
@@ -410,6 +418,7 @@ public class QZSettingController extends SpringMVCBaseController {
 
     /**
      * 暂停续费 || 下架整站 - 批量
+     *
      * @param requestMap
      * @return
      */
@@ -431,7 +440,30 @@ public class QZSettingController extends SpringMVCBaseController {
     }
 
     /**
+     * 修改站点状态 - 单个
+     *
+     * @param requestMap
+     * @return
+     */
+    @PostMapping(value = "/updRenewalStatus")
+    public ResultBean updRenewalStatus(@RequestBody Map<String, Integer> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            long uuid = requestMap.get("uuid");
+            Integer renewalStatus = requestMap.get("renewalStatus");
+            qzSettingService.updRenewalStatus(uuid, renewalStatus);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    /**
      * 修改站点关联的标签
+     *
      * @param map
      * @return
      */

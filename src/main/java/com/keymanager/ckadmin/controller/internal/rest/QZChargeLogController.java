@@ -3,8 +3,10 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.entity.QZChargeLog;
 import com.keymanager.ckadmin.service.QZChargeLogService;
+import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +26,7 @@ public class QZChargeLogController {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
         try {
-            resultBean.setData(qzChargeLogService.getQZChargeLog(uuid).get(0));
+            resultBean.setData(qzChargeLogService.getQZChargeLog(uuid));
         } catch (Exception e) {
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
@@ -33,23 +35,41 @@ public class QZChargeLogController {
     }
 
     //插入一条收费流水表
+    @RequiresPermissions("/internal/qzchargelog/save")
     @RequestMapping(value = "/saveQZChargeLogs", method = RequestMethod.POST)
-    public ResultBean saveQZChargeLogs(@RequestBody QZChargeLog qzChargeLog, HttpSession session) {
+    public ResultBean saveQZChargeLogs(@RequestBody List<QZChargeLog> qzChargeLogs,
+        HttpSession session) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
         try {
             String loginName = (String) session.getAttribute("username");
-            qzChargeLogService.saveQZChargeLog(qzChargeLog, loginName);
+            qzChargeLogService.saveQZChargeLog(qzChargeLogs, loginName);
         } catch (Exception e) {
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
         }
         return resultBean;
     }
-//
-//    //查看收费记录
-//    @RequestMapping(value = "/chargesList/{uuid}", method = RequestMethod.GET)
-//    public ResponseEntity<?> chargesList(@PathVariable("uuid") Long uuid) {
-//        return new ResponseEntity<Object>(qzChargeLogService.chargesList(uuid), HttpStatus.OK);
-//    }
+
+    //查看收费记录
+    @RequiresPermissions("/internal/qzchargelog/chargesList")
+    @RequestMapping(value = "/qzChargesLogsList/{uuid}", method = RequestMethod.GET)
+    public ResultBean qzChargesLogsList(@PathVariable("uuid") Long uuid) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        List<QZChargeLog> logs;
+        try {
+            logs = qzChargeLogService.chargesList(uuid);
+        } catch (Exception e) {
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+            return resultBean;
+        }
+        if (null == logs || logs.isEmpty()) {
+            resultBean.setCode(300);
+        } else {
+            resultBean.setData(logs);
+        }
+        return resultBean;
+    }
 }
