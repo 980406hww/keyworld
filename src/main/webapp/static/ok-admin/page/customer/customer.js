@@ -392,11 +392,87 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
     $(document).on('mousedown', 'thead',
         function (e) {
             var that = $(this);
-            $(document).one('mouseup',
-                function () {
+            $(document).one('mouseup',function () {
                     autoFixed(that.parents('.layui-table-view'));
-                })
-        });
+            })
+        }
+     );
+
+
+    window.generate_customer_business_td2 = function(data) {
+        let html = '';
+        let customerBusinessList = data.customerBusinessList;
+        if (customerBusinessList !== null && customerBusinessList.length > 0) {
+            for (let index in customerBusinessList) {
+                var parm = {};
+                let url = '', title = '', id = '';
+                var contactPerson = data.contactPerson.replace(/\s+/g, "");
+                if (customerBusinessList[index] === 'keyword') {
+                    url = '/internal/customerKeyword/searchCustomerKeywords/' + data.uuid;
+                    title = contactPerson + '-关键字信息';
+                    id = contactPerson + '-关键字信息';
+                    $.ajax({
+                        url: '/internal/customerKeyword/getCustomerKeywordsCount/'+data.uuid,
+                        dataType: 'json',
+                        type: 'get',
+                        async: false,
+                        success: function (res) {
+                            html +='<div class="layui-row" >\n' +
+                                '       <div class="layui-col-md5 td-border-right">关键字信息</div>\n' +
+                                '       <div class="layui-col-md7 td-border-right">';
+                            if (res.code === 200){
+                                html += generate_keyword_info(res.data)
+                            }else{
+                                html += '暂无数据'
+                            }
+                            html +=
+                                '       </div>\n' +
+                                '   </div>';
+
+                        }
+                    });
+                } else if (customerBusinessList[index] === 'qzsetting') {
+                    url = '/internal/qzsetting/toQZSetttingsWithCustomerUuid/' + data.uuid;
+                    title = contactPerson + '-全站信息';
+                    id = contactPerson + '-全站信息';
+
+                    $.ajax({
+                        url: '/internal/qzsetting/getQZSettingsCount/'+data.uuid,
+                        dataType: 'json',
+                        type: 'get',
+                        async: false,
+                        success: function (res) {
+                            html +='<div class="layui-row" >\n' +
+                                '       <div class="layui-col-md5 td-border-right">全站信息</div>\n' +
+                                '       <div class="layui-col-md7 td-border-right">';
+                            if (res.code === 200){
+                                html += generate_qzsetting_info(res.data)
+                            }else{
+                                html += '暂无数据'
+                            }
+                            html +=
+                                '       </div>\n' +
+                                '   </div>';
+
+                        }
+                    });
+
+                } else if (customerBusinessList[index] === 'fm') {
+                    url = '/internal/productKeyword/searchProductKeywordsByCustomerUuid/' + data.uuid;
+                    title = contactPerson + '-负面信息';
+                    id = contactPerson + '-负面信息';
+                    html +='<div class="layui-row" >\n' +
+                        '       <div class="layui-col-md5 td-border-right">负面信息</div>\n' +
+                        '       <div class="layui-col-md7 td-border-right">'+'待做--占位符'+
+                        '       </div>\n' +
+                        '   </div>';
+                }
+            }
+        }else{
+            html += '暂无业务'
+        }
+        return html;
+    }
 
 });
 
@@ -452,48 +528,51 @@ function generate_customer_business_td(data) {
     return html;
 }
 
-function generate_customer_business_td2(data) {
-    let html = '';
-    let customerBusinessList = data.customerBusinessList;
-    if (customerBusinessList !== null && customerBusinessList.length > 0) {
-        for (let index in customerBusinessList) {
-            var parm = {};
-            let url = '', title = '', id = '';
-            var contactPerson = data.contactPerson.replace(/\s+/g, "");
-            if (customerBusinessList[index] === 'keyword') {
-                url = '/internal/customerKeyword/searchCustomerKeywords/' + data.uuid;
-                title = contactPerson + '-关键字信息';
-                id = contactPerson + '-关键字信息';
 
-                html +='<div class="layui-row" >\n' +
-                    '       <div class="layui-col-md5 td-border-right">关键字信息</div>\n' +
-                    '       <div class="layui-col-md7 td-border-right">'+data.contactPerson+
-                    '       </div>\n' +
-                    '   </div>';
-            } else if (customerBusinessList[index] === 'qzsetting') {
-                url = '/internal/qzsetting/toQZSetttingsWithCustomerUuid/' + data.uuid;
-                title = contactPerson + '-全站信息';
-                id = contactPerson + '-全站信息';
-                html +='<div class="layui-row" >\n' +
-                    '       <div class="layui-col-md5 td-border-right">全站信息</div>\n' +
-                    '       <div class="layui-col-md7 td-border-right">'+data.contactPerson+
-                    '       </div>\n' +
-                    '   </div>';
-            } else if (customerBusinessList[index] === 'fm') {
-                url = '/internal/productKeyword/searchProductKeywordsByCustomerUuid/' + data.uuid;
-                title = contactPerson + '-负面信息';
-                id = contactPerson + '-负面信息';
-                html +='<div class="layui-row" >\n' +
-                    '       <div class="layui-col-md5 td-border-right">负面信息</div>\n' +
-                    '       <div class="layui-col-md7 td-border-right">'+data.contactPerson+
-                    '       </div>\n' +
-                    '   </div>';
-            }
+function generate_keyword_info(data) {
+    let htm = '';
+    if (data.totalCount > 0) {
+        htm += '<span>总数:' + data.totalCount + '&nbsp;&nbsp;&nbsp;&nbsp;</span>(';
+        if (data.totalCount === data.activeCount) {
+            htm += '<span style="color: green;">激活</span>' +
+                '|<a href="javascript:changeCustomerKeywordStatus(\'' + data.customerUuid + '\', 0)">暂停关键字</a>'
+        } else if (data.totalCount > 0 && data.activeCount > 0) {
+            htm += '<span style="color: yellowgreen;">部分暂停</span>' +
+                '|<a href="javascript:changeCustomerKeywordStatus(\'' + data.customerUuid + '\', 0)">暂停关键字</a>' +
+                '|<a href="javascript:changeCustomerKeywordStatus(\'' + data.customerUuid + '\', 1)">激活关键字</a>'
+        } else {
+            htm += '<span style="color: red;">暂停</span>' +
+                '|<a href="javascript:changeCustomerKeywordStatus(\'' + data.customerUuid + '\', 1)">激活关键字</a>'
         }
+        htm += ')';
+    } else {
+        htm += '<a href="javascript:void(0)">暂无信息</a>'
     }
-    return html;
+    return htm;
 }
 
+
+function generate_qzsetting_info(data) {
+    let htm = '';
+    if (data.totalCount > 0) {
+        htm += '<span>总数:' + data.totalCount + '&nbsp;&nbsp;&nbsp;&nbsp;</span>(';
+        if (data.totalCount === data.activeCount) {
+            htm += '<span style="color: green;">激活</span>' +
+                '|<a href="javascript:changeQZSettingRenewalStatus(\'' + data.customerUuid + '\', 0)">暂停全站</a>'
+        } else if (data.totalCount > 0 && data.activeCount > 0) {
+            htm += '<span style="color: yellowgreen;">部分暂停</span>' +
+                '|<a href="javascript:changeQZSettingRenewalStatus(\'' + data.customerUuid + '\', 0)">暂停全站</a>' +
+                '|<a href="javascript:changeQZSettingRenewalStatus(\'' + data.customerUuid + '\', 3)">下架全站</a>'
+        } else {
+            htm += '<span style="color: red;">暂停</span>' ;
+
+        }
+        htm += ')';
+    } else {
+        htm += '<a href="javascript:void(0)">暂无信息</a>'
+    }
+    return htm;
+}
 
 
 

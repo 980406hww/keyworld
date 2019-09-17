@@ -9,6 +9,8 @@ import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
 import com.keymanager.ckadmin.entity.QZCategoryTag;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
+import com.keymanager.ckadmin.vo.QZSettingCountVO;
+
 import java.util.List;
 import java.util.Map;
 
@@ -55,4 +57,6 @@ public interface QZSettingService extends IService<QZSetting> {
     void batchUpdateRenewalStatus(String uuids, int renewalStatus);
     
     Map<String, String> getPCPhoneGroupByUuid(Long uuid);
+
+    QZSettingCountVO getQZSettingsCountByCustomerUuid( Long customerUuid);
 }

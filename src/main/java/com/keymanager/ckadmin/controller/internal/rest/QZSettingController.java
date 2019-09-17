@@ -13,6 +13,7 @@ import com.keymanager.ckadmin.service.*;
 import com.keymanager.ckadmin.enums.KeywordEffectEnum;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
+import com.keymanager.ckadmin.vo.QZSettingCountVO;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.HashMap;
 import java.util.List;
@@ -451,5 +452,27 @@ public class QZSettingController extends SpringMVCBaseController {
         request.setAttribute("customerUuidTmp",customerUuid);
         mv.setViewName("qzsettings/qzsetting");
         return mv;
+    }
+
+    /**
+     * 根据用户id获取全站统计信息
+     * @param customerUuid
+     * @return
+     */
+    @GetMapping("/getQZSettingsCount/{customerUuid}")
+    public ResultBean getOperationCombines(@PathVariable Long customerUuid) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            QZSettingCountVO qzSettingCountVO = qzSettingService.getQZSettingsCountByCustomerUuid(customerUuid);
+            resultBean.setCode(200);
+            resultBean.setMsg("success");
+            resultBean.setData(qzSettingCountVO);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
     }
 }

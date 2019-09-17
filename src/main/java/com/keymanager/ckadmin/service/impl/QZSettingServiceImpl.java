@@ -20,6 +20,7 @@ import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.*;
 import com.keymanager.ckadmin.vo.QZKeywordRankInfoVO;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
+import com.keymanager.ckadmin.vo.QZSettingCountVO;
 import com.keymanager.ckadmin.vo.QZSettingVO;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.util.Constants;
@@ -660,5 +661,10 @@ public class QZSettingServiceImpl extends
             qzCategoryTagService.updateQZCategoryTag(existingQZCategoryTags, targetQZCategoryTags,
                 Long.parseLong(uuid));
         }
+    }
+
+    @Override
+    public QZSettingCountVO getQZSettingsCountByCustomerUuid(Long customerUuid) {
+        return qzSettingDao.getQZSettingsCountByCustomerUuid(customerUuid);
     }
 }

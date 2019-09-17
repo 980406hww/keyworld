@@ -8,6 +8,7 @@ import com.keymanager.ckadmin.enums.KeywordEffectEnum;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
+import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.util.Utils;
@@ -192,6 +193,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public Integer getCustomerKeywordCountByOptimizeGroupName(String groupName) {
         return customerKeywordDao.getCustomerKeywordCountByOptimizeGroupName(groupName);
+    }
+
+    @Override
+    public KeywordCountVO getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String terminalType) {
+        return customerKeywordDao.getCustomerKeywordsCountByCustomerUuid(customerUuid, terminalType);
     }
 }
 

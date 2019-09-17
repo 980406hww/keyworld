@@ -27,34 +27,35 @@
 <script type="text/html" id="baseInfo">
     <div class="layui-row" >
         <div class="layui-col-md6">
-            <div class="layui-col-md5 td-border-right">所属用户</div>
-            <div class="layui-col-md7 td-border-right">{{d.loginName}}</div>
+            <div class="layui-col-md5 ">所属用户</div>
+            <div class="layui-col-md7 ">{{d.loginName}}</div>
         </div>
         <div class="layui-col-md6">
-            <div class="layui-col-md5 td-border-right">客户名称</div>
-            <div class="layui-col-md7 td-border-right">{{d.contactPerson}}</div>
+            <div class="layui-col-md5 ">客户名称</div>
+            <div class="layui-col-md7 ">{{d.contactPerson}}</div>
         </div>
     </div>
     <div class="layui-row">
         <div class="layui-col-md6">
-            <div class="layui-col-md5 td-border-right">联系方式</div>
-            <div class="layui-col-md7 td-border-right">
-                <button type="button" class="layui-btn layui-btn-xs">点击查看详细</button>
+            <div class="layui-col-md5 ">联系方式</div>
+            <div class="layui-col-md7 ">
+                <a href="javascript:void(0)">点击查看详细</a>
+<!--                <button type="button" class="layui-btn layui-btn-xs">点击查看详细</button>-->
             </div>
         </div>
         <div class="layui-col-md6">
-            <div class="layui-col-md5 td-border-right">客户类型</div>
-            <div class="layui-col-md7 td-border-right">{{d.type}}</div>
+            <div class="layui-col-md5 ">客户类型</div>
+            <div class="layui-col-md7 ">{{d.type}}</div>
         </div>
     </div>
     <div class="layui-row">
         <div class="layui-col-md6">
-            <div class="layui-col-md5 td-border-right">销售分组</div>
-            <div class="layui-col-md7 td-border-right">{{d.saleRemark}}</div>
+            <div class="layui-col-md5 ">销售分组</div>
+            <div class="layui-col-md7 reamrk" title="{{d.saleRemark}}">{{d.saleRemark}}</div>
         </div>
         <div class="layui-col-md6">
-            <div class="layui-col-md5 td-border-right">备注</div>
-            <div class="layui-col-md7 td-border-right">{{d.remark}}</div>
+            <div class="layui-col-md5 ">备注</div>
+            <div class="layui-col-md7 reamrk" title="{{d.remark}}">{{d.remark}}</div>
         </div>
     </div>
 

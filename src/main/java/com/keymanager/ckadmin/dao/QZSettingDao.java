@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.entity.QZSetting;
 
+import com.keymanager.ckadmin.vo.QZSettingCountVO;
 import com.keymanager.ckadmin.vo.QZSettingVO;
 import java.util.List;
 import java.util.Map;
@@ -34,5 +35,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
         @Param("renewalStatus") int renewalStatus);
     
     Map<String, String> getPCPhoneGroupByUuid(@Param("uuid") Long uuid);
+
+    QZSettingCountVO getQZSettingsCountByCustomerUuid(@Param("customerUuid") Long customerUuid);
 }
 
