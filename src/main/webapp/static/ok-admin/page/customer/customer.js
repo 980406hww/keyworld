@@ -281,7 +281,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
 
     // 添加客户
     function toAddCustomer(){
-        okLayer.open("首页 / 客户列表 / 添加用户", "/internal/customer/toCustomersAdd", "90%", "90%", null, function () {
+        okLayer.open("首页 / 客户列表 / 添加用户", "/internal/customer/toCustomersAdd", "60%", "90%", null, function () {
             if(sign){
                 active['reload'].call(this);
                 sign = false;
