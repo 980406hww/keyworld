@@ -8,6 +8,7 @@
         c.fExternalAccount AS `externalAccount`,
         c.fContactPerson AS `contactPerson`,
         c.fQQ AS `qq`,
+        c.fWechat AS `wechat`,
         c.fType AS `type`,
         c.fEmail  AS `email`,
         c.fTelphone AS `telphone`,

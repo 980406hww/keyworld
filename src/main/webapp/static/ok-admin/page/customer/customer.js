@@ -26,7 +26,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
         autoSort: false,
         size: 'sm',
         id: 'customerTable',
-        even: true,//隔行背景
+        // even: true,//隔行背景
         // toolbar: true,
         toolbar: "#toolbarTpl",
         // defaultToolbar: ['filter', 'print', 'exports'], 对应列筛选 打印 导出
@@ -34,8 +34,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
         contentType: 'application/json',
         cols: [[
             /*templet: '#toDateTime'*/
-            {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
-            {field: 'uuid', title: '基本信息', fixed: "left", width: '640', templet: '#baseInfo'},
+            {filed: 'uuid', type: 'checkbox', fixed: "right", width: '32'},
+            {field: 'uuid', title: '基本信息', fixed: "right", width: '640', templet: '#baseInfo'},
             {field: 'uuid', title: '拥有业务', width: '640', templet: '#businessInfo'},
             {field: 'uuid', title: '操作',  fixed: "right", width: '180', templet: '#operationTpl',}
         ]],

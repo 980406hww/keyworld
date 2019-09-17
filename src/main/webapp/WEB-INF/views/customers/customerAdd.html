@@ -30,6 +30,13 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">微信</label>
+            <div class="layui-input-block">
+                <input type="text" name="wechat" placeholder="请输入微信号" autocomplete="off"
+                       class="layui-input" >
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">联系电话</label>
             <div class="layui-input-block">
                 <input type="text" name="telphone" placeholder="请输入联系电话" autocomplete="off"
@@ -39,16 +46,9 @@
         <div class="layui-form-item">
             <label class="layui-form-label">客户类型</label>
             <div class="layui-input-block">
-                <input type="text" name="type" placeholder="请输入客户类型" autocomplete="off"
-                       class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">客户状态</label>
-            <div class="layui-input-block">
-                <select name="status">
-                    <option value="1">激活</option>
-                    <option value="2">暂停</option>
+                <select name="type">
+                    <option value="普通客户">普通客户</option>
+                    <option value="测试客户">测试客户</option>
                 </select>
             </div>
         </div>
@@ -68,7 +68,6 @@
                 <input type="checkbox" name="customerBusinessList" value="qzsetting" title="全站">
                 <input type="checkbox" name="customerBusinessList" value="fm" title="负面" >
             </div>
-
         </div>
 
         <div class="layui-form-item layui-form-text">

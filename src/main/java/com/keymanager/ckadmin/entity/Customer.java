@@ -23,18 +23,21 @@ public class Customer extends BaseEntity {
 //    @TableField(value = "fEntryType")
 //    private String entryType;
 
-//    @NotNull
+    @NotNull
     @TableField(value = "fContactPerson")
     private String contactPerson;
 
-//    @Pattern(regexp = "()|(^[1-9]\\d{4,14}$)", message = "QQ号格式不符")
+    @Pattern(regexp = "()|(^[1-9]\\d{4,14}$)", message = "QQ号格式不符")
     @TableField(value = "fQQ")
     private String qq;
+
+    @TableField(value = "fWechat")
+    private String wechat;
 
     @TableField(value = "fEmail")
     private String email;
 
-//    @Pattern(regexp = "()|(^(13[0-9]|14[5-9]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[13589])\\d{8}$)", message = "手机号格式不符")
+    @Pattern(regexp = "()|(^(13[0-9]|14[5-9]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[13589])\\d{8}$)", message = "手机号格式不符")
     @TableField(value = "fTelphone")
     private String telphone;
 
@@ -126,6 +129,14 @@ public class Customer extends BaseEntity {
 
     public void setQq(String qq) {
         this.qq = qq;
+    }
+
+    public String getWechat() {
+        return wechat;
+    }
+
+    public void setWechat(String wechat) {
+        this.wechat = wechat;
     }
 
     public String getEmail() {

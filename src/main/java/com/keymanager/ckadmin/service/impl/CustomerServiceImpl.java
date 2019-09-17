@@ -75,7 +75,6 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
 
     @Override
     public void saveCustomer(Customer customer, String loginName) {
-        customer.setCustomerBusinessList(customer.getCustomerBusinessStr().split(","));
         //修改
         if (null != customer.getUuid()) {
             updateCustomer(customer, loginName);
@@ -87,6 +86,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
         } else {//添加
             customer.setUpdateTime(new Date());
             customer.setLoginName(loginName);
+            customer.setStatus(1);
             customerDao.insert(customer);
             customerBusinessService.saveCustomerBusiness(customer);
 
@@ -104,6 +104,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
         if (oldCustomer != null) {
             if (oldCustomer.getLoginName().equals(loginName)) {
                 oldCustomer.setQq(customer.getQq());
+                oldCustomer.setWechat(customer.getWechat());
                 oldCustomer.setEmail(customer.getEmail());
                 oldCustomer.setTelphone(customer.getTelphone());
                 oldCustomer.setSaleRemark(customer.getSaleRemark());

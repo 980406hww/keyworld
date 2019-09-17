@@ -79,3 +79,7 @@
     text-overflow: ellipsis;
     white-space: nowrap
 }
+
+.layui-table-body tr{
+    border-bottom: 1px solid black;
+}
