@@ -49,3 +49,22 @@
     padding: 0 5px;
     border-width: 0 0 1px;
 }
+
+
+.layui-table-cell {
+    height: auto;
+    overflow: visible;
+    text-overflow: inherit;
+    white-space: normal;
+    padding: 0 !important;
+}
+
+.layui-row{
+    /*border-right: 1px solid #e6e6e6;*/
+    border-bottom: 1px solid #e6e6e6;
+    padding: 5px;
+}
+
+/*.layui-table tbody tr:hover, .layui-table-hover {
+    background-color: lightgrey;
+}*/

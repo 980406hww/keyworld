@@ -23,41 +23,47 @@
     {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
 </script>
 
-<script type="text/html" id="toProductKeyword">
-    <a href="javascript:updateOrNewTab('/internal/productKeyword/searchProductKeywordsByCustomerUuid/{{d.uuid}}','{{d.contactPerson}}-关键字列表', '{{d.uuid}}')">{{d.contactPerson}}</a>
+<!--基本信息-->
+<script type="text/html" id="baseInfo">
+    <div class="layui-row" >
+        <div class="layui-col-md6">
+            <div class="layui-col-md5 td-border-right">所属用户</div>
+            <div class="layui-col-md7 td-border-right">{{d.loginName}}</div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-col-md5 td-border-right">客户名称</div>
+            <div class="layui-col-md7 td-border-right">{{d.contactPerson}}</div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md6">
+            <div class="layui-col-md5 td-border-right">联系方式</div>
+            <div class="layui-col-md7 td-border-right">
+                <button type="button" class="layui-btn layui-btn-xs">点击查看详细</button>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-col-md5 td-border-right">客户类型</div>
+            <div class="layui-col-md7 td-border-right">{{d.type}}</div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md6">
+            <div class="layui-col-md5 td-border-right">销售分组</div>
+            <div class="layui-col-md7 td-border-right">{{d.saleRemark}}</div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-col-md5 td-border-right">备注</div>
+            <div class="layui-col-md7 td-border-right">{{d.remark}}</div>
+        </div>
+    </div>
+
 </script>
 
-<script type="text/html" id="keywordInfo">
-    {{# if(d.keywordCount > 0){
-    if(d.keywordCount == d.activeKeywordCount){ }}
-    <span style="color: green;">激活</span>
-    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 0)">暂停关键字</a>
-    </@shiro.hasPermission>
-    {{# }else if(d.keywordCount > 0 && d.activeKeywordCount > 0){ }}
-    <span style="color: yellowgreen;">部分暂停</span>
-    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 0)">暂停关键字</a>
-    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 1)">激活关键字</a>
-    </@shiro.hasPermission>
-    {{# }else{  }}
-    <span style="color: red;">暂停</span>
-    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 1)">激活关键字</a>
-    </@shiro.hasPermission>
-    {{# }
-    }else{ }}
-    暂无关键字
-    {{#} }}
-</script>
+<!--业务信息-->
+<script type="text/html" id="businessInfo">
+    {{ generate_customer_business_td2(d) }}
 
-<script type="text/html" id="customerStatus">
-    {{#
-    if(d.status==1){  }}
-    激活
-    {{#  }else{  }}
-    暂停
-    {{#  }  }}
 </script>
 
 <script type="text/html" id="customerBusinessTpl">
