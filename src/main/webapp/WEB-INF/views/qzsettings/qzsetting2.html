@@ -422,11 +422,15 @@
         #optimizationGroup span,
         #operationCombine span {
             display: inline-block;
-            width: 90%;
             word-break: keep-all;
             white-space: normal;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        #optimizationGroup span:last-child,
+        #operationCombine span:last-child {
+            max-width: 65%;
         }
 
         .layui-table-tool-temp .layui-btn + .layui-btn {
@@ -523,7 +527,6 @@
                 <h2 class="layui-colla-title">条件筛选<i class="layui-icon layui-colla-icon"></i></h2>
                 <div class="layui-colla-content" id="searchContent">
                     <form class="layui-form layui-form-pane" id="searchForm">
-
                         <input hidden name="searchEngine" id="searchEngine" value="百度"/>
                         <input hidden name="terminalType" id="terminalType" value="PC"/>
                         <input type="text" hidden name="userInfoID" id="userInfoID" value="">
@@ -842,7 +845,6 @@
                 where: whereCondition,
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
-                    // {filed: 'uuid', title: '记录', width: '1638', templet: '#item', align: 'center'},
                     {filed: 'info', title: '基本信息', width: '400', fixed: "left", templet: '#item1', align: 'center'},
                     {filed: 'graph', title: '曲线图表', width: '1200', templet: '#item2', align: 'center'},
                     {filed: 'op', title: '操作', width: '138', fixed: "right", templet: '#item3', align: 'center'}
@@ -854,21 +856,28 @@
                     terminalType = terminalType === '' ? 'PC' : terminalType;
                     getTerminalSearchEngineMap();
                     get_operation_combine_list(terminalType);
-                    let qz_setting_table = $("#qzSettingTable").parent().find(".layui-table-main").find("table");
+                    let main_table = $("#qzSettingTable").parent().find(".layui-table-main").find("table");
+                    let left_table = $("#qzSettingTable").parent().find(".layui-table-fixed-l").find("table");
                     $.each(res.data, function (idx, val) {
-                        let td = qz_setting_table.find("tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
+                        let td_1 = left_table.find("tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
                             "td[data-field='1']");
-                        let optimizeGroupName = td.find(
+                        let td_2 = main_table.find("tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
+                            "td[data-field='2']");
+                        let optimizeGroupName = td_1.find(
                             "input[name='" + terminalType + "Group']").val();
                         let postData = {};
                         postData.uuid = val.uuid;
                         postData.terminalType = terminalType;
                         postData.optimizeGroupName = optimizeGroupName;
                         getQZKeywordRankInfo(postData, function (result) {
-                            td.find(".other-rank_2").find("#optimizationGroup span").prop("title", optimizeGroupName);
-                            td.find(".other-rank_2").find("#optimizationGroup span a").text(optimizeGroupName);
+                            td_1.find("#optimizationGroup span:last-child").prop("title", optimizeGroupName);
+                            td_1.find("#optimizationGroup span:last-child").text(optimizeGroupName);
                             if (result.data != null) {
-                                initQZKeywordRankInfo(result.data, td);
+                                initQZKeywordRankInfo(result.data, td_2);
+                                initQZSettingKeywordCount(td_1,
+                                    result.data["customerKeywordCount"],
+                                    result.data["categoryTagNames"],
+                                    result.data["operationCombineName"]);
                             }
                         });
                     });
@@ -877,47 +886,45 @@
         }
         </@shiro.hasPermission>
 
-        function initQZKeywordRankInfo(data, td) {
-            td.find("#fmtStandardDate a").text(
+        function initQZKeywordRankInfo(data, td_2) {
+            /*td.find("#fmtStandardDate a").text(
                 data["standardTime"] === null ? "无" : toDateFormat(
                     new Date(data["standardTime"])));
             let font = td.find(".standard-info").find("div.line1 a font");
             font.text("￥ " + data["price"]);
             if (data["price"] > 0) {
                 font.css("background-color", "mediumseagreen");
-            }
+            }*/
 
-            initQZSettingKeywordCount(td.find(".other-rank_2"),
+            /*initQZSettingKeywordCount(td_1,
                 data["customerKeywordCount"],
                 data["categoryTagNames"],
-                data["operationCombineName"]);
+                data["operationCombineName"]);*/
 
             if (data['aiZhan'] !== undefined) {
                 generateQZKeywordTrendCharts(
-                    td.find("#keywordTrendCharts")[0],
+                    td_2.find("#keywordTrendCharts")[0],
                     data['aiZhan']);
             }
 
             if (data['5118'] !== undefined) {
                 generateQZKeywordTrendCharts(
-                    td.find("#keywordTrendCharts")[0], data['5118']);
+                    td_2.find("#keywordTrendCharts")[0], data['5118']);
             }
 
             if (data['designationWord'] === undefined) {
-                td.find("div.rank-wrap1").css("display", "none");
+                td_2.find("#designationWordCharts").css("display", "none");
             } else {
                 // 指定词曲线
                 generateQZDesignationWordTrendCharts(
-                    td.find("#designationWordCharts")[0],
-                    data['designationWord']);
+                    td_2.find("#designationWordCharts")[0], data['designationWord']);
             }
 
             if (data['xt'] === undefined) {
-                td.find("div.rank-wrap2").css("display", "none");
+                td_2.find("#xtCharts").css("display", "none");
             } else {
                 // 排名-操作词数图表
-                generateQZXTKeywordTrendCharts(td.find("#xtCharts")[0],
-                    data['xt']);
+                generateQZXTKeywordTrendCharts(td_2.find("#xtCharts")[0], data['xt']);
             }
         }
 
@@ -995,7 +1002,7 @@
             }
             var keywordTrendCharts = echarts.init(domElement);
             var option;
-            var parentElement = $(domElement).parent()[0];
+            /*var parentElement = $(domElement).parent()[0];
             $(parentElement).find("#Top10").text(data.topTen[data.topTen.length - 1]);
             $(parentElement).find("#Top50").text(data.topFifty[data.topFifty.length - 1]);
             $(parentElement).find("#TopCreate10").text(data.createTopTenNum);
@@ -1007,32 +1014,21 @@
             } else {
                 $(parentElement).find("#IsStandard").parent().parent().css("display", "none");
                 $(parentElement).find("#StandardTime").parent().parent().css("display", "none");
-            }
+            }*/
             if (data.websiteType === "aiZhan") {
                 option = {
                     color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
-                    title: {
-                        text: '爱站 - 关键词排名趋势',
-                        textStyle: {
-                            color: '#999',
-                            fontFamily: "Arial",
-                            fontWeight: 400,
-                            fontSize: 12
-                        },
-                        x: 'center',
-                        bottom: -3
-                    },
                     tooltip: {
                         trigger: 'axis',
                         position: function(point, params, dom, rect, size){
-                            return [point[0]+20,'-15%'];
+                            return [point[0]+20,'-5%'];
                         }
                     },
                     grid: {
                         left: '0%',
-                        right: '1%',
+                        right: '0%',
                         top: '3%',
-                        bottom: '0%',
+                        bottom: '-3%',
                         containLabel: true
                     },
                     toolbox: {
@@ -1203,28 +1199,17 @@
             } else if (data.websiteType === "5118") {
                 option = {
                     color: ['#228B22', '#0000FF', '#FF6100', '#FF0000'],
-                    title: {
-                        text: data.websiteType + ' - 关键词排名趋势',
-                        textStyle: {
-                            color: '#999',
-                            fontFamily: "Arial",
-                            fontWeight: 400,
-                            fontSize: 12
-                        },
-                        x: 'center',
-                        bottom: -3
-                    },
                     tooltip: {
                         trigger: 'axis',
                         position: function(point, params, dom, rect, size){
-                            return [point[0]+20,'-15%'];
+                            return [point[0]+20,'-5%'];
                         }
                     },
                     grid: {
                         left: '0%',
-                        right: '1%',
+                        right: '0%',
                         top: '3%',
-                        bottom: '0%',
+                        bottom: '-3%',
                         containLabel: true
                     },
                     toolbox: {
@@ -1393,38 +1378,27 @@
             }
             var designationWordTrendCharts = echarts.init(domElement);
             var option;
-            var parentElement = $(domElement).parent()[0];
+            /*var parentElement = $(domElement).parent()[0];
             $(parentElement).find("#Top10").text(data.topTen[data.topTen.length - 1]);
             $(parentElement).find("#Top50").text(data.topFifty[data.topFifty.length - 1]);
             $(parentElement).find("#TopCreate10").text(data.createTopTenNum);
             $(parentElement).find("#TopCreate50").text(data.createTopFiftyNum);
             $(parentElement).find("#IsStandard").text(data.achieveLevel === 0 ? "否" : "是");
             $(parentElement).find("#StandardTime").text(
-                data.achieveTime === null ? "无" : toDateFormat(new Date(data.achieveTime)));
+                data.achieveTime === null ? "无" : toDateFormat(new Date(data.achieveTime)));*/
             option = {
                 color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
-                title: {
-                    text: '指定词排名趋势',
-                    textStyle: {
-                        color: '#999',
-                        fontFamily: "Arial",
-                        fontWeight: 400,
-                        fontSize: 12
-                    },
-                    x: 'center',
-                    bottom: -3
-                },
                 tooltip: {
                     trigger: 'axis',
                     position: function(point, params, dom, rect, size){
-                        return [point[0]+20,'-15%'];
+                        return [point[0]+20,'-5%'];
                     }
                 },
                 grid: {
                     left: '0%',
-                    right: '1%',
+                    right: '0%',
                     top: '3%',
-                    bottom: '0%',
+                    bottom: '-3%',
                     containLabel: true
                 },
                 toolbox: {
@@ -1553,28 +1527,17 @@
             var colors = ['#228B22', '#0000FF', '#FF6100', '#FF0000', '#d14a61', '#675bba'];
             var option = {
                 color: colors,
-                title: {
-                    text: '排名 - 操作词数图表',
-                    textStyle: {
-                        color: '#999',
-                        fontFamily: "Arial",
-                        fontWeight: 400,
-                        fontSize: 12
-                    },
-                    x: 'center',
-                    bottom: -1
-                },
                 tooltip: {
                     trigger: 'axis',
                     position: function(point, params, dom, rect, size){
-                        return [point[0]+20,'-15%'];
+                        return [point[0]+20,'-5%'];
                     }
                 },
                 grid: {
                     left: '0%',
-                    right: '1%',
+                    right: '0%',
                     top: '3%',
-                    bottom: '0%',
+                    bottom: '-3%',
                     containLabel: true
                 },
                 xAxis: [
@@ -1739,23 +1702,21 @@
             keywordRecordCharts.setOption(option);
         }
 
-        function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames, operationCombineName) {
-            div.parent().find(".other-rank .line1").find("#customerKeywordCount").text(customerKeywordCount);
+        function initQZSettingKeywordCount(td, customerKeywordCount, categoryTagNames, operationCombineName) {
+            td.find("#customerKeywordCount span:last-child").text(customerKeywordCount);
             if (categoryTagNames.length > 0) {
                 var tagNameStr = "";
-                var span = $(div).parent().parent().parent().find(".header span.tagNames");
+                var span = $(td).find("#tagNames span:last-child");
                 $.each(categoryTagNames, function (idx, val) {
                     tagNameStr += val + ",";
                 });
-                $(span).find("label.tagNameStr").html(
-                    tagNameStr.substring(0, tagNameStr.length - 1));
-                $(span).find("label.tagNameStr").attr('title',  tagNameStr.substring(0, tagNameStr.length - 1))
-
+                $(span).text(tagNameStr.substring(0, tagNameStr.length - 1));
+                $(span).prop('title',  tagNameStr.substring(0, tagNameStr.length - 1))
             }
 
             if (operationCombineName !== null) {
-                div.find("#operationCombine span").prop("title", operationCombineName);
-                div.find("#operationCombine span a").text(operationCombineName);
+                td.find("#operationCombine span:last-child").prop("title", operationCombineName);
+                td.find("#operationCombine span:last-child").text(operationCombineName);
             }
         }
 
@@ -2522,19 +2483,27 @@
 </script>
 
 <script type="text/html" id="item1">
-    <div class="layui-row" style="">
+    <div class="layui-row">
         <div class="layui-col-md5">
-            <div class="table-cell border-line">部门: <strong>{{d.organizationName}}</strong></div>
-            <div class="table-cell border-line">用户: <strong>{{d.userID}}</strong></div>
-            <div class="table-cell border-line">客户: <strong>{{d.contactPerson}}</strong></div>
-            <div class="table-cell border-line">操作组合: <strong>暂无</strong></div>
-            <div class="table-cell border-line">优化分组: <strong>暂无</strong></div>
+            <input type="hidden" name="PCGroup" value="{{d.pcGroup}}">
+            <input type="hidden" name="PhoneGroup" value="{{d.phoneGroup}}">
+            <div class="table-cell border-line">部门: <span>{{d.organizationName}}</span></div>
+            <div class="table-cell border-line">用户: <span>{{d.userID}}</span></div>
+            <div class="table-cell border-line">客户: <span>{{d.contactPerson}}</span></div>
+            <div class="table-cell border-line" id="operationCombine">
+                <span>操作组合: </span>
+                <span>暂无</span>
+            </div>
+            <div class="table-cell border-line" id="optimizationGroup">
+                <span>优化分组: </span>
+                <span>暂无</span>
+            </div>
         </div>
         <div class="layui-col-md7">
-            <div class="table-cell border-line">域名: <strong>{{d.domain}}</strong></div>
+            <div class="table-cell border-line">域名: <span>{{d.domain}}</span></div>
             <div class="table-cell border-line">
                 状态:
-                <strong>
+                <span>
                     {{#  if(d.renewalStatus === 1) { }}
                     <span style="color: green;">续费</span>
                     {{# }else if(d.renewalStatus === 0) { }}
@@ -2548,11 +2517,17 @@
                     {{# }else if(d.renewalStatus === 5) { }}
                     <span style="color: mediumseagreen;">seo</span>
                     {{# } }}
-                </strong>
+                </span>
             </div>
-            <div class="table-cell border-line">创建时间: <strong>{{layui.util.toDateString(d.createTime,'yyyy-MM-dd')}}</strong></div>
-            <div class="table-cell border-line">操作词数: <strong>000</strong></div>
-            <div class="table-cell border-line">分组标签: <strong>sfbhsafbskabgksbsfafsaskjbsagjbsakj</strong></div>
+            <div class="table-cell border-line">创建时间: <span>{{layui.util.toDateString(d.createTime,'yyyy-MM-dd')}}</span></div>
+            <div class="table-cell border-line" id="customerKeywordCount">
+                <span>操作词数: </span>
+                <span>暂无</span>
+            </div>
+            <div class="table-cell border-line" id="tagNames">
+                <span>网站标签: </span>
+                <span>暂无</span>
+            </div>
         </div>
     </div>
 </script>
@@ -2560,15 +2535,20 @@
 <script type="text/html" id="item2">
     <div class="layui-row">
         <div class="layui-col-md4">
-            <div class="graph-cell border-line"></div>
+            <div class="graph-cell border-line" id="xtCharts"
+                 style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
             <div class="table-cell border-line">排名-操作词数图表</div>
         </div>
+        {{# if(d.searchEngine === '百度') { }}
         <div class="layui-col-md4">
-            <div class="graph-cell border-line"></div>
+            <div class="graph-cell border-line" id="keywordTrendCharts"
+                 style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
             <div class="table-cell border-line">爱站-关键词排名收录趋势</div>
         </div>
+        {{# } }}
         <div class="layui-col-md4">
-            <div class="graph-cell border-line"></div>
+            <div class="graph-cell border-line" id="designationWordCharts"
+                 style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
             <div class="table-cell border-line">指定词排名趋势</div>
         </div>
     </div>
