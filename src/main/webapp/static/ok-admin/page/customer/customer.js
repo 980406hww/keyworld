@@ -34,10 +34,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
         contentType: 'application/json',
         cols: [[
             /*templet: '#toDateTime'*/
-            {filed: 'uuid', type: 'checkbox', fixed: "right", width: '32'},
-            {field: 'uuid', title: '基本信息', fixed: "right", width: '640', templet: '#baseInfo'},
-            {field: 'uuid', title: '拥有业务', width: '640', templet: '#businessInfo'},
-            {field: 'uuid', title: '操作',  fixed: "right", width: '180', templet: '#operationTpl',}
+            {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
+            {field: 'uuid', title: '基本信息', fixed: "left", width: '680', templet: '#baseInfo'},
+            {field: 'uuid', title: '拥有业务', width: '680', templet: '#businessInfo'},
+            {field: 'uuid', title: '操作', fixed: "right", width: '100',align: 'center', templet: '#operationTpl',}
         ]],
         height: 'full-110',
 
@@ -47,7 +47,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
     });
 
     //监听排序事件
-    table.on('sort(tableFilter)', function(obj){
+    table.on('sort(tableFilter)', function (obj) {
         let data = $.parseJSON(formToJson($("#searchForm").serialize()));
         data.orderBy = obj.field;
         data.orderMode = obj.type === 'asc' ? 1 : 0;
@@ -73,8 +73,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
         }
     });
 
-    table.on('toolbar(tableFilter)',function(obj){
-        var data = obj.data,event = obj.event;
+    table.on('toolbar(tableFilter)', function (obj) {
+        var data = obj.data, event = obj.event;
         switch (event) {
             case 'batchDeleteCustomer':
                 batchDeleteCustomer();
@@ -112,9 +112,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
     });
 
     function formToJson(data) {
-        data=data.replace(/&/g,"\",\"");
-        data=data.replace(/=/g,"\":\"");
-        data="{\""+data+"\"}";
+        data = data.replace(/&/g, "\",\"");
+        data = data.replace(/=/g, "\":\"");
+        data = "{\"" + data + "\"}";
         return data;
     }
 
@@ -206,26 +206,26 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
         });
     }
 
-   /* $.ajax({
-        url: '/internal/customer/getActiveUsers',
-        dataType: 'json',
-        type: 'get',
-        success: function (data) {
-            $("#loginName").empty();
-            $("#loginName").append('<option value="">请选择所属用户</option>');
-            $.each(data, function (index, item) {
-                $('#loginName').append('<option value="' + item.loginName + '">' + item.userName + '</option>');
-            });
-            form.render("select");
-        }
-    });*/
+    /* $.ajax({
+         url: '/internal/customer/getActiveUsers',
+         dataType: 'json',
+         type: 'get',
+         success: function (data) {
+             $("#loginName").empty();
+             $("#loginName").append('<option value="">请选择所属用户</option>');
+             $.each(data, function (index, item) {
+                 $('#loginName').append('<option value="' + item.loginName + '">' + item.userName + '</option>');
+             });
+             form.render("select");
+         }
+     });*/
 
     // 编辑表格获得表格数据
     function editCustomer(data) {
         okLayer.open("首页 / 客户列表 / 修改用户", "/internal/customer/toCustomersAdd", "60%", "90%", function (layero) {
             window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
-        },function(){
-            if(sign){
+        }, function () {
+            if (sign) {
                 active['reload'].call(this);
                 sign = false;
             }
@@ -274,9 +274,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
     });
 
     // 添加客户
-    function toAddCustomer(){
+    function toAddCustomer() {
         okLayer.open("首页 / 客户列表 / 添加用户", "/internal/customer/toCustomersAdd", "60%", "90%", null, function () {
-            if(sign){
+            if (sign) {
                 active['reload'].call(this);
                 sign = false;
             }
@@ -354,20 +354,21 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
             }
         });
     };
+
     /**
      * 修正浮动栏高度
      * @param tableElem 表格显示div
      */
     function autoFixed(tableElem) {
         var $tableView = tableElem || $(".layui-table-view");
-        var dataIndex ,trHeight;
-        $tableView.each(function() {
+        var dataIndex, trHeight;
+        $tableView.each(function () {
             // 获取两侧浮动栏
             var $fixed = $(this).find(".layui-table-fixed");
             // 同步表头高度
             $fixed.find(".layui-table-header tr").height($(this).find(".layui-table-header tr").eq(0).height());
             // 遍历tr 修正浮动栏行高
-            $(this).find(".layui-table-main tr").each(function() {
+            $(this).find(".layui-table-main tr").each(function () {
                 dataIndex = $(this).attr("data-index");
                 trHeight = $(this).css("height");
                 $fixed.find("tr[data-index=" + dataIndex + "]").css("height", trHeight);
@@ -377,11 +378,11 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
 
     // 监听浏览器窗口大小变化
     var resizeTimer;
-    $(window).resize(function() {
+    $(window).resize(function () {
         if (resizeTimer) {
             clearTimeout(resizeTimer);
         }
-        resizeTimer = setTimeout(function() {
+        resizeTimer = setTimeout(function () {
                 resizeTimer = null;
                 autoFixed();
             },
@@ -392,37 +393,42 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
     $(document).on('mousedown', 'thead',
         function (e) {
             var that = $(this);
-            $(document).one('mouseup',function () {
-                    autoFixed(that.parents('.layui-table-view'));
+            $(document).one('mouseup', function () {
+                autoFixed(that.parents('.layui-table-view'));
             })
         }
-     );
+    );
 
 
-    window.generate_customer_business_td2 = function(data) {
+    window.generate_customer_business_td2 = function (data) {
         let html = '';
+        let count = 0;
         let customerBusinessList = data.customerBusinessList;
         if (customerBusinessList !== null && customerBusinessList.length > 0) {
+
             for (let index in customerBusinessList) {
+
                 var parm = {};
                 let url = '', title = '', id = '';
+
                 var contactPerson = data.contactPerson.replace(/\s+/g, "");
                 if (customerBusinessList[index] === 'keyword') {
+                    count++;
                     url = '/internal/customerKeyword/searchCustomerKeywords/' + data.uuid;
                     title = contactPerson + '-关键字信息';
                     id = contactPerson + '-关键字信息';
                     $.ajax({
-                        url: '/internal/customerKeyword/getCustomerKeywordsCount/'+data.uuid,
+                        url: '/internal/customerKeyword/getCustomerKeywordsCount/' + data.uuid,
                         dataType: 'json',
                         type: 'get',
                         async: false,
                         success: function (res) {
-                            html +='<div class="layui-row" >\n' +
-                                '       <div class="layui-col-md5 td-border-right">关键字信息</div>\n' +
+                            html += '<div class="layui-row" >\n' +
+                                '       <div class="layui-col-md5 td-border-right"><a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>关键字信息</a></div>\n' +
                                 '       <div class="layui-col-md7 td-border-right">';
-                            if (res.code === 200){
+                            if (res.code === 200) {
                                 html += generate_keyword_info(res.data)
-                            }else{
+                            } else {
                                 html += '暂无数据'
                             }
                             html +=
@@ -432,22 +438,23 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
                         }
                     });
                 } else if (customerBusinessList[index] === 'qzsetting') {
+                    count++;
                     url = '/internal/qzsetting/toQZSetttingsWithCustomerUuid/' + data.uuid;
                     title = contactPerson + '-全站信息';
                     id = contactPerson + '-全站信息';
 
                     $.ajax({
-                        url: '/internal/qzsetting/getQZSettingsCount/'+data.uuid,
+                        url: '/internal/qzsetting/getQZSettingsCount/' + data.uuid,
                         dataType: 'json',
                         type: 'get',
                         async: false,
                         success: function (res) {
-                            html +='<div class="layui-row" >\n' +
-                                '       <div class="layui-col-md5 td-border-right">全站信息</div>\n' +
+                            html += '<div class="layui-row" >\n' +
+                                '       <div class="layui-col-md5 td-border-right"><a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>全站信息</a></div>\n' +
                                 '       <div class="layui-col-md7 td-border-right">';
-                            if (res.code === 200){
+                            if (res.code === 200) {
                                 html += generate_qzsetting_info(res.data)
-                            }else{
+                            } else {
                                 html += '暂无数据'
                             }
                             html +=
@@ -458,17 +465,25 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
                     });
 
                 } else if (customerBusinessList[index] === 'fm') {
+                    count++;
                     url = '/internal/productKeyword/searchProductKeywordsByCustomerUuid/' + data.uuid;
                     title = contactPerson + '-负面信息';
                     id = contactPerson + '-负面信息';
-                    html +='<div class="layui-row" >\n' +
+                    html += '<div class="layui-row" >\n' +
                         '       <div class="layui-col-md5 td-border-right">负面信息</div>\n' +
-                        '       <div class="layui-col-md7 td-border-right">'+'待做--占位符'+
+                        '       <div class="layui-col-md7 td-border-right">' + '待做--占位符' +
                         '       </div>\n' +
                         '   </div>';
                 }
             }
-        }else{
+            for (count; count < 3; count++) {
+                html += '<div class="layui-row" >\n' +
+                    '       <div class="layui-col-md5 td-border-right">&nbsp;</div>\n' +
+                    '       <div class="layui-col-md7 td-border-right">' + '&nbsp;' +
+                    '       </div>\n' +
+                    '   </div>';
+            }
+        } else {
             html += '暂无业务'
         }
         return html;
@@ -482,11 +497,11 @@ function updateOrNewTab(url, tit, id) {
     var contentIframe = ("<iframe src='" + url + "' lay-id='" + id
         + "'frameborder='0' scrolling='yes' width='100%' height='100%'></iframe>");
     parent.layui.$('.layui-tab-title li').each(function () {
-        if (id === this.getAttribute('lay-id')){
+        if (id === this.getAttribute('lay-id')) {
             update = true;
         }
     });
-    if (!update){
+    if (!update) {
         parent.layui.element.tabAdd('ok-tab', {
                 title: tit,
                 content: contentIframe,
@@ -546,7 +561,7 @@ function generate_keyword_info(data) {
         }
         htm += ')';
     } else {
-        htm += '<a href="javascript:void(0)">暂无信息</a>'
+        htm += '<a href="javascript:void(0)">暂无数据</a>'
     }
     return htm;
 }
@@ -564,12 +579,12 @@ function generate_qzsetting_info(data) {
                 '|<a href="javascript:changeQZSettingRenewalStatus(\'' + data.customerUuid + '\', 0)">暂停全站</a>' +
                 '|<a href="javascript:changeQZSettingRenewalStatus(\'' + data.customerUuid + '\', 3)">下架全站</a>'
         } else {
-            htm += '<span style="color: red;">暂停</span>' ;
+            htm += '<span style="color: red;">暂停</span>';
 
         }
         htm += ')';
     } else {
-        htm += '<a href="javascript:void(0)">暂无信息</a>'
+        htm += '<a href="javascript:void(0)">暂无数据</a>'
     }
     return htm;
 }

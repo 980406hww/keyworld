@@ -86,13 +86,18 @@
 </script>
 
 <script type="text/html" id="operationTpl">
+    <div class="layui-row">
+        <@shiro.hasPermission name="/internal/customer/saveCustomer">
+        <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
+    </@shiro.hasPermission>
+    </div>
 
-    <@shiro.hasPermission name="/internal/customer/saveCustomer">
-    <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
+    <div class="layui-row">
+        <@shiro.hasPermission name="/internal/customer/delCustomer">
+        <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
     </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/customer/delCustomer">
-    <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
-    </@shiro.hasPermission>
+    </div>
+
 
 </script>
 
