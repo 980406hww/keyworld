@@ -46,17 +46,17 @@
                                     </td>
                                     <td>
                                         <div class="my-label my-left">
-                                            <input type="number" class="layui-input my-input">
+                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,'')" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="my-label my-left">
-                                            <input type="number" class="layui-input my-input">
+                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,'')" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="my-label my-left">
-                                            <input type="number" class="layui-input my-input">
+                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,'')" class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
@@ -185,9 +185,10 @@
                                 <div class="layui-form-item">
                                     <label class="computer layui-form-label">初始首页词数</label>
                                     <div class="layui-input-block">
-                                        <input type="number" name="comCurrentKeywordCount"
+                                        <input type="text" name="comCurrentKeywordCount"
                                                placeholder="请输入初始首页词数"
                                                autocomplete="off"
+                                               onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
                                                class="computer-input layui-input">
                                     </div>
                                 </div>
@@ -205,9 +206,10 @@
                                 <div class="layui-form-item">
                                     <label class="computer layui-form-label">采词词数限制</label>
                                     <div class="layui-input-block">
-                                        <input type="number" name="comMaxKeywordCount"
+                                        <input type="text" name="comMaxKeywordCount"
                                                placeholder="请输入采词词数限制"
                                                autocomplete="off"
+                                               onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
                                                class="computer-input layui-input" value="300">
                                     </div>
                                 </div>
@@ -295,17 +297,23 @@
                                     </td>
                                     <td>
                                         <div class="my-label my-left">
-                                            <input type="number" class="layui-input my-input">
+                                            <input type="text"
+                                                   onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                                                   class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="my-label my-left">
-                                            <input type="number" class="layui-input my-input">
+                                            <input type="text"
+                                                   onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                                                   class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="my-label my-left">
-                                            <input type="number" class="layui-input my-input">
+                                            <input type="text"
+                                                   onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                                                   class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
@@ -359,9 +367,10 @@
                                 <div class="layui-form-item">
                                     <label class="phone layui-form-label">初始首页词数</label>
                                     <div class="layui-input-block">
-                                        <input type="number" name="phoneCurrentKeywordCount"
+                                        <input type="text" name="phoneCurrentKeywordCount"
                                                placeholder="请输入初始首页词数"
                                                autocomplete="off"
+                                               onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
                                                class="phone-input layui-input">
                                     </div>
                                 </div>
@@ -379,9 +388,10 @@
                                 <div class="phone layui-form-item">
                                     <label class="layui-form-label">采词词数限制</label>
                                     <div class="layui-input-block">
-                                        <input type="number" name="phoneMaxKeywordCount"
+                                        <input type="text" name="phoneMaxKeywordCount"
                                                placeholder="请输入采词词数限制"
                                                autocomplete="off"
+                                               onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
                                                class="phone-input layui-input" value="300">
                                     </div>
                                 </div>
@@ -469,17 +479,23 @@
                                     </td>
                                     <td>
                                         <div class="my-label my-left">
-                                            <input type="number" class="layui-input my-input">
+                                            <input type="text"
+                                                   onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                                                   class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="my-label my-left">
-                                            <input type="number" class="layui-input my-input">
+                                            <input type="text"
+                                                   onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                                                   class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="my-label my-left">
-                                            <input type="number" class="layui-input my-input">
+                                            <input type="text"
+                                                   onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                                                   class="layui-input my-input">
                                         </div>
                                     </td>
                                     <td>
@@ -627,7 +643,7 @@
                                 deselectPhone();
                                 d_n.computer = true;
                                 d_n.optimizationComType = d.qzOperationTypes[i].optimizationType;
-                                if (d_n.optimizationComType === '0') {
+                                if (d_n.optimizationComType === 0) {
                                     selectPhone(true);
                                 }
                                 d_n.pcGroup = d.qzOperationTypes[i].group;
@@ -640,13 +656,17 @@
                                     d_n.comStandardSpecies = d.qzOperationTypes[i].qzChargeRules[0].standardSpecies;
                                     html_c = getHeader(d_n.comStandardSpecies, true) + html_c;
                                     document.getElementById('computerTbody').innerHTML = html_c;
+                                } else {
+                                    d_n.comStandardSpecies = 'other';
+                                    computerTableFlag = false;
+                                    computerTable.style.display = 'none';
                                 }
                                 break;
                             case "Phone":
                                 deselectComputer();
                                 d_n.phone = true;
                                 d_n.optimizationPhoneType = d.qzOperationTypes[i].optimizationType;
-                                if (d_n.optimizationPhoneType === '0') {
+                                if (d_n.optimizationPhoneType === 0) {
                                     selectComputer(true);
                                 }
                                 d_n.phoneGroup = d.qzOperationTypes[i].group;
@@ -659,6 +679,10 @@
                                     d_n.phoneStandardSpecies = d.qzOperationTypes[i].qzChargeRules[0].standardSpecies;
                                     html_p = getHeader(d_n.phoneStandardSpecies, false) + html_p;
                                     document.getElementById('phoneTbody').innerHTML = html_p;
+                                } else {
+                                    d_n.phoneStandardSpecies = 'other';
+                                    phoneTableFlag = false;
+                                    phoneTable.style.display = 'none';
                                 }
                                 break;
                         }
@@ -670,7 +694,7 @@
                     }
                     flag_ = false;
                 } else {
-                    l.layer.msg(res.msg);
+                    l.layer.msg(res.msg === null ? '未知错误' : res.msg);
                 }
             }
         });
@@ -696,32 +720,33 @@
 
     function listToHtml(l) {
         let html = ``;
-        for (let j = 0; j < l.length; j++) {
-            html += `<tr>
+        if (l) {
+            for (let j = 0; j < l.length; j++) {
+                html += `<tr>
                                     <td>
                                         <div class="my-label my-left my-padding">`;
-            html += (j + 1);
-            html += `</div>
+                html += (j + 1);
+                html += `</div>
                                     </td>
                                     <td>
                                         <div class="my-label my-left">
-                                            <input type="number" class="layui-input my-input" value="`;
-            html += l[j].startKeywordCount;
-            html += `">
+                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,'')" class="layui-input my-input" value="`;
+                html += l[j].startKeywordCount;
+                html += `">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="my-label my-left">
-                                            <input type="number" class="layui-input my-input" value="`;
-            html += l[j].endKeywordCount;
-            html += `">
+                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,'')" class="layui-input my-input" value="`;
+                html += l[j].endKeywordCount === null ? '' : l[j].endKeywordCount;
+                html += `">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="my-label my-left">
-                                            <input type="number" class="layui-input my-input" value="`;
-            html += l[j].amount;
-            html += `">
+                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,'')" class="layui-input my-input" value="`;
+                html += l[j].amount;
+                html += `">
                                         </div>
                                     </td>
                                     <td>
@@ -733,6 +758,7 @@
                                         </div>
                                     </td>
                                 </tr>`;
+            }
         }
         return html;
     }
@@ -759,13 +785,6 @@
                 break;
             case 'other':
                 header_ += '其他收费规则';
-                if (f) {
-                    computerTableFlag = false;
-                    computerTable.style.display = 'none';
-                } else {
-                    phoneTableFlag = false;
-                    phoneTable.style.display = 'none';
-                }
                 break;
         }
         header_ += `</div>
@@ -1009,7 +1028,7 @@
                                 customerInput.setAttribute('disabled', '');
                             }
                         } else {
-                            layer.msg(res.msg);
+                            layer.msg(res.msg === null ? '未知错误' : res.msg);
                         }
                     }
                 });
@@ -1256,7 +1275,7 @@
                 b.standardType = 'satisfyAll';
                 b.subDomainName = d.comSubDomainName;
                 let qzChargeRules = [], comTr = tbody_com.children('tr');
-                if (d.optimizationComType !== '0') {
+                if (d.optimizationComType !== '0' && d.comStandardSpecies !== 'other') {
                     for (let i = 2; i < comTr.length; i++) {
                         let comTd = comTr[i].children, c = {};
                         c.standardSpecies = d.comStandardSpecies;
@@ -1305,7 +1324,7 @@
                 b.standardType = 'satisfyAll';
                 b.subDomainName = d.phoneSubDomainName;
                 let qzChargeRules = [], phoneTr = tbody_phone.children('tr');
-                if (d.optimizationPhoneType !== '0') {
+                if (d.optimizationPhoneType !== '0' && d.phoneStandardSpecies !== 'other') {
                     for (let i = 2; i < phoneTr.length; i++) {
                         let phoneTd = phoneTr[i].children, c = {};
                         c.standardSpecies = d.phoneStandardSpecies;
@@ -1460,11 +1479,11 @@
                                     parent.layer.close(parent.layer.getFrameIndex(window.name));
                                 });
                             } else {
-                                layui.layer.msg(res.msg);
+                                layer.msg(res.msg === null ? '未知错误' : res.msg);
                             }
                         },
                         error: function () {
-                            layui.layer.msg("保存失败");
+                            layer.msg("保存失败");
                         }
                     });
                 }, btn2: function (index) {

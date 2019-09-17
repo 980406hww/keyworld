@@ -54,7 +54,7 @@ public interface QZSettingService extends IService<QZSetting> {
 
     void batchUpdateRenewalStatus(String uuids, int renewalStatus);
 
-    void updRenewalStatus(Long uuid,int renewalStatus);
+    void updRenewalStatus(Long uuid, int renewalStatus);
 
     Map<String, String> getPCPhoneGroupByUuid(Long uuid);
 }

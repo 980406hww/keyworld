@@ -295,7 +295,7 @@ public class QZSettingServiceImpl extends
 
     @Override
     public Long saveQZSetting(QZSetting qzSetting, String userName) {
-        Long uuid = null;
+        Long qzSettingUuid = null;
         if (qzSetting.getUuid() != null) {
             //修改qzSetting表
             QZSetting existingQZSetting = qzSettingDao.selectById(qzSetting.getUuid());
@@ -339,9 +339,8 @@ public class QZSettingServiceImpl extends
         } else {
             qzSetting.setUpdateTime(new Date());
             qzSettingDao.insert(qzSetting);
-            uuid = qzSetting.getUuid();
+            qzSettingUuid = qzSetting.getUuid();
             // 插入qzSetting是的uuid
-            Long qzSettingUuid = (long) qzSettingDao.selectLastId();
             for (QZOperationType qzOperationType : qzSetting.getQzOperationTypes()) {
                 qzOperationType.setQzSettingUuid(qzSettingUuid);
                 qzOperationTypeService.insert(qzOperationType);
@@ -380,7 +379,7 @@ public class QZSettingServiceImpl extends
                 qzCategoryTagService.insert(qzCategoryTag);
             }
         }
-        return uuid;
+        return qzSettingUuid;
     }
 
     private void updateQZKeywordRankInfo(List<QZKeywordRankInfo> existingQZKeywordRankInfos,
@@ -546,7 +545,8 @@ public class QZSettingServiceImpl extends
             QZChargeRule qzChargeRule = oldOperationType.getQzChargeRules().iterator().next();
             if (qzChargeRule.getStandardSpecies()
                 .equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
-                if (!newOperationType.getQzChargeRules().iterator().next().getStandardSpecies()
+                if (!newOperationType.getQzChargeRules().isEmpty() && !newOperationType
+                    .getQzChargeRules().iterator().next().getStandardSpecies()
                     .equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
                     CaptureRankJob existCaptureRankJob = captureRankJobService
                         .findExistCaptureRankJob(qzSettingUuid,
@@ -606,7 +606,7 @@ public class QZSettingServiceImpl extends
             }
         }
         captureRankJobService.deleteCaptureRankJob(uuid, null);
-        Map<String, String> groupMap = this.getPCPhoneGroupByUuid(uuid);
+        Map<String, String> groupMap = qzSettingDao.getPCPhoneGroupByUuid(uuid);
         String pcGroup = groupMap.get("pcGroup");
         if (pcGroup != null
             && customerKeywordService.getCustomerKeywordCountByOptimizeGroupName(pcGroup) == 0) {

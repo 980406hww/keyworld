@@ -391,12 +391,12 @@
             height: 30px;
         }
 
-        .my-label{
+        .my-label {
             height: auto !important;
             max-width: 330px;
         }
 
-        .layui-input-inline input{
+        .layui-input-inline input {
             height: 30px;
         }
 
@@ -487,41 +487,47 @@
                         <input hidden name="searchEngine" id="searchEngine" value="百度"/>
                         <input hidden name="terminalType" id="terminalType" value="PC"/>
                         <input type="text" hidden name="userInfoID" id="userInfoID" value="">
-                        <input type="text" hidden name="organizationID" id="organizationID" value="">
+                        <input type="text" hidden name="organizationID" id="organizationID"
+                               value="">
                         <div class="layui-form-item" lay-filter="loginNameFilter">
                             <div class="layui-inline">
                                 <label class="layui-form-label">域名</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="domain" id="domain" placeholder="请输入域名" autocomplete="off" onblur="checkDomain()" onmouseleave="checkDomain()" class="layui-input">
+                                    <input type="text" name="domain" id="domain" placeholder="请输入域名"
+                                           autocomplete="off" onblur="checkDomain()"
+                                           onmouseleave="checkDomain()" class="layui-input">
                                 </div>
                             </div>
 
                             <div class="layui-inline">
                                 <label class="layui-form-label">客户</label>
                                 <div class="layui-input-inline">
-                                    <select name="customerInfo" id="customerInfo" lay-filter="customerInfoFilter" lay-search>
+                                    <select name="customerInfo" id="customerInfo"
+                                            lay-filter="customerInfoFilter" lay-search>
                                     </select>
                                 </div>
                             </div>
-<!--                            TODO-->
-<!--                            <div class="layui-inline">用户</div>-->
-<!--                            <div class="layui-inline">-->
-<!--                                <div class="layui-input-inline">-->
-<!--                                    <select id="LAY-auth-tree-index" lay-filter="tree"></select>-->
-<!--                                </div>-->
-<!--                            </div>-->
+                            <!--                            TODO-->
+                            <!--                            <div class="layui-inline">用户</div>-->
+                            <!--                            <div class="layui-inline">-->
+                            <!--                                <div class="layui-input-inline">-->
+                            <!--                                    <select id="LAY-auth-tree-index" lay-filter="tree"></select>-->
+                            <!--                                </div>-->
+                            <!--                            </div>-->
 
                             <div class="layui-inline">
                                 <label class="layui-form-label">用户</label>
                                 <div class="layui-input-inline">
-                                    <input type="text"  id="tree" lay-filter="tree" class="layui-input" >
+                                    <input type="text" id="tree" lay-filter="tree"
+                                           class="layui-input">
                                 </div>
                             </div>
 
                             <div class="layui-inline">
                                 <label class="layui-form-label">分类标签</label>
                                 <div class="layui-input-inline">
-                                    <select name="categoryTag" id="categoryTag" lay-filter="categoryTagFilter" lay-search>
+                                    <select name="categoryTag" id="categoryTag"
+                                            lay-filter="categoryTagFilter" lay-search>
                                     </select>
                                 </div>
                             </div>
@@ -529,7 +535,8 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label">组名</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="group" id="group" placeholder="请输入组名" autocomplete="off"class="layui-input">
+                                    <input type="text" name="group" id="group" placeholder="请输入组名"
+                                           autocomplete="off" class="layui-input">
                                 </div>
                             </div>
 
@@ -612,7 +619,8 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label">创建时间</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" class="layui-input" id="createTimes" name="createTimes" readonly placeholder="请选择日期">
+                                    <input type="text" class="layui-input" id="createTimes"
+                                           name="createTimes" readonly placeholder="请选择日期">
                                 </div>
                             </div>
                         </div>
@@ -636,12 +644,14 @@
 <!--数据表格-->
 <table class="layui-hide" id="qzSettingTable" lay-filter="tableFilter"></table>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
-<script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
+<script type="text/javascript"
+        src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
 <script>
     var sign = false;
     var noteAddRow = true;
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'treeSelect', 'laydate','authtree'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'treeSelect', 'laydate',
+        'authtree'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
@@ -657,8 +667,8 @@
             range: true
         });
         let customerUuid = $("#customerUuid").val();
-        let whereCondition = {searchEngine:'百度',terminalType: 'PC'};
-        if(customerUuid !==""){
+        let whereCondition = {searchEngine: '百度', terminalType: 'PC'};
+        if (customerUuid !== "") {
             whereCondition.customerUuid = customerUuid;
         }
         get_qzsetting(whereCondition);
@@ -682,9 +692,12 @@
                         } else {
                             ttse = item.searchEngineName;
                         }
-                        terminalSearchEngine.append('<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
+                        terminalSearchEngine.append(
+                            '<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
                     });
-                    terminalSearchEngine.val( ($('#searchEngine').val() + $('#terminalType').val()) === '' ? '百度PC' : ($('#searchEngine').val() + $('#terminalType').val()));
+                    terminalSearchEngine.val(
+                        ($('#searchEngine').val() + $('#terminalType').val()) === '' ? '百度PC' : ($(
+                            '#searchEngine').val() + $('#terminalType').val()));
                     form.render("select");
                 }
             });
@@ -720,12 +733,12 @@
             data: '/internal/user/trees2',
             type: 'get',
             placeholder: '用户名称',
-            click: function(d){
+            click: function (d) {
                 $("#organizationID").val("");
                 $("#userInfoID").val("");
                 if (d.current.level === 0 && d.current.id !== 0) {
                     $("#organizationID").val(d.current.id)
-                }else if (d.current.level === 1) {
+                } else if (d.current.level === 1) {
                     $("#userInfoID").val(d.current.id)
                 }
             },
@@ -733,10 +746,10 @@
             }
         });
 
-        window.checkDomain = function() {
-            var domain = $("#domain").val().replace(/\s*/g,"");
-            if(domain != null && domain !== ''){
-                if(domain.indexOf(".") === -1){
+        window.checkDomain = function () {
+            var domain = $("#domain").val().replace(/\s*/g, "");
+            if (domain != null && domain !== '') {
+                if (domain.indexOf(".") === -1) {
                     show_layer_msg("域名不符合规范", 5);
                 }
             }
@@ -750,7 +763,8 @@
                 $("#categoryTag").empty();
                 $("#categoryTag").append('<option value="">请选择分类标签</option>');
                 $.each(data, function (index, item) {
-                    $('#categoryTag').append('<option value="' + item + '">' + item.trim() + '</option>');
+                    $('#categoryTag').append(
+                        '<option value="' + item + '">' + item.trim() + '</option>');
                 });
                 form.render("select");
             }
@@ -764,25 +778,27 @@
                 $("#customerInfo").empty();
                 $("#customerInfo").append('<option value="">请选择客户</option>');
                 $.each(data, function (index, item) {
-                    $('#customerInfo').append('<option value="' + item.uuid + '">' + item.contactPerson.trim() + '</option>');
+                    $('#customerInfo').append(
+                        '<option value="' + item.uuid + '">' + item.contactPerson.trim()
+                        + '</option>');
                 });
                 form.render("select");
             }
         });
 
         form.on("submit(search)", function (data) {
-            data.field.domain.replace(/\s*/g,"");
-            data.field.customerInfo.replace(/\s*/g,"");
-            data.field.categoryTag.replace(/\s*/g,"");
+            data.field.domain.replace(/\s*/g, "");
+            data.field.customerInfo.replace(/\s*/g, "");
+            data.field.categoryTag.replace(/\s*/g, "");
 
-            if(data.field.createTimes != null || data.field.createTimes != ''){
+            if (data.field.createTimes != null || data.field.createTimes != '') {
                 var str = data.field.createTimes.split(" - ")
                 data.field.createTime = str[0]
                 data.field.createTimePrefix = str[1]
             }
 
-            if(data.field.domain != null && data.field.domain !== ''){
-                if(data.field.domain.indexOf(".") === -1){
+            if (data.field.domain != null && data.field.domain !== '') {
+                if (data.field.domain.indexOf(".") === -1) {
                     show_layer_msg("域名不符合规范", 5);
                     return false;
                 }
@@ -792,54 +808,58 @@
             return false;
         });
 
-        <@shiro.hasPermission name="/internal/qzsetting/searchQZSettings">
-        function get_qzsetting(whereCondition) {
-            table.render({
-                elem: '#qzSettingTable',
-                method: 'post',
-                url: '/internal/qzsetting/getQZSettings',
-                limit: 25,
-                limits: [10, 25, 50, 75, 100, 500, 1000],
-                page: true,
-                size: 'sm',
-                id: 'qzSettingTable',
-                toolbar: "#toolbarTpl",
-                defaultToolbar: [],
-                contentType: 'application/json',
-                where: whereCondition,
-                cols: [[
-                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
-                    {filed: 'uuid', title: '记录', width: '1638', templet: '#item'}
-                ]],
-                height: 'full-100',
-                loading: true,
-                done: function (res, curr, count) {
-                    let terminalType = $('#terminalType').val();
-                    terminalType = terminalType === '' ? 'PC' : terminalType;
-                    getTerminalSearchEngineMap();
-                    get_operation_combine_list(terminalType);
-                    let qz_setting_table = $("#qzSettingTable").parent().find(".layui-table-main").find("table");
-                    $.each(res.data, function (idx, val) {
-                        let td = qz_setting_table.find("tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
-                            "td[data-field='1']");
-                        let optimizeGroupName = td.find(
-                            "input[name='" + terminalType + "Group']").val();
-                        let postData = {};
-                        postData.uuid = val.uuid;
-                        postData.terminalType = terminalType;
-                        postData.optimizeGroupName = optimizeGroupName;
-                        getQZKeywordRankInfo(postData, function (result) {
-                            td.find(".other-rank_2").find("#optimizationGroup span").prop("title", optimizeGroupName);
-                            td.find(".other-rank_2").find("#optimizationGroup span a").text(optimizeGroupName);
-                            if (result.data != null) {
-                                initQZKeywordRankInfo(result.data, td);
-                            }
+    <@shiro.hasPermission name = "/internal/qzsetting/searchQZSettings">
+            function get_qzsetting(whereCondition) {
+                table.render({
+                    elem: '#qzSettingTable',
+                    method: 'post',
+                    url: '/internal/qzsetting/getQZSettings',
+                    limit: 25,
+                    limits: [10, 25, 50, 75, 100, 500, 1000],
+                    page: true,
+                    size: 'sm',
+                    id: 'qzSettingTable',
+                    toolbar: "#toolbarTpl",
+                    defaultToolbar: [],
+                    contentType: 'application/json',
+                    where: whereCondition,
+                    cols: [[
+                        {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
+                        {filed: 'uuid', title: '记录', width: '1638', templet: '#item'}
+                    ]],
+                    height: 'full-100',
+                    loading: true,
+                    done: function (res, curr, count) {
+                        let terminalType = $('#terminalType').val();
+                        terminalType = terminalType === '' ? 'PC' : terminalType;
+                        getTerminalSearchEngineMap();
+                        get_operation_combine_list(terminalType);
+                        let qz_setting_table = $("#qzSettingTable").parent().find(
+                            ".layui-table-main").find("table");
+                        $.each(res.data, function (idx, val) {
+                            let td = qz_setting_table.find(
+                                "tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
+                                "td[data-field='1']");
+                            let optimizeGroupName = td.find(
+                                "input[name='" + terminalType + "Group']").val();
+                            let postData = {};
+                            postData.uuid = val.uuid;
+                            postData.terminalType = terminalType;
+                            postData.optimizeGroupName = optimizeGroupName;
+                            getQZKeywordRankInfo(postData, function (result) {
+                                td.find(".other-rank_2").find("#optimizationGroup span").prop(
+                                    "title", optimizeGroupName);
+                                td.find(".other-rank_2").find("#optimizationGroup span a").text(
+                                    optimizeGroupName);
+                                if (result.data != null) {
+                                    initQZKeywordRankInfo(result.data, td);
+                                }
+                            });
                         });
-                    });
-                }
-            });
-        }
-        </@shiro.hasPermission>
+                    }
+                });
+            }
+            </@shiro.hasPermission>
 
         function initQZKeywordRankInfo(data, td) {
             td.find("#fmtStandardDate a").text(
@@ -895,8 +915,9 @@
                 success: function (res) {
                     let operation_combine_select = $("#update_qz_operation_combine");
                     operation_combine_select.append("<option value='null'>置空</option>");
-                    $.each(res.data, function(i ,v) {
-                        var option=$("<option value='"+v.uuid+"'>"+v.operationCombineName+"</option>");
+                    $.each(res.data, function (i, v) {
+                        var option = $("<option value='" + v.uuid + "'>" + v.operationCombineName
+                            + "</option>");
                         operation_combine_select.append(option);
                     });
                     form.render("select");
@@ -916,7 +937,8 @@
         var active = {
             reload: function () {
                 table.reload('qzSettingTable', {
-                    where: $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true))),
+                    where: $.parseJSON(
+                        formToJson(decodeURIComponent($("#searchForm").serialize(), true))),
                     page: {
                         curr: 1 //从第一页开始
                     }
@@ -989,8 +1011,8 @@
                     },
                     tooltip: {
                         trigger: 'axis',
-                        position: function(point, params, dom, rect, size){
-                            return [point[0]+20,'-15%'];
+                        position: function (point, params, dom, rect, size) {
+                            return [point[0] + 20, '-15%'];
                         }
                     },
                     grid: {
@@ -1181,8 +1203,8 @@
                     },
                     tooltip: {
                         trigger: 'axis',
-                        position: function(point, params, dom, rect, size){
-                            return [point[0]+20,'-15%'];
+                        position: function (point, params, dom, rect, size) {
+                            return [point[0] + 20, '-15%'];
                         }
                     },
                     grid: {
@@ -1381,8 +1403,8 @@
                 },
                 tooltip: {
                     trigger: 'axis',
-                    position: function(point, params, dom, rect, size){
-                        return [point[0]+20,'-15%'];
+                    position: function (point, params, dom, rect, size) {
+                        return [point[0] + 20, '-15%'];
                     }
                 },
                 grid: {
@@ -1531,8 +1553,8 @@
                 },
                 tooltip: {
                     trigger: 'axis',
-                    position: function(point, params, dom, rect, size){
-                        return [point[0]+20,'-15%'];
+                    position: function (point, params, dom, rect, size) {
+                        return [point[0] + 20, '-15%'];
                     }
                 },
                 grid: {
@@ -1704,8 +1726,10 @@
             keywordRecordCharts.setOption(option);
         }
 
-        function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames, operationCombineName) {
-            div.parent().find(".other-rank .line1").find("#customerKeywordCount").text(customerKeywordCount);
+        function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames,
+            operationCombineName) {
+            div.parent().find(".other-rank .line1").find("#customerKeywordCount").text(
+                customerKeywordCount);
             if (categoryTagNames.length > 0) {
                 var tagNameStr = "";
                 var span = $(div).parent().parent().parent().find(".header span.tagNames");
@@ -1714,7 +1738,8 @@
                 });
                 $(span).find("label.tagNameStr").html(
                     tagNameStr.substring(0, tagNameStr.length - 1));
-                $(span).find("label.tagNameStr").attr('title',  tagNameStr.substring(0, tagNameStr.length - 1))
+                $(span).find("label.tagNameStr").attr('title',
+                    tagNameStr.substring(0, tagNameStr.length - 1))
 
             }
 
@@ -1979,7 +2004,7 @@
                 })
         };
 
-        window.commitNoteBook = function(e) {
+        window.commitNoteBook = function (e) {
             let this_ = e.parentElement.parentElement;
             let td_l = this_.parentElement.children;
             let d = {};
@@ -2275,7 +2300,7 @@
             layer.confirm("确定要修改所选站点优化组关联的操作组合吗？", {icon: 3, title: '修改操作组合'}, function (index) {
                 let groupNameArr = [];
                 $.each(checkStatus.data, function (i, v) {
-                if (v.pcGroup !== null) {
+                    if (v.pcGroup !== null) {
                         groupNameArr.push(v.pcGroup);
                     } else {
                         groupNameArr.push(v.phoneGroup);
@@ -2283,7 +2308,8 @@
                 });
 
                 let postData = {};
-                postData.operationCombineUuid = (data.value === 'null' || data.value === '') ? null : data.value;
+                postData.operationCombineUuid = (data.value === 'null' || data.value === '') ? null
+                    : data.value;
                 postData.groupNames = groupNameArr;
                 $.ajax({
                     url: '/internal/group/updateGroupOperationCombineUuid',
@@ -2322,7 +2348,8 @@
             });
         }
 
-        window.showAddKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
+        window.showAddKeywordDialog = function (uuid, customerUuid, domain, bearPawNumber,
+            searchEngine, type, pcGroup, phoneGroup) {
             let terminalType = $("#terminalSearchEngine").val();
             terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
             let optimizeGroupName = phoneGroup;
@@ -2471,7 +2498,7 @@
                 return;
             }
             let msg = 0;
-            if(renewalStatus === 0) {
+            if (renewalStatus === 0) {
                 msg = "确认选中的整站要暂停续费吗?";
             } else if (renewalStatus === 3) {
                 msg = "确认要下架所选整站吗?";
@@ -2525,29 +2552,33 @@
     </div>
 
     <div class="layui-btn-group">
-    <@shiro.hasPermission name="/internal/qzsetting/save">
-    <button class="layui-btn layui-btn-sm" id="addQz" lay-event="addQz">
+        <@shiro.hasPermission name="/internal/qzsetting/save">
+        <button class="layui-btn layui-btn-sm" id="addQz" lay-event="addQz">
             <i class="layui-icon">&#xe61f;</i>添加
-    </button>
+        </button>
 
-    <button class="layui-btn layui-btn-sm" lay-event="updFZTags">
-        <i class="layui-icon"></i>修改标签
-    </button>
+        <button class="layui-btn layui-btn-sm" lay-event="updFZTags">
+            <i class="layui-icon"></i>修改标签
+        </button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
-    	<button class="layui-btn layui-btn-sm layui-btn-danger" id="batchDeleteQZSetting" lay-event="batchDeleteQZSetting">
-            <i class="layui-icon"></i>删除所选
-        </button>
+    <button class="layui-btn layui-btn-sm layui-btn-danger" id="batchDeleteQZSetting"
+            lay-event="batchDeleteQZSetting">
+        <i class="layui-icon"></i>删除所选
+    </button>
     </@shiro.hasPermission>
-        <button class="layui-btn layui-btn-sm" id="batchUpdateQZSettingUpdateStatus" lay-event="batchUpdateQZSettingUpdateStatus">
-            <i class="layui-icon"></i>马上更新
-        </button>
-        <button class="layui-btn layui-btn-sm layui-btn-warm" id="batchUpdateRenewalStatusToSuspend" lay-event="batchUpdateRenewalStatusToSuspend">
-            <i class="layui-icon"></i>暂停续费
-        </button>
-        <button class="layui-btn layui-btn-sm layui-btn-danger" id="batchUpdateRenewalStatusToSoldOut" lay-event="batchUpdateRenewalStatusToSoldOut">
-            <i class="layui-icon"></i>下架整站
-        </button>
+    <button class="layui-btn layui-btn-sm" id="batchUpdateQZSettingUpdateStatus"
+            lay-event="batchUpdateQZSettingUpdateStatus">
+        <i class="layui-icon"></i>马上更新
+    </button>
+    <button class="layui-btn layui-btn-sm layui-btn-warm" id="batchUpdateRenewalStatusToSuspend"
+            lay-event="batchUpdateRenewalStatusToSuspend">
+        <i class="layui-icon"></i>暂停续费
+    </button>
+    <button class="layui-btn layui-btn-sm layui-btn-danger" id="batchUpdateRenewalStatusToSoldOut"
+            lay-event="batchUpdateRenewalStatusToSoldOut">
+        <i class="layui-icon"></i>下架整站
+    </button>
     </div>
 </script>
 
@@ -2560,10 +2591,11 @@
             <span class="contactPerson-name" title="{{d.contactPerson}}"><a href="javascript:;">{{d.contactPerson}}</a></span>
             <span class="domain" title="{{d.domain}}"><a href="javascript:;">{{d.domain}}</a></span>
             <span class="organization-name" title="{{d.organizationName}}"><a href="javascript:;">{{d.organizationName}}</a></span>
-            <span class="to-aizhan"><a href="https://www.aizhan.com/cha/{{d.domain}}" target="_blank"
-                     title="查看爱站">爱站</a></span>
+            <span class="to-aizhan"><a href="https://www.aizhan.com/cha/{{d.domain}}"
+                                       target="_blank"
+                                       title="查看爱站">爱站</a></span>
             <span class="to-5118"><a href="https://www.5118.com/seo/{{d.domain}}" target="_blank"
-                     title="查看5118">5118</a></span>
+                                     title="查看5118">5118</a></span>
             <span>
                 自动采词:
                 <a href="javascript:;">
@@ -2611,32 +2643,31 @@
         <div class="layui-col-md1">
             <span class="tagNames"
                   ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>标签:</label>&nbsp;&nbsp;<label
-                    class="tagNameStr" title="">暂无</label></span>
+                class="tagNameStr" title="">暂无</label></span>
         </div>
         <!--     操作栏   -->
         <div class="layui-col-md4">
             <div class="handle">
                 <span>
                     <a class="blue"
-                      href="javascript:showExcludeCustomerKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">排除关键字</a>
+                       href="javascript:showExcludeCustomerKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">排除关键字</a>
                 </span>
-
                 <@shiro.hasPermission name="/internal/qzsetting/save">
                 <span>
                     <a class="blue"
-                      href="javascript:showAddKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}','{{d.bearPawNumber}}','{{d.searchEngine}}', '{{d.type}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">添加词</a>
+                       href="javascript:showAddKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}','{{d.bearPawNumber}}','{{d.searchEngine}}', '{{d.type}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">添加词</a>
                 </span>
-                </@shiro.hasPermission>
-                <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
-                <span>
+            </@shiro.hasPermission>
+            <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
+            <span>
                     <a class="blue"
-                      href="javascript:openMessageBox('全站设置','{{d.customerUuid}}','{{d.contactPerson}}')">用户留言</a>
+                       href="javascript:openMessageBox('全站设置','{{d.customerUuid}}','{{d.contactPerson}}')">用户留言</a>
                 </span>
-                <!--                </@shiro.hasPermission>-->
-
-                <span>
+            <!--                </@shiro.hasPermission>-->
+            <@shiro.hasPermission name="/internal/usernotebook/searchUserNoteBooks">
+            <span>
                     <a class="blue"
-                      href="javascript:openNoteBookDialog('{{d.customerUuid}}')">记事本</a>
+                       href="javascript:openNoteBookDialog('{{d.customerUuid}}')">记事本</a>
                 </span>
                 </@shiro.hasPermission>
                 <@shiro.hasPermission name="/internal/qzchargelog/save">-->
@@ -2685,7 +2716,7 @@
                         <a href="javascript:;" qzsettinguuid="{{d.uuid}}">
                         {{#  if(d.organizationName !== '优化部') { }}
                             <font
-                                    style="background-color: palevioletred;font-size: 14px;">￥ 0</font>
+                                style="background-color: palevioletred;font-size: 14px;">￥ 0</font>
                         {{#  } }}
                         </a>
                     </span>

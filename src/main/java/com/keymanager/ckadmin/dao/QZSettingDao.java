@@ -3,8 +3,8 @@ package com.keymanager.ckadmin.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
-import com.keymanager.ckadmin.entity.QZSetting;
 
+import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.vo.QZSettingVO;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +32,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     void batchUpdateRenewalStatus(@Param("uuids") String uuids,
         @Param("renewalStatus") int renewalStatus);
-    
+
     Map<String, String> getPCPhoneGroupByUuid(@Param("uuid") Long uuid);
 }
 

@@ -119,7 +119,7 @@ public class QZSettingController extends SpringMVCBaseController {
             Page<QZSetting> page = new Page<>(qzSettingCriteria.getPage(),
                 qzSettingCriteria.getLimit());
             Set<String> roles = getCurrentUser().getRoles();
-            if(!roles.contains("DepartmentManager")) {
+            if (!roles.contains("DepartmentManager")) {
                 String loginName = (String) request.getSession().getAttribute("username");
                 qzSettingCriteria.setLoginName(loginName);
             }
@@ -316,7 +316,7 @@ public class QZSettingController extends SpringMVCBaseController {
         String entryType = (String) request.getSession().getAttribute("entryType");
         customerCriteria.setEntryType(entryType);
         Set<String> roles = getCurrentUser().getRoles();
-        if(!roles.contains("DepartmentManager")) {
+        if (!roles.contains("DepartmentManager")) {
             String loginName = (String) request.getSession().getAttribute("username");
             customerCriteria.setLoginName(loginName);
         }
