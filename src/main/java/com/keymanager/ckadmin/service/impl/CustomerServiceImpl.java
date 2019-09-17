@@ -12,11 +12,7 @@ import com.keymanager.ckadmin.service.CustomerKeywordService;
 
 import java.math.BigDecimal;
 import java.sql.Wrapper;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -63,8 +59,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
                 if (map != null) {
                     String customerBusinessStr = (String) map.get("customerBusinessStr");
                     if (customerBusinessStr != null) {
-                        customer.setCustomerBusinessStr(customerBusinessStr);
-                        customer.setCustomerBusinessList(customerBusinessStr.split(","));
+                        customer.setCustomerBusinessList(Arrays.asList(customerBusinessStr.split(",")));
                     }
                 }
             }
@@ -78,11 +73,10 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
         //修改
         if (null != customer.getUuid()) {
             updateCustomer(customer, loginName);
-            if (StringUtils.isNotBlank(customer.getCustomerBusinessStr())){
-                customer.setCustomerBusinessList(customer.getCustomerBusinessStr().split(","));
-                customerBusinessService.deleteByCustomerUuid(customer.getUuid());
-                customerBusinessService.saveCustomerBusiness(customer);
-            }
+
+            customerBusinessService.deleteByCustomerUuid(customer.getUuid());
+            customerBusinessService.saveCustomerBusiness(customer);
+
         } else {//添加
             customer.setUpdateTime(new Date());
             customer.setLoginName(loginName);
@@ -149,10 +143,9 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
         Customer customer = customerDao.selectById(customerUuid);
 
         if (customer != null) {
-            String customerBusinessStr = customerBusinessService.getCustomerBusinessStrByCustomerUuid(customerUuid);
-            if (StringUtils.isNotBlank(customerBusinessStr)){
-                customer.setCustomerBusinessStr(customerBusinessStr);
-                customer.setCustomerBusinessList(customerBusinessStr.split(","));
+            List<String> customerBusinessList = customerBusinessService.getCustomerBusinessStrByCustomerUuid(customerUuid);
+            if (CollectionUtils.isNotEmpty(customerBusinessList)){
+                customer.setCustomerBusinessList(customerBusinessList);
             }
             /*if (!customer.getLoginName().equals(loginName)) {
                 customer.setEmail(null);

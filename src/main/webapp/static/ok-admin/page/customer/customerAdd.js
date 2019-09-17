@@ -23,16 +23,12 @@ function setForm(l, u) {
                 } else {
                     res.data.dailyReportIdentify = 0
                 }
-                layui.form.val("addCustomer", res.data);
                 let customerBusinessList = res.data.customerBusinessList;
                 for (let index in customerBusinessList) {
-                    $("input:checkbox[name='customerBusinessList']").each(function(){
-                        if($(this).val()===customerBusinessList[index]){
-                            $(this).attr("checked","true")
-                        }
-                    });
+                    res.data['customerBusinessList['+customerBusinessList[index]+']'] = customerBusinessList[index];
                 }
-                form.render();
+                layui.form.val("addCustomer", res.data);
+
             } else {
                 l.layer.msg(res.msg);
             }
@@ -52,14 +48,34 @@ layui.use(["form", "okLayer", "jquery", "layer"], function () {
     }
 
     form.on("submit(commitCustomer)", function (data) {
+        // var postData = data.field;
         var customerBusinessStr = "";
-        var customerBusinessList= new Array();
-        $("input:checkbox[name='customerBusinessList']:checked").each(function(){
-            customerBusinessList.push($(this).val())
-        });
-        customerBusinessStr = customerBusinessList.join(",");
-        data.field.customerBusinessStr = customerBusinessStr;
+        var customerBusinessList= [];
+        if (data.field['customerBusinessList[keyword]']){
+            customerBusinessList.push(data.field['customerBusinessList[keyword]'])
+            delete data.field['customerBusinessList[keyword]']
+        }
 
+        if (data.field['customerBusinessList[qzsetting]']){
+            customerBusinessList.push(data.field['customerBusinessList[qzsetting]'])
+            delete data.field['customerBusinessList[qzsetting]']
+        }
+
+        if (data.field['customerBusinessList[fm]']){
+            customerBusinessList.push(data.field['customerBusinessList[fm]'])
+            delete data.field['customerBusinessList[fm]']
+
+        }
+        if (data.field.dailyReportIdentify ===1 ) {
+            data.field.dailyReportIdentify = true
+        } else {
+            data.field.dailyReportIdentify = false
+        }
+        data.field.customerBusinessList = customerBusinessList;
+        // return false;
+
+        data.field.customerBusinessStr = customerBusinessStr;
+        console.log(data.field)
         layer.confirm('确认保存？', {
             icon: 3,
             title: '保存数据',
@@ -68,8 +84,11 @@ layui.use(["form", "okLayer", "jquery", "layer"], function () {
                 $.ajax({
                     url: '/internal/customer/postCustomersAdd',
                     type: 'post',
-                    data: data.field,
-                    dataType: 'json',
+                    data: JSON.stringify(data.field),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
                     success: function (res) {
                         if (res.code === 200) {
                             layer.close(index);

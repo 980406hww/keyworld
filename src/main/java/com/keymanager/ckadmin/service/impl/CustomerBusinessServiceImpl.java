@@ -42,7 +42,7 @@ public class CustomerBusinessServiceImpl extends ServiceImpl<CustomerBusinessDao
     }
 
     @Override
-    public String getCustomerBusinessStrByCustomerUuid(long customerUuid) {
+    public List<String> getCustomerBusinessStrByCustomerUuid(long customerUuid) {
         return customerBusinessDao.getCustomerBusinessStrByCustomerUuid(customerUuid);
     }
 }

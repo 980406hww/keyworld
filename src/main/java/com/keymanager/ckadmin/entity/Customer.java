@@ -78,10 +78,7 @@ public class Customer extends BaseEntity {
     private String updateInterval;
 
     @TableField(exist = false)
-    private String[] customerBusinessList;
-
-    @TableField(exist = false)
-    private String  customerBusinessStr;
+    private List<String> customerBusinessList;
 
     public String getLoginName() {
         return loginName;
@@ -251,23 +248,15 @@ public class Customer extends BaseEntity {
         this.dailyReportIdentify = dailyReportIdentify;
     }
 
-    public String[] getCustomerBusinessList() {
-        return customerBusinessList;
-    }
-
-    public void setCustomerBusinessList(String[] customerBusinessList) {
-        this.customerBusinessList = customerBusinessList;
-    }
-
     public boolean isDailyReportIdentify() {
         return dailyReportIdentify;
     }
 
-    public String getCustomerBusinessStr() {
-        return customerBusinessStr;
+    public List<String> getCustomerBusinessList() {
+        return customerBusinessList;
     }
 
-    public void setCustomerBusinessStr(String customerBusinessStr) {
-        this.customerBusinessStr = customerBusinessStr;
+    public void setCustomerBusinessList(List<String> customerBusinessList) {
+        this.customerBusinessList = customerBusinessList;
     }
 }

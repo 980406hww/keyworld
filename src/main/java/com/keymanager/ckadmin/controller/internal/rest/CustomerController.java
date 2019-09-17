@@ -160,7 +160,7 @@ public class CustomerController {
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @RequestMapping(value = "/postCustomersAdd", method = RequestMethod.POST)
-    public ResultBean postCustomersAdd(@Valid Customer customer, BindingResult result,
+    public ResultBean postCustomersAdd(@RequestBody @Valid Customer customer, BindingResult result,
         HttpSession session) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);

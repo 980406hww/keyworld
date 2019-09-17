@@ -14,7 +14,7 @@
 <div class="ok-body">
     <!--form表单-->
     <form class="layui-form layui-form-pane ok-form" lay-filter="addCustomer">
-        <input type="hidden" name="uuid">
+        <input type="hidden" name="uuid" value=""/>
         <div class="layui-form-item">
             <label class="layui-form-label">联系人</label>
             <div class="layui-input-block">
@@ -47,7 +47,7 @@
             <label class="layui-form-label">客户类型</label>
             <div class="layui-input-block">
                 <select name="type">
-                    <option value="普通客户">普通客户</option>
+                    <option value="普通客户" selected>普通客户</option>
                     <option value="测试客户">测试客户</option>
                 </select>
             </div>
@@ -64,9 +64,9 @@
         <div class="layui-form-item">
             <label class="layui-form-label">业务类型</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="customerBusinessList" value="keyword" title="关键字">
-                <input type="checkbox" name="customerBusinessList" value="qzsetting" title="全站">
-                <input type="checkbox" name="customerBusinessList" value="fm" title="负面" >
+                <input type="checkbox" name="customerBusinessList[keyword]" value="keyword" title="关键字" />
+                <input type="checkbox" name="customerBusinessList[qzsetting]" value="qzsetting" title="全站" />
+                <input type="checkbox" name="customerBusinessList[fm]" value="fm" title="负面" />
             </div>
         </div>
 
