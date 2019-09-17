@@ -35,8 +35,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
         cols: [[
             /*templet: '#toDateTime'*/
             {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
-            {field: 'uuid', title: '基本信息', fixed: "left", width: '680', templet: '#baseInfo'},
-            {field: 'uuid', title: '拥有业务', width: '680', templet: '#businessInfo'},
+            {field: 'uuid', title: '基本信息', fixed: "left", width: '680', align: 'center', templet: '#baseInfo'},
+            {field: 'uuid', title: '拥有业务', width: '680', align: 'center', templet: '#businessInfo'},
             {field: 'uuid', title: '操作', fixed: "right", width: '100',align: 'center', templet: '#operationTpl',}
         ]],
         height: 'full-110',
@@ -92,9 +92,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
         reload: function () {
             table.reload('customerTable', {
                 where: $.parseJSON(formToJson($("#searchForm").serialize())),
-                page: {
+                /*page: {
                     curr: 1
-                }
+                }*/
             });
             $("#searchContent").removeClass("layui-show")
         },

@@ -66,10 +66,16 @@
     border-left: none;
 }
 
+.layui-table-view .layui-table-header .layui-table td,
+.layui-table-view .layui-table-header .layui-table th {
+    text-align: center;
+}
+
 .layui-col-md5, .layui-col-md7{
     border-right: 1px solid #e6e6e6;
     border-bottom: 1px solid #e6e6e6;
     padding: 5px;
+    /*text-indent: 10px;*/
 }
 
 .layui-laypage{
