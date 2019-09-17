@@ -307,9 +307,9 @@ public class QZSettingServiceImpl extends
             existingQZSetting.setPcGroup(qzSetting.getPcGroup());
             existingQZSetting.setPhoneGroup(qzSetting.getPhoneGroup());
             existingQZSetting.setType(qzSetting.getType());
-            existingQZSetting.setAutoCrawlKeywordFlag(qzSetting.isAutoCrawlKeywordFlag());
-            existingQZSetting.setIgnoreNoIndex(qzSetting.isIgnoreNoIndex());
-            existingQZSetting.setIgnoreNoOrder(qzSetting.isIgnoreNoOrder());
+            existingQZSetting.setAutoCrawlKeywordFlag(qzSetting.getAutoCrawlKeywordFlag());
+            existingQZSetting.setIgnoreNoIndex(qzSetting.getIgnoreNoIndex());
+            existingQZSetting.setIgnoreNoOrder(qzSetting.getIgnoreNoOrder());
             existingQZSetting.setUpdateInterval(qzSetting.getUpdateInterval());
             existingQZSetting.setUpdateTime(new Date());
             existingQZSetting
@@ -317,6 +317,7 @@ public class QZSettingServiceImpl extends
             existingQZSetting
                 .setCaptureCurrentKeywordStatus(qzSetting.getCaptureCurrentKeywordStatus());
             existingQZSetting.setCrawlerStatus(Constants.QZ_SETTING_CRAWLER_STATUS_NEW);
+            existingQZSetting.setCaptureTerminalType(qzSetting.getCaptureTerminalType());
 
             //修改部分
             List<QZOperationType> oldOperationTypes = qzOperationTypeService

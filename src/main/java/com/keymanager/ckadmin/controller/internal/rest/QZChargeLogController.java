@@ -50,10 +50,26 @@ public class QZChargeLogController {
         }
         return resultBean;
     }
-//
-//    //查看收费记录
-//    @RequestMapping(value = "/chargesList/{uuid}", method = RequestMethod.GET)
-//    public ResponseEntity<?> chargesList(@PathVariable("uuid") Long uuid) {
-//        return new ResponseEntity<Object>(qzChargeLogService.chargesList(uuid), HttpStatus.OK);
-//    }
+
+    //查看收费记录
+    @RequiresPermissions("/internal/qzchargelog/chargesList")
+    @RequestMapping(value = "/qzChargesLogsList/{uuid}", method = RequestMethod.GET)
+    public ResultBean qzChargesLogsList(@PathVariable("uuid") Long uuid) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        List<QZChargeLog> logs;
+        try {
+            logs = qzChargeLogService.chargesList(uuid);
+        } catch (Exception e) {
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+            return resultBean;
+        }
+        if (null == logs || logs.isEmpty()) {
+            resultBean.setCode(300);
+        } else {
+            resultBean.setData(logs);
+        }
+        return resultBean;
+    }
 }

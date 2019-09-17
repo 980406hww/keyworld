@@ -11,6 +11,14 @@
         .layui-btn {
             width: 150px;
         }
+
+        .four-row .layui-form-label {
+            width: 120px;
+        }
+
+        .four-row .layui-input-block {
+            margin-left: 120px;
+        }
     </style>
     <script>
         function removeElement(e) {
@@ -70,7 +78,7 @@
         <div class="ok-body">
             <input type="hidden" name="uuid" value=""/>
             <div class="layui-row">
-                <div class="layui-col-md6 padding-ten-right">
+                <div class="layui-col-md9 padding-ten-right">
                     <div class="layui-form-item">
                         <label class="layui-form-label">客户</label>
                         <div class="layui-input-block">
@@ -80,25 +88,8 @@
                             </select>
                         </div>
                     </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">域名</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="domain"
-                                   placeholder="请输入域名：例如baidu.com,不能填写www.baidu.com,map.baidu.com等"
-                                   autocomplete="off"
-                                   class="layui-input" lay-verify="required|domain">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">熊掌号</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="bearPawNumber" placeholder="请输入熊掌号"
-                                   autocomplete="off"
-                                   class="layui-input">
-                        </div>
-                    </div>
                 </div>
-                <div class="layui-col-md6 padding-ten-left">
+                <div class="layui-col-md3 padding-ten-left four-row">
                     <div class="layui-form-item" pane>
                         <label class="computer layui-form-label">站点状态</label>
                         <div class="layui-input-block">
@@ -108,15 +99,21 @@
                                    value="-1" title="其他">
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="layui-row four-row">
+                <div class="layui-col-md3 padding-ten-right">
                     <div class="layui-form-item">
-                        <label class="layui-form-label">标签</label>
+                        <label class="layui-form-label">域名</label>
                         <div class="layui-input-block">
-                            <input type="text" name="tagNames"
-                                   placeholder="按正确方式输入：阿卡索,MBA,算法,每个词用逗号隔开"
+                            <input type="text" name="domain"
+                                   placeholder="请输入顶级域名，不带www"
                                    autocomplete="off"
-                                   class="layui-input" lay-verify="tagNames">
+                                   class="layui-input" lay-verify="required|domain">
                         </div>
                     </div>
+                </div>
+                <div class="layui-col-md3 padding-ten-left padding-ten-right">
                     <div class="layui-form-item">
                         <label class="layui-form-label">搜索引擎</label>
                         <div class="layui-input-block">
@@ -125,11 +122,31 @@
                         </div>
                     </div>
                 </div>
+                <div class="layui-col-md3 padding-ten-left padding-ten-right">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">熊掌号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="bearPawNumber" placeholder="请输入熊掌号"
+                                   autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md3 padding-ten-left">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">标签</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="tagNames"
+                                   placeholder="例如MBA,算法,每个词用逗号隔开"
+                                   autocomplete="off"
+                                   class="layui-input" lay-verify="tagNames">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!--      <fieldset class="layui-elem-field layui-field-title">-->
-            <!--        <legend>收费规则</legend>-->
-            <!--      </fieldset>-->
-            <hr>
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>收费规则</legend>
+            </fieldset>
             <div class="layui-row">
                 <div class="layui-col-md6 padding-ten-right">
                     <div class="layui-form-item" pane>
@@ -166,10 +183,10 @@
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
-                                    <label class="computer layui-form-label">当前词量</label>
+                                    <label class="computer layui-form-label">初始首页词数</label>
                                     <div class="layui-input-block">
                                         <input type="number" name="comCurrentKeywordCount"
-                                               placeholder="请输入当前词量"
+                                               placeholder="请输入初始首页词数"
                                                autocomplete="off"
                                                class="computer-input layui-input">
                                     </div>
@@ -186,10 +203,10 @@
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
-                                    <label class="computer layui-form-label">词数限制</label>
+                                    <label class="computer layui-form-label">采词词数限制</label>
                                     <div class="layui-input-block">
                                         <input type="number" name="comMaxKeywordCount"
-                                               placeholder="请输入限制词量"
+                                               placeholder="请输入采词词数限制"
                                                autocomplete="off"
                                                class="computer-input layui-input" value="300">
                                     </div>
@@ -199,9 +216,10 @@
                         <div class="layui-form-item layui-form-text">
                             <label class="computer layui-form-label">达标备注</label>
                             <div class="layui-input-block">
-                                <textarea name="comMonitorRemark"
-                                          placeholder="请填写电脑端达标备注, 如：首月30-50个词 客供词 3000"
-                                          class="computer-input layui-textarea"></textarea>
+                                <input type="text" name="comMonitorRemark"
+                                       placeholder="请填写电脑端达标备注, 如：首月30-50个词 客供词 3000"
+                                       autocomplete="off"
+                                       class="computer-input layui-input">
                             </div>
                         </div>
                         <div id="comStandardSpecies" class="layui-form-item" pane>
@@ -339,10 +357,10 @@
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
-                                    <label class="phone layui-form-label">当前词量</label>
+                                    <label class="phone layui-form-label">初始首页词数</label>
                                     <div class="layui-input-block">
                                         <input type="number" name="phoneCurrentKeywordCount"
-                                               placeholder="请输入当前词量"
+                                               placeholder="请输入初始首页词数"
                                                autocomplete="off"
                                                class="phone-input layui-input">
                                     </div>
@@ -359,10 +377,10 @@
                                     </div>
                                 </div>
                                 <div class="phone layui-form-item">
-                                    <label class="layui-form-label">词数限制</label>
+                                    <label class="layui-form-label">采词词数限制</label>
                                     <div class="layui-input-block">
                                         <input type="number" name="phoneMaxKeywordCount"
-                                               placeholder="请输入限制词量"
+                                               placeholder="请输入采词词数限制"
                                                autocomplete="off"
                                                class="phone-input layui-input" value="300">
                                     </div>
@@ -372,9 +390,10 @@
                         <div class="layui-form-item layui-form-text">
                             <label class="phone layui-form-label">达标备注</label>
                             <div class="layui-input-block">
-                                <textarea name="phoneMonitorRemark"
-                                          placeholder="请填写电脑端达标备注, 如：首月30-50个词 客供词 3000"
-                                          class="phone-input layui-textarea"></textarea>
+                                <input type="text" name="phoneMonitorRemark"
+                                       placeholder="请填写手机端达标备注, 如：首月30-50个词 客供词 3000"
+                                       autocomplete="off"
+                                       class="phone-input layui-input">
                             </div>
                         </div>
                         <div id="phoneStandardSpecies" class="layui-form-item" pane>
@@ -478,20 +497,13 @@
                     </div>
                 </div>
             </div>
-            <hr>
-            <div class="layui-row" style="margin-bottom: 48px">
-                <div class="layui-col-md6 padding-ten-right">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>爬取规则</legend>
+            </fieldset>
+            <div class="layui-row four-row">
+                <div class="layui-col-md3 padding-ten-right">
                     <div class="layui-form-item">
-                        <label class="layui-form-label">去掉没指数</label>
-                        <div class="layui-input-block">
-                            <select name="ignoreNoIndex">
-                                <option value="true">是</option>
-                                <option value="false">否</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">爬取关键字</label>
+                        <label class="layui-form-label">自动采词</label>
                         <div class="layui-input-block">
                             <select name="autoCrawlKeywordFlag">
                                 <option value="true">是</option>
@@ -500,34 +512,45 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6 padding-ten-left">
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">去掉没排名</label>
+                <div class="layui-col-md3 padding-ten-left padding-ten-right">
+                    <div class="layui-form-item" pane>
+                        <label class="layui-form-label">终端选择</label>
                         <div class="layui-input-block">
-                            <select name="ignoreNoOrder">
-                                <option value="true">是</option>
-                                <option value="false">否</option>
-                            </select>
+                            <input type="checkbox" name="terminalType[PC]" lay-skin="primary"
+                                   title="电脑" value="PC">
+                            <input type="checkbox" name="terminalType[Phone]"
+                                   lay-skin="primary"
+                                   title="手机" value="Phone">
                         </div>
                     </div>
+                </div>
+                <div class="layui-col-md3 padding-ten-left padding-ten-right">
                     <div class="layui-form-item">
                         <label class="layui-form-label">更新间隔</label>
                         <div class="layui-input-block">
                             <select name="updateInterval">
-                                <option value="1">1天</option>
-                                <option value="2" selected>2天</option>
                                 <option value="3">3天</option>
-                                <option value="5">5天</option>
                                 <option value="7">7天</option>
-                                <option value="10">10天</option>
-                                <option value="12">12天</option>
-                                <option value="15">15天</option>
+                                <option value="15" selected>15天</option>
+                                <option value="30">30天</option>
                             </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md3 padding-ten-left">
+                    <div class="layui-form-item" pane>
+                        <label class="layui-form-label">过滤规则</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="filterRule[ignoreNoIndex]"
+                                   lay-skin="primary" title="去掉没指数" checked>
+                            <input type="checkbox" name="filterRule[ignoreNoOrder]"
+                                   lay-skin="primary" title="去掉没排名" checked>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div style="height: 58px;"></div>
         <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
             <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
                 <button class="layui-btn" lay-submit lay-filter="commitQZSetting">确定</button>
@@ -580,19 +603,24 @@
                 if (res.code === 200) {
                     let d = res.data, d_n = {};
                     // 初始化用户列表和搜索引擎下拉框
-                    getInitData({uuid: d.customerUuid, contactPerson: d.contactPerson},
+                    getInitData({
+                            uuid: d.customerUuid,
+                            contactPerson: d.contactPerson
+                        },
                         d.searchEngine);
-                    d_n.siteStatus = d.renewalStatus;
-                    d_n.uuid = d.uuid;
-                    d_n.domain = d.domain;
-                    d_n.tagNames = listToStr(d.qzCategoryTags);
-                    d_n.bearPawNumber = d.bearPawNumber;
-                    d_n.ignoreNoIndex = d.ignoreNoIndex ? 'true' : 'false';
-                    d_n.ignoreNoOrder = d.ignoreNoOrder ? 'true' : 'false';
-                    d_n.updateInterval = d.updateInterval;
-                    d_n.autoCrawlKeywordFlag = d.autoCrawlKeywordFlag ? 'true' : 'false';
-                    d_n.computer = false;
-                    d_n.phone = false;
+                    d_n['filterRule[ignoreNoIndex]'] = d.ignoreNoIndex; //去掉没指数
+                    d_n['filterRule[ignoreNoOrder]'] = d.ignoreNoOrder;//去掉没排名
+                    d_n['terminalType[PC]'] = exist(d.captureTerminalType, 'PC'); //电脑终端
+                    d_n['terminalType[Phone]'] = exist(d.captureTerminalType, 'Phone');//手机终端
+                    d_n.siteStatus = d.renewalStatus; //站点状态
+                    d_n.uuid = d.uuid; //uuid
+                    d_n.domain = d.domain; //域名
+                    d_n.tagNames = listToStr(d.qzCategoryTags); //标签
+                    d_n.bearPawNumber = d.bearPawNumber; //熊掌号
+                    d_n.updateInterval = d.updateInterval; //更新间隔
+                    d_n.autoCrawlKeywordFlag = d.autoCrawlKeywordFlag ? 'true' : 'false'; //自动采词
+                    d_n.computer = false; //电脑开关
+                    d_n.phone = false; //手机开关
                     for (let i = 0; i < d.qzOperationTypes.length; i++) {
                         switch (d.qzOperationTypes[i].operationType) {
                             case "PC":
@@ -646,6 +674,13 @@
                 }
             }
         });
+    }
+
+    function exist(s, v) {
+        if (s) {
+            return s.indexOf(v) >= 0;
+        }
+        return false;
     }
 
     function listToStr(l) {
@@ -724,6 +759,13 @@
                 break;
             case 'other':
                 header_ += '其他收费规则';
+                if (f) {
+                    computerTableFlag = false;
+                    computerTable.style.display = 'none';
+                } else {
+                    phoneTableFlag = false;
+                    phoneTable.style.display = 'none';
+                }
                 break;
         }
         header_ += `</div>
@@ -779,8 +821,11 @@
         return header_;
     }
 
-    var tbody_com = null;
-    var tbody_phone = null;
+    let tbody_com = null;
+    let tbody_phone = null;
+    // 初始时是否需要隐藏收费表
+    let computerTableFlag = true;
+    let phoneTableFlag = true;
 
     // let computers = document.getElementsByClassName('computer');
     // let computersInput = document.getElementsByClassName('computer-input');
@@ -792,7 +837,9 @@
     function selectPhone(f) {
         if (f) {
             comStandardSpecies.style.display = 'none';
-            computerTable.style.display = 'none';
+            if (computerTableFlag) {
+                computerTable.style.display = 'none';
+            }
         } else {
             comQzsettingBox.style.display = 'none';
             comQzsettingBoxSelect.style.display = 'none';
@@ -815,7 +862,9 @@
     function deselectPhone(f) {
         if (f) {
             comStandardSpecies.style.display = 'block';
-            computerTable.style.display = 'block';
+            if (computerTableFlag) {
+                computerTable.style.display = 'block';
+            }
         } else {
             comQzsettingBox.style.display = 'block';
             comQzsettingBoxSelect.style.display = 'block';
@@ -846,7 +895,9 @@
     function selectComputer(f) {
         if (f) {
             phoneStandardSpecies.style.display = 'none';
-            phoneTable.style.display = 'none';
+            if (phoneTableFlag) {
+                phoneTable.style.display = 'none';
+            }
         } else {
             phoneQzsettingBox.style.display = 'none';
             phoneQzsettingBoxSelect.style.display = 'none';
@@ -870,7 +921,9 @@
     function deselectComputer(f) {
         if (f) {
             phoneStandardSpecies.style.display = 'block';
-            phoneTable.style.display = 'block';
+            if (phoneTableFlag) {
+                phoneTable.style.display = 'block';
+            }
         } else {
             phoneQzsettingBox.style.display = 'block';
             phoneQzsettingBoxSelect.style.display = 'block';
@@ -1024,18 +1077,24 @@
         //监听指定radio
         form.on('radio(comStandardSpecies)', function (data) {
             let computerTitle = document.getElementById('computerTitle');
+            computerTableFlag = true;
             switch (data.value) {
                 case 'aiZhan':
                     computerTitle.innerHTML = '爱站' + name;
+                    computerTable.style.display = 'block';
                     break;
                 case '5118':
                     computerTitle.innerHTML = '5118' + name;
+                    computerTable.style.display = 'block';
                     break;
                 case 'designationWord':
                     computerTitle.innerHTML = '指定词' + name;
+                    computerTable.style.display = 'block';
                     break;
                 case 'other':
-                    computerTitle.innerHTML = '其他' + name;
+                    // computerTitle.innerHTML = '其他' + name;
+                    computerTableFlag = false;
+                    computerTable.style.display = 'none';
                     break;
             }
         });
@@ -1043,18 +1102,24 @@
         //监听指定radio
         form.on('radio(phoneStandardSpecies)', function (data) {
             let phoneTitle = document.getElementById('phoneTitle');
+            phoneTableFlag = true;
             switch (data.value) {
                 case 'aiZhan':
                     phoneTitle.innerHTML = '爱站' + name;
+                    phoneTable.style.display = 'block';
                     break;
                 case '5118':
                     phoneTitle.innerHTML = '5118' + name;
+                    phoneTable.style.display = 'block';
                     break;
                 case 'designationWord':
                     phoneTitle.innerHTML = '指定词' + name;
+                    phoneTable.style.display = 'block';
                     break;
                 case 'other':
-                    phoneTitle.innerHTML = '其他' + name;
+                    // phoneTitle.innerHTML = '其他' + name;
+                    phoneTableFlag = false;
+                    phoneTable.style.display = 'none';
                     break;
             }
         });
@@ -1136,13 +1201,30 @@
                 okLayer.msg.redCry('必须选择电脑或手机中至少一个且至少拥有一个主优化', null);
                 return false;
             }
+            ;
+            // filterRule[ignoreNoIndex] filterRule[ignoreNoOrder]  terminalType[Phone]
             p_d.autoCrawlKeywordFlag = d.autoCrawlKeywordFlag;
             p_d.bearPawNumber = d.bearPawNumber;
             p_d.customerUuid = d.customerUuid;
             p_d.renewalStatus = d.siteStatus;
             p_d.domain = d.domain;
-            p_d.ignoreNoIndex = d.ignoreNoIndex;
-            p_d.ignoreNoOrder = d.ignoreNoOrder;
+            p_d.ignoreNoIndex = d['filterRule[ignoreNoIndex]'] === 'on';
+            p_d.ignoreNoOrder = d['filterRule[ignoreNoOrder]'] === 'on';
+            let captureTerminalType = '';
+            if (d['terminalType[PC]']) {
+                captureTerminalType += d['terminalType[PC]'];
+            }
+            if (d['terminalType[Phone]']) {
+                if (captureTerminalType === '') {
+                    captureTerminalType += d['terminalType[Phone]'];
+                } else {
+                    captureTerminalType += ',';
+                    captureTerminalType += d['terminalType[Phone]'];
+                }
+            }
+            if (captureTerminalType !== '') {
+                p_d.captureTerminalType = captureTerminalType;
+            }
             p_d.pcGroup = d.pcGroup;
             p_d.phoneGroup = d.phoneGroup;
             p_d.searchEngine = d.searchEngine;

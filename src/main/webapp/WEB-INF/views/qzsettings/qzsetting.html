@@ -390,7 +390,7 @@
         .layui-form-select input {
             height: 30px;
         }
-        
+
         .my-label{
             height: auto !important;
             max-width: 330px;
@@ -1764,8 +1764,100 @@
             }
         });
 
+        let chargeRecordHtml = `<div style="padding: 10px;" id="noteBookBody">
+                            <table border="0" width="100%">
+                                <tbody>
+                                <tr class="my-bg">
+                                    <td class="my-header-title" style="min-width: 120px">
+                                        <div class="my-label my-padding">
+                                            收费时间
+                                        </div>
+                                    </td>
+                                    <td class="my-header-title" style="min-width: 80px">
+                                        <div class="my-label my-padding">
+                                            终端类型
+                                        </div>
+                                    </td>
+                                    <td class="my-header-title" style="min-width: 80px">
+                                        <div class="my-label my-padding">
+                                            收费金额
+                                        </div>
+                                    </td>
+                                    <td class="my-header-title" style="min-width: 80px">
+                                        <div class="my-label my-padding">
+                                            收费人员
+                                        </div>
+                                    </td>
+                                    <td class="my-header-btn"  style="min-width: 240px">
+                                        <div
+                                            class="my-label my-padding">
+                                            创建时间
+                                        </div>
+                                    </td>
+                                </tr>`;
 
-        let updFZTagsHtml = `                    <div style="width: 100%;margin-top: 10px;text-align: center">
+        window.showChargeLog = function (uuid) {
+            $.ajax({
+                url: '/internal/qzchargelog/qzChargesLogsList/' + uuid,
+                type: 'GET',
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        let arr = res.data;
+                        let html = chargeRecordHtml;
+                        let date = new Date();
+                        for (let i = 0; i < arr.length; i++) {
+                            html += `<tr>
+                                    <td class="my-left">
+                                        <div class="my-label my-padding">`;
+                            html += new Date(arr[i].actualChargeDate).format('yyyy-MM-dd');
+                            html += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                        <div class="my-label my-padding">`;
+                            html += arr[i].operationType;
+                            html += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                        <div class="my-label my-padding">`;
+                            html += arr[i].actualAmount;
+                            html += `</div>
+                                    </td>
+                                    <td class="my-left">
+                                        <div class="my-label my-padding">`;
+                            html += arr[i].userName;
+                            html += `</div>
+                                    </td>
+                                    <td class="my-left my-bottom">
+                                        <div
+                                            class="my-label my-padding">`;
+                            html += new Date(arr[i].createTime).format('yyyy-MM-dd hh:mm:ss');
+                            html += `</div>
+                                    </td>
+                                </tr>`;
+                        }
+                        html += noteBookHtmlFooter;
+                        layer.open({
+                            type: 1,
+                            title: '收费记录',
+                            content: html,
+                            shadeClose: true,
+                            resize: false,
+                            area: '700px',
+                        });
+                    } else if (res.code === 300) {
+                        show_layer_msg('暂无收费记录数据', 5);
+                    } else {
+                        show_layer_msg(res.msg, 5);
+                    }
+                },
+                error: function () {
+                    show_layer_msg('未知错误，请稍后再试', 5);
+                }
+            });
+        };
+
+        let updFZTagsHtml = `<div style="width: 100%;margin-top: 10px;text-align: center">
                 <div class="layui-inline" style="width: 60px;line-height: 34px;text-align: center">新标签：</div>
                 <div class="layui-inline">
                     <div class="layui-input-inline" style="width: 300px">
@@ -2020,6 +2112,8 @@
             });
         };
 
+        let noteBookHtmlFooter = `</tbody></table></div>`;
+
         function showData(uuid, call) {
             let noteBookHtml = `<div style="padding: 10px;" id="noteBookBody">
                             <table border="0" width="100%">
@@ -2077,7 +2171,6 @@
                                         </div>
                                     </td>
                                 </tr>`;
-            let noteBookHtmlFooter = `</tbody></table></div>`;
             let d = {};
             d.customerUuid = uuid;
             d.searchAll = 0;
@@ -2530,7 +2623,6 @@
                       href="javascript:showAddKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}','{{d.bearPawNumber}}','{{d.searchEngine}}', '{{d.type}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">添加关键字</a>
                 </span>
                 </@shiro.hasPermission>
-
                 <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
                 <span>
                     <a class="blue"
@@ -2543,12 +2635,12 @@
                       href="javascript:openNoteBookDialog('{{d.customerUuid}}')">记事本</a>
                 </span>
                 </@shiro.hasPermission>
-                <!--                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
+                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
                 <span>
                     <a class="blue"
                       href="javascript:showChargeDialog('{{d.uuid}}','{{d.contactPerson}}','{{d.domain.trim()}}','{{d.renewalStatus}}')">收费</a>
                 </span>
-                <!--                </@shiro.hasPermission>-->
+                </@shiro.hasPermission>-->
                 <@shiro.hasPermission name="/internal/qzsetting/save">
                 <span>
                     <a class="blue" href="javascript:" onclick="showSettingDialog('{{d.uuid}}')">修改</a>
@@ -2559,12 +2651,11 @@
                     <a class="blue" href="javascript:delQZSetting('{{d.uuid}}')">删除</a>
                 </span>
                 </@shiro.hasPermission>
-
-                <!--                <@shiro.hasPermission name="/internal/qzchargelog/chargesList">-->
+                <@shiro.hasPermission name="/internal/qzchargelog/chargesList">
                 <span>
-                    <a class="blue" href="javascript:showChargeLog('{{d.uuid}}',this)">收费记录</a>
+                    <a class="blue" href="javascript:showChargeLog('{{d.uuid}}')">收费记录</a>
                 </span>
-                <!--                </@shiro.hasPermission>-->
+                 </@shiro.hasPermission>
             </div>
         </div>
     </div>

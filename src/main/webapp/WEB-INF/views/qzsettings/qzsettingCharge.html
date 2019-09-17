@@ -449,70 +449,71 @@
                 d.actualAmount = data.field.phoneActualAmount;
                 d.nextChargeDate = data.field.phoneNextChargeDate;
                 p_d.push(d);
-                layer.confirm('确认保存？', {
-                    icon: 3,
-                    title: '保存数据',
-                    btn: ['确认', '取消']
-                    , yes: function (index) {
-                        let postData = {};
-                        postData.uuid = data_.uuid;
-                        postData.renewalStatus = data.field.siteStatus;
-                        $.ajax({
-                            url: '/internal/qzsetting/updRenewalStatus',
-                            data: JSON.stringify(postData),
-                            headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json'
-                            },
-                            type: 'POST',
-                            success: function (res) {
-                                if (res.code === 200) {
-                                    if (data.field.siteStatus === '2') {
-                                        $.ajax({
-                                            url: '/internal/qzchargelog/saveQZChargeLogs',
-                                            type: 'post',
-                                            // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
-                                            data: JSON.stringify(p_d),
-                                            headers: {
-                                                'Accept': 'application/json',
-                                                'Content-Type': 'application/json'
-                                            },
-                                            success: function (res) {
-                                                if (res.code === 200) {
-                                                    layer.close(index);
-                                                    okLayer.msg.greenTick("保存成功", function () {
-                                                        parent.window.sign = true;
-                                                        parent.layer.close(
-                                                            parent.layer.getFrameIndex(
-                                                                window.name));
-                                                    });
-                                                } else {
-                                                    layui.layer.msg(res.msg);
-                                                }
-                                            }
-                                        });
-                                    } else {
-                                        layer.close(index);
-                                        okLayer.msg.greenTick("保存成功", function () {
-                                            parent.window.sign = true;
-                                            parent.layer.close(
-                                                parent.layer.getFrameIndex(window.name));
-                                        });
-                                    }
-                                } else {
-                                    layui.layer.msg(res.msg);
-                                }
-                            },
-                            error: function () {
-                                layui.layer.msg('未知错误，请稍后重试', 5);
-                            }
-                        });
-                    }, btn2: function (index) {
-                        layer.close(index);
-                    }
-                });
-                return false;
             }
+            console.log(p_d);
+            layer.confirm('确认保存？', {
+                icon: 3,
+                title: '保存数据',
+                btn: ['确认', '取消']
+                , yes: function (index) {
+                    let postData = {};
+                    postData.uuid = data_.uuid;
+                    postData.renewalStatus = data.field.siteStatus;
+                    $.ajax({
+                        url: '/internal/qzsetting/updRenewalStatus',
+                        data: JSON.stringify(postData),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        type: 'POST',
+                        success: function (res) {
+                            if (res.code === 200) {
+                                if (postData.renewalStatus === '1') {
+                                    $.ajax({
+                                        url: '/internal/qzchargelog/saveQZChargeLogs',
+                                        type: 'post',
+                                        // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
+                                        data: JSON.stringify(p_d),
+                                        headers: {
+                                            'Accept': 'application/json',
+                                            'Content-Type': 'application/json'
+                                        },
+                                        success: function (res) {
+                                            if (res.code === 200) {
+                                                layer.close(index);
+                                                okLayer.msg.greenTick("保存成功", function () {
+                                                    parent.window.sign = true;
+                                                    parent.layer.close(
+                                                        parent.layer.getFrameIndex(
+                                                            window.name));
+                                                });
+                                            } else {
+                                                layui.layer.msg(res.msg);
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    layer.close(index);
+                                    okLayer.msg.greenTick("保存成功", function () {
+                                        parent.window.sign = true;
+                                        parent.layer.close(
+                                            parent.layer.getFrameIndex(window.name));
+                                    });
+                                }
+                            } else {
+                                layui.layer.msg(res.msg);
+                            }
+                        },
+                        error: function () {
+                            layui.layer.msg('未知错误，请稍后重试', 5);
+                        }
+                    });
+                }, btn2: function (index) {
+                    layer.close(index);
+                }
+            });
+            return false;
         });
 
         $('#close').click(function () {

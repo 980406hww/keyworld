@@ -36,5 +36,5 @@ public interface CustomerService extends IService<Customer> {
 
     List<Customer> getActiveCustomerSimpleInfo(CustomerCriteria customerCriteria);
 
-    Customer getCustomer(int customerUuid);
+    Customer getCustomer(Long customerUuid);
 }

@@ -89,4 +89,9 @@ public class QZChargeLogServiceImpl extends ServiceImpl<QZChargeLogDao, QZCharge
             }
         }
     }
+
+    @Override
+    public List<QZChargeLog> chargesList(Long uuid) {
+        return qzChargeLogDao.chargesList(uuid);
+    }
 }
