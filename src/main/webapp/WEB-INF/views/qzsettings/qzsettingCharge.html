@@ -71,7 +71,7 @@
                     <div class="layui-form-item" pane>
                         <label class="layui-form-label">电脑</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" checked name="computer" lay-skin="switch"
+                            <input type="checkbox" name="computer" lay-skin="switch"
                                    lay-filter="computer"
                                    lay-text="Select|Deselect" id="computer">
                         </div>
@@ -141,7 +141,7 @@
                     <div class="layui-form-item" pane>
                         <label class="layui-form-label">手机</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" checked name="phone" lay-skin="switch"
+                            <input type="checkbox" name="phone" lay-skin="switch"
                                    lay-filter="phone"
                                    lay-text="Select|Deselect" id="phone">
                         </div>
@@ -315,7 +315,7 @@
                                 : arr[i].currentKeywordCount;
                             d.pcInitialKeywordCount = arr[i].initialKeywordCount == null ? ''
                                 : arr[i].initialKeywordCount;
-                            d.phone = 0;
+                            d.computer = 1;
                             d.pcPlanChargeDate = arr[i].planChargeDate;
                             d.pcQzOperationTypeUuid = arr[i].qzOperationTypeUuid;
                             d.pcReceivableAmount = arr[i].receivableAmount == null ? ''
@@ -327,7 +327,7 @@
                                 : arr[i].currentKeywordCount;
                             d.phoneInitialKeywordCount = arr[i].initialKeywordCount == null ? ''
                                 : arr[i].initialKeywordCount;
-                            d.computer = 0;
+                            d.phone = 1;
                             d.phonePlanChargeDate = arr[i].planChargeDate;
                             d.phoneQzOperationTypeUuid = arr[i].qzOperationTypeUuid;
                             d.phoneReceivableAmount = arr[i].receivableAmount == null ? ''
@@ -337,6 +337,16 @@
                         }
                     }
                     l.form.val("qzSettingSf", JSON.parse(JSON.stringify(d)));
+                    switch (d.siteStatus) {
+                        case '0':
+                            selectPhone(true);
+                            selectComputer(true);
+                            break;
+                        case '3':
+                            selectPhone(true);
+                            selectComputer(true);
+                            break;
+                    }
                 } else {
                     l.layer.msg(res.msg);
                 }
@@ -378,7 +388,7 @@
         //监听指定radio
         form.on('radio(siteStatus)', function (data) {
             switch (data.value) {
-                case '2':
+                case '1':
                     if (sign_c) {
                         deselectPhone(true);
                     }
@@ -386,11 +396,11 @@
                         deselectComputer(true);
                     }
                     break;
-                case '3':
+                case '0':
                     selectPhone(true);
                     selectComputer(true);
                     break;
-                case '4':
+                case '3':
                     selectPhone(true);
                     selectComputer(true);
                     break;
