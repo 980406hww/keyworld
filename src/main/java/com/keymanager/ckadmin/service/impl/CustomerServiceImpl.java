@@ -73,17 +73,14 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
         //修改
         if (null != customer.getUuid()) {
             updateCustomer(customer, loginName);
-
             customerBusinessService.deleteByCustomerUuid(customer.getUuid());
             customerBusinessService.saveCustomerBusiness(customer);
-
         } else {//添加
             customer.setUpdateTime(new Date());
             customer.setLoginName(loginName);
             customer.setStatus(1);
             customerDao.insert(customer);
             customerBusinessService.saveCustomerBusiness(customer);
-
         }
     }
 
@@ -118,8 +115,8 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     }
 
     @Override
-    public void deleteAll(List<Integer> uuids) {
-        for (Integer uuid : uuids) {
+    public void deleteAll(List<String> uuids) {
+        for (String uuid : uuids) {
             deleteCustomer(Long.valueOf(uuid));
         }
     }

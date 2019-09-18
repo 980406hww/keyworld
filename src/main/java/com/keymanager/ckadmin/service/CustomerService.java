@@ -25,7 +25,7 @@ public interface CustomerService extends IService<Customer> {
 
     void deleteCustomer(long uuid);
 
-    void deleteAll(List<Integer> uuids);
+    void deleteAll(List<String> uuids);
 
     void updateCustomerDailyReportIdentify(List<Integer> uuids);
 

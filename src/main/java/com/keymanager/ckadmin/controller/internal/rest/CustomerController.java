@@ -49,11 +49,20 @@ public class CustomerController {
 
     @RequiresPermissions("/internal/customer/searchCustomers")
     @RequestMapping(value = "/toCustomers", method = RequestMethod.GET)
-    public ModelAndView toAlgorithmTestPlans() {
+    public ModelAndView toCustomers() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("customers/customer");
         return mv;
     }
+
+    @RequiresPermissions("/internal/customer/searchCustomers")
+    @RequestMapping(value = "/toCustomers2", method = RequestMethod.GET)
+    public ModelAndView toCustomers2() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("customers/customer2");
+        return mv;
+    }
+
 
     @RequiresPermissions("/internal/customer/searchCustomers")
     @RequestMapping(value = "/getCustomers")
@@ -189,7 +198,7 @@ public class CustomerController {
     @RequestMapping(value = "/deleteCustomers2", method = RequestMethod.POST)
     public ResultBean deleteCustomers(@RequestBody Map<String, Object> requestMap) {
         try {
-            List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
+            List<String> uuids = (List<String>) requestMap.get("uuids");
             customerService.deleteAll(uuids);
             return new ResultBean(200, "删除成功");
         } catch (Exception e) {
