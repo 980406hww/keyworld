@@ -676,4 +676,19 @@ public class QZSettingServiceImpl extends
                 Long.parseLong(uuid));
         }
     }
+
+    @Override
+    public Map<String, Object> getQZSettingForAutoOperate() {
+        Map<String, Object> map = qzSettingDao.selectQZSettingForAutoOperate();
+        if (null != map) {
+            long qzSettingUuid = (long) map.get("uuid");
+            String captureTerminalType = (String) map.get("captureTerminalType");
+            map.remove("captureTerminalType");
+            String[] terminalTypes = captureTerminalType.split(",");
+            List<String> standardSpecieList = qzOperationTypeService
+                .getQZSettngStandardSpecie(qzSettingUuid, terminalTypes);
+            map.put("standardSpecieList", standardSpecieList);
+        }
+        return map;
+    }
 }

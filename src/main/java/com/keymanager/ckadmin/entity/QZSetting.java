@@ -93,7 +93,7 @@ public class QZSetting extends BaseEntity {
     @TableField(value = "fCrawlerStatus")
     private String crawlerStatus;
 
-    @TableField(value = "fCaptureTerminalType")
+    @TableField(value = "fCaptureTerminalType", strategy = FieldStrategy.IGNORED)
     private String captureTerminalType;
     /**
      * QZCategoryTag为全站表子类 一对多

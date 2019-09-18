@@ -139,4 +139,30 @@
         FROM t_qz_setting
         WHERE fUuid = #{uuid}
     </select>
+
+    <select id="selectQZSettingForAutoOperate" resultType="java.util.Map">
+        SELECT
+            qs.fUuid   AS 'uuid',
+            qs.fDomain AS 'domain',
+            qs.fCustomerUuid  AS 'customerUuid',
+            qs.fIgnoreNoIndex AS 'ignoreNoIndex',
+            qs.fIgnoreNoOrder AS 'ignoreNoOrder',
+            qs.fCaptureTerminalType AS 'captureTerminalType'
+        FROM t_qz_setting qs
+        WHERE qs.fType = 'qz'
+        AND qs.fRenewalStatus = 1
+        AND qs.fAutoCrawlKeywordFlag = 1
+        AND qs.fCaptureTerminalType &gt; ''
+        AND (qs.fUpdateStatus IS NULL
+            OR qs.fUpdateEndTime IS NULL
+            OR (qs.fUpdateStatus = 'Completed'
+            AND qs.fUpdateEndTime &lt; DATE_SUB(CURRENT_DATE(), INTERVAL qs.fUpdateInterval DAY))
+            OR (qs.fUpdateStatus = 'Processing'
+            AND DATE_SUB(NOW(), INTERVAL 20 MINUTE) > qs.fUpdateStartTime)
+            OR (qs.fUpdateStatus = 'DownloadTimesUsed'
+            AND qs.fUpdateEndTime &lt; CURRENT_DATE())
+        )
+        LIMIT 1
+    </select>
+
 </mapper>

@@ -47,9 +47,9 @@ public interface QZOperationTypeDao extends BaseMapper<QZOperationType> {
     void updateStandardTimeByUuid(@Param("uuid") Long uuid, @Param("updateFlag") int updateFlag,
         @Param("lastAchieve") int lastAchieve);
 
-    List<String> getAllOperationChargeKeywordCountByQZSettingUuid(
-        @Param("qzSettingUuid") Long qzSettingUuid);
-
     Date getStandardTime(@Param("qzSettingUuid") long qzSettingUuid,
+        @Param("terminalType") String terminalType);
+
+    String getQZSettngStandardSpecie(@Param("qzSettingUuid") long qzSettingUuid,
         @Param("terminalType") String terminalType);
 }

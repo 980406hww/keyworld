@@ -1,4 +1,4 @@
-package com.keymanager.ckadmin.controller.internal;
+package com.keymanager.ckadmin.controller;
 
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.monitoring.vo.ExtendedUsernamePasswordToken;

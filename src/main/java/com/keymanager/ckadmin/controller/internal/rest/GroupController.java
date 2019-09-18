@@ -1,7 +1,7 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.keymanager.ckadmin.common.result.ResultBean;
-import com.keymanager.ckadmin.controller.internal.SpringMVCBaseController;
+import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.service.GroupService;
 import java.util.List;
 import java.util.Map;

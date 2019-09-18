@@ -106,12 +106,16 @@
         LIMIT 1
     </select>
 
-    <select id="getAllOperationChargeKeywordCountByQZSettingUuid" resultType="String">
-        SELECT
-            CONCAT(qzot.fOperationtype,"_",qzcr.fStandardSpecies)
-        FROM t_qz_operation_type qzot , t_qz_charge_rule qzcr
-        WHERE qzot.fQZSettingUuid = #{qzSettingUuid}
-        AND qzot.fUuid = qzcr.fQZOperationTypeUuid
-        GROUP BY qzot.fUuid
+    <select id="getQZSettngStandardSpecie" resultType="java.lang.String">
+        SELECT qcr.fStandardSpecies
+        FROM t_qz_charge_rule qcr
+        LEFT JOIN t_qz_operation_type qot
+        ON qot.fUuid = qcr.fQZOperationTypeUuid
+        WHERE qot.fQZSettingUuid = #{qzSettingUuid}
+        AND qot.fOperationtype = #{terminalType}
+        AND qcr.fStandardSpecies &lt;&gt; 'designationWord'
+        AND qot.fIsDeleted = 0
+        GROUP BY qot.fUuid
     </select>
+
 </mapper>

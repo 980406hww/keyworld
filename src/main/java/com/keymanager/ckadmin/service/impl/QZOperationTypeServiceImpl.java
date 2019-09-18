@@ -6,6 +6,7 @@ import com.keymanager.ckadmin.entity.QZChargeRule;
 import com.keymanager.ckadmin.entity.QZOperationType;
 import com.keymanager.ckadmin.service.QZChargeRuleService;
 import com.keymanager.ckadmin.service.QZOperationTypeService;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
@@ -53,6 +54,17 @@ public class QZOperationTypeServiceImpl extends
     @Override
     public void deleteByQZSettingUuid(Long qzSettingUuid) {
         qzOperationTypeDao.deleteByQZSettingUuid(qzSettingUuid);
+    }
+
+    @Override
+    public List<String> getQZSettngStandardSpecie(long qzSettingUuid, String[] terminalTypes) {
+        List<String> standardSpecieList = new ArrayList<>(2);
+        for (String terminalType : terminalTypes) {
+            String standardSpecie = qzOperationTypeDao
+                .getQZSettngStandardSpecie(qzSettingUuid, terminalType);
+            standardSpecieList.add(terminalType + "_" + standardSpecie);
+        }
+        return standardSpecieList;
     }
 
 }
