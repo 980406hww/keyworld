@@ -783,9 +783,9 @@
             data.field.customerInfo.replace(/\s*/g, "");
             data.field.categoryTag.replace(/\s*/g, "");
 
-            if (data.field.createTimes != null || data.field.createTimes != '') {
-                var str = data.field.createTimes.split(" - ")
-                data.field.createTime = str[0]
+            if (data.field.createTimes != null || data.field.createTimes !== '') {
+                var str = data.field.createTimes.split(" - ");
+                data.field.createTime = str[0];
                 data.field.createTimePrefix = str[1]
             }
 
@@ -901,7 +901,7 @@
             /*动态加载操作组合列表*/
             $.ajax({
                 url: '/internal/operationcombine/getOperationCombines/' + terminalType,
-                type: 'post',
+                type: 'get',
                 asyns: true,
                 dataType: 'json',
                 success: function (res) {
@@ -2662,12 +2662,12 @@
                        href="javascript:openNoteBookDialog('{{d.customerUuid}}')">记事本</a>
                 </span>
                 </@shiro.hasPermission>
-                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
+                <@shiro.hasPermission name="/internal/qzchargelog/save">
                 <span>
                     <a class="blue"
                       href="javascript:showChargeDialog('{{d.uuid}}','{{d.contactPerson}}','{{d.domain.trim()}}','{{d.renewalStatus}}')">收费</a>
                 </span>
-                </@shiro.hasPermission>-->
+                </@shiro.hasPermission>
                 <@shiro.hasPermission name="/internal/qzsetting/save">
                 <span>
                     <a class="blue" href="javascript:" onclick="showSettingDialog('{{d.uuid}}')">修改</a>
