@@ -12,29 +12,23 @@ public interface QZOperationTypeDao extends BaseMapper<QZOperationType> {
 
     /**
      * 通过uuid查询操作类型表
-     * @param qzSettingUuid
-     * @return
      */
     List<QZOperationType> searchQZOperationTypesByQZSettingUuid(
         @Param("qzSettingUuid") Long qzSettingUuid);
 
     /**
      * 查询多条操作类型信息
-     * @param qzSettingUuid
-     * @return
      */
     List<QZOperationType> searchQZOperationTypesIsDelete(
         @Param("qzSettingUuid") Long qzSettingUuid);
 
     /**
      * 删除
-     * @param qzSettingUuid
      */
     void deleteByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid);
 
     /**
      * 上一级的主键
-     * @return
      */
     int selectLastId();
 

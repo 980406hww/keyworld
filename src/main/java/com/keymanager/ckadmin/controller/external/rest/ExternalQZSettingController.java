@@ -5,6 +5,7 @@ import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import java.util.Map;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -25,10 +26,10 @@ public class ExternalQZSettingController extends SpringMVCBaseController {
 
     @RequestMapping(value = "/getQZSettingForAutoOperate", method = RequestMethod.POST)
     public ResponseEntity<?> getQZSettingForAutoOperate(
-        @RequestBody Map<String, String> requestMap) {
+        @RequestBody HttpServletRequest request) {
         try {
-            String userName = requestMap.get("userName");
-            String password = requestMap.get("password");
+            String userName = request.getParameter("userName");
+            String password = request.getParameter("password");
             if (validUser(userName, password)) {
                 Map<String, Object>  responseMap = qzSettingService.getQZSettingForAutoOperate();
                 return new ResponseEntity<Object>(responseMap, HttpStatus.OK);

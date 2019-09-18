@@ -18,5 +18,6 @@ public interface QZKeywordRankInfoService extends IService<QZKeywordRankInfo> {
 
     List<ExternalQZSettingVO> getQZSettingTask();
 
-    void updateQzKeywordRankInfo(ExternalQZKeywordRankInfoResultVO externalQZKeywordRankInfoResultVo);
+    void updateQzKeywordRankInfo(
+        ExternalQZKeywordRankInfoResultVO externalQZKeywordRankInfoResultVo);
 }

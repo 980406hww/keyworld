@@ -165,7 +165,7 @@
         LIMIT 1
     </select>
 
-    <select id="getQZSettingTask" resultType="com.keymanager.ckadmin.vo.ExternalQzSettingVO">
+    <select id="getQZSettingTask" resultType="com.keymanager.ckadmin.vo.ExternalQZSettingVO">
         SELECT
             qs.fUuid   AS 'uuid',
             qs.fDomain AS 'domain'

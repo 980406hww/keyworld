@@ -28,8 +28,8 @@ public class QZChargeRuleServiceImpl extends ServiceImpl<QZChargeRuleDao, QZChar
     }
 
     @Override
-    public List<QZChargeRuleVO> findQZChargeRules(Long qzSettingUuid, String terminalType,
+    public List<QZChargeRuleVO> findQZChargeRules(Long qzSettingUuid, String operationType,
         String websiteType) {
-        return qzChargeRuleDao.findQZChargeRules(qzSettingUuid, terminalType, websiteType);
+        return qzChargeRuleDao.findQZChargeRules(qzSettingUuid, operationType, websiteType);
     }
 }

@@ -43,6 +43,6 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     void updateCrawlerStatus(@Param("uuids") List<Long> uuids);
 
-    void updateQzSetting(@Param("qzsetting") QZSetting qzSetting);
+    void updateQzSetting(@Param("qzSetting") QZSetting qzSetting);
 }
 
