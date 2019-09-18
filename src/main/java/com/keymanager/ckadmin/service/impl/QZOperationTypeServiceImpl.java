@@ -19,6 +19,7 @@ public class QZOperationTypeServiceImpl extends
 
     @Resource(name = "qzOperationTypeDao2")
     private QZOperationTypeDao qzOperationTypeDao;
+
     @Resource(name = "qzChargeRuleService2")
     private QZChargeRuleService qzChargeRuleService;
 
@@ -67,4 +68,13 @@ public class QZOperationTypeServiceImpl extends
         return standardSpecieList;
     }
 
+    @Override
+    public QZOperationType searchQZOperationType(Long qzSettingUuid, String operationType) {
+        return qzOperationTypeDao.searchQZOperationType(qzSettingUuid, operationType);
+    }
+
+    @Override
+    public void updateQZOperationTypeStandardTime(Long uuid, int isStandardFlag) {
+        qzOperationTypeDao.updateQZOperationTypeStandardTime(uuid, isStandardFlag);
+    }
 }

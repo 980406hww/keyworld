@@ -19,6 +19,7 @@ import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.*;
+import com.keymanager.ckadmin.vo.ExternalQZSettingVO;
 import com.keymanager.ckadmin.vo.QZKeywordRankInfoVO;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.vo.QZSettingVO;
@@ -847,6 +848,21 @@ public class QZSettingServiceImpl extends
         this.completeQZSetting(qzSettingCriteria.getQzSettinguuid(),
             qzSettingCriteria.isDownloadTimesUsed(), pcKeywordExceedMaxCount,
             phoneKeywordExceedMaxCount);
+    }
+
+    @Override
+    public List<ExternalQZSettingVO> getQZSettingTask(int crawlerHour, int taskNumber) {
+        return qzSettingDao.getQZSettingTask(crawlerHour, taskNumber);
+    }
+
+    @Override
+    public void updateCrawlerStatus(List<Long> uuids) {
+        qzSettingDao.updateCrawlerStatus(uuids);
+    }
+
+    @Override
+    public void updateQzSetting(QZSetting qzSetting) {
+        qzSettingDao.updateQzSetting(qzSetting);
     }
 
     private CustomerKeyword createCustomerKeyword(ExternalQZSettingCriteria qzSettingCriteria,

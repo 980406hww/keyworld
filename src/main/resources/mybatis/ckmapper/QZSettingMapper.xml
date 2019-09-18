@@ -165,4 +165,49 @@
         LIMIT 1
     </select>
 
+    <select id="getQZSettingTask" resultType="com.keymanager.ckadmin.vo.ExternalQzSettingVO">
+        SELECT
+            qs.fUuid   AS 'uuid',
+            qs.fDomain AS 'domain'
+        FROM t_qz_setting qs
+        WHERE qs.fCrawlerStatus = 'new'
+        AND qs.fSearchEngine = '百度'
+        LIMIT #{taskNumber}
+        UNION ALL
+        SELECT
+            qs.fUuid   AS 'uuid',
+            qs.fDomain AS 'domain'
+        FROM t_qz_setting qs
+        WHERE qs.fCrawlerStatus = 'processing'
+        AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL 10 MINUTE)
+        AND qs.fSearchEngine = '百度'
+        LIMIT #{taskNumber}
+        UNION ALL
+        SELECT
+            qs.fUuid   AS 'uuid',
+            qs.fDomain AS 'domain'
+        FROM t_qz_setting qs
+        WHERE qs.fCrawlerStatus = 'finish'
+        AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL #{crawlerHour} HOUR)
+        AND qs.fSearchEngine = '百度'
+        LIMIT #{taskNumber}
+    </select>
+
+    <update id="updateCrawlerStatus">
+        update t_qz_setting
+        SET fCrawlerStatus = 'processing', fCrawlerTime = NOW()
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
+
+    <update id="updateQzSetting">
+        update t_qz_setting
+        <set>
+            <if test="qzSetting.crawlerTime != null">fCrawlerTime = #{qzSetting.crawlerTime},</if>
+            <if test="qzSetting.crawlerStatus != null and qzSetting.crawlerStatus != ''">fCrawlerStatus = #{qzSetting.crawlerStatus}</if>
+        </set>
+        WHERE fUuid = #{qzSetting.uuid}
+    </update>
 </mapper>

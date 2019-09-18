@@ -9,6 +9,7 @@ import com.keymanager.value.UserAccountLogCustomerKeywordVO;
 import java.sql.Timestamp;
 
 public class ExternalCustomerKeywordVO {
+
     private int uuid;
     private String terminalType;
     private int customerUuid;
@@ -79,12 +80,12 @@ public class ExternalCustomerKeywordVO {
     private Timestamp captureCurrentKeywordCountTime;
     private CustomerKeywordAccountLogVO latestCustomerKeywordAccountLog;
 
-    public double getApplicableFee(int positionNumber, String type){
+    public double getApplicableFee(int positionNumber, String type) {
         return getApplicablePCFee(positionNumber);
     }
 
-    public double getApplicablePCFee(int positionNumber){
-        switch(positionNumber){
+    public double getApplicablePCFee(int positionNumber) {
+        switch (positionNumber) {
             case 1:
                 return this.getPositionFirstFee();
             case 2:
@@ -96,15 +97,15 @@ public class ExternalCustomerKeywordVO {
             case 5:
                 return this.getPositionFifthFee();
             default:
-                if (positionNumber > 0 && positionNumber <= 10){
+                if (positionNumber > 0 && positionNumber <= 10) {
                     return this.getPositionFirstPageFee();
                 }
                 return 0;
         }
     }
 
-    public double getApplicableCost(int positionNumber){
-        switch(positionNumber){
+    public double getApplicableCost(int positionNumber) {
+        switch (positionNumber) {
             case 1:
                 return this.getPositionFirstCost();
             case 2:
@@ -120,8 +121,8 @@ public class ExternalCustomerKeywordVO {
         }
     }
 
-    public String getStatusName(){
-        switch(this.getStatus()){
+    public String getStatusName() {
+        switch (this.getStatus()) {
             case 1:
                 return "激活";
             case 0:
@@ -133,63 +134,69 @@ public class ExternalCustomerKeywordVO {
         }
     }
 
-    public String getCollectMethodName(){
+    public String getCollectMethodName() {
         return CollectMethod.findByCode(this.getCollectMethod()).getName();
     }
 
-    public String searchEngineUrl(){
-        return Constants.SEARCH_ENGINE_URL_MAP.get(this.getSearchEngine() + "_" + this.getTerminalType());
+    public String searchEngineUrl() {
+        return Constants.SEARCH_ENGINE_URL_MAP
+            .get(this.getSearchEngine() + "_" + this.getTerminalType());
     }
 
-    public int getPeriodDuration(){
+    public int getPeriodDuration() {
         CollectMethod collectMethod = CollectMethod.findByCode(this.getCollectMethod());
-        if (collectMethod != null){
+        if (collectMethod != null) {
             return collectMethod.getDuration();
         }
         return 0;
     }
 
-    public boolean withinAvailableAccountRange(){
+    public boolean withinAvailableAccountRange() {
         if (this.getEffectiveFromTime() != null && this.getEffectiveToTime() != null
             && Utils.getCurrentTimestamp().after(this.getEffectiveFromTime())
-            && Utils.getCurrentTimestamp().before(this.getEffectiveToTime())){
+            && Utils.getCurrentTimestamp().before(this.getEffectiveToTime())) {
             return true;
         }
         return false;
     }
 
-    public boolean availableToAddNewAccountLog(String type){
+    public boolean availableToAddNewAccountLog(String type) {
         if (this.getEffectiveToTime() == null ||
-            Utils.getCurrentTimestamp().after(this.getEffectiveToTime())){
+            Utils.getCurrentTimestamp().after(this.getEffectiveToTime())) {
             return true;
         }
         return false;
     }
 
-    public boolean isUnpaid(){
+    public boolean isUnpaid() {
         return Constants.CUSTOMER_KEYWORD_PAY_STATUS_UN_PAID.equals(this.getReceiveStatus());
     }
 
-    public boolean isPushPay(){
+    public boolean isPushPay() {
         return Constants.CUSTOMER_KEYWORD_PAY_STATUS_PUSH_PAY.equals(this.getReceiveStatus());
     }
 
-    public boolean isExpired(){
-        return this.getEffectiveToTime() != null && Utils.getCurrentTimestamp().after(this.getEffectiveToTime());
+    public boolean isExpired() {
+        return this.getEffectiveToTime() != null && Utils.getCurrentTimestamp()
+            .after(this.getEffectiveToTime());
     }
 
-    public CustomerKeywordPaymentLogVO generatePaymentLog(){
+    public CustomerKeywordPaymentLogVO generatePaymentLog() {
         CustomerKeywordPaymentLogVO paymentLog = new CustomerKeywordPaymentLogVO();
         paymentLog.setCustomerKeywordUuid(this.getUuid());
-        paymentLog.setEffectiveFromTime(this.getPaymentEffectiveToTime() != null ? this.getPaymentEffectiveToTime() : Utils.getCurrentTimestamp());
-        paymentLog.setEffectiveToTime(Utils.addDay(paymentLog.getEffectiveFromTime(), this.getPeriodDuration()));
+        paymentLog.setEffectiveFromTime(
+            this.getPaymentEffectiveToTime() != null ? this.getPaymentEffectiveToTime()
+                : Utils.getCurrentTimestamp());
+        paymentLog.setEffectiveToTime(
+            Utils.addDay(paymentLog.getEffectiveFromTime(), this.getPeriodDuration()));
         paymentLog.setPayable(this.getApplicableCost(this.getCurrentPosition()));
         return paymentLog;
     }
 
-    public CustomerKeywordAccountLogVO generateAccountLog(String type){
+    public CustomerKeywordAccountLogVO generateAccountLog(String type) {
         CustomerKeywordAccountLogVO customerKeywordAccountLog = new CustomerKeywordAccountLogVO();
-        Timestamp effectiveFromTime = this.getApplicableEffectiveToTime(type) != null ? this.getApplicableEffectiveToTime(type) : Utils.getCurrentTimestamp();
+        Timestamp effectiveFromTime = this.getApplicableEffectiveToTime(type) != null ? this
+            .getApplicableEffectiveToTime(type) : Utils.getCurrentTimestamp();
         Timestamp effectiveToTime = Utils.addDay(effectiveFromTime, this.getPeriodDuration());
         customerKeywordAccountLog.setCustomerKeywordUuid(getUuid());
         customerKeywordAccountLog.setMonth(Utils.formatDatetime(effectiveFromTime, "yyyy-MM"));
@@ -201,7 +208,7 @@ public class ExternalCustomerKeywordVO {
         return customerKeywordAccountLog;
     }
 
-    public CustomerKeywordAccountLogVO generateAccountLog(int position, String type){
+    public CustomerKeywordAccountLogVO generateAccountLog(int position, String type) {
         CustomerKeywordAccountLogVO customerKeywordAccountLog = generateAccountLog(type);
         customerKeywordAccountLog.setReceivable(getApplicableFee(position, type));
         return customerKeywordAccountLog;
@@ -267,7 +274,7 @@ public class ExternalCustomerKeywordVO {
         return currentIndexCount;
     }
 
-    public int getApplicableCurrentIndexCount(String type){
+    public int getApplicableCurrentIndexCount(String type) {
         return this.getCurrentIndexCount();
     }
 
@@ -275,8 +282,8 @@ public class ExternalCustomerKeywordVO {
         this.currentIndexCount = currentIndexCount;
     }
 
-    public int getPercentage(int currentPosition){
-        switch (currentPosition/10){
+    public int getPercentage(int currentPosition) {
+        switch (currentPosition / 10) {
             case 0:
                 return this.getOptimizePositionFirstPercentage();
             case 1:
@@ -381,84 +388,86 @@ public class ExternalCustomerKeywordVO {
         this.serviceProvider = serviceProvider;
     }
 
-    public String costString(){
+    public String costString() {
         StringBuilder cost = new StringBuilder("");
-        if(this.getPositionFirstCost() > 0){
+        if (this.getPositionFirstCost() > 0) {
             cost.append(this.getPositionFirstCostString() + ";");
         }
-        if(this.getPositionSecondCost() > 0){
+        if (this.getPositionSecondCost() > 0) {
             cost.append(this.getPositionSecondCostString() + ";");
         }
-        if(this.getPositionThirdCost() > 0){
+        if (this.getPositionThirdCost() > 0) {
             cost.append(this.getPositionThirdCostString() + ";");
         }
-        if(this.getPositionForthCost() > 0){
+        if (this.getPositionForthCost() > 0) {
             cost.append("</br>" + this.getPositionForthCostString() + ";");
         }
-        if(this.getPositionFifthCost() > 0){
+        if (this.getPositionFifthCost() > 0) {
             cost.append(this.getPositionFifthCostString() + ";");
         }
         return cost.toString();
     }
 
 
-    public String feeString(){
+    public String feeString() {
         StringBuilder fee = new StringBuilder("");
         String pcFeeString = this.pcFeeString();
         boolean first = true;
-        if(!Utils.isNullOrEmpty(pcFeeString)){
+        if (!Utils.isNullOrEmpty(pcFeeString)) {
             fee.append("" + pcFeeString);
             first = false;
         }
         return fee.toString();
     }
 
-    public int priceCount(){
+    public int priceCount() {
         int i = 0;
-        if(hasPC()){
+        if (hasPC()) {
             i++;
         }
         return i;
     }
 
-    public boolean hasPC(){
+    public boolean hasPC() {
         return this.getPositionFirstFee() > 0;
     }
 
-    public String pcFeeString(){
+    public String pcFeeString() {
         StringBuilder fee = new StringBuilder("");
-        if(this.getPositionFirstFee() > 0){
+        if (this.getPositionFirstFee() > 0) {
             fee.append(this.getPositionFirstFeeString() + ";");
         }
-        if(this.getPositionSecondFee() > 0){
+        if (this.getPositionSecondFee() > 0) {
             fee.append(this.getPositionSecondFeeString() + ";");
         }
-        if(this.getPositionThirdFee() > 0){
+        if (this.getPositionThirdFee() > 0) {
             fee.append(this.getPositionThirdFeeString() + ";");
         }
-        if(this.getPositionForthFee() > 0){
+        if (this.getPositionForthFee() > 0) {
             fee.append(this.getPositionForthFeeString() + ";");
         }
-        if(this.getPositionFifthFee() > 0){
+        if (this.getPositionFifthFee() > 0) {
             fee.append(this.getPositionFifthFeeString() + ";");
         }
-        if(this.getPositionFirstPageFee() > 0){
+        if (this.getPositionFirstPageFee() > 0) {
             fee.append(this.getPositionFirstPageFeeString() + ";");
         }
         return fee.toString();
     }
 
-    public String generateComplexValue(){
+    public String generateComplexValue() {
         StringBuilder sb = new StringBuilder();
         sb.append(this.getUuid() + ",");
-        CustomerKeywordAccountLogVO customerKeywordAccountLogVO = this.getLatestCustomerKeywordAccountLog();
+        CustomerKeywordAccountLogVO customerKeywordAccountLogVO = this
+            .getLatestCustomerKeywordAccountLog();
         sb.append(customerKeywordAccountLogVO.getUuid() + ",");
         sb.append("1,");
         sb.append(Utils.formatDatetime(this.getEffectiveFromTime(), "yyyy-MM-dd") + ",");
         sb.append(Utils.formatDatetime(this.getEffectiveToTime(), "yyyy-MM-dd") + ",");
         sb.append(customerKeywordAccountLogVO.getReceivable() + ",");
         sb.append(customerKeywordAccountLogVO.getFirstRealCollection() + ",");
-        sb.append((customerKeywordAccountLogVO.getReceivable() - customerKeywordAccountLogVO.getFirstRealCollection()) + ",");
+        sb.append((customerKeywordAccountLogVO.getReceivable() - customerKeywordAccountLogVO
+            .getFirstRealCollection()) + ",");
         sb.append("1," + Utils.getCurrentDate());
         return sb.toString();
     }
@@ -503,7 +512,8 @@ public class ExternalCustomerKeywordVO {
         return latestCustomerKeywordAccountLog;
     }
 
-    public void setLatestCustomerKeywordAccountLog(CustomerKeywordAccountLogVO latestCustomerKeywordAccountLog) {
+    public void setLatestCustomerKeywordAccountLog(
+        CustomerKeywordAccountLogVO latestCustomerKeywordAccountLog) {
         this.latestCustomerKeywordAccountLog = latestCustomerKeywordAccountLog;
     }
 
@@ -604,23 +614,24 @@ public class ExternalCustomerKeywordVO {
     }
 
 
-
-    public String effectiveString(){
+    public String effectiveString() {
         StringBuilder str = new StringBuilder();
         boolean first = true;
-        if(this.getEffectiveFromTime() != null){
-            str.append("PC:" + Utils.formatDatetime(getEffectiveFromTime(), "MM-dd") + "->" + Utils.formatDatetime(getEffectiveToTime(), "MM-dd"));
+        if (this.getEffectiveFromTime() != null) {
+            str.append("PC:" + Utils.formatDatetime(getEffectiveFromTime(), "MM-dd") + "->" + Utils
+                .formatDatetime(getEffectiveToTime(), "MM-dd"));
             first = false;
         }
         return str.toString();
     }
 
-    public String capturePositionString(String type){
-        return String.format("%s__col__%s__col__%s__col__%s__col__%s__col__%s", this.getUuid(), this.getKeyword(),
+    public String capturePositionString(String type) {
+        return String.format("%s__col__%s__col__%s__col__%s__col__%s__col__%s", this.getUuid(),
+            this.getKeyword(),
             this.getUrl(), this.getOriginalUrl(), "", "");
     }
 
-    public String captureIndexString(String type){
+    public String captureIndexString(String type) {
         return String.format("%s__col__%s__col__%s", this.getUuid(), type, this.getKeyword());
     }
 
@@ -788,7 +799,7 @@ public class ExternalCustomerKeywordVO {
         this.invalidRefreshCount = invalidRefreshCount;
     }
 
-    public UserAccountLogCustomerKeywordVO createUserAccountLogCustomerKeywordVO(){
+    public UserAccountLogCustomerKeywordVO createUserAccountLogCustomerKeywordVO() {
         UserAccountLogCustomerKeywordVO userAccountLogCustomerKeywordVO = new UserAccountLogCustomerKeywordVO();
         userAccountLogCustomerKeywordVO.setKeyword(this.getKeyword());
         userAccountLogCustomerKeywordVO.setUrl(this.getUrl());

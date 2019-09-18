@@ -72,8 +72,7 @@
         </if>
     </update>
 
-    <select id="searchQZOperationTypeByQZSettingAndTerminalType"
-        resultType="com.keymanager.ckadmin.entity.QZOperationType">
+    <select id="searchQZOperationType" resultType="com.keymanager.ckadmin.entity.QZOperationType">
         SELECT
             fUuid AS 'uuid',
             fStandardTime AS 'standardTime'
