@@ -307,7 +307,7 @@
             dataType: 'json',
             success: function (res) {
                 if (res.code === 200) {
-                    d.siteStatus = d.renewalStatus;
+                    d.siteStatus = d.renewalStatus + '';
                     let arr = res.data;
                     for (let i = 0; i < arr.length; i++) {
                         if (arr[i].operationType === 'PC') {
