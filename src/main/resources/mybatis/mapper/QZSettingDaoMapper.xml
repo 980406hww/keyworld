@@ -353,29 +353,25 @@
             qs.fDomain AS 'domain'
         FROM t_qz_setting qs
         WHERE qs.fCrawlerStatus = 'new'
+        AND qs.fSearchEngine = '百度'
+        LIMIT #{taskNumber}
         UNION ALL
         SELECT
             qs.fUuid   AS 'uuid',
             qs.fDomain AS 'domain'
         FROM t_qz_setting qs
-        WHERE qs.fCrawlerStatus = 'processing' AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL 10 MINUTE)
+        WHERE qs.fCrawlerStatus = 'processing'
+        AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL 10 MINUTE)
+        AND qs.fSearchEngine = '百度'
+        LIMIT #{taskNumber}
         UNION ALL
         SELECT
             qs.fUuid   AS 'uuid',
             qs.fDomain AS 'domain'
         FROM t_qz_setting qs
-        WHERE qs.fCrawlerStatus = 'finish' AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL #{crawlerHour} HOUR)
-        AND EXISTS(
-            SELECT 1
-            FROM t_qz_keyword_rank_info qk
-            WHERE qk.fQZSettingUuid = qs.fUuid
-            AND qk.fWebsiteType = '5118'
-            UNION ALL
-            SELECT 1
-            FROM t_qz_keyword_rank_info qk
-            WHERE qk.fQZSettingUuid = qs.fUuid
-            AND qk.fWebsiteType = 'aiZhan'
-        )
+        WHERE qs.fCrawlerStatus = 'finish'
+        AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL #{crawlerHour} HOUR)
+        AND qs.fSearchEngine = '百度'
         LIMIT #{taskNumber}
     </select>
 
@@ -474,12 +470,13 @@
         LEFT JOIN t_customer c
         ON c.fUuid = qs.fCustomerUuid
         WHERE qs.fDomain LIKE '${domain}%'
+        LIMIT 1
         UNION ALL
         SELECT CONCAT(c.fUserID, '##', c.fContactPerson)
         FROM t_customer c
         WHERE c.fEntryType = 'qz'
         AND c.fContactPerson LIKE '${domain}%'
-        LIMIT 1;
+        LIMIT 1
     </select>
 
     <select id="searchAllQZSettingForGenerateRankingCurve" resultType="com.keymanager.monitoring.entity.QZSetting">

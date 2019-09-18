@@ -76,8 +76,8 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
                     .getQZKeywordRankInfoTypes(qzSettingVo.getUuid());
                 if (CollectionUtils.isNotEmpty(types)) {
                     qzSettingVo.setTypeList(types);
+                    uuids.add(qzSettingVo.getUuid());
                 }
-                uuids.add(qzSettingVo.getUuid());
             }
             qzSettingService.updateCrawlerStatus(uuids);
         }
@@ -191,7 +191,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
 
     private Map standardCalculation(List<QZChargeRuleVO> chargeRuleVos, QZKeywordRankInfo qzKeywordRankInfo) {
         DecimalFormat decimalFormat = new DecimalFormat("0.0000");
-        double topTen = Integer.parseInt(qzKeywordRankInfo.getTopTen().replace("[", "").replace("]", "").split(",")[0]);
+        int topTen = Integer.parseInt(qzKeywordRankInfo.getTopTen().replace("[", "").replace("]", "").split(",")[0]);
         int beginStartKeywordCount = Integer.parseInt(chargeRuleVos.get(0).getStartKeywordCount());
         int lastStartKeywordCount = Integer.parseInt(chargeRuleVos.get(chargeRuleVos.size() - 1).getStartKeywordCount());
 
