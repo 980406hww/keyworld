@@ -467,7 +467,8 @@
             border-left: 1px solid #e6e6e6;
             border-right: 1px solid #e6e6e6;
             border-bottom: 1px solid #e6e6e6;
-            transition: visibility .6s;
+            border-bottom-right-radius: 2px;
+            border-bottom-left-radius: 2px;
         }
 
         .my-collapse button {
@@ -873,7 +874,7 @@
                     where: whereCondition,
                     cols: [[
                         {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
-                        {filed: 'uuid', title: '记录', width: '1638', templet: '#item'}
+                        {filed: 'uuid', title: '记录', width: '1611', templet: '#item'}
                     ]],
                     height: 'full-100',
                     loading: true,
@@ -1836,6 +1837,9 @@
                 case 'batchUpdateRenewalStatusToSoldOut':
                     batchUpdateRenewalStatus(3);
                     break;
+                case 'batchUpdateRenewalStatusToOther':
+                    batchUpdateRenewalStatus(4);
+                    break;
                 default:
                     break;
             }
@@ -2548,6 +2552,8 @@
                 msg = "确认选中的整站要暂停续费吗?";
             } else if (renewalStatus === 3) {
                 msg = "确认要下架所选整站吗?";
+            }else if (renewalStatus === 4) {
+                msg = "确定要将选中整站续费状态更为其他吗?";
             }
             layer.confirm(msg, {icon: 3, title: '修改所选'}, function (index) {
                 let uuids = "";
@@ -2590,35 +2596,43 @@
             <option value="">修改所选站点操作组合</option>
         </select>
     </div>
-
     <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/qzsetting/save">
-        <button class="layui-btn layui-btn-sm" id="addQz" lay-event="addQz">
-            <i class="layui-icon">&#xe61f;</i>添加
+        <button class="layui-btn layui-btn-sm" style="background: #876200"
+                id="addQz" lay-event="addQz">
+            <i style="position: relative;top: -1px" class="layui-icon">&#xe654;</i>添加
         </button>
-
-        <button class="layui-btn layui-btn-sm" lay-event="updFZTags">
-            <i class="layui-icon"></i>修改标签
+        <button class="layui-btn layui-btn-sm" style="background: #873c00"
+                lay-event="updFZTags">
+            <i class="layui-icon">&#xe642;</i>修改标签
         </button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
-    <button class="layui-btn layui-btn-sm layui-btn-danger" id="batchDeleteQZSetting"
-            lay-event="batchDeleteQZSetting">
-        <i class="layui-icon"></i>删除所选
-    </button>
-    </@shiro.hasPermission>
-    <button class="layui-btn layui-btn-sm" id="batchUpdateQZSettingUpdateStatus"
-            lay-event="batchUpdateQZSettingUpdateStatus">
-        <i class="layui-icon"></i>马上更新
-    </button>
-    <button class="layui-btn layui-btn-sm layui-btn-warm" id="batchUpdateRenewalStatusToSuspend"
-            lay-event="batchUpdateRenewalStatusToSuspend">
-        <i class="layui-icon"></i>暂停续费
-    </button>
-    <button class="layui-btn layui-btn-sm layui-btn-danger" id="batchUpdateRenewalStatusToSoldOut"
-            lay-event="batchUpdateRenewalStatusToSoldOut">
-        <i class="layui-icon"></i>下架整站
-    </button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
+        <button class="layui-btn layui-btn-sm" style="background: #9c001b"
+                id="batchDeleteQZSetting"
+                lay-event="batchDeleteQZSetting">
+            <i style="position: relative;top: -1px" class="layui-icon">&#xe640;</i>删除所选
+        </button>
+        </@shiro.hasPermission>
+        <button class="layui-btn layui-btn-sm" style="background: #580087"
+                id="batchUpdateQZSettingUpdateStatus"
+                lay-event="batchUpdateQZSettingUpdateStatus">
+            <i style="font-size: 15px !important;" class="layui-icon">&#xe666;</i>马上更新
+        </button>
+    </div>
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-sm" style="background: #9c0098"
+                lay-event="batchUpdateRenewalStatusToSuspend">
+            <i class="layui-icon">&#xe651;</i>暂停续费
+        </button>
+        <button class="layui-btn layui-btn-sm" style="background: #9c0009"
+                lay-event="batchUpdateRenewalStatusToSoldOut">
+            <i class="layui-icon">&#xe601;</i>下架整站
+        </button>
+        <button class="layui-btn layui-btn-sm" style="background: #58959c"
+                lay-event="batchUpdateRenewalStatusToOther">
+            <i class="layui-icon">&#xe63f;</i>更为其他
+        </button>
     </div>
 </script>
 

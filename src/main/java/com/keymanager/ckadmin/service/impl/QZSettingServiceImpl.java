@@ -617,6 +617,7 @@ public class QZSettingServiceImpl extends
             && customerKeywordService.getCustomerKeywordCountByOptimizeGroupName(pcGroup) == 0) {
             groupService.deleteByGroupName(phoneGroup);
         }
+        qzCategoryTagService.deleteById(uuid);
         qzSettingDao.deleteById(uuid);
     }
 
