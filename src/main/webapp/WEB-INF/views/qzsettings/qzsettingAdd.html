@@ -19,6 +19,11 @@
         .four-row .layui-input-block {
             margin-left: 120px;
         }
+
+        .my-text {
+            text-indent: 10px;
+            line-height: 38px;
+        }
     </style>
     <script>
         function removeElement(e) {
@@ -91,12 +96,12 @@
                 </div>
                 <div class="layui-col-md3 padding-ten-left four-row">
                     <div class="layui-form-item" pane>
-                        <label class="computer layui-form-label">站点状态</label>
-                        <div class="layui-input-block">
+                        <label class="computer layui-form-label">续费状态</label>
+                        <div class="layui-input-block" id="siteStatus">
                             <input type="radio" name="siteStatus"
                                    value="2" title="首次收费" checked>
                             <input type="radio" name="siteStatus"
-                                   value="-1" title="其他">
+                                   value="5" title="其他">
                         </div>
                     </div>
                 </div>
@@ -152,12 +157,13 @@
                     <div class="layui-form-item" pane>
                         <label class="layui-form-label">电脑</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" checked name="computer" lay-skin="switch"
+                            <input type="checkbox" name="computer" lay-skin="switch"
                                    lay-filter="computer"
                                    lay-text="Select|Deselect">
                         </div>
                     </div>
-                    <div id="comQzsettingBoxSelect" class="layui-form-item" pane>
+                    <div id="comQzsettingBoxSelect" style="display: none" class="layui-form-item"
+                         pane>
                         <label class="computer layui-form-label">达标优化类型</label>
                         <div class="layui-input-block">
                             <input type="radio" name="optimizationComType"
@@ -171,7 +177,7 @@
                                    value="0" title="辅助优化" class="computer-input">
                         </div>
                     </div>
-                    <div id="comQzsettingBox" class="qzsetting-box">
+                    <div id="comQzsettingBox" style="display: none" class="qzsetting-box">
                         <div class="layui-row">
                             <div class="layui-col-md6 padding-ten-right">
                                 <div class="layui-form-item">
@@ -334,12 +340,13 @@
                     <div class="layui-form-item" pane>
                         <label class="layui-form-label">手机</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" checked name="phone" lay-skin="switch"
+                            <input type="checkbox" name="phone" lay-skin="switch"
                                    lay-filter="phone"
                                    lay-text="Select|Deselect">
                         </div>
                     </div>
-                    <div id="phoneQzsettingBoxSelect" class="layui-form-item" pane>
+                    <div id="phoneQzsettingBoxSelect" style="display: none" class="layui-form-item"
+                         pane>
                         <label class="phone layui-form-label">达标优化类型</label>
                         <div class="layui-input-block">
                             <input type="radio" name="optimizationPhoneType"
@@ -353,7 +360,7 @@
                                    value="0" title="辅助优化" class="phone-input">
                         </div>
                     </div>
-                    <div id="phoneQzsettingBox" class="qzsetting-box">
+                    <div id="phoneQzsettingBox" style="display: none" class="qzsetting-box">
                         <div class="layui-row">
                             <div class="layui-col-md6 padding-ten-right">
                                 <div class="layui-form-item">
@@ -555,8 +562,8 @@
                 </div>
                 <div class="layui-col-md3 padding-ten-left">
                     <div class="layui-form-item" pane>
-                        <label class="layui-form-label">过滤规则</label>
-                        <div class="layui-input-block">
+                        <label class="layui-form-label" style="width: 110px">过滤规则</label>
+                        <div class="layui-input-block" style="margin-left: 110px">
                             <input type="checkbox" name="filterRule[ignoreNoIndex]"
                                    lay-skin="primary" title="去掉没指数" checked>
                             <input type="checkbox" name="filterRule[ignoreNoOrder]"
@@ -588,7 +595,7 @@
     let layui_ = null;
     let flag_ = true;
     // 是否需要弹出收费
-    let sign_ = true;
+    // let sign_ = true;
 
     /**
      * 供上方调用
@@ -597,7 +604,7 @@
     function initForm(data) {
         uuid_ = data;
         // 修改状态下无需弹出收费
-        sign_ = false;
+        // sign_ = false;
         selectPhone();
         selectComputer();
         if (layui_ != null) {
@@ -618,6 +625,8 @@
             success: function (res) {
                 if (res.code === 200) {
                     let d = res.data, d_n = {};
+                    // 初始化续费状态
+                    initRenewalStatus(d.renewalStatus + '');
                     // 初始化用户列表和搜索引擎下拉框
                     getInitData({
                             uuid: d.customerUuid,
@@ -628,7 +637,6 @@
                     d_n['filterRule[ignoreNoOrder]'] = d.ignoreNoOrder;//去掉没排名
                     d_n['terminalType[PC]'] = exist(d.captureTerminalType, 'PC'); //电脑终端
                     d_n['terminalType[Phone]'] = exist(d.captureTerminalType, 'Phone');//手机终端
-                    d_n.siteStatus = d.renewalStatus; //站点状态
                     d_n.uuid = d.uuid; //uuid
                     d_n.domain = d.domain; //域名
                     d_n.tagNames = listToStr(d.qzCategoryTags); //标签
@@ -688,16 +696,51 @@
                         }
                     }
                     l.form.val("addQZSetting", d_n);
-                    let siteStatusRadio = document.getElementsByName('siteStatus');
-                    for (let i = 0; i < siteStatusRadio.length; i++) {
-                        siteStatusRadio[i].setAttribute('disabled', '');
-                    }
+                    // let siteStatusRadio = document.getElementsByName('siteStatus');
+                    // for (let i = 0; i < siteStatusRadio.length; i++) {
+                    //     siteStatusRadio[i].setAttribute('disabled', '');
+                    // }
                     flag_ = false;
                 } else {
                     l.layer.msg(res.msg === null ? '未知错误' : res.msg);
                 }
             }
         });
+    }
+
+    function initRenewalStatus(s) {
+        let siteStatus = document.getElementById('siteStatus');
+        siteStatus.classList.add('my-text');
+        switch (s) {
+            case '1':
+                siteStatus.style.color = 'green';
+                siteStatus.innerHTML = '续费中';
+                break;
+            case '0':
+                siteStatus.style.color = 'palevioletred';
+                siteStatus.innerHTML = '暂停续费';
+                break;
+            case '2':
+                siteStatus.style.color = 'mediumseagreen';
+                siteStatus.innerHTML = '首次收费';
+                break;
+            case '3':
+                siteStatus.style.color = 'red';
+                siteStatus.innerHTML = '下架';
+                break;
+            case '4':
+                siteStatus.style.color = 'mediumseagreen';
+                siteStatus.innerHTML = '观测';
+                break;
+            case '5':
+                siteStatus.style.color = 'mediumseagreen';
+                siteStatus.innerHTML = 'seo';
+                break;
+            case '-1':
+                siteStatus.style.color = 'mediumseagreen';
+                siteStatus.innerHTML = 'seo';
+                break;
+        }
     }
 
     function exist(s, v) {
@@ -1143,75 +1186,78 @@
             }
         });
 
-        let chargeHtml = `<form class="layui-form layui-form-pane ok-form" lay-filter="charge">
-            <div class="layui-row ok-body">
-                <div class="layui-col-md6 padding-ten-right">
-                    <div class="layui-form-item layui-form-text" style="margin-bottom: 0">
-                        <label class="layui-form-label" style="text-align: center">电 脑 收 费</label>
-                    </div>
-                    <div id="comQzsettingBox" class="qzsetting-box"  style="border-top: 0">
-                        <input type="hidden" name="pcQzOperationTypeUuid"/>
-                        <div class="layui-form-item">
-                            <label class="computer layui-form-label">下次收费日期</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="pcNextChargeDate" placeholder="请选择下次收费日期"
-                                       autocomplete="off" id="layui-date-two" disabled
-                                       class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="computer layui-form-label">实收金额</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="pcActualAmount" placeholder="请输入实收金额"
-                                       id="pc-i" autocomplete="off" class="layui-input" disabled>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="computer layui-form-label">实际收费日期</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="pcActualChargeDate" placeholder="请选择实际收费日期"
-                                       autocomplete="off" id="layui-date-three" disabled
-                                       class="computer-input layui-input">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-col-md6 padding-ten-left">
-                    <div class="layui-form-item layui-form-text" style="margin-bottom: 0">
-                        <label class="layui-form-label" style="text-align: center">手 机 收 费</label>
-                    </div>
-                    <div id="phoneQzsettingBox" class="qzsetting-box" style="border-top: 0">
-                        <input type="hidden" name="phoneQzOperationTypeUuid"/>
-                        <div class="layui-form-item">
-                            <label class="phone layui-form-label">下次收费日期</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="phoneNextChargeDate"
-                                       placeholder="请选择下次收费日期" disabled
-                                       autocomplete="off" id="layui-date-five"
-                                       class="phone-input layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="phone layui-form-label">实收金额</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="phoneActualAmount" placeholder="请输入实收金额"
-                                       autocomplete="off" id="phone-i" disabled
-                                       class="phone-input layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="phone layui-form-label">实际收费日期</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="phoneActualChargeDate"
-                                       placeholder="请选择实际收费日期" disabled
-                                       autocomplete="off" id="layui-date-six"
-                                       class="phone-input layui-input">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </form>`;
+        // TODO 收费对应注释块
+        // let chargeHtml = `<form class="layui-form layui-form-pane ok-form" lay-filter="charge">
+        //     <div class="layui-row ok-body">
+        //         <div class="layui-col-md6 padding-ten-right">
+        //             <div class="layui-form-item layui-form-text" style="margin-bottom: 0">
+        //                 <label class="layui-form-label" style="text-align: center">电 脑 收 费</label>
+        //             </div>
+        //             <div id="comQzsettingBox" class="qzsetting-box"  style="border-top: 0">
+        //                 <input type="hidden" name="pcQzOperationTypeUuid"/>
+        //                 <div class="layui-form-item">
+        //                     <label class="computer layui-form-label">下次收费日期</label>
+        //                     <div class="layui-input-block">
+        //                         <input type="text" name="pcNextChargeDate" placeholder="请选择下次收费日期"
+        //                                autocomplete="off" id="layui-date-two" disabled
+        //                                class="layui-input">
+        //                     </div>
+        //                 </div>
+        //                 <div class="layui-form-item">
+        //                     <label class="computer layui-form-label">实收金额</label>
+        //                     <div class="layui-input-block">
+        //                         <input type="text" name="pcActualAmount" placeholder="请输入实收金额"
+        //                                id="pc-i" autocomplete="off" class="layui-input" disabled
+        //                                onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,'')">
+        //                     </div>
+        //                 </div>
+        //                 <div class="layui-form-item">
+        //                     <label class="computer layui-form-label">实际收费日期</label>
+        //                     <div class="layui-input-block">
+        //                         <input type="text" name="pcActualChargeDate" placeholder="请选择实际收费日期"
+        //                                autocomplete="off" id="layui-date-three" disabled
+        //                                class="computer-input layui-input">
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //         </div>
+        //         <div class="layui-col-md6 padding-ten-left">
+        //             <div class="layui-form-item layui-form-text" style="margin-bottom: 0">
+        //                 <label class="layui-form-label" style="text-align: center">手 机 收 费</label>
+        //             </div>
+        //             <div id="phoneQzsettingBox" class="qzsetting-box" style="border-top: 0">
+        //                 <input type="hidden" name="phoneQzOperationTypeUuid"/>
+        //                 <div class="layui-form-item">
+        //                     <label class="phone layui-form-label">下次收费日期</label>
+        //                     <div class="layui-input-block">
+        //                         <input type="text" name="phoneNextChargeDate"
+        //                                placeholder="请选择下次收费日期" disabled
+        //                                autocomplete="off" id="layui-date-five"
+        //                                class="phone-input layui-input">
+        //                     </div>
+        //                 </div>
+        //                 <div class="layui-form-item">
+        //                     <label class="phone layui-form-label">实收金额</label>
+        //                     <div class="layui-input-block">
+        //                         <input type="text" name="phoneActualAmount" placeholder="请输入实收金额"
+        //                                autocomplete="off" id="phone-i" disabled
+        //                                onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,'')"
+        //                                class="phone-input layui-input">
+        //                     </div>
+        //                 </div>
+        //                 <div class="layui-form-item">
+        //                     <label class="phone layui-form-label">实际收费日期</label>
+        //                     <div class="layui-input-block">
+        //                         <input type="text" name="phoneActualChargeDate"
+        //                                placeholder="请选择实际收费日期" disabled
+        //                                autocomplete="off" id="layui-date-six"
+        //                                class="phone-input layui-input">
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     </div>
+        //     </form>`;
 
         form.on("submit(commitQZSetting)", function (data) {
             let d = data.field, p_d = {};
@@ -1220,10 +1266,11 @@
                 okLayer.msg.redCry('必须选择电脑或手机中至少一个且至少拥有一个主优化', null);
                 return false;
             }
-            ;
             // filterRule[ignoreNoIndex] filterRule[ignoreNoOrder]  terminalType[Phone]
             p_d.autoCrawlKeywordFlag = d.autoCrawlKeywordFlag;
-            p_d.bearPawNumber = d.bearPawNumber;
+            if (d.bearPawNumber.trim() !== '') {
+                p_d.bearPawNumber = d.bearPawNumber;
+            }
             p_d.customerUuid = d.customerUuid;
             p_d.renewalStatus = d.siteStatus;
             p_d.domain = d.domain;
@@ -1251,11 +1298,14 @@
             p_d.type = 'qz';
             p_d.uuid = d.uuid;
 
-            let qzCategoryTags = [], tagNames = d.tagNames.split(',');
-            for (let item in tagNames) {
-                let a = {};
-                a.tagName = tagNames[item];
-                qzCategoryTags.push(a);
+            let qzCategoryTags = [];
+            if (d.tagNames.trim() !== '') {
+                let tagNames = d.tagNames.split(',');
+                for (let item in tagNames) {
+                    let a = {};
+                    a.tagName = tagNames[item];
+                    qzCategoryTags.push(a);
+                }
             }
             p_d.qzCategoryTags = qzCategoryTags;
 
@@ -1358,99 +1408,100 @@
                 qzOperationTypes.push(b);
             }
             p_d.qzOperationTypes = qzOperationTypes;
-            if (sign_ && p_d.renewalStatus !== '-1') {
-                layer.open({
-                    type: 1,
-                    title: '收费',
-                    content: chargeHtml,
-                    shadeClose: true,
-                    resize: false,
-                    area: '70%',
-                    offset: '23%',
-                    success: function () {
-                        laydate.render({elem: '#layui-date-two'});
-                        laydate.render({elem: '#layui-date-three', value: new Date()});
-                        laydate.render({elem: '#layui-date-five'});
-                        laydate.render({elem: '#layui-date-six', value: new Date()});
-                        if (d.computer === 'on' && d.optimizationComType !== '0') {
-                            document.getElementById('layui-date-two').removeAttribute('disabled');
-                            document.getElementById('pc-i').removeAttribute('disabled');
-                            document.getElementById('layui-date-three').removeAttribute('disabled');
-                        }
-                        if (d.phone === 'on' && d.optimizationPhoneType !== '0') {
-                            document.getElementById('layui-date-five').removeAttribute('disabled');
-                            document.getElementById('phone-i').removeAttribute('disabled');
-                            document.getElementById('layui-date-six').removeAttribute('disabled');
-                        }
-                    },
-                    btn: ['确认', '取消'],
-                    yes: function (index) {
-                        let pcNextChargeDate = document.getElementById('layui-date-two').value;
-                        let pcActualAmount = document.getElementById('pc-i').value;
-                        let pcActualChargeDate = document.getElementById('layui-date-three').value;
-
-                        let phoneNextChargeDate = document.getElementById('layui-date-five').value;
-                        let phoneActualAmount = document.getElementById('phone-i').value;
-                        let phoneActualChargeDate = document.getElementById('layui-date-six').value;
-                        if (d.computer === 'on' && d.optimizationComType !== '0') {
-                            if (pcActualAmount === '') {
-                                okLayer.msg.redCry('电脑实收金额必须填写', null);
-                                return false;
-                            }
-                        }
-                        if (d.phone === 'on' && d.optimizationPhoneType !== '0') {
-                            if (phoneActualAmount === '') {
-                                okLayer.msg.redCry('手机实收金额必须填写', null);
-                                return false;
-                            }
-                        }
-                        commit(p_d, function (init) {
-                            let p_d_c = [];
-                            for (let i = 0; i < init.length; i++) {
-                                if (init[i].operationType === 'PC') {
-                                    let c = {};
-                                    c.qzOperationTypeUuid = init[i].qzOperationTypeUuid;
-                                    c.actualChargeDate = pcActualChargeDate;
-                                    c.actualAmount = pcActualAmount;
-                                    c.nextChargeDate = pcNextChargeDate;
-                                    p_d_c.push(c);
-                                } else if (init[i].operationType === 'Phone') {
-                                    let c = {};
-                                    c.qzOperationTypeUuid = init[i].qzOperationTypeUuid;
-                                    c.actualChargeDate = phoneActualChargeDate;
-                                    c.actualAmount = phoneActualAmount;
-                                    c.nextChargeDate = phoneNextChargeDate;
-                                    p_d_c.push(c);
-                                }
-                            }
-                            $.ajax({
-                                url: '/internal/qzchargelog/saveQZChargeLogs',
-                                type: 'post',
-                                // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
-                                data: JSON.stringify(p_d_c),
-                                headers: {
-                                    'Accept': 'application/json',
-                                    'Content-Type': 'application/json'
-                                },
-                                success: function (res) {
-                                    // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
-                                    // 客户端会主观认为服务端返回的就是 JSON 格式的字符串
-                                    if (res.code === 200) {
-                                    } else {
-                                    }
-                                }, error: function () {
-                                    console.error("未知错误");
-                                }
-                            });
-                        });
-                    }, btn2: function (index) {
-                        layer.close(index);
-                    }
-                });
-            } else {
-                commit(p_d, function (init) {
-                });
-            }
+            // TODO 收费对应弹出框
+            // if (sign_ && p_d.renewalStatus !== '-1') {
+            //     layer.open({
+            //         type: 1,
+            //         title: '收费',
+            //         content: chargeHtml,
+            //         shadeClose: true,
+            //         resize: false,
+            //         area: '70%',
+            //         offset: '23%',
+            //         success: function () {
+            //             laydate.render({elem: '#layui-date-two'});
+            //             laydate.render({elem: '#layui-date-three', value: new Date()});
+            //             laydate.render({elem: '#layui-date-five'});
+            //             laydate.render({elem: '#layui-date-six', value: new Date()});
+            //             if (d.computer === 'on' && d.optimizationComType !== '0') {
+            //                 document.getElementById('layui-date-two').removeAttribute('disabled');
+            //                 document.getElementById('pc-i').removeAttribute('disabled');
+            //                 document.getElementById('layui-date-three').removeAttribute('disabled');
+            //             }
+            //             if (d.phone === 'on' && d.optimizationPhoneType !== '0') {
+            //                 document.getElementById('layui-date-five').removeAttribute('disabled');
+            //                 document.getElementById('phone-i').removeAttribute('disabled');
+            //                 document.getElementById('layui-date-six').removeAttribute('disabled');
+            //             }
+            //         },
+            //         btn: ['确认', '取消'],
+            //         yes: function (index) {
+            //             let pcNextChargeDate = document.getElementById('layui-date-two').value;
+            //             let pcActualAmount = document.getElementById('pc-i').value;
+            //             let pcActualChargeDate = document.getElementById('layui-date-three').value;
+            //
+            //             let phoneNextChargeDate = document.getElementById('layui-date-five').value;
+            //             let phoneActualAmount = document.getElementById('phone-i').value;
+            //             let phoneActualChargeDate = document.getElementById('layui-date-six').value;
+            //             if (d.computer === 'on' && d.optimizationComType !== '0') {
+            //                 if (pcActualAmount === '') {
+            //                     okLayer.msg.redCry('电脑实收金额必须填写', null);
+            //                     return false;
+            //                 }
+            //             }
+            //             if (d.phone === 'on' && d.optimizationPhoneType !== '0') {
+            //                 if (phoneActualAmount === '') {
+            //                     okLayer.msg.redCry('手机实收金额必须填写', null);
+            //                     return false;
+            //                 }
+            //             }
+            //             commit(p_d, function (init) {
+            //                 let p_d_c = [];
+            //                 for (let i = 0; i < init.length; i++) {
+            //                     if (init[i].operationType === 'PC') {
+            //                         let c = {};
+            //                         c.qzOperationTypeUuid = init[i].qzOperationTypeUuid;
+            //                         c.actualChargeDate = pcActualChargeDate;
+            //                         c.actualAmount = pcActualAmount;
+            //                         c.nextChargeDate = pcNextChargeDate;
+            //                         p_d_c.push(c);
+            //                     } else if (init[i].operationType === 'Phone') {
+            //                         let c = {};
+            //                         c.qzOperationTypeUuid = init[i].qzOperationTypeUuid;
+            //                         c.actualChargeDate = phoneActualChargeDate;
+            //                         c.actualAmount = phoneActualAmount;
+            //                         c.nextChargeDate = phoneNextChargeDate;
+            //                         p_d_c.push(c);
+            //                     }
+            //                 }
+            //                 $.ajax({
+            //                     url: '/internal/qzchargelog/saveQZChargeLogs',
+            //                     type: 'post',
+            //                     // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
+            //                     data: JSON.stringify(p_d_c),
+            //                     headers: {
+            //                         'Accept': 'application/json',
+            //                         'Content-Type': 'application/json'
+            //                     },
+            //                     success: function (res) {
+            //                         // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
+            //                         // 客户端会主观认为服务端返回的就是 JSON 格式的字符串
+            //                         if (res.code === 200) {
+            //                         } else {
+            //                         }
+            //                     }, error: function () {
+            //                         console.error("未知错误");
+            //                     }
+            //                 });
+            //             });
+            //         }, btn2: function (index) {
+            //             layer.close(index);
+            //         }
+            //     });
+            // } else {
+            commit(p_d, function (init) {
+            });
+            // }
             return false;
         });
 
