@@ -26,7 +26,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
         autoSort: false,
         size: 'sm',
         id: 'customerTable',
-        // even: true,//隔行背景
+        even: true,//隔行背景
         // toolbar: true,
         toolbar: "#toolbarTpl",
         // defaultToolbar: ['filter', 'print', 'exports'], 对应列筛选 打印 导出
@@ -587,6 +587,36 @@ function generate_qzsetting_info(data) {
         htm += '<a href="javascript:void(0)">暂无数据</a>'
     }
     return htm;
+}
+
+function showContact(contactPerson, qq, wechat, telphone){
+    let title = contactPerson + '--联系方式';
+    let tabl = '<table class="layui-table" style="text-align: center">' +
+        '<tr>' +
+        '<td colspan="2">联系方式</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td width="50%">QQ</td>' +
+        '<td>'+qq+'</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td width="50%">微信</td>' +
+        '<td>'+wechat+'</td>' +
+        '</tr>' +'<tr>' +
+        '<td width="50%">联系电话</td>' +
+        '<td>'+telphone+'</td>' +
+        '</tr>' +
+        '   </table>';
+    layer.open( {
+        type:1,
+        title: title,
+        content: tabl,
+        // width:'40%',
+        shade:0.1,
+        area: ['360px', '280px'],
+        // resize: false,
+        btn:['确认']
+    });
 }
 
 
