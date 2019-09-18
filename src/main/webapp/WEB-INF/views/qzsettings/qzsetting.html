@@ -696,8 +696,7 @@
                             '<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
                     });
                     terminalSearchEngine.val(
-                        ($('#searchEngine').val() + $('#terminalType').val()) === '' ? '百度PC' : ($(
-                            '#searchEngine').val() + $('#terminalType').val()));
+                        ($('#searchEngine').val() + $('#terminalType').val()) === '' ? '百度PC' : ($('#searchEngine').val() + $('#terminalType').val()));
                     form.render("select");
                 }
             });
@@ -804,7 +803,7 @@
                 }
             }
 
-            get_qzsettting(data.field);
+            get_qzsetting(data.field);
             return false;
         });
 
