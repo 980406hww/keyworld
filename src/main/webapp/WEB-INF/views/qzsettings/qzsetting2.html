@@ -455,6 +455,18 @@
             white-space: nowrap;
         }
 
+        .table2-cell{
+            height: 40px;
+            font-size: 12px;
+            text-align: left;
+            line-height: 40px;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+            padding-left: 5px;
+            box-sizing: border-box;
+        }
+
         .border-line{
             border-bottom: 1px solid rgba(52, 250, 197, 0.27);
             border-right: 1px solid rgba(52, 250, 197, 0.27);
@@ -659,6 +671,9 @@
                                     <button class="layui-btn" lay-submit="" lay-filter="search"
                                             id="searchBtn">搜索
                                     </button>
+                                    <button class="layui-btn" type="reset"
+                                            id="resetBtn">重置
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -722,26 +737,6 @@
                 }
             });
         }
-
-        // $.ajax({
-        //     url: '/internal/user/trees2',
-        //     dataType: 'json',
-        //     type: 'get',
-        //     success: function (data) {
-        //         console.log(data)
-        //         tree.render({
-        //             elem: '#tree',
-        //             data: data,
-        //             showCheckbox: true,
-        //             id: 'demoId1',
-        //             click: function(obj){
-        //                 var data = obj.data;
-        //                 // layer.msg('状态：'+ obj.state + '<br>节点数据：' + JSON.stringify(data));
-        //                 console.log(data)
-        //             }
-        //         });
-        //     }
-        // });
 
         treeSelect.render({
             elem: '#tree',
@@ -845,9 +840,10 @@
                 where: whereCondition,
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
-                    {filed: 'info', title: '基本信息', width: '400', fixed: "left", templet: '#item1', align: 'center'},
-                    {filed: 'graph', title: '曲线图表', width: '1200', templet: '#item2', align: 'center'},
-                    {filed: 'op', title: '操作', width: '138', fixed: "right", templet: '#item3', align: 'center'}
+                    {filed: 'uuid', title: '记录', width: '1638', templet: '#item'},
+                    // {filed: 'info', title: '基本信息', width: '400', fixed: "left", templet: '#item1', align: 'center'},
+                    // {filed: 'graph', title: '曲线图表', width: '1200', templet: '#item2', align: 'center'},
+                    // {filed: 'op', title: '操作', width: '138', fixed: "right", templet: '#item3', align: 'center'}
                 ]],
                 height: 'full-100',
                 loading: true,
@@ -2161,9 +2157,23 @@
                 case 'showChargeDialog':
                     showChargeDialog(data.uuid, data.contactPerson, data.domain.trim());
                     break;
+                case 'to5118':
+                    to5118(data.domain.trim());
+                    break;
+                case 'toAizhan':
+                    toAizhan(data.domain.trim());
+                    break;
             }
 
         });
+
+        window.to5118 = function(domain){
+            window.open('https://www.5118.com/seo/'+domain)
+        }
+
+        window.toAizhan = function(domain){
+            window.open('https://www.aizhan.com/cha/'+domain)
+        }
 
         window.showChargeLog = function (){
 
@@ -2537,19 +2547,19 @@
         <div class="layui-col-md4">
             <div class="graph-cell border-line" id="xtCharts"
                  style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
-            <div class="table-cell border-line">排名-操作词数图表</div>
+            <div class="table2-cell border-line">排名-操作词数图表</div>
         </div>
         {{# if(d.searchEngine === '百度') { }}
         <div class="layui-col-md4">
             <div class="graph-cell border-line" id="keywordTrendCharts"
                  style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
-            <div class="table-cell border-line">爱站-关键词排名收录趋势</div>
+            <div class="table2-cell border-line">爱站-关键词排名收录趋势</div>
         </div>
         {{# } }}
         <div class="layui-col-md4">
             <div class="graph-cell border-line" id="designationWordCharts"
                  style="position:static !important; -webkit-tap-highlight-color: transparent; user-select: none;"></div>
-            <div class="table-cell border-line">指定词排名趋势</div>
+            <div class="table2-cell border-line">指定词排名趋势</div>
         </div>
     </div>
 </script>
@@ -2559,7 +2569,14 @@
         <div class="layui-col-md12">
             <div class="op-cell">
                 <div class="op-btn-cell">
-                    <a href="">5118</a>&nbsp;|&nbsp;<a href="">爱站</a>
+                    <div class="layui-btn-group">
+                        <button type="button" class="layui-btn layui-btn-normal layui-btn-xs" lay-event="to5118">
+                            <i class="layui-icon">&#xe64c;</i>5118
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-normal layui-btn-xs" lay-event="toAizhan">
+                            <i class="layui-icon">&#xe64c;</i>爱站
+                        </button>
+                    </div>
                 </div>
                 <div class="op-btn-cell">
                     <button type="button" class="layui-btn layui-btn-xs" lay-event="showExcludeCustomerKeywordDialog">
