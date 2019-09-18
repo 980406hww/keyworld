@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
+import com.keymanager.ckadmin.criteria.ExternalQZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
@@ -59,4 +60,6 @@ public interface QZSettingService extends IService<QZSetting> {
     Map<String, String> getPCPhoneGroupByUuid(Long uuid);
 
     Map<String, Object> getQZSettingForAutoOperate();
+
+    void updateQZSettingKeywords(ExternalQZSettingCriteria qzSettingCriteria);
 }

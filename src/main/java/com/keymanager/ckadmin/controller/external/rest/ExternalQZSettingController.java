@@ -1,5 +1,6 @@
 package com.keymanager.ckadmin.controller.external.rest;
 
+import com.keymanager.ckadmin.criteria.ExternalQZSettingCriteria;
 import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import java.util.Map;
@@ -38,5 +39,16 @@ public class ExternalQZSettingController extends SpringMVCBaseController {
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-
+    @RequestMapping(value = "/updateQZSettingKeywords", method = RequestMethod.POST)
+    public ResponseEntity<?> updateQZSettingKeywords(@RequestBody ExternalQZSettingCriteria qzSettingCriteria) {
+        try {
+            if (validUser(qzSettingCriteria.getUserName(), qzSettingCriteria.getPassword())) {
+                qzSettingService.updateQZSettingKeywords(qzSettingCriteria);
+                return new ResponseEntity<Object>(HttpStatus.OK);
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
 }

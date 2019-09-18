@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.service;
 import com.baomidou.mybatisplus.service.IService;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import java.util.List;
 import java.util.Map;
 
@@ -30,4 +31,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void addCustomerKeyword(List<CustomerKeyword> customerKeywords, String userName);
 
     Integer getCustomerKeywordCountByOptimizeGroupName(String groupName);
+
+    List<CustomerKeywordSummaryInfoVO> searchCustomerKeywordSummaryInfo(String entryType, long customerUuid);
 }
