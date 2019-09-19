@@ -136,4 +136,12 @@
         AND ui.fOrganizationID = #{organizationID}
     </select>
 
+    <select id="getOrganizationNameByLoginName" resultType="java.lang.String">
+        SELECT o.fOrganizationName
+        FROM t_userinfo ui
+        LEFT JOIN t_organization o
+        ON o.fUuid = ui.fOrganizationID
+        WHERE ui.fLoginName = #{loginName}
+        LIMIT 1
+    </select>
 </mapper>

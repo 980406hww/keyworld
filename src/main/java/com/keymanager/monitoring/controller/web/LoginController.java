@@ -6,6 +6,7 @@ import com.keymanager.monitoring.common.result.Tree;
 import com.keymanager.monitoring.common.shiro.captcha.DreamCaptcha;
 import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.service.IResourceService;
+import com.keymanager.monitoring.service.IUserInfoService;
 import com.keymanager.monitoring.vo.ExtendedUsernamePasswordToken;
 import com.keymanager.util.TerminalTypeMapping;
 import org.apache.shiro.SecurityUtils;
@@ -31,11 +32,16 @@ import java.util.List;
  */
 @Controller
 public class LoginController extends BaseController {
+
 	@Autowired
 	private DreamCaptcha dreamCaptcha;
 
 	@Autowired
 	private IResourceService resourceService;
+
+	@Autowired
+	private IUserInfoService userInfoService;
+
 	/**
 	 * 首页
 	 *
@@ -110,10 +116,12 @@ public class LoginController extends BaseController {
 		try {
 			user.login(token);
 			Session session = user.getSession();
+			String organizationName = userInfoService.getOrganizationNameByLoginName(username);
 			session.setAttribute("entryType",entryType);
 			session.setAttribute("terminalType", terminalType);
 			session.setAttribute("username",username);
 			session.setAttribute("password",password);
+			session.setAttribute("organizationName",organizationName);
 			session.setAttribute("menus",menus);
 			return renderSuccess();
 		} catch (UnknownAccountException e) {
@@ -133,7 +141,7 @@ public class LoginController extends BaseController {
 	 */
 	@GetMapping("/unauth")
 	public String unauth() {
-		if (SecurityUtils.getSubject().isAuthenticated() == false) {
+		if (!SecurityUtils.getSubject().isAuthenticated()) {
 			return "redirect:/views/login";
 		}
 		return "unauth";

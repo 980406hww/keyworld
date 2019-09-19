@@ -158,4 +158,9 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
         }
         return trees;
     }
+
+    @Override
+    public String getOrganizationNameByLoginName(String loginName) {
+        return userInfoDao.getOrganizationNameByLoginName(loginName);
+    }
 }

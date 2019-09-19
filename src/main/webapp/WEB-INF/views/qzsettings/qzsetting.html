@@ -664,7 +664,6 @@
                                     <option value="2">首次续费</option>
                                     <option value="3">下架</option>
                                     <option value="4">其他</option>
-<!--                                    <option value="5">seo</option>-->
                                 </select>
                             </div>
                         </div>
@@ -987,11 +986,7 @@
         let radio = document.getElementsByName('sort');
         function initSortRadio(condition){
             if (condition.autoCrawlKeywordFlag && condition.autoCrawlKeywordFlag !== '') {
-                if (condition.autoCrawlKeywordFlag === '1') {
-                    condition.autoCrawlKeywordFlag = true;
-                } else {
-                    condition.autoCrawlKeywordFlag = false;
-                }
+                condition.autoCrawlKeywordFlag = condition.autoCrawlKeywordFlag === '1';
             }
             if (condition.customerInfo && condition.customerInfo !== '') {
                 condition.customerUuid = condition.customerInfo;
@@ -2739,7 +2734,7 @@
 
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
-    <@shiro.hasPermission name="/internal/qzsetting/updateGroupOperationCombineUuid">
+    <@shiro.hasPermission name="/internal/group/updateGroupOperationCombineUuid">
     <div class="layui-input-inline" style="width: 200px; height: 30px">
         <select id="update_qz_operation_combine" lay-filter="operationCombineFilter" lay-search>
             <option value="">修改所选站点操作组合</option>
@@ -2770,6 +2765,7 @@
         </button>
         </@shiro.hasPermission>
     </div>
+    <@shiro.hasPermission name="/internal/qzsetting/updateRenewalStatus">
     <div class="layui-btn-group">
         <button class="layui-btn layui-btn-sm" style="background: #04bb00"
                 lay-event="batchUpdateRenewalStatusToNormal">
@@ -2788,6 +2784,7 @@
             <i class="layui-icon">&#xe63f;</i>更为其他
         </button>
     </div>
+    </@shiro.hasPermission>
 </script>
 
 <script type="text/html" id="item">
@@ -2968,8 +2965,6 @@
                                 <span style="color: red;">下架</span>
                             {{# }else if(d.renewalStatus === 4) { }}
                                 <span style="color: mediumseagreen;">其他</span>
-<!--                            {{# }else if(d.renewalStatus === 5) { }}-->
-<!--                                <span style="color: mediumseagreen;">seo</span>-->
                             {{# } }}
                         </a>
                     </span>
