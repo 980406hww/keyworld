@@ -628,8 +628,8 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">客户</label>
                             <div class="layui-input-inline">
-                                <select name="customerInfo" id="customerInfo"
-                                        lay-filter="customerInfoFilter" lay-search>
+                                <select name="customerUuid" id="customerUuid"
+                                        lay-filter="customerUuidFilter" lay-search>
                                 </select>
                             </div>
                         </div>
@@ -891,10 +891,10 @@
             dataType: 'json',
             type: 'get',
             success: function (data) {
-                $("#customerInfo").empty();
-                $("#customerInfo").append('<option value="">请选择客户</option>');
+                $("#customerUuid").empty();
+                $("#customerUuid").append('<option value="">请选择客户</option>');
                 $.each(data, function (index, item) {
-                    $('#customerInfo').append(
+                    $('#customerUuid').append(
                         '<option value="' + item.uuid + '">' + item.contactPerson.trim()
                         + '</option>');
                 });
@@ -904,7 +904,7 @@
 
         form.on("submit(search)", function (data) {
             data.field.domain.replace(/\s*/g, "");
-            data.field.customerInfo.replace(/\s*/g, "");
+            data.field.customerUuid.replace(/\s*/g, "");
             data.field.categoryTag.replace(/\s*/g, "");
 
             if (data.field.createTimes != null || data.field.createTimes !== '') {
@@ -992,9 +992,6 @@
                 } else {
                     condition.autoCrawlKeywordFlag = false;
                 }
-            }
-            if (condition.customerInfo && condition.customerInfo !== '') {
-                condition.customerUuid = condition.customerInfo;
             }
             $.ajax({
                 url: '/internal/qzkeywordrank/searchCountNumOfQZKeywordRankInfoNew',
