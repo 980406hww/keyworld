@@ -1,10 +1,12 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.base.BaseCriteria;
 import com.keymanager.ckadmin.entity.ClientUpgrade;
 import com.keymanager.ckadmin.service.ClientUpgradeService;
+import com.keymanager.ckadmin.util.ReflectUtils;
 import com.keymanager.util.TerminalTypeMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +38,14 @@ public class ClientUpgradeController {
     public ResultBean getClientUpgrades2(HttpServletRequest request, @RequestBody BaseCriteria baseCriteria){
         ResultBean resultBean = new ResultBean();
         try {
-            //TODO
-            //排序
             Page<ClientUpgrade> page = new Page<>(baseCriteria.getPage(), baseCriteria.getLimit());
+            String orderByField = ReflectUtils.getTableFieldValue(ClientUpgrade.class, baseCriteria.getOrderBy());
+            if (StringUtils.isNotEmpty(orderByField)) {
+                page.setOrderByField(orderByField);
+            }
+            if (baseCriteria.getOrderMode() != null && baseCriteria.getOrderMode() == 0) {
+                page.setAsc(false);
+            }
             String terminalType = TerminalTypeMapping.getTerminalType(request);
             page = clientUpgradeService.searchClientUpgrades(page, terminalType);
             resultBean.setCode(0);
@@ -54,26 +61,43 @@ public class ClientUpgradeController {
         return resultBean;
     }
 
+    @RequestMapping(value = "/toClientUpgradeAdd", method = RequestMethod.GET)
+    public ModelAndView toClientUpgradeAdd(){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("client/clientUpgradeAdd");
+        return mv;
+    }
+
     @RequestMapping(value = "/saveClientUpgrade2", method = RequestMethod.POST)
-    public ResponseEntity<?> saveClientUpgrade(@RequestBody ClientUpgrade clientUpgrade, HttpServletRequest request) {
+    public ResultBean saveClientUpgrade(@RequestBody ClientUpgrade clientUpgrade, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean();
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
         try {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
             clientUpgradeService.saveClientUpgrade(terminalType, clientUpgrade);
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
+            resultBean.setCode(200);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
         }
+        return resultBean;
     }
 
     @RequestMapping(value = "/getClientUpgrade2/{uuid}", method = RequestMethod.GET)
-    public ResponseEntity<?> getClientUpgrade(@PathVariable("uuid") Long uuid) {
+    public ResultBean getClientUpgrade(@PathVariable("uuid") Long uuid) {
+        ResultBean resultBean = new ResultBean();
         try {
-            return new ResponseEntity<Object>(clientUpgradeService.selectById(uuid), HttpStatus.OK);
+            ClientUpgrade clientUpgrade = clientUpgradeService.selectById(uuid);
+            resultBean.setCode(200);
+            resultBean.setData(clientUpgrade);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
         }
+        return resultBean;
     }
 
     @RequestMapping(value = "/deleteClientUpgrade2/{uuid}", method = RequestMethod.POST)

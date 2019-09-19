@@ -184,8 +184,8 @@
             let data = $.parseJSON(formToJson($("#searchForm").serialize()));
             data.orderBy = obj.field;
             data.orderMode = obj.type === 'asc' ? 1 : 0;
-            //尽管我们的 table 自带排序功能，但并没有请求服务端。
-            //有些时候，你可能需要根据当前排序的字段，重新向服务端发送请求，从而实现服务端排序，如：
+            // 尽管我们的 table 自带排序功能，但并没有请求服务端。
+            // 有些时候，你可能需要根据当前排序的字段，重新向服务端发送请求，从而实现服务端排序，如：
             table.reload('customerTable', {
                 where: data,
                 page: {

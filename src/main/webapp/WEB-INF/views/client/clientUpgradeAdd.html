@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <style>
+        .layui-btn {
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+<div class="ok-body">
+    <!--form表单-->
+    <form class="layui-form layui-form-pane ok-form" lay-filter="addClientUpgrade">
+        <div class="layui-form-item">
+            <label class="layui-form-label">程序类型</label>
+            <input type="hidden" name="uuid">
+            <div class="layui-input-block">
+                <select name="programType" lay-verify="required">
+                    <option value="">请选择程序类型</option>
+                    <option value="New">New</option>
+                    <option value="Old">Old</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">当前版本</label>
+            <div class="layui-input-block">
+                <input type="text" name="version" placeholder="请输入当前版本" autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">目标版本</label>
+            <div class="layui-input-block">
+                <input type="text" name="targetVersion" placeholder="请输入目标版本" autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">最大升级数</label>
+            <div class="layui-input-block">
+                <input type="text" name="maxUpgradeCount" placeholder="请输入最大升级数" autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">升级状态</label>
+            <div class="layui-input-block">
+                <select name="status" lay-verify="required">
+                    <option value="">请选择升级状态</option>
+                    <option value="true">开始</option>
+                    <option value="false">暂停</option>
+                </select>
+            </div>
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="commitClientUpgrade">确定</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script>
+
+    let uuid_ = null;
+    let layui_ = null;
+
+    function initForm(data) {
+        uuid_ = data.uuid;
+        if (layui_ != null) {
+            setForm(layui_, uuid_);
+        }
+    }
+
+    function setForm(l, u) {
+        l.jquery.ajax({
+            url: '/internal/clientUpgrade/getClientUpgrade2/' + u,
+            type: 'get',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function (res) {
+                var data = res.data
+                data.status = data.status + ""
+                if (res.code === 200) {
+                    layui.form.val("addClientUpgrade", data);
+                } else {
+                    l.layer.msg(res.msg);
+                }
+            }
+        });
+    }
+
+    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+        var form = layui.form;
+        var okLayer = layui.okLayer;
+        var $ = layui.jquery;
+        var layer = layui.layer;
+
+        if (uuid_ != null) {
+            setForm(layui, uuid_);
+        } else {
+            layui_ = layui;
+        }
+
+        form.on("submit(commitClientUpgrade)", function (data) {
+            var maxUpgradeCount = data.field.maxUpgradeCount
+            if(isNaN(maxUpgradeCount)){
+                layer.msg("最大升级数必须为数字")
+                return false;
+            }
+            var data = JSON.stringify(data.field)
+            layer.confirm('确认保存？', {
+                icon: 3,
+                title: '保存数据',
+                btn: ['确认', '取消'],
+                yes: function (index) {
+                    $.ajax({
+                        url: '/internal/clientUpgrade/saveClientUpgrade2',
+                        type: 'post',
+                        data: data,
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        success: function (res) {
+                            if (res.code === 200) {
+                                layer.close(index);
+                                okLayer.msg.greenTick("保存成功", function () {
+                                    parent.window.sign = true;
+                                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                                });
+                            } else {
+                                layer.msg(res.msg);
+                            }
+                        }
+                    });
+                },
+                btn2: function (index) {
+                    layer.close(index);
+                }
+            });
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+    });
+
+</script>
+
+</body>
+</html>
