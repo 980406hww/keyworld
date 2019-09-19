@@ -2599,7 +2599,7 @@
     <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/qzsetting/save">
         <button class="layui-btn layui-btn-sm" style="background: #876200"
-                id="addQz" lay-event="addQz">
+                lay-event="addQz">
             <i style="position: relative;top: -1px" class="layui-icon">&#xe654;</i>添加
         </button>
         <button class="layui-btn layui-btn-sm" style="background: #873c00"
@@ -2609,13 +2609,11 @@
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
         <button class="layui-btn layui-btn-sm" style="background: #9c001b"
-                id="batchDeleteQZSetting"
                 lay-event="batchDeleteQZSetting">
             <i style="position: relative;top: -1px" class="layui-icon">&#xe640;</i>删除所选
         </button>
         </@shiro.hasPermission>
         <button class="layui-btn layui-btn-sm" style="background: #580087"
-                id="batchUpdateQZSettingUpdateStatus"
                 lay-event="batchUpdateQZSettingUpdateStatus">
             <i style="font-size: 15px !important;" class="layui-icon">&#xe666;</i>马上更新
         </button>

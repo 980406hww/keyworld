@@ -5,7 +5,9 @@ import com.keymanager.ckadmin.service.ResourceService;
 
 import java.util.List;
 import javax.annotation.Resource;
-
+import javax.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,8 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping(value = "/internal/layer")
 public class LayerUIAdminTestController {
+
+    private static Logger logger = LoggerFactory.getLogger(LayerUIAdminTestController.class);
 
     @Resource(name = "resourceService2")
     private ResourceService resourceService;
@@ -41,8 +45,14 @@ public class LayerUIAdminTestController {
     }
 
     @RequestMapping("/menu")
-    public ResponseEntity selectMenus() {
-        List<Menu> menus = resourceService.selectAuthorizationResource("duchengfu", null);
-        return new ResponseEntity(menus, HttpStatus.OK);
+    public ResponseEntity<?> selectMenus(HttpServletRequest request) {
+        try {
+            String loginName = (String) request.getSession().getAttribute("username");
+            List<Menu> menus = resourceService.selectAuthorizationResource(loginName, null);
+            return new ResponseEntity<Object>(menus, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
     }
 }

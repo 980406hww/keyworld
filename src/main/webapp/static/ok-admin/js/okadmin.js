@@ -6,8 +6,7 @@ layui.use(['element', 'layer', 'okUtils', 'okTab'], function () {
     layer = layui.layer,
     okTab = layui.okTab({
       url: "/internal/layer/menu",
-      openTabNum: 30, //允许同时选项卡的个数
-
+      openTabNum: 30 //允许同时选项卡的个数
     });
 
   okTab.render(function () {
@@ -19,7 +18,7 @@ layui.use(['element', 'layer', 'okUtils', 'okTab'], function () {
   // 添加新窗口
   $("body").on("click", "#navBar .layui-nav-item a,#userInfo a", function () {
     //如果不存在子级
-    if ($(this).siblings().length == 0) {
+    if ($(this).siblings().length === 0) {
       okTab.tabAdd($(this));
     }
     $(this).parent("li").siblings().removeClass("layui-nav-itemed");//关闭其他的二级标签
@@ -65,11 +64,11 @@ layui.use(['element', 'layer', 'okUtils', 'okTab'], function () {
   //全屏/退出全屏
   $("body").on("keydown", function (event) {
     event = event || window.event || arguments.callee.caller.arguments[0];
-    if (event && event.keyCode == 27) { // 按 Esc
+    if (event && event.keyCode === 27) { // 按 Esc
       console.log("Esc");
       $("#fullScreen").children("i").eq(0).removeClass("okicon-screen-restore");
     }
-    if (event && event.keyCode == 122) { // 按 F11
+    if (event && event.keyCode === 122) { // 按 F11
       $("#fullScreen").children("i").eq(0).addClass("okicon-screen-restore");
     }
   });
@@ -154,7 +153,7 @@ layui.use(['element', 'layer', 'okUtils', 'okTab'], function () {
         closeBtn: 0,
         formType: 1
       }, function (value, index, elem) {
-        if (value == "123456") {
+        if (value === "123456") {
           layer.close(index);
           $(".yy").hide();
         } else {
