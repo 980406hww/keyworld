@@ -1,2 +1,2 @@
 alter table t_qz_setting
-	add fCaptureTerminalType varchar(40) null comment '抓取终端类型';
+	add fCaptureTerminalType varchar(40) null comment '鎶撳彇缁堢绫诲瀷';
