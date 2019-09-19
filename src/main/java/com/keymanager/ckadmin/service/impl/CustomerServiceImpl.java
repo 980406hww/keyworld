@@ -131,7 +131,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     }
 
     @Override
-    public void changeCustomerDailyReportIdentify(long uuid, boolean identify) {
+    public void changeCustomerDailyReportIdentify(long uuid, int identify) {
         Customer customer = customerDao.selectById(uuid);
         customer.setDailyReportIdentify(identify);
         customer.setUpdateTime(new Date());

@@ -402,27 +402,30 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             layer.msg('请激活客户', {icon: 5});
             return;
         }
-        var postData = {};
-        postData.customerUuid = uuid;
-        postData.identify = newIdentify;
-        $.ajax({
-            url: '/internal/customer/changeCustomerDailyReportIdentify2',
-            type: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            data: JSON.stringify(postData),
-            success: function (result) {
-                if (result.code === 200) {
-                    layer.msg('操作成功', {icon: 6});
-                    $('#dr'+uuid).html(generate_customer_daily_report(uuid, status, newIdentify))
+        layer.confirm("确定更新客户日报表状态吗", {icon: 3, title: '更新日报表状态'}, function (index) {
+            var postData = {};
+            postData.customerUuid = uuid;
+            postData.identify = newIdentify;
+            $.ajax({
+                url: '/internal/customer/changeCustomerDailyReportIdentify2',
+                type: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(postData),
+                success: function (result) {
+                    if (result.code === 200) {
+                        layer.msg('操作成功', {icon: 6, time:1000});
+                        $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, newIdentify))
+                    }
+                },
+                error: function () {
+                    layer.msg('操作失败', {icon: 5, time:1000});
+                    $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, oldIdentify))
                 }
-            },
-            error: function () {
-                layer.msg('操作失败', {icon: 5});
-                $('#dr'+uuid).html(generate_customer_daily_report(uuid, status, oldIdentify))
-            }
+            });
+            layer.close(index);
         });
     };
 
@@ -489,11 +492,13 @@ function generate_customer_daily_report(uuid, status, oldIdentify){
     uuid = uuid +'';
     status = status+'';
     oldIdentify = oldIdentify+'';
+    let newIdentify = '1';
     let stat ='否';
-    if(oldIdentify === 'true'){
+    if(oldIdentify === '1'){
         stat = '是';
+        newIdentify = '0'
     }
-    let newIdentify = !(oldIdentify==='true')+'';
+
     if (status === '1') {
         stat += ' | <a href="javascript:void(0)" onclick=changeCustomerDailyReportIdentify(\'' + uuid + '\',\'' + status + '\',\'' + oldIdentify + '\',\'' + newIdentify + '\')>修改状态</a>';
     }

@@ -29,11 +29,6 @@ function setForm(l, u) {
         dataType: 'json',
         success: function (res) {
             if (res.code === 200) {
-                if (res.data.dailyReportIdentify) {
-                    res.data.dailyReportIdentify = 1
-                } else {
-                    res.data.dailyReportIdentify = 0
-                }
                 let customerBusinessList = res.data.customerBusinessList;
                 for (let index in customerBusinessList) {
                     res.data['customerBusinessList['+customerBusinessList[index]+']'] = customerBusinessList[index];
@@ -87,11 +82,7 @@ layui.use(["form", "okLayer", "jquery", "layer"], function () {
             delete data.field['customerBusinessList[fm]']
 
         }
-        if (data.field.dailyReportIdentify ===1 ) {
-            data.field.dailyReportIdentify = true
-        } else {
-            data.field.dailyReportIdentify = false
-        }
+
         data.field.customerBusinessList = customerBusinessList;
 
         data.field.customerBusinessStr = customerBusinessStr;
@@ -101,7 +92,7 @@ layui.use(["form", "okLayer", "jquery", "layer"], function () {
             btn: ['确认', '取消']
             , yes: function (index) {
                 $.ajax({
-                    url: '/internal/customer/postCustomersAdd',
+                    url: '/internal/customer/saveCustomer2',
                     type: 'post',
                     data: JSON.stringify(data.field),
                     headers: {

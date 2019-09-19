@@ -21,11 +21,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -48,7 +44,7 @@ public class CustomerController {
     private UserInfoService userInfoService;
 
     @RequiresPermissions("/internal/customer/searchCustomers")
-    @RequestMapping(value = "/toCustomers", method = RequestMethod.GET)
+    @GetMapping(value = "/toCustomers")
     public ModelAndView toCustomers() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("customers/customer");
@@ -56,7 +52,7 @@ public class CustomerController {
     }
 
     @RequiresPermissions("/internal/customer/searchCustomers")
-    @RequestMapping(value = "/toCustomers2", method = RequestMethod.GET)
+    @GetMapping(value = "/toCustomers2")
     public ModelAndView toCustomers2() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("customers/customer2");
@@ -65,7 +61,7 @@ public class CustomerController {
 
 
     @RequiresPermissions("/internal/customer/searchCustomers")
-    @RequestMapping(value = "/getCustomers")
+    @PostMapping(value = "/getCustomers")
     public ResultBean getAlgorithmTestPlans(HttpServletRequest request,
         @RequestBody CustomerCriteria customerCriteria) {
         ResultBean resultBean = new ResultBean();
@@ -118,7 +114,7 @@ public class CustomerController {
      * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
-    @RequestMapping(value = "/toCustomersAdd", method = RequestMethod.GET)
+    @GetMapping(value = "/toCustomersAdd")
     public ModelAndView toCustomersAdd() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("customers/customerAdd");
@@ -133,7 +129,7 @@ public class CustomerController {
      * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
-    @RequestMapping(value = "/getCustomersMsgById/{uuid}", method = RequestMethod.GET)
+    @GetMapping(value = "/getCustomersMsgById/{uuid}")
     public ResultBean toCustomersAdd(@PathVariable Long uuid, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         try {
@@ -161,15 +157,14 @@ public class CustomerController {
 
     /**
      * 添加用户
-     *
      * @param customer
      * @param result
      * @param session
      * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
-    @RequestMapping(value = "/postCustomersAdd", method = RequestMethod.POST)
-    public ResultBean postCustomersAdd(@RequestBody @Valid Customer customer, BindingResult result,
+    @PostMapping(value = "/saveCustomer2")
+    public ResultBean saveCustomer2(@RequestBody @Valid Customer customer, BindingResult result,
         HttpSession session) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
@@ -193,9 +188,13 @@ public class CustomerController {
         return resultBean;
     }
 
-
+    /**
+     * 批量删除客户
+     * @param requestMap
+     * @return
+     */
     @RequiresPermissions("/internal/customer/deleteCustomers")
-    @RequestMapping(value = "/deleteCustomers2", method = RequestMethod.POST)
+    @PostMapping(value = "/deleteCustomers2")
     public ResultBean deleteCustomers(@RequestBody Map<String, Object> requestMap) {
         try {
             List<String> uuids = (List<String>) requestMap.get("uuids");
@@ -214,7 +213,7 @@ public class CustomerController {
      * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
-    @RequestMapping(value = "/updateCustomerDailyReportIdentify2", method = RequestMethod.POST)
+    @PostMapping(value = "/updateCustomerDailyReportIdentify2")
     public ResultBean updateCustomerDailyReportIdentify(@RequestBody Map requestMap) {
         try {
             List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
@@ -233,11 +232,11 @@ public class CustomerController {
      * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
-    @RequestMapping(value = "/changeCustomerDailyReportIdentify2", method = RequestMethod.POST)
+    @PostMapping(value = "/changeCustomerDailyReportIdentify2")
     public ResultBean changeCustomerDailyReportIdentify(@RequestBody Map requestMap) {
         try {
             long uuid = Long.valueOf((String) requestMap.get("customerUuid"));
-            boolean identify = Boolean.valueOf((String) requestMap.get("identify"));
+            int identify = Integer.valueOf((String) requestMap.get("identify"));
             customerService.changeCustomerDailyReportIdentify(uuid, identify);
             return new ResultBean(200, "更新成功");
         } catch (NumberFormatException e) {

@@ -54,7 +54,7 @@ public class Customer extends BaseEntity {
     private String remark;
 
     @TableField(value = "fDailyReportIdentify")
-    private boolean dailyReportIdentify;
+    private int dailyReportIdentify;
 
 //    @TableField(value = "fActiveHour")
 //    private String activeHour;
@@ -240,16 +240,12 @@ public class Customer extends BaseEntity {
         this.updateInterval = updateInterval;
     }
 
-    public boolean getDailyReportIdentify() {
+    public int getDailyReportIdentify() {
         return dailyReportIdentify;
     }
 
-    public void setDailyReportIdentify(boolean dailyReportIdentify) {
+    public void setDailyReportIdentify(int dailyReportIdentify) {
         this.dailyReportIdentify = dailyReportIdentify;
-    }
-
-    public boolean isDailyReportIdentify() {
-        return dailyReportIdentify;
     }
 
     public List<String> getCustomerBusinessList() {
