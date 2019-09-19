@@ -266,4 +266,14 @@
         WHERE fOptimizeGroupName LIKE CONCAT(#{groupName}, '%')
     </select>
 
+    <select id="searchCustomerKeywordSummaryInfo" resultType="com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO">
+        SELECT
+            fKeyword      AS 'keyword',
+            fTerminalType AS 'terminalType',
+            fStatus       AS 'status'
+        FROM t_customer_keyword
+        WHERE fCustomerUuid = #{customerUuid}
+        AND fType = #{entryType}
+        GROUP BY fKeyword, fTerminalType
+    </select>
 </mapper>

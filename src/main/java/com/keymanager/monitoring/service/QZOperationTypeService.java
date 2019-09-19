@@ -58,4 +58,9 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
     public Date getStandardTime(long qzSettingUuid, String terminalType) {
 		return qzOperationTypeDao.getStandardTime(qzSettingUuid, terminalType);
     }
+
+
+	public List<String> getQZSettngStandardSpecies(Long uuid) {
+		return qzOperationTypeDao.getQZSettngStandardSpecies(uuid);
+	}
 }

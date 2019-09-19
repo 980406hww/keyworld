@@ -8,7 +8,6 @@ import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
 import com.keymanager.ckadmin.service.CustomerExcludeKeywordService;
 import java.util.Date;
 import javax.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("customerExcludeKeywordService2")

@@ -39,9 +39,8 @@ public class ExternalQZKeywordRankInfoController extends SpringMVCBaseController
             }
         } catch (Exception ex) {
             logger.error(ex.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<Object>(false, HttpStatus.OK);
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/updateQZSettingsTasks", method = RequestMethod.POST)
@@ -51,12 +50,11 @@ public class ExternalQZKeywordRankInfoController extends SpringMVCBaseController
         try {
             if(StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password) && validUser(userName, password)) {
                 qzKeywordRankInfoService.updateQzKeywordRankInfo(externalQZKeywordRankInfoResultVo);
-                return new ResponseEntity<Object>(true, HttpStatus.OK);
+                return new ResponseEntity<Object>(HttpStatus.OK);
             }
         } catch (Exception ex) {
             logger.error(ex.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<Object>(false, HttpStatus.OK);
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 }

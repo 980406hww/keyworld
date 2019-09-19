@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.service.impl;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.ckadmin.criteria.ExternalQZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
@@ -18,12 +19,20 @@ import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.*;
+import com.keymanager.ckadmin.vo.ExternalQZSettingVO;
 import com.keymanager.ckadmin.vo.QZKeywordRankInfoVO;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.vo.QZSettingVO;
 import com.keymanager.enums.CollectMethod;
+import com.keymanager.ckadmin.entity.QZCaptureTitleLog;
+import com.keymanager.ckadmin.enums.QZCaptureTitleLogStatusEnum;
+import com.keymanager.ckadmin.enums.QZSettingStatusEnum;
+import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
+import com.keymanager.ckadmin.service.QZCaptureTitleLogService;
 import com.keymanager.util.Constants;
+import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
+import com.keymanager.value.CustomerKeywordVO;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,6 +46,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -86,6 +96,9 @@ public class QZSettingServiceImpl extends
 
     @Resource(name = "groupService2")
     private GroupService groupService;
+
+    @Resource(name = "qzCaptureTitleLogService2")
+    private QZCaptureTitleLogService qzCaptureTitleLogService;
 
     @Override
     public Page<QZSetting> searchQZSetting(Page<QZSetting> page,
@@ -675,6 +688,231 @@ public class QZSettingServiceImpl extends
                 .searchCategoryTagByQZSettingUuid(Long.parseLong(uuid));
             qzCategoryTagService.updateQZCategoryTag(existingQZCategoryTags, targetQZCategoryTags,
                 Long.parseLong(uuid));
+        }
+    }
+
+    @Override
+    public Map<String, Object> getQZSettingForAutoOperate() {
+        Map<String, Object> map = qzSettingDao.selectQZSettingForAutoOperate();
+        if (null != map) {
+            int qzSettingUuid = (int) map.get("uuid");
+            String captureTerminalType = (String) map.get("captureTerminalType");
+            map.remove("captureTerminalType");
+            String[] terminalTypes = captureTerminalType.split(",");
+            List<String> standardSpecieList = qzOperationTypeService
+                .getQZSettngStandardSpecie((long) qzSettingUuid, terminalTypes);
+            map.put("standardSpecieList", standardSpecieList);
+        }
+        return map;
+    }
+
+    @Override
+    public void updateQZSettingKeywords(ExternalQZSettingCriteria qzSettingCriteria) {
+        boolean pcKeywordExceedMaxCount = false;
+        boolean phoneKeywordExceedMaxCount = false;
+        if (!qzSettingCriteria.isDownloadTimesUsed()) {
+            if (CollectionUtils.isNotEmpty(qzSettingCriteria.getCustomerKeywordVos())) {
+                List<QZOperationType> qzOperationTypes = qzOperationTypeService
+                    .searchQZOperationTypesByQZSettingUuid(qzSettingCriteria.getUuid());
+                //取用户全站类别下所有关键字
+                List<CustomerKeywordSummaryInfoVO> customerKeywordSummaryInfoVos = customerKeywordService
+                    .searchCustomerKeywordSummaryInfo("qz", qzSettingCriteria.getCustomerUuid());
+                Map<String, Set<String>> customerKeywordSummaryInfoMaps = new HashMap<>(500);
+                int pcKeywordCountNum = 0, phoneKeywordCountNum = 0;
+                //关键字分类
+                if (CollectionUtils.isNotEmpty(customerKeywordSummaryInfoVos)) {
+                    for (CustomerKeywordSummaryInfoVO customerKeywordSummaryInfoVO : customerKeywordSummaryInfoVos) {
+                        if (customerKeywordSummaryInfoVO.getStatus() > 0) {
+                            if (customerKeywordSummaryInfoVO.getTerminalType().equals(
+                                TerminalTypeEnum.PC.name())) {
+                                pcKeywordCountNum++;
+                            } else {
+                                phoneKeywordCountNum++;
+                            }
+                        }
+                        Set<String> terminalTypeSet = customerKeywordSummaryInfoMaps
+                            .get(customerKeywordSummaryInfoVO.getKeyword());
+                        if (terminalTypeSet == null) {
+                            terminalTypeSet = new HashSet<>(2);
+                            customerKeywordSummaryInfoMaps
+                                .put(customerKeywordSummaryInfoVO.getKeyword(), terminalTypeSet);
+                        }
+                        terminalTypeSet.add(customerKeywordSummaryInfoVO.getTerminalType());
+                    }
+                }
+                for (QZOperationType qzOperationType : qzOperationTypes) {
+                    if (qzOperationType.getOperationType().equals(TerminalTypeEnum.PC.name())) {
+                        pcKeywordCountNum =
+                            qzOperationType.getMaxKeywordCount() - pcKeywordCountNum;
+                    } else {
+                        phoneKeywordCountNum =
+                            qzOperationType.getMaxKeywordCount() - phoneKeywordCountNum;
+                    }
+                }
+                QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
+                qzCaptureTitleLog.setStatus(QZCaptureTitleLogStatusEnum.New.getValue());
+                if (CollectionUtils.isNotEmpty(qzOperationTypes)) {
+                    List<CustomerKeyword> insertingCustomerKeywords = new ArrayList<>();
+                    for (CustomerKeywordVO customerKeywordVO : qzSettingCriteria
+                        .getCustomerKeywordVos()) {
+                        for (QZOperationType qzOperationType : qzOperationTypes) {
+                            if (!(customerKeywordSummaryInfoMaps
+                                .containsKey(customerKeywordVO.getKeyword())
+                                && customerKeywordSummaryInfoMaps
+                                .get(customerKeywordVO.getKeyword())
+                                .contains(qzOperationType.getOperationType()))) {
+                                if (StringUtils.isBlank(customerKeywordVO.getTerminalType())
+                                    || qzOperationType.getOperationType()
+                                    .equals(customerKeywordVO.getTerminalType())) {
+                                    if (qzOperationType.getOperationType().equals(
+                                        TerminalTypeEnum.PC.name())) {
+                                        if (pcKeywordCountNum > 0) {
+                                            CustomerKeyword customerKeyword = createCustomerKeyword(
+                                                qzSettingCriteria, qzOperationType,
+                                                customerKeywordVO);
+                                            insertingCustomerKeywords.add(customerKeyword);
+                                            pcKeywordCountNum--;
+                                        }
+                                    } else {
+                                        if (phoneKeywordCountNum > 0) {
+                                            CustomerKeyword customerKeyword = createCustomerKeyword(
+                                                qzSettingCriteria, qzOperationType,
+                                                customerKeywordVO);
+                                            insertingCustomerKeywords.add(customerKeyword);
+                                            phoneKeywordCountNum--;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    for (QZOperationType qzOperationType : qzOperationTypes) {
+                        qzCaptureTitleLog.setTerminalType(qzOperationType.getOperationType());
+                        qzCaptureTitleLog.setQzOperationTypeUuid(qzOperationType.getUuid());
+                        qzCaptureTitleLogService.addQZCaptureTitleLog(qzCaptureTitleLog);
+                        // 全站下不存在的终端类型，默认其是达标的
+                        if (pcKeywordCountNum == 0) {
+                            pcKeywordExceedMaxCount = true;
+                        }
+                        if (phoneKeywordCountNum == 0) {
+                            phoneKeywordExceedMaxCount = true;
+                        }
+                    }
+                    String pcCustomerExcludeKeywords = customerExcludeKeywordService
+                        .getCustomerExcludeKeyword(qzSettingCriteria.getCustomerUuid(),
+                            qzSettingCriteria.getUuid(), TerminalTypeEnum.PC.toString(),
+                            qzSettingCriteria.getDomain());
+                    String phoneCustomerExcludeKeywords = customerExcludeKeywordService
+                        .getCustomerExcludeKeyword(qzSettingCriteria.getCustomerUuid(),
+                            qzSettingCriteria.getUuid(), TerminalTypeEnum.Phone.toString(),
+                            qzSettingCriteria.getDomain());
+
+                    Set<String> pcExcludeKeyword = new HashSet<>();
+                    Set<String> phoneExcludeKeyword = new HashSet<>(500);
+                    if (null != pcCustomerExcludeKeywords) {
+                        pcExcludeKeyword
+                            .addAll(Arrays.asList(pcCustomerExcludeKeywords.split(",")));
+                    }
+                    if (null != phoneCustomerExcludeKeywords) {
+                        phoneExcludeKeyword
+                            .addAll(Arrays.asList(phoneCustomerExcludeKeywords.split(",")));
+                    }
+                    if (CollectionUtils.isNotEmpty(insertingCustomerKeywords)) {
+                        List<CustomerKeyword> customerKeywords = new ArrayList<>();
+                        for (CustomerKeyword customerKeyword : insertingCustomerKeywords) {
+                            if (TerminalTypeEnum.PC.name()
+                                .equals(customerKeyword.getTerminalType())) {
+                                if (!pcExcludeKeyword.isEmpty()) {
+                                    if (pcExcludeKeyword.contains(customerKeyword.getKeyword())) {
+                                        customerKeyword.setStatus(0);
+                                    }
+                                }
+                            } else {
+                                if (!phoneExcludeKeyword.isEmpty()) {
+                                    if (phoneExcludeKeyword
+                                        .contains(customerKeyword.getKeyword())) {
+                                        customerKeyword.setStatus(0);
+                                    }
+                                }
+                            }
+                            customerKeyword
+                                .setCustomerKeywordSource(CustomerKeywordSourceEnum.Capture.name());
+                            customerKeywords.add(customerKeyword);
+                        }
+                        customerKeywordService
+                            .addCustomerKeyword(customerKeywords, qzSettingCriteria.getUserName());
+                    }
+                }
+            }
+        }
+        this.completeQZSetting(qzSettingCriteria.getUuid(),
+            qzSettingCriteria.isDownloadTimesUsed(), pcKeywordExceedMaxCount,
+            phoneKeywordExceedMaxCount);
+    }
+
+    @Override
+    public List<ExternalQZSettingVO> getQZSettingTask(int crawlerHour, int taskNumber) {
+        return qzSettingDao.getQZSettingTask(crawlerHour, taskNumber);
+    }
+
+    @Override
+    public void updateCrawlerStatus(List<Long> uuids) {
+        qzSettingDao.updateCrawlerStatus(uuids);
+    }
+
+    @Override
+    public void updateQzSetting(QZSetting qzSetting) {
+        qzSettingDao.updateQzSetting(qzSetting);
+    }
+
+    private CustomerKeyword createCustomerKeyword(ExternalQZSettingCriteria qzSettingCriteria,
+        QZOperationType qzOperationType, CustomerKeywordVO customerKeywordVO) {
+        CustomerKeyword customerKeyword = new CustomerKeyword();
+        customerKeyword.setQzSettingUuid(qzSettingCriteria.getUuid());
+        customerKeyword.setKeyword(customerKeywordVO.getKeyword());
+        customerKeyword.setUrl(customerKeywordVO.getUrl());
+        customerKeyword
+            .setBearPawNumber(qzSettingCriteria.getBearPawNumber());
+        customerKeyword.setTitle(customerKeywordVO.getTitle());
+        customerKeyword.setOrderNumber(customerKeywordVO.getOrderNumber());
+        customerKeyword.setCurrentIndexCount(customerKeywordVO.getCurrentIndexCount());
+        customerKeyword
+            .setCustomerUuid(qzSettingCriteria.getCustomerUuid());
+        customerKeyword.setOptimizePlanCount(customerKeywordVO.getCurrentIndexCount() + 8);
+        customerKeyword.setOptimizeRemainingCount(customerKeywordVO.getCurrentIndexCount() + 8);
+        customerKeyword.setServiceProvider("baidutop123");
+        customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
+        customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
+        customerKeyword.setType("qz");
+        customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
+        customerKeyword.setStatus(1);
+        customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
+        customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+        customerKeyword.setInitialIndexCount(customerKeywordVO.getCurrentIndexCount());
+        customerKeyword.setTerminalType(qzOperationType.getOperationType());
+        customerKeyword.setOptimizeGroupName(qzOperationType.getGroup());
+        customerKeyword.setMachineGroup("sqz");
+        return customerKeyword;
+    }
+
+    private void completeQZSetting(Long uuid, boolean downloadTimesUsed,
+        boolean pcKeywordExceedMaxCount, boolean phoneKeywordExceedMaxCount) {
+        QZSetting qzSetting = qzSettingDao.selectById(uuid);
+        if (qzSetting != null) {
+            if (downloadTimesUsed) {
+                qzSetting.setUpdateStatus(QZSettingStatusEnum.DownloadTimesUsed.getValue());
+            } else {
+                qzSetting.setUpdateStatus(QZSettingStatusEnum.Completed.getValue());
+            }
+            if (pcKeywordExceedMaxCount) {
+                qzSetting.setPcKeywordExceedMaxCount(true);
+            }
+            if (phoneKeywordExceedMaxCount) {
+                qzSetting.setPhoneKeywordExceedMaxCount(true);
+            }
+            qzSetting.setUpdateEndTime(new Date());
+            qzSettingDao.updateById(qzSetting);
         }
     }
 }

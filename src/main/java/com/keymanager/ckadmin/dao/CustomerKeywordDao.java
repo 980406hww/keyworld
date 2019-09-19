@@ -3,16 +3,15 @@ package com.keymanager.ckadmin.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-
 @Repository("customerKeywordDao2")
-public interface
-CustomerKeywordDao extends BaseMapper<com.keymanager.ckadmin.entity.CustomerKeyword> {
+public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<Map> getCustomerKeywordsCount(@Param("customerUuids") List<Long> customerUuids,
         @Param("terminalType") String terminalType, @Param
@@ -46,4 +45,7 @@ CustomerKeywordDao extends BaseMapper<com.keymanager.ckadmin.entity.CustomerKeyw
     void updateSimilarCustomerKeyword(@Param("customerKeyword") CustomerKeyword customerKeyword);
 
     Integer getCustomerKeywordCountByOptimizeGroupName(@Param("groupName") String groupName);
+
+    List<CustomerKeywordSummaryInfoVO> searchCustomerKeywordSummaryInfo(
+        @Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
 }

@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.monitoring.criteria.*;
-import com.keymanager.monitoring.dao.CustomerKeywordDao;
-import com.keymanager.monitoring.dao.QZOperationTypeDao;
 import com.keymanager.monitoring.dao.QZSettingDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
@@ -62,16 +60,10 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	@Autowired
 	private OperationCombineService operationCombineService;
 
-	@Autowired
-	private CustomerKeywordDao customerKeywordDao;
-
-	@Autowired
-	private QZOperationTypeDao qzOperationTypeDao;
-
 	public ExternalQzSettingVO getAvailableQZSetting(){
 		ExternalQzSettingVO externalQzSettingVO = qzSettingDao.selectQZSettingForAutoOperate();
-		if(externalQzSettingVO !=null){
-			List<String> typeList = qzOperationTypeDao.getAllOperationChargeKeywordCountByQZSettingUuid(externalQzSettingVO.getUuid());
+		if(externalQzSettingVO != null){
+			List<String> typeList = qzOperationTypeService.getQZSettngStandardSpecies(externalQzSettingVO.getUuid());
 			if(CollectionUtils.isNotEmpty(typeList)){
 				externalQzSettingVO.setKeywordType(StringUtils.join(typeList,","));
 			}
@@ -526,7 +518,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			if (CollectionUtils.isNotEmpty(qzSettingCriteria.getCustomerKeywordVOs())) {
 				List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(qzSettingCriteria.getExternalQzSettingVO().getUuid());
 				//取用户全站类别下所有关键字
-				List<CustomerKeywordSummaryInfoVO> customerKeywordSummaryInfoVOs = customerKeywordService.searchCustomerKeywordSummaryInfo(qzSettingCriteria.getExternalQzSettingVO().getType(), (long)qzSettingCriteria.getExternalQzSettingVO().getCustomerUuid());
+				List<CustomerKeywordSummaryInfoVO> customerKeywordSummaryInfoVOs = customerKeywordService.searchCustomerKeywordSummaryInfo(qzSettingCriteria.getExternalQzSettingVO().getType(), qzSettingCriteria.getExternalQzSettingVO().getCustomerUuid());
 				Map<String, Set<String>> customerKeywordSummaryInfoMaps = new HashMap<String, Set<String>>();
 				int pcKeywordCountNum = 0, phoneKeywordCountNum = 0;
 				//关键字分类
@@ -1042,10 +1034,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				qzSettingDao.updateById(setting);
 			}
 		}
-	}
-
-	public ExternalQzSettingVO selectQZSettingForAutoOperate () {
-		return qzSettingDao.selectQZSettingForAutoOperate();
 	}
 
 	public String findQZCustomer(String domain) {

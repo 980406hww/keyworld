@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.dao.QZChargeRuleDao;
 import com.keymanager.ckadmin.entity.QZChargeRule;
 import com.keymanager.ckadmin.service.QZChargeRuleService;
+import com.keymanager.ckadmin.vo.QZChargeRuleVO;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -24,5 +25,11 @@ public class QZChargeRuleServiceImpl extends ServiceImpl<QZChargeRuleDao, QZChar
     //通过QZOperationTypeUuid删除
     public void deleteByQZOperationTypeUuid(Long QZOperationTypeUuid) {
         qzChargeRuleDao.deleteByQZOperationTypeUuid(QZOperationTypeUuid);
+    }
+
+    @Override
+    public List<QZChargeRuleVO> findQZChargeRules(Long qzSettingUuid, String operationType,
+        String websiteType) {
+        return qzChargeRuleDao.findQZChargeRules(qzSettingUuid, operationType, websiteType);
     }
 }

@@ -2,12 +2,14 @@ package com.keymanager.ckadmin.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
+import com.keymanager.ckadmin.criteria.ExternalQZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
 import com.keymanager.ckadmin.entity.QZCategoryTag;
 import com.keymanager.ckadmin.entity.QZSetting;
+import com.keymanager.ckadmin.vo.ExternalQZSettingVO;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import java.util.List;
 import java.util.Map;
@@ -57,4 +59,14 @@ public interface QZSettingService extends IService<QZSetting> {
     void updRenewalStatus(Long uuid, int renewalStatus);
 
     Map<String, String> getPCPhoneGroupByUuid(Long uuid);
+
+    Map<String, Object> getQZSettingForAutoOperate();
+
+    void updateQZSettingKeywords(ExternalQZSettingCriteria qzSettingCriteria);
+
+    List<ExternalQZSettingVO> getQZSettingTask(int crawlerHour, int taskNumber);
+
+    void updateCrawlerStatus(List<Long> uuids);
+
+    void updateQzSetting(QZSetting qzSetting);
 }

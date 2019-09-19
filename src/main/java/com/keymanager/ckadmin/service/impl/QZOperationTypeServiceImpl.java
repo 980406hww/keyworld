@@ -6,6 +6,7 @@ import com.keymanager.ckadmin.entity.QZChargeRule;
 import com.keymanager.ckadmin.entity.QZOperationType;
 import com.keymanager.ckadmin.service.QZChargeRuleService;
 import com.keymanager.ckadmin.service.QZOperationTypeService;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
@@ -18,6 +19,7 @@ public class QZOperationTypeServiceImpl extends
 
     @Resource(name = "qzOperationTypeDao2")
     private QZOperationTypeDao qzOperationTypeDao;
+
     @Resource(name = "qzChargeRuleService2")
     private QZChargeRuleService qzChargeRuleService;
 
@@ -55,4 +57,24 @@ public class QZOperationTypeServiceImpl extends
         qzOperationTypeDao.deleteByQZSettingUuid(qzSettingUuid);
     }
 
+    @Override
+    public List<String> getQZSettngStandardSpecie(long qzSettingUuid, String[] terminalTypes) {
+        List<String> standardSpecieList = new ArrayList<>(2);
+        for (String terminalType : terminalTypes) {
+            String standardSpecie = qzOperationTypeDao
+                .getQZSettngStandardSpecie(qzSettingUuid, terminalType);
+            standardSpecieList.add(terminalType + "_" + standardSpecie);
+        }
+        return standardSpecieList;
+    }
+
+    @Override
+    public QZOperationType searchQZOperationType(Long qzSettingUuid, String operationType) {
+        return qzOperationTypeDao.searchQZOperationType(qzSettingUuid, operationType);
+    }
+
+    @Override
+    public void updateQZOperationTypeStandardTime(Long uuid, int isStandardFlag) {
+        qzOperationTypeDao.updateQZOperationTypeStandardTime(uuid, isStandardFlag);
+    }
 }

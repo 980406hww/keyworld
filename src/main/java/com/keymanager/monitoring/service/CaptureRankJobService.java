@@ -162,7 +162,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
                         updateGenerationCurve(captureRankJob);
                     }
                     captureRankJob.setEndTime(new Date());
-                    captureRankJob.setLastExecutionDate(new java.sql.Date(new Date().getTime()));
+                    captureRankJob.setLastExecutionDate(new java.sql.Date(System.currentTimeMillis()));
                     captureRankJob.setExectionStatus(CaptureRankExectionStatus.Complete.name());
                 }
                 captureRankJobDao.updateById(captureRankJob);
@@ -326,7 +326,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
 
     public void changeCaptureRankJobStatus(Long uuid, String status) {
         CaptureRankJob captureRankJob = captureRankJobDao.selectById(uuid);
-        captureRankJob.setCaptureRankJobStatus(status.equals("true") ? true : false);
+        captureRankJob.setCaptureRankJobStatus("true".equals(status));
         captureRankJobDao.updateById(captureRankJob);
     }
 
