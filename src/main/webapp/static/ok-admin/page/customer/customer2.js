@@ -1,16 +1,13 @@
 var sign = false;
 
 // layui相关
-layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLayer', 'layer'], function () {
+layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function () {
     var element = layui.element;
-    // var table = layui.table;
     var form = layui.form;
     var $ = layui.jquery;
     var layer = layui.layer;
     var okLayer = layui.okLayer;
-    // var tablePlug = layui.tablePlug; //表格插件
     var laypage = layui.laypage;
-    // tablePlug.enableTableFixedScroll(true);//允许表格固定列滚动
 
     initLayPage();
 
@@ -19,6 +16,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
             pageConf = {};
             pageConf.limit = 25;
             pageConf.page = 1;
+        }
+        if(!pageConf.page){
+            pageConf.page = 1;
+        }
+        if (!pageConf.limit) {
+            pageConf.limit = 25;
         }
         $.ajax({
             url: '/internal/customer/getCustomers',
@@ -49,7 +52,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
                 });
                 init_data(result.data);
                 form.render()
-
             },
             error: function () {
                 layer.msg('获取用户失败，请稍后再试', {icon: 5});
@@ -64,7 +66,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
                 '   <div class="layadmin-contact-box">' +
                 '       <div class="layui-col-md5 layui-col-sm6">';
             item += '           <h3 class="layadmin-title">' +
-                '               <input type="checkbox" name="checkItem" value="' + obj.uuid + '"lay-skin="primary" >' +
+                '               <input type="checkbox" name="checkItem" value="' + obj.uuid + '" status="'+obj.status+'"lay-skin="primary" >' +
                 '               <strong>' + obj.contactPerson + '</strong>' + '<i class="layui-icon layui-icon-right"></i> ' +
                 obj.type +
                 '           </h3>';
@@ -77,11 +79,14 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
                 '                   <br>' +
                 '                   QQ:' + obj.qq +
                 '               </div>';
+            item += '           <div class="layadmin-address other_info">' +
+                '                   <strong>其他信息</strong>' +
+                '                   <p class="skip" title="'+obj.remark+'">客户状态:' + generate_customer_status(obj.status) +'</p>' +
+                '                   <p class="skip" title="'+obj.remark+'">是否产生日报表:<span id="dr'+obj.uuid+'">' + generate_customer_daily_report(obj.uuid, obj.status, obj.dailyReportIdentify) + '</span></p>' +
+                '               </div>';
             item += '           <div class="layadmin-address ">' +
                 '                   <strong>备注</strong>' +
-                // '                   <br>' +
                 '                   <p class="skip" title="'+obj.remark+'">销售备注:' + obj.saleRemark + '</p>' +
-                // '                   <br>' +
                 '                   <p class="skip" title="'+obj.remark+'">备注:' + obj.remark + '</p>' +
                 '               </div>' +
                 '       </div>';
@@ -182,6 +187,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
         })
     }
 
+    function formToJson(data) {
+        data = data.replace(/&/g, "\",\"");
+        data = data.replace(/=/g, "\":\"");
+        data = "{\"" + data + "\"}";
+        return data;
+    }
+
     form.on('checkbox(checkAll)', function (data) {
         if ($(this)[0].checked) {
             $("input[name='checkItem']").each(function () {
@@ -204,7 +216,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
             showCondition();
         }
         initLayPage(pageConf);
-        // $("#searchContent").removeClass("layui-show");
         return false;
     });
 
@@ -221,6 +232,28 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
             }
         });
     }
+
+    //获取选中客户uuid[]
+    function get_select_uuids(){
+        var uuidArr = [];
+        $('input[name="checkItem"]:checked').each(function () {
+            uuidArr.push(this.value)
+        });
+        return uuidArr;
+    }
+
+    //获取选中的激活的客户uuid[]
+    function get_select_active_uuids(){
+        var uuidArr = [];
+        $('input[name="checkItem"]:checked').each(function () {
+            if (this.getAttribute("status") === '1') {
+                uuidArr.push(this.value);
+            }
+        });
+        return uuidArr;
+    }
+
+
 
     //删除单个客户
     window.delOneCustomer = function (uuid) {
@@ -244,7 +277,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
                             icon: 6,
                             time: 2000 //2秒关闭（如果不配置，默认是3秒）
                         }, function () {
-                            initLayPage()
+                            let pageConf = $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
+                            initLayPage(pageConf)
                         });
                     } else {
                         layer.msg('操作失败', {icon: 5});
@@ -259,17 +293,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
         });
     };
 
+    //批量删除
     window.batchDelete = function () {
-        var length = $('input[name="checkItem"]:checked').length;
-        if (length <= 0) {
+        let uuidArr = get_select_uuids();
+        if (uuidArr.length <= 0) {
             show_layer_msg("请选择要删除的客户！！", 5);
             return false;
         }
-        var uuidArr = [];
-        $('input[name="checkItem"]:checked').each(function () {
-            // alert($(this).val())
-            uuidArr.push(this.value)
-        });
         layer.confirm("确定要删除所选客户吗", {icon: 3, title: '删除所选'}, function (index) {
             var postData = {};
             postData.uuids = uuidArr;
@@ -288,7 +318,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
                             icon: 6,
                             time: 2000
                         }, function () {
-                            initLayPage()
+                            let pageConf = $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
+                            initLayPage(pageConf)
                         });
                     } else {
                         layer.msg('操作失败', {icon: 5});
@@ -302,31 +333,32 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
         });
     };
 
+    // 添加客户
+    window.toAddCustomer = function () {
+        okLayer.open("首页 / 客户列表 / 添加用户", "/internal/customer/toCustomersAdd", "60%", "90%", null, function () {
+            if (sign) {
+                let pageConf = $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
+                initLayPage(pageConf);
+                sign = false;
+            }
+        });
+    };
+
     // 编辑表格获得表格数据
     window.editCustomer = function (uuid) {
         okLayer.open("首页 / 客户列表 / 修改用户", "/internal/customer/toCustomersAdd", "60%", "90%", function (layero) {
             window[layero.find("iframe")[0]["name"]].initForm(uuid);
         }, function () {
             if (sign) {
-                initLayPage()
+                let pageConf = $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
+                initLayPage(pageConf);
                 sign = false;
             }
         })
     };
 
-    // 添加客户
-    window.toAddCustomer = function () {
-        okLayer.open("首页 / 客户列表 / 添加用户", "/internal/customer/toCustomersAdd", "60%", "90%", null, function () {
-            if (sign) {
-                active['reload'].call(this);
-                sign = false;
-            }
-        });
-    };
-
-
     //更新关键字状态
-    window.changeCustomerKeywordStatus = function changeCustomerKeywordStatus(customerUuid, status) {
+    window.changeCustomerKeywordStatus = function (customerUuid, status) {
         if (status === 0) {
             msg = "确定暂停所有关键字吗?"
         } else if (status === 1) {
@@ -350,8 +382,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
                         layer.msg('操作成功', {
                             icon: 6,
                             time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                        }, function () {
-                            active['reload'].call(this);
                         });
                     } else {
                         layer.msg('操作失败', {icon: 5});
@@ -366,6 +396,73 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
         });
     };
 
+    //改变日报表值
+    window.changeCustomerDailyReportIdentify = function (uuid, status, oldIdentify, newIdentify) {
+        if (status !== '1') {
+            layer.msg('请激活客户', {icon: 5});
+            return;
+        }
+        var postData = {};
+        postData.customerUuid = uuid;
+        postData.identify = newIdentify;
+        $.ajax({
+            url: '/internal/customer/changeCustomerDailyReportIdentify2',
+            type: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(postData),
+            success: function (result) {
+                if (result.code === 200) {
+                    layer.msg('操作成功', {icon: 6});
+                    $('#dr'+uuid).html(generate_customer_daily_report(uuid, status, newIdentify))
+                }
+            },
+            error: function () {
+                layer.msg('操作失败', {icon: 5});
+                $('#dr'+uuid).html(generate_customer_daily_report(uuid, status, oldIdentify))
+            }
+        });
+    };
+
+    //触发所选客户日报表
+    window.batchUpdateDailyReport= function () { //获取选中数据
+        let uuidArr = get_select_active_uuids();
+        if (uuidArr.length <= 0) {
+            layer.msg('请选择要操作的激活的客户', {icon: 5});
+            return false;
+        }
+        layer.confirm("确定更新所选客户日报表吗", {icon: 3, title: '更新日报表'}, function (index) {
+            var postData = {};
+            postData.uuids = uuidArr;
+            $.ajax({
+                url: '/internal/customer/updateCustomerDailyReportIdentify2',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result.code === 200) {
+                        layer.msg('操作成功', {
+                            icon: 6,
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        });
+                    } else {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                },
+                error: function () {
+                    layer.msg('操作失败', {icon: 5});
+                }
+            });
+            layer.close(index);
+        });
+    }
+
 });
 
 let open = true;
@@ -378,6 +475,29 @@ function showCondition() {
         searchContent.style.display = 'none';
     }
     open = !open;
+}
+
+function generate_customer_status(status){
+    let stat ='<span style="color: red;">暂停</span>';
+    if(status===1){
+        stat = '<span style="color: green;">激活</span>';
+    }
+    return stat;
+}
+
+function generate_customer_daily_report(uuid, status, oldIdentify){
+    uuid = uuid +'';
+    status = status+'';
+    oldIdentify = oldIdentify+'';
+    let stat ='否';
+    if(oldIdentify === 'true'){
+        stat = '是';
+    }
+    let newIdentify = !(oldIdentify==='true')+'';
+    if (status === '1') {
+        stat += ' | <a href="javascript:void(0)" onclick=changeCustomerDailyReportIdentify(\'' + uuid + '\',\'' + status + '\',\'' + oldIdentify + '\',\'' + newIdentify + '\')>修改状态</a>';
+    }
+    return stat;
 }
 
 function generate_keyword_info(data) {
