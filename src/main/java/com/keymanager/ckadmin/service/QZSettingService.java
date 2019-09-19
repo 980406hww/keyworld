@@ -6,6 +6,7 @@ import com.keymanager.ckadmin.criteria.ExternalQZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
+import com.keymanager.ckadmin.criteria.QZSettingSearchCriteria;
 import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
 import com.keymanager.ckadmin.entity.QZCategoryTag;
 import com.keymanager.ckadmin.entity.QZSetting;
@@ -24,7 +25,7 @@ import java.util.Map;
  */
 public interface QZSettingService extends IService<QZSetting> {
 
-    Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingCriteria qzSettingCriteria);
+    Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingCriteria);
 
     List<QZSearchEngineVO> searchQZSettingSearchEngineMap(
         QZSettingCriteria criteria, Integer record);

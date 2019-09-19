@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
+import com.keymanager.ckadmin.criteria.QZSettingSearchCriteria;
 import com.keymanager.ckadmin.entity.*;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
@@ -112,7 +113,7 @@ public class QZSettingController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/qzsetting/searchQZSettings")
     @PostMapping("/getQZSettings")
-    public ResultBean getQZSettings(@RequestBody QZSettingCriteria qzSettingCriteria,
+    public ResultBean getQZSettings(@RequestBody QZSettingSearchCriteria qzSettingCriteria,
         HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         try {

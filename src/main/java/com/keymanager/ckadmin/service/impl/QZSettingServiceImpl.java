@@ -6,6 +6,7 @@ import com.keymanager.ckadmin.criteria.ExternalQZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
+import com.keymanager.ckadmin.criteria.QZSettingSearchCriteria;
 import com.keymanager.ckadmin.dao.QZSettingDao;
 import com.keymanager.ckadmin.entity.CaptureRankJob;
 import com.keymanager.ckadmin.entity.Customer;
@@ -102,7 +103,7 @@ public class QZSettingServiceImpl extends
 
     @Override
     public Page<QZSetting> searchQZSetting(Page<QZSetting> page,
-        QZSettingCriteria qzSettingCriteria) {
+        QZSettingSearchCriteria qzSettingCriteria) {
         page.setRecords(qzSettingDao.searchQZSettings(page, qzSettingCriteria));
         return page;
     }

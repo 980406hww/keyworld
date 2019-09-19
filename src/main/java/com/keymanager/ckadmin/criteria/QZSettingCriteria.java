@@ -31,6 +31,15 @@ public class QZSettingCriteria extends BaseCriteria {
     private String updateStatus;
     private String userInfoID;
     private String loginName;
+    private Integer checkStatus;
+
+    public Integer getCheckStatus() {
+        return checkStatus;
+    }
+
+    public void setCheckStatus(Integer checkStatus) {
+        this.checkStatus = checkStatus;
+    }
 
     public String isAutoCrawlKeywordFlag() {
         return autoCrawlKeywordFlag;
