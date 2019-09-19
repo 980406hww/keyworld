@@ -1,3 +1,4 @@
+<#assign organizationName = Session["organizationName"]>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -98,10 +99,12 @@
                     <div class="layui-form-item" pane>
                         <label class="computer layui-form-label">续费状态</label>
                         <div class="layui-input-block" id="siteStatus">
-                            <input type="radio" name="siteStatus"
-                                   value="2" title="首次收费" checked>
-                            <input type="radio" name="siteStatus"
-                                   value="4" title="其他">
+                            <#if organizationName == '整站销售部'>
+                                <input type="radio" name="siteStatus" value="2" title="首次收费" checked>
+                                <input type="radio" name="siteStatus" value="4" title="其他">
+                            <#else>
+                                <input type="radio" name="siteStatus" readonly checked value="4" title="其他">
+                            </#if>
                         </div>
                     </div>
                 </div>
@@ -520,10 +523,11 @@
                     </div>
                 </div>
             </div>
-            <fieldset class="layui-elem-field layui-field-title">
-                <legend>爬取规则</legend>
-            </fieldset>
-            <div class="layui-row four-row">
+            <#if (organizationName == '运营部' || organizationName == '技术部')>
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>爬取规则</legend>
+                </fieldset>
+                <div class="layui-row four-row">
                 <div class="layui-col-md3 padding-ten-right">
                     <div class="layui-form-item">
                         <label class="layui-form-label">自动采词</label>
@@ -572,6 +576,7 @@
                     </div>
                 </div>
             </div>
+            </#if>
         </div>
         <div style="height: 58px;"></div>
         <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
