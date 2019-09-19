@@ -115,6 +115,7 @@
         AND qcr.fStandardSpecies &lt;&gt; 'designationWord'
         AND qot.fIsDeleted = 0
         GROUP BY qot.fUuid
+        LIMIT 1
     </select>
 
 </mapper>

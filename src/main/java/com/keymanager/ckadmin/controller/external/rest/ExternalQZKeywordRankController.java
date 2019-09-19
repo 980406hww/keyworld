@@ -9,15 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-/**
- * @Author zhoukai
- * @Date 2018/12/6 11:33
- **/
 
 @RestController
 @RequestMapping(value = "/external/qzkeywordrank")
@@ -28,7 +23,7 @@ public class ExternalQZKeywordRankController extends SpringMVCBaseController {
     @Resource(name = "qzKeywordRankInfoService2")
     private QZKeywordRankInfoService qzKeywordRankInfoService;
 
-    @RequestMapping(value = "/getQZSettingsTask2", method = RequestMethod.POST)
+    @PostMapping(value = "/getQZSettingsTask2")
     public ResponseEntity<?> getQZSettingsTask(HttpServletRequest request) {
         try {
             String userName = request.getParameter("userName");
@@ -43,7 +38,7 @@ public class ExternalQZKeywordRankController extends SpringMVCBaseController {
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/updateQZSettingsTasks2", method = RequestMethod.POST)
+    @PostMapping(value = "/updateQZSettingsTasks2")
     public ResponseEntity<?> updateQZSettingsTask(
         @RequestBody ExternalQZKeywordRankInfoResultVO externalQZKeywordRankInfoResultVo) {
         try {

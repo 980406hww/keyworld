@@ -694,12 +694,12 @@ public class QZSettingServiceImpl extends
     public Map<String, Object> getQZSettingForAutoOperate() {
         Map<String, Object> map = qzSettingDao.selectQZSettingForAutoOperate();
         if (null != map) {
-            long qzSettingUuid = (long) map.get("uuid");
+            int qzSettingUuid = (int) map.get("uuid");
             String captureTerminalType = (String) map.get("captureTerminalType");
             map.remove("captureTerminalType");
             String[] terminalTypes = captureTerminalType.split(",");
             List<String> standardSpecieList = qzOperationTypeService
-                .getQZSettngStandardSpecie(qzSettingUuid, terminalTypes);
+                .getQZSettngStandardSpecie((long) qzSettingUuid, terminalTypes);
             map.put("standardSpecieList", standardSpecieList);
         }
         return map;
@@ -712,7 +712,7 @@ public class QZSettingServiceImpl extends
         if (!qzSettingCriteria.isDownloadTimesUsed()) {
             if (CollectionUtils.isNotEmpty(qzSettingCriteria.getCustomerKeywordVos())) {
                 List<QZOperationType> qzOperationTypes = qzOperationTypeService
-                    .searchQZOperationTypesByQZSettingUuid(qzSettingCriteria.getQzSettinguuid());
+                    .searchQZOperationTypesByQZSettingUuid(qzSettingCriteria.getUuid());
                 //取用户全站类别下所有关键字
                 List<CustomerKeywordSummaryInfoVO> customerKeywordSummaryInfoVos = customerKeywordService
                     .searchCustomerKeywordSummaryInfo("qz", qzSettingCriteria.getCustomerUuid());
@@ -800,11 +800,11 @@ public class QZSettingServiceImpl extends
                     }
                     String pcCustomerExcludeKeywords = customerExcludeKeywordService
                         .getCustomerExcludeKeyword(qzSettingCriteria.getCustomerUuid(),
-                            qzSettingCriteria.getQzSettinguuid(), TerminalTypeEnum.PC.toString(),
+                            qzSettingCriteria.getUuid(), TerminalTypeEnum.PC.toString(),
                             qzSettingCriteria.getDomain());
                     String phoneCustomerExcludeKeywords = customerExcludeKeywordService
                         .getCustomerExcludeKeyword(qzSettingCriteria.getCustomerUuid(),
-                            qzSettingCriteria.getQzSettinguuid(), TerminalTypeEnum.Phone.toString(),
+                            qzSettingCriteria.getUuid(), TerminalTypeEnum.Phone.toString(),
                             qzSettingCriteria.getDomain());
 
                     Set<String> pcExcludeKeyword = new HashSet<>();
@@ -845,7 +845,7 @@ public class QZSettingServiceImpl extends
                 }
             }
         }
-        this.completeQZSetting(qzSettingCriteria.getQzSettinguuid(),
+        this.completeQZSetting(qzSettingCriteria.getUuid(),
             qzSettingCriteria.isDownloadTimesUsed(), pcKeywordExceedMaxCount,
             phoneKeywordExceedMaxCount);
     }
@@ -868,7 +868,7 @@ public class QZSettingServiceImpl extends
     private CustomerKeyword createCustomerKeyword(ExternalQZSettingCriteria qzSettingCriteria,
         QZOperationType qzOperationType, CustomerKeywordVO customerKeywordVO) {
         CustomerKeyword customerKeyword = new CustomerKeyword();
-        customerKeyword.setQzSettingUuid(qzSettingCriteria.getQzSettinguuid());
+        customerKeyword.setQzSettingUuid(qzSettingCriteria.getUuid());
         customerKeyword.setKeyword(customerKeywordVO.getKeyword());
         customerKeyword.setUrl(customerKeywordVO.getUrl());
         customerKeyword

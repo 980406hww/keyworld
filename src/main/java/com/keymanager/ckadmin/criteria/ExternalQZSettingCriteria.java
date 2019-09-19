@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ExternalQZSettingCriteria extends ExternalBaseCriteria {
 
-    private long qzSettinguuid;
+    private long uuid;
 
     private String domain;
 
@@ -18,12 +18,12 @@ public class ExternalQZSettingCriteria extends ExternalBaseCriteria {
 
     private List<CustomerKeywordVO> customerKeywordVos;
 
-    public long getQzSettinguuid() {
-        return qzSettinguuid;
+    public long getUuid() {
+        return uuid;
     }
 
-    public void setQzSettinguuid(long qzSettinguuid) {
-        this.qzSettinguuid = qzSettinguuid;
+    public void setUuid(long uuid) {
+        this.uuid = uuid;
     }
 
     public String getDomain() {
