@@ -60,7 +60,7 @@
                     <div class="layui-input-block">
                         <input type="text" name="bearPawNumber" id="bearPawNumber" placeholder=""
                                autocomplete="off"
-                               class="layui-input" readonly disabled>
+                               class="layui-input" >
                     </div>
                 </div>
             </div>
@@ -70,7 +70,7 @@
                     <div class="layui-input-block">
                         <input type="text" name="optimizeGroupName" id="optimizeGroupName" placeholder=""
                                autocomplete="off"
-                               class="layui-input" readonly disabled>
+                               class="layui-input">
                     </div>
                 </div>
             </div>
@@ -88,7 +88,7 @@
                 <label class="layui-form-label">关键字作用</label>
 
                 <div class="layui-input-block">
-                    <select name="keywordEffect" id="keywordEffect">
+                    <select name="keywordEffect" id="keywordEffect" lay-verify="required">
 
                     </select>
                 </div>
@@ -144,7 +144,8 @@
         $("#domain").val(data.domain);
         $("#searchEngine").val(data.searchEngine);
         $("#terminalType").val(data.terminalType);
-        $("#bearPawNumber").val(data.bearPawNumber);
+        $("#bearPawNumber").val((data.bearPawNumber === null || data.bearPawNumber === 'null') ? ''
+            : data.bearPawNumber);
         $("#type").val(data.type);
         $("#optimizeGroupName").val(data.optimizeGroupName);
     }
@@ -167,6 +168,7 @@
             success: function (res) {
                 if (res.code === 200) {
                     $("#keywordEffect").empty();
+                    $('#keywordEffect').append('<option value="">请选择</option>');
                     $.each(res.data, function (index, item) {
                         $('#keywordEffect').append('<option value="' + item.value + '">' + item.desc + '</option>');// 下拉菜单里添加元素
                     });

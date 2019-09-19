@@ -23,7 +23,7 @@ public class ConfigService extends ServiceImpl<MachineInfoDao, MachineInfo>{
     @Autowired
     private ConfigCacheService configCacheService;
 
-    @Cacheable(value = "configList", key = "#configType + #key")
+//    @Cacheable(value = "configList", key = "#configType + #key")
     public Config getConfig(String configType, String key){
         return configDao.getConfig(configType, key);
     }

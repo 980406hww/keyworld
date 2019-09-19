@@ -12,7 +12,7 @@ import java.util.Map;
 public enum KeywordEffectEnum {
 
     // 指定词
-    Appointment("客户指定词", "Appointment", 2),
+    Appointment("客户提供词", "Appointment", 2),
 
     // 曲线词
     Curve("曲线达标词", "Curve", 3),

@@ -15,11 +15,12 @@ public class UserInfoController {
     private UserInfoService userInfoService;
 
     @GetMapping("/trees")
-    public Object tree(){
+    public Object tree() {
         return userInfoService.selectUserInfoTrees();
     }
+
     @GetMapping("/trees2")
-    public Object tree2(){
+    public Object tree2() {
         return userInfoService.selectUserInfoTrees2();
     }
 

@@ -16,11 +16,12 @@ import java.util.Map;
 
 @Service("configService2")
 public class ConfigServiceImpl implements ConfigService {
+
     @Resource(name = "configDao2")
     private ConfigDao configDao;
 
     @Override
-    @Cacheable(value = "configList", key = "#configType + #key")
+//    @Cacheable(value = "configList", key = "#configType + #key")
     public Config getConfig(String configType, String key) {
         return configDao.getConfig(configType, key);
     }

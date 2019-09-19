@@ -1,6 +1,8 @@
 package com.keymanager.ckadmin.criteria;
 
-public class QZSettingSearchCriteria {
+import com.keymanager.ckadmin.criteria.base.BaseCriteria;
+
+public class QZSettingSearchCriteria extends BaseCriteria {
 
     private String loginName;
     private String customerUuid;
