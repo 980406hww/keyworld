@@ -450,6 +450,11 @@
             box-shadow: none;
         }
 
+        .my-collapse .layui-form-select dl,
+        .my-collapse .layui-form-select .layui-anim {
+            top: 33px !important;
+        }
+
         .my-collapse > div:first-child {
             background: #f2f2f2;
             border: 1px solid #e6e6e6;
@@ -654,13 +659,12 @@
                             <div class="layui-input-inline">
                                 <select name="renewalStatus" id="renewalStatus">
                                     <option value selected>全部</option>
-                                    <option value="1">续费</option>
-                                    <option value="0">未续费</option>
+                                    <option value="1">续费中</option>
+                                    <option value="0">暂停续费</option>
                                     <option value="2">首次续费</option>
-                                    <option value="3">其他</option>
-<!--                                    <option value="3">下架</option>-->
-<!--                                    <option value="4">观测</option>-->
-                                    <option value="5">seo</option>
+                                    <option value="3">下架</option>
+                                    <option value="4">其他</option>
+<!--                                    <option value="5">seo</option>-->
                                 </select>
                             </div>
                         </div>
@@ -2955,7 +2959,7 @@
                     <span>
                         <a href="javascript:;">
                             {{#  if(d.renewalStatus === 1) { }}
-                                <span style="color: green;">续费</span>
+                                <span style="color: green;">续费中</span>
                             {{# }else if(d.renewalStatus === 0) { }}
                                 <span style="color: palevioletred;">暂停续费</span>
                             {{# }else if(d.renewalStatus === 2) { }}
@@ -2963,9 +2967,9 @@
                             {{# }else if(d.renewalStatus === 3) { }}
                                 <span style="color: red;">下架</span>
                             {{# }else if(d.renewalStatus === 4) { }}
-                                <span style="color: mediumseagreen;">观测</span>
-                            {{# }else if(d.renewalStatus === 5) { }}
-                                <span style="color: mediumseagreen;">seo</span>
+                                <span style="color: mediumseagreen;">其他</span>
+<!--                            {{# }else if(d.renewalStatus === 5) { }}-->
+<!--                                <span style="color: mediumseagreen;">seo</span>-->
                             {{# } }}
                         </a>
                     </span>
