@@ -736,6 +736,13 @@
     </div>
 </div>
 
+<form id="searchCustomerKeywordForm" method="post" target="_blank"
+      action="/internal/customerKeyword/searchCustomerKeywords" style="display: none;">
+    <input type="text" name="customerUuid" id="customerUuid">
+    <input type="text" name="optimizeGroupName" id="optimizeGroupName">
+    <input type="text" name="status" id="status">
+</form>
+
 <!--数据表格-->
 <table class="layui-hide" id="qzSettingTable" lay-filter="tableFilter"></table>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
@@ -1029,8 +1036,6 @@
                 }
             });
         }
-
-
 
         function initQZKeywordRankInfo(data, td) {
             td.find("#fmtStandardDate a").text(
@@ -2726,6 +2731,17 @@
                 layer.close(index);
             });
         }
+
+        /**
+         * 点击操作词数，跳转到关键字列表
+         */
+        window.searchCustomerKeywords = function (customerUuid, pcGroup, phoneGroup) {
+            let searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
+            searchCustomerKeywordForm.find("#customerUuid").val(customerUuid);
+            searchCustomerKeywordForm.find("#optimizeGroupName").val(pcGroup == null ? phoneGroup : pcGroup);
+            searchCustomerKeywordForm.find("#status").val(1);
+            searchCustomerKeywordForm.submit();
+        }
     });
 </script>
 
@@ -2941,7 +2957,7 @@
                 <div class="layui-col-md12">
                     <span>
                           <a target="_blank" id="customerKeywordCount"
-                             href="/internal/customerKeyword/searchCustomerKeywords/{{d.customerUuid}}">0</a>
+                             href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}');">0</a>
                      </span>
                 </div>
                 <div class="layui-col-md12">
