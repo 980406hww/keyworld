@@ -35,7 +35,7 @@
 
 
     <select id="getCustomerBusinessMap" resultType="java.util.Map">
-        SELECT cb.fCustomerUuid as 'customerUuid', group_concat(cb.`fType`) AS `customerBusinessStr`
+        SELECT cb.fCustomerUuid as 'customerUuid', GROUP_CONCAT(cb.`fType`  ORDER BY cb.fUuid) AS `customerBusinessStr`
         FROM t_customer_business cb
         WHERE cb.fCustomerUuid IN
         <foreach item="item" index="index" collection="customerUuids" open="(" separator="," close=")">

@@ -27,29 +27,28 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            timeout: 5000,
+            timeout: 20000,
             type: 'POST',
             success: function (result) {
                 laypage.render({
-                        elem: 'page_nav',
-                        count: result.count,
-                        curr: pageConf.page,
-                        limit: pageConf.limit,
-                        limits: [10, 25, 50, 75, 100, 500, 1000],
-                        first: '首页',
-                        last: '尾页',
-                        layout: ['count', 'prev', 'page', 'next', 'limit'],
-                        jump: function (obj, first) {
-                            if (!first) {
-                                pageConf.page = obj.curr;
-                                pageConf.limit = obj.limit;
-                                initLayPage(pageConf);
-                            }
+                    elem: 'page_nav',
+                    count: result.count,
+                    curr: pageConf.page,
+                    limit: pageConf.limit,
+                    limits: [10, 25, 50, 75, 100, 500, 1000],
+                    first: '首页',
+                    last: '尾页',
+                    layout: ['count', 'prev', 'page', 'next', 'limit'],
+                    jump: function (obj, first) {
+                        if (!first) {
+                            pageConf.page = obj.curr;
+                            pageConf.limit = obj.limit;
+                            initLayPage(pageConf);
                         }
-                    });
-                    // console.log(result.data)
-                    init_data(result.data);
-                    form.render()
+                    }
+                });
+                init_data(result.data);
+                form.render()
 
             },
             error: function () {
@@ -61,35 +60,35 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
     function init_data(data) {
         $("#data_list").html('');
         $.each(data, function (index, obj) {
-            let item =  '<div class="layui-col-md12 layui-col-sm6">' +
-                        '   <div class="layadmin-contact-box">' +
-                        '       <div class="layui-col-md5 layui-col-sm6">';
-            item +=     '           <h3 class="layadmin-title">'+
-                        '               <input type="checkbox" name="checkItem" value="'+obj.uuid+'"lay-skin="primary" >'+
-                        '               <strong>'+obj.contactPerson+'</strong>'+'<i class="layui-icon layui-icon-right"></i> '+
-                                        obj.type+
-                        '           </h3>';
-            item +=     '           <div class="layadmin-address">'+
-                        '               <strong>联系方式</strong>'+
-                        '               <br>'+
-                        '               电话:'+obj.telphone+
-                        '               <br>'+
-                        '               微信:'+ obj.wechat+
-                        '               <br>'+
-                        '               QQ:'+obj.qq+
-                        '           </div>' ;
-            item +=     '           <div class="layadmin-address">' +
-                        '               <strong>备注</strong>' +
-                        '               <br>'+
-                        '               销售备注:'+obj.saleRemark+
-                        '               <br>'+
-                        '               备注:'+obj.remark+
-                        '               </div>' +
-                        '       </div>';
-            item +=     '   <div class="layui-col-md6  layui-col-sm6">' +
-                        '       <h3 class="layadmin-title">' +
-                        '           <strong>拥有业务</strong>' +
-                        '       </h3>';
+            let item = '<div class="layui-col-md6 layui-col-sm6">' +
+                '   <div class="layadmin-contact-box">' +
+                '       <div class="layui-col-md5 layui-col-sm6">';
+            item += '           <h3 class="layadmin-title">' +
+                '               <input type="checkbox" name="checkItem" value="' + obj.uuid + '"lay-skin="primary" >' +
+                '               <strong>' + obj.contactPerson + '</strong>' + '<i class="layui-icon layui-icon-right"></i> ' +
+                obj.type +
+                '           </h3>';
+            item += '           <div class="layadmin-address">' +
+                '                   <strong>联系方式</strong>' +
+                '                   <br>' +
+                '                   电话:' + obj.telphone +
+                '                   <br>' +
+                '                   微信:' + obj.wechat +
+                '                   <br>' +
+                '                   QQ:' + obj.qq +
+                '               </div>';
+            item += '           <div class="layadmin-address ">' +
+                '                   <strong>备注</strong>' +
+                // '                   <br>' +
+                '                   <p class="skip" title="'+obj.remark+'">销售备注:' + obj.saleRemark + '</p>' +
+                // '                   <br>' +
+                '                   <p class="skip" title="'+obj.remark+'">备注:' + obj.remark + '</p>' +
+                '               </div>' +
+                '       </div>';
+            item += '   <div class="layui-col-md6  layui-col-sm6">' +
+                '       <h3 class="layadmin-title">' +
+                '           <strong>拥有业务</strong>' +
+                '       </h3>';
             let customerBusinessList = obj.customerBusinessList;
             if (customerBusinessList !== null && customerBusinessList.length > 0) {
                 var contactPerson = obj.contactPerson.replace(/\s+/g, "");
@@ -99,11 +98,11 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
                         url = '/internal/customerKeyword/searchCustomerKeywords/' + obj.uuid;
                         title = contactPerson + '-关键字信息';
                         id = contactPerson + '-关键字信息';
-                        item += '<div class="layadmin-address">'+
-                                    '<strong>' +
-                                        '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>单词业务</a>' +
-                                    '</strong>' +
-                                    '<br>';
+                        item += '<div class="layadmin-address">' +
+                            '<strong>' +
+                            '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>单词业务</a>' +
+                            '</strong>' +
+                            '<br>';
                         $.ajax({
                             url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid,
                             dataType: 'json',
@@ -115,10 +114,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
                                 } else {
                                     item += '暂无数据'
                                 }
-                                item +='</div>';
+                                item += '</div>';
                             }
                         });
-                    }else if (tmp === 'qzsetting') {
+                    } else if (tmp === 'qzsetting') {
                         url = '/internal/qzsetting/toQZSetttingsWithCustomerUuid/' + obj.uuid;
                         title = contactPerson + '-全站信息';
                         id = contactPerson + '-全站信息';
@@ -138,58 +137,58 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
                                     item += '暂无数据'
                                 }
                                 item +=
-                                    '</div>' ;
+                                    '</div>';
 
                             }
                         });
-                    }else if (tmp === 'fm') {
+                    } else if (tmp === 'fm') {
                         url = '/internal/qzsetting/toFMWithCustomerUuid/' + obj.uuid;
                         title = contactPerson + '-负面信息';
                         id = contactPerson + '-负面信息';
                         item += '<div class="layadmin-address"><strong>' +
                             '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>负面业务</a>' +
                             '</strong>' +
-                            '<br>'+
-                            '待做---占位符'+
+                            '<br>' +
+                            '待做---占位符' +
                             '</div>';
                     }
                 });
-            }else{
+            } else {
                 item += '<div class="layadmin-address">\n' +
                     '                <strong>暂无业务</strong>\n' +
-                    '    </div>' ;
+                    '    </div>';
 
             }
-            item += '</div>'
-            item += '<div class="layui-col-md1 layui-col-sm6">\n' +
+            item += '</div>';
+            item += '<div class="layui-col-md1 layui-col-sm6 operation">\n' +
                 '       <h3 class="layadmin-title">\n' +
                 '           <strong>操作</strong>\n' +
-                '           </h3>'+
-                '               <div class="layadmin-address">\n' +
-                '                   <button class="layui-btn layui-btn-sm caller-fr" onclick=editCustomer("'+obj.uuid+'")>' +
-                '                   <i class="layui-icon layui-icon-edit"></i>\n' +
-                '                   修改\n' +
-                '               </button>\n' +
-                '           </div>'+
-                '           <div class="layadmin-address">\n' +
-                '               <button class="layui-btn layui-btn-danger layui-btn-sm caller-fr" onclick=delOneCustomer("'+obj.uuid+'")>' +
-                '                   <i class="layui-icon layui-icon-close"></i>\n' +
+                '       </h3>' +
+                '       <div class="layadmin-address">\n' +
+                '           <a href="javascript:void(0)" class="caller-fr" onclick=editCustomer("' + obj.uuid + '")>' +
+                '               修改\n' +
+                '               <i class="layui-icon layui-icon-edit"></i>\n' +
+                '           </a>\n' +
+                '       </div>' +
+                '       <div class="layadmin-address">\n' +
+                '           <a href="javascript:void(0)" class="caller-fr" onclick=delOneCustomer("' + obj.uuid + '")>' +
                 '                   删除\n' +
-                '               </button>\n' +
-                '           </div>';
+                '               <i class="layui-icon layui-icon-close"></i>\n' +
+                '           </a>\n' +
+                '       </div>';
             item += '</div>';
             item += '</div>';
             $("#data_list").append(item)
         })
     }
 
-    form.on('checkbox(checkAll)', function(data){
-        if($(this)[0].checked) {
-            $("input[name='checkItem']").each(function() {
+    form.on('checkbox(checkAll)', function (data) {
+        if ($(this)[0].checked) {
+            $("input[name='checkItem']").each(function () {
                 this.checked = true;
             })
-        }else{
-            $('input[name="checkItem"]').each(function(){
+        } else {
+            $('input[name="checkItem"]').each(function () {
                 this.checked = false;
             })
         }
@@ -201,7 +200,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
         var pageConf = data.field;
         pageConf.limit = 25;
         pageConf.page = 1;
-        if (!open){
+        if (!open) {
             showCondition();
         }
         initLayPage(pageConf);
@@ -262,12 +261,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
 
     window.batchDelete = function () {
         var length = $('input[name="checkItem"]:checked').length;
-        if (length <= 0){
-            show_layer_msg("请选择要删除的客户！！",5);
+        if (length <= 0) {
+            show_layer_msg("请选择要删除的客户！！", 5);
             return false;
         }
         var uuidArr = [];
-        $('input[name="checkItem"]:checked').each(function(){
+        $('input[name="checkItem"]:checked').each(function () {
             // alert($(this).val())
             uuidArr.push(this.value)
         });
@@ -313,7 +312,59 @@ layui.use(['element', 'table', 'form', 'jquery', 'laypage', 'tablePlug', 'okLaye
                 sign = false;
             }
         })
-    }
+    };
+
+    // 添加客户
+    window.toAddCustomer = function () {
+        okLayer.open("首页 / 客户列表 / 添加用户", "/internal/customer/toCustomersAdd", "60%", "90%", null, function () {
+            if (sign) {
+                active['reload'].call(this);
+                sign = false;
+            }
+        });
+    };
+
+
+    //更新关键字状态
+    window.changeCustomerKeywordStatus = function changeCustomerKeywordStatus(customerUuid, status) {
+        if (status === 0) {
+            msg = "确定暂停所有关键字吗?"
+        } else if (status === 1) {
+            msg = "确定激活所有关键字吗?"
+        }
+        layer.confirm(msg, {icon: 3, title: '关键字状态'}, function (index) {
+            var data = {};
+            data.customerUuid = customerUuid;
+            data.status = status;
+            $.ajax({
+                url: '/internal/customerKeyword/changeCustomerKeywordStatus2',
+                data: JSON.stringify(data),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result.code === 200) {
+                        layer.msg('操作成功', {
+                            icon: 6,
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            active['reload'].call(this);
+                        });
+                    } else {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                },
+                error: function () {
+                    layer.msg('操作失败', {icon: 5});
+
+                }
+            });
+            layer.close(index);
+        });
+    };
 
 });
 

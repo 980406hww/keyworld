@@ -74,13 +74,17 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
         if (null != customer.getUuid()) {
             updateCustomer(customer, loginName);
             customerBusinessService.deleteByCustomerUuid(customer.getUuid());
-            customerBusinessService.saveCustomerBusiness(customer);
+            if (CollectionUtils.isNotEmpty(customer.getCustomerBusinessList())){
+                customerBusinessService.saveCustomerBusiness(customer);
+            }
         } else {//添加
             customer.setUpdateTime(new Date());
             customer.setLoginName(loginName);
             customer.setStatus(1);
             customerDao.insert(customer);
-            customerBusinessService.saveCustomerBusiness(customer);
+            if (CollectionUtils.isNotEmpty(customer.getCustomerBusinessList())){
+                customerBusinessService.saveCustomerBusiness(customer);
+            }
         }
     }
 
