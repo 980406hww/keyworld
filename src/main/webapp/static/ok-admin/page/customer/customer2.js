@@ -359,9 +359,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
 
     //更新关键字状态
     window.changeCustomerKeywordStatus = function (customerUuid, status) {
-        if (status === 0) {
+        if (status === '0') {
             msg = "确定暂停所有关键字吗?"
-        } else if (status === 1) {
+        } else if (status === '1') {
             msg = "确定激活所有关键字吗?"
         }
         layer.confirm(msg, {icon: 3, title: '关键字状态'}, function (index) {
@@ -381,14 +381,17 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                     if (result.code === 200) {
                         layer.msg('操作成功', {
                             icon: 6,
-                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            time: 1000
+                        },function () {
+                            let pageConf = $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
+                            initLayPage(pageConf);
                         });
                     } else {
-                        layer.msg('操作失败', {icon: 5});
+                        layer.msg('操作失败', {icon: 5, time: 1000});
                     }
                 },
                 error: function () {
-                    layer.msg('操作失败', {icon: 5});
+                    layer.msg('操作失败', {icon: 5, time: 1000});
 
                 }
             });
@@ -511,14 +514,14 @@ function generate_keyword_info(data) {
         htm += '<span>总数:' + data.totalCount + '&nbsp;&nbsp;&nbsp;&nbsp;</span>(';
         if (data.totalCount === data.activeCount) {
             htm += '<span style="color: green;">激活</span>' +
-                '|<a href="javascript:changeCustomerKeywordStatus(\'' + data.customerUuid + '\', 0)">暂停关键字</a>'
+                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","0")>暂停关键字</a>'
         } else if (data.totalCount > 0 && data.activeCount > 0) {
             htm += '<span style="color: yellowgreen;">部分暂停</span>' +
-                '|<a href="javascript:changeCustomerKeywordStatus(\'' + data.customerUuid + '\', 0)">暂停关键字</a>' +
-                '|<a href="javascript:changeCustomerKeywordStatus(\'' + data.customerUuid + '\', 1)">激活关键字</a>'
+                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","0")>暂停关键字</a>' +
+                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","1")>激活关键字</a>'
         } else {
             htm += '<span style="color: red;">暂停</span>' +
-                '|<a href="javascript:changeCustomerKeywordStatus(\'' + data.customerUuid + '\', 1)">激活关键字</a>'
+                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","1")>激活关键字</a>'
         }
         htm += ')';
     } else {

@@ -38,8 +38,8 @@ public class CustomerKeywordController {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
             String entryType = (String) request.getSession().getAttribute("entryType");
             String customerUuid = (String) requestMap.get("customerUuid");
-            Integer status = (Integer) requestMap.get("status");
-            customerKeywordService.changeCustomerKeywordStatus(terminalType, entryType, Long.parseLong(customerUuid), status);
+            String status = (String) requestMap.get("status");
+            customerKeywordService.changeCustomerKeywordStatus(terminalType, entryType, Long.parseLong(customerUuid), Integer.parseInt(status));
             return new ResultBean(200,"success");
         } catch (Exception e) {
             logger.error(e.getMessage());
