@@ -851,36 +851,42 @@
             }
         };
 
-        $.ajax({
-            url: '${ctx.path}/internal/qzsetting/getCategoryTag',
-            dataType: 'json',
-            type: 'get',
-            success: function (data) {
-                $("#categoryTag").empty();
-                $("#categoryTag").append('<option value="">请选择分类标签</option>');
-                $.each(data, function (index, item) {
-                    $('#categoryTag').append(
-                        '<option value="' + item + '">' + item.trim() + '</option>');
-                });
-                form.render("select");
-            }
-        });
+        function get_qzcategory_label_list() {
+            /*动态加载网站分类标签列表*/
+            $.ajax({
+                url: '${ctx.path}/internal/qzsetting/getCategoryTag',
+                dataType: 'json',
+                type: 'get',
+                success: function (data) {
+                    $("#categoryTag").empty();
+                    $("#categoryTag").append('<option value="">请选择分类标签</option>');
+                    $.each(data, function (index, item) {
+                        $('#categoryTag').append(
+                            '<option value="' + item + '">' + item.trim() + '</option>');
+                    });
+                    form.render("select");
+                }
+            });
+        }
 
-        $.ajax({
-            url: '${ctx.path}/internal/qzsetting/getActiveCustomer',
-            dataType: 'json',
-            type: 'get',
-            success: function (data) {
-                $("#customerUuid").empty();
-                $("#customerUuid").append('<option value="">请选择客户</option>');
-                $.each(data, function (index, item) {
-                    $('#customerUuid').append(
-                        '<option value="' + item.uuid + '">' + item.contactPerson.trim()
-                        + '</option>');
-                });
-                form.render("select");
-            }
-        });
+        function get_active_customer_list() {
+            /*动态加载客户列表*/
+            $.ajax({
+                url: '${ctx.path}/internal/qzsetting/getActiveCustomer',
+                dataType: 'json',
+                type: 'get',
+                success: function (data) {
+                    $("#customerUuid").empty();
+                    $("#customerUuid").append('<option value="">请选择客户</option>');
+                    $.each(data, function (index, item) {
+                        $('#customerUuid').append(
+                            '<option value="' + item.uuid + '">' + item.contactPerson.trim()
+                            + '</option>');
+                    });
+                    form.render("select");
+                }
+            });
+        }
 
         form.on("submit(search)", function (data) {
             data.field.domain.replace(/\s*/g, "");
@@ -940,6 +946,8 @@
             terminalType = terminalType === '' ? 'PC' : terminalType;
             getTerminalSearchEngineMap();
             get_operation_combine_list(terminalType);
+            get_qzcategory_label_list();
+            get_active_customer_list();
             let qz_setting_table = $("#qzSettingTable").parent().find(
                 ".layui-table-main").find("table");
             $.each(res.data, function (idx, val) {
@@ -2821,48 +2829,47 @@
     </@shiro.hasPermission>
     <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/qzsetting/save">
-        <button class="layui-btn layui-btn-sm" style="background: #c69000"
+        <button class="layui-btn layui-btn-sm" style="background: #04bb00"
                 lay-event="addQz">
             <i style="position: relative;top: -1px" class="layui-icon">&#xe654;</i>添加整站
         </button>
-        <button class="layui-btn layui-btn-sm" style="background: #c25a00"
+        <button class="layui-btn layui-btn-sm" style="background: #e68900"
                 lay-event="updFZTags">
             <i class="layui-icon">&#xe642;</i>修改标签
         </button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
-        <button class="layui-btn layui-btn-sm" style="background: #a70020"
+        <button class="layui-btn layui-btn-sm" style="background: #CF1900"
                 lay-event="batchDeleteQZSetting">
             <i style="position: relative;top: -1px" class="layui-icon">&#xe640;</i>删除所选
         </button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/qzsetting/updateImmediately">
-        <button class="layui-btn layui-btn-sm" style="background: #6d00a3"
+        <button class="layui-btn layui-btn-sm" style="background: #00b3a7"
                 lay-event="batchUpdateQZSettingUpdateStatus">
             <i style="font-size: 15px !important;" class="layui-icon">&#xe666;</i>马上更新
         </button>
         </@shiro.hasPermission>
-    </div>
-    <@shiro.hasPermission name="/internal/qzsetting/updateRenewalStatus">
-    <div class="layui-btn-group">
+        <@shiro.hasPermission name="/internal/qzsetting/updateRenewalStatus">
         <button class="layui-btn layui-btn-sm" style="background: #04bb00"
                 lay-event="batchUpdateRenewalStatusToNormal">
             <i class="layui-icon">&#x1005;</i>正常续费
         </button>
-        <button class="layui-btn layui-btn-sm" style="background: #00b3a7"
+        <button class="layui-btn layui-btn-sm" style="background: #e68900"
                 lay-event="batchUpdateRenewalStatusToSuspend">
             <i class="layui-icon">&#xe651;</i>暂停续费
         </button>
-        <button class="layui-btn layui-btn-sm" style="background: #0066cc"
+        <button class="layui-btn layui-btn-sm" style="background: #CF1900"
                 lay-event="batchUpdateRenewalStatusToSoldOut">
             <i class="layui-icon">&#xe601;</i>下架整站
         </button>
-        <button class="layui-btn layui-btn-sm" style="background: #5c9fd7"
+        <button class="layui-btn layui-btn-sm" style="background: #00b3a7"
                 lay-event="batchUpdateRenewalStatusToOther">
             <i class="layui-icon">&#xe63f;</i>更为其他
         </button>
+        </@shiro.hasPermission>
     </div>
-    </@shiro.hasPermission>
+
 </script>
 
 <script type="text/html" id="item">
