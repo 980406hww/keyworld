@@ -76,6 +76,21 @@
                                 </tr>`;
             t.append(html);
         }
+
+        function resetHidden() {
+            let c = document.getElementsByName('computer')[0];
+            if (c.nextElementSibling.getElementsByTagName('em')[0].innerText === 'Select') {
+                c.setAttribute('checked', '');
+            } else {
+                c.removeAttribute('checked');
+            }
+            let p = document.getElementsByName('phone')[0];
+            if (p.nextElementSibling.getElementsByTagName('em')[0].innerText === 'Select') {
+                p.setAttribute('checked', '');
+            } else {
+                p.removeAttribute('checked');
+            }
+        }
     </script>
 </head>
 <div>
@@ -522,10 +537,10 @@
                 </div>
             </div>
             <#if (organizationName == '运营部' || organizationName == '技术部')>
-                <fieldset class="layui-elem-field layui-field-title">
-                    <legend>爬取规则</legend>
-                </fieldset>
-                <div class="layui-row four-row">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>爬取规则</legend>
+            </fieldset>
+            <div class="layui-row four-row">
                 <div class="layui-col-md3 padding-ten-right">
                     <div class="layui-form-item">
                         <label class="layui-form-label">自动采词</label>
@@ -574,21 +589,21 @@
                     </div>
                 </div>
             </div>
-            </#if>
-        </div>
-        <div style="height: 58px;"></div>
-        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
-            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
-                <button class="layui-btn" lay-submit lay-filter="commitQZSetting">确定</button>
-                <button type="reset" class="layui-btn layui-btn-primary">
-                    重置
-                </button>
-                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">
-                    取消
-                </button>
-            </div>
-        </div>
-    </form>
+        </#if>
+</div>
+<div style="height: 58px;"></div>
+<div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+    <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+        <button class="layui-btn" lay-submit lay-filter="commitQZSetting">确定</button>
+        <button type="reset" class="layui-btn layui-btn-primary" onclick="resetHidden()">
+            重置
+        </button>
+        <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">
+            取消
+        </button>
+    </div>
+</div>
+</form>
 </div>
 <!--js逻辑-->
 
@@ -679,7 +694,7 @@
                                         document.getElementById('computerTbody').innerHTML = html_c;
                                     }
                                 }
-                                if (d_n.comStandardSpecies === 'other'){
+                                if (d_n.comStandardSpecies === 'other') {
                                     computerTable.style.display = 'none';
                                     computerTableFlag = false;
                                 }
@@ -705,7 +720,7 @@
                                         document.getElementById('phoneTbody').innerHTML = html_p;
                                     }
                                 }
-                                if (d_n.phoneStandardSpecies === 'other'){
+                                if (d_n.phoneStandardSpecies === 'other') {
                                     phoneTable.style.display = 'none';
                                     phoneTableFlag = false;
                                 }
