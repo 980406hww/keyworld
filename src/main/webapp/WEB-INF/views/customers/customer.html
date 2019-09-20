@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<#import "/commons/global.html" as ctx>
+
 <html>
 <head>
     <meta charset="UTF-8">
@@ -9,9 +9,7 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
-    <style>
-
-    </style>
+    <link rel="stylesheet" href="/static/ok-admin/page/customer/customer.css">
 </head>
 <body>
 <div class="ok-body">
@@ -36,70 +34,52 @@
                     <div class="layui-colla-content" id="searchContent">
                         <form class="layui-form layui-form-pane" id="searchForm">
                             <div class="layui-form-item" lay-filter="loginNameFilter">
-                                <div class="layui-inline">
+                                <!--<div class="layui-inline">
+                                    <label class="layui-form-label">域名</label>
                                     <div class="layui-input-inline">
                                         <select name="loginName" id="loginName" lay-filter="loginNameFilter" lay-search>
                                             <option value="">请选择所属用户</option>
                                         </select>
                                     </div>
-                                </div>
+                                </div>-->
                                 <div class="layui-inline">
+                                    <label class="layui-form-label">联系人</label>
                                     <div class="layui-input-inline">
-                                        <input type="text" name="contactPerson" id="contactPerson" placeholder="联系人"
+                                        <input type="text" name="contactPerson" id="contactPerson" placeholder="请输入联系人"
                                                autocomplete="off" class="layui-input">
-                                        <!--<i style="color: red; position: absolute; right: 8px;top: 8px;cursor: pointer"-->
-                                        <!--class="layui-icon layui-unselect layui-tab-close" id="clearContactPerson">ဆ</i>-->
                                     </div>
                                 </div>
 
                                 <div class="layui-inline">
+                                    <label class="layui-form-label">客户类型</label>
                                     <div class="layui-input-inline">
-                                        <input type="text" name="type" id="type" placeholder="分组" autocomplete="off"
+                                        <input type="text" name="type" id="type" placeholder="请输入分组" autocomplete="off"
                                                class="layui-input">
                                     </div>
                                 </div>
 
                                 <div class="layui-inline">
-                                    <div class="layui-input-inline" style="width: 150px;">
-                                        <input type="text" name="qq" id="qq" placeholder="QQ" autocomplete="off"
+                                    <label class="layui-form-label">QQ</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="qq" id="qq" placeholder="请输入QQ" autocomplete="off"
                                                class="layui-input">
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <div class="layui-input-inline" style="width: 150px;">
-                                        <input type="text" name="telphone" id="telphone" placeholder="联系电话"
+                                    <label class="layui-form-label">联系电话</label>
+                                    <div class="layui-input-inline" >
+                                        <input type="text" name="telphone" id="telphone" placeholder="请输入联系电话"
                                                autocomplete="off"
                                                class="layui-input">
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <div class="layui-input-inline" style="width: 150px;">
-                                        <input type="text" name="remark" id="remark" placeholder="备注" autocomplete="off"
+                                    <label class="layui-form-label">备注</label>
+                                    <div class="layui-input-inline" >
+                                        <input type="text" name="remark" id="remark" placeholder="请输入备注" autocomplete="off"
                                                class="layui-input">
                                     </div>
                                 </div>
-
-                                <!--                                <div class="layui-inline">-->
-                                <!--                                    <div class="layui-input-inline" style="width: 150px;">-->
-                                <!--                                        <select name="orderBy" id="orderBy" lay-filter="orderByFilter" lay-search>-->
-                                <!--                                            <option value="">请选择排序字段</option>-->
-                                <!--                                            <option value="loginName">用户名称</option>-->
-                                <!--                                            <option value="contactPerson">联系人</option>-->
-                                <!--                                            <option value="type">分组</option>-->
-                                <!--                                            <option value="createTime">创建时间</option>-->
-                                <!--                                        </select>-->
-                                <!--                                    </div>-->
-                                <!--                                </div>-->
-                                <!--                                <div class="layui-inline">-->
-                                <!--                                    <div class="layui-input-inline" style="width: 150px;">-->
-                                <!--                                        <select name="orderMode" id="orderMode" lay-filter="orderModeFilter" lay-search>-->
-                                <!--                                            <option value="">请选择排序方式</option>-->
-                                <!--                                            <option value="1">升序</option>-->
-                                <!--                                            <option value="0">降序</option>-->
-                                <!--                                        </select>-->
-                                <!--                                    </div>-->
-                                <!--                                </div>-->
-                                <!--                            </div>-->
 
                                 <div class="layui-form-item">
                                     <div class="layui-inline">
@@ -125,515 +105,9 @@
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
-<script>
-    var sign = false;
-    // 进度条加载提示
-    NProgress.start();
-    window.onload = function () {
-        NProgress.done();
-    };
-    // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
-        var element = layui.element;
-        var table = layui.table;
-        var form = layui.form;
-        var $ = layui.jquery;
-        var laydate = layui.laydate;
-        var okLayer = layui.okLayer;
-        var layer = layui.layer;
-        var customerTable = table.render({
-            elem: '#customerTable',
-            method: 'post',
-            url: '${ctx.path}/internal/customer/getCustomers',
-            limit: 50,
-            page: true,
-            autoSort: false,
-            size: 'sm',
-            id: 'customerTable',
-            even: true,//隔行背景
-            // toolbar: true,
-            toolbar: "#toolbarTpl",
-            // defaultToolbar: ['filter', 'print', 'exports'], 对应列筛选 打印 导出
-            defaultToolbar: ['filter'],
-            contentType: 'application/json',
-            cols: [[
-                {filed: 'uuid', type: 'checkbox', fixed: "left", width: '3%'},
-                {field: 'loginName', title: '用户名称', sort: true, width: '8%'},
-                {field: 'contactPerson', title: '联系人', sort: true, width: '10%', templet: '#toProductKeyword'},
-                {field: 'type', title: '分组', sort: true, width: '5%'},
-                {field: 'keywordCount', title: '关键字信息', width: '15%', templet: '#keywordInfo'},
-                {field: 'qq', title: 'QQ', width: '7%'},
-                {field: 'saleRemark', title: '销售备注', width: '6%'},
-                // hide: true 设置默认隐藏
-                // {field: 'saleRemark', title: '销售备注', width: '6%', hide: true},
-                {field: 'remark', title: '备注', width: '5%'},
-                {field: 'status', title: '客户状态', width: '5%', templet: '#customerStatus'},
-                {field: 'dailyReportIdentify', title: '是否产生日报表', width: '10%', templet: '#customerDailyReportIdentify'},
-                {field: 'createTime', title: '创建时间', sort: true, width: '10%', templet: '#toDateTime'},
-                {title: '操作', templet: '#operationTpl', align: 'center', width: '16%'}
-            ]],
-            height: 'full-115',
+<script src="/static/ok-admin/page/customer/customer.js"></script>
 
-            done: function (res, curr, count) {
-                $("#countNum").text(count);
-            }
-        });
-
-        //监听排序事件
-        table.on('sort(tableFilter)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
-            let data = $.parseJSON(formToJson($("#searchForm").serialize()));
-            data.orderBy = obj.field;
-            data.orderMode = obj.type === 'asc' ? 1 : 0;
-            //尽管我们的 table 自带排序功能，但并没有请求服务端。
-            //有些时候，你可能需要根据当前排序的字段，重新向服务端发送请求，从而实现服务端排序，如：
-            table.reload('customerTable', {
-                where: data,
-                page: {
-                    curr: 1 //从第一页开始
-                }
-            });
-        });
-
-        //监听工具条
-        table.on('tool(tableFilter)', function (obj) {
-            var data = obj.data;
-            switch (obj.event) {
-                case 'edit':
-                    editCustomer(data);
-                    break;
-                case 'del':
-                    delOneCustomer(data);
-                    break;
-            }
-        });
-
-        table.on('toolbar(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
-            switch (event) {
-                case 'batchDeleteCustomer':
-                    batchDeleteCustomer();
-                    break;
-                case 'batchUpdateDailyReport':
-                    batchUpdateDailyReport();
-                    break;
-                case 'addUser':
-                    toAddCustomer();
-                    break
-            }
-        });
-
-        var active = {
-            reload: function () {
-                table.reload('customerTable', {
-                    where: $.parseJSON(formToJson($("#searchForm").serialize())),
-                    page: {
-                        curr: 1 //从第一页开始
-                    }
-                });
-                $("#searchContent").removeClass("layui-show")
-            },
-        };
-
-        form.on("submit(search)", function (data) {
-            table.reload('customerTable', {
-                where: data.field,
-                page: {
-                    curr: 1 //从第一页开始
-                }
-            });
-            $("#searchContent").removeClass("layui-show")
-            return false;
-        });
-
-        function formToJson(data) {
-            data=data.replace(/&/g,"\",\"");
-            data=data.replace(/=/g,"\":\"");
-            data="{\""+data+"\"}";
-            return data;
-        }
-
-        function batchDeleteCustomer() { //获取选中数据
-            var checkStatus = table.checkStatus('customerTable')
-                , data = checkStatus.data;
-            var uuidArr = [];
-            $.each(data, function (index, item) {
-                uuidArr.push(item.uuid);
-            });
-            if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的客户', {icon: 5});
-                return
-            }
-            layer.confirm("确定要删除所选客户吗", {icon: 3, title: '删除所选'}, function (index) {
-                var postData = {};
-                postData.uuids = uuidArr;
-                $.ajax({
-                    url: '/internal/customer/deleteCustomers2',
-                    data: JSON.stringify(postData),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (result) {
-                        if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                            }, function () {
-                                active['reload'].call(this);
-                            });
-                        } else {
-                            layer.msg('操作失败', {icon: 5});
-                        }
-                    },
-                    error: function () {
-                        layer.msg('操作失败', {icon: 5});
-                    }
-                });
-                layer.close(index);
-            });
-        }
-
-        function batchUpdateDailyReport() { //获取选中数据
-            var checkStatus = table.checkStatus('customerTable')
-                , data = checkStatus.data;
-            var uuidArr = [];
-            $.each(data, function (index, item) {
-                if (item.status === 1) {
-                    uuidArr.push(item.uuid);
-                }
-            });
-            if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的客户', {icon: 5});
-                return
-            }
-            layer.confirm("确定更新所选客户日报表吗", {icon: 3, title: '更新日报表'}, function (index) {
-                var postData = {};
-                postData.uuids = uuidArr;
-                $.ajax({
-                    url: '/internal/customer/updateCustomerDailyReportIdentify2',
-                    data: JSON.stringify(postData),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (result) {
-                        if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                            }, function () {
-                                active['reload'].call(this);
-                            });
-                        } else {
-                            layer.msg('操作失败', {icon: 5});
-                        }
-                    },
-                    error: function () {
-                        layer.msg('操作失败', {icon: 5});
-                    }
-                });
-                layer.close(index);
-            });
-        }
-
-        $.ajax({
-            url: '${ctx.path}/internal/customer/getActiveUsers',
-            dataType: 'json',
-            type: 'get',
-            success: function (data) {
-                $("#loginName").empty();
-                $("#loginName").append('<option value="">请选择所属用户</option>');
-                $.each(data, function (index, item) {
-                    $('#loginName').append('<option value="' + item.loginName + '">' + item.userName + '</option>');// 下拉菜单里添加元素
-                });
-                form.render("select");
-            }
-        });
-
-        // 编辑表格获得表格数据
-        function editCustomer(data) {
-            okLayer.open("首页 / 客户列表 / 修改用户", "/internal/customer/toCustomersAdd", "90%", "90%", function (layero) {
-                window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
-            },function(){
-                if(sign){
-                    active['reload'].call(this);
-                    sign = false;
-                }
-            })
-        }
-
-        //删除单个客户
-        function delOneCustomer(data) {
-            layer.confirm('真的删除该客户吗', function (index) {
-                var uuidArr = [];
-                uuidArr.push(data.uuid);
-                var postData = {};
-                postData.uuids = uuidArr;
-                $.ajax({
-                    url: '/internal/customer/deleteCustomers2',
-                    data: JSON.stringify(postData),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (result) {
-                        if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                            }, function () {
-                                active['reload'].call(this);
-                            });
-                        } else {
-                            layer.msg('操作失败', {icon: 5});
-                        }
-                    },
-                    error: function () {
-                        layer.msg('操作失败', {icon: 5});
-
-                    }
-                });
-                layer.close(index);
-            });
-        }
-
-        $('#clearContactPerson').click(function () {
-            $('#contactPerson').val('');
-        });
-
-        // 添加客户
-        function toAddCustomer(){
-            okLayer.open("首页 / 客户列表 / 添加用户", "/internal/customer/toCustomersAdd", "90%", "90%", null, function () {
-                if(sign){
-                    active['reload'].call(this);
-                    sign = false;
-                }
-            });
-        }
-
-        //更新关键字状态
-        window.changeCustomerKeywordStatus = function changeCustomerKeywordStatus(customerUuid, status) {
-            if (status === 0) {
-                msg = "确定暂停所有关键字吗?"
-            } else if (status === 1) {
-                msg = "确定激活所有关键字吗?"
-            }
-            layer.confirm(msg, {icon: 3, title: '关键字状态'}, function (index) {
-                var data = {};
-                data.customerUuid = customerUuid;
-                data.status = status;
-                $.ajax({
-                    url: '/internal/customerKeyword/changeCustomerKeywordStatus2',
-                    data: JSON.stringify(data),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (result) {
-                        if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                            }, function () {
-                                active['reload'].call(this);
-                            });
-                        } else {
-                            layer.msg('操作失败', {icon: 5});
-                        }
-                    },
-                    error: function () {
-                        layer.msg('操作失败', {icon: 5});
-
-                    }
-                });
-                layer.close(index);
-            });
-        };
-
-        //
-        window.changeCustomerDailyReportIdentify = function changeCustomerDailyReportIdentify(uuid, status, oldIdentify,
-            newIdentify, self) {
-            var select = $(self);
-            if (status !== '1') {
-                layer.msg('请激活客户', {icon: 5});
-                return;
-            }
-            var postData = {};
-            postData.customerUuid = uuid;
-            postData.identify = newIdentify;
-            $.ajax({
-                url: '/internal/customer/changeCustomerDailyReportIdentify2',
-                type: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                data: JSON.stringify(postData),
-                success: function (result) {
-                    if (result.code === 200) {
-                        layer.msg('操作成功', {icon: 6});
-                    }
-                },
-                error: function () {
-                    layer.msg('操作失败', {icon: 5});
-                    select.val(oldIdentify);
-                }
-            });
-        };
-
-    });
-
-    function viewSitesdRank(contactPerson, type) {
-        var index = contactPerson.indexOf("整站");
-        if (index > -1) {
-            contactPerson = contactPerson.substr(0, index);
-        }
-        if (type === 'aizhan') {
-            window.open("https://baidurank.aizhan.com/baidu/" + contactPerson);
-        } else if (type === '5118') {
-            window.open("http://5118.com/seo/baidurank/" + contactPerson);
-        }
-    }
-
-    function updateOrNewTab(url, tit, id) {
-        var update = false;
-        var contentIframe = ("<iframe src='" + url + "' lay-id='" + id
-            + "'frameborder='0' scrolling='yes' width='100%' height='100%'></iframe>");
-        parent.layui.$('.layui-tab-title li').each(function () {
-            if (id === this.getAttribute('lay-id')){
-                update = true;
-            }
-        });
-        if (!update){
-            parent.layui.element.tabAdd('ok-tab', {
-                    title: tit,
-                    content: contentIframe,
-                    id: id
-                }
-            );
-        }
-
-        parent.layui.element.tabChange('ok-tab', id)
-    }
-
-</script>
-
-<!-- 头工具栏模板 -->
-<script type="text/html" id="toolbarTpl">
-    <div class="layui-btn-container">
-        <@shiro.hasPermission name="/internal/customer/deleteCustomers">
-        <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="batchDeleteCustomer">
-            <i class="layui-icon layui-icon-delete"></i>删除所选
-        </button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/customer/saveCustomer">
-    <button class="layui-btn layui-btn-warn layui-btn-sm" id="batchUpdateDailyReport"
-            lay-event="batchUpdateDailyReport">
-        触发所选客户日报表
-    </button>
-    </@shiro.hasPermission>
-
-    <button class="layui-btn layui-btn-sm" id="addUser" lay-event="addUser">
-        添加客户
-    </button>
-    </div>
-</script>
-<!--模板-->
-<script type="text/html" id="toDateTime">
-    {{layui.util.toDateString(d.createTime)}}
-</script>
-
-<script type="text/html" id="toProductKeyword">
-    <a href="javascript:updateOrNewTab('/internal/productKeyword/searchProductKeywordsByCustomerUuid/{{d.uuid}}','{{d.contactPerson}}-关键字列表', '{{d.uuid}}')">{{d.contactPerson}}</a>
-</script>
-
-<script type="text/html" id="keywordInfo">
-    {{# if(d.keywordCount > 0){
-    if(d.keywordCount == d.activeKeywordCount){ }}
-    <span style="color: green;">激活</span>
-    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 0)">暂停关键字</a>
-    </@shiro.hasPermission>
-    {{# }else if(d.keywordCount > 0 && d.activeKeywordCount > 0){ }}
-    <span style="color: yellowgreen;">部分暂停</span>
-    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 0)">暂停关键字</a>
-    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 1)">激活关键字</a>
-    </@shiro.hasPermission>
-    {{# }else{  }}
-    <span style="color: red;">暂停</span>
-    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-    | <a href="javascript:changeCustomerKeywordStatus('{{d.uuid}}', 1)">激活关键字</a>
-    </@shiro.hasPermission>
-    {{# }
-    }else{ }}
-    暂无关键字
-    {{#} }}
-</script>
-
-<script type="text/html" id="customerStatus">
-    {{#  if(d.status==1){  }}
-    激活
-    {{#  }else{  }}
-    暂停
-    {{#  }  }}
-</script>
-
-<script type="text/html" id="customerDailyReportIdentify">
-    <select value="{{d.dailyReportIdentify}}" lay-ignore style="width: 100px;font-size: 12px; height: 25px"
-            onchange="changeCustomerDailyReportIdentify('{{d.uuid}}', '{{d.status}}','{{d.dailyReportIdentify}}', this.value, this);">
-        <option value="true" selected>是</option>
-        <option value="false"
-                {{# if(!d.dailyReportIdentify){ }}
-                selected
-                {{# } }}
-        >否
-        </option>
-
-    </select>
-</script>
-
-<script type="text/html" id="operationTpl">
-
-    <@shiro.hasPermission name="/internal/customer/saveCustomer">
-    <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/customer/delCustomer">
-    <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
-    </@shiro.hasPermission>
-    {{#
-    var entryType = document.getElementById("entryType").value;
-    if( 'qz'=== entryType){ }}
-    <button type="button" class="layui-btn layui-btn-normal layui-btn-xs"
-            onclick="viewSitesdRank('{{d.contactPerson}}','aizhan')">爱站排名
-    </button>
-    <button type="button" class="layui-btn layui-btn-normal layui-btn-xs"
-            onclick="viewSitesdRank('{{d.contactPerson}}','5118')">5118排名
-    </button>
-    {{# }else if('bc' === entryType){ }}
-    <@shiro.hasPermission name="/internal/customerChargeType/saveCustomerChargeType">
-    <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">客户规则</button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeywords">
-    <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">快速加词</button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/customer/uploadDailyReportTemplate">
-    <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">上传日报表模板</button>
-    </@shiro.hasPermission>
-    {{# } }}
-
-    <@shiro.hasPermission name="/internal/negativeStandardSetting/searchNegativeStandardSetting">
-    <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">负面达标设置</button>
-    </@shiro.hasPermission>
-</script>
+<#include  "./customerTpl.html" />
 
 </body>
 </html>

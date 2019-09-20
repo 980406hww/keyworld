@@ -6,11 +6,14 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.dao.CustomerDao;
 import com.keymanager.ckadmin.entity.Customer;
+import com.keymanager.ckadmin.service.CustomerBusinessService;
+import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 
 import com.keymanager.ckadmin.service.CustomerService;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +21,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -38,12 +42,8 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     @Resource(name = "customerKeywordService2")
     private CustomerKeywordService customerKeywordService;
 
-/*    @Override
-    public Page<AlgorithmTestPlan> searchAlgorithmTestPlans(Page<AlgorithmTestPlan> page, AlgorithmTestCriteria algorithmTestCriteria) {
-        List<AlgorithmTestPlan> algorithmTestPlanList = algorithmTestPlanDao.searchAlgorithmTestPlans(page,algorithmTestCriteria);
-        page.setRecords(algorithmTestPlanList);
-        return page;
-    }*/
+    @Resource(name = "customerBusinessService2")
+    private CustomerBusinessService customerBusinessService;
 
     @Override
     public Page<Customer> searchCustomers(Page<Customer> page, CustomerCriteria customerCriteria) {
@@ -53,30 +53,17 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
             for (Customer customer : customerList) {
                 customerUuids.add(customer.getUuid());
             }
-            List<Map> customerKeywordCountMap = customerKeywordService
-                .getCustomerKeywordsCount(customerUuids, customerCriteria.getTerminalType(),
-                    customerCriteria.getEntryType());
-            Map<Integer, Map> customerUuidKeywordCountMap = new HashMap<Integer, Map>();
-            for (Map map : customerKeywordCountMap) {
-                customerUuidKeywordCountMap.put((Integer) map.get("customerUuid"), map);
+            List<Map> customerCustomerBusinessMapList = customerBusinessService.getCustomerBusinessMapList(customerUuids);
+            Map<Integer, Map> customerCustomerBusinessMap = new HashMap<>();
+            for (Map map : customerCustomerBusinessMapList) {
+                customerCustomerBusinessMap.put((Integer) map.get("customerUuid"), map);
             }
-            for (Customer customer : customerList) {
-                if (!customer.getLoginName().equals(customerCriteria.getLoginName())) {
-                    customer.setSaleRemark(null);
-                    customer.setTelphone(null);
-                    customer.setQq(null);
-                    customer.setEmail(null);
-                }
-                Map map = customerUuidKeywordCountMap.get(customer.getUuid().intValue());
+            for (Customer customer :customerList){
+                Map map = customerCustomerBusinessMap.get(customer.getUuid().intValue());
                 if (map != null) {
-                    Long totalCount = (Long) map.get("totalCount");
-                    if (totalCount != null) {
-                        customer.setKeywordCount(totalCount.intValue());
-                    }
-
-                    BigDecimal activeCount = (BigDecimal) map.get("activeCount");
-                    if (activeCount != null) {
-                        customer.setActiveKeywordCount(activeCount.intValue());
+                    String customerBusinessStr = (String) map.get("customerBusinessStr");
+                    if (customerBusinessStr != null) {
+                        customer.setCustomerBusinessList(Arrays.asList(customerBusinessStr.split(",")));
                     }
                 }
             }
@@ -90,10 +77,18 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
         //修改
         if (null != customer.getUuid()) {
             updateCustomer(customer, loginName);
+            customerBusinessService.deleteByCustomerUuid(customer.getUuid());
+            if (CollectionUtils.isNotEmpty(customer.getCustomerBusinessList())){
+                customerBusinessService.saveCustomerBusiness(customer);
+            }
         } else {//添加
             customer.setUpdateTime(new Date());
             customer.setLoginName(loginName);
+            customer.setStatus(1);
             customerDao.insert(customer);
+            if (CollectionUtils.isNotEmpty(customer.getCustomerBusinessList())){
+                customerBusinessService.saveCustomerBusiness(customer);
+            }
         }
     }
 
@@ -108,6 +103,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
         if (oldCustomer != null) {
             if (oldCustomer.getLoginName().equals(loginName)) {
                 oldCustomer.setQq(customer.getQq());
+                oldCustomer.setWechat(customer.getWechat());
                 oldCustomer.setEmail(customer.getEmail());
                 oldCustomer.setTelphone(customer.getTelphone());
                 oldCustomer.setSaleRemark(customer.getSaleRemark());
@@ -127,8 +123,8 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     }
 
     @Override
-    public void deleteAll(List<Integer> uuids) {
-        for (Integer uuid : uuids) {
+    public void deleteAll(List<String> uuids) {
+        for (String uuid : uuids) {
             deleteCustomer(Long.valueOf(uuid));
         }
     }
@@ -139,7 +135,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     }
 
     @Override
-    public void changeCustomerDailyReportIdentify(long uuid, boolean identify) {
+    public void changeCustomerDailyReportIdentify(long uuid, int identify) {
         Customer customer = customerDao.selectById(uuid);
         customer.setDailyReportIdentify(identify);
         customer.setUpdateTime(new Date());
@@ -150,15 +146,20 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     public Customer getCustomerWithKeywordCount(String terminalType, String entryType,
         long customerUuid, String loginName) {
         Customer customer = customerDao.selectById(customerUuid);
+
         if (customer != null) {
-            if (!customer.getLoginName().equals(loginName)) {
+            List<String> customerBusinessList = customerBusinessService.getCustomerBusinessStrByCustomerUuid(customerUuid);
+            if (CollectionUtils.isNotEmpty(customerBusinessList)){
+                customer.setCustomerBusinessList(customerBusinessList);
+            }
+            /*if (!customer.getLoginName().equals(loginName)) {
                 customer.setEmail(null);
                 customer.setQq(null);
                 customer.setTelphone(null);
                 customer.setSaleRemark(null);
             }
             customer.setKeywordCount(customerKeywordService
-                .getCustomerKeywordCount(terminalType, entryType, customerUuid));
+                .getCustomerKeywordCount(terminalType, entryType, customerUuid));*/
         }
         return customer;
     }

@@ -623,6 +623,8 @@
                     <input type="hidden" name="userInfoID" id="userInfoID" value="">
                     <input type="hidden" name="organizationID" id="organizationID" value="">
                     <input type="hidden" name="checkStatus" id="checkStatus" value="">
+                    <input hidden value='<#if Request.customerUuidTmp?exists>${Request.customerUuidTmp}</#if>'
+                           id="customerUuidTmp">
                     <div class="layui-form-item" style="margin-bottom: 0"
                          lay-filter="loginNameFilter">
                         <div class="layui-inline">
@@ -783,7 +785,7 @@
             elem: '#createTimes',
             range: true
         });
-        let customerUuid = $("#customerUuid").val();
+        let customerUuid = $("#customerUuidTmp").val();
         let whereCondition = {searchEngine: '百度', terminalType: 'PC'};
         if (customerUuid && customerUuid !== "") {
             whereCondition.customerUuid = customerUuid;

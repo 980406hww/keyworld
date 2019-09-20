@@ -276,4 +276,13 @@
         AND fType = #{entryType}
         GROUP BY fKeyword, fTerminalType
     </select>
+
+    <select id="getCustomerKeywordsCountByCustomerUuid" resultType="com.keymanager.ckadmin.vo.KeywordCountVO">
+        SELECT ck.fCustomerUuid              as 'customerUuid',
+        COUNT(1)                      as 'totalCount',
+        SUM(IF(ck.fStatus = 1, 1, 0)) AS 'activeCount'
+        FROM t_customer_keyword ck
+        WHERE ck.fTerminalType = #{terminalType}
+        AND ck.fCustomerUuid = #{customerUuid}
+    </select>
 </mapper>

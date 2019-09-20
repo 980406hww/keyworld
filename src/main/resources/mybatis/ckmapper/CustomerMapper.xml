@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.ckadmin.dao.CustomerDao">
-  <sql id="colID">
+    <sql id="colID">
         c.fUuid AS `uuid`,
         c.fUserID AS `loginName`,
         c.fExternalAccount AS `externalAccount`,
         c.fContactPerson AS `contactPerson`,
-        c.fQQ AS `qq`,
+        IFNULL(c.fQQ,'暂无') AS `qq`,
+        IFNULL(c.fWechat,'暂无') AS `wechat`,
+        c.fType AS `type`,
         c.fEmail  AS `email`,
-        c.fTelphone AS `telphone`,
+        IFNULL(c.fTelphone,'暂无') AS `telphone`,
         c.fAlipay AS `alipay`,
         c.fPaidFee AS `paidFee`,
-        c.fSaleRemark AS 'saleRemark',
-        c.fRemark AS `remark`,
+        IFNULL(c.fSaleRemark,'暂无') AS 'saleRemark',
+        IFNULL(c.fRemark,'暂无') AS `remark`,
         c.fDailyReportIdentify AS `dailyReportIdentify`,
         c.fStatus AS `status`,
         c.fUpdateInterval AS `updateInterval`,
@@ -21,80 +23,87 @@
         c.fCreateTime AS `createTime`
     </sql>
 
-  <select id="searchCustomers" parameterType="com.keymanager.ckadmin.criteria.CustomerCriteria"
-    resultType="com.keymanager.ckadmin.entity.Customer">
-    SELECT
-    <include refid="colID"/>
-    FROM t_customer c
-    WHERE 1 = 1
-    <if test="customerCriteria.contactPerson != null and customerCriteria.contactPerson != ''">AND
-      c.fContactPerson
-      LIKE CONCAT(#{customerCriteria.contactPerson},'%')
-    </if>
-    <if test="customerCriteria.qq != null and customerCriteria.qq != ''">AND c.fQQ LIKE
-      CONCAT(#{customerCriteria.qq},'%')
-    </if>
-    <if test="customerCriteria.telphone != null and customerCriteria.telphone != ''">AND c.fTelphone
-      LIKE
-      CONCAT(#{customerCriteria.telphone},'%')
-    </if>
-    <if test="customerCriteria.loginName != null and customerCriteria.loginName != ''">AND c.fUserID
-      =
-      #{customerCriteria.loginName}
-    </if>
-    <if test="customerCriteria.status != null and customerCriteria.status != ''">
-      AND c.fStatus = #{customerCriteria.status}
-    </if>
-    <if test="customerCriteria.remark != null and customerCriteria.remark != ''">AND c.fRemark
-      LIKE CONCAT(#{customerCriteria.remark},'%')
-    </if>
-  </select>
+    <select id="searchCustomers" parameterType="com.keymanager.ckadmin.criteria.CustomerCriteria"
+            resultType="com.keymanager.ckadmin.entity.Customer">
+        SELECT
+        <include refid="colID"/>
+        FROM t_customer c
+        WHERE 1 = 1
+        <if test="customerCriteria.contactPerson != null and customerCriteria.contactPerson != ''">
+            AND c.fContactPerson LIKE CONCAT(#{customerCriteria.contactPerson},'%')
+        </if>
+        <if test="customerCriteria.type != null and customerCriteria.type != ''">
+            AND c.fType = #{customerCriteria.type}
+        </if>
+        <if test="customerCriteria.qq != null and customerCriteria.qq != ''">
+            AND c.fQQ LIKE CONCAT(#{customerCriteria.qq},'%')
+        </if>
+        <if test="customerCriteria.wechat != null and customerCriteria.wechat != ''">
+            AND c.fWechat LIKE CONCAT(#{customerCriteria.wechat},'%')
+        </if>
+        <if test="customerCriteria.telphone != null and customerCriteria.telphone != ''">
+            AND c.fTelphone LIKE CONCAT(#{customerCriteria.telphone},'%')
+        </if>
+        <if test="customerCriteria.loginName != null and customerCriteria.loginName != ''">
+            AND c.fUserID  = #{customerCriteria.loginName}
+        </if>
+        <if test="customerCriteria.status != null and customerCriteria.status != ''">
+            AND c.fStatus = #{customerCriteria.status}
+        </if>
+        <if test="customerCriteria.remark != null and customerCriteria.remark != ''">AND c.fRemark
+            LIKE CONCAT(#{customerCriteria.remark},'%')
+        </if>
+    </select>
 
-  <select id="getActiveCustomerSimpleInfo" resultType="com.keymanager.ckadmin.entity.Customer">
-    SELECT
-    c.fContactPerson AS 'contactPerson',
-    c.fUuid AS 'uuid'
-    FROM t_customer c
-    WHERE c.fStatus = 1
-    <if test="customerCriteria.entryType != null and customerCriteria.entryType != ''">AND
-      c.fEntryType = #{customerCriteria.entryType}
-    </if>
-    <if test="customerCriteria.loginName != null and customerCriteria.loginName != ''">AND c.fUserID
-      = #{customerCriteria.loginName}
-    </if>
-    order by c.fContactPerson
-  </select>
+    <select id="getActiveCustomerSimpleInfo" resultType="com.keymanager.ckadmin.entity.Customer">
+        SELECT
+        c.fContactPerson AS 'contactPerson',
+        c.fUuid AS 'uuid'
+        FROM t_customer c
+        WHERE c.fStatus = 1
+        <if test="customerCriteria.entryType != null and customerCriteria.entryType != ''">
+            AND c.fEntryType = #{customerCriteria.entryType}
+        </if>
+        <if test="customerCriteria.loginName != null and customerCriteria.loginName != ''">
+            AND c.fUserID  = #{customerCriteria.loginName}
+        </if>
+        order by c.fContactPerson
+    </select>
 
-  <select id="selectLastId" resultType="int">
+    <select id="selectLastId" resultType="int">
         select LAST_INSERT_ID()
     </select>
 
-  <select id="searchCustomerWithKeyword" resultType="com.keymanager.ckadmin.entity.Customer">
-    SELECT
-    c.fUuid AS uuid,
-    c.fContactPerson AS contactPerson
-    FROM
-    t_customer c
-    RIGHT JOIN t_customer_keyword ck ON c.fUuid = ck.fCustomerUuid
-    WHERE
-    c.fUuid IS NOT NULL
-    AND ck.fTerminalType = #{terminalType}
-    AND c.fStatus = 1
-    AND ck.fOptimizeGroupName IN
-    <foreach collection="groupNames" item="groupName" open="(" close=")" separator=",">
-      #{groupName}
-    </foreach>
-    GROUP BY
-    ck.fCustomerUuid
-  </select>
+    <select id="searchCustomerWithKeyword" resultType="com.keymanager.ckadmin.entity.Customer">
+        SELECT
+        c.fUuid AS uuid,
+        c.fContactPerson AS contactPerson
+        FROM
+        t_customer c
+        RIGHT JOIN t_customer_keyword ck ON c.fUuid = ck.fCustomerUuid
+        WHERE
+        c.fUuid IS NOT NULL
+        AND ck.fTerminalType = #{terminalType}
+        AND c.fStatus = 1
+        AND ck.fOptimizeGroupName IN
+        <foreach collection="groupNames" item="groupName" open="(" close=")" separator=",">
+            #{groupName}
+        </foreach>
+        GROUP BY
+        ck.fCustomerUuid
+    </select>
 
-  <update id="updateCustomerDailyReportIdentify">
-    UPDATE t_customer
-    SET fUpdateTime = NOW(), fDailyReportIdentify = 1
-    WHERE fUuid IN(
-    <foreach collection="uuids" item="uuid" separator=",">
-      #{uuid}
-    </foreach>
-    )
-  </update>
+    <update id="updateCustomerDailyReportIdentify">
+        UPDATE t_customer
+        SET fUpdateTime = NOW(), fDailyReportIdentify = 1
+        WHERE fUuid IN(
+        <foreach collection="uuids" item="uuid" separator=",">
+            #{uuid}
+        </foreach>
+        )
+    </update>
+
+    <select id="lastInsertID" resultType="java.lang.Long">
+        SELECT LAST_INSERT_ID()
+    </select>
 </mapper>

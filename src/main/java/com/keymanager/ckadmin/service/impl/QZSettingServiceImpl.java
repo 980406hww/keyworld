@@ -24,6 +24,7 @@ import com.keymanager.ckadmin.service.QZChargeRuleService;
 import com.keymanager.ckadmin.vo.ExternalQZSettingVO;
 import com.keymanager.ckadmin.vo.QZKeywordRankInfoVO;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
+import com.keymanager.ckadmin.vo.QZSettingCountVO;
 import com.keymanager.ckadmin.vo.QZSettingVO;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.ckadmin.entity.QZCaptureTitleLog;
@@ -909,5 +910,10 @@ public class QZSettingServiceImpl extends
             qzSetting.setUpdateEndTime(new Date());
             qzSettingDao.updateById(qzSetting);
         }
+    }
+
+    @Override
+    public QZSettingCountVO getQZSettingsCountByCustomerUuid(Long customerUuid) {
+        return qzSettingDao.getQZSettingsCountByCustomerUuid(customerUuid);
     }
 }

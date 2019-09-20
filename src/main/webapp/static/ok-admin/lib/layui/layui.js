@@ -58,6 +58,7 @@ if (!Object.assign) {
     code: "modules/code",
     jquery: "modules/jquery",
     mobile: "modules/mobile",
+    tablePlug: "plug/tablePlug/tablePlug",
     "layui.all": "../layui.all",
     okLayer: "okmodules/okLayer"
   },okmodules);
