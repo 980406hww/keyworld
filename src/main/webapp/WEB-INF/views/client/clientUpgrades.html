@@ -261,14 +261,14 @@
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
     <div class="layui-btn-container">
-        <@shiro:hasPermission name="/internal/clientUpgrade/saveClientUpgrade">
+        <@shiro.hasPermission name="/internal/clientUpgrade/saveClientUpgrade">
             <button class="layui-btn layui-btn-sm" id="addMachine" lay-event="addMachine">添加</button>
-        </@shiro:hasPermission>
-        <@shiro:hasPermission name="/internal/clientUpgrade/deleteClientUpgrade">
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/clientUpgrade/deleteClientUpgrade">
             <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="batchDeleteClientUpgrade">
                 <i class="layui-icon layui-icon-delete"></i>删除所选
             </button>
-        </@shiro:hasPermission>
+        </@shiro.hasPermission>
     </div>
 </script>
 
@@ -298,17 +298,17 @@
 
 <script type="text/html" id="operationTpl">
     <div class="layui-btn-group">
-        <@shiro:hasPermission name="/internal/clientUpgrade/saveClientUpgrade">
+        <@shiro.hasPermission name="/internal/clientUpgrade/saveClientUpgrade">
             {{# if(d.status === true) { }}
                 <button type="button" class="layui-btn layui-btn-xs" lay-event="updateStatus">暂停</button>
             {{# }else { }}
                 <button type="button" class="layui-btn layui-btn-xs" lay-event="updateStatus">开始</button>
             {{# } }}
             <button type="button" class="layui-btn layui-btn-xs" lay-event="modifyMachine" id="modifyMachine">修改</button>
-        </@shiro:hasPermission>
-        <@shiro:hasPermission name="/internal/clientUpgrade/deleteClientUpgrade">
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/clientUpgrade/deleteClientUpgrade">
             <button type="button" class="layui-btn layui-btn-xs" lay-event="deleteClient">删除</button>
-        </@shiro:hasPermission>
+        </@shiro.hasPermission>
     </div>
 </script>
 
