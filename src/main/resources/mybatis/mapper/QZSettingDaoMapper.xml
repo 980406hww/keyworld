@@ -29,7 +29,7 @@
                    AND DATE_SUB(NOW(), INTERVAL 10 MINUTE) > qs.fUpdateStartTime)
                OR (qs.fUpdateStatus = 'DownloadTimesUsed'
                    AND qs.fUpdateEndTime &lt; CURRENT_DATE())
-              ) AND qs.fStatus = 1
+              ) AND (qs.fRenewalStatus = 1 OR qs.fRenewalStatus = 2)
               AND ((qs.fPcGroup > '' AND qs.fPcKeywordExceedMaxCount = 0)
               OR  (qs.fPhoneGroup > '' AND qs.fPhoneKeywordExceedMaxCount = 0))
               AND qs.fAutoCrawlKeywordFlag IS TRUE
@@ -73,7 +73,7 @@
             qs.fCaptureCurrentKeywordStatus = 'Processing'
             AND DATE_SUB(NOW(), INTERVAL 10 MINUTE) > qs.fCaptureCurrentKeywordCountTime
         )
-        AND qs.fStatus = 1
+        AND (qs.fRenewalStatus = 1 OR qs.fRenewalStatus = 2)
         ORDER BY qs.fCaptureCurrentKeywordCountTime
     </select>
 
@@ -88,7 +88,7 @@
         qs.fUuid = ot.fQZSettingUuid
         AND ot.fNextChargeDate &lt;= date_add(CURDATE(), INTERVAL 7 DAY)
         AND ot.fIsDeleted = 0
-        AND qs.fStatus = 1
+        AND (qs.fRenewalStatus = 1 OR qs.fRenewalStatus = 2)
     </select>
 
     <select id="searchQZSettings" resultType="com.keymanager.monitoring.entity.QZSetting">
@@ -279,7 +279,7 @@
 
     <update id="updateQZSettingStatus">
         UPDATE t_qz_setting
-        SET fStatus = #{status}
+        SET 1 = 1
         <if test="status == 3">
             , fAutoCrawlKeywordFlag = FALSE
         </if>
@@ -404,7 +404,7 @@
             </otherwise>
         </choose>
         FROM t_qz_setting qs
-        WHERE qs.fStatus = 1
+        WHERE (qs.fRenewalStatus = 1 OR qs.fRenewalStatus = 2)
         <choose>
             <when test="groupSettingCriteria.terminalType =='PC'">
                 AND qs.fPcGroup > ''
@@ -448,8 +448,7 @@
     <update id="updateQZSettingRenewalStatus">
         UPDATE t_qz_setting
         SET fUpdateTime = NOW(),
-            fRenewalStatus = #{renewalStatus},
-            fStatus = #{renewalStatus}
+            fRenewalStatus = #{renewalStatus}
         WHERE fUuid IN
         <foreach item="item" index="index" collection="uuids" open="(" separator="," close=")">
             #{item}
@@ -509,8 +508,7 @@
             AND qzs.fUpdateEndTime &lt; CURRENT_DATE())
         )
         AND qzs.fType = 'qz'
-        AND qzs.fRenewalStatus = 1
-        AND qzs.fStatus = 1
+        AND (qzs.fRenewalStatus = 1 OR qzs.fRenewalStatus = 2)
         AND qzs.fAutoCrawlKeywordFlag = 1
         ORDER BY qzs.fUuid
         LIMIT 1

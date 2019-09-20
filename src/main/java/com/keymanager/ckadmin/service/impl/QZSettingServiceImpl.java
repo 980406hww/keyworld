@@ -403,12 +403,7 @@ public class QZSettingServiceImpl extends
                 if (CollectionUtils.isNotEmpty(qzOperationType.getQzChargeRules())) {
                     QZChargeRule qzChargeRule = qzOperationType.getQzChargeRules().iterator().next();
                     String newStandardSpecies = qzChargeRule.getStandardSpecies();
-                    QZKeywordRankInfo qzKeywordRankInfo;
-                    if ("other".equals(newStandardSpecies)) {
-                        qzKeywordRankInfo = qzKeywordRankInfoMap.get("aiZhan");
-                    } else {
-                        qzKeywordRankInfo = qzKeywordRankInfoMap.get(newStandardSpecies);
-                    }
+                    QZKeywordRankInfo qzKeywordRankInfo = qzKeywordRankInfoMap.get(newStandardSpecies);
                     if (null != qzKeywordRankInfo) {
                         existingStandardSpeciesSet.add(newStandardSpecies);
                         if (newStandardSpecies.equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)

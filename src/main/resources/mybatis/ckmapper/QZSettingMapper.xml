@@ -22,7 +22,6 @@
         </choose>
         qs.fType AS 'type',
         qs.fCreateTime AS 'createTime',
-        qs.fStatus AS 'status',
         qs.fRenewalStatus AS 'renewalStatus',
         qs.fCrawlerStatus AS 'crawlerStatus',
         qs.fAutoCrawlKeywordFlag AS 'autoCrawlKeywordFlag'
@@ -51,7 +50,6 @@
             </when>
         </choose>
         <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingSearchCriteria.updateStatus}</if>
-        <if test="qzSettingSearchCriteria.status != null">AND qs.fStatus = #{qzSettingSearchCriteria.status}</if>
         <if test="qzSettingSearchCriteria.renewalStatus != null">AND qs.fRenewalStatus = #{qzSettingSearchCriteria.renewalStatus}</if>
         <if test="qzSettingSearchCriteria.autoCrawlKeywordFlag != null">AND qs.fAutoCrawlKeywordFlag = #{qzSettingSearchCriteria.autoCrawlKeywordFlag}</if>
         <if test="qzSettingSearchCriteria.standardSpecies != null and qzSettingSearchCriteria.standardSpecies != ''">
