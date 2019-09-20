@@ -7,6 +7,8 @@ import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.keymanager.ckadmin.vo.KeywordCountVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -48,4 +50,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<CustomerKeywordSummaryInfoVO> searchCustomerKeywordSummaryInfo(
         @Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
+
+    KeywordCountVO getCustomerKeywordsCountByCustomerUuid(@Param("customerUuid") Long customerUuid, @Param("terminalType") String terminalType);
+
 }

@@ -1,0 +1,109 @@
+
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+        <button class="layui-btn layui-btn-sm" id="addUser" lay-event="addUser">
+            添加客户
+        </button>
+
+        <@shiro.hasPermission name="/internal/customer/deleteCustomers">
+        <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="batchDeleteCustomer">
+            <i class="layui-icon layui-icon-delete"></i>删除所选
+        </button>
+        </@shiro.hasPermission>
+    <!--<@shiro.hasPermission name="/internal/customer/saveCustomer">
+    <button class="layui-btn layui-btn-warn layui-btn-sm" id="batchUpdateDailyReport"
+            lay-event="batchUpdateDailyReport">
+        触发所选客户日报表
+    </button>-->
+    </@shiro.hasPermission>
+
+</script>
+<!--模板-->
+<script type="text/html" id="toDateTime">
+    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+</script>
+
+<!--基本信息-->
+<script type="text/html" id="baseInfo">
+    <div class="layui-row" >
+        <div class="layui-col-md6">
+            <div class="layui-col-md5 ">所属用户</div>
+            <div class="layui-col-md7 ">{{d.loginName}}</div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-col-md5 ">客户名称</div>
+            <div class="layui-col-md7 ">{{d.contactPerson}}</div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md6">
+            <div class="layui-col-md5 "title="QQ:{{d.qq}},微信:{{d.wechat}},联系电话:{{d.telphone}}">联系方式</div>
+            <div class="layui-col-md7 reamrk">
+                <a href="javascript:void(0)" title="点击查看详情" onclick="showContact('{{d.contactPerson}}','{{d.qq}}','{{d.wechat}}','{{d.telphone}}')">QQ:{{d.qq}},微信:{{d.wechat}},联系电话:{{d.telphone}}</a>
+<!--                <button type="button" class="layui-btn layui-btn-xs">点击查看详细</button>-->
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-col-md5 ">客户类型</div>
+            <div class="layui-col-md7 ">{{d.type}}</div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md6">
+            <div class="layui-col-md5 ">销售备注</div>
+            <div class="layui-col-md7 reamrk" title="{{d.saleRemark}}">{{d.saleRemark}}&nbsp;</div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-col-md5 ">备注</div>
+            <div class="layui-col-md7 reamrk" title="{{d.remark}}">{{d.remark}}&nbsp;</div>
+        </div>
+    </div>
+
+</script>
+
+<!--业务信息-->
+<script type="text/html" id="businessInfo">
+    {{ generate_customer_business_td2(d) }}
+
+</script>
+
+<script type="text/html" id="customerBusinessTpl">
+   {{ generate_customer_business_td(d) }}
+</script>
+
+<script type="text/html" id="customerDailyReportIdentify">
+    <select value="{{d.dailyReportIdentify}}" lay-ignore style="width: 100px;font-size: 12px; height: 25px"
+            onchange="changeCustomerDailyReportIdentify('{{d.uuid}}', '{{d.status}}','{{d.dailyReportIdentify}}', this.value, this);">
+        <option value="true" selected>是</option>
+        <option value="false"
+                {{# if(!d.dailyReportIdentify){ }}
+                selected
+                {{# } }}
+        >否
+        </option>
+
+    </select>
+</script>
+
+<script type="text/html" id="operationTpl">
+    <div class="op-btn-cell">
+    <div class="layui-row ">
+        <div class="layui-col-md12">
+        <@shiro.hasPermission name="/internal/customer/saveCustomer">
+        <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
+    </@shiro.hasPermission>
+    </div>
+    </div>
+    </div>
+    <div class="op-btn-cell">
+    <div class="layui-row ">
+        <div class="layui-col-md12">
+        <@shiro.hasPermission name="/internal/customer/delCustomer">
+        <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+    </@shiro.hasPermission>
+    </div>
+    </div>
+    </div>
+
+</script>
+

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.criteria.QZSettingSearchCriteria;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.vo.ExternalQZSettingVO;
+import com.keymanager.ckadmin.vo.QZSettingCountVO;
 import com.keymanager.ckadmin.vo.QZSettingVO;
 import java.util.List;
 import java.util.Map;
@@ -44,5 +45,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     void updateCrawlerStatus(@Param("uuids") List<Long> uuids);
 
     void updateQzSetting(@Param("qzSetting") QZSetting qzSetting);
+
+    QZSettingCountVO getQZSettingsCountByCustomerUuid(@Param("customerUuid") Long customerUuid);
 }
 

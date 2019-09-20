@@ -390,13 +390,12 @@
         .layui-form-select input {
             height: 30px;
         }
-
-        .my-label {
+        
+        .my-label{
             height: auto !important;
-            max-width: 330px;
         }
 
-        .layui-input-inline input {
+        .layui-input-inline input{
             height: 30px;
         }
 
@@ -437,83 +436,7 @@
             padding: 0 5px;
         }
 
-        .layui-card-body{
-            padding-bottom: 0;
-        }
 
-        .my-collapse {
-            position: relative;
-            box-shadow: none;
-        }
-
-        .my-collapse * {
-            box-shadow: none;
-        }
-
-        .my-collapse .layui-form-select dl,
-        .my-collapse .layui-form-select .layui-anim {
-            top: 33px !important;
-        }
-
-        .my-collapse > div:first-child {
-            background: #f2f2f2;
-            border: 1px solid #e6e6e6;
-        }
-
-        .my-collapse > div {
-            padding: 6px 5px;
-        }
-
-        .my-hide {
-            padding-bottom: 1px !important;
-            width: 100%;
-            display: none;
-            position: absolute;
-            top: 43px;
-            left: 0;
-            z-index: 894;
-            background: #fff;
-            border-left: 1px solid #e6e6e6;
-            border-right: 1px solid #e6e6e6;
-            border-bottom: 1px solid #e6e6e6;
-            border-bottom-right-radius: 2px;
-            border-bottom-left-radius: 2px;
-        }
-
-        .my-collapse button {
-            height: 30px;
-            line-height: 30px;
-        }
-
-        .my-collapse .my-btn {
-            height: 30px !important;
-            line-height: 30px !important;
-            padding: 0 18px;
-            background-color: #45a3c2;
-            color: #fff;
-            white-space: nowrap;
-            text-align: center;
-            font-size: 14px;
-            border: none;
-            border-radius: 2px;
-            cursor: pointer;
-        }
-
-        .my-collapse .my-btn:hover {
-            opacity: .8;
-            transition: opacity 0.5s;
-        }
-
-        .radio-box{
-            position: relative;
-            top: 2px;
-        }
-
-        .my-collapse .layui-form-radio{
-            margin: 0;
-            padding-left: 6px;
-            padding-right: 0;
-        }
     </style>
     <script>
         Date.prototype.format = function (fmt) {
@@ -543,7 +466,7 @@
 </head>
 <body class="ok-body">
 <!--面包屑导航区域-->
-<div class="ok-body-breadcrumb" style="margin: 5px 0">
+<div class="ok-body-breadcrumb">
     <span class="layui-breadcrumb">
         <a><cite>全站信息设置</cite></a>
         <a><cite>全站信息列表</cite></a>
@@ -554,216 +477,172 @@
 </div>
 <div class="layui-card ">
     <div class="layui-card-body ">
-        <form class="layui-form layui-form-pane" id="searchForm">
-            <div class="my-collapse">
-                <div>
-                    <div class="layui-inline" style="width: 120px;height: 30px">
-                        <select name="terminalSearchEngine" id="terminalSearchEngine"
-                                lay-filter="terminalSearchEngineFilter"></select>
-                    </div>
-                    <div class="layui-inline">
-                        <input type="text" name="domain" id="domain" placeholder="请输入域名"
-                               autocomplete="off" onblur="checkDomain()" style="width: 180px;height: 30px"
-                               onmouseleave="checkDomain()" class="layui-input">
-                    </div>
-                    <div class="layui-inline">
-                        <button class="layui-btn" lay-submit lay-filter="search"
-                                id="searchBtn">搜索
-                        </button>
-                    </div>
-                    <div class="layui-inline">
-                        <div class="layui-collapse my-btn" onclick="showCondition()">
-                            更多条件
-                        </div>
-                    </div>
-                    <div class="layui-inline" onclick="resetHidden()">
-                        <button style="background: #897c00;color: #ffffff" class="layui-btn"
-                                type="reset" id="resetBtn">
-                            重置
-                        </button>
-                    </div>
-                    <div class="layui-inline radio-box">
-                        <div pane>
-                            <input type="radio" name="sort" value="-1" title="正常"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="1" title="骤降(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="2" title="无变化(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="3" title="暴涨(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="7" title="下降(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="8" title="不变(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="9" title="上升(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="4" title="达标(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="5" title="未达标(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="6" title="接近达标(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                        </div>
-                    </div>
-                </div>
-                <div class="my-hide" id="searchContent">
-                    <input type="hidden" name="searchEngine" id="searchEngine" value="百度"/>
-                    <input type="hidden" name="terminalType" id="terminalType" value="PC"/>
-                    <input type="hidden" name="userInfoID" id="userInfoID" value="">
-                    <input type="hidden" name="organizationID" id="organizationID" value="">
-                    <input type="hidden" name="checkStatus" id="checkStatus" value="">
-                    <div class="layui-form-item" style="margin-bottom: 0"
-                         lay-filter="loginNameFilter">
-                        <div class="layui-inline">
-                            <label class="layui-form-label">客户</label>
-                            <div class="layui-input-inline">
-                                <select name="customerUuid" id="customerUuid"
-                                        lay-filter="customerUuidFilter" lay-search>
-                                </select>
+        <div class="layui-collapse" lay-filter="test">
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">条件筛选<i class="layui-icon layui-colla-icon"></i></h2>
+                <div class="layui-colla-content" id="searchContent">
+                    <form class="layui-form layui-form-pane" id="searchForm">
+
+                        <input hidden value='<#if Request.customerUuidTmp?exists>${Request.customerUuidTmp}</#if>'
+                               id="customerUuid" name="customerUuid">
+                        <input hidden name="searchEngine" id="searchEngine" value="百度"/>
+                        <input hidden name="terminalType" id="terminalType" value="PC"/>
+                        <input type="text" hidden name="userInfoID" id="userInfoID" value="">
+                        <input type="text" hidden name="organizationID" id="organizationID" value="">
+                        <div class="layui-form-item" lay-filter="loginNameFilter">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">域名</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="domain" id="domain" placeholder="请输入域名" autocomplete="off" onblur="checkDomain()" onmouseleave="checkDomain()" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">客户</label>
+                                <div class="layui-input-inline">
+                                    <select name="customerInfo" id="customerInfo" lay-filter="customerInfoFilter" lay-search>
+                                    </select>
+                                </div>
+                            </div>
+<!--                            TODO-->
+<!--                            <div class="layui-inline">用户</div>-->
+<!--                            <div class="layui-inline">-->
+<!--                                <div class="layui-input-inline">-->
+<!--                                    <select id="LAY-auth-tree-index" lay-filter="tree"></select>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">用户</label>
+                                <div class="layui-input-inline">
+                                    <input type="text"  id="tree" lay-filter="tree" class="layui-input" >
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">分类标签</label>
+                                <div class="layui-input-inline">
+                                    <select name="categoryTag" id="categoryTag" lay-filter="categoryTagFilter" lay-search>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">组名</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="group" id="group" placeholder="请输入组名" autocomplete="off"class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">续费状态</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="renewalStatus" id="renewalStatus">
+                                        <option value selected>全部</option>
+                                        <option value="1">续费</option>
+                                        <option value="0">未续费</option>
+                                        <option value="2">首次续费</option>
+                                        <option value="3">下架</option>
+                                        <option value="4">观测</option>
+                                        <option value="5">seo</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">自动采词</label>
+                                <div class="layui-input-inline">
+                                    <select name="autoCrawlKeywordFlag" id="autoCrawlKeywordFlag">
+                                        <option value selected>全部</option>
+                                        <option value="1">是</option>
+                                        <option value="0">否</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">达标种类</label>
+                                <div class="layui-input-inline">
+                                    <select name="standardSpecies" id="standardSpecies">
+                                        <option value selected>全部</option>
+                                        <option value="aiZhan">爱站</option>
+                                        <option value="5118">5118</option>
+                                        <option value="designationWord">指定词</option>
+                                        <option value="other">其它</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">达标优化类型</label>
+                                <div class="layui-input-inline">
+                                    <select name="optimizationType" id="optimizationType">
+                                        <option value selected>全部</option>
+                                        <option value="1">主优化</option>
+                                        <option value="2">次优化</option>
+                                        <option value="0">辅助优化</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">采集状态</label>
+                                <div class="layui-input-inline">
+                                    <select name="status" id="status">
+                                        <option value selected>全部</option>
+                                        <option value="1">激活</option>
+                                        <option value="0">暂停</option>
+                                        <option value="2">新增</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">更新状态</label>
+                                <div class="layui-input-inline">
+                                    <select name="updateStatus" id="updateStatus">
+                                        <option></option>
+                                        <option>Processing</option>
+                                        <option>Completed</option>
+                                        <option>DownloadTimesUsed</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">创建时间</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" id="createTimes" name="createTimes" readonly placeholder="请选择日期">
+                                </div>
                             </div>
                         </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户</label>
-                            <div class="layui-input-inline">
-                                <input type="text" id="tree" lay-filter="tree" class="layui-input">
+
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <button class="layui-btn" lay-submit="" lay-filter="search"
+                                            id="searchBtn">搜索
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">分类标签</label>
-                            <div class="layui-input-inline">
-                                <select name="categoryTag" id="categoryTag"
-                                        lay-filter="categoryTagFilter" lay-search>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">组名</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="group" id="group" placeholder="请输入组名"
-                                       autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">续费状态</label>
-                            <div class="layui-input-inline">
-                                <select name="renewalStatus" id="renewalStatus">
-                                    <option value selected>全部</option>
-                                    <option value="1">续费中</option>
-                                    <option value="0">暂停续费</option>
-                                    <option value="2">首次续费</option>
-                                    <option value="3">下架</option>
-                                    <option value="4">其他</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">自动采词</label>
-                            <div class="layui-input-inline">
-                                <select name="autoCrawlKeywordFlag" id="autoCrawlKeywordFlag">
-                                    <option value selected>全部</option>
-                                    <option value="1">是</option>
-                                    <option value="0">否</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">达标种类</label>
-                            <div class="layui-input-inline">
-                                <select name="standardSpecies" id="standardSpecies">
-                                    <option value selected>全部</option>
-                                    <option value="aiZhan">爱站</option>
-                                    <option value="5118">5118</option>
-                                    <option value="designationWord">指定词</option>
-                                    <option value="other">其它</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">达标优化类型</label>
-                            <div class="layui-input-inline">
-                                <select name="optimizationType" id="optimizationType">
-                                    <option value selected>全部</option>
-                                    <option value="1">主优化</option>
-                                    <option value="2">次优化</option>
-                                    <option value="0">辅助优化</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">采集状态</label>
-                            <div class="layui-input-inline">
-                                <select name="status" id="status">
-                                    <option value selected>全部</option>
-                                    <option value="1">激活</option>
-                                    <option value="0">暂停</option>
-                                    <option value="2">新增</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">更新状态</label>
-                            <div class="layui-input-inline">
-                                <select name="updateStatus" id="updateStatus">
-                                    <option></option>
-                                    <option>Processing</option>
-                                    <option>Completed</option>
-                                    <option>DownloadTimesUsed</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">创建时间</label>
-                            <div class="layui-input-inline">
-                                <input type="text" class="layui-input" id="createTimes"
-                                       name="createTimes" readonly placeholder="请选择日期">
-                            </div>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
 <!--数据表格-->
 <table class="layui-hide" id="qzSettingTable" lay-filter="tableFilter"></table>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
-<script type="text/javascript"
-        src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
+<script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
 <script>
-    let s_c = 0;
-
-    function showCondition() {
-        let searchContent = document.getElementById('searchContent');
-        if (s_c++ % 2 === 0) {
-            searchContent.style.display = 'block';
-        } else {
-            searchContent.style.display = 'none';
-        }
-    }
-
-    function resetHidden() {
-        document.getElementById('userInfoID').value = '';
-        document.getElementById('organizationID').value = '';
-        document.getElementById('checkStatus').value = '';
-    }
-
     var sign = false;
     var noteAddRow = true;
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'treeSelect', 'laydate',
-        'authtree'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'treeSelect', 'laydate','authtree'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
@@ -779,8 +658,8 @@
             range: true
         });
         let customerUuid = $("#customerUuid").val();
-        let whereCondition = {searchEngine: '百度', terminalType: 'PC'};
-        if (customerUuid && customerUuid !== "") {
+        let whereCondition = {searchEngine:'百度',terminalType: 'PC'};
+        if(customerUuid !==""){
             whereCondition.customerUuid = customerUuid;
         }
         get_qzsetting(whereCondition);
@@ -804,16 +683,9 @@
                         } else {
                             ttse = item.searchEngineName;
                         }
-                        if (ttse === '百度PC'){
-                            terminalSearchEngine.append(
-                                '<option value="' + ttse + '" selected>' + ttse + '</option>');
-                        }else {
-                            terminalSearchEngine.append(
-                                '<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
-                        }
+                        terminalSearchEngine.append('<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
                     });
-                    terminalSearchEngine.val(
-                        ($('#searchEngine').val() + $('#terminalType').val()) === '' ? '百度PC' : ($('#searchEngine').val() + $('#terminalType').val()));
+                    terminalSearchEngine.val( ($('#searchEngine').val() + $('#terminalType').val()) === '' ? '百度PC' : ($('#searchEngine').val() + $('#terminalType').val()));
                     form.render("select");
                 }
             });
@@ -824,6 +696,7 @@
         //     url: '/internal/user/trees2',
         //     dataType: 'json',
         //     success: function(data){
+        //         console.log(data)
         //         var trees = authtree.listConvert(data,{
         //             primaryKey: 'id',
         //             startPid: 0,
@@ -848,12 +721,12 @@
             data: '/internal/user/trees2',
             type: 'get',
             placeholder: '用户名称',
-            click: function (d) {
+            click: function(d){
                 $("#organizationID").val("");
                 $("#userInfoID").val("");
                 if (d.current.level === 0 && d.current.id !== 0) {
                     $("#organizationID").val(d.current.id)
-                } else if (d.current.level === 1) {
+                }else if (d.current.level === 1) {
                     $("#userInfoID").val(d.current.id)
                 }
             },
@@ -861,10 +734,10 @@
             }
         });
 
-        window.checkDomain = function () {
-            var domain = $("#domain").val().replace(/\s*/g, "");
-            if (domain != null && domain !== '') {
-                if (domain.indexOf(".") === -1) {
+        window.checkDomain = function() {
+            var domain = $("#domain").val().replace(/\s*/g,"");
+            if(domain != null && domain !== ''){
+                if(domain.indexOf(".") === -1){
                     show_layer_msg("域名不符合规范", 5);
                 }
             }
@@ -878,8 +751,7 @@
                 $("#categoryTag").empty();
                 $("#categoryTag").append('<option value="">请选择分类标签</option>');
                 $.each(data, function (index, item) {
-                    $('#categoryTag').append(
-                        '<option value="' + item + '">' + item.trim() + '</option>');
+                    $('#categoryTag').append('<option value="' + item + '">' + item.trim() + '</option>');
                 });
                 form.render("select");
             }
@@ -890,147 +762,85 @@
             dataType: 'json',
             type: 'get',
             success: function (data) {
-                $("#customerUuid").empty();
-                $("#customerUuid").append('<option value="">请选择客户</option>');
+                $("#customerInfo").empty();
+                $("#customerInfo").append('<option value="">请选择客户</option>');
                 $.each(data, function (index, item) {
-                    $('#customerUuid').append(
-                        '<option value="' + item.uuid + '">' + item.contactPerson.trim()
-                        + '</option>');
+                    $('#customerInfo').append('<option value="' + item.uuid + '">' + item.contactPerson.trim() + '</option>');
                 });
                 form.render("select");
             }
         });
 
         form.on("submit(search)", function (data) {
-            data.field.domain.replace(/\s*/g, "");
-            data.field.customerUuid.replace(/\s*/g, "");
-            data.field.categoryTag.replace(/\s*/g, "");
+            data.field.domain.replace(/\s*/g,"");
+            data.field.customerInfo.replace(/\s*/g,"");
+            data.field.categoryTag.replace(/\s*/g,"");
 
-            if (data.field.createTimes != null || data.field.createTimes !== '') {
-                var str = data.field.createTimes.split(" - ");
-                data.field.createTime = str[0];
+            if(data.field.createTimes != null || data.field.createTimes != ''){
+                var str = data.field.createTimes.split(" - ")
+                data.field.createTime = str[0]
                 data.field.createTimePrefix = str[1]
             }
-            if (!data.field.createTimePrefix) {
-                data.field.createTimePrefix = '';
-            }
-            if (data.field.domain != null && data.field.domain !== '') {
-                if (data.field.domain.indexOf(".") === -1) {
+
+            if(data.field.domain != null && data.field.domain !== ''){
+                if(data.field.domain.indexOf(".") === -1){
                     show_layer_msg("域名不符合规范", 5);
                     return false;
                 }
             }
 
-            get_qzsetting(data.field);
+            get_qzsettting(data.field);
             return false;
         });
 
-        <@shiro.hasPermission name = "/internal/qzsetting/searchQZSettings">
-            function get_qzsetting(whereCondition) {
-                table.render({
-                    elem: '#qzSettingTable',
-                    method: 'post',
-                    url: '/internal/qzsetting/getQZSettings',
-                    limit: 25,
-                    limits: [10, 25, 50, 75, 100, 500, 1000],
-                    page: true,
-                    size: 'sm',
-                    id: 'qzSettingTable',
-                    toolbar: "#toolbarTpl",
-                    defaultToolbar: [],
-                    contentType: 'application/json',
-                    where: whereCondition,
-                    cols: [[
-                        {filed: 'uuid', type: 'checkbox', fixed: "left", width: '2%'},
-                        {filed: 'uuid', title: '记录', width: '98%', templet: '#item'}
-                    ]],
-                    height: 'full-112',
-                    loading: true,
-                    done: function (res, curr, count) {
-                        successTable(res);
-                        initSortRadio(whereCondition);
-                    }
-                });
-            }
-        </@shiro.hasPermission>
-
-        function successTable(res) {
-            let terminalType = $('#terminalType').val();
-            terminalType = terminalType === '' ? 'PC' : terminalType;
-            getTerminalSearchEngineMap();
-            get_operation_combine_list(terminalType);
-            let qz_setting_table = $("#qzSettingTable").parent().find(
-                ".layui-table-main").find("table");
-            $.each(res.data, function (idx, val) {
-                let td = qz_setting_table.find(
-                    "tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
-                    "td[data-field='1']");
-                let optimizeGroupName = td.find(
-                    "input[name='" + terminalType + "Group']").val();
-                let postData = {};
-                postData.uuid = val.uuid;
-                postData.terminalType = terminalType;
-                postData.optimizeGroupName = optimizeGroupName;
-                getQZKeywordRankInfo(postData, function (result) {
-                    td.find(".other-rank_2").find("#optimizationGroup span").prop(
-                        "title", optimizeGroupName);
-                    td.find(".other-rank_2").find("#optimizationGroup span a").text(
-                        optimizeGroupName);
-                    if (result.data != null) {
-                        initQZKeywordRankInfo(result.data, td);
-                    }
-                });
-            });
-        }
-
-        let radio = document.getElementsByName('sort');
-        function initSortRadio(condition){
-            if (condition.autoCrawlKeywordFlag && condition.autoCrawlKeywordFlag !== '') {
-                condition.autoCrawlKeywordFlag = condition.autoCrawlKeywordFlag === '1';
-            }
-            $.ajax({
-                url: '/internal/qzkeywordrank/searchCountNumOfQZKeywordRankInfoNew',
-                type: 'POST',
-                data: JSON.stringify(condition),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                success: function (res) {
-                    if (res.code === 200) {
-                        radio[1].title = "骤降(" + res.data.downNum + ")";
-                        radio[2].title = "无变化(" + res.data.unchangedNum + ")";
-                        radio[3].title = "暴涨(" + res.data.upNum + ")";
-                        radio[4].title = "下降(" + res.data.downDifferenceNum + ")";
-                        radio[5].title = "不变(" + res.data.unchangedDifferenceNum + ")";
-                        radio[6].title = "上升(" + res.data.upDifferenceNum + ")";
-                        radio[7].title = "达标(" + res.data.atLeastStandardNum + ")";
-                        radio[8].title = "未达标(" + res.data.neverStandardNum + ")";
-                        radio[9].title = "接近达标(" + res.data.closeStandardNum + ")";
-                        form.render();
-                        radio[1].nextElementSibling.title = "网站关键词(PC,Phone)一星期排名趋势涨幅<"
-                            + res.data.upperValue + ", 且下降至少" + res.data.upOneWeekDiff + "个词";
-                        radio[2].nextElementSibling.title = "网站关键词(PC,Phone)一星期排名趋势涨幅不变";
-                        radio[3].nextElementSibling.title = "网站关键词(PC,Phone)一星期排名趋势涨幅>"
-                            + res.data.upperValue + ", 且上涨至少" + res.data.upOneWeekDiff + "个词";
-                        radio[4].nextElementSibling.title = "网站关键词(PC,Phone)今天前10下降";
-                        radio[5].nextElementSibling.title = "网站关键词(PC,Phone)今天前10不变";
-                        radio[6].nextElementSibling.title = "网站关键词(PC,Phone)今天前10上升";
-                        radio[7].nextElementSibling.title = "标识最少有一条规则达标";
-                        radio[8].nextElementSibling.title = "标识一条规则都未达标";
-                        radio[9].nextElementSibling.title = "标识下条规则接近达标, 未完成度<"
-                            + res.data.differenceValue;
-                    } else {
-                        show_layer_msg(res.msg === null ? '未知错误' : res.msg, 5);
-                    }
-                },
-                error: function () {
-                    show_layer_msg("未知错误", 5);
+        <@shiro.hasPermission name="/internal/qzsetting/searchQZSettings">
+        function get_qzsetting(whereCondition) {
+            table.render({
+                elem: '#qzSettingTable',
+                method: 'post',
+                url: '/internal/qzsetting/getQZSettings',
+                limit: 25,
+                limits: [10, 25, 50, 75, 100, 500, 1000],
+                page: true,
+                size: 'sm',
+                id: 'qzSettingTable',
+                toolbar: "#toolbarTpl",
+                defaultToolbar: [],
+                contentType: 'application/json',
+                where: whereCondition,
+                cols: [[
+                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
+                    {filed: 'uuid', title: '记录', width: '1638', templet: '#item'}
+                ]],
+                height: 'full-100',
+                loading: true,
+                done: function (res, curr, count) {
+                    let terminalType = $('#terminalType').val();
+                    terminalType = terminalType === '' ? 'PC' : terminalType;
+                    getTerminalSearchEngineMap();
+                    get_operation_combine_list(terminalType);
+                    let qz_setting_table = $("#qzSettingTable").parent().find(".layui-table-main").find("table");
+                    $.each(res.data, function (idx, val) {
+                        let td = qz_setting_table.find("tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
+                            "td[data-field='1']");
+                        let optimizeGroupName = td.find(
+                            "input[name='" + terminalType + "Group']").val();
+                        let postData = {};
+                        postData.uuid = val.uuid;
+                        postData.terminalType = terminalType;
+                        postData.optimizeGroupName = optimizeGroupName;
+                        getQZKeywordRankInfo(postData, function (result) {
+                            td.find(".other-rank_2").find("#optimizationGroup span").prop("title", optimizeGroupName);
+                            td.find(".other-rank_2").find("#optimizationGroup span a").text(optimizeGroupName);
+                            if (result.data != null) {
+                                initQZKeywordRankInfo(result.data, td);
+                            }
+                        });
+                    });
                 }
             });
         }
-
-
+        </@shiro.hasPermission>
 
         function initQZKeywordRankInfo(data, td) {
             td.find("#fmtStandardDate a").text(
@@ -1080,30 +890,20 @@
             /*动态加载操作组合列表*/
             $.ajax({
                 url: '/internal/operationcombine/getOperationCombines/' + terminalType,
-                type: 'get',
+                type: 'post',
                 asyns: true,
                 dataType: 'json',
                 success: function (res) {
                     let operation_combine_select = $("#update_qz_operation_combine");
                     operation_combine_select.append("<option value='null'>置空</option>");
-                    $.each(res.data, function (i, v) {
-                        var option = $("<option value='" + v.uuid + "'>" + v.operationCombineName
-                            + "</option>");
+                    $.each(res.data, function(i ,v) {
+                        var option=$("<option value='"+v.uuid+"'>"+v.operationCombineName+"</option>");
                         operation_combine_select.append(option);
                     });
                     form.render("select");
                 }
             });
         }
-
-        form.on('radio(sort)', function (d) {
-            if (d === '-1') {
-                document.getElementById('checkStatus').value = '';
-            } else {
-                document.getElementById('checkStatus').value = d.value;
-            }
-            active['reload'].call(this);
-        });
 
         form.on('select(terminalSearchEngineFilter)', function (data) {
             let val = data.value;
@@ -1116,18 +916,13 @@
 
         var active = {
             reload: function () {
-                let condition = $.parseJSON(
-                    formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
-                console.log(condition);
                 table.reload('qzSettingTable', {
-                    where: condition,
+                    where: $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true))),
                     page: {
                         curr: 1 //从第一页开始
-                    }, done: function (res, curr, c) {
-                        successTable(res);
-                        initSortRadio(condition);
                     }
                 });
+                $("#searchContent").removeClass("layui-show")
             }
         };
 
@@ -1195,8 +990,8 @@
                     },
                     tooltip: {
                         trigger: 'axis',
-                        position: function (point, params, dom, rect, size) {
-                            return [point[0] + 20, '-15%'];
+                        position: function(point, params, dom, rect, size){
+                            return [point[0]+20,'-15%'];
                         }
                     },
                     grid: {
@@ -1387,8 +1182,8 @@
                     },
                     tooltip: {
                         trigger: 'axis',
-                        position: function (point, params, dom, rect, size) {
-                            return [point[0] + 20, '-15%'];
+                        position: function(point, params, dom, rect, size){
+                            return [point[0]+20,'-15%'];
                         }
                     },
                     grid: {
@@ -1587,8 +1382,8 @@
                 },
                 tooltip: {
                     trigger: 'axis',
-                    position: function (point, params, dom, rect, size) {
-                        return [point[0] + 20, '-15%'];
+                    position: function(point, params, dom, rect, size){
+                        return [point[0]+20,'-15%'];
                     }
                 },
                 grid: {
@@ -1737,8 +1532,8 @@
                 },
                 tooltip: {
                     trigger: 'axis',
-                    position: function (point, params, dom, rect, size) {
-                        return [point[0] + 20, '-15%'];
+                    position: function(point, params, dom, rect, size){
+                        return [point[0]+20,'-15%'];
                     }
                 },
                 grid: {
@@ -1910,10 +1705,8 @@
             keywordRecordCharts.setOption(option);
         }
 
-        function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames,
-            operationCombineName) {
-            div.parent().find(".other-rank .line1").find("#customerKeywordCount").text(
-                customerKeywordCount);
+        function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames, operationCombineName) {
+            div.parent().find(".other-rank .line1").find("#customerKeywordCount").text(customerKeywordCount);
             if (categoryTagNames.length > 0) {
                 var tagNameStr = "";
                 var span = $(div).parent().parent().parent().find(".header span.tagNames");
@@ -1922,8 +1715,7 @@
                 });
                 $(span).find("label.tagNameStr").html(
                     tagNameStr.substring(0, tagNameStr.length - 1));
-                $(span).find("label.tagNameStr").attr('title',
-                    tagNameStr.substring(0, tagNameStr.length - 1))
+                $(span).find("label.tagNameStr").attr('title',  tagNameStr.substring(0, tagNameStr.length - 1))
 
             }
 
@@ -1966,117 +1758,19 @@
                 case 'batchUpdateQZSettingUpdateStatus':
                     batchUpdateQZSettingUpdateStatus();
                     break;
-                case 'batchUpdateRenewalStatusToNormal':
-                    batchUpdateRenewalStatus(1);
-                    break;
                 case 'batchUpdateRenewalStatusToSuspend':
                     batchUpdateRenewalStatus(0);
                     break;
                 case 'batchUpdateRenewalStatusToSoldOut':
                     batchUpdateRenewalStatus(3);
                     break;
-                case 'batchUpdateRenewalStatusToOther':
-                    batchUpdateRenewalStatus(4);
-                    break;
                 default:
                     break;
             }
         });
 
-        let chargeRecordHtml = `<div style="padding: 10px;">
-                            <table border="0" width="100%">
-                                <tbody>
-                                <tr class="my-bg">
-                                    <td class="my-header-title" style="min-width: 120px">
-                                        <div class="my-label my-padding">
-                                            收费时间
-                                        </div>
-                                    </td>
-                                    <td class="my-header-title" style="min-width: 80px">
-                                        <div class="my-label my-padding">
-                                            终端类型
-                                        </div>
-                                    </td>
-                                    <td class="my-header-title" style="min-width: 80px">
-                                        <div class="my-label my-padding">
-                                            收费金额
-                                        </div>
-                                    </td>
-                                    <td class="my-header-title" style="min-width: 80px">
-                                        <div class="my-label my-padding">
-                                            收费人员
-                                        </div>
-                                    </td>
-                                    <td class="my-header-btn"  style="min-width: 240px">
-                                        <div
-                                            class="my-label my-padding">
-                                            创建时间
-                                        </div>
-                                    </td>
-                                </tr>`;
 
-        window.showChargeLog = function (uuid) {
-            $.ajax({
-                url: '/internal/qzchargelog/qzChargesLogsList/' + uuid,
-                type: 'GET',
-                dataType: 'json',
-                success: function (res) {
-                    if (res.code === 200) {
-                        let arr = res.data;
-                        let html = chargeRecordHtml;
-                        let date = new Date();
-                        for (let i = 0; i < arr.length; i++) {
-                            html += `<tr>
-                                    <td class="my-left">
-                                        <div class="my-label my-padding">`;
-                            html += new Date(arr[i].actualChargeDate).format('yyyy-MM-dd');
-                            html += `</div>
-                                    </td>
-                                    <td class="my-left">
-                                        <div class="my-label my-padding">`;
-                            html += arr[i].operationType;
-                            html += `</div>
-                                    </td>
-                                    <td class="my-left">
-                                        <div class="my-label my-padding">`;
-                            html += arr[i].actualAmount;
-                            html += `</div>
-                                    </td>
-                                    <td class="my-left">
-                                        <div class="my-label my-padding">`;
-                            html += arr[i].userName;
-                            html += `</div>
-                                    </td>
-                                    <td class="my-left my-bottom">
-                                        <div
-                                            class="my-label my-padding">`;
-                            html += new Date(arr[i].createTime).format('yyyy-MM-dd hh:mm:ss');
-                            html += `</div>
-                                    </td>
-                                </tr>`;
-                        }
-                        html += noteBookHtmlFooter;
-                        layer.open({
-                            type: 1,
-                            title: '收费记录',
-                            content: html,
-                            shadeClose: true,
-                            resize: false,
-                            area: '700px',
-                        });
-                    } else if (res.code === 300) {
-                        show_layer_msg('暂无收费记录数据', 5);
-                    } else {
-                        show_layer_msg(res.msg, 5);
-                    }
-                },
-                error: function () {
-                    show_layer_msg('未知错误，请稍后再试', 5);
-                }
-            });
-        };
-
-        let updFZTagsHtml = `<div style="width: 100%;margin-top: 10px;text-align: center">
+        let updFZTagsHtml = `                    <div style="width: 100%;margin-top: 10px;text-align: center">
                 <div class="layui-inline" style="width: 60px;line-height: 34px;text-align: center">新标签：</div>
                 <div class="layui-inline">
                     <div class="layui-input-inline" style="width: 300px">
@@ -2169,23 +1863,18 @@
                     window[layero.find("iframe")[0]["name"]].initForm(uuid);
                 }, function () {
                     if (sign) {
-                        // active['reload'].call(this);
+                        active['reload'].call(this);
                         sign = false;
                     }
                 })
         };
 
         // 收费
-        window.showChargeDialog = function (uuid, contactPearson, domain, renewalStatus) {
-            okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toQZSettingCharge", "60%",
-                "70%", function (layero) {
+        window.showChargeDialog = function (uuid, contactPearson, domain) {
+            okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toQZSettingCharge", "90%",
+                "90%", function (layero) {
                     window[layero.find("iframe")[0]["name"]].initForm(
-                        {
-                            uuid: uuid,
-                            qzSettingCustomer: contactPearson,
-                            qzSettingDomain: domain,
-                            renewalStatus: renewalStatus
-                        });
+                        {uuid: uuid, qzSettingCustomer: contactPearson, qzSettingDomain: domain});
                 }, function () {
                     if (sign) {
                         active['reload'].call(this);
@@ -2194,51 +1883,20 @@
                 })
         };
 
-        window.commitNoteBook = function (e) {
-            let this_ = e.parentElement.parentElement;
-            let td_l = this_.parentElement.children;
-            let d = {};
-            if (td_l.length > 2) {
-                this_ = this_.previousElementSibling.previousElementSibling.children[0].children;
-                d.uuid = this_[0].value;
-                d.content = this_[1].value;
-            } else {
-                d.content = this_.previousElementSibling.children[0].children[0].value;
-            }
-            d.customerUuid = document.getElementById('customerUuid').value;
-            d.terminalType = document.getElementById('terminalType').value;
-            $.ajax({
-                url: '/internal/notebook/saveUserNoteBook',
-                type: 'POST',
-                headers: {
-                    "Accept": 'application/json',
-                    "Content-Type": 'application/json'
-                },
-                data: JSON.stringify(d),
-                success: function (res) {
-                    if (res.code === 200) {
-                        refreshNotebook(d.customerUuid);
-                    } else {
-                        show_layer_msg(res.msg, 5);
-                    }
-                },
-                error: function () {
-                    show_layer_msg('未知错误，请稍后重试！！', 5);
-                }
-            });
-        };
+        function commitNoteBook(){
+
+        }
 
         let oneRowI = `<tr>
                             <td class="my-left" colspan="4">
-                                <div class="my-label" style="max-width: none">
+                                <div class="my-label">
                                      <input type="text" class="layui-input my-input"
-                                     placeholder="请在此输入你想要记录的内容"
-                                     style="height: 36px;padding-right: 10px">
+                                     placeholder="请在此输入你想要记录的内容" style="height: 36px">
                                 </div>
                             </td>
                             <td class="my-left my-bottom">
                                 <div class="my-label my-btn">
-                                <button type="button" onclick="commitNoteBook(this)"
+                                <button type="button" onclick="commitNoteBook()"
                                     class="layui-btn layui-btn-xs">
                                 保存
                                 </button>
@@ -2254,93 +1912,48 @@
             }
         };
 
-        window.updNoteBook = function (e) {
-            let this_ = e.parentElement.parentElement.parentElement;
-            let td_l = this_.children;
-            let index = td_l[0].children[0].innerText;
-            let name = td_l[1].children[0].innerText;
-            let uuid = td_l[2].children[0].children[0].value;
-            let old = td_l[2].children[0].innerText;
-            let date = td_l[3].children[0].innerText;
-            let html = `<td class="my-left">
-                                    <div class="my-label my-padding">`;
-            html += index;
-            html += `</div>
-                                    </td>
-                                    <td class="my-left">
-                                    <div class="my-label my-padding">`;
-            html += name;
-            html += `</div>
-                                    </td>
-                                    <td class="my-left">
-                                    <div class="my-label">
-                                    <input type="hidden" value="`;
-            html += uuid;
-            html += `">
-                                    <input type="text" class="layui-input my-input"
-                                     placeholder="请在此输入" style="height: 36px; width:330px" value="`;
-            html += old;
-            html += `">
-                                    </div>
-                                    </td>
-                                    <td class="my-left">
-                                    <div class="my-label my-padding">`;
-            html += date;
-            html += `</div>
-                                </td>
-                                <td class="my-left my-bottom">
-                                    <div class="my-label my-btn">
-                                    <button type="button" onclick="commitNoteBook(this)"
-                                    class="layui-btn layui-btn-xs"> 保存
-                                    </button>
-                                    </div>
-                                    </td>`;
-            this_.innerHTML = html;
-        };
+        let oneRowU = `<tr>
+                        <td class="my-left">
+                            <div class="my-label my-padding">
+                            1
+                            </div>
+                            </td>
+                            <td class="my-left">
+                            <div class="my-label my-padding">
+                            sdfhjksadf
+                            </div>
+                            </td>
+                            <td class="my-left">
+                            <div class="my-label my-padding">
+                            撒地方很快就的身份卡萨丁撒地方很快就的身份卡萨丁撒地方很快就的身份卡萨丁
+                            </div>
+                            </td>
+                            <td class="my-left">
+                            <div class="my-label my-padding">
+                            2019-10-01 11:11:11
+                        </div>
+                        </td>
+                        <td class="my-left my-bottom">
+                            <div class="my-label my-btn">
+                            <button type="button" onclick=""
+                                class="layui-btn layui-btn-xs layui-btn-danger">
+                            修改
+                            </button>
+                            </div>
+                            </td>
+                            </tr>`;
 
-        window.refreshNotebook = function (uuid) {
-            noteAddRow = true;
-            if (!uuid) {
-                uuid = document.getElementById('customerUuid').value;
-            }
-            showData(uuid, function (noteBookHtml) {
-                let noteBookBody = document.getElementById('noteBookBody').parentElement;
-                noteBookBody.innerHTML = noteBookHtml;
-                document.getElementById('customerUuid').value = uuid;
-            });
-        };
-
-        // 运营记录 原记事本
+        // 记事本
         window.openNoteBookDialog = function (uuid) {
             noteAddRow = true;
-            showData(uuid, function (noteBookHtml) {
-                layer.open({
-                    type: 1,
-                    title: '运营记录',
-                    content: noteBookHtml,
-                    shadeClose: true,
-                    resize: false,
-                    area: '700px',
-                    offset: '180px',
-                    success: function () {
-                        document.getElementById('customerUuid').value = uuid;
-                    }
-                });
-            });
-        };
-
-        let noteBookHtmlFooter = `</tbody></table></div>`;
-
-        function showData(uuid, call) {
-            let noteBookHtml = `<div style="padding: 10px;" id="noteBookBody">
+            let noteBookHtml = `<div style="padding: 10px;">
                             <table border="0" width="100%">
                                 <tbody id="noteBookTbody">
                                 <tr class="my-bg">
                                     <td colspan="3" class="my-header-title">
-                                        <input type="hidden" id="customerUuid" value>
-                                        <div id="phoneTitle" style="max-width: none"
+                                        <div id="phoneTitle"
                                              class="my-label my-padding">
-                                            运 营 记 录
+                                            记事本NoteBook
                                         </div>
                                     </td>
                                     <td class="my-header-title">
@@ -2353,7 +1966,7 @@
                                     </td>
                                     <td class="my-header-btn">
                                         <div class="my-label">
-                                            <button onclick="refreshNotebook()" type="button" style="padding: 0 20px"
+                                            <button onclick="" type="button" style="padding: 0 20px"
                                                     class="layui-btn layui-btn-xs">
                                                 刷新
                                             </button>
@@ -2388,6 +2001,7 @@
                                         </div>
                                     </td>
                                 </tr>`;
+            let noteBookHtmlFooter = `</tbody></table></div>`;
             let d = {};
             d.customerUuid = uuid;
             d.searchAll = 0;
@@ -2401,6 +2015,7 @@
                 },
                 data: JSON.stringify(d),
                 success: function (res) {
+                    console.log(res);
                     if (res.code === 200) {
                         if (res.data.length === 0) {
                             noteBookHtml += oneRowI;
@@ -2422,6 +2037,8 @@
                                     <div class="my-label my-padding">
                                     <input type="hidden" value="`;
                                 noteBookHtml += res.data[i].uuid;
+                                noteBookHtml += `"><input type="hidden" value="`;
+                                noteBookHtml += res.data[i].customerUuid;
                                 noteBookHtml += `">`;
                                 noteBookHtml += res.data[i].content;
                                 noteBookHtml += `</div>
@@ -2434,7 +2051,7 @@
                                 </td>
                                 <td class="my-left my-bottom">
                                     <div class="my-label my-btn">
-                                    <button type="button" onclick="updNoteBook(this)"
+                                    <button type="button" onclick=""
                                         class="layui-btn layui-btn-xs layui-btn-danger">
                                     修改
                                     </button>
@@ -2444,7 +2061,15 @@
                             }
                         }
                         noteBookHtml += noteBookHtmlFooter;
-                        call(noteBookHtml);
+                        layer.open({
+                            type: 1,
+                            title: '记事本',
+                            content: noteBookHtml,
+                            shadeClose: true,
+                            resize: false,
+                            area: '700px',
+                            offset: '180px'
+                        });
                     } else {
                         show_layer_msg(res.msg, 5);
                     }
@@ -2453,7 +2078,7 @@
                     show_layer_msg('未知错误，请稍后重试！！', 5);
                 }
             });
-        }
+        };
 
         window.showExcludeCustomerKeywordDialog = function (uuid, customerUuid, domain, pcGroup,
             phoneGroup) {
@@ -2464,7 +2089,7 @@
                 optimizeGroupName = pcGroup;
             }
             okLayer.open("其他 / 前往全站设置信息 / 排除关键字", "/internal/qzsetting/toExcludeCustomerKeyword",
-                "60%", "70%", function (layero) {
+                "60%", "90%", function (layero) {
                     window[layero.find("iframe")[0]["name"]].initForm({
                         qzSettingUuid: uuid,
                         customerUuid: customerUuid,
@@ -2488,7 +2113,7 @@
             layer.confirm("确定要修改所选站点优化组关联的操作组合吗？", {icon: 3, title: '修改操作组合'}, function (index) {
                 let groupNameArr = [];
                 $.each(checkStatus.data, function (i, v) {
-                    if (v.pcGroup !== null) {
+                if (v.pcGroup !== null) {
                         groupNameArr.push(v.pcGroup);
                     } else {
                         groupNameArr.push(v.phoneGroup);
@@ -2496,8 +2121,7 @@
                 });
 
                 let postData = {};
-                postData.operationCombineUuid = (data.value === 'null' || data.value === '') ? null
-                    : data.value;
+                postData.operationCombineUuid = (data.value === 'null' || data.value === '') ? null : data.value;
                 postData.groupNames = groupNameArr;
                 $.ajax({
                     url: '/internal/group/updateGroupOperationCombineUuid',
@@ -2536,8 +2160,7 @@
             });
         }
 
-        window.showAddKeywordDialog = function (uuid, customerUuid, domain, bearPawNumber,
-            searchEngine, type, pcGroup, phoneGroup) {
+        window.showAddKeywordDialog = function(uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
             let terminalType = $("#terminalSearchEngine").val();
             terminalType = terminalType.substr(terminalType.indexOf("P"), terminalType.length);
             let optimizeGroupName = phoneGroup;
@@ -2545,7 +2168,7 @@
                 optimizeGroupName = pcGroup;
             }
             okLayer.open("其他 / 全站设置信息 / 添加关键字", "/internal/qzsetting/toAddCustomerKeyword",
-                "60%", "70%", function (layero) {
+                "60%", "90%", function (layero) {
                     window[layero.find("iframe")[0]["name"]].initForm({
                         qzSettingUuid: uuid,
                         customerUuid: customerUuid,
@@ -2685,15 +2308,11 @@
                 show_layer_msg('请选择要操作的站点', 5);
                 return;
             }
-            let msg = '未知错误';
-            if(renewalStatus === 1){
-                msg = "确认要续费所选整站吗?";
-            } else if (renewalStatus === 0) {
+            let msg = 0;
+            if(renewalStatus === 0) {
                 msg = "确认选中的整站要暂停续费吗?";
             } else if (renewalStatus === 3) {
                 msg = "确认要下架所选整站吗?";
-            }else if (renewalStatus === 4) {
-                msg = "确定要将选中整站续费状态更为其他吗?";
             }
             layer.confirm(msg, {icon: 3, title: '修改所选'}, function (index) {
                 let uuids = "";
@@ -2731,57 +2350,43 @@
 
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
-    <@shiro.hasPermission name="/internal/group/updateGroupOperationCombineUuid">
+
+    <div class="layui-input-inline" style="width: 120px; height: 30px">
+        <select name="terminalSearchEngine" id="terminalSearchEngine"
+                lay-filter="terminalSearchEngineFilter"></select>
+    </div>
+
     <div class="layui-input-inline" style="width: 200px; height: 30px">
         <select id="update_qz_operation_combine" lay-filter="operationCombineFilter" lay-search>
             <option value="">修改所选站点操作组合</option>
         </select>
     </div>
+
+    <div class="layui-btn-group">
+    <@shiro.hasPermission name="/internal/qzsetting/save">
+    <button class="layui-btn layui-btn-sm" id="add_qz" lay-event="addQz">
+            <i class="layui-icon">&#xe61f;</i>添加
+    </button>
+
+    <button class="layui-btn layui-btn-sm" lay-event="updFZTags">
+        修改分组标签
+    </button>
     </@shiro.hasPermission>
-    <div class="layui-btn-group">
-        <@shiro.hasPermission name="/internal/qzsetting/save">
-        <button class="layui-btn layui-btn-sm" style="background: #c69000"
-                lay-event="addQz">
-            <i style="position: relative;top: -1px" class="layui-icon">&#xe654;</i>添加整站
+    <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
+    	<button class="layui-btn layui-btn-sm layui-btn-danger" id="batchDeleteQZSetting" lay-event="batchDeleteQZSetting">
+            <i class="layui-icon layui-icon-delete"></i>删除所选
         </button>
-        <button class="layui-btn layui-btn-sm" style="background: #c25a00"
-                lay-event="updFZTags">
-            <i class="layui-icon">&#xe642;</i>修改标签
+    </@shiro.hasPermission>
+        <button class="layui-btn layui-btn-sm" id="batchUpdateQZSettingUpdateStatus" lay-event="batchUpdateQZSettingUpdateStatus">
+            <i class="layui-icon"></i>马上更新
         </button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
-        <button class="layui-btn layui-btn-sm" style="background: #a70020"
-                lay-event="batchDeleteQZSetting">
-            <i style="position: relative;top: -1px" class="layui-icon">&#xe640;</i>删除所选
+        <button class="layui-btn layui-btn-sm layui-btn-warm" id="batchUpdateRenewalStatusToSuspend" lay-event="batchUpdateRenewalStatusToSuspend">
+            <i class="layui-icon"></i>暂停续费
         </button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/qzsetting/updateImmediately">
-        <button class="layui-btn layui-btn-sm" style="background: #6d00a3"
-                lay-event="batchUpdateQZSettingUpdateStatus">
-            <i style="font-size: 15px !important;" class="layui-icon">&#xe666;</i>马上更新
-        </button>
-        </@shiro.hasPermission>
-    </div>
-    <@shiro.hasPermission name="/internal/qzsetting/updateRenewalStatus">
-    <div class="layui-btn-group">
-        <button class="layui-btn layui-btn-sm" style="background: #04bb00"
-                lay-event="batchUpdateRenewalStatusToNormal">
-            <i class="layui-icon">&#x1005;</i>正常续费
-        </button>
-        <button class="layui-btn layui-btn-sm" style="background: #00b3a7"
-                lay-event="batchUpdateRenewalStatusToSuspend">
-            <i class="layui-icon">&#xe651;</i>暂停续费
-        </button>
-        <button class="layui-btn layui-btn-sm" style="background: #0066cc"
-                lay-event="batchUpdateRenewalStatusToSoldOut">
-            <i class="layui-icon">&#xe601;</i>下架整站
-        </button>
-        <button class="layui-btn layui-btn-sm" style="background: #5c9fd7"
-                lay-event="batchUpdateRenewalStatusToOther">
-            <i class="layui-icon">&#xe63f;</i>更为其他
+        <button class="layui-btn layui-btn-sm layui-btn-danger" id="batchUpdateRenewalStatusToSoldOut" lay-event="batchUpdateRenewalStatusToSoldOut">
+            <i class="layui-icon"></i>下架整站
         </button>
     </div>
-    </@shiro.hasPermission>
 </script>
 
 <script type="text/html" id="item">
@@ -2793,11 +2398,10 @@
             <span class="contactPerson-name" title="{{d.contactPerson}}"><a href="javascript:;">{{d.contactPerson}}</a></span>
             <span class="domain" title="{{d.domain}}"><a href="javascript:;">{{d.domain}}</a></span>
             <span class="organization-name" title="{{d.organizationName}}"><a href="javascript:;">{{d.organizationName}}</a></span>
-            <span class="to-aizhan"><a href="https://www.aizhan.com/cha/{{d.domain}}"
-                                       target="_blank"
-                                       title="查看爱站">爱站</a></span>
+            <span class="to-aizhan"><a href="https://www.aizhan.com/cha/{{d.domain}}" target="_blank"
+                     title="查看爱站">爱站</a></span>
             <span class="to-5118"><a href="https://www.5118.com/seo/{{d.domain}}" target="_blank"
-                                     title="查看5118">5118</a></span>
+                     title="查看5118">5118</a></span>
             <span>
                 自动采词:
                 <a href="javascript:;">
@@ -2820,19 +2424,18 @@
                     {{# } }}
                 </a>
             </span>
-<!--            TODO 采集状态去掉 上线删除改代码-->
-<!--            <span>-->
-<!--                采集状态:-->
-<!--                <a href="javascript:;">-->
-<!--                    {{#  if(d.status === 1) { }}-->
-<!--                        激活-->
-<!--                    {{#  }else if(d.status === 0) { }}-->
-<!--                        新增-->
-<!--                    {{# }else{ }}-->
-<!--                        暂停-->
-<!--                    {{# } }}-->
-<!--                </a>-->
-<!--            </span>-->
+            <span>
+                采集状态:
+                <a href="javascript:;">
+                    {{#  if(d.status === 1) { }}
+                        激活
+                    {{#  }else if(d.status === 0) { }}
+                        新增
+                    {{# }else{ }}
+                        暂停
+                    {{# } }}
+                </a>
+            </span>
             <span>
                 达标时间:
                 <a href="javascript:;">{{layui.util.toDateString(d.standardTime,'yyyy-MM-dd')}}</a>
@@ -2842,64 +2445,63 @@
                 <a href="javascript:;">{{layui.util.toDateString(d.createTime,'yyyy-MM-dd')}}</a>
             </span>
         </div>
-        <!--    标签    -->
+        <!--    分组标签    -->
         <div class="layui-col-md1">
             <span class="tagNames"
-                  ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>标签:</label>&nbsp;&nbsp;<label
-                class="tagNameStr" title="">暂无</label></span>
+                  ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>分组标签:</label>&nbsp;&nbsp;<label
+                    class="tagNameStr" title="">暂无</label></span>
         </div>
         <!--     操作栏   -->
         <div class="layui-col-md4">
             <div class="handle">
                 <span>
                     <a class="blue"
-                       href="javascript:showExcludeCustomerKeywordDialog(
-                       '{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}',
-                       '{{d.pcGroup}}', '{{d.phoneGroup}}')">排除关键字</a>
+                      href="javascript:showExcludeCustomerKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">排除关键字</a>
                 </span>
+
                 <@shiro.hasPermission name="/internal/qzsetting/save">
                 <span>
                     <a class="blue"
-                       href="javascript:showAddKeywordDialog('{{d.uuid}}',
-                       '{{d.customerUuid}}','{{d.domain.trim()}}','{{d.bearPawNumber}}',
-                       '{{d.searchEngine}}', '{{d.type}}', '{{d.pcGroup}}',
-                       '{{d.phoneGroup}}')">添加关键字</a>
+                      href="javascript:showAddKeywordDialog('{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}','{{d.bearPawNumber}}','{{d.searchEngine}}', '{{d.type}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">添加词</a>
                 </span>
                 </@shiro.hasPermission>
-                <!--<@shiro.hasPermission name="/internal/qzsetting/save">-->
-                <span>
-                    <a class="blue" href="javascript:openMessageBox('全站设置','{{d.customerUuid}}',
-                           '{{d.contactPerson}}')">用户留言</a>
-                </span>
-                <!--</@shiro.hasPermission>-->
-                <@shiro.hasPermission name="/internal/usernotebook/searchUserNoteBooks">
+
+                <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
                 <span>
                     <a class="blue"
-                       href="javascript:openNoteBookDialog('{{d.customerUuid}}')">运营记录</a>
+                      href="javascript:openMessageBox('全站设置','{{d.customerUuid}}','{{d.contactPerson}}')">用户留言</a>
                 </span>
-                </@shiro.hasPermission>
-                <@shiro.hasPermission name="/internal/qzchargelog/save">
+                <!--                </@shiro.hasPermission>-->
+
                 <span>
                     <a class="blue"
-                      href="javascript:showChargeDialog('{{d.uuid}}','{{d.contactPerson}}',
-                      '{{d.domain.trim()}}','{{d.renewalStatus}}')">收费</a>
+                      href="javascript:openNoteBookDialog('{{d.customerUuid}}')">记事本</a>
                 </span>
-                </@shiro.hasPermission>
-                <@shiro.hasPermission name="/internal/qzchargelog/chargesList">
+
+                <!--                <@shiro.hasPermission name="/internal/qzchargelog/save">-->
                 <span>
-                    <a class="blue" href="javascript:showChargeLog('{{d.uuid}}')">收费记录</a>
+                    <a class="blue"
+                      href="javascript:showChargeDialog('{{d.uuid}}','{{d.contactPerson}}','{{d.domain.trim()}}',this)">收费</a>
                 </span>
-                </@shiro.hasPermission>
-                <@shiro.hasPermission name="/internal/qzsetting/save">
+                <!--                </@shiro.hasPermission>-->
+
+                <!--                <@shiro.hasPermission name="/internal/qzsetting/save">-->
                 <span>
                     <a class="blue" href="javascript:" onclick="showSettingDialog('{{d.uuid}}')">修改</a>
                 </span>
-                </@shiro.hasPermission>
+                <!--                </@shiro.hasPermission>-->
+
                 <@shiro.hasPermission name="/internal/qzsetting/delete">
                 <span>
                     <a class="blue" href="javascript:delQZSetting('{{d.uuid}}')">删除</a>
                 </span>
                 </@shiro.hasPermission>
+
+                <!--                <@shiro.hasPermission name="/internal/qzchargelog/chargesList">-->
+                <span>
+                    <a class="blue" href="javascript:showChargeLog('{{d.uuid}}',this)">收费记录</a>
+                </span>
+                <!--                </@shiro.hasPermission>-->
             </div>
         </div>
     </div>
@@ -2925,7 +2527,7 @@
                         <a href="javascript:;" qzsettinguuid="{{d.uuid}}">
                         {{#  if(d.organizationName !== '优化部') { }}
                             <font
-                                style="background-color: palevioletred;font-size: 14px;">￥ 0</font>
+                                    style="background-color: palevioletred;font-size: 14px;">￥ 0</font>
                         {{#  } }}
                         </a>
                     </span>
@@ -2941,7 +2543,7 @@
                 <div class="layui-col-md12">
                     <span>
                           <a target="_blank" id="customerKeywordCount"
-                             href="/internal/customerKeyword/searchCustomerKeywords/{{d.customerUuid}}">0</a>
+                             href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.LAY_TABLE_INDEX }}');">0</a>
                      </span>
                 </div>
                 <div class="layui-col-md12">
@@ -2953,7 +2555,7 @@
                     <span>
                         <a href="javascript:;">
                             {{#  if(d.renewalStatus === 1) { }}
-                                <span style="color: green;">续费中</span>
+                                <span style="color: green;">续费</span>
                             {{# }else if(d.renewalStatus === 0) { }}
                                 <span style="color: palevioletred;">暂停续费</span>
                             {{# }else if(d.renewalStatus === 2) { }}
@@ -2961,7 +2563,9 @@
                             {{# }else if(d.renewalStatus === 3) { }}
                                 <span style="color: red;">下架</span>
                             {{# }else if(d.renewalStatus === 4) { }}
-                                <span style="color: mediumseagreen;">其他</span>
+                                <span style="color: mediumseagreen;">观测</span>
+                            {{# }else if(d.renewalStatus === 5) { }}
+                                <span style="color: mediumseagreen;">seo</span>
                             {{# } }}
                         </a>
                     </span>

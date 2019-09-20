@@ -12,6 +12,8 @@ import com.keymanager.ckadmin.entity.QZCategoryTag;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.vo.ExternalQZSettingVO;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
+import com.keymanager.ckadmin.vo.QZSettingCountVO;
+
 import java.util.List;
 import java.util.Map;
 
@@ -70,4 +72,6 @@ public interface QZSettingService extends IService<QZSetting> {
     void updateCrawlerStatus(List<Long> uuids);
 
     void updateQzSetting(QZSetting qzSetting);
+
+    QZSettingCountVO getQZSettingsCountByCustomerUuid( Long customerUuid);
 }

@@ -1,0 +1,101 @@
+.layui-input-inline input{
+    height: 30px;
+}
+
+.layui-form-pane .layui-form-label {
+    width: 116px;
+    padding: 8px 15px;
+    height: 30px;
+    line-height: 13px;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 2px 0 0 2px;
+    text-align: center;
+    background-color: #FBFBFB;
+    overflow: hidden;
+    box-sizing: border-box
+}
+
+
+
+.layui-colla-content {
+    display: none;
+    padding: 5px 15px;
+    line-height: 22px;
+    color: #666;
+}
+
+.layui-colla-content .layui-btn {
+    display: inline-block;
+    height: 30px;
+    line-height: 13px;
+    padding: 0 18px;
+    background-color: #009688;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.layui-table-tool {
+    position: relative;
+    z-index: 890;
+    width: 100%;
+    min-height: 30px;
+    line-height: 12px;
+    padding: 0 5px;
+    border-width: 0 0 1px;
+}
+
+
+.layui-table-cell {
+    height: auto;
+    overflow: visible;
+    text-overflow: inherit;
+    white-space: normal;
+    padding: 0 !important;
+}
+
+.layui-table-view .layui-table-body .layui-table td,
+.layui-table-view .layui-table-body .layui-table th {
+    padding: 0px 0px;
+    border-top: none;
+    border-left: none;
+}
+
+.layui-table-view .layui-table-header .layui-table td,
+.layui-table-view .layui-table-header .layui-table th {
+    text-align: center;
+}
+
+.layui-col-md5, .layui-col-md7{
+    border-right: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+    padding: 5px;
+    /*text-indent: 10px;*/
+}
+
+.layui-laypage{
+    position:fixed;
+    right:20px;
+}
+
+.reamrk{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+.layui-table-body tr{
+    border-bottom: 1px solid black;
+}
+
+.op-btn-cell{
+    text-align: center;
+
+    font-size: 13px;
+    margin-top: 7px;
+}

@@ -13,6 +13,7 @@ public class CustomerCriteria extends BaseCriteria {
     private String contactPerson;
     private String type;
     private String qq;
+    private String wechat;
     private String telphone;
     private String loginName;
     private String remark;
@@ -92,18 +93,11 @@ public class CustomerCriteria extends BaseCriteria {
         this.terminalType = terminalType;
     }
 
-    @Override
-    public String toString() {
-        return "CustomerCriteria{" +
-            "contactPerson='" + contactPerson + '\'' +
-            ", type='" + type + '\'' +
-            ", qq='" + qq + '\'' +
-            ", telphone='" + telphone + '\'' +
-            ", loginName='" + loginName + '\'' +
-            ", remark='" + remark + '\'' +
-            ", entryType='" + entryType + '\'' +
-            ", status=" + status +
-            ", terminalType='" + terminalType + '\'' +
-            '}';
+    public String getWechat() {
+        return wechat;
+    }
+
+    public void setWechat(String wechat) {
+        this.wechat = wechat;
     }
 }

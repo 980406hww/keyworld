@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.List;
 
 @TableName(value = "t_customer")
 public class Customer extends BaseEntity {
@@ -30,6 +31,9 @@ public class Customer extends BaseEntity {
     @TableField(value = "fQQ")
     private String qq;
 
+    @TableField(value = "fWechat")
+    private String wechat;
+
     @TableField(value = "fEmail")
     private String email;
 
@@ -50,7 +54,7 @@ public class Customer extends BaseEntity {
     private String remark;
 
     @TableField(value = "fDailyReportIdentify")
-    private boolean dailyReportIdentify;
+    private int dailyReportIdentify;
 
 //    @TableField(value = "fActiveHour")
 //    private String activeHour;
@@ -58,8 +62,8 @@ public class Customer extends BaseEntity {
 //    @TableField(value = "fInActiveHour")
 //    private String inActiveHour;
 
-//    @TableField(value = "fType")
-//    private String type;
+    @TableField(value = "fType")
+    private String type;
 
     @TableField(exist = false)
     private int keywordCount;
@@ -72,6 +76,9 @@ public class Customer extends BaseEntity {
 
     @TableField(value = "fUpdateInterval")
     private String updateInterval;
+
+    @TableField(exist = false)
+    private List<String> customerBusinessList;
 
     public String getLoginName() {
         return loginName;
@@ -119,6 +126,14 @@ public class Customer extends BaseEntity {
 
     public void setQq(String qq) {
         this.qq = qq;
+    }
+
+    public String getWechat() {
+        return wechat;
+    }
+
+    public void setWechat(String wechat) {
+        this.wechat = wechat;
     }
 
     public String getEmail() {
@@ -169,13 +184,13 @@ public class Customer extends BaseEntity {
         this.remark = remark;
     }
 
-//    public String getType() {
-//        return type;
-//    }
-//
-//    public void setType(String type) {
-//        this.type = type;
-//    }
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public int getKeywordCount() {
         return keywordCount;
@@ -225,11 +240,19 @@ public class Customer extends BaseEntity {
         this.updateInterval = updateInterval;
     }
 
-    public boolean getDailyReportIdentify() {
+    public int getDailyReportIdentify() {
         return dailyReportIdentify;
     }
 
-    public void setDailyReportIdentify(boolean dailyReportIdentify) {
+    public void setDailyReportIdentify(int dailyReportIdentify) {
         this.dailyReportIdentify = dailyReportIdentify;
+    }
+
+    public List<String> getCustomerBusinessList() {
+        return customerBusinessList;
+    }
+
+    public void setCustomerBusinessList(List<String> customerBusinessList) {
+        this.customerBusinessList = customerBusinessList;
     }
 }

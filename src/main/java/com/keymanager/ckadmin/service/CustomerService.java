@@ -24,11 +24,11 @@ public interface CustomerService extends IService<Customer> {
 
     void deleteCustomer(long uuid);
 
-    void deleteAll(List<Integer> uuids);
+    void deleteAll(List<String> uuids);
 
     void updateCustomerDailyReportIdentify(List<Integer> uuids);
 
-    void changeCustomerDailyReportIdentify(long uuid, boolean identify);
+    void changeCustomerDailyReportIdentify(long uuid, int identify);
 
     Customer getCustomerWithKeywordCount(String terminalType, String entryType, long customerUuid,
         String loginName);

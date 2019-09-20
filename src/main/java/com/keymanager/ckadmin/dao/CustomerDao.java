@@ -28,4 +28,6 @@ public interface CustomerDao extends BaseMapper<Customer> {
 
     List<Customer> getActiveCustomerSimpleInfo(
         @Param("customerCriteria") CustomerCriteria customerCriteria);
+
+    Long lastInsertID();
 }
