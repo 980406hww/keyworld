@@ -7,6 +7,7 @@ import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.vo.*;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
+import java.util.Collection;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -265,4 +266,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateCaptureIndexQueryTimeByKeywords(@Param("customerKeywords") List<ExternalCustomerKeywordVO> customerKeywords);
 
     void batchUpdateIndexAndOptimizePlanCount(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
+
+    void batchUpdateOptimizedCountFromCache(@Param("updateOptimizedCountVOs") Collection<UpdateOptimizedCountSimpleVO> updateOptimizedCountVOs);
 }

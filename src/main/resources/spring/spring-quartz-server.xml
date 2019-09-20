@@ -11,6 +11,7 @@
 				<ref bean="cronTriggerCacheCrawlRankCustomerQZKeyword" />
 				<ref bean="cronTriggerCacheCrawlRankCustomerPTKeyword" />
 				<ref bean="cronTriggerCacheCheckingEnteredCustomerKeyword" />
+				<ref bean="cronTriggerUpdateOptimizedCount" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -71,5 +72,16 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
+	<!--缓存更新结果信息到队列中-->
+	<bean id="cronTriggerUpdateOptimizedCount" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerUpdateOptimizedCountSchedule"/>
+		<property name="cronExpression" value="0/2 * * * * ?" />
+	</bean>
+
+	<bean id="cronTriggerUpdateOptimizedCountSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="updateOptimizedCountSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
 
 </beans>

@@ -19,6 +19,7 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.ibatis.annotations.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,6 +114,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     @Autowired
     private CustomerExcludeKeywordService customerExcludeKeywordService;
 
+    private final static LinkedBlockingQueue updateOptimizedResultQueue = new LinkedBlockingQueue();
+
     private final static Map<String, LinkedBlockingQueue> machineGroupQueueMap = new HashMap<String, LinkedBlockingQueue>();
 
     private final static ArrayBlockingQueue customerKeywordCrawlQZRankQueue = new ArrayBlockingQueue(30000);
@@ -120,6 +123,57 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     private final static Map<String, ArrayBlockingQueue> customerKeywordCrawlPTRankQueueMap = new HashMap<String, ArrayBlockingQueue>();
 
     private final static ArrayBlockingQueue checkingEnteredKeywordQueue = new ArrayBlockingQueue<>(5000);
+
+    public void cacheUpdateOptimizedCountResult(UpdateOptimizedCountVO updateOptimizedCountVO){
+        updateOptimizedResultQueue.offer(updateOptimizedCountVO);
+    }
+
+    public void updateOptimizedCount(){
+        if(updateOptimizedResultQueue.size() > 1000) {
+            int times = 0;
+            do {
+                Map<String, UpdateOptimizedCountVO> updateOptimizedCountVOMap = new HashMap<String, UpdateOptimizedCountVO>();
+                Map<Long, UpdateOptimizedCountSimpleVO> updateOptimizedCountSimpleVOMap = new HashMap<Long, UpdateOptimizedCountSimpleVO>();
+                for(int i = 0; i < 1000; i++) {
+                    Object obj = updateOptimizedResultQueue.poll();
+                    if (obj != null) {
+                        UpdateOptimizedCountVO updateOptimizedCountVO = (UpdateOptimizedCountVO) obj;
+                        UpdateOptimizedCountVO tmpUpdateOptimizedCountVO = updateOptimizedCountVOMap.get(updateOptimizedCountVO.getClientID());
+
+                        updateOptimizedCountVOMap.put(updateOptimizedCountVO.getClientID(), updateOptimizedCountVO);
+                        if(tmpUpdateOptimizedCountVO == null){
+                            tmpUpdateOptimizedCountVO = updateOptimizedCountVO;
+                        }
+                        updateOptimizedCountVO.setTotalCount(tmpUpdateOptimizedCountVO.getTotalCount() + 1);
+                        updateOptimizedCountVO.setTotalSucceedCount(tmpUpdateOptimizedCountVO.getTotalSucceedCount() + updateOptimizedCountVO.getCount());
+                        if(updateOptimizedCountVO.getCount() > 0){
+                            updateOptimizedCountVO.setLastContinueFailedCount(0);
+                        }else{
+                            updateOptimizedCountVO.setLastContinueFailedCount(tmpUpdateOptimizedCountVO.getLastContinueFailedCount() + 1);
+                        }
+
+                        UpdateOptimizedCountSimpleVO tmpUpdateOptimizedSimpleCountVO = updateOptimizedCountSimpleVOMap.get(updateOptimizedCountVO.getCustomerKeywordUuid());
+
+                        if(tmpUpdateOptimizedSimpleCountVO == null) {
+                            tmpUpdateOptimizedSimpleCountVO = new UpdateOptimizedCountSimpleVO();
+                            tmpUpdateOptimizedSimpleCountVO.setCustomerKeywordUuid(updateOptimizedCountVO.getCustomerKeywordUuid());
+                            updateOptimizedCountSimpleVOMap.put(updateOptimizedCountVO.getCustomerKeywordUuid(), tmpUpdateOptimizedSimpleCountVO);
+                        }
+                        tmpUpdateOptimizedSimpleCountVO.setTotalCount(tmpUpdateOptimizedCountVO.getTotalCount() + 1);
+                        if(updateOptimizedCountVO.getCount() > 0){
+                            tmpUpdateOptimizedSimpleCountVO.setLastContinueFailedCount(0);
+                            tmpUpdateOptimizedSimpleCountVO.setTotalSucceedCount(tmpUpdateOptimizedSimpleCountVO.getTotalSucceedCount() + 1);
+                        }else{
+                            tmpUpdateOptimizedSimpleCountVO.setLastContinueFailedCount(tmpUpdateOptimizedSimpleCountVO.getLastContinueFailedCount() + 1);
+                        }
+                    }
+                }
+                customerKeywordDao.batchUpdateOptimizedCountFromCache(updateOptimizedCountSimpleVOMap.values());
+                machineInfoService.updateOptimizationResultFromCache(updateOptimizedCountVOMap.values());
+                times++;
+            } while (times < 20 && updateOptimizedResultQueue.size() > 1000);
+        }
+    }
 
     public void cacheCustomerKeywords() {
         List<String> machineGroups = customerKeywordDao.getMachineGroups();
@@ -1450,9 +1504,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public void updateOptimizationResult(String terminalType, Long customerKeywordUuid, int count, String ip, String city, String clientID, String status, String freeSpace, String version, String runningProgramType,int cpuCount,int memory) {
+    public void updateOptimizationResult(Long customerKeywordUuid, int count, String ip, String city, String clientID, String status, String freeSpace, String version, String runningProgramType,int cpuCount,int memory) {
         customerKeywordDao.updateOptimizationResult(customerKeywordUuid, count);
-        machineInfoService.logMachineInfoTime(terminalType, clientID, status, freeSpace, version, city, count, runningProgramType,cpuCount,memory);
+        machineInfoService.logMachineInfoTime(clientID, status, freeSpace, version, city, count, runningProgramType,cpuCount,memory);
 //        customerKeywordIPService.addCustomerKeywordIP(customerKeywordUuid, city, ip);
     }
 
@@ -1970,6 +2024,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         for (Map.Entry<String, LinkedBlockingQueue> entry : machineGroupQueueMap.entrySet()) {
             machineGroupQueueVOS.add(new machineGroupQueueVO(entry.getKey(), entry.getValue().size()));
         }
+
+        machineGroupQueueVOS.add(new machineGroupQueueVO("Update", updateOptimizedResultQueue.size()));
         return machineGroupQueueVOS;
     }
 
