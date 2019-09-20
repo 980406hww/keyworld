@@ -10,6 +10,7 @@ import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord
 import com.keymanager.monitoring.entity.MachineGroupWorkInfo;
 import com.keymanager.monitoring.entity.MachineInfo;
 import com.keymanager.monitoring.vo.*;
+import java.util.Collection;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -98,4 +99,6 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
     List<MachineInfoMachineGroupSummaryVO> searchMachineInfoMachineGroupSummaryVO(@Param("machineGroup") String machineGroup, @Param("terminalType") String terminalType);
 
     void updateMachine(@Param("clientID")String clientID, @Param("city")String city, @Param("version")String version,@Param("freeSpace") String freeSpace,@Param("runningProgramType") String runningProgramType,@Param("cpuCount") int cpuCount,@Param("memory") int memory);
+
+    void updateOptimizationResultFromCache(@Param("updateOptimizedCountVOs") Collection<UpdateOptimizedCountVO> updateOptimizedCountVOs);
 }

@@ -40,6 +40,10 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
     @Autowired
     private ClientStatusRestartLogService clientStatusRestartLogService;
 
+    public void updateOptimizationResultFromCache(Collection updateOptimizedCountVOs){
+        machineInfoDao.updateOptimizationResultFromCache(updateOptimizedCountVOs);
+    }
+
     public void changeTerminalType(String clientID, String terminalType){
         MachineInfo machineInfo = machineInfoDao.selectById(clientID);
         if(machineInfo != null){
@@ -64,14 +68,9 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         machineInfoDao.updateMachineInfoVersion(clientID, version, hasKeyword);
     }
 
-    public void logMachineInfoTime(String terminalType, String clientID, String status, String freeSpace, String version, String
+    public void logMachineInfoTime(String clientID, String status, String freeSpace, String version, String
             city, int updateCount, String runningProgramType,int cpuCount,int memory){
-        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
-        if(machineInfo == null){
-            addSummaryMachineInfo(terminalType, clientID, freeSpace, version, city);
-        }else{
-            machineInfoDao.updateOptimizationResult(clientID, status, version, freeSpace, city, updateCount, runningProgramType,cpuCount,memory);
-        }
+        machineInfoDao.updateOptimizationResult(clientID, status, version, freeSpace, city, updateCount, runningProgramType,cpuCount,memory);
     }
 
     public Page<MachineInfo> searchMachineInfos(Page<MachineInfo> page, MachineInfoCriteria machineInfoCriteria, boolean normalSearchFlag) {
