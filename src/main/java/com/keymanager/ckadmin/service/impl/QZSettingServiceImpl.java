@@ -373,6 +373,10 @@ public class QZSettingServiceImpl extends
                     isExtraRankInfo = true;
                     standardSpecies = "aiZhan";
                 }
+                if ("other".equals(standardSpecies)) {
+                    isExtraRankInfo = true;
+                    standardSpecies = "aiZhan";
+                }
                 if (null != standardSpecies) {
                     qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(),
                         qzOperationType.getOperationType(), standardSpecies, !isExtraRankInfo);

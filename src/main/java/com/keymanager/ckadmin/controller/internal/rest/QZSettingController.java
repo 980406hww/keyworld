@@ -84,6 +84,12 @@ public class QZSettingController extends SpringMVCBaseController {
     public ModelAndView toQZSetttings() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("qzsettings/qzsetting");
+        int isSEOSales = 0;
+        Set<String> roles = getCurrentUser().getRoles();
+        if (roles.contains("SEOSales")) {
+            isSEOSales = 1;
+        }
+        mv.addObject("isSEOSales",isSEOSales);
         return mv;
     }
 

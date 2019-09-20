@@ -95,14 +95,10 @@
                     </div>
                 </div>
                 <div class="layui-col-md3 padding-ten-left four-row">
-                    <div class="layui-form-item" pane>
-                        <label class="computer layui-form-label">续费状态</label>
-                        <div class="layui-input-block" id="siteStatus">
-                            <input type="radio" name="siteStatus"
-                                   value="2" title="首次收费" checked>
-                            <input type="radio" name="siteStatus"
-                                   value="4" title="其他">
-                        </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">续费状态</label>
+                        <input type="hidden" value="4" name="siteStatus" id="siteStatus">
+                        <div class="layui-input-block my-text" id="siteStatusDiv" style="color: mediumseagreen;border: #e6e6e6 1px solid;height: 36px">其他</div>
                     </div>
                 </div>
             </div>
@@ -248,91 +244,93 @@
                                        class="computer-input">
                             </div>
                         </div>
-                        <div id="computerTable" class="layui-form-item">
-                            <table border="0" width="100%" class="computer">
-                                <tbody id="computerTbody">
-                                <tr class="my-bg">
-                                    <td colspan="3">
-                                        <div id="computerTitle"
-                                             class="my-header-title my-label my-padding">
-                                            爱站收费规则
-                                        </div>
-                                    </td>
-                                    <td colspan="2">
-                                        <div class="my-header-btn my-label">
-                                            <button onclick="appendTable(true)" type="button"
-                                                    class="layui-btn layui-btn-sm">
-                                                增加收费规则
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="my-bg">
-                                    <td>
-                                        <div class="my-label my-left my-padding">
-                                            达标阶段
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left my-padding">
-                                            起始达标词数
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left my-padding">
-                                            终止达标词数
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left my-padding">
-                                            电脑端价格
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div
-                                            class="my-label my-left my-padding my-bottom">
-                                            操作
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="my-label my-left my-padding">
-                                            1
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left">
-                                            <input type="text"
-                                                   onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                                                   class="layui-input my-input">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left">
-                                            <input type="text"
-                                                   onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                                                   class="layui-input my-input">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left">
-                                            <input type="text"
-                                                   onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                                                   class="layui-input my-input">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-btn my-left my-bottom">
-                                            <button type="button" onclick="removeElement(this)"
-                                                    class="layui-btn layui-btn-xs layui-btn-danger">
-                                                删除
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                        <div>
+                            <div id="computerTable" class="layui-form-item">
+                                <table border="0" width="100%" class="computer">
+                                    <tbody id="computerTbody">
+                                    <tr class="my-bg">
+                                        <td colspan="3">
+                                            <div id="computerTitle"
+                                                 class="my-header-title my-label my-padding">
+                                                爱站收费规则
+                                            </div>
+                                        </td>
+                                        <td colspan="2">
+                                            <div class="my-header-btn my-label">
+                                                <button onclick="appendTable(true)" type="button"
+                                                        class="layui-btn layui-btn-sm">
+                                                    增加收费规则
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="my-bg">
+                                        <td>
+                                            <div class="my-label my-left my-padding">
+                                                达标阶段
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left my-padding">
+                                                起始达标词数
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left my-padding">
+                                                终止达标词数
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left my-padding">
+                                                电脑端价格
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div
+                                                class="my-label my-left my-padding my-bottom">
+                                                操作
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="my-label my-left my-padding">
+                                                1
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left">
+                                                <input type="text"
+                                                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                                                       class="layui-input my-input">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left">
+                                                <input type="text"
+                                                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                                                       class="layui-input my-input">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left">
+                                                <input type="text"
+                                                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                                                       class="layui-input my-input">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-btn my-left my-bottom">
+                                                <button type="button" onclick="removeElement(this)"
+                                                        class="layui-btn layui-btn-xs layui-btn-danger">
+                                                    删除
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -431,91 +429,93 @@
                                        class="phone-input">
                             </div>
                         </div>
-                        <div id="phoneTable" class="layui-form-item">
-                            <table border="0" width="100%" class="phone">
-                                <tbody id="phoneTbody">
-                                <tr class="my-bg">
-                                    <td colspan="3">
-                                        <div id="phoneTitle"
-                                             class="my-header-title my-label my-padding">
-                                            爱站收费规则
-                                        </div>
-                                    </td>
-                                    <td colspan="2">
-                                        <div class="my-header-btn my-label">
-                                            <button onclick="appendTable(false)" type="button"
-                                                    class="layui-btn layui-btn-sm">
-                                                增加收费规则
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="my-bg">
-                                    <td>
-                                        <div class="my-label my-left my-padding">
-                                            达标阶段
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left my-padding">
-                                            起始达标词数
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left my-padding">
-                                            终止达标词数
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left my-padding">
-                                            手机端价格
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div
-                                            class="my-label my-left my-padding my-bottom">
-                                            操作
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="my-label my-left my-padding">
-                                            1
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left">
-                                            <input type="text"
-                                                   onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                                                   class="layui-input my-input">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left">
-                                            <input type="text"
-                                                   onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                                                   class="layui-input my-input">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left">
-                                            <input type="text"
-                                                   onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                                                   class="layui-input my-input">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-btn my-left my-bottom">
-                                            <button type="button" onclick="removeElement(this)"
-                                                    class="layui-btn layui-btn-xs layui-btn-danger">
-                                                删除
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                        <div>
+                            <div id="phoneTable" class="layui-form-item">
+                                <table border="0" width="100%" class="phone">
+                                    <tbody id="phoneTbody">
+                                    <tr class="my-bg">
+                                        <td colspan="3">
+                                            <div id="phoneTitle"
+                                                 class="my-header-title my-label my-padding">
+                                                爱站收费规则
+                                            </div>
+                                        </td>
+                                        <td colspan="2">
+                                            <div class="my-header-btn my-label">
+                                                <button onclick="appendTable(false)" type="button"
+                                                        class="layui-btn layui-btn-sm">
+                                                    增加收费规则
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="my-bg">
+                                        <td>
+                                            <div class="my-label my-left my-padding">
+                                                达标阶段
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left my-padding">
+                                                起始达标词数
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left my-padding">
+                                                终止达标词数
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left my-padding">
+                                                手机端价格
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div
+                                                class="my-label my-left my-padding my-bottom">
+                                                操作
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="my-label my-left my-padding">
+                                                1
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left">
+                                                <input type="text"
+                                                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                                                       class="layui-input my-input">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left">
+                                                <input type="text"
+                                                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                                                       class="layui-input my-input">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left">
+                                                <input type="text"
+                                                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                                                       class="layui-input my-input">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-btn my-left my-bottom">
+                                                <button type="button" onclick="removeElement(this)"
+                                                        class="layui-btn layui-btn-xs layui-btn-danger">
+                                                    删除
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -612,6 +612,14 @@
         }
     }
 
+    function initForm2(isSEOSales) {
+        if (isSEOSales === 1) {
+            initRenewalStatus('1');
+        } else {
+            initRenewalStatus('4');
+        }
+    }
+
     /**
      * 初始化数据
      * @param l layui对象
@@ -653,6 +661,7 @@
                                 d_n.optimizationComType = d.qzOperationTypes[i].optimizationType;
                                 if (d_n.optimizationComType === 0) {
                                     selectPhone(true);
+                                    computerTableFlag = false;
                                 }
                                 d_n.pcGroup = d.qzOperationTypes[i].group;
                                 d_n.comSubDomainName = d.qzOperationTypes[i].subDomainName;
@@ -662,12 +671,10 @@
                                 let html_c = listToHtml(d.qzOperationTypes[i].qzChargeRules);
                                 if (html_c !== ``) {
                                     d_n.comStandardSpecies = d.qzOperationTypes[i].qzChargeRules[0].standardSpecies;
-                                    html_c = getHeader(d_n.comStandardSpecies, true) + html_c;
-                                    document.getElementById('computerTbody').innerHTML = html_c;
-                                } else {
-                                    d_n.comStandardSpecies = 'other';
-                                    computerTableFlag = false;
-                                    computerTable.style.display = 'none';
+                                    if (d.renewalStatus !== 4 && d_n.comStandardSpecies !== 'other') {
+                                        html_c = getHeader(d_n.comStandardSpecies, true) + html_c;
+                                        document.getElementById('computerTbody').innerHTML = html_c;
+                                    }
                                 }
                                 break;
                             case "Phone":
@@ -676,6 +683,7 @@
                                 d_n.optimizationPhoneType = d.qzOperationTypes[i].optimizationType;
                                 if (d_n.optimizationPhoneType === 0) {
                                     selectComputer(true);
+                                    phoneTableFlag = false;
                                 }
                                 d_n.phoneGroup = d.qzOperationTypes[i].group;
                                 d_n.phoneSubDomainName = d.qzOperationTypes[i].subDomainName;
@@ -685,12 +693,10 @@
                                 let html_p = listToHtml(d.qzOperationTypes[i].qzChargeRules);
                                 if (html_p !== ``) {
                                     d_n.phoneStandardSpecies = d.qzOperationTypes[i].qzChargeRules[0].standardSpecies;
-                                    html_p = getHeader(d_n.phoneStandardSpecies, false) + html_p;
-                                    document.getElementById('phoneTbody').innerHTML = html_p;
-                                } else {
-                                    d_n.phoneStandardSpecies = 'other';
-                                    phoneTableFlag = false;
-                                    phoneTable.style.display = 'none';
+                                    if (d.renewalStatus !== 4 && d_n.phoneStandardSpecies !== 'other') {
+                                        html_p = getHeader(d_n.phoneStandardSpecies, false) + html_p;
+                                        document.getElementById('phoneTbody').innerHTML = html_p;
+                                    }
                                 }
                                 break;
                         }
@@ -708,34 +714,38 @@
         });
     }
 
-    function initRenewalStatus(s) {
+    window.initRenewalStatus = function (s) {
         let siteStatus = document.getElementById('siteStatus');
-        siteStatus.classList.add('my-text');
+        siteStatus.value = s;
+        let siteStatusDiv = document.getElementById('siteStatusDiv');
+        siteStatusDiv.classList.add('my-text');
         switch (s) {
             case '1':
-                siteStatus.style.color = 'green';
-                siteStatus.innerHTML = '续费中';
+                siteStatusDiv.style.color = 'green';
+                siteStatusDiv.innerHTML = '续费中';
                 break;
             case '0':
-                siteStatus.style.color = 'palevioletred';
-                siteStatus.innerHTML = '暂停续费';
+                siteStatusDiv.style.color = 'palevioletred';
+                siteStatusDiv.innerHTML = '暂停续费';
                 break;
             case '2':
-                siteStatus.style.color = 'mediumseagreen';
-                siteStatus.innerHTML = '首次收费';
+                siteStatusDiv.style.color = 'mediumseagreen';
+                siteStatusDiv.innerHTML = '首次收费';
                 break;
             case '3':
-                siteStatus.style.color = 'red';
-                siteStatus.innerHTML = '下架';
+                siteStatusDiv.style.color = 'red';
+                siteStatusDiv.innerHTML = '下架';
                 break;
             case '4':
-                siteStatus.style.color = 'mediumseagreen';
-                siteStatus.innerHTML = '其他';
+                siteStatusDiv.style.color = 'mediumseagreen';
+                siteStatusDiv.innerHTML = '其他';
+                computerTable.innerHTML = '';
+                phoneTable.innerHTML = '';
                 break;
             default:
                 break;
         }
-    }
+    };
 
     function exist(s, v) {
         if (s) {
@@ -1133,50 +1143,54 @@
         //监听指定radio
         form.on('radio(comStandardSpecies)', function (data) {
             let computerTitle = document.getElementById('computerTitle');
-            computerTableFlag = true;
-            switch (data.value) {
-                case 'aiZhan':
-                    computerTitle.innerHTML = '爱站' + name;
-                    computerTable.style.display = 'block';
-                    break;
-                case '5118':
-                    computerTitle.innerHTML = '5118' + name;
-                    computerTable.style.display = 'block';
-                    break;
-                case 'designationWord':
-                    computerTitle.innerHTML = '指定词' + name;
-                    computerTable.style.display = 'block';
-                    break;
-                case 'other':
-                    // computerTitle.innerHTML = '其他' + name;
-                    computerTableFlag = false;
-                    computerTable.style.display = 'none';
-                    break;
+            if (computerTitle) {
+                computerTableFlag = true;
+                switch (data.value) {
+                    case 'aiZhan':
+                        computerTitle.innerHTML = '爱站' + name;
+                        computerTable.style.display = 'block';
+                        break;
+                    case '5118':
+                        computerTitle.innerHTML = '5118' + name;
+                        computerTable.style.display = 'block';
+                        break;
+                    case 'designationWord':
+                        computerTitle.innerHTML = '指定词' + name;
+                        computerTable.style.display = 'block';
+                        break;
+                    case 'other':
+                        // computerTitle.innerHTML = '其他' + name;
+                        computerTableFlag = false;
+                        computerTable.style.display = 'none';
+                        break;
+                }
             }
         });
 
         //监听指定radio
         form.on('radio(phoneStandardSpecies)', function (data) {
             let phoneTitle = document.getElementById('phoneTitle');
-            phoneTableFlag = true;
-            switch (data.value) {
-                case 'aiZhan':
-                    phoneTitle.innerHTML = '爱站' + name;
-                    phoneTable.style.display = 'block';
-                    break;
-                case '5118':
-                    phoneTitle.innerHTML = '5118' + name;
-                    phoneTable.style.display = 'block';
-                    break;
-                case 'designationWord':
-                    phoneTitle.innerHTML = '指定词' + name;
-                    phoneTable.style.display = 'block';
-                    break;
-                case 'other':
-                    // phoneTitle.innerHTML = '其他' + name;
-                    phoneTableFlag = false;
-                    phoneTable.style.display = 'none';
-                    break;
+            if (phoneTitle) {
+                phoneTableFlag = true;
+                switch (data.value) {
+                    case 'aiZhan':
+                        phoneTitle.innerHTML = '爱站' + name;
+                        phoneTable.style.display = 'block';
+                        break;
+                    case '5118':
+                        phoneTitle.innerHTML = '5118' + name;
+                        phoneTable.style.display = 'block';
+                        break;
+                    case 'designationWord':
+                        phoneTitle.innerHTML = '指定词' + name;
+                        phoneTable.style.display = 'block';
+                        break;
+                    case 'other':
+                        // phoneTitle.innerHTML = '其他' + name;
+                        phoneTableFlag = false;
+                        phoneTable.style.display = 'none';
+                        break;
+                }
             }
         });
 
@@ -1320,34 +1334,50 @@
                 b.subDomainName = d.comSubDomainName;
                 let qzChargeRules = [], comTr = tbody_com.children('tr');
                 if (d.optimizationComType !== '0' && d.comStandardSpecies !== 'other') {
-                    for (let i = 2; i < comTr.length; i++) {
-                        let comTd = comTr[i].children, c = {};
+                    if (d.siteStatus === '4') {
+                        let c = {};
                         c.standardSpecies = d.comStandardSpecies;
-                        for (let j = 1; j < 4; j++) {
-                            if (comTd[j].children[0].children[0].value === '') {
-                                if (!(i === comTr.length - 1 && j === 2)) {
-                                    okLayer.msg.redCry('电脑收费规则表必须填写完整', null);
-                                    return false;
+                        c.startKeywordCount = '1';
+                        c.endKeywordCount = '2';
+                        c.amount = '3';
+                        qzChargeRules.push(c);
+                    } else {
+                        for (let i = 2; i < comTr.length; i++) {
+                            let comTd = comTr[i].children, c = {};
+                            c.standardSpecies = d.comStandardSpecies;
+                            for (let j = 1; j < 4; j++) {
+                                if (comTd[j].children[0].children[0].value === '') {
+                                    if (!(i === comTr.length - 1 && j === 2)) {
+                                        okLayer.msg.redCry('电脑收费规则表必须填写完整', null);
+                                        return false;
+                                    }
+                                }
+                                // if (!/^[0-9]+$/.test(comTd[j].children[0].children[0].value)) {
+                                //     okLayer.msg.redCry('电脑收费表格内必须为数字', null);
+                                //     return false;
+                                // }
+                                switch (j) {
+                                    case 1:
+                                        c.startKeywordCount = comTd[j].children[0].children[0].value;
+                                        break;
+                                    case 2:
+                                        c.endKeywordCount = comTd[j].children[0].children[0].value;
+                                        break;
+                                    case 3:
+                                        c.amount = comTd[j].children[0].children[0].value;
+                                        break;
                                 }
                             }
-                            // if (!/^[0-9]+$/.test(comTd[j].children[0].children[0].value)) {
-                            //     okLayer.msg.redCry('电脑收费表格内必须为数字', null);
-                            //     return false;
-                            // }
-                            switch (j) {
-                                case 1:
-                                    c.startKeywordCount = comTd[j].children[0].children[0].value;
-                                    break;
-                                case 2:
-                                    c.endKeywordCount = comTd[j].children[0].children[0].value;
-                                    break;
-                                case 3:
-                                    c.amount = comTd[j].children[0].children[0].value;
-                                    break;
-                            }
+                            qzChargeRules.push(c);
                         }
-                        qzChargeRules.push(c);
                     }
+                } else {
+                    let c = {};
+                    c.standardSpecies = 'other';
+                    c.startKeywordCount = '1';
+                    c.endKeywordCount = '2';
+                    c.amount = '3';
+                    qzChargeRules.push(c);
                 }
                 b.qzChargeRules = qzChargeRules;
                 qzOperationTypes.push(b);
@@ -1369,34 +1399,50 @@
                 b.subDomainName = d.phoneSubDomainName;
                 let qzChargeRules = [], phoneTr = tbody_phone.children('tr');
                 if (d.optimizationPhoneType !== '0' && d.phoneStandardSpecies !== 'other') {
-                    for (let i = 2; i < phoneTr.length; i++) {
-                        let phoneTd = phoneTr[i].children, c = {};
+                    if (d.siteStatus === '4') {
+                        let c = {};
                         c.standardSpecies = d.phoneStandardSpecies;
-                        for (let j = 1; j < 4; j++) {
-                            if (phoneTd[j].children[0].children[0].value === '') {
-                                if (!(i === phoneTr.length - 1 && j === 2)) {
-                                    okLayer.msg.redCry('手机收费规则表必须填写完整', null);
-                                    return false;
+                        c.startKeywordCount = '1';
+                        c.endKeywordCount = '2';
+                        c.amount = '3';
+                        qzChargeRules.push(c);
+                    } else {
+                        for (let i = 2; i < phoneTr.length; i++) {
+                            let phoneTd = phoneTr[i].children, c = {};
+                            c.standardSpecies = d.phoneStandardSpecies;
+                            for (let j = 1; j < 4; j++) {
+                                if (phoneTd[j].children[0].children[0].value === '') {
+                                    if (!(i === phoneTr.length - 1 && j === 2)) {
+                                        okLayer.msg.redCry('手机收费规则表必须填写完整', null);
+                                        return false;
+                                    }
+                                }
+                                // if (!/^[0-9]+$/.test(phoneTd[j].children[0].children[0].value)) {
+                                //     okLayer.msg.redCry('手机收费表格内必须为数字', null);
+                                //     return false;
+                                // }
+                                switch (j) {
+                                    case 1:
+                                        c.startKeywordCount = phoneTd[j].children[0].children[0].value;
+                                        break;
+                                    case 2:
+                                        c.endKeywordCount = phoneTd[j].children[0].children[0].value;
+                                        break;
+                                    case 3:
+                                        c.amount = phoneTd[j].children[0].children[0].value;
+                                        break;
                                 }
                             }
-                            // if (!/^[0-9]+$/.test(phoneTd[j].children[0].children[0].value)) {
-                            //     okLayer.msg.redCry('手机收费表格内必须为数字', null);
-                            //     return false;
-                            // }
-                            switch (j) {
-                                case 1:
-                                    c.startKeywordCount = phoneTd[j].children[0].children[0].value;
-                                    break;
-                                case 2:
-                                    c.endKeywordCount = phoneTd[j].children[0].children[0].value;
-                                    break;
-                                case 3:
-                                    c.amount = phoneTd[j].children[0].children[0].value;
-                                    break;
-                            }
+                            qzChargeRules.push(c);
                         }
-                        qzChargeRules.push(c);
                     }
+                } else {
+                    let c = {};
+                    c.standardSpecies = 'other';
+                    c.startKeywordCount = '1';
+                    c.endKeywordCount = '2';
+                    c.amount = '3';
+                    qzChargeRules.push(c);
                 }
                 b.qzChargeRules = qzChargeRules;
                 qzOperationTypes.push(b);

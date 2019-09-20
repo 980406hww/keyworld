@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<#import "/commons/global.html" as ctx>
 <html>
 <head>
     <meta charset="utf-8">
@@ -2156,7 +2157,10 @@
 
         function addQZSetting() {
             okLayer.open("其他 / 前往全站设置信息 / 添加", "/internal/qzsetting/toQZSettingAdd", "90%", "90%",
-                null, function () {
+                function (layero) {
+                    let isSEOSales = '${isSEOSales}';
+                    window[layero.find("iframe")[0]["name"]].initForm2(isSEOSales);
+                }, function () {
                     if (sign) {
                         active['reload'].call(this);
                         sign = false;
