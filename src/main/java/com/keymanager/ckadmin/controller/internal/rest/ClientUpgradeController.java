@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ public class ClientUpgradeController {
     @Resource(name = "clientUpgradeService2")
     private ClientUpgradeService clientUpgradeService;
 
+    @RequiresPermissions("/internal/clientUpgrade/searchClientUpgrades")
     @RequestMapping(value = "/toClientUpgrades2", method = RequestMethod.GET)
     public ModelAndView toClientUpgrades2(HttpServletRequest request) {
         ModelAndView mv = new ModelAndView();
@@ -37,6 +39,7 @@ public class ClientUpgradeController {
         return mv;
     }
 
+    @RequiresPermissions("/internal/clientUpgrade/searchClientUpgrades")
     @RequestMapping(value = "/getClientUpgrades2")
     public ResultBean getClientUpgrades2(HttpServletRequest request, @RequestBody BaseCriteria baseCriteria){
         ResultBean resultBean = new ResultBean();
@@ -64,6 +67,7 @@ public class ClientUpgradeController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/clientUpgrade/saveClientUpgrade")
     @RequestMapping(value = "/toClientUpgradeAdd", method = RequestMethod.GET)
     public ModelAndView toClientUpgradeAdd(){
         ModelAndView mv = new ModelAndView();
@@ -71,6 +75,7 @@ public class ClientUpgradeController {
         return mv;
     }
 
+    @RequiresPermissions("/internal/clientUpgrade/saveClientUpgrade")
     @RequestMapping(value = "/saveClientUpgrade2", method = RequestMethod.POST)
     public ResultBean saveClientUpgrade(@RequestBody ClientUpgrade clientUpgrade, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
@@ -103,6 +108,7 @@ public class ClientUpgradeController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/clientUpgrade/deleteClientUpgrade")
     @RequestMapping(value = "/deleteClientUpgrade2/{uuid}", method = RequestMethod.GET)
     public ResultBean deleteClientUpgrade(@PathVariable("uuid") Long uuid) {
         ResultBean resultBean = new ResultBean();
@@ -118,6 +124,7 @@ public class ClientUpgradeController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/clientUpgrade/deleteClientUpgrade")
     @RequestMapping(value = "/batchDeleteClientUpgrade", method = RequestMethod.POST)
     public ResultBean batchDeleteClientUpgrade(@RequestBody Map<String, Object> requestMap){
         ResultBean resultBean = new ResultBean();
@@ -134,6 +141,7 @@ public class ClientUpgradeController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/clientUpgrade/saveClientUpgrade")
     @RequestMapping(value = "/updateClientUpgradeStatus2", method = RequestMethod.POST)
     public ResultBean updateClientUpgradeStatus(@RequestBody ClientUpgrade clientUpgrade) {
         ResultBean resultBean = new ResultBean();
