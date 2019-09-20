@@ -19,6 +19,7 @@ import com.keymanager.monitoring.vo.OptimizationVO;
 import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
 import com.keymanager.monitoring.vo.SearchEngineResultItemsVO;
 import com.keymanager.monitoring.vo.SearchEngineResultVO;
+import com.keymanager.monitoring.vo.UpdateOptimizedCountVO;
 import com.keymanager.monitoring.vo.customerSourceVO;
 import com.keymanager.util.AESUtils;
 import com.keymanager.util.Constants;
@@ -370,44 +371,40 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
     @RequestMapping(value = "/updateOptimizedCount", method = RequestMethod.GET)
     public ResponseEntity<?> updateOptimizedCount(HttpServletRequest request) throws Exception {
-        long startMilleSeconds = System.currentTimeMillis();
         String userName = request.getParameter("userName");
         if (StringUtils.isBlank(userName)) {
             userName = request.getParameter("username");
         }
         String password = request.getParameter("password");
 
-        Long customerKeywordUuid = Long.parseLong(request.getParameter("uuid").trim());
-        String count = request.getParameter("count");
-        String clientID = request.getParameter("clientID");
-        String freeSpace = request.getParameter("freespace");
-        String version = request.getParameter("version");
-        String city = request.getParameter("city");
-        String status = request.getParameter("status");
+        UpdateOptimizedCountVO updateOptimizedCountVO = new UpdateOptimizedCountVO();
+        updateOptimizedCountVO.setCustomerKeywordUuid(Long.parseLong(request.getParameter("uuid").trim()));
+        updateOptimizedCountVO.setCount(Integer.parseInt(request.getParameter("count")));
+        updateOptimizedCountVO.setClientID(request.getParameter("clientID"));
+        updateOptimizedCountVO.setFreeSpace(request.getParameter("freespace"));
+        updateOptimizedCountVO.setVersion(request.getParameter("version"));
+        updateOptimizedCountVO.setCity(request.getParameter("city"));
+        updateOptimizedCountVO.setStatus(request.getParameter("status"));
+        updateOptimizedCountVO.setRunningProgramType(request.getParameter("runningProgramType"));
+        updateOptimizedCountVO.setCpuCount(request.getParameter("cpuCount") == null ? 0
+            : Integer.parseInt(request.getParameter("cpuCount")));
+        updateOptimizedCountVO.setMemory(request.getParameter("memory") == null ? 0
+            : Integer.parseInt(request.getParameter("memory")));
+        updateOptimizedCountVO.setIp(getIP(request));
+
         String position = request.getParameter("position");
-        String runningProgramType = request.getParameter("runningProgramType");
-
-        int cpuCount = request.getParameter("cpuCount") == null ? 0
-            : Integer.parseInt(request.getParameter("cpuCount"));
-        int memory = request.getParameter("memory") == null ? 0
-            : Integer.parseInt(request.getParameter("memory"));
-
-        String ip = getIP(request);
 
         try {
             if (validUser(userName, password)) {
-                MachineInfo machineInfo = machineInfoService.selectById(clientID);
-                String terminalType = machineInfo.getTerminalType();
-                if (StringUtils.isNotBlank(position)) {
-                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid,
-                        Integer.parseInt(position), null, null, null);
-                }
-                customerKeywordService.updateOptimizationResult(terminalType, customerKeywordUuid,
-                    Integer.parseInt(count.trim()), ip, city, clientID,
-                    status, freeSpace, version, runningProgramType, cpuCount, memory);
-                performanceService.addPerformanceLog(terminalType + ":updateOptimizedCount",
-                    System.currentTimeMillis() - startMilleSeconds, null);
 
+//                if (StringUtils.isNotBlank(position)) {
+//                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid,
+//                        Integer.parseInt(position), null, null, null);
+//                }
+//                customerKeywordService.updateOptimizationResult(customerKeywordUuid,
+//                    Integer.parseInt(count.trim()), ip, city, clientID,
+//                    status, freeSpace, version, runningProgramType, cpuCount, memory);
+                customerKeywordService.cacheUpdateOptimizedCountResult(updateOptimizedCountVO);
                 return new ResponseEntity<Object>(1, HttpStatus.OK);
             }
         } catch (Exception ex) {
