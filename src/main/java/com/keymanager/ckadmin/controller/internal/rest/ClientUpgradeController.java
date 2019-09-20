@@ -8,16 +8,19 @@ import com.keymanager.ckadmin.entity.ClientUpgrade;
 import com.keymanager.ckadmin.service.ClientUpgradeService;
 import com.keymanager.ckadmin.util.ReflectUtils;
 import com.keymanager.util.TerminalTypeMapping;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping(value = "/internal/clientUpgrade")
@@ -100,25 +103,49 @@ public class ClientUpgradeController {
         return resultBean;
     }
 
-    @RequestMapping(value = "/deleteClientUpgrade2/{uuid}", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteClientUpgrade(@PathVariable("uuid") Long uuid) {
+    @RequestMapping(value = "/deleteClientUpgrade2/{uuid}", method = RequestMethod.GET)
+    public ResultBean deleteClientUpgrade(@PathVariable("uuid") Long uuid) {
+        ResultBean resultBean = new ResultBean();
         try {
             clientUpgradeService.deleteById(uuid);
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
+            resultBean.setCode(200);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
         }
+        return resultBean;
+    }
+
+    @RequestMapping(value = "/batchDeleteClientUpgrade", method = RequestMethod.POST)
+    public ResultBean batchDeleteClientUpgrade(@RequestBody Map<String, Object> requestMap){
+        ResultBean resultBean = new ResultBean();
+        try {
+            List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
+            clientUpgradeService.batchDeleteClientUpgrade(uuids);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
     }
 
     @RequestMapping(value = "/updateClientUpgradeStatus2", method = RequestMethod.POST)
-    public ResponseEntity<?> updateClientUpgradeStatus(@RequestBody ClientUpgrade clientUpgrade) {
+    public ResultBean updateClientUpgradeStatus(@RequestBody ClientUpgrade clientUpgrade) {
+        ResultBean resultBean = new ResultBean();
         try {
             clientUpgradeService.updateClientUpgradeStatus(clientUpgrade.getUuid(), clientUpgrade.getStatus());
-            return new ResponseEntity<Object>(true, HttpStatus.OK);
+            resultBean.setCode(200);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
         }
+        return resultBean;
     }
 }

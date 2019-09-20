@@ -16,4 +16,6 @@ public interface ClientUpgradeService extends IService<ClientUpgrade> {
     public void clientAutoUpgrade();
 
     public void updateClientUpgradeStatus(Long uuid, Boolean status);
+
+    public void batchDeleteClientUpgrade(List<Integer> uuids);
 }

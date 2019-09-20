@@ -113,11 +113,116 @@
             });
         }
 
+        function updateStatus(data){
+            data.uuid = parseInt(data.uuid);
+            data.status = data.status == true ? false : true;
+            $.ajax({
+                url: '/internal/clientUpgrade/updateClientUpgradeStatus2',
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                data: JSON.stringify(data),
+                success: function (res) {
+                    if (res.code === 200) {
+                        let data = {}
+                        table.reload('clientUpgradeTable', {
+                            where: data,
+                            page: {
+                                curr: 1
+                            }
+                        });
+                        layer.msg("修改成功")
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                },
+                error: function () {
+                    layer.msg('未知错误，请稍后重试！！')
+                }
+            });
+        }
+
+        function deleteClient(uuid){
+            $.ajax({
+                url: '/internal/clientUpgrade/deleteClientUpgrade2/' + uuid,
+                type: 'GET',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        let data = {}
+                        table.reload('clientUpgradeTable', {
+                            where: data,
+                            page: {
+                                curr: 1
+                            }
+                        });
+                        layer.msg("删除成功")
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                },
+                error: function () {
+                    layer.msg('未知错误，请稍后重试！！')
+                }
+            });
+        }
+
+        function batchDeleteClientUpgrade(){
+            var checkStatus = table.checkStatus('clientUpgradeTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要操作的机器', {icon: 5});
+                return
+            }
+            layer.confirm("确定要删除所选机器吗", {icon: 3, title: '删除所选'}, function (index) {
+                var postData = {};
+                postData.uuids = uuidArr;
+                $.ajax({
+                    url: '/internal/clientUpgrade/batchDeleteClientUpgrade',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 2000
+                            }, function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            layer.msg('操作失败', {icon: 5});
+                        }
+                    },
+                    error: function () {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                });
+                layer.close(index);
+            });
+        }
+
         table.on('toolbar(tableFilter)',function(obj){
             var data = obj.data,event = obj.event;
             switch (event) {
                 case 'addMachine':
                     toAddClientUpgrade();
+                    break;
+                case 'batchDeleteClientUpgrade':
+                    batchDeleteClientUpgrade();
                     break;
             }
         });
@@ -127,6 +232,12 @@
             switch (event) {
                 case 'modifyMachine':
                     toUpdateClientUpgrade(data);
+                    break;
+                case 'updateStatus':
+                    updateStatus(data);
+                    break;
+                case 'deleteClient':
+                    deleteClient(data.uuid);
                     break;
             }
         });
@@ -186,12 +297,12 @@
 <script type="text/html" id="operationTpl">
     <div class="layui-btn-group">
         {{# if(d.status === true) { }}
-            <button type="button" class="layui-btn layui-btn-xs" lay-event="">暂停</button>
+            <button type="button" class="layui-btn layui-btn-xs" lay-event="updateStatus">暂停</button>
         {{# }else { }}
-            <button type="button" class="layui-btn layui-btn-xs" lay-event="">开始</button>
+            <button type="button" class="layui-btn layui-btn-xs" lay-event="updateStatus">开始</button>
         {{# } }}
         <button type="button" class="layui-btn layui-btn-xs" lay-event="modifyMachine" id="modifyMachine">修改</button>
-        <button type="button" class="layui-btn layui-btn-xs" lay-event="">删除</button>
+        <button type="button" class="layui-btn layui-btn-xs" lay-event="deleteClient">删除</button>
     </div>
 </script>
 

@@ -2012,7 +2012,6 @@
             }
             d.customerUuid = document.getElementById('customerUuid').value;
             d.terminalType = document.getElementById('terminalType').value;
-            console.log(d);
             $.ajax({
                 url: '/internal/notebook/saveUserNoteBook',
                 type: 'POST',

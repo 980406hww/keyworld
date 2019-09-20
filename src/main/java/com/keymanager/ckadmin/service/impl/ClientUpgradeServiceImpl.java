@@ -68,4 +68,11 @@ public class ClientUpgradeServiceImpl extends ServiceImpl<ClientUpgradeDao, Clie
     public void updateClientUpgradeStatus(Long uuid, Boolean status) {
         clientUpgradeDao.updateClientUpgradeStatus(uuid, status);
     }
+
+    @Override
+    public void batchDeleteClientUpgrade(List<Integer> uuids) {
+        for(Integer uuid: uuids){
+            deleteById(uuid.longValue());
+        }
+    }
 }
