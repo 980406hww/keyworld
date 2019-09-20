@@ -15,7 +15,6 @@ public class QZSettingSearchCriteria extends BaseCriteria {
     private String group;
     private String updateStatus;
     private Integer dateRangeType;
-    private Integer status;
     private Integer renewalStatus;
     private Integer checkStatus;
     private String terminalType;
@@ -117,14 +116,6 @@ public class QZSettingSearchCriteria extends BaseCriteria {
 
     public void setDateRangeType(Integer dateRangeType) {
         this.dateRangeType = dateRangeType;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
     }
 
     public Integer getCheckStatus() {
