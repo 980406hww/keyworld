@@ -57,8 +57,7 @@ public class QZKeywordRankInfoServiceImpl extends
     }
 
     @Override
-    public void addQZKeywordRankInfo(Long uuid, String terminalType, String standardSpecies,
-        boolean dataProcessingStatus) {
+    public void addQZKeywordRankInfo(Long uuid, String terminalType, String standardSpecies, boolean dataProcessingStatus) {
         QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
         qzKeywordRankInfo.setQzSettingUuid(uuid);
         qzKeywordRankInfo.setTerminalType(terminalType);

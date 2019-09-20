@@ -739,8 +739,7 @@
     </div>
 </div>
 
-<form id="searchCustomerKeywordForm" method="post" target="_blank"
-      action="/internal/customerKeyword/searchCustomerKeywords" style="display: none;">
+<form id="searchCustomerKeywordForm" method="post" target="_blank" action="/internal/customerKeyword/searchCustomerKeywords" style="display: none;">
     <input type="text" name="customerUuid" id="customerUuid">
     <input type="text" name="optimizeGroupName" id="optimizeGroupName">
     <input type="text" name="status" id="status">
@@ -2730,8 +2729,7 @@
         window.searchCustomerKeywords = function (customerUuid, pcGroup, phoneGroup) {
             let searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
             searchCustomerKeywordForm.find("#customerUuid").val(customerUuid);
-            searchCustomerKeywordForm.find("#optimizeGroupName").val(
-                pcGroup == null ? phoneGroup : pcGroup);
+            searchCustomerKeywordForm.find("#optimizeGroupName").val(pcGroup == null ? phoneGroup : pcGroup);
             searchCustomerKeywordForm.find("#status").val(1);
             searchCustomerKeywordForm.submit();
         };
