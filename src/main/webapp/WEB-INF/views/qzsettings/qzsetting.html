@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<#import "/commons/global.html" as ctx>
 <html>
 <head>
     <meta charset="utf-8">
@@ -675,8 +674,8 @@
                             <div class="layui-input-inline">
                                 <select name="autoCrawlKeywordFlag" id="autoCrawlKeywordFlag">
                                     <option value selected>全部</option>
-                                    <option value="1">是</option>
-                                    <option value="0">否</option>
+                                    <option value="true">是</option>
+                                    <option value="false">否</option>
                                 </select>
                             </div>
                         </div>
@@ -740,9 +739,9 @@
 </div>
 
 <form id="searchCustomerKeywordForm" method="post" target="_blank" action="/internal/customerKeyword/searchCustomerKeywords" style="display: none;">
-    <input type="text" name="customerUuid" id="customerUuid">
-    <input type="text" name="optimizeGroupName" id="optimizeGroupName">
-    <input type="text" name="status" id="status">
+    <input type="text" name="customerUuid" id="hideCustomerUuid">
+    <input type="text" name="optimizeGroupName" id="hideOptimizeGroupName">
+    <input type="text" name="status" id="hideStatus">
 </form>
 
 <!--数据表格-->
@@ -943,13 +942,14 @@
             }
         </@shiro.hasPermission>
 
+        get_qzcategory_label_list();
+        get_active_customer_list();
+
         function successTable(res) {
             let terminalType = $('#terminalType').val();
             terminalType = terminalType === '' ? 'PC' : terminalType;
             getTerminalSearchEngineMap();
             get_operation_combine_list(terminalType);
-            get_qzcategory_label_list();
-            get_active_customer_list();
             let qz_setting_table = $("#qzSettingTable").parent().find(
                 ".layui-table-main").find("table");
             $.each(res.data, function (idx, val) {
@@ -976,9 +976,6 @@
 
         let radio = document.getElementsByName('sort');
         function initSortRadio(condition){
-            if (condition.autoCrawlKeywordFlag && condition.autoCrawlKeywordFlag !== '') {
-                condition.autoCrawlKeywordFlag = condition.autoCrawlKeywordFlag === '1';
-            }
             $.ajax({
                 url: '/internal/qzkeywordrank/searchCountNumOfQZKeywordRankInfoNew',
                 type: 'POST',
@@ -998,7 +995,7 @@
                         radio[7].title = "达标(" + res.data.atLeastStandardNum + ")";
                         radio[8].title = "未达标(" + res.data.neverStandardNum + ")";
                         radio[9].title = "接近达标(" + res.data.closeStandardNum + ")";
-                        form.render();
+                        form.render('radio');
                         radio[1].nextElementSibling.title = "网站关键词(PC,Phone)一星期排名趋势涨幅<"
                             + res.data.upperValue + ", 且下降至少" + res.data.upOneWeekDiff + "个词";
                         radio[2].nextElementSibling.title = "网站关键词(PC,Phone)一星期排名趋势涨幅不变";
@@ -2728,9 +2725,9 @@
          */
         window.searchCustomerKeywords = function (customerUuid, pcGroup, phoneGroup) {
             let searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
-            searchCustomerKeywordForm.find("#customerUuid").val(customerUuid);
-            searchCustomerKeywordForm.find("#optimizeGroupName").val(pcGroup == null ? phoneGroup : pcGroup);
-            searchCustomerKeywordForm.find("#status").val(1);
+            searchCustomerKeywordForm.find("#hideCustomerUuid").val(customerUuid);
+            searchCustomerKeywordForm.find("#hideOptimizeGroupName").val(pcGroup == null ? phoneGroup : pcGroup);
+            searchCustomerKeywordForm.find("#hideStatus").val(1);
             searchCustomerKeywordForm.submit();
         };
 
@@ -2833,42 +2830,34 @@
     </@shiro.hasPermission>
     <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/qzsetting/save">
-        <button class="layui-btn layui-btn-sm" style="background: #04bb00"
-                lay-event="addQz">
+        <button class="layui-btn layui-btn-sm" lay-event="addQz">
             <i style="position: relative;top: -1px" class="layui-icon">&#xe654;</i>添加整站
         </button>
-        <button class="layui-btn layui-btn-sm" style="background: #e68900"
-                lay-event="updFZTags">
+        <button class="layui-btn layui-btn-sm " lay-event="updFZTags">
             <i class="layui-icon">&#xe642;</i>修改标签
         </button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
-        <button class="layui-btn layui-btn-sm" style="background: #CF1900"
-                lay-event="batchDeleteQZSetting">
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchDeleteQZSetting">
             <i style="position: relative;top: -1px" class="layui-icon">&#xe640;</i>删除所选
         </button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/qzsetting/updateImmediately">
-        <button class="layui-btn layui-btn-sm" style="background: #00b3a7"
-                lay-event="batchUpdateQZSettingUpdateStatus">
+        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchUpdateQZSettingUpdateStatus">
             <i style="font-size: 15px !important;" class="layui-icon">&#xe666;</i>马上更新
         </button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/qzsetting/updateRenewalStatus">
-        <button class="layui-btn layui-btn-sm" style="background: #04bb00"
-                lay-event="batchUpdateRenewalStatusToNormal">
+        <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToNormal">
             <i class="layui-icon">&#x1005;</i>正常续费
         </button>
-        <button class="layui-btn layui-btn-sm" style="background: #e68900"
-                lay-event="batchUpdateRenewalStatusToSuspend">
+        <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToSuspend">
             <i class="layui-icon">&#xe651;</i>暂停续费
         </button>
-        <button class="layui-btn layui-btn-sm" style="background: #CF1900"
-                lay-event="batchUpdateRenewalStatusToSoldOut">
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchUpdateRenewalStatusToSoldOut">
             <i class="layui-icon">&#xe601;</i>下架整站
         </button>
-        <button class="layui-btn layui-btn-sm" style="background: #00b3a7"
-                lay-event="batchUpdateRenewalStatusToOther">
+        <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToOther">
             <i class="layui-icon">&#xe63f;</i>更为其他
         </button>
         </@shiro.hasPermission>

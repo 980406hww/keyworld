@@ -357,20 +357,17 @@ public class QZSettingServiceImpl extends
                     isExtraRankInfo = true;
                     standardSpecies = "aiZhan";
                 }
-                if ("other".equals(standardSpecies)) {
-                    isExtraRankInfo = true;
-                    standardSpecies = "aiZhan";
-                }
                 if (null != standardSpecies) {
-                    qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(),
-                        qzOperationType.getOperationType(), standardSpecies, !isExtraRankInfo);
+                    if ("other".equals(standardSpecies)) {
+                        standardSpecies = "aiZhan";
+                    }
+                    qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), qzOperationType.getOperationType(), standardSpecies, !isExtraRankInfo);
                     if (standardSpecies.equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
                         if (qzSetting.getSearchEngine().equals(Constants.SEARCH_ENGINE_BAIDU)) {
-                            qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(),
-                                qzOperationType.getOperationType(), "aiZhan", false);
+                            qzKeywordRankInfoService.addQZKeywordRankInfo(qzSetting.getUuid(), qzOperationType.getOperationType(), "aiZhan", false);
                         }
-                        captureRankJobService.qzAddCaptureRankJob(qzOperationType.getGroup(), qzSettingUuid,
-                            qzSetting.getCustomerUuid(), qzOperationType.getOperationType(), userName);
+                        captureRankJobService.qzAddCaptureRankJob(qzOperationType.getGroup(), qzSettingUuid, qzSetting.getCustomerUuid(),
+                            qzOperationType.getOperationType(), userName);
                     }
                 }
             }
