@@ -159,18 +159,15 @@ public class QZSettingServiceImpl extends
     }
 
     @Override
-    public Map<String, Object> getQZKeywordRankInfo(long uuid, String terminalType,
-        String optimizeGroupName) {
-        List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService
-            .searchExistingQZKeywordRankInfo(uuid, terminalType, null);
+    public Map<String, Object> getQZKeywordRankInfo(long uuid, String terminalType, String optimizeGroupName) {
+        List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(uuid, terminalType, null);
         Map<String, Object> rankInfoVoMap = new HashMap<>();
         if (CollectionUtils.isNotEmpty(qzKeywordRankInfos)) {
             int price = 0;
             for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
                 QZKeywordRankInfoVO qzKeywordRankInfoVo = new QZKeywordRankInfoVO();
                 initQZKeywordRankInfoVo(qzKeywordRankInfo, qzKeywordRankInfoVo);
-                price += qzKeywordRankInfo.getCurrentPrice() == null ? 0
-                    : qzKeywordRankInfo.getCurrentPrice();
+                price += qzKeywordRankInfo.getCurrentPrice() == null ? 0 : qzKeywordRankInfo.getCurrentPrice();
                 rankInfoVoMap.put(qzKeywordRankInfo.getWebsiteType(), qzKeywordRankInfoVo);
             }
             rankInfoVoMap.put("price", price);
@@ -220,15 +217,11 @@ public class QZSettingServiceImpl extends
         return split;
     }
 
-    private void getQZSettingGroupInfo(Map<String, Object> rankInfoVoMap, long uuid,
-        String terminalType, String optimizeGroupName) {
-        rankInfoVoMap.put("customerKeywordCount",
-            qzSettingDao.getQZSettingGroupInfo(terminalType, optimizeGroupName));
-        rankInfoVoMap.put("operationCombineName",
-            operationCombineService.getOperationCombineName(optimizeGroupName));
+    private void getQZSettingGroupInfo(Map<String, Object> rankInfoVoMap, long uuid, String terminalType, String optimizeGroupName) {
+        rankInfoVoMap.put("customerKeywordCount", qzSettingDao.getQZSettingGroupInfo(terminalType, optimizeGroupName));
+        rankInfoVoMap.put("operationCombineName", operationCombineService.getOperationCombineName(optimizeGroupName));
         rankInfoVoMap.put("categoryTagNames", qzCategoryTagService.findTagNames(uuid));
-        rankInfoVoMap
-            .put("standardTime", qzOperationTypeService.getStandardTime(uuid, terminalType));
+        rankInfoVoMap.put("standardTime", qzOperationTypeService.getStandardTime(uuid, terminalType));
     }
 
     @Override

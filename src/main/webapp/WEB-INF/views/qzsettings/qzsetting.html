@@ -769,8 +769,7 @@
     var sign = false;
     var noteAddRow = true;
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'treeSelect', 'laydate',
-        'authtree'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'treeSelect', 'laydate'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
@@ -779,7 +778,6 @@
         var treeSelect = layui.treeSelect;
         var layer = layui.layer;
         var laydate = layui.laydate;
-        var authtree = layui.authtree;
 
         laydate.render({
             elem: '#createTimes',
@@ -825,30 +823,6 @@
                 }
             });
         }
-
-        //  TODO
-        // $.ajax({
-        //     url: '/internal/user/trees2',
-        //     dataType: 'json',
-        //     success: function(data){
-        //         var trees = authtree.listConvert(data,{
-        //             primaryKey: 'id',
-        //             startPid: 0,
-        //             parentKey: 'parentTId',
-        //             childKey: data.children,
-        //             nameKey: 'name',
-        //             valueKey: 'id'
-        //         });
-        //         authtree.render('#LAY-auth-tree-index', trees, {
-        //             inputname: 'authids[]',
-        //             layfilter: 'tree',
-        //             autowidth: true,
-        //             openall: true,
-        //             autochecked: false,
-        //         });
-        //         authtree.showAll(data)
-        //     }
-        // });
 
         treeSelect.render({
             elem: '#tree',
@@ -1925,11 +1899,8 @@
                 $.each(categoryTagNames, function (idx, val) {
                     tagNameStr += val + ",";
                 });
-                $(span).find("label.tagNameStr").html(
-                    tagNameStr.substring(0, tagNameStr.length - 1));
-                $(span).find("label.tagNameStr").attr('title',
-                    tagNameStr.substring(0, tagNameStr.length - 1))
-
+                $(span).find("a.tagNameStr").html(tagNameStr.substring(0, tagNameStr.length - 1));
+                $(span).find("a.tagNameStr").attr('title', tagNameStr.substring(0, tagNameStr.length - 1))
             }
 
             if (operationCombineName !== null) {
@@ -2107,11 +2078,18 @@
                 btn: ['确认', '取消'],
                 yes: function (index) {
                     let v = document.getElementById('tagNames').value;
-                    if (!/^[\u4e00-\u9fa50-9a-zA-Z,]+$/.test(v)) {
+                    if (!/^[\u4e00-\u9fa50-9a-zA-Z,]*$/.test(v)) {
                         show_layer_msg('请输入符合规则的标签数据！', 5);
                         return false;
                     }
                     let d = {}, tags = [], ids = [], tagNames = v.split(',');
+                    tagNames = tagNames.filter(function (val, index) {
+                       return tagNames.indexOf(val) ===index && val !== "";
+                    });
+                    if (v.indexOf("暂无") > -1 && tagNames.length === 0 && v !== "") {
+                        show_layer_msg('请输入有意义的数据！', 5);
+                        return false;
+                    }
                     for (let item in tagNames) {
                         let a = {};
                         a.tagName = tagNames[item];
@@ -2137,7 +2115,7 @@
                                 },
                                 success: function (res) {
                                     if (res.code === 200) {
-                                        show_layer_msg('修改成功', 1);
+                                        show_layer_msg('修改成功', 6);
                                         active['reload'].call(this);
                                         layer.close(index);
                                         layer.close(index_);
@@ -2532,7 +2510,7 @@
                 icon: icon,
                 title: title === undefined ? null : title,
                 anim: 5,
-                time: 2000,
+                time: 1000,
                 isOutAnim: false
             }, function () {
                 if (status) {
@@ -2738,10 +2716,97 @@
         window.searchCustomerKeywords = function (customerUuid, pcGroup, phoneGroup) {
             let searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
             searchCustomerKeywordForm.find("#customerUuid").val(customerUuid);
-            searchCustomerKeywordForm.find("#optimizeGroupName").val(pcGroup == null ? phoneGroup : pcGroup);
+            searchCustomerKeywordForm.find("#optimizeGroupName").val(
+                pcGroup == null ? phoneGroup : pcGroup);
             searchCustomerKeywordForm.find("#status").val(1);
             searchCustomerKeywordForm.submit();
-        }
+        };
+
+        window.editTagNameStr = function (uuid) {
+            let old_text = $("a#tagName_" + uuid).text();
+            if ("暂无" === old_text) {
+                old_text = "";
+            }
+            layer.open({
+                type: 1,
+                title: '修改分组标签',
+                content: updFZTagsHtml,
+                shadeClose: true,
+                resize: false,
+                area: '420px',
+                btn: ['确认', '取消'],
+                success: function(layero, index){
+                    document.getElementById('tagNames').value = old_text;
+                },
+                yes: function (index_0) {
+                    let new_text = document.getElementById('tagNames').value;
+                    if (!/^[\u4e00-\u9fa50-9a-zA-Z,]*$/.test(new_text)) {
+                        show_layer_msg('请输入符合规则的标签数据！', 5);
+                        return false;
+                    }
+                    if (new_text === old_text && old_text !== "") {
+                        show_layer_msg('新分组标签不能与原分组标签相同', 5);
+                        return false;
+                    }
+                    let qzCategoryTags = [], categoryTags = new_text.split(',');
+                    categoryTags = categoryTags.filter(function (val, index) {
+                        return categoryTags.indexOf(val) === index && val !== "";
+                    });
+                    if (new_text.indexOf("暂无") > -1 && categoryTags.length === 0 && new_text !== "") {
+                        show_layer_msg('请输入有意义的标签', 5);
+                        return false;
+                    }
+                    for (let item in categoryTags) {
+                        let obj = {};
+                        obj.tagName = categoryTags[item];
+                        qzCategoryTags.push(obj);
+                    }
+                    let postData = {};
+                    postData.qzSettingUuid = uuid;
+                    postData.qzCategoryTags = qzCategoryTags;
+                    layer.confirm('确认修改', {
+                        icon: 3,
+                        title: '修改标签',
+                        btn: ['确认', '取消'],
+                        yes: function (index_1) {
+                            $.ajax({
+                                url: "/internal/qzcategory/saveCategoryLabel",
+                                type: "POST",
+                                data: JSON.stringify(postData),
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                success: function (res) {
+                                    if (res) {
+                                        let text = "";
+                                        for (let item in categoryTags) {
+                                            text += "," + categoryTags[item];
+                                        }
+                                        text = text.substr(1);
+                                        if (text === "") {
+                                            text = "暂无";
+                                        }
+                                        $("a#tagName_" + uuid).text(text);
+                                        $("a#tagName_" + uuid).prop("title", text);
+                                        show_layer_msg("修改成功", 6);
+                                        layer.close(index_1);
+                                        layer.close(index_0);
+                                    } else {
+                                        show_layer_msg(res.msg, 5);
+                                    }
+                                }
+                            });
+                        }, btn2: function (index_1) {
+                            layer.close(index_1);
+                        }
+                    });
+                }, btn2: function (index_0) {
+                    layer.close(index_0);
+                }, cancel: function() {
+                }
+            })
+        };
     });
 </script>
 
@@ -2804,6 +2869,7 @@
     <div class="layui-row header">
         <!--    头部信息栏    -->
         <div class="layui-col-md7">
+            <input type="hidden" name="uuid" value="{{d.uuid}}">
             <input type="hidden" name="PCGroup" value="{{d.pcGroup}}">
             <input type="hidden" name="PhoneGroup" value="{{d.phoneGroup}}">
             <span class="contactPerson-name" title="{{d.contactPerson}}"><a href="javascript:;">{{d.contactPerson}}</a></span>
@@ -2860,9 +2926,10 @@
         </div>
         <!--    标签    -->
         <div class="layui-col-md1">
-            <span class="tagNames"
-                  ondblclick="editTagNameStr($(this).find('label.tagNameStr')[0], true)"><label>标签:</label>&nbsp;&nbsp;<label
-                class="tagNameStr" title="">暂无</label></span>
+            <span class="tagNames">
+                <label>标签:</label>&nbsp;&nbsp;
+                <a class="tagNameStr" id="tagName_{{d.uuid}}" href="javascript:editTagNameStr('{{d.uuid}}');" title="">暂无</a>
+            </span>
         </div>
         <!--     操作栏   -->
         <div class="layui-col-md4">
@@ -2882,12 +2949,6 @@
                        '{{d.phoneGroup}}')">添加关键字</a>
                 </span>
                 </@shiro.hasPermission>
-                <!--<@shiro.hasPermission name="/internal/qzsetting/save">-->
-                <span>
-                    <a class="blue" href="javascript:openMessageBox('全站设置','{{d.customerUuid}}',
-                           '{{d.contactPerson}}')">用户留言</a>
-                </span>
-                <!--</@shiro.hasPermission>-->
                 <@shiro.hasPermission name="/internal/usernotebook/searchUserNoteBooks">
                 <span>
                     <a class="blue"

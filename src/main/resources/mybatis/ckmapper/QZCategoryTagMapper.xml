@@ -14,8 +14,7 @@
     </select>
 
     <select id="findTagNames" resultType="java.lang.String">
-        SELECT
-        qc.fTagName AS "tagName"
+        SELECT qc.fTagName
         FROM t_qz_category_tag qc
         WHERE 1 = 1
         <if test="qzSettingUuid != null">

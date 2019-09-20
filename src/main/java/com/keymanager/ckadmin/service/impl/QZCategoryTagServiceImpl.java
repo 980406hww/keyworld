@@ -1,6 +1,7 @@
 package com.keymanager.ckadmin.service.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.ckadmin.criteria.QZCategoryTagCriteria;
 import com.keymanager.ckadmin.dao.QZCategoryTagDao;
 import com.keymanager.ckadmin.entity.QZCategoryTag;
 import com.keymanager.ckadmin.service.QZCategoryTagService;
@@ -28,15 +29,13 @@ public class QZCategoryTagServiceImpl extends
     }
 
     @Override
-    public void updateQZCategoryTag(List<QZCategoryTag> existingQZCategoryTags,
-        List<QZCategoryTag> updateQZCategoryTags, long qzSettingUuid) {
+    public void updateQZCategoryTag(List<QZCategoryTag> existingQZCategoryTags, List<QZCategoryTag> updateQZCategoryTags, long qzSettingUuid) {
         Map<String, QZCategoryTag> existingQZCategoryTagMap = new HashMap<>();
         for (QZCategoryTag qzCategoryTag : existingQZCategoryTags) {
             existingQZCategoryTagMap.put(qzCategoryTag.getTagName(), qzCategoryTag);
         }
         for (QZCategoryTag newQZCategoryTag : updateQZCategoryTags) {
-            QZCategoryTag oldQZCategoryTag = existingQZCategoryTagMap
-                .get(newQZCategoryTag.getTagName());
+            QZCategoryTag oldQZCategoryTag = existingQZCategoryTagMap.get(newQZCategoryTag.getTagName());
             if (null != oldQZCategoryTag) {
                 existingQZCategoryTagMap.remove(newQZCategoryTag.getTagName());
             } else {
@@ -47,5 +46,11 @@ public class QZCategoryTagServiceImpl extends
         for (QZCategoryTag qzCategoryTag : existingQZCategoryTagMap.values()) {
             qzCategoryTagDao.deleteById(qzCategoryTag);
         }
+    }
+
+    @Override
+    public void saveCategoryTagNames(QZCategoryTagCriteria qzCategoryTagCriteria) {
+        List<QZCategoryTag> existingQZCategoryTags = this.searchCategoryTagByQZSettingUuid(qzCategoryTagCriteria.getQzSettingUuid());
+        this.updateQZCategoryTag(existingQZCategoryTags, qzCategoryTagCriteria.getQzCategoryTags(), qzCategoryTagCriteria.getQzSettingUuid());
     }
 }
