@@ -15,18 +15,13 @@ import org.springframework.stereotype.Repository;
 @Repository("qzKeywordRankInfoDao2")
 public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
 
-    List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo(
-        @Param("qzSettingUuid") Long qzSettingUuid,
-        @Param("terminalType") String terminalType,
-        @Param("websiteType") String websiteType);
+    List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType, @Param("websiteType") String websiteType);
 
     void deleteByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid);
 
-    QZKeywordRankInfo getQZKeywordRankInfo(@Param("qzSettingUuid") Long qzSettingUuid,
-        @Param("terminalType") String terminalType, @Param("websiteType") String websiteType);
+    QZKeywordRankInfo getQZKeywordRankInfo(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType, @Param("websiteType") String websiteType);
 
-    QZSettingCountNumCriteria getCountNumOfRankInfo(@Param("lowerValue") double lowerValue,
-        @Param("upperValue") double upperValue,
+    QZSettingCountNumCriteria getCountNumOfRankInfo(@Param("lowerValue") double lowerValue, @Param("upperValue") double upperValue,
         @Param("differenceValue") double differenceValue,
         @Param("downOneWeekDiff") int downOneWeekDiff,
         @Param("upperOneWeekDiff") int upperOneWeekDiff,
@@ -34,9 +29,7 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
 
     List<String> getQZKeywordRankInfoTypes(@Param("qzSettingUuid") Long qzSettingUuid);
 
-    QZKeywordRankInfo selectByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid,
-        @Param("terminalType") String terminalType);
+    QZKeywordRankInfo selectByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType);
 
-    List<QZKeywordRankInfo> searchExistingExtraQZKeywordRankInfo(
-        @Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType);
+    List<QZKeywordRankInfo> searchExistingExtraQZKeywordRankInfo(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType);
 }

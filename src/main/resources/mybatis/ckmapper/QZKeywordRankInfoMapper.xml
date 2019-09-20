@@ -189,8 +189,7 @@
         AND qk.fWebsiteType = 'designationWord'
     </select>
 
-    <select id="searchExistingExtraQZKeywordRankInfo"
-        resultType="com.keymanager.ckadmin.entity.QZKeywordRankInfo">
+    <select id="searchExistingExtraQZKeywordRankInfo" resultType="com.keymanager.ckadmin.entity.QZKeywordRankInfo">
         SELECT qzkri.fUuid AS 'uuid'
         FROM t_qz_keyword_rank_info qzkri
         WHERE qzkri.fQZSettingUuid = #{qzSettingUuid}

@@ -9,18 +9,19 @@ public interface QZOperationTypeService extends IService<QZOperationType> {
 
     Date getStandardTime(long qzSettingUuid, String terminalType);
 
-    List<QZOperationType> searchQZOperationTypesByQZSettingUuid(Long uuid);
+    List<QZOperationType> searchQZOperationTypesByQZSettingUuid(long uuid);
 
-    List<QZOperationType> searchQZOperationTypesIsDelete(Long uuid);
+    List<QZOperationType> searchQZOperationTypesIsDelete(long uuid);
 
     int selectLastId();
 
-    void deleteByQZSettingUuid(Long uuid);
+    void deleteByQZSettingUuid(long uuid);
 
     List<String> getQZSettngStandardSpecie(long qzSettingUuid, String[] terminalTypes);
 
-    QZOperationType searchQZOperationType(
-        Long qzSettingUuid, String terminalType);
+    QZOperationType searchQZOperationType(long qzSettingUuid, String terminalType);
 
-    void updateQZOperationTypeStandardTime(Long uuid, int isStandardFlag);
+    void updateQZOperationTypeStandardTime(long uuid, int isStandardFlag);
+
+    String findQZChargeRuleStandardSpecies(long qzSettingUuid, String terminalType);
 }

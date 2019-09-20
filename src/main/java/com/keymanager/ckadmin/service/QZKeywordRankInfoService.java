@@ -10,8 +10,7 @@ import java.util.List;
 
 public interface QZKeywordRankInfoService extends IService<QZKeywordRankInfo> {
 
-    List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo(long qzSettingUuid, String terminalType,
-        String websiteType);
+    List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo(long qzSettingUuid, String terminalType, String websiteType);
 
     void addQZKeywordRankInfo(Long uuid, String terminalType, String standardSpecies, boolean dataProcessingStatus);
 
@@ -19,8 +18,7 @@ public interface QZKeywordRankInfoService extends IService<QZKeywordRankInfo> {
 
     List<ExternalQZSettingVO> getQZSettingTask();
 
-    void updateQzKeywordRankInfo(
-        ExternalQZKeywordRankInfoResultVO externalQZKeywordRankInfoResultVo);
+    void updateQzKeywordRankInfo(ExternalQZKeywordRankInfoResultVO externalQZKeywordRankInfoResultVo);
 
     QZSettingCountNumCriteria searchCountNumOfQZKeywordRankInfo(QZSettingSearchCriteria criteria);
 }

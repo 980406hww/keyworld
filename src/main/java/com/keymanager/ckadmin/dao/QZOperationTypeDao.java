@@ -13,14 +13,12 @@ public interface QZOperationTypeDao extends BaseMapper<QZOperationType> {
     /**
      * 通过uuid查询操作类型表
      */
-    List<QZOperationType> searchQZOperationTypesByQZSettingUuid(
-        @Param("qzSettingUuid") Long qzSettingUuid);
+    List<QZOperationType> searchQZOperationTypesByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid);
 
     /**
      * 查询多条操作类型信息
      */
-    List<QZOperationType> searchQZOperationTypesIsDelete(
-        @Param("qzSettingUuid") Long qzSettingUuid);
+    List<QZOperationType> searchQZOperationTypesIsDelete(@Param("qzSettingUuid") Long qzSettingUuid);
 
     /**
      * 删除
@@ -32,18 +30,13 @@ public interface QZOperationTypeDao extends BaseMapper<QZOperationType> {
      */
     int selectLastId();
 
-    void updateQZOperationTypeStandardTime(@Param("uuid") long uuid,
-        @Param("isStandardFlag") int isStandardFlag);
+    void updateQZOperationTypeStandardTime(@Param("uuid") long uuid, @Param("isStandardFlag") int isStandardFlag);
 
-    QZOperationType searchQZOperationType(@Param("qzSettingUuid") long qzSettingUuid,
-        @Param("operationType") String operationType);
+    QZOperationType searchQZOperationType(@Param("qzSettingUuid") long qzSettingUuid, @Param("operationType") String operationType);
 
-    void updateStandardTimeByUuid(@Param("uuid") Long uuid, @Param("updateFlag") int updateFlag,
-        @Param("lastAchieve") int lastAchieve);
+    void updateStandardTimeByUuid(@Param("uuid") Long uuid, @Param("updateFlag") int updateFlag, @Param("lastAchieve") int lastAchieve);
 
-    Date getStandardTime(@Param("qzSettingUuid") long qzSettingUuid,
-        @Param("terminalType") String terminalType);
+    Date getStandardTime(@Param("qzSettingUuid") long qzSettingUuid, @Param("terminalType") String terminalType);
 
-    String getQZSettngStandardSpecie(@Param("qzSettingUuid") long qzSettingUuid,
-        @Param("terminalType") String terminalType);
+    String getQZSettngStandardSpecie(@Param("qzSettingUuid") long qzSettingUuid, @Param("terminalType") String terminalType);
 }
