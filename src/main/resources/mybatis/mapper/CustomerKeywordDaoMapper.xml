@@ -1771,16 +1771,6 @@
         FROM t_customer_keyword ck
         WHERE ck.fCurrentIndexCount = -1
         AND ck.fType = 'qz'
-        AND ck.fCaptureIndexQueryTime IS NULL
-        LIMIT 10
-        UNION ALL
-        SELECT
-        ck.fUuid AS 'uuid',
-        ck.fKeyword	AS	'keyword',
-        ck.fTerminalType AS 'terminalType'
-        FROM t_customer_keyword ck
-        WHERE ck.fCurrentIndexCount = -1
-        AND ck.fType = 'qz'
         AND ck.fCaptureIndexQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
         LIMIT 10
     </select>
@@ -1799,7 +1789,7 @@
             UPDATE t_customer_keyword
             SET fCurrentIndexCount = #{customerKeyword.currentIndexCount}
             <if test="customerKeyword.currentIndexCount == -1">
-                , fCaptureIndexQueryTime = NULL
+                , fCaptureIndexQueryTime = DATE_SUB(NOW(), INTERVAL 30 MINUTE)
             </if>
             , fOptimizePlanCount = #{customerKeyword.optimizePlanCount}
             , fOptimizeTodayCount = fOptimizePlanCount * ROUND(RAND() * 0.7 + 0.5)
