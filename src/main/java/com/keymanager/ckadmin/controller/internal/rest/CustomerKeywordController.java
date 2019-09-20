@@ -1,9 +1,16 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
+import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.criteria.ProductkeywordCriteria;
+import com.keymanager.ckadmin.entity.ProductKeyword;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
+import com.keymanager.ckadmin.util.ReflectUtils;
+import com.keymanager.ckadmin.util.SQLFilterUtils;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.util.TerminalTypeMapping;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +20,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @ClassName CustomerKeywordController
@@ -30,6 +38,48 @@ public class CustomerKeywordController {
 
     @Resource(name = "customerKeywordService2")
     private CustomerKeywordService customerKeywordService;
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/toKeywords")
+    public ModelAndView toCustomers() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/keyword");
+        return mv;
+    }
+
+    /* @PostMapping(value = "/searchProductKeywords")
+    public ResultBean searchProductKeywords(HttpServletRequest request,
+            @RequestBody ProductkeywordCriteria productkeywordCriteria) {
+        ResultBean resultBean = new ResultBean();
+        if (SQLFilterUtils.sqlInject(productkeywordCriteria.toString())) {
+            resultBean.setCode(400);
+            resultBean.setMsg("查询参数错误或包含非法字符，请检查后重试！");
+            return resultBean;
+        }
+        try {
+            Page<ProductKeyword> page = new Page(productkeywordCriteria.getPage(), productkeywordCriteria.getLimit());
+            String orderByField = ReflectUtils
+                    .getTableFieldValue(ProductKeyword.class, productkeywordCriteria.getOrderBy());
+            if (StringUtils.isNotEmpty(orderByField)) {
+                page.setOrderByField(orderByField);
+            }
+            if (productkeywordCriteria.getOrderMode() != null && productkeywordCriteria.getOrderMode() == 0) {
+                page.setAsc(false);
+            }
+            page = productKeywordService.searchProductKeywords(page, productkeywordCriteria);
+            List<ProductKeyword> customers = page.getRecords();
+            resultBean.setCode(0);
+            resultBean.setCount(page.getTotal());
+            resultBean.setMsg("");
+            resultBean.setData(customers);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }*/
 
     @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordStatus")
     @RequestMapping(value = "/changeCustomerKeywordStatus2", method = RequestMethod.POST)

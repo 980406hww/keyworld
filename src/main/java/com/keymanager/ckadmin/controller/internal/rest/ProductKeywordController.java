@@ -61,7 +61,6 @@ public class ProductKeywordController {
             return resultBean;
         }
         try {
-
             Page<ProductKeyword> page = new Page(productkeywordCriteria.getPage(), productkeywordCriteria.getLimit());
             String orderByField = ReflectUtils
                 .getTableFieldValue(ProductKeyword.class, productkeywordCriteria.getOrderBy());
