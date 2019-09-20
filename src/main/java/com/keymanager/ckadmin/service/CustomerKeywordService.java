@@ -1,6 +1,8 @@
 package com.keymanager.ckadmin.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
+import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
@@ -37,4 +39,12 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     List<CustomerKeywordSummaryInfoVO> searchCustomerKeywordSummaryInfo(String entryType, long customerUuid);
 
     KeywordCountVO getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String terminalType);
+
+    Page<CustomerKeyword> searchKeywords(Page<CustomerKeyword> page, KeywordCriteria keywordCriteria);
+
+    void updateCustomerKeywordStatus(List<Long> customerKeywordUuids, Integer status);
+
+    void updateOptimizeGroupName(KeywordCriteria keywordCriteria);
+
+    void updateBearPawNumber(KeywordCriteria keywordCriteria);
 }

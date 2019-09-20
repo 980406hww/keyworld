@@ -1,9 +1,12 @@
 package com.keymanager.ckadmin.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
+import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,4 +56,13 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     KeywordCountVO getCustomerKeywordsCountByCustomerUuid(@Param("customerUuid") Long customerUuid, @Param("terminalType") String terminalType);
 
+    List<CustomerKeyword> searchKeywords(Page<CustomerKeyword> page, @Param("keywordCriteria") KeywordCriteria keywordCriteria);
+
+    void updateCustomerKeywordStatus(@Param("uuids") List<Long> uuids, @Param("status") Integer status);
+
+    int getKeywordCountByKeywordCriteria(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
+
+    void updateOptimizeGroupName(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
+
+    void updateBearPawNumber(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
 }

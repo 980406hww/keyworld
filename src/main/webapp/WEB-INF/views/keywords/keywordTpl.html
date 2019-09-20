@@ -1,0 +1,45 @@
+
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+        <button class="layui-btn layui-btn-sm" id="pause_keyword" lay-event="pause_keyword">
+            暂停
+        </button>
+        <button class="layui-btn layui-btn-sm" id="active_keyword" lay-event="active_keyword">
+            激活
+        </button>
+        <button class="layui-btn layui-btn-sm" id="change_current_optimizedGroup" lay-event="change_current_optimizedGroup">
+            修改当前优化组
+        </button>
+        <button class="layui-btn layui-btn-sm" id="change_selected_optimizedGroup" lay-event="change_selected_optimizedGroup">
+            修改选中优化组
+        </button>
+        <button class="layui-btn layui-btn-sm" id="change_current_bearPawNumber" lay-event="change_current_bearPawNumber">
+            修改当前熊掌号
+        </button>
+        <button class="layui-btn layui-btn-sm" id="change_selected_bearPawNumber" lay-event="change_selected_bearPawNumber">
+            修改选中熊掌号
+        </button>
+        <button class="layui-btn layui-btn-sm" id="batch_modify" lay-event="batch_modify">
+            批量修改
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" id="batch_delete" lay-event="batch_delete">
+            批量删除
+        </button>
+</script>
+<!--模板-->
+<script type="text/html" id="toDateTime">
+    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+</script>
+
+<script type="text/html" id="toCUstomerProductKeyword">
+    <a href="javascript:updateOrNewTab('/internal/productKeyword/searchProductKeywordsByCustomerUuid/{{d.customerUuid}}','{{d.contactPerson}}-关键字列表', '{{d.customerUuid}}')">{{d.contactPerson}}</a>
+</script>
+
+<script type="text/html" id="operationTpl">
+    <@shiro.hasPermission name="/internal/customer/saveCustomer">
+    <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/customer/delCustomer">
+    <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+    </@shiro.hasPermission>
+</script>

@@ -1,6 +1,8 @@
 package com.keymanager.ckadmin.service.impl;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.dao.CustomerKeywordDao;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
@@ -12,6 +14,7 @@ import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.EntryTypeEnum;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
+import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import java.util.ArrayList;
@@ -208,6 +211,30 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public KeywordCountVO getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String terminalType) {
         return customerKeywordDao.getCustomerKeywordsCountByCustomerUuid(customerUuid, terminalType);
+    }
+
+    @Override
+    public Page<CustomerKeyword> searchKeywords(Page<CustomerKeyword> page, KeywordCriteria keywordCriteria) {
+        // 不使用mp自带分页查询，解决count慢问题
+        page.setSearchCount(false);
+        page.setTotal(customerKeywordDao.getKeywordCountByKeywordCriteria(keywordCriteria));
+        List<CustomerKeyword> customerKeywordList = customerKeywordDao.searchKeywords(page, keywordCriteria);
+        page.setRecords(customerKeywordList);
+        return page;
+    }
+
+    @Override
+    public void updateCustomerKeywordStatus(List<Long> customerKeywordUuids, Integer status) {
+        customerKeywordDao.updateCustomerKeywordStatus(customerKeywordUuids, status);
+    }
+
+    @Override
+    public void updateOptimizeGroupName(KeywordCriteria keywordCriteria) {
+        customerKeywordDao.updateOptimizeGroupName(keywordCriteria);
+    }
+    @Override
+    public void updateBearPawNumber(KeywordCriteria keywordCriteria) {
+        customerKeywordDao.updateBearPawNumber(keywordCriteria);
     }
 }
 
