@@ -62,7 +62,7 @@ public class CustomerController {
 
     @RequiresPermissions("/internal/customer/searchCustomers")
     @PostMapping(value = "/getCustomers")
-    public ResultBean getAlgorithmTestPlans(HttpServletRequest request,
+    public ResultBean getCustomers(HttpServletRequest request,
         @RequestBody CustomerCriteria customerCriteria) {
         ResultBean resultBean = new ResultBean();
         if (SQLFilterUtils.sqlInject(customerCriteria.toString())) {

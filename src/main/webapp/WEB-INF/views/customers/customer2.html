@@ -63,8 +63,11 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">客户类型</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="type" id="type" placeholder="请输入客户类型" autocomplete="off"
-                               class="layui-input">
+                        <select name="type">
+                            <option value=""></option>
+                            <option value="普通客户">普通客户</option>
+                            <option value="测试客户">测试客户</option>
+                        </select>
                     </div>
                 </div>
 
@@ -76,8 +79,15 @@
                     </div>
                 </div>
                 <div class="layui-inline">
+                    <label class="layui-form-label">微信</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="wechat" id="wechat" placeholder="请输入微信" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
                     <label class="layui-form-label">联系电话</label>
-                    <div class="layui-input-inline" >
+                    <div class="layui-input-inline">
                         <input type="text" name="telphone" id="telphone" placeholder="请输入联系电话"
                                autocomplete="off"
                                class="layui-input">
@@ -85,7 +95,7 @@
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">备注</label>
-                    <div class="layui-input-inline" >
+                    <div class="layui-input-inline">
                         <input type="text" name="remark" id="remark" placeholder="请输入备注" autocomplete="off"
                                class="layui-input">
                     </div>
