@@ -674,8 +674,8 @@
                             <div class="layui-input-inline">
                                 <select name="autoCrawlKeywordFlag" id="autoCrawlKeywordFlag">
                                     <option value selected>全部</option>
-                                    <option value="1">是</option>
-                                    <option value="0">否</option>
+                                    <option value="true">是</option>
+                                    <option value="false">否</option>
                                 </select>
                             </div>
                         </div>
@@ -740,9 +740,9 @@
 
 <form id="searchCustomerKeywordForm" method="post" target="_blank"
       action="/internal/customerKeyword/searchCustomerKeywords" style="display: none;">
-    <input type="text" name="customerUuid">
-    <input type="text" name="optimizeGroupName">
-    <input type="text" name="status">
+    <input type="text" name="customerUuid" id="hideCustomerUuid">
+    <input type="text" name="optimizeGroupName" id="hideOptimizeGroupName">
+    <input type="text" name="status" id="hideStatus">
 </form>
 
 <!--数据表格-->
@@ -943,13 +943,14 @@
             }
         </@shiro.hasPermission>
 
+        get_qzcategory_label_list();
+        get_active_customer_list();
+
         function successTable(res) {
             let terminalType = $('#terminalType').val();
             terminalType = terminalType === '' ? 'PC' : terminalType;
             getTerminalSearchEngineMap();
             get_operation_combine_list(terminalType);
-            get_qzcategory_label_list();
-            get_active_customer_list();
             let qz_setting_table = $("#qzSettingTable").parent().find(
                 ".layui-table-main").find("table");
             $.each(res.data, function (idx, val) {
@@ -976,9 +977,6 @@
 
         let radio = document.getElementsByName('sort');
         function initSortRadio(condition){
-            if (condition.autoCrawlKeywordFlag && condition.autoCrawlKeywordFlag !== '') {
-                condition.autoCrawlKeywordFlag = condition.autoCrawlKeywordFlag === '1';
-            }
             $.ajax({
                 url: '/internal/qzkeywordrank/searchCountNumOfQZKeywordRankInfoNew',
                 type: 'POST',
@@ -998,7 +996,7 @@
                         radio[7].title = "达标(" + res.data.atLeastStandardNum + ")";
                         radio[8].title = "未达标(" + res.data.neverStandardNum + ")";
                         radio[9].title = "接近达标(" + res.data.closeStandardNum + ")";
-                        form.render();
+                        form.render('radio');
                         radio[1].nextElementSibling.title = "网站关键词(PC,Phone)一星期排名趋势涨幅<"
                             + res.data.upperValue + ", 且下降至少" + res.data.upOneWeekDiff + "个词";
                         radio[2].nextElementSibling.title = "网站关键词(PC,Phone)一星期排名趋势涨幅不变";
@@ -2728,10 +2726,10 @@
          */
         window.searchCustomerKeywords = function (customerUuid, pcGroup, phoneGroup) {
             let searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
-            searchCustomerKeywordForm.find("#customerUuid").val(customerUuid);
-            searchCustomerKeywordForm.find("#optimizeGroupName").val(
+            searchCustomerKeywordForm.find("#hideCustomerUuid").val(customerUuid);
+            searchCustomerKeywordForm.find("#hideOptimizeGroupName").val(
                 pcGroup == null ? phoneGroup : pcGroup);
-            searchCustomerKeywordForm.find("#status").val(1);
+            searchCustomerKeywordForm.find("#hideStatus").val(1);
             searchCustomerKeywordForm.submit();
         };
 

@@ -679,6 +679,10 @@
                                         document.getElementById('computerTbody').innerHTML = html_c;
                                     }
                                 }
+                                if (d_n.comStandardSpecies === 'other'){
+                                    computerTable.style.display = 'none';
+                                    computerTableFlag = false;
+                                }
                                 break;
                             case "Phone":
                                 deselectComputer();
@@ -700,6 +704,10 @@
                                         html_p = getHeader(d_n.phoneStandardSpecies, false) + html_p;
                                         document.getElementById('phoneTbody').innerHTML = html_p;
                                     }
+                                }
+                                if (d_n.phoneStandardSpecies === 'other'){
+                                    phoneTable.style.display = 'none';
+                                    phoneTableFlag = false;
                                 }
                                 break;
                         }
