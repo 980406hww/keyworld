@@ -211,7 +211,7 @@
             qs.fUuid   AS 'uuid',
             qs.fDomain AS 'domain',
             qs.fCustomerUuid  AS 'customerUuid',
-            qs.fBearPawNumber    AS 'bearPawNumber',
+            qs.fBearPawNumber AS 'bearPawNumber',
             qs.fIgnoreNoIndex AS 'ignoreNoIndex',
             qs.fIgnoreNoOrder AS 'ignoreNoOrder',
             qs.fCaptureTerminalType AS 'captureTerminalType'
