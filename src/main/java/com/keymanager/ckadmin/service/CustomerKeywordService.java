@@ -21,7 +21,6 @@ import java.util.Map;
  */
 public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
-
     List<Map> getCustomerKeywordsCount(List<Long> customerUuids, String terminalType, String entryType);
 
     void changeCustomerKeywordStatus(String terminalType, String entryType, Long customerUuid, Integer status);
@@ -46,5 +45,9 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     void updateOptimizeGroupName(KeywordCriteria keywordCriteria);
 
+    void updateMachineGroup(KeywordCriteria keywordCriteria);
+
     void updateBearPawNumber(KeywordCriteria keywordCriteria);
+
+
 }

@@ -232,6 +232,12 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     public void updateOptimizeGroupName(KeywordCriteria keywordCriteria) {
         customerKeywordDao.updateOptimizeGroupName(keywordCriteria);
     }
+
+    @Override
+    public void updateMachineGroup(KeywordCriteria keywordCriteria) {
+        customerKeywordDao.updateMachineGroup(keywordCriteria);
+    }
+
     @Override
     public void updateBearPawNumber(KeywordCriteria keywordCriteria) {
         customerKeywordDao.updateBearPawNumber(keywordCriteria);

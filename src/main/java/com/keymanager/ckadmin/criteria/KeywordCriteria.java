@@ -28,6 +28,7 @@ public class KeywordCriteria extends BaseCriteria {
 
 
     private String targetOptimizeGroupName;
+    private String targetMachineGroup;
     private String targetBearPawNumber;
 
 
@@ -159,5 +160,13 @@ public class KeywordCriteria extends BaseCriteria {
 
     public void setTargetBearPawNumber(String targetBearPawNumber) {
         this.targetBearPawNumber = targetBearPawNumber;
+    }
+
+    public String getTargetMachineGroup() {
+        return targetMachineGroup;
+    }
+
+    public void setTargetMachineGroup(String targetMachineGroup) {
+        this.targetMachineGroup = targetMachineGroup;
     }
 }

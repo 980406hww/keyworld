@@ -29,7 +29,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         contentType: 'application/json',
         cols: [[
             {filed: 'uuid', type: 'checkbox', fixed: "left", width: '3%'},
-            {field: 'contactPerson', title: '用户名称', width: '8%', templet: '#toCUstomerProductKeyword'},
+            {field: 'contactPerson', title: '用户名称', width: '8%', templet: '#toCUstomerKeywordTpl'},
             {field: 'keyword', title: '关键字', width: '10%'},
             {field: 'url', title: '链接', width: '15%'},
 
@@ -38,20 +38,21 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             // {field: 'terminalType', title: '终端', width: '5%'},
             {field: 'title', title: '标题', width: '10%'},
 
-            {field: 'indexCount', title: '指数', width: '5%'},
-            {field: 'initialPosition', title: '初始排名', width: '5%'},
-            {field: 'currentPosition', title: '现排名', width: '5%'},
+            {field: 'indexCount', title: '指数', width: '5%', hide: true},
+            {field: 'initialPosition', title: '初始排名', width: '5%' , hide: true},
+            {field: 'currentPosition', title: '现排名', width: '5%' , hide: true},
             {field: 'searchEngine', title: '搜索引擎', width: '6%'},
             {field: 'optimizeGroupName', title: '优化分组', width: '6%'},
+            {field: 'machineGroup', title: '机器分组', width: '6%'},
             {field: 'city', title: '目标城市', width: '6%', hide: true},
 
-            {field: 'collectMethod', title: '收费方式', width: '5%', hide: true},
+            {field: 'collectMethod', title: '收费方式', width: '5%', templet:'#collectMethodTpl'},
             {field: 'optimizePlanCount', title: '要刷', width: '5%', hide: true},
             {field: 'optimizedCount', title: '已刷', width: '5%', hide: true},
             {field: 'invalidRefreshCount', title: '无效', width: '5%'},
             {field: 'status', title: '状态', width: '5%'},
             {field: 'paymentStatus', title: '付费状态', width: '5%', hide: true},
-            {field: 'remarks', title: '备注', width: '8%'},
+            {field: 'remarks', title: '备注', width: '8%', hide: true},
             {field: 'failedCause', title: '失败原因', width: '8%', },
             // {title: '操作', align: 'center',fixed:'right', width: '10%' , templet: '#operationTpl'}
         ]],
@@ -71,9 +72,18 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                     curr: 1 //从第一页开始
                 }
             });
-            // $("#searchContent").removeClass("layui-show")
         },
     };
+
+    function get_selected_uuid_arr() {
+        var checkStatus = table.checkStatus('keywordTable')
+            , data = checkStatus.data;
+        var uuidArr = [];
+        $.each(data, function (index, item) {
+            uuidArr.push(item.uuid);
+        });
+        return uuidArr;
+    }
 
     function show_layer_msg(msg, icon, status, time, title) {
         layer.msg(msg, {
@@ -90,7 +100,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
     }
 
     form.on("submit(search)", function (data) {
-        // console.log(formToJsonObject('searchForm'));
         table.reload('keywordTable', {
             where: data.field,
             page: {
@@ -118,6 +127,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             case 'change_selected_optimizedGroup':
                 change_selected_optimizedGroup();
                 break;
+            case 'change_current_machineGroup':
+                change_current_machineGroup();
+                break;
+            case 'change_selected_machineGroup':
+                change_selected_machineGroup();
+                break;
             case 'change_current_bearPawNumber':
                 change_current_bearPawNumber();
                 break;
@@ -135,14 +150,11 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         }
     });
 
-    function updateCustomerKeywordStatus(status) {
+    function updateCustomerKeywordStatus (status) {
         //获取选中数据
-        var checkStatus = table.checkStatus('keywordTable')
-            , data = checkStatus.data;
-        var uuidArr = [];
-        $.each(data, function (index, item) {
-            uuidArr.push(item.uuid);
-        });
+
+        var uuidArr = get_selected_uuid_arr();
+
         if (uuidArr.length <= 0) {
             show_layer_msg('请选择要操作的词', 5);
 
@@ -181,13 +193,14 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         });
     }
 
-    function change_current_optimizedGroup() {
+    function change_current_optimizedGroup () {
         layer.prompt({
-            formType: 2,
+            formType: 3,
             value: '',
             title: '新优化组',
-            area: ['220px', '60px'], //自定义文本域宽高
+            // area: ['220px', '60px'], //自定义文本域宽高
             yes: function(index, layero){
+                var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
                 if(value === ''){
                     show_layer_msg('请输入新优化组！', 5, null, 1000);
@@ -214,35 +227,32 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                         },
                         error: function () {
                             show_layer_msg('未知错误，请稍后重试', 5);
+                        },
+                        complete: function () {
+                            layer.close(index);
                         }
                     });
-                    layer.close(index);
-
+                    layer.close(index2);
                 });
-                layer.close(index);
+
             }
-        } );
+        });
     }
 
-    function change_selected_optimizedGroup() {
+    function change_selected_optimizedGroup () {
         //获取选中数据
-        var checkStatus = table.checkStatus('keywordTable')
-            , data = checkStatus.data;
-        var uuidArr = [];
-        $.each(data, function (index, item) {
-            uuidArr.push(item.uuid);
-        });
+        var uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
             show_layer_msg('请选择要操作的词', 5);
             return
         }
-
         layer.prompt({
-            formType: 2,
+            formType: 3,
             value: '',
             title: '新优化组',
             area: ['220px', '60px'], //自定义文本域宽高
             yes: function(index, layero){
+                var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
                 if(value === ''){
                     show_layer_msg('请输入新优化组！', 5, null, 1000);
@@ -251,9 +261,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 layer.confirm("确定修改选中词的优化组吗", {icon: 3, title: '修改优化组'}, function (index) {
                     var postData = {};
                     postData.uuids = uuidArr;
-                    postData.targetBearPawNumber = value;
+                    postData.targetOptimizeGroupName = value;
                     $.ajax({
-                        url: '/internal/customerKeyword/updateBearPawNumber2',
+                        url: '/internal/customerKeyword/updateOptimizeGroupName2',
                         data: JSON.stringify(postData),
                         headers: {
                             'Accept': 'application/json',
@@ -270,23 +280,126 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                         },
                         error: function () {
                             show_layer_msg('未知错误，请稍后重试', 5);
+                        },
+                        complete: function () {
+                            layer.close(index);
+                        }
+
+                    });
+                    layer.close(index2);
+                });
+
+            }
+        });
+    }
+
+    function change_current_machineGroup() {
+        layer.prompt({
+            formType: 3,
+            value: '',
+            title: '新机器分组',
+            area: ['220px', '60px'], //自定义文本域宽高
+            yes: function(index, layero){
+                var index2 = index;
+                var value = layero.find(".layui-layer-input").val();
+                if(value === ''){
+                    show_layer_msg('请输入新机器分组！', 5, null, 1000);
+                    return;
+                }
+                layer.confirm("确定修改当前词的机器分组吗", {icon: 3, title: '修改机器分组'}, function (index) {
+                    var postData = formToJsonObject('searchForm');
+                    postData.targetMachineGroup = value;
+                    $.ajax({
+                        url: '/internal/customerKeyword/updateMachineGroup2',
+                        data: JSON.stringify(postData),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        timeout: 5000,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result.code === 200) {
+                                show_layer_msg('操作成功', 6, true);
+                            } else {
+                                show_layer_msg('操作失败', 5);
+                            }
+                        },
+                        error: function () {
+                            show_layer_msg('未知错误，请稍后重试', 5);
+                        },
+                        complete: function () {
+                            layer.close(index);
                         }
                     });
-                    layer.close(index);
+                    layer.close(index2);
 
                 });
-                layer.close(index);
             }
-        } );
+        });
+    }
+
+    function change_selected_machineGroup() {
+        //获取选中数据
+        var uuidArr = get_selected_uuid_arr();
+        if (uuidArr.length <= 0) {
+            show_layer_msg('请选择要操作的词', 5);
+            return
+        }
+        layer.prompt({
+            formType: 3,
+            value: '',
+            title: '新机器分组',
+            area: ['220px', '60px'], //自定义文本域宽高
+            yes: function(index, layero){
+                var index2 = index;
+                var value = layero.find(".layui-layer-input").val();
+                if(value === ''){
+                    show_layer_msg('请输入新机器分组！', 5, null, 1000);
+                    return;
+                }
+                layer.confirm("确定修改选中词的机器分组吗", {icon: 3, title: '修改机器分组'}, function (index) {
+                    var postData = {};
+                    postData.uuids = uuidArr;
+                    postData.targetMachineGroup = value;
+                    $.ajax({
+                        url: '/internal/customerKeyword/updateMachineGroup2',
+                        data: JSON.stringify(postData),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        timeout: 5000,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result.code === 200) {
+                                show_layer_msg('操作成功', 6, true);
+                            } else {
+                                show_layer_msg('操作失败', 5);
+                            }
+                        },
+                        error: function () {
+                            show_layer_msg('未知错误，请稍后重试', 5);
+                        },
+                        complete: function () {
+                            layer.close(index);
+                        }
+                    });
+                    layer.close(index2);
+
+                });
+            }
+        });
     }
 
     function change_current_bearPawNumber() {
         layer.prompt({
-            formType: 2,
+            formType: 3,
             value: '',
             title: '新熊掌号',
             area: ['220px', '60px'], //自定义文本域宽高
             yes: function(index, layero){
+                var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
                 if(value === ''){
                     show_layer_msg('请输入新熊掌号！', 5, null, 1000);
@@ -313,35 +426,33 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                         },
                         error: function () {
                             show_layer_msg('未知错误，请稍后重试', 5);
+                        },
+                        complete: function () {
+                            layer.close(index);
                         }
                     });
-                    layer.close(index);
+                    layer.close(index2);
 
                 });
-                layer.close(index);
             }
-        } );
+        });
     }
 
     function change_selected_bearPawNumber() {
         //获取选中数据
-        var checkStatus = table.checkStatus('keywordTable')
-            , data = checkStatus.data;
-        var uuidArr = [];
-        $.each(data, function (index, item) {
-            uuidArr.push(item.uuid);
-        });
+        var uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
             show_layer_msg('请选择要操作的词', 5);
             return
         }
 
         layer.prompt({
-            formType: 2,
+            formType: 3,
             value: '',
             title: '新熊掌号',
             area: ['220px', '60px'], //自定义文本域宽高
             yes: function(index, layero){
+                var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
                 if(value === ''){
                     show_layer_msg('请输入新熊掌号！', 5, null, 1000);
@@ -350,9 +461,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 layer.confirm("确定修改选中词的熊掌号吗", {icon: 3, title: '修改熊掌号'}, function (index) {
                     var postData = {};
                     postData.uuids = uuidArr;
-                    postData.targetOptimizeGroupName = value;
+                    postData.targetBearPawNumber = value;
                     $.ajax({
-                        url: '/internal/customerKeyword/updateOptimizeGroupName2',
+                        url: '/internal/customerKeyword/updateBearPawNumber2',
                         data: JSON.stringify(postData),
                         headers: {
                             'Accept': 'application/json',
@@ -369,14 +480,51 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                         },
                         error: function () {
                             show_layer_msg('未知错误，请稍后重试', 5);
+                        },
+                        complete: function () {
+                            layer.close(index);
                         }
                     });
-                    layer.close(index);
-
+                    layer.close(index2);
                 });
-                layer.close(index);
             }
-        } );
+        });
+    }
+
+    function batch_delete(){
+        var uuidArr = get_selected_uuid_arr();
+        if (uuidArr.length <= 0) {
+            show_layer_msg('请选择要操作的词', 5);
+            return false;
+        }
+        layer.confirm("确定删除选中词吗", {icon: 3, title: '删除选中词'}, function (index) {
+            var postData = {};
+            postData.uuids = uuidArr;
+            postData.targetBearPawNumber = value;
+            $.ajax({
+                url: '/internal/customerKeyword/updateBearPawNumber2',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result.code === 200) {
+                        show_layer_msg('操作成功', 6, true);
+                    } else {
+                        show_layer_msg('操作失败', 5);
+                    }
+                },
+                error: function () {
+                    show_layer_msg('未知错误，请稍后重试', 5);
+                },
+                complete: function () {
+                    layer.close(index);
+                }
+            });
+        });
     }
 
 });
@@ -398,7 +546,6 @@ function updateOrNewTab(url, tit, id) {
             }
         );
     }
-
     parent.layui.element.tabChange('ok-tab', id)
 }
 

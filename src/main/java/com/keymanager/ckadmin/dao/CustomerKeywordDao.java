@@ -64,5 +64,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateOptimizeGroupName(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
 
+    void updateMachineGroup(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
+
     void updateBearPawNumber(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
 }

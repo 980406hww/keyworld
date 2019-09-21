@@ -4,28 +4,21 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
-import com.keymanager.ckadmin.criteria.ProductkeywordCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
-import com.keymanager.ckadmin.entity.ProductKeyword;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.ReflectUtils;
-import com.keymanager.ckadmin.util.SQLFilterUtils;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
-import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -80,7 +73,7 @@ public class CustomerKeywordController {
             List<CustomerKeyword> keywords = page.getRecords();
             resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("");
+            resultBean.setMsg("success");
             resultBean.setData(keywords);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -149,17 +142,39 @@ public class CustomerKeywordController {
 
     @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordGroupName")
     @RequestMapping(value = "/updateOptimizeGroupName2", method = RequestMethod.POST)
-    public ResultBean updateOptimizeGroupName(@RequestBody KeywordCriteria KeywordCriteria, HttpServletRequest request) {
+    public ResultBean updateOptimizeGroupName(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200,"success");
         try {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
             String userName = (String) request.getSession().getAttribute("username");
             boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
             if(!isDepartmentManager) {
-                KeywordCriteria.setUserName(userName);
+                keywordCriteria.setUserName(userName);
             }
-            KeywordCriteria.setTerminalType(terminalType);
-            customerKeywordService.updateOptimizeGroupName(KeywordCriteria);
+            keywordCriteria.setTerminalType(terminalType);
+            customerKeywordService.updateOptimizeGroupName(keywordCriteria);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordMachineGroup")
+    @RequestMapping(value = "/updateMachineGroup2", method = RequestMethod.POST)
+    public ResultBean updateMachineGroup(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200,"success");
+        try {
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            String userName = (String) request.getSession().getAttribute("username");
+            boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+            if(!isDepartmentManager) {
+                keywordCriteria.setUserName(userName);
+            }
+            keywordCriteria.setTerminalType(terminalType);
+            customerKeywordService.updateMachineGroup(keywordCriteria);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
@@ -171,17 +186,17 @@ public class CustomerKeywordController {
 
     @RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
     @RequestMapping(value = "/updateBearPawNumber2", method = RequestMethod.POST)
-    public ResultBean updateBearPawNumber2(@RequestBody KeywordCriteria KeywordCriteria, HttpServletRequest request) {
+    public ResultBean updateBearPawNumber2(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200,"success");
         try {
-//            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
             String userName = (String) request.getSession().getAttribute("username");
             boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
             if(!isDepartmentManager) {
-                KeywordCriteria.setUserName(userName);
+                keywordCriteria.setUserName(userName);
             }
-//            KeywordCriteria.setTerminalType(terminalType);
-            customerKeywordService.updateBearPawNumber(KeywordCriteria);
+            keywordCriteria.setTerminalType(terminalType);
+            customerKeywordService.updateBearPawNumber(keywordCriteria);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

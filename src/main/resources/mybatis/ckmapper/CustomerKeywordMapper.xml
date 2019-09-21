@@ -293,6 +293,9 @@
         <if test="keywordCriteria.keyword != null and keywordCriteria.keyword != ''">
             AND ck.fKeyword LIKE CONCAT(#{keywordCriteria.keyword},'%')
         </if>
+        <if test="keywordCriteria.userName != null and keywordCriteria.userName != ''">
+            AND c.fUserID = #{keywordCriteria.userName}
+        </if>
         <if test="keywordCriteria.url != null and keywordCriteria.url != ''">
             AND ck.fUrl LIKE CONCAT(#{keywordCriteria.url},'%')
         </if>
@@ -302,100 +305,30 @@
         <if test="keywordCriteria.status != null and keywordCriteria.status != ''">
             AND ck.fStatus = #{keywordCriteria.status}
         </if>
-        <!--<if test="keywordCriteria.invalidRefreshCount != null and keywordCriteria.invalidRefreshCount != ''">
-            AND ck.fInvalidRefreshCount &gt;= #{keywordCriteria.invalidRefreshCount}
-        </if>
-        <if test="keywordCriteria.creationFromTime != null and keywordCriteria.creationFromTime != ''">
-            AND ck.fCreateTime &gt;= #{keywordCriteria.creationFromTime}
-        </if>
-        <if test="keywordCriteria.creationToTime != null and keywordCriteria.creationToTime != ''">
-            AND ck.fCreateTime &lt;= #{keywordCriteria.creationToTime}
-        </if>
-        <if test="keywordCriteria.entryType != null and keywordCriteria.entryType != ''">
-            AND ck.fType = #{keywordCriteria.entryType}
-        </if>
-        <if test="keywordCriteria.gtPosition != null and (keywordCriteria.noPosition == null or keywordCriteria.noPosition == '') ">
-            AND ck.fCurrentPosition &gt;= #{keywordCriteria.gtPosition}
-        </if>
-        <if test="keywordCriteria.ltPosition != null and (keywordCriteria.noPosition == null or keywordCriteria.noPosition == '') ">
-            AND ck.fCurrentPosition &lt;= #{keywordCriteria.ltPosition}
-        </if>
-        <if test="keywordCriteria.noPosition == 1 ">
-            AND ck.fCurrentPosition = 0
-        </if>
-        <if test="keywordCriteria.orderNumber != null and keywordCriteria.orderNumber != ''">
-            AND ck.fOrderNumber  LIKE CONCAT(#{keywordCriteria.orderNumber},'%')
-        </if>
-        <if test="keywordCriteria.pushPay != null and keywordCriteria.pushPay != ''">
-            AND ((ck.fCollectMethod = 'PerDay' AND ck.fEffectiveToTime is not null) OR (ck.fEffectiveToTime &lt;= DATE_ADD(CURDATE(),INTERVAL 3 DAY)))
-        </if>
-        <if test="keywordCriteria.terminalType != null and keywordCriteria.terminalType != ''">
-            AND fTerminalType =  #{keywordCriteria.terminalType}
-        </if>
-        <if test="keywordCriteria.gtOptimizedCount != null">
-            AND ck.fOptimizedCount &gt;= #{keywordCriteria.gtOptimizedCount}
-        </if>
-        <if test="keywordCriteria.ltOptimizedCount != null">
-            AND ck.fOptimizedCount &lt;= #{keywordCriteria.ltOptimizedCount}
-        </if>
-        <if test="keywordCriteria.gtOptimizePlanCount != null">
-            AND ck.fOptimizePlanCount &gt;= #{keywordCriteria.gtOptimizePlanCount}
-        </if>
-        <if test="keywordCriteria.ltOptimizePlanCount != null">
-            AND ck.fOptimizePlanCount &lt;= #{keywordCriteria.ltOptimizePlanCount}
-        </if>-->
-        <if test="keywordCriteria.remarks != null and keywordCriteria.remarks != ''">
-            AND ck.fRemarks LIKE CONCAT(#{keywordCriteria.remarks},'%')
-        </if>
-        <!--<if test="keywordCriteria.failedCause != null and keywordCriteria.failedCause != ''">
-            AND ck.fFailedCause = #{keywordCriteria.failedCause}
-        </if>
-        <if test="keywordCriteria.keywordEffect != null and keywordCriteria.keywordEffect != ''">
-            AND ck.fKeywordEffect = #{keywordCriteria.keywordEffect}
-        </if>
-        <if test="keywordCriteria.gtCurrentIndexCount != null">
-            AND ck.fCurrentIndexCount &gt;= #{keywordCriteria.gtCurrentIndexCount}
-        </if>
-        <if test="keywordCriteria.ltCurrentIndexCount != null">
-            AND ck.fCurrentIndexCount &lt;= #{keywordCriteria.ltCurrentIndexCount}
-        </if>
-        <if test="keywordCriteria.qq != null and keywordCriteria.qq != ''">
-            AND c.fQQ LIKE CONCAT(#{keywordCriteria.qq},'%')
-        </if>
-        <if test="keywordCriteria.searchEngine != null and keywordCriteria.searchEngine != ''">
-            AND ck.fSearchEngine = #{keywordCriteria.searchEngine}
-        </if>
-        <if test="keywordCriteria.userName != null and keywordCriteria.userName != ''">
-            AND c.fUserID = #{keywordCriteria.userName}
-        </if>
-        <if test="keywordCriteria.customerKeywordSource != null and keywordCriteria.customerKeywordSource != ''">
-            AND ck.fCustomerKeywordSource = #{keywordCriteria.customerKeywordSource}
-        </if>
-        <if test="keywordCriteria.noReachStandardDays != null and keywordCriteria.noReachStandardDays > 0">
-            AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL #{keywordCriteria.noReachStandardDays} DAY)
-        </if>
-        <if test="keywordCriteria.noReachStandardDays != null and keywordCriteria.noReachStandardDays == -1">
-            AND ck.fLastReachStandardDate = CURRENT_DATE()
-        </if>
-        <if test="keywordCriteria.requireDelete == true">
-            AND ck.fRequireDelete = 1
-        </if>
-        <if test="keywordCriteria.titleFlag == 1">
-            AND (ck.fTitle = '' OR ck.fTitle IS NULL)
-        </if>
-        <if test="keywordCriteria.titleFlag == 2">
-            AND ck.fTitle > ''
-        </if>-->
-        <if test="keywordCriteria.userName != null and keywordCriteria.userName != ''">
-            AND c.fUserID = #{keywordCriteria.userName}
-        </if>
         <if test="keywordCriteria.optimizeGroupName != null and keywordCriteria.optimizeGroupName != ''">
             AND ck.fOptimizeGroupName LIKE CONCAT(#{keywordCriteria.optimizeGroupName},'%')
         </if>
         <if test="keywordCriteria.machineGroup != null and keywordCriteria.machineGroup != ''">
             AND ck.fMachineGroup LIKE CONCAT(#{keywordCriteria.machineGroup},'%')
         </if>
-
+        <if test="keywordCriteria.remarks != null and keywordCriteria.remarks != ''">
+            AND ck.fRemarks LIKE CONCAT(#{keywordCriteria.remarks},'%')
+        </if>
+        <if test="keywordCriteria.failedCause != null and keywordCriteria.failedCause != ''">
+            AND ck.fFailedCause = #{keywordCriteria.failedCause}
+        </if>
+        <if test="keywordCriteria.terminalType != null and keywordCriteria.terminalType != ''">
+            AND fTerminalType =  #{keywordCriteria.terminalType}
+        </if>
+        <if test="keywordCriteria.searchEngine != null and keywordCriteria.searchEngine != ''">
+            AND fSearchEngine =  #{keywordCriteria.searchEngine}
+        </if>
+        <if test="keywordCriteria.customerKeywordSource != null and keywordCriteria.customerKeywordSource != ''">
+            AND fCustomerKeywordSource =  #{keywordCriteria.customerKeywordSource}
+        </if>
+        <if test="keywordCriteria.status != null and keywordCriteria.status != ''">
+            AND ck.fStatus = #{keywordCriteria.status}
+        </if>
     </sql>
 
     <sql id="updateCustomerKeywordsCriteria">
@@ -411,6 +344,9 @@
         <if test="keywordCriteria.keyword != null and keywordCriteria.keyword != ''">
             AND ck.fKeyword LIKE CONCAT(#{keywordCriteria.keyword},'%')
         </if>
+        <if test="keywordCriteria.userName != null and keywordCriteria.userName != ''">
+            AND c.fUserID = #{keywordCriteria.userName}
+        </if>
         <if test="keywordCriteria.url != null and keywordCriteria.url != ''">
             AND ck.fUrl LIKE CONCAT(#{keywordCriteria.url},'%')
         </if>
@@ -420,23 +356,29 @@
         <if test="keywordCriteria.status != null and keywordCriteria.status != ''">
             AND ck.fStatus = #{keywordCriteria.status}
         </if>
-        <if test="keywordCriteria.terminalType != null and keywordCriteria.terminalType != ''">
-            AND fTerminalType =  #{keywordCriteria.terminalType}
-        </if>
-        <if test="keywordCriteria.remarks != null and keywordCriteria.remarks != ''">
-            AND ck.fRemarks LIKE CONCAT(#{keywordCriteria.remarks},'%')
-        </if>
-        <if test="keywordCriteria.searchEngine != null and keywordCriteria.searchEngine != ''">
-            AND ck.fSearchEngine = #{keywordCriteria.searchEngine}
-        </if>
-        <if test="keywordCriteria.userName != null and keywordCriteria.userName != ''">
-            AND c.fUserID = #{keywordCriteria.userName}
-        </if>
         <if test="keywordCriteria.optimizeGroupName != null and keywordCriteria.optimizeGroupName != ''">
             AND ck.fOptimizeGroupName LIKE CONCAT(#{keywordCriteria.optimizeGroupName},'%')
         </if>
         <if test="keywordCriteria.machineGroup != null and keywordCriteria.machineGroup != ''">
             AND ck.fMachineGroup LIKE CONCAT(#{keywordCriteria.machineGroup},'%')
+        </if>
+        <if test="keywordCriteria.remarks != null and keywordCriteria.remarks != ''">
+            AND ck.fRemarks LIKE CONCAT(#{keywordCriteria.remarks},'%')
+        </if>
+        <if test="keywordCriteria.failedCause != null and keywordCriteria.failedCause != ''">
+            AND ck.fFailedCause = #{keywordCriteria.failedCause}
+        </if>
+        <if test="keywordCriteria.terminalType != null and keywordCriteria.terminalType != ''">
+            AND fTerminalType =  #{keywordCriteria.terminalType}
+        </if>
+        <if test="keywordCriteria.searchEngine != null and keywordCriteria.searchEngine != ''">
+            AND fSearchEngine =  #{keywordCriteria.searchEngine}
+        </if>
+        <if test="keywordCriteria.customerKeywordSource != null and keywordCriteria.customerKeywordSource != ''">
+            AND fCustomerKeywordSource =  #{keywordCriteria.customerKeywordSource}
+        </if>
+        <if test="keywordCriteria.status != null and keywordCriteria.status != ''">
+            AND ck.fStatus = #{keywordCriteria.status}
         </if>
     </sql>
     
@@ -470,7 +412,8 @@
         ck.fRemarks	AS	'remarks',
         ck.fFailedCause AS 'failedCause',
         ck.fCapturePositionQueryTime AS 'capturePositionQueryTime',
-        ck.fOptimizeGroupName AS 'optimizeGroupName'
+        ck.fOptimizeGroupName AS 'optimizeGroupName',
+        ck.fMachineGroup AS 'machineGroup'
         FROM
         t_customer_keyword ck,
         t_customer c
@@ -501,6 +444,16 @@
         t_customer_keyword ck,t_customer c
         SET
         ck.fOptimizeGroupName = #{keywordCriteria.targetOptimizeGroupName},
+        ck.fUpdateTime = NOW()
+        WHERE c.fUuid = ck.fCustomerUuid
+        <include refid="updateCustomerKeywordsCriteria"/>
+    </update>
+
+    <update id="updateMachineGroup" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria">
+        UPDATE
+        t_customer_keyword ck,t_customer c
+        SET
+        ck.fMachineGroup = #{keywordCriteria.targetMachineGroup},
         ck.fUpdateTime = NOW()
         WHERE c.fUuid = ck.fCustomerUuid
         <include refid="updateCustomerKeywordsCriteria"/>
