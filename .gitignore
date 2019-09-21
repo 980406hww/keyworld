@@ -19,3 +19,5 @@ target/
 *.idea*
 *.iml
 src/main/resources/rebel.xml
+
+src/main/resources/logback.xml

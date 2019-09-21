@@ -963,8 +963,8 @@
             });
         }
 
-        let radio = document.getElementsByName('sort');
         function initSortRadio(condition){
+            let radio = document.getElementsByName('sort');
             $.ajax({
                 url: '/internal/qzkeywordrank/searchCountNumOfQZKeywordRankInfoNew',
                 type: 'POST',
@@ -1939,21 +1939,72 @@
                     batchUpdateQZSettingUpdateStatus();
                     break;
                 case 'batchUpdateRenewalStatusToNormal':
-                    batchUpdateRenewalStatus(1);
+                    saveChargeStatus();
+                    // batchUpdateRenewalStatus(1);
                     break;
                 case 'batchUpdateRenewalStatusToSuspend':
-                    batchUpdateRenewalStatus(0);
+                    // batchUpdateRenewalStatus(0);
                     break;
                 case 'batchUpdateRenewalStatusToSoldOut':
-                    batchUpdateRenewalStatus(3);
+                    // batchUpdateRenewalStatus(3);
                     break;
                 case 'batchUpdateRenewalStatusToOther':
-                    batchUpdateRenewalStatus(4);
+                    // batchUpdateRenewalStatus(4);
                     break;
                 default:
                     break;
             }
         });
+
+        let chargeStatus = ``;
+        function saveChargeStatus() {
+            let checkStatus = table.checkStatus('qzSettingTable').data;
+            if (checkStatus.length === 0) {
+                show_layer_msg('请选择需要收费的站点！', 5);
+                return;
+            }
+            layer.open({
+                type: 1,
+                title: '收费满意度调查',
+                content: chargeStatus,
+                shadeClose: true,
+                resize: false,
+                area: '700px',
+                btn: ['确认', '取消'],
+                yes: function (index) {
+                    layer.confirm('确认保存？', {
+                        icon: 3,
+                        title: '收费满意度',
+                        btn: ['确认', '取消']
+                        , yes: function (index_) {
+                            // $.ajax({
+                            //     url: '/internal/qzsetting/updQzCategoryTags',
+                            //     type: 'post',
+                            //     data: JSON.stringify(d),
+                            //     headers: {
+                            //         'Accept': 'application/json',
+                            //         'Content-Type': 'application/json'
+                            //     },
+                            //     success: function (res) {
+                            //         if (res.code === 200) {
+                            //             show_layer_msg('修改成功', 6);
+                            //             active['reload'].call(this);
+                            //             layer.close(index_);
+                            //             layer.close(index);
+                            //         } else {
+                            //             layer.msg(res.msg);
+                            //         }
+                            //     }
+                            // });
+                        }, btn2: function (index) {
+                            layer.close(index);
+                        }
+                    });
+                }, btn2: function (index) {
+                    layer.close(index);
+                }
+            });
+        }
 
         let chargeRecordHtml = `<div style="padding: 10px;">
                             <table border="0" width="100%">
@@ -2837,6 +2888,7 @@
         </button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/qzsetting/updateRenewalStatus">
+        <#if isSEOSales==0>
         <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToNormal">
             <i class="layui-icon">&#x1005;</i>正常续费
         </button>
@@ -2849,9 +2901,9 @@
         <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToOther">
             <i class="layui-icon">&#xe63f;</i>更为其他
         </button>
+        </#if>
         </@shiro.hasPermission>
     </div>
-
 </script>
 
 <script type="text/html" id="item">
