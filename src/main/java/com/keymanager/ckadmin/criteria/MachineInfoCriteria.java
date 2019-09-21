@@ -1,7 +1,7 @@
 package com.keymanager.ckadmin.criteria;
 
-import com.keymanager.monitoring.criteria.BaseCriteria;
 
+import com.keymanager.ckadmin.criteria.base.BaseCriteria;
 import java.util.List;
 import java.util.Set;
 

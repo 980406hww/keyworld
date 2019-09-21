@@ -2,17 +2,17 @@ package com.keymanager.ckadmin.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.ckadmin.criteria.CustomerKeywordRefreshStatInfoCriteria;
+import com.keymanager.ckadmin.criteria.MachineGroupWorkInfoCriteria;
+import com.keymanager.ckadmin.criteria.MachineInfoCriteria;
 import com.keymanager.ckadmin.entity.ClientUpgrade;
+import com.keymanager.ckadmin.entity.CustomerKeywordTerminalRefreshStatRecord;
+import com.keymanager.ckadmin.entity.MachineGroupWorkInfo;
 import com.keymanager.ckadmin.entity.MachineInfo;
-import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
-import com.keymanager.monitoring.criteria.MachineGroupWorkInfoCriteria;
-import com.keymanager.monitoring.criteria.MachineInfoCriteria;
-import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord;
-import com.keymanager.monitoring.entity.MachineGroupWorkInfo;
-import com.keymanager.monitoring.vo.CookieVO;
-import com.keymanager.monitoring.vo.MachineInfoGroupSummaryVO;
-import com.keymanager.monitoring.vo.MachineInfoMachineGroupSummaryVO;
-import com.keymanager.monitoring.vo.MachineInfoSummaryVO;
+import com.keymanager.ckadmin.vo.CookieVO;
+import com.keymanager.ckadmin.vo.MachineInfoGroupSummaryVO;
+import com.keymanager.ckadmin.vo.MachineInfoMachineGroupSummaryVO;
+import com.keymanager.ckadmin.vo.MachineInfoSummaryVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
