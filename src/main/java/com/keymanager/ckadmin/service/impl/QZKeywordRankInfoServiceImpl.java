@@ -111,8 +111,7 @@ public class QZKeywordRankInfoServiceImpl extends
     }
 
     @Override
-    public void updateQzKeywordRankInfo(
-        ExternalQZKeywordRankInfoResultVO externalQzKeywordRankInfoResultVo) {
+    public void updateQzKeywordRankInfo(ExternalQZKeywordRankInfoResultVO externalQzKeywordRankInfoResultVo) {
         for (ExternalQZKeywordRankInfoVO externalQzKeywordRankInfoVo : externalQzKeywordRankInfoResultVo.getQzKeywordRankInfoVos()) {
             QZKeywordRankInfo rankInfo = this.getQZKeywordRankInfo(externalQzKeywordRankInfoVo, externalQzKeywordRankInfoResultVo.getQzSettingUuid());
             QZKeywordRankInfo qzKeywordRankInfo = qzKeywordRankInfoDao.getQZKeywordRankInfo(rankInfo.getQzSettingUuid(), rankInfo.getTerminalType(),
@@ -165,7 +164,7 @@ public class QZKeywordRankInfoServiceImpl extends
 
         // 查询达标规则是否是other
         String standardSpecies = qzOperationTypeService.findQZChargeRuleStandardSpecies(qzSettingUuid, qzKeywordRankInfo.getTerminalType());
-        if (qzKeywordRankInfo.getDataProcessingStatus() && !"other".equals(standardSpecies) ) {
+        if (qzKeywordRankInfo.getDataProcessingStatus() && !"other".equals(standardSpecies)) {
             if (StringUtils.isNotBlank(ExternalQZKeywordRankInfoVO.getTopTen())) {
                 this.setIncreaseAndTodayDifference(qzKeywordRankInfo);
             }
@@ -193,8 +192,12 @@ public class QZKeywordRankInfoServiceImpl extends
         } else {
             List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoDao.searchExistingExtraQZKeywordRankInfo(qzKeywordRankInfo.getQzSettingUuid(),
                 qzKeywordRankInfo.getTerminalType());
-            if (qzKeywordRankInfos.size() > 1) {
-                for (int i = 1; i < qzKeywordRankInfos.size(); i++) {
+            int index = 1;
+            if ("other".equals(standardSpecies)) {
+                index = 0;
+            }
+            if (qzKeywordRankInfos.size() > index) {
+                for (int i = index; i < qzKeywordRankInfos.size(); i++) {
                     qzKeywordRankInfoDao.deleteById(qzKeywordRankInfos.get(i).getUuid());
                 }
             }

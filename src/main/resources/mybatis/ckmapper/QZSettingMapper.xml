@@ -152,7 +152,6 @@
 
             </otherwise>
         </choose>
-        ORDER BY qs.fUpdateTime
     </select>
 
     <select id="searchQZSettingSearchEngines" resultType="com.keymanager.ckadmin.vo.QZSettingVO">

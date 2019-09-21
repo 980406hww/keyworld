@@ -159,6 +159,7 @@
         FROM t_qz_keyword_rank_info qk
         WHERE qk.fQZSettingUuid = #{qzSettingUuid}
         AND qk.fWebsiteType = "aiZhan"
+        GROUP BY qk.fTerminalType
         UNION ALL
         SELECT CONCAT(qk.fTerminalType, '_', qk.fWebsiteType, '_', qk.fDataProcessingStatus)
         FROM t_qz_keyword_rank_info qk
