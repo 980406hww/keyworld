@@ -189,6 +189,14 @@ public class ConfigService extends ServiceImpl<MachineInfoDao, MachineInfo>{
         return null;
     }
 
+    public Integer getOnceGetKeywordNum(){
+        Config config = getConfig(Constants.CONFIG_OPERATE_KEYWORD, "OnceGetKeywordNum");
+        if(config != null) {
+            return Integer.parseInt(config.getValue());
+        }
+        return null;
+    }
+
     public String getWebsiteCheckSign(){
         Config config = getConfig(Constants.CONFIG_TYPE_WEBSITE_CHECK_SIGN, "WebsiteCheck");
         if(config != null) {

@@ -382,12 +382,13 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String version = request.getParameter("version");
         StringBuilder errorFlag = new StringBuilder("");
         try {
+            Integer onceGetKeywordNum = configService.getOnceGetKeywordNum();
             if (validUser(userName, password)) {
                 MachineInfo machineInfo = machineInfoService.selectById(clientID);
                 String s = "";
                 List<OptimizationVO> OptimizationVOList = new ArrayList<>();
                 if (machineInfo != null) {
-                    for (int i = 0; i < 10; i++) {
+                    for (int i = 0; i < onceGetKeywordNum; i++) {
                         String terminalType = machineInfo.getTerminalType();
                         errorFlag.append("1");
                         OptimizationVO optimizationVO = customerKeywordService
