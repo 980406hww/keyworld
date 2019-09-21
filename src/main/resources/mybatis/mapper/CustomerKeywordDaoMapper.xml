@@ -688,7 +688,7 @@
     <update id="batchUpdateOptimizedCountFromCache" parameterType="java.util.Collection">
         UPDATE t_customer_keyword
         <trim prefix="set" suffixOverrides=",">
-            <trim prefix="fOptimizedCount =(case" suffix="end),">
+            <trim prefix="fOptimizedCount = fOptimizedCount + (case" suffix="end),">
                 <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
                   when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then #{updateOptimizedCountVO.totalSucceedCount}
                 </foreach>
@@ -703,14 +703,9 @@
                     when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then (#{updateOptimizedCountVO.totalCount} - #{updateOptimizedCountVO.lastContinueFailedCount})
                 </foreach>
             </trim>
-            <trim prefix="fInvalidFlag = fOptimizeRemainingCount - (case" suffix="end),">
-                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
-                    when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then #{updateOptimizedCountVO.totalSucceedCount}
-                </foreach>
-            </trim>
             fInvalidFlag = if(fInvalidRefreshCount > 8, 1, 0), fLastOptimizeDateTime = now(), fQueryTime = if(fOptimizePlanCount > fOptimizedCount, fQueryTime, DATE_ADD(NOW(), INTERVAL 1 DAY)), fUpdateTime = NOW()
         </trim>
-		    WHERE fUuid IN
+		WHERE fUuid IN
         <foreach item="updateOptimizedCountVO" index="index" collection="updateOptimizedCountVOs" open="(" separator="," close=")">
             #{updateOptimizedCountVO.customerKeywordUuid}
         </foreach>
