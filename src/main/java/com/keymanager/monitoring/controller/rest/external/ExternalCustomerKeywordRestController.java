@@ -369,6 +369,63 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
+    @RequestMapping(value = "/fetchCustomerKeywordZipList", method = RequestMethod.GET)
+    public ResponseEntity<?> fetchCustomerKeywordListForOptimization(HttpServletRequest request)
+        throws Exception {
+        long startMilleSeconds = System.currentTimeMillis();
+        String clientID = request.getParameter("clientID");
+        String userName = request.getParameter("userName");
+        if (StringUtils.isBlank(userName)) {
+            userName = request.getParameter("username");
+        }
+        String password = request.getParameter("password");
+        String version = request.getParameter("version");
+        StringBuilder errorFlag = new StringBuilder("");
+        try {
+            if (validUser(userName, password)) {
+                MachineInfo machineInfo = machineInfoService.selectById(clientID);
+                String s = "";
+                List<OptimizationVO> OptimizationVOList = new ArrayList<>();
+                if (machineInfo != null) {
+                    for (int i = 0; i < 10; i++) {
+                        String terminalType = machineInfo.getTerminalType();
+                        errorFlag.append("1");
+                        OptimizationVO optimizationVO = customerKeywordService
+                            .fetchCustomerKeywordForOptimization(machineInfo);
+                        errorFlag.append("2");
+                        if (optimizationVO != null) {
+                            machineInfoService
+                                .updateMachineInfoVersion(clientID, version,
+                                    optimizationVO != null);
+                            errorFlag.append("3");
+                            performanceService
+                                .addPerformanceLog(terminalType + ":fetchCustomerKeywordZip",
+                                    System.currentTimeMillis() - startMilleSeconds, null);
+                            errorFlag.append("4");
+                            OptimizationVOList.add(optimizationVO);
+                            errorFlag.append("5");
+                        } else {
+                            break;
+                        }
+
+                    }
+                } else {
+                    logger.error("fetchCustomerKeywordZip,     Not found clientID:" + clientID);
+                }
+                String result =
+                    OptimizationVOList.size() > 0 ? AESUtils.encrypt(OptimizationVOList) : "";
+                errorFlag.append("6");
+                return ResponseEntity.status(HttpStatus.OK).body(result);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.error(
+                "fetchCustomerKeywordZip: " + errorFlag.toString() + "clientID:" + clientID + ex
+                    .getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
     @RequestMapping(value = "/updateOptimizedCount", method = RequestMethod.GET)
     public ResponseEntity<?> updateOptimizedCount(HttpServletRequest request) throws Exception {
         String userName = request.getParameter("userName");
