@@ -356,6 +356,15 @@
         <if test="keywordCriteria.ltCreateTime != null and keywordCriteria.ltCreateTime != ''">
             AND ck.fCreateTime &lt;= #{keywordCriteria.ltCreateTime}
         </if>
+        <if test="keywordCriteria.noPosition != null and keywordCriteria.noPosition != ''">
+            AND ck.fCurrentPosition = 0
+        </if>
+        <if test="keywordCriteria.pushPay != null and keywordCriteria.pushPay != ''">
+            AND ((ck.fCollectMethod = 'PerDay' AND ck.fEffectiveToTime is not null) OR (ck.fEffectiveToTime &lt;= DATE_ADD(CURDATE(),INTERVAL 3 DAY)))
+        </if>
+        <if test="keywordCriteria.requireDelete != null and keywordCriteria.requireDelete != ''">
+            AND ck.fRequireDelete = 1
+        </if>
     </sql>
 
     <sql id="updateCustomerKeywordsCriteria">
@@ -433,6 +442,17 @@
         </if>
         <if test="keywordCriteria.ltCreateTime != null and keywordCriteria.ltCreateTime != ''">
             AND ck.fCreateTime &lt;= #{keywordCriteria.ltCreateTime}
+        </if>
+
+        <if test="keywordCriteria.noPosition != null and keywordCriteria.noPosition != ''">
+            AND ck.fCurrentPosition = 0
+        </if>
+        <if test="keywordCriteria.pushPay != null and keywordCriteria.pushPay != ''">
+            AND ((ck.fCollectMethod = 'PerDay' AND ck.fEffectiveToTime is not null) OR (ck.fEffectiveToTime &lt;= DATE_ADD(CURDATE(),INTERVAL 3 DAY)))
+        </if>
+
+        <if test="keywordCriteria.requireDelete != null and keywordCriteria.requireDelete != ''">
+            AND ck.fRequireDelete = 1
         </if>
     </sql>
     

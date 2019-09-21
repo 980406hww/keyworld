@@ -31,11 +31,12 @@ public class KeywordCriteria extends BaseCriteria {
     private Integer ltOptimizedCount;//已刷结束
     private Integer gtPosition;//排名起始
     private Integer ltPosition;//排名结束
-    private Integer noPosition;//没有排名
-
+    private String noPosition;//显示排名为0
     private Integer invalidRefreshCount;//无效点击量
     private String gtCreateTime;//创建时间起始
     private String ltCreateTime;//创建时间结束
+    private String pushPay;//催缴
+    private String requireDelete;//要求删除
 
     private String targetOptimizeGroupName;
     private String targetMachineGroup;
@@ -237,11 +238,11 @@ public class KeywordCriteria extends BaseCriteria {
         this.ltPosition = ltPosition;
     }
 
-    public Integer getNoPosition() {
+    public String getNoPosition() {
         return noPosition;
     }
 
-    public void setNoPosition(Integer noPosition) {
+    public void setNoPosition(String noPosition) {
         this.noPosition = noPosition;
     }
 
@@ -267,5 +268,21 @@ public class KeywordCriteria extends BaseCriteria {
 
     public void setLtCreateTime(String ltCreateTime) {
         this.ltCreateTime = ltCreateTime;
+    }
+
+    public String getPushPay() {
+        return pushPay;
+    }
+
+    public void setPushPay(String pushPay) {
+        this.pushPay = pushPay;
+    }
+
+    public String getRequireDelete() {
+        return requireDelete;
+    }
+
+    public void setRequireDelete(String requireDelete) {
+        this.requireDelete = requireDelete;
     }
 }
