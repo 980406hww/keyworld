@@ -159,7 +159,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                             tmpUpdateOptimizedSimpleCountVO.setCustomerKeywordUuid(updateOptimizedCountVO.getCustomerKeywordUuid());
                             updateOptimizedCountSimpleVOMap.put(updateOptimizedCountVO.getCustomerKeywordUuid(), tmpUpdateOptimizedSimpleCountVO);
                         }
-                        tmpUpdateOptimizedSimpleCountVO.setTotalCount(tmpUpdateOptimizedCountVO.getTotalCount() + 1);
+                        tmpUpdateOptimizedSimpleCountVO.setTotalCount(tmpUpdateOptimizedSimpleCountVO.getTotalCount() + 1);
                         if(updateOptimizedCountVO.getCount() > 0){
                             tmpUpdateOptimizedSimpleCountVO.setLastContinueFailedCount(0);
                             tmpUpdateOptimizedSimpleCountVO.setTotalSucceedCount(tmpUpdateOptimizedSimpleCountVO.getTotalSucceedCount() + 1);
