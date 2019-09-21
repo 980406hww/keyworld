@@ -14,7 +14,6 @@ import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.EntryTypeEnum;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
-import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import java.util.ArrayList;
@@ -242,6 +241,38 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     public void updateBearPawNumber(KeywordCriteria keywordCriteria) {
         customerKeywordDao.updateBearPawNumber(keywordCriteria);
     }
+
+    @Override
+    public void deleteCustomerKeywordsByDeleteType(KeywordCriteria keywordCriteria) {
+        switch (keywordCriteria.getDeleteType()) {
+            case "byUuids":
+                deleteCustomerKeywordsByUuids(keywordCriteria);
+                break;
+            case "byEmptyTitle":
+                deleteCustomerKeywordsWhenEmptyTitle(keywordCriteria);
+                break;
+            case "EmptyTitleAndUrl":
+                deleteCustomerKeywordsWhenEmptyTitleAndUrl(keywordCriteria);
+                break;
+            default:
+
+        }
+
+    }
+
+    private void deleteCustomerKeywordsByUuids(KeywordCriteria keywordCriteria) {
+        customerKeywordDao.deleteCustomerKeywordsByUuids(keywordCriteria.getUuids());
+    }
+
+    private void deleteCustomerKeywordsWhenEmptyTitle(KeywordCriteria keywordCriteria) {
+        customerKeywordDao.deleteCustomerKeywordsWhenEmptyTitle(keywordCriteria);
+    }
+
+    private void deleteCustomerKeywordsWhenEmptyTitleAndUrl(KeywordCriteria keywordCriteria) {
+        customerKeywordDao.deleteCustomerKeywordsWhenEmptyTitleAndUrl(keywordCriteria);
+    }
+
+
 }
 
 

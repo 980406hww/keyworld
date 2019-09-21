@@ -468,4 +468,27 @@
         WHERE c.fUuid = ck.fCustomerUuid
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
+
+    <delete id="deleteCustomerKeywordsByUuids">
+        DELETE FROM t_customer_keyword WHERE fUuid IN
+        <foreach item="item" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="deleteCustomerKeywordsWhenEmptyTitle">
+        DELETE FROM t_customer_keyword
+        WHERE fTerminalType = #{keywordCriteria.terminalType}
+          AND fCustomerUuid = #{keywordCriteria.customerUuid}
+          AND (fTitle = '' OR fTitle IS NULL)
+    </delete>
+
+    <delete id="deleteCustomerKeywordsWhenEmptyTitleAndUrl">
+        DELETE FROM t_customer_keyword
+        WHERE fTerminalType = #{keywordCriteria.terminalType}
+          AND fCustomerUuid = #{keywordCriteria.customerUuid}
+          AND (fTitle = '' OR fTitle IS NULL)
+          AND (fUrl = '' OR fUrl IS NULL)
+    </delete>
+
 </mapper>

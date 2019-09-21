@@ -186,7 +186,24 @@ public class CustomerKeywordController {
 
     @RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
     @RequestMapping(value = "/updateBearPawNumber2", method = RequestMethod.POST)
-    public ResultBean updateBearPawNumber2(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
+    public ResultBean updateBearPawNumber(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            keywordCriteria.setTerminalType(terminalType);
+            customerKeywordService.deleteCustomerKeywordsByDeleteType(keywordCriteria);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/deleteCustomerKeywords")
+    @RequestMapping(value = "/deleteCustomerKeywords2", method = RequestMethod.POST)
+    public ResultBean deleteCustomerKeywords(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200,"success");
         try {
             String terminalType = TerminalTypeMapping.getTerminalType(request);

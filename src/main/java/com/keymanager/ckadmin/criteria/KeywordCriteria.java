@@ -31,7 +31,7 @@ public class KeywordCriteria extends BaseCriteria {
     private String targetMachineGroup;
     private String targetBearPawNumber;
 
-
+    private String deleteType;
 
     public List<Long> getUuids() {
         return uuids;
@@ -168,5 +168,14 @@ public class KeywordCriteria extends BaseCriteria {
 
     public void setTargetMachineGroup(String targetMachineGroup) {
         this.targetMachineGroup = targetMachineGroup;
+    }
+
+
+    public String getDeleteType() {
+        return deleteType;
+    }
+
+    public void setDeleteType(String deleteType) {
+        this.deleteType = deleteType;
     }
 }

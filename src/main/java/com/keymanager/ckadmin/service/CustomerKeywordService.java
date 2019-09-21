@@ -50,4 +50,5 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void updateBearPawNumber(KeywordCriteria keywordCriteria);
 
 
+    void deleteCustomerKeywordsByDeleteType(KeywordCriteria keywordCriteria);
 }

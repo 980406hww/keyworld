@@ -500,7 +500,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         layer.confirm("确定删除选中词吗", {icon: 3, title: '删除选中词'}, function (index) {
             var postData = {};
             postData.uuids = uuidArr;
-            postData.targetBearPawNumber = value;
+            postData.deleteType = 'byUuids';
             $.ajax({
                 url: '/internal/customerKeyword/updateBearPawNumber2',
                 data: JSON.stringify(postData),
