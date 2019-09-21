@@ -12,15 +12,7 @@ import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.MachineInfoService;
 import com.keymanager.monitoring.service.PerformanceService;
-import com.keymanager.monitoring.vo.CustomerKeywordEnteredVO;
-import com.keymanager.monitoring.vo.CustomerKeywordForOptimizationSimple;
-import com.keymanager.monitoring.vo.ExternalCustomerKeywordVO;
-import com.keymanager.monitoring.vo.OptimizationVO;
-import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
-import com.keymanager.monitoring.vo.SearchEngineResultItemsVO;
-import com.keymanager.monitoring.vo.SearchEngineResultVO;
-import com.keymanager.monitoring.vo.UpdateOptimizedCountVO;
-import com.keymanager.monitoring.vo.customerSourceVO;
+import com.keymanager.monitoring.vo.*;
 import com.keymanager.util.AESUtils;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
@@ -370,8 +362,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     }
 
     @RequestMapping(value = "/fetchCustomerKeywordZipList", method = RequestMethod.GET)
-    public ResponseEntity<?> fetchCustomerKeywordListForOptimization(HttpServletRequest request)
-        throws Exception {
+    public ResponseEntity<?> fetchCustomerKeywordListForOptimization(HttpServletRequest request) throws Exception {
         long startMilleSeconds = System.currentTimeMillis();
         String clientID = request.getParameter("clientID");
         String userName = request.getParameter("userName");
@@ -381,48 +372,31 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String password = request.getParameter("password");
         String version = request.getParameter("version");
         StringBuilder errorFlag = new StringBuilder("");
+        List<OptimizationMachineVO> machineVOList=null;
         try {
-            Integer onceGetKeywordNum = configService.getOnceGetKeywordNum();
             if (validUser(userName, password)) {
                 MachineInfo machineInfo = machineInfoService.selectById(clientID);
-                String s = "";
-                List<OptimizationVO> OptimizationVOList = new ArrayList<>();
                 if (machineInfo != null) {
-                    for (int i = 0; i < onceGetKeywordNum; i++) {
-                        String terminalType = machineInfo.getTerminalType();
-                        errorFlag.append("1");
-                        OptimizationVO optimizationVO = customerKeywordService
-                            .fetchCustomerKeywordForOptimization(machineInfo);
-                        errorFlag.append("2");
-                        if (optimizationVO != null) {
-                            machineInfoService
-                                .updateMachineInfoVersion(clientID, version,
-                                    optimizationVO != null);
-                            errorFlag.append("3");
-                            performanceService
-                                .addPerformanceLog(terminalType + ":fetchCustomerKeywordZip",
-                                    System.currentTimeMillis() - startMilleSeconds, null);
-                            errorFlag.append("4");
-                            OptimizationVOList.add(optimizationVO);
-                            errorFlag.append("5");
-                        } else {
-                            break;
-                        }
-
+                    String terminalType = machineInfo.getTerminalType();
+                    errorFlag.append("1");
+                    machineVOList= customerKeywordService.fetchCustomerKeywordForOptimizationList(machineInfo);
+                    errorFlag.append("2");
+                    if (!CollectionUtils.isEmpty(machineVOList)) {
+                        machineInfoService.updateMachineInfoVersion(clientID, version, !CollectionUtils.isEmpty(machineVOList));
+                        errorFlag.append("3");
+                        performanceService.addPerformanceLog(terminalType + ":fetchCustomerKeywordZip", System.currentTimeMillis() - startMilleSeconds, null);
+                        errorFlag.append("4");
                     }
                 } else {
                     logger.error("fetchCustomerKeywordZip,     Not found clientID:" + clientID);
                 }
-                String result =
-                    OptimizationVOList.size() > 0 ? AESUtils.encrypt(OptimizationVOList) : "";
+                String result = CollectionUtils.isEmpty(machineVOList) ? "" : AESUtils.encrypt(machineVOList);
                 errorFlag.append("6");
                 return ResponseEntity.status(HttpStatus.OK).body(result);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            logger.error(
-                "fetchCustomerKeywordZip: " + errorFlag.toString() + "clientID:" + clientID + ex
-                    .getMessage());
+            logger.error("fetchCustomerKeywordZip: " + errorFlag.toString() + "clientID:" + clientID + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
