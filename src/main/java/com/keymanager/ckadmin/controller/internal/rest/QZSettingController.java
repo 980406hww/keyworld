@@ -51,29 +51,54 @@ public class QZSettingController extends SpringMVCBaseController {
     @Resource(name = "configService2")
     private ConfigService configService;
 
-    @Resource(name = "userInfoService2")
-    private UserInfoService userInfoService;
-
     @Resource(name = "qzCategoryTagService2")
     private QZCategoryTagService qzCategoryTagService;
 
     @Resource(name = "qzChargeLogService2")
     private QZChargeLogService qzChargeLogService;
 
+    /**
+     * 获取网站分类标签
+     * @return
+     */
     @GetMapping(value = "/getCategoryTag")
-    public List<String> getCategoryTag() {
-        return qzCategoryTagService.findTagNames(null);
+    public ResultBean getCategoryTag(HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        try {
+            String userName = null;
+            if (!getCurrentUser().getRoles().contains("DepartmentManager")) {
+                userName = (String) request.getSession().getAttribute("username");
+            }
+            resultBean.setData(qzCategoryTagService.findTagNameByUserName(userName));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
     }
 
+    /**
+     * 获取客户列表
+     * @return
+     */
     @GetMapping(value = "/getActiveCustomer")
-    public List<Customer> getActiveCustomer() {
-        CustomerCriteria customerCriteria = new CustomerCriteria();
-        return customerService.getActiveCustomerSimpleInfo(customerCriteria);
-    }
-
-    @GetMapping(value = "/getUserInfo")
-    public List<UserInfo> getUserInfo() {
-        return userInfoService.findActiveUsers();
+    public ResultBean getActiveCustomer(HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        try {
+            CustomerCriteria customerCriteria = new CustomerCriteria();
+            if (!getCurrentUser().getRoles().contains("DepartmentManager")) {
+                customerCriteria.setLoginName((String) request.getSession().getAttribute("username"));
+            }
+            resultBean.setData(customerService.getActiveCustomerSimpleInfo(customerCriteria));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
     }
 
     /**
@@ -85,8 +110,7 @@ public class QZSettingController extends SpringMVCBaseController {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("qzsettings/qzsetting");
         int isSEOSales = 0;
-        Set<String> roles = getCurrentUser().getRoles();
-        if (roles.contains("SEOSales")) {
+        if (getCurrentUser().getRoles().contains("SEOSales")) {
             isSEOSales = 1;
         }
         mv.addObject("isSEOSales",isSEOSales);
@@ -107,7 +131,6 @@ public class QZSettingController extends SpringMVCBaseController {
     /**
      * 跳转添加或修改全站收费页面
      */
-    // TODO 收费权限
     @GetMapping(value = "/toQZSettingCharge")
     public ModelAndView toQZSettingCharge() {
         ModelAndView mv = new ModelAndView();
@@ -120,14 +143,12 @@ public class QZSettingController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/qzsetting/searchQZSettings")
     @PostMapping("/getQZSettings")
-    public ResultBean getQZSettings(@RequestBody QZSettingSearchCriteria qzSettingCriteria,
-        HttpServletRequest request) {
+    public ResultBean getQZSettings(@RequestBody QZSettingSearchCriteria qzSettingCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         try {
             Page<QZSetting> page = new Page<>(qzSettingCriteria.getPage(),
                 qzSettingCriteria.getLimit());
-            Set<String> roles = getCurrentUser().getRoles();
-            if (!roles.contains("DepartmentManager")) {
+            if (!getCurrentUser().getRoles().contains("DepartmentManager")) {
                 String loginName = (String) request.getSession().getAttribute("username");
                 qzSettingCriteria.setLoginName(loginName);
             }
@@ -154,9 +175,8 @@ public class QZSettingController extends SpringMVCBaseController {
     public ResultBean getQZSettingSearchEngineMap(QZSettingCriteria qzSettingCriteria) {
         ResultBean resultBean = new ResultBean();
         try {
-            List<QZSearchEngineVO> qzSearchEngine = qzSettingService
-                .searchQZSettingSearchEngineMap(qzSettingCriteria, 0);
-            resultBean.setCode(0);
+            List<QZSearchEngineVO> qzSearchEngine = qzSettingService.searchQZSettingSearchEngineMap(qzSettingCriteria, 0);
+            resultBean.setCode(200);
             resultBean.setMsg("获取搜索引擎映射列表成功");
             resultBean.setData(qzSearchEngine);
         } catch (Exception e) {
@@ -202,13 +222,19 @@ public class QZSettingController extends SpringMVCBaseController {
         return mv;
     }
 
+
+    /**
+     * 排除词回显
+     * @param request
+     * @param qzSettingExcludeCustomerKeywordsCriteria
+     * @return
+     */
     @PostMapping(value = "/echoExcludeKeyword2")
     public ResultBean echoExcludeKeyword(HttpServletRequest request,
         @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
         ResultBean resultBean = new ResultBean();
         try {
-            CustomerExcludeKeyword customerExcludeKeyword = qzSettingService
-                .echoExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria);
+            CustomerExcludeKeyword customerExcludeKeyword = qzSettingService.echoExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria);
             resultBean.setCode(200);
             resultBean.setMsg("获取排除词成功");
             resultBean.setData(customerExcludeKeyword);
@@ -222,6 +248,13 @@ public class QZSettingController extends SpringMVCBaseController {
 
     }
 
+    /**
+     * 指定排除词
+     *
+     * @param request
+     * @param qzSettingExcludeCustomerKeywordsCriteria
+     * @return
+     */
     @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/excludeQZSettingCustomerKeywords2")
     public ResultBean excludeQZSettingCustomerKeywords2(HttpServletRequest request,
@@ -255,6 +288,13 @@ public class QZSettingController extends SpringMVCBaseController {
         return mv;
     }
 
+    /**
+     * 添加关键词
+     *
+     * @param request
+     * @param qzSettingSaveCustomerKeywordsCriteria
+     * @return
+     */
     @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/saveQZSettingCustomerKeywords2")
     public ResultBean saveQZSettingCustomerKeywords(HttpServletRequest request,
@@ -275,6 +315,11 @@ public class QZSettingController extends SpringMVCBaseController {
 
     }
 
+    /**
+     * 删除站点信息 —— 单个
+     * @param uuid
+     * @return
+     */
     @RequiresPermissions("/internal/qzsetting/delete")
     @PostMapping(value = "/delete2/{uuid}")
     public ResultBean deleteQZSetting(@PathVariable("uuid") Long uuid) {
@@ -291,6 +336,11 @@ public class QZSettingController extends SpringMVCBaseController {
         return resultBean;
     }
 
+    /**
+     * 删除站点信息 —— 批量
+     * @param requestMap
+     * @return
+     */
     @RequiresPermissions("/internal/qzsetting/deleteQZSettings")
     @PostMapping(value = "/deleteQZSettings2")
     public ResultBean deleteQZSettings(@RequestBody Map<String, Object> requestMap) {
@@ -322,8 +372,7 @@ public class QZSettingController extends SpringMVCBaseController {
         CustomerCriteria customerCriteria = new CustomerCriteria();
         String entryType = (String) request.getSession().getAttribute("entryType");
         customerCriteria.setEntryType(entryType);
-        Set<String> roles = getCurrentUser().getRoles();
-        if (!roles.contains("DepartmentManager")) {
+        if (!getCurrentUser().getRoles().contains("DepartmentManager")) {
             String loginName = (String) request.getSession().getAttribute("username");
             customerCriteria.setLoginName(loginName);
         }
@@ -342,6 +391,13 @@ public class QZSettingController extends SpringMVCBaseController {
         return resultBean;
     }
 
+    /**
+     * 站点信息  修改 || 保存
+     *
+     * @param qzSetting
+     * @param session
+     * @return
+     */
     @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/saveQZSetting")
     public ResultBean saveQZSetting(@RequestBody QZSetting qzSetting, HttpSession session) {
@@ -349,8 +405,7 @@ public class QZSettingController extends SpringMVCBaseController {
         resultBean.setCode(200);
         try {
             if (qzSetting.getUuid() == null) {
-                Set<String> roles = getCurrentUser().getRoles();
-                if (roles.contains("DepartmentManager")) {
+                if (getCurrentUser().getRoles().contains("DepartmentManager")) {
                     qzSetting.setStatus(1);
                 } else {
                     qzSetting.setStatus(2);
@@ -370,6 +425,12 @@ public class QZSettingController extends SpringMVCBaseController {
         return resultBean;
     }
 
+    /**
+     * 站点信息回显
+     *
+     * @param uuid
+     * @return
+     */
     @GetMapping(value = "/getQZSettingsMsg/{uuid}")
     public ResultBean getQZSettingsMsg(@PathVariable Long uuid) {
         ResultBean resultBean = new ResultBean();
@@ -476,20 +537,17 @@ public class QZSettingController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/updQzCategoryTags")
-    public ResultBean updateQzCategoryTags(@RequestBody Map<String, Object> map) {
+    public ResultBean updateQzCategoryTags(@RequestBody Map<String, Object> map, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
-        List<String> uuids = (List<String>) map.get("uuids");
-        List<QZCategoryTag> targetQZCategoryTags = new ObjectMapper()
-            .convertValue(map.get("targetQZCategoryTags"),
-                new TypeReference<List<QZCategoryTag>>() {
-                });
         try {
-            qzSettingService.updateQzCategoryTags(uuids, targetQZCategoryTags);
+            String userName = (String) request.getSession().getAttribute("username");
+            List<String> uuids = (List<String>) map.get("uuids");
+            List<QZCategoryTag> targetQZCategoryTags = new ObjectMapper().convertValue(map.get("targetQZCategoryTags"), new TypeReference<List<QZCategoryTag>>() {});
+            qzSettingService.updateQzCategoryTags(uuids, targetQZCategoryTags, userName);
         } catch (Exception ex) {
             logger.error(ex.getMessage());
             resultBean.setMsg(ex.getMessage());
-            resultBean.setCode(400);
             resultBean.setCode(400);
         }
         return resultBean;

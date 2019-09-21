@@ -55,7 +55,7 @@ public interface QZSettingService extends IService<QZSetting> {
 
     void batchUpdateQZSettingUpdateStatus(String uuids);
 
-    void updateQzCategoryTags(List<String> uuids, List<QZCategoryTag> targetQZCategoryTags);
+    void updateQzCategoryTags(List<String> uuids, List<QZCategoryTag> targetQZCategoryTags, String userName);
 
     void batchUpdateRenewalStatus(String uuids, int renewalStatus);
 

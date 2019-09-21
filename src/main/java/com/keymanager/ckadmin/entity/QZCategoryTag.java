@@ -21,6 +21,9 @@ public class QZCategoryTag extends BaseEntity {
     @TableField(value = "fTagName")
     private String tagName;
 
+    @TableField(value = "fBelongUser")
+    private String belongUser;
+
     public Long getQzSettingUuid () {
         return qzSettingUuid;
     }
@@ -35,5 +38,13 @@ public class QZCategoryTag extends BaseEntity {
 
     public void setTagName (String tagName) {
         this.tagName = tagName;
+    }
+
+    public String getBelongUser() {
+        return belongUser;
+    }
+
+    public void setBelongUser(String belongUser) {
+        this.belongUser = belongUser;
     }
 }

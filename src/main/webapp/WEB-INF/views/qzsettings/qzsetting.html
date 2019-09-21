@@ -789,31 +789,36 @@
                 // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
                 dataType: 'json',
                 success: function (res) {
-                    let data = res.data;
-                    let terminalSearchEngine = $('#terminalSearchEngine');
-                    terminalSearchEngine.empty();
-                    $.each(data, function (index, item) {
-                        let ttse;
-                        if (item.terminalType === 'PC') {
-                            ttse = item.searchEngineName + item.terminalType;
-                        } else {
-                            ttse = item.searchEngineName;
-                        }
-                        if (ttse === '百度PC'){
-                            terminalSearchEngine.append(
-                                '<option value="' + ttse + '" selected>' + ttse + '</option>');
-                        }else {
-                            terminalSearchEngine.append(
-                                '<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
-                        }
-                    });
-                    terminalSearchEngine.val(
-                        ($('#searchEngine').val() + $('#terminalType').val()) === '' ? '百度PC' : ($('#searchEngine').val() + $('#terminalType').val()));
-                    form.render("select");
+                    if (res.code === 200) {
+                        let data = res.data;
+                        let terminalSearchEngine = $('#terminalSearchEngine');
+                        terminalSearchEngine.empty();
+                        $.each(data, function (index, item) {
+                            let ttse;
+                            if (item.terminalType === 'PC') {
+                                ttse = item.searchEngineName + item.terminalType;
+                            } else {
+                                ttse = item.searchEngineName;
+                            }
+                            if (ttse === '百度PC'){
+                                terminalSearchEngine.append(
+                                    '<option value="' + ttse + '" selected>' + ttse + '</option>');
+                            }else {
+                                terminalSearchEngine.append(
+                                    '<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
+                            }
+                        });
+                        terminalSearchEngine.val(
+                            ($('#searchEngine').val() + $('#terminalType').val()) === '' ? '百度PC' : ($('#searchEngine').val() + $('#terminalType').val()));
+                        form.render("select");
+                    } else {
+                        show_layer_msg(res.msg, 5);
+                    }
                 }
             });
         }
 
+        <@shiro.hasPermission name = "/internal/qzsetting/updateGroupOperationCombineUuid">
         treeSelect.render({
             elem: '#tree',
             data: '/internal/user/trees2',
@@ -831,6 +836,7 @@
             success: function (d) {
             }
         });
+        </@shiro.hasPermission>
 
         window.checkDomain = function () {
             var domain = $("#domain").val().replace(/\s*/g, "");
@@ -847,14 +853,16 @@
                 url: '${ctx.path}/internal/qzsetting/getCategoryTag',
                 dataType: 'json',
                 type: 'get',
-                success: function (data) {
-                    $("#categoryTag").empty();
-                    $("#categoryTag").append('<option value="">请选择分类标签</option>');
-                    $.each(data, function (index, item) {
-                        $('#categoryTag').append(
-                            '<option value="' + item + '">' + item.trim() + '</option>');
-                    });
-                    form.render("select");
+                success: function (res) {
+                    if (res.code === 200) {
+                        $("#categoryTag").empty();
+                        $("#categoryTag").append('<option value="">请选择分类标签</option>');
+                        $.each(res.data, function (index, item) {
+                            $('#categoryTag').append(
+                                '<option value="' + item + '">' + item.trim() + '</option>');
+                        });
+                        form.render("select");
+                    }
                 }
             });
         }
@@ -865,15 +873,17 @@
                 url: '${ctx.path}/internal/qzsetting/getActiveCustomer',
                 dataType: 'json',
                 type: 'get',
-                success: function (data) {
-                    $("#customerUuid").empty();
-                    $("#customerUuid").append('<option value="">请选择客户</option>');
-                    $.each(data, function (index, item) {
-                        $('#customerUuid').append(
-                            '<option value="' + item.uuid + '">' + item.contactPerson.trim()
-                            + '</option>');
-                    });
-                    form.render("select");
+                success: function (res) {
+                    if (res.code === 200) {
+                        $("#customerUuid").empty();
+                        $("#customerUuid").append('<option value="">请选择客户</option>');
+                        $.each(res.data, function (index, item) {
+                            $('#customerUuid').append(
+                                '<option value="' + item.uuid + '">' + item.contactPerson.trim()
+                                + '</option>');
+                        });
+                        form.render("select");
+                    }
                 }
             });
         }
@@ -931,14 +941,13 @@
             }
         </@shiro.hasPermission>
 
-        get_qzcategory_label_list();
-        get_active_customer_list();
-
         function successTable(res) {
             let terminalType = $('#terminalType').val();
             terminalType = terminalType === '' ? 'PC' : terminalType;
             getTerminalSearchEngineMap();
             get_operation_combine_list(terminalType);
+            get_qzcategory_label_list();
+            get_active_customer_list();
             let qz_setting_table = $("#qzSettingTable").parent().find(
                 ".layui-table-main").find("table");
             $.each(res.data, function (idx, val) {
@@ -1059,14 +1068,15 @@
                 asyns: true,
                 dataType: 'json',
                 success: function (res) {
-                    let operation_combine_select = $("#update_qz_operation_combine");
-                    operation_combine_select.append("<option value='null'>置空</option>");
-                    $.each(res.data, function (i, v) {
-                        var option = $("<option value='" + v.uuid + "'>" + v.operationCombineName
-                            + "</option>");
-                        operation_combine_select.append(option);
-                    });
-                    form.render("select");
+                    if (res.code === 200) {
+                        let operation_combine_select = $("#update_qz_operation_combine");
+                        operation_combine_select.append("<option value='null'>置空</option>");
+                        $.each(res.data, function (i, v) {
+                            let option = $("<option value='" + v.uuid + "'>" + v.operationCombineName + "</option>");
+                            operation_combine_select.append(option);
+                        });
+                        form.render("select");
+                    }
                 }
             });
         }
@@ -2776,7 +2786,7 @@
                                     'Content-Type': 'application/json'
                                 },
                                 success: function (res) {
-                                    if (res) {
+                                    if (res.code === 200) {
                                         let text = "";
                                         for (let item in categoryTags) {
                                             text += "," + categoryTags[item];
