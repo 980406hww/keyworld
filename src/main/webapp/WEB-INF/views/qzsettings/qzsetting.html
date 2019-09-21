@@ -134,6 +134,7 @@
             white-space: nowrap;
         }
 
+        .layui-table-col-special .header span.domain a,
         .layui-table-col-special .header span.to-aizhan a,
         .layui-table-col-special .header span.to-5118 a {
             color: #0c7df5;
@@ -931,14 +932,13 @@
             }
         </@shiro.hasPermission>
 
-        get_qzcategory_label_list();
-        get_active_customer_list();
-
         function successTable(res) {
             let terminalType = $('#terminalType').val();
             terminalType = terminalType === '' ? 'PC' : terminalType;
             getTerminalSearchEngineMap();
             get_operation_combine_list(terminalType);
+            get_qzcategory_label_list();
+            get_active_customer_list();
             let qz_setting_table = $("#qzSettingTable").parent().find(
                 ".layui-table-main").find("table");
             $.each(res.data, function (idx, val) {
@@ -2788,6 +2788,7 @@
                                         $("a#tagName_" + uuid).text(text);
                                         $("a#tagName_" + uuid).prop("title", text);
                                         show_layer_msg("修改成功", 6);
+                                        active['reload'].call(this);
                                         layer.close(index_1);
                                         layer.close(index_0);
                                     } else {
@@ -2862,13 +2863,10 @@
             <input type="hidden" name="PCGroup" value="{{d.pcGroup}}">
             <input type="hidden" name="PhoneGroup" value="{{d.phoneGroup}}">
             <span class="contactPerson-name" title="{{d.contactPerson}}"><a href="javascript:;">{{d.contactPerson}}</a></span>
-            <span class="domain" title="{{d.domain}}"><a href="javascript:;">{{d.domain}}</a></span>
+            <span class="domain" title="{{d.domain}}"><a href="http://{{d.domain.trim()}}" target="_blank" title="查看官网">{{d.domain.trim()}}</a></span>
             <span class="organization-name" title="{{d.organizationName}}"><a href="javascript:;">{{d.organizationName}}</a></span>
-            <span class="to-aizhan"><a href="https://www.aizhan.com/cha/{{d.domain}}"
-                                       target="_blank"
-                                       title="查看爱站">爱站</a></span>
-            <span class="to-5118"><a href="https://www.5118.com/seo/{{d.domain}}" target="_blank"
-                                     title="查看5118">5118</a></span>
+            <span class="to-aizhan"><a href="https://www.aizhan.com/cha/{{d.domain.trim()}}" target="_blank" title="查看爱站">爱站</a></span>
+            <span class="to-5118"><a href="https://www.5118.com/seo/{{d.domain.trim()}}" target="_blank" title="查看5118">5118</a></span>
             <span>
                 自动采词:
                 <a href="javascript:;">
