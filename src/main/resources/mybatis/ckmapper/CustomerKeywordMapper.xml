@@ -329,6 +329,33 @@
         <if test="keywordCriteria.status != null and keywordCriteria.status != ''">
             AND ck.fStatus = #{keywordCriteria.status}
         </if>
+        <if test="keywordCriteria.gtOptimizePlanCount != null">
+            AND ck.fOptimizePlanCount &gt;= #{keywordCriteria.gtOptimizePlanCount}
+        </if>
+        <if test="keywordCriteria.ltOptimizePlanCount != null">
+            AND ck.fOptimizePlanCount &lt;= #{keywordCriteria.ltOptimizePlanCount}
+        </if>
+        <if test="keywordCriteria.gtOptimizedCount != null">
+            AND ck.fOptimizedCount &gt;= #{keywordCriteria.gtOptimizedCount}
+        </if>
+        <if test="keywordCriteria.ltOptimizedCount != null">
+            AND ck.fOptimizedCount &lt;= #{keywordCriteria.ltOptimizedCount}
+        </if>
+        <if test="keywordCriteria.gtPosition != null and (keywordCriteria.noPosition == null or keywordCriteria.noPosition == '') ">
+            AND ck.fCurrentPosition &gt;= #{keywordCriteria.gtPosition}
+        </if>
+        <if test="keywordCriteria.ltPosition != null and (keywordCriteria.noPosition == null or keywordCriteria.noPosition == '') ">
+            AND ck.fCurrentPosition &lt;= #{keywordCriteria.ltPosition}
+        </if>
+        <if test="keywordCriteria.invalidRefreshCount != null and keywordCriteria.invalidRefreshCount != ''">
+            AND ck.fInvalidRefreshCount &gt;= #{keywordCriteria.invalidRefreshCount}
+        </if>
+        <if test="keywordCriteria.gtCreateTime != null and keywordCriteria.gtCreateTime != ''">
+            AND ck.fCreateTime &gt;= #{keywordCriteria.gtCreateTime}
+        </if>
+        <if test="keywordCriteria.ltCreateTime != null and keywordCriteria.ltCreateTime != ''">
+            AND ck.fCreateTime &lt;= #{keywordCriteria.ltCreateTime}
+        </if>
     </sql>
 
     <sql id="updateCustomerKeywordsCriteria">
@@ -379,6 +406,33 @@
         </if>
         <if test="keywordCriteria.status != null and keywordCriteria.status != ''">
             AND ck.fStatus = #{keywordCriteria.status}
+        </if>
+        <if test="keywordCriteria.gtOptimizePlanCount != null">
+            AND ck.fOptimizePlanCount &gt;= #{keywordCriteria.gtOptimizePlanCount}
+        </if>
+        <if test="keywordCriteria.ltOptimizePlanCount != null">
+            AND ck.fOptimizePlanCount &lt;= #{keywordCriteria.ltOptimizePlanCount}
+        </if>
+        <if test="keywordCriteria.gtOptimizedCount != null">
+            AND ck.fOptimizedCount &gt;= #{keywordCriteria.gtOptimizedCount}
+        </if>
+        <if test="keywordCriteria.ltOptimizedCount != null">
+            AND ck.fOptimizedCount &lt;= #{keywordCriteria.ltOptimizedCount}
+        </if>
+        <if test="keywordCriteria.gtPosition != null and (keywordCriteria.noPosition == null or keywordCriteria.noPosition == '') ">
+            AND ck.fCurrentPosition &gt;= #{keywordCriteria.gtPosition}
+        </if>
+        <if test="keywordCriteria.ltPosition != null and (keywordCriteria.noPosition == null or keywordCriteria.noPosition == '') ">
+            AND ck.fCurrentPosition &lt;= #{keywordCriteria.ltPosition}
+        </if>
+        <if test="keywordCriteria.invalidRefreshCount != null and keywordCriteria.invalidRefreshCount != ''">
+            AND ck.fInvalidRefreshCount &gt;= #{keywordCriteria.invalidRefreshCount}
+        </if>
+        <if test="keywordCriteria.gtCreateTime != null and keywordCriteria.gtCreateTime != ''">
+            AND ck.fCreateTime &gt;= #{keywordCriteria.gtCreateTime}
+        </if>
+        <if test="keywordCriteria.ltCreateTime != null and keywordCriteria.ltCreateTime != ''">
+            AND ck.fCreateTime &lt;= #{keywordCriteria.ltCreateTime}
         </if>
     </sql>
     

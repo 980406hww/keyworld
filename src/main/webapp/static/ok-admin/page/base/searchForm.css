@@ -67,10 +67,12 @@
 .layui-inline .layui-form-label{
     height: 30px;
     line-height: 12px;
-    width: 115px;
+    width: 120px;
 }
 
-
+.layui-form-item .layui-input-inline {
+    height: 30px;
+}
 /*
 #searchForm {
     position: fixed;
@@ -80,6 +82,8 @@
 }
 */
 
-#searchForm .layui-inline{
+.layui-form-item .layui-inline {
     padding: 5px 0px;
+    margin-bottom: 0px;
+    margin-right: 0px;
 }

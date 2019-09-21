@@ -10,6 +10,50 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
     var table = layui.table;
     var form = layui.form;
     var $ = layui.jquery;
+    var laydate = layui.laydate;
+
+    //日期范围
+    laydate.render({
+        elem: '#gtCreateTime',
+    });
+    laydate.render({
+        elem: '#ltCreateTime',
+    });
+    $.ajax({
+        url: '/internal/customer/getActiveUsers',
+        dataType: 'json',
+        type: 'get',
+        success: function (data) {
+            $("#userName").empty();
+            $("#userName").append('<option value="">请选择所属用户</option>');
+            $.each(data, function (index, item) {
+                $('#userName').append(
+                    '<option value="' + item.loginName + '">' + item.userName
+                    + '</option>');// 下拉菜单里添加元素
+            });
+            form.render("select");
+        }
+    });
+
+    $.ajax({
+        url: '/internal/common/getSearchEngines',
+        dataType: 'json',
+        type: 'post',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({'terminalType': 'All'}),
+        success: function (data) {
+            $("#searchEngine").empty();
+            $("#searchEngine").append('<option value="">请选择搜索引擎</option>');
+            $.each(data.data, function (index, item) {
+                $('#searchEngine').append(
+                    '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
+            });
+            form.render("select");
+        }
+    });
 
     var keywordTable = table.render({
         elem: '#keywordTable',
@@ -56,7 +100,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             {field: 'failedCause', title: '失败原因', width: '8%', },
             // {title: '操作', align: 'center',fixed:'right', width: '10%' , templet: '#operationTpl'}
         ]],
-        height: 'full-110',
+        height: 'full-95',
 
         done: function (res, curr, count) {
         }

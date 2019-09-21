@@ -151,6 +151,7 @@
                                     <input type="text" name="bearPawNumber" id="bearPawNumber" placeholder="请输入熊掌号" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
+
                             <div class="layui-inline">
                                 <label class="layui-form-label">优化组名</label>
                                 <div class="layui-input-inline">
@@ -158,9 +159,50 @@
                                 </div>
                             </div>
                             <div class="layui-inline">
+                                <label class="layui-form-label">关键字状态</label>
+                                <div class="layui-input-inline">
+                                    <select name="status" id="status">
+                                        <option value=''>请选择关键字状态</option>
+                                        <option value='1'>激活</option>
+                                        <option value='2'>新增</option>
+                                        <option value='0'>暂不操作</option>
+                                        <option value='3'>下架</option>
+                                    </select>&nbsp;
+                                </div>
+                            </div>
+                            <div class="layui-inline">
                                 <label class="layui-form-label">机器分组</label>
                                 <div class="layui-input-inline">
                                     <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">用户名称</label>
+                                <div class="layui-input-inline">
+                                    <select name="userName" id="userName">
+                                        <option value="">请选择用户</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">关键字来源</label>
+                                <div class="layui-input-inline">
+                                    <select name="customerKeywordSource" id="customerKeywordSource">
+                                        <option value="">请选择关键字来源</option>
+                                        <option value="Capture">机器采集词</option>
+                                        <option value="Excel">表格上传词</option>
+                                        <option value="UI">页面添加词</option>
+                                        <option value="Plugin">插件添加词</option>
+                                        <option value="Specify">全站指定词</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">备注</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="remarks" id="remarks" placeholder="请输入备注" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
                             <div class="layui-inline">
@@ -178,23 +220,58 @@
                                 </div>
                             </div>
                             <div class="layui-inline">
-                                <label class="layui-form-label">关键字来源</label>
+                                <label class="layui-form-label">要刷数量范围</label>
+                                <div class="layui-input-inline" style="width: 90.5px;">
+                                    <input type="number" name="gtOptimizePlanCount" placeholder=">=" autocomplete="off" class="layui-input">
+                                </div>
+                                <div class="layui-input-inline" style="width: 90.5px;">
+                                    <input type="number" name="ltOptimizePlanCount" placeholder="<=" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">已刷数量范围</label>
+                                <div class="layui-input-inline" style="width: 90.5px;">
+                                    <input type="number" name="gtOptimizedCount" placeholder=">=" autocomplete="off" class="layui-input">
+                                </div>
+                                <div class="layui-input-inline" style="width: 90.5px;">
+                                    <input type="number" name="ltOptimizedCount" placeholder="<=" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">排名范围</label>
+                                <div class="layui-input-inline" style="width: 90.5px;">
+                                    <input type="number" name="gtPosition" placeholder=">=" autocomplete="off" class="layui-input">
+                                </div>
+                                <div class="layui-input-inline" style="width: 90.5px;">
+                                    <input type="number" name="ltPosition" placeholder="<=" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">无效点击数</label>
                                 <div class="layui-input-inline">
-                                    <select name="customerKeywordSource" id="customerKeywordSource">
-                                        <option value="">请选择关键字来源</option>
-                                        <option value="Capture">机器采集词</option>
-                                        <option value="Excel">表格上传词</option>
-                                        <option value="UI">页面添加词</option>
-                                        <option value="Plugin">插件添加词</option>
-                                        <option value="Specify">全站指定词</option>
-                                    </select>
+                                    <input type="number" name="invalidRefreshCount" id="invalidRefreshCount" placeholder="请输入无效点击数" autocomplete="off"
+                                           class="layui-input">
                                 </div>
                             </div>
                             <div class="layui-inline">
-                                <label class="layui-form-label">备注</label>
+                                <label class="layui-form-label">搜索引擎</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="remark" id="remark" placeholder="请输入备注" autocomplete="off"
-                                           class="layui-input">
+                                    <select name="searchEngine" id="searchEngine">
+                                        <option value=''>请选择搜索引擎</option>
+
+                                    </select>&nbsp;
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">创建日期范围</label>
+                                <div class="layui-input-inline" style="width: 90.5px;">
+                                    <input type="text" name="gtCreateTime" id="gtCreateTime" placeholder="起始日期" autocomplete="off" class="layui-input">
+                                </div>
+                                <div class="layui-input-inline" style="width: 90.5px;">
+                                    <input type="text" name="ltCreateTime" id="ltCreateTime" placeholder="结束日期" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
                         </div>

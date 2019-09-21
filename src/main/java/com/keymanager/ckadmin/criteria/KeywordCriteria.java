@@ -25,7 +25,17 @@ public class KeywordCriteria extends BaseCriteria {
     private String searchEngine;
     private String customerKeywordSource;//关键字来源
     private String status;
+    private Integer gtOptimizePlanCount;//要刷起始
+    private Integer ltOptimizePlanCount;//要刷结束
+    private Integer gtOptimizedCount;//已刷起始
+    private Integer ltOptimizedCount;//已刷结束
+    private Integer gtPosition;//排名起始
+    private Integer ltPosition;//排名结束
+    private Integer noPosition;//没有排名
 
+    private Integer invalidRefreshCount;//无效点击量
+    private String gtCreateTime;//创建时间起始
+    private String ltCreateTime;//创建时间结束
 
     private String targetOptimizeGroupName;
     private String targetMachineGroup;
@@ -177,5 +187,85 @@ public class KeywordCriteria extends BaseCriteria {
 
     public void setDeleteType(String deleteType) {
         this.deleteType = deleteType;
+    }
+
+    public Integer getGtOptimizePlanCount() {
+        return gtOptimizePlanCount;
+    }
+
+    public void setGtOptimizePlanCount(Integer gtOptimizePlanCount) {
+        this.gtOptimizePlanCount = gtOptimizePlanCount;
+    }
+
+    public Integer getLtOptimizePlanCount() {
+        return ltOptimizePlanCount;
+    }
+
+    public void setLtOptimizePlanCount(Integer ltOptimizePlanCount) {
+        this.ltOptimizePlanCount = ltOptimizePlanCount;
+    }
+
+    public Integer getGtOptimizedCount() {
+        return gtOptimizedCount;
+    }
+
+    public void setGtOptimizedCount(Integer gtOptimizedCount) {
+        this.gtOptimizedCount = gtOptimizedCount;
+    }
+
+    public Integer getLtOptimizedCount() {
+        return ltOptimizedCount;
+    }
+
+    public void setLtOptimizedCount(Integer ltOptimizedCount) {
+        this.ltOptimizedCount = ltOptimizedCount;
+    }
+
+    public Integer getGtPosition() {
+        return gtPosition;
+    }
+
+    public void setGtPosition(Integer gtPosition) {
+        this.gtPosition = gtPosition;
+    }
+
+    public Integer getLtPosition() {
+        return ltPosition;
+    }
+
+    public void setLtPosition(Integer ltPosition) {
+        this.ltPosition = ltPosition;
+    }
+
+    public Integer getNoPosition() {
+        return noPosition;
+    }
+
+    public void setNoPosition(Integer noPosition) {
+        this.noPosition = noPosition;
+    }
+
+    public Integer getInvalidRefreshCount() {
+        return invalidRefreshCount;
+    }
+
+    public void setInvalidRefreshCount(Integer invalidRefreshCount) {
+        this.invalidRefreshCount = invalidRefreshCount;
+    }
+
+    public String getGtCreateTime() {
+        return gtCreateTime;
+    }
+
+    public void setGtCreateTime(String gtCreateTime) {
+        this.gtCreateTime = gtCreateTime;
+    }
+
+    public String getLtCreateTime() {
+        return ltCreateTime;
+    }
+
+    public void setLtCreateTime(String ltCreateTime) {
+        this.ltCreateTime = ltCreateTime;
     }
 }
