@@ -19,92 +19,161 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
     laydate.render({
         elem: '#ltCreateTime',
     });
-    $.ajax({
-        url: '/internal/customer/getActiveUsers',
-        dataType: 'json',
-        type: 'get',
-        success: function (data) {
-            $("#userName").empty();
-            $("#userName").append('<option value="">请选择所属用户</option>');
-            $.each(data, function (index, item) {
-                $('#userName').append(
-                    '<option value="' + item.loginName + '">' + item.userName
-                    + '</option>');// 下拉菜单里添加元素
-            });
-            form.render("select");
-        }
-    });
+    init_search();
 
-    $.ajax({
-        url: '/internal/common/getSearchEngines',
-        dataType: 'json',
-        type: 'post',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        data: JSON.stringify({'terminalType': 'All'}),
-        success: function (data) {
-            $("#searchEngine").empty();
-            $("#searchEngine").append('<option value="">请选择搜索引擎</option>');
-            $.each(data.data, function (index, item) {
-                $('#searchEngine').append(
-                    '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
-            });
-            form.render("select");
-        }
-    });
+    function init_search() {
+        init_keyword_type();
+        init_belong_user();
+        init_searchEngine();
+        get_keywords(formToJsonObject('searchForm'));
+    }
 
-    var keywordTable = table.render({
-        elem: '#keywordTable',
-        method: 'post',
-        url: '/internal/customerKeyword/getKeywords',
-        limit: 25,
-        limits: [10, 25, 50, 75, 100, 500, 1000],
-        page: true,
-        size: 'sm',
-        id: 'keywordTable',
-        even: true,//隔行背景
-        // toolbar: true,
-        where: formToJsonObject('searchForm'),
-        toolbar: "#toolbarTpl",
-        // defaultToolbar: ['filter', 'print', 'exports'], 对应列筛选 打印 导出
-        defaultToolbar: ['filter'],
-        contentType: 'application/json',
-        cols: [[
-            {filed: 'uuid', type: 'checkbox', fixed: "left", width: '3%'},
-            {field: 'contactPerson', title: '用户名称', width: '8%', templet: '#toCUstomerKeywordTpl'},
-            {field: 'keyword', title: '关键字', width: '10%'},
-            {field: 'url', title: '链接', width: '15%'},
+    function init_keyword_type() {
+        $.ajax({
+            url: '/internal/customerKeyword/getKeywordTypeByUserRole',
+            dataType: 'json',
+            async: false,
+            type: 'get',
+            success: function (res) {
+                if (res.code === 200) {
+                    // $("#type").empty();
+                    $.each(res.data, function (index, item) {
+                        let businessItem = item.split("#");
+                        $('#type').append(
+                            '<option value="' + businessItem[0] + '">'
+                            + businessItem[1]
+                            + '</option>');// 下拉菜单里添加元素
+                    });
+                    form.render("select");
+                }
+            }
+        });
+    }
 
-            {field: 'bearPawNumber', title: '熊掌号', width: '5%'},
-            // {field: 'originalUrl', title: '原始链接', width: '15%',},
-            // {field: 'terminalType', title: '终端', width: '5%'},
-            {field: 'title', title: '标题', width: '10%'},
+    function init_belong_user() {
+        $.ajax({
+            url: '/internal/customer/getActiveUsers',
+            dataType: 'json',
+            type: 'get',
+            success: function (data) {
+                $("#userName").empty();
+                $("#userName").append('<option value="">请选择所属用户</option>');
+                $.each(data, function (index, item) {
+                    $('#userName').append(
+                        '<option value="' + item.loginName + '">'
+                        + item.userName
+                        + '</option>');// 下拉菜单里添加元素
+                });
+                form.render("select");
+            }
+        });
+    }
 
-            {field: 'indexCount', title: '指数', width: '5%', hide: true},
-            {field: 'initialPosition', title: '初始排名', width: '5%' , hide: true},
-            {field: 'currentPosition', title: '现排名', width: '5%' , hide: true},
-            {field: 'searchEngine', title: '搜索引擎', width: '6%'},
-            {field: 'optimizeGroupName', title: '优化分组', width: '6%'},
-            {field: 'machineGroup', title: '机器分组', width: '6%'},
-            {field: 'city', title: '目标城市', width: '6%', hide: true},
+    function init_searchEngine() {
+        $.ajax({
+            url: '/internal/common/getSearchEngines',
+            dataType: 'json',
+            type: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({'terminalType': 'All'}),
+            success: function (data) {
+                $("#searchEngine").empty();
+                $("#searchEngine").append('<option value="">请选择搜索引擎</option>');
+                $.each(data.data, function (index, item) {
+                    $('#searchEngine').append(
+                        '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
+                });
+                form.render("select");
+            }
+        });
+    }
 
-            {field: 'collectMethod', title: '收费方式', width: '5%', templet:'#collectMethodTpl'},
-            {field: 'optimizePlanCount', title: '要刷', width: '5%', hide: true},
-            {field: 'optimizedCount', title: '已刷', width: '5%', hide: true},
-            {field: 'invalidRefreshCount', title: '无效', width: '5%'},
-            {field: 'status', title: '状态', width: '5%'},
-            {field: 'paymentStatus', title: '付费状态', width: '5%', hide: true},
-            {field: 'remarks', title: '备注', width: '8%', hide: true},
-            {field: 'failedCause', title: '失败原因', width: '8%', },
-            // {title: '操作', align: 'center',fixed:'right', width: '10%' , templet: '#operationTpl'}
-        ]],
-        height: 'full-95',
+    function get_keywords(whereCondition) {
+        var keywordTable = table.render({
+            elem: '#keywordTable',
+            method: 'post',
+            url: '/internal/customerKeyword/getKeywords',
+            limit: 25,
+            limits: [10, 25, 50, 75, 100, 500, 1000],
+            page: true,
+            size: 'sm',
+            id: 'keywordTable',
+            even: true,//隔行背景
+            // toolbar: true,
+            where: whereCondition,
+            toolbar: "#toolbarTpl",
+            // defaultToolbar: ['filter', 'print', 'exports'], 对应列筛选 打印 导出
+            defaultToolbar: ['filter'],
+            contentType: 'application/json',
+            cols: [[
+                {filed: 'uuid', type: 'checkbox', fixed: "left", width: '3%'},
+                {
+                    field: 'contactPerson',
+                    title: '用户名称',
+                    width: '8%',
+                    templet: '#toCUstomerKeywordTpl'
+                },
+                {field: 'keyword', title: '关键字', width: '10%'},
+                {field: 'url', title: '链接', width: '15%'},
 
-        done: function (res, curr, count) {
-        }
-    });
+                {field: 'bearPawNumber', title: '熊掌号', width: '5%'},
+                // {field: 'originalUrl', title: '原始链接', width: '15%',},
+                // {field: 'terminalType', title: '终端', width: '5%'},
+                {field: 'title', title: '标题', width: '10%'},
+
+                {field: 'indexCount', title: '指数', width: '5%', hide: true},
+                {
+                    field: 'initialPosition',
+                    title: '初始排名',
+                    width: '5%',
+                    hide: true
+                },
+                {
+                    field: 'currentPosition',
+                    title: '现排名',
+                    width: '5%',
+                    hide: true
+                },
+                {field: 'searchEngine', title: '搜索引擎', width: '6%'},
+                {field: 'optimizeGroupName', title: '优化分组', width: '6%'},
+                {field: 'machineGroup', title: '机器分组', width: '6%'},
+                {field: 'city', title: '目标城市', width: '6%', hide: true},
+
+                {
+                    field: 'collectMethod',
+                    title: '收费方式',
+                    width: '5%',
+                    templet: '#collectMethodTpl'
+                },
+                {
+                    field: 'optimizePlanCount',
+                    title: '要刷',
+                    width: '5%',
+                    hide: true
+                },
+                {field: 'optimizedCount', title: '已刷', width: '5%', hide: true},
+                {field: 'invalidRefreshCount', title: '无效', width: '5%'},
+                {field: 'status', title: '状态', width: '5%'},
+                {
+                    field: 'paymentStatus',
+                    title: '付费状态',
+                    width: '5%',
+                    hide: true
+                },
+                {field: 'remarks', title: '备注', width: '8%', hide: true},
+                {field: 'failedCause', title: '失败原因', width: '8%',},
+                // {title: '操作', align: 'center',fixed:'right', width: '10%' , templet: '#operationTpl'}
+            ]],
+            height: 'full-95',
+
+            done: function (res, curr, count) {
+            }
+        });
+
+    }
 
 
     //监听工具条
@@ -305,6 +374,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 layer.confirm("确定修改选中词的优化组吗", {icon: 3, title: '修改优化组'}, function (index) {
                     var postData = {};
                     postData.uuids = uuidArr;
+                    postData.terminalType = $('#terminalType').val();
                     postData.targetOptimizeGroupName = value;
                     $.ajax({
                         url: '/internal/customerKeyword/updateOptimizeGroupName2',
@@ -405,6 +475,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 layer.confirm("确定修改选中词的机器分组吗", {icon: 3, title: '修改机器分组'}, function (index) {
                     var postData = {};
                     postData.uuids = uuidArr;
+                    postData.terminalType = $('#terminalType').val();
                     postData.targetMachineGroup = value;
                     $.ajax({
                         url: '/internal/customerKeyword/updateMachineGroup2',
@@ -505,6 +576,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 layer.confirm("确定修改选中词的熊掌号吗", {icon: 3, title: '修改熊掌号'}, function (index) {
                     var postData = {};
                     postData.uuids = uuidArr;
+                    postData.terminalType = $('#terminalType').val();
                     postData.targetBearPawNumber = value;
                     $.ajax({
                         url: '/internal/customerKeyword/updateBearPawNumber2',

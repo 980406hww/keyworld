@@ -1,22 +1,30 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.ReflectUtils;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
+import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.util.TerminalTypeMapping;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +53,9 @@ public class CustomerKeywordController {
     @Resource(name = "userInfoService2")
     private UserInfoService userInfoService;
 
+    @Resource(name = "configService2")
+    private ConfigService configService;
+
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
     @GetMapping(value = "/toKeywords")
     public ModelAndView toCustomers() {
@@ -67,8 +78,8 @@ public class CustomerKeywordController {
             if (keywordCriteria.getOrderMode() != null && keywordCriteria.getOrderMode() == 0) {
                 page.setAsc(false);
             }
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
-            keywordCriteria.setTerminalType(terminalType);
+//            String terminalType = TerminalTypeMapping.getTerminalType(request);
+//            keywordCriteria.setTerminalType(terminalType);
             page = customerKeywordService.searchKeywords(page, keywordCriteria);
             List<CustomerKeyword> keywords = page.getRecords();
             resultBean.setCode(0);
@@ -145,13 +156,11 @@ public class CustomerKeywordController {
     public ResultBean updateOptimizeGroupName(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200,"success");
         try {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
             String userName = (String) request.getSession().getAttribute("username");
             boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
             if(!isDepartmentManager) {
                 keywordCriteria.setUserName(userName);
             }
-            keywordCriteria.setTerminalType(terminalType);
             customerKeywordService.updateOptimizeGroupName(keywordCriteria);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -167,13 +176,11 @@ public class CustomerKeywordController {
     public ResultBean updateMachineGroup(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200,"success");
         try {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
             String userName = (String) request.getSession().getAttribute("username");
             boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
             if(!isDepartmentManager) {
                 keywordCriteria.setUserName(userName);
             }
-            keywordCriteria.setTerminalType(terminalType);
             customerKeywordService.updateMachineGroup(keywordCriteria);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -189,8 +196,6 @@ public class CustomerKeywordController {
     public ResultBean updateBearPawNumber(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
-            keywordCriteria.setTerminalType(terminalType);
             customerKeywordService.deleteCustomerKeywordsByDeleteType(keywordCriteria);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -206,14 +211,32 @@ public class CustomerKeywordController {
     public ResultBean deleteCustomerKeywords(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200,"success");
         try {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
-            String userName = (String) request.getSession().getAttribute("username");
-            boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
-            if(!isDepartmentManager) {
-                keywordCriteria.setUserName(userName);
+            customerKeywordService.deleteCustomerKeywordsByDeleteType(keywordCriteria);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/getKeywordTypeByUserRole")
+    public ResultBean getKeywordTypeByUserRole(HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
+            Set<String> roles = shiroUser.getRoles();
+            List<String> businessType = new ArrayList<>();
+            if (roles.contains("Operation")) {
+                businessType = Arrays.asList(configService.getConfig("BusinessType", "All").getValue().split(","));
+            } else if (roles.contains("SEOSales")) {
+                businessType = Arrays.asList(configService.getConfig("BusinessType", "SEOSales").getValue().split(","));
+            } else if (roles.contains("NegativeSales")) {
+                businessType = Arrays.asList(configService.getConfig("BusinessType", "NegativeSales").getValue().split(","));
             }
-            keywordCriteria.setTerminalType(terminalType);
-            customerKeywordService.updateBearPawNumber(keywordCriteria);
+            resultBean.setData(businessType);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

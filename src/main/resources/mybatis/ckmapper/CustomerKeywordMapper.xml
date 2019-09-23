@@ -317,9 +317,15 @@
         <if test="keywordCriteria.failedCause != null and keywordCriteria.failedCause != ''">
             AND ck.fFailedCause = #{keywordCriteria.failedCause}
         </if>
-        <if test="keywordCriteria.terminalType != null and keywordCriteria.terminalType != ''">
-            AND fTerminalType =  #{keywordCriteria.terminalType}
-        </if>
+
+        <choose>
+            <when test="keywordCriteria.terminalType == null || keywordCriteria.terminalType == ''">
+                AND fTerminalType IN ('PC', 'Phone')
+            </when>
+            <otherwise>
+                AND fTerminalType = #{keywordCriteria.terminalType}
+            </otherwise>
+        </choose>
         <if test="keywordCriteria.searchEngine != null and keywordCriteria.searchEngine != ''">
             AND fSearchEngine =  #{keywordCriteria.searchEngine}
         </if>
@@ -364,6 +370,9 @@
         </if>
         <if test="keywordCriteria.requireDelete != null and keywordCriteria.requireDelete != ''">
             AND ck.fRequireDelete = 1
+        </if>
+        <if test="keywordCriteria.type != null and keywordCriteria.type != ''">
+            AND ck.fType = #{keywordCriteria.type}
         </if>
     </sql>
 
@@ -404,9 +413,14 @@
         <if test="keywordCriteria.failedCause != null and keywordCriteria.failedCause != ''">
             AND ck.fFailedCause = #{keywordCriteria.failedCause}
         </if>
-        <if test="keywordCriteria.terminalType != null and keywordCriteria.terminalType != ''">
-            AND fTerminalType =  #{keywordCriteria.terminalType}
-        </if>
+        <choose>
+            <when test="keywordCriteria.terminalType == null || keywordCriteria.terminalType == ''">
+                AND fTerminalType IN ('PC', 'Phone')
+            </when>
+            <otherwise>
+                AND fTerminalType = #{keywordCriteria.terminalType}
+            </otherwise>
+        </choose>
         <if test="keywordCriteria.searchEngine != null and keywordCriteria.searchEngine != ''">
             AND fSearchEngine =  #{keywordCriteria.searchEngine}
         </if>
@@ -453,6 +467,9 @@
 
         <if test="keywordCriteria.requireDelete != null and keywordCriteria.requireDelete != ''">
             AND ck.fRequireDelete = 1
+        </if>
+        <if test="keywordCriteria.type != null and keywordCriteria.type != ''">
+            AND ck.fType = #{keywordCriteria.type}
         </if>
     </sql>
     

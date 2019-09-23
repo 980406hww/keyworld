@@ -87,3 +87,7 @@
     margin-bottom: 0px;
     margin-right: 0px;
 }
+
+.my-collapse .layui-inline {
+    height: 30px;
+}

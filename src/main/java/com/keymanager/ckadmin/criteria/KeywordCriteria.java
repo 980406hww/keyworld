@@ -37,6 +37,7 @@ public class KeywordCriteria extends BaseCriteria {
     private String ltCreateTime;//创建时间结束
     private String pushPay;//催缴
     private String requireDelete;//要求删除
+    private String type;//词类型
 
     private String targetOptimizeGroupName;
     private String targetMachineGroup;
@@ -284,5 +285,13 @@ public class KeywordCriteria extends BaseCriteria {
 
     public void setRequireDelete(String requireDelete) {
         this.requireDelete = requireDelete;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
