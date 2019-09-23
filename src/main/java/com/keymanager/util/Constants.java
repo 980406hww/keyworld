@@ -220,4 +220,6 @@ public class Constants {
         QZSETTING_WEIGHT_LIST.add("8");
         QZSETTING_WEIGHT_LIST.add("9");
     }
+
+    public final static String CONFIG_OPERATE_KEYWORD = "OperateKeywordConfig";
 }
