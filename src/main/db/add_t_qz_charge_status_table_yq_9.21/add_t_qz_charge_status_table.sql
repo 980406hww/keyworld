@@ -12,3 +12,6 @@ create table t_qz_charge_status
 		primary key (fUuid)
 )
 comment '收费状态表';
+
+alter table t_qz_setting
+	add fChargeStatusUuid int null comment '最新一次收费状态Uuid';

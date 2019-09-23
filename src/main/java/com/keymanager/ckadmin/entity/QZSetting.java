@@ -80,7 +80,7 @@ public class QZSetting extends BaseEntity {
      * 续费状态 1：续费  0：暂停续费
      */
     @TableField(value = "fRenewalStatus")
-    private int renewalStatus;
+    private Integer renewalStatus;
     /**
      * qzOperationTypes为全站表子类  一对多
      */
@@ -95,6 +95,10 @@ public class QZSetting extends BaseEntity {
 
     @TableField(value = "fCaptureTerminalType", strategy = FieldStrategy.IGNORED)
     private String captureTerminalType;
+
+    @TableField(value = "fChargeStatusUuid")
+    private Long chargeStatusUuid;
+
     /**
      * QZCategoryTag为全站表子类 一对多
      */
@@ -290,11 +294,11 @@ public class QZSetting extends BaseEntity {
         this.status = status;
     }
 
-    public int getRenewalStatus() {
+    public Integer getRenewalStatus() {
         return renewalStatus;
     }
 
-    public void setRenewalStatus(int renewalStatus) {
+    public void setRenewalStatus(Integer renewalStatus) {
         this.renewalStatus = renewalStatus;
     }
 
@@ -345,5 +349,13 @@ public class QZSetting extends BaseEntity {
 
     public void setStandardSpecies(List<String> standardSpecies) {
         this.standardSpecies = standardSpecies;
+    }
+
+    public Long getChargeStatusUuid() {
+        return chargeStatusUuid;
+    }
+
+    public void setChargeStatusUuid(Long chargeStatusUuid) {
+        this.chargeStatusUuid = chargeStatusUuid;
     }
 }

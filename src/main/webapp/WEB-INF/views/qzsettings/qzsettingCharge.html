@@ -348,7 +348,7 @@
                             break;
                     }
                 } else {
-                    l.layer.msg(res.msg);
+                    l.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
                 }
             }
         });
@@ -489,7 +489,7 @@
                                                             window.name));
                                                 });
                                             } else {
-                                                layui.layer.msg(res.msg);
+                                                layui.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
                                             }
                                         }
                                     });
@@ -502,7 +502,7 @@
                                     });
                                 }
                             } else {
-                                layui.layer.msg(res.msg);
+                                layui.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
                             }
                         },
                         error: function () {

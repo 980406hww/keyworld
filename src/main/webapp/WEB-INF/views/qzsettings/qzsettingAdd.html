@@ -734,7 +734,7 @@
                     // }
                     flag_ = false;
                 } else {
-                    l.layer.msg(res.msg === null ? '未知错误' : res.msg);
+                    l.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
                 }
             }
         });
@@ -1101,7 +1101,7 @@
                                 customerInput.setAttribute('disabled', '');
                             }
                         } else {
-                            layer.msg(res.msg === null ? '未知错误' : res.msg);
+                            layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
                         }
                     }
                 });
@@ -1596,7 +1596,7 @@
                                     parent.layer.close(parent.layer.getFrameIndex(window.name));
                                 });
                             } else {
-                                layer.msg(res.msg === null ? '未知错误' : res.msg);
+                                layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
                             }
                         },
                         error: function () {

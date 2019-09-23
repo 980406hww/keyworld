@@ -966,14 +966,16 @@
             }
         </@shiro.hasPermission>
 
+        get_qzcategory_label_list();
+        get_active_customer_list();
+
         function successTable(res) {
             let terminalType = $('#terminalType').val();
             terminalType = terminalType === '' ? 'PC' : terminalType;
             getTerminalSearchEngineMap();
             get_operation_combine_list(terminalType);
-            get_qzcategory_label_list();
-            get_active_customer_list();
-            let qz_setting_table = $("#qzSettingTable").parent().find(".layui-table-main").find("table");
+            let qz_setting_table = $("#qzSettingTable").parent().find(
+                ".layui-table-main").find("table");
             $.each(res.data, function (idx, val) {
                 let td = qz_setting_table.find(
                     "tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
@@ -1031,7 +1033,7 @@
                         radio[9].nextElementSibling.title = "标识下条规则接近达标, 未完成度<"
                             + res.data.differenceValue;
                     } else {
-                        show_layer_msg(res.msg === null ? '未知错误' : res.msg, 5);
+                        show_layer_msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg, 5);
                     }
                 },
                 error: function () {
@@ -1972,19 +1974,15 @@
                     break;
                 case 'batchUpdateRenewalStatusToNormal':
                     saveChargeStatus(1);
-                    // batchUpdateRenewalStatus(1);
                     break;
                 case 'batchUpdateRenewalStatusToSuspend':
                     saveChargeStatus(0);
-                    // batchUpdateRenewalStatus(0);
                     break;
                 case 'batchUpdateRenewalStatusToSoldOut':
                     saveChargeStatus(3);
-                    // batchUpdateRenewalStatus(3);
                     break;
                 case 'batchUpdateRenewalStatusToOther':
-                    saveChargeStatus(4);
-                    // batchUpdateRenewalStatus(4);
+                    batchUpdateRenewalStatus(4);
                     break;
                 default:
                     break;
@@ -2065,8 +2063,7 @@
                     if (satisfaction.length !== 0) {
                         p_d.satisfaction = satisfaction.length;
                     } else {
-                        show_layer_msg('满意度必须选择喔', 5);
-                        return false;
+                        p_d.satisfaction = 1;
                     }
                     if (customerMsg) {
                         p_d.customerMsg = customerMsg.value;
@@ -2086,11 +2083,11 @@
                                 }, success: function (res) {
                                     if (res.code === 200) {
                                         show_layer_msg('修改成功', 6);
-                                        // active['reload'].call(this);
+                                        active['reload'].call(this);
                                         layer.close(index_);
                                         layer.close(index);
                                     } else {
-                                        layer.msg(res.msg);
+                                        layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
                                     }
                                 }
                             });
@@ -2213,7 +2210,7 @@
                     } else if (res.code === 300) {
                         show_layer_msg('暂无收费记录数据', 5);
                     } else {
-                        show_layer_msg(res.msg, 5);
+                        show_layer_msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg, 5);
                     }
                 },
                 error: function () {
@@ -2290,7 +2287,7 @@
                                         layer.close(index);
                                         layer.close(index_);
                                     } else {
-                                        layer.msg(res.msg);
+                                        layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
                                     }
                                 }
                             });
@@ -2375,7 +2372,7 @@
                     if (res.code === 200) {
                         refreshNotebook(d.customerUuid);
                     } else {
-                        show_layer_msg(res.msg, 5);
+                        show_layer_msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg, 5);
                     }
                 },
                 error: function () {
@@ -2602,7 +2599,7 @@
                         noteBookHtml += noteBookHtmlFooter;
                         call(noteBookHtml);
                     } else {
-                        show_layer_msg(res.msg, 5);
+                        show_layer_msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg, 5);
                     }
                 },
                 error: function () {
@@ -2871,6 +2868,7 @@
                     success: function (result) {
                         if (result.code === 200) {
                             show_layer_msg('操作成功', 6, true);
+                            active['reload'].call(this);
                         } else {
                             show_layer_msg('操作失败', 5);
                         }
@@ -2965,7 +2963,7 @@
                                         layer.close(index_1);
                                         layer.close(index_0);
                                     } else {
-                                        show_layer_msg(res.msg, 5);
+                                        show_layer_msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg, 5);
                                     }
                                 }
                             });
@@ -3010,7 +3008,6 @@
         <i style="font-size: 15px !important;" class="layui-icon">&#xe666;</i>马上更新
     </button>
     </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/qzsetting/updateRenewalStatus">
     <#if isSEOSales==0>
     <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToNormal">
         <i class="layui-icon">&#x1005;</i>正常续费
@@ -3025,7 +3022,6 @@
         <i class="layui-icon">&#xe63f;</i>更为其他
     </button>
     </#if>
-    </@shiro.hasPermission>
     </div>
 </script>
 
@@ -3105,8 +3101,8 @@
                     <a class="blue"
                        href="javascript:openNoteBookDialog('{{d.customerUuid}}')">运营记录</a>
                 </span>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/qzchargelog/save">
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/qzchargelog/save">
                 <span>
                     <a class="blue"
                        href="javascript:showChargeDialog('{{d.uuid}}','{{d.contactPerson}}',
@@ -3128,8 +3124,8 @@
                     <a class="blue" href="javascript:delQZSetting('{{d.uuid}}')">删除</a>
                 </span>
             </@shiro.hasPermission>
-    </div>
-    </div>
+            </div>
+        </div>
     </div>
     <div class="layui-row body">
         <!--   身体左侧基本信息    -->

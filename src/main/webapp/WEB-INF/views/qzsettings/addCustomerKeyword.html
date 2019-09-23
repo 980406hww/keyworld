@@ -174,7 +174,7 @@
                     });
                     form.render("select");
                 } else {
-                    l.layer.msg(res.msg);
+                    l.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
                 }
             }
         });
@@ -217,7 +217,7 @@
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        layui.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
                     }
                 }
             });

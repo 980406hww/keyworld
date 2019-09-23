@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.dao.QZChargeStatusDao;
 import com.keymanager.ckadmin.dao.QZSettingDao;
 import com.keymanager.ckadmin.entity.QZChargeStatus;
+import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.service.QZChargeStatusService;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -43,8 +45,12 @@ public class QZChargeStatusServiceImpl extends ServiceImpl<QZChargeStatusDao, QZ
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void saveOneQZChargeStatus(QZChargeStatus qzChargeStatus) {
-//        qzSettingDao.saveChargeStatus(qzChargeStatus);
         qzChargeStatusDao.insert(qzChargeStatus);
+        QZSetting qzSetting = qzSettingDao.selectById(qzChargeStatus.getQzSettingUuid());
+        qzSetting.setRenewalStatus(qzChargeStatus.getChargeStatus());
+        qzSetting.setChargeStatusUuid(qzChargeStatus.getUuid());
+        qzSettingDao.updateById(qzSetting);
     }
 }

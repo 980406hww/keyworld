@@ -28,7 +28,7 @@ public class QZChargeStatusController {
             List<Integer> uuids = (List<Integer>) dataMap.get("qzSettingUUids");
             Object strMoney = dataMap.get("money");
             BigDecimal money = null;
-            if (null != strMoney) {
+            if (null != strMoney && !"".equals(strMoney)) {
                 money = new BigDecimal((String) dataMap.get("money"));
             }
             Integer status = (Integer) dataMap.get("chargeStatus");
