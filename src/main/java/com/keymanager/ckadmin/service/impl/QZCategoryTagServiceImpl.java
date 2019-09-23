@@ -1,7 +1,6 @@
 package com.keymanager.ckadmin.service.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.ckadmin.criteria.QZCategoryTagCriteria;
 import com.keymanager.ckadmin.dao.QZCategoryTagDao;
 import com.keymanager.ckadmin.entity.QZCategoryTag;
 import com.keymanager.ckadmin.service.QZCategoryTagService;
@@ -12,15 +11,14 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 @Service("qzCategoryTagService2")
-public class QZCategoryTagServiceImpl extends
-    ServiceImpl<QZCategoryTagDao, QZCategoryTag> implements QZCategoryTagService {
+public class QZCategoryTagServiceImpl extends ServiceImpl<QZCategoryTagDao, QZCategoryTag> implements QZCategoryTagService {
 
     @Resource(name = "qzCategoryTagDao2")
     private QZCategoryTagDao qzCategoryTagDao;
 
     @Override
-    public List<String> findTagNames(Long qzSettingUuid) {
-        return qzCategoryTagDao.findTagNames(qzSettingUuid);
+    public List<String> findTagNameByQZSettingUuid(Long qzSettingUuid) {
+        return qzCategoryTagDao.findTagNameByQZSettingUuid(qzSettingUuid);
     }
 
     @Override
@@ -29,8 +27,8 @@ public class QZCategoryTagServiceImpl extends
     }
 
     @Override
-    public void updateQZCategoryTag(List<QZCategoryTag> existingQZCategoryTags, List<QZCategoryTag> updateQZCategoryTags, long qzSettingUuid) {
-        Map<String, QZCategoryTag> existingQZCategoryTagMap = new HashMap<>();
+    public void updateQZCategoryTag(List<QZCategoryTag> existingQZCategoryTags, List<QZCategoryTag> updateQZCategoryTags, long qzSettingUuid, String userName) {
+        Map<String, QZCategoryTag> existingQZCategoryTagMap = new HashMap<>(5);
         for (QZCategoryTag qzCategoryTag : existingQZCategoryTags) {
             existingQZCategoryTagMap.put(qzCategoryTag.getTagName(), qzCategoryTag);
         }
@@ -40,6 +38,7 @@ public class QZCategoryTagServiceImpl extends
                 existingQZCategoryTagMap.remove(newQZCategoryTag.getTagName());
             } else {
                 newQZCategoryTag.setQzSettingUuid(qzSettingUuid);
+                newQZCategoryTag.setBelongUser(userName);
                 qzCategoryTagDao.insert(newQZCategoryTag);
             }
         }
@@ -49,8 +48,13 @@ public class QZCategoryTagServiceImpl extends
     }
 
     @Override
-    public void saveCategoryTagNames(QZCategoryTagCriteria qzCategoryTagCriteria) {
-        List<QZCategoryTag> existingQZCategoryTags = this.searchCategoryTagByQZSettingUuid(qzCategoryTagCriteria.getQzSettingUuid());
-        this.updateQZCategoryTag(existingQZCategoryTags, qzCategoryTagCriteria.getQzCategoryTags(), qzCategoryTagCriteria.getQzSettingUuid());
+    public void saveCategoryTagNames(long qzSettingUuid, List<QZCategoryTag> qzCategoryTags, String userName) {
+        List<QZCategoryTag> existingQZCategoryTags = this.searchCategoryTagByQZSettingUuid(qzSettingUuid);
+        this.updateQZCategoryTag(existingQZCategoryTags, qzCategoryTags, qzSettingUuid, userName);
+    }
+
+    @Override
+    public List<String> findTagNameByUserName(String userName) {
+        return qzCategoryTagDao.findTagNameByUserName(userName);
     }
 }

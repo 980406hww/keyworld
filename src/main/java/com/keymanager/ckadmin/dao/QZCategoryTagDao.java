@@ -16,5 +16,7 @@ public interface QZCategoryTagDao extends BaseMapper<QZCategoryTag> {
     List<QZCategoryTag> searchCategoryTagByQZSettingUuid(
         @Param("qzSettingUuid") Long qzSettingUuid);
 
-    List<String> findTagNames(@Param("qzSettingUuid") Long qzSettingUuid);
+    List<String> findTagNameByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid);
+
+    List<String> findTagNameByUserName(@Param("userName") String userName);
 }

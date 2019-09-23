@@ -13,12 +13,19 @@
         ORDER BY qc.fCreateTime
     </select>
 
-    <select id="findTagNames" resultType="java.lang.String">
+    <select id="findTagNameByQZSettingUuid" resultType="java.lang.String">
+        SELECT qc.fTagName
+        FROM t_qz_category_tag qc
+        WHERE qc.fQZSettingUuid = #{qzSettingUuid}
+        GROUP BY qc.fTagName
+    </select>
+
+    <select id="findTagNameByUserName" resultType="java.lang.String">
         SELECT qc.fTagName
         FROM t_qz_category_tag qc
         WHERE 1 = 1
-        <if test="qzSettingUuid != null">
-            AND qc.fQZSettingUuid = #{qzSettingUuid}
+        <if test="userName != null">
+            AND qc.fBelongUser = #{userName}
         </if>
         GROUP BY qc.fTagName
     </select>

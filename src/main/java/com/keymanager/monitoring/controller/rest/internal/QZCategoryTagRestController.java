@@ -1,7 +1,6 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.criteria.QZCategoryTagCriteria;
-import com.keymanager.monitoring.entity.QZCategoryTag;
 import com.keymanager.monitoring.service.QZCategoryTagService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

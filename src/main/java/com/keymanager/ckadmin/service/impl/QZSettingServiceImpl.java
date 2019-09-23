@@ -221,7 +221,7 @@ public class QZSettingServiceImpl extends
     private void getQZSettingGroupInfo(Map<String, Object> rankInfoVoMap, long uuid, String terminalType, String optimizeGroupName) {
         rankInfoVoMap.put("customerKeywordCount", qzSettingDao.getQZSettingGroupInfo(terminalType, optimizeGroupName));
         rankInfoVoMap.put("operationCombineName", operationCombineService.getOperationCombineName(optimizeGroupName));
-        rankInfoVoMap.put("categoryTagNames", qzCategoryTagService.findTagNames(uuid));
+        rankInfoVoMap.put("categoryTagNames", qzCategoryTagService.findTagNameByQZSettingUuid(uuid));
         rankInfoVoMap.put("standardTime", qzOperationTypeService.getStandardTime(uuid, terminalType));
     }
 
@@ -335,7 +335,7 @@ public class QZSettingServiceImpl extends
             // 修改标签
             List<QZCategoryTag> existingQZCategoryTags = qzCategoryTagService.searchCategoryTagByQZSettingUuid(qzSetting.getUuid());
             List<QZCategoryTag> updateQZCategoryTags = qzSetting.getQzCategoryTags();
-            qzCategoryTagService.updateQZCategoryTag(existingQZCategoryTags, updateQZCategoryTags, qzSetting.getUuid());
+            qzCategoryTagService.updateQZCategoryTag(existingQZCategoryTags, updateQZCategoryTags, qzSetting.getUuid(), userName);
             qzSettingDao.updateById(existingQZSetting);
         } else {
             qzSetting.setUpdateTime(new Date());
@@ -665,12 +665,9 @@ public class QZSettingServiceImpl extends
     }
 
     @Override
-    public void updateQzCategoryTags(List<String> uuids, List<QZCategoryTag> targetQZCategoryTags) {
+    public void updateQzCategoryTags(List<String> uuids, List<QZCategoryTag> targetQZCategoryTags, String userName) {
         for (String uuid : uuids) {
-            List<QZCategoryTag> existingQZCategoryTags = qzCategoryTagService
-                .searchCategoryTagByQZSettingUuid(Long.parseLong(uuid));
-            qzCategoryTagService.updateQZCategoryTag(existingQZCategoryTags, targetQZCategoryTags,
-                Long.parseLong(uuid));
+            qzCategoryTagService.saveCategoryTagNames(Long.parseLong(uuid), targetQZCategoryTags, userName);
         }
     }
 

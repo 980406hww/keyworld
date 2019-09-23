@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.QZCategoryTagCriteria;
 import com.keymanager.monitoring.dao.QZCategoryTagDao;
 import com.keymanager.monitoring.entity.QZCategoryTag;
-import com.keymanager.monitoring.entity.QZSetting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
