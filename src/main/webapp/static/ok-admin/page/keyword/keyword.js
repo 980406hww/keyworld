@@ -114,7 +114,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                     field: 'contactPerson',
                     title: '用户名称',
                     width: '8%',
-                    templet: '#toCUstomerKeywordTpl'
+                    templet: '#toCustomerKeywordTpl'
                 },
                 {field: 'keyword', title: '关键字', width: '10%'},
                 {field: 'url', title: '链接', width: '15%'},
@@ -618,7 +618,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             postData.uuids = uuidArr;
             postData.deleteType = 'byUuids';
             $.ajax({
-                url: '/internal/customerKeyword/updateBearPawNumber2',
+                url: '/internal/customerKeyword/deleteCustomerKeywords2',
                 data: JSON.stringify(postData),
                 headers: {
                     'Accept': 'application/json',
@@ -643,6 +643,16 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         });
     }
 
+    window.toCustomerKeyword = function (customerUuid, contactPerson) {
+        // console.log(customerUuid,contactPerson);
+        let businessType = $('#type').val();
+        let terminalType = $('#terminalType').val() === '' ? 'All' : $(
+            '#terminalType').val();
+        let url = '/internal/customerKeyword/toCustomerKeywords/' + businessType
+            + '/' + terminalType + '/' + customerUuid;
+        let tit = contactPerson + '--关键字列表';
+        updateOrNewTab(url, tit, customerUuid);
+    }
 });
 
 function updateOrNewTab(url, tit, id) {

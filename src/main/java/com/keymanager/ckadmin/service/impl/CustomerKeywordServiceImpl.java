@@ -7,6 +7,8 @@ import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.dao.CustomerKeywordDao;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.enums.KeywordEffectEnum;
+import com.keymanager.ckadmin.service.ConfigService;
+import com.keymanager.ckadmin.service.CustomerExcludeKeywordService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
@@ -17,9 +19,12 @@ import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +45,12 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     @Resource(name = "userInfoService2")
     private UserInfoService userInfoService;
+
+    @Resource(name = "customerExcludeKeywordService2")
+    private CustomerExcludeKeywordService customerExcludeKeywordService;
+
+    @Resource(name = "configService2")
+    private ConfigService configService;
 
     @Override
     public List<Map> getCustomerKeywordsCount(List<Long> customerUuids, String terminalType, String entryType) {
@@ -80,8 +91,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         if (CollectionUtils.isNotEmpty(addCustomerKeywords)) {
             int fromIndex = 0, toIndex = 1000;
             do {
-                customerKeywordDao.addCustomerKeywords(new ArrayList<>(addCustomerKeywords.subList(fromIndex, toIndex >
-                    addCustomerKeywords.size() ? addCustomerKeywords.size() : toIndex)));
+                customerKeywordDao.addCustomerKeywords(new ArrayList<>(addCustomerKeywords.subList(fromIndex, Math.min(toIndex, addCustomerKeywords.size()))));
                 fromIndex += 1000;
                 toIndex += 1000;
             } while (addCustomerKeywords.size() > fromIndex);
@@ -163,6 +173,15 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                     1));
             queryInterval = queryInterval / optimizeTodayCount;
             customerKeyword.setOptimizeTodayCount(optimizeTodayCount);
+        } else {
+            if ("Important".equals(customerKeyword.getKeywordEffect())) {
+                Integer optimizePlanCount = Integer.valueOf(configService
+                    .getConfig("KeywordEffectOptimizePlanCount", "ImportantKeyword")
+                    .getValue());
+                customerKeyword.setOptimizePlanCount(optimizePlanCount);
+            } else {
+                customerKeyword.setOptimizePlanCount(10);
+            }
         }
         customerKeyword.setQueryInterval(queryInterval);
         customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
@@ -251,7 +270,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             case "byEmptyTitle":
                 deleteCustomerKeywordsWhenEmptyTitle(keywordCriteria);
                 break;
-            case "EmptyTitleAndUrl":
+            case "byEmptyTitleAndUrl":
                 deleteCustomerKeywordsWhenEmptyTitleAndUrl(keywordCriteria);
                 break;
             default:
@@ -272,7 +291,57 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         customerKeywordDao.deleteCustomerKeywordsWhenEmptyTitleAndUrl(keywordCriteria);
     }
 
+    @Override
+    public Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, KeywordCriteria keywordCriteria) {
+        // 不使用mp自带分页查询，解决count慢问题
+        page.setSearchCount(false);
+        page.setTotal(customerKeywordDao.getKeywordCountByKeywordCriteria(keywordCriteria));
+        List<CustomerKeyword> customerKeywordList = customerKeywordDao.searchCustomerKeywords(page, keywordCriteria);
+        page.setRecords(customerKeywordList);
+        return page;
+    }
 
+    @Override
+    public void saveCustomerKeyword(CustomerKeyword customerKeyword, String userName) {
+        String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(customerKeyword.getCustomerUuid(),
+            customerKeyword.getQzSettingUuid(), customerKeyword.getTerminalType(), customerKeyword.getUrl());
+        if (null != customerExcludeKeywords) {
+            Set<String> excludeKeyword = new HashSet<>(Arrays.asList(customerExcludeKeywords.split(",")));
+            if (!excludeKeyword.isEmpty()) {
+                if (excludeKeyword.contains(customerKeyword.getKeyword())) {
+                    customerKeyword.setStatus(0);
+                }
+            }
+        }
+        customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.UI.name());
+        addCustomerKeyword(customerKeyword, userName);
+    }
+
+    private void addCustomerKeyword(CustomerKeyword customerKeyword, String userName) {
+        customerKeyword = checkCustomerKeyword(customerKeyword, userName);
+        if (customerKeyword != null) {
+            customerKeywordDao.insert(customerKeyword);
+        }
+    }
+
+    @Override
+    public void updateCustomerKeywordFromUI(CustomerKeyword customerKeyword, String userName) {
+        boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+        if (isDepartmentManager) {
+            customerKeyword.setStatus(1);
+        } else {
+            customerKeyword.setStatus(2);
+        }
+        int queryInterval = 24 * 60 * 60;
+        if (null != customerKeyword.getOptimizePlanCount() && customerKeyword.getOptimizePlanCount() > 0) {
+            int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(customerKeyword.getOptimizePlanCount() * (Math.random() * 0.7 + 0.5), 1));
+            queryInterval = queryInterval / optimizeTodayCount;
+            customerKeyword.setOptimizeTodayCount(optimizeTodayCount);
+        }
+        customerKeyword.setQueryInterval(queryInterval);
+        customerKeyword.setUpdateTime(new Date());
+        customerKeywordDao.updateById(customerKeyword);
+    }
 }
 
 

@@ -36,4 +36,6 @@ public interface CustomerService extends IService<Customer> {
     List<Customer> getActiveCustomerSimpleInfo(CustomerCriteria customerCriteria);
 
     Customer getCustomer(Long customerUuid);
+
+    Customer getCustomerByCustomerUuid(String terminalType, String businessType, Long customerUuid);
 }

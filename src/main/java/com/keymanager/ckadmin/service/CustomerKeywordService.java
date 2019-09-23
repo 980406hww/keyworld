@@ -51,4 +51,10 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
 
     void deleteCustomerKeywordsByDeleteType(KeywordCriteria keywordCriteria);
+
+    Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, KeywordCriteria keywordCriteria);
+
+    void saveCustomerKeyword(CustomerKeyword customerKeyword, String userName);
+
+    void updateCustomerKeywordFromUI(CustomerKeyword customerKeyword, String userName);
 }

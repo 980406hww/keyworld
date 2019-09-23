@@ -106,4 +106,10 @@
     <select id="lastInsertID" resultType="java.lang.Long">
         SELECT LAST_INSERT_ID()
     </select>
+
+    <select id="getCustomerByCustomerUuid" resultType="com.keymanager.ckadmin.entity.Customer">
+        SELECT fContactPerson AS 'contactPerson'
+        FROM t_customer
+        WHERE fUuid = #{customerUuid}
+    </select>
 </mapper>

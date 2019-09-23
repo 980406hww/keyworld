@@ -1,0 +1,68 @@
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+    <!--    <!--<@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">-->
+    <!--        <button class="layui-btn layui-btn-sm" id="pause_keyword" lay-event="pause_keyword">-->
+    <!--            暂停-->
+    <!--        </button>-->
+    <!--        <button class="layui-btn layui-btn-sm" id="active_keyword" lay-event="active_keyword">-->
+    <!--            激活-->
+    <!--        </button>-->
+    <!--    </@shiro.hasPermission>-->
+
+    <button class="layui-btn layui-btn-sm" id="add_customer_keyword" lay-event="add_customer_keyword">
+        添加
+    </button>
+
+    <button class="layui-btn layui-btn-sm" id="change_current_optimizePlanCount" lay-event="change_current_optimizePlanCount">
+        修改当前刷量
+    </button>
+    <button class="layui-btn layui-btn-sm" id="change_select_optimizePlanCount" lay-event="change_select_optimizePlanCount">
+        修改所选刷量
+    </button>
+
+
+    <button class="layui-btn layui-btn-sm" id="change_selected_bearPawNumber" lay-event="change_selected_bearPawNumber">
+        修改所选词客户
+    </button>
+    <button class="layui-btn layui-btn-sm" id="change_selected_bearPawNumber" lay-event="change_selected_bearPawNumber">
+        记事本
+    </button>
+    <button class="layui-btn layui-btn-sm" id="change_selected_bearPawNumber" lay-event="change_selected_bearPawNumber">
+        用户留言
+    </button>
+
+    <button class="layui-btn layui-btn-sm layui-btn-danger" id="delete_same_keyword" lay-event="delete_same_keyword">
+        删除重复关键字
+    </button>
+
+    <button class="layui-btn layui-btn-sm layui-btn-danger" id="batch_delete" lay-event="batch_delete">
+        批量删除
+    </button>
+
+
+</script>
+<!--模板-->
+<script type="text/html" id="toDateTime">
+    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+</script>
+
+<script type="text/html" id="collectMethodTpl">
+    {{#  if(d.collectMethod === 'PerDay') { }}
+    按天
+    {{# }else if(d.collectMethod === 'PerTenDay'){ }}
+    十天
+    {{# }else if(d.collectMethod === 'PerSevenDay'){ }}
+    七天
+    {{#  }else{ }}
+    按月
+    {{# } }}
+</script>
+
+<script type="text/html" id="operationTpl">
+    <@shiro.hasPermission name="/internal/customer/saveCustomer">
+    <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/customer/delCustomer">
+    <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+    </@shiro.hasPermission>
+</script>

@@ -30,4 +30,7 @@ public interface CustomerDao extends BaseMapper<Customer> {
         @Param("customerCriteria") CustomerCriteria customerCriteria);
 
     Long lastInsertID();
+
+    Customer getCustomerByCustomerUuid(@Param("customerUuid") Long customerUuid);
+
 }

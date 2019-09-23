@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
+import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
+import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.ReflectUtils;
@@ -27,6 +29,8 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -56,6 +60,9 @@ public class CustomerKeywordController {
     @Resource(name = "configService2")
     private ConfigService configService;
 
+    @Resource(name = "customerService2")
+    private CustomerService customerService;
+
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
     @GetMapping(value = "/toKeywords")
     public ModelAndView toCustomers() {
@@ -66,7 +73,7 @@ public class CustomerKeywordController {
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
     @PostMapping(value = "/getKeywords")
-    public ResultBean searchProductKeywords(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
+    public ResultBean searchKeywords(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         try {
             Page<CustomerKeyword> page = new Page(keywordCriteria.getPage(), keywordCriteria.getLimit());
@@ -74,9 +81,9 @@ public class CustomerKeywordController {
                     .getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {
                 page.setOrderByField(orderByField);
-            }
-            if (keywordCriteria.getOrderMode() != null && keywordCriteria.getOrderMode() == 0) {
-                page.setAsc(false);
+                if (keywordCriteria.getOrderMode() != null && keywordCriteria.getOrderMode() == 0) {
+                    page.setAsc(false);
+                }
             }
 //            String terminalType = TerminalTypeMapping.getTerminalType(request);
 //            keywordCriteria.setTerminalType(terminalType);
@@ -244,5 +251,80 @@ public class CustomerKeywordController {
             return resultBean;
         }
         return resultBean;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/toCustomerKeywords/{businessType}/{terminalType}/{customerUuid}")
+    public ModelAndView toCustomerKeywords(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
+        @PathVariable(name = "customerUuid") Long customerUuid) {
+        ModelAndView mv = new ModelAndView();
+        Customer customer = customerService.getCustomerByCustomerUuid(terminalType, businessType, customerUuid);
+        mv.setViewName("keywords/customerKeyword");
+        mv.addObject("businessType", businessType);
+        mv.addObject("terminalType", terminalType);
+        mv.addObject("customer", customer);
+        mv.addObject("customerUuid", customerUuid);
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @PostMapping(value = "/getCustomerKeywords")
+    public ResultBean searchCustomerKeywords(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            Page<CustomerKeyword> page = new Page(keywordCriteria.getPage(), keywordCriteria.getLimit());
+            String orderByField = ReflectUtils
+                .getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
+            if (StringUtils.isNotEmpty(orderByField)) {
+                page.setOrderByField(orderByField);
+                if (keywordCriteria.getOrderMode() != null && keywordCriteria.getOrderMode() == 0) {
+                    page.setAsc(false);
+                }
+            }
+            page = customerKeywordService.searchCustomerKeywords(page, keywordCriteria);
+            List<CustomerKeyword> keywords = page.getRecords();
+            resultBean.setCode(0);
+            resultBean.setCount(page.getTotal());
+            resultBean.setMsg("success");
+            resultBean.setData(keywords);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/toCustomerKeywordAdd/{businessType}/{terminalType}/{customerUuid}")
+    public ModelAndView toCustomerKeywordAdd(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
+        @PathVariable(name = "customerUuid") Long customerUuid) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/customerKeywordAdd");
+        mv.addObject("type", businessType);
+        mv.addObject("terminalType", terminalType);
+        mv.addObject("customerUuid", customerUuid);
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
+    @RequestMapping(value = "/saveCustomerKeyword2", method = RequestMethod.POST)
+    public ResultBean saveCustomerKeyword(@RequestBody CustomerKeyword customerKeyword, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            String userName = (String) request.getSession().getAttribute("username");
+            if (customerKeyword.getUuid() == null) {
+                customerKeywordService.saveCustomerKeyword(customerKeyword, userName);
+            } else {
+                customerKeywordService.updateCustomerKeywordFromUI(customerKeyword, userName);
+            }
+            return resultBean;
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("fail");
+            return resultBean;
+        }
     }
 }

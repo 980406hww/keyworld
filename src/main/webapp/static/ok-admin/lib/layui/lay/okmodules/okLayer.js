@@ -33,6 +33,7 @@ layui.define(["layer"], function (exports) {
                 maxmin: true,
                 shade: 0.5,
                 anim: 0,
+                scrollbar: false,
                 area: [width, height],
                 content: content,
                 zIndex: layer.zIndex,

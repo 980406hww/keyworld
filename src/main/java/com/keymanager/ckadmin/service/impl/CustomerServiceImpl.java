@@ -173,4 +173,11 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     public Customer getCustomer(Long customerUuid) {
         return customerDao.selectById(customerUuid);
     }
+
+    @Override
+    public Customer getCustomerByCustomerUuid(String terminalType, String businessType, Long customerUuid) {
+        Customer customer = customerDao.getCustomerByCustomerUuid(customerUuid);
+//        customer.setKeywordCount(customerKeywordService.getCustomerKeywordCount(terminalType, businessType, customerUuid));
+        return customer;
+    }
 }
