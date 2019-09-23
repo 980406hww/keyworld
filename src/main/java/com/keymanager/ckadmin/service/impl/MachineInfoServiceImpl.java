@@ -11,6 +11,7 @@ import com.keymanager.ckadmin.entity.ClientUpgrade;
 import com.keymanager.ckadmin.entity.CustomerKeywordTerminalRefreshStatRecord;
 import com.keymanager.ckadmin.entity.MachineGroupWorkInfo;
 import com.keymanager.ckadmin.entity.MachineInfo;
+import com.keymanager.ckadmin.enums.ClientStartUpStatusEnum;
 import com.keymanager.ckadmin.service.ClientStatusRestartLogService;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.GroupSettingService;
@@ -21,6 +22,7 @@ import com.keymanager.ckadmin.vo.MachineInfoGroupSummaryVO;
 import com.keymanager.ckadmin.vo.MachineInfoMachineGroupSummaryVO;
 import com.keymanager.ckadmin.vo.MachineInfoSummaryVO;
 import com.keymanager.util.DES;
+import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import java.io.File;
@@ -142,12 +144,12 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public void deleteMachineInfo(String clientID) {
-
+        machineInfoDao.deleteById(clientID);
     }
 
     @Override
     public void deleteAll(List<String> clientIDs) {
-
+        machineInfoDao.deleteMachineInfos(clientIDs);
     }
 
     @Override
@@ -197,12 +199,80 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public void reopenMachineInfo(List<String> clientIDs, String downloadProgramType) {
+        if("New".equals(downloadProgramType)){
+            machineInfoDao.reopenMachineInfo(clientIDs, downloadProgramType, "laodu");
+        }else{
+            machineInfoDao.reopenMachineInfo(clientIDs, downloadProgramType, "Default");
+        }
+    }
 
+    private void saveMachineInfoByVPSFile(MachineInfo machineInfo, String[] MachineInfos) {
+        String[] vncInfos = MachineInfos[2].split(":");
+        machineInfo.setClientID(MachineInfos[0]);
+        machineInfo.setVpsBackendSystemComputerID(MachineInfos[1]);
+        machineInfo.setHost(vncInfos[0]);
+        machineInfo.setPort(vncInfos[1]);
+        machineInfo.setUserName(MachineInfos[3]);
+        machineInfo.setPassword(MachineInfos[4]);
+        machineInfo.setTargetVPSPassword(MachineInfos[4]);
+        machineInfo.setBroadbandAccount(MachineInfos[5]);
+        machineInfo.setBroadbandPassword(MachineInfos[6]);
+        machineInfo.setClientIDPrefix(Utils.removeDigital(MachineInfos[0]));
+    }
+
+    private void supplementDefaultValue(MachineInfo machineInfo){
+        machineInfo.setAllowSwitchGroup(0);
+        supplementAdditionalValue(machineInfo);
     }
 
     @Override
     public void uploadVPSFile(String machineInfoType, String downloadProgramType, File file, String terminalType) {
-
+        List<String> vpsInfos = FileUtil.readTxtFile(file,"UTF-8");
+        for (String vpsInfo : vpsInfos) {
+            String[] machineInfos = vpsInfo.split("===");
+            MachineInfo existingMachineInfo = machineInfoDao.selectById(machineInfos[0]);
+            if(null != existingMachineInfo) {
+                saveMachineInfoByVPSFile(existingMachineInfo, machineInfos);
+                if("New".equals(downloadProgramType)){
+                    existingMachineInfo.setSwitchGroupName("laodu");
+                }else{
+                    existingMachineInfo.setSwitchGroupName("Default");
+                }
+                if(machineInfoType.equals("startUp")) {
+                    existingMachineInfo.setStartUpStatus(ClientStartUpStatusEnum.New.name());
+                    existingMachineInfo.setDownloadProgramType(downloadProgramType);
+                } else {
+                    existingMachineInfo.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
+                    existingMachineInfo.setDownloadProgramType(null);
+                }
+                machineInfoDao.updateById(existingMachineInfo);
+            } else {
+                MachineInfo machineInfo = new MachineInfo();
+                machineInfo.setTerminalType(terminalType);
+                machineInfo.setFreeSpace(500.00);
+                machineInfo.setValid(true);
+                saveMachineInfoByVPSFile(machineInfo, machineInfos);
+                if(!Character.isDigit(machineInfos[0].charAt(machineInfos[0].length() - 1))) {
+                    Integer maxClientID = machineInfoDao.selectMaxIdByMachineID(machineInfos[0]);
+                    maxClientID = maxClientID == null ? 1 : maxClientID + 1;
+                    machineInfo.setClientID(machineInfos[0] + maxClientID);
+                }
+                supplementDefaultValue(machineInfo);
+                if("New".equals(downloadProgramType)){
+                    machineInfo.setSwitchGroupName("laodu");
+                }else{
+                    machineInfo.setSwitchGroupName("Default");
+                }
+                if(machineInfoType.equals("startUp")) {
+                    machineInfo.setStartUpStatus(ClientStartUpStatusEnum.New.name());
+                    machineInfo.setDownloadProgramType(downloadProgramType);
+                }else{
+                    machineInfo.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
+                }
+                machineInfo.setUpdateSettingTime(Utils.getCurrentTimestamp());
+                machineInfoDao.insert(machineInfo);
+            }
+        }
     }
 
     @Override
@@ -287,7 +357,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public void updateStartUpStatusForCompleted(List<String> clientIDs) {
-
+        machineInfoDao.updateStartUpStatusForCompleted(clientIDs);
     }
 
     @Override
@@ -363,7 +433,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public void updateMachineGroup(MachineInfoCriteria machineInfoCriteria) {
-
+        machineInfoDao.updateMachineGroup(machineInfoCriteria);
     }
 
     @Override
