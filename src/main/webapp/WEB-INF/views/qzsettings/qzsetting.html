@@ -534,7 +534,7 @@
             for (let k in o) {
                 if (new RegExp("(" + k + ")").test(fmt)) {
                     fmt = fmt.replace(RegExp.$1,
-                        (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(
+                        (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(
                             ("" + o[k]).length)));
                 }
             }
@@ -585,36 +585,16 @@
                     </div>
                     <div class="layui-inline radio-box">
                         <div pane>
-                            <input type="radio" name="sort" value="-1" title="正常"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="1" title="骤降(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="2" title="无变化(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="3" title="暴涨(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="7" title="下降(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="8" title="不变(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="9" title="上升(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="4" title="达标(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="5" title="未达标(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
-                            <input type="radio" name="sort" value="6" title="接近达标(0)"
-                                   lay-filter="sort"
-                                   class="phone-input">
+                            <input type="radio" name="sort" value="-1" title="正常" lay-filter="sort" class="phone-input">
+                            <input type="radio" name="sort" value="1" title="骤降(0)" lay-filter="sort" class="phone-input">
+                            <input type="radio" name="sort" value="2" title="无变化(0)" lay-filter="sort" class="phone-input">
+                            <input type="radio" name="sort" value="3" title="暴涨(0)" lay-filter="sort" class="phone-input">
+                            <input type="radio" name="sort" value="7" title="下降(0)" lay-filter="sort" class="phone-input">
+                            <input type="radio" name="sort" value="8" title="不变(0)" lay-filter="sort" class="phone-input">
+                            <input type="radio" name="sort" value="9" title="上升(0)" lay-filter="sort" class="phone-input">
+                            <input type="radio" name="sort" value="4" title="达标(0)" lay-filter="sort" class="phone-input">
+                            <input type="radio" name="sort" value="5" title="未达标(0)" lay-filter="sort" class="phone-input">
+                            <input type="radio" name="sort" value="6" title="接近达标(0)" lay-filter="sort" class="phone-input">
                         </div>
                     </div>
                 </div>
@@ -636,12 +616,14 @@
                                 </select>
                             </div>
                         </div>
+                        <@shiro.hasPermission name = "/internal/group/updateGroupOperationCombineUuid">
                         <div class="layui-inline">
                             <label class="layui-form-label">用户</label>
                             <div class="layui-input-inline">
                                 <input type="text" id="tree" lay-filter="tree" class="layui-input">
                             </div>
                         </div>
+                        </@shiro.hasPermission>
                         <div class="layui-inline">
                             <label class="layui-form-label">分类标签</label>
                             <div class="layui-input-inline">
@@ -819,7 +801,7 @@
             });
         }
 
-        <@shiro.hasPermission name = "/internal/qzsetting/updateGroupOperationCombineUuid">
+        <@shiro.hasPermission name = "/internal/group/updateGroupOperationCombineUuid">
         treeSelect.render({
             elem: '#tree',
             data: '/internal/user/trees2',

@@ -55,11 +55,13 @@
         <if test="qzSettingSearchCriteria.standardSpecies != null and qzSettingSearchCriteria.standardSpecies != ''">
             AND EXISTS (
             SELECT 1
-            FROM t_qz_keyword_rank_info qk
-            WHERE qk.fQZSettingUuid = qs.fUuid
-            AND qk.fDataProcessingStatus = 1
-            AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
-            AND qk.fWebsiteType = #{qzSettingSearchCriteria.standardSpecies}
+            FROM t_qz_charge_rule qcr
+            LEFT JOIN t_qz_operation_type qot
+            ON qot.fUuid = qcr.fQZOperationTypeUuid
+            WHERE qot.fQZSettingUuid = qs.fUuid
+            AND qot.fOperationtype = #{qzSettingSearchCriteria.terminalType}
+            AND qot.fIsDeleted = 0
+            AND qcr.fStandardSpecies = #{qzSettingSearchCriteria.standardSpecies}
             )
         </if>
         <if test="qzSettingSearchCriteria.optimizationType != null">

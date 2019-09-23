@@ -74,12 +74,9 @@ public class QZKeywordRankInfoServiceImpl extends
     @Override
     public QZSettingCountNumCriteria searchCountNumOfQZKeywordRankInfo(
         QZSettingSearchCriteria criteria) {
-        double upperValue = Double.parseDouble(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK,
-            Constants.CONFIG_KEY_UPPER_VALUE).getValue());
-        double differenceValue = Double.parseDouble(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK,
-            Constants.CONFIG_KEY_DIFFERENCEVALUE_VALUE).getValue());
-        int oneWeekDiff = Integer.parseInt(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK,
-            Constants.CONFIG_KEY_ONE_WEEK_DIFF).getValue());
+        double upperValue = Double.parseDouble(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_UPPER_VALUE).getValue());
+        double differenceValue = Double.parseDouble(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_DIFFERENCEVALUE_VALUE).getValue());
+        int oneWeekDiff = Integer.parseInt(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_ONE_WEEK_DIFF).getValue());
 
         QZSettingCountNumCriteria qzSettingCountNumCriteria = qzKeywordRankInfoDao.getCountNumOfRankInfo(-upperValue, upperValue, differenceValue, -oneWeekDiff,
             oneWeekDiff, criteria);

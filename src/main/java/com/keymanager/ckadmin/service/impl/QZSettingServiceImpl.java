@@ -162,7 +162,7 @@ public class QZSettingServiceImpl extends
     @Override
     public Map<String, Object> getQZKeywordRankInfo(long uuid, String terminalType, String optimizeGroupName) {
         List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(uuid, terminalType, null);
-        Map<String, Object> rankInfoVoMap = new HashMap<>();
+        Map<String, Object> rankInfoVoMap = new HashMap<>(4);
         if (CollectionUtils.isNotEmpty(qzKeywordRankInfos)) {
             int price = 0;
             for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {

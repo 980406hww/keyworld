@@ -30,8 +30,7 @@ public class QZKeywordRankInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/qzsetting/searchQZSettings")
     @RequestMapping(value = "/searchCountNumOfQZKeywordRankInfoNew", method = RequestMethod.POST)
-    public ResultBean searchCountNumOfQZKeywordRankInfoNew(
-        @RequestBody QZSettingSearchCriteria qzSettingSearchCriteria, HttpSession session) {
+    public ResultBean searchCountNumOfQZKeywordRankInfoNew(@RequestBody QZSettingSearchCriteria qzSettingSearchCriteria, HttpSession session) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
         try {
@@ -41,13 +40,11 @@ public class QZKeywordRankInfoController extends SpringMVCBaseController {
                 qzSettingSearchCriteria.setLoginName(loginName);
             } else {
                 if (qzSettingSearchCriteria.getUserInfoID() != null) {
-                    UserInfo userInfo = userInfoService
-                        .selectById(qzSettingSearchCriteria.getUserInfoID());
+                    UserInfo userInfo = userInfoService.selectById(qzSettingSearchCriteria.getUserInfoID());
                     qzSettingSearchCriteria.setLoginName(userInfo.getLoginName());
                 }
             }
-            resultBean.setData(qzKeywordRankInfoService
-                .searchCountNumOfQZKeywordRankInfo(qzSettingSearchCriteria));
+            resultBean.setData(qzKeywordRankInfoService.searchCountNumOfQZKeywordRankInfo(qzSettingSearchCriteria));
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
