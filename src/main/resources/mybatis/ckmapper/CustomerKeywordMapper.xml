@@ -318,14 +318,9 @@
             AND ck.fFailedCause = #{keywordCriteria.failedCause}
         </if>
 
-        <choose>
-            <when test="keywordCriteria.terminalType == null || keywordCriteria.terminalType == ''">
-                AND fTerminalType IN ('PC', 'Phone')
-            </when>
-            <otherwise>
-                AND fTerminalType = #{keywordCriteria.terminalType}
-            </otherwise>
-        </choose>
+        <if test="keywordCriteria.terminalType != null || keywordCriteria.terminalType != ''">
+            AND fTerminalType = #{keywordCriteria.terminalType}
+        </if>
         <if test="keywordCriteria.searchEngine != null and keywordCriteria.searchEngine != ''">
             AND fSearchEngine =  #{keywordCriteria.searchEngine}
         </if>
@@ -425,14 +420,9 @@
         <if test="keywordCriteria.failedCause != null and keywordCriteria.failedCause != ''">
             AND ck.fFailedCause = #{keywordCriteria.failedCause}
         </if>
-        <choose>
-            <when test="keywordCriteria.terminalType == null || keywordCriteria.terminalType == ''">
-                AND fTerminalType IN ('PC', 'Phone')
-            </when>
-            <otherwise>
-                AND fTerminalType = #{keywordCriteria.terminalType}
-            </otherwise>
-        </choose>
+        <if test="keywordCriteria.terminalType != null || keywordCriteria.terminalType != ''">
+            AND fTerminalType = #{keywordCriteria.terminalType}
+        </if>
         <if test="keywordCriteria.searchEngine != null and keywordCriteria.searchEngine != ''">
             AND fSearchEngine =  #{keywordCriteria.searchEngine}
         </if>
@@ -650,4 +640,13 @@
         <include refid="searchCustomerKeywordsCriteria"/>
     </select>
 
+    <update id="updateOptimizePlanCount" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria">
+        UPDATE
+        t_customer_keyword ck,t_customer c
+        SET
+        ck.fOptimizePlanCount = #{keywordCriteria.targetOptimizePlanCount},
+        ck.fUpdateTime = NOW()
+        WHERE c.fUuid = ck.fCustomerUuid
+        <include refid="updateCustomerKeywordsCriteria"/>
+    </update>
 </mapper>

@@ -342,6 +342,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         customerKeyword.setUpdateTime(new Date());
         customerKeywordDao.updateById(customerKeyword);
     }
+
+    @Override
+    public void updateOptimizePlanCount(KeywordCriteria keywordCriteria) {
+        customerKeywordDao.updateOptimizePlanCount(keywordCriteria);
+    }
 }
 
 

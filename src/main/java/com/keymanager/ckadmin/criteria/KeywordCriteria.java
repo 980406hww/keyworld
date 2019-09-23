@@ -46,6 +46,8 @@ public class KeywordCriteria extends BaseCriteria {
     private String targetOptimizeGroupName;
     private String targetMachineGroup;
     private String targetBearPawNumber;
+    private Integer targetOptimizePlanCount;
+
 
     private String deleteType;
 
@@ -321,5 +323,13 @@ public class KeywordCriteria extends BaseCriteria {
 
     public void setTitleFlag(Integer titleFlag) {
         this.titleFlag = titleFlag;
+    }
+
+    public Integer getTargetOptimizePlanCount() {
+        return targetOptimizePlanCount;
+    }
+
+    public void setTargetOptimizePlanCount(Integer targetOptimizePlanCount) {
+        this.targetOptimizePlanCount = targetOptimizePlanCount;
     }
 }

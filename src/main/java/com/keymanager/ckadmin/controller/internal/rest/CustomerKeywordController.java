@@ -85,8 +85,6 @@ public class CustomerKeywordController {
                     page.setAsc(false);
                 }
             }
-//            String terminalType = TerminalTypeMapping.getTerminalType(request);
-//            keywordCriteria.setTerminalType(terminalType);
             page = customerKeywordService.searchKeywords(page, keywordCriteria);
             List<CustomerKeyword> keywords = page.getRecords();
             resultBean.setCode(0);
@@ -326,5 +324,25 @@ public class CustomerKeywordController {
             resultBean.setMsg("fail");
             return resultBean;
         }
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordMachineGroup")
+    @RequestMapping(value = "/updateOptimizePlanCount2", method = RequestMethod.POST)
+    public ResultBean updateOptimizePlanCount(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            String userName = (String) request.getSession().getAttribute("username");
+            boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+            if (!isDepartmentManager) {
+                keywordCriteria.setUserName(userName);
+            }
+            customerKeywordService.updateOptimizePlanCount(keywordCriteria);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
     }
 }

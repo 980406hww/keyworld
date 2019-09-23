@@ -75,4 +75,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void deleteCustomerKeywordsWhenEmptyTitleAndUrl(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
 
     List<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, @Param("keywordCriteria") KeywordCriteria keywordCriteria);
+
+    void updateOptimizePlanCount(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
 }

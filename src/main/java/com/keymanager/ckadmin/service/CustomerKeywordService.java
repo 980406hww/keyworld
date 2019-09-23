@@ -49,7 +49,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     void updateBearPawNumber(KeywordCriteria keywordCriteria);
 
-
     void deleteCustomerKeywordsByDeleteType(KeywordCriteria keywordCriteria);
 
     Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, KeywordCriteria keywordCriteria);
@@ -57,4 +56,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void saveCustomerKeyword(CustomerKeyword customerKeyword, String userName);
 
     void updateCustomerKeywordFromUI(CustomerKeyword customerKeyword, String userName);
+
+    void updateOptimizePlanCount(KeywordCriteria keywordCriteria);
 }
