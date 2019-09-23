@@ -937,8 +937,7 @@
             return false;
         });
 
-    <@shiro.hasPermission
-        name = "/internal/qzsetting/searchQZSettings" >
+        <@shiro.hasPermission name = "/internal/qzsetting/searchQZSettings" >
             function get_qzsetting(whereCondition) {
                 table.render({
                     elem: '#qzSettingTable',
@@ -965,18 +964,16 @@
                     }
                 });
             }
-            < /@shiro.hasPermission>
-
-        get_qzcategory_label_list();
-        get_active_customer_list();
+        </@shiro.hasPermission>
 
         function successTable(res) {
             let terminalType = $('#terminalType').val();
             terminalType = terminalType === '' ? 'PC' : terminalType;
             getTerminalSearchEngineMap();
             get_operation_combine_list(terminalType);
-            let qz_setting_table = $("#qzSettingTable").parent().find(
-                ".layui-table-main").find("table");
+            get_qzcategory_label_list();
+            get_active_customer_list();
+            let qz_setting_table = $("#qzSettingTable").parent().find(".layui-table-main").find("table");
             $.each(res.data, function (idx, val) {
                 let td = qz_setting_table.find(
                     "tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
@@ -2995,7 +2992,7 @@
     </div>
     </@shiro.hasPermission>
     <div class="layui-btn-group">
-        <@shiro.hasPermission name="/internal/qzsetting/save">
+    <@shiro.hasPermission name="/internal/qzsetting/save">
         <button class="layui-btn layui-btn-sm" lay-event="addQz">
             <i style="position: relative;top: -1px" class="layui-icon">&#xe654;</i>添加整站
         </button>
@@ -3094,7 +3091,7 @@
                        '{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}',
                        '{{d.pcGroup}}', '{{d.phoneGroup}}')">排除关键字</a>
                 </span>
-                <@shiro.hasPermission name="/internal/qzsetting/save">
+            <@shiro.hasPermission name="/internal/qzsetting/save">
                 <span>
                     <a class="blue"
                        href="javascript:showAddKeywordDialog('{{d.uuid}}',
@@ -3102,37 +3099,35 @@
                        '{{d.searchEngine}}', '{{d.type}}', '{{d.pcGroup}}',
                        '{{d.phoneGroup}}')">添加关键字</a>
                 </span>
-            </
-            @shiro.hasPermission>
+            </@shiro.hasPermission>
             <@shiro.hasPermission name="/internal/usernotebook/searchUserNoteBooks">
-            <span>
+                <span>
                     <a class="blue"
                        href="javascript:openNoteBookDialog('{{d.customerUuid}}')">运营记录</a>
                 </span>
-        </
-        @shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/qzchargelog/save">
-        <span>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/qzchargelog/save">
+                <span>
                     <a class="blue"
                        href="javascript:showChargeDialog('{{d.uuid}}','{{d.contactPerson}}',
                       '{{d.domain.trim()}}','{{d.renewalStatus}}')">收费</a>
                 </span>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/qzchargelog/chargesList">
-    <span>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/qzchargelog/chargesList">
+                <span>
                     <a class="blue" href="javascript:showChargeLog('{{d.uuid}}')">收费记录</a>
                 </span>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/qzsetting/save">
-    <span>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/qzsetting/save">
+                <span>
                     <a class="blue" href="javascript:" onclick="showSettingDialog('{{d.uuid}}')">修改</a>
                 </span>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/qzsetting/delete">
-    <span>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/qzsetting/delete">
+                <span>
                     <a class="blue" href="javascript:delQZSetting('{{d.uuid}}')">删除</a>
                 </span>
-    </@shiro.hasPermission>
+            </@shiro.hasPermission>
     </div>
     </div>
     </div>
@@ -3273,7 +3268,7 @@
                 </div>
             </div>
         </div>
-        {{# }}}
+        {{# } }}
         <!--指定词曲线-->
         <div class="layui-col-md5 rank-wrap1">
             <div class="layui-col-md3 col-1" id="designationWordCharts"
