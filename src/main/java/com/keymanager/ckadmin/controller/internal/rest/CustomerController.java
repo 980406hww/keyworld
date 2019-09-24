@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.UserInfo;
@@ -13,6 +14,7 @@ import com.keymanager.ckadmin.util.SQLFilterUtils;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -33,7 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @RestController
 @RequestMapping("/internal/customer")
-public class CustomerController {
+public class CustomerController extends SpringMVCBaseController {
 
     private Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
@@ -244,5 +246,27 @@ public class CustomerController {
             return new ResultBean(400, "更新失败");
         }
     }
+
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @GetMapping(value = "/getActiveCustomers2")
+    public ResultBean getActiveCustomers(CustomerCriteria customerCriteria, HttpSession session) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            Set<String> roles = getCurrentUser().getRoles();
+            if (!roles.contains("DepartmentManager")) {
+                String loginName = (String) session.getAttribute("username");
+                customerCriteria.setLoginName(loginName);
+            }
+            List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
+            resultBean.setData(customerList);
+            return resultBean;
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultBean.setCode(400);
+            resultBean.setMsg("error");
+            return resultBean;
+        }
+    }
+
 
 }

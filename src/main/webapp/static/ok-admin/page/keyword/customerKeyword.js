@@ -226,8 +226,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 case 'change_select_optimizePlanCount':
                     change_select_optimizePlanCount();
                     break;
-                case 'batch_modify':
-                    batch_modify();
+                case 'change_select_customer':
+                    change_select_customer();
                     break;
                 case 'batch_delete':
                     batch_delete();
@@ -242,11 +242,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             let type = $('#type').val();
             let terminalType = $('#terminalType').val();
             let url = '/internal/customerKeyword/toCustomerKeywordAdd/' + type
-                + '/'
-                + terminalType + '/' + customerUuid;
+                + '/' + terminalType + '/' + customerUuid;
             okLayer.open("关键字管理 / 客户客户关键字 / 添加关键字", url, "60%", "90%",
                 function (layero) {
-                    // window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
+
                 }, function () {
                     if (sign) {
                         active['reload'].call(this);
@@ -355,6 +354,49 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                             layer.close(index2);
                         });
 
+                }
+            });
+        }
+
+        function change_select_customer() {
+            var uuidArr = get_selected_uuid_arr();
+            if (uuidArr.length <= 0) {
+                show_layer_msg('请选择要操作的词', 5);
+                return false;
+            }
+            var postData = {};
+            // postData.uuids = uuidArr;
+            postData.terminalType = $('#terminalType').val();
+            postData.type = $('#type').val();
+            // postData.targetOptimizePlanCount = value;
+            $.ajax({
+                url: '/internal/customer/getActiveCustomers2',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'GET',
+                success: function (res) {
+                    if (res.code === 200) {
+                        let htm = '<select name="customerUuid" id="customerUuid">';
+                        $.each(res.data, function (index, item) {
+
+                            htm += '<option value="' + item.uuid + '">'
+                                + item.contactPerson + '</option>';// 下拉菜单里添加元素
+                        });
+                        layer.open({
+                            type: 1,
+                            content: htm //注意，如果str是object，那么需要字符拼接。
+                        });
+                        // show_layer_msg('操作成功', 6, true);
+                    } else {
+                        show_layer_msg('操作失败', 5);
+                    }
+                },
+                error: function () {
+                    show_layer_msg('未知错误，请稍后重试', 5);
                 }
             });
         }
