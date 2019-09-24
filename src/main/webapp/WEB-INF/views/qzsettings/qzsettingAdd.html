@@ -1,5 +1,5 @@
-<#assign organizationName = Session["organizationName"]>
 <!DOCTYPE html>
+<#assign organizationName = Session["organizationName"]>
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
@@ -44,36 +44,9 @@
                 t = tbody_phone;
                 v = v_phone++;
             }
-            let html = `<tr>
-                                    <td>
-                                        <div class="my-label my-left my-padding">`;
+            let html = '<tr>\n                                    <td>\n                                        <div class="my-label my-left my-padding">';
             html += v;
-            html += `</div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left">
-                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,'')" class="layui-input my-input">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left">
-                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,'')" class="layui-input my-input">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left">
-                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,'')" class="layui-input my-input">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-btn my-left my-bottom">
-                                            <button type="button" onclick="removeElement(this)"
-                                                    class="layui-btn layui-btn-xs layui-btn-danger">
-                                                删除
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>`;
+            html += '</div>\n                                    </td>\n                                    <td>\n                                        <div class="my-label my-left">\n                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,\'\')" class="layui-input my-input">\n                                        </div>\n                                    </td>\n                                    <td>\n                                        <div class="my-label my-left">\n                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,\'\')" class="layui-input my-input">\n                                        </div>\n                                    </td>\n                                    <td>\n                                        <div class="my-label my-left">\n                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,\'\')" class="layui-input my-input">\n                                        </div>\n                                    </td>\n                                    <td>\n                                        <div class="my-label my-btn my-left my-bottom">\n                                            <button type="button" onclick="removeElement(this)"\n                                                    class="layui-btn layui-btn-xs layui-btn-danger">\n                                                删除\n                                            </button>\n                                        </div>\n                                    </td>\n                                </tr>';
             t.append(html);
         }
 
@@ -589,7 +562,9 @@
                     </div>
                 </div>
             </div>
-        </#if>
+            </#if>
+        </div>
+    </form>
 </div>
 <div style="height: 58px;"></div>
 <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
@@ -606,7 +581,6 @@
 </form>
 </div>
 <!--js逻辑-->
-
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script>
     let uuid_ = null;
@@ -687,7 +661,7 @@
                                 d_n.comMaxKeywordCount = d.qzOperationTypes[i].maxKeywordCount;
                                 d_n.comMonitorRemark = d.qzOperationTypes[i].monitorRemark;
                                 let html_c = listToHtml(d.qzOperationTypes[i].qzChargeRules);
-                                if (html_c !== ``) {
+                                if (html_c !== '') {
                                     d_n.comStandardSpecies = d.qzOperationTypes[i].qzChargeRules[0].standardSpecies;
                                     if (d.renewalStatus !== 4 && d_n.comStandardSpecies !== 'other') {
                                         html_c = getHeader(d_n.comStandardSpecies, true) + html_c;
@@ -713,7 +687,7 @@
                                 d_n.phoneMaxKeywordCount = d.qzOperationTypes[i].maxKeywordCount;
                                 d_n.phoneMonitorRemark = d.qzOperationTypes[i].monitorRemark;
                                 let html_p = listToHtml(d.qzOperationTypes[i].qzChargeRules);
-                                if (html_p !== ``) {
+                                if (html_p !== '') {
                                     d_n.phoneStandardSpecies = d.qzOperationTypes[i].qzChargeRules[0].standardSpecies;
                                     if (d.renewalStatus !== 4 && d_n.phoneStandardSpecies !== 'other') {
                                         html_p = getHeader(d_n.phoneStandardSpecies, false) + html_p;
@@ -792,59 +766,29 @@
     }
 
     function listToHtml(l) {
-        let html = ``;
+        let html = '';
         if (l) {
             for (let j = 0; j < l.length; j++) {
-                html += `<tr>
-                                    <td>
-                                        <div class="my-label my-left my-padding">`;
+                html += '<tr>\n                                    <td>\n                                        <div class="my-label my-left my-padding">';
                 html += (j + 1);
-                html += `</div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left">
-                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,'')" class="layui-input my-input" value="`;
+                html += '</div>\n                                    </td>\n                                    <td>\n                                        <div class="my-label my-left">\n                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,\'\')" class="layui-input my-input" value="';
                 html += l[j].startKeywordCount;
-                html += `">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left">
-                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,'')" class="layui-input my-input" value="`;
+                html += '">\n                                        </div>\n                                    </td>\n                                    <td>\n                                        <div class="my-label my-left">\n                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,\'\')" class="layui-input my-input" value="';
                 html += l[j].endKeywordCount === null ? '' : l[j].endKeywordCount;
-                html += `">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left">
-                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,'')" class="layui-input my-input" value="`;
+                html += '">\n                                        </div>\n                                    </td>\n                                    <td>\n                                        <div class="my-label my-left">\n                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,\'\')" class="layui-input my-input" value="';
                 html += l[j].amount;
-                html += `">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-btn my-left my-bottom">
-                                            <button type="button" onclick="removeElement(this)"
-                                                    class="layui-btn layui-btn-xs layui-btn-danger">
-                                                删除
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>`;
+                html += '">\n                                        </div>\n                                    </td>\n                                    <td>\n                                        <div class="my-label my-btn my-left my-bottom">\n                                            <button type="button" onclick="removeElement(this)"\n                                                    class="layui-btn layui-btn-xs layui-btn-danger">\n                                                删除\n                                            </button>\n                                        </div>\n                                    </td>\n                                </tr>';
             }
         }
         return html;
     }
 
     function getHeader(v, f) {
-        let header_ = `                                <tr class="my-bg">
-                                    <td colspan="3">`;
+        let header_ = '<tr class="my-bg">\n                                    <td colspan="3">';
         if (f) {
-            header_ += `<div id="computerTitle"
-                                             class="my-header-title my-label my-padding">`;
+            header_ += '<div id="computerTitle"\n                                             class="my-header-title my-label my-padding">';
         } else {
-            header_ += `<div id="phoneTitle"
-                                             class="my-header-title my-label my-padding">`;
+            header_ += '<div id="phoneTitle"\n                                             class="my-header-title my-label my-padding">';
         }
         switch (v) {
             case 'aiZhan':
@@ -860,56 +804,19 @@
                 header_ += '其他收费规则';
                 break;
         }
-        header_ += `</div>
-                                    </td>
-                                    <td colspan="2">
-                                        <div class="my-header-btn my-label">`;
+        header_ += '</div>\n                                    </td>\n                                    <td colspan="2">\n                                        <div class="my-header-btn my-label">';
         if (f) {
-            header_ += `<button onclick="appendTable(true)" type="button"
-                                                    class="layui-btn layui-btn-sm">
-                                                增加收费规则
-                                            </button>`;
+            header_ += '<button onclick="appendTable(true)" type="button"\n                                                    class="layui-btn layui-btn-sm">\n                                                增加收费规则\n                                            </button>';
         } else {
-            header_ += `<button onclick="appendTable(false)" type="button"
-                                                    class="layui-btn layui-btn-sm">
-                                                增加收费规则
-                                            </button>`;
+            header_ += '<button onclick="appendTable(false)" type="button"\n                                                    class="layui-btn layui-btn-sm">\n                                                增加收费规则\n                                            </button>';
         }
-        header_ += `</div>
-                                    </td>
-                                </tr>
-                                <tr class="my-bg">
-                                    <td>
-                                        <div class="my-label my-left my-padding">
-                                            达标阶段
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left my-padding">
-                                            起始达标词数
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left my-padding">
-                                            终止达标词数
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="my-label my-left my-padding">`;
+        header_ += '</div>\n                                    </td>\n                                </tr>\n                                <tr class="my-bg">\n                                    <td>\n                                        <div class="my-label my-left my-padding">\n                                            达标阶段\n                                        </div>\n                                    </td>\n                                    <td>\n                                        <div class="my-label my-left my-padding">\n                                            起始达标词数\n                                        </div>\n                                    </td>\n                                    <td>\n                                        <div class="my-label my-left my-padding">\n                                            终止达标词数\n                                        </div>\n                                    </td>\n                                    <td>\n                                        <div class="my-label my-left my-padding">';
         if (f) {
             header_ += '电脑端价格';
         } else {
             header_ += '手机端价格';
         }
-        header_ += `</div>
-                                    </td>
-                                    <td>
-                                        <div
-                                            class="my-label my-left my-padding my-bottom">
-                                            操作
-                                        </div>
-                                    </td>
-                                </tr>`;
+        header_ += '</div>\n                                    </td>\n                                    <td>\n                                        <div\n                                            class="my-label my-left my-padding my-bottom">\n                                            操作\n                                        </div>\n                                    </td>\n                                </tr>';
         return header_;
     }
 
@@ -1049,7 +956,8 @@
             layui_ = layui;
         }
 
-        window.getInitData = function (a, b = '百度') {
+        window.getInitData = function (a, b) {
+            b = b === undefined ? '百度' : b;
             if (flag_) {
                 $.ajax({
                     url: '/internal/qzsetting/getSaveQZSettingsMsg',
@@ -1059,37 +967,36 @@
                         if (res.code === 200) {
                             let customerList = document.getElementById('customerList');
                             let searchList = document.getElementById('searchList');
-                            let html_c = `<option value="">请选择</option>`;
+                            let html_c = '<option value="">请选择</option>';
                             if (a) {
-                                html_c += `<option value="`;
+                                html_c += '<option value="';
                                 html_c += a.uuid;
-                                html_c += `" selected>`;
+                                html_c += '" selected>';
                                 html_c += a.contactPerson;
-                                html_c += `</option>`;
+                                html_c += '</option>';
                                 customerList.setAttribute('disabled', '');
                             } else {
                                 let customers = res.data.customers;
                                 let l = customers.length;
                                 for (let i = 0; i < l; i++) {
-                                    html_c += `<option value="`;
+                                    html_c += '<option value="';
                                     html_c += customers[i].uuid;
-                                    html_c += `">`;
+                                    html_c += '">';
                                     html_c += customers[i].contactPerson;
-                                    html_c += `</option>`;
+                                    html_c += '</option>';
                                 }
                             }
-                            let html_s = ``;
+                            let html_s = '';
                             let search = res.data.search;
                             for (let item in res.data.search) {
-                                html_s += `<option value="`;
-                                html_s += item;
-                                html_s += `"`;
+                                html_s += '<option value="';
+                                html_s += item + '"';
                                 if (item === b) {
-                                    html_s += `selected`;
+                                    html_s += 'selected';
                                 }
-                                html_s += `>`;
+                                html_s += '>';
                                 html_s += search[item];
-                                html_s += `</option>`;
+                                html_s += '</option>';
                             }
 
                             customerList.innerHTML = html_c;

@@ -719,8 +719,7 @@
 <!--数据表格-->
 <table class="layui-hide" id="qzSettingTable" lay-filter="tableFilter"></table>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
-<script type="text/javascript"
-        src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
+<script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
 <script>
     let s_c = 0;
 
@@ -1948,38 +1947,6 @@
             }
         });
 
-        let chargeRecordHtml = `<div style="padding: 10px;">
-                            <table border="0" width="100%">
-                                <tbody>
-                                <tr class="my-bg">
-                                    <td class="my-header-title" style="min-width: 120px">
-                                        <div class="my-label my-padding">
-                                            收费时间
-                                        </div>
-                                    </td>
-                                    <td class="my-header-title" style="min-width: 80px">
-                                        <div class="my-label my-padding">
-                                            终端类型
-                                        </div>
-                                    </td>
-                                    <td class="my-header-title" style="min-width: 80px">
-                                        <div class="my-label my-padding">
-                                            收费金额
-                                        </div>
-                                    </td>
-                                    <td class="my-header-title" style="min-width: 80px">
-                                        <div class="my-label my-padding">
-                                            收费人员
-                                        </div>
-                                    </td>
-                                    <td class="my-header-btn"  style="min-width: 240px">
-                                        <div
-                                            class="my-label my-padding">
-                                            创建时间
-                                        </div>
-                                    </td>
-                                </tr>`;
-
         window.showChargeLog = function (uuid) {
             $.ajax({
                 url: '/internal/qzchargelog/qzChargesLogsList/' + uuid,
@@ -1991,34 +1958,17 @@
                         let html = chargeRecordHtml;
                         let date = new Date();
                         for (let i = 0; i < arr.length; i++) {
-                            html += `<tr>
-                                    <td class="my-left">
-                                        <div class="my-label my-padding">`;
+                            html += '<tr>\n                                    <td class="my-left">\n                                        <div class="my-label my-padding">';
                             html += new Date(arr[i].actualChargeDate).format('yyyy-MM-dd');
-                            html += `</div>
-                                    </td>
-                                    <td class="my-left">
-                                        <div class="my-label my-padding">`;
+                            html += '</div>\n                                    </td>\n                                    <td class="my-left">\n                                        <div class="my-label my-padding">';
                             html += arr[i].operationType;
-                            html += `</div>
-                                    </td>
-                                    <td class="my-left">
-                                        <div class="my-label my-padding">`;
+                            html += '</div>\n                                    </td>\n                                    <td class="my-left">\n                                        <div class="my-label my-padding">';
                             html += arr[i].actualAmount;
-                            html += `</div>
-                                    </td>
-                                    <td class="my-left">
-                                        <div class="my-label my-padding">`;
+                            html += '</div>\n                                    </td>\n                                    <td class="my-left">\n                                        <div class="my-label my-padding">';
                             html += arr[i].userName;
-                            html += `</div>
-                                    </td>
-                                    <td class="my-left my-bottom">
-                                        <div
-                                            class="my-label my-padding">`;
+                            html += '</div>\n                                    </td>\n                                    <td class="my-left my-bottom">\n                                        <div\n                                            class="my-label my-padding">';
                             html += new Date(arr[i].createTime).format('yyyy-MM-dd hh:mm:ss');
-                            html += `</div>
-                                    </td>
-                                </tr>`;
+                            html += '</div>\n                                    </td>\n                                </tr>';
                         }
                         html += noteBookHtmlFooter;
                         layer.open({
@@ -2040,16 +1990,6 @@
                 }
             });
         };
-
-        let updFZTagsHtml = `<div style="width: 100%;margin-top: 10px;text-align: center">
-                <div class="layui-inline" style="width: 60px;line-height: 34px;text-align: center">新标签：</div>
-                <div class="layui-inline">
-                    <div class="layui-input-inline" style="width: 300px">
-                        <input style="height: 34px" type="text" id="tagNames" placeholder="每个词用逗号隔开例如:阿卡索,MBA"
-                        autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-            </div>`;
 
         function openUpdFZTags() {
             let checkStatus = table.checkStatus('qzSettingTable').data;
@@ -2127,8 +2067,7 @@
         function addQZSetting() {
             okLayer.open("其他 / 前往全站设置信息 / 添加", "/internal/qzsetting/toQZSettingAdd", "90%", "90%",
                 function (layero) {
-                    let isSEOSales = '${isSEOSales}';
-                    window[layero.find("iframe")[0]["name"]].initForm2(isSEOSales);
+                    window[layero.find("iframe")[0]["name"]].initForm2('${isSEOSales}');
                 }, function () {
                     if (sign) {
                         active['reload'].call(this);
@@ -2137,6 +2076,12 @@
                 });
         }
 
+        let chargeRecordHtml = '<div style="padding: 10px;">\n                            <table border="0" width="100%">\n                                <tbody>\n                                <tr class="my-bg">\n                                    <td class="my-header-title" style="min-width: 120px">\n                                        <div class="my-label my-padding">\n                                            收费时间\n                                        </div>\n                                    </td>\n                                    <td class="my-header-title" style="min-width: 80px">\n                                        <div class="my-label my-padding">\n                                            终端类型\n                                        </div>\n                                    </td>\n                                    <td class="my-header-title" style="min-width: 80px">\n                                        <div class="my-label my-padding">\n                                            收费金额\n                                        </div>\n                                    </td>\n                                    <td class="my-header-title" style="min-width: 80px">\n                                        <div class="my-label my-padding">\n                                            收费人员\n                                        </div>\n                                    </td>\n                                    <td class="my-header-btn"  style="min-width: 240px">\n                                        <div\n                                            class="my-label my-padding">\n                                            创建时间\n                                        </div>\n                                    </td>\n                                </tr>';
+
+        let updFZTagsHtml = '<div style="width: 100%;margin-top: 10px;text-align: center">\n                <div class="layui-inline" style="width: 60px;line-height: 34px;text-align: center">新标签：</div>\n                <div class="layui-inline">\n                    <div class="layui-input-inline" style="width: 300px">\n                        <input style="height: 34px" type="text" id="tagNames" placeholder="每个词用逗号隔开例如:阿卡索,MBA"\n                        autocomplete="off" class="layui-input">\n                    </div>\n                </div>\n            </div>';
+
+        let oneRowI = '<tr>\n                            <td class="my-left" colspan="4">\n                                <div class="my-label" style="max-width: none">\n                                     <input type="text" class="layui-input my-input"\n                                     placeholder="请在此输入你想要记录的内容"\n                                     style="height: 36px;padding-right: 10px">\n                                </div>\n                            </td>\n                            <td class="my-left my-bottom">\n                                <div class="my-label my-btn">\n                                <button type="button" onclick="commitNoteBook(this)"\n                                    class="layui-btn layui-btn-xs">\n                                保存\n                                </button>\n                                </div>\n                             </td>\n                             </tr>';
+
         // 修改
         window.showSettingDialog = function (uuid) {
             okLayer.open("其他 / 前往全站设置信息 / 修改", "/internal/qzsetting/toQZSettingAdd", "90%",
@@ -2144,7 +2089,6 @@
                     window[layero.find("iframe")[0]["name"]].initForm(uuid);
                 }, function () {
                     if (sign) {
-                        // active['reload'].call(this);
                         sign = false;
                     }
                 })
@@ -2203,24 +2147,6 @@
             });
         };
 
-        let oneRowI = `<tr>
-                            <td class="my-left" colspan="4">
-                                <div class="my-label" style="max-width: none">
-                                     <input type="text" class="layui-input my-input"
-                                     placeholder="请在此输入你想要记录的内容"
-                                     style="height: 36px;padding-right: 10px">
-                                </div>
-                            </td>
-                            <td class="my-left my-bottom">
-                                <div class="my-label my-btn">
-                                <button type="button" onclick="commitNoteBook(this)"
-                                    class="layui-btn layui-btn-xs">
-                                保存
-                                </button>
-                                </div>
-                             </td>
-                             </tr>`;
-
         window.appendTable = function () {
             if (noteAddRow) {
                 let noteBookTbody = document.getElementById('noteBookTbody');
@@ -2237,39 +2163,38 @@
             let uuid = td_l[2].children[0].children[0].value;
             let old = td_l[2].children[0].innerText;
             let date = td_l[3].children[0].innerText;
-            let html = `<td class="my-left">
-                                    <div class="my-label my-padding">`;
+            let html = '<td class="my-left">\n' +
+                '<div class="my-label my-padding">';
             html += index;
-            html += `</div>
-                                    </td>
-                                    <td class="my-left">
-                                    <div class="my-label my-padding">`;
+            html += '</div>\n' +
+                '</td>\n' +
+                '<td class="my-left">\n' +
+                '<div class="my-label my-padding">';
             html += name;
-            html += `</div>
-                                    </td>
-                                    <td class="my-left">
-                                    <div class="my-label">
-                                    <input type="hidden" value="`;
+            html += '</div>\n' +
+                '</td>\n' +
+                '<td class="my-left">\n' +
+                '<div class="my-label">\n' +
+                '<input type="hidden" value="';
             html += uuid;
-            html += `">
-                                    <input type="text" class="layui-input my-input"
-                                     placeholder="请在此输入" style="height: 36px; width:330px" value="`;
+            html += '">\n' +
+                '<input type="text" class="layui-input my-input" placeholder="请在此输入" style="height: 36px; width:330px" value="';
             html += old;
-            html += `">
-                                    </div>
-                                    </td>
-                                    <td class="my-left">
-                                    <div class="my-label my-padding">`;
+            html += '">\n' +
+                '</div>\n' +
+                '</td>\n' +
+                '<td class="my-left">\n' +
+                '<div class="my-label my-padding">';
             html += date;
-            html += `</div>
-                                </td>
-                                <td class="my-left my-bottom">
-                                    <div class="my-label my-btn">
-                                    <button type="button" onclick="commitNoteBook(this)"
-                                    class="layui-btn layui-btn-xs"> 保存
-                                    </button>
-                                    </div>
-                                    </td>`;
+            html += '</div>\n'
+                + '</td>\n'
+                + '<td class="my-left my-bottom">\n'
+                + '<div class="my-label my-btn">\n'
+                + '<button type="button" onclick="commitNoteBook(this)"\n'
+                + 'class="layui-btn layui-btn-xs"> 保存\n'
+                + '</button>\n'
+                + '</div>\n'
+                + '</td>';
             this_.innerHTML = html;
         };
 
@@ -2304,65 +2229,61 @@
             });
         };
 
-        let noteBookHtmlFooter = `</tbody></table></div>`;
+        let noteBookHtmlFooter = '</tbody></table></div>';
 
         function showData(uuid, call) {
-            let noteBookHtml = `<div style="padding: 10px;" id="noteBookBody">
-                            <table border="0" width="100%">
-                                <tbody id="noteBookTbody">
-                                <tr class="my-bg">
-                                    <td colspan="3" class="my-header-title">
-                                        <input type="hidden" id="customerUuid" value>
-                                        <div id="phoneTitle" style="max-width: none"
-                                             class="my-label my-padding">
-                                            运 营 记 录
-                                        </div>
-                                    </td>
-                                    <td class="my-header-title">
-                                        <div class="my-label">
-                                            <button onclick="appendTable()" type="button"
-                                            style="padding: 0 36px" class="layui-btn layui-btn-xs">
-                                                增加
-                                            </button>
-                                        </div>
-                                    </td>
-                                    <td class="my-header-btn">
-                                        <div class="my-label">
-                                            <button onclick="refreshNotebook()" type="button" style="padding: 0 20px"
-                                                    class="layui-btn layui-btn-xs">
-                                                刷新
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="my-bg">
-                                    <td class="my-left" style="min-width: 70px">
-                                        <div class="my-label my-padding">
-                                            序号
-                                        </div>
-                                    </td>
-                                    <td class="my-left">
-                                        <div class="my-label my-padding">
-                                            记录者
-                                        </div>
-                                    </td>
-                                    <td class="my-left">
-                                        <div class="my-label my-padding">
-                                            内容
-                                        </div>
-                                    </td>
-                                    <td class="my-left" style="min-width: 120px">
-                                        <div class="my-label my-padding">
-                                            日期
-                                        </div>
-                                    </td>
-                                    <td class="my-left my-bottom">
-                                        <div
-                                            class="my-label my-padding">
-                                            操作
-                                        </div>
-                                    </td>
-                                </tr>`;
+            let noteBookHtml = '<div style="padding: 10px;" id="noteBookBody">\n' +
+                '<table border="0" width="100%">\n' +
+                '<tbody id="noteBookTbody">\n' +
+                '<tr class="my-bg">\n' +
+                '<td colspan="3" class="my-header-title">\n' +
+                '<input type="hidden" id="customerUuid" value>\n' +
+                '<div id="phoneTitle" style="max-width: none" class="my-label my-padding">\n' +
+                '运 营 记 录\n' +
+                '</div>\n' +
+                '</td>\n' +
+                '<td class="my-header-title">\n' +
+                '<div class="my-label">\n' +
+                '<button onclick="appendTable()" type="button" style="padding: 0 36px" class="layui-btn layui-btn-xs">\n' +
+                '增加\n' +
+                '</button>\n' +
+                '</div>\n' +
+                '</td>\n' +
+                '<td class="my-header-btn">\n' +
+                '<div class="my-label">\n' +
+                '<button onclick="refreshNotebook()" type="button" style="padding: 0 20px" class="layui-btn layui-btn-xs">\n' +
+                '刷新\n' +
+                '</button>\n' +
+                '</div>\n' +
+                '</td>\n' +
+                '</tr>\n' +
+                '<tr class="my-bg">\n' +
+                '<td class="my-left" style="min-width: 70px">\n' +
+                '<div class="my-label my-padding">\n' +
+                '序号\n' +
+                '</div>\n' +
+                '</td>\n' +
+                '<td class="my-left">\n' +
+                '<div class="my-label my-padding">\n' +
+                '记录者\n' +
+                '</div>\n' +
+                '</td>\n' +
+                '<td class="my-left">\n' +
+                '<div class="my-label my-padding">\n' +
+                '内容\n' +
+                '</div>\n' +
+                '</td>\n' +
+                '<td class="my-left" style="min-width: 120px">\n' +
+                '<div class="my-label my-padding">\n' +
+                '日期\n' +
+                '</div>\n' +
+                '</td>\n' +
+                '<td class="my-left my-bottom">\n' +
+                '<div class="my-label my-padding">\n' +
+                '操作\n' +
+                '</div>\n' +
+                '</td>\n' +
+                '</tr>';
             let d = {};
             d.customerUuid = uuid;
             d.searchAll = 0;
@@ -2382,40 +2303,20 @@
                             noteAddRow = false;
                         } else {
                             for (let i = 0; i < res.data.length; i++) {
-                                noteBookHtml += `<tr>
-                                <td class="my-left">
-                                    <div class="my-label my-padding">`;
+                                noteBookHtml += '<tr>\n' +
+                                    '<td class="my-left">\n' +
+                                    '<div class="my-label my-padding">';
                                 noteBookHtml += i + 1;
-                                noteBookHtml += `</div>
-                                    </td>
-                                    <td class="my-left">
-                                    <div class="my-label my-padding">`;
+                                noteBookHtml += '</div>\n                                    </td>\n                                    <td class="my-left">\n                                    <div class="my-label my-padding">';
                                 noteBookHtml += res.data[i].notesPerson;
-                                noteBookHtml += `</div>
-                                    </td>
-                                    <td class="my-left">
-                                    <div class="my-label my-padding">
-                                    <input type="hidden" value="`;
+                                noteBookHtml += '</div>\n                                    </td>\n                                    <td class="my-left">\n                                    <div class="my-label my-padding">\n                                    <input type="hidden" value="';
                                 noteBookHtml += res.data[i].uuid;
-                                noteBookHtml += `">`;
+                                noteBookHtml += '">';
                                 noteBookHtml += res.data[i].content;
-                                noteBookHtml += `</div>
-                                    </td>
-                                    <td class="my-left">
-                                    <div class="my-label my-padding">`;
+                                noteBookHtml += '</div>\n                                    </td>\n                                    <td class="my-left">\n                                    <div class="my-label my-padding">';
                                 noteBookHtml += new Date(res.data[i].createTime).format(
                                     'yyyy-MM-dd');
-                                noteBookHtml += `</div>
-                                </td>
-                                <td class="my-left my-bottom">
-                                    <div class="my-label my-btn">
-                                    <button type="button" onclick="updNoteBook(this)"
-                                        class="layui-btn layui-btn-xs layui-btn-danger">
-                                    修改
-                                    </button>
-                                    </div>
-                                    </td>
-                                    </tr>`;
+                                noteBookHtml += '</div>\n                                </td>\n                                <td class="my-left my-bottom">\n                                    <div class="my-label my-btn">\n                                    <button type="button" onclick="updNoteBook(this)"\n                                        class="layui-btn layui-btn-xs layui-btn-danger">\n                                    修改\n                                    </button>\n                                    </div>\n                                    </td>\n                                    </tr>';
                             }
                         }
                         noteBookHtml += noteBookHtmlFooter;

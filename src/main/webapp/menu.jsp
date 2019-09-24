@@ -7,10 +7,10 @@
 						<c:forEach items="${menus}" var="menu">
 							<li style="" pid="${menu.pid}" lid="${menu.id}">
 								<c:if test="${menu.openMode=='ajax' || menu.openMode=='iframe'}">
-									<a href="javascript:void(0)" onclick="openUrl('${menu.attributes}','${menu.text}','${menu.iconCls}','${menu.openMode}')" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
+									<a href="${menu.attributes}" target="_blank" onclick="openUrl('${menu.attributes}','${menu.text}','${menu.iconCls}','${menu.openMode}')" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
 								</c:if>
 								<c:if test="${menu.openMode==null || menu.openMode==''}">
-									<a href="${menu.attributes}" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
+									<a href="${menu.attributes}" target="_blank" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
 								</c:if>
 							</li>
 						</c:forEach>
@@ -20,10 +20,10 @@
 					<c:forEach items="${menus}" var="menu">
 						<li style="" pid="${menu.pid}" lid="${menu.id}">
 							<c:if test="${menu.openMode=='ajax' || menu.openMode=='iframe'}">
-								<a href="javascript:void(0)" onclick="openUrl('${menu.attributes}','${menu.text}','${menu.iconCls}','${menu.openMode}')" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
+								<a href="${menu.attributes}" target="_blank" onclick="openUrl('${menu.attributes}','${menu.text}','${menu.iconCls}','${menu.openMode}')" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
 							</c:if>
 							<c:if test="${menu.openMode==null || menu.openMode==''}">
-								<a href="${menu.attributes}" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
+								<a href="${menu.attributes}" target="_blank" title="${menu.attributes}"><i class="${menu.iconCls}"></i> ${menu.text}</a>
 							</c:if>
 						</li>
 					</c:forEach>
