@@ -1989,47 +1989,24 @@
                 return;
             }
 
-            let chargeMoney = `<div class="layui-form-item">
-                                <label style="width: 120px" class="layui-form-label">收费金额：</label>
-                                <div style="margin-left: 120px" class="layui-input-block">
-                                  <input type="text" id="money" autocomplete="off" placeholder="收费金额" class="layui-input">
-                                </div>
-                              </div>`;
+            let chargeMoney = '<div class="layui-form-item">\n                                <label style="width: 120px" class="layui-form-label">收费金额：</label>\n                                <div style="margin-left: 120px" class="layui-input-block">\n                                  <input type="text" id="money" autocomplete="off" placeholder="收费金额" class="layui-input">\n                                </div>\n                              </div>';
 
-            let chargeStatus = `<div class="layui-form-item">
-                                <label style="width: 120px;line-height: 22px" class="layui-form-label">客户满意度：</label>
-                                <div style="margin-left: 120px;display: flex" class="layui-input-block">
-                                    <div style="flex: 1">
-                                        <ul class="clean-float">
-                                             <li style="padding-left: 0" onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
-                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
-                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
-                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
-                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
-                                        </ul>
-                                    </div>
-                                    <div id="chargeStatus" style="flex: 2;font-size: 15px;line-height: 42px;height: 40px;letter-spacing: 1px"></div>
-                                </div>
-                              </div>
-                               <div class="layui-form-item layui-form-text">`;
+            let chargeStatus = '<div class="layui-form-item">\n                                <label style="width: 120px;line-height: 22px" class="layui-form-label">客户满意度：</label>\n                                <div style="margin-left: 120px;display: flex" class="layui-input-block">\n                                    <div style="flex: 1">\n                                        <ul class="clean-float">\n                                             <li style="padding-left: 0" onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>\n                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>\n                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>\n                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>\n                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>\n                                        </ul>\n                                    </div>\n                                    <div id="chargeStatus" style="flex: 2;font-size: 15px;line-height: 42px;height: 40px;letter-spacing: 1px"></div>\n                                </div>\n                              </div>\n                               <div class="layui-form-item layui-form-text">';
 
-            let chargeStatusFooter = `<div style="margin-left: 120px;" class="layui-input-block">
-                                  <textarea style="min-height: 80px" id="customerMsg" placeholder="请输入内容" class="layui-textarea"></textarea>
-                                </div>
-                              </div></div>`;
+            let chargeStatusFooter = '<div style="margin-left: 120px;" class="layui-input-block">\n                                  <textarea style="min-height: 80px" id="customerMsg" placeholder="请输入内容" class="layui-textarea"></textarea>\n                                </div>\n                              </div></div>';
 
             switch (renewalStatus) {
                 case 1:
-                    chargeStatus = `<div class="charge-status">` + chargeMoney + chargeStatus
-                        + `<label style="width: 120px" class="layui-form-label">客户评价：</label>` + chargeStatusFooter;
+                    chargeStatus = '<div class="charge-status">' + chargeMoney + chargeStatus
+                        + '<label style="width: 120px" class="layui-form-label">客户评价：</label>' + chargeStatusFooter;
                     break;
                 case 0:
-                    chargeStatus = `<div class="charge-status">` + chargeStatus
-                        + `<label style="width: 120px" class="layui-form-label">客户评价：</label>` + chargeStatusFooter;
+                    chargeStatus = '<div class="charge-status">' + chargeStatus
+                        + '<label style="width: 120px" class="layui-form-label">客户评价：</label>' + chargeStatusFooter;
                     break;
                 case 3:
-                    chargeStatus = `<div class="charge-status">` + chargeStatus
-                        + `<label style="width: 120px" class="layui-form-label">下架原因：</label>` + chargeStatusFooter;
+                    chargeStatus = '<div class="charge-status">' + chargeStatus
+                        + '<label style="width: 120px" class="layui-form-label">下架原因：</label>' + chargeStatusFooter;
                     break;
                 default:
                     break;
@@ -2099,7 +2076,7 @@
             });
         }
 
-        let chargeStatusText = ``;
+        let chargeStatusText = '';
         let chargeStatusValue = 0;
         window.over = function (e) {
             if (chargeStatusValue !== 0) {
@@ -2117,19 +2094,19 @@
             let c = document.getElementById('chargeStatus');
             switch (i) {
                 case 5:
-                    c.innerHTML = `<span style="color: green">非常满意</span>`;
+                    c.innerHTML = '<span style="color: green">非常满意</span>';
                     break;
                 case 4:
-                    c.innerHTML = `<span style="color: #006529">满意</span>`;
+                    c.innerHTML = '<span style="color: #006529">满意</span>';
                     break;
                 case 3:
-                    c.innerHTML = `<span style="color: #628000">一般</span>`;
+                    c.innerHTML = '<span style="color: #628000">一般</span>';
                     break;
                 case 2:
-                    c.innerHTML = `<span style="color: #e95500">差</span>`;
+                    c.innerHTML = '<span style="color: #e95500">差</span>';
                     break;
                 default:
-                    c.innerHTML = `<span style="color: #ff0000">非常差</span>`;
+                    c.innerHTML = '<span style="color: #ff0000">非常差</span>';
                     break;
             }
         };
@@ -2156,19 +2133,19 @@
             }
             switch (j) {
                 case 5:
-                    chargeStatusText = `<span style="color: green">非常满意</span>`;
+                    chargeStatusText = '<span style="color: green">非常满意</span>';
                     break;
                 case 4:
-                    chargeStatusText = `<span style="color: #006529">满意</span>`;
+                    chargeStatusText = '<span style="color: #006529">满意</span>';
                     break;
                 case 3:
-                    chargeStatusText = `<span style="color: #628000">一般</span>`;
+                    chargeStatusText = '<span style="color: #628000">一般</span>';
                     break;
                 case 2:
-                    chargeStatusText = `<span style="color: #e95500">差</span>`;
+                    chargeStatusText = '<span style="color: #e95500">差</span>';
                     break;
                 default:
-                    chargeStatusText = `<span style="color: #ff0000">非常差</span>`;
+                    chargeStatusText = '<span style="color: #ff0000">非常差</span>';
                     break;
             }
             chargeStatusValue = j;
