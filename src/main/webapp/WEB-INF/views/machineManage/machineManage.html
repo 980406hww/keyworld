@@ -10,6 +10,23 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
 </head>
 <style>
+    .layui-table-cell{
+        height: 40px !important;
+        padding: 0 6px !important;
+    }
+
+    .layui-btn-xs{
+        height: 18px;
+        line-height: 18px;
+    }
+
+    .my-height{
+        line-height: 40px !important;
+    }
+
+    .my-height-ts{
+        line-height: 18px !important;
+    }
 </style>
 <body>
 
@@ -24,9 +41,7 @@
             <i class="layui-icon layui-icon-refresh"></i>
         </a>
     </div>
-
     <table class="layui-hide" id="machineManageTable" lay-filter="tableFilter"></table>
-
 </div>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
@@ -60,28 +75,37 @@
             defaultToolbar: ['filter'],
             contentType: 'application/json',
             cols: [[
-                {filed: 'uuid', align: 'center', type: 'checkbox', fixed: "left", width: '50'},
-                {field: 'clientID', align: 'center', title: '客户端ID', width: '80'},
-                {field: 'machineGroup', align: 'center', title: '机器分组', width: '80'},
-                {field: 'renewalDate', align: 'center', title: '续费日期', width: '80', templet: '#toRenewalDate'},
-                {field: 'versionInfo', align: 'center', title: '现版本|目标版本', width: '130',templet: '#showVersionInfo'},
-                {field: 'restartCount', align: 'center', title: '重启数|重启状态|失败次数', width: '180'},
-                {field: 'cityAndStatus', align: 'center', title: '所在城市|终端状态', width: '185', templet: '#cityAndStatus'},
-                {field: 'cpuCount', align: 'center', title: 'CPU核数|内存', width: '140'},
-                {field: 'freeSpace', align: 'center', title: '剩余空间', width: '100'},
-                {field: 'lastVisitTimeAndRestartTime', align: 'center', title: '最新工作时间|重启时间', width: '190', templet: '#lastVisitTimeAndRestartTime'},
-                {field: 'restartOrderingTimeAndLastSendNotificationTime', align: 'center', title: '重启排序时间|发送通知时间', width: '190', templet: '#restartOrderingTimeAndLastSendNotificationTime'},
-                {field: 'optimizationSucceedCountAndOptimizationTotalCount', align: 'center', title: '成功次数|操作次数', width: '160', templet: '#optimizationSucceedCountAndOptimizationTotalCount'},
-                {field: 'broadbandAccountAndBroadbandPassword', align: 'center', title: '宽带账号|宽带密码', width: '150', templet: '#broadbandAccountAndBroadbandPassword'},
-                {field: 'runningProgramType', align: 'center', title: '运行程序类型', width: '120'},
-                {field: 'startUpStatusAndDownloadProgramType', align: 'center', title: '开机状态|下载程序类型', width: '175', templet: '#startUpStatusAndDownloadProgramType'},
-                {field: 'valids', align: 'center', title: '状态', width: '85', templet: '#valid'},
-                {field: 'upgradeFailedReason', align: 'center', title: '失败原因', width: '85'},
-                {field: 'vpsBackendSystemComputerID', align: 'center', title: '服务器ID', width: '130'},
-                {title: '操作', templet: '#operationTpl', align: 'center',fixed: "right",width: '290'}
+                {filed: 'uuid', align: 'center', type: 'checkbox', width: '42'},
+                {field: 'clientID', align: 'center', title: '客户端ID', width: '72'},
+                {field: 'machineGroup', align: 'center', title: '机器分组', width: '72'},
+                {field: 'renewalDate', align: 'center', title: '续费日期', width: '72', templet: '#toRenewalDate'},
+                {field: 'versionInfo', align: 'center', title: '现版本<br>目标版本', width: '72',templet: '#showVersionInfo'},
+                {field: 'restartCount', align: 'center', title: '重启数/重启状态<br>失败次数', width: '120'},
+                {field: 'cityAndStatus', align: 'center', title: '所在城市<br>终端状态', width: '128', templet: '#cityAndStatus'},
+                {field: 'cpuCount', align: 'center', title: 'CPU核数<br>内存', width: '70'},
+                {field: 'freeSpace', align: 'center', title: '剩余空间', width: '72'},
+                {field: 'lastVisitTimeAndRestartTime', align: 'center', title: '最新工作时间<br>重启时间', width: '100', templet: '#lastVisitTimeAndRestartTime'},
+                {field: 'restartOrderingTimeAndLastSendNotificationTime', align: 'center', title: '重启排序时间<br>发送通知时间', width: '100', templet: '#restartOrderingTimeAndLastSendNotificationTime'},
+                {field: 'optimizationSucceedCountAndOptimizationTotalCount', align: 'center', title: '成功次数<br>操作次数', width: '72', templet: '#optimizationSucceedCountAndOptimizationTotalCount'},
+                {field: 'broadbandAccountAndBroadbandPassword', align: 'center', title: '宽带账号<br>宽带密码', width: '72', templet: '#broadbandAccountAndBroadbandPassword'},
+                {field: 'runningProgramType', align: 'center', title: '运行程序类型', width: '100'},
+                {field: 'startUpStatusAndDownloadProgramType', align: 'center', title: '开机状态<br>下载程序类型', width: '92', templet: '#startUpStatusAndDownloadProgramType'},
+                {field: 'valids', align: 'center', title: '状态', width: '72', templet: '#valid'},
+                {field: 'upgradeFailedReason', align: 'center', title: '失败原因', width: '72'},
+                {field: 'vpsBackendSystemComputerID', align: 'center', title: '服务器ID', width: '72'},
+                {title: '操作', templet: '#operationTpl', align: 'center',fixed: "right",width: '188'}
             ]],
-            height: 'full-115',
+            height: 'full-53',
             done: function (res, curr, count) {
+                let cell = document.getElementsByClassName('layui-table-cell');
+                let l = cell.length;
+                for (let i = 0; i < l; i++) {
+                    if (cell[i].innerHTML.indexOf('<br>') === -1) {
+                        cell[i].classList.add('my-height');
+                    }else if (cell[i].innerHTML.indexOf('VNC') !== -1){
+                        cell[i].classList.add('my-height-ts');
+                    }
+                }
             }
         });
 
@@ -377,35 +401,35 @@
 </script>
 
 <script type="text/html" id="showVersionInfo">
-    {{d.version == null ? "" : d.version}}&nbsp;|&nbsp;{{d.targetVersion == null ? "" : d.targetVersion}}
+    {{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}
 </script>
 
 <script type="text/html" id="cityAndStatus">
-    {{d.city == null ? "" : d.city}}&nbsp;|&nbsp;{{d.status == null ? "" : d.status}}
+    {{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}
 </script>
 
 <script type="text/html" id="lastVisitTimeAndRestartTime">
     {{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}
-        &nbsp;|&nbsp;
+    <br>
     {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}
 </script>
 
 <script type="text/html" id="restartOrderingTimeAndLastSendNotificationTime">
     {{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}
-        &nbsp;|&nbsp;
+    <br>
     {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}
 </script>
 
 <script type="text/html" id="optimizationSucceedCountAndOptimizationTotalCount">
-    {{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}&nbsp;|&nbsp;{{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}
+    {{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>{{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}
 </script>
 
 <script type="text/html" id="broadbandAccountAndBroadbandPassword">
-    {{d.broadbandAccount == null ? "" : d.broadbandAccount}}&nbsp;|&nbsp;{{d.broadbandPassword == null ? "" : d.broadbandPassword}}
+    {{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}
 </script>
 
 <script type="text/html" id="startUpStatusAndDownloadProgramType">
-    {{d.startUpStatus == null ? "" : d.startUpStatus}}&nbsp;|&nbsp;{{d.downloadProgramType == null ? "" : d.downloadProgramType}}
+    {{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}
 </script>
 
 <script type="text/html" id="valid">
@@ -419,10 +443,12 @@
         <@shiro.hasPermission name="/internal/machineInfo/deleteMachineInfo">
             <button class="layui-btn layui-btn-xs" lay-event="deleteMachine">删除</button>
         </@shiro.hasPermission>
+    </div>
+    <br>
+    <div class="layui-btn-group">
         <button class="layui-btn layui-btn-xs">开始监控</button>
         <button class="layui-btn layui-btn-xs">变更终端类型</button>
     </div>
 </script>
-
 </body>
 </html>
