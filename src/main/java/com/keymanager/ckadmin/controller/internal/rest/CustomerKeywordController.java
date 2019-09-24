@@ -387,4 +387,19 @@ public class CustomerKeywordController {
             return resultBean;
         }
     }
+
+    @RequiresPermissions("/internal/customerKeyword/deleteCustomerKeyword")
+    @PostMapping(value = "/deleteCustomerKeyword2/{customerKeywordUuid}")
+    public ResultBean deleteCustomerKeyword(@PathVariable("customerKeywordUuid") Long customerKeywordUuid , HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            customerKeywordService.deleteById(customerKeywordUuid);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+    }
 }
