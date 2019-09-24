@@ -92,23 +92,27 @@
                 {field: 'startUpStatusAndDownloadProgramType', align: 'center', title: '开机状态<br>下载程序类型', width: '92', templet: '#startUpStatusAndDownloadProgramType'},
                 {field: 'valids', align: 'center', title: '状态', width: '72', templet: '#valid'},
                 {field: 'upgradeFailedReason', align: 'center', title: '失败原因', width: '72'},
-                {field: 'vpsBackendSystemComputerID', align: 'center', title: '服务器ID', width: '72'},
-                {title: '操作', templet: '#operationTpl', align: 'center',fixed: "right",width: '188'}
+                {field: 'vpsBackendSystemComputerID', align: 'center', title: '服务器ID', width: '82'},
+                {title: '操作', templet: '#operationTpl', align: 'center',fixed: "right",width: '178'}
             ]],
             height: 'full-53',
             done: function (res, curr, count) {
-                let cell = document.getElementsByClassName('layui-table-cell');
-                let l = cell.length;
-                for (let i = 0; i < l; i++) {
-                    if (cell[i].innerHTML.indexOf('<br>') === -1) {
-                        cell[i].classList.add('my-height');
-                    }else if (cell[i].innerHTML.indexOf('VNC') !== -1){
-                        cell[i].classList.add('my-height-ts');
-                    }
-                }
+                handleStyle();
             }
         });
 
+        function handleStyle() {
+            let cell = document.getElementsByClassName('layui-table-cell');
+            let l = cell.length;
+            for (let i = 0; i < l; i++) {
+                if (cell[i].innerHTML.indexOf('<br>') === -1) {
+                    cell[i].classList.add('my-height');
+                }else if (cell[i].innerHTML.indexOf('VNC') !== -1){
+                    cell[i].classList.add('my-height-ts');
+                }
+            }
+        }
+        
         var active = {
             reload: function () {
                 var data = {}
