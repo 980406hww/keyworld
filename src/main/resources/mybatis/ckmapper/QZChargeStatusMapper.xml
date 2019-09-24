@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.QZChargeStatusDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keymanager.ckadmin.entity.QZChargeStatus">
+        <id column="fUuid" property="uuid"/>
+        <result column="fQZSettingUuid" property="qzSettingUuid"/>
+        <result column="fChargeStatus" property="chargeStatus"/>
+        <result column="fChargeMoney" property="chargeMoney"/>
+        <result column="fCustomerSatisfaction" property="customerSatisfaction"/>
+        <result column="fChargeStatusMsg" property="chargeStatusMsg"/>
+        <result column="fCreateTime" property="createTime"/>
+        <result column="fLoginName" property="loginName"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        fUuid AS uuid,
+        fQZSettingUuid AS qzSettingUuid,
+        fChargeStatus AS chargeStatus,
+        fChargeMoney AS chargeMoney,
+        fCustomerSatisfaction AS customerSatisfaction,
+        fChargeStatusMsg AS chargeStatusMsg,
+        fCreateTime AS createTime,
+        fLoginName AS loginName
+    </sql>
+
+</mapper>

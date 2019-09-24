@@ -24,7 +24,8 @@
         qs.fCreateTime AS 'createTime',
         qs.fRenewalStatus AS 'renewalStatus',
         qs.fCrawlerStatus AS 'crawlerStatus',
-        qs.fAutoCrawlKeywordFlag AS 'autoCrawlKeywordFlag'
+        qs.fAutoCrawlKeywordFlag AS 'autoCrawlKeywordFlag',
+        qs.fChargeStatusUuid AS 'chargeStatusUuid'
         FROM t_qz_setting qs
         JOIN t_customer c
         ON qs.fCustomerUuid = c.fUuid

@@ -438,10 +438,11 @@
             padding: 0 5px;
         }
 
-        .layui-card-body{
+        .layui-card-body {
             padding-bottom: 0;
         }
 
+        /* 下拉条件框 */
         .my-collapse {
             position: relative;
             box-shadow: none;
@@ -505,15 +506,49 @@
             transition: opacity 0.5s;
         }
 
-        .radio-box{
+        .radio-box {
             position: relative;
             top: 2px;
         }
 
-        .my-collapse .layui-form-radio{
+        .my-collapse .layui-form-radio {
             margin: 0;
             padding-left: 6px;
             padding-right: 0;
+        }
+
+        .charge-status {
+            margin: 15px 20px 0 0;
+        }
+
+        /* 五角心心评论 */
+        .charge-status .clean-float::after {
+            display: block;
+            clear: both;
+            content: "";
+            visibility: hidden;
+            height: 0;
+        }
+
+        .charge-status ul {
+            position: relative;
+            top: -2px;
+        }
+
+        /*清浮动*/
+        .charge-status ul li {
+            list-style: none;
+            float: left;
+            font-size: 30px;
+            color: #d6d6d6;
+            cursor: pointer;
+            margin: 0;
+            padding: 0 2px;
+        }
+
+        /*五角星样式*/
+        .hs {
+            color: #ffba00 !important;
         }
     </style>
     <script>
@@ -782,10 +817,10 @@
                             } else {
                                 ttse = item.searchEngineName;
                             }
-                            if (ttse === '百度PC'){
+                        if (ttse === '百度PC') {
                                 terminalSearchEngine.append(
                                     '<option value="' + ttse + '" selected>' + ttse + '</option>');
-                            }else {
+                        } else {
                                 terminalSearchEngine.append(
                                     '<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
                             }
@@ -895,7 +930,7 @@
             return false;
         });
 
-        <@shiro.hasPermission name = "/internal/qzsetting/searchQZSettings">
+        <@shiro.hasPermission name = "/internal/qzsetting/searchQZSettings" >
             function get_qzsetting(whereCondition) {
                 table.render({
                     elem: '#qzSettingTable',
@@ -955,8 +990,8 @@
             });
         }
 
-        let radio = document.getElementsByName('sort');
-        function initSortRadio(condition){
+        function initSortRadio(condition) {
+            let radio = document.getElementsByName('sort');
             $.ajax({
                 url: '/internal/qzkeywordrank/searchCountNumOfQZKeywordRankInfoNew',
                 type: 'POST',
@@ -990,7 +1025,7 @@
                         radio[9].nextElementSibling.title = "标识下条规则接近达标, 未完成度<"
                             + res.data.differenceValue;
                     } else {
-                        show_layer_msg(res.msg === null ? '未知错误' : res.msg, 5);
+                        show_layer_msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg, 5);
                     }
                 },
                 error: function () {
@@ -1931,13 +1966,13 @@
                     batchUpdateQZSettingUpdateStatus();
                     break;
                 case 'batchUpdateRenewalStatusToNormal':
-                    batchUpdateRenewalStatus(1);
+                    saveChargeStatus(1);
                     break;
                 case 'batchUpdateRenewalStatusToSuspend':
-                    batchUpdateRenewalStatus(0);
+                    saveChargeStatus(0);
                     break;
                 case 'batchUpdateRenewalStatusToSoldOut':
-                    batchUpdateRenewalStatus(3);
+                    saveChargeStatus(3);
                     break;
                 case 'batchUpdateRenewalStatusToOther':
                     batchUpdateRenewalStatus(4);
@@ -1946,6 +1981,288 @@
                     break;
             }
         });
+
+        function saveChargeStatus(renewalStatus) {
+            let checkStatus = table.checkStatus('qzSettingTable').data;
+            if (checkStatus.length === 0) {
+                show_layer_msg('请选择需要收费的站点！', 5);
+                return;
+            }
+
+            let chargeMoney = `<div class="layui-form-item">
+                                <label style="width: 120px" class="layui-form-label">收费金额：</label>
+                                <div style="margin-left: 120px" class="layui-input-block">
+                                  <input type="text" id="money" autocomplete="off" placeholder="收费金额" class="layui-input">
+                                </div>
+                              </div>`;
+
+            let chargeStatus = `<div class="layui-form-item">
+                                <label style="width: 120px;line-height: 22px" class="layui-form-label">客户满意度：</label>
+                                <div style="margin-left: 120px;display: flex" class="layui-input-block">
+                                    <div style="flex: 1">
+                                        <ul class="clean-float">
+                                             <li style="padding-left: 0" onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
+                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
+                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
+                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
+                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
+                                        </ul>
+                                    </div>
+                                    <div id="chargeStatus" style="flex: 2;font-size: 15px;line-height: 42px;height: 40px;letter-spacing: 1px"></div>
+                                </div>
+                              </div>
+                               <div class="layui-form-item layui-form-text">`;
+
+            let chargeStatusFooter = `<div style="margin-left: 120px;" class="layui-input-block">
+                                  <textarea style="min-height: 80px" id="customerMsg" placeholder="请输入内容" class="layui-textarea"></textarea>
+                                </div>
+                              </div></div>`;
+
+            switch (renewalStatus) {
+                case 1:
+                    chargeStatus = `<div class="charge-status">` + chargeMoney + chargeStatus
+                        + `<label style="width: 120px" class="layui-form-label">客户评价：</label>` + chargeStatusFooter;
+                    break;
+                case 0:
+                    chargeStatus = `<div class="charge-status">` + chargeStatus
+                        + `<label style="width: 120px" class="layui-form-label">客户评价：</label>` + chargeStatusFooter;
+                    break;
+                case 3:
+                    chargeStatus = `<div class="charge-status">` + chargeStatus
+                        + `<label style="width: 120px" class="layui-form-label">下架原因：</label>` + chargeStatusFooter;
+                    break;
+                default:
+                    break;
+            }
+            layer.open({
+                type: 1,
+                title: '收费满意度调查',
+                content: chargeStatus,
+                shadeClose: true,
+                resize: false,
+                area: '600px',
+                offset:'40px',
+                btn: ['确认', '取消'],
+                yes: function (index) {
+                    let p_d = {};
+                    p_d.chargeStatus = renewalStatus;
+                    let l = [];
+                    for (let i = 0; i < checkStatus.length; i++) {
+                        l[i] = checkStatus[i].uuid;
+                    }
+                    p_d.qzSettingUUids = l;
+                    let money = document.getElementById('money');
+                    let satisfaction = document.getElementsByClassName('cs');
+                    let customerMsg = document.getElementById('customerMsg');
+                    if (money) {
+                        p_d.money = money.value;
+                    }
+                    if (satisfaction.length !== 0) {
+                        p_d.satisfaction = satisfaction.length;
+                    } else {
+                        p_d.satisfaction = 1;
+                    }
+                    if (customerMsg) {
+                        p_d.customerMsg = customerMsg.value;
+                    }
+                    layer.confirm('确认保存？', {
+                        icon: 3,
+                        title: '收费满意度',
+                        offset:'120px',
+                        btn: ['确认', '取消']
+                        , yes: function (index_) {
+                            $.ajax({
+                                url: '/internal/qzchargestatus/saveQZChargeStatus',
+                                type: 'post',
+                                data: JSON.stringify(p_d),
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                }, success: function (res) {
+                                    if (res.code === 200) {
+                                        show_layer_msg('修改成功', 6);
+                                        active['reload'].call(this);
+                                        layer.close(index_);
+                                        layer.close(index);
+                                    } else {
+                                        layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
+                                    }
+                                }
+                            });
+                        }, btn2: function (index) {
+                            layer.close(index);
+                        }
+                    });
+                }, btn2: function (index) {
+                    layer.close(index);
+                }
+            });
+        }
+
+        let chargeStatusText = ``;
+        let chargeStatusValue = 0;
+        window.over = function (e) {
+            if (chargeStatusValue !== 0) {
+                let s = e.parentElement.children;
+                for (let i = 0; i < 5; i++) {
+                    s[i].classList.remove('hs');
+                }
+            }
+            let i = 0;
+            while (e) {
+                e.classList.add('hs');
+                e = e.previousElementSibling;
+                i++;
+            }
+            let c = document.getElementById('chargeStatus');
+            switch (i) {
+                case 5:
+                    c.innerHTML = `<span style="color: green">非常满意</span>`;
+                    break;
+                case 4:
+                    c.innerHTML = `<span style="color: #006529">满意</span>`;
+                    break;
+                case 3:
+                    c.innerHTML = `<span style="color: #628000">一般</span>`;
+                    break;
+                case 2:
+                    c.innerHTML = `<span style="color: #e95500">差</span>`;
+                    break;
+                default:
+                    c.innerHTML = `<span style="color: #ff0000">非常差</span>`;
+                    break;
+            }
+        };
+
+        window.out = function (e) {
+            let s = e.parentElement.children;
+            while (e) {
+                e.classList.remove('hs');
+                e = e.previousElementSibling;
+            }
+            if (chargeStatusValue !== 0) {
+                for (let i = 0; i < chargeStatusValue; i++) {
+                    s[i].classList.add('hs');
+                }
+            }
+            document.getElementById('chargeStatus').innerHTML = chargeStatusText;
+        };
+
+        window.clickXx = function (e) {
+            let j = 0;
+            while (e) {
+                e = e.previousElementSibling;
+                j++;
+            }
+            switch (j) {
+                case 5:
+                    chargeStatusText = `<span style="color: green">非常满意</span>`;
+                    break;
+                case 4:
+                    chargeStatusText = `<span style="color: #006529">满意</span>`;
+                    break;
+                case 3:
+                    chargeStatusText = `<span style="color: #628000">一般</span>`;
+                    break;
+                case 2:
+                    chargeStatusText = `<span style="color: #e95500">差</span>`;
+                    break;
+                default:
+                    chargeStatusText = `<span style="color: #ff0000">非常差</span>`;
+                    break;
+            }
+            chargeStatusValue = j;
+        };
+
+        window.showChargeStatus = function(uuid){
+            okLayer.open("其他 / 前往全站设置信息 / 收费状态记录", "/internal/qzchargestatus/toQzChargeStatus", "60%", "70%",
+                function (layero) {
+                    window[layero.find("iframe")[0]["name"]].initForm(uuid);
+                }, function () {
+                    /*if (sign) {
+                        active['reload'].call(this);
+                        sign = false;
+                    }*/
+                },'40px');
+        };
+
+        let tips_ = null;
+
+        window.showTip = function (e, uuid) {
+            if (uuid !== null && uuid !== "null" && uuid !== "" && uuid !== "0" && uuid !== 0) {
+                $.ajax({
+                    url: '/internal/qzchargestatus/getOneQzChargeStatus/' + uuid,
+                    type: 'get',
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.code === 200) {
+                            let bz = '';
+                            let msg = '上次更新时间：';
+                            msg += new Date(res.data.createTime).format('yyyy年MM月dd日');
+                            msg += '，续费状态：';
+                            switch (res.data.chargeStatus) {
+                                case 1:
+                                    msg += '续费';
+                                    bz = '，客户评价：';
+                                    break;
+                                case 0:
+                                    msg += '暂停续费';
+                                    bz = '，客户评价：';
+                                    break;
+                                case 3:
+                                    msg += '下架';
+                                    bz = '，下架原因：';
+                                    break;
+                                default:
+                                    msg += '暂无';
+                                    break;
+                            }
+                            if(res.data.chargeMoney !== 0){
+                                msg += '，收费金额：';
+                                msg += res.data.chargeMoney;
+                                msg += '元';
+                            }
+                            msg += '，客户满意度：';
+                            switch (res.data.customerSatisfaction) {
+                                case 4:
+                                    msg += '满意';
+                                    break;
+                                case 3:
+                                    msg += '一般';
+                                    break;
+                                case 5:
+                                    msg += '非常满意';
+                                    break;
+                                case 2:
+                                    msg += '差';
+                                    break;
+                                case 1:
+                                    msg += '非常差';
+                                    break;
+                                default:
+                                    msg += '一般';
+                                    break;
+                            }
+                            if (res.data.chargeStatusMsg !== ''){
+                                msg += bz;
+                                msg += res.data.chargeStatusMsg;
+                            }
+                            tips_ = layer.tips(msg, e, {tips: 1,time:0});
+                        } else {
+                            layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
+                        }
+                    }
+                });
+            } else {
+                tips_ = layer.tips('暂无数据~', e, {tips: 1,time:0});
+            }
+        };
+
+        window.closeTip = function(){
+            if (tips_!==null){
+                layer.close(tips_);
+            }
+        };
 
         window.showChargeLog = function (uuid) {
             $.ajax({
@@ -1978,11 +2295,12 @@
                             shadeClose: true,
                             resize: false,
                             area: '700px',
+                            offset:'40px'
                         });
                     } else if (res.code === 300) {
                         show_layer_msg('暂无收费记录数据', 5);
                     } else {
-                        show_layer_msg(res.msg, 5);
+                        show_layer_msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg, 5);
                     }
                 },
                 error: function () {
@@ -2004,6 +2322,7 @@
                 shadeClose: true,
                 resize: false,
                 area: '420px',
+                offset:'40px',
                 btn: ['确认', '取消'],
                 yes: function (index) {
                     let v = document.getElementById('tagNames').value;
@@ -2013,7 +2332,7 @@
                     }
                     let d = {}, tags = [], ids = [], tagNames = v.split(',');
                     tagNames = tagNames.filter(function (val, index) {
-                       return tagNames.indexOf(val) ===index && val !== "";
+                        return tagNames.indexOf(val) === index && val !== "";
                     });
                     if (v.indexOf("暂无") > -1 && tagNames.length === 0 && v !== "") {
                         show_layer_msg('请输入有意义的数据！', 5);
@@ -2029,6 +2348,7 @@
                     }
                     d.targetQZCategoryTags = tags;
                     d.uuids = ids;
+
                     $.ajax({
                         url: '/internal/qzsetting/updQzCategoryTags',
                         type: 'post',
@@ -2062,7 +2382,7 @@
                         active['reload'].call(this);
                         sign = false;
                     }
-                });
+                },'40px');
         }
 
         let chargeRecordHtml = '<div style="padding: 10px;">\n                            <table border="0" width="100%">\n                                <tbody>\n                                <tr class="my-bg">\n                                    <td class="my-header-title" style="min-width: 120px">\n                                        <div class="my-label my-padding">\n                                            收费时间\n                                        </div>\n                                    </td>\n                                    <td class="my-header-title" style="min-width: 80px">\n                                        <div class="my-label my-padding">\n                                            终端类型\n                                        </div>\n                                    </td>\n                                    <td class="my-header-title" style="min-width: 80px">\n                                        <div class="my-label my-padding">\n                                            收费金额\n                                        </div>\n                                    </td>\n                                    <td class="my-header-title" style="min-width: 80px">\n                                        <div class="my-label my-padding">\n                                            收费人员\n                                        </div>\n                                    </td>\n                                    <td class="my-header-btn"  style="min-width: 240px">\n                                        <div\n                                            class="my-label my-padding">\n                                            创建时间\n                                        </div>\n                                    </td>\n                                </tr>';
@@ -2080,7 +2400,7 @@
                     if (sign) {
                         sign = false;
                     }
-                })
+                },'40px')
         };
 
         // 收费
@@ -2099,7 +2419,7 @@
                         active['reload'].call(this);
                         sign = false;
                     }
-                })
+                },'40px');
         };
 
         window.commitNoteBook = function (e) {
@@ -2127,7 +2447,7 @@
                     if (res.code === 200) {
                         refreshNotebook(d.customerUuid);
                     } else {
-                        show_layer_msg(res.msg, 5);
+                        show_layer_msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg, 5);
                     }
                 },
                 error: function () {
@@ -2210,7 +2530,7 @@
                     shadeClose: true,
                     resize: false,
                     area: '700px',
-                    offset: '180px',
+                    offset:'40px',
                     success: function () {
                         document.getElementById('customerUuid').value = uuid;
                     }
@@ -2311,7 +2631,7 @@
                         noteBookHtml += noteBookHtmlFooter;
                         call(noteBookHtml);
                     } else {
-                        show_layer_msg(res.msg, 5);
+                        show_layer_msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg, 5);
                     }
                 },
                 error: function () {
@@ -2339,7 +2659,7 @@
                     });
                 }, function () {
 
-                })
+                },'40px')
         };
 
         // 修改选中站点优化组关联的操作组合
@@ -2350,7 +2670,7 @@
                 show_layer_msg('请选择要修改优化组关联的操作组合的站点！！', 5);
                 return false;
             }
-            layer.confirm("确定要修改所选站点优化组关联的操作组合吗？", {icon: 3, title: '修改操作组合'}, function (index) {
+            layer.confirm("确定要修改所选站点优化组关联的操作组合吗？", {icon: 3, offset:'120px',title: '修改操作组合'}, function (index) {
                 let groupNameArr = [];
                 $.each(checkStatus.data, function (i, v) {
                     if (v.pcGroup !== null) {
@@ -2423,7 +2743,7 @@
                     });
                 }, function () {
 
-                }
+                },'40px'
             );
         };
 
@@ -2432,7 +2752,7 @@
          * @param uuid
          */
         window.delQZSetting = function (uuid) {
-            layer.confirm('确认要删除该站点吗', function (index) {
+            layer.confirm('确认要删除该站点吗', { offset:'120px'}, function (index) {
                 $.ajax({
                     url: '/internal/qzsetting/delete2/' + uuid,
                     headers: {
@@ -2471,7 +2791,7 @@
                 show_layer_msg('请选择要操作的站点', 5);
                 return
             }
-            layer.confirm("确定要删除所选站点吗", {icon: 3, title: '删除所选'}, function (index) {
+            layer.confirm("确定要删除所选站点吗", {icon: 3,  offset:'120px',title: '删除所选'}, function (index) {
                 var postData = {};
                 postData.uuids = uuidArr;
                 $.ajax({
@@ -2509,7 +2829,7 @@
                 show_layer_msg('请选择要操作的站点', 5);
                 return;
             }
-            layer.confirm("确定要修改所选站点吗", {icon: 3, title: '修改所选'}, function (index) {
+            layer.confirm("确定要修改所选站点吗", {icon: 3, offset:'120px', title: '修改所选'}, function (index) {
                 let uuids = "";
                 $.each(data, function (index, item) {
                     uuids += (index === 0 ? "" : ",") + item.uuid;
@@ -2551,16 +2871,16 @@
                 return;
             }
             let msg = '未知错误';
-            if(renewalStatus === 1){
+            if (renewalStatus === 1) {
                 msg = "确认要续费所选整站吗?";
             } else if (renewalStatus === 0) {
                 msg = "确认选中的整站要暂停续费吗?";
             } else if (renewalStatus === 3) {
                 msg = "确认要下架所选整站吗?";
-            }else if (renewalStatus === 4) {
+            } else if (renewalStatus === 4) {
                 msg = "确定要将选中整站续费状态更为其他吗?";
             }
-            layer.confirm(msg, {icon: 3, title: '修改所选'}, function (index) {
+            layer.confirm(msg, {icon: 3,  offset:'120px',title: '修改所选'}, function (index) {
                 let uuids = "";
                 $.each(data, function (index, item) {
                     uuids += (index === 0 ? "" : ",") + item.uuid;
@@ -2580,6 +2900,7 @@
                     success: function (result) {
                         if (result.code === 200) {
                             show_layer_msg('操作成功', 6, true);
+                            active['reload'].call(this);
                         } else {
                             show_layer_msg('操作失败', 5);
                         }
@@ -2615,8 +2936,9 @@
                 shadeClose: true,
                 resize: false,
                 area: '420px',
+                offset:'40px',
                 btn: ['确认', '取消'],
-                success: function(layero, index){
+                success: function (layero, index) {
                     document.getElementById('tagNames').value = old_text;
                 },
                 yes: function (index_0) {
@@ -2645,6 +2967,7 @@
                     let postData = {};
                     postData.qzSettingUuid = uuid;
                     postData.qzCategoryTags = qzCategoryTags;
+
                     $.ajax({
                         url: "/internal/qzcategory/saveCategoryLabel",
                         type: "POST",
@@ -2674,7 +2997,7 @@
                     });
                 }, btn2: function (index_0) {
                     layer.close(index_0);
-                }, cancel: function() {
+                }, cancel: function () {
 
                 }
             })
@@ -2692,40 +3015,39 @@
     </div>
     </@shiro.hasPermission>
     <div class="layui-btn-group">
-        <@shiro.hasPermission name="/internal/qzsetting/save">
+    <@shiro.hasPermission name="/internal/qzsetting/save">
         <button class="layui-btn layui-btn-sm" lay-event="addQz">
             <i style="position: relative;top: -1px" class="layui-icon">&#xe654;</i>添加整站
         </button>
         <button class="layui-btn layui-btn-sm " lay-event="updFZTags">
             <i class="layui-icon">&#xe642;</i>修改标签
         </button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
-        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchDeleteQZSetting">
-            <i style="position: relative;top: -1px" class="layui-icon">&#xe640;</i>删除所选
-        </button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/qzsetting/updateImmediately">
-        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchUpdateQZSettingUpdateStatus">
-            <i style="font-size: 15px !important;" class="layui-icon">&#xe666;</i>马上更新
-        </button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/qzsetting/updateRenewalStatus">
-        <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToNormal">
-            <i class="layui-icon">&#x1005;</i>正常续费
-        </button>
-        <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToSuspend">
-            <i class="layui-icon">&#xe651;</i>暂停续费
-        </button>
-        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchUpdateRenewalStatusToSoldOut">
-            <i class="layui-icon">&#xe601;</i>下架整站
-        </button>
-        <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToOther">
-            <i class="layui-icon">&#xe63f;</i>更为其他
-        </button>
-        </@shiro.hasPermission>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
+    <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchDeleteQZSetting">
+        <i style="position: relative;top: -1px" class="layui-icon">&#xe640;</i>删除所选
+    </button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/qzsetting/updateImmediately">
+    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchUpdateQZSettingUpdateStatus">
+        <i style="font-size: 15px !important;" class="layui-icon">&#xe666;</i>马上更新
+    </button>
+    </@shiro.hasPermission>
+    <#if isSEOSales==0>
+    <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToNormal">
+        <i class="layui-icon">&#x1005;</i>正常续费
+    </button>
+    <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToSuspend">
+        <i class="layui-icon">&#xe651;</i>暂停续费
+    </button>
+    <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchUpdateRenewalStatusToSoldOut">
+        <i class="layui-icon">&#xe601;</i>下架整站
+    </button>
+    <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToOther">
+        <i class="layui-icon">&#xe63f;</i>更为其他
+    </button>
+    </#if>
     </div>
-
 </script>
 
 <script type="text/html" id="item">
@@ -2787,7 +3109,7 @@
                        '{{d.uuid}}','{{d.customerUuid}}','{{d.domain.trim()}}',
                        '{{d.pcGroup}}', '{{d.phoneGroup}}')">排除关键字</a>
                 </span>
-                <@shiro.hasPermission name="/internal/qzsetting/save">
+            <@shiro.hasPermission name="/internal/qzsetting/save">
                 <span>
                     <a class="blue"
                        href="javascript:showAddKeywordDialog('{{d.uuid}}',
@@ -2795,35 +3117,38 @@
                        '{{d.searchEngine}}', '{{d.type}}', '{{d.pcGroup}}',
                        '{{d.phoneGroup}}')">添加关键字</a>
                 </span>
-                </@shiro.hasPermission>
-                <@shiro.hasPermission name="/internal/usernotebook/searchUserNoteBooks">
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/usernotebook/searchUserNoteBooks">
                 <span>
                     <a class="blue"
                        href="javascript:openNoteBookDialog('{{d.customerUuid}}')">运营记录</a>
                 </span>
-                </@shiro.hasPermission>
-                <@shiro.hasPermission name="/internal/qzchargelog/save">
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/qzchargelog/save">
                 <span>
                     <a class="blue"
-                      href="javascript:showChargeDialog('{{d.uuid}}','{{d.contactPerson}}',
+                       href="javascript:showChargeDialog('{{d.uuid}}','{{d.contactPerson}}',
                       '{{d.domain.trim()}}','{{d.renewalStatus}}')">收费</a>
                 </span>
-                </@shiro.hasPermission>
-                <@shiro.hasPermission name="/internal/qzchargelog/chargesList">
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/qzchargelog/chargesList">
                 <span>
                     <a class="blue" href="javascript:showChargeLog('{{d.uuid}}')">收费记录</a>
                 </span>
-                </@shiro.hasPermission>
-                <@shiro.hasPermission name="/internal/qzsetting/save">
+            </@shiro.hasPermission>
+                <span>
+                    <a class="blue" href="javascript:showChargeStatus('{{d.uuid}}')">续费状态记录</a>
+                </span>
+            <@shiro.hasPermission name="/internal/qzsetting/save">
                 <span>
                     <a class="blue" href="javascript:" onclick="showSettingDialog('{{d.uuid}}')">修改</a>
                 </span>
-                </@shiro.hasPermission>
-                <@shiro.hasPermission name="/internal/qzsetting/delete">
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/qzsetting/delete">
                 <span>
                     <a class="blue" href="javascript:delQZSetting('{{d.uuid}}')">删除</a>
                 </span>
-                </@shiro.hasPermission>
+            </@shiro.hasPermission>
             </div>
         </div>
     </div>
@@ -2874,20 +3199,18 @@
             </div>
             <div class="layui-col-md12 line1">
                 <div class="layui-col-md12">
-                    <span>
-                        <a href="javascript:;">
-                            {{#  if(d.renewalStatus === 1) { }}
-                                <span style="color: green;">续费中</span>
-                            {{# }else if(d.renewalStatus === 0) { }}
-                                <span style="color: palevioletred;">暂停续费</span>
-                            {{# }else if(d.renewalStatus === 2) { }}
-                                <span style="color: mediumseagreen;">首次收费</span>
-                            {{# }else if(d.renewalStatus === 3) { }}
-                                <span style="color: red;">下架</span>
-                            {{# }else if(d.renewalStatus === 4) { }}
-                                <span style="color: mediumseagreen;">其他</span>
-                            {{# } }}
-                        </a>
+                    <span style="cursor: pointer" onmouseover="showTip(this,'{{d.chargeStatusUuid}}')" onmouseout="closeTip()">
+                        {{#  if(d.renewalStatus === 1) { }}
+                            <span style="color: green;">续费中</span>
+                        {{# }else if(d.renewalStatus === 0) { }}
+                            <span style="color: palevioletred;">暂停续费</span>
+                        {{# }else if(d.renewalStatus === 2) { }}
+                            <span style="color: mediumseagreen;">首次收费</span>
+                        {{# }else if(d.renewalStatus === 3) { }}
+                            <span style="color: red;">下架</span>
+                        {{# }else if(d.renewalStatus === 4) { }}
+                            <span style="color: mediumseagreen;">其他</span>
+                        {{# } }}
                     </span>
                 </div>
                 <div class="layui-col-md12">
@@ -2964,7 +3287,7 @@
                 </div>
             </div>
         </div>
-        {{# }}}
+        {{# } }}
         <!--指定词曲线-->
         <div class="layui-col-md5 rank-wrap1">
             <div class="layui-col-md3 col-1" id="designationWordCharts"
