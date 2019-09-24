@@ -229,6 +229,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             case 'pause_keyword':
                 updateCustomerKeywordStatus(0);
                 break;
+            case 'down_keyword':
+                updateCustomerKeywordStatus(2);
+                break;
             case 'active_keyword':
                 updateCustomerKeywordStatus(1);
                 break;
