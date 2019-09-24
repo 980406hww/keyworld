@@ -19,15 +19,10 @@ public class QZSettingSearchCriteria extends BaseCriteria {
     private Integer checkStatus;
     private String terminalType;
     private String categoryTag;
-    private Integer openDialogStatus;
-    private String operationType;
     private String createTime;
     private String createTimePrefix;
-    private Boolean hasMonitor;
-    private Boolean hasReady;
     private String standardSpecies;
     private Integer optimizationType;
-    private boolean resetPagingParam;
     private Boolean autoCrawlKeywordFlag;
 
     public String getCustomerUuids() {
@@ -142,22 +137,6 @@ public class QZSettingSearchCriteria extends BaseCriteria {
         this.categoryTag = categoryTag;
     }
 
-    public Integer getOpenDialogStatus() {
-        return openDialogStatus;
-    }
-
-    public void setOpenDialogStatus(Integer openDialogStatus) {
-        this.openDialogStatus = openDialogStatus;
-    }
-
-    public String getOperationType() {
-        return operationType;
-    }
-
-    public void setOperationType(String operationType) {
-        this.operationType = operationType;
-    }
-
     public String getCreateTime() {
         return createTime;
     }
@@ -174,22 +153,6 @@ public class QZSettingSearchCriteria extends BaseCriteria {
         this.createTimePrefix = createTimePrefix;
     }
 
-    public Boolean getHasMonitor() {
-        return hasMonitor;
-    }
-
-    public void setHasMonitor(Boolean hasMonitor) {
-        this.hasMonitor = hasMonitor;
-    }
-
-    public Boolean getHasReady() {
-        return hasReady;
-    }
-
-    public void setHasReady(Boolean hasReady) {
-        this.hasReady = hasReady;
-    }
-
     public String getStandardSpecies() {
         return standardSpecies;
     }
@@ -204,14 +167,6 @@ public class QZSettingSearchCriteria extends BaseCriteria {
 
     public void setOptimizationType(Integer optimizationType) {
         this.optimizationType = optimizationType;
-    }
-
-    public boolean getResetPagingParam() {
-        return resetPagingParam;
-    }
-
-    public void setResetPagingParam(boolean resetPagingParam) {
-        this.resetPagingParam = resetPagingParam;
     }
 
     public Integer getRenewalStatus() {

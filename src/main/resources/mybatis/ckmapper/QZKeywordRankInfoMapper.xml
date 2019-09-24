@@ -92,12 +92,9 @@
             </when>
             <otherwise></otherwise>
         </choose>
-        <if test="criteria.updateStatus != null and criteria.updateStatus != ''">AND
-            qs.fUpdateStatus = #{criteria.updateStatus}
-        </if>
+        <if test="criteria.updateStatus != null and criteria.updateStatus != ''">AND qs.fUpdateStatus = #{criteria.updateStatus}</if>
         <if test="criteria.renewalStatus != null">AND qs.fRenewalStatus = #{criteria.renewalStatus}</if>
-        <if test="criteria.hasMonitor != null">AND qs.fIsMonitor = #{criteria.hasMonitor}</if>
-        <if test="criteria.hasReady != null">AND qs.fIsReady = #{criteria.hasReady}</if>
+        <if test="criteria.autoCrawlKeywordFlag != null">AND qs.fAutoCrawlKeywordFlag = #{criteria.autoCrawlKeywordFlag}</if>
         <if test="criteria.standardSpecies != null and criteria.standardSpecies != ''">
             AND EXISTS (
                 SELECT 1
@@ -110,14 +107,6 @@
         <if test="criteria.renewalStatus != null">AND qs.fRenewalStatus = #{criteria.renewalStatus}</if>
         <if test="criteria.categoryTag != null and criteria.categoryTag != ''">
             AND EXISTS (SELECT 1 FROM t_qz_category_tag qc WHERE qc.fQZSettingUuid = qs.fUuid AND qc.fTagName = #{criteria.categoryTag})
-        </if>
-        <if test="criteria.operationType != null and criteria.operationType != ''">
-            AND EXISTS (
-            SELECT 1 FROM t_machine_info mi
-            WHERE mi.fUsingOperationType = #{criteria.operationType}
-            AND mi.fGroup = qot.fGroup
-            AND mi.fTerminalType = #{criteria.terminalType}
-            )
         </if>
         <if test="criteria.createTime != null and criteria.createTime != ''">AND qs.fCreateTime &gt;= #{criteria.createTime}</if>
         <if test="criteria.createTimePrefix != null and criteria.createTimePrefix != ''">AND qs.fCreateTime &lt;= #{criteria.createTimePrefix}</if>

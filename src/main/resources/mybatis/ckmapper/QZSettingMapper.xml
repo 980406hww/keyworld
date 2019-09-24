@@ -117,22 +117,6 @@
         <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
             AND EXISTS (SELECT 1 FROM t_qz_category_tag qc WHERE qc.fQZSettingUuid = qs.fUuid AND qc.fTagName = #{qzSettingSearchCriteria.categoryTag})
         </if>
-        <if test="qzSettingSearchCriteria.operationType != null and qzSettingSearchCriteria.operationType != ''">
-            AND EXISTS (
-            SELECT 1
-            FROM t_machine_info mi
-            WHERE mi.fUsingOperationType = #{qzSettingSearchCriteria.operationType}
-            <choose>
-                <when test="qzSettingSearchCriteria.terminalType == 'PC'">
-                    AND mi.fGroup = qs.fPcGroup
-                </when>
-                <otherwise>
-                    AND mi.fGroup = qs.fPhoneGroup
-                </otherwise>
-            </choose>
-            AND mi.fTerminalType = #{qzSettingSearchCriteria.terminalType}
-            )
-        </if>
         <if test="qzSettingSearchCriteria.createTime != null and qzSettingSearchCriteria.createTime != ''">AND qs.fCreateTime &gt;= #{qzSettingSearchCriteria.createTime}</if>
         <if test="qzSettingSearchCriteria.createTimePrefix != null and qzSettingSearchCriteria.createTimePrefix != ''">AND qs.fCreateTime &lt;= #{qzSettingSearchCriteria.createTimePrefix}</if>
         <choose>

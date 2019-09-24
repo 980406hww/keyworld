@@ -24,6 +24,23 @@
             border-radius: 2px 0 0 2px;
             border: solid 1px #e6e6e6;
         }
+
+        #keywordEffect {
+            height: 36px;
+            width: 900px;
+        }
+
+        .radio-box{
+            height: 36px;
+            position: relative;
+            top: 2px;
+        }
+
+        .my-collapse .layui-form-radio{
+            margin: 0;
+            padding-left: 6px;
+            padding-right: 0;
+        }
     </style>
 </head>
 <div>
@@ -87,10 +104,10 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">关键字作用</label>
 
-                <div class="layui-input-block">
-                    <select name="keywordEffect" id="keywordEffect" lay-verify="required">
+                <div class="layui-inline radio-box">
+                    <div id="keywordEffect" pane>
 
-                    </select>
+                    </div>
                 </div>
             </div>
 
@@ -168,13 +185,18 @@
             success: function (res) {
                 if (res.code === 200) {
                     $("#keywordEffect").empty();
-                    $('#keywordEffect').append('<option value="">请选择</option>');
                     $.each(res.data, function (index, item) {
-                        $('#keywordEffect').append('<option value="' + item.value + '">' + item.desc + '</option>');// 下拉菜单里添加元素
+                        let html = '';
+                        if (index === 1) {
+                            html = '<input type="radio" name="keywordEffect" checked value="' + item.value + '" title="'+ item.desc +'" class="phone-input">'
+                        } else {
+                            html = '<input type="radio" name="keywordEffect" value="' + item.value + '" title="'+ item.desc +'" class="phone-input">'
+                        }
+                        $('#keywordEffect').append(html);
                     });
-                    form.render("select");
+                    form.render('radio');
                 } else {
-                    l.layer.msg(res.msg);
+                    layer.msg(res.msg);
                 }
             }
         });
@@ -193,9 +215,9 @@
             });
             postData.keywords = keywords;
 
-            if(postData.synchronousAddition) {
+            if (postData.synchronousAddition) {
                 terminalTypes = ['PC', 'Phone'];
-            }else {
+            } else {
                 terminalTypes.push(postData.terminalType);
             }
             postData.terminalTypes = terminalTypes;

@@ -1,4 +1,23 @@
 
+# 全站设置信息子资源移植
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `pro_resource_data_migration`;
+CREATE PROCEDURE pro_resource_data_migration()
+BEGIN
+	START TRANSACTION;
+			BEGIN
+			SET @old_uuid = (SELECT fUuid FROM t_resource WHERE fResourceName = "全站设置信息");
+			SET @new_uuid = (SELECT fUuid FROM t_resource WHERE fResourceName = "前往全站信息设置");
+			UPDATE t_resource SET fParentID = @new_uuid WHERE fParentID = @old_uuid;
+			END;
+	COMMIT;
+END;
+
+CALL pro_resource_data_migration();
+
+# 删除原全站设置信息 资源
+DELETE FROM t_resource WHERE fResourceName = '全站设置信息';
+
 INSERT INTO `db_keyword`.`t_resource`(`fResourceName`, `fUrl`, `fIconCls`,
 	`fParentID`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`,  `fCreateTime`)
 VALUES ('前往全站信息设置', '/internal/qzsetting/toQZSetttings', 'fi-thumbnails',

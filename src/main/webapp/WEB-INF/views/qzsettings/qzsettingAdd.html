@@ -1273,9 +1273,18 @@
                         c.amount = '3';
                         qzChargeRules.push(c);
                     } else {
+                        let last_standard_value = 0;
                         for (let i = 2; i < comTr.length; i++) {
                             let comTd = comTr[i].children, c = {};
                             c.standardSpecies = d.comStandardSpecies;
+                            if (last_standard_value >= parseInt(comTd[1].children[0].children[0].value)) {
+                                okLayer.msg.redCry('电脑达标规则填写错误', null);
+                                return false;
+                            }
+                            if (parseInt(comTd[1].children[0].children[0].value) >= parseInt(comTd[2].children[0].children[0].value)) {
+                                okLayer.msg.redCry('电脑达标规则终止达标词数要大于起始达标词数', null);
+                                return false;
+                            }
                             for (let j = 1; j < 4; j++) {
                                 if (comTd[j].children[0].children[0].value === '') {
                                     if (!(i === comTr.length - 1 && j === 2)) {
@@ -1293,6 +1302,7 @@
                                         break;
                                     case 2:
                                         c.endKeywordCount = comTd[j].children[0].children[0].value;
+                                        last_standard_value = parseInt(c.endKeywordCount);
                                         break;
                                     case 3:
                                         c.amount = comTd[j].children[0].children[0].value;
@@ -1338,9 +1348,18 @@
                         c.amount = '3';
                         qzChargeRules.push(c);
                     } else {
+                        let last_standard_value = 0;
                         for (let i = 2; i < phoneTr.length; i++) {
                             let phoneTd = phoneTr[i].children, c = {};
                             c.standardSpecies = d.phoneStandardSpecies;
+                            if (last_standard_value >= parseInt(phoneTd[1].children[0].children[0].value)) {
+                                okLayer.msg.redCry('手机达标规则填写错误', null);
+                                return false;
+                            }
+                            if (parseInt(phoneTd[1].children[0].children[0].value) >= parseInt(phoneTd[2].children[0].children[0].value)) {
+                                okLayer.msg.redCry('手机达标规则终止达标词数要大于起始达标词数', null);
+                                return false;
+                            }
                             for (let j = 1; j < 4; j++) {
                                 if (phoneTd[j].children[0].children[0].value === '') {
                                     if (!(i === phoneTr.length - 1 && j === 2)) {
@@ -1358,6 +1377,7 @@
                                         break;
                                     case 2:
                                         c.endKeywordCount = phoneTd[j].children[0].children[0].value;
+                                        last_standard_value = parseInt(c.endKeywordCount);
                                         break;
                                     case 3:
                                         c.amount = phoneTd[j].children[0].children[0].value;
@@ -1479,7 +1499,7 @@
 
         function commit(p_d, call) {
             $.ajax({
-                url: '/internal/qzsetting/saveQZSetting', ///internal/qzsetting/save
+                url: '/internal/qzsetting/saveQZSetting',
                 type: 'post',
                 data: JSON.stringify(p_d),
                 headers: {
