@@ -109,65 +109,62 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             defaultToolbar: ['filter'],
             contentType: 'application/json',
             cols: [[
-                {filed: 'uuid', type: 'checkbox', fixed: "left", width: '3%'},
+                {filed: 'uuid', type: 'checkbox', fixed: "left", width: '35'},
+                {field: 'userID', title: '用户', width: '150',},
                 {
                     field: 'contactPerson',
                     title: '客户名称',
-                    width: '8%',
+                    width: '150',
                     templet: '#toCustomerKeywordTpl'
                 },
-                {field: 'keyword', title: '关键字', width: '10%'},
-                {field: 'url', title: '链接', width: '15%'},
-                {field: 'bearPawNumber', title: '熊掌号', width: '5%'},
+                {field: 'keyword', title: '关键字', width: '150'},
+                {field: 'url', title: '链接', width: '120'},
+                {field: 'bearPawNumber', title: '熊掌号', width: '100'},
                 // {field: 'originalUrl', title: '原始链接', width: '15%',},
                 // {field: 'terminalType', title: '终端', width: '5%'},
-                {field: 'title', title: '标题', width: '10%'},
-                {field: 'indexCount', title: '指数', width: '5%', hide: true},
-                {
-                    field: 'initialPosition',
-                    title: '初始排名',
-                    width: '5%',
-                    hide: true
-                },
-                {
-                    field: 'currentPosition',
-                    title: '现排名',
-                    width: '5%',
-                    hide: true
-                },
-                {field: 'searchEngine', title: '搜索引擎', width: '6%'},
-                {field: 'optimizeGroupName', title: '优化分组', width: '6%'},
-                {field: 'machineGroup', title: '机器分组', width: '6%'},
-                {field: 'city', title: '目标城市', width: '6%', hide: true},
+                {field: 'title', title: '标题', width: '160'},
+                {field: 'indexCount', title: '指数', width: '80'},
+                {field: 'initialPosition', title: '初始排名', width: '80'},
+                {field: 'currentPosition', title: '现排名', width: '80'},
+                {field: 'searchEngine', title: '搜索引擎', width: '80'},
+                {field: 'optimizeGroupName', title: '优化分组', width: '100'},
+                {field: 'machineGroup', title: '机器分组', width: '100'},
+                {field: 'city', title: '目标城市', width: '80', hide: true},
 
                 {
                     field: 'collectMethod',
                     title: '收费方式',
-                    width: '5%',
+                    width: '80',
                     templet: '#collectMethodTpl'
                 },
+                {field: 'optimizePlanCount', title: '要刷', width: '60',},
+                {field: 'optimizedCount', title: '已刷', width: '60'},
                 {
-                    field: 'optimizePlanCount',
-                    title: '要刷',
-                    width: '5%',
+                    field: 'invalidRefreshCount',
+                    title: '无效',
+                    width: '60',
                     hide: true
                 },
-                {field: 'optimizedCount', title: '已刷', width: '5%', hide: true},
-                {field: 'invalidRefreshCount', title: '无效', width: '5%'},
-                {field: 'status', title: '状态', width: '5%'},
+                {
+                    field: 'status',
+                    title: '状态',
+                    width: '60',
+                    templet: '#statusTpl'
+                },
                 {
                     field: 'paymentStatus',
                     title: '付费状态',
-                    width: '5%',
+                    width: '80',
                     hide: true
                 },
-                {field: 'remarks', title: '备注', width: '8%', hide: true},
-                {field: 'failedCause', title: '失败原因', width: '8%',},
+                {field: 'remarks', title: '备注', width: '100', hide: true},
+                {field: 'failedCause', title: '失败原因', width: '80', hide: true},
                 // {title: '操作', align: 'center',fixed:'right', width: '10%' , templet: '#operationTpl'}
             ]],
             height: 'full-95',
 
             done: function (res, curr, count) {
+                console.log(res)
             }
         });
 
