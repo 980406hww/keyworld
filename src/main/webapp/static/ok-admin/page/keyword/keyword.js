@@ -109,7 +109,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             defaultToolbar: ['filter'],
             contentType: 'application/json',
             cols: [[
-                {filed: 'uuid', type: 'checkbox', fixed: "left", width: '3%'},
+                {filed: 'uuid', type: 'checkbox', width: '3%'},
                 {
                     field: 'contactPerson',
                     title: '用户名称',
@@ -122,7 +122,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 {field: 'bearPawNumber', title: '熊掌号', width: '5%'},
                 // {field: 'originalUrl', title: '原始链接', width: '15%',},
                 // {field: 'terminalType', title: '终端', width: '5%'},
-                {field: 'title', title: '标题', width: '10%'},
+                {field: 'title', title: '标题', width: '18%'},
 
                 {field: 'indexCount', title: '指数', width: '5%', hide: true},
                 {
@@ -138,7 +138,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                     hide: true
                 },
                 {field: 'searchEngine', title: '搜索引擎', width: '6%'},
-                {field: 'optimizeGroupName', title: '优化分组', width: '6%'},
+                {field: 'optimizeGroupName', title: '优化分组', width: '8%'},
                 {field: 'machineGroup', title: '机器分组', width: '6%'},
                 {field: 'city', title: '目标城市', width: '6%', hide: true},
 
