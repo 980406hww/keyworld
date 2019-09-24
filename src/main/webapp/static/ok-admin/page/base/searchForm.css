@@ -114,3 +114,16 @@
 .my-collapse .layui-inline {
     height: 30px;
 }
+
+.layui-table-cell {
+    display: table-cell;
+    vertical-align: middle;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    word-break:break-all;
+}
+
+.layui-table-header {
+    padding-right: 9px;
+}
