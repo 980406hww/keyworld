@@ -319,13 +319,13 @@
         </if>
 
         <if test="keywordCriteria.terminalType != null || keywordCriteria.terminalType != ''">
-            AND fTerminalType = #{keywordCriteria.terminalType}
+            AND ck.fTerminalType = #{keywordCriteria.terminalType}
         </if>
         <if test="keywordCriteria.searchEngine != null and keywordCriteria.searchEngine != ''">
-            AND fSearchEngine =  #{keywordCriteria.searchEngine}
+            AND ck.fSearchEngine = #{keywordCriteria.searchEngine}
         </if>
         <if test="keywordCriteria.customerKeywordSource != null and keywordCriteria.customerKeywordSource != ''">
-            AND fCustomerKeywordSource =  #{keywordCriteria.customerKeywordSource}
+            AND ck.fCustomerKeywordSource = #{keywordCriteria.customerKeywordSource}
         </if>
         <if test="keywordCriteria.status != null and keywordCriteria.status != ''">
             AND ck.fStatus = #{keywordCriteria.status}
@@ -421,13 +421,13 @@
             AND ck.fFailedCause = #{keywordCriteria.failedCause}
         </if>
         <if test="keywordCriteria.terminalType != null || keywordCriteria.terminalType != ''">
-            AND fTerminalType = #{keywordCriteria.terminalType}
+            AND ck.fTerminalType = #{keywordCriteria.terminalType}
         </if>
         <if test="keywordCriteria.searchEngine != null and keywordCriteria.searchEngine != ''">
-            AND fSearchEngine =  #{keywordCriteria.searchEngine}
+            AND ck.fSearchEngine = #{keywordCriteria.searchEngine}
         </if>
         <if test="keywordCriteria.customerKeywordSource != null and keywordCriteria.customerKeywordSource != ''">
-            AND fCustomerKeywordSource =  #{keywordCriteria.customerKeywordSource}
+            AND ck.fCustomerKeywordSource = #{keywordCriteria.customerKeywordSource}
         </if>
         <if test="keywordCriteria.status != null and keywordCriteria.status != ''">
             AND ck.fStatus = #{keywordCriteria.status}
@@ -528,7 +528,7 @@
 
     <select id="getKeywordCountByKeywordCriteria" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria" resultType="int">
         SELECT
-        count(1)
+        COUNT(1)
         FROM
         t_customer_keyword ck,
         t_customer c

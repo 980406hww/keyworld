@@ -57,7 +57,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             type: 'get',
             success: function (data) {
                 $("#userName").empty();
-                $("#userName").append('<option value="">请选择所属用户</option>');
+                $("#userName").append('<option value="">所属用户</option>');
                 $.each(data, function (index, item) {
                     $('#userName').append(
                         '<option value="' + item.loginName + '">'
@@ -81,7 +81,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             data: JSON.stringify({'terminalType': 'All'}),
             success: function (data) {
                 $("#searchEngine").empty();
-                $("#searchEngine").append('<option value="">请选择搜索引擎</option>');
+                $("#searchEngine").append('<option value="">搜索引擎</option>');
                 $.each(data.data, function (index, item) {
                     $('#searchEngine').append(
                         '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素

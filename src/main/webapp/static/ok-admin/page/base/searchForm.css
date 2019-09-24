@@ -64,15 +64,38 @@
     height: 30px;
 }
 
-.layui-inline .layui-form-label{
+.my-hide .layui-inline .layui-form-label {
     height: 30px;
     line-height: 12px;
-    width: 120px;
+    width: 90px;
+    padding: 8px 0;
 }
 
-.layui-form-item .layui-input-inline {
-    height: 30px;
+.out-condition .layui-select-title {
+    width: 140px;
 }
+
+.out-condition .layui-inline .layui-form-label {
+    height: 30px;
+    line-height: 12px;
+    width: 90px;
+    padding: 8px 0;
+}
+
+.out-condition .layui-unselect .layui-form-select {
+    padding: 0 0;
+
+}
+
+.out-condition .layui-input-inline .layui-input-text {
+    height: 30px;
+    width: 110px;
+}
+
+/*.layui-inline .layui-input-inline {
+    height: 30px;
+    width: 120px;
+}*/
 /*
 #searchForm {
     position: fixed;
