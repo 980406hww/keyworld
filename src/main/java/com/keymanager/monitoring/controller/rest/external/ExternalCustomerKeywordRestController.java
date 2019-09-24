@@ -495,12 +495,9 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         try {
             if (validUser(userName, password)) {
                 if (position > -1) {
-                    customerKeywordService
-                        .updateCustomerKeywordPosition(customerKeywordUuid, position,
-                            Utils.getCurrentTimestamp(), ip, city);
+                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp(), ip, city);
                 } else {
-                    customerKeywordService
-                        .updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
+                    customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
                 }
                 if (StringUtil.isNotNullNorEmpty(clientID)) {
                     machineInfoService.updateMachineInfoForCapturePosition(clientID);
@@ -508,7 +505,6 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
             logger.error("updateCustomerKeywordPosition:        " + ex.getMessage());
         }
         return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
