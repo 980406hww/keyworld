@@ -2048,6 +2048,7 @@
                 shadeClose: true,
                 resize: false,
                 area: '600px',
+                offset:'40px',
                 btn: ['确认', '取消'],
                 yes: function (index) {
                     let p_d = {};
@@ -2074,6 +2075,7 @@
                     layer.confirm('确认保存？', {
                         icon: 3,
                         title: '收费满意度',
+                        offset:'120px',
                         btn: ['确认', '取消']
                         , yes: function (index_) {
                             $.ajax({
@@ -2128,13 +2130,13 @@
                     c.innerHTML = `<span style="color: #006529">满意</span>`;
                     break;
                 case 3:
-                    c.innerHTML = `<span style="color: #628000">合适</span>`;
+                    c.innerHTML = `<span style="color: #628000">一般</span>`;
                     break;
                 case 2:
-                    c.innerHTML = `<span style="color: #e95500">较差</span>`;
+                    c.innerHTML = `<span style="color: #e95500">差</span>`;
                     break;
                 default:
-                    c.innerHTML = `<span style="color: #ff0000">特别差</span>`;
+                    c.innerHTML = `<span style="color: #ff0000">非常差</span>`;
                     break;
             }
         };
@@ -2149,8 +2151,8 @@
                 for (let i = 0; i < chargeStatusValue; i++) {
                     s[i].classList.add('hs');
                 }
-                document.getElementById('chargeStatus').innerHTML = chargeStatusText;
             }
+            document.getElementById('chargeStatus').innerHTML = chargeStatusText;
         };
 
         window.clickXx = function (e) {
@@ -2167,13 +2169,13 @@
                     chargeStatusText = `<span style="color: #006529">满意</span>`;
                     break;
                 case 3:
-                    chargeStatusText = `<span style="color: #628000">合适</span>`;
+                    chargeStatusText = `<span style="color: #628000">一般</span>`;
                     break;
                 case 2:
-                    chargeStatusText = `<span style="color: #e95500">较差</span>`;
+                    chargeStatusText = `<span style="color: #e95500">差</span>`;
                     break;
                 default:
-                    chargeStatusText = `<span style="color: #ff0000">特别差</span>`;
+                    chargeStatusText = `<span style="color: #ff0000">非常差</span>`;
                     break;
             }
             chargeStatusValue = j;
@@ -2188,7 +2190,7 @@
                         active['reload'].call(this);
                         sign = false;
                     }*/
-                });
+                },'40px');
         };
 
         let tips_ = null;
@@ -2233,19 +2235,19 @@
                                     msg += '满意';
                                     break;
                                 case 3:
-                                    msg += '合适';
+                                    msg += '一般';
                                     break;
                                 case 5:
                                     msg += '非常满意';
                                     break;
                                 case 2:
-                                    msg += '较差';
+                                    msg += '差';
                                     break;
                                 case 1:
-                                    msg += '特别差';
+                                    msg += '非常差';
                                     break;
                                 default:
-                                    msg += '合适';
+                                    msg += '一般';
                                     break;
                             }
                             if (res.data.chargeStatusMsg !== ''){
@@ -2258,6 +2260,8 @@
                         }
                     }
                 });
+            } else {
+                tips_ = layer.tips('暂无数据~', e, {tips: 1,time:0});
             }
         };
 
@@ -2347,6 +2351,7 @@
                             shadeClose: true,
                             resize: false,
                             area: '700px',
+                            offset:'40px'
                         });
                     } else if (res.code === 300) {
                         show_layer_msg('暂无收费记录数据', 5);
@@ -2383,6 +2388,7 @@
                 shadeClose: true,
                 resize: false,
                 area: '420px',
+                offset:'40px',
                 btn: ['确认', '取消'],
                 yes: function (index) {
                     let v = document.getElementById('tagNames').value;
@@ -2411,6 +2417,7 @@
                     layer.confirm('确认修改？', {
                         icon: 3,
                         title: '修改标签',
+                        offset:'120px',
                         btn: ['确认', '取消'] //可以无限个按钮
                         , yes: function (index_) {
                             $.ajax({
@@ -2453,7 +2460,7 @@
                         active['reload'].call(this);
                         sign = false;
                     }
-                });
+                },'40px');
         }
 
         // 修改
@@ -2466,7 +2473,7 @@
                         // active['reload'].call(this);
                         sign = false;
                     }
-                })
+                },'40px')
         };
 
         // 收费
@@ -2485,7 +2492,7 @@
                         active['reload'].call(this);
                         sign = false;
                     }
-                })
+                },'40px');
         };
 
         window.commitNoteBook = function (e) {
@@ -2615,7 +2622,7 @@
                     shadeClose: true,
                     resize: false,
                     area: '700px',
-                    offset: '180px',
+                    offset:'40px',
                     success: function () {
                         document.getElementById('customerUuid').value = uuid;
                     }
@@ -2768,7 +2775,7 @@
                     });
                 }, function () {
 
-                })
+                },'40px')
         };
 
         // 修改选中站点优化组关联的操作组合
@@ -2779,7 +2786,7 @@
                 show_layer_msg('请选择要修改优化组关联的操作组合的站点！！', 5);
                 return false;
             }
-            layer.confirm("确定要修改所选站点优化组关联的操作组合吗？", {icon: 3, title: '修改操作组合'}, function (index) {
+            layer.confirm("确定要修改所选站点优化组关联的操作组合吗？", {icon: 3, offset:'120px',title: '修改操作组合'}, function (index) {
                 let groupNameArr = [];
                 $.each(checkStatus.data, function (i, v) {
                     if (v.pcGroup !== null) {
@@ -2852,7 +2859,7 @@
                     });
                 }, function () {
 
-                }
+                },'40px'
             );
         };
 
@@ -2861,7 +2868,7 @@
          * @param uuid
          */
         window.delQZSetting = function (uuid) {
-            layer.confirm('真的删除该站点吗', function (index) {
+            layer.confirm('真的删除该站点吗',{ offset:'120px'}, function (index) {
                 $.ajax({
                     url: '/internal/qzsetting/delete2/' + uuid,
                     headers: {
@@ -2900,7 +2907,7 @@
                 show_layer_msg('请选择要操作的站点', 5);
                 return
             }
-            layer.confirm("确定要删除所选站点吗", {icon: 3, title: '删除所选'}, function (index) {
+            layer.confirm("确定要删除所选站点吗", {icon: 3,  offset:'120px',title: '删除所选'}, function (index) {
                 var postData = {};
                 postData.uuids = uuidArr;
                 $.ajax({
@@ -2938,7 +2945,7 @@
                 show_layer_msg('请选择要操作的站点', 5);
                 return;
             }
-            layer.confirm("确定要修改所选站点吗", {icon: 3, title: '修改所选'}, function (index) {
+            layer.confirm("确定要修改所选站点吗", {icon: 3, offset:'120px', title: '修改所选'}, function (index) {
                 let uuids = "";
                 $.each(data, function (index, item) {
                     uuids += (index === 0 ? "" : ",") + item.uuid;
@@ -2989,7 +2996,7 @@
             } else if (renewalStatus === 4) {
                 msg = "确定要将选中整站续费状态更为其他吗?";
             }
-            layer.confirm(msg, {icon: 3, title: '修改所选'}, function (index) {
+            layer.confirm(msg, {icon: 3,  offset:'120px',title: '修改所选'}, function (index) {
                 let uuids = "";
                 $.each(data, function (index, item) {
                     uuids += (index === 0 ? "" : ",") + item.uuid;
@@ -3045,6 +3052,7 @@
                 shadeClose: true,
                 resize: false,
                 area: '420px',
+                offset:'40px',
                 btn: ['确认', '取消'],
                 success: function (layero, index) {
                     document.getElementById('tagNames').value = old_text;
@@ -3078,6 +3086,7 @@
                     layer.confirm('确认修改', {
                         icon: 3,
                         title: '修改标签',
+                        offset:'120px',
                         btn: ['确认', '取消'],
                         yes: function (index_1) {
                             $.ajax({
