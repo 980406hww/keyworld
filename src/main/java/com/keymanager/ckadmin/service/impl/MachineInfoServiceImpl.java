@@ -93,7 +93,11 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public void changeTerminalType(String clientID, String terminalType) {
-
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        if(machineInfo != null){
+            machineInfo.setTerminalType(terminalType);
+            machineInfoDao.updateById(machineInfo);
+        }
     }
 
     @Override
@@ -114,7 +118,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public void updateMachineInfo(MachineInfo machineInfo) {
-
+        machineInfoDao.updateById(machineInfo);
     }
 
     @Override
@@ -139,7 +143,8 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public MachineInfo getMachineInfo(String clientID, String terminalType) {
-        return null;
+        MachineInfo machineInfo = machineInfoDao.getMachineInfoByMachineID(clientID, terminalType);
+        return machineInfo;
     }
 
     @Override
@@ -189,7 +194,9 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public void changeStatus(String clientID) {
-
+        MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+        machineInfo.setValid(!machineInfo.getValid());
+        machineInfoDao.updateById(machineInfo);
     }
 
     @Override
@@ -362,7 +369,8 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public void batchUpdateMachineInfo(MachineInfoBatchUpdateCriteria machineInfoBatchUpdateCriteria) {
-
+        String[] clientIDs = machineInfoBatchUpdateCriteria.getMachineInfo().getClientID().split(",");
+        machineInfoDao.batchUpdateMachineInfo(clientIDs, machineInfoBatchUpdateCriteria.getMi(), machineInfoBatchUpdateCriteria.getMachineInfo());
     }
 
     @Override

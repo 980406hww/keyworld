@@ -51,6 +51,7 @@
                     var postData = {};
                     postData.clientIDs = clientIDs;
                     postData.targetMachineGroup = data.field.machineGroup
+                    console.log(postData)
                     $.ajax({
                         url: '/internal/machineManage/updateMachineGroup',
                         type: 'post',

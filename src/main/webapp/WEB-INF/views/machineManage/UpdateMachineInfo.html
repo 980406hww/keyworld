@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改终端信息</title>
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+</head>
+<body>
+<div class="ok-body" id="UpdateMachineDialog">
+
+    <form class="layui-form layui-form-pane ok-form" lay-filter="UpdateMachineInfo">
+        <div class="layui-form-item">
+            <label class="layui-form-label">机器分组</label>
+            <div class="layui-input-block">
+                <input type="text" id="machineGroup" name="machineGroup" lay-verify="required" placeholder="请输入机器分组" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">允许换组</label>
+            <div class="layui-input-block">
+                <input type="radio" name="allowSwitchGroup" value="0" title="不允许" checked>
+                <input type="radio" name="allowSwitchGroup" value="1" title="允许">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">流转分组</label>
+            <div class="layui-input-block">
+                <input type="text" id="switchGroupName" name="switchGroupName" lay-verify="required" placeholder="请输入流转分组" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">主机</label>
+            <div class="layui-input-block">
+                <input type="text" id="host" name="host" lay-verify="required" placeholder="请输入主机" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">端口</label>
+            <div class="layui-input-block">
+                <input type="text" id="port" name="port" lay-verify="required" placeholder="请输入端口" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">VNC和操作系统用户名</label>
+            <div class="layui-input-block">
+                <input type="text" id="csUserName" name="csUserName" lay-verify="required" value="Administrator" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">VPS后台系统电脑ID</label>
+            <div class="layui-input-block">
+                <input type="text" id="vpsBackendSystemComputerID" name="vpsBackendSystemComputerID" lay-verify="required" placeholder="请输入VPS后台系统电脑ID" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">VPS后台系统密码</label>
+            <div class="layui-input-block">
+                <input type="text" id="vpsBackendSystemPassword" name="vpsBackendSystemPassword" lay-verify="required" placeholder="请输入VPS后台系统密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">宽带账号</label>
+            <div class="layui-input-block">
+                <input type="text" id="broadbandAccount" name="broadbandAccount" lay-verify="required" placeholder="请输入宽带账号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">宽带密码</label>
+            <div class="layui-input-block">
+                <input type="text" id="broadbandPassword" name="broadbandPassword" lay-verify="required" placeholder="请输入宽带密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="commit">确定</button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script>
+    var layui_ = null
+    var clientID_ = null
+
+    function initMachineInfo(clientID) {
+        clientID_ = clientID
+        if (layui_ != null) {
+            setForm(layui_, clientID_);
+        }
+    }
+
+    function setForm(l, clientID){
+        var postData = {}
+        postData.clientID = clientID
+        l.jquery.ajax({
+            url: '/internal/machineManage/getMachineInfo/' + clientID,
+                type: 'post',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                success: function (res) {
+                    var data = res.data
+                    if (res.code === 200) {
+                        layui.form.val("UpdateMachineInfo", data);
+                    } else {
+                        l.layer.msg(res.msg);
+                    }
+                }
+        });
+    }
+
+    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+        var form = layui.form;
+        var okLayer = layui.okLayer;
+        var $ = layui.jquery;
+
+        if (clientID_ != null) {
+            setForm(layui, clientID_);
+        } else {
+            layui_ = layui;
+        }
+
+        function isChecked(id) {
+            var color = $("#UpdateMachineDialog").find("#" + id).parent().css("color");
+            console.log(color)
+            if(color == "rgb(255, 0, 0)") {
+                return "1";
+            } else {
+                return "0";
+            }
+        }
+
+        form.on("submit(commit)", function (data) {
+            layer.confirm('确认修改？', {
+                icon: 3,
+                title: '修改机器分组',
+                btn: ['确认', '取消'],
+                yes: function (index) {
+                    var machineInfo = {};
+                    machineInfo = data.field;
+                    machineInfo.clientID = clientID_;
+                    // if(clientID_ != null){
+                    //     var mi = {};
+                    //     mi.machineGroup = isChecked("machineGroup");
+                    //     mi.allowSwitchGroup = isChecked("allowSwitchGroup");
+                    //     mi.switchGroupName = isChecked("switchGroupName");
+                    //     mi.host = isChecked("host");
+                    //     mi.port = isChecked("port");
+                    //     mi.userName = isChecked("csUserName");
+                    //     mi.broadbandAccount = isChecked("broadbandAccount");
+                    //     mi.broadbandPassword = isChecked("broadbandPassword");
+                    //     mi.vpsBackendSystemComputerID = isChecked("vpsBackendSystemComputerID");
+                    //     mi.vpsBackendSystemPassword = isChecked("vpsBackendSystemPassword");
+                    // }
+                    // postData.mi = mi;
+                    $.ajax({
+                        url: '/internal/machineManage/updateMachineInfo',
+                        type: 'post',
+                        data: JSON.stringify(machineInfo),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        timeout: 5000,
+                        success: function (res) {
+                            if (res.code === 200) {
+                                layer.close(index);
+                                okLayer.msg.greenTick("保存成功", function () {
+                                    parent.window.sign = true;
+                                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                                });
+                            } else {
+                                layui.layer.msg(res.msg);
+                            }
+                        }
+                    });
+                },
+                btn2: function (index) {
+                    layer.close(index);
+                }
+            });
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

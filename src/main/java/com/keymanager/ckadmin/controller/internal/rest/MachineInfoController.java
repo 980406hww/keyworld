@@ -2,9 +2,11 @@ package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.criteria.MachineInfoBatchUpdateCriteria;
 import com.keymanager.ckadmin.criteria.MachineInfoCriteria;
 import com.keymanager.ckadmin.entity.MachineInfo;
 import com.keymanager.ckadmin.entity.UserPageSetup;
+import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.MachineInfoService;
 import com.keymanager.ckadmin.service.PerformanceService;
 import com.keymanager.ckadmin.service.UserPageSetupService;
@@ -84,6 +86,63 @@ public class MachineInfoController extends SpringMVCBaseController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/toUpdateMachineInfo", method = RequestMethod.GET)
+    public ModelAndView toUpdateMachineInfo(){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/UpdateMachineInfo");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/batchUpdateMachineInfo", method = RequestMethod.POST)
+    public ResultBean batchUpdateMachineInfo(@RequestBody MachineInfoBatchUpdateCriteria machineInfoBatchUpdateCriteria) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            machineInfoService.batchUpdateMachineInfo(machineInfoBatchUpdateCriteria);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/updateMachineInfo", method = RequestMethod.POST)
+    public ResultBean updateMachineInfo(@RequestBody MachineInfo machineInfo) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            machineInfoService.updateMachineInfo(machineInfo);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequestMapping(value = "/getMachineInfo/{clientID}", method = RequestMethod.POST)
+    public ResultBean getMachineInfo(@PathVariable("clientID") String clientID, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            MachineInfo machineInfo = machineInfoService.getMachineInfo(clientID, terminalType);
+            resultBean.setCode(200);
+            resultBean.setData(machineInfo);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
     @RequiresPermissions("/internal/machineInfo/updateMachineGroup")
     @RequestMapping(value = "/updateMachineGroup",method = RequestMethod.POST)
     public ResultBean batchUpdateMachineGroup(@RequestBody MachineInfoCriteria machineInfoCriteria) {
@@ -134,6 +193,41 @@ public class MachineInfoController extends SpringMVCBaseController {
             List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
             String downloadProgramType = (String) requestMap.get("downloadProgramType");
             machineInfoService.reopenMachineInfo(clientIDs, downloadProgramType);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/changeStatus")
+    @RequestMapping(value = "/changeStatus/{clientID}", method = RequestMethod.POST)
+    public ResultBean changeStatus(@PathVariable("clientID") String clientID){
+        ResultBean resultBean = new ResultBean();
+        try {
+            machineInfoService.changeStatus(clientID);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/changeTerminalType")
+    @RequestMapping(value = "/changeTerminalType", method = RequestMethod.POST)
+    public ResultBean changeTerminalType(@RequestBody Map<String, Object> requestMap, HttpServletRequest request){
+        ResultBean resultBean = new ResultBean();
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        String clientID = (String) requestMap.get("clientID");
+        try {
+            machineInfoService.changeTerminalType(clientID, TerminalTypeEnum.PC.name().equals(terminalType) ? TerminalTypeEnum.Phone.name() :
+                    TerminalTypeEnum.PC.name());
             resultBean.setCode(200);
         } catch (Exception e) {
             logger.error(e.getMessage());

@@ -76,23 +76,23 @@
             contentType: 'application/json',
             cols: [[
                 {filed: 'uuid', align: 'center', type: 'checkbox', width: '42'},
-                {field: 'clientID', align: 'center', title: '客户端ID', width: '72'},
-                {field: 'machineGroup', align: 'center', title: '机器分组', width: '72'},
+                {field: 'clientIDs', align: 'center', title: '客户端ID', width: '72', templet: '#clientIDs'},
+                {field: 'machineGroups', align: 'center', title: '机器分组', width: '72', templet: '#machineGroups'},
                 {field: 'renewalDate', align: 'center', title: '续费日期', width: '72', templet: '#toRenewalDate'},
                 {field: 'versionInfo', align: 'center', title: '现版本<br>目标版本', width: '72',templet: '#showVersionInfo'},
-                {field: 'restartCount', align: 'center', title: '重启数/重启状态<br>失败次数', width: '120'},
+                {field: 'restartCountAndFailCount', align: 'center', title: '重启数/重启状态<br>失败次数', width: '120', templet: '#restartCountAndFailCount'},
                 {field: 'cityAndStatus', align: 'center', title: '所在城市<br>终端状态', width: '128', templet: '#cityAndStatus'},
-                {field: 'cpuCount', align: 'center', title: 'CPU核数<br>内存', width: '70'},
-                {field: 'freeSpace', align: 'center', title: '剩余空间', width: '72'},
+                {field: 'cpuCounts', align: 'center', title: 'CPU核数<br>内存', width: '70', templet: '#cpuCounts'},
+                {field: 'freeSpaces', align: 'center', title: '剩余空间', width: '72', templet: '#freeSpaces'},
                 {field: 'lastVisitTimeAndRestartTime', align: 'center', title: '最新工作时间<br>重启时间', width: '100', templet: '#lastVisitTimeAndRestartTime'},
                 {field: 'restartOrderingTimeAndLastSendNotificationTime', align: 'center', title: '重启排序时间<br>发送通知时间', width: '100', templet: '#restartOrderingTimeAndLastSendNotificationTime'},
                 {field: 'optimizationSucceedCountAndOptimizationTotalCount', align: 'center', title: '成功次数<br>操作次数', width: '72', templet: '#optimizationSucceedCountAndOptimizationTotalCount'},
                 {field: 'broadbandAccountAndBroadbandPassword', align: 'center', title: '宽带账号<br>宽带密码', width: '72', templet: '#broadbandAccountAndBroadbandPassword'},
-                {field: 'runningProgramType', align: 'center', title: '运行程序类型', width: '100'},
+                {field: 'runningProgramTypes', align: 'center', title: '运行程序类型', width: '100', templet: '#runningProgramTypes'},
                 {field: 'startUpStatusAndDownloadProgramType', align: 'center', title: '开机状态<br>下载程序类型', width: '92', templet: '#startUpStatusAndDownloadProgramType'},
                 {field: 'valids', align: 'center', title: '状态', width: '72', templet: '#valid'},
-                {field: 'upgradeFailedReason', align: 'center', title: '失败原因', width: '72'},
-                {field: 'vpsBackendSystemComputerID', align: 'center', title: '服务器ID', width: '72'},
+                {field: 'upgradeFailedReasons', align: 'center', title: '失败原因', width: '72', templet: '#upgradeFailedReasons'},
+                {field: 'vpsBackendSystemComputerIDs', align: 'center', title: '服务器ID', width: '72', templet: '#vpsBackendSystemComputerIDs'},
                 {title: '操作', templet: '#operationTpl', align: 'center',fixed: "right",width: '188'}
             ]],
             height: 'full-53',
@@ -169,7 +169,7 @@
             }else{
 
             }
-            okLayer.open("首页 / 终端列表 / 修改机器分组", "/internal/machineManage/toUpdateMachineGroup", "30%", "25%", function (layero) {
+            okLayer.open("首页 / 终端列表 / 修改机器分组", "/internal/machineManage/toUpdateMachineGroup", "30%", "30%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initData(changeType, postData);
             },function(){
                 if(sign){
@@ -272,8 +272,102 @@
                 case 'deleteMachine':
                     deleteMachine(data.clientID);
                     break;
+                case 'toUpdateMachineInfo':
+                    toUpdateMachineInfo(data.clientID);
+                    break;
+                case 'changeStatus(stop)':
+                    changeStatus('stop', data.clientID);
+                    break;
+                case 'changeStatus(start)':
+                    changeStatus('start', data.clientID);
+                    break;
+                case 'changeTerminalType':
+                    changeTerminalType(data.clientID);
+                    break;
             }
         });
+
+        function changeTerminalType(clientID) {
+            var postData = {};
+            postData.clientID = clientID;
+            layer.confirm('确定要变更终端类型吗?' , {
+                icon: 3,
+                title: '改变终端类型',
+                btn: ['确认', '取消']
+                , yes: function () {
+                    $.ajax({
+                        url: '/internal/machineManage/changeTerminalType',
+                        type: 'POST',
+                        headers: {
+                            "Accept": 'application/json',
+                            "Content-Type": 'application/json'
+                        },
+                        data: JSON.stringify(postData),
+                        success: function (res) {
+                            if (res.code === 200) {
+                                active['reload'].call(this);
+                                layer.msg("操作成功")
+                            } else {
+                                layer.msg(res.msg)
+                            }
+                        },
+                        error: function () {
+                            layer.msg('未知错误，请稍后重试！！')
+                        }
+                    });
+                }, btn2: function (index) {
+                    layer.close(index);
+                }
+            });
+        }
+
+        function changeStatus(flag, clientID) {
+            var title = ''
+            if(flag == 'stop'){
+                title = '确认要暂停监控这台终端吗？'
+            }else{
+                title = '确认要开始监控这台终端吗？'
+            }
+            layer.confirm(title , {
+                icon: 3,
+                title: '监控终端状态',
+                btn: ['确认', '取消']
+                , yes: function () {
+                    $.ajax({
+                        url: '/internal/machineManage/changeStatus/' + clientID,
+                        type: 'POST',
+                        headers: {
+                            "Accept": 'application/json',
+                            "Content-Type": 'application/json'
+                        },
+                        success: function (res) {
+                            if (res.code === 200) {
+                                active['reload'].call(this);
+                                layer.msg("操作成功")
+                            } else {
+                                layer.msg(res.msg)
+                            }
+                        },
+                        error: function () {
+                            layer.msg('未知错误，请稍后重试！！')
+                        }
+                    });
+                }, btn2: function (index) {
+                    layer.close(index);
+                }
+            });
+        }
+
+        function toUpdateMachineInfo(clientID) {
+            okLayer.open("首页 / 终端列表 / 修改终端信息", "/internal/machineManage/toUpdateMachineInfo", "35%", "60%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initMachineInfo(clientID);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            })
+        }
 
         function deleteMachine(clientID) {
             layer.confirm('确认删除该机器？', {
@@ -396,58 +490,332 @@
     </div>
 </script>
 
+<script type="text/html" id="clientIDs">
+    {{# var isValidClient = true }}
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+                <font color="#FF0000">{{d.clientID}}</font>
+    {{#          isValidClient = false }}
+    {{#     }else if(d.orange){ }}
+                <font color="#e86e33">{{d.clientID}}</font>
+    {{#          isValidClient = false }}
+    {{#     }else if(d.yellow){ }}
+                <font color="#ef00ff">{{d.clientID}}</font>
+    {{#          isValidClient = false }}
+    {{#     }else{ }}
+                <font color="green">{{d.clientID}}</font>
+    {{#     } }}
+    {{# }else{ }}
+        <font color="green">{{d.clientID}}</font>
+    {{# } }}
+    {{# if(!isValidClient){ }}
+        <span name="invalidClient" id="span_{{d.clientID}}"></span>
+    {{# } }}
+</script>
+
+<script type="text/html" id="machineGroups">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+                <font color="#FF0000">{{d.machineGroup}}</font>
+    {{#     }else if(d.orange){ }}
+                <font color="#e86e33">{{d.machineGroup}}</font>
+    {{#     }else if(d.yellow){ }}
+                <font color="#ef00ff">{{d.machineGroup}}</font>
+    {{#     }else{ }}
+                <font color="green">{{d.machineGroup}}</font>
+    {{#     } }}
+    {{# }else{ }}
+        <font color="green">{{d.machineGroup}}</font>
+    {{# } }}
+</script>
+
 <script type="text/html" id="toRenewalDate">
-    {{layui.util.toDateString(d.renewalDate,'MM-dd')}}
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{layui.util.toDateString(d.renewalDate,'MM-dd')}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{layui.util.toDateString(d.renewalDate,'MM-dd')}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{layui.util.toDateString(d.renewalDate,'MM-dd')}}</font>
+    {{#     }else{ }}
+    <font color="green">{{layui.util.toDateString(d.renewalDate,'MM-dd')}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{layui.util.toDateString(d.renewalDate,'MM-dd')}}</font>
+    {{# } }}
 </script>
 
 <script type="text/html" id="showVersionInfo">
-    {{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{# } }}
 </script>
 
 <script type="text/html" id="cityAndStatus">
-    {{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="cpuCounts">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.cpuCount}}<br>{{d.memory}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.cpuCount}}<br>{{d.memory}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.cpuCount}}<br>{{d.memory}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.cpuCount}}<br>{{d.memory}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.cpuCount}}<br>{{d.memory}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="freeSpaces">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.freeSpace}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.freeSpace}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.freeSpace}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.freeSpace}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.freeSpace}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="restartCountAndFailCount">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
+    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
+    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
+    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
+    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
+    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{# } }}
 </script>
 
 <script type="text/html" id="lastVisitTimeAndRestartTime">
-    {{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}
     <br>
-    {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}
+    {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}</font>
+    {{# } }}
 </script>
 
 <script type="text/html" id="restartOrderingTimeAndLastSendNotificationTime">
-    {{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}
     <br>
-    {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}
+    {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}</font>
+    {{# } }}
 </script>
 
 <script type="text/html" id="optimizationSucceedCountAndOptimizationTotalCount">
-    {{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>{{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>{{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>{{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>{{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>{{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>{{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}</font>
+    {{# } }}
 </script>
 
 <script type="text/html" id="broadbandAccountAndBroadbandPassword">
-    {{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}</font>
+    {{# } }}
 </script>
 
 <script type="text/html" id="startUpStatusAndDownloadProgramType">
-    {{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="runningProgramTypes">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.runningProgramType == null ? "" : d.runningProgramType}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.runningProgramType == null ? "" : d.runningProgramType}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.runningProgramType == null ? "" : d.runningProgramType}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.runningProgramType == null ? "" : d.runningProgramType}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.runningProgramType == null ? "" : d.runningProgramType}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="upgradeFailedReasons">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.upgradeFailedReason == null ? "" : d.upgradeFailedReason}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.upgradeFailedReason == null ? "" : d.upgradeFailedReason}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.upgradeFailedReason == null ? "" : d.upgradeFailedReason}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.upgradeFailedReason == null ? "" : d.upgradeFailedReason}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.upgradeFailedReason == null ? "" : d.upgradeFailedReason}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="vpsBackendSystemComputerIDs">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.vpsBackendSystemComputerID == null ? "" : d.vpsBackendSystemComputerID}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.vpsBackendSystemComputerID == null ? "" : d.vpsBackendSystemComputerID}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.vpsBackendSystemComputerID == null ? "" : d.vpsBackendSystemComputerID}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.vpsBackendSystemComputerID == null ? "" : d.vpsBackendSystemComputerID}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.vpsBackendSystemComputerID == null ? "" : d.vpsBackendSystemComputerID}}</font>
+    {{# } }}
 </script>
 
 <script type="text/html" id="valid">
-    {{d.valid ? "监控中" : "暂停监控"}}
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.valid ? "监控中" : "暂停监控"}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.valid ? "监控中" : "暂停监控"}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.valid ? "监控中" : "暂停监控"}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.valid ? "监控中" : "暂停监控"}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.valid ? "监控中" : "暂停监控"}}</font>
+    {{# } }}
 </script>
 
 <script type="text/html" id="operationTpl">
     <div class="layui-btn-group">
         <button class="layui-btn layui-btn-xs">VNC</button>
-        <button class="layui-btn layui-btn-xs">修改</button>
+        <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
+            <button class="layui-btn layui-btn-xs" lay-event="toUpdateMachineInfo">修改</button>
+        </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/machineInfo/deleteMachineInfo">
             <button class="layui-btn layui-btn-xs" lay-event="deleteMachine">删除</button>
         </@shiro.hasPermission>
     </div>
     <br>
     <div class="layui-btn-group">
-        <button class="layui-btn layui-btn-xs">开始监控</button>
-        <button class="layui-btn layui-btn-xs">变更终端类型</button>
+        <@shiro.hasPermission name="/internal/machineInfo/changeStatus">
+        {{# if(d.valid){ }}
+            <button class="layui-btn layui-btn-xs" lay-event="changeStatus(stop)">暂停监控</button>
+        {{# }else{ }}
+            <button class="layui-btn layui-btn-xs" lay-event="changeStatus(start)">开始监控</button>
+        {{# } }}
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/machineInfo/changeTerminalType">
+            <button class="layui-btn layui-btn-xs" lay-event="changeTerminalType">变更终端类型</button>
+        </@shiro.hasPermission>
     </div>
 </script>
 </body>
