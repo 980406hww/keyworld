@@ -546,7 +546,7 @@
         }
 
         /*五角星样式*/
-        .hs, .cs {
+        .hs {
             color: #ffba00 !important;
         }
     </style>
@@ -2005,14 +2005,17 @@
 
             let chargeStatus = `<div class="layui-form-item">
                                 <label style="width: 120px;line-height: 22px" class="layui-form-label">客户满意度：</label>
-                                <div style="margin-left: 120px" class="layui-input-block">
-                                  <ul class="clean-float">
-                                      <li style="padding-left: 0" onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
-                                      <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
-                                      <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
-                                      <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
-                                      <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
-                                  </ul>
+                                <div style="margin-left: 120px;display: flex" class="layui-input-block">
+                                    <div style="flex: 1">
+                                        <ul class="clean-float">
+                                             <li style="padding-left: 0" onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
+                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
+                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
+                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
+                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>
+                                        </ul>
+                                    </div>
+                                    <div id="chargeStatus" style="flex: 2;font-size: 15px;line-height: 42px;height: 40px;letter-spacing: 1px"></div>
                                 </div>
                               </div>
                                <div class="layui-form-item layui-form-text">`;
@@ -2101,28 +2104,166 @@
             });
         }
 
+        let chargeStatusText = ``;
+        let chargeStatusValue = 0;
         window.over = function (e) {
+            if (chargeStatusValue !== 0) {
+                let s = e.parentElement.children;
+                for (let i = 0; i < 5; i++) {
+                    s[i].classList.remove('hs');
+                }
+            }
+            let i = 0;
             while (e) {
                 e.classList.add('hs');
                 e = e.previousElementSibling;
+                i++;
+            }
+            let c = document.getElementById('chargeStatus');
+            switch (i) {
+                case 5:
+                    c.innerHTML = `<span style="color: green">非常满意</span>`;
+                    break;
+                case 4:
+                    c.innerHTML = `<span style="color: #006529">满意</span>`;
+                    break;
+                case 3:
+                    c.innerHTML = `<span style="color: #628000">合适</span>`;
+                    break;
+                case 2:
+                    c.innerHTML = `<span style="color: #e95500">较差</span>`;
+                    break;
+                default:
+                    c.innerHTML = `<span style="color: #ff0000">特别差</span>`;
+                    break;
             }
         };
 
         window.out = function (e) {
+            let s = e.parentElement.children;
             while (e) {
                 e.classList.remove('hs');
                 e = e.previousElementSibling;
             }
+            if (chargeStatusValue !== 0) {
+                for (let i = 0; i < chargeStatusValue; i++) {
+                    s[i].classList.add('hs');
+                }
+                document.getElementById('chargeStatus').innerHTML = chargeStatusText;
+            }
         };
 
         window.clickXx = function (e) {
-            let s = e.parentElement.children;
-            for (let i = 0; i < 5; i++) {
-                s[i].classList.remove('cs');
-            }
+            let j = 0;
             while (e) {
-                e.classList.add('cs');
                 e = e.previousElementSibling;
+                j++;
+            }
+            switch (j) {
+                case 5:
+                    chargeStatusText = `<span style="color: green">非常满意</span>`;
+                    break;
+                case 4:
+                    chargeStatusText = `<span style="color: #006529">满意</span>`;
+                    break;
+                case 3:
+                    chargeStatusText = `<span style="color: #628000">合适</span>`;
+                    break;
+                case 2:
+                    chargeStatusText = `<span style="color: #e95500">较差</span>`;
+                    break;
+                default:
+                    chargeStatusText = `<span style="color: #ff0000">特别差</span>`;
+                    break;
+            }
+            chargeStatusValue = j;
+        };
+
+        window.showChargeStatus = function(uuid){
+            okLayer.open("其他 / 前往全站设置信息 / 收费状态记录", "/internal/qzchargestatus/toQzChargeStatus", "60%", "70%",
+                function (layero) {
+                    window[layero.find("iframe")[0]["name"]].initForm(uuid);
+                }, function () {
+                    /*if (sign) {
+                        active['reload'].call(this);
+                        sign = false;
+                    }*/
+                });
+        };
+
+        let tips_ = null;
+
+        window.showTip = function (e, uuid) {
+            if (uuid !== null && uuid !== "null" && uuid !== "" && uuid !== "0" && uuid !== 0) {
+                $.ajax({
+                    url: '/internal/qzchargestatus/getOneQzChargeStatus/' + uuid,
+                    type: 'get',
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.code === 200) {
+                            let bz = '';
+                            let msg = '上次更新时间：';
+                            msg += new Date(res.data.createTime).format('yyyy年MM月dd日');
+                            msg += '，续费状态：';
+                            switch (res.data.chargeStatus) {
+                                case 1:
+                                    msg += '续费';
+                                    bz = '，客户评价：';
+                                    break;
+                                case 0:
+                                    msg += '暂停续费';
+                                    bz = '，客户评价：';
+                                    break;
+                                case 3:
+                                    msg += '下架';
+                                    bz = '，下架原因：';
+                                    break;
+                                default:
+                                    msg += '暂无';
+                                    break;
+                            }
+                            if(res.data.chargeMoney !== 0){
+                                msg += '，收费金额：';
+                                msg += res.data.chargeMoney;
+                                msg += '元';
+                            }
+                            msg += '，客户满意度：';
+                            switch (res.data.customerSatisfaction) {
+                                case 4:
+                                    msg += '满意';
+                                    break;
+                                case 3:
+                                    msg += '合适';
+                                    break;
+                                case 5:
+                                    msg += '非常满意';
+                                    break;
+                                case 2:
+                                    msg += '较差';
+                                    break;
+                                case 1:
+                                    msg += '特别差';
+                                    break;
+                                default:
+                                    msg += '合适';
+                                    break;
+                            }
+                            if (res.data.chargeStatusMsg !== ''){
+                                msg += bz;
+                                msg += res.data.chargeStatusMsg;
+                            }
+                            tips_ = layer.tips(msg, e, {tips: 1,time:0});
+                        } else {
+                            layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
+                        }
+                    }
+                });
+            }
+        };
+
+        window.closeTip = function(){
+            if (tips_!==null){
+                layer.close(tips_);
             }
         };
 
@@ -3114,6 +3255,9 @@
                     <a class="blue" href="javascript:showChargeLog('{{d.uuid}}')">收费记录</a>
                 </span>
             </@shiro.hasPermission>
+                <span>
+                    <a class="blue" href="javascript:showChargeStatus('{{d.uuid}}')">续费状态记录</a>
+                </span>
             <@shiro.hasPermission name="/internal/qzsetting/save">
                 <span>
                     <a class="blue" href="javascript:" onclick="showSettingDialog('{{d.uuid}}')">修改</a>
@@ -3174,20 +3318,18 @@
             </div>
             <div class="layui-col-md12 line1">
                 <div class="layui-col-md12">
-                    <span>
-                        <a href="javascript:;">
-                            {{#  if(d.renewalStatus === 1) { }}
-                                <span style="color: green;">续费中</span>
-                            {{# }else if(d.renewalStatus === 0) { }}
-                                <span style="color: palevioletred;">暂停续费</span>
-                            {{# }else if(d.renewalStatus === 2) { }}
-                                <span style="color: mediumseagreen;">首次收费</span>
-                            {{# }else if(d.renewalStatus === 3) { }}
-                                <span style="color: red;">下架</span>
-                            {{# }else if(d.renewalStatus === 4) { }}
-                                <span style="color: mediumseagreen;">其他</span>
-                            {{# } }}
-                        </a>
+                    <span style="cursor: pointer" onmouseover="showTip(this,'{{d.chargeStatusUuid}}')" onmouseout="closeTip()">
+                        {{#  if(d.renewalStatus === 1) { }}
+                            <span style="color: green;">续费中</span>
+                        {{# }else if(d.renewalStatus === 0) { }}
+                            <span style="color: palevioletred;">暂停续费</span>
+                        {{# }else if(d.renewalStatus === 2) { }}
+                            <span style="color: mediumseagreen;">首次收费</span>
+                        {{# }else if(d.renewalStatus === 3) { }}
+                            <span style="color: red;">下架</span>
+                        {{# }else if(d.renewalStatus === 4) { }}
+                            <span style="color: mediumseagreen;">其他</span>
+                        {{# } }}
                     </span>
                 </div>
                 <div class="layui-col-md12">

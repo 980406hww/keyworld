@@ -1,16 +1,26 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.criteria.QZChargeStatusCriteria;
+import com.keymanager.ckadmin.entity.QZChargeStatus;
 import com.keymanager.ckadmin.service.QZChargeStatusService;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping("/internal/qzchargestatus")
@@ -19,7 +29,23 @@ public class QZChargeStatusController {
     @Resource(name = "qzChargeStatusService2")
     QZChargeStatusService qzChargeStatusService;
 
-    //点击收费按钮触发的方法
+    /**
+     * 跳转收费状态记录页面
+     */
+    @GetMapping(value = "/toQzChargeStatus")
+    public ModelAndView toQzChargeStatus() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("qzsettings/qzChargeStatus");
+        return mv;
+    }
+
+    /**
+     * 收费状态
+     *
+     * @param dataMap 数据列表
+     * @param session 获得登录名
+     * @return 成功或失败信息
+     */
     @RequestMapping(value = "/saveQZChargeStatus", method = RequestMethod.POST)
     public ResultBean saveQZChargeStatus(@RequestBody Map<String, Object> dataMap, HttpSession session) {
         ResultBean resultBean = new ResultBean();
@@ -36,6 +62,39 @@ public class QZChargeStatusController {
             String msg = null == dataMap.get("customerMsg") ? "" : (String) dataMap.get("customerMsg");
             String loginName = (String) session.getAttribute("username");
             qzChargeStatusService.saveQZChargeStatus(uuids, money, status, satisfaction, msg, loginName);
+        } catch (Exception e) {
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    @GetMapping(value = "/getOneQzChargeStatus/{uuid}")
+    public ResultBean getOneQzChargeStatus(@PathVariable Long uuid) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        try {
+            resultBean.setData(qzChargeStatusService.selectById(uuid));
+        } catch (Exception e) {
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    @PostMapping(value = "/getQzChargeStatus")
+    public ResultBean getQzChargeStatus(@RequestBody QZChargeStatusCriteria criteria) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(0);
+        Page<QZChargeStatus> page = new Page<>(criteria.getPage(), criteria.getLimit());
+        page.setOrderByField("createTime");
+        page.setAsc(false);
+        Wrapper<QZChargeStatus> wrapper = new EntityWrapper<>();
+        wrapper.where("fQZSettingUuid = {0}", criteria.getQzSettingUuid());
+        try {
+            page = qzChargeStatusService.selectPage(page, wrapper);
+            resultBean.setData(page.getRecords());
+            resultBean.setCount(page.getTotal());
         } catch (Exception e) {
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
