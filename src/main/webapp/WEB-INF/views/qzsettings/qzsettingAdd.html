@@ -563,9 +563,7 @@
                 </div>
             </div>
             </#if>
-        </div>
-    </form>
-</div>
+    </div>
 <div style="height: 58px;"></div>
 <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
     <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
@@ -1473,45 +1471,36 @@
             //     });
             // } else {
             commit(p_d, function (init) {
+
             });
             // }
             return false;
         });
 
         function commit(p_d, call) {
-            layer.confirm('确认保存？', {
-                icon: 3,
-                title: '保存数据',
-                btn: ['确认', '取消']
-                , yes: function (index) {
-                    $.ajax({
-                        url: '/internal/qzsetting/saveQZSetting', ///internal/qzsetting/save
-                        type: 'post',
-                        data: JSON.stringify(p_d),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        success: function (res) {
-                            if (res.code === 200) {
-                                if (res.data) {
-                                    call(res.data);
-                                }
-                                layer.close(index);
-                                okLayer.msg.greenTick("保存成功", function () {
-                                    parent.window.sign = true;
-                                    parent.layer.close(parent.layer.getFrameIndex(window.name));
-                                });
-                            } else {
-                                layer.msg(res.msg === null ? '未知错误' : res.msg);
-                            }
-                        },
-                        error: function () {
-                            layer.msg("保存失败");
+            $.ajax({
+                url: '/internal/qzsetting/saveQZSetting', ///internal/qzsetting/save
+                type: 'post',
+                data: JSON.stringify(p_d),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        if (res.data) {
+                            call(res.data);
                         }
-                    });
-                }, btn2: function (index) {
-                    layer.close(index);
+                        okLayer.msg.greenTick("保存成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        layer.msg(res.msg, {icon: 5, time: 1000});
+                    }
+                },
+                error: function () {
+                    layer.msg("保存失败");
                 }
             });
         }

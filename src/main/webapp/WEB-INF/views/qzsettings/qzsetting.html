@@ -2029,32 +2029,21 @@
                     }
                     d.targetQZCategoryTags = tags;
                     d.uuids = ids;
-                    layer.confirm('确认修改？', {
-                        icon: 3,
-                        title: '修改标签',
-                        btn: ['确认', '取消'] //可以无限个按钮
-                        , yes: function (index_) {
-                            $.ajax({
-                                url: '/internal/qzsetting/updQzCategoryTags',
-                                type: 'post',
-                                data: JSON.stringify(d),
-                                headers: {
-                                    'Accept': 'application/json',
-                                    'Content-Type': 'application/json'
-                                },
-                                success: function (res) {
-                                    if (res.code === 200) {
-                                        show_layer_msg('修改成功', 6);
-                                        active['reload'].call(this);
-                                        layer.close(index);
-                                        layer.close(index_);
-                                    } else {
-                                        layer.msg(res.msg);
-                                    }
-                                }
-                            });
-                        }, btn2: function (index) {
-                            layer.close(index);
+                    $.ajax({
+                        url: '/internal/qzsetting/updQzCategoryTags',
+                        type: 'post',
+                        data: JSON.stringify(d),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        success: function (res) {
+                            if (res.code === 200) {
+                                layer.close(index);
+                                show_layer_msg('修改成功', 6, true);
+                            } else {
+                                layer.msg(res.msg);
+                            }
                         }
                     });
                 }, btn2: function (index) {
@@ -2443,7 +2432,7 @@
          * @param uuid
          */
         window.delQZSetting = function (uuid) {
-            layer.confirm('真的删除该站点吗', function (index) {
+            layer.confirm('确认要删除该站点吗', function (index) {
                 $.ajax({
                     url: '/internal/qzsetting/delete2/' + uuid,
                     headers: {
@@ -2656,47 +2645,37 @@
                     let postData = {};
                     postData.qzSettingUuid = uuid;
                     postData.qzCategoryTags = qzCategoryTags;
-                    layer.confirm('确认修改', {
-                        icon: 3,
-                        title: '修改标签',
-                        btn: ['确认', '取消'],
-                        yes: function (index_1) {
-                            $.ajax({
-                                url: "/internal/qzcategory/saveCategoryLabel",
-                                type: "POST",
-                                data: JSON.stringify(postData),
-                                headers: {
-                                    'Accept': 'application/json',
-                                    'Content-Type': 'application/json'
-                                },
-                                success: function (res) {
-                                    if (res.code === 200) {
-                                        let text = "";
-                                        for (let item in categoryTags) {
-                                            text += "," + categoryTags[item];
-                                        }
-                                        text = text.substr(1);
-                                        if (text === "") {
-                                            text = "暂无";
-                                        }
-                                        $("a#tagName_" + uuid).text(text);
-                                        $("a#tagName_" + uuid).prop("title", text);
-                                        show_layer_msg("修改成功", 6);
-                                        active['reload'].call(this);
-                                        layer.close(index_1);
-                                        layer.close(index_0);
-                                    } else {
-                                        show_layer_msg(res.msg, 5);
-                                    }
+                    $.ajax({
+                        url: "/internal/qzcategory/saveCategoryLabel",
+                        type: "POST",
+                        data: JSON.stringify(postData),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        success: function (res) {
+                            if (res.code === 200) {
+                                let text = "";
+                                for (let item in categoryTags) {
+                                    text += "," + categoryTags[item];
                                 }
-                            });
-                        }, btn2: function (index_1) {
-                            layer.close(index_1);
+                                text = text.substr(1);
+                                if (text === "") {
+                                    text = "暂无";
+                                }
+                                $("a#tagName_" + uuid).text(text);
+                                $("a#tagName_" + uuid).prop("title", text);
+                                layer.close(index_0);
+                                show_layer_msg("修改成功", 6, true);
+                            } else {
+                                show_layer_msg(res.msg, 5);
+                            }
                         }
                     });
                 }, btn2: function (index_0) {
                     layer.close(index_0);
                 }, cancel: function() {
+
                 }
             })
         };
