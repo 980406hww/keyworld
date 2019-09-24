@@ -112,18 +112,16 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 {filed: 'uuid', type: 'checkbox', fixed: "left", width: '3%'},
                 {
                     field: 'contactPerson',
-                    title: '用户名称',
+                    title: '客户名称',
                     width: '8%',
                     templet: '#toCustomerKeywordTpl'
                 },
                 {field: 'keyword', title: '关键字', width: '10%'},
                 {field: 'url', title: '链接', width: '15%'},
-
                 {field: 'bearPawNumber', title: '熊掌号', width: '5%'},
                 // {field: 'originalUrl', title: '原始链接', width: '15%',},
                 // {field: 'terminalType', title: '终端', width: '5%'},
                 {field: 'title', title: '标题', width: '10%'},
-
                 {field: 'indexCount', title: '指数', width: '5%', hide: true},
                 {
                     field: 'initialPosition',

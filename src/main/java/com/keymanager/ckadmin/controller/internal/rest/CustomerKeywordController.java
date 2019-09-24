@@ -14,6 +14,7 @@ import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.ReflectUtils;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
+import com.keymanager.ckadmin.webDo.KeywordCountDO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -344,5 +346,45 @@ public class CustomerKeywordController {
             return resultBean;
         }
         return resultBean;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/toUploadKeywords/{businessType}/{terminalType}/{customerUuid}/{excelType}")
+    public ModelAndView toUploadKeywords(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
+        @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable("excelType") String excelType) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/UploadKeywordByExcel");
+
+        mv.addObject("entry", businessType);
+        mv.addObject("terminalType", terminalType);
+        mv.addObject("customerUuid", customerUuid);
+        mv.addObject("excelType", excelType);
+        return mv;
+    }
+
+    //关键字Excel上传(简化版)
+    @RequiresPermissions("/internal/customerKeyword/uploadCustomerKeywords")
+    @RequestMapping(value = "/uploadCustomerKeywords2", method = RequestMethod.POST)
+    public ResultBean uploadCustomerKeywords(KeywordCountDO keywordCountDO, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+
+        String userName = (String) request.getSession().getAttribute("username");
+
+        try {
+            boolean uploaded = customerKeywordService
+                .handleExcel(keywordCountDO.getFile().getInputStream(), keywordCountDO.getExcelType(), keywordCountDO.getCustomerUuid(),
+                    keywordCountDO.getEntryType(), keywordCountDO.getTerminalType(), userName);
+            if (uploaded) {
+                resultBean.setMsg("文件上传成功");
+            } else {
+                resultBean.setMsg("文件解析异常");
+            }
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
     }
 }

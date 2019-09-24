@@ -8,6 +8,7 @@ import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -58,4 +59,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void updateCustomerKeywordFromUI(CustomerKeyword customerKeyword, String userName);
 
     void updateOptimizePlanCount(KeywordCriteria keywordCriteria);
+
+    boolean handleExcel(InputStream inputStream, String excelType, int parseInt, String entry, String terminalType, String userName) throws Exception;
 }

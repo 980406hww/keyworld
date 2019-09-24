@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>导入关键字</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+</head>
+<body>
+<div class="ok-body">
+
+    <form class="layui-form layui-form-pane ok-form" enctype="multipart/form-data" id="uploadForm">
+        <input type="text" hidden value="<#if customerUuid?exists>${customerUuid}</#if>" id="customerUuid" name="customerUuid"/>
+        <input type="text" hidden value="<#if entry?exists>${entry}</#if>" id="entryType" name="entryType"/>
+        <input type="text" hidden value="<#if terminalType?exists>${terminalType}</#if>" id="terminalType" name="terminalType"/>
+        <input type="text" hidden value="<#if excelType?exists>${excelType}</#if>" id="excelType" name="excelType"/>
+
+        <div class="layui-form-item">
+            <div class="layui-upload">
+                <button type="button" class="layui-btn layui-btn-normal" id="test8">选择文件</button>
+            </div>
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" id="upload">上传</button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script>
+    var machineInfoType = null;
+
+    layui.use(["form", "okLayer", "jquery", "layer", "upload"], function () {
+        var form = layui.form;
+        var okLayer = layui.okLayer;
+        var $ = layui.jquery;
+        var upload = layui.upload;
+
+        //选完文件后不自动上传
+        upload.render({
+            elem: '#test8',
+            url: '/internal/customerKeyword/uploadCustomerKeywords',
+            auto: false,
+            accept: 'file',
+            exts: 'xls|xlsx',
+            acceptMime: 'application/vnd.ms-excel, ,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            done: function (res) {
+                okLayer.msg.greenTick("上传成功", function () {
+                    // parent.window.sign = true;
+                    // parent.layer.close(parent.layer.getFrameIndex(window.name));
+                });
+            }
+        });
+
+        $('#upload').click(function () {
+            var fs1 = new FormData($('#uploadForm')[0]);
+            $.ajax({
+                url: '/internal/customerKeyword/uploadCustomerKeywords2',
+                type: 'post',
+                data: fs1,
+                async: false,
+                contentType: false,   //jax 中 contentType 设置为 false 是为了避免 JQuery 对其操作，从而失去分界符，而使服务器不能正常解析文件
+                processData: false,
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        console.log(res.code);
+                        okLayer.msg.greenTick("保存成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        layui.layer.msg(res.msg);
+                    }
+
+                }
+            });
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

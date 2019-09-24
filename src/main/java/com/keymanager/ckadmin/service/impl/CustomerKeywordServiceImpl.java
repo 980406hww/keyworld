@@ -7,6 +7,7 @@ import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.dao.CustomerKeywordDao;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.enums.KeywordEffectEnum;
+import com.keymanager.ckadmin.excel.operator.AbstractExcelReader;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerExcludeKeywordService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
@@ -18,6 +19,7 @@ import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -102,7 +104,6 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         if (StringUtil.isNullOrEmpty(customerKeyword.getOriginalUrl())) {
             customerKeyword.setOriginalUrl(customerKeyword.getUrl());
         }
-/*
         String originalUrl = customerKeyword.getOriginalUrl();
         if (!StringUtil.isNullOrEmpty(originalUrl)) {
             if (originalUrl.indexOf("www.") == 0) {
@@ -113,7 +114,6 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         } else {
             originalUrl = null;
         }
-*/
         customerKeyword.setKeyword(customerKeyword.getKeyword().trim());
 
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
@@ -125,7 +125,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         }
 
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType()) ) {
-            CustomerKeyword customerKeyword1 = customerKeywordDao.getOneSimilarCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getOriginalUrl(), customerKeyword.getTitle());
+            CustomerKeyword customerKeyword1 = customerKeywordDao
+                .getOneSimilarCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), originalUrl,
+                    customerKeyword.getTitle());
             if (customerKeyword1 != null ) {
                 detectCustomerKeywordEffect(customerKeyword, customerKeyword1);
                 return null;
@@ -346,6 +348,39 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public void updateOptimizePlanCount(KeywordCriteria keywordCriteria) {
         customerKeywordDao.updateOptimizePlanCount(keywordCriteria);
+    }
+
+
+    //简化版Excel文件导入
+    @Override
+    public boolean handleExcel(InputStream inputStream, String excelType, int customerUuid, String type, String terminalType, String userName)
+        throws Exception {
+        AbstractExcelReader operator = AbstractExcelReader.createExcelOperator(inputStream, excelType);
+        if (null != operator) {
+            List<CustomerKeyword> customerKeywords = operator.readDataFromExcel();
+            supplementInfo(customerKeywords, customerUuid, type, terminalType);
+            addCustomerKeywords(customerKeywords, userName);
+            return true;
+        }
+        return false;
+    }
+
+    private void supplementInfo(List<CustomerKeyword> customerKeywords, int customerUuid, String type, String terminalType) {
+        for (CustomerKeyword customerKeyword : customerKeywords) {
+            customerKeyword.setCustomerUuid(customerUuid);
+            customerKeyword.setType(type);
+            customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
+            customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+            customerKeyword.setTerminalType(terminalType);
+            customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Excel.name());
+        }
+    }
+
+    private void addCustomerKeywords(List<CustomerKeyword> customerKeywords, String loginName) throws Exception {
+        for (CustomerKeyword customerKeyword : customerKeywords) {
+            customerKeyword.setKeywordEffect("");
+            addCustomerKeyword(customerKeyword, loginName);
+        }
     }
 }
 

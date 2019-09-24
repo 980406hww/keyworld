@@ -5,7 +5,8 @@ window.onload = function () {
     NProgress.done();
 };
 // layui相关
-layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
+layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
+        'layer'],
     function () {
         var element = layui.element;
         var table = layui.table;
@@ -13,6 +14,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         var $ = layui.jquery;
         var laydate = layui.laydate;
         var okLayer = layui.okLayer;
+        var upload = layui.upload;
         //日期范围
         laydate.render({
             elem: '#gtCreateTime',
@@ -226,6 +228,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 case 'change_select_optimizePlanCount':
                     change_select_optimizePlanCount();
                     break;
+                case 'upload_keyword_simple':
+                    upload_keyword('SuperUserSimple');
+                    break;
+                case 'upload_keyword_full':
+                    upload_keyword('SuperUserFull');
+                    break;
                 case 'change_select_customer':
                     change_select_customer();
                     break;
@@ -239,13 +247,32 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
 
         function add_customer_keyword() {
             let customerUuid = $('#customerUuid').val();
-            let type = $('#type').val();
+            let type = $('#typeTmp').val();
             let terminalType = $('#terminalType').val();
             let url = '/internal/customerKeyword/toCustomerKeywordAdd/' + type
                 + '/' + terminalType + '/' + customerUuid;
             okLayer.open("关键字管理 / 客户客户关键字 / 添加关键字", url, "60%", "90%",
                 function (layero) {
 
+                }, function () {
+                    if (sign) {
+                        active['reload'].call(this);
+                        sign = false;
+                    }
+                })
+        }
+
+        function upload_keyword(excelType) {
+            let customerUuid = $('#customerUuid').val();
+            let type = $('#type').val();
+
+            let terminalType = $('#terminalType').val();
+            let url = '/internal/customerKeyword/toUploadKeywords/' + type + '/'
+                + terminalType + '/' + customerUuid + '/' + excelType;
+            let msg = excelType === 'SuperUserSimple' ? '简化版' : '完整版';
+            okLayer.open("关键字管理 / 客户关键字 / Excel上传关键字(" + msg + ")", url, "30%",
+                "25%",
+                function (layero) {
                 }, function () {
                     if (sign) {
                         active['reload'].call(this);
