@@ -790,8 +790,7 @@
                                     '<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
                             }
                         });
-                        terminalSearchEngine.val(
-                            ($('#searchEngine').val() + $('#terminalType').val()) === '' ? '百度PC' : ($('#searchEngine').val() + $('#terminalType').val()));
+                        terminalSearchEngine.val(($('#searchEngine').val() + $('#terminalType').val()) === '' ? '百度PC' : ($('#searchEngine').val() + $('#terminalType').val()));
                         form.render("select");
                     } else {
                         show_layer_msg(res.msg, 5);
@@ -829,7 +828,7 @@
             }
         };
 
-        function get_qzcategory_label_list() {
+        function get_qzcategory_label_list(categoryTag) {
             /*动态加载网站分类标签列表*/
             $.ajax({
                 url: '${ctx.path}/internal/qzsetting/getCategoryTag',
@@ -843,13 +842,14 @@
                             $('#categoryTag').append(
                                 '<option value="' + item + '">' + item.trim() + '</option>');
                         });
+                        $("#categoryTag").val(categoryTag);
                         form.render("select");
                     }
                 }
             });
         }
 
-        function get_active_customer_list() {
+        function get_active_customer_list(customerUuid) {
             /*动态加载客户列表*/
             $.ajax({
                 url: '${ctx.path}/internal/qzsetting/getActiveCustomer',
@@ -864,6 +864,7 @@
                                 '<option value="' + item.uuid + '">' + item.contactPerson.trim()
                                 + '</option>');
                         });
+                        $("#customerUuid").val(customerUuid);
                         form.render("select");
                     }
                 }
@@ -916,20 +917,20 @@
                     height: 'full-112',
                     loading: true,
                     done: function (res, curr, count) {
-                        successTable(res);
+                        successTable(res, whereCondition);
                         initSortRadio(whereCondition);
                     }
                 });
             }
         </@shiro.hasPermission>
 
-        function successTable(res) {
+        function successTable(res, whereCondition) {
             let terminalType = $('#terminalType').val();
             terminalType = terminalType === '' ? 'PC' : terminalType;
             getTerminalSearchEngineMap();
             get_operation_combine_list(terminalType);
-            get_qzcategory_label_list();
-            get_active_customer_list();
+            get_qzcategory_label_list(whereCondition.categoryTag);
+            get_active_customer_list(whereCondition.customerUuid);
             let qz_setting_table = $("#qzSettingTable").parent().find(
                 ".layui-table-main").find("table");
             $.each(res.data, function (idx, val) {
@@ -1085,13 +1086,12 @@
             reload: function () {
                 let condition = $.parseJSON(
                     formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
-                console.log(condition);
                 table.reload('qzSettingTable', {
                     where: condition,
                     page: {
                         curr: 1 //从第一页开始
                     }, done: function (res, curr, c) {
-                        successTable(res);
+                        successTable(res, condition);
                         initSortRadio(condition);
                     }
                 });
@@ -2598,7 +2598,7 @@
         window.searchCustomerKeywords = function (customerUuid, pcGroup, phoneGroup) {
             let searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
             searchCustomerKeywordForm.find("#hideCustomerUuid").val(customerUuid);
-            searchCustomerKeywordForm.find("#hideOptimizeGroupName").val(pcGroup == null ? phoneGroup : pcGroup);
+            searchCustomerKeywordForm.find("#hideOptimizeGroupName").val(pcGroup === 'null' ? phoneGroup : pcGroup);
             searchCustomerKeywordForm.find("#hideStatus").val(1);
             searchCustomerKeywordForm.submit();
         };
