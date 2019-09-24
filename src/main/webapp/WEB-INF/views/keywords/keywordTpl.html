@@ -74,6 +74,16 @@
     {{# } }}
 </script>
 
+<script type="text/html" id="indexCountTpl">
+    {{#  if(d.currentIndexCount === -1) { }}
+    未采集
+    {{#  }else if(d.currentIndexCount === -2) { }}
+    未收录
+    {{# }else{ }}
+    {{= d.currentIndexCount }}
+    {{# } }}
+</script>
+
 <script type="text/html" id="collectMethodTpl">
     {{#  if(d.collectMethod === 'PerDay') { }}
     按天

@@ -123,7 +123,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 // {field: 'originalUrl', title: '原始链接', width: '15%',},
                 // {field: 'terminalType', title: '终端', width: '5%'},
                 {field: 'title', title: '标题', width: '220'},
-                {field: 'indexCount', title: '指数', width: '80'},
+                {field: 'currentIndexCount', title: '指数', width: '80', templet:'#indexCountTpl'},
                 {field: 'initialPosition', title: '初始排名', width: '80'},
                 {field: 'currentPosition', title: '现排名', width: '80'},
                 {field: 'searchEngine', title: '搜索引擎', width: '80'},
@@ -164,7 +164,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             height: 'full-95',
 
             done: function (res, curr, count) {
-                console.log(res)
             }
         });
 
