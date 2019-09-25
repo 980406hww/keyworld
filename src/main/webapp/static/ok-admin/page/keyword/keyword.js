@@ -161,9 +161,20 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 {field: 'failedCause', title: '失败原因', width: '80', hide: true},
                 // {title: '操作', align: 'center',fixed:'right', width: '10%' , templet: '#operationTpl'}
             ]],
-            height: 'full-95',
-
+            height: 'full-100',
             done: function (res, curr, count) {
+                let tables = document.getElementsByTagName('table');
+                if ((tables[2].offsetHeight || tables[2].clientHeight)
+                    > (tables[2].parentElement.offsetHeight
+                        || tables[2].parentElement.clientHeight)) {
+                    document.getElementsByClassName(
+                        'layui-table-header')[0].classList.add(
+                        'details-header');
+                } else {
+                    document.getElementsByClassName(
+                        'layui-table-header')[0].classList.remove(
+                        'details-header');
+                }
             }
         });
 
