@@ -1,4 +1,16 @@
 
+INSERT INTO `db_keyword`.`t_resource`(`fResourceName`, `fUrl`, `fIconCls`,
+	`fParentID`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`,  `fCreateTime`)
+VALUES ('前往全站信息设置', '/internal/qzsetting/toQZSetttings', 'fi-thumbnails',
+	(SELECT r.fUuid FROM t_resource r WHERE r.fUrl = '#' AND r.fResourceName = "其他"), 1, 0, 1, 0, NOW());
+
+
+# 将前往关键字列表权限分配给运营, 技术, 整站销售, 优化角色
+INSERT INTO t_role_resource(fRoleID, fResourceID) SELECT tem_role.fUuid, tem_resource.fUuid FROM (
+		(SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('Operation', 'Technical', 'SEOSales', 'SEO')) tem_role,
+		(SELECT tr.fUuid FROM t_resource tr WHERE tr.fResourceName = '前往全站信息设置') tem_resource);
+
+
 # 全站设置信息子资源移植
 DELIMITER $$
 DROP PROCEDURE IF EXISTS `pro_resource_data_migration`;
@@ -15,19 +27,10 @@ END;
 
 CALL pro_resource_data_migration();
 
+DROP PROCEDURE pro_resource_data_migration;
+
 # 删除原全站设置信息 资源
 DELETE FROM t_resource WHERE fResourceName = '全站设置信息';
-
-INSERT INTO `db_keyword`.`t_resource`(`fResourceName`, `fUrl`, `fIconCls`,
-	`fParentID`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`,  `fCreateTime`)
-VALUES ('前往全站信息设置', '/internal/qzsetting/toQZSetttings', 'fi-thumbnails',
-	(SELECT r.fUuid FROM t_resource r WHERE r.fUrl = '#' AND r.fResourceName = "其他"), 1, 0, 1, 0, NOW());
-
-
-# 将前往关键字列表权限分配给运营, 技术, 整站销售, 优化角色
-INSERT INTO t_role_resource(fRoleID, fResourceID) SELECT tem_role.fUuid, tem_resource.fUuid FROM (
-		(SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('Operation', 'Technical', 'SEOSales', 'SEO')) tem_role,
-		(SELECT tr.fUuid FROM t_resource tr WHERE tr.fResourceName = '前往全站信息设置') tem_resource);
 
 
 # 修改所选站点操作组合

@@ -8,11 +8,12 @@ import com.keymanager.ckadmin.criteria.QZChargeStatusCriteria;
 import com.keymanager.ckadmin.entity.QZChargeStatus;
 import com.keymanager.ckadmin.service.QZChargeStatusService;
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,8 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping("/internal/qzchargestatus")
 public class QZChargeStatusController {
+
+    private static final Logger logger = LoggerFactory.getLogger(QZChargeStatusController.class);
 
     @Resource(name = "qzChargeStatusService2")
     QZChargeStatusService qzChargeStatusService;
@@ -63,6 +66,7 @@ public class QZChargeStatusController {
             String loginName = (String) session.getAttribute("username");
             qzChargeStatusService.saveQZChargeStatus(uuids, money, status, satisfaction, msg, loginName);
         } catch (Exception e) {
+            logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
         }
@@ -76,6 +80,7 @@ public class QZChargeStatusController {
         try {
             resultBean.setData(qzChargeStatusService.selectById(uuid));
         } catch (Exception e) {
+            logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
         }
@@ -96,6 +101,7 @@ public class QZChargeStatusController {
             resultBean.setData(page.getRecords());
             resultBean.setCount(page.getTotal());
         } catch (Exception e) {
+            logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
         }

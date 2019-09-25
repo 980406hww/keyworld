@@ -2029,7 +2029,7 @@
                     }
                     p_d.qzSettingUUids = l;
                     let money = document.getElementById('money');
-                    let satisfaction = document.getElementsByClassName('cs');
+                    let satisfaction = document.getElementsByClassName('hs');
                     let customerMsg = document.getElementById('customerMsg');
                     if (money) {
                         p_d.money = money.value;
@@ -2042,32 +2042,20 @@
                     if (customerMsg) {
                         p_d.customerMsg = customerMsg.value;
                     }
-                    layer.confirm('确认保存？', {
-                        icon: 3,
-                        title: '收费满意度',
-                        offset:'120px',
-                        btn: ['确认', '取消']
-                        , yes: function (index_) {
-                            $.ajax({
-                                url: '/internal/qzchargestatus/saveQZChargeStatus',
-                                type: 'post',
-                                data: JSON.stringify(p_d),
-                                headers: {
-                                    'Accept': 'application/json',
-                                    'Content-Type': 'application/json'
-                                }, success: function (res) {
-                                    if (res.code === 200) {
-                                        show_layer_msg('修改成功', 6);
-                                        active['reload'].call(this);
-                                        layer.close(index_);
-                                        layer.close(index);
-                                    } else {
-                                        layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
-                                    }
-                                }
-                            });
-                        }, btn2: function (index) {
-                            layer.close(index);
+                    $.ajax({
+                        url: '/internal/qzchargestatus/saveQZChargeStatus',
+                        type: 'post',
+                        data: JSON.stringify(p_d),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }, success: function (res) {
+                            if (res.code === 200) {
+                                layer.close(index);
+                                show_layer_msg('修改成功', 6, true);
+                            } else {
+                                layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
+                            }
                         }
                     });
                 }, btn2: function (index) {
@@ -2174,32 +2162,31 @@
                     success: function (res) {
                         if (res.code === 200) {
                             let bz = '';
-                            let msg = '上次更新时间：';
+                            let msg = '<span>上次更新时间：';
                             msg += new Date(res.data.createTime).format('yyyy年MM月dd日');
-                            msg += '，续费状态：';
+                            msg += '</span><br>续费状态：';
                             switch (res.data.chargeStatus) {
                                 case 1:
                                     msg += '续费';
-                                    bz = '，客户评价：';
+                                    bz = '<span>客户评价：';
                                     break;
                                 case 0:
                                     msg += '暂停续费';
-                                    bz = '，客户评价：';
+                                    bz = '<span>客户评价：';
                                     break;
                                 case 3:
                                     msg += '下架';
-                                    bz = '，下架原因：';
+                                    bz = '<span>下架原因：';
                                     break;
                                 default:
                                     msg += '暂无';
                                     break;
                             }
                             if(res.data.chargeMoney !== 0){
-                                msg += '，收费金额：';
+                                msg += '</span><br>收费金额：';
                                 msg += res.data.chargeMoney;
-                                msg += '元';
                             }
-                            msg += '，客户满意度：';
+                            msg += '<span><br>客户满意度：';
                             switch (res.data.customerSatisfaction) {
                                 case 4:
                                     msg += '满意';
@@ -2221,17 +2208,17 @@
                                     break;
                             }
                             if (res.data.chargeStatusMsg !== ''){
-                                msg += bz;
-                                msg += res.data.chargeStatusMsg;
+                                msg += "</span><br>" + bz;
+                                msg += res.data.chargeStatusMsg + "</span>";
                             }
-                            tips_ = layer.tips(msg, e, {tips: 1,time:0});
+                            tips_ = layer.tips(msg, e, {tips: 1, time: 20000, area:'auto', maxWidth: '400'});
                         } else {
-                            layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
+                            show_layer_msg(res.msg);
                         }
                     }
                 });
             } else {
-                tips_ = layer.tips('暂无数据~', e, {tips: 1,time:0});
+                tips_ = layer.tips('暂无数据~', e, {tips: 1, time:0});
             }
         };
 
