@@ -29,7 +29,8 @@ CALL pro_resource_data_migration();
 
 DROP PROCEDURE pro_resource_data_migration;
 
-# 删除原全站设置信息 资源
+# 删除原全站设置信息的 角色-资源信息||资源信息
+DELETE FROM t_role_resource WHERE fResourceID = (SELECT fUuid FROM t_resource WHERE fResourceName = '全站设置信息');
 DELETE FROM t_resource WHERE fResourceName = '全站设置信息';
 
 
