@@ -1045,20 +1045,36 @@
     </update>
 
     <update id="updatePosition">
-        UPDATE
-            t_customer_keyword
-        SET
-            fCurrentPosition = IF(fLastReachStandardDate = CURRENT_DATE(),IF(#{position} > 0 AND #{position} &lt; fCurrentPosition, #{position}, fCurrentPosition), #{position}),
-            fInitialPosition = IFNULL(fInitialPosition, #{position}),
-            fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
-            fTodayFee = if(fLastReachStandardDate = CURRENT_DATE(), if(fTodayFee > #{todayFee} OR #{todayFee} is null, fTodayFee, #{todayFee}), #{todayFee}),
-            fCapturePositionIP = #{ip}, fCapturePositionCity = #{city},
-            <if test="todayFee != null">
-                fLastReachStandardDate = CURRENT_DATE(),
-            </if>
-            fCaptureStatus = 0,
-            fUpdateTime = NOW()
-        WHERE fUuid = #{uuid}
+        <foreach collection="updateCustomerKeywordPositionVos" item="updateCustomerKeywordPositionVo" separator=";">
+            UPDATE t_customer_keyword
+            <set>
+                fCurrentPosition = IF(fLastReachStandardDate = CURRENT_DATE(), IF(#{updateCustomerKeywordPositionVo.position} > 0 AND #{updateCustomerKeywordPositionVo.position} &lt; fCurrentPosition, #{updateCustomerKeywordPositionVo.position}, fCurrentPosition), #{updateCustomerKeywordPositionVo.position}),
+                fInitialPosition = IFNULL(fInitialPosition, #{updateCustomerKeywordPositionVo.position}),
+                fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
+                fCapturePositionIP = #{updateCustomerKeywordPositionVo.ip}, fCapturePositionCity = #{updateCustomerKeywordPositionVo.city},
+                <choose>
+                    <when test="updateCustomerKeywordPositionVo.type == 'qz'">
+                        <if test="needReduceFlag == true">
+                            fOptimizeTodayCount = IF(fKeywordEffect = 'Important', IF(fOptimizePlanCount * ROUND((RAND() * 0.4 + 0.4), 1) &lt; 20, 20, fOptimizePlanCount * ROUND((RAND() * 0.4 + 0.4), 1)), IF(fOptimizePlanCount * ROUND((RAND() * 0.4 + 0.4), 1) &lt; 4, 4, fOptimizePlanCount * ROUND((RAND() * 0.4 + 0.4), 1))),
+                        </if>
+                        <if test="needReduceFlag == false">
+                            fOptimizeTodayCount = IF(fKeywordEffect = 'Important', IF(fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) &lt; 20, 20, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1)), IF(fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) &lt; 4, 4, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1))),
+                        </if>
+                    </when>
+                    <when test="updateCustomerKeywordPositionVo.type == 'pt'">
+                        fOptimizeTodayCount = IF(#{needReduceFlag}, IF(fOptimizePlanCount * ROUND((RAND() * 0.4 + 0.4), 1) &lt; 20, 20, fOptimizePlanCount * ROUND((RAND() * 0.4 + 0.4), 1)), IF(fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) &lt; 20, 20, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1))),
+                    </when>
+                    <otherwise></otherwise>
+                </choose>
+                <if test="updateCustomerKeywordPositionVo.todayFee != null">
+                    fTodayFee = IF(fLastReachStandardDate = CURRENT_DATE(), IF(fTodayFee > #{updateCustomerKeywordPositionVo.todayFee} OR #{updateCustomerKeywordPositionVo.todayFee} IS NULL, fTodayFee, #{updateCustomerKeywordPositionVo.todayFee}), #{updateCustomerKeywordPositionVo.todayFee}),
+                    fLastReachStandardDate = CURRENT_DATE(),
+                </if>
+                fCaptureStatus = 0,
+                fUpdateTime = NOW()
+            </set>
+            WHERE fUuid = #{updateCustomerKeywordPositionVo.uuid}
+        </foreach>
     </update>
 
     <select id="takeOptimizationCountExceptionUsers" resultType="com.keymanager.monitoring.vo.OptimizationCountVO">

@@ -25,4 +25,8 @@
     <delete id="deletePositionSummaryFromAWeekAgo">
         DELETE FROM t_ck_position_summary WHERE fCreateDate &lt; DATE_SUB(CURDATE(), INTERVAL 7 DAY)
     </delete>
+
+    <select id="searchOneWeekPositionByCustomerUuid" resultType="java.lang.Integer">
+        SELECT fPosition FROM t_ck_position_summary WHERE fCustomerKeywordUuid = #{customerKeywordUuid} ORDER BY fCreateDate DESC LIMIT 6
+    </select>
 </mapper>

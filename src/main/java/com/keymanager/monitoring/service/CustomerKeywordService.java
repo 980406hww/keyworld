@@ -4,34 +4,99 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.monitoring.common.email.ObserveOptimizationCountMailService;
-import com.keymanager.monitoring.criteria.*;
+import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
+import com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria;
+import com.keymanager.monitoring.criteria.ExternalCaptureJobCriteria;
+import com.keymanager.monitoring.criteria.GroupSettingCriteria;
+import com.keymanager.monitoring.criteria.KeywordAmountCountCriteria;
+import com.keymanager.monitoring.criteria.KeywordIndexCriteria;
+import com.keymanager.monitoring.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.monitoring.dao.CustomerKeywordDao;
-import com.keymanager.monitoring.entity.*;
-import com.keymanager.monitoring.enums.*;
+import com.keymanager.monitoring.entity.CaptureRankJob;
+import com.keymanager.monitoring.entity.Config;
+import com.keymanager.monitoring.entity.CustomerChargeType;
+import com.keymanager.monitoring.entity.CustomerChargeTypeCalculation;
+import com.keymanager.monitoring.entity.CustomerChargeTypeInterval;
+import com.keymanager.monitoring.entity.CustomerChargeTypePercentage;
+import com.keymanager.monitoring.entity.CustomerKeyword;
+import com.keymanager.monitoring.entity.GroupSetting;
+import com.keymanager.monitoring.entity.MachineInfo;
+import com.keymanager.monitoring.entity.NegativeList;
+import com.keymanager.monitoring.entity.NegativeListUpdateInfo;
+import com.keymanager.monitoring.entity.OperationCombine;
+import com.keymanager.monitoring.entity.QZCaptureTitleLog;
+import com.keymanager.monitoring.entity.QZOperationType;
+import com.keymanager.monitoring.entity.QZSetting;
+import com.keymanager.monitoring.enums.ChargeDataTypeEnum;
+import com.keymanager.monitoring.enums.ChargeTypeEnum;
+import com.keymanager.monitoring.enums.CustomerKeywordCleanTypeEnum;
+import com.keymanager.monitoring.enums.CustomerKeywordDeletionTypeEnum;
+import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
+import com.keymanager.monitoring.enums.EntryTypeEnum;
+import com.keymanager.monitoring.enums.KeywordEffectEnum;
+import com.keymanager.monitoring.enums.QZCaptureTitleLogStatusEnum;
+import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import com.keymanager.monitoring.excel.operator.AbstractExcelReader;
-import com.keymanager.monitoring.vo.*;
+import com.keymanager.monitoring.vo.CodeNameVo;
+import com.keymanager.monitoring.vo.CustomerKeyWordCrawlRankVO;
+import com.keymanager.monitoring.vo.CustomerKeywordEnteredVO;
+import com.keymanager.monitoring.vo.CustomerKeywordForOptimization;
+import com.keymanager.monitoring.vo.CustomerKeywordForOptimizationSimple;
+import com.keymanager.monitoring.vo.CustomerKeywordRankingCountVO;
+import com.keymanager.monitoring.vo.CustomerKeywordSortVO;
+import com.keymanager.monitoring.vo.CustomerKeywordSummaryInfoVO;
+import com.keymanager.monitoring.vo.ExternalCustomerKeywordVO;
+import com.keymanager.monitoring.vo.KeywordSimpleVO;
+import com.keymanager.monitoring.vo.KeywordStatusBatchUpdateVO;
+import com.keymanager.monitoring.vo.OptimizationCountVO;
+import com.keymanager.monitoring.vo.OptimizationKeywordVO;
+import com.keymanager.monitoring.vo.OptimizationMachineVO;
+import com.keymanager.monitoring.vo.OptimizationVO;
+import com.keymanager.monitoring.vo.RequireDeleteKeywordVO;
+import com.keymanager.monitoring.vo.SearchEngineResultItemVO;
+import com.keymanager.monitoring.vo.SearchEngineResultVO;
+import com.keymanager.monitoring.vo.UpdateCustomerKeywordPositionVO;
+import com.keymanager.monitoring.vo.UpdateOptimizedCountSimpleVO;
+import com.keymanager.monitoring.vo.UpdateOptimizedCountVO;
+import com.keymanager.monitoring.vo.customerSourceVO;
+import com.keymanager.monitoring.vo.keywordAmountCountVo;
+import com.keymanager.monitoring.vo.machineGroupQueueVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
+import com.sun.xml.internal.bind.v2.TODO;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import javax.print.DocFlavor.STRING;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.ibatis.annotations.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 @Service
 public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, CustomerKeyword> {
@@ -124,6 +189,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     private final static Map<String, ArrayBlockingQueue> customerKeywordCrawlPTRankQueueMap = new HashMap<String, ArrayBlockingQueue>();
 
     private final static ArrayBlockingQueue checkingEnteredKeywordQueue = new ArrayBlockingQueue<>(5000);
+
+    private static final ConcurrentHashMap<String, LinkedBlockingQueue> customerKeywordUpdatePositionQueueMap = new ConcurrentHashMap<String, LinkedBlockingQueue>();
 
     public void cacheUpdateOptimizedCountResult(UpdateOptimizedCountVO updateOptimizedCountVO){
         updateOptimizedResultQueue.offer(updateOptimizedCountVO);
@@ -1620,28 +1687,34 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.updateOptimizePlanCountForBaiduMap();
     }
 
-    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime, String ip, String city) {
-        Double todayFee = null;
+    public void updateCustomerKeywordPosition(Long customerKeywordUuid, String type, int position, String ip, String city) {
+        // TODO 获取历史排名 进行是否需要降低刷量的计算
+        List<Integer> summaryPositions = customerKeywordPositionSummaryService.searchOneWeekPositionByCustomerUuid(customerKeywordUuid);
+        boolean needReduce = true;
         if (position > 0 && position <= 10) {
-            CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordFee(customerKeywordUuid);
-            if (customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
-                todayFee = customerKeyword.getPositionFirstFee();
-            } else if (customerKeyword.getPositionSecondFee() != null && customerKeyword.getPositionSecondFee() > 0 && position == 2) {
-                todayFee = customerKeyword.getPositionSecondFee();
-            } else if (customerKeyword.getPositionThirdFee() != null && customerKeyword.getPositionThirdFee() > 0 && position == 3) {
-                todayFee = customerKeyword.getPositionThirdFee();
-            } else if (customerKeyword.getPositionForthFee() != null && customerKeyword.getPositionForthFee() > 0 && position == 4) {
-                todayFee = customerKeyword.getPositionForthFee();
-            } else if (customerKeyword.getPositionFifthFee() != null && customerKeyword.getPositionFifthFee() > 0 && position == 5) {
-                todayFee = customerKeyword.getPositionFifthFee();
-            } else if (customerKeyword.getPositionFirstPageFee() != null && customerKeyword.getPositionFirstPageFee() > 0) {
-                todayFee = customerKeyword.getPositionFirstPageFee();
+            for (Integer summaryPosition : summaryPositions) {
+                needReduce = summaryPosition >= 10;
+                if (!needReduce) {
+                    break;
+                }
             }
+        } else {
+            needReduce = false;
         }
-        customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee, ip, city);
-        if (capturePositionQueryTime != null) {
+        String mapKey = type + "####" + needReduce;
+        String queueValue = customerKeywordUuid + "####" + position + "####" + ip + "####" + city;
+        LinkedBlockingQueue linkedBlockingQueue = customerKeywordUpdatePositionQueueMap.get(mapKey);
+        if (null == linkedBlockingQueue) {
+            linkedBlockingQueue = new LinkedBlockingQueue(12000);
+            customerKeywordUpdatePositionQueueMap.put(mapKey, linkedBlockingQueue);
+        }
+        linkedBlockingQueue.offer(queueValue);
+        // 更新排名
+//        customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee, ip, city);
+        // 记录历史排名
+        /*if (capturePositionQueryTime != null) {
             customerKeywordPositionSummaryService.savePositionSummary(customerKeywordUuid, position);
-        }
+        }*/
     }
 
     public CustomerKeywordForCapturePosition getCustomerKeywordForCapturePosition(String terminalType, List<String> groupNames, Long customerUuid,
@@ -1958,8 +2031,15 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         customerKeywordDao.batchUpdateRequireDalete(requireDeleteKeywordVOs);
     }
 
-    public void updateCustomerKeywordQueryTime(Long customerKeywordUuid, Date date) {
-        customerKeywordDao.updateCustomerKeywordQueryTime(customerKeywordUuid, DateUtils.addMinutes(date, -3));
+    public void updateCustomerKeywordQueryTime(Long customerKeywordUuid, long date) {
+        // TODO 抓取排名失败关键词 放入队列，进行批量更新
+        LinkedBlockingQueue linkedBlockingQueue = customerKeywordUpdatePositionQueueMap.get("updateCustomerKeywordQueryTime");
+        if (null == linkedBlockingQueue) {
+            linkedBlockingQueue = new LinkedBlockingQueue(12000);
+            customerKeywordUpdatePositionQueueMap.put("updateCustomerKeywordQueryTime", linkedBlockingQueue);
+        }
+        linkedBlockingQueue.offer(customerKeywordUuid + "####" + date);
+//        customerKeywordDao.updateCustomerKeywordQueryTime(customerKeywordUuid, DateUtils.addMinutes(date, -3));
     }
 
     public void updateKeywordCustomerUuid(List<String> keywordUuids, String customerUuid, String terminalType) {
@@ -2191,6 +2271,80 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 customerKeywords.add(customerKeyword);
             }
             customerKeywordDao.batchUpdateIndexAndOptimizePlanCount(customerKeywords);
+        }
+    }
+
+    public void autoUpdateCustomerKeywordPosition() {
+        if (!customerKeywordUpdatePositionQueueMap.isEmpty()) {
+            for (Entry<String, LinkedBlockingQueue> entry : customerKeywordUpdatePositionQueueMap.entrySet()) {
+                if ("updateCustomerKeywordQueryTime".equals(entry.getValue())) {
+                    autoUpdateCustomerKeywordQueryTime(customerKeywordUpdatePositionQueueMap.get("updateCustomerKeywordQueryTime"));
+                } else {
+                    updateCustomerKeywordAndCheckNeedReduceOptimizeTodayCount(entry.getKey(), entry.getValue());
+                }
+            }
+        }
+    }
+
+    private void autoUpdateCustomerKeywordQueryTime(LinkedBlockingQueue queue) {
+        if (null != queue && queue.size() > 0) {
+            int count = 1000;
+            do {
+                String uuidAndDate = (String) queue.poll();
+                String[] strings = uuidAndDate.split("####");
+                Long customerKeywordUuid = Long.parseLong(strings[0]);
+                Date capturePositionQueryTime = new Date(Long.parseLong(strings[1]));
+                customerKeywordDao.updateCustomerKeywordQueryTime(customerKeywordUuid, DateUtils.addMinutes(capturePositionQueryTime, -3));
+                count--;
+            } while (count > 0 && queue.size() > 0);
+        }
+    }
+
+    private void updateCustomerKeywordAndCheckNeedReduceOptimizeTodayCount(String mapKey, LinkedBlockingQueue queue) {
+        if (null != queue) {
+            String[] typeAndNeedReduceFlag = mapKey.split("####");
+            String type = typeAndNeedReduceFlag[0];
+            boolean needReduceFlag = Boolean.parseBoolean(typeAndNeedReduceFlag[1]);
+            List<UpdateCustomerKeywordPositionVO> updateCustomerKeywordPositionVos = new ArrayList<>();
+            if (queue.size() > 0) {
+                do {
+                    String queueValue = (String) queue.poll();
+                    String[] values = queueValue.split("####");
+                    long customerKeywordUuid = Long.parseLong(values[0]);
+                    int position = Integer.parseInt(values[1]);
+                    Double todayFee = null;
+                    // 计算收费，更新pt关键词的最近达标时间 fLastReachStandardDate
+                    if (type.equals(EntryTypeEnum.pt.name())) {
+                        if (position > 0 && position <= 10) {
+                            CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordFee(customerKeywordUuid);
+                            if (customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
+                                todayFee = customerKeyword.getPositionFirstFee();
+                            } else if (customerKeyword.getPositionSecondFee() != null && customerKeyword.getPositionSecondFee() > 0 && position == 2) {
+                                todayFee = customerKeyword.getPositionSecondFee();
+                            } else if (customerKeyword.getPositionThirdFee() != null && customerKeyword.getPositionThirdFee() > 0 && position == 3) {
+                                todayFee = customerKeyword.getPositionThirdFee();
+                            } else if (customerKeyword.getPositionForthFee() != null && customerKeyword.getPositionForthFee() > 0 && position == 4) {
+                                todayFee = customerKeyword.getPositionForthFee();
+                            } else if (customerKeyword.getPositionFifthFee() != null && customerKeyword.getPositionFifthFee() > 0 && position == 5) {
+                                todayFee = customerKeyword.getPositionFifthFee();
+                            } else if (customerKeyword.getPositionFirstPageFee() != null && customerKeyword.getPositionFirstPageFee() > 0) {
+                                todayFee = customerKeyword.getPositionFirstPageFee();
+                            }
+                        }
+                    }
+                    UpdateCustomerKeywordPositionVO updateCustomerKeywordPositionVo = new UpdateCustomerKeywordPositionVO();
+                    updateCustomerKeywordPositionVo.setCustomerKeywordUuid(customerKeywordUuid);
+                    updateCustomerKeywordPositionVo.setType(type);
+                    updateCustomerKeywordPositionVo.setPosition(position);
+                    updateCustomerKeywordPositionVo.setTodayFee(todayFee);
+                    updateCustomerKeywordPositionVo.setCapturePositionQueryTime(Utils.getCurrentTimestamp());
+                    updateCustomerKeywordPositionVo.setIp(values[2]);
+                    updateCustomerKeywordPositionVo.setCity(values[3]);
+                    updateCustomerKeywordPositionVos.add(updateCustomerKeywordPositionVo);
+                } while (updateCustomerKeywordPositionVos.size() < 1000 && queue.size() > 0);
+            }
+            // TODO foreach批量修改排名
+            customerKeywordDao.updatePosition(updateCustomerKeywordPositionVos, needReduceFlag);
         }
     }
 }
