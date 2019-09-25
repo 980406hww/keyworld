@@ -161,6 +161,18 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             height: 'full-100',
 
             done: function (res, curr, count) {
+                let tables = document.getElementsByTagName('table');
+                if ((tables[2].offsetHeight || tables[2].clientHeight)
+                    > (tables[2].parentElement.offsetHeight
+                        || tables[2].parentElement.clientHeight)) {
+                    document.getElementsByClassName(
+                        'layui-table-header')[0].classList.add(
+                        'details-header');
+                } else {
+                    document.getElementsByClassName(
+                        'layui-table-header')[0].classList.remove(
+                        'details-header');
+                }
             }
         });
 
