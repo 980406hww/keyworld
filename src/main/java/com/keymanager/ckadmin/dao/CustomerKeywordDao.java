@@ -87,4 +87,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<CustomerKeyword> searchCustomerKeywordInfo(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
 
     List<Map> selectAllKeywordAndUrl(@Param("customerUuid") Long customerUuid, @Param("terminalType") String terminalType);
+
+    void updateSearchEngine(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
 }

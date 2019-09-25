@@ -50,7 +50,7 @@
     </div>
 
 
-    <div class="my-hide" id="operationContent">
+    <div class="my-opration-hide" id="operationContent">
 
         <div class="layui-btn-group">
             <button class="layui-btn layui-btn-sm" id="upload_keyword_simple" lay-event="upload_keyword_simple">
@@ -102,13 +102,13 @@
 
         <div class="layui-btn-group">
             <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
-            <button class="layui-btn layui-btn-sm" id="change_optimizedGroup_byPosition" lay-event="change_optimizedGroup_byPosition">
+            <!--<button class="layui-btn layui-btn-sm" id="change_optimizedGroup_byPosition" lay-event="change_optimizedGroup_byPosition">
                 按排名修改优化组
-            </button>
+            </button>-->
             <button class="layui-btn layui-btn-sm" id="change_current_optimizedGroup" lay-event="change_current_optimizedGroup">
                 修改当前优化组
             </button>
-            <button class="layui-btn layui-btn-sm" id="change_selected_optimizedGroup" lay-event="change_selected_optimizedGroup">
+            <button class="layui-btn layui-btn-sm" id="change_select_optimizedGroup" lay-event="change_select_optimizedGroup">
                 修改选中优化组
             </button>
             </@shiro.hasPermission>
@@ -174,12 +174,7 @@
             <button class="layui-btn layui-btn-sm" id="clear_customer_keyword_title" lay-event="clear_customer_keyword_title">
                 清空客户标题
             </button>
-
         </div>
-
-
-
-
 
     </div>
 </script>

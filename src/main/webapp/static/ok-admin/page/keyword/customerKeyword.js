@@ -5,6 +5,7 @@ window.onload = function () {
     NProgress.done();
 };
 // layui相关
+
 layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         'layer'], function () {
     var element = layui.element;
@@ -227,11 +228,11 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 change_select_optimizePlanCount();
                 break;
 
-            /*case 'change_select_customer':
+            case 'change_select_customer':
                 change_select_customer();
-                break;*/
+                break;
             case 'batch_delete':
-                batch_delete();
+                batch_delete_byUuids();
                 break;
             case 'more_operation':
                 show_more_operation();
@@ -254,8 +255,32 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             case 'download_keyword_info':
                 download_keyword_info();
                 break;
+            case 'change_current_bearPawNumber':
+                change_current_bearPawNumber();
+                break;
+            case 'change_select_bearPawNumber':
+                change_select_bearPawNumber();
+                break;
             case 'download_keyword_url':
                 download_keyword_url();
+                break;
+            case 'delete_keyword_by_nullTitle_and_nullUrl':
+                batch_delete('byEmptyTitleAndUrl');
+                break;
+            case 'delete_keyword_by_nullTitle':
+                batch_delete('byEmptyTitle');
+                break;
+            case 'change_current_optimizedGroup':
+                change_current_optimizedGroup();
+                break;
+            case 'change_select_optimizedGroup':
+                change_select_optimizedGroup();
+                break;
+            case 'change_current_searchEngine':
+                change_searchEngine('current');
+                break;
+            case 'change_select_searchEngine':
+                change_searchEngine('select');
                 break;
 
             default:
@@ -324,13 +349,248 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             }
         });
     }
+
     function download_keyword_url(){
-        console.log(111)
         $("#customerUuidKU").val($("#customerUuid").val());
         $("#terminalTypeKU").val($("#terminalTypeTmp").val());
         $("#keywordUrlForm").submit();
     }
 
+    function change_current_bearPawNumber() {
+        layer.prompt({
+            formType: 3,
+            value: '',
+            title: '新熊掌号',
+            area: ['220px', '60px'], //自定义文本域宽高
+            yes: function(index, layero){
+                var index2 = index;
+                var value = layero.find(".layui-layer-input").val();
+                if(value === ''){
+                    show_layer_msg('请输入新熊掌号！', 5, null, 1000);
+                    return;
+                }
+                layer.confirm("确定修改当前词的熊掌号吗", {icon: 3, title: '修改熊掌号'}, function (index) {
+                    var postData = formToJsonObject('searchForm');
+                    postData.targetBearPawNumber = value;
+                    $.ajax({
+                        url: '/internal/customerKeyword/updateBearPawNumber2',
+                        data: JSON.stringify(postData),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        timeout: 5000,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result.code === 200) {
+                                show_layer_msg('操作成功', 6, true);
+                            } else {
+                                show_layer_msg('操作失败', 5);
+                            }
+                        },
+                        error: function () {
+                            show_layer_msg('未知错误，请稍后重试', 5);
+                        },
+                        complete: function () {
+                            layer.close(index);
+                        }
+                    });
+                    layer.close(index2);
+
+                });
+            }
+        });
+    }
+
+    function change_select_bearPawNumber() {
+        //获取选中数据
+        var uuidArr = get_selected_uuid_arr();
+        if (uuidArr.length <= 0) {
+            show_layer_msg('请选择要操作的词', 5);
+            return
+        }
+
+        layer.prompt({
+            formType: 3,
+            value: '',
+            title: '新熊掌号',
+            area: ['220px', '60px'], //自定义文本域宽高
+            yes: function(index, layero){
+                var index2 = index;
+                var value = layero.find(".layui-layer-input").val();
+                if(value === ''){
+                    show_layer_msg('请输入新熊掌号！', 5, null, 1000);
+                    return;
+                }
+                layer.confirm("确定修改选中词的熊掌号吗", {icon: 3, title: '修改熊掌号'}, function (index) {
+                    var postData = {};
+                    postData.uuids = uuidArr;
+                    postData.terminalType = $('#terminalType').val();
+                    postData.targetBearPawNumber = value;
+                    $.ajax({
+                        url: '/internal/customerKeyword/updateBearPawNumber2',
+                        data: JSON.stringify(postData),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        timeout: 5000,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result.code === 200) {
+                                show_layer_msg('操作成功', 6, true);
+                            } else {
+                                show_layer_msg('操作失败', 5);
+                            }
+                        },
+                        error: function () {
+                            show_layer_msg('未知错误，请稍后重试', 5);
+                        },
+                        complete: function () {
+                            layer.close(index);
+                        }
+                    });
+                    layer.close(index2);
+                });
+            }
+        });
+    }
+
+    function change_current_optimizedGroup () {
+        layer.prompt({
+            formType: 3,
+            value: '',
+            title: '新优化组',
+            // area: ['220px', '60px'], //自定义文本域宽高
+            yes: function(index, layero){
+                var index2 = index;
+                var value = layero.find(".layui-layer-input").val();
+                if(value === ''){
+                    show_layer_msg('请输入新优化组！', 5, null, 1000);
+                    return;
+                }
+                layer.confirm("确定修改当前词的优化组吗", {icon: 3, title: '修改优化组'}, function (index) {
+                    var postData = formToJsonObject('searchForm');
+                    postData.targetOptimizeGroupName = value;
+                    $.ajax({
+                        url: '/internal/customerKeyword/updateOptimizeGroupName2',
+                        data: JSON.stringify(postData),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        timeout: 5000,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result.code === 200) {
+                                show_layer_msg('操作成功', 6, true);
+                            } else {
+                                show_layer_msg('操作失败', 5);
+                            }
+                        },
+                        error: function () {
+                            show_layer_msg('未知错误，请稍后重试', 5);
+                        },
+                        complete: function () {
+                            layer.close(index);
+                        }
+                    });
+                    layer.close(index2);
+                });
+
+            }
+        });
+    }
+
+    function change_select_optimizedGroup () {
+        //获取选中数据
+        var uuidArr = get_selected_uuid_arr();
+        if (uuidArr.length <= 0) {
+            show_layer_msg('请选择要操作的词', 5);
+            return
+        }
+        layer.prompt({
+            formType: 3,
+            value: '',
+            title: '新优化组',
+            area: ['220px', '60px'], //自定义文本域宽高
+            yes: function(index, layero){
+                var index2 = index;
+                var value = layero.find(".layui-layer-input").val();
+                if(value === ''){
+                    show_layer_msg('请输入新优化组！', 5, null, 1000);
+                    return;
+                }
+                layer.confirm("确定修改选中词的优化组吗", {icon: 3, title: '修改优化组'}, function (index) {
+                    var postData = {};
+                    postData.uuids = uuidArr;
+                    postData.terminalType = $('#terminalType').val();
+                    postData.targetOptimizeGroupName = value;
+                    $.ajax({
+                        url: '/internal/customerKeyword/updateOptimizeGroupName2',
+                        data: JSON.stringify(postData),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        timeout: 5000,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result.code === 200) {
+                                show_layer_msg('操作成功', 6, true);
+                            } else {
+                                show_layer_msg('操作失败', 5);
+                            }
+                        },
+                        error: function () {
+                            show_layer_msg('未知错误，请稍后重试', 5);
+                        },
+                        complete: function () {
+                            layer.close(index);
+                        }
+
+                    });
+                    layer.close(index2);
+                });
+
+            }
+        });
+    }
+
+    function batch_delete(deleteType){
+        let customerUuid = $("#customerUuid").val();
+        let terminalType = $("#terminalType").val();
+        let msg = deleteType==='byEmptyTitleAndUrl'?'确定要删除标题和网址为空的词吗':'确定要删除标题为空的词吗';
+        layer.confirm(msg, {icon: 3, title: '删除词'}, function (index) {
+            var postData = {};
+            postData.customerUuid = customerUuid;
+            postData.terminalType = terminalType;
+            postData.deleteType = deleteType;
+            $.ajax({
+                url: '/internal/customerKeyword/deleteCustomerKeywords2',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result.code === 200) {
+                        show_layer_msg('操作成功', 6, true);
+                    } else {
+                        show_layer_msg('操作失败', 5);
+                    }
+                },
+                error: function () {
+                    show_layer_msg('未知错误，请稍后重试', 5);
+                },
+                complete: function () {
+                    layer.close(index);
+                }
+            });
+        });
+    }
 
     function change_current_optimizePlanCount() {
         layer.prompt({
@@ -436,6 +696,35 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         });
     }
 
+    function change_searchEngine(type){
+        let postData={};
+        switch (type) {
+            case 'current':
+                postData = formToJsonObject('searchForm');
+                break;
+            case 'select':
+                var uuidArr = get_selected_uuid_arr();
+                if (uuidArr.length <= 0) {
+                    show_layer_msg('请选择要操作的词', 5);
+                    return
+                }
+                postData.uuids = uuidArr;
+                postData.terminalType = $("#terminalType").val();
+                break;
+            default:
+                return;
+        }
+        okLayer.open("首页 / 客户列表 / 修改用户", "/internal/customerKeyword/toChangeKeywordsSearchEngine", "40%", "40%", function (layero) {
+            window[layero.find("iframe")[0]["name"]].initForm(postData);
+        }, function () {
+            if (sign) {
+                active['reload'].call(this);
+                sign = false;
+            }
+        })
+
+    }
+
     function change_select_customer() {
         var uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
@@ -446,7 +735,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         // postData.uuids = uuidArr;
         postData.terminalType = $('#terminalType').val();
         postData.type = $('#type').val();
-        // postData.targetOptimizePlanCount = value;
         $.ajax({
             url: '/internal/customer/getActiveCustomers2',
             data: JSON.stringify(postData),
@@ -458,15 +746,31 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             type: 'GET',
             success: function (res) {
                 if (res.code === 200) {
+                    let searchEngineTpl = $("#searchEngineFor");
+                    searchEngineTpl.empty();
                     let htm = '<select name="customerUuid" id="customerUuid">';
                     $.each(res.data, function (index, item) {
 
-                        htm += '<option value="' + item.uuid + '">'
-                            + item.contactPerson + '</option>';// 下拉菜单里添加元素
+                        searchEngineTpl.append('<option value="' + item.uuid + '">'
+                            + item.contactPerson + '</option>');// 下拉菜单里添加元素
                     });
+                    // searchEngineTpl.val($("#contactPerson").val())
+                    console.log($("#contactPerson").val())
+                    form.render('select')
                     layer.open({
                         type: 1,
-                        content: htm //注意，如果str是object，那么需要字符拼接。
+                        title: '新客户',
+                        area:['400','600'],
+                        content: $('#searchEngineDiv') ,//注意，如果str是object，那么需要字符拼接。
+                        btn:['确定','取消'],
+                        btn1: function (index, layero) {
+                            active['reload'].call(this);
+                            layer.close(index)
+                        },
+                        btn2: function (index, layero) {
+                            // active['reload'].call(this);
+                            layer.close(index)
+                        }
                     });
                     // show_layer_msg('操作成功', 6, true);
                 } else {
@@ -479,7 +783,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         });
     }
 
-    function batch_delete() {
+    function batch_delete_byUuids() {
         var uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
             show_layer_msg('请选择要操作的词', 5);
@@ -490,7 +794,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             postData.uuids = uuidArr;
             postData.deleteType = 'byUuids';
             $.ajax({
-                url: '/internal/customerKeyword/updateBearPawNumber2',
+                url: '/internal/customerKeyword/deleteCustomerKeywords2',
                 data: JSON.stringify(postData),
                 headers: {
                     'Accept': 'application/json',

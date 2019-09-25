@@ -19,6 +19,8 @@
             <a><cite>关键字管理</cite></a>
             <a><cite>客户关键字</cite></a>
             <a><cite>${customer.contactPerson}</cite></a>
+            <input type="text" hidden value="<#if customer.contactPerson?exists>${customer.contactPerson}</#if>" id="contactPerson" name="contactPerson">
+
         </span>
         <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
             <i class="layui-icon layui-icon-refresh"></i>
@@ -235,4 +237,5 @@
 <#include "./customerKeywordTpl.html" />
 
 </body>
+
 </html>

@@ -11,8 +11,24 @@
     padding-right: 9px;
 }
 
-.my-hide .layui-btn-group + .layui-btn-group {
+.my-opration-hide {
+    padding-bottom: 1px !important;
+    width: 91%;
+    display: none;
+    position: absolute;
+    top: 43px;
+    left: 35px;
+    padding-left: 10px ;
+    z-index: 894;
+    background: #fff;
+    border: 1px solid lightgrey;
+    transition: visibility .6s;
+}
+
+.my-opration-hide .layui-btn-group + .layui-btn-group {
     margin-left: 0;
     margin-right: 10px !important;
 }
+
+#searchEngineDiv .layui-unselect dl { max-height:20px; }
 

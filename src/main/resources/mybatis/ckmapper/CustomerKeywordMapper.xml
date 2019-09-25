@@ -737,4 +737,14 @@
         WHERE fCustomerUuid = #{customerUuid}
           AND fTerminalType = #{terminalType}
     </select>
+
+    <update id="updateSearchEngine" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria">
+        UPDATE
+        t_customer_keyword ck,t_customer c
+        SET
+        ck.fSearchEngine = #{keywordCriteria.targetSearchEngine},
+        ck.fUpdateTime = NOW()
+        WHERE c.fUuid = ck.fCustomerUuid
+        <include refid="updateCustomerKeywordsCriteria"/>
+    </update>
 </mapper>

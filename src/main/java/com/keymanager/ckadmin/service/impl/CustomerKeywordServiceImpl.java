@@ -15,11 +15,12 @@ import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.EntryTypeEnum;
+import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
-import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
-import com.keymanager.util.Utils;
-import com.keymanager.util.common.StringUtil;
+
+import com.keymanager.ckadmin.util.StringUtil;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -407,6 +408,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public List<Map> searchAllKeywordAndUrl(Long customerUuid, String terminalType) {
         return customerKeywordDao.selectAllKeywordAndUrl(customerUuid, terminalType);
+    }
+
+    @Override
+    public void updateSearchEngine(KeywordCriteria keywordCriteria) {
+        customerKeywordDao.updateSearchEngine(keywordCriteria);
     }
 }
 

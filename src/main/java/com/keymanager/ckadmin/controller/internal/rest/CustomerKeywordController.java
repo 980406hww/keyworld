@@ -7,6 +7,7 @@ import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.excel.operator.CustomerKeywordAndUrlCvsExportWriter;
 import com.keymanager.ckadmin.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
@@ -19,8 +20,6 @@ import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.webDo.KeywordCountDO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
-import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
-import com.keymanager.monitoring.excel.operator.CustomerKeywordAndUrlCvsExportWriter;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,13 +32,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -209,7 +204,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     public ResultBean updateBearPawNumber(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
-            customerKeywordService.deleteCustomerKeywordsByDeleteType(keywordCriteria);
+            customerKeywordService.updateBearPawNumber(keywordCriteria);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
@@ -221,7 +216,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/customerKeyword/deleteCustomerKeywords")
     @RequestMapping(value = "/deleteCustomerKeywords2", method = RequestMethod.POST)
-    public ResultBean deleteCustomerKeywords(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
+    public ResultBean deleteCustomerKeywords(@RequestBody KeywordCriteria keywordCriteria) {
         ResultBean resultBean = new ResultBean(200,"success");
         try {
             customerKeywordService.deleteCustomerKeywordsByDeleteType(keywordCriteria);
@@ -373,9 +368,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     @RequestMapping(value = "/uploadCustomerKeywords2", method = RequestMethod.POST)
     public ResultBean uploadCustomerKeywords(KeywordCountDO keywordCountDO, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");
-
         String userName = (String) request.getSession().getAttribute("username");
-
         try {
             boolean uploaded = customerKeywordService
                 .handleExcel(keywordCountDO.getFile().getInputStream(), keywordCountDO.getExcelType(), keywordCountDO.getCustomerUuid(),
@@ -415,11 +408,6 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     public ResultBean downloadCustomerKeywordInfo( HttpServletRequest request, HttpServletResponse response, @RequestBody  KeywordCriteria keywordCriteria) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
-//            String terminalType = TerminalTypeMapping.getTerminalType(request);
-//            String entryType = (String) request.getSession().getAttribute("entryType");
-//            keywordCriteria.setTerminalType(terminalType);
-//            keywordCriteria.setEntryType(entryType);
-//            initOrderElement(customerKeywordCriteria.getOrderingElement(), customerKeywordCriteria);
             List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywordInfo(keywordCriteria);
             if (!Utils.isEmpty(customerKeywords)) {
                 CustomerKeywordInfoExcelWriter excelWriter = new CustomerKeywordInfoExcelWriter();
@@ -447,7 +435,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 //            String terminalType = TerminalTypeMapping.getTerminalType(request);
             List<Map> dataList = customerKeywordService.searchAllKeywordAndUrl(keywordCriteria.getCustomerUuid(), keywordCriteria.getTerminalType());
             Customer customer = customerService.selectById(keywordCriteria.getCustomerUuid());
-            CustomerKeywordAndUrlCvsExportWriter.exportCsv(dataList);
+            com.keymanager.ckadmin.excel.operator.CustomerKeywordAndUrlCvsExportWriter.exportCsv(dataList);
             CustomerKeywordAndUrlCvsExportWriter.downloadZip(response, customer.getContactPerson(), keywordCriteria.getTerminalType());
             return resultBean;
         } catch (Exception e) {
@@ -457,4 +445,31 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             return resultBean;
         }
     }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/toChangeKeywordsSearchEngine")
+    public ModelAndView toChangeKeywordsSearchEngine() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/changeKeywordSeachEngine");
+
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
+    @RequestMapping(value = "/updateSearchEngine2", method = RequestMethod.POST)
+    public ResultBean updateSearchEngine2(@RequestBody KeywordCriteria keywordCriteria) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            customerKeywordService.updateSearchEngine(keywordCriteria);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+
+
 }
