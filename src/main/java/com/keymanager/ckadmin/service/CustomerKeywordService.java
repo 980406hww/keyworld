@@ -73,4 +73,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     List<Map> searchAllKeywordAndUrl(Long customerUuid, String terminalType);
 
     void updateSearchEngine(KeywordCriteria keywordCriteria);
+
+    void changeCustomerKeywordStatusInCKPage(KeywordCriteria keywordCriteria);
 }

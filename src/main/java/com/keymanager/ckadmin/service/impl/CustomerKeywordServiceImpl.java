@@ -414,6 +414,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     public void updateSearchEngine(KeywordCriteria keywordCriteria) {
         customerKeywordDao.updateSearchEngine(keywordCriteria);
     }
+
+    @Override
+    public void changeCustomerKeywordStatusInCKPage(KeywordCriteria keywordCriteria) {
+        customerKeywordDao.changeCustomerKeywordStatusInCKPage(keywordCriteria);
+    }
 }
 
 

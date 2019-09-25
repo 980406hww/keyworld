@@ -34,6 +34,8 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -471,5 +473,16 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
 
+    @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordStatus")
+    @RequestMapping(value = "/changeCustomerKeywordStatus3", method = RequestMethod.POST)
+    public ResultBean changeCustomerKeywordStatusInCKPage(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
+        try {
 
+            customerKeywordService.changeCustomerKeywordStatusInCKPage(keywordCriteria);
+            return new ResultBean(200,"success");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResultBean(400,"error");
+        }
+    }
 }

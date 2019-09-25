@@ -282,6 +282,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             case 'change_select_searchEngine':
                 change_searchEngine('select');
                 break;
+            case 'change_current_machineGroup':
+                change_current_machineGroup();
+                break;
+            case 'change_select_machineGroup':
+                change_select_machineGroup();
+                break;
 
             default:
                 break;
@@ -692,6 +698,106 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                         layer.close(index2);
                     });
 
+            }
+        });
+    }
+
+    function change_current_machineGroup() {
+        layer.prompt({
+            formType: 3,
+            value: '',
+            title: '新机器分组',
+            area: ['220px', '60px'], //自定义文本域宽高
+            yes: function(index, layero){
+                var index2 = index;
+                var value = layero.find(".layui-layer-input").val();
+                if(value === ''){
+                    show_layer_msg('请输入新机器分组！', 5, null, 1000);
+                    return;
+                }
+                layer.confirm("确定修改当前词的机器分组吗", {icon: 3, title: '修改机器分组'}, function (index) {
+                    var postData = formToJsonObject('searchForm');
+                    postData.targetMachineGroup = value;
+                    $.ajax({
+                        url: '/internal/customerKeyword/updateMachineGroup2',
+                        data: JSON.stringify(postData),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        timeout: 5000,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result.code === 200) {
+                                show_layer_msg('操作成功', 6, true);
+                            } else {
+                                show_layer_msg('操作失败', 5);
+                            }
+                        },
+                        error: function () {
+                            show_layer_msg('未知错误，请稍后重试', 5);
+                        },
+                        complete: function () {
+                            layer.close(index);
+                        }
+                    });
+                    layer.close(index2);
+
+                });
+            }
+        });
+    }
+
+    function change_select_machineGroup() {
+        //获取选中数据
+        var uuidArr = get_selected_uuid_arr();
+        if (uuidArr.length <= 0) {
+            show_layer_msg('请选择要操作的词', 5);
+            return
+        }
+        layer.prompt({
+            formType: 3,
+            value: '',
+            title: '新机器分组',
+            area: ['220px', '60px'], //自定义文本域宽高
+            yes: function(index, layero){
+                var index2 = index;
+                var value = layero.find(".layui-layer-input").val();
+                if(value === ''){
+                    show_layer_msg('请输入新机器分组！', 5, null, 1000);
+                    return;
+                }
+                layer.confirm("确定修改选中词的机器分组吗", {icon: 3, title: '修改机器分组'}, function (index) {
+                    var postData = {};
+                    postData.uuids = uuidArr;
+                    postData.terminalType = $('#terminalType').val();
+                    postData.targetMachineGroup = value;
+                    $.ajax({
+                        url: '/internal/customerKeyword/updateMachineGroup2',
+                        data: JSON.stringify(postData),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        timeout: 5000,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result.code === 200) {
+                                show_layer_msg('操作成功', 6, true);
+                            } else {
+                                show_layer_msg('操作失败', 5);
+                            }
+                        },
+                        error: function () {
+                            show_layer_msg('未知错误，请稍后重试', 5);
+                        },
+                        complete: function () {
+                            layer.close(index);
+                        }
+                    });
+                    layer.close(index2);
+
+                });
             }
         });
     }
