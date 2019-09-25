@@ -12,9 +12,10 @@
 
     <form class="layui-form layui-form-pane ok-form" lay-filter="UploadVPSFile" enctype="multipart/form-data" id="uploadForm">
         <div class="layui-form-item">
-            <button type="button" class="layui-btn" id="upload">
-                <i class="layui-icon">&#xe67c;</i>上传VPS文件
-            </button>
+            <input id="upload" name="file" type="file">
+<!--            <button type="button" class="layui-btn" id="uploadBtn">-->
+<!--                <i class="layui-icon">&#xe67c;</i>上传VPS文件-->
+<!--            </button>-->
         </div>
         <div class="layui-form-item" id="programType">
             <label class="layui-form-label">下载程序类型</label>
@@ -52,31 +53,48 @@
         var $ = layui.jquery;
         var upload = layui.upload;
 
-        upload.render({
-            elem: '#upload',
-            url: '/internal/machineManage/uploadVPSFile',
-            // exts: 'txt',
-            accept: 'file',
-            auto: false,
-            done: function(res){
-
-            }
+        $("#uploadBtn").click(function(){
+            console.log(a)
+            upload.render({
+                elem: '#upload',
+                url: '/internal/machineManage/uploadVPSFile',
+                exts: 'txt',
+                accept: 'file',
+                auto: false,
+                done: function(res){
+                }
+            });
         });
 
         form.on("submit(commit)", function (data) {
-            var file = new FormData($('#uploadForm')[0]);
+            var fileValue = $('#uploadForm').find("#upload").val()
+            if(fileValue == ""){
+                layer.msg("请选择要上传的VPS文件!")
+                return false;
+            }
+            var posIndex = fileValue.indexOf(".txt");
+            if (posIndex == -1) {
+                layer.msg("只能上传txt文件!")
+                return false;
+            }
+            var postData = new FormData();
+            postData.append('machineInfoType', machineInfoType)
+            postData.append('file', $("#uploadForm").find("#upload")[0].files[0])
+            if(machineInfoType == 'startUp'){
+                postData.append('downloadProgramType', data.field.downloadProgramType)
+            }
             $.ajax({
                 url: '/internal/machineManage/uploadVPSFile',
                 type: 'post',
-                data: file,
+                cache: false,
+                data: postData,
                 async: false,
-                contentType: false,
                 processData: false,
-                dataType: 'json',
+                contentType: false,
                 success: function (res) {
-                    if (res.code === 200) {
-                        console.log(res.code);
-                        okLayer.msg.greenTick("保存成功", function () {
+                    var data = JSON.parse(res)
+                    if (data.code == 200) {
+                        okLayer.msg.greenTick("上传成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });

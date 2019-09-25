@@ -10,6 +10,7 @@ import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.MachineInfoService;
 import com.keymanager.ckadmin.service.PerformanceService;
 import com.keymanager.ckadmin.service.UserPageSetupService;
+import com.keymanager.ckadmin.vo.MachineInfoUploadVO;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.TerminalTypeMapping;
@@ -177,6 +178,7 @@ public class MachineInfoController extends SpringMVCBaseController {
             FileUtil.delFolder(path);
             resultBean.setCode(200);
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg("未知错误");
@@ -270,14 +272,12 @@ public class MachineInfoController extends SpringMVCBaseController {
             }
             Page<MachineInfo> page = new Page<>(machineInfoCriteria.getPage(), machineInfoCriteria.getLimit());
             long startMilleSeconds = System.currentTimeMillis();
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
-            machineInfoCriteria.setTerminalType(terminalType);
             Set<String> switchGroups = getCurrentUser().getRoles();
             if(!switchGroups.contains("DepartmentManager")) {
                 machineInfoCriteria.setSwitchGroups(switchGroups);
             }
+            performanceService.addPerformanceLog(machineInfoCriteria.getTerminalType() + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
             page = machineInfoService.searchMachineInfos(page, machineInfoCriteria, true);
-            performanceService.addPerformanceLog(terminalType + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
             List<MachineInfo> machineInfos = page.getRecords();
             resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
