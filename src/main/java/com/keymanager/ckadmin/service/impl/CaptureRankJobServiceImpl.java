@@ -7,6 +7,7 @@ import com.keymanager.ckadmin.enums.CaptureRankExectionStatus;
 import com.keymanager.ckadmin.service.CaptureRankJobService;
 import java.sql.Time;
 import java.util.Date;
+import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -47,5 +48,10 @@ public class CaptureRankJobServiceImpl extends
     @Override
     public void deleteCaptureRankJob(Long qzSettingUuid, String operationType) {
         captureRankJobDao.deleteCaptureRankJob(qzSettingUuid, operationType);
+    }
+
+    @Override
+    public Boolean hasUncompletedCaptureRankJob(List<String> groupNames, String rankJobArea) {
+        return captureRankJobDao.hasUncompletedCaptureRankJob(groupNames, rankJobArea) != null;
     }
 }

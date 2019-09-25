@@ -61,4 +61,14 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void updateOptimizePlanCount(KeywordCriteria keywordCriteria);
 
     boolean handleExcel(InputStream inputStream, String excelType, int parseInt, String entry, String terminalType, String userName) throws Exception;
+
+    List<CustomerKeyword> searchCustomerKeywordsForDailyReport(KeywordCriteria keywordCriteria);
+
+    List<String> getGroups(List<Long> customerUuids);
+
+    List<Long> getCustomerUuids(String entryType, String terminalType);
+
+    List<CustomerKeyword> searchCustomerKeywordInfo(KeywordCriteria keywordCriteria);
+
+    List<Map> searchAllKeywordAndUrl(Long customerUuid, String terminalType);
 }

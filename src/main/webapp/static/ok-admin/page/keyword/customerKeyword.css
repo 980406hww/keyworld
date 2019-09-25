@@ -7,8 +7,12 @@
     padding: 0 !important;
 }
 
-/*.layui-table-header {
+.layui-table-header {
     padding-right: 9px;
-}*/
+}
 
+.my-hide .layui-btn-group + .layui-btn-group {
+    margin-left: 0;
+    margin-right: 10px !important;
+}
 

@@ -38,4 +38,8 @@ public interface CustomerService extends IService<Customer> {
     Customer getCustomer(Long customerUuid);
 
     Customer getCustomerByCustomerUuid(String terminalType, String businessType, Long customerUuid);
+
+    List<Long> getActiveDailyReportIdentifyCustomerUuids(String userID);
+
+    List<String> getActiveDailyReportIdentifyUserIDs();
 }

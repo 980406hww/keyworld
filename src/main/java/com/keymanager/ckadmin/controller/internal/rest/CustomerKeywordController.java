@@ -7,15 +7,20 @@ import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.ReflectUtils;
+import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.webDo.KeywordCountDO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
+import com.keymanager.monitoring.controller.SpringMVCBaseController;
+import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
+import com.keymanager.monitoring.excel.operator.CustomerKeywordAndUrlCvsExportWriter;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +30,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
@@ -46,7 +52,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping(value = "/internal/customerKeyword")
-public class CustomerKeywordController {
+public class CustomerKeywordController extends SpringMVCBaseController {
 
     private static Logger logger = LoggerFactory.getLogger(CustomerKeywordController.class);
 
@@ -394,6 +400,55 @@ public class CustomerKeywordController {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
             customerKeywordService.deleteById(customerKeywordUuid);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+    }
+
+    //导出成Excel文件
+    @RequiresPermissions("/internal/customerKeyword/downloadCustomerKeywordInfo")
+    @RequestMapping(value = "/downloadCustomerKeywordInfo2", method = RequestMethod.POST)
+    public ResultBean downloadCustomerKeywordInfo( HttpServletRequest request, HttpServletResponse response, @RequestBody  KeywordCriteria keywordCriteria) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+//            String terminalType = TerminalTypeMapping.getTerminalType(request);
+//            String entryType = (String) request.getSession().getAttribute("entryType");
+//            keywordCriteria.setTerminalType(terminalType);
+//            keywordCriteria.setEntryType(entryType);
+//            initOrderElement(customerKeywordCriteria.getOrderingElement(), customerKeywordCriteria);
+            List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywordInfo(keywordCriteria);
+            if (!Utils.isEmpty(customerKeywords)) {
+                CustomerKeywordInfoExcelWriter excelWriter = new CustomerKeywordInfoExcelWriter();
+                excelWriter.writeDataToExcel(customerKeywords);
+                Customer customer = customerService.selectById(keywordCriteria.getCustomerUuid());
+                String fileName = customer.getContactPerson() + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
+                fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
+                byte[] buffer = excelWriter.getExcelContentBytes();
+                downExcelFile(response, fileName, buffer);
+            }
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+    }
+
+    @RequestMapping(value = "/keywordUrlExport2", method = RequestMethod.POST)
+    public ResultBean keywordUrlExport(HttpServletRequest request, HttpServletResponse response, KeywordCriteria keywordCriteria) {
+
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+//            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            List<Map> dataList = customerKeywordService.searchAllKeywordAndUrl(keywordCriteria.getCustomerUuid(), keywordCriteria.getTerminalType());
+            Customer customer = customerService.selectById(keywordCriteria.getCustomerUuid());
+            CustomerKeywordAndUrlCvsExportWriter.exportCsv(dataList);
+            CustomerKeywordAndUrlCvsExportWriter.downloadZip(response, customer.getContactPerson(), keywordCriteria.getTerminalType());
             return resultBean;
         } catch (Exception e) {
             logger.error(e.getMessage());

@@ -226,21 +226,38 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             case 'change_select_optimizePlanCount':
                 change_select_optimizePlanCount();
                 break;
-            case 'upload_keyword_simple':
-                upload_keyword('SuperUserSimple');
-                break;
-            case 'upload_keyword_full':
-                upload_keyword('SuperUserFull');
-                break;
-            case 'change_select_customer':
+
+            /*case 'change_select_customer':
                 change_select_customer();
-                break;
+                break;*/
             case 'batch_delete':
                 batch_delete();
                 break;
             case 'more_operation':
                 show_more_operation();
                 break;
+            case 'upload_keyword_simple':
+                upload_keyword('SuperUserSimple');
+                break;
+            case 'download_keyword_simple_excel':
+                download_keyword_excel('SuperUserSimple');
+                break;
+            case 'upload_keyword_full':
+                upload_keyword('SuperUserFull');
+                break;
+            case 'download_keyword_full_excel':
+                download_keyword_excel('SuperUserFull');
+                break;
+            case 'download_daily_report':
+                download_daily_report();
+                break;
+            case 'download_keyword_info':
+                download_keyword_info();
+                break;
+            case 'download_keyword_url':
+                download_keyword_url();
+                break;
+
             default:
                 break;
         }
@@ -281,6 +298,39 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 }
             })
     }
+
+    function download_keyword_excel(excelType){
+        let url = excelType==='SuperUserSimple'? '/SuperUserSimpleKeywordList.xls' : '/SuperUserFullKeywordList.xls';
+        window.open(url, '_blank');
+    }
+
+    function download_keyword_info(){
+        let postData = formToJsonObject('searchForm');
+        $.ajax({
+            url: '/internal/customerKeyword/downloadCustomerKeywordInfo2',
+            data: JSON.stringify(postData),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            async: false,
+            type: 'post',
+            success: function (res) {
+                if (res.code === 200) {
+                    show_layer_msg('导出成功', 6, false);
+                }else {
+                    show_layer_msg('未知错误！', 5);
+                }
+            }
+        });
+    }
+    function download_keyword_url(){
+        console.log(111)
+        $("#customerUuidKU").val($("#customerUuid").val());
+        $("#terminalTypeKU").val($("#terminalTypeTmp").val());
+        $("#keywordUrlForm").submit();
+    }
+
 
     function change_current_optimizePlanCount() {
         layer.prompt({
@@ -465,6 +515,11 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         });
     }
 
+    function download_daily_report(){
+        let customerUuid = $('#customerUuid').val();
+        let url = '/internal/dailyReport/downloadSingleCustomerReport2/'+customerUuid;
+        window.open(url, '_blank');
+    }
     //监听工具条
     table.on('tool(tableFilter)', function (obj) {
         var data = obj.data;
@@ -512,9 +567,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         });
     }
 
-    let show = false;
+    let show = true;
     function show_more_operation() {
-        console.log(show)
         let operationContent = document.getElementById('operationContent');
         if (show) {
             operationContent.style.display = 'block';

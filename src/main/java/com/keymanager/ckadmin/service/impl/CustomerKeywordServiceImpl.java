@@ -17,6 +17,7 @@ import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.EntryTypeEnum;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
+import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import java.io.InputStream;
@@ -381,6 +382,31 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             customerKeyword.setKeywordEffect("");
             addCustomerKeyword(customerKeyword, loginName);
         }
+    }
+
+    @Override
+    public List<CustomerKeyword> searchCustomerKeywordsForDailyReport(KeywordCriteria keywordCriteria) {
+        return customerKeywordDao.searchCustomerKeywordsForDailyReport(keywordCriteria);
+    }
+
+    @Override
+    public List<String> getGroups(List<Long> customerUuids) {
+        return customerKeywordDao.getGroups(customerUuids);
+    }
+
+    @Override
+    public List<Long> getCustomerUuids(String entryType, String terminalType) {
+        return customerKeywordDao.getCustomerUuids(entryType, terminalType);
+    }
+
+    @Override
+    public List<CustomerKeyword> searchCustomerKeywordInfo(KeywordCriteria keywordCriteria) {
+        return customerKeywordDao.searchCustomerKeywordInfo(keywordCriteria);
+    }
+
+    @Override
+    public List<Map> searchAllKeywordAndUrl(Long customerUuid, String terminalType) {
+        return customerKeywordDao.selectAllKeywordAndUrl(customerUuid, terminalType);
     }
 }
 

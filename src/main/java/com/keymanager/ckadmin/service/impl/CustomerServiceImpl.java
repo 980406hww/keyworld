@@ -180,4 +180,14 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
 //        customer.setKeywordCount(customerKeywordService.getCustomerKeywordCount(terminalType, businessType, customerUuid));
         return customer;
     }
+
+    @Override
+    public List<Long> getActiveDailyReportIdentifyCustomerUuids(String userID) {
+        return customerDao.getActiveDailyReportIdentifyCustomerUuids(userID);
+    }
+
+    @Override
+    public List<String> getActiveDailyReportIdentifyUserIDs() {
+        return customerDao.getActiveDailyReportIdentifyUserIDs();
+    }
 }

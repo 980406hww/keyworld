@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.service;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.keymanager.ckadmin.entity.CaptureRankJob;
+import java.util.List;
 
 public interface CaptureRankJobService extends IService<CaptureRankJob> {
 
@@ -11,4 +12,6 @@ public interface CaptureRankJobService extends IService<CaptureRankJob> {
     CaptureRankJob findExistCaptureRankJob(Long qzSettingUuid, String operationType);
 
     void deleteCaptureRankJob(Long qzSettingUuid, String operationType);
+
+    Boolean hasUncompletedCaptureRankJob(List<String> groupNames, String china);
 }

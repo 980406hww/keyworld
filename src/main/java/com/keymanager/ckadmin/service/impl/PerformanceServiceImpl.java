@@ -1,23 +1,23 @@
-package com.keymanager.monitoring.service;
+package com.keymanager.ckadmin.service.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.ckadmin.dao.PerformanceDao;
+import com.keymanager.ckadmin.service.PerformanceService;
 import com.keymanager.monitoring.dao.MachineInfoDao;
+import com.keymanager.monitoring.dao.PerformanceDao;
 import com.keymanager.monitoring.entity.MachineInfo;
 import com.keymanager.monitoring.entity.Performance;
-import javax.annotation.Resource;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 
-
-@Service
-public class PerformanceService extends ServiceImpl<MachineInfoDao, MachineInfo>{
+@Service("performanceService2")
+public class PerformanceServiceImpl extends ServiceImpl<MachineInfoDao, MachineInfo> implements PerformanceService {
 	
-	@Resource(name = "performanceDao2")
+	@Autowired
 	private PerformanceDao performanceDao;
 
+	@Override
 	public void addPerformanceLog(String module, long milleSeconds, String remarks){
 		if("ResetInfoDailySchedule".equals(module)) {
 			Performance performance = new Performance();
