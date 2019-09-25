@@ -35,7 +35,6 @@
      </button>-->
 
 
-
     |
 
 <!--
@@ -59,6 +58,28 @@
 <!--模板-->
 <script type="text/html" id="toDateTime">
     {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+</script>
+
+<script type="text/html" id="statusTpl">
+    {{#  if(d.status === 1) { }}
+    激活
+    {{#  }else if(d.status === 0) { }}
+    新增
+    {{#  }else if(d.status === 2) { }}
+    下架
+    {{# }else{ }}
+    暂停
+    {{# } }}
+</script>
+
+<script type="text/html" id="indexCountTpl">
+    {{#  if(d.currentIndexCount === -1) { }}
+    未采集
+    {{#  }else if(d.currentIndexCount === -2) { }}
+    未收录
+    {{# }else{ }}
+    {{ d.currentIndexCount }}
+    {{# } }}
 </script>
 
 <script type="text/html" id="collectMethodTpl">

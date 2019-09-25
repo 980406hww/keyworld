@@ -1,12 +1,14 @@
+
 .layui-table-cell {
     display: table-cell;
-    vertical-align: middle;
     overflow: visible;
-    text-overflow: clip;
+    text-overflow: inherit;
     white-space: normal;
-    word-break:break-all;
+    padding: 0 !important;
 }
 
 .layui-table-header {
     padding-right: 9px;
 }
+
+
