@@ -238,6 +238,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             case 'batch_delete':
                 batch_delete();
                 break;
+            case 'more_operation':
+                show_more_operation();
+                break;
             default:
                 break;
         }
@@ -507,6 +510,18 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             });
             layer.close(index);
         });
+    }
+
+    let show = false;
+    function show_more_operation() {
+        console.log(show)
+        let operationContent = document.getElementById('operationContent');
+        if (show) {
+            operationContent.style.display = 'block';
+        } else {
+            operationContent.style.display = 'none';
+        }
+        show = !show;
     }
 
 });
