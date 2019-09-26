@@ -37,10 +37,10 @@
                 <div class="my-collapse">
                     <div>
                         <div class="layui-inline" style="width: 100px">
-                            <select name="type" id="type"> </select>&nbsp;
+                            <select name="type" id="type" lay-filter="businessType"> </select>
                         </div>
                         <div class="layui-inline" style="width: 120px">
-                            <select name="terminalType" id="terminalType">
+                            <select name="terminalType" id="terminalType" lay-filter="terminalType">
                                 <option value='PC'>PC</option>
                                 <option value='Phone'>Phone</option>
                             </select>&nbsp;
@@ -237,5 +237,8 @@
 <#include "./customerKeywordTpl.html" />
 
 </body>
-
+<form action="/internal/customerKeyword/keywordUrlExport2" method="post" id="keywordUrlForm">
+    <input id="customerUuidKU" name="customerUuid" hidden value=""/>
+    <input id="terminalTypeKU" name="terminalType" hidden value=""/>
+</form>
 </html>

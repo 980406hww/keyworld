@@ -31,11 +31,11 @@
                 <div class="my-collapse">
                     <div class="out-condition">
                         <div class="layui-inline" style="width: 100px">
-                            <select name="type" id="type">
+                            <select name="type" id="type" lay-filter="businessType">
                             </select>&nbsp;
                         </div>
                         <div class="layui-inline" style="width: 100px">
-                            <select name="terminalType" id="terminalType">
+                            <select name="terminalType" id="terminalType" lay-filter="terminalType">
                                 <option value='PC'>PC</option>
                                 <option value='Phone'>Phone</option>
                             </select>&nbsp;
@@ -45,12 +45,19 @@
                                    class="layui-input">
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">搜索引擎</label>
-                            <div class="layui-input-inline">
+
                                 <select name="searchEngine" id="searchEngine">
                                     <option value=''>搜索引擎</option>
                                 </select>&nbsp;
-                            </div>
+
+                        </div>
+
+                        <div class="layui-inline">
+
+                                <select name="userName" id="userName">
+                                    <option value="">请选择用户</option>
+                                </select>
+
                         </div>
                         <div class="layui-inline">
                             <label class="layui-form-label">优化组名</label>
@@ -66,29 +73,10 @@
                                        class="layui-input layui-input-text ">
                             </div>
                         </div>
+
+
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户名称</label>
-                            <div class="layui-input-inline">
-                                <select name="userName" id="userName">
-                                    <option value="">请选择用户</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">关键字状态</label>
-                            <div class="layui-input-inline">
-                                <select name="status" id="status">
-                                    <option value=''>关键字状态</option>
-                                    <option value='1'>激活</option>
-                                    <option value='2'>新增</option>
-                                    <option value='0'>暂不操作</option>
-                                    <option value='3'>下架</option>
-                                </select>&nbsp;
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <button class="layui-btn" lay-submit="" lay-filter="search"
-                                    id="searchBtn">搜索
+                            <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索
                             </button>
                         </div>
                         <div class="layui-inline">
@@ -137,6 +125,18 @@
                                 <label class="layui-form-label">备注</label>
                                 <div class="layui-input-inline">
                                     <input type="text" name="remarks" id="remarks" placeholder="请输入备注" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">关键字状态</label>
+                                <div class="layui-input-inline">
+                                    <select name="status" id="status">
+                                        <option value=''>关键字状态</option>
+                                        <option value='1'>激活</option>
+                                        <option value='2'>新增</option>
+                                        <option value='0'>暂不操作</option>
+                                        <option value='3'>下架</option>
+                                    </select>&nbsp;
                                 </div>
                             </div>
                             <div class="layui-inline">

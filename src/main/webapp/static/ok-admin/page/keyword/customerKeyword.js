@@ -8,7 +8,6 @@ window.onload = function () {
 
 var show = true;
 function show_more_operation() {
-    console.log(show)
     let operationContent = document.getElementById('operationContent');
     if (show) {
         operationContent.style.display = 'block';
@@ -126,37 +125,30 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             contentType: 'application/json',
             cols: [[
                 {filed: 'uuid', type: 'checkbox', width: '35' },
-                // {field: 'contactPerson', title: '用户名称', width: '8%', templet: '#toCUstomerKeywordTpl'},
                 {field: 'keyword', title: '关键字', width: '150'},
                 {field: 'url', title: '链接', width: '140'},
 
                 {field: 'bearPawNumber', title: '熊掌号', align: 'center', width: '100'},
-                // {field: 'originalUrl', title: '原始链接', width: '15%',},
-                // {field: 'terminalType', title: '终端', width: '5%'},
                 {field: 'title', title: '标题', width: '220'},
                 {field: 'currentIndexCount', title: '指数', align: 'center', width: '80', templet:'#indexCountTpl'},
                 {field: 'initialPosition', title: '初始排名', align: 'center', width: '80'},
                 {field: 'currentPosition', title: '现排名', align: 'center', width: '80'},
                 {field: 'searchEngine', title: '搜索引擎',  align: 'center', width: '80'},
-                // {field: 'city', title: '目标城市', width: '6%', hide: true},
                 {field: 'collectMethod', title: '收费方式', align: 'center', width: '80',  templet: '#collectMethodTpl' },
                 {field: 'optimizePlanCount', title: '要刷',align: 'center',  width: '80'},
                 {field: 'optimizedCount', title: '已刷', align: 'center', width: '80'},
                 {field: 'invalidRefreshCount', title: '无效', align: 'center', width: '60', hide:'true'},
-                // {field: 'startOptimizedTime', title: '开始优化日期', width: '7%', templet:'#toDateTime'},
-                // {field: 'lastOptimizeDateTime', title: '最后优化日期', width: '7%', templet:'#toDateTime'},
                 {field: 'status', title: '状态', align: 'center', width: '80', templet:'#statusTpl'},
-                // {field: 'remarks', title: '备注', width: '8%'},
                 {field: 'failedCause', title: '失败原因', align: 'center', width: '100',},
                 {field: 'optimizeGroupName', title: '优化分组', align: 'center', width: '80'},
                 {field: 'machineGroup', title: '机器分组', align: 'center', width: '80'},
                 {title: '操作', align: 'center', width: '120', templet: '#operationTpl' }
             ]],
-            height: 'full-100',
+            height: 'full-105',
 
             done: function (res, curr, count) {
                 let tables = document.getElementsByTagName('table');
-                if ((tables[2].offsetHeight || tables[2].clientHeight) > (tables[2].parentElement.offsetHeight || tables[2].parentElement.clientHeight)) {
+                if ((tables[2].offsetHeight || tables[2].clientHeight ||tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight || tables[2].parentElement.clientHeight||tables[2].scrollHeight)) {
                     document.getElementsByClassName('layui-table-header')[0].classList.add( 'details-header');
                 } else {
                     document.getElementsByClassName('layui-table-header')[0].classList.remove('details-header');
@@ -165,7 +157,25 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         });
 
     }
+    form.on('select(businessType)', function(data){
+        active['reload'].call(this);
+    });
 
+    form.on('select(terminalType)', function(data){
+        active['reload'].call(this);
+    });
+    // 监听表头鼠标按下事件
+    $(document).on('mousedown', 'thead',
+        function (e) {
+        console.log(111)
+            let tables = document.getElementsByTagName('table');
+            if ((tables[2].offsetHeight || tables[2].clientHeight ||tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight || tables[2].parentElement.clientHeight||tables[2].scrollHeight)) {
+                document.getElementsByClassName('layui-table-header')[0].classList.add( 'details-header');
+            } else {
+                document.getElementsByClassName('layui-table-header')[0].classList.remove('details-header');
+            }
+        }
+    );
     //监听工具条
     var active = {
         reload: function () {
@@ -233,9 +243,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 delete_same_keyword();
                 break;
 
-            /*case 'change_select_customer':
-                change_select_customer();
-                break;*/
             case 'batch_delete':
                 batch_delete_byUuids();
                 break;

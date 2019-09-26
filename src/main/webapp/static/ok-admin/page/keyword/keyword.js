@@ -161,10 +161,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 {field: 'failedCause', title: '失败原因', width: '80', hide: true},
                 // {title: '操作', align: 'center',fixed:'right', width: '10%' , templet: '#operationTpl'}
             ]],
-            height: 'full-100',
+            height: 'full-110',
             done: function (res, curr, count) {
                 let tables = document.getElementsByTagName('table');
-                if ((tables[2].offsetHeight || tables[2].clientHeight) > (tables[2].parentElement.offsetHeight || tables[2].parentElement.clientHeight)) {
+                if ((tables[2].offsetHeight || tables[2].clientHeight||tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight || tables[2].parentElement.clientHeight||tables[2].scrollHeight)) {
                     document.getElementsByClassName('layui-table-header')[0].classList.add( 'details-header');
                 } else {
                     document.getElementsByClassName('layui-table-header')[0].classList.remove('details-header');
@@ -174,7 +174,16 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
 
     }
 
-
+    // 监听表头鼠标按下事件
+    $(document).on('onMouseUp', 'thead', function (e) {
+            let tables = document.getElementsByTagName('table');
+            if ((tables[2].offsetHeight || tables[2].clientHeight||tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight || tables[2].parentElement.clientHeight||tables[2].scrollHeight)) {
+                document.getElementsByClassName('layui-table-header')[0].classList.add( 'details-header');
+            } else {
+                document.getElementsByClassName('layui-table-header')[0].classList.remove('details-header');
+            }
+        }
+    );
     //监听工具条
     var active = {
         reload: function () {
@@ -222,6 +231,14 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             showCondition();
         }
         return false;
+    });
+
+    form.on('select(businessType)', function(data){
+        active['reload'].call(this);
+    });
+
+    form.on('select(terminalType)', function(data){
+        active['reload'].call(this);
     });
 
     table.on('toolbar(tableFilter)', function(obj) {

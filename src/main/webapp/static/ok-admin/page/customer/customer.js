@@ -376,21 +376,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
         });
     }
 
-    // 监听浏览器窗口大小变化
-    var resizeTimer;
-    $(window).resize(function () {
-        if (resizeTimer) {
-            clearTimeout(resizeTimer);
-        }
-        resizeTimer = setTimeout(function () {
-                resizeTimer = null;
-                autoFixed();
-            },
-            200);
-    });
 
-// 监听表头鼠标按下事件
-    $(document).on('mousedown', 'thead',
+    // 监听表头鼠标按下事件
+    $(document).on('onMouseUp', 'thead',
         function (e) {
             var that = $(this);
             $(document).one('mouseup', function () {

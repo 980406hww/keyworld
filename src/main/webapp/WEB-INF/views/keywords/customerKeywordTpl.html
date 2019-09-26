@@ -8,11 +8,16 @@
     <!--            激活-->
     <!--        </button>-->
     <!--    </@shiro.hasPermission>-->
-
-    <button class="layui-btn layui-btn-sm" id="add_customer_keyword" lay-event="add_customer_keyword">
-        添加
-    </button>
-
+    <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
+        {{#
+            var businessType = document.getElementById('type').value;
+            if(businessType !=='qz'){  }}
+                <button class="layui-btn layui-btn-sm" id="add_customer_keyword" lay-event="add_customer_keyword">
+                    添加
+                </button>
+        {{#  }  }}
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/customerKeyword/editOptimizePlanCount">
     <div class="layui-btn-group">
         <button class="layui-btn layui-btn-sm" id="change_current_optimizePlanCount" lay-event="change_current_optimizePlanCount">
             修改当前刷量
@@ -21,6 +26,7 @@
             修改所选刷量
         </button>
     </div>
+    </@shiro.hasPermission>
     <!-- <button class="layui-btn layui-btn-sm" id="change_select_customer" lay-event="change_select_customer">
          修改所选词客户
      </button>-->
@@ -31,6 +37,7 @@
     <button class="layui-btn layui-btn-sm" id="change_selected_bearPawNumber" lay-event="change_selected_bearPawNumber">
         用户留言
     </button>-->
+    <@shiro.hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
     {{#
         var businessType = document.getElementById('type').value;
         if(businessType==='qz'){  }}
@@ -40,12 +47,14 @@
                 </button>
             </div>
     {{#  }  }}
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
     <div class="layui-btn-group">
         <button class="layui-btn layui-btn-sm layui-btn-danger" id="batch_delete" lay-event="batch_delete">
             批量删除
         </button>
     </div>
-
+    </@shiro.hasPermission>
     <div class="layui-btn-group">
         <button class="layui-btn layui-btn-sm layui-btn-warm" id="more_operation" lay-event="more_operation">
             更多功能
@@ -56,31 +65,44 @@
     <div class="my-opration-hide" id="operationContent">
 
         <div class="layui-btn-group">
+            <@shiro.hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
             <button class="layui-btn layui-btn-sm" id="upload_keyword_simple" lay-event="upload_keyword_simple">
                 Excel上传(简化版)
             </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/SuperUserSimpleKeywordList.xls">
             <button class="layui-btn layui-btn-sm" id="download_keyword_simple_excel" lay-event="download_keyword_simple_excel">
                 Excel简化版下载
             </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
             <button class="layui-btn layui-btn-sm" id="upload_keyword_full" lay-event="upload_keyword_full">
                 Excel上传(完整版)
             </button>
-
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/SuperUserFullKeywordList.xls">
             <button class="layui-btn layui-btn-sm" id="download_keyword_full_excel" lay-event="download_keyword_full_excel">
                 Excel完整版下载
             </button>
+            </@shiro.hasPermission>
         </div>
 
         <div class="layui-btn-group">
+            <@shiro.hasPermission name="/internal/customerKeyword/downloadSingleCustomerReport">
             <button class="layui-btn layui-btn-sm" id="download_daily_report" lay-event="download_daily_report">
                 导出日报表
             </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/customerKeyword/downloadCustomerKeywordInfo">
             <button class="layui-btn layui-btn-sm" id="download_keyword_info" lay-event="download_keyword_info">
                 导出结果
             </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/customerKeyword/cleanTitle">
             <button class="layui-btn layui-btn-sm" id="download_keyword_url" lay-event="download_keyword_url">
                 关键字url导出
             </button>
+            </@shiro.hasPermission>
         </div>
 
         <div class="layui-btn-group">
@@ -105,9 +127,6 @@
 
         <div class="layui-btn-group">
             <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
-            <!--<button class="layui-btn layui-btn-sm" id="change_optimizedGroup_byPosition" lay-event="change_optimizedGroup_byPosition">
-                按排名修改优化组
-            </button>-->
             <button class="layui-btn layui-btn-sm" id="change_current_optimizedGroup" lay-event="change_current_optimizedGroup">
                 修改当前优化组
             </button>
@@ -152,6 +171,8 @@
             <button class="layui-btn layui-btn-sm" id="pause_select_keyword" lay-event="pause_select_keyword">
                 暂停选中关键字
             </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
             <button class="layui-btn layui-btn-sm" id="active_all_keyword" lay-event="active_all_keyword">
                 激活所有关键字
             </button>
@@ -162,6 +183,7 @@
         </div>
 
         <div class="layui-btn-group">
+            <@shiro.hasPermission name="/internal/customerKeyword/cleanTitle">
             <button class="layui-btn layui-btn-sm" id="recollect_customer_keyword_title" lay-event="recollect_customer_keyword_title">
                 重采客户标题
             </button>
@@ -174,7 +196,7 @@
             <button class="layui-btn layui-btn-sm" id="clean_select_keyword_title" lay-event="clean_select_keyword_title">
                 清空所选标题
             </button>
-
+        </@shiro.hasPermission>
         </div>
 
     </div>
@@ -202,7 +224,7 @@
     {{#  }else if(d.currentIndexCount === -2) { }}
     未收录
     {{# }else{ }}
-    {{ d.currentIndexCount }}
+    {{= d.currentIndexCount }}
     {{# } }}
 </script>
 
@@ -228,7 +250,3 @@
 </script>
 
 
-<form action="/internal/customerKeyword/keywordUrlExport2" method="post" id="keywordUrlForm">
-    <input id="customerUuidKU" name="customerUuid" hidden value=""/>
-    <input id="terminalTypeKU" name="terminalType" hidden value=""/>
-</form>

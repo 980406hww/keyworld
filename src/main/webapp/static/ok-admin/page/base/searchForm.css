@@ -16,7 +16,7 @@
 }
 
 .my-collapse > div {
-    padding: 1px 5px;
+    padding: 7px 5px;
 }
 
 .my-hide {
@@ -24,7 +24,7 @@
     width: 99%;
     display: none;
     position: absolute;
-    top: 43px;
+    top: 50px;
     left: 3px;
     padding-left: 10px ;
     z-index: 894;

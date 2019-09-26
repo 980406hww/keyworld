@@ -1,5 +1,6 @@
 .layui-table-cell {
     display: table-cell;
+    padding: 0 5px;
     vertical-align: middle;
     overflow: visible;
     text-overflow: clip;
@@ -10,3 +11,13 @@
 .details-header{
     padding-right: 9px;
 }
+
+table a:link{color:blue;}
+
+table  a:visited{color:purple;}
+
+table  a:hover{color:red;}
+
+table  a:active{color:darkslateblue;}
+
+

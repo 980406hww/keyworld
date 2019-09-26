@@ -1,10 +1,13 @@
 
+
 .layui-table-cell {
     display: table-cell;
+    padding: 0 5px;
+    vertical-align: middle;
     overflow: visible;
-    text-overflow: inherit;
+    text-overflow: clip;
     white-space: normal;
-    padding: 0 !important;
+    word-break:break-all;
 }
 
 .details-header{
@@ -32,3 +35,10 @@
 
 #searchEngineDiv .layui-unselect dl { max-height:20px; }
 
+table a:link{color:blue;}
+
+table  a:visited{color:purple;}
+
+table  a:hover{color:red;}
+
+table  a:active{color:darkslateblue;}
