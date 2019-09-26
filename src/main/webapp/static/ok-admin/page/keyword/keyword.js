@@ -123,7 +123,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 // {field: 'originalUrl', title: '原始链接', width: '15%',},
                 // {field: 'terminalType', title: '终端', width: '5%'},
                 {field: 'title', title: '标题', width: '220'},
-                {field: 'currentIndexCount', title: '指数', width: '80', templet:'#indexCountTpl'},
+                {field: 'currentIndexCount', title: '指数', width: '80', templet: '#indexCountTpl'},
                 {field: 'initialPosition', title: '初始排名', width: '80'},
                 {field: 'currentPosition', title: '现排名', width: '80'},
                 {field: 'searchEngine', title: '搜索引擎', width: '80'},
@@ -164,8 +164,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             height: 'full-110',
             done: function (res, curr, count) {
                 let tables = document.getElementsByTagName('table');
-                if ((tables[2].offsetHeight || tables[2].clientHeight||tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight || tables[2].parentElement.clientHeight||tables[2].scrollHeight)) {
-                    document.getElementsByClassName('layui-table-header')[0].classList.add( 'details-header');
+                if ((tables[2].offsetHeight || tables[2].clientHeight || tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight
+                    || tables[2].parentElement.clientHeight || tables[2].scrollHeight)) {
+                    document.getElementsByClassName('layui-table-header')[0].classList.add('details-header');
                 } else {
                     document.getElementsByClassName('layui-table-header')[0].classList.remove('details-header');
                 }
@@ -177,8 +178,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
     // 监听表头鼠标按下事件
     $(document).on('onMouseUp', 'thead', function (e) {
             let tables = document.getElementsByTagName('table');
-            if ((tables[2].offsetHeight || tables[2].clientHeight||tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight || tables[2].parentElement.clientHeight||tables[2].scrollHeight)) {
-                document.getElementsByClassName('layui-table-header')[0].classList.add( 'details-header');
+            if ((tables[2].offsetHeight || tables[2].clientHeight || tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight
+                || tables[2].parentElement.clientHeight || tables[2].scrollHeight)) {
+                document.getElementsByClassName('layui-table-header')[0].classList.add('details-header');
             } else {
                 document.getElementsByClassName('layui-table-header')[0].classList.remove('details-header');
             }
@@ -233,15 +235,15 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         return false;
     });
 
-    form.on('select(businessType)', function(data){
+    form.on('select(businessType)', function (data) {
         active['reload'].call(this);
     });
 
-    form.on('select(terminalType)', function(data){
+    form.on('select(terminalType)', function (data) {
         active['reload'].call(this);
     });
 
-    table.on('toolbar(tableFilter)', function(obj) {
+    table.on('toolbar(tableFilter)', function (obj) {
         var data = obj.data, event = obj.event;
         switch (event) {
             case 'pause_keyword':
@@ -273,7 +275,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         }
     });
 
-    function updateCustomerKeywordStatus (status) {
+    function updateCustomerKeywordStatus(status) {
         //获取选中数据
 
         var uuidArr = get_selected_uuid_arr();
@@ -283,7 +285,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
 
             return
         }
-        if(status === 0) {
+        if (status === 0) {
             msg = '确认要暂停选中的关键字吗';
         } else {
             msg = '确认要上线选中的关键字吗';
@@ -316,16 +318,16 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         });
     }
 
-    function change_current_optimizedGroup () {
+    function change_current_optimizedGroup() {
         layer.prompt({
             formType: 3,
             value: '',
             title: '新优化组',
             // area: ['220px', '60px'], //自定义文本域宽高
-            yes: function(index, layero){
+            yes: function (index, layero) {
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
-                if(value === ''){
+                if (value === '') {
                     show_layer_msg('请输入新优化组！', 5, null, 1000);
                     return;
                 }
@@ -362,7 +364,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         });
     }
 
-    function change_selected_optimizedGroup () {
+    function change_selected_optimizedGroup() {
         //获取选中数据
         var uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
@@ -374,10 +376,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             value: '',
             title: '新优化组',
             area: ['220px', '60px'], //自定义文本域宽高
-            yes: function(index, layero){
+            yes: function (index, layero) {
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
-                if(value === ''){
+                if (value === '') {
                     show_layer_msg('请输入新优化组！', 5, null, 1000);
                     return;
                 }
@@ -423,10 +425,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             value: '',
             title: '新机器分组',
             area: ['220px', '60px'], //自定义文本域宽高
-            yes: function(index, layero){
+            yes: function (index, layero) {
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
-                if(value === ''){
+                if (value === '') {
                     show_layer_msg('请输入新机器分组！', 5, null, 1000);
                     return;
                 }
@@ -475,10 +477,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             value: '',
             title: '新机器分组',
             area: ['220px', '60px'], //自定义文本域宽高
-            yes: function(index, layero){
+            yes: function (index, layero) {
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
-                if(value === ''){
+                if (value === '') {
                     show_layer_msg('请输入新机器分组！', 5, null, 1000);
                     return;
                 }
@@ -523,10 +525,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             value: '',
             title: '新熊掌号',
             area: ['220px', '60px'], //自定义文本域宽高
-            yes: function(index, layero){
+            yes: function (index, layero) {
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
-                if(value === ''){
+                if (value === '') {
                     show_layer_msg('请输入新熊掌号！', 5, null, 1000);
                     return;
                 }
@@ -576,10 +578,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             value: '',
             title: '新熊掌号',
             area: ['220px', '60px'], //自定义文本域宽高
-            yes: function(index, layero){
+            yes: function (index, layero) {
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
-                if(value === ''){
+                if (value === '') {
                     show_layer_msg('请输入新熊掌号！', 5, null, 1000);
                     return;
                 }
@@ -617,7 +619,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         });
     }
 
-    function batch_delete(){
+    function batch_delete() {
         var uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
             show_layer_msg('请选择要操作的词', 5);
@@ -656,10 +658,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
     window.toCustomerKeyword = function (customerUuid, contactPerson) {
         // console.log(customerUuid,contactPerson);
         let businessType = $('#type').val();
-        let terminalType = $('#terminalType').val() === '' ? 'All' : $(
-            '#terminalType').val();
-        let url = '/internal/customerKeyword/toCustomerKeywords/' + businessType
-            + '/' + terminalType + '/' + customerUuid;
+        let terminalType = $('#terminalType').val() === '' ? 'All' : $('#terminalType').val();
+        let url = '/internal/customerKeyword/toCustomerKeywords/' + businessType + '/' + terminalType + '/' + customerUuid;
         let tit = contactPerson + '--关键字列表';
         updateOrNewTab(url, tit, customerUuid);
     }

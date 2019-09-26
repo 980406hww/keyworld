@@ -7,6 +7,7 @@ window.onload = function () {
 // layui相关
 
 var show = true;
+
 function show_more_operation() {
     let operationContent = document.getElementById('operationContent');
     if (show) {
@@ -18,7 +19,7 @@ function show_more_operation() {
 }
 
 layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
-        'layer'], function () {
+    'layer'], function () {
     var element = layui.element;
     var table = layui.table;
     var form = layui.form;
@@ -124,32 +125,33 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             defaultToolbar: ['filter'],
             contentType: 'application/json',
             cols: [[
-                {filed: 'uuid', type: 'checkbox', width: '35' },
+                {filed: 'uuid', type: 'checkbox', width: '35'},
                 {field: 'keyword', title: '关键字', width: '150'},
                 {field: 'url', title: '链接', width: '140'},
 
                 {field: 'bearPawNumber', title: '熊掌号', align: 'center', width: '100'},
                 {field: 'title', title: '标题', width: '220'},
-                {field: 'currentIndexCount', title: '指数', align: 'center', width: '80', templet:'#indexCountTpl'},
+                {field: 'currentIndexCount', title: '指数', align: 'center', width: '80', templet: '#indexCountTpl'},
                 {field: 'initialPosition', title: '初始排名', align: 'center', width: '80'},
                 {field: 'currentPosition', title: '现排名', align: 'center', width: '80'},
-                {field: 'searchEngine', title: '搜索引擎',  align: 'center', width: '80'},
-                {field: 'collectMethod', title: '收费方式', align: 'center', width: '80',  templet: '#collectMethodTpl' },
-                {field: 'optimizePlanCount', title: '要刷',align: 'center',  width: '80'},
+                {field: 'searchEngine', title: '搜索引擎', align: 'center', width: '80'},
+                {field: 'collectMethod', title: '收费方式', align: 'center', width: '80', templet: '#collectMethodTpl'},
+                {field: 'optimizePlanCount', title: '要刷', align: 'center', width: '80'},
                 {field: 'optimizedCount', title: '已刷', align: 'center', width: '80'},
-                {field: 'invalidRefreshCount', title: '无效', align: 'center', width: '60', hide:'true'},
-                {field: 'status', title: '状态', align: 'center', width: '80', templet:'#statusTpl'},
+                {field: 'invalidRefreshCount', title: '无效', align: 'center', width: '60', hide: 'true'},
+                {field: 'status', title: '状态', align: 'center', width: '80', templet: '#statusTpl'},
                 {field: 'failedCause', title: '失败原因', align: 'center', width: '100',},
                 {field: 'optimizeGroupName', title: '优化分组', align: 'center', width: '80'},
                 {field: 'machineGroup', title: '机器分组', align: 'center', width: '80'},
-                {title: '操作', align: 'center', width: '120', templet: '#operationTpl' }
+                {title: '操作', align: 'center', width: '120', templet: '#operationTpl'}
             ]],
-            height: 'full-105',
+            height: 'full-108',
 
             done: function (res, curr, count) {
                 let tables = document.getElementsByTagName('table');
-                if ((tables[2].offsetHeight || tables[2].clientHeight ||tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight || tables[2].parentElement.clientHeight||tables[2].scrollHeight)) {
-                    document.getElementsByClassName('layui-table-header')[0].classList.add( 'details-header');
+                if ((tables[2].offsetHeight || tables[2].clientHeight || tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight
+                    || tables[2].parentElement.clientHeight || tables[2].scrollHeight)) {
+                    document.getElementsByClassName('layui-table-header')[0].classList.add('details-header');
                 } else {
                     document.getElementsByClassName('layui-table-header')[0].classList.remove('details-header');
                 }
@@ -157,20 +159,20 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         });
 
     }
-    form.on('select(businessType)', function(data){
+
+    form.on('select(businessType)', function (data) {
         active['reload'].call(this);
     });
 
-    form.on('select(terminalType)', function(data){
+    form.on('select(terminalType)', function (data) {
         active['reload'].call(this);
     });
     // 监听表头鼠标按下事件
-    $(document).on('mousedown', 'thead',
-        function (e) {
-        console.log(111)
+    $(document).on('mousedown', 'thead', function (e) {
             let tables = document.getElementsByTagName('table');
-            if ((tables[2].offsetHeight || tables[2].clientHeight ||tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight || tables[2].parentElement.clientHeight||tables[2].scrollHeight)) {
-                document.getElementsByClassName('layui-table-header')[0].classList.add( 'details-header');
+            if ((tables[2].offsetHeight || tables[2].clientHeight || tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight
+                || tables[2].parentElement.clientHeight || tables[2].scrollHeight)) {
+                document.getElementsByClassName('layui-table-header')[0].classList.add('details-header');
             } else {
                 document.getElementsByClassName('layui-table-header')[0].classList.remove('details-header');
             }
@@ -371,12 +373,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             })
     }
 
-    function download_keyword_excel(excelType){
-        let url = excelType==='SuperUserSimple'? '/SuperUserSimpleKeywordList.xls' : '/SuperUserFullKeywordList.xls';
+    function download_keyword_excel(excelType) {
+        let url = excelType === 'SuperUserSimple' ? '/SuperUserSimpleKeywordList.xls' : '/SuperUserFullKeywordList.xls';
         window.open(url, '_blank');
     }
 
-    function download_keyword_info(){
+    function download_keyword_info() {
         let postData = formToJsonObject('searchForm');
         $.ajax({
             url: '/internal/customerKeyword/downloadCustomerKeywordInfo2',
@@ -390,14 +392,14 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             success: function (res) {
                 if (res.code === 200) {
                     show_layer_msg('导出成功', 6, false);
-                }else {
+                } else {
                     show_layer_msg('未知错误！', 5);
                 }
             }
         });
     }
 
-    function download_keyword_url(){
+    function download_keyword_url() {
         $("#customerUuidKU").val($("#customerUuid").val());
         $("#terminalTypeKU").val($("#terminalTypeTmp").val());
         $("#keywordUrlForm").submit();
@@ -409,10 +411,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             value: '',
             title: '新熊掌号',
             area: ['220px', '60px'], //自定义文本域宽高
-            yes: function(index, layero){
+            yes: function (index, layero) {
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
-                if(value === ''){
+                if (value === '') {
                     show_layer_msg('请输入新熊掌号！', 5, null, 1000);
                     return;
                 }
@@ -462,10 +464,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             value: '',
             title: '新熊掌号',
             area: ['220px', '60px'], //自定义文本域宽高
-            yes: function(index, layero){
+            yes: function (index, layero) {
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
-                if(value === ''){
+                if (value === '') {
                     show_layer_msg('请输入新熊掌号！', 5, null, 1000);
                     return;
                 }
@@ -503,16 +505,16 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         });
     }
 
-    function change_current_optimizedGroup () {
+    function change_current_optimizedGroup() {
         layer.prompt({
             formType: 3,
             value: '',
             title: '新优化组',
             // area: ['220px', '60px'], //自定义文本域宽高
-            yes: function(index, layero){
+            yes: function (index, layero) {
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
-                if(value === ''){
+                if (value === '') {
                     show_layer_msg('请输入新优化组！', 5, null, 1000);
                     return;
                 }
@@ -549,7 +551,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         });
     }
 
-    function change_select_optimizedGroup () {
+    function change_select_optimizedGroup() {
         //获取选中数据
         var uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
@@ -561,10 +563,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             value: '',
             title: '新优化组',
             area: ['220px', '60px'], //自定义文本域宽高
-            yes: function(index, layero){
+            yes: function (index, layero) {
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
-                if(value === ''){
+                if (value === '') {
                     show_layer_msg('请输入新优化组！', 5, null, 1000);
                     return;
                 }
@@ -604,8 +606,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         });
     }
 
-    function change_all_keyowrd_status(status){
-        let postData={};
+    function change_all_keyowrd_status(status) {
+        let postData = {};
         postData.terminalType = $("#terminalType").val();
         postData.type = $("#type").val();
         postData.targetStatus = status;
@@ -651,8 +653,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         });
     }
 
-    function delete_same_keyword(){
-        let postData={};
+    function delete_same_keyword() {
+        let postData = {};
         postData.terminalType = $("#terminalType").val();
         postData.type = $("#type").val();
         postData.customerUuid = $('#customerUuid').val();
@@ -684,8 +686,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         });
     }
 
-    function change_select_keyowrd_status(status){
-        let postData={};
+    function change_select_keyowrd_status(status) {
+        let postData = {};
         var uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
             show_layer_msg('请选择要操作的词', 5);
@@ -735,7 +737,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         });
     }
 
-    function change_title(changeType){
+    function change_title(changeType) {
         let postData = {};
         postData.type = $('#type').val();
         postData.terminalType = $('#terminalType').val();
@@ -802,10 +804,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             });
     }
 
-    function batch_delete(deleteType){
+    function batch_delete(deleteType) {
         let customerUuid = $("#customerUuid").val();
         let terminalType = $("#terminalType").val();
-        let msg = deleteType==='byEmptyTitleAndUrl'?'确定要删除标题和网址为空的词吗':'确定要删除标题为空的词吗';
+        let msg = deleteType === 'byEmptyTitleAndUrl' ? '确定要删除标题和网址为空的词吗' : '确定要删除标题为空的词吗';
         layer.confirm(msg, {icon: 3, title: '删除词'}, function (index) {
             var postData = {};
             postData.customerUuid = customerUuid;
@@ -947,10 +949,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             value: '',
             title: '新机器分组',
             area: ['220px', '60px'], //自定义文本域宽高
-            yes: function(index, layero){
+            yes: function (index, layero) {
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
-                if(value === ''){
+                if (value === '') {
                     show_layer_msg('请输入新机器分组！', 5, null, 1000);
                     return;
                 }
@@ -999,10 +1001,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             value: '',
             title: '新机器分组',
             area: ['220px', '60px'], //自定义文本域宽高
-            yes: function(index, layero){
+            yes: function (index, layero) {
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
-                if(value === ''){
+                if (value === '') {
                     show_layer_msg('请输入新机器分组！', 5, null, 1000);
                     return;
                 }
@@ -1041,8 +1043,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         });
     }
 
-    function change_searchEngine(type){
-        let postData={};
+    function change_searchEngine(type) {
+        let postData = {};
         switch (type) {
             case 'current':
                 postData = formToJsonObject('searchForm');
@@ -1105,9 +1107,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     layer.open({
                         type: 1,
                         title: '新客户',
-                        area:['400','600'],
-                        content: $('#searchEngineDiv') ,//注意，如果str是object，那么需要字符拼接。
-                        btn:['确定','取消'],
+                        area: ['400', '600'],
+                        content: $('#searchEngineDiv'),//注意，如果str是object，那么需要字符拼接。
+                        btn: ['确定', '取消'],
                         btn1: function (index, layero) {
                             active['reload'].call(this);
                             layer.close(index)
@@ -1164,11 +1166,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         });
     }
 
-    function download_daily_report(){
+    function download_daily_report() {
         let customerUuid = $('#customerUuid').val();
-        let url = '/internal/dailyReport/downloadSingleCustomerReport2/'+customerUuid;
+        let url = '/internal/dailyReport/downloadSingleCustomerReport2/' + customerUuid;
         window.open(url, '_blank');
     }
+
     //监听工具条
     table.on('tool(tableFilter)', function (obj) {
         var data = obj.data;
@@ -1186,7 +1189,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
     function delOneKeyword(data) {
         layer.confirm('真的删除该关键字吗', function (index) {
             $.ajax({
-                url: '/internal/customerKeyword/deleteCustomerKeyword2/'+ data.uuid,
+                url: '/internal/customerKeyword/deleteCustomerKeyword2/' + data.uuid,
                 // data: data.uuid,
                 headers: {
                     'Accept': 'application/json',
@@ -1216,11 +1219,11 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
     }
 
 // 编辑表格获得表格数据
-     function editKeyword(data) {
-         let customerUuid = $('#customerUuid').val();
-         let type = $('#typeTmp').val();
-         let terminalType = $('#terminalType').val();
-         let url = '/internal/customerKeyword/toCustomerKeywordAdd/' + type + '/' + terminalType + '/' + customerUuid;
+    function editKeyword(data) {
+        let customerUuid = $('#customerUuid').val();
+        let type = $('#typeTmp').val();
+        let terminalType = $('#terminalType').val();
+        let url = '/internal/customerKeyword/toCustomerKeywordAdd/' + type + '/' + terminalType + '/' + customerUuid;
         okLayer.open("关键字统计 / 客户关键字 / 修改关键字", url, "60%", "90%", function (layero) {
             window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
         }, function () {
