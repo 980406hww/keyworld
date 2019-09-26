@@ -1686,20 +1686,28 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void updateCustomerKeywordPosition(Long customerKeywordUuid, String type, int position, String ip, String city) {
-        // 获取历史排名 进行是否需要降低刷量的计算
-        List<Integer> summaryPositions = customerKeywordPositionSummaryService.searchOneWeekPositionByCustomerUuid(customerKeywordUuid);
-        boolean needReduce = true;
-        if (position > 0 && position <= 10) {
-            if (CollectionUtils.isNotEmpty(summaryPositions)) {
-                for (Integer summaryPosition : summaryPositions) {
-                    needReduce = summaryPosition >= 10;
-                    if (!needReduce) {
-                        break;
+        Boolean needReduce = null;
+        if (null != type) {
+            // 获取历史排名 进行是否需要降低刷量的计算
+            List<Integer> summaryPositions = customerKeywordPositionSummaryService.searchOneWeekPositionByCustomerUuid(customerKeywordUuid);
+            if (position > 0 && position <= 10) {
+                if (CollectionUtils.isNotEmpty(summaryPositions)) {
+                    if (summaryPositions.size() == 6) {
+                        for (Integer summaryPosition : summaryPositions) {
+                            needReduce = summaryPosition >= 10;
+                            if (!needReduce) {
+                                break;
+                            }
+                        }
+                    } else {
+                        needReduce = false;
                     }
+                } else {
+                    needReduce = false;
                 }
+            } else {
+                needReduce = false;
             }
-        } else {
-            needReduce = false;
         }
         String mapKey = type + "####" + needReduce;
         String queueValue = customerKeywordUuid + "####" + position + "####" + ip + "####" + city;
@@ -2270,84 +2278,83 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     public void autoUpdateCustomerKeywordPosition() {
         if (!customerKeywordUpdatePositionQueueMap.isEmpty()) {
             for (Entry<String, LinkedBlockingQueue> entry : customerKeywordUpdatePositionQueueMap.entrySet()) {
-                if ("updateCustomerKeywordQueryTime".equals(entry.getValue())) {
-                    autoUpdateCustomerKeywordQueryTime(customerKeywordUpdatePositionQueueMap.get("updateCustomerKeywordQueryTime"));
-                } else {
-                    updateCustomerKeywordAndCheckNeedReduceOptimizeTodayCount(entry.getKey(), entry.getValue());
+                if (entry.getValue().size() > 0) {
+                    if ("updateCustomerKeywordQueryTime".equals(entry.getKey())) {
+                        autoUpdateCustomerKeywordQueryTime(entry.getValue());
+                    } else {
+                        updateCustomerKeywordAndCheckNeedReduceOptimizeTodayCount(entry.getKey(), entry.getValue());
+                    }
                 }
             }
         }
     }
 
     private void autoUpdateCustomerKeywordQueryTime(LinkedBlockingQueue queue) {
-        if (null != queue && queue.size() > 0) {
-            List<UpdateCustomerKeywordPositionVO> updateCustomerKeywordPositionVos = new ArrayList<>();
-            do {
-                String uuidAndDate = (String) queue.poll();
-                String[] strings = uuidAndDate.split("####");
-                Long customerKeywordUuid = Long.parseLong(strings[0]);
-                Date capturePositionQueryTime = new Date(Long.parseLong(strings[1]));
-                UpdateCustomerKeywordPositionVO updateCustomerKeywordPositionVo = new UpdateCustomerKeywordPositionVO();
-                updateCustomerKeywordPositionVo.setCustomerKeywordUuid(customerKeywordUuid);
-                updateCustomerKeywordPositionVo.setCapturePositionQueryTime(DateUtils.addMinutes(capturePositionQueryTime, -3));
-                updateCustomerKeywordPositionVos.add(updateCustomerKeywordPositionVo);
-            } while (updateCustomerKeywordPositionVos.size() < 1000 && queue.size() > 0);
-            if (CollectionUtils.isNotEmpty(updateCustomerKeywordPositionVos)) {
-                // foreach批量处理抓取排名失败的关键词
-                customerKeywordDao.updateCustomerKeywordQueryTime(updateCustomerKeywordPositionVos);
-            }
+        List<UpdateCustomerKeywordPositionVO> updateCustomerKeywordPositionVos = new ArrayList<>();
+        do {
+            String uuidAndDate = (String) queue.poll();
+            String[] strings = uuidAndDate.split("####");
+            Long customerKeywordUuid = Long.parseLong(strings[0]);
+            Date capturePositionQueryTime = new Date(Long.parseLong(strings[1]));
+            UpdateCustomerKeywordPositionVO updateCustomerKeywordPositionVo = new UpdateCustomerKeywordPositionVO();
+            updateCustomerKeywordPositionVo.setCustomerKeywordUuid(customerKeywordUuid);
+            updateCustomerKeywordPositionVo.setCapturePositionQueryTime(DateUtils.addMinutes(capturePositionQueryTime, -3));
+            updateCustomerKeywordPositionVos.add(updateCustomerKeywordPositionVo);
+        } while (updateCustomerKeywordPositionVos.size() < 1000 && queue.size() > 0);
+        if (CollectionUtils.isNotEmpty(updateCustomerKeywordPositionVos)) {
+            // foreach批量处理抓取排名失败的关键词
+            customerKeywordDao.updateCustomerKeywordQueryTime(updateCustomerKeywordPositionVos);
         }
     }
 
     private void updateCustomerKeywordAndCheckNeedReduceOptimizeTodayCount(String mapKey, LinkedBlockingQueue queue) {
-        if (null != queue) {
-            String[] typeAndNeedReduceFlag = mapKey.split("####");
-            String type = typeAndNeedReduceFlag[0];
-            boolean needReduceFlag = Boolean.parseBoolean(typeAndNeedReduceFlag[1]);
-            List<UpdateCustomerKeywordPositionVO> updateCustomerKeywordPositionVos = new ArrayList<>();
-            if (queue.size() > 0) {
-                do {
-                    String queueValue = (String) queue.poll();
-                    String[] values = queueValue.split("####");
-                    long customerKeywordUuid = Long.parseLong(values[0]);
-                    int position = Integer.parseInt(values[1]);
-                    Double todayFee = null;
-                    // 计算收费，更新pt关键词的最近达标时间 fLastReachStandardDate
-                    if (type.equals(EntryTypeEnum.pt.name())) {
-                        if (position > 0 && position <= 10) {
-                            CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordFee(customerKeywordUuid);
-                            if (customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
-                                todayFee = customerKeyword.getPositionFirstFee();
-                            } else if (customerKeyword.getPositionSecondFee() != null && customerKeyword.getPositionSecondFee() > 0 && position == 2) {
-                                todayFee = customerKeyword.getPositionSecondFee();
-                            } else if (customerKeyword.getPositionThirdFee() != null && customerKeyword.getPositionThirdFee() > 0 && position == 3) {
-                                todayFee = customerKeyword.getPositionThirdFee();
-                            } else if (customerKeyword.getPositionForthFee() != null && customerKeyword.getPositionForthFee() > 0 && position == 4) {
-                                todayFee = customerKeyword.getPositionForthFee();
-                            } else if (customerKeyword.getPositionFifthFee() != null && customerKeyword.getPositionFifthFee() > 0 && position == 5) {
-                                todayFee = customerKeyword.getPositionFifthFee();
-                            } else if (customerKeyword.getPositionFirstPageFee() != null && customerKeyword.getPositionFirstPageFee() > 0) {
-                                todayFee = customerKeyword.getPositionFirstPageFee();
-                            }
-                        }
+        String[] typeAndNeedReduceFlag = mapKey.split("####");
+        String type = "null".equals(typeAndNeedReduceFlag[0]) ? null : typeAndNeedReduceFlag[0];
+        Boolean needReduceFlag = "null".equals(typeAndNeedReduceFlag[1]) ? null : Boolean.parseBoolean(typeAndNeedReduceFlag[1]);
+        List<UpdateCustomerKeywordPositionVO> updateCustomerKeywordPositionVos = new ArrayList<>();
+
+        do {
+            String queueValue = (String) queue.poll();
+            assert queueValue != null;
+            String[] values = queueValue.split("####");
+            long customerKeywordUuid = Long.parseLong(values[0]);
+            int position = Integer.parseInt(values[1]);
+            Double todayFee = null;
+            // 计算非qz, fm关键词的收费
+            if (!EntryTypeEnum.qz.name().equals(type) && !EntryTypeEnum.fm.name().equals(type)) {
+                if (position > 0 && position <= 10) {
+                    CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordFee(customerKeywordUuid);
+                    if (customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
+                        todayFee = customerKeyword.getPositionFirstFee();
+                    } else if (customerKeyword.getPositionSecondFee() != null && customerKeyword.getPositionSecondFee() > 0 && position == 2) {
+                        todayFee = customerKeyword.getPositionSecondFee();
+                    } else if (customerKeyword.getPositionThirdFee() != null && customerKeyword.getPositionThirdFee() > 0 && position == 3) {
+                        todayFee = customerKeyword.getPositionThirdFee();
+                    } else if (customerKeyword.getPositionForthFee() != null && customerKeyword.getPositionForthFee() > 0 && position == 4) {
+                        todayFee = customerKeyword.getPositionForthFee();
+                    } else if (customerKeyword.getPositionFifthFee() != null && customerKeyword.getPositionFifthFee() > 0 && position == 5) {
+                        todayFee = customerKeyword.getPositionFifthFee();
+                    } else if (customerKeyword.getPositionFirstPageFee() != null && customerKeyword.getPositionFirstPageFee() > 0) {
+                        todayFee = customerKeyword.getPositionFirstPageFee();
                     }
-                    UpdateCustomerKeywordPositionVO updateCustomerKeywordPositionVo = new UpdateCustomerKeywordPositionVO();
-                    updateCustomerKeywordPositionVo.setCustomerKeywordUuid(customerKeywordUuid);
-                    updateCustomerKeywordPositionVo.setType(type);
-                    updateCustomerKeywordPositionVo.setPosition(position);
-                    updateCustomerKeywordPositionVo.setTodayFee(todayFee);
-                    updateCustomerKeywordPositionVo.setCapturePositionQueryTime(Utils.getCurrentTimestamp());
-                    updateCustomerKeywordPositionVo.setIp(values[2]);
-                    updateCustomerKeywordPositionVo.setCity(values[3]);
-                    updateCustomerKeywordPositionVos.add(updateCustomerKeywordPositionVo);
-                } while (updateCustomerKeywordPositionVos.size() < 1000 && queue.size() > 0);
+                }
             }
+            UpdateCustomerKeywordPositionVO updateCustomerKeywordPositionVo = new UpdateCustomerKeywordPositionVO();
+            updateCustomerKeywordPositionVo.setCustomerKeywordUuid(customerKeywordUuid);
+            updateCustomerKeywordPositionVo.setType(type);
+            updateCustomerKeywordPositionVo.setPosition(position);
+            updateCustomerKeywordPositionVo.setTodayFee(todayFee);
+            updateCustomerKeywordPositionVo.setCapturePositionQueryTime(Utils.getCurrentTimestamp());
+            updateCustomerKeywordPositionVo.setIp(values[2]);
+            updateCustomerKeywordPositionVo.setCity(values[3]);
+            updateCustomerKeywordPositionVos.add(updateCustomerKeywordPositionVo);
+        } while (updateCustomerKeywordPositionVos.size() < 1000 && queue.size() > 0);
+
+        if (CollectionUtils.isNotEmpty(updateCustomerKeywordPositionVos)) {
             // foreach批量修改排名
-            if (CollectionUtils.isNotEmpty(updateCustomerKeywordPositionVos)) {
-                customerKeywordDao.updatePosition(updateCustomerKeywordPositionVos, needReduceFlag);
-                // 记录历史排名
-                customerKeywordPositionSummaryService.savePositionSummary(updateCustomerKeywordPositionVos);
-            }
+            customerKeywordDao.updatePosition(updateCustomerKeywordPositionVos, needReduceFlag);
+            // 记录历史排名
+            customerKeywordPositionSummaryService.savePositionSummary(updateCustomerKeywordPositionVos);
         }
     }
 }

@@ -3,7 +3,7 @@
 <mapper namespace="com.keymanager.monitoring.dao.CustomerKeywordPositionSummaryDao">
     <insert id="addPositionSummary" parameterType="com.keymanager.monitoring.entity.CustomerKeywordPositionSummary">
         INSERT INTO t_ck_position_summary (fCustomerKeywordUuid, fPosition, fCreateDate) VALUES
-        <foreach collection="ckPositionSummaryListForUpdate" item="ckPositionSummary" open="(" close=")" separator=",">
+        <foreach collection="ckPositionSummaryListForUpdate" item="ckPositionSummary" separator=",">
             (#{ckPositionSummary.customerKeywordUuid}, #{ckPositionSummary.position}, CURRENT_DATE())
         </foreach>
     </insert>
@@ -24,7 +24,7 @@
     </delete>
 
     <select id="searchOneWeekPositionByCustomerUuid" resultType="java.lang.Integer">
-        SELECT fPosition FROM t_ck_position_summary WHERE fCustomerKeywordUuid = #{customerKeywordUuid} ORDER BY fCreateDate DESC LIMIT 6
+        SELECT fPosition FROM t_ck_position_summary WHERE fCustomerKeywordUuid = #{customerKeywordUuid} GROUP BY fCreateDate ORDER BY fCreateDate DESC LIMIT 6
     </select>
 
     <update id="updatePositionSummary">

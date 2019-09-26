@@ -1062,14 +1062,13 @@
                             fOptimizeTodayCount = IF(fKeywordEffect = 'Important', IF(fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) &lt; 20, 20, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1)), IF(fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) &lt; 4, 4, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1))),
                         </if>
                     </when>
-                    <when test="updateCustomerKeywordPositionVo.type == 'pt'">
-                        fOptimizeTodayCount = IF(#{needReduceFlag}, IF(fOptimizePlanCount * ROUND((RAND() * 0.4 + 0.4), 1) &lt; 20, 20, fOptimizePlanCount * ROUND((RAND() * 0.4 + 0.4), 1)), IF(fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) &lt; 20, 20, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1))),
+                    <otherwise>
+                        fOptimizeTodayCount = IF(fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) &lt; 20, 20, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1)),
                         <if test="updateCustomerKeywordPositionVo.todayFee != null">
                             fTodayFee = IF(fLastReachStandardDate = CURRENT_DATE(), IF(fTodayFee > #{updateCustomerKeywordPositionVo.todayFee} OR #{updateCustomerKeywordPositionVo.todayFee} IS NULL, fTodayFee, #{updateCustomerKeywordPositionVo.todayFee}), #{updateCustomerKeywordPositionVo.todayFee}),
                             fLastReachStandardDate = CURRENT_DATE(),
                         </if>
-                    </when>
-                    <otherwise></otherwise>
+                    </otherwise>
                 </choose>
                 fCaptureStatus = 0,
                 fUpdateTime = NOW()
