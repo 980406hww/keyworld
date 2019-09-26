@@ -308,6 +308,21 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     @Override
+    public void batchUpdateUpgradeFailedReason(List<String> clientIDs, String upgradeFailedReason) {
+        machineInfoDao.batchUpdateUpgradeFailedReason(clientIDs, upgradeFailedReason);
+    }
+
+    @Override
+    public void batchUpdateSwitchGroupName(List<String> clientIDs, String switchGroupName) {
+        machineInfoDao.batchUpdateSwitchGroupName(clientIDs, switchGroupName);
+    }
+
+    @Override
+    public void batchUpdateAllowSwitchGroup(List<String> clientIDs, String allowSwitchGroup) {
+        machineInfoDao.batchUpdateAllowSwitchGroup(clientIDs, allowSwitchGroup);
+    }
+
+    @Override
     public String checkUpgrade(String clientID) {
         return null;
     }

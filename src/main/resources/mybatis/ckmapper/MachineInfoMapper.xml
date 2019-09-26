@@ -370,6 +370,33 @@
         </foreach>
     </update>
 
+    <update id="batchUpdateUpgradeFailedReason">
+        UPDATE t_machine_info
+        SET fUpgradeFailedReason = #{upgradeFailedReason}
+        WHERE fClientID IN
+        <foreach item="clientID" collection="clientIDs" open="(" separator="," close=")">
+            #{clientID}
+        </foreach>
+    </update>
+
+    <update id="batchUpdateSwitchGroupName">
+        UPDATE t_machine_info
+        SET fSwitchGroupName = #{switchGroupName}
+        WHERE fClientID IN
+        <foreach item="clientID" collection="clientIDs" open="(" separator="," close=")">
+            #{clientID}
+        </foreach>
+    </update>
+
+    <update id="batchUpdateAllowSwitchGroup">
+        UPDATE t_machine_info
+        SET fAllowSwitchGroup = #{allowSwitchGroup}
+        WHERE fClientID IN
+        <foreach item="clientID" collection="clientIDs" open="(" separator="," close=")">
+            #{clientID}
+        </foreach>
+    </update>
+
     <update id="batchChangeStatus">
         UPDATE t_machine_info
         SET fValid = #{valid}

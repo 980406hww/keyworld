@@ -54,7 +54,7 @@
 
     .my-hide {
         padding-bottom: 1px !important;
-        width: 100%;
+        width: 99%;
         display: none;
         position: absolute;
         top: 43px;
@@ -90,6 +90,34 @@
         height: 30px;
         width: 100px;
     }
+
+    #valid-box input{
+        height: 30px;
+        width: 120px;
+    }
+
+    #searchContent input{
+        height: 38px;
+        width: 185px;
+        display: inline;
+    }
+
+    #memory input{
+        height: 38px;
+        width: 90px;
+        display: inline;
+    }
+
+    #fuzzy-box div{
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-left: 1px;
+    }
+
+    #checkGroup input{
+        display: none;
+    }
+
 </style>
 <body>
 
@@ -122,8 +150,15 @@
                         <div class="layui-inline">
                             <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
                         </div>
-                        <div class="layui-inline">
-                            <input type="text" name="status" id="status" placeholder="请输入状态" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
+                        <div class="layui-inline" id="fuzzy-box">
+                            <input type="checkbox" name="machineGroupFuzzyQuery" lay-skin="switch" lay-text="开启模糊查询|关闭模糊查询">
+                        </div>
+                        <div class="layui-inline" id="valid-box">
+                            <select name="valid">
+                                <option value="" selected>请选择状态</option>
+                                <option value="1">监控中</option>
+                                <option value="0">暂停监控</option>
+                            </select>
                         </div>
                         <div class="layui-inline">
                             <input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID" placeholder="请输入服务器ID" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
@@ -140,66 +175,91 @@
                                 更多条件
                             </div>
                         </div>
+                        <div class="layui-inline">
+                            <button style="background: #897c00;color: #ffffff" class="layui-collapse my-btn" type="reset" id="resetBtn">
+                                重置
+                            </button>
+                        </div>
                     </div>
                     <div class="my-hide" id="searchContent">
                         <div class="layui-form-item" style="margin-bottom: 0" lay-filter="loginNameFilter">
                             <div class="layui-inline">
-                                <label class="layui-form-label">客户</label>
+                                <label class="layui-form-label">版本</label>
                                 <div class="layui-input-inline">
-                                    <select name="customerUuid" id="customerUuid"
-                                            lay-filter="customerUuidFilter" lay-search>
+                                    <input type="text" name="version" id="version" placeholder="请输入版本号" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">目标版本</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="targetVersion" id="targetVersion" placeholder="请输入目标版本" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">城市</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="city" id="city" placeholder="请输入城市" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">失败原因</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="upgradeFailedReason" id="upgradeFailedReason" placeholder="请输入失败原因" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline" id="memory">
+                                <label class="layui-form-label">内存</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="gtMemory" id="gtMemory" placeholder="≥" autocomplete="off" class="layui-input">
+                                    <input type="text" name="ltMemory" id="ltMemory" placeholder="≤" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">流转分组</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="switchGroupName" id="switchGroupName" placeholder="请输入流转分组" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">是否有机器分组</label>
+                                <div class="layui-input-inline">
+                                    <select name="hasOrNoMachineGroup">
+                                        <option value="" selected>请选择是否有机器分组</option>
+                                        <option value="hasMachineGroup">有机器分组</option>
+                                        <option value="noMachineGroup">没机器分组</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="layui-inline">
-                                <label class="layui-form-label">分类标签</label>
+                                <label class="layui-form-label">开机状态</label>
                                 <div class="layui-input-inline">
-                                    <select name="categoryTag" id="categoryTag"
-                                            lay-filter="categoryTagFilter" lay-search>
+                                    <select name="startUpStatus">
+                                        <option value='' selected>All</option>
+                                        <option value='New'>New</option>
+                                        <option value='Processing'>Processing</option>
+                                        <option value='Setting'>Setting</option>
+                                        <option value='Downloading'>Downloading</option>
+                                        <option value='Completed'>Completed</option>
+                                        <option value='Error'>Error</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="layui-inline">
-                                <label class="layui-form-label">组名</label>
+                                <label class="layui-form-label">运行程序类型</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="group" id="group" placeholder="请输入组名"
-                                           autocomplete="off" class="layui-input">
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">续费状态</label>
-                                <div class="layui-input-inline">
-                                    <select name="renewalStatus" id="renewalStatus">
-                                        <option value selected>全部</option>
-                                        <option value="1">续费中</option>
-                                        <option value="0">暂停续费</option>
-                                        <option value="2">首次续费</option>
-                                        <option value="3">下架</option>
-                                        <option value="4">其他</option>
+                                    <select name="runningProgramType">
+                                        <option value='' selected>All</option>
+                                        <option value='New'>New</option>
+                                        <option value='Old'>Old</option>
+                                        <option value='Super'>Super</option>
+                                        <option value='Rank'>Rank</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">自动采词</label>
-                                <div class="layui-input-inline">
-                                    <select name="autoCrawlKeywordFlag" id="autoCrawlKeywordFlag">
-                                        <option value selected>全部</option>
-                                        <option value="true">是</option>
-                                        <option value="false">否</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">达标种类</label>
-                                <div class="layui-input-inline">
-                                    <select name="standardSpecies" id="standardSpecies">
-                                        <option value selected>全部</option>
-                                        <option value="aiZhan">爱站</option>
-                                        <option value="5118">5118</option>
-                                        <option value="designationWord">指定词</option>
-                                        <option value="other">其它</option>
-                                    </select>
-                                </div>
+                            <div class="layui-inline" id="checkGroup">
+                                <input type="checkbox" name="noVNC" value="noVNC" title="没VNC">
+                                <input type="checkbox" name="noChangePassword" value="noChangePassword" title="没修改密码">
+<!--                                <input type="checkbox" name="showFetchKeywordStatus" value="showFetchKeywordStatus" title="显示取词状态">-->
                             </div>
                         </div>
                     </div>
@@ -250,12 +310,18 @@
 
         form.on("submit(search)", function (data) {
             var postData = data.field
+            if(data.field.hasOrNoMachineGroup != ""){
+                if(data.field.hasOrNoMachineGroup == "hasMachineGroup"){
+                    postData.hasMachineGroup = "hasMachineGroup"
+                }else{
+                    postData.noMachineGroup = "noMachineGroup"
+                }
+            }
             searchMachine(postData)
             return false
         });
 
         function searchMachine(whereCondition){
-            console.log(whereCondition)
             table.render({
                 elem: '#machineManageTable',
                 method: 'post',
@@ -292,7 +358,7 @@
                     {field: 'vpsBackendSystemComputerIDs', align: 'center', title: '服务器ID', width: '82', templet: '#vpsBackendSystemComputerIDs'},
                     {title: '操作', templet: '#operationTpl', align: 'center',fixed: "right",width: '178'}
                 ]],
-                height: 'full-53',
+                height: 'full-115',
                 done: function (res, curr, count) {
                     handleStyle();
                 }
@@ -351,8 +417,89 @@
                 case 'batchUpdateMachineGroup(\'total\')':
                     batchUpdateMachineGroup('total');
                     break;
+                case 'toBatchUpdateFailedReason':
+                    toBatchUpdateFailedReason();
+                    break;
+                case 'toAllowSwitchGroup':
+                    toAllowSwitchGroup();
+                    break;
+                case 'toSwitchGroup':
+                    toSwitchGroup();
+                    break;
             }
         });
+
+        function toAllowSwitchGroup(){
+            var checkStatus = table.checkStatus('machineManageTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.clientID);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要修改换组状态的机器', {icon: 5});
+                return
+            }
+            var postData = {};
+            postData.clientIDs = uuidArr;
+            okLayer.open("首页 / 终端列表 / 修改终端是否可换组", "/internal/machineManage/toAllowSwitchGroup", "30%", "30%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            })
+            return false;
+        }
+
+        function toSwitchGroup(){
+            var checkStatus = table.checkStatus('machineManageTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.clientID);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要修改流转分组的机器', {icon: 5});
+                return
+            }
+            var postData = {};
+            postData.clientIDs = uuidArr;
+            okLayer.open("首页 / 终端列表 / 修改终端流转分组", "/internal/machineManage/toSwitchGroup", "30%", "30%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            })
+            return false;
+        }
+
+        function toBatchUpdateFailedReason(){
+            var checkStatus = table.checkStatus('machineManageTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.clientID);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要修改失败原因的机器', {icon: 5});
+                return
+            }
+            var postData = {};
+            postData.clientIDs = uuidArr;
+            okLayer.open("首页 / 终端列表 / 修改失败原因", "/internal/machineManage/toBatchUpdateFailedReason", "30%", "30%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            })
+            return false;
+        }
 
         function batchUpdateMachineGroup(changeType){
             var postData = {};
@@ -364,15 +511,26 @@
                     uuidArr.push(item.clientID);
                 });
                 if (uuidArr.length <= 0) {
-                    layer.msg('请选择要重开的机器', {icon: 5});
+                    layer.msg('请选择要修改机器分组的终端', {icon: 5});
                     return
                 }
                 postData.clientIDs = uuidArr;
             }else{
-
+                var whereCondition = {}
+                var obj = $("#searchForm").serializeArray()
+                $.each(obj, function() {
+                    if (whereCondition[this.name]) {
+                        if (!whereCondition[this.name].push) {
+                            whereCondition[this.name] = [whereCondition[this.name]];
+                        }
+                        whereCondition[this.name].push(this.value || '');
+                    } else {
+                        whereCondition[this.name] = this.value || '';
+                    }
+                });
             }
             okLayer.open("首页 / 终端列表 / 修改机器分组", "/internal/machineManage/toUpdateMachineGroup", "30%", "30%", function (layero) {
-                window[layero.find("iframe")[0]["name"]].initData(changeType, postData);
+                window[layero.find("iframe")[0]["name"]].initData(changeType, postData, whereCondition);
             },function(){
                 if(sign){
                     active['reload'].call(this);
@@ -484,14 +642,68 @@
                     changeStatus('start', data.clientID);
                     break;
                 case 'changeTerminalType':
-                    changeTerminalType(data.clientID);
+                    changeTerminalType(data.clientID, data.terminalType);
+                    break;
+                case 'connectVNC':
+                    connectVNC(data.host, data.port, data.userName, data.password);
                     break;
             }
         });
 
-        function changeTerminalType(clientID) {
+        function connectVNC(host, port, vncUser, vncPwd){
+            try {
+                var fso = new ActiveXObject("Scripting.FileSystemObject");
+                if (!fso.FolderExists("C:\\vnc")) {
+                    fso.CreateFolder ("C:\\vnc");
+                }
+
+                var fileName = "C:\\vnc\\temp_openVNC_file.vnc";
+                if (fso.FileExists(fileName)) {
+                    var f1 = fso.GetFile(fileName);
+                    f1.Delete();
+                }
+                var tf = fso.CreateTextFile(fileName, true, false);
+                tf.WriteLine("[Connection]");
+                tf.WriteLine("Host=" + host);
+                tf.WriteLine("Port=" + port);
+                tf.WriteLine("Username=" + vncUser);
+                tf.WriteLine("Password=" + vncPwd);
+                tf.WriteLine("[Options]");
+                tf.WriteLine("UseLocalCursor=1");
+                tf.WriteLine("UseDesktopResize=1");
+                tf.WriteLine("FullScreen=0");
+                tf.WriteLine("FullColour=0");
+                tf.WriteLine("LowColourLevel=1");
+                tf.WriteLine("PreferredEncoding=ZRLE");
+                tf.WriteLine("AutoSelect=1");
+                tf.WriteLine("Shared=0");
+                tf.WriteLine("SendPtrEvents=1");
+                tf.WriteLine("SendKeyEvents=1");
+                tf.WriteLine("SendCutText=1");
+                tf.WriteLine("AcceptCutText=1");
+                tf.WriteLine("Emulate3=0");
+                tf.WriteLine("PointerEventInterval=0");
+                tf.WriteLine("Monitor=");
+                tf.WriteLine("MenuKey=F8");
+                tf.close();
+                tf = null;
+                // 运行
+                var obj = new ActiveXObject("wscript.shell");
+                obj.run(fileName);
+                obj = null;
+            } catch (e) {
+                if (e.name === "ReferenceError") {
+                    alert("请更换到带IE内核的浏览器！")
+                } else {
+                    alert("未找到对应的.vnc文件或其他的错误")
+                }
+            }
+        }
+
+        function changeTerminalType(clientID, terminalType) {
             var postData = {};
             postData.clientID = clientID;
+            postData.terminalType = terminalType;
             layer.confirm('确定要变更终端类型吗?' , {
                 icon: 3,
                 title: '改变终端类型',
@@ -676,16 +888,27 @@
         </button>
     </div>
     </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/machineInfo/updateMachineGroup">
     <div class="layui-btn-group">
+    <@shiro.hasPermission name="/internal/machineInfo/updateMachineGroup">
         <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="batchUpdateMachineGroup('selected')">
             <i class="layui-icon layui-icon-edit"></i>修改所选终端机器分组
         </button>
         <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="batchUpdateMachineGroup('total')">
             <i class="layui-icon layui-icon-edit"></i>修改当前终端机器分组
         </button>
-    </div>
     </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
+        <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toBatchUpdateFailedReason">
+            <i class="layui-icon layui-icon-edit"></i>修改所选终端失败原因
+        </button>
+        <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toAllowSwitchGroup">
+            <i class="layui-icon layui-icon-edit"></i>修改所选终端换组状态
+        </button>
+        <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toSwitchGroup">
+            <i class="layui-icon layui-icon-edit"></i>修改所选终端流转分组
+        </button>
+    </@shiro.hasPermission>
+    </div>
     </div>
 </script>
 
@@ -995,7 +1218,11 @@
 
 <script type="text/html" id="operationTpl">
     <div class="layui-btn-group">
-        <button class="layui-btn layui-btn-xs">VNC</button>
+        {{# if(d.host != null && d.host != ''){ }}
+            <@shiro.hasPermission name="/internal/machineInfo/downloadVNCFile">
+                <button class="layui-btn layui-btn-xs" lay-event="connectVNC">VNC</button>
+            </@shiro.hasPermission>
+        {{# } }}
         <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
             <button class="layui-btn layui-btn-xs" lay-event="toUpdateMachineInfo">修改</button>
         </@shiro.hasPermission>

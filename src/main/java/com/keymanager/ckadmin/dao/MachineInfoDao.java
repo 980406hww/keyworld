@@ -48,6 +48,10 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     MachineInfo getMachineInfoForStartUp();
 
+    void batchUpdateSwitchGroupName(@Param("clientIDs") List<String> clientIDs,@Param("switchGroupName")  String switchGroupName);
+
+    void batchUpdateAllowSwitchGroup(@Param("clientIDs") List<String> clientIDs,@Param("allowSwitchGroup")  String allowSwitchGroup);
+
     Integer getDownloadingClientCount();
 
     Integer getUpgradingMachineCount(@Param("clientUpgrade") ClientUpgrade clientUpgrade);
@@ -55,6 +59,8 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
     Integer getResidualMachineCount(@Param("clientUpgrade") ClientUpgrade clientUpgrade);
 
     void reopenMachineInfo(@Param("clientIDs") List<String> clientIDs, @Param("downloadProgramType") String downloadProgramType, @Param("switchGroupName") String switchGroupName);
+
+    void batchUpdateUpgradeFailedReason(@Param("clientIDs") List<String> clientIDs, @Param("upgradeFailedReason") String upgradeFailedReason);
 
     void updateStartUpStatusForCompleted(@Param("clientIDs") List<String> clientIDs);
 

@@ -21,121 +21,127 @@ import java.io.InputStream;
 import java.util.List;
 
 public interface MachineInfoService extends IService<MachineInfo> {
-    public void changeTerminalType(String clientID, String terminalType);
+    void changeTerminalType(String clientID, String terminalType);
 
-    public void addSummaryMachineInfo(String terminalType, String clientID, String freeSpace, String version, String city);
+    void addSummaryMachineInfo(String terminalType, String clientID, String freeSpace, String version, String city);
 
-    public  void updateMachineInfoVersion(String clientID, String version, boolean hasKeyword);
+     void updateMachineInfoVersion(String clientID, String version, boolean hasKeyword);
 
-    public void logMachineInfoTime(String terminalType, String clientID, String status, String freeSpace, String version, String
-            city, int updateCount, String runningProgramType,int cpuCount,int memory);
+    void logMachineInfoTime(String terminalType, String clientID, String status, String freeSpace, String version, String
+     city, int updateCount, String runningProgramType,int cpuCount,int memory);
 
-    public Page<MachineInfo> searchMachineInfos(Page<MachineInfo> page, MachineInfoCriteria machineInfoCriteria, boolean normalSearchFlag);
+    Page<MachineInfo> searchMachineInfos(Page<MachineInfo> page, MachineInfoCriteria machineInfoCriteria, boolean normalSearchFlag);
 
-    public void updateMachineInfo(MachineInfo machineInfo);
+    void batchUpdateUpgradeFailedReason(List<String> clientIDs, String upgradeFailedReason);
 
-    public void updateMachineInfoForCapturePosition(String clientID);
+    void batchUpdateSwitchGroupName(List<String> clientIDs, String switchGroupName);
 
-    public void updateMachineInfoTargetVersion(List<String> clientIDs, String targetVersion);
+    void batchUpdateAllowSwitchGroup(List<String> clientIDs, String allowSwitchGroup);
 
-    public void updateMachineInfoTargetVPSPassword(List<String> clientIDs, String targetVPSPassword);
+    void updateMachineInfo(MachineInfo machineInfo);
 
-    public void updateRenewalDate(String clientIDs,String settingType,String renewalDate);
+    void updateMachineInfoForCapturePosition(String clientID);
 
-    public MachineInfo getMachineInfo(String clientID, String terminalType);
+    void updateMachineInfoTargetVersion(List<String> clientIDs, String targetVersion);
 
-    public void deleteMachineInfo(String clientID);
+    void updateMachineInfoTargetVPSPassword(List<String> clientIDs, String targetVPSPassword);
 
-    public void deleteAll(List<String> clientIDs);
+    void updateRenewalDate(String clientIDs,String settingType,String renewalDate);
 
-    public void saveMachineInfo(MachineInfo machineInfo);
+    MachineInfo getMachineInfo(String clientID, String terminalType);
 
-    public void resetRestartStatusForProcessing();
+    void deleteMachineInfo(String clientID);
 
-    public void changeStatus(String clientID);
+    void deleteAll(List<String> clientIDs);
 
-    public void uploadVNCFile(InputStream inputStream, String terminalType);
+    void saveMachineInfo(MachineInfo machineInfo);
 
-    public void reopenMachineInfo(List<String> clientIDs, String downloadProgramType);
+    void resetRestartStatusForProcessing();
 
-    public void uploadVPSFile(String machineInfoType, String downloadProgramType, File file, String terminalType);
+    void changeStatus(String clientID);
 
-    public void getFullVNCFileInfo(String terminalType);
+    void uploadVNCFile(InputStream inputStream, String terminalType);
 
-    public void writeXMLDTD(FileOutputStream o);
+    void reopenMachineInfo(List<String> clientIDs, String downloadProgramType);
 
-    public void writeFullTxtFile(List<MachineInfo> machineInfos);
+    void uploadVPSFile(String machineInfoType, String downloadProgramType, File file, String terminalType);
 
-    public void writeTxtFile(MachineInfo machineInfo, String password);
+    void getFullVNCFileInfo(String terminalType);
 
-    public void updateUpgradeFailedReason(String clientID, String upgradeFailedReason);
+    void writeXMLDTD(FileOutputStream o);
 
-    public String checkUpgrade(String clientID);
+    void writeFullTxtFile(List<MachineInfo> machineInfos);
 
-    public String checkPassword(String clientID);
+    void writeTxtFile(MachineInfo machineInfo, String password);
 
-    public String updatePassword(String clientID);
+    void updateUpgradeFailedReason(String clientID, String upgradeFailedReason);
 
-    public void updateMachineInfoRestartStatus(String clientID, String restartStatus);
+    String checkUpgrade(String clientID);
 
-    public void switchGroup();
+    String checkPassword(String clientID);
 
-    public void sendNotificationForRenewal();
+    String updatePassword(String clientID);
 
-    public MachineInfo getMachineInfoForStartUp();
+    void updateMachineInfoRestartStatus(String clientID, String restartStatus);
 
-    public String getMachineStartUpStatus(String clientID);
+    void switchGroup();
 
-    public String getMachineInfoID(String vpsBackendSystemComputerID);
+    void sendNotificationForRenewal();
 
-    public void updateMachineStartUpStatus(String clientID, String status);
+    MachineInfo getMachineInfoForStartUp();
 
-    public Integer getDownloadingMachineCount();
+    String getMachineStartUpStatus(String clientID);
 
-    public void updateStartUpStatusForCompleted(List<String> clientIDs);
+    String getMachineInfoID(String vpsBackendSystemComputerID);
 
-    public void batchUpdateMachineInfo(MachineInfoBatchUpdateCriteria machineInfoBatchUpdateCriteria);
+    void updateMachineStartUpStatus(String clientID, String status);
 
-    public void batchChangeStatus(String clientIDs,Boolean status);
+    Integer getDownloadingMachineCount();
 
-    public void batchChangeTerminalType(String[] clientIds, String terminalType);
+    void updateStartUpStatusForCompleted(List<String> clientIDs);
 
-    public Integer getUpgradingMachineCount(ClientUpgrade clientUpgrade);
+    void batchUpdateMachineInfo(MachineInfoBatchUpdateCriteria machineInfoBatchUpdateCriteria);
 
-    public void updateMachineTargetVersion(ClientUpgrade clientUpgrade);
+    void batchChangeStatus(String clientIDs,Boolean status);
 
-    public Integer getResidualMachineCount(ClientUpgrade clientUpgrade);
+    void batchChangeTerminalType(String[] clientIds, String terminalType);
 
-    public void updateVersion(String clientID, String version);
+    Integer getUpgradingMachineCount(ClientUpgrade clientUpgrade);
 
-    public void updatePageNo(String clientID, int pageNo);
+    void updateMachineTargetVersion(ClientUpgrade clientUpgrade);
 
-    public List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(
-            CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
+    Integer getResidualMachineCount(ClientUpgrade clientUpgrade);
 
-    public List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(String clientIDPrefix, String city, String switchGroupName);
+    void updateVersion(String clientID, String version);
 
-    public List<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(String group, String terminalType);
+    void updatePageNo(String clientID, int pageNo);
 
-    public MachineInfo getStoppedMachineInfo();
+    List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(
+     CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
-    public void updateRemainingKeywordIndicator(List<String> groupNames, int indicator);
+    List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(String clientIDPrefix, String city, String switchGroupName);
 
-    public void updateAllRemainingKeywordIndicator(int indicator);
+    List<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(String group, String terminalType);
 
-    public List<CookieVO> searchClientForAllotCookie(int clientCookieCount, String cookieGroupForBaidu, String cookieGroupFor360);
+    MachineInfo getStoppedMachineInfo();
 
-    public void resetOptimizationInfo();
+    void updateRemainingKeywordIndicator(List<String> groupNames, int indicator);
 
-    public ClientStatusForOptimization getClientStatusForOptimization(String clientID);
+    void updateAllRemainingKeywordIndicator(int indicator);
 
-    public void updateMachineGroup(MachineInfoCriteria machineInfoCriteria);
+    List<CookieVO> searchClientForAllotCookie(int clientCookieCount, String cookieGroupForBaidu, String cookieGroupFor360);
 
-    public void updateMachineGroupById(String clientID, String machineGroup);
+    void resetOptimizationInfo();
 
-    public List<MachineGroupWorkInfo> searchMachineInfoFormMachineGroupWorkInfo(MachineGroupWorkInfoCriteria machineGroupWorkInfoCriteria);
+    ClientStatusForOptimization getClientStatusForOptimization(String clientID);
 
-    public List<MachineInfoMachineGroupSummaryVO> searchMachineInfoMachineGroupSummaryVO(String machineGroup, String terminalType);
+    void updateMachineGroup(MachineInfoCriteria machineInfoCriteria);
 
-    public void updateMachine(String clientID, String city, String version, String freeSpace, String runningProgramType,int cpuCount,int memory);
+    void updateMachineGroupById(String clientID, String machineGroup);
+
+    List<MachineGroupWorkInfo> searchMachineInfoFormMachineGroupWorkInfo(MachineGroupWorkInfoCriteria machineGroupWorkInfoCriteria);
+
+    List<MachineInfoMachineGroupSummaryVO> searchMachineInfoMachineGroupSummaryVO(String machineGroup, String terminalType);
+
+    void updateMachine(String clientID, String city, String version, String freeSpace, String runningProgramType,int cpuCount,int memory);
 }

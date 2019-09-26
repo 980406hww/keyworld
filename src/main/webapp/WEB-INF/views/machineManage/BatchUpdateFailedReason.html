@@ -2,20 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>修改机器分组</title>
+    <title>修改失败原因</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
 </head>
 <body>
 <div class="ok-body">
 
-    <form class="layui-form layui-form-pane ok-form" lay-filter="UpdateMachineGroup">
+    <form class="layui-form layui-form-pane ok-form" lay-filter="UpdateFailedReason">
         <div class="layui-form-item">
-            <label class="layui-form-label">机器分组</label>
+            <label class="layui-form-label">失败原因</label>
             <div class="layui-input-block">
-                <input type="text" name="machineGroup" lay-verify="required" placeholder="请输入机器分组" autocomplete="off" class="layui-input">
+                <input type="text" name="upgradeFailedReason" placeholder="请输入失败原因" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
@@ -29,13 +28,12 @@
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
-    var changeType = null;
-    var whereCondition = null;
+    var uuid_ = null;
+    var layui_ = null;
+    var clientIDs = null;
 
-    function initData(changetype, data, wherecondition) {
-        changeType = changetype
+    function initData(data) {
         clientIDs = data.clientIDs
-        whereCondition = wherecondition
     }
 
     layui.use(["form", "okLayer", "jquery", "layer"], function () {
@@ -46,19 +44,14 @@
         form.on("submit(commit)", function (data) {
             layer.confirm('确认修改？', {
                 icon: 3,
-                title: '修改机器分组',
+                title: '修改失败原因',
                 btn: ['确认', '取消'],
                 yes: function (index) {
                     var postData = {};
-                    if(changeType == 'total'){
-                        postData = whereCondition
-                        postData.targetMachineGroup = data.field.machineGroup
-                    }else{
-                        postData.clientIDs = clientIDs;
-                        postData.targetMachineGroup = data.field.machineGroup
-                    }
+                    postData.clientIDs = clientIDs;
+                    postData.upgradeFailedReason = data.field.upgradeFailedReason;
                     $.ajax({
-                        url: '/internal/machineManage/updateMachineGroup',
+                        url: '/internal/machineManage/batchUpdateUpgradeFailedReason',
                         type: 'post',
                         data: JSON.stringify(postData),
                         headers: {
@@ -69,7 +62,7 @@
                         success: function (res) {
                             if (res.code === 200) {
                                 layer.close(index);
-                                okLayer.msg.greenTick("保存成功", function () {
+                                okLayer.msg.greenTick("修改成功", function () {
                                     parent.window.sign = true;
                                     parent.layer.close(parent.layer.getFrameIndex(window.name));
                                 });
@@ -93,5 +86,6 @@
 
     });
 </script>
+
 </body>
 </html>

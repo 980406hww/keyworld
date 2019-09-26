@@ -88,11 +88,71 @@ public class MachineInfoController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/toBatchUpdateFailedReason", method = RequestMethod.GET)
+    public ModelAndView toBatchUpdateFailedReason(){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/BatchUpdateFailedReason");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
     @RequestMapping(value = "/toUpdateMachineInfo", method = RequestMethod.GET)
     public ModelAndView toUpdateMachineInfo(){
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/UpdateMachineInfo");
         return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/toAllowSwitchGroup", method = RequestMethod.GET)
+    public ModelAndView toAllowSwitchGroup(){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/AllowSwitchGroup");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/toSwitchGroup", method = RequestMethod.GET)
+    public ModelAndView toSwitchGroup(){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/SwitchGroup");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/batchUpdateSwitchGroupName", method = RequestMethod.POST)
+    public ResultBean batchUpdateSwitchGroupName(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
+            String switchGroupName = (String) requestMap.get("switchGroupName");
+            machineInfoService.batchUpdateSwitchGroupName(clientIDs, switchGroupName);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/batchUpdateAllowSwitchGroup", method = RequestMethod.POST)
+    public ResultBean batchUpdateAllowSwitchGroup(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
+            String allowSwitchGroup = (String) requestMap.get("allowSwitchGroup");
+            machineInfoService.batchUpdateAllowSwitchGroup(clientIDs, allowSwitchGroup);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
     }
 
     @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
@@ -205,6 +265,24 @@ public class MachineInfoController extends SpringMVCBaseController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/batchUpdateUpgradeFailedReason", method = RequestMethod.POST)
+    public ResultBean batchUpdateUpgradeFailedReason(@RequestBody Map<String, Object> requestMap){
+        ResultBean resultBean = new ResultBean();
+        try {
+            List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
+            String upgradeFailedReason = (String) requestMap.get("upgradeFailedReason");
+            machineInfoService.batchUpdateUpgradeFailedReason(clientIDs, upgradeFailedReason);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
     @RequiresPermissions("/internal/machineInfo/changeStatus")
     @RequestMapping(value = "/changeStatus/{clientID}", method = RequestMethod.POST)
     public ResultBean changeStatus(@PathVariable("clientID") String clientID){
@@ -225,11 +303,10 @@ public class MachineInfoController extends SpringMVCBaseController {
     @RequestMapping(value = "/changeTerminalType", method = RequestMethod.POST)
     public ResultBean changeTerminalType(@RequestBody Map<String, Object> requestMap, HttpServletRequest request){
         ResultBean resultBean = new ResultBean();
-        String terminalType = TerminalTypeMapping.getTerminalType(request);
         String clientID = (String) requestMap.get("clientID");
+        String terminalType = (String) requestMap.get("terminalType");
         try {
-            machineInfoService.changeTerminalType(clientID, TerminalTypeEnum.PC.name().equals(terminalType) ? TerminalTypeEnum.Phone.name() :
-                    TerminalTypeEnum.PC.name());
+            machineInfoService.changeTerminalType(clientID, TerminalTypeEnum.PC.name().equals(terminalType) ? TerminalTypeEnum.Phone.name() : TerminalTypeEnum.PC.name());
             resultBean.setCode(200);
         } catch (Exception e) {
             logger.error(e.getMessage());
