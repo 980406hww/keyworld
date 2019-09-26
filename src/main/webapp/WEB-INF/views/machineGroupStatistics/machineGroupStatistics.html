@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>刷量统计</title>
+    <title>机器分组统计</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
     <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
@@ -141,13 +141,10 @@
                             </select>
                         </div>
                         <div class="layui-inline">
-                            <input type="text" name="groupName" id="groupName" placeholder="请输入分组查询" class="layui-input">
+                            <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" class="layui-input">
                         </div>
                         <div class="layui-inline">
-                            <input type="checkbox" name="groupNameFuzzyQuery" title="模糊搜索">
-                        </div>
-                        <div class="layui-inline">
-                            <input type="text" name="machineGroup" placeholder="请输入机器分组" class="layui-input">
+                            <input type="checkbox" name="machineGroupFuzzyQuery" title="模糊搜索">
                         </div>
                         <div class="layui-inline">
                             <input type="text" name="customerName" id="customerName" placeholder="请输入客户名称" class="layui-input">
@@ -184,17 +181,18 @@
             </form>
         </div>
     </div>
-    <!--TODO 跳转页面 但是跳但是目前跳转的是久的页面-->
+
+    <!--TODO 跳转旧的页面-->
     <form id="searchCustomerKeywordForm" style="display: none;" method="post" target="_blank"
           action="/internal/customerKeyword/searchCustomerKeywordLists">
-        <input type="hidden" name="optimizeGroupName" id="optimizeGroupName" value=""/>
+        <input type="hidden" name="machineGroup" id="openMachineGroup" value=""/>
         <input type="hidden" name="invalidRefreshCount" id="invalidRefreshCount" value=""/>
         <input type="hidden" name="noReachStandardDays" id="noReachStandardDays" value=""/>
         <input type="hidden" name="status" id="status" value="1"/>
     </form>
 
     <!--数据表格-->
-    <table class="layui-hide" id="refreshTable" lay-filter="refreshTable"></table>
+    <table class="layui-hide" id="machineTable" lay-filter="machineTable"></table>
 </div>
 <!--js逻辑-->
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
@@ -213,9 +211,9 @@
         var form = layui.form;
         var $ = layui.jquery;
 
-        <@shiro.hasPermission name = "/internal/customerKeyword/searchCustomerKeywordLists" >
-        window.searchCustomerKeywords = function (group) {
-            $("#searchCustomerKeywordForm").find("#optimizeGroupName").val(group);
+        <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
+        window.searchCustomerKeywords = function (machineGroup) {
+            $("#searchCustomerKeywordForm").find("#openMachineGroup").val(machineGroup);
             $("#searchCustomerKeywordForm").submit();
         };
         </@shiro.hasPermission>
@@ -227,9 +225,16 @@
             } else {
                 $("#searchCustomerKeywordForm").find("#noReachStandardDays").val(0);
             }
-            $("#searchCustomerKeywordForm").find("#invalidRefreshCount").val(invalidRefreshCount ? invalidRefreshCount : '');
-            $("#searchCustomerKeywordForm").find("#optimizeGroupName").val(optimizeGroupName ? optimizeGroupName : '');
+            $("#searchCustomerKeywordForm").find("#invalidRefreshCount").val(invalidRefreshCount);
+            $("#searchCustomerKeywordForm").find("#optimizeGroupName").val(optimizeGroupName);
             $("#searchCustomerKeywordForm").submit();
+        };
+        </@shiro.hasPermission>
+
+        <@shiro.hasPermission name="/internal/machineInfo/searchBadMachineInfo">
+        window.findMachineInfo = function (machineGroup) {
+            $("#searchMachineInfoForm").find("#openMachineGroup").val(machineGroup);
+            $("#searchMachineInfoForm").submit();
         };
         </@shiro.hasPermission>
 
@@ -273,13 +278,13 @@
         <@shiro.hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
         function tableInit(condition) {
             table.render({
-                elem: '#refreshTable',
+                elem: '#machineTable',
                 method: 'post',
-                url: '/internal/refreshstatistics/getRefreshDataByCondition',
+                url: '/internal/machinegroupstatistics/searchMachineGroupWorkInfos',
                 page: false,
-                autoSort: false,
+                autoSort: true,
                 size: 'sm',
-                id: 'refreshTable',
+                id: 'machineTable',
                 even: true,//隔行背景
                 where: condition,
                 defaultToolbar: ['filter'],
@@ -288,36 +293,37 @@
                     {filed: 'uuid', type: 'checkbox', width: '2%', rowspan: 2},
                     {
                         title: '类型', width: '10%', align: 'center', templet: function (d) {
-                            if (d.group === '总计') {
-                                return d.group;
+                            if (d.machineGroup === '总计') {
+                                return d.machineGroup;
                             }
-                            return '<a href="javascript:searchCustomerKeywords(\'' + d.group + '\')" style="color: blue">' + d.group + '</a>';
+                            return '<a href="javascript:searchCustomerKeywords(\'' + d.machineGroup + '\')" style="color: blue">' + d.machineGroup + '</a>';
                         }, rowspan: 2
                     },
-                    {title: '关键字', width: '49%', align: 'center', colspan: 8},
-                    {title: '刷的次数', width: '39%', align: 'center', colspan: 6}
+                    {title: '关键字', width: '37%', align: 'center', colspan: 7},
+                    {title: '刷的次数', width: '58%', align: 'center', colspan: 6},
+                    {title: '机器数', width: '15%', align: 'center', colspan: 3}
                 ], [
                     {
-                        title: '总数', width: '6%', align: 'center', templet: function (d) {
+                        title: '总数', width: '5%', align: 'center', templet: function (d) {
                             return d.totalKeywordCount;
                         }
                     },
                     {
                         title: '达标数(金额)', width: '6%', align: 'center', templet: function (d) {
                             if (d.reachStandardKeywordCount > 0) {
-                                if (d.group === '总计') {
+                                if (d.machineGroup === '总计') {
                                     return '<a href="javascript:findKeyword(\'\', \'\')" style="color: blue">' + d.reachStandardKeywordCount + '('
                                         + d.todaySubTotal + ')</a>';
                                 }
-                                return '<a href="javascript:findKeyword(\'' + d.group + '\', \'\')" style="color: blue">' + d.reachStandardKeywordCount + '('
-                                    + d.todaySubTotal + ')</a>';
+                                return '<a href="javascript:findKeyword(\'' + d.machineGroup + '\', \'\')" style="color: blue">' + d.reachStandardKeywordCount
+                                    + '(' + d.todaySubTotal + ')</a>';
                             } else {
                                 return '';
                             }
                         }
                     },
                     {
-                        title: '达标率', width: '6%', align: 'center', templet: function (d) {
+                        title: '达标率', width: '5%', align: 'center', templet: function (d) {
                             let reachStandardPercentage = (d.reachStandardKeywordCount * 1.0) / d.totalKeywordCount * 100;
                             if (reachStandardPercentage > 0) {
                                 return reachStandardPercentage.toFixed(2) + '%';
@@ -327,7 +333,7 @@
                         }
                     },
                     {
-                        title: '没有刷量', width: '6%', align: 'center', templet: function (d) {
+                        title: '没有刷量', width: '5%', align: 'center', templet: function (d) {
                             if (d.zeroOptimizedCount > 0) {
                                 return d.zeroOptimizedCount;
                             } else {
@@ -336,7 +342,7 @@
                         }
                     },
                     {
-                        title: '待刷数', width: '6%', align: 'center', templet: function (d) {
+                        title: '待刷数', width: '5%', align: 'center', templet: function (d) {
                             if (d.needOptimizeKeywordCount > 0) {
                                 return d.needOptimizeKeywordCount;
                             } else {
@@ -345,24 +351,24 @@
                         }
                     },
                     {
-                        title: '无效刷量', width: '7%', align: 'center', templet: function (d) {
+                        title: '无效刷量', width: '6%', align: 'center', templet: function (d) {
                             if (d.invalidKeywordCount > 0) {
                                 let html = '';
-                                if (d.group === '总计') {
+                                if (d.machineGroup === '总计') {
                                     html = '<a href="javascript:findKeyword(\'\', \'' + d.maxInvalidCount + '\')" style="color: blue">' + d.invalidKeywordCount
                                         + '</a>';
                                 } else {
-                                    html = '<a href="javascript:findKeyword(\'' + d.group + '\', \'' + d.maxInvalidCount + '\')" style="color: blue">'
+                                    html = '<a href="javascript:findKeyword(\'' + d.machineGroup + '\', \'' + d.maxInvalidCount + '\')" style="color: blue">'
                                         + d.invalidKeywordCount + '</a>';
                                 }
                                 <@shiro.hasPermission name="/internal/customerKeyword/resetInvalidRefreshCount">
                                 let cus = document.getElementById('customerName').value;
-                                if (d.group === '总计') {
-                                    html += '<a href="javascript:resetInvaidRefreshCount(\'' + document.getElementById('groupName').value
+                                if (d.machineGroup === '总计') {
+                                    html += '<a href="javascript:resetInvaidRefreshCount(\'' + document.getElementById('machineGroup').value
                                         + '\',\'' + cus
                                         + '\', false)" style="color: blue;margin-left: 5px">重置</a>';
                                 } else {
-                                    html += '<a href="javascript:resetInvaidRefreshCount(\'' + d.group
+                                    html += '<a href="javascript:resetInvaidRefreshCount(\'' + d.machineGroup
                                         + '\',\'' + cus + '\', true)" style="color: blue;margin-left: 5px">重置</a>';
                                 }
                                 </@shiro.hasPermission>
@@ -373,16 +379,7 @@
                         }
                     },
                     {
-                        title: '失败数', width: '6%', align: 'center', templet: function (d) {
-                            if (d.failedKeywordCount > 0) {
-                                return d.failedKeywordCount;
-                            } else {
-                                return '';
-                            }
-                        }
-                    },
-                    {
-                        title: '无效占比', width: '6%', align: 'center', templet: function (d) {
+                        title: '无效占比', width: '5%', align: 'center', templet: function (d) {
                             let invalidKeywordPercentage = (d.totalKeywordCount > 0) ? ((d.invalidKeywordCount * 1.0) / d.totalKeywordCount) * 100 : 0;
                             if (invalidKeywordPercentage > 0) {
                                 let color = invalidKeywordPercentage > 20 ? "red" : (invalidKeywordPercentage > 10 ? "purple" : "#000");
@@ -402,7 +399,7 @@
                         }
                     },
                     {
-                        title: '已刷次数', width: '6%', align: 'center', templet: function (d) {
+                        title: '已刷次数', width: '5%', align: 'center', templet: function (d) {
                             if (d.totalOptimizedCount > 0) {
                                 return d.totalOptimizedCount;
                             } else {
@@ -420,7 +417,7 @@
                         }
                     },
                     {
-                        title: '平均有效刷量', width: '8%', align: 'center', templet: function (d) {
+                        title: '平均有效刷量', width: '7%', align: 'center', templet: function (d) {
                             if (d.totalOptimizedCount > 0) {
                                 let avgOptimizedCount = d.totalOptimizedCount / d.totalKeywordCount;
                                 let color = avgOptimizedCount <= 30 ? "red" : "black";
@@ -431,7 +428,7 @@
                         }
                     },
                     {
-                        title: '取词次数', width: '7%', align: 'center', templet: function (d) {
+                        title: '取词次数', width: '6%', align: 'center', templet: function (d) {
                             if (d.queryCount > 0) {
                                 return d.queryCount;
                             } else {
@@ -445,6 +442,37 @@
                             if (invalidOptimizePercentage > 0) {
                                 let color = invalidOptimizePercentage > 20 ? "red" : (invalidOptimizePercentage > 10 ? "purple" : "#000");
                                 return '<span style="color: ' + color + '">' + invalidOptimizePercentage.toFixed(2) + '%</span>';
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        title: '总数', width: '5%', align: 'center', templet: function (d) {
+                            if (d.totalMachineCount > 0) {
+                                return d.totalMachineCount;
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        title: '空闲率', width: '5%', align: 'center', templet: function (d) {
+                            let idlePercentage = d.idleTotalMinutes / (d.totalMachineCount * 24 * 60.0) * 100;
+                            if (idlePercentage > 0) {
+                                return idlePercentage.toFixed(2) + '%';
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        title: '已停数', width: '5%', align: 'center', templet: function (d) {
+                            if (d.unworkMachineCount > 0) {
+                                if (d.machineGroup === '总计') {
+                                    return '<a target="_blank" href="javascript:findMachineInfo(\'\')">d.unworkMachineCount</a>';
+                                }
+                                return '<a target="_blank" href="javascript:findMachineInfo(\'' + d.machineGroup + '\')">d.unworkMachineCount</a>';
                             } else {
                                 return '';
                             }
@@ -472,7 +500,7 @@
                 if (!condition.groupNameFuzzyQuery) {
                     condition.groupNameFuzzyQuery = '';
                 }
-                table.reload('refreshTable', {
+                table.reload('machineTable', {
                     where: condition
                 });
             }
@@ -486,7 +514,7 @@
             if (!condition.groupNameFuzzyQuery) {
                 condition.groupNameFuzzyQuery = '';
             }
-            table.reload('refreshTable', {
+            table.reload('machineTable', {
                 where: condition
             });
             return false;

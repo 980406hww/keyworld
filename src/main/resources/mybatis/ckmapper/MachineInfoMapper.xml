@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.MachineInfoDao">
+
+    <select id="searchMachineInfoFormMachineGroupWorkInfo"
+        resultType="com.keymanager.ckadmin.entity.MachineGroupWorkInfo">
+        SELECT
+        cs.fMachineGroup AS "machineGroup",
+        cs.fTerminalType AS "terminalType",
+        SUM(IF(DATE_ADD(cs.fLastVisitTime, INTERVAL IF(10 > cs.fPageNo * 3, 15, cs.fPageNo * 3 + 5)
+        MINUTE) &lt; NOW(), 1, 0)) AS 'unworkMachineCount',
+        SUM(cs.fIdleTotalMinutes) AS "idleTotalMinutes",
+        COUNT(1) AS 'totalMachineCount'
+        FROM t_machine_info cs
+        WHERE cs.fValid = 1
+        <if
+            test="criteria.terminalType!=null and criteria.terminalType!=''">
+            AND cs.fTerminalType = #{criteria.terminalType}
+        </if>
+        <if
+            test="criteria.machineGroup!=null and criteria.machineGroup!=''">
+            AND cs.fMachineGroup like '${criteria.machineGroup}%'
+            AND EXISTS (SELECT 1 FROM t_customer_keyword ck WHERE ck.fType =
+            #{criteria.entryType} AND ck.fMachineGroup like
+            '${criteria.machineGroup}%')
+        </if>
+        GROUP BY cs.fMachineGroup, cs.fTerminalType
+    </select>
+</mapper>
