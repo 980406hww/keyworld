@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.service.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
+import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.dao.CustomerKeywordDao;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.enums.KeywordEffectEnum;
@@ -27,7 +28,8 @@ import org.springframework.stereotype.Service;
 
 @Service("customerKeywordService2")
 public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, CustomerKeyword> implements
-        CustomerKeywordService {
+    CustomerKeywordService {
+
     private static Logger logger = LoggerFactory.getLogger(CustomerKeywordServiceImpl.class);
 
     @Resource(name = "customerKeywordDao2")
@@ -105,16 +107,20 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         customerKeyword.setKeyword(customerKeyword.getKeyword().trim());
 
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
-            CustomerKeyword customerKeyword1 = customerKeywordDao.getOneSameCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl(), customerKeyword.getTitle());
-            if (customerKeyword1 != null ) {
+            CustomerKeyword customerKeyword1 = customerKeywordDao
+                .getOneSameCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(),
+                    customerKeyword.getUrl(), customerKeyword.getTitle());
+            if (customerKeyword1 != null) {
                 detectCustomerKeywordEffect(customerKeyword, customerKeyword1);
                 return null;
             }
         }
 
-        if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType()) ) {
-            CustomerKeyword customerKeyword1 = customerKeywordDao.getOneSimilarCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getOriginalUrl(), customerKeyword.getTitle());
-            if (customerKeyword1 != null ) {
+        if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
+            CustomerKeyword customerKeyword1 = customerKeywordDao
+                .getOneSimilarCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(),
+                    customerKeyword.getOriginalUrl(), customerKeyword.getTitle());
+            if (customerKeyword1 != null) {
                 detectCustomerKeywordEffect(customerKeyword, customerKeyword1);
                 return null;
             }
@@ -190,7 +196,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             String oldKeywordEffect = customerKeyword1.getKeywordEffect();
             String keywordEffect = customerKeyword.getKeywordEffect();
             if (null != oldKeywordEffect) {
-                if (!oldKeywordEffect.equals(keywordEffect)){
+                if (!oldKeywordEffect.equals(keywordEffect)) {
                     Map<String, Integer> levelMap = KeywordEffectEnum.toLevelMap();
                     String newKeywordEffect = levelMap.get(oldKeywordEffect) < levelMap.get(keywordEffect) ? oldKeywordEffect : keywordEffect;
                     customerKeyword.setKeywordEffect(newKeywordEffect);
@@ -208,6 +214,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public KeywordCountVO getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String terminalType) {
         return customerKeywordDao.getCustomerKeywordsCountByCustomerUuid(customerUuid, terminalType);
+    }
+
+    @Override
+    public void resetInvalidRefreshCount(RefreshStatisticsCriteria criteria) {
+        customerKeywordDao.resetInvalidRefreshCount(criteria);
     }
 }
 

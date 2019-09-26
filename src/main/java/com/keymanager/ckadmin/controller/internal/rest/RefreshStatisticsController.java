@@ -1,6 +1,5 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
-import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.RefreshStatRecord;
@@ -56,8 +55,6 @@ public class RefreshStatisticsController {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(0);
         try {
-            String entryType = (String) request.getSession().getAttribute("entryType");
-            criteria.setEntryType(entryType);
             String terminalType = TerminalTypeMapping.getTerminalType(request);
             criteria.setTerminalType(terminalType);
             HttpSession session = request.getSession();

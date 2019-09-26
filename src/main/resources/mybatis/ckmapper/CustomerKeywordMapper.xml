@@ -30,7 +30,7 @@
     </select>
 
     <update id="excludeCustomerKeyword">
-        UPDATE  t_customer_keyword ck
+        UPDATE t_customer_keyword ck
         SET ck.fStatus = 3
         WHERE 1=1
         <if test="qzSettingExcludeCustomerKeywordsCriteria.customerUuid != null and qzSettingExcludeCustomerKeywordsCriteria.customerUuid != ''">
@@ -39,7 +39,7 @@
         AND ck.fType = #{qzSettingExcludeCustomerKeywordsCriteria.type}
         AND ck.fTerminalType = #{qzSettingExcludeCustomerKeywordsCriteria.terminalType}
         AND ck.fKeyword IN
-        <foreach item = "keyword" collection = "qzSettingExcludeCustomerKeywordsCriteria.keywords" open="(" separator="," close=")">
+        <foreach item="keyword" collection="qzSettingExcludeCustomerKeywordsCriteria.keywords" open="(" separator="," close=")">
             #{keyword}
         </foreach>
         AND ck.fUrl LIKE CONCAT(#{qzSettingExcludeCustomerKeywordsCriteria.domain},'%')
@@ -165,18 +165,18 @@
 
     <select id="getOneSameCustomerKeyword" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
         SELECT
-        ck.fUuid	AS	'uuid',
-        ck.fTerminalType	AS	'terminalType',
-        ck.fCustomerUuid	AS	'customerUuid',
-        ck.fKeyword	AS	'keyword',
-        ck.fUrl	AS	'url',
-        ck.fOriginalUrl	AS	'originalUrl',
+        ck.fUuid AS 'uuid',
+        ck.fTerminalType AS 'terminalType',
+        ck.fCustomerUuid AS 'customerUuid',
+        ck.fKeyword AS 'keyword',
+        ck.fUrl AS 'url',
+        ck.fOriginalUrl AS 'originalUrl',
         ck.fBearPawNumber AS 'bearPawNumber',
-        ck.fTitle	AS	'title',
-        ck.fStatus	AS	'status',
-        ck.fSearchEngine	AS	'searchEngine',
+        ck.fTitle AS 'title',
+        ck.fStatus AS 'status',
+        ck.fSearchEngine AS 'searchEngine',
         ck.fKeywordEffect AS 'keywordEffect',
-        ck.fOptimizePlanCount	AS	'optimizePlanCount'
+        ck.fOptimizePlanCount AS 'optimizePlanCount'
         FROM t_customer_keyword ck
         WHERE ck.fKeyword = #{keyword}
         AND ck.fTerminalType = #{terminalType}
@@ -212,18 +212,18 @@
 
     <select id="getOneSimilarCustomerKeyword" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
         SELECT
-        ck.fUuid	AS	'uuid',
-        ck.fTerminalType	AS	'terminalType',
-        ck.fCustomerUuid	AS	'customerUuid',
-        ck.fKeyword	AS	'keyword',
-        ck.fUrl	AS	'url',
-        ck.fOriginalUrl	AS	'originalUrl',
+        ck.fUuid AS 'uuid',
+        ck.fTerminalType AS 'terminalType',
+        ck.fCustomerUuid AS 'customerUuid',
+        ck.fKeyword AS 'keyword',
+        ck.fUrl AS 'url',
+        ck.fOriginalUrl AS 'originalUrl',
         ck.fBearPawNumber AS 'bearPawNumber',
-        ck.fTitle	AS	'title',
-        ck.fStatus	AS	'status',
-        ck.fSearchEngine	AS	'searchEngine',
+        ck.fTitle AS 'title',
+        ck.fStatus AS 'status',
+        ck.fSearchEngine AS 'searchEngine',
         ck.fKeywordEffect AS 'keywordEffect',
-        ck.fOptimizePlanCount	AS	'optimizePlanCount'
+        ck.fOptimizePlanCount AS 'optimizePlanCount'
         FROM t_customer_keyword ck
         WHERE ck.fKeyword = #{keyword}
         AND ck.fTerminalType = #{terminalType}
@@ -285,4 +285,41 @@
         WHERE ck.fTerminalType = #{terminalType}
         AND ck.fCustomerUuid = #{customerUuid}
     </select>
+
+    <update id="resetInvalidRefreshCount" parameterType="com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria">
+        UPDATE t_customer_keyword
+        SET fInvalidRefreshCount = 0,
+        fInvalidFlag = 0,
+        fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
+        WHERE fType = #{criteria.entryType}
+        AND fTerminalType = #{criteria.terminalType}
+        <if test="criteria.customerName != null and criteria.customerName != ''">
+            AND EXISTS (
+            SELECT 1
+            FROM t_customer c
+            WHERE c.fUuid = fCustomerUuid
+            AND c.fContactPerson LIKE concat('%', #{criteria.customerName}, '%')
+            )
+        </if>
+        <if test="criteria.groupName!=null and criteria.groupName!=''">
+            <choose>
+                <when test="criteria.fullMatchGroup == true">
+                    AND fOptimizeGroupName = #{criteria.groupName}
+                </when>
+                <otherwise>
+                    AND fOptimizeGroupName LIKE concat(#{criteria.groupName}, '%')
+                </otherwise>
+            </choose>
+        </if>
+        <if test="criteria.machineGroup!=null and criteria.machineGroup!=''">
+            <choose>
+                <when test="criteria.fullMatchGroup == true">
+                    AND fMachineGroup = #{criteria.machineGroup}
+                </when>
+                <otherwise>
+                    AND fMachineGroup LIKE concat(#{criteria.machineGroup}, '%')
+                </otherwise>
+            </choose>
+        </if>
+    </update>
 </mapper>

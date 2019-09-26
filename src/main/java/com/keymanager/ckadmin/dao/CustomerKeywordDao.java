@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
+import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import java.util.ArrayList;
@@ -53,4 +54,5 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     KeywordCountVO getCustomerKeywordsCountByCustomerUuid(@Param("customerUuid") Long customerUuid, @Param("terminalType") String terminalType);
 
+    void resetInvalidRefreshCount(@Param("criteria") RefreshStatisticsCriteria criteria);
 }

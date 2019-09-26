@@ -1,6 +1,7 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.util.TerminalTypeMapping;
@@ -40,17 +41,15 @@ public class CustomerKeywordController {
             String customerUuid = (String) requestMap.get("customerUuid");
             String status = (String) requestMap.get("status");
             customerKeywordService.changeCustomerKeywordStatus(terminalType, entryType, Long.parseLong(customerUuid), Integer.parseInt(status));
-            return new ResultBean(200,"success");
+            return new ResultBean(200, "success");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResultBean(400,"error");
+            return new ResultBean(400, "error");
         }
     }
 
     /**
      * 根据用户id获取关键字统计信息
-     * @param customerUuid
-     * @return
      */
     @GetMapping("/getCustomerKeywordsCount/{customerUuid}")
     public ResultBean getOperationCombines(@PathVariable Long customerUuid, HttpServletRequest request) {
@@ -66,6 +65,23 @@ public class CustomerKeywordController {
             resultBean.setCode(400);
             resultBean.setMsg("未知错误");
             return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/resetInvalidRefreshCount")
+    @RequestMapping(value = "/resetInvalidRefresh", method = RequestMethod.POST)
+    public ResultBean resetInvalidRefresh(@RequestBody RefreshStatisticsCriteria criteria, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        try {
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            criteria.setTerminalType(terminalType);
+            customerKeywordService.resetInvalidRefreshCount(criteria);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
         }
         return resultBean;
     }

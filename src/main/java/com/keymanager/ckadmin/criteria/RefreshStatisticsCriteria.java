@@ -45,7 +45,7 @@ public class RefreshStatisticsCriteria {
     }
 
     public int getDayNum() {
-        return Math.max(dayNum, 0);
+        return dayNum;
     }
 
     public void setDayNum(int dayNum) {
