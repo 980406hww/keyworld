@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 public interface CustomerKeywordPositionSummaryDao extends BaseMapper<CustomerKeywordPositionSummary> {
 
-    void addPositionSummary(@Param("customerKeywordPositionSummary") CustomerKeywordPositionSummary customerKeywordPositionSummary);
+    void addPositionSummary(@Param("ckPositionSummaryListForUpdate") List<CustomerKeywordPositionSummary> ckPositionSummaryListForUpdate);
 
     CustomerKeywordPositionSummary getTodayPositionSummary(@Param("customerKeywordUuid") Long customerKeywordUuid);
 
@@ -19,4 +19,6 @@ public interface CustomerKeywordPositionSummaryDao extends BaseMapper<CustomerKe
      * @return
      */
     List<Integer> searchOneWeekPositionByCustomerUuid(@Param("customerKeywordUuid") Long customerKeywordUuid);
+
+    void updatePositionSummary(@Param("ckPositionSummaryListForUpdate") List<CustomerKeywordPositionSummary> ckPositionSummaryListForUpdate);
 }

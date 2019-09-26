@@ -1050,10 +1050,11 @@
             <set>
                 fCurrentPosition = IF(fLastReachStandardDate = CURRENT_DATE(), IF(#{updateCustomerKeywordPositionVo.position} > 0 AND #{updateCustomerKeywordPositionVo.position} &lt; fCurrentPosition, #{updateCustomerKeywordPositionVo.position}, fCurrentPosition), #{updateCustomerKeywordPositionVo.position}),
                 fInitialPosition = IFNULL(fInitialPosition, #{updateCustomerKeywordPositionVo.position}),
-                fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
+                fCapturePositionQueryTime = IFNULL(#{updateCustomerKeywordPositionVo.capturePositionQueryTime}, fCapturePositionQueryTime),
                 fCapturePositionIP = #{updateCustomerKeywordPositionVo.ip}, fCapturePositionCity = #{updateCustomerKeywordPositionVo.city},
                 <choose>
                     <when test="updateCustomerKeywordPositionVo.type == 'qz'">
+                        fLastReachStandardDate = IF(#{updateCustomerKeywordPositionVo.position} &gt; 0 AND fCurrentPosition &lt;= 10, CURRENT_DATE(), fLastReachStandardDate)
                         <if test="needReduceFlag == true">
                             fOptimizeTodayCount = IF(fKeywordEffect = 'Important', IF(fOptimizePlanCount * ROUND((RAND() * 0.4 + 0.4), 1) &lt; 20, 20, fOptimizePlanCount * ROUND((RAND() * 0.4 + 0.4), 1)), IF(fOptimizePlanCount * ROUND((RAND() * 0.4 + 0.4), 1) &lt; 4, 4, fOptimizePlanCount * ROUND((RAND() * 0.4 + 0.4), 1))),
                         </if>
@@ -1063,17 +1064,17 @@
                     </when>
                     <when test="updateCustomerKeywordPositionVo.type == 'pt'">
                         fOptimizeTodayCount = IF(#{needReduceFlag}, IF(fOptimizePlanCount * ROUND((RAND() * 0.4 + 0.4), 1) &lt; 20, 20, fOptimizePlanCount * ROUND((RAND() * 0.4 + 0.4), 1)), IF(fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) &lt; 20, 20, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1))),
+                        <if test="updateCustomerKeywordPositionVo.todayFee != null">
+                            fTodayFee = IF(fLastReachStandardDate = CURRENT_DATE(), IF(fTodayFee > #{updateCustomerKeywordPositionVo.todayFee} OR #{updateCustomerKeywordPositionVo.todayFee} IS NULL, fTodayFee, #{updateCustomerKeywordPositionVo.todayFee}), #{updateCustomerKeywordPositionVo.todayFee}),
+                            fLastReachStandardDate = CURRENT_DATE(),
+                        </if>
                     </when>
                     <otherwise></otherwise>
                 </choose>
-                <if test="updateCustomerKeywordPositionVo.todayFee != null">
-                    fTodayFee = IF(fLastReachStandardDate = CURRENT_DATE(), IF(fTodayFee > #{updateCustomerKeywordPositionVo.todayFee} OR #{updateCustomerKeywordPositionVo.todayFee} IS NULL, fTodayFee, #{updateCustomerKeywordPositionVo.todayFee}), #{updateCustomerKeywordPositionVo.todayFee}),
-                    fLastReachStandardDate = CURRENT_DATE(),
-                </if>
                 fCaptureStatus = 0,
                 fUpdateTime = NOW()
             </set>
-            WHERE fUuid = #{updateCustomerKeywordPositionVo.uuid}
+            WHERE fUuid = #{updateCustomerKeywordPositionVo.customerKeywordUuid}
         </foreach>
     </update>
 
@@ -1287,10 +1288,12 @@
     </update>
 
     <update id="updateCustomerKeywordQueryTime">
-        UPDATE t_customer_keyword
-        SET fCaptureStatus = 0,
-        fCapturePositionQueryTime = #{capturePositionQueryTime}
-        WHERE fUuid = #{customerKeywordUuid}
+        <foreach collection="updateCustomerKeywordPositionVos" item="updateCustomerKeywordPositionVo" separator=";">
+            UPDATE t_customer_keyword
+            SET fCaptureStatus = 0,
+            fCapturePositionQueryTime = #{updateCustomerKeywordPositionVo.capturePositionQueryTime}
+            WHERE fUuid = #{updateCustomerKeywordPositionVo.customerKeywordUuid}
+        </foreach>
     </update>
 
     <update id="updateKeywordCustomerUuid">
