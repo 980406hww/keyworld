@@ -48,7 +48,6 @@ public class KeywordCriteria extends BaseCriteria {
     private String targetBearPawNumber;
     private Integer targetOptimizePlanCount;
     private String targetSearchEngine;
-    private Integer targetStatus;
 
 
     private String deleteType;
@@ -343,11 +342,4 @@ public class KeywordCriteria extends BaseCriteria {
         this.targetSearchEngine = targetSearchEngine;
     }
 
-    public Integer getTargetStatus() {
-        return targetStatus;
-    }
-
-    public void setTargetStatus(Integer targetStatus) {
-        this.targetStatus = targetStatus;
-    }
 }

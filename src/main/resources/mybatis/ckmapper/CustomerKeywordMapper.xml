@@ -749,13 +749,83 @@
     </update>
 
 
-    <update id="changeCustomerKeywordStatusInCKPage" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria">
+    <update id="changeCustomerKeywordStatusInCKPage" parameterType="com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria">
         UPDATE
         t_customer_keyword ck,t_customer c
         SET
-        ck.fStatus = #{keywordCriteria.targetStatus},
+        ck.fStatus = #{customerKeywordUpdateStatusCriteria.targetStatus},
         ck.fUpdateTime = NOW()
         WHERE c.fUuid = ck.fCustomerUuid
-        <include refid="updateCustomerKeywordsCriteria"/>
+        <if test="customerKeywordUpdateStatusCriteria.uuids != null">
+            AND ck.fUuid IN
+            <foreach item = "item" collection = "customerKeywordUpdateStatusCriteria.uuids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="customerKeywordUpdateStatusCriteria.customerUuid != null and customerKeywordUpdateStatusCriteria.customerUuid != ''">
+            AND ck.fCustomerUuid = #{customerKeywordUpdateStatusCriteria.customerUuid}
+        </if>
+        <if test="customerKeywordUpdateStatusCriteria.type != null and customerKeywordUpdateStatusCriteria.type != ''">
+            AND ck.fType = #{customerKeywordUpdateStatusCriteria.type}
+        </if>
+        <if test="customerKeywordUpdateStatusCriteria.terminalType != null || customerKeywordUpdateStatusCriteria.terminalType != ''">
+            AND ck.fTerminalType = #{customerKeywordUpdateStatusCriteria.terminalType}
+        </if>
     </update>
+
+    <update id="cleanSelectedCustomerKeywordTitle">
+        UPDATE t_customer_keyword
+        SET fTitle = NULL ,
+            fManualCleanTitle = 1
+        WHERE fUuid IN
+        <foreach item="item" index="index" collection="uuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="cleanCustomerTitle">
+        UPDATE t_customer_keyword
+        SET fTitle = NULL,
+            fManualCleanTitle = 1
+        WHERE fTerminalType = #{terminalType}
+          AND fType = #{type}
+          AND fCustomerUuid = #{customerUuid}
+    </update>
+
+    <update id="cleanCaptureTitleFlag">
+        UPDATE t_customer_keyword
+        SET fTitle = NULL,
+            fCaptureTitleQueryTime = NULL,
+            fCapturedTitle = 0
+        WHERE fTerminalType = #{terminalType}
+          AND fCustomerUuid = #{customerUuid}
+          AND fType = #{type}
+          AND fManualCleanTitle = 0
+    </update>
+
+    <update id="cleanCaptureTitleBySelected">
+        UPDATE t_customer_keyword
+        SET fTitle = NULL,
+            fCaptureTitleQueryTime = NULL,
+            fCapturedTitle = 0
+        WHERE fUuid IN
+        <foreach item="item" index="index" collection="uuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="searchDuplicateKeywords" resultType="java.lang.String">
+        SELECT
+        GROUP_CONCAT(CAST(fUuid AS CHAR) ORDER BY fUuid) AS 'uuids'
+        FROM
+        t_customer_keyword
+        WHERE
+        fType = #{customerKeywordUpdateStatusCriteria.type}
+        AND fTerminalType =  #{customerKeywordUpdateStatusCriteria.terminalType}
+        <if test="customerKeywordUpdateStatusCriteria.customerUuid != null and customerKeywordUpdateStatusCriteria.customerUuid != ''">
+            AND fCustomerUuid = #{customerKeywordUpdateStatusCriteria.customerUuid}
+        </if>
+        GROUP BY fKeyword,fUrl, fCustomerUuid
+        HAVING COUNT(1) > 1
+    </select>
 </mapper>

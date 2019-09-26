@@ -14,9 +14,10 @@
 </head>
 <div>
     <!--form表单-->
-    <form class="layui-form layui-form-pane ok-form" lay-filter="excludeExcludeKeyword">
+    <form class="layui-form layui-form-pane ok-form" lay-filter="saveKeyword">
         <div class="ok-body">
             <input type="text" hidden value="<#if customerUuid?exists>${customerUuid}</#if>" id="customerUuid" name="customerUuid"/>
+            <input type="text" hidden value="" id="uuid" name="uuid"/>
             <input type="text" hidden value="<#if businessType?exists>${businessType}</#if>" id="type" name="type"/>
             <input type="text" hidden value="<#if terminalType?exists>${terminalType}</#if>" id="terminalType" name="terminalType"/>
             <div class="layui-row">
@@ -113,17 +114,6 @@
                     </div>
                 </div>
 
-            </div>
-
-            <div class="layui-row">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">关键字作用</label>
-                    <div class="layui-input-block">
-                        <select name="keywordEffect" id="keywordEffect" lay-verify="required">
-
-                        </select>
-                    </div>
-                </div>
             </div>
 
             <div class="layui-row">
@@ -261,88 +251,122 @@
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script>
 
-  layui.use(["form", "okLayer", "jquery", "layer"], function () {
-    let form = layui.form;
-    let okLayer = layui.okLayer;
-    let $ = layui.jquery;
-    let layer = layui.layer;
-
-    init_keyword_effect();
-    init_searchEngine();
-
-    function init_keyword_effect() {
-      $.ajax({
-        url: '/internal/common/getKeywordEffect',
-        type: 'get',
-        dataType: 'json',
-        success: function (res) {
-          if (res.code === 200) {
-            $("#keywordEffect").empty();
-            $.each(res.data, function (index, item) {
-              $('#keywordEffect').append('<option value="' + item.value + '">' + item.desc + '</option>');// 下拉菜单里添加元素
-            });
-            form.render("select");
-          } else {
-            l.layer.msg(res.msg);
-          }
+    let layui_ = null;
+    var uuid_ = null;
+    function initForm(data){
+        uuid_ = data;
+        if (layui_ != null){
+            setForm(layui_, uuid_)
         }
-      });
+    }
+    function setForm(layui, uuid){
+        var $ = layui.jquery;
+        var form = layui.form;
+        $.ajax({
+            url: '/internal/customerKeyword/getKeywordInfoByUuid/' + uuid,
+            type: 'post',
+            dataType: 'json',
+            success: function (res) {
+                if (res.code === 200) {
+                    // console.log(res.data)
+                    init_searchEngine();
+                    form.val("saveKeyword", res.data);
+                } else {
+                    layui.layer.msg(res.msg);
+                }
+            }
+        });
     }
 
-    function init_searchEngine() {
-      $.ajax({
-        url: '/internal/common/getSearchEngines',
-        dataType: 'json',
-        type: 'post',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        data: JSON.stringify({'terminalType': 'All'}),
-        success: function (data) {
-          $("#searchEngine").empty();
-          $.each(data.data, function (index, item) {
-            $('#searchEngine').append(
-                '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
-          });
-          $("#searchEngine").val('百度');
-          form.render("select");
+    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+        let form = layui.form;
+        let okLayer = layui.okLayer;
+        let $ = layui.jquery;
+        let layer = layui.layer;
+
+        if (uuid_ != null){
+            setForm(layui, uuid_)
+        }else {
+            layui_ = layui;
         }
-      });
-    }
 
-    form.on("submit(save)", function (data) {
-      var postData = data.field;
-      console.log(postData)
+        // init_keyword_effect();
+        // init_searchEngine();
 
-      $.ajax({
-        url: '/internal/customerKeyword/saveCustomerKeyword2',
-        type: 'post',
-        data: JSON.stringify(postData),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        success: function (res) {
-          if (res.code === 200) {
-            okLayer.msg.greenTick("保存成功", function () {
-              parent.window.sign = true;
-              parent.layer.close(parent.layer.getFrameIndex(window.name));
+        function init_keyword_effect() {
+            $.ajax({
+                url: '/internal/common/getKeywordEffect',
+                type: 'get',
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        $("#keywordEffect").empty();
+                        $.each(res.data, function (index, item) {
+                            $('#keywordEffect').append('<option value="' + item.value + '">' + item.desc + '</option>');// 下拉菜单里添加元素
+                        });
+                        form.render("select");
+                    } else {
+                        l.layer.msg(res.msg);
+                    }
+                }
             });
-          } else {
-            layui.layer.msg(res.msg);
-          }
         }
-      });
-      return false;
-    });
 
-    $('#close').click(function () {
-      parent.layer.close(parent.layer.getFrameIndex(window.name));
-      return false;
-    });
+        window.init_searchEngine = function() {
+            $.ajax({
+                url: '/internal/common/getSearchEngines',
+                dataType: 'json',
+                type: 'post',
+                async: false,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify({'terminalType': 'All'}),
+                success: function (data) {
+                    $("#searchEngine").empty();
+                    $.each(data.data, function (index, item) {
+                        $('#searchEngine').append(
+                            '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
+                    });
+                    $("#searchEngine").val('百度');
+                    form.render("select");
+                }
+            });
+        }
 
-  })
+        form.on("submit(save)", function (data) {
+            var postData = data.field;
+            console.log(postData);
+            // return false;
+            $.ajax({
+                url: '/internal/customerKeyword/saveCustomerKeyword2',
+                type: 'post',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        okLayer.msg.greenTick("保存成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        layui.layer.msg(res.msg);
+                    }
+                }
+            });
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+    })
 
 </script>
 </body>

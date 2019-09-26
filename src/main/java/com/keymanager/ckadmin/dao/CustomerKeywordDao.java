@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
@@ -90,5 +91,16 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateSearchEngine(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
 
-    void changeCustomerKeywordStatusInCKPage(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
+    void changeCustomerKeywordStatusInCKPage(@Param("customerKeywordUpdateStatusCriteria") CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria);
+
+    void cleanSelectedCustomerKeywordTitle(@Param("uuids") List<Long> uuids);
+
+    void cleanCustomerTitle(@Param("terminalType") String terminalType, @Param("type") String type, @Param("customerUuid") Long customerUuid);
+
+    void cleanCaptureTitleFlag(@Param("terminalType") String terminalType, @Param("type") String type, @Param("customerUuid") Long customerUuid);
+
+    void cleanCaptureTitleBySelected(@Param("uuids") List<Long> uuids);
+
+    List<String> searchDuplicateKeywords(@Param("customerKeywordUpdateStatusCriteria") CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria);
+
 }

@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.criteria.CustomerKeywordCleanTitleCriteria;
+import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
@@ -20,6 +22,7 @@ import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.webDo.KeywordCountDO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
+import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +33,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -127,7 +131,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
      * @return
      */
     @GetMapping("/getCustomerKeywordsCount/{customerUuid}")
-    public ResultBean getOperationCombines(@PathVariable Long customerUuid, HttpServletRequest request) {
+    public ResultBean getCustomerKeywordsCount(@PathVariable Long customerUuid, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         try {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
@@ -475,14 +479,54 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordStatus")
     @RequestMapping(value = "/changeCustomerKeywordStatus3", method = RequestMethod.POST)
-    public ResultBean changeCustomerKeywordStatusInCKPage(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
+    public ResultBean changeCustomerKeywordStatusInCKPage(@RequestBody CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria, HttpServletRequest request) {
         try {
-
-            customerKeywordService.changeCustomerKeywordStatusInCKPage(keywordCriteria);
+            customerKeywordService.changeCustomerKeywordStatusInCKPage(customerKeywordUpdateStatusCriteria);
             return new ResultBean(200,"success");
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResultBean(400,"error");
+        }
+    }
+
+    //重采标题
+    @RequiresPermissions("/internal/customerKeyword/cleanTitle")
+    @RequestMapping(value = "/cleanTitle2", method = RequestMethod.POST)
+    public ResultBean cleanTitle(@RequestBody CustomerKeywordCleanTitleCriteria customerKeywordCleanTitleCriteria, HttpServletRequest request) {
+        try{
+            customerKeywordService.cleanTitle(customerKeywordCleanTitleCriteria);
+            return new ResultBean(200,"success");
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+            return new ResultBean(400,"error");
+        }
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/deleteCustomerKeywords")
+    @RequestMapping(value = "/deleteDuplicateCustomerKeywords2" , method = RequestMethod.POST)
+    public ResultBean  deleteDuplicateCustomerKeyword(@RequestBody CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria) {
+        try{
+            customerKeywordService.deleteDuplicateKeywords(customerKeywordUpdateStatusCriteria);
+            return new ResultBean(200,"success");
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return new ResultBean(400,"error");
+        }
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/deleteCustomerKeywords")
+    @RequestMapping(value = "/getKeywordInfoByUuid/{uuid}" , method = RequestMethod.POST)
+    public ResultBean getKeywordInfoByUuid(@PathVariable Long uuid) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try{
+            CustomerKeyword customerKeyword = customerKeywordService.getKeywordInfoByUuid(uuid);
+            resultBean.setData(customerKeyword);
+            return resultBean;
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
         }
     }
 }

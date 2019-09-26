@@ -2,10 +2,13 @@ package com.keymanager.ckadmin.service.impl;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.ckadmin.criteria.CustomerKeywordCleanTitleCriteria;
+import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.dao.CustomerKeywordDao;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.enums.CustomerKeywordCleanTypeEnum;
 import com.keymanager.ckadmin.enums.KeywordEffectEnum;
 import com.keymanager.ckadmin.excel.operator.AbstractExcelReader;
 import com.keymanager.ckadmin.service.ConfigService;
@@ -30,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Resource;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -416,8 +420,51 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public void changeCustomerKeywordStatusInCKPage(KeywordCriteria keywordCriteria) {
-        customerKeywordDao.changeCustomerKeywordStatusInCKPage(keywordCriteria);
+    public void changeCustomerKeywordStatusInCKPage(CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria) {
+        customerKeywordDao.changeCustomerKeywordStatusInCKPage(customerKeywordUpdateStatusCriteria);
+    }
+
+    @Override
+    public void cleanTitle(CustomerKeywordCleanTitleCriteria customerKeywordCleanTitleCriteria) {
+        switch (customerKeywordCleanTitleCriteria.getCleanType()) {
+            case "recollectAll":
+                customerKeywordDao.cleanCaptureTitleFlag(customerKeywordCleanTitleCriteria.getTerminalType(), customerKeywordCleanTitleCriteria.getType(),
+                    customerKeywordCleanTitleCriteria.getCustomerUuid());
+                break;
+            case "recollectSelect":
+                customerKeywordDao.cleanCaptureTitleBySelected(customerKeywordCleanTitleCriteria.getUuids());
+                break;
+            case "cleanAll":
+                customerKeywordDao.cleanCustomerTitle(customerKeywordCleanTitleCriteria.getTerminalType(), customerKeywordCleanTitleCriteria.getType(),
+                    customerKeywordCleanTitleCriteria.getCustomerUuid());
+                break;
+            case "cleanSelect":
+                customerKeywordDao.cleanSelectedCustomerKeywordTitle(customerKeywordCleanTitleCriteria.getUuids());
+                break;
+            default:
+        }
+    }
+
+    @Override
+    public void deleteDuplicateKeywords(CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria) {
+        List<String> uuidsList = customerKeywordDao.searchDuplicateKeywords(customerKeywordUpdateStatusCriteria);
+        List<Long> customerKeywordUuids = new ArrayList<>();
+        for (String uuids : uuidsList) {
+            ArrayList<Long> listIds = new ArrayList<>(Arrays.asList((Long[]) ConvertUtils.convert(uuids.split(","), Long.class)));
+            listIds.remove(0);
+            customerKeywordUuids.addAll(listIds);
+        }
+        while (customerKeywordUuids.size() > 0) {
+            List<Long> subCustomerKeywordUuids = customerKeywordUuids.subList(0, Math.min(customerKeywordUuids.size(), 500));
+            customerKeywordDao.deleteBatchIds(subCustomerKeywordUuids);
+            logger.info("controlCustomerKeywordStatus:" + subCustomerKeywordUuids.toString());
+            customerKeywordUuids.removeAll(subCustomerKeywordUuids);
+        }
+    }
+
+    @Override
+    public CustomerKeyword getKeywordInfoByUuid(Long uuid) {
+        return customerKeywordDao.selectById(uuid);
     }
 }
 

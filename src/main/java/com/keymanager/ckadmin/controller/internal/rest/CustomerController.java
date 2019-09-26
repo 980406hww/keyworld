@@ -75,13 +75,11 @@ public class CustomerController extends SpringMVCBaseController {
         try {
             HttpSession session = request.getSession();
 //            String entryType = (String) session.getAttribute("entryType");
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
+//            String terminalType = TerminalTypeMapping.getTerminalType(request);
 //            customerCriteria.setEntryType(entryType);
-            customerCriteria.setTerminalType(terminalType);
-            Page<Customer> page = new Page<>(customerCriteria.getPage(),
-                customerCriteria.getLimit());
-            String orderByField = ReflectUtils
-                .getTableFieldValue(Customer.class, customerCriteria.getOrderBy());
+//            customerCriteria.setTerminalType(terminalType);
+            Page<Customer> page = new Page<>(customerCriteria.getPage(), customerCriteria.getLimit());
+            String orderByField = ReflectUtils.getTableFieldValue(Customer.class, customerCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {
                 page.setOrderByField(orderByField);
             }

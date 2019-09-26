@@ -164,16 +164,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             height: 'full-100',
             done: function (res, curr, count) {
                 let tables = document.getElementsByTagName('table');
-                if ((tables[2].offsetHeight || tables[2].clientHeight)
-                    > (tables[2].parentElement.offsetHeight
-                        || tables[2].parentElement.clientHeight)) {
-                    document.getElementsByClassName(
-                        'layui-table-header')[0].classList.add(
-                        'details-header');
+                if ((tables[2].offsetHeight || tables[2].clientHeight) > (tables[2].parentElement.offsetHeight || tables[2].parentElement.clientHeight)) {
+                    document.getElementsByClassName('layui-table-header')[0].classList.add( 'details-header');
                 } else {
-                    document.getElementsByClassName(
-                        'layui-table-header')[0].classList.remove(
-                        'details-header');
+                    document.getElementsByClassName('layui-table-header')[0].classList.remove('details-header');
                 }
             }
         });
@@ -242,20 +236,11 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             case 'active_keyword':
                 updateCustomerKeywordStatus(1);
                 break;
-            case 'change_current_optimizedGroup':
-                change_current_optimizedGroup();
-                break;
             case 'change_selected_optimizedGroup':
                 change_selected_optimizedGroup();
                 break;
-            case 'change_current_machineGroup':
-                change_current_machineGroup();
-                break;
             case 'change_selected_machineGroup':
                 change_selected_machineGroup();
-                break;
-            case 'change_current_bearPawNumber':
-                change_current_bearPawNumber();
                 break;
             case 'change_selected_bearPawNumber':
                 change_selected_bearPawNumber();

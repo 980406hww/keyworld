@@ -2,6 +2,8 @@ package com.keymanager.ckadmin.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
+import com.keymanager.ckadmin.criteria.CustomerKeywordCleanTitleCriteria;
+import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
@@ -74,5 +76,11 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     void updateSearchEngine(KeywordCriteria keywordCriteria);
 
-    void changeCustomerKeywordStatusInCKPage(KeywordCriteria keywordCriteria);
+    void changeCustomerKeywordStatusInCKPage(CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria);
+
+    void cleanTitle(CustomerKeywordCleanTitleCriteria customerKeywordCleanTitleCriteria);
+
+    void deleteDuplicateKeywords(CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria);
+
+    CustomerKeyword getKeywordInfoByUuid(Long uuid);
 }

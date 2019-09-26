@@ -6,6 +6,18 @@ window.onload = function () {
 };
 // layui相关
 
+var show = true;
+function show_more_operation() {
+    console.log(show)
+    let operationContent = document.getElementById('operationContent');
+    if (show) {
+        operationContent.style.display = 'block';
+    } else {
+        operationContent.style.display = 'none';
+    }
+    show = !show;
+}
+
 layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         'layer'], function () {
     var element = layui.element;
@@ -42,10 +54,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     // $("#type").empty();
                     $.each(res.data, function (index, item) {
                         let businessItem = item.split("#");
-                        $('#type').append(
-                            '<option value="' + businessItem[0] + '">'
-                            + businessItem[1]
-                            + '</option>');// 下拉菜单里添加元素
+                        $('#type').append('<option value="' + businessItem[0] + '">' + businessItem[1] + '</option>');// 下拉菜单里添加元素
                     });
                     $('#type').val($('#typeTmp').val());
                     $('#terminalType').val($('#terminalTypeTmp').val());
@@ -116,11 +125,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             defaultToolbar: ['filter'],
             contentType: 'application/json',
             cols: [[
-                {
-                    filed: 'uuid',
-                    type: 'checkbox',
-                    width: '35'
-                },
+                {filed: 'uuid', type: 'checkbox', width: '35' },
                 // {field: 'contactPerson', title: '用户名称', width: '8%', templet: '#toCUstomerKeywordTpl'},
                 {field: 'keyword', title: '关键字', width: '150'},
                 {field: 'url', title: '链接', width: '140'},
@@ -134,13 +139,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 {field: 'currentPosition', title: '现排名', align: 'center', width: '80'},
                 {field: 'searchEngine', title: '搜索引擎',  align: 'center', width: '80'},
                 // {field: 'city', title: '目标城市', width: '6%', hide: true},
-                {
-                    field: 'collectMethod',
-                    title: '收费方式',
-                    align: 'center',
-                    width: '80',
-                    templet: '#collectMethodTpl'
-                },
+                {field: 'collectMethod', title: '收费方式', align: 'center', width: '80',  templet: '#collectMethodTpl' },
                 {field: 'optimizePlanCount', title: '要刷',align: 'center',  width: '80'},
                 {field: 'optimizedCount', title: '已刷', align: 'center', width: '80'},
                 {field: 'invalidRefreshCount', title: '无效', align: 'center', width: '60', hide:'true'},
@@ -151,27 +150,16 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 {field: 'failedCause', title: '失败原因', align: 'center', width: '100',},
                 {field: 'optimizeGroupName', title: '优化分组', align: 'center', width: '80'},
                 {field: 'machineGroup', title: '机器分组', align: 'center', width: '80'},
-                {
-                    title: '操作',
-                    align: 'center',
-                    width: '120',
-                    templet: '#operationTpl'
-                }
+                {title: '操作', align: 'center', width: '120', templet: '#operationTpl' }
             ]],
             height: 'full-100',
 
             done: function (res, curr, count) {
                 let tables = document.getElementsByTagName('table');
-                if ((tables[2].offsetHeight || tables[2].clientHeight)
-                    > (tables[2].parentElement.offsetHeight
-                        || tables[2].parentElement.clientHeight)) {
-                    document.getElementsByClassName(
-                        'layui-table-header')[0].classList.add(
-                        'details-header');
+                if ((tables[2].offsetHeight || tables[2].clientHeight) > (tables[2].parentElement.offsetHeight || tables[2].parentElement.clientHeight)) {
+                    document.getElementsByClassName('layui-table-header')[0].classList.add( 'details-header');
                 } else {
-                    document.getElementsByClassName(
-                        'layui-table-header')[0].classList.remove(
-                        'details-header');
+                    document.getElementsByClassName('layui-table-header')[0].classList.remove('details-header');
                 }
             }
         });
@@ -181,6 +169,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
     //监听工具条
     var active = {
         reload: function () {
+            show = true;
             table.reload('keywordTable', {
                 where: formToJsonObject('searchForm'),
                 page: {
@@ -188,6 +177,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 }
             });
         },
+
     };
 
     function get_selected_uuid_arr() {
@@ -239,10 +229,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             case 'change_select_optimizePlanCount':
                 change_select_optimizePlanCount();
                 break;
-
-            case 'change_select_customer':
-                change_select_customer();
+            case 'delete_same_keyword':
+                delete_same_keyword();
                 break;
+
+            /*case 'change_select_customer':
+                change_select_customer();
+                break;*/
             case 'batch_delete':
                 batch_delete_byUuids();
                 break;
@@ -300,7 +293,36 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             case 'change_select_machineGroup':
                 change_select_machineGroup();
                 break;
-
+            case 'down_off_all_keyword':
+                change_all_keyowrd_status(3);
+                break;
+            case 'down_off_select_keyword':
+                change_select_keyowrd_status(3);
+                break;
+            case 'pause_all_keyword':
+                change_all_keyowrd_status(0);
+                break;
+            case 'pause_select_keyword':
+                change_select_keyowrd_status(0);
+                break;
+            case 'active_all_keyword':
+                change_all_keyowrd_status(1);
+                break;
+            case 'active_select_keyword':
+                change_select_keyowrd_status(1);
+                break;
+            case 'recollect_customer_keyword_title':
+                change_title('recollectAll');
+                break;
+            case 'recollect_select_keyword_title':
+                change_title('recollectSelect');
+                break;
+            case 'clean_customer_keyword_title':
+                change_title('cleanAll');
+                break;
+            case 'clean_select_keyword_title':
+                change_title('cleanSelect');
+                break;
             default:
                 break;
         }
@@ -573,6 +595,204 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
 
             }
         });
+    }
+
+    function change_all_keyowrd_status(status){
+        let postData={};
+        postData.terminalType = $("#terminalType").val();
+        postData.type = $("#type").val();
+        postData.targetStatus = status;
+        postData.customerUuid = $('#customerUuid').val();
+        let msg = '';
+        switch (status) {
+            case 0:
+                msg = '是否暂停所有关键字';
+                break;
+            case 3:
+                msg = '是否下架所有关键字';
+                break;
+            case 1:
+                msg = '是否激活所有关键字';
+                break;
+            default:
+                return;
+        }
+        layer.confirm(msg, {icon: 3, title: '更新关键字状态'}, function (index) {
+            $.ajax({
+                url: '/internal/customerKeyword/changeCustomerKeywordStatus3',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result.code === 200) {
+                        show_layer_msg('操作成功', 6, true);
+                    } else {
+                        show_layer_msg('操作失败', 5);
+                    }
+                },
+                error: function () {
+                    show_layer_msg('未知错误，请稍后重试', 5);
+                },
+                complete: function () {
+                    layer.close(index);
+                }
+            });
+        });
+    }
+
+    function delete_same_keyword(){
+        let postData={};
+        postData.terminalType = $("#terminalType").val();
+        postData.type = $("#type").val();
+        postData.customerUuid = $('#customerUuid').val();
+
+        layer.confirm('确定删除重复关键字吗', {icon: 3, title: '删除重复关键字'}, function (index) {
+            $.ajax({
+                url: '/internal/customerKeyword/deleteDuplicateCustomerKeywords2',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result.code === 200) {
+                        show_layer_msg('操作成功', 6, true);
+                    } else {
+                        show_layer_msg('操作失败', 5);
+                    }
+                },
+                error: function () {
+                    show_layer_msg('未知错误，请稍后重试', 5);
+                },
+                complete: function () {
+                    layer.close(index);
+                }
+            });
+        });
+    }
+
+    function change_select_keyowrd_status(status){
+        let postData={};
+        var uuidArr = get_selected_uuid_arr();
+        if (uuidArr.length <= 0) {
+            show_layer_msg('请选择要操作的词', 5);
+            return
+        }
+        postData.uuids = uuidArr;
+        postData.targetStatus = status;
+
+        let msg = '';
+        switch (status) {
+            case 0:
+                msg = '是否暂停所选关键字';
+                break;
+            case 3:
+                msg = '是否下架所选关键字';
+                break;
+            case 1:
+                msg = '是否激活所选关键字';
+                break;
+            default:
+                return;
+        }
+        layer.confirm(msg, {icon: 3, title: '更新关键字状态'}, function (index) {
+            $.ajax({
+                url: '/internal/customerKeyword/changeCustomerKeywordStatus3',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result.code === 200) {
+                        show_layer_msg('操作成功', 6, true);
+                    } else {
+                        show_layer_msg('操作失败', 5);
+                    }
+                },
+                error: function () {
+                    show_layer_msg('未知错误，请稍后重试', 5);
+                },
+                complete: function () {
+                    layer.close(index);
+                }
+            });
+        });
+    }
+
+    function change_title(changeType){
+        let postData = {};
+        postData.type = $('#type').val();
+        postData.terminalType = $('#terminalType').val();
+        postData.cleanType = changeType;
+        let uuidArr;
+        let msg = '';
+        switch (changeType) {
+            case 'recollectAll':
+                postData.customerUuid = $('#customerUuid').val();
+                msg = '确认要重新采集自动导入的关键词的标题吗';
+                break;
+            case 'recollectSelect':
+                uuidArr = get_selected_uuid_arr();
+                if (uuidArr.length <= 0) {
+                    show_layer_msg('请选择要操作的词', 5);
+                    return
+                }
+                postData.uuids = uuidArr;
+                msg = '确认要重新采集所选关键词的标题吗';
+                break;
+            case 'cleanAll':
+                postData.customerUuid = $('#customerUuid').val();
+
+                msg = '确认要清空客户下所有关键词的标题吗';
+                break;
+
+            case 'cleanSelect':
+                uuidArr = get_selected_uuid_arr();
+                if (uuidArr.length <= 0) {
+                    show_layer_msg('请选择要操作的词', 5);
+                    return
+                }
+                postData.uuids = uuidArr;
+                msg = '确认要清空所选关键词的标题吗';
+                break;
+            default:
+                return;
+        }
+        layer.confirm(msg, {icon: 3, title: '更新标题'},
+            function (index) {
+                $.ajax({
+                    url: '/internal/customerKeyword/cleanTitle2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    },
+                    complete: function () {
+                        layer.close(index);
+                    }
+                });
+            });
     }
 
     function batch_delete(deleteType){
@@ -958,7 +1178,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
     //删除单个客户
     function delOneKeyword(data) {
         layer.confirm('真的删除该关键字吗', function (index) {
-
             $.ajax({
                 url: '/internal/customerKeyword/deleteCustomerKeyword2/'+ data.uuid,
                 // data: data.uuid,
@@ -989,17 +1208,23 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         });
     }
 
-    let show = true;
-    function show_more_operation() {
-        let operationContent = document.getElementById('operationContent');
-        if (show) {
-            operationContent.style.display = 'block';
-        } else {
-            operationContent.style.display = 'none';
-        }
-        show = !show;
+// 编辑表格获得表格数据
+     function editKeyword(data) {
+         let customerUuid = $('#customerUuid').val();
+         let type = $('#typeTmp').val();
+         let terminalType = $('#terminalType').val();
+         let url = '/internal/customerKeyword/toCustomerKeywordAdd/' + type + '/' + terminalType + '/' + customerUuid;
+        okLayer.open("关键字统计 / 客户关键字 / 修改关键字", url, "60%", "90%", function (layero) {
+            window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
+        }, function () {
+            if (sign) {
+                active['reload'].call(this);
+                sign = false;
+            }
+        })
     }
 
+//layui.use 结束
 });
 
 function updateOrNewTab(url, tit, id) {
