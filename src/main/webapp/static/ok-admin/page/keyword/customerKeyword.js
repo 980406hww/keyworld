@@ -145,7 +145,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 {field: 'machineGroup', title: '机器分组', align: 'center', width: '80'},
                 {title: '操作', align: 'center', width: '120', templet: '#operationTpl'}
             ]],
-            height: 'full-108',
+            height: 'full-110',
 
             done: function (res, curr, count) {
                 let tables = document.getElementsByTagName('table');
@@ -1089,7 +1089,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                             + item.contactPerson + '</option>');// 下拉菜单里添加元素
                     });
                     // searchEngineTpl.val($("#contactPerson").val())
-                    console.log($("#contactPerson").val())
                     form.render('select')
                     layer.open({
                         type: 1,

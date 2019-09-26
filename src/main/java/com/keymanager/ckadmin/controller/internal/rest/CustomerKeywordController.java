@@ -1,6 +1,5 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.ckadmin.common.result.ResultBean;
@@ -22,7 +21,6 @@ import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.webDo.KeywordCountDO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
-import com.keymanager.monitoring.criteria.CustomerKeywordCleanCriteria;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,16 +29,17 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -86,8 +85,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean();
         try {
             Page<CustomerKeyword> page = new Page(keywordCriteria.getPage(), keywordCriteria.getLimit());
-            String orderByField = ReflectUtils
-                    .getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
+            String orderByField = ReflectUtils.getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {
                 page.setOrderByField(orderByField);
                 if (keywordCriteria.getOrderMode() != null && keywordCriteria.getOrderMode() == 0) {
@@ -110,7 +108,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordStatus")
-    @RequestMapping(value = "/changeCustomerKeywordStatus2", method = RequestMethod.POST)
+    @PostMapping(value = "/changeCustomerKeywordStatus2")
     public ResultBean changeCustomerKeywordStatus(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         try {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
@@ -166,7 +164,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordGroupName")
-    @RequestMapping(value = "/updateOptimizeGroupName2", method = RequestMethod.POST)
+    @PostMapping(value = "/updateOptimizeGroupName2")
     public ResultBean updateOptimizeGroupName(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200,"success");
         try {
@@ -186,7 +184,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordMachineGroup")
-    @RequestMapping(value = "/updateMachineGroup2", method = RequestMethod.POST)
+    @PostMapping(value = "/updateMachineGroup2")
     public ResultBean updateMachineGroup(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200,"success");
         try {
@@ -206,7 +204,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
-    @RequestMapping(value = "/updateBearPawNumber2", method = RequestMethod.POST)
+    @PostMapping(value = "/updateBearPawNumber2")
     public ResultBean updateBearPawNumber(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
@@ -221,7 +219,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/deleteCustomerKeywords")
-    @RequestMapping(value = "/deleteCustomerKeywords2", method = RequestMethod.POST)
+    @PostMapping(value = "/deleteCustomerKeywords2")
     public ResultBean deleteCustomerKeywords(@RequestBody KeywordCriteria keywordCriteria) {
         ResultBean resultBean = new ResultBean(200,"success");
         try {
@@ -316,7 +314,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
-    @RequestMapping(value = "/saveCustomerKeyword2", method = RequestMethod.POST)
+    @PostMapping(value = "/saveCustomerKeyword2")
     public ResultBean saveCustomerKeyword(@RequestBody CustomerKeyword customerKeyword, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
@@ -336,7 +334,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordMachineGroup")
-    @RequestMapping(value = "/updateOptimizePlanCount2", method = RequestMethod.POST)
+    @PostMapping(value = "/updateOptimizePlanCount2")
     public ResultBean updateOptimizePlanCount(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
@@ -371,7 +369,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
     //关键字Excel上传(简化版)
     @RequiresPermissions("/internal/customerKeyword/uploadCustomerKeywords")
-    @RequestMapping(value = "/uploadCustomerKeywords2", method = RequestMethod.POST)
+    @PostMapping(value = "/uploadCustomerKeywords2")
     public ResultBean uploadCustomerKeywords(KeywordCountDO keywordCountDO, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");
         String userName = (String) request.getSession().getAttribute("username");
@@ -410,7 +408,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
     //导出成Excel文件
     @RequiresPermissions("/internal/customerKeyword/downloadCustomerKeywordInfo")
-    @RequestMapping(value = "/downloadCustomerKeywordInfo2", method = RequestMethod.POST)
+    @PostMapping(value = "/downloadCustomerKeywordInfo2")
     public ResultBean downloadCustomerKeywordInfo( HttpServletRequest request, HttpServletResponse response, @RequestBody  KeywordCriteria keywordCriteria) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
@@ -433,12 +431,11 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         }
     }
 
-    @RequestMapping(value = "/keywordUrlExport2", method = RequestMethod.POST)
+    @RequiresPermissions("/internal/customerKeyword/cleanTitle")
+    @PostMapping(value = "/keywordUrlExport2")
     public ResultBean keywordUrlExport(HttpServletRequest request, HttpServletResponse response, KeywordCriteria keywordCriteria) {
-
         ResultBean resultBean = new ResultBean(200, "success");
         try {
-//            String terminalType = TerminalTypeMapping.getTerminalType(request);
             List<Map> dataList = customerKeywordService.searchAllKeywordAndUrl(keywordCriteria.getCustomerUuid(), keywordCriteria.getTerminalType());
             Customer customer = customerService.selectById(keywordCriteria.getCustomerUuid());
             com.keymanager.ckadmin.excel.operator.CustomerKeywordAndUrlCvsExportWriter.exportCsv(dataList);
@@ -457,12 +454,11 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     public ModelAndView toChangeKeywordsSearchEngine() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/changeKeywordSeachEngine");
-
         return mv;
     }
 
     @RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
-    @RequestMapping(value = "/updateSearchEngine2", method = RequestMethod.POST)
+    @PostMapping(value = "/updateSearchEngine2")
     public ResultBean updateSearchEngine2(@RequestBody KeywordCriteria keywordCriteria) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
@@ -478,7 +474,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
 
     @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordStatus")
-    @RequestMapping(value = "/changeCustomerKeywordStatus3", method = RequestMethod.POST)
+    @PostMapping(value = "/changeCustomerKeywordStatus3")
     public ResultBean changeCustomerKeywordStatusInCKPage(@RequestBody CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria, HttpServletRequest request) {
         try {
             customerKeywordService.changeCustomerKeywordStatusInCKPage(customerKeywordUpdateStatusCriteria);
@@ -491,7 +487,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
     //重采标题
     @RequiresPermissions("/internal/customerKeyword/cleanTitle")
-    @RequestMapping(value = "/cleanTitle2", method = RequestMethod.POST)
+    @PostMapping(value = "/cleanTitle2")
     public ResultBean cleanTitle(@RequestBody CustomerKeywordCleanTitleCriteria customerKeywordCleanTitleCriteria, HttpServletRequest request) {
         try{
             customerKeywordService.cleanTitle(customerKeywordCleanTitleCriteria);
@@ -503,7 +499,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/deleteCustomerKeywords")
-    @RequestMapping(value = "/deleteDuplicateCustomerKeywords2" , method = RequestMethod.POST)
+    @PostMapping(value = "/deleteDuplicateCustomerKeywords2")
     public ResultBean  deleteDuplicateCustomerKeyword(@RequestBody CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria) {
         try{
             customerKeywordService.deleteDuplicateKeywords(customerKeywordUpdateStatusCriteria);
@@ -515,7 +511,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/deleteCustomerKeywords")
-    @RequestMapping(value = "/getKeywordInfoByUuid/{uuid}" , method = RequestMethod.POST)
+    @PostMapping(value = "/getKeywordInfoByUuid/{uuid}")
     public ResultBean getKeywordInfoByUuid(@PathVariable Long uuid) {
         ResultBean resultBean = new ResultBean(200, "success");
         try{

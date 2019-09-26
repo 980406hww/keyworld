@@ -8,7 +8,8 @@ import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.dao.CustomerKeywordDao;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
-import com.keymanager.ckadmin.enums.CustomerKeywordCleanTypeEnum;
+import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
+import com.keymanager.ckadmin.enums.EntryTypeEnum;
 import com.keymanager.ckadmin.enums.KeywordEffectEnum;
 import com.keymanager.ckadmin.excel.operator.AbstractExcelReader;
 import com.keymanager.ckadmin.service.ConfigService;
@@ -16,14 +17,10 @@ import com.keymanager.ckadmin.service.CustomerExcludeKeywordService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
-import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
-import com.keymanager.ckadmin.enums.EntryTypeEnum;
+import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
-
-import com.keymanager.ckadmin.util.StringUtil;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -176,9 +173,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         }
         int queryInterval = 24 * 60 * 60;
         if (null != customerKeyword.getOptimizePlanCount() && customerKeyword.getOptimizePlanCount() > 0) {
-            int optimizeTodayCount = (int) Math.floor(Utils
-                .getRoundValue(customerKeyword.getOptimizePlanCount() * (Math.random() * 0.7 + 0.5),
-                    1));
+            int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(customerKeyword.getOptimizePlanCount() * (Math.random() * 0.7 + 0.5), 1));
             queryInterval = queryInterval / optimizeTodayCount;
             customerKeyword.setOptimizeTodayCount(optimizeTodayCount);
         } else {
