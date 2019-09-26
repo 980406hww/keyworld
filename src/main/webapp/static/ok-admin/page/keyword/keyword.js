@@ -484,37 +484,34 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                     show_layer_msg('请输入新机器分组！', 5, null, 1000);
                     return;
                 }
-                layer.confirm("确定修改选中词的机器分组吗", {icon: 3, title: '修改机器分组'}, function (index) {
-                    var postData = {};
-                    postData.uuids = uuidArr;
-                    postData.terminalType = $('#terminalType').val();
-                    postData.targetMachineGroup = value;
-                    $.ajax({
-                        url: '/internal/customerKeyword/updateMachineGroup2',
-                        data: JSON.stringify(postData),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        timeout: 5000,
-                        type: 'POST',
-                        success: function (result) {
-                            if (result.code === 200) {
-                                show_layer_msg('操作成功', 6, true);
-                            } else {
-                                show_layer_msg('操作失败', 5);
-                            }
-                        },
-                        error: function () {
-                            show_layer_msg('未知错误，请稍后重试', 5);
-                        },
-                        complete: function () {
-                            layer.close(index);
-                        }
-                    });
-                    layer.close(index2);
 
+                var postData = {};
+                postData.uuids = uuidArr;
+                postData.terminalType = $('#terminalType').val();
+                postData.targetMachineGroup = value;
+                $.ajax({
+                    url: '/internal/customerKeyword/updateMachineGroup2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
                 });
+                layer.close(index2);
+
+
             }
         });
     }
@@ -532,35 +529,32 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                     show_layer_msg('请输入新熊掌号！', 5, null, 1000);
                     return;
                 }
-                layer.confirm("确定修改当前词的熊掌号吗", {icon: 3, title: '修改熊掌号'}, function (index) {
-                    var postData = formToJsonObject('searchForm');
-                    postData.targetBearPawNumber = value;
-                    $.ajax({
-                        url: '/internal/customerKeyword/updateBearPawNumber2',
-                        data: JSON.stringify(postData),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        timeout: 5000,
-                        type: 'POST',
-                        success: function (result) {
-                            if (result.code === 200) {
-                                show_layer_msg('操作成功', 6, true);
-                            } else {
-                                show_layer_msg('操作失败', 5);
-                            }
-                        },
-                        error: function () {
-                            show_layer_msg('未知错误，请稍后重试', 5);
-                        },
-                        complete: function () {
-                            layer.close(index);
-                        }
-                    });
-                    layer.close(index2);
 
+                var postData = formToJsonObject('searchForm');
+                postData.targetBearPawNumber = value;
+                $.ajax({
+                    url: '/internal/customerKeyword/updateBearPawNumber2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
                 });
+                layer.close(index2);
+
+
             }
         });
     }
@@ -585,36 +579,33 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                     show_layer_msg('请输入新熊掌号！', 5, null, 1000);
                     return;
                 }
-                layer.confirm("确定修改选中词的熊掌号吗", {icon: 3, title: '修改熊掌号'}, function (index) {
-                    var postData = {};
-                    postData.uuids = uuidArr;
-                    postData.terminalType = $('#terminalType').val();
-                    postData.targetBearPawNumber = value;
-                    $.ajax({
-                        url: '/internal/customerKeyword/updateBearPawNumber2',
-                        data: JSON.stringify(postData),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        timeout: 5000,
-                        type: 'POST',
-                        success: function (result) {
-                            if (result.code === 200) {
-                                show_layer_msg('操作成功', 6, true);
-                            } else {
-                                show_layer_msg('操作失败', 5);
-                            }
-                        },
-                        error: function () {
-                            show_layer_msg('未知错误，请稍后重试', 5);
-                        },
-                        complete: function () {
-                            layer.close(index);
+
+                var postData = {};
+                postData.uuids = uuidArr;
+                postData.terminalType = $('#terminalType').val();
+                postData.targetBearPawNumber = value;
+                $.ajax({
+                    url: '/internal/customerKeyword/updateBearPawNumber2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
                         }
-                    });
-                    layer.close(index2);
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
                 });
+                layer.close(index2);
+
             }
         });
     }

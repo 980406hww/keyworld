@@ -471,36 +471,33 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     show_layer_msg('请输入新熊掌号！', 5, null, 1000);
                     return;
                 }
-                layer.confirm("确定修改选中词的熊掌号吗", {icon: 3, title: '修改熊掌号'}, function (index) {
-                    var postData = {};
-                    postData.uuids = uuidArr;
-                    postData.terminalType = $('#terminalType').val();
-                    postData.targetBearPawNumber = value;
-                    $.ajax({
-                        url: '/internal/customerKeyword/updateBearPawNumber2',
-                        data: JSON.stringify(postData),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        timeout: 5000,
-                        type: 'POST',
-                        success: function (result) {
-                            if (result.code === 200) {
-                                show_layer_msg('操作成功', 6, true);
-                            } else {
-                                show_layer_msg('操作失败', 5);
-                            }
-                        },
-                        error: function () {
-                            show_layer_msg('未知错误，请稍后重试', 5);
-                        },
-                        complete: function () {
-                            layer.close(index);
+
+                var postData = {};
+                postData.uuids = uuidArr;
+                postData.terminalType = $('#terminalType').val();
+                postData.targetBearPawNumber = value;
+                $.ajax({
+                    url: '/internal/customerKeyword/updateBearPawNumber2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
                         }
-                    });
-                    layer.close(index2);
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
                 });
+                layer.close(index2);
+
             }
         });
     }
@@ -570,37 +567,34 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     show_layer_msg('请输入新优化组！', 5, null, 1000);
                     return;
                 }
-                layer.confirm("确定修改选中词的优化组吗", {icon: 3, title: '修改优化组'}, function (index) {
-                    var postData = {};
-                    postData.uuids = uuidArr;
-                    postData.terminalType = $('#terminalType').val();
-                    postData.targetOptimizeGroupName = value;
-                    $.ajax({
-                        url: '/internal/customerKeyword/updateOptimizeGroupName2',
-                        data: JSON.stringify(postData),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        timeout: 5000,
-                        type: 'POST',
-                        success: function (result) {
-                            if (result.code === 200) {
-                                show_layer_msg('操作成功', 6, true);
-                            } else {
-                                show_layer_msg('操作失败', 5);
-                            }
-                        },
-                        error: function () {
-                            show_layer_msg('未知错误，请稍后重试', 5);
-                        },
-                        complete: function () {
-                            layer.close(index);
-                        }
 
-                    });
-                    layer.close(index2);
+                var postData = {};
+                postData.uuids = uuidArr;
+                postData.terminalType = $('#terminalType').val();
+                postData.targetOptimizeGroupName = value;
+                $.ajax({
+                    url: '/internal/customerKeyword/updateOptimizeGroupName2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
+
                 });
+                layer.close(index2);
+
 
             }
         });
@@ -905,39 +899,35 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     show_layer_msg('请输入新刷量！', 5, null, 1000);
                     return;
                 }
-                layer.confirm("确定修改选中词的刷量吗", {icon: 3, title: '修改刷量'},
-                    function (index) {
-                        var postData = {};
-                        postData.uuids = uuidArr;
-                        postData.terminalType = $('#terminalType').val();
-                        postData.type = $('#type').val();
-                        postData.targetOptimizePlanCount = value;
-                        $.ajax({
-                            url: '/internal/customerKeyword/updateOptimizePlanCount2',
-                            data: JSON.stringify(postData),
-                            headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json'
-                            },
-                            timeout: 5000,
-                            type: 'POST',
-                            success: function (result) {
-                                if (result.code === 200) {
-                                    show_layer_msg('操作成功', 6, true);
-                                } else {
-                                    show_layer_msg('操作失败', 5);
-                                }
-                            },
-                            error: function () {
-                                show_layer_msg('未知错误，请稍后重试', 5);
-                            },
-                            complete: function () {
-                                layer.close(index);
-                            }
 
-                        });
-                        layer.close(index2);
-                    });
+                var postData = {};
+                postData.uuids = uuidArr;
+                postData.terminalType = $('#terminalType').val();
+                postData.type = $('#type').val();
+                postData.targetOptimizePlanCount = value;
+                $.ajax({
+                    url: '/internal/customerKeyword/updateOptimizePlanCount2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
+
+                });
+                layer.close(index2);
+
 
             }
         });
@@ -1008,37 +998,34 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     show_layer_msg('请输入新机器分组！', 5, null, 1000);
                     return;
                 }
-                layer.confirm("确定修改选中词的机器分组吗", {icon: 3, title: '修改机器分组'}, function (index) {
-                    var postData = {};
-                    postData.uuids = uuidArr;
-                    postData.terminalType = $('#terminalType').val();
-                    postData.targetMachineGroup = value;
-                    $.ajax({
-                        url: '/internal/customerKeyword/updateMachineGroup2',
-                        data: JSON.stringify(postData),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        timeout: 5000,
-                        type: 'POST',
-                        success: function (result) {
-                            if (result.code === 200) {
-                                show_layer_msg('操作成功', 6, true);
-                            } else {
-                                show_layer_msg('操作失败', 5);
-                            }
-                        },
-                        error: function () {
-                            show_layer_msg('未知错误，请稍后重试', 5);
-                        },
-                        complete: function () {
-                            layer.close(index);
-                        }
-                    });
-                    layer.close(index2);
 
+                var postData = {};
+                postData.uuids = uuidArr;
+                postData.terminalType = $('#terminalType').val();
+                postData.targetMachineGroup = value;
+                $.ajax({
+                    url: '/internal/customerKeyword/updateMachineGroup2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
                 });
+                layer.close(index2);
+
+
             }
         });
     }
@@ -1239,8 +1226,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
 
 function updateOrNewTab(url, tit, id) {
     var update = false;
-    var contentIframe = ("<iframe src='" + url + "' lay-id='" + id
-        + "'frameborder='0' scrolling='yes' width='100%' height='100%'></iframe>");
+    var contentIframe = ("<iframe src='" + url + "' lay-id='" + id + "'frameborder='0' scrolling='yes' width='100%' height='100%'></iframe>");
     parent.layui.$('.layui-tab-title li').each(function () {
         if (id === this.getAttribute('lay-id')) {
             update = true;
