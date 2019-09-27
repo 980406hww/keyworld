@@ -540,8 +540,11 @@
         }
 
         function showUploadVPSDialog(machineInfoType) {
-            if(machineInfoType == 'common')
-            okLayer.open("首页 / 终端列表 / 上传VPS", "/internal/machineManage/toUploadVPSFile", "30%", "22%", function (layero) {
+            var height = "22%"
+            if(machineInfoType == 'common'){
+                height = "18%"
+            }
+            okLayer.open("首页 / 终端列表 / 上传VPS", "/internal/machineManage/toUploadVPSFile", "30%", height, function (layero) {
                 window[layero.find("iframe")[0]["name"]].initData(machineInfoType);
             },function(){
                 if(sign){
