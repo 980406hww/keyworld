@@ -23,8 +23,7 @@
         c.fCreateTime AS `createTime`
     </sql>
 
-    <select id="searchCustomers" parameterType="com.keymanager.ckadmin.criteria.CustomerCriteria"
-            resultType="com.keymanager.ckadmin.entity.Customer">
+    <select id="searchCustomers" parameterType="com.keymanager.ckadmin.criteria.CustomerCriteria" resultType="com.keymanager.ckadmin.entity.Customer">
         SELECT
         <include refid="colID"/>
         FROM t_customer c

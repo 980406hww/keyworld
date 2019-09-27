@@ -81,7 +81,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                 '               </div>';
             item += '           <div class="layadmin-address other_info">' +
                 '                   <strong>其他信息</strong>' +
-                '                   <p class="skip" title="'+obj.remark+'">客户状态:' + generate_customer_status(obj.status) +'</p>' +
+                '                   <p class="skip" >所属用户:' + obj.loginName +'</p>' +
+                '                   <p class="skip" >客户状态:' + generate_customer_status(obj.status) +'</p>' +
                 '                   <p class="skip" title="'+obj.remark+'">是否产生日报表:<span id="dr'+obj.uuid+'">' + generate_customer_daily_report(obj.uuid, obj.status, obj.dailyReportIdentify) + '</span></p>' +
                 '               </div>';
             item += '           <div class="layadmin-address ">' +
@@ -405,31 +406,30 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             layer.msg('请激活客户', {icon: 5});
             return;
         }
-        layer.confirm("确定更新客户日报表状态吗", {icon: 3, title: '更新日报表状态'}, function (index) {
-            var postData = {};
-            postData.customerUuid = uuid;
-            postData.identify = newIdentify;
-            $.ajax({
-                url: '/internal/customer/changeCustomerDailyReportIdentify2',
-                type: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                data: JSON.stringify(postData),
-                success: function (result) {
-                    if (result.code === 200) {
-                        layer.msg('操作成功', {icon: 6, time:1000});
-                        $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, newIdentify))
-                    }
-                },
-                error: function () {
-                    layer.msg('操作失败', {icon: 5, time:1000});
-                    $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, oldIdentify))
+
+        var postData = {};
+        postData.customerUuid = uuid;
+        postData.identify = newIdentify;
+        $.ajax({
+            url: '/internal/customer/changeCustomerDailyReportIdentify2',
+            type: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(postData),
+            success: function (result) {
+                if (result.code === 200) {
+                    layer.msg('操作成功', {icon: 6, time:1000});
+                    $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, newIdentify))
                 }
-            });
-            layer.close(index);
+            },
+            error: function () {
+                layer.msg('操作失败', {icon: 5, time:1000});
+                $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, oldIdentify))
+            }
         });
+
     };
 
     //触发所选客户日报表

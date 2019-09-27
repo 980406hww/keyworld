@@ -21,16 +21,17 @@
                 <a class="ok-refresh" href="javascript:;" title="刷新">
                     <i class="layui-icon layui-icon-refresh-3"></i>
                 </a>
-            </li>
+            </li><!--
             <li class="layui-nav-item ok-input-search">
                 <input type="text" placeholder="搜索..." class="layui-input layui-input-search"/>
-            </li>
+            </li>-->
             <li class="ok-nav-item ok-hide-md">
 
                 <!--<div id="tp-weather-widget"></div>-->
             </li>
         </ul>
         <ul class="layui-nav layui-layout-right">
+
             <li class="no-line layui-nav-item">
                 <a href="javascript:;">
                     <@shiro.principal property="name"/>
@@ -45,6 +46,17 @@
 <!--                    </dd>-->
                     <dd><a href="javascript:void(0)" id="logout">退出登录</a></dd>
                 </dl>
+            </li>
+            <li class=" layui-nav-item layui-form">
+
+                <a href="javascript:;" id="entryType_index">
+
+                </a>
+                <dl id="businessInfo" class="layui-nav-child">
+
+                </dl>
+                <input type="text" id="businessType_index_tmp" value='${Session["entryType"]}'  hidden name="businessType_index_tmp"/>
+
             </li>
         </ul>
     </div>
@@ -113,6 +125,6 @@
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/js/okadmin.js"></script>
-
+<script src="/static/ok-admin/page/index.js"></script>
 </body>
 </html>
