@@ -42,38 +42,27 @@
         var $ = layui.jquery;
 
         form.on("submit(commit)", function (data) {
-            layer.confirm('确认修改？', {
-                icon: 3,
-                title: '修改流转分组',
-                btn: ['确认', '取消'],
-                yes: function (index) {
-                    var postData = {};
-                    postData.clientIDs = clientIDs;
-                    postData.switchGroupName = data.field.switchGroupName;
-                    $.ajax({
-                        url: '/internal/machineManage/batchUpdateSwitchGroupName',
-                        type: 'post',
-                        data: JSON.stringify(postData),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        timeout: 5000,
-                        success: function (res) {
-                            if (res.code === 200) {
-                                layer.close(index);
-                                okLayer.msg.greenTick("修改成功", function () {
-                                    parent.window.sign = true;
-                                    parent.layer.close(parent.layer.getFrameIndex(window.name));
-                                });
-                            } else {
-                                layui.layer.msg(res.msg);
-                            }
-                        }
-                    });
+            var postData = {};
+            postData.clientIDs = clientIDs;
+            postData.switchGroupName = data.field.switchGroupName;
+            $.ajax({
+                url: '/internal/machineManage/batchUpdateSwitchGroupName',
+                type: 'post',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                btn2: function (index) {
-                    layer.close(index);
+                timeout: 5000,
+                success: function (res) {
+                    if (res.code === 200) {
+                        okLayer.msg.greenTick("修改成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        layui.layer.msg(res.msg);
+                    }
                 }
             });
             return false;

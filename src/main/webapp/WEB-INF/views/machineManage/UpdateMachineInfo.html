@@ -139,52 +139,27 @@
         }
 
         form.on("submit(commit)", function (data) {
-            layer.confirm('确认修改？', {
-                icon: 3,
-                title: '修改机器分组',
-                btn: ['确认', '取消'],
-                yes: function (index) {
-                    var machineInfo = {};
-                    machineInfo = data.field;
-                    machineInfo.clientID = clientID_;
-                    // if(clientID_ != null){
-                    //     var mi = {};
-                    //     mi.machineGroup = isChecked("machineGroup");
-                    //     mi.allowSwitchGroup = isChecked("allowSwitchGroup");
-                    //     mi.switchGroupName = isChecked("switchGroupName");
-                    //     mi.host = isChecked("host");
-                    //     mi.port = isChecked("port");
-                    //     mi.userName = isChecked("csUserName");
-                    //     mi.broadbandAccount = isChecked("broadbandAccount");
-                    //     mi.broadbandPassword = isChecked("broadbandPassword");
-                    //     mi.vpsBackendSystemComputerID = isChecked("vpsBackendSystemComputerID");
-                    //     mi.vpsBackendSystemPassword = isChecked("vpsBackendSystemPassword");
-                    // }
-                    // postData.mi = mi;
-                    $.ajax({
-                        url: '/internal/machineManage/updateMachineInfo',
-                        type: 'post',
-                        data: JSON.stringify(machineInfo),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        timeout: 5000,
-                        success: function (res) {
-                            if (res.code === 200) {
-                                layer.close(index);
-                                okLayer.msg.greenTick("保存成功", function () {
-                                    parent.window.sign = true;
-                                    parent.layer.close(parent.layer.getFrameIndex(window.name));
-                                });
-                            } else {
-                                layui.layer.msg(res.msg);
-                            }
-                        }
-                    });
+            var machineInfo = {};
+            machineInfo = data.field;
+            machineInfo.clientID = clientID_;
+            $.ajax({
+                url: '/internal/machineManage/updateMachineInfo',
+                type: 'post',
+                data: JSON.stringify(machineInfo),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                btn2: function (index) {
-                    layer.close(index);
+                timeout: 5000,
+                success: function (res) {
+                    if (res.code === 200) {
+                        okLayer.msg.greenTick("保存成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        layui.layer.msg(res.msg);
+                    }
                 }
             });
             return false;

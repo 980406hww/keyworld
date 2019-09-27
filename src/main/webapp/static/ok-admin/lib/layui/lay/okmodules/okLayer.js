@@ -26,7 +26,7 @@ layui.define(["layer"], function (exports) {
          * @param endFunction
          */
         open: function (title, content, width, height, successFunction,
-            endFunction) {
+            endFunction,offset) {
             layer.open({
                 title: title,
                 type: 2,
@@ -37,6 +37,7 @@ layui.define(["layer"], function (exports) {
                 content: content,
                 zIndex: layer.zIndex,
                 skin: '',
+                offset:offset,
                 success: successFunction,
                 end: endFunction
             });
