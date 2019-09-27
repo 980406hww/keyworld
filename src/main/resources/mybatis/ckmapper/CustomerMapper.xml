@@ -46,6 +46,9 @@
         <if test="customerCriteria.loginName != null and customerCriteria.loginName != ''">
             AND c.fUserID  = #{customerCriteria.loginName}
         </if>
+        <if test="customerCriteria.entryType != null and customerCriteria.entryType != ''">
+            AND c.fEntryType  = #{customerCriteria.entryType}
+        </if>
         <if test="customerCriteria.status != null and customerCriteria.status != ''">
             AND c.fStatus = #{customerCriteria.status}
         </if>

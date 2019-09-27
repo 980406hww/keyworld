@@ -223,6 +223,15 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
     }
 
     form.on("submit(search)", function (data) {
+        if (!data.field.noPosition){
+            data.field.noPosition = '';
+        }
+        if (!data.field.pushPay){
+            data.field.pushPay = '';
+        }
+        if (!data.field.requireDelete){
+            data.field.requireDelete = '';
+        }
         table.reload('keywordTable', {
             where: data.field,
             page: {

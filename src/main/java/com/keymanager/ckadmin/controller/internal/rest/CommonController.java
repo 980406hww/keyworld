@@ -3,9 +3,15 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.enums.KeywordEffectEnum;
 import com.keymanager.ckadmin.service.ConfigService;
+import com.keymanager.monitoring.common.shiro.ShiroUser;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,6 +58,30 @@ public class CommonController {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    @GetMapping(value = "/getKeywordTypeByUserRole")
+    public ResultBean getKeywordTypeByUserRole(HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
+            Set<String> roles = shiroUser.getRoles();
+            List<String> businessType = new ArrayList<>();
+            if (roles.contains("Operation")) {
+                businessType = Arrays.asList(configService.getConfig("BusinessType", "All").getValue().split(","));
+            } else if (roles.contains("SEOSales")) {
+                businessType = Arrays.asList(configService.getConfig("BusinessType", "SEOSales").getValue().split(","));
+            } else if (roles.contains("NegativeSales")) {
+                businessType = Arrays.asList(configService.getConfig("BusinessType", "NegativeSales").getValue().split(","));
+            }
+            resultBean.setData(businessType);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
         }
         return resultBean;
     }

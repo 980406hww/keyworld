@@ -217,6 +217,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
     }
 
     form.on("submit(search)", function (data) {
+        if (!data.field.noPosition){
+            data.field.noPosition = '';
+        }
         table.reload('keywordTable', {
             where: data.field,
             page: {

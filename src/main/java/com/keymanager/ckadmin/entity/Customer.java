@@ -20,8 +20,8 @@ public class Customer extends BaseEntity {
 //    @TableField(value = "fSearchEngine")
 //    private String searchEngine;
 
-//    @TableField(value = "fEntryType")
-//    private String entryType;
+    @TableField(value = "fEntryType")
+    private String entryType;
 
     @NotNull
     @TableField(value = "fContactPerson")
@@ -104,13 +104,13 @@ public class Customer extends BaseEntity {
 //        this.searchEngine = searchEngine;
 //    }
 
-//    public String getEntryType() {
-//        return entryType;
-//    }
-//
-//    public void setEntryType(String entryType) {
-//        this.entryType = entryType;
-//    }
+    public String getEntryType() {
+        return entryType;
+    }
+
+    public void setEntryType(String entryType) {
+        this.entryType = entryType;
+    }
 
     public String getContactPerson() {
         return contactPerson;
