@@ -75,7 +75,7 @@
 	<!--缓存更新结果信息到队列中-->
 	<bean id="cronTriggerUpdateOptimizedCount" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerUpdateOptimizedCountSchedule"/>
-		<property name="cronExpression" value="0/2 * * * * ?" />
+		<property name="cronExpression" value="0/20 * * * * ?" />
 	</bean>
 
 	<bean id="cronTriggerUpdateOptimizedCountSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
