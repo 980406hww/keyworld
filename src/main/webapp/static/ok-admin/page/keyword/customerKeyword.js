@@ -411,35 +411,34 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     show_layer_msg('请输入新熊掌号！', 5, null, 1000);
                     return;
                 }
-                layer.confirm("确定修改当前词的熊掌号吗", {icon: 3, title: '修改熊掌号'}, function (index) {
-                    var postData = formToJsonObject('searchForm');
-                    postData.targetBearPawNumber = value;
-                    $.ajax({
-                        url: '/internal/customerKeyword/updateBearPawNumber2',
-                        data: JSON.stringify(postData),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        timeout: 5000,
-                        type: 'POST',
-                        success: function (result) {
-                            if (result.code === 200) {
-                                show_layer_msg('操作成功', 6, true);
-                            } else {
-                                show_layer_msg('操作失败', 5);
-                            }
-                        },
-                        error: function () {
-                            show_layer_msg('未知错误，请稍后重试', 5);
-                        },
-                        complete: function () {
-                            layer.close(index);
+                // layer.confirm("确定修改当前词的熊掌号吗", {icon: 3, title: '修改熊掌号'}, function (index) {
+                var postData = formToJsonObject('searchForm');
+                postData.targetBearPawNumber = value;
+                $.ajax({
+                    url: '/internal/customerKeyword/updateBearPawNumber2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
                         }
-                    });
-                    layer.close(index2);
-
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    },
+                    complete: function () {
+                        layer.close(index);
+                    }
                 });
+                layer.close(index2);
+                // });
             }
         });
     }
@@ -508,35 +507,34 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     show_layer_msg('请输入新优化组！', 5, null, 1000);
                     return;
                 }
-                layer.confirm("确定修改当前词的优化组吗", {icon: 3, title: '修改优化组'}, function (index) {
-                    var postData = formToJsonObject('searchForm');
-                    postData.targetOptimizeGroupName = value;
-                    $.ajax({
-                        url: '/internal/customerKeyword/updateOptimizeGroupName2',
-                        data: JSON.stringify(postData),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        timeout: 5000,
-                        type: 'POST',
-                        success: function (result) {
-                            if (result.code === 200) {
-                                show_layer_msg('操作成功', 6, true);
-                            } else {
-                                show_layer_msg('操作失败', 5);
-                            }
-                        },
-                        error: function () {
-                            show_layer_msg('未知错误，请稍后重试', 5);
-                        },
-                        complete: function () {
-                            layer.close(index);
+                // layer.confirm("确定修改当前词的优化组吗", {icon: 3, title: '修改优化组'}, function (index) {
+                var postData = formToJsonObject('searchForm');
+                postData.targetOptimizeGroupName = value;
+                $.ajax({
+                    url: '/internal/customerKeyword/updateOptimizeGroupName2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
                         }
-                    });
-                    layer.close(index2);
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    },
+                    complete: function () {
+                        layer.close(index);
+                    }
                 });
-
+                layer.close(index2);
+                // });
             }
         });
     }
@@ -838,37 +836,39 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 if (value === '') {
                     show_layer_msg('请输入新刷量！', 5, null, 1000);
                     return;
+                } else if (!/^\d+$/.test(value)) {
+                    show_layer_msg('请输入正确数字！', 5, null, 1000);
+                    return;
                 }
-                layer.confirm("确定修改当前词的刷量吗", {icon: 3, title: '修改刷量'},
-                    function (index) {
-                        var postData = formToJsonObject('searchForm');
-                        postData.targetOptimizePlanCount = value;
-                        $.ajax({
-                            url: '/internal/customerKeyword/updateOptimizePlanCount2',
-                            data: JSON.stringify(postData),
-                            headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json'
-                            },
-                            timeout: 5000,
-                            type: 'POST',
-                            success: function (result) {
-                                if (result.code === 200) {
-                                    show_layer_msg('操作成功', 6, true);
-                                } else {
-                                    show_layer_msg('操作失败', 5);
-                                }
-                            },
-                            error: function () {
-                                show_layer_msg('未知错误，请稍后重试', 5);
-                            },
-                            complete: function () {
-                                layer.close(index);
-                            }
-                        });
-                        layer.close(index2);
-                    });
-
+                // layer.confirm("确定修改当前词的刷量吗", {icon: 3, title: '修改刷量'},
+                //     function (index) {
+                var postData = formToJsonObject('searchForm');
+                postData.targetOptimizePlanCount = value;
+                $.ajax({
+                    url: '/internal/customerKeyword/updateOptimizePlanCount2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    },
+                    complete: function () {
+                        layer.close(index);
+                    }
+                });
+                layer.close(index2);
+                    // });
             }
         });
     }
@@ -890,6 +890,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 var value = layero.find(".layui-layer-input").val();
                 if (value === '') {
                     show_layer_msg('请输入新刷量！', 5, null, 1000);
+                    return;
+                } else if (!/^\d+$/.test(value)) {
+                    show_layer_msg('请输入正确数字！', 5, null, 1000);
                     return;
                 }
 
@@ -939,7 +942,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     show_layer_msg('请输入新机器分组！', 5, null, 1000);
                     return;
                 }
-                layer.confirm("确定修改当前词的机器分组吗", {icon: 3, title: '修改机器分组'}, function (index) {
+                // layer.confirm("确定修改当前词的机器分组吗", {icon: 3, title: '修改机器分组'}, function (index) {
                     var postData = formToJsonObject('searchForm');
                     postData.targetMachineGroup = value;
                     $.ajax({
@@ -967,7 +970,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     });
                     layer.close(index2);
 
-                });
+                // });
             }
         });
     }
@@ -1249,7 +1252,7 @@ function updateOrNewTab(url, tit, id) {
     });
     if (!update) {
         parent.layui.element.tabAdd('ok-tab', {
-                title: tit,
+                title: '<i class="layui-icon layui-icon-align-right">&#xe648;</i>' + tit,
                 content: contentIframe,
                 id: id
             }
