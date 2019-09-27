@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css" media="all">
-    <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="/static/ok-admin/css/scroll-bar.css">
     <style>
         .show {
             display: none;
@@ -24,7 +24,11 @@
             /*overflow: visible;*/
             /*text-overflow: inherit;*/
             /*white-space: normal;*/
-            padding: 0px !important;
+            padding: 0 !important;
+        }
+
+        .layui-table-main {
+            max-height: 415px;
         }
     </style>
 </head>
@@ -91,7 +95,7 @@
                     type: 'map',
                     mapType: 'china',
                     selectedMode: 'single',
-                    roam: true,
+                    roam: false,
                     zoom: 1.2,
                     label: {
                         normal: {
@@ -110,6 +114,7 @@
                     getMachineInfoBody(params.data.value, params.data.name);
                 } else {
                     document.getElementById('showData').style.display = 'none';
+                    layer.msg("暂无数据", {icon: 5});
                 }
             });
         }
@@ -139,7 +144,7 @@
                     if (res.code === 200) {
                         showHide(value, res.data);
                     } else {
-
+                        layer.msg(res.msg ? res.msg : "暂无数据", {icon: 5});
                     }
                 }
             });
@@ -179,7 +184,6 @@
             show.style.display = 'block';
             //转换静态表格
             table.init('machineInfoTable', {
-                height: 460,//设置高度
                 limit: 100
                 //支持所有基础参数
             });
