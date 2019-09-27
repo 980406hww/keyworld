@@ -21,15 +21,16 @@
 
 .my-hide {
     padding-bottom: 1px !important;
-    width: 99%;
     display: none;
     position: absolute;
-    top: 50px;
-    left: 3px;
-    padding-left: 10px ;
+    top: 45px;
+    left: 0;
+    padding-left: 10px;
     z-index: 894;
     background: #fff;
-    border: 1px solid lightgrey;
+    border-bottom: 1px #e6e6e6 solid;
+    border-left: 1px #e6e6e6 solid;
+    border-right: 1px #e6e6e6 solid;
     transition: visibility .6s;
 }
 
@@ -61,7 +62,7 @@
     height: 30px;
 }
 
-.layui-inline input{
+.layui-inline input {
     height: 30px;
 }
 

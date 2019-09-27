@@ -15,22 +15,21 @@
 }
 
 .my-opration-hide {
-    padding-bottom: 1px !important;
-    width: 91%;
+    padding: 10px 10px 5px 15px;
+    /*width: 88%;*/
     display: none;
     position: absolute;
-    top: 43px;
-    left: 35px;
-    padding-left: 10px ;
+    top: 51px;
+    left: 0;
     z-index: 894;
     background: #fff;
-    border: 1px solid lightgrey;
+    border-top: 1px #e6e6e6 solid;
+    border-bottom: 1px #e6e6e6 solid;
     transition: visibility .6s;
 }
 
-.my-opration-hide .layui-btn-group + .layui-btn-group {
-    margin-left: 0;
-    margin-right: 10px !important;
+.my-opration-hide .layui-btn-group {
+    margin: 0 10px 5px 0;
 }
 
 #searchEngineDiv .layui-unselect dl { max-height:20px; }
