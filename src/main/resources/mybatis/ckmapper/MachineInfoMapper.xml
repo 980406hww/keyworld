@@ -370,6 +370,17 @@
         </foreach>
     </update>
 
+    <update id="batchUpdateMachine" parameterType="com.keymanager.ckadmin.criteria.MachineInfoCriteria">
+        UPDATE t_machine_info mi
+        SET mi.fMachineGroup = #{machineInfoCriteria.targetMachineGroup},mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName},mi.fAllowSwitchGroup = #{machineInfoCriteria.allowSwitchGroup}
+        WHERE 1=1
+        <if test="machineInfoCriteria.clientIDs != null">AND mi.fClientID IN
+            <foreach item="item" collection="machineInfoCriteria.clientIDs" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </update>
+
     <update id="batchUpdateUpgradeFailedReason">
         UPDATE t_machine_info
         SET fUpgradeFailedReason = #{upgradeFailedReason}

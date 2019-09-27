@@ -394,6 +394,11 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     @Override
+    public void batchUpdateMachine(MachineInfoCriteria machineInfoCriteria){
+        machineInfoDao.batchUpdateMachine(machineInfoCriteria);
+    }
+
+    @Override
     public void batchChangeTerminalType(String[] clientIds, String terminalType) {
 
     }

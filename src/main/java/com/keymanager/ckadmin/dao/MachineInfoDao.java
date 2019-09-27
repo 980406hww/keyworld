@@ -68,6 +68,8 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     void batchUpdateMachineInfo(@Param("clientIDs") String[] clientIDs, @Param("mi") MachineInfo mi, @Param("machineInfo") MachineInfo machineInfo);
 
+    void batchUpdateMachine(@Param("machineInfoCriteria") MachineInfoCriteria machineInfoCriteria);
+
     void batchChangeStatus(@Param("clientIds") String[] clientIds, @Param("valid") Boolean valid);
 
     void updateMachineTargetVersion(@Param("clientUpgrade") ClientUpgrade clientUpgrade);

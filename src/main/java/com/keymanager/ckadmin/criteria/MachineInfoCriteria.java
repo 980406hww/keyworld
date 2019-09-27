@@ -41,9 +41,18 @@ public class MachineInfoCriteria extends BaseCriteria {
     private boolean haveHiddenColumns; //是否为设置隐藏弹窗提交的
     private String targetMachineGroup;
     private String targetGroup;
+    private int allowSwitchGroup;
 
     private Integer gtMemory;
     private Integer ltMemory;
+
+    public int getAllowSwitchGroup() {
+        return allowSwitchGroup;
+    }
+
+    public void setAllowSwitchGroup(int allowSwitchGroup) {
+        this.allowSwitchGroup = allowSwitchGroup;
+    }
 
     public Integer getGtMemory() {
         return gtMemory;

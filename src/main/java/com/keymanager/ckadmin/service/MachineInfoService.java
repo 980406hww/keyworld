@@ -102,6 +102,8 @@ public interface MachineInfoService extends IService<MachineInfo> {
 
     void batchUpdateMachineInfo(MachineInfoBatchUpdateCriteria machineInfoBatchUpdateCriteria);
 
+    void batchUpdateMachine(MachineInfoCriteria machineInfoCriteria);
+
     void batchChangeStatus(String clientIDs,Boolean status);
 
     void batchChangeTerminalType(String[] clientIds, String terminalType);

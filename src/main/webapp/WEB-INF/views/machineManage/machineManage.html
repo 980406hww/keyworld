@@ -336,7 +336,6 @@
                 defaultToolbar: ['filter'],
                 contentType: 'application/json',
                 where: whereCondition,
-                height: 'full-53',
                 cols: [[
                     {filed: 'uuid', align: 'center', type: 'checkbox', width: '42'},
                     {field: 'clientIDs', align: 'center', title: '客户端ID', width: '72', templet: '#clientIDs'},
@@ -426,8 +425,35 @@
                 case 'toSwitchGroup':
                     toSwitchGroup();
                     break;
+                case 'batchUpdateMachine':
+                    batchUpdateMachine();
+                    break;
             }
         });
+
+        function batchUpdateMachine() {
+            var checkStatus = table.checkStatus('machineManageTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.clientID);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要修改换组状态的机器', {icon: 5});
+                return
+            }
+            var postData = {};
+            postData.clientIDs = uuidArr;
+            okLayer.open("首页 / 终端列表 / 修改终端分组信息", "/internal/machineManage/toBatchUpdateMachine", "30%", "30%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, '180px')
+            return false;
+        }
 
         function toAllowSwitchGroup(){
             var checkStatus = table.checkStatus('machineManageTable');
@@ -831,52 +857,43 @@
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
     <div class="layui-btn-container">
-    <@shiro.hasPermission name="/internal/machineInfo/deleteMachineInfos">
-    <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="batchDeleteMachines">
-        <i class="layui-icon layui-icon-delete"></i>删除所选
-    </button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
-    <div class="layui-btn-group">
-        <button class="layui-btn layui-btn layui-btn-normal layui-btn-sm" id="showReopenClientDialog" lay-event="showReopenClientDialog">
-            <i class="layui-icon layui-icon-refresh"></i>重开机器
-        </button>
-        <button class="layui-btn layui-btn layui-btn-normal layui-btn-sm" id="finishStartUp" lay-event="finishStartUp">
-            <i class="layui-icon layui-icon-chart-screen"></i>完成开机
-        </button>
-    </div>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/machineInfo/uploadVPSFile">
-    <div class="layui-btn-group">
-        <button class="layui-btn layui-btn layui-btn layui-btn-warm layui-btn-sm" id="common" lay-event="showUploadVPSDialog('common')">
-            <i class="layui-icon layui-icon-upload-drag"></i>导入普通终端
-        </button>
-        <button class="layui-btn layui-btn layui-btn layui-btn-warm layui-btn-sm" id="startUp" lay-event="showUploadVPSDialog('startUp')">
-            <i class="layui-icon layui-icon-upload-drag"></i>导入开机终端
-        </button>
-    </div>
-    </@shiro.hasPermission>
-    <div class="layui-btn-group">
-    <@shiro.hasPermission name="/internal/machineInfo/updateMachineGroup">
-        <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="batchUpdateMachineGroup('selected')">
-            <i class="layui-icon layui-icon-edit"></i>修改所选终端机器分组
-        </button>
-        <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="batchUpdateMachineGroup('total')">
-            <i class="layui-icon layui-icon-edit"></i>修改当前终端机器分组
-        </button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
-        <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toBatchUpdateFailedReason">
-            <i class="layui-icon layui-icon-edit"></i>修改所选终端失败原因
-        </button>
-        <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toAllowSwitchGroup">
-            <i class="layui-icon layui-icon-edit"></i>修改所选终端换组状态
-        </button>
-        <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toSwitchGroup">
-            <i class="layui-icon layui-icon-edit"></i>修改所选终端流转分组
-        </button>
-    </@shiro.hasPermission>
-    </div>
+        <@shiro.hasPermission name="/internal/machineInfo/deleteMachineInfos">
+            <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="batchDeleteMachines">
+                <i class="layui-icon layui-icon-delete"></i>删除所选
+            </button>
+        </@shiro.hasPermission>
+        <div class="layui-btn-group">
+            <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
+                <button class="layui-btn layui-btn layui-btn-normal layui-btn-sm" id="showReopenClientDialog" lay-event="showReopenClientDialog">
+                    <i class="layui-icon layui-icon-refresh"></i>重开机器
+                </button>
+                <button class="layui-btn layui-btn layui-btn-normal layui-btn-sm" id="finishStartUp" lay-event="finishStartUp">
+                    <i class="layui-icon layui-icon-chart-screen"></i>完成开机
+                </button>
+            </@shiro.hasPermission>
+        </div>
+        <div class="layui-btn-group">
+            <@shiro.hasPermission name="/internal/machineInfo/uploadVPSFile">
+                <button class="layui-btn layui-btn layui-btn layui-btn-warm layui-btn-sm" id="common" lay-event="showUploadVPSDialog('common')">
+                    <i class="layui-icon layui-icon-upload-drag"></i>导入普通终端
+                </button>
+                <button class="layui-btn layui-btn layui-btn layui-btn-warm layui-btn-sm" id="startUp" lay-event="showUploadVPSDialog('startUp')">
+                    <i class="layui-icon layui-icon-upload-drag"></i>导入开机终端
+                </button>
+            </@shiro.hasPermission>
+        </div>
+        <div class="layui-btn-group">
+            <@shiro.hasPermission name="/internal/machineInfo/updateMachineGroup">
+                <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="batchUpdateMachine">
+                    <i class="layui-icon layui-icon-edit"></i>修改所选终端分组信息
+                </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
+                <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toBatchUpdateFailedReason">
+                    <i class="layui-icon layui-icon-edit"></i>修改所选终端失败原因
+                </button>
+            </@shiro.hasPermission>
+        </div>
     </div>
 </script>
 

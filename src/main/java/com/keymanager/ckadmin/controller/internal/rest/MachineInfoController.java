@@ -63,6 +63,14 @@ public class MachineInfoController extends SpringMVCBaseController {
         return mv;
     }
 
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/toBatchUpdateMachine", method = RequestMethod.GET)
+    public ModelAndView toBatchUpdateMachine(HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/BatchUpdateMachine");
+        return mv;
+    }
+
     @RequiresPermissions("/internal/machineInfo/uploadVPSFile")
     @RequestMapping(value = "/toUploadVPSFile", method = RequestMethod.GET)
     public ModelAndView toUploadVPSFile(HttpServletRequest request) {
@@ -145,6 +153,22 @@ public class MachineInfoController extends SpringMVCBaseController {
             List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
             String allowSwitchGroup = (String) requestMap.get("allowSwitchGroup");
             machineInfoService.batchUpdateAllowSwitchGroup(clientIDs, allowSwitchGroup);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/batchUpdateMachine", method = RequestMethod.POST)
+    public ResultBean batchUpdateMachine(@RequestBody MachineInfoCriteria machineInfoCriteria) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            machineInfoService.batchUpdateMachine(machineInfoCriteria);
             resultBean.setCode(200);
         } catch (Exception e) {
             logger.error(e.getMessage());
