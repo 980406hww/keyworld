@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
+    <style>
+        .show {
+            display: none;
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 35%;
+            border-radius: 5px;
+            padding: 20px 20px 10px 20px;
+            border: #ccc solid 1px;
+            text-align: center;
+            background: #fff;
+        }
+
+        .layui-table-cell {
+            /*height: auto;*/
+            /*overflow: visible;*/
+            /*text-overflow: inherit;*/
+            /*white-space: normal;*/
+            padding: 0px !important;
+        }
+    </style>
+</head>
+<body style="height: 100%">
+<div style="height: 100%;width: 80%" id="container"></div>
+<div id="showData" class="show"></div>
+<script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script type="text/javascript" src="/static/ok-admin/lib/echarts/echarts.min.js"></script>
+<script type="text/javascript" src="/static/ok-admin/lib/echarts/world/js/china.js"></script>
+<script src="/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script type="text/javascript">
+    // 进度条加载提示
+    NProgress.start();
+
+    window.onload = function () {
+        NProgress.done();
+    };
+
+    let colors = ['D9EDE1', 'D9EDE1', 'FCE1D8', 'FBE0EC', 'FFFDE4', 'FBE0EC', 'FBE0EC', 'FCE1D8', 'FCE1D8',
+        'D7EDFB', 'FCE1D8', 'D9EDE1', 'D7EDFB', 'D7EDFB', 'D9EDE1', 'FBE0EC', 'FFFDE4', 'D9EDE1', 'FFFDE4',
+        'D9EDE1', 'D7EDFB', 'FCE1D8', 'FFFDE4', 'D7EDFB', 'FFFDE4', 'FCE1D8', 'FBE0EC', 'FFFDE4', 'D9EDE1',
+        'FBE0EC', 'FBE0EC', 'FBE0EC', 'FCE1D8', 'FCE1D8', 'FCE1D8'];
+
+    // layui相关
+    layui.use(['table', 'form', 'jquery', 'layer'], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let $ = layui.jquery;
+        let layer = layui.layer;
+
+        $.ajax({
+            url: '/internal/machineinfo/getMachineInfos',
+            type: 'get',
+            dataType: 'json'
+            , success: function (res) {
+                if (res.code === 200) {
+                    init(res.data);
+                } else {
+
+                }
+            }
+        });
+
+        function init(data) {
+            let myChart = echarts.init(document.getElementById("container"));
+            handle(data);
+            let option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: function (params) {
+                        let herder = params.data.name + '<br>';
+                        let msg = herder;
+                        if (params.data.value) {
+                            msg += '机器数：' + params.data.value;
+                        }
+                        if (msg === herder) {
+                            msg += '暂无机器';
+                        }
+                        return msg;
+                    }
+                },
+                series: [{
+                    name: '中国',
+                    type: 'map',
+                    mapType: 'china',
+                    selectedMode: 'single',
+                    roam: true,
+                    zoom: 1.2,
+                    label: {
+                        normal: {
+                            show: true
+                        },
+                        emphasis: {
+                            show: true
+                        }
+                    },
+                    data: data
+                }]
+            };
+            myChart.setOption(option, true);
+            myChart.on('click', function (params) {
+                if (params.data.value) {
+                    getMachineInfoBody(params.data.value, params.data.name);
+                } else {
+                    document.getElementById('showData').style.display = 'none';
+                }
+            });
+        }
+
+        function handle(data) {
+            for (let i = 0; i < data.length; i++) {
+                data[i].itemStyle = {
+                    normal: {
+                        areaColor: '#' + colors[i]
+                    }
+                }
+            }
+        }
+
+        function getMachineInfoBody(value, name) {
+            let data = {name: name};
+            $.ajax({
+                url: '/internal/machineinfo/getMachineInfoBody',
+                type: 'post',
+                data: JSON.stringify(data),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                dataType: 'json'
+                , success: function (res) {
+                    if (res.code === 200) {
+                        showHide(value, res.data);
+                    } else {
+
+                    }
+                }
+            });
+        }
+
+        function showHide(value, data) {
+            console.log(data);
+            let show = document.getElementById('showData');
+            let html = '<div>总机器数：' + value + ' 联通机器数：' + data.total.unicom + ' 电信机器数：' + data.total.telecom + ' 其他：' + data.total.other + '</div>';
+            html += '<div><table lay-filter="machineInfoTable">'
+                + '  <thead>'
+                + '    <tr>'
+                + '      <th lay-data="{field:\'a\', width:\'18%\', align: \'center\'}">客户端ID前缀</th>'
+                + '      <th lay-data="{field:\'b\', width:\'8%\', align: \'center\'}">总数</th>'
+                + '      <th lay-data="{field:\'c\', width:\'10%\', align: \'center\'}">类型</th>'
+                + '      <th lay-data="{field:\'d\', width:\'8%\', align: \'center\'}">小计</th>'
+                + '      <th lay-data="{field:\'e\', width:\'30%\', align: \'center\'}">城市</th>'
+                + '      <th lay-data="{field:\'f\', width:\'18%\', align: \'center\'}">流转分组</th>'
+                + '      <th lay-data="{field:\'g\', width:\'8%\', align: \'center\'}">数量</th>'
+                + '    </tr>'
+                + '  </thead>'
+                + '  <tbody>';
+            for (let i = 0; i < data.data.length; i++) {
+                html += '  <tr>'
+                    + '      <td>' + data.data[i].clientIDPrefix + '</td>'
+                    + '      <td>' + data.data[i].clientIDPrefixTotalCount + '</td>'
+                    + '      <td>' + data.data[i].type + '</td>'
+                    + '      <td>' + data.data[i].typeTotalCount + '</td>'
+                    + '      <td>' + data.data[i].city + '</td>'
+                    + '      <td>' + data.data[i].switchGroupName + '</td>'
+                    + '      <td>' + data.data[i].count + '</td>'
+                    + '    </tr>'
+            }
+            html += '</tbody>'
+                + '</table></div>';
+            show.innerHTML = html;
+            show.style.display = 'block';
+            //转换静态表格
+            table.init('machineInfoTable', {
+                height: 460,//设置高度
+                limit: 100
+                //支持所有基础参数
+            });
+        }
+    });
+</script>
+</body>
+</html>
