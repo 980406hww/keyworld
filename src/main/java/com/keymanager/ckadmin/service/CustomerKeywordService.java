@@ -10,6 +10,7 @@ import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 
+import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -83,4 +84,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void deleteDuplicateKeywords(CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria);
 
     CustomerKeyword getKeywordInfoByUuid(Long uuid);
+
+    void batchUpdateKeywords(KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO);
 }

@@ -21,6 +21,7 @@ import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
+import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -460,6 +461,12 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public CustomerKeyword getKeywordInfoByUuid(Long uuid) {
         return customerKeywordDao.selectById(uuid);
+    }
+
+    //客户关键字批量设置
+    @Override
+    public void batchUpdateKeywords(KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO) {
+        customerKeywordDao.batchUpdateKeywords(keywordStatusBatchUpdateVO.getUuids(), keywordStatusBatchUpdateVO.getKeywordChecks(), keywordStatusBatchUpdateVO.getKeywordValues());
     }
 }
 

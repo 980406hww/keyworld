@@ -18,6 +18,7 @@ import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.ReflectUtils;
 import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
+import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 import com.keymanager.ckadmin.webDo.KeywordCountDO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
@@ -34,11 +35,14 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -523,6 +527,26 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             resultBean.setCode(400);
             resultBean.setMsg("未知错误");
             return resultBean;
+        }
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
+    @GetMapping(value = "/toCustomerKeywordBatchUpdate")
+    public ModelAndView toCustomerKeywordBatchUpdate() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/customerKeywordBatchUpdate");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
+    @RequestMapping(value="batchUpdateKeywords2",method = RequestMethod.POST)
+    public ResultBean batchUpdateKeywords(@RequestBody KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO){
+        try {
+            customerKeywordService.batchUpdateKeywords(keywordStatusBatchUpdateVO);
+            return new ResultBean(200,"success");
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return new ResultBean(400,"error");
         }
     }
 }

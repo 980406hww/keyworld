@@ -828,4 +828,60 @@
         GROUP BY fKeyword,fUrl, fCustomerUuid
         HAVING COUNT(1) > 1
     </select>
+
+    <update id="batchUpdateKeywords">
+        UPDATE t_customer_keyword
+        SET fTerminalType = fTerminalType
+        <if test="keywordChecks.keyword==1">,fKeyword = #{keywordValues.keyword}</if>
+        <if test="keywordChecks.title==1"> ,fTitle = #{keywordValues.title}</if>
+        <if test="keywordChecks.bearPawNumber==1"> ,fBearPawNumber = #{keywordValues.bearPawNumber}</if>
+        <if test="keywordChecks.url==1"> ,fUrl = #{keywordValues.url}</if>
+        <if test="keywordChecks.originalUrl==1"> ,fOriginalUrl = #{keywordValues.originalUrl}</if>
+        <if test="keywordChecks.optimizePlanCount==1">
+            , fOptimizePlanCount = #{keywordValues.optimizePlanCount}
+            , fOptimizeRemainingCount = IF(#{keywordValues.optimizePlanCount} - fOptimizedCount > 0, #{keywordValues.optimizePlanCount} - fOptimizedCount, 0)
+            , fOptimizeTodayCount = IF(fOptimizePlanCount > 0, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
+            , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
+            , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
+        </if>
+        <if test="keywordChecks.optimizeGroupName==1"> ,fOptimizeGroupName = #{keywordValues.optimizeGroupName}</if>
+        <if test="keywordChecks.machineGroup==1"> ,fMachineGroup = #{keywordValues.machineGroup}</if>
+        <if test="keywordChecks.initialIndexCount==1"> ,fInitialIndexCount = #{keywordValues.initialIndexCount}</if>
+        <if test="keywordChecks.initialPosition==1"> ,fInitialPosition = #{keywordValues.initialPosition}</if>
+        <if test="keywordChecks.positionFirstFee==1"> ,fPositionFirstFee = #{keywordValues.positionFirstFee}</if>
+        <if test="keywordChecks.positionSecondFee==1"> ,fPositionSecondFee = #{keywordValues.positionSecondFee}</if>
+        <if test="keywordChecks.positionThirdFee==1"> ,fPositionThirdFee = #{keywordValues.positionThirdFee}</if>
+        <if test="keywordChecks.positionForthFee==1"> ,fPositionForthFee = #{keywordValues.positionForthFee}</if>
+        <if test="keywordChecks.positionFifthFee==1"> ,fPositionFifthFee = #{keywordValues.positionFifthFee}</if>
+        <if test="keywordChecks.positionFirstPageFee==1"> ,fPositionFirstPageFee = #{keywordValues.positionFirstPageFee}</if>
+        <if test="keywordChecks.serviceProvider==1"> ,fServiceProvider = #{keywordValues.serviceProvider}</if>
+        <if test="keywordChecks.keywordEffect==1"> ,fKeywordEffect = #{keywordValues.keywordEffect}</if>
+        <if test="keywordChecks.collectMethod==1"> ,fCollectMethod = #{keywordValues.collectMethod}</if>
+        <if test="keywordChecks.searchEngine==1"> ,fSearchEngine = #{keywordValues.searchEngine}</if>
+        <if test="keywordChecks.city==1"> ,fCity = #{keywordValues.city}</if>
+        <if test="keywordChecks.sequence==1"> ,fSequence = #{keywordValues.sequence}</if>
+        <if test="keywordChecks.orderNumber==1"> ,fOrderNumber = #{keywordValues.orderNumber}</if>
+        <if test="keywordChecks.paymentStatus==1"> ,fPaymentStatus = #{keywordValues.paymentStatus}</if>
+        <if test="keywordChecks.recommendKeywords==1"> ,fRecommendKeywords = #{keywordValues.recommendKeywords}</if>
+        <if test="keywordChecks.negativeKeywords==1"> ,fNegativeKeywords = #{keywordValues.negativeKeywords}</if>
+        <if test="keywordChecks.excludeKeywords==1"> ,fExcludeKeywords = #{keywordValues.excludeKeywords}</if>
+        <if test="keywordChecks.showPage==1"> ,fShowPage = #{keywordValues.showPage}</if>
+        <if test="keywordChecks.relatedKeywordPercentage==1"> ,frelatedKeywordPercentage = #{keywordValues.relatedKeywordPercentage}</if>
+        <if test="keywordChecks.remarks==1"> ,fRemarks = #{keywordValues.remarks}</if>
+        <if test="keywordChecks.positionFirstCost==1"> ,fPositionFirstCost = #{keywordValues.positionFirstCost}</if>
+        <if test="keywordChecks.positionSecondCost==1"> ,fPositionSecondCost = #{keywordValues.positionSecondCost}</if>
+        <if test="keywordChecks.positionThirdCost==1"> ,fPositionThirdCost = #{keywordValues.positionThirdCost}</if>
+        <if test="keywordChecks.positionForthCost==1"> ,fPositionForthCost = #{keywordValues.positionForthCost}</if>
+        <if test="keywordChecks.positionFifthCost==1"> ,fPositionFifthCost = #{keywordValues.positionFifthCost}</if>
+        <if test="keywordChecks.operateSelectKeyword==1"> ,fOperateSelectKeyword = #{keywordValues.operateSelectKeyword}</if>
+        <if test="keywordChecks.operateRelatedKeyword==1"> ,fOperateRelatedKeyword = #{keywordValues.operateRelatedKeyword}</if>
+        <if test="keywordChecks.operateRecommendKeyword==1"> ,fOperateRecommendKeyword = #{keywordValues.operateRecommendKeyword}</if>
+        <if test="keywordChecks.operateSearchAfterSelectKeyword==1"> ,fOperateSearchAfterSelectKeyword = #{keywordValues.operateSearchAfterSelectKeyword}</if>
+        <if test="keywordChecks.clickUrl==1"> ,fClickUrl = #{keywordValues.clickUrl}</if>
+        <if test="keywordChecks.failedCause == 1"> ,fFailedCause = NULL</if>
+        WHERE fUuid IN
+        <foreach item="uuid" collection="uuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
 </mapper>

@@ -241,10 +241,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             case 'change_select_optimizePlanCount':
                 change_select_optimizePlanCount();
                 break;
+            case 'batch_update':
+                batch_update_ByUuids();
+                break;
             case 'delete_same_keyword':
                 delete_same_keyword();
                 break;
-
             case 'batch_delete':
                 batch_delete_byUuids();
                 break;
@@ -341,36 +343,27 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         let customerUuid = $('#customerUuid').val();
         let type = $('#typeTmp').val();
         let terminalType = $('#terminalType').val();
-        let url = '/internal/customerKeyword/toCustomerKeywordAdd/' + type
-            + '/' + terminalType + '/' + customerUuid;
-        okLayer.open("关键字管理 / 客户客户关键字 / 添加关键字", url, "60%", "90%",
-            function (layero) {
-
-            }, function () {
-                if (sign) {
-                    active['reload'].call(this);
-                    sign = false;
-                }
-            })
+        let url = '/internal/customerKeyword/toCustomerKeywordAdd/' + type + '/' + terminalType + '/' + customerUuid;
+        okLayer.open("关键字管理 / 客户客户关键字 / 添加关键字", url, "60%", "90%", function (layero) { }, function () {
+            if (sign) {
+                active['reload'].call(this);
+                sign = false;
+            }
+        })
     }
 
     function upload_keyword(excelType) {
         let customerUuid = $('#customerUuid').val();
         let type = $('#type').val();
-
         let terminalType = $('#terminalType').val();
-        let url = '/internal/customerKeyword/toUploadKeywords/' + type + '/'
-            + terminalType + '/' + customerUuid + '/' + excelType;
+        let url = '/internal/customerKeyword/toUploadKeywords/' + type + '/' + terminalType + '/' + customerUuid + '/' + excelType;
         let msg = excelType === 'SuperUserSimple' ? '简化版' : '完整版';
-        okLayer.open("关键字管理 / 客户关键字 / Excel上传关键字(" + msg + ")", url, "30%",
-            "25%",
-            function (layero) {
-            }, function () {
-                if (sign) {
-                    active['reload'].call(this);
-                    sign = false;
-                }
-            })
+        okLayer.open("关键字管理 / 客户关键字 / Excel上传关键字(" + msg + ")", url, "30%", "25%", function (layero) { }, function () {
+            if (sign) {
+                active['reload'].call(this);
+                sign = false;
+            }
+        })
     }
 
     function download_keyword_excel(excelType) {
@@ -1204,10 +1197,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         });
     }
 
-// 编辑表格获得表格数据
+    // 编辑表格获得表格数据
     function editKeyword(data) {
         let customerUuid = $('#customerUuid').val();
-        let type = $('#typeTmp').val();
+        let type = $('#type').val();
         let terminalType = $('#terminalType').val();
         let url = '/internal/customerKeyword/toCustomerKeywordAdd/' + type + '/' + terminalType + '/' + customerUuid;
         okLayer.open("关键字统计 / 客户关键字 / 修改关键字", url, "60%", "90%", function (layero) {
@@ -1218,6 +1211,29 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 sign = false;
             }
         })
+    }
+
+    // 编辑表格获得表格数据
+    function batch_update_ByUuids() {
+        var uuidArr = get_selected_uuid_arr();
+        if (uuidArr.length <= 0) {
+            show_layer_msg('请选择要操作的词', 5);
+            return false;
+        }
+        let postData = {};
+        postData.uuids = uuidArr;
+        postData.customerUuid = $('#customerUuid').val();
+        postData.type = $('#type').val();
+        postData.terminalType = $('#terminalType').val();
+        let url = '/internal/customerKeyword/toCustomerKeywordBatchUpdate';
+        okLayer.open("关键字统计 / 客户关键字 / 关键字批量设置(<span style='color: red'>请将需要修改的字段点击标记为红色</span>)", url, "60%", "95%", function (layero) {
+            window[layero.find("iframe")[0]["name"]].initForm(postData);
+        }, function () {
+            if (sign) {
+                active['reload'].call(this);
+                sign = false;
+            }
+        });
     }
 
 //layui.use 结束

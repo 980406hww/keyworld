@@ -20,28 +20,21 @@
     <!--form表单-->
     <form class="layui-form layui-form-pane ok-form" lay-filter="saveKeyword">
         <div class="ok-body">
-            <input type="text" hidden value="<#if customerUuid?exists>${customerUuid}</#if>" id="customerUuid" name="customerUuid"/>
-            <input type="text" hidden value="" id="uuid" name="uuid"/>
-            <input type="text" hidden value="<#if businessType?exists>${businessType}</#if>" id="type" name="type"/>
-            <input type="text" hidden value="<#if terminalType?exists>${terminalType}</#if>" id="terminalType" name="terminalType"/>
+<!--            <input type="text" hidden value="<#if customerUuid?exists>${customerUuid}</#if>" id="customerUuid" name="customerUuid"/>-->
+<!--            <input type="text" hidden value="" id="uuid" name="uuid"/>-->
+<!--            <input type="text" hidden value="<#if businessType?exists>${businessType}</#if>" id="type" name="type"/>-->
+<!--            <input type="text" hidden value="<#if terminalType?exists>${terminalType}</#if>" id="terminalType" name="terminalType"/>-->
             <div class="layui-row">
                 <div class="layui-col-md12">
                     <div class="layui-form-item">
                         <label class="layui-form-label" style="width: 100%"><h3>基本信息</h3></label>
                     </div>
                 </div>
-                <div class="layui-col-md6">
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">关键字</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="keyword" id="keyword" placeholder="请输入关键字" autocomplete="off" class="layui-input" lay-verify="required"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-col-md6">
+
+                <div class="layui-col-md12"  >
                     <div class="layui-form-item">
                         <label class="layui-form-label">标题</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)">
                             <input type="text" name="title" id="title" placeholder="请输入标题" autocomplete="off" class="layui-input"/>
                         </div>
                     </div>
@@ -51,7 +44,7 @@
                 <div class="layui-col-md6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">域名</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)">
                             <input type="text" name="url" id="url" placeholder="" autocomplete="off" class="layui-input"/>
                         </div>
                     </div>
@@ -59,7 +52,7 @@
                 <div class="layui-col-md6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">原始域名</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)" >
                             <input type="text" name="originalUrl" id="originalUrl" placeholder="" autocomplete="off" class="layui-input"/>
                         </div>
                     </div>
@@ -70,7 +63,7 @@
                 <div class="layui-col-md6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">熊掌号</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)">
                             <input type="text" name="bearPawNumber" id="bearPawNumber" placeholder="" autocomplete="off" class="layui-input"/>
                         </div>
                     </div>
@@ -78,7 +71,7 @@
                 <div class="layui-col-md6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">目标城市</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)">
                             <input type="text" name="city" id="city" placeholder="" autocomplete="off" class="layui-input"/>
                         </div>
                     </div>
@@ -90,7 +83,7 @@
                 <div class="layui-col-md6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">优化组</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)">
                             <input type="text" name="optimizeGroupName" id="optimizeGroupName" placeholder="" autocomplete="off" class="layui-input"/>
                         </div>
                     </div>
@@ -98,7 +91,7 @@
                 <div class="layui-col-md6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">机器分组</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)">
                             <input type="text" name="machineGroup" id="machineGroup" placeholder="" autocomplete="off" value="" class="layui-input"/>
                         </div>
                     </div>
@@ -109,7 +102,7 @@
                 <div class="layui-col-md6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">指数</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)">
                             <input type="number" name="initialIndexCount" id="initialIndexCount" placeholder="" autocomplete="off" class="layui-input"/>
                         </div>
                     </div>
@@ -117,7 +110,7 @@
                 <div class="layui-col-md6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">排名</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)">
                             <input type="number" name="initialPosition" id="initialPosition" placeholder="" autocomplete="off" class="layui-input"/>
                         </div>
                     </div>
@@ -128,7 +121,7 @@
                 <div class="layui-col-md6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">搜索引擎</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)">
                             <select name="searchEngine" id="searchEngine">
 
                             </select>
@@ -138,50 +131,50 @@
                 <div class="layui-col-md6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">排序</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)">
                             <input type="number" name="sequence" id="sequence" placeholder="" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="layui-col-md12">
+            <div class="layui-col-md12" >
                 <div class="layui-form-item">
                     <label class="layui-form-label" style="width: 100%"><h3>收费信息</h3></label>
                 </div>
             </div>
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6" >
                     <div class="layui-form-item">
                         <label class="layui-form-label">第一报价</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)" >
                             <input type="number" name="positionFirstFee" id="positionFirstFee" placeholder="" autocomplete="off" class="layui-input"/>
                         </div>
                     </div>
                 </div>
 
-                <div class="layui-col-md6">
+                <div class="layui-col-md6" >
                     <div class="layui-form-item">
                         <label class="layui-form-label">第五报价</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)" >
                             <input type="number" name="positionFifthFee" id="positionFifthFee" placeholder="" autocomplete="off" class="layui-input"/>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6" >
                     <div class="layui-form-item">
                         <label class="layui-form-label">第二报价</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)" >
                             <input type="number" name="positionSecondFee" id="positionSecondFee" placeholder="" autocomplete="off" class="layui-input"/>
                         </div>
                     </div>
                 </div>
 
-                <div class="layui-col-md6">
+                <div class="layui-col-md6" >
                     <div class="layui-form-item">
                         <label class="layui-form-label">首页报价</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)" >
                             <input type="number" name="positionFirstPageFee" id="positionFirstPageFee" placeholder="" autocomplete="off" class="layui-input"/>
                         </div>
                     </div>
@@ -192,15 +185,15 @@
                 <div class="layui-col-md6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">第三报价</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)" >
                             <input type="number" name="positionThirdFee" id="positionThirdFee" placeholder="" autocomplete="off" class="layui-input"/>
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6" >
                     <div class="layui-form-item">
                         <label class="layui-form-label">收费状态</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)" >
                             <select name="paymentStatus" id="paymentStatus">
                                 <option value="0">请选择收费状态</option>
                                 <option value="1">担保中</option>
@@ -214,19 +207,19 @@
             </div>
 
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6" >
                     <div class="layui-form-item">
                         <label class="layui-form-label">第四报价</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" onclick="checkItem(this)" >
                             <input type="number" name="positionForthFee" id="positionForthFee" placeholder="" autocomplete="off" class="layui-input"/>
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6" >
                     <div class="layui-form-item">
                         <label class="layui-form-label">收费方式</label>
-                        <div class="layui-input-block">
-                            <select name="collectMethod" id="collectMethod">
+                        <div class="layui-input-block" onclick="checkItem(this)" >
+                            <select name="collectMethod" id="collectMethod" >
                                 <option value="PerMonth" selected>按月</option>
                                 <option value="PerTenDay">十天</option>
                                 <option value="PerSevenDay">七天</option>
@@ -237,10 +230,10 @@
                 </div>
             </div>
 
-            <div class="layui-form-item layui-form-text">
+            <div class="layui-form-item layui-form-text" >
                 <label class="layui-form-label">备注</label>
-                <div class="layui-input-block">
-                    <textarea name="remarks" id="remarks" placeholder="" class="layui-textarea"></textarea>
+                <div class="layui-input-block" onclick="checkItem(this)" >
+                    <textarea name="remarks" id="remarks" placeholder="" class="layui-textarea" ></textarea>
                 </div>
             </div>
 
@@ -258,36 +251,16 @@
 <!--js逻辑-->
 
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
+
 <script>
 
-    let layui_ = null;
-    var uuid_ = null;
+    var baseData = null;
 
     function initForm(data) {
-        uuid_ = data;
-        if (layui_ != null) {
-            setForm(layui_, uuid_)
-        }
+        baseData = data;
     }
 
-    function setForm(layui, uuid) {
-        var $ = layui.jquery;
-        var form = layui.form;
-        $.ajax({
-            url: '/internal/customerKeyword/getKeywordInfoByUuid/' + uuid,
-            type: 'post',
-            dataType: 'json',
-            success: function (res) {
-                if (res.code === 200) {
-                    // console.log(res.data)
-                    init_searchEngine();
-                    form.val("saveKeyword", res.data);
-                } else {
-                    layui.layer.msg(res.msg);
-                }
-            }
-        });
-    }
+
 
     layui.use(["form", "okLayer", "jquery", "layer"], function () {
         let form = layui.form;
@@ -295,7 +268,34 @@
         let $ = layui.jquery;
         let layer = layui.layer;
 
-        window.init_searchEngine = function () {
+        document.onkeydown=function(e){
+            // console.log(e.target.id)
+            var isie = !!(document.all);
+            var key;
+            var ev;
+            if(isie){//IE浏览器
+                key = window.event.keyCode;
+                ev = window.event;
+            }else{//火狐浏览器
+                key = e.which;
+                ev = e;
+            }
+            if(key===9){//IE浏览器
+                // document.getElementById(e.target.id).focus()
+                okLayer.msg.yellowSigh("请不要使用tab键切换输入框！",null);
+                e.target.focus();
+                if(isie){
+                    ev.keyCode=0;
+                    ev.returnValue=false;
+                }else{//火狐浏览器
+                    ev.which=0;
+                    ev.preventDefault();
+                }
+            }
+        };
+        init_searchEngine();
+
+        function init_searchEngine () {
             $.ajax({
                 url: '/internal/common/getSearchEngines',
                 dataType: 'json',
@@ -316,21 +316,48 @@
                     form.render("select");
                 }
             });
+        }
+
+        window.checkItem = function (self) {
+            // var color = $(self).css("color");
+            var color = $($(self).siblings()[0]).css("color");
+            // console.log($(self).siblings()[0])
+            if(color === "rgb(0, 0, 0)") {
+
+                $($(self).siblings()[0]).css("color", "red");
+            } else {
+                // $(self).css("color", "black");
+                $($(self).siblings()[0]).css("color", "black");
+            }
         };
 
-        if (uuid_ != null) {
-            setForm(layui, uuid_)
-        } else {
-            init_searchEngine();
-            layui_ = layui;
+        function isChecked(id) {
+            // console.log($('#'+id).parent().siblings()[0])
+            // console.log($($('#'+id).parent().siblings()[0]).css("color"))
+            var color =  $($('#'+id).parent().siblings()[0]).css("color");
+            if(color === "rgb(255, 0, 0)") {
+                return "1";
+            } else {
+                return "0";
+            }
         }
 
         form.on("submit(save)", function (data) {
-            var postData = data.field;
-            console.log(postData);
+            var postData = {};
+            postData.uuids = baseData.uuids;
+            postData.keywordValues = data.field;
+            // console.log(postData);
+            let keywordChecks = {};
+            for (var key in data.field)
+            {
+                keywordChecks[key] = isChecked(key)
+
+            }
+            postData.keywordChecks = keywordChecks;
+            console.log(postData)
             // return false;
             $.ajax({
-                url: '/internal/customerKeyword/saveCustomerKeyword2',
+                url: '/internal/customerKeyword/batchUpdateKeywords2',
                 type: 'post',
                 data: JSON.stringify(postData),
                 headers: {

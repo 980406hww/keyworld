@@ -103,4 +103,5 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<String> searchDuplicateKeywords(@Param("customerKeywordUpdateStatusCriteria") CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria);
 
+    void batchUpdateKeywords(@Param("uuids") List<String> uuids, @Param("keywordChecks") CustomerKeyword keywordChecks, @Param("keywordValues") CustomerKeyword keywordValues);
 }

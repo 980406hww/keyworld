@@ -1,13 +1,6 @@
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
-    <!--    <!--<@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">-->
-    <!--        <button class="layui-btn layui-btn-sm" id="pause_keyword" lay-event="pause_keyword">-->
-    <!--            暂停-->
-    <!--        </button>-->
-    <!--        <button class="layui-btn layui-btn-sm" id="active_keyword" lay-event="active_keyword">-->
-    <!--            激活-->
-    <!--        </button>-->
-    <!--    </@shiro.hasPermission>-->
+
     <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
         {{#
             var businessType = document.getElementById('type').value;
@@ -27,16 +20,13 @@
         </button>
     </div>
     </@shiro.hasPermission>
-    <!-- <button class="layui-btn layui-btn-sm" id="change_select_customer" lay-event="change_select_customer">
-         修改所选词客户
-     </button>-->
-<!--
-    <button class="layui-btn layui-btn-sm" id="change_selected_bearPawNumber" lay-event="change_selected_bearPawNumber">
-        记事本
-    </button>
-    <button class="layui-btn layui-btn-sm" id="change_selected_bearPawNumber" lay-event="change_selected_bearPawNumber">
-        用户留言
-    </button>-->
+    <@shiro.hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-sm layui-btn-warm" id="batch_update" lay-event="batch_update">
+            批量设置
+        </button>
+    </div>
+    </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
     {{#
         var businessType = document.getElementById('type').value;
