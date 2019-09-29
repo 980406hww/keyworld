@@ -22,7 +22,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
     init_search();
 
     function init_search() {
-        init_keyword_type();
+        // init_keyword_type();
         init_belong_user();
         init_searchEngine();
         get_keywords(formToJsonObject('searchForm'));
@@ -161,7 +161,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 {field: 'failedCause', title: '失败原因', width: '80', hide: true},
                 // {title: '操作', align: 'center',fixed:'right', width: '10%' , templet: '#operationTpl'}
             ]],
-            height: 'full-110',
+            height: 'full-150',
             done: function (res, curr, count) {
                 let tables = document.getElementsByTagName('table');
                 if ((tables[2].offsetHeight || tables[2].clientHeight || tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight
@@ -235,14 +235,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         return false;
     });
 
-    form.on('select(businessType)', function (data) {
-        active['reload'].call(this);
-    });
-
-    form.on('select(terminalType)', function (data) {
-        active['reload'].call(this);
-    });
-
     table.on('toolbar(tableFilter)', function (obj) {
         var data = obj.data, event = obj.event;
         switch (event) {
@@ -273,6 +265,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             default:
                 break;
         }
+    });
+
+    element.on('tab(keywordTab)', function (data) {
+        let d = data.elem.context.dataset;
+        $('#type').val(d.type);
+        $('#terminalType').val(d.terminal);
+        active['reload'].call(this);
     });
 
     function updateCustomerKeywordStatus(status) {
