@@ -16,6 +16,7 @@ import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.vo.QZSettingCountVO;
 import com.keymanager.util.TerminalTypeMapping;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -171,14 +172,20 @@ public class QZSettingController extends SpringMVCBaseController {
      * 获取搜索引擎映射列表
      */
     @RequiresPermissions("/internal/qzsetting/searchQZSettings")
-    @GetMapping("/getQZSettingSearchEngineMap")
-    public ResultBean getQZSettingSearchEngineMap(QZSettingCriteria qzSettingCriteria) {
+    @GetMapping("/getQZSettingSearchEngineMap/{terminal}")
+    public ResultBean getQZSettingSearchEngineMap(@PathVariable String terminal) {
         ResultBean resultBean = new ResultBean();
         try {
-            List<QZSearchEngineVO> qzSearchEngine = qzSettingService.searchQZSettingSearchEngineMap(qzSettingCriteria, 0);
+            List<QZSearchEngineVO> qzSearchEngine = qzSettingService.searchQZSettingSearchEngineMap(new QZSettingCriteria(), 0);
+            List<QZSearchEngineVO> data = new ArrayList<>();
+            for (QZSearchEngineVO qz:qzSearchEngine){
+                if (terminal.equals(qz.getTerminalType())){
+                    data.add(qz);
+                }
+            }
             resultBean.setCode(200);
             resultBean.setMsg("获取搜索引擎映射列表成功");
-            resultBean.setData(qzSearchEngine);
+            resultBean.setData(data);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
