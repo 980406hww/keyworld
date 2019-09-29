@@ -7,7 +7,7 @@ layui.use(["form", "okLayer", "jquery", "layer"], function () {
     console.log(entryType_index)
     switch (entryType_index) {
         case 'qz':
-            detail_entryType = '全站业务';
+            detail_entryType = '整站业务';
             break;
         case 'pt':
             detail_entryType = '单词业务';
@@ -41,14 +41,11 @@ layui.use(["form", "okLayer", "jquery", "layer"], function () {
             data:{"businessType":businessType},
             dataType: 'json',
             async: false,
-            type: 'get',
+            type: 'post',
             success: function (res) {
                 console.log(res);
                 if (res.code === 200) {
-                    $.each(res.data, function (index, item) {
-                        let businessItem = item.split("#");
-                        $('#businessInfo').append('<dd><a href="javascript:void(0)" onclick=changeBusinessType("'+businessItem[0]+'")>'+businessItem[1]+'</a></dd>');
-                    });
+                    top.location.reload();
                 }
             }
         });

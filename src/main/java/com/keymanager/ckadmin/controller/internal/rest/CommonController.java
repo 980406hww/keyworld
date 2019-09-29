@@ -69,12 +69,21 @@ public class CommonController {
             ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
             Set<String> roles = shiroUser.getRoles();
             List<String> businessType = new ArrayList<>();
-            if (roles.contains("Operation")) {
+            /*if (roles.contains("Operation")) {
                 businessType = Arrays.asList(configService.getConfig("BusinessType", "All").getValue().split(","));
             } else if (roles.contains("SEOSales")) {
                 businessType = Arrays.asList(configService.getConfig("BusinessType", "SEOSales").getValue().split(","));
             } else if (roles.contains("NegativeSales")) {
                 businessType = Arrays.asList(configService.getConfig("BusinessType", "NegativeSales").getValue().split(","));
+            }*/
+            if (roles.contains("PTSpecial")){
+                businessType.add("pt#单词业务");
+            }
+            if (roles.contains("QZSpecial")){
+                businessType.add("qz#整站业务");
+            }
+            if (roles.contains("FMSpecial")){
+                businessType.add("fm#负面业务");
             }
             resultBean.setData(businessType);
         } catch (Exception e) {
