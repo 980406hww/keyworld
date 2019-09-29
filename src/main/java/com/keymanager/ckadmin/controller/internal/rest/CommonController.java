@@ -62,20 +62,14 @@ public class CommonController {
         return resultBean;
     }
 
-    @GetMapping(value = "/getKeywordTypeByUserRole")
-    public ResultBean getKeywordTypeByUserRole(HttpServletRequest request) {
+    @GetMapping(value = "/getBusinessTypeByUserRole")
+    public ResultBean getBusinessTypeByUserRole(HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
             ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
             Set<String> roles = shiroUser.getRoles();
             List<String> businessType = new ArrayList<>();
-            /*if (roles.contains("Operation")) {
-                businessType = Arrays.asList(configService.getConfig("BusinessType", "All").getValue().split(","));
-            } else if (roles.contains("SEOSales")) {
-                businessType = Arrays.asList(configService.getConfig("BusinessType", "SEOSales").getValue().split(","));
-            } else if (roles.contains("NegativeSales")) {
-                businessType = Arrays.asList(configService.getConfig("BusinessType", "NegativeSales").getValue().split(","));
-            }*/
+
             if (roles.contains("PTSpecial")){
                 businessType.add("pt#单词业务");
             }
