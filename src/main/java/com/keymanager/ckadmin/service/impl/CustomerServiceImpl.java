@@ -106,8 +106,8 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
             oldCustomer.setAlipay(customer.getAlipay());
             oldCustomer.setPaidFee(customer.getPaidFee());
             oldCustomer.setRemark(customer.getRemark());
-//            oldCustomer.setType(customer.getType());
-            oldCustomer.setStatus(customer.getStatus());
+            oldCustomer.setType(customer.getType());
+//            oldCustomer.setStatus(customer.getStatus());
             oldCustomer.setDailyReportIdentify(customer.getDailyReportIdentify());
             oldCustomer.setLoginName(customer.getLoginName());
 //            oldCustomer.setEntryType(customer.getEntryType());
@@ -183,5 +183,15 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     @Override
     public List<String> getActiveDailyReportIdentifyUserIDs() {
         return customerDao.getActiveDailyReportIdentifyUserIDs();
+    }
+
+    @Override
+    public void changeSaleRemark(Long uuid, String saleRemark) {
+        customerDao.changeSaleRemark(uuid, saleRemark);
+    }
+
+    @Override
+    public void changeRemark(Long uuid, String remark) {
+        customerDao.changeRemark(uuid, remark);
     }
 }

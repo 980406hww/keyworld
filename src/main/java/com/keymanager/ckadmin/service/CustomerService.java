@@ -39,4 +39,8 @@ public interface CustomerService extends IService<Customer> {
     List<Long> getActiveDailyReportIdentifyCustomerUuids(String userID);
 
     List<String> getActiveDailyReportIdentifyUserIDs();
+
+    void changeSaleRemark(Long uuid, String saleRemark);
+
+    void changeRemark(Long uuid, String remark);
 }

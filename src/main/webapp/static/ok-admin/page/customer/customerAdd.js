@@ -63,7 +63,6 @@ layui.use(["form", "okLayer", "jquery", "layer"], function () {
         }
 
         data.field.customerBusinessList = customerBusinessList;
-
         data.field.customerBusinessStr = customerBusinessStr;
         layer.confirm('确认保存？', {
             icon: 3,

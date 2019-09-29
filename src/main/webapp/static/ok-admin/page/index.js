@@ -4,7 +4,6 @@ layui.use(["form", "okLayer", "jquery", "layer"], function () {
 
     let entryType_index = $('#businessType_index_tmp').val();
     let detail_entryType ='';
-    console.log(entryType_index)
     switch (entryType_index) {
         case 'qz':
             detail_entryType = '整站业务';
@@ -24,7 +23,6 @@ layui.use(["form", "okLayer", "jquery", "layer"], function () {
         async: false,
         type: 'get',
         success: function (res) {
-            console.log(res);
             if (res.code === 200) {
                 $.each(res.data, function (index, item) {
                     let businessItem = item.split("#");

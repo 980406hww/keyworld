@@ -268,4 +268,38 @@ public class CustomerController extends SpringMVCBaseController {
     }
 
 
+    /**
+     * 改变客户标签
+     */
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @PostMapping(value = "/changeSaleRemark2")
+    public ResultBean changeSaleRemark2(@RequestBody Map requestMap) {
+        try {
+            long uuid = Long.parseLong((String) requestMap.get("uuid"));
+            String saleRemark = (String) requestMap.get("saleRemark");
+            customerService.changeSaleRemark(uuid, saleRemark);
+            return new ResultBean(200, "更新成功");
+        } catch (NumberFormatException e) {
+            logger.error(e.getMessage());
+            return new ResultBean(400, "更新失败");
+        }
+    }
+
+    /**
+     * 改变销售详细备注
+     */
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @PostMapping(value = "/changeRemark2")
+    public ResultBean changeRemark2(@RequestBody Map requestMap) {
+        try {
+            long uuid = Long.parseLong((String) requestMap.get("uuid"));
+            String remark = (String) requestMap.get("remark");
+            customerService.changeRemark(uuid, remark);
+            return new ResultBean(200, "更新成功");
+        } catch (NumberFormatException e) {
+            logger.error(e.getMessage());
+            return new ResultBean(400, "更新失败");
+        }
+    }
+
 }

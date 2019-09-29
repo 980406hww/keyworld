@@ -129,4 +129,16 @@
         WHERE c.fStatus = 1
           AND c.fDailyReportIdentify = 1
     </select>
+
+    <update id="changeSaleRemark">
+        UPDATE t_customer
+        SET fUpdateTime = NOW(), fSaleRemark = #{saleRemark}
+        WHERE fUuid = #{uuid}
+    </update>
+
+    <update id="changeRemark">
+        UPDATE t_customer
+        SET fUpdateTime = NOW(), fRemark = #{remark}
+        WHERE fUuid = #{uuid}
+    </update>
 </mapper>
