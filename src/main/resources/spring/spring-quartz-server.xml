@@ -8,9 +8,10 @@
 		<property name="triggers">
 			<list>
 				<ref bean="cronTriggerCacheCustomerKeyword" />
-				<ref bean="cronTriggerCacheCrawlRankCustomerQZKeyword" />
-				<ref bean="cronTriggerCacheCrawlRankCustomerPTKeyword" />
-				<ref bean="cronTriggerCacheCheckingEnteredCustomerKeyword" />
+				<ref bean="cronTriggerCacheCustomerKeyword2" />
+<!--				<ref bean="cronTriggerCacheCrawlRankCustomerQZKeyword" />-->
+<!--				<ref bean="cronTriggerCacheCrawlRankCustomerPTKeyword" />-->
+<!--				<ref bean="cronTriggerCacheCheckingEnteredCustomerKeyword" />-->
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -31,6 +32,18 @@
 
 	<bean id="cronTriggerCacheCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="cacheCustomerKeywordSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!-- layui_缓存关键字信息到队列中 -->
+	<bean id="cronTriggerCacheCustomerKeyword2" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerCacheCustomerKeywordSchedule2"/>
+		<property name="cronExpression" value="0 0/1 * * * ?" />
+	</bean>
+
+	<bean id="cronTriggerCacheCustomerKeywordSchedule2" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cacheCustomerKeywordSchedule2" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

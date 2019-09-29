@@ -13,6 +13,7 @@ public class PerformanceServiceImpl extends ServiceImpl<PerformanceDao, Performa
     @Resource(name = "performanceDao2")
     private PerformanceDao performanceDao;
 
+    @Override
     public void addPerformanceLog(String module, long milleSeconds, String remarks){
         if("ResetInfoDailySchedule".equals(module)) {
             Performance performance = new Performance();

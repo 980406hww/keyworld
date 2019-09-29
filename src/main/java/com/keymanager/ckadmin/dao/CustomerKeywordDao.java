@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,11 +19,15 @@ CustomerKeywordDao extends BaseMapper<com.keymanager.ckadmin.entity.CustomerKeyw
         @Param("terminalType") String terminalType, @Param
         ("entryType") String entryType);
 
+    List<String> getMachineGroups();
+
     void changeCustomerKeywordStatus(@Param("terminalType") String terminalType,
         @Param("entryType") String entryType,
         @Param("customerUuid") Long customerUuid, @Param("status") Integer status);
 
     void deleteCustomerKeywordsByCustomerUuid(long customerUuid);
+
+    void updateOptimizationQueryTime(@Param("customerKeywordUuids") List<Long> customerKeywordUuids);
 
     int getCustomerKeywordCount(@Param("terminalType") String terminalType,
         @Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
@@ -32,6 +37,8 @@ CustomerKeywordDao extends BaseMapper<com.keymanager.ckadmin.entity.CustomerKeyw
 
     void addCustomerKeywords(
         @Param("customerKeywords") ArrayList<CustomerKeyword> customerKeywords);
+
+    List<OptimizationKeywordVO> fetchCustomerKeywordsForCache(@Param("terminalType") String terminalType, @Param("machineGroup") String machineGroup, @Param("batchCount") int batchCount);
 
     CustomerKeyword getOneSameCustomerKeyword(@Param("terminalType") String terminalType,
         @Param("customerUuid") long customerUuid, @Param("keyword") String keyword,

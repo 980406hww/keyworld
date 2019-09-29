@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>机器分组工作统计</title>
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+</head>
+<body>
+<div class="ok-body">
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>关键字管理</cite></a>
+                <a><cite>机器分组工作统计</cite></a>
+            </span>
+<!--        <input hidden value='${Session["entryType"]}' id="entryType">-->
+<!--        <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">-->
+<!--            <i class="layui-icon layui-icon-refresh"></i>-->
+<!--        </a>-->
+    </div>
+
+    <table class="layui-hide" id="machineGroupAndSizeTable" lay-filter="tableFilter"></table>
+</div>
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script>
+    var sign = false;
+    // 进度条加载提示
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
+    // layui相关
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+        var okLayer = layui.okLayer;
+        var layer = layui.layer;
+
+        var active = {
+            reload: function () {
+                var data = {}
+                table.reload('machineGroupAndSizeTable', {
+                    where: data,
+                    page: {
+                        curr: 1
+                    }
+                });
+            },
+        };
+
+        searchMachineGroupAndSize()
+
+        form.on("submit(search)", function (data) {
+            var postData = data.field
+            searchMachineGroupAndSize(postData)
+            return false
+        });
+
+        function searchMachineGroupAndSize(){
+            table.render({
+                elem: '#machineGroupAndSizeTable',
+                method: 'post',
+                url: '${ctx.path}/internal/customerKeyword/searchMachineGroupAndSize',
+                limit: 50,
+                page: true,
+                autoSort: false,
+                size: 'sm',
+                id: 'machineGroupAndSizeTable',
+                even: true,
+                toolbar: "#toolbarTpl",
+                defaultToolbar: [],
+                contentType: 'application/json',
+                cols: [[
+                    {field: 'machineGroupName', title: '机器分组', width: '50%', align: 'center'},
+                    {field: 'size', title: '数量', width: '50%', align: 'center'},
+                ]],
+                height: 'full-115',
+                done: function (res, curr, count) {
+                }
+            });
+        }
+
+        table.on('toolbar(tableFilter)',function(obj){
+            var data = obj.data,event = obj.event;
+            switch (event) {
+                case 'searchMachineGroupAndSize':
+                    searchMachineGroupAndSize();
+                    break;
+            }
+        });
+
+        function searchMachineGroupAndSize(){
+            active['reload'].call(this);
+        }
+
+    });
+
+</script>
+
+<script type="text/html" id="toolbarTpl">
+    <div class="layui-btn-container">
+        <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
+            <button class="layui-btn layui-btn-sm" lay-event="searchMachineGroupAndSize">查询</button>
+        </@shiro.hasPermission>
+    </div>
+</script>
+
+</body>
+</html>

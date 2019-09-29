@@ -5,5 +5,5 @@ import com.keymanager.ckadmin.entity.Performance;
 
 public interface PerformanceService extends IService<Performance> {
 
-    public void addPerformanceLog(String module, long milleSeconds, String remarks);
+    void addPerformanceLog(String module, long milleSeconds, String remarks);
 }
