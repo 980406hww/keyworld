@@ -9,6 +9,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     var okLayer = layui.okLayer;
     var laypage = layui.laypage;
 
+    init_keyword_type();
     initLayPage();
 
     function initLayPage(pageConf) {
@@ -194,6 +195,43 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         data = "{\"" + data + "\"}";
         return data;
     }
+
+    function init_keyword_type() {
+        $.ajax({
+            url: '/internal/common/getBusinessTypeByUserRole',
+            dataType: 'json',
+            async: false,
+            type: 'get',
+            success: function (res) {
+                if (res.code === 200) {
+                    // $("#tabItem").empty();
+                    let i = 0;
+                    $.each(res.data, function (index, item) {
+                        let businessItem = item.split("#");
+                        if (i === 0) {
+                            $('#tabItem').append(
+                                '<li data-type="' + businessItem[0] + '" data-terminal="PC" class="layui-this">' + businessItem[1] + '</li>' );
+                            $('#type').val(businessItem[0]);
+                        }else {
+                            $('#tabItem').append(
+                                '<li data-type="' + businessItem[0] + '" data-terminal="PC">' + businessItem[1] + '</li>' );
+                        }
+                        i++;
+                    });
+                    form.render("select");
+                }
+            }
+        });
+    }
+
+    element.on('tab(customerTab)', function (data) {
+        let d = data.elem.context.dataset;
+        console.log(d)
+        $('#type').val(d.type);
+        // $('#terminalType').val(d.terminal);
+        // active['reload'].call(this);
+        // initLayPage();
+    });
 
     form.on('checkbox(checkAll)', function (data) {
         if ($(this)[0].checked) {

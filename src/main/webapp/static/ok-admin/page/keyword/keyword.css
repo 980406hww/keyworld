@@ -20,4 +20,11 @@ table  a:hover{color:red;}
 
 table  a:active{color:darkslateblue;}
 
+.layui-table-page > div {
+    height: 26px;
+    position: fixed;
+    right: 25px;
+}
+
+
 
