@@ -45,19 +45,29 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
 
     function init_keyword_type() {
         $.ajax({
-            url: '/internal/customerKeyword/getKeywordTypeByUserRole',
+            url: '/internal/common/getBusinessTypeByUserRole',
             dataType: 'json',
             async: false,
             type: 'get',
             success: function (res) {
                 if (res.code === 200) {
-                    // $("#type").empty();
+                    // $("#tabItem").empty();
+                    let i = 0;
                     $.each(res.data, function (index, item) {
                         let businessItem = item.split("#");
-                        $('#type').append('<option value="' + businessItem[0] + '">' + businessItem[1] + '</option>');// 下拉菜单里添加元素
+                        if (i === 0) {
+                            $('#tabItem').append(
+                                '<li data-type="' + businessItem[0] + '" data-terminal="PC" class="layui-this">' + businessItem[1] + '电脑</li>' +
+                                '<li data-type="' + businessItem[0] + '" data-terminal="Phone">' + businessItem[1] + '手机</li>');
+                            $('#type').val(businessItem[0]);
+                            $('#terminalType').val('PC');
+                        }else {
+                            $('#tabItem').append(
+                                '<li data-type="' + businessItem[0] + '" data-terminal="PC">' + businessItem[1] + '电脑</li>' +
+                                '<li data-type="' + businessItem[0] + '" data-terminal="Phone">' + businessItem[1] + '手机</li>');
+                        }
+                        i++;
                     });
-                    $('#type').val($('#typeTmp').val());
-                    $('#terminalType').val($('#terminalTypeTmp').val());
                     form.render("select");
                 }
             }
@@ -82,6 +92,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             }
         });
     }
+
+    element.on('tab(keywordTab)', function (data) {
+        let d = data.elem.context.dataset;
+        $('#type').val(d.type);
+        $('#terminalType').val(d.terminal);
+        active['reload'].call(this);
+    });
 
     function init_searchEngine() {
         $.ajax({
@@ -145,19 +162,29 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 {field: 'machineGroup', title: '机器分组', align: 'center', width: '80'},
                 {title: '操作', align: 'center', width: '120', templet: '#operationTpl'}
             ]],
-            height: 'full-110',
-
+            height: 'full-150',
             done: function (res, curr, count) {
-                let tables = document.getElementsByTagName('table');
-                if ((tables[2].offsetHeight || tables[2].clientHeight || tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight
-                    || tables[2].parentElement.clientHeight || tables[2].scrollHeight)) {
-                    document.getElementsByClassName('layui-table-header')[0].classList.add('details-header');
-                } else {
-                    document.getElementsByClassName('layui-table-header')[0].classList.remove('details-header');
-                }
+                jz();
             }
         });
 
+    }
+
+    function jz() {
+        let tables = document.getElementsByTagName('table');
+        let t_h = tables[1].offsetHeight || tables[1].clientHeight || tables[1].scrollHeight;
+        let t_p_h = tables[1].parentElement.offsetHeight || tables[1].parentElement.clientHeight || tables[1].scrollHeight;
+        let t_w = tables[1].offsetWidth || tables[1].clientWidth || tables[1].scrollWidth;
+        let t_p_w = tables[1].parentElement.offsetWidth || tables[1].parentElement.clientWidth || tables[1].scrollWidth;
+        if (t_h > t_p_h) {
+            document.getElementsByClassName('layui-table-header')[0].classList.add('details-header');
+        } else {
+            if (t_w === t_p_w) {
+                let ths = document.getElementsByClassName('layui-table-header')[0].getElementsByTagName('th');
+                ths[ths.length - 1].style.borderRight = '0';
+            }
+            document.getElementsByClassName('layui-table-header')[0].classList.remove('details-header');
+        }
     }
 
     form.on('select(businessType)', function (data) {
@@ -169,13 +196,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
     });
     // 监听表头鼠标按下事件
     $(document).on('mousedown', 'thead', function (e) {
-            let tables = document.getElementsByTagName('table');
-            if ((tables[2].offsetHeight || tables[2].clientHeight || tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight
-                || tables[2].parentElement.clientHeight || tables[2].scrollHeight)) {
-                document.getElementsByClassName('layui-table-header')[0].classList.add('details-header');
-            } else {
-                document.getElementsByClassName('layui-table-header')[0].classList.remove('details-header');
-            }
+            jz();
         }
     );
     //监听工具条

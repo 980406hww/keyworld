@@ -71,13 +71,13 @@ public class CommonController {
             List<String> businessType = new ArrayList<>();
 
             if (roles.contains("PTSpecial")){
-                businessType.add("pt#单词业务");
+                businessType.add("pt#单词");
             }
             if (roles.contains("QZSpecial")){
-                businessType.add("qz#整站业务");
+                businessType.add("qz#整站");
             }
             if (roles.contains("FMSpecial")){
-                businessType.add("fm#负面业务");
+                businessType.add("fm#负面");
             }
             resultBean.setData(businessType);
         } catch (Exception e) {

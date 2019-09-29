@@ -22,7 +22,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
     init_search();
 
     function init_search() {
-        // init_keyword_type();
+        init_keyword_type();
         init_belong_user();
         init_searchEngine();
         get_keywords(formToJsonObject('searchForm'));
@@ -30,19 +30,28 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
 
     function init_keyword_type() {
         $.ajax({
-            url: '/internal/customerKeyword/getKeywordTypeByUserRole',
+            url: '/internal/common/getBusinessTypeByUserRole',
             dataType: 'json',
             async: false,
             type: 'get',
             success: function (res) {
                 if (res.code === 200) {
-                    // $("#type").empty();
+                    // $("#tabItem").empty();
+                    let i = 0;
                     $.each(res.data, function (index, item) {
                         let businessItem = item.split("#");
-                        $('#type').append(
-                            '<option value="' + businessItem[0] + '">'
-                            + businessItem[1]
-                            + '</option>');// 下拉菜单里添加元素
+                        if (i === 0) {
+                            $('#tabItem').append(
+                                '<li data-type="' + businessItem[0] + '" data-terminal="PC" class="layui-this">' + businessItem[1] + '电脑</li>' +
+                                '<li data-type="' + businessItem[0] + '" data-terminal="Phone">' + businessItem[1] + '手机</li>');
+                            $('#type').val(businessItem[0]);
+                            $('#terminalType').val('PC');
+                        }else {
+                            $('#tabItem').append(
+                                '<li data-type="' + businessItem[0] + '" data-terminal="PC">' + businessItem[1] + '电脑</li>' +
+                                '<li data-type="' + businessItem[0] + '" data-terminal="Phone">' + businessItem[1] + '手机</li>');
+                        }
+                        i++;
                     });
                     form.render("select");
                 }

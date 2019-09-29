@@ -14,13 +14,8 @@
 <body>
 <div class="ok-body">
     <div class="layui-tab layui-tab-card" lay-filter="keywordTab">
-        <ul class="layui-tab-title">
-            <li data-type="pt" data-terminal="PC" class="layui-this">单词电脑</li>
-            <li data-type="pt" data-terminal="Phone">单词手机</li>
-            <li data-type="qz" data-terminal="PC">全站电脑</li>
-            <li data-type="qz" data-terminal="Phone">全站手机</li>
-            <li data-type="fm" data-terminal="PC">负面电脑</li>
-            <li data-type="fm" data-terminal="Phone">负面手机</li>
+        <ul class="layui-tab-title" id="tabItem">
+
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
@@ -32,51 +27,27 @@
                                 <div class="out-condition">
                                     <input type="hidden" name="type" id="type" value="pt">
                                     <input type="hidden" name="terminalType" id="terminalType" value="PC">
-<!--                                    <div class="layui-inline" style="width: 100px">-->
-<!--                                        <select name="type" id="type" lay-filter="businessType">-->
-<!--                                        </select>&nbsp;-->
-<!--                                    </div>-->
-<!--                                    <div class="layui-inline" style="width: 100px">-->
-<!--                                        <select name="terminalType" id="terminalType" lay-filter="terminalType">-->
-<!--                                            <option value='PC'>PC</option>-->
-<!--                                            <option value='Phone'>Phone</option>-->
-<!--                                        </select>&nbsp;-->
-<!--                                    </div>-->
-                                    <div class="layui-inline" style="width: 110px">
-                                        <input type="text" name="keyword" id="keyword" placeholder="关键字"
-                                               class="layui-input">
-                                    </div>
                                     <div class="layui-inline">
-
                                         <select name="searchEngine" id="searchEngine">
                                             <option value=''>搜索引擎</option>
-                                        </select>&nbsp;
-
+                                        </select>
                                     </div>
-
                                     <div class="layui-inline">
-
                                         <select name="userName" id="userName">
                                             <option value="">请选择用户</option>
                                         </select>
-
                                     </div>
-                                    <div class="layui-inline">
-                                        <label class="layui-form-label">优化组名</label>
-                                        <div class="layui-input-inline">
-                                            <input type="text" name="optimizeGroupName" id="optimizeGroupName" placeholder="优化组名" autocomplete="off"
-                                                   class="layui-input layui-input-text">
-                                        </div>
+                                    <div class="layui-inline" style="width: 140px">
+                                        <input type="text" name="keyword" id="keyword" placeholder="请输入关键字" class="layui-input">
                                     </div>
-                                    <div class="layui-inline">
-                                        <label class="layui-form-label">机器分组</label>
-                                        <div class="layui-input-inline">
-                                            <input type="text" name="machineGroup" id="machineGroup" placeholder="机器分组" autocomplete="off"
-                                                   class="layui-input layui-input-text ">
-                                        </div>
+                                    <div class="layui-inline" style="width: 140px">
+                                        <input type="text" name="optimizeGroupName" id="optimizeGroupName" placeholder="请输入优化组名" autocomplete="off"
+                                               class="layui-input layui-input-text">
                                     </div>
-
-
+                                    <div class="layui-inline" style="width: 140px">
+                                        <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off"
+                                               class="layui-input layui-input-text ">
+                                    </div>
                                     <div class="layui-inline">
                                         <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索
                                         </button>
@@ -87,7 +58,7 @@
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <button class="layui-btn layui-btn-sm layui-btn-primary" type="reset">
+                                        <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset" id="resetBtn">
                                             重置
                                         </button>
                                     </div>
