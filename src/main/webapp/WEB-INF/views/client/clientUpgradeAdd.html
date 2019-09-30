@@ -112,34 +112,23 @@
 
         form.on("submit(commitClientUpgrade)", function (data) {
             var data = JSON.stringify(data.field)
-            layer.confirm('确认保存？', {
-                icon: 3,
-                title: '保存数据',
-                btn: ['确认', '取消'],
-                yes: function (index) {
-                    $.ajax({
-                        url: '/internal/clientUpgrade/saveClientUpgrade2',
-                        type: 'post',
-                        data: data,
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        success: function (res) {
-                            if (res.code === 200) {
-                                layer.close(index);
-                                okLayer.msg.greenTick("保存成功", function () {
-                                    parent.window.sign = true;
-                                    parent.layer.close(parent.layer.getFrameIndex(window.name));
-                                });
-                            } else {
-                                layer.msg(res.msg);
-                            }
-                        }
-                    });
+            $.ajax({
+                url: '/internal/clientUpgrade/saveClientUpgrade2',
+                type: 'post',
+                data: data,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                btn2: function (index) {
-                    layer.close(index);
+                success: function (res) {
+                    if (res.code === 200) {
+                        okLayer.msg.greenTick("保存成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        layer.msg(res.msg);
+                    }
                 }
             });
             return false;

@@ -1,6 +1,6 @@
 package com.keymanager.ckadmin.vo;
 
-public class machineGroupQueueVO {
+public class MachineGroupQueueVO {
     private String machineGroupName;
     private int size;
 
@@ -20,10 +20,10 @@ public class machineGroupQueueVO {
         this.size = size;
     }
 
-    public machineGroupQueueVO() {
+    public MachineGroupQueueVO() {
     }
 
-    public machineGroupQueueVO(String machineGroupName, int size) {
+    public MachineGroupQueueVO(String machineGroupName, int size) {
         this.machineGroupName = machineGroupName;
         this.size = size;
     }

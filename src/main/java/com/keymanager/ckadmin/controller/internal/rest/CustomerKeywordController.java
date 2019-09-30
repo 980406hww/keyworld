@@ -4,7 +4,7 @@ import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.PerformanceService;
-import com.keymanager.ckadmin.vo.machineGroupQueueVO;
+import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.List;
@@ -53,7 +53,7 @@ public class CustomerKeywordController {
         long startMilleSeconds = System.currentTimeMillis();
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         try {
-            List<machineGroupQueueVO> machineGroupQueueVOS = customerKeywordService.getMachineGroupAndSize();
+            List<MachineGroupQueueVO> machineGroupQueueVOS = customerKeywordService.getMachineGroupAndSize();
             performanceService.addPerformanceLog(terminalType + ":showMachineGroupAndSize", (System.currentTimeMillis() - startMilleSeconds), null);
             resultBean.setCode(0);
             resultBean.setMsg("success");

@@ -16,7 +16,7 @@ import com.keymanager.ckadmin.enums.EntryTypeEnum;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
-import com.keymanager.ckadmin.vo.machineGroupQueueVO;
+import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import java.util.ArrayList;
@@ -155,10 +155,10 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public List<machineGroupQueueVO> getMachineGroupAndSize() {
-        List<machineGroupQueueVO> machineGroupQueueVOS = new ArrayList<>();
+    public List<MachineGroupQueueVO> getMachineGroupAndSize() {
+        List<MachineGroupQueueVO> machineGroupQueueVOS = new ArrayList<>();
         for (Map.Entry<String, LinkedBlockingQueue> entry : machineGroupQueueMap.entrySet()) {
-            machineGroupQueueVOS.add(new machineGroupQueueVO(entry.getKey(), entry.getValue().size()));
+            machineGroupQueueVOS.add(new MachineGroupQueueVO(entry.getKey(), entry.getValue().size()));
         }
         return machineGroupQueueVOS;
     }
