@@ -443,7 +443,7 @@
     </update>
 
     <select id="searchMachineInfoForRefreshStat"
-            parameterType="com.keymanager.ckadmin.criteria.CustomerKeywordRefreshStatInfoCriteria"
+            parameterType="com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria"
             resultType="com.keymanager.ckadmin.entity.CustomerKeywordTerminalRefreshStatRecord">
         SELECT
         cs.fGroup AS "group",
@@ -455,15 +455,15 @@
         FROM t_machine_info cs
         WHERE cs.fValid = 1
         <if
-                test="customerKeywordRefreshStatInfoCriteria.terminalType!=null and customerKeywordRefreshStatInfoCriteria.terminalType!=''">
-            AND cs.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
+                test="criteria.terminalType!=null and criteria.terminalType!=''">
+            AND cs.fTerminalType = #{criteria.terminalType}
         </if>
         <if
-                test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">
-            AND cs.fGroup like '${customerKeywordRefreshStatInfoCriteria.groupName}%'
+                test="criteria.groupName!=null and criteria.groupName!=''">
+            AND cs.fGroup like '${criteria.groupName}%'
             AND EXISTS (SELECT 1 FROM t_customer_keyword ck WHERE ck.fType =
-            #{customerKeywordRefreshStatInfoCriteria.entryType} AND ck.fOptimizeGroupName like
-            '${customerKeywordRefreshStatInfoCriteria.groupName}%')
+            #{criteria.entryType} AND ck.fOptimizeGroupName like
+            '${criteria.groupName}%')
         </if>
         GROUP BY cs.fGroup, cs.fTerminalType
         ORDER BY cs.fGroup
