@@ -77,7 +77,7 @@ public class SuppliersController {
     }
 
 
-    //    @RequiresPermissions("/internal/supplier/deleteSupplier")
+    @RequiresPermissions("/internal/supplier/deleteSupplier")
     @RequestMapping(value = "/deleteSuppliers", method = RequestMethod.POST)
     public ResultBean deleteSuppliers(@RequestBody List<Integer> uuids) {
         ResultBean resultBean = new ResultBean();
