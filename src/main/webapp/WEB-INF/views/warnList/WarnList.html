@@ -25,21 +25,16 @@
         .my-collapse > div {
             padding: 6px 5px;
         }
+
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
     </style>
 </head>
 <body>
 <div class="ok-body">
-    <div class="ok-body-breadcrumb">
-            <span class="layui-breadcrumb">
-                <a><cite>关键字管理</cite></a>
-                <a><cite>预警清单</cite></a>
-            </span>
-        <input hidden value='${Session["entryType"]}' id="entryType">
-        <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
-            <i class="layui-icon layui-icon-refresh"></i>
-        </a>
-    </div>
-
     <div class="layui-card ">
         <div class="layui-card-body ">
             <form class="layui-form layui-form-pane" id="searchForm">

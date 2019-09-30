@@ -86,19 +86,22 @@
 <script>
     var layui_ = null
     var clientID_ = null
+    var terminalType_ = null
 
-    function initMachineInfo(clientID) {
-        clientID_ = clientID
+    function initMachineInfo(data) {
+        clientID_ = data.clientID
+        terminalType_ = data.terminalType
         if (layui_ != null) {
-            setForm(layui_, clientID_);
+            setForm(layui_, clientID_,terminalType_);
         }
     }
 
-    function setForm(l, clientID){
+    function setForm(l, clientID,terminalType){
         var postData = {}
         postData.clientID = clientID
+        postData.terminalType = terminalType
         l.jquery.ajax({
-            url: '/internal/machineManage/getMachineInfo/' + clientID,
+            url: '/internal/machineManage/getMachineInfo/' + clientID + '/' + terminalType,
                 type: 'post',
                 data: JSON.stringify(postData),
                 headers: {

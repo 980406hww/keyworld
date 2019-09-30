@@ -18,7 +18,16 @@ public class NegativeListCriteria extends BaseCriteria {
     private String operationType;
     private String originalUrl;
     private Date complainTime;
+    private String TerminalType;
     private List<NegativeList> negativeLists;
+
+    public String getTerminalType() {
+        return TerminalType;
+    }
+
+    public void setTerminalType(String terminalType) {
+        TerminalType = terminalType;
+    }
 
     public String getKeyword() {
         return keyword;

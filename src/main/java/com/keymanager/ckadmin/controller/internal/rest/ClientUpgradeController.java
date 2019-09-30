@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.criteria.ClientUpgradeCriteria;
 import com.keymanager.ckadmin.criteria.base.BaseCriteria;
 import com.keymanager.ckadmin.entity.ClientUpgrade;
 import com.keymanager.ckadmin.service.ClientUpgradeService;
@@ -33,7 +34,7 @@ public class ClientUpgradeController {
 
     @RequiresPermissions("/internal/clientUpgrade/searchClientUpgrades")
     @RequestMapping(value = "/toClientUpgrades2", method = RequestMethod.GET)
-    public ModelAndView toClientUpgrades2(HttpServletRequest request) {
+    public ModelAndView toClientUpgrades2() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("client/clientUpgrades");
         return mv;
@@ -41,19 +42,18 @@ public class ClientUpgradeController {
 
     @RequiresPermissions("/internal/clientUpgrade/searchClientUpgrades")
     @RequestMapping(value = "/getClientUpgrades2")
-    public ResultBean getClientUpgrades2(HttpServletRequest request, @RequestBody BaseCriteria baseCriteria){
+    public ResultBean getClientUpgrades2(@RequestBody ClientUpgradeCriteria clientUpgradeCriteria){
         ResultBean resultBean = new ResultBean();
         try {
-            Page<ClientUpgrade> page = new Page<>(baseCriteria.getPage(), baseCriteria.getLimit());
-            String orderByField = ReflectUtils.getTableFieldValue(ClientUpgrade.class, baseCriteria.getOrderBy());
+            Page<ClientUpgrade> page = new Page<>(clientUpgradeCriteria.getPage(), clientUpgradeCriteria.getLimit());
+            String orderByField = ReflectUtils.getTableFieldValue(ClientUpgrade.class, clientUpgradeCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {
                 page.setOrderByField(orderByField);
             }
-            if (baseCriteria.getOrderMode() != null && baseCriteria.getOrderMode() == 0) {
+            if (clientUpgradeCriteria.getOrderMode() != null && clientUpgradeCriteria.getOrderMode() == 0) {
                 page.setAsc(false);
             }
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
-            page = clientUpgradeService.searchClientUpgrades(page, terminalType);
+            page = clientUpgradeService.searchClientUpgrades(page, clientUpgradeCriteria.getTerminalType());
             resultBean.setCode(0);
             resultBean.setMsg("success");
             resultBean.setData(page.getRecords());
@@ -77,9 +77,9 @@ public class ClientUpgradeController {
 
     @RequiresPermissions("/internal/clientUpgrade/saveClientUpgrade")
     @RequestMapping(value = "/saveClientUpgrade2", method = RequestMethod.POST)
-    public ResultBean saveClientUpgrade(@RequestBody ClientUpgrade clientUpgrade, HttpServletRequest request) {
+    public ResultBean saveClientUpgrade(@RequestBody ClientUpgrade clientUpgrade) {
         ResultBean resultBean = new ResultBean();
-        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        String terminalType = clientUpgrade.getTerminalType();
         try {
             clientUpgradeService.saveClientUpgrade(terminalType, clientUpgrade);
             resultBean.setCode(200);

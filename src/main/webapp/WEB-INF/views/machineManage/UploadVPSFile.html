@@ -54,6 +54,7 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
     var machineInfoType = null;
+    var terminalType = null;
 
     function showName(e) {
         var files = e.files;
@@ -61,8 +62,9 @@
         document.getElementById("fileName").innerText = fileName
     }
 
-    function initData(data) {
-        machineInfoType = data
+    function initData(data1, data2) {
+        machineInfoType = data1
+        terminalType = data2
         if(machineInfoType == "startUp") {
             document.getElementById("programType").style.visibility = "visible"
         } else {
@@ -103,6 +105,7 @@
             var postData = new FormData();
             postData.append('machineInfoType', machineInfoType)
             postData.append('file', $("#uploadForm").find("#upload")[0].files[0])
+            postData.append('terminalType', terminalType)
             if(machineInfoType == 'startUp'){
                 postData.append('downloadProgramType', data.field.downloadProgramType)
             }

@@ -26,24 +26,19 @@
             padding: 6px 5px;
         }
 
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
     </style>
 </head>
 <body>
 <div class="ok-body">
-    <div class="ok-body-breadcrumb">
-            <span class="layui-breadcrumb">
-                <a><cite>关键字管理</cite></a>
-                <a><cite>负面清单</cite></a>
-            </span>
-        <input hidden value='${Session["entryType"]}' id="entryType">
-        <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
-            <i class="layui-icon layui-icon-refresh"></i>
-        </a>
-    </div>
-
     <div class="layui-card ">
         <div class="layui-card-body ">
             <form class="layui-form layui-form-pane" id="searchForm">
+                <input type="hidden" id="terminalType" name="terminalType">
                 <div class="my-collapse">
                     <div>
                         <div class="layui-inline">
@@ -74,7 +69,6 @@
             </form>
         </div>
     </div>
-
     <table class="layui-hide" id="negativeListTable" lay-filter="tableFilter"></table>
 </div>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
@@ -98,7 +92,8 @@
 
         var active = {
             reload: function () {
-                var data = {}
+                var terminalType = $("#terminalType").val()
+                var data = {'terminalType': terminalType}
                 table.reload('negativeListTable', {
                     where: data,
                     page: {
@@ -107,6 +102,27 @@
                 });
             },
         };
+
+        // searchNegativeList({'terminalType': 'PC'})
+        //
+        // element.on('tab(keywordTab)', function (data) {
+        //     var d = data.elem.context.dataset
+        //     $('#terminalType').val(d.terminal);
+        //     active['reload'].call(this);
+        // });
+        //
+        // var active = {
+        //     reload: function () {
+        //         var terminalType = $("#terminalType").val()
+        //         var data = {'terminalType': terminalType}
+        //         table.reload('negativeListTable', {
+        //             where: data,
+        //             page: {
+        //                 curr: 1
+        //             }
+        //         });
+        //     },
+        // };
 
         searchNegativeList()
 

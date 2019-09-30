@@ -211,11 +211,10 @@ public class MachineInfoController extends SpringMVCBaseController {
         return resultBean;
     }
 
-    @RequestMapping(value = "/getMachineInfo/{clientID}", method = RequestMethod.POST)
-    public ResultBean getMachineInfo(@PathVariable("clientID") String clientID, HttpServletRequest request) {
+    @RequestMapping(value = "/getMachineInfo/{clientID}/{terminalType}", method = RequestMethod.POST)
+    public ResultBean getMachineInfo(@PathVariable("clientID") String clientID,@PathVariable("terminalType") String terminalType) {
         ResultBean resultBean = new ResultBean();
         try {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
             MachineInfo machineInfo = machineInfoService.getMachineInfo(clientID, terminalType);
             resultBean.setCode(200);
             resultBean.setData(machineInfo);
@@ -248,10 +247,9 @@ public class MachineInfoController extends SpringMVCBaseController {
     @RequestMapping(value = "/uploadVPSFile", method = RequestMethod.POST)
     public ResultBean uploadVPSFile(@RequestParam(value = "file", required = false) MultipartFile file,
         @RequestParam(defaultValue = "common", name = "machineInfoType") String machineInfoType,
-        @RequestParam(defaultValue = "no", name = "downloadProgramType") String downloadProgramType, HttpServletRequest request) {
+        @RequestParam(defaultValue = "no", name = "downloadProgramType") String downloadProgramType, @RequestParam(name = "terminalType") String terminalType) {
         ResultBean resultBean = new ResultBean();
         try {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
             String path = Utils.getWebRootPath() + "vpsfile";
             File targetFile = new File(path, "vps.txt");
             if (!targetFile.exists()) {

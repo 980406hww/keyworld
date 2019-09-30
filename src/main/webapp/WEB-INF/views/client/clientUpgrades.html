@@ -8,27 +8,30 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+    <style>
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
+    </style>
 </head>
 <body>
 <div class="ok-body">
-    <!--面包屑导航区域-->
-    <div class="ok-body-breadcrumb">
-            <span class="layui-breadcrumb">
-                <a><cite>机器升级管理</cite></a>
-                <a><cite>机器升级列表</cite></a>
-            </span>
-        <input hidden value='${Session["entryType"]}' id="entryType">
-        <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
-            <i class="layui-icon layui-icon-refresh"></i>
-        </a>
+    <div class="layui-tab layui-tab-card" lay-filter="keywordTab">
+        <ul class="layui-tab-title" id="tabItem">
+            <li lay-id="PC" class="layui-this" data-terminal="PC">PC</li>
+            <li lay-id="Phone" data-terminal="Phone">Phone</li>
+        </ul>
+        <input type="hidden" id="terminalType" name="terminalType">
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <form class="layui-form layui-form-pane" id="searchForm"></form>
+                <!--数据表格-->
+                <table class="layui-hide" id="clientUpgradeTable" lay-filter="tableFilter"></table>
+            </div>
+        </div>
     </div>
-
-    <form class="layui-form layui-form-pane" id="searchForm">
-    </form>
-
-    <!--数据表格-->
-    <table class="layui-hide" id="clientUpgradeTable" lay-filter="tableFilter">
-    </table>
 </div>
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
@@ -50,40 +53,52 @@
         var laydate = layui.laydate;
         var okLayer = layui.okLayer;
         var layer = layui.layer;
-        var clientUpgradeTable = table.render({
-            elem: '#clientUpgradeTable',
-            method: 'post',
-            url: '${ctx.path}/internal/clientUpgrade/getClientUpgrades2',
-            limit: 50,
-            page: true,
-            autoSort: false,
-            size: 'sm',
-            id: 'clientUpgradeTable',
-            even: true,//隔行背景
-            toolbar: "#toolbarTpl",
-            defaultToolbar: [],
-            contentType: 'application/json',
-            cols: [[
-                {filed: 'uuid', type: 'checkbox', fixed: "left", width: '5%', align: 'center'},
-                {field: 'programType', title: '程序类型', width: '10%', align: 'center'},
-                {field: 'version', title: '当前版本', width: '10%', align: 'center'},
-                {field: 'targetVersion', title: '目标版本', width: '10%', align: 'center'},
-                {field: 'maxUpgradeCount', title: '最大升级数', width: '10%', align: 'center'},
-                {field: 'residualUpgradeCount', title: '升级情况', width: '15%', templet: '#toResidualUpgradeCount', align: 'center'},
-                {field: 'status', title: '任务状态', width: '10%', templet: '#toStatus', align: 'center'},
-                {field: 'createTime', title: '创建时间', width: '16%', templet: '#toDateTime', align: 'center'},
-                {title: '操作', templet: '#operationTpl', align: 'center', width: '14%', align: 'center'}
-            ]],
-            height: 'full-115',
 
-            done: function (res, curr, count) {
-                // $("#countNum").text(count);
-            }
+        init_Search({'terminalType': 'PC'})
+
+        function init_Search(whereCondition){
+            table.render({
+                elem: '#clientUpgradeTable',
+                method: 'post',
+                url: '${ctx.path}/internal/clientUpgrade/getClientUpgrades2',
+                limit: 50,
+                page: true,
+                autoSort: false,
+                size: 'sm',
+                id: 'clientUpgradeTable',
+                even: true,//隔行背景
+                toolbar: "#toolbarTpl",
+                defaultToolbar: [],
+                contentType: 'application/json',
+                where: whereCondition,
+                cols: [[
+                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '5%', align: 'center'},
+                    {field: 'programType', title: '程序类型', width: '10%', align: 'center'},
+                    {field: 'version', title: '当前版本', width: '10%', align: 'center'},
+                    {field: 'targetVersion', title: '目标版本', width: '10%', align: 'center'},
+                    {field: 'maxUpgradeCount', title: '最大升级数', width: '10%', align: 'center'},
+                    {field: 'residualUpgradeCount', title: '升级情况', width: '15%', templet: '#toResidualUpgradeCount', align: 'center'},
+                    {field: 'status', title: '任务状态', width: '10%', templet: '#toStatus', align: 'center'},
+                    {field: 'createTime', title: '创建时间', width: '16%', templet: '#toDateTime', align: 'center'},
+                    {title: '操作', templet: '#operationTpl', align: 'center', width: '14%', align: 'center'}
+                ]],
+                height: 'full-115',
+
+                done: function (res, curr, count) {
+                }
+            });
+        }
+
+        element.on('tab(keywordTab)', function (data) {
+            var d = data.elem.context.dataset
+            $('#terminalType').val(d.terminal);
+            active['reload'].call(this);
         });
 
         var active = {
             reload: function () {
-                let data = {}
+                var terminalType = $("#terminalType").val()
+                var data = {'terminalType': terminalType}
                 table.reload('clientUpgradeTable', {
                     where: data,
                     page: {
@@ -94,7 +109,13 @@
         };
 
         function toAddClientUpgrade() {
-            okLayer.open("首页/机器升级列表/添加机器升级", "/internal/clientUpgrade/toClientUpgradeAdd", "35%", "40%", null, function(){
+            var terminalType = $("#terminalType").val()
+            if(terminalType == '' || terminalType == null){
+                terminalType = 'PC'
+            }
+            okLayer.open("首页/机器升级列表/添加机器升级", "/internal/clientUpgrade/toClientUpgradeAdd", "35%", "40%",function(layero){
+                window[layero.find("iframe")[0]["name"]].setTerminalType(terminalType);
+            }, function(){
                 if(sign){
                     active['reload'].call(this);
                     sign = false;

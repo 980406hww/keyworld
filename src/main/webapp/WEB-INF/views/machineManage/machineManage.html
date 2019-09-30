@@ -118,157 +118,155 @@
         display: none;
     }
 
+    .layui-table-page > div {
+        height: 26px;
+        position: fixed;
+        right: 25px;
+    }
 </style>
 <body>
 
 <div class="ok-body">
-    <div class="ok-body-breadcrumb">
-            <span class="layui-breadcrumb">
-                <a><cite>机器管理</cite></a>
-                <a><cite>机器列表</cite></a>
-            </span>
-        <input hidden value='${Session["entryType"]}' id="entryType">
-        <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
-            <i class="layui-icon layui-icon-refresh"></i>
-        </a>
-    </div>
-
-    <div class="layui-card ">
-        <div class="layui-card-body ">
-            <form class="layui-form layui-form-pane" id="searchForm">
-                <div class="my-collapse">
-                    <div>
-                        <div class="layui-inline" id="terminalTypes">
-                            <select name="terminalType" id="terminalType" lay-filter="terminalTypeFilter">
-                                <option value="PC" selected>PC</option>
-                                <option value="Phone">Phone</option>
-                            </select>
-                        </div>
-                        <div class="layui-inline">
-                            <input type="text" name="clientID" id="clientID" placeholder="请输入客户端ID" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
-                        </div>
-                        <div class="layui-inline">
-                            <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
-                        </div>
-                        <div class="layui-inline" id="fuzzy-box">
-                            <input type="checkbox" name="machineGroupFuzzyQuery" title="模糊搜索">
-                        </div>
-                        <div class="layui-inline" id="valid-box">
-                            <select name="valid">
-                                <option value="" selected>请选择状态</option>
-                                <option value="1">监控中</option>
-                                <option value="0">暂停监控</option>
-                            </select>
-                        </div>
-                        <div class="layui-inline">
-                            <input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID" placeholder="请输入服务器ID" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
-                        </div>
-                        <div class="layui-inline">
-                            <input type="checkbox" name="hasProblem" value="hasProblem" title="停了">
-                            <input type="checkbox" name="noUpgrade" value="noUpgrade" title="没升级">
-                        </div>
-                        <div class="layui-inline">
-                            <button class="layui-collapse my-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
-                        </div>
-                        <div class="layui-inline">
-                            <div class="layui-collapse my-btn" onclick="showCondition()">
-                                更多条件
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <button style="background: #897c00;color: #ffffff" class="layui-collapse my-btn" type="reset" id="resetBtn">
-                                重置
-                            </button>
-                        </div>
-                    </div>
-                    <div class="my-hide" id="searchContent">
-                        <div class="layui-form-item" style="margin-bottom: 0" lay-filter="loginNameFilter">
-                            <div class="layui-inline">
-                                <label class="layui-form-label">版本</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="version" id="version" placeholder="请输入版本号" autocomplete="off" class="layui-input">
+    <div class="layui-tab layui-tab-card" lay-filter="keywordTab">
+        <ul class="layui-tab-title" id="tabItem">
+            <li lay-id="PC" class="layui-this" data-terminal="PC">PC</li>
+            <li lay-id="Phone" data-terminal="Phone">Phone</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <!--模糊搜索区域-->
+                <div class="layui-card ">
+                    <div class="layui-card-body ">
+                        <form class="layui-form layui-form-pane" id="searchForm">
+                            <div class="my-collapse">
+                                <div>
+                                    <input type="hidden" name="terminalType" id="terminalType">
+                                    <div class="layui-inline">
+                                        <input type="text" name="clientID" id="clientID" placeholder="请输入客户端ID" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
+                                    </div>
+                                    <div class="layui-inline" id="fuzzy-box">
+                                        <input type="checkbox" name="machineGroupFuzzyQuery" title="模糊搜索">
+                                    </div>
+                                    <div class="layui-inline" id="valid-box">
+                                        <select name="valid">
+                                            <option value="" selected>请选择状态</option>
+                                            <option value="1">监控中</option>
+                                            <option value="0">暂停监控</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID" placeholder="请输入服务器ID" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input type="checkbox" name="hasProblem" value="hasProblem" title="停了">
+                                        <input type="checkbox" name="noUpgrade" value="noUpgrade" title="没升级">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <button class="layui-collapse my-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <div class="layui-collapse my-btn" onclick="showCondition()">
+                                            更多条件
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <button style="background: #897c00;color: #ffffff" class="layui-collapse my-btn" type="reset" id="resetBtn">
+                                            重置
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="my-hide" id="searchContent">
+                                    <div class="layui-form-item" style="margin-bottom: 0" lay-filter="loginNameFilter">
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">版本</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="version" id="version" placeholder="请输入版本号" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">目标版本</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="targetVersion" id="targetVersion" placeholder="请输入目标版本" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">城市</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="city" id="city" placeholder="请输入城市" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">失败原因</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="upgradeFailedReason" id="upgradeFailedReason" placeholder="请输入失败原因" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline" id="memory">
+                                            <label class="layui-form-label">内存</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="gtMemory" id="gtMemory" placeholder="≥" autocomplete="off" class="layui-input">
+                                                <input type="text" name="ltMemory" id="ltMemory" placeholder="≤" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">流转分组</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="switchGroupName" id="switchGroupName" placeholder="请输入流转分组" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">是否有机器分组</label>
+                                            <div class="layui-input-inline">
+                                                <select name="hasOrNoMachineGroup">
+                                                    <option value="" selected>请选择是否有机器分组</option>
+                                                    <option value="hasMachineGroup">有机器分组</option>
+                                                    <option value="noMachineGroup">没机器分组</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">开机状态</label>
+                                            <div class="layui-input-inline">
+                                                <select name="startUpStatus">
+                                                    <option value='' selected>All</option>
+                                                    <option value='New'>New</option>
+                                                    <option value='Processing'>Processing</option>
+                                                    <option value='Setting'>Setting</option>
+                                                    <option value='Downloading'>Downloading</option>
+                                                    <option value='Completed'>Completed</option>
+                                                    <option value='Error'>Error</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">运行程序类型</label>
+                                            <div class="layui-input-inline">
+                                                <select name="runningProgramType">
+                                                    <option value='' selected>All</option>
+                                                    <option value='New'>New</option>
+                                                    <option value='Old'>Old</option>
+                                                    <option value='Super'>Super</option>
+                                                    <option value='Rank'>Rank</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline" id="checkGroup">
+                                            <input type="checkbox" name="noVNC" value="noVNC" title="没VNC">
+                                            <input type="checkbox" name="noChangePassword" value="noChangePassword" title="没修改密码">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">目标版本</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="targetVersion" id="targetVersion" placeholder="请输入目标版本" autocomplete="off" class="layui-input">
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">城市</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="city" id="city" placeholder="请输入城市" autocomplete="off" class="layui-input">
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">失败原因</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="upgradeFailedReason" id="upgradeFailedReason" placeholder="请输入失败原因" autocomplete="off" class="layui-input">
-                                </div>
-                            </div>
-                            <div class="layui-inline" id="memory">
-                                <label class="layui-form-label">内存</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="gtMemory" id="gtMemory" placeholder="≥" autocomplete="off" class="layui-input">
-                                    <input type="text" name="ltMemory" id="ltMemory" placeholder="≤" autocomplete="off" class="layui-input">
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">流转分组</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="switchGroupName" id="switchGroupName" placeholder="请输入流转分组" autocomplete="off" class="layui-input">
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">是否有机器分组</label>
-                                <div class="layui-input-inline">
-                                    <select name="hasOrNoMachineGroup">
-                                        <option value="" selected>请选择是否有机器分组</option>
-                                        <option value="hasMachineGroup">有机器分组</option>
-                                        <option value="noMachineGroup">没机器分组</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">开机状态</label>
-                                <div class="layui-input-inline">
-                                    <select name="startUpStatus">
-                                        <option value='' selected>All</option>
-                                        <option value='New'>New</option>
-                                        <option value='Processing'>Processing</option>
-                                        <option value='Setting'>Setting</option>
-                                        <option value='Downloading'>Downloading</option>
-                                        <option value='Completed'>Completed</option>
-                                        <option value='Error'>Error</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">运行程序类型</label>
-                                <div class="layui-input-inline">
-                                    <select name="runningProgramType">
-                                        <option value='' selected>All</option>
-                                        <option value='New'>New</option>
-                                        <option value='Old'>Old</option>
-                                        <option value='Super'>Super</option>
-                                        <option value='Rank'>Rank</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline" id="checkGroup">
-                                <input type="checkbox" name="noVNC" value="noVNC" title="没VNC">
-                                <input type="checkbox" name="noChangePassword" value="noChangePassword" title="没修改密码">
-<!--                                <input type="checkbox" name="showFetchKeywordStatus" value="showFetchKeywordStatus" title="显示取词状态">-->
-                            </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
+        <table class="layui-hide" id="machineManageTable" lay-filter="tableFilter"></table>
         </div>
     </div>
-
-    <table class="layui-hide" id="machineManageTable" lay-filter="tableFilter"></table>
 </div>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
@@ -337,17 +335,16 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', align: 'center', type: 'checkbox', width: '42'},
+                    {filed: 'uuid', align: 'center', type: 'checkbox', width: '42',fixed: "left"},
                     {field: 'clientIDs', align: 'center', title: '客户端ID', width: '72', templet: '#clientIDs'},
                     {field: 'machineGroups', align: 'center', title: '机器分组', width: '72', templet: '#machineGroups'},
-                    // {field: 'renewalDate', align: 'center', title: '续费日期', width: '72', templet: '#toRenewalDate'},
                     {field: 'versionInfo', align: 'center', title: '现版本<br>目标版本', width: '72',templet: '#showVersionInfo'},
                     {field: 'restartCountAndFailCount', align: 'center', title: '重启数/重启状态<br>失败次数', width: '120', templet: '#restartCountAndFailCount'},
                     {field: 'cityAndStatus', align: 'center', title: '所在城市<br>终端状态', width: '128', templet: '#cityAndStatus'},
                     {field: 'cpuCounts', align: 'center', title: 'CPU核数<br>内存', width: '70', templet: '#cpuCounts'},
                     {field: 'freeSpaces', align: 'center', title: '剩余空间', width: '72', templet: '#freeSpaces'},
                     {field: 'lastVisitTimeAndRestartTime', align: 'center', title: '最新工作时间<br>重启时间', width: '136', templet: '#lastVisitTimeAndRestartTime'},
-                    {field: 'restartOrderingTimeAndLastSendNotificationTime', align: 'center', title: '重启排序时间<br>发送通知时间', width: '136', templet: '#restartOrderingTimeAndLastSendNotificationTime'},
+                    {field: 'restartOrderingTimeAndLastSendNotificationTime', align: 'center', title: '重启排序时间<br>发送通知时间', width: '120', templet: '#restartOrderingTimeAndLastSendNotificationTime'},
                     {field: 'optimizationSucceedCountAndOptimizationTotalCount', align: 'center', title: '成功次数<br>操作次数', width: '72', templet: '#optimizationSucceedCountAndOptimizationTotalCount'},
                     {field: 'broadbandAccountAndBroadbandPassword', align: 'center', title: '宽带账号<br>宽带密码', width: '72', templet: '#broadbandAccountAndBroadbandPassword'},
                     {field: 'runningProgramTypes', align: 'center', title: '运行程序类型', width: '100', templet: '#runningProgramTypes'},
@@ -357,12 +354,18 @@
                     {field: 'vpsBackendSystemComputerIDs', align: 'center', title: '服务器ID', width: '82', templet: '#vpsBackendSystemComputerIDs'},
                     {title: '操作', templet: '#operationTpl', align: 'center',fixed: "right",width: '178'}
                 ]],
-                height: 'full-115',
+                height: 'full-165',
                 done: function (res, curr, count) {
                     handleStyle();
                 }
             });
         }
+
+        element.on('tab(keywordTab)', function (data) {
+            var d = data.elem.context.dataset
+            $('#terminalType').val(d.terminal);
+            active['reload'].call(this);
+        });
 
         function handleStyle() {
             var cell = document.getElementsByClassName('layui-table-cell');
@@ -378,7 +381,8 @@
 
         var active = {
             reload: function () {
-                var data = {}
+                var terminalType = $("#terminalType").val()
+                var data = {'terminalType': terminalType}
                 table.reload('machineManageTable', {
                     where: data,
                     page: {
@@ -570,8 +574,12 @@
             if(machineInfoType == 'common'){
                 height = "18%"
             }
+            var terminalType = $("#terminalType").val()
+            if(terminalType == '' || terminalType == null){
+                terminalType = 'PC'
+            }
             okLayer.open("首页 / 终端列表 / 上传VPS", "/internal/machineManage/toUploadVPSFile", "30%", height, function (layero) {
-                window[layero.find("iframe")[0]["name"]].initData(machineInfoType);
+                window[layero.find("iframe")[0]["name"]].initData(machineInfoType, terminalType);
             },function(){
                 if(sign){
                     active['reload'].call(this);
@@ -615,10 +623,6 @@
             return false;
         }
 
-        function showSearch() {
-
-        }
-
         function showReopenClientDialog(data){
             var checkStatus = table.checkStatus('machineManageTable');
             var data = checkStatus.data;
@@ -651,7 +655,7 @@
                     deleteMachine(data.clientID);
                     break;
                 case 'toUpdateMachineInfo':
-                    toUpdateMachineInfo(data.clientID);
+                    toUpdateMachineInfo(data);
                     break;
                 case 'changeStatus(stop)':
                     changeStatus('stop', data.clientID);
@@ -766,9 +770,9 @@
             });
         }
 
-        function toUpdateMachineInfo(clientID) {
+        function toUpdateMachineInfo(data) {
             okLayer.open("首页 / 终端列表 / 修改终端信息", "/internal/machineManage/toUpdateMachineInfo", "35%", "60%", function (layero) {
-                window[layero.find("iframe")[0]["name"]].initMachineInfo(clientID);
+                window[layero.find("iframe")[0]["name"]].initMachineInfo(data);
             },function(){
                 if(sign){
                     active['reload'].call(this);
