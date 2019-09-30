@@ -14,11 +14,55 @@
         </foreach>
     </select>
 
+    <select id="getMachineGroups" resultType="java.lang.String">
+        SELECT
+          CONCAT(fTerminalType, '####', fMachineGroup, '####', COUNT(1))
+        FROM t_machine_info mi
+        WHERE fMachineGroup > ''
+        GROUP BY fTerminalType, fMachineGroup
+    </select>
+
+    <select id="fetchCustomerKeywordsForCache" resultType="com.keymanager.ckadmin.vo.OptimizationKeywordVO">
+        SELECT
+            ck.fUuid              AS 'uuid',
+            ck.fTerminalType      AS 'terminalType',
+            ck.fKeyword           AS 'keyword',
+            ck.fUrl               AS 'url',
+            ck.fBearPawNumber     AS 'bearPawNumber',
+            ck.fType              AS 'entryType',
+            ck.fTitle             AS 'title',
+            ck.fSearchEngine      AS 'searchEngine',
+            ck.fOptimizeGroupName AS 'optimizeGroup',
+            ck.fOptimizedCount	  AS 'optimizedCount',
+            ck.fQueryInterval	  AS 'queryInterval'
+        FROM t_customer_keyword ck
+        WHERE ck.fMachineGroup = #{machineGroup}
+        AND ck.fStatus = 1
+        AND ck.fTerminalType = #{terminalType}
+        AND ck.fQueryTime <![CDATA[<]]> NOW()
+        AND ck.fInvalidFlag = 0
+        ORDER BY ck.fQueryTime
+        LIMIT #{batchCount}
+    </select>
+
     <update id="changeCustomerKeywordStatus">
         UPDATE t_customer_keyword SET fStatus = #{status}
         WHERE fTerminalType = #{terminalType}
         AND fType = #{entryType}
         AND fCustomerUuid = #{customerUuid}
+    </update>
+
+    <update id="updateOptimizationQueryTime">
+        UPDATE t_customer_keyword
+        SET fQueryDate = CURRENT_DATE(),
+        fQueryCount = fQueryCount + 1,
+        fInvalidRefreshCount = fInvalidRefreshCount + 1,
+        fQueryTime = DATE_ADD(fQueryTime, INTERVAL (IF ((ROUND(RAND(),1) &lt; 0.5), ROUND(fQueryInterval * ROUND(RAND() + 1)), ROUND(fQueryInterval * ROUND(RAND() * 0.4 + 0.1)))) SECOND ),
+        fInvalidFlag = if(fInvalidRefreshCount > 8, 1, 0)
+        WHERE fUuid IN
+        <foreach item="uuid" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
     </update>
 
     <delete id="deleteCustomerKeywordsByCustomerUuid">

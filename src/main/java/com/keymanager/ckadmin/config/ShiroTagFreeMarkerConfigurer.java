@@ -16,6 +16,7 @@ public class ShiroTagFreeMarkerConfigurer extends FreeMarkerConfigurer {
     @Override
     public void afterPropertiesSet() throws IOException, TemplateException {
         super.afterPropertiesSet();
+        this.setTemplateLoaderPath("/WEB-INF/views/");
         this.getConfiguration().setSharedVariable("shiro", new ShiroTags());
     }
 }

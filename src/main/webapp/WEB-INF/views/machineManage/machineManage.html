@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>机器管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+</head>
+<style>
+    .layui-table-cell{
+        height: 40px !important;
+        padding: 0 6px !important;
+    }
+
+    .layui-btn-xs{
+        height: 18px;
+        line-height: 18px;
+    }
+
+    .my-height{
+        line-height: 40px !important;
+    }
+
+    .my-height-ts{
+        line-height: 18px !important;
+    }
+
+    /* 下拉条件框 */
+    .my-collapse {
+        position: relative;
+        box-shadow: none;
+    }
+
+    .my-collapse * {
+        box-shadow: none;
+    }
+
+    .my-collapse .layui-form-select dl,
+    .my-collapse .layui-form-select .layui-anim {
+        top: 33px !important;
+    }
+
+    .my-collapse > div:first-child {
+        background: #f2f2f2;
+        border: 1px solid #e6e6e6;
+    }
+
+    .my-collapse > div {
+        padding: 6px 5px;
+    }
+
+    .my-hide {
+        padding-bottom: 1px !important;
+        width: 99%;
+        display: none;
+        position: absolute;
+        top: 43px;
+        left: 0;
+        z-index: 894;
+        background: #fff;
+        border-left: 1px solid #e6e6e6;
+        border-right: 1px solid #e6e6e6;
+        border-bottom: 1px solid #e6e6e6;
+        border-bottom-right-radius: 2px;
+        border-bottom-left-radius: 2px;
+    }
+    .my-collapse .my-btn {
+        height: 30px !important;
+        line-height: 30px !important;
+        padding: 0 18px;
+        background-color: #45a3c2;
+        color: #fff;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 14px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+    }
+
+    .my-collapse .my-btn:hover {
+        opacity: .8;
+        transition: opacity 0.5s;
+    }
+
+    #terminalTypes input{
+        height: 30px;
+        width: 100px;
+    }
+
+    #valid-box input{
+        height: 30px;
+        width: 120px;
+    }
+
+    #searchContent input{
+        height: 38px;
+        width: 185px;
+        display: inline;
+    }
+
+    #memory input{
+        height: 38px;
+        width: 90px;
+        display: inline;
+    }
+
+    #fuzzy-box div{
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-left: 1px;
+    }
+
+    #checkGroup input{
+        display: none;
+    }
+
+</style>
+<body>
+
+<div class="ok-body">
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>机器管理</cite></a>
+                <a><cite>机器列表</cite></a>
+            </span>
+        <input hidden value='${Session["entryType"]}' id="entryType">
+        <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+
+    <div class="layui-card ">
+        <div class="layui-card-body ">
+            <form class="layui-form layui-form-pane" id="searchForm">
+                <div class="my-collapse">
+                    <div>
+                        <div class="layui-inline" id="terminalTypes">
+                            <select name="terminalType" id="terminalType" lay-filter="terminalTypeFilter">
+                                <option value="PC" selected>PC</option>
+                                <option value="Phone">Phone</option>
+                            </select>
+                        </div>
+                        <div class="layui-inline">
+                            <input type="text" name="clientID" id="clientID" placeholder="请输入客户端ID" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
+                        </div>
+                        <div class="layui-inline">
+                            <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
+                        </div>
+                        <div class="layui-inline" id="fuzzy-box">
+                            <input type="checkbox" name="machineGroupFuzzyQuery" lay-skin="switch" lay-text="开启模糊查询|关闭模糊查询">
+                        </div>
+                        <div class="layui-inline" id="valid-box">
+                            <select name="valid">
+                                <option value="" selected>请选择状态</option>
+                                <option value="1">监控中</option>
+                                <option value="0">暂停监控</option>
+                            </select>
+                        </div>
+                        <div class="layui-inline">
+                            <input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID" placeholder="请输入服务器ID" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
+                        </div>
+                        <div class="layui-inline">
+                            <input type="checkbox" name="hasProblem" value="hasProblem" title="停了">
+                            <input type="checkbox" name="noUpgrade" value="noUpgrade" title="没升级">
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-collapse my-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-collapse my-btn" onclick="showCondition()">
+                                更多条件
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button style="background: #897c00;color: #ffffff" class="layui-collapse my-btn" type="reset" id="resetBtn">
+                                重置
+                            </button>
+                        </div>
+                    </div>
+                    <div class="my-hide" id="searchContent">
+                        <div class="layui-form-item" style="margin-bottom: 0" lay-filter="loginNameFilter">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">版本</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="version" id="version" placeholder="请输入版本号" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">目标版本</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="targetVersion" id="targetVersion" placeholder="请输入目标版本" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">城市</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="city" id="city" placeholder="请输入城市" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">失败原因</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="upgradeFailedReason" id="upgradeFailedReason" placeholder="请输入失败原因" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline" id="memory">
+                                <label class="layui-form-label">内存</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="gtMemory" id="gtMemory" placeholder="≥" autocomplete="off" class="layui-input">
+                                    <input type="text" name="ltMemory" id="ltMemory" placeholder="≤" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">流转分组</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="switchGroupName" id="switchGroupName" placeholder="请输入流转分组" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">是否有机器分组</label>
+                                <div class="layui-input-inline">
+                                    <select name="hasOrNoMachineGroup">
+                                        <option value="" selected>请选择是否有机器分组</option>
+                                        <option value="hasMachineGroup">有机器分组</option>
+                                        <option value="noMachineGroup">没机器分组</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">开机状态</label>
+                                <div class="layui-input-inline">
+                                    <select name="startUpStatus">
+                                        <option value='' selected>All</option>
+                                        <option value='New'>New</option>
+                                        <option value='Processing'>Processing</option>
+                                        <option value='Setting'>Setting</option>
+                                        <option value='Downloading'>Downloading</option>
+                                        <option value='Completed'>Completed</option>
+                                        <option value='Error'>Error</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">运行程序类型</label>
+                                <div class="layui-input-inline">
+                                    <select name="runningProgramType">
+                                        <option value='' selected>All</option>
+                                        <option value='New'>New</option>
+                                        <option value='Old'>Old</option>
+                                        <option value='Super'>Super</option>
+                                        <option value='Rank'>Rank</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline" id="checkGroup">
+                                <input type="checkbox" name="noVNC" value="noVNC" title="没VNC">
+                                <input type="checkbox" name="noChangePassword" value="noChangePassword" title="没修改密码">
+<!--                                <input type="checkbox" name="showFetchKeywordStatus" value="showFetchKeywordStatus" title="显示取词状态">-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <table class="layui-hide" id="machineManageTable" lay-filter="tableFilter"></table>
+</div>
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script>
+    var sign = false;
+
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
+
+    var s_c = 0;
+
+    function showCondition() {
+        let searchContent = document.getElementById('searchContent');
+        if (s_c++ % 2 === 0) {
+            searchContent.style.display = 'block';
+        } else {
+            searchContent.style.display = 'none';
+        }
+    }
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+        var okLayer = layui.okLayer;
+        var layer = layui.layer;
+
+        searchMachine({'terminalType': 'PC'})
+
+        form.on('select(terminalTypeFilter)', function (data) {
+            var val = data.value
+            var whereCondition = {'terminalType': val}
+            $('#terminalType').val(val);
+            searchMachine(whereCondition)
+        });
+
+        form.on("submit(search)", function (data) {
+            var postData = data.field
+            if(data.field.hasOrNoMachineGroup != ""){
+                if(data.field.hasOrNoMachineGroup == "hasMachineGroup"){
+                    postData.hasMachineGroup = "hasMachineGroup"
+                }else{
+                    postData.noMachineGroup = "noMachineGroup"
+                }
+            }
+            searchMachine(postData)
+            return false
+        });
+
+        function searchMachine(whereCondition){
+            table.render({
+                elem: '#machineManageTable',
+                method: 'post',
+                url: '/internal/machineManage/getMachineInfos',
+                limit: 50,
+                limits: [10, 25, 50, 75, 100, 500, 1000],
+                page: true,
+                size: 'sm',
+                id: 'machineManageTable',
+                toolbar: "#toolbarTpl",
+                even: true,//隔行背景
+                defaultToolbar: ['filter'],
+                contentType: 'application/json',
+                where: whereCondition,
+                cols: [[
+                    {filed: 'uuid', align: 'center', type: 'checkbox', width: '42'},
+                    {field: 'clientIDs', align: 'center', title: '客户端ID', width: '72', templet: '#clientIDs'},
+                    {field: 'machineGroups', align: 'center', title: '机器分组', width: '72', templet: '#machineGroups'},
+                    // {field: 'renewalDate', align: 'center', title: '续费日期', width: '72', templet: '#toRenewalDate'},
+                    {field: 'versionInfo', align: 'center', title: '现版本<br>目标版本', width: '72',templet: '#showVersionInfo'},
+                    {field: 'restartCountAndFailCount', align: 'center', title: '重启数/重启状态<br>失败次数', width: '120', templet: '#restartCountAndFailCount'},
+                    {field: 'cityAndStatus', align: 'center', title: '所在城市<br>终端状态', width: '128', templet: '#cityAndStatus'},
+                    {field: 'cpuCounts', align: 'center', title: 'CPU核数<br>内存', width: '70', templet: '#cpuCounts'},
+                    {field: 'freeSpaces', align: 'center', title: '剩余空间', width: '72', templet: '#freeSpaces'},
+                    {field: 'lastVisitTimeAndRestartTime', align: 'center', title: '最新工作时间<br>重启时间', width: '136', templet: '#lastVisitTimeAndRestartTime'},
+                    {field: 'restartOrderingTimeAndLastSendNotificationTime', align: 'center', title: '重启排序时间<br>发送通知时间', width: '136', templet: '#restartOrderingTimeAndLastSendNotificationTime'},
+                    {field: 'optimizationSucceedCountAndOptimizationTotalCount', align: 'center', title: '成功次数<br>操作次数', width: '72', templet: '#optimizationSucceedCountAndOptimizationTotalCount'},
+                    {field: 'broadbandAccountAndBroadbandPassword', align: 'center', title: '宽带账号<br>宽带密码', width: '72', templet: '#broadbandAccountAndBroadbandPassword'},
+                    {field: 'runningProgramTypes', align: 'center', title: '运行程序类型', width: '100', templet: '#runningProgramTypes'},
+                    {field: 'startUpStatusAndDownloadProgramType', align: 'center', title: '开机状态<br>下载程序类型', width: '92', templet: '#startUpStatusAndDownloadProgramType'},
+                    {field: 'valids', align: 'center', title: '状态', width: '72', templet: '#valid'},
+                    {field: 'upgradeFailedReasons', align: 'center', title: '失败原因', width: '72', templet: '#upgradeFailedReasons'},
+                    {field: 'vpsBackendSystemComputerIDs', align: 'center', title: '服务器ID', width: '82', templet: '#vpsBackendSystemComputerIDs'},
+                    {title: '操作', templet: '#operationTpl', align: 'center',fixed: "right",width: '178'}
+                ]],
+                height: 'full-115',
+                done: function (res, curr, count) {
+                    handleStyle();
+                }
+            });
+        }
+
+        function handleStyle() {
+            var cell = document.getElementsByClassName('layui-table-cell');
+            var l = cell.length;
+            for (var i = 0; i < l; i++) {
+                if (cell[i].innerHTML.indexOf('<br>') === -1) {
+                    cell[i].classList.add('my-height');
+                }else if (cell[i].innerHTML.indexOf('VNC') !== -1){
+                    cell[i].classList.add('my-height-ts');
+                }
+            }
+        }
+
+        var active = {
+            reload: function () {
+                var data = {}
+                table.reload('machineManageTable', {
+                    where: data,
+                    page: {
+                        curr: 1
+                    }
+                });
+            },
+        };
+
+        table.on('toolbar(tableFilter)',function (obj) {
+            var data = obj.data;
+            var event = obj.event;
+            switch (event) {
+                case 'showSearch':
+                    showSearch();
+                    break;
+                case 'batchDeleteMachines':
+                    batchDeleteMachines();
+                    break;
+                case 'showReopenClientDialog':
+                    showReopenClientDialog(data);
+                    break;
+                case 'finishStartUp':
+                    finishStartUp();
+                    break;
+                case 'showUploadVPSDialog(\'common\')':
+                    showUploadVPSDialog('common');
+                    break;
+                case 'showUploadVPSDialog(\'startUp\')':
+                    showUploadVPSDialog('startUp');
+                    break;
+                case 'batchUpdateMachineGroup(\'selected\')':
+                    batchUpdateMachineGroup('selected');
+                    break;
+                case 'batchUpdateMachineGroup(\'total\')':
+                    batchUpdateMachineGroup('total');
+                    break;
+                case 'toBatchUpdateFailedReason':
+                    toBatchUpdateFailedReason();
+                    break;
+                case 'toAllowSwitchGroup':
+                    toAllowSwitchGroup();
+                    break;
+                case 'toSwitchGroup':
+                    toSwitchGroup();
+                    break;
+                case 'batchUpdateMachine':
+                    batchUpdateMachine();
+                    break;
+            }
+        });
+
+        function batchUpdateMachine() {
+            var checkStatus = table.checkStatus('machineManageTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.clientID);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要修改换组状态的机器', {icon: 5});
+                return
+            }
+            var postData = {};
+            postData.clientIDs = uuidArr;
+            okLayer.open("首页 / 终端列表 / 修改终端分组信息", "/internal/machineManage/toBatchUpdateMachine", "30%", "30%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, '180px')
+            return false;
+        }
+
+        function toAllowSwitchGroup(){
+            var checkStatus = table.checkStatus('machineManageTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.clientID);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要修改换组状态的机器', {icon: 5});
+                return
+            }
+            var postData = {};
+            postData.clientIDs = uuidArr;
+            okLayer.open("首页 / 终端列表 / 修改终端是否可换组", "/internal/machineManage/toAllowSwitchGroup", "30%", "18%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, '180px')
+            return false;
+        }
+
+        function toSwitchGroup(){
+            var checkStatus = table.checkStatus('machineManageTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.clientID);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要修改流转分组的机器', {icon: 5});
+                return
+            }
+            var postData = {};
+            postData.clientIDs = uuidArr;
+            okLayer.open("首页 / 终端列表 / 修改终端流转分组", "/internal/machineManage/toSwitchGroup", "30%", "18%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, '180px')
+            return false;
+        }
+
+        function toBatchUpdateFailedReason(){
+            var checkStatus = table.checkStatus('machineManageTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.clientID);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要修改失败原因的机器', {icon: 5});
+                return
+            }
+            var postData = {};
+            postData.clientIDs = uuidArr;
+            okLayer.open("首页 / 终端列表 / 修改失败原因", "/internal/machineManage/toBatchUpdateFailedReason", "30%", "18%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, '180px')
+            return false;
+        }
+
+        function batchUpdateMachineGroup(changeType){
+            var postData = {};
+            if(changeType == 'selected'){
+                var checkStatus = table.checkStatus('machineManageTable');
+                var data = checkStatus.data;
+                var uuidArr = [];
+                $.each(data, function (index, item) {
+                    uuidArr.push(item.clientID);
+                });
+                if (uuidArr.length <= 0) {
+                    layer.msg('请选择要修改机器分组的终端', {icon: 5});
+                    return
+                }
+                postData.clientIDs = uuidArr;
+            }else{
+                var whereCondition = {}
+                var obj = $("#searchForm").serializeArray()
+                $.each(obj, function() {
+                    if (whereCondition[this.name]) {
+                        if (!whereCondition[this.name].push) {
+                            whereCondition[this.name] = [whereCondition[this.name]];
+                        }
+                        whereCondition[this.name].push(this.value || '');
+                    } else {
+                        whereCondition[this.name] = this.value || '';
+                    }
+                });
+            }
+            okLayer.open("首页 / 终端列表 / 修改机器分组", "/internal/machineManage/toUpdateMachineGroup", "30%", "18%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(changeType, postData, whereCondition);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, '180px')
+        }
+
+        function showUploadVPSDialog(machineInfoType) {
+            var height = "22%"
+            if(machineInfoType == 'common'){
+                height = "18%"
+            }
+            okLayer.open("首页 / 终端列表 / 上传VPS", "/internal/machineManage/toUploadVPSFile", "30%", height, function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(machineInfoType);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, '180px')
+        }
+
+        function finishStartUp() {
+            var checkStatus = table.checkStatus('machineManageTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.clientID);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要重开的机器', {icon: 5});
+                return
+            }
+            var postData = {};
+            postData.clientIDs = uuidArr;
+            $.ajax({
+                url: '/internal/machineManage/updateStartUpStatusForCompleted',
+                type: 'post',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                success: function (res) {
+                    if (res.code === 200) {
+                        okLayer.msg.greenTick("保存成功", function () {
+                            active['reload'].call(this);
+                        });
+                    } else {
+                        layui.layer.msg(res.msg);
+                    }
+                }
+            });
+            return false;
+        }
+
+        function showSearch() {
+
+        }
+
+        function showReopenClientDialog(data){
+            var checkStatus = table.checkStatus('machineManageTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.clientID);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要重开的机器', {icon: 5});
+                return
+            }
+            var postData = {};
+            postData.clientIDs = uuidArr;
+
+            okLayer.open("首页 / 终端列表 / 重开机器", "/internal/machineManage/toReopenClient", "30%", "18%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].getClientIDs(postData);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, '180px')
+        }
+
+        table.on('tool(tableFilter)',function (obj) {
+            var data = obj.data;
+            var event = obj.event;
+            switch (event) {
+                case 'deleteMachine':
+                    deleteMachine(data.clientID);
+                    break;
+                case 'toUpdateMachineInfo':
+                    toUpdateMachineInfo(data.clientID);
+                    break;
+                case 'changeStatus(stop)':
+                    changeStatus('stop', data.clientID);
+                    break;
+                case 'changeStatus(start)':
+                    changeStatus('start', data.clientID);
+                    break;
+                case 'changeTerminalType':
+                    changeTerminalType(data.clientID, data.terminalType);
+                    break;
+                case 'connectVNC':
+                    connectVNC(data.host, data.port, data.userName, data.password);
+                    break;
+            }
+        });
+
+        function connectVNC(host, port, vncUser, vncPwd){
+            try {
+                var fso = new ActiveXObject("Scripting.FileSystemObject");
+                if (!fso.FolderExists("C:\\vnc")) {
+                    fso.CreateFolder ("C:\\vnc");
+                }
+
+                var fileName = "C:\\vnc\\temp_openVNC_file.vnc";
+                if (fso.FileExists(fileName)) {
+                    var f1 = fso.GetFile(fileName);
+                    f1.Delete();
+                }
+                var tf = fso.CreateTextFile(fileName, true, false);
+                tf.WriteLine("[Connection]");
+                tf.WriteLine("Host=" + host);
+                tf.WriteLine("Port=" + port);
+                tf.WriteLine("Username=" + vncUser);
+                tf.WriteLine("Password=" + vncPwd);
+                tf.WriteLine("[Options]");
+                tf.WriteLine("UseLocalCursor=1");
+                tf.WriteLine("UseDesktopResize=1");
+                tf.WriteLine("FullScreen=0");
+                tf.WriteLine("FullColour=0");
+                tf.WriteLine("LowColourLevel=1");
+                tf.WriteLine("PreferredEncoding=ZRLE");
+                tf.WriteLine("AutoSelect=1");
+                tf.WriteLine("Shared=0");
+                tf.WriteLine("SendPtrEvents=1");
+                tf.WriteLine("SendKeyEvents=1");
+                tf.WriteLine("SendCutText=1");
+                tf.WriteLine("AcceptCutText=1");
+                tf.WriteLine("Emulate3=0");
+                tf.WriteLine("PointerEventInterval=0");
+                tf.WriteLine("Monitor=");
+                tf.WriteLine("MenuKey=F8");
+                tf.close();
+                tf = null;
+                // 运行
+                var obj = new ActiveXObject("wscript.shell");
+                obj.run(fileName);
+                obj = null;
+            } catch (e) {
+                if (e.name === "ReferenceError") {
+                    alert("请更换到带IE内核的浏览器！")
+                } else {
+                    alert("未找到对应的.vnc文件或其他的错误")
+                }
+            }
+        }
+
+        function changeTerminalType(clientID, terminalType) {
+            var postData = {};
+            postData.clientID = clientID;
+            postData.terminalType = terminalType;
+            $.ajax({
+                url: '/internal/machineManage/changeTerminalType',
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                data: JSON.stringify(postData),
+                success: function (res) {
+                    if (res.code === 200) {
+                        active['reload'].call(this);
+                        layer.msg("操作成功")
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                },
+                error: function () {
+                    layer.msg('未知错误，请稍后重试！！')
+                }
+            });
+        }
+
+        function changeStatus(flag, clientID) {
+            $.ajax({
+                url: '/internal/machineManage/changeStatus/' + clientID,
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        active['reload'].call(this);
+                        layer.msg("操作成功")
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                },
+                error: function () {
+                    layer.msg('未知错误，请稍后重试！！')
+                }
+            });
+        }
+
+        function toUpdateMachineInfo(clientID) {
+            okLayer.open("首页 / 终端列表 / 修改终端信息", "/internal/machineManage/toUpdateMachineInfo", "35%", "60%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initMachineInfo(clientID);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, "80px")
+        }
+
+        function deleteMachine(clientID) {
+            layer.confirm('确认删除该机器？', {
+                icon: 3,
+                title: '删除终端',
+                btn: ['确认', '取消']
+                , yes: function (index_) {
+                    $.ajax({
+                        url: '/internal/machineManage/deleteMachineInfo/' + clientID,
+                        type: 'GET',
+                        headers: {
+                            "Accept": 'application/json',
+                            "Content-Type": 'application/json'
+                        },
+                        success: function (res) {
+                            if (res.code === 200) {
+                                active['reload'].call(this);
+                                layer.msg("删除成功")
+                            } else {
+                                layer.msg(res.msg)
+                            }
+                        },
+                        error: function () {
+                            layer.msg('未知错误，请稍后重试！！')
+                        }
+                    });
+                }, btn2: function (index) {
+                    layer.close(index);
+                }
+            });
+        }
+
+        function batchDeleteMachines() {
+            var checkStatus = table.checkStatus('machineManageTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.clientID);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要删除的机器', {icon: 5});
+                return
+            }
+            layer.confirm("确定要删除所选机器吗", {icon: 3, title: '删除所选'}, function (index) {
+                var postData = {};
+                postData.clientIDs = uuidArr;
+                $.ajax({
+                    url: '/internal/machineManage/deleteMachineInfos',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 2000
+                            }, function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            layer.msg('操作失败', {icon: 5});
+                        }
+                    },
+                    error: function () {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                });
+                layer.close(index);
+            });
+        }
+
+    });
+</script>
+
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+    <div class="layui-btn-container">
+        <@shiro.hasPermission name="/internal/machineInfo/deleteMachineInfos">
+            <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="batchDeleteMachines">
+                <i class="layui-icon layui-icon-delete"></i>删除所选
+            </button>
+        </@shiro.hasPermission>
+        <div class="layui-btn-group">
+            <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
+                <button class="layui-btn layui-btn layui-btn-normal layui-btn-sm" id="showReopenClientDialog" lay-event="showReopenClientDialog">
+                    <i class="layui-icon layui-icon-refresh"></i>重开机器
+                </button>
+                <button class="layui-btn layui-btn layui-btn-normal layui-btn-sm" id="finishStartUp" lay-event="finishStartUp">
+                    <i class="layui-icon layui-icon-chart-screen"></i>完成开机
+                </button>
+            </@shiro.hasPermission>
+        </div>
+        <div class="layui-btn-group">
+            <@shiro.hasPermission name="/internal/machineInfo/uploadVPSFile">
+                <button class="layui-btn layui-btn layui-btn layui-btn-warm layui-btn-sm" id="common" lay-event="showUploadVPSDialog('common')">
+                    <i class="layui-icon layui-icon-upload-drag"></i>导入普通终端
+                </button>
+                <button class="layui-btn layui-btn layui-btn layui-btn-warm layui-btn-sm" id="startUp" lay-event="showUploadVPSDialog('startUp')">
+                    <i class="layui-icon layui-icon-upload-drag"></i>导入开机终端
+                </button>
+            </@shiro.hasPermission>
+        </div>
+        <div class="layui-btn-group">
+            <@shiro.hasPermission name="/internal/machineInfo/updateMachineGroup">
+                <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="batchUpdateMachine">
+                    <i class="layui-icon layui-icon-edit"></i>修改所选终端分组信息
+                </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
+                <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toBatchUpdateFailedReason">
+                    <i class="layui-icon layui-icon-edit"></i>修改所选终端失败原因
+                </button>
+            </@shiro.hasPermission>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="clientIDs">
+    {{# var isValidClient = true }}
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+                <font color="#FF0000">{{d.clientID}}</font>
+    {{#          isValidClient = false }}
+    {{#     }else if(d.orange){ }}
+                <font color="#e86e33">{{d.clientID}}</font>
+    {{#          isValidClient = false }}
+    {{#     }else if(d.yellow){ }}
+                <font color="#ef00ff">{{d.clientID}}</font>
+    {{#          isValidClient = false }}
+    {{#     }else{ }}
+                <font color="green">{{d.clientID}}</font>
+    {{#     } }}
+    {{# }else{ }}
+        <font color="green">{{d.clientID}}</font>
+    {{# } }}
+    {{# if(!isValidClient){ }}
+        <span name="invalidClient" id="span_{{d.clientID}}"></span>
+    {{# } }}
+</script>
+
+<script type="text/html" id="machineGroups">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+                <font color="#FF0000">{{d.machineGroup}}</font>
+    {{#     }else if(d.orange){ }}
+                <font color="#e86e33">{{d.machineGroup}}</font>
+    {{#     }else if(d.yellow){ }}
+                <font color="#ef00ff">{{d.machineGroup}}</font>
+    {{#     }else{ }}
+                <font color="green">{{d.machineGroup}}</font>
+    {{#     } }}
+    {{# }else{ }}
+        <font color="green">{{d.machineGroup}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="toRenewalDate">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{layui.util.toDateString(d.renewalDate,'MM-dd')}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{layui.util.toDateString(d.renewalDate,'MM-dd')}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{layui.util.toDateString(d.renewalDate,'MM-dd')}}</font>
+    {{#     }else{ }}
+    <font color="green">{{layui.util.toDateString(d.renewalDate,'MM-dd')}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{layui.util.toDateString(d.renewalDate,'MM-dd')}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="showVersionInfo">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="cityAndStatus">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="cpuCounts">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.cpuCount}}<br>{{d.memory}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.cpuCount}}<br>{{d.memory}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.cpuCount}}<br>{{d.memory}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.cpuCount}}<br>{{d.memory}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.cpuCount}}<br>{{d.memory}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="freeSpaces">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.freeSpace}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.freeSpace}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.freeSpace}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.freeSpace}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.freeSpace}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="restartCountAndFailCount">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
+    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
+    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
+    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
+    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
+    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="lastVisitTimeAndRestartTime">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="restartOrderingTimeAndLastSendNotificationTime">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}
+    <br>
+    {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="optimizationSucceedCountAndOptimizationTotalCount">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>{{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>{{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>{{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>{{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>{{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="broadbandAccountAndBroadbandPassword">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="startUpStatusAndDownloadProgramType">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="runningProgramTypes">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.runningProgramType == null ? "" : d.runningProgramType}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.runningProgramType == null ? "" : d.runningProgramType}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.runningProgramType == null ? "" : d.runningProgramType}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.runningProgramType == null ? "" : d.runningProgramType}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.runningProgramType == null ? "" : d.runningProgramType}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="upgradeFailedReasons">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.upgradeFailedReason == null ? "" : d.upgradeFailedReason}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.upgradeFailedReason == null ? "" : d.upgradeFailedReason}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.upgradeFailedReason == null ? "" : d.upgradeFailedReason}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.upgradeFailedReason == null ? "" : d.upgradeFailedReason}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.upgradeFailedReason == null ? "" : d.upgradeFailedReason}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="vpsBackendSystemComputerIDs">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.vpsBackendSystemComputerID == null ? "" : d.vpsBackendSystemComputerID}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.vpsBackendSystemComputerID == null ? "" : d.vpsBackendSystemComputerID}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.vpsBackendSystemComputerID == null ? "" : d.vpsBackendSystemComputerID}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.vpsBackendSystemComputerID == null ? "" : d.vpsBackendSystemComputerID}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.vpsBackendSystemComputerID == null ? "" : d.vpsBackendSystemComputerID}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="valid">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    <font color="#FF0000">{{d.valid ? "监控中" : "暂停监控"}}</font>
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.valid ? "监控中" : "暂停监控"}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.valid ? "监控中" : "暂停监控"}}</font>
+    {{#     }else{ }}
+    <font color="green">{{d.valid ? "监控中" : "暂停监控"}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="green">{{d.valid ? "监控中" : "暂停监控"}}</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="operationTpl">
+    <div class="layui-btn-group">
+        {{# if(d.host != null && d.host != ''){ }}
+            <@shiro.hasPermission name="/internal/machineInfo/downloadVNCFile">
+                <button class="layui-btn layui-btn-xs" lay-event="connectVNC">VNC</button>
+            </@shiro.hasPermission>
+        {{# } }}
+        <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
+            <button class="layui-btn layui-btn-xs" lay-event="toUpdateMachineInfo">修改</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/machineInfo/deleteMachineInfo">
+            <button class="layui-btn layui-btn-xs" lay-event="deleteMachine">删除</button>
+        </@shiro.hasPermission>
+    </div>
+    <br>
+    <div class="layui-btn-group">
+        <@shiro.hasPermission name="/internal/machineInfo/changeStatus">
+        {{# if(d.valid){ }}
+            <button class="layui-btn layui-btn-xs" lay-event="changeStatus(stop)">暂停监控</button>
+        {{# }else{ }}
+            <button class="layui-btn layui-btn-xs" lay-event="changeStatus(start)">开始监控</button>
+        {{# } }}
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/machineInfo/changeTerminalType">
+            <button class="layui-btn layui-btn-xs" lay-event="changeTerminalType">变更终端类型</button>
+        </@shiro.hasPermission>
+    </div>
+</script>
+</body>
+</html>

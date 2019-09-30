@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.ClientUpgradeDao">
+    <select id="searchClientUpgrades" resultType="com.keymanager.ckadmin.entity.ClientUpgrade">
+        SELECT
+            fUuid AS 'uuid',
+            fProgramType AS 'programType',
+            fTerminalType AS 'terminalType',
+            fVersion AS 'version',
+            fTargetVersion AS 'targetVersion',
+            fStatus AS 'status',
+            fMaxUpgradeCount AS 'maxUpgradeCount',
+            fResidualUpgradeCount AS 'residualUpgradeCount',
+            fUpdateTime AS 'updateTime',
+            fCreateTime AS 'createTime'
+        FROM t_client_upgrade
+        WHERE fTerminalType = #{terminalType}
+    </select>
+
+    <select id="findClientUpgradeJobs" resultType="com.keymanager.ckadmin.entity.ClientUpgrade">
+        SELECT
+            fUuid AS 'uuid',
+            fTerminalType AS 'terminalType',
+            fProgramType AS 'programType',
+            fVersion AS 'version',
+            fTargetVersion AS 'targetVersion',
+            fStatus AS 'status',
+            fMaxUpgradeCount AS 'maxUpgradeCount',
+            fResidualUpgradeCount AS 'residualUpgradeCount',
+            fUpdateTime AS 'updateTime',
+            fCreateTime AS 'createTime'
+        FROM t_client_upgrade
+        WHERE fStatus = 1
+        AND fResidualUpgradeCount &gt; 0
+    </select>
+
+    <update id="updateClientUpgradeStatus">
+        UPDATE t_client_upgrade
+        SET fStatus = #{status}
+        WHERE fUuid = #{uuid}
+    </update>
+</mapper>

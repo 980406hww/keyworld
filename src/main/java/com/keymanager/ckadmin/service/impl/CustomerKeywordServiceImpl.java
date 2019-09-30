@@ -5,6 +5,8 @@ import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.dao.CustomerKeywordDao;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
+import com.keymanager.ckadmin.enums.EntryTypeEnum;
 import com.keymanager.ckadmin.enums.KeywordEffectEnum;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.UserInfoService;
@@ -13,14 +15,21 @@ import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.EntryTypeEnum;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
+import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
+import com.keymanager.ckadmin.vo.machineGroupQueueVO;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
 import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +49,119 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     @Resource(name = "userInfoService2")
     private UserInfoService userInfoService;
+
+    private final static Map<String, LinkedBlockingQueue> machineGroupQueueMap = new HashMap<>();
+
+    @Override
+    public void cacheCustomerKeywords() {
+        List<String> machineGroups = customerKeywordDao.getMachineGroups();
+        if (CollectionUtils.isNotEmpty(machineGroups)) {
+            for (String machineGroup : machineGroups) {
+                String[] terminalTypeAndMachineGroups = machineGroup.split("####");
+                LinkedBlockingQueue blockingQueue = machineGroupQueueMap.get(terminalTypeAndMachineGroups[0] + "####" + terminalTypeAndMachineGroups[1]);
+                if (blockingQueue == null) {
+                    blockingQueue = new LinkedBlockingQueue<String>(100000);
+                    machineGroupQueueMap.put(terminalTypeAndMachineGroups[0] + "####" + terminalTypeAndMachineGroups[1], blockingQueue);
+                }
+                int machineCount = Integer.parseInt(terminalTypeAndMachineGroups[2]);
+                int currentSize = blockingQueue.size();
+                int offerCount = 0;
+                if (currentSize < (machineCount * 4)) {
+                    List<OptimizationKeywordVO> optimizationKeywordVOS = null;
+                    do {
+                        optimizationKeywordVOS = customerKeywordDao.fetchCustomerKeywordsForCache(terminalTypeAndMachineGroups[0], terminalTypeAndMachineGroups[1], ((machineCount * 10) > 5000 ? 5000 : (machineCount * 10)));
+                        if (CollectionUtils.isNotEmpty(optimizationKeywordVOS)) {
+                            List<Long> customerKeywordUuids = new ArrayList<>();
+                            if (optimizationKeywordVOS.size() > machineCount) {
+                                for (OptimizationKeywordVO optimizationKeywordVO : optimizationKeywordVOS) {
+                                    if (blockingQueue.offer(optimizationKeywordVO)) {
+                                        offerCount++;
+                                        customerKeywordUuids.add(optimizationKeywordVO.getUuid());
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                updateOptimizationQueryTime(customerKeywordUuids);
+                            } else {
+                                int count = 0;
+                                int repeatTimes = 0;
+                                boolean hasNewElement = false;
+                                Map<Long, Integer> customerKeywordUuidAndRepeatCount = new HashMap<>();
+                                do {
+                                    hasNewElement = false;
+                                    repeatTimes++;
+                                    Iterator<OptimizationKeywordVO> it = optimizationKeywordVOS.iterator();
+                                    while (it.hasNext()) {
+                                        OptimizationKeywordVO optimizationKeywordVO = it.next();
+                                        if (optimizationKeywordVO.getQueryInterval() == 0) {
+                                            optimizationKeywordVO.setQueryInterval(5000);
+                                        }
+                                        int maxOptimizeCount = Math.round(DateUtils.getFragmentInSeconds(Calendar.getInstance(), Calendar.DATE) / (optimizationKeywordVO.getQueryInterval()));
+                                        Integer repeatCount = customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid());
+                                        if (repeatCount == null) {
+                                            customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), 0);
+                                        }
+                                        if (maxOptimizeCount - optimizationKeywordVO.getOptimizedCount() > 0) {
+                                            offerCount++;
+                                            blockingQueue.offer(optimizationKeywordVO);
+                                            optimizationKeywordVO.setOptimizedCount(optimizationKeywordVO.getOptimizedCount() + 1);
+                                            hasNewElement = true;
+                                            customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), (customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid()) + 1));
+                                            count++;
+                                            if (count > (machineCount * 4)) {
+                                                break;
+                                            }
+                                        } else {
+                                            it.remove();
+                                        }
+                                    }
+                                }
+                                while (count < (machineCount * 4) && hasNewElement && repeatTimes < 50 && CollectionUtils.isNotEmpty(optimizationKeywordVOS));
+
+                                if (customerKeywordUuidAndRepeatCount.size() == 0) {
+                                    break;
+                                }
+                                while (customerKeywordUuidAndRepeatCount.size() > 0) {
+                                    customerKeywordUuids.addAll(customerKeywordUuidAndRepeatCount.keySet());
+                                    updateOptimizationQueryTime(customerKeywordUuids);
+                                    customerKeywordUuids.clear();
+                                    for (Long customerKeywordUuid : customerKeywordUuidAndRepeatCount.keySet()) {
+                                        if (customerKeywordUuidAndRepeatCount.get(customerKeywordUuid) < 2) {
+                                            customerKeywordUuids.add(customerKeywordUuid);
+                                        } else {
+                                            customerKeywordUuidAndRepeatCount.put(customerKeywordUuid, (customerKeywordUuidAndRepeatCount.get(customerKeywordUuid) - 1));
+                                        }
+                                    }
+                                    for (Long customerKeywordUuid : customerKeywordUuids) {
+                                        customerKeywordUuidAndRepeatCount.remove(customerKeywordUuid);
+                                    }
+                                    customerKeywordUuids.clear();
+                                }
+                                if (!CollectionUtils.isNotEmpty(optimizationKeywordVOS)) {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    while (currentSize + offerCount < (machineCount * 10) && CollectionUtils.isNotEmpty(optimizationKeywordVOS));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void updateOptimizationQueryTime(List<Long> customerKeywordUuids) {
+        customerKeywordDao.updateOptimizationQueryTime(customerKeywordUuids);
+    }
+
+    @Override
+    public List<machineGroupQueueVO> getMachineGroupAndSize() {
+        List<machineGroupQueueVO> machineGroupQueueVOS = new ArrayList<>();
+        for (Map.Entry<String, LinkedBlockingQueue> entry : machineGroupQueueMap.entrySet()) {
+            machineGroupQueueVOS.add(new machineGroupQueueVO(entry.getKey(), entry.getValue().size()));
+        }
+        return machineGroupQueueVOS;
+    }
 
     @Override
     public List<Map> getCustomerKeywordsCount(List<Long> customerUuids, String terminalType, String entryType) {

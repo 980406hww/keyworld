@@ -83,6 +83,15 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
                 tree.setChildren(userInfoTreeList);
             }
         }
+//        UserTree userTree2 = new UserTree();
+//        userTree2.setId(0L);
+//        userTree2.setName("请选择用户");
+//        userTree2.setAlias("");
+//        userTree2.setSpread(Boolean.TRUE);
+//        userTree2.setChildren(trees);
+//        List<UserTree> list = new ArrayList<>();
+//        list.add(userTree2);
+//        return list;
         return trees;
     }
 

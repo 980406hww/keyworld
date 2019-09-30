@@ -1,6 +1,8 @@
 package com.keymanager.ckadmin.criteria;
 
-public class MachineGroupWorkInfoCriteria {
+import com.keymanager.ckadmin.criteria.base.BaseCriteria;
+
+public class MachineGroupWorkInfoCriteria extends BaseCriteria {
 
     private String entryType;
 

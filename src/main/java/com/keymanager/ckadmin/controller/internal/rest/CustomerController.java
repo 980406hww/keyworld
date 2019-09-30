@@ -76,8 +76,7 @@ public class CustomerController {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
 //            customerCriteria.setEntryType(entryType);
             customerCriteria.setTerminalType(terminalType);
-            Page<Customer> page = new Page<>(customerCriteria.getPage(),
-                customerCriteria.getLimit());
+            Page<Customer> page = new Page<>(customerCriteria.getPage(), customerCriteria.getLimit());
             String orderByField = ReflectUtils
                 .getTableFieldValue(Customer.class, customerCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {

@@ -2,8 +2,6 @@ package com.keymanager.ckadmin.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.keymanager.monitoring.entity.BaseEntity;
-import com.keymanager.monitoring.entity.GroupSetting;
 import java.util.List;
 
 @TableName(value = "t_operation_combine")

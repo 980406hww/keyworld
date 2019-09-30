@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.UserPageSetupDao">
+
+    <select id="searchUserPageSetup"   parameterType="java.lang.String"  resultType="com.keymanager.ckadmin.entity.UserPageSetup">
+        SELECT
+        fUuid AS uuid,
+        fLoginName AS loginName,
+        fPageUrl AS pageUrl,
+        fHiddenField AS hiddenField
+        FROM t_user_page_setup tups
+        <where>
+            <if test="loginName != null and loginName != ''"> AND tups.fLoginName = #{loginName}</if>
+            <if test="pageUrl != null and pageUrl != ''"> AND  tups.fPageUrl = #{pageUrl}</if>
+        </where>
+    </select>
+
+    <update id="updateUserPageSetup" parameterType="java.lang.String">
+        UPDATE t_user_page_setup tups
+        SET tups.fHiddenField = #{hiddenField} , tups.fUpdateTime = NOW()
+        <where>
+            <if test="loginName != null and loginName != ''"> AND tups.fLoginName = #{loginName}</if>
+            <if test="pageUrl != null and pageUrl != ''"> AND  tups.fPageUrl = #{pageUrl}</if>
+        </where>
+    </update>
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.PositiveListUpdateInfoDao">
+    <sql id="selectCol">
+		fUuid AS "uuid",
+		fPid AS "pid",
+		fOptimizeMethod AS "optimizeMethod",
+		fUserName AS "userName",
+		fUpdateTime AS "updateTime",
+		fCreateTime AS "createTime",
+		fPosition AS "position"
+	</sql>
+
+    <select id="findMostRecentPositiveListUpdateInfo" resultType="com.keymanager.ckadmin.entity.PositiveListUpdateInfo">
+        SELECT
+        <include refid="selectCol"/>
+        FROM
+        t_positive_list_update_info tplui
+        WHERE tplui.fPid = #{pid}
+        ORDER BY tplui.fCreateTime DESC
+        LIMIT 5
+    </select>
+
+    <delete id="deleteByPid">
+        DELETE FROM t_positive_list_update_info
+        WHERE fPid = #{pid}
+    </delete>
+</mapper>

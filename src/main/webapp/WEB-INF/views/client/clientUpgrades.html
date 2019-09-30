@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>终端升级</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>机器升级管理</cite></a>
+                <a><cite>机器升级列表</cite></a>
+            </span>
+        <input hidden value='${Session["entryType"]}' id="entryType">
+        <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+
+    <form class="layui-form layui-form-pane" id="searchForm">
+    </form>
+
+    <!--数据表格-->
+    <table class="layui-hide" id="clientUpgradeTable" lay-filter="tableFilter">
+    </table>
+</div>
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+
+<script>
+    var sign = false;
+    // 进度条加载提示
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
+    // layui相关
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+        var okLayer = layui.okLayer;
+        var layer = layui.layer;
+        var clientUpgradeTable = table.render({
+            elem: '#clientUpgradeTable',
+            method: 'post',
+            url: '${ctx.path}/internal/clientUpgrade/getClientUpgrades2',
+            limit: 50,
+            page: true,
+            autoSort: false,
+            size: 'sm',
+            id: 'clientUpgradeTable',
+            even: true,//隔行背景
+            toolbar: "#toolbarTpl",
+            defaultToolbar: [],
+            contentType: 'application/json',
+            cols: [[
+                {filed: 'uuid', type: 'checkbox', fixed: "left", width: '5%', align: 'center'},
+                {field: 'programType', title: '程序类型', width: '10%', align: 'center'},
+                {field: 'version', title: '当前版本', width: '10%', align: 'center'},
+                {field: 'targetVersion', title: '目标版本', width: '10%', align: 'center'},
+                {field: 'maxUpgradeCount', title: '最大升级数', width: '10%', align: 'center'},
+                {field: 'residualUpgradeCount', title: '升级情况', width: '15%', templet: '#toResidualUpgradeCount', align: 'center'},
+                {field: 'status', title: '任务状态', width: '10%', templet: '#toStatus', align: 'center'},
+                {field: 'createTime', title: '创建时间', width: '16%', templet: '#toDateTime', align: 'center'},
+                {title: '操作', templet: '#operationTpl', align: 'center', width: '14%', align: 'center'}
+            ]],
+            height: 'full-115',
+
+            done: function (res, curr, count) {
+                // $("#countNum").text(count);
+            }
+        });
+
+        var active = {
+            reload: function () {
+                let data = {}
+                table.reload('clientUpgradeTable', {
+                    where: data,
+                    page: {
+                        curr: 1
+                    }
+                });
+            },
+        };
+
+        function toAddClientUpgrade() {
+            okLayer.open("首页/机器升级列表/添加机器升级", "/internal/clientUpgrade/toClientUpgradeAdd", "35%", "40%", null, function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            });
+        }
+
+        function toUpdateClientUpgrade(data){
+            okLayer.open("首页/机器升级列表/修改机器升级", "/internal/clientUpgrade/toClientUpgradeAdd", "35%", "40%", function(layero){
+                window[layero.find("iframe")[0]["name"]].initForm(data);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            });
+        }
+
+        function updateStatus(data){
+            data.uuid = parseInt(data.uuid);
+            data.status = data.status == true ? false : true;
+            $.ajax({
+                url: '/internal/clientUpgrade/updateClientUpgradeStatus2',
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                data: JSON.stringify(data),
+                success: function (res) {
+                    if (res.code === 200) {
+                        let data = {}
+                        table.reload('clientUpgradeTable', {
+                            where: data,
+                            page: {
+                                curr: 1
+                            }
+                        });
+                        layer.msg("修改成功")
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                },
+                error: function () {
+                    layer.msg('未知错误，请稍后重试！！')
+                }
+            });
+        }
+
+        function deleteClient(uuid){
+            $.ajax({
+                url: '/internal/clientUpgrade/deleteClientUpgrade2/' + uuid,
+                type: 'GET',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        let data = {}
+                        table.reload('clientUpgradeTable', {
+                            where: data,
+                            page: {
+                                curr: 1
+                            }
+                        });
+                        layer.msg("删除成功")
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                },
+                error: function () {
+                    layer.msg('未知错误，请稍后重试！！')
+                }
+            });
+        }
+
+        function batchDeleteClientUpgrade(){
+            var checkStatus = table.checkStatus('clientUpgradeTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要操作的机器', {icon: 5});
+                return
+            }
+            layer.confirm("确定要删除所选机器吗", {icon: 3, title: '删除所选'}, function (index) {
+                var postData = {};
+                postData.uuids = uuidArr;
+                $.ajax({
+                    url: '/internal/clientUpgrade/batchDeleteClientUpgrade',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 2000
+                            }, function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            layer.msg('操作失败', {icon: 5});
+                        }
+                    },
+                    error: function () {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                });
+                layer.close(index);
+            });
+        }
+
+        table.on('toolbar(tableFilter)',function(obj){
+            var data = obj.data,event = obj.event;
+            switch (event) {
+                case 'addMachine':
+                    toAddClientUpgrade();
+                    break;
+                case 'batchDeleteClientUpgrade':
+                    batchDeleteClientUpgrade();
+                    break;
+            }
+        });
+
+        table.on('tool(tableFilter)',function(obj){
+            var data = obj.data,event = obj.event;
+            switch (event) {
+                case 'modifyMachine':
+                    toUpdateClientUpgrade(data);
+                    break;
+                case 'updateStatus':
+                    updateStatus(data);
+                    break;
+                case 'deleteClient':
+                    deleteClient(data.uuid);
+                    break;
+            }
+        });
+
+        table.on('sort(tableFilter)', function (obj) {
+            let data = {};
+            data.orderBy = obj.field;
+            data.orderMode = obj.type === 'asc' ? 1 : 0;
+            table.reload('clientUpgradeTable', {
+                where: data,
+                page: {
+                    curr: 1
+                }
+            });
+        });
+
+    });
+
+</script>
+
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+    <div class="layui-btn-container">
+        <@shiro.hasPermission name="/internal/clientUpgrade/saveClientUpgrade">
+            <button class="layui-btn layui-btn-sm" id="addMachine" lay-event="addMachine">添加</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/clientUpgrade/deleteClientUpgrade">
+            <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="batchDeleteClientUpgrade">
+                <i class="layui-icon layui-icon-delete"></i>删除所选
+            </button>
+        </@shiro.hasPermission>
+    </div>
+</script>
+
+<script type="text/html" id="toDateTime">
+    {{layui.util.toDateString(d.createTime)}}
+</script>
+
+<script type="text/html" id="toResidualUpgradeCount">
+    <span>
+        {{# if(d.residualUpgradeCount > 0) { }}
+            Processing
+        {{# }else{ }}
+            Completed
+        {{# } }}
+    </span>
+</script>
+
+<script type="text/html" id="toStatus">
+    <span>
+        {{# if(d.status === true) { }}
+            开始
+        {{# }else{ }}
+            暂停
+        {{# } }}
+    </span>
+</script>
+
+<script type="text/html" id="operationTpl">
+    <div class="layui-btn-group">
+        <@shiro.hasPermission name="/internal/clientUpgrade/saveClientUpgrade">
+            {{# if(d.status === true) { }}
+                <button type="button" class="layui-btn layui-btn-xs" lay-event="updateStatus">暂停</button>
+            {{# }else { }}
+                <button type="button" class="layui-btn layui-btn-xs" lay-event="updateStatus">开始</button>
+            {{# } }}
+            <button type="button" class="layui-btn layui-btn-xs" lay-event="modifyMachine" id="modifyMachine">修改</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/clientUpgrade/deleteClientUpgrade">
+            <button type="button" class="layui-btn layui-btn-xs" lay-event="deleteClient">删除</button>
+        </@shiro.hasPermission>
+    </div>
+</script>
+
+</body>
+</html>

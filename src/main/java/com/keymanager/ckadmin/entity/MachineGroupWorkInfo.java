@@ -98,15 +98,15 @@ public class MachineGroupWorkInfo implements Serializable {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType (String type) {
         this.type = type;
     }
 
-    public String getTerminalType() {
+    public String getTerminalType () {
         return terminalType;
     }
 
-    public void setTerminalType(String terminalType) {
+    public void setTerminalType (String terminalType) {
         this.terminalType = terminalType;
     }
 

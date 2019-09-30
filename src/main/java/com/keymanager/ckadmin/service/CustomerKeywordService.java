@@ -6,7 +6,7 @@ import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
-
+import com.keymanager.ckadmin.vo.machineGroupQueueVO;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +20,11 @@ import java.util.Map;
  */
 public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
+    List<machineGroupQueueVO> getMachineGroupAndSize();
+
+    void cacheCustomerKeywords();
+
+    void updateOptimizationQueryTime(List<Long> customerKeywordUuids);
 
     List<Map> getCustomerKeywordsCount(List<Long> customerUuids, String terminalType, String entryType);
 
