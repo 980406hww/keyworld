@@ -29,10 +29,7 @@ html {
     display: none;
     position: absolute;
     top: 45px;
-    /*left: 0;*/
-    /*padding-left: 10px;*/
-    right: 5px;
-    left: 5px;
+    left: 0;
     z-index: 894;
     background: #fff;
     border-bottom: 1px #e6e6e6 solid;
@@ -80,6 +77,10 @@ html {
     padding: 8px 0;
 }
 
+.layui-fluid{
+    padding: 0;
+}
+
 /*.out-condition{*/
 /*    padding-left: 10px;;*/
 /*}*/
@@ -121,26 +122,14 @@ html {
     box-shadow: #fff 0px 0px 0px 0px;
     border: #fff;
 }*/
-.layui-tab-content {
-    padding-top: 10px !important;
-    padding-left: 0;
-    padding-right: 0;
-}
-.layui-tab {
-    margin: 0 0;
-    text-align: left !important;
-}
 
 #data_list {
     padding-top: 10px;
 }
 
-
-.layui-tab-content {
-    padding-top:0 ;
+.layui-tab{
+    margin: 10px;
 }
-
-
 
 /*操作*/
 .operation {
