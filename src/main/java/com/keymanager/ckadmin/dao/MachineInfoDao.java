@@ -2,9 +2,9 @@ package com.keymanager.ckadmin.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.keymanager.ckadmin.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.ckadmin.criteria.MachineGroupWorkInfoCriteria;
 import com.keymanager.ckadmin.criteria.MachineInfoCriteria;
+import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.ClientUpgrade;
 import com.keymanager.ckadmin.entity.CustomerKeywordTerminalRefreshStatRecord;
 import com.keymanager.ckadmin.entity.MachineGroupWorkInfo;
@@ -82,7 +82,7 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     void updateVersion(@Param("clientID") String clientID, @Param("version") String version);
 
-    List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(@Param("customerKeywordRefreshStatInfoCriteria") CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
+    List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(@Param("criteria") RefreshStatisticsCriteria criteria);
 
     List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(@Param("clientIDPrefix") String clientIDPrefix, @Param("city") String city, @Param("switchGroupName") String switchGroupName);
 

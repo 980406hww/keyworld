@@ -2,10 +2,10 @@ package com.keymanager.ckadmin.service.impl;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.ckadmin.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.ckadmin.criteria.MachineGroupWorkInfoCriteria;
 import com.keymanager.ckadmin.criteria.MachineInfoBatchUpdateCriteria;
 import com.keymanager.ckadmin.criteria.MachineInfoCriteria;
+import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.dao.MachineInfoDao;
 import com.keymanager.ckadmin.entity.ClientUpgrade;
 import com.keymanager.ckadmin.entity.CustomerKeywordTerminalRefreshStatRecord;
@@ -38,7 +38,7 @@ import javax.annotation.Resource;
 
 @Service("machineInfoService2")
 public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineInfo>
-        implements MachineInfoService {
+    implements MachineInfoService {
 
     @Resource(name = "machineInfoDao2")
     private MachineInfoDao machineInfoDao;
@@ -64,13 +64,13 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public Page<MachineInfo> searchMachineInfos(Page<MachineInfo> page, MachineInfoCriteria machineInfoCriteria, boolean normalSearchFlag) {
-        if(normalSearchFlag) {
+        if (normalSearchFlag) {
             page.setRecords(machineInfoDao.searchMachineInfos(page, machineInfoCriteria));
         } else {
             page.setRecords(machineInfoDao.searchBadMachineInfo(page, machineInfoCriteria));
         }
         Map<String, String> passwordMap = new HashMap<>();
-        for(MachineInfo machineInfo : page.getRecords()) {
+        for (MachineInfo machineInfo : page.getRecords()) {
             String password = passwordMap.get(machineInfo.getPassword());
             if (password == null) {
                 if (StringUtil.isNullOrEmpty(machineInfo.getPassword())) {
@@ -95,7 +95,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     @Override
     public void changeTerminalType(String clientID, String terminalType) {
         MachineInfo machineInfo = machineInfoDao.selectById(clientID);
-        if(machineInfo != null){
+        if (machineInfo != null) {
             machineInfo.setTerminalType(terminalType);
             machineInfoDao.updateById(machineInfo);
         }
@@ -113,7 +113,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public void logMachineInfoTime(String terminalType, String clientID, String status, String freeSpace, String version, String city,
-            int updateCount, String runningProgramType, int cpuCount, int memory) {
+        int updateCount, String runningProgramType, int cpuCount, int memory) {
 
     }
 
@@ -180,7 +180,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
         }
     }
 
-    private void supplementAdditionalValue(MachineInfo machineInfo){
+    private void supplementAdditionalValue(MachineInfo machineInfo) {
         machineInfo.setLastVisitTime(Utils.getCurrentTimestamp());
         machineInfo.setTenMinsLastVisitTime(Utils.addMinutes(Utils.getCurrentTimestamp(), 10));
         machineInfo.setRestartTime(Utils.getCurrentTimestamp());
@@ -207,9 +207,9 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public void reopenMachineInfo(List<String> clientIDs, String downloadProgramType) {
-        if("New".equals(downloadProgramType)){
+        if ("New".equals(downloadProgramType)) {
             machineInfoDao.reopenMachineInfo(clientIDs, downloadProgramType, "laodu");
-        }else{
+        } else {
             machineInfoDao.reopenMachineInfo(clientIDs, downloadProgramType, "Default");
         }
     }
@@ -228,25 +228,25 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
         machineInfo.setClientIDPrefix(Utils.removeDigital(MachineInfos[0]));
     }
 
-    private void supplementDefaultValue(MachineInfo machineInfo){
+    private void supplementDefaultValue(MachineInfo machineInfo) {
         machineInfo.setAllowSwitchGroup(0);
         supplementAdditionalValue(machineInfo);
     }
 
     @Override
     public void uploadVPSFile(String machineInfoType, String downloadProgramType, File file, String terminalType) {
-        List<String> vpsInfos = FileUtil.readTxtFile(file,"UTF-8");
+        List<String> vpsInfos = FileUtil.readTxtFile(file, "UTF-8");
         for (String vpsInfo : vpsInfos) {
             String[] machineInfos = vpsInfo.split("===");
             MachineInfo existingMachineInfo = machineInfoDao.selectById(machineInfos[0]);
-            if(null != existingMachineInfo) {
+            if (null != existingMachineInfo) {
                 saveMachineInfoByVPSFile(existingMachineInfo, machineInfos);
-                if("New".equals(downloadProgramType)){
+                if ("New".equals(downloadProgramType)) {
                     existingMachineInfo.setSwitchGroupName("laodu");
-                }else{
+                } else {
                     existingMachineInfo.setSwitchGroupName("Default");
                 }
-                if(machineInfoType.equals("startUp")) {
+                if (machineInfoType.equals("startUp")) {
                     existingMachineInfo.setStartUpStatus(ClientStartUpStatusEnum.New.name());
                     existingMachineInfo.setDownloadProgramType(downloadProgramType);
                 } else {
@@ -260,21 +260,21 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
                 machineInfo.setFreeSpace(500.00);
                 machineInfo.setValid(true);
                 saveMachineInfoByVPSFile(machineInfo, machineInfos);
-                if(!Character.isDigit(machineInfos[0].charAt(machineInfos[0].length() - 1))) {
+                if (!Character.isDigit(machineInfos[0].charAt(machineInfos[0].length() - 1))) {
                     Integer maxClientID = machineInfoDao.selectMaxIdByMachineID(machineInfos[0]);
                     maxClientID = maxClientID == null ? 1 : maxClientID + 1;
                     machineInfo.setClientID(machineInfos[0] + maxClientID);
                 }
                 supplementDefaultValue(machineInfo);
-                if("New".equals(downloadProgramType)){
+                if ("New".equals(downloadProgramType)) {
                     machineInfo.setSwitchGroupName("laodu");
-                }else{
+                } else {
                     machineInfo.setSwitchGroupName("Default");
                 }
-                if(machineInfoType.equals("startUp")) {
+                if (machineInfoType.equals("startUp")) {
                     machineInfo.setStartUpStatus(ClientStartUpStatusEnum.New.name());
                     machineInfo.setDownloadProgramType(downloadProgramType);
-                }else{
+                } else {
                     machineInfo.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
                 }
                 machineInfo.setUpdateSettingTime(Utils.getCurrentTimestamp());
@@ -395,7 +395,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     @Override
-    public void batchUpdateMachine(MachineInfoCriteria machineInfoCriteria){
+    public void batchUpdateMachine(MachineInfoCriteria machineInfoCriteria) {
         machineInfoDao.batchUpdateMachine(machineInfoCriteria);
     }
 
@@ -415,8 +415,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     @Override
-    public List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(
-            CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
+    public List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(RefreshStatisticsCriteria criteria) {
         return null;
     }
 
@@ -477,7 +476,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public void updateMachine(String clientID, String city, String version, String freeSpace, String runningProgramType, int cpuCount,
-            int memory) {
+        int memory) {
     }
 
     @Override
