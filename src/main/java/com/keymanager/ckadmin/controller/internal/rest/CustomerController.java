@@ -74,9 +74,9 @@ public class CustomerController extends SpringMVCBaseController {
         }
         try {
             HttpSession session = request.getSession();
-            String entryType = (String) session.getAttribute("entryType");
+//            String entryType = (String) session.getAttribute("entryType");
 
-            customerCriteria.setEntryType(entryType);
+//            customerCriteria.setEntryType(entryType);
             //            String terminalType = TerminalTypeMapping.getTerminalType(request);
 //            customerCriteria.setTerminalType(terminalType);
             Page<Customer> page = new Page<>(customerCriteria.getPage(), customerCriteria.getLimit());

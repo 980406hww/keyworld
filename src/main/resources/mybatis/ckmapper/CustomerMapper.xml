@@ -52,8 +52,11 @@
         <if test="customerCriteria.status != null and customerCriteria.status != ''">
             AND c.fStatus = #{customerCriteria.status}
         </if>
-        <if test="customerCriteria.remark != null and customerCriteria.remark != ''">AND c.fRemark
-            LIKE CONCAT(#{customerCriteria.remark},'%')
+        <if test="customerCriteria.remark != null and customerCriteria.remark != ''">
+            AND c.fRemark LIKE CONCAT(#{customerCriteria.remark},'%')
+        </if>
+        <if test="customerCriteria.saleRemark != null and customerCriteria.saleRemark != ''">
+            AND c.fSaleRemark LIKE CONCAT(#{customerCriteria.saleRemark},'%')
         </if>
     </select>
 

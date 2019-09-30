@@ -20,4 +20,4 @@ layui.use(['jquery'], function () {
         formData = $.parseJSON(formData);
         return formData;
     }
-})
+});

@@ -16,6 +16,7 @@ public class CustomerCriteria extends BaseCriteria {
     private String wechat;
     private String telphone;
     private String loginName;
+    private String saleRemark;
     private String remark;
     private String entryType;
     private Integer status;
@@ -99,5 +100,13 @@ public class CustomerCriteria extends BaseCriteria {
 
     public void setWechat(String wechat) {
         this.wechat = wechat;
+    }
+
+    public String getSaleRemark() {
+        return saleRemark;
+    }
+
+    public void setSaleRemark(String saleRemark) {
+        this.saleRemark = saleRemark;
     }
 }

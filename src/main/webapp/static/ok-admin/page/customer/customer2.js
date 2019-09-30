@@ -9,10 +9,21 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     var okLayer = layui.okLayer;
     var laypage = layui.laypage;
 
+
+    function formToJsonObject (form_id) {
+        var formData = decodeURIComponent($("#" + form_id).serialize(), true);
+        formData = formData.replace(/&/g, "\",\"");
+        formData = formData.replace(/=/g, "\":\"");
+        formData = "{\"" + formData + "\"}";
+        formData = $.parseJSON(formData);
+        return formData;
+    }
+
     init_keyword_type();
-    initLayPage();
+    initLayPage(formToJsonObject('searchForm'));
 
     function initLayPage(pageConf) {
+        console.log(pageConf)
         if (!pageConf) {
             pageConf = {};
             pageConf.limit = 25;
@@ -189,13 +200,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         })
     }
 
-    function formToJson(data) {
-        data = data.replace(/&/g, "\",\"");
-        data = data.replace(/=/g, "\":\"");
-        data = "{\"" + data + "\"}";
-        return data;
-    }
-
     function init_keyword_type() {
         $.ajax({
             url: '/internal/common/getBusinessTypeByUserRole',
@@ -204,21 +208,21 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             type: 'get',
             success: function (res) {
                 if (res.code === 200) {
-                    // $("#tabItem").empty();
                     let i = 0;
                     $.each(res.data, function (index, item) {
                         let businessItem = item.split("#");
                         if (i === 0) {
                             $('#tabItem').append(
-                                '<li data-type="' + businessItem[0] + '" data-terminal="PC" class="layui-this">' + businessItem[1] + '</li>' );
-                            $('#type').val(businessItem[0]);
+                                '<li data-entrytype="' + businessItem[0] + '" data-terminal="PC" class="layui-this">' + businessItem[1] + '</li>' );
+                            $('#entryType').val(businessItem[0]);
                         }else {
                             $('#tabItem').append(
-                                '<li data-type="' + businessItem[0] + '" data-terminal="PC">' + businessItem[1] + '</li>' );
+                                '<li data-entrytype="' + businessItem[0] + '" data-terminal="PC">' + businessItem[1] + '</li>' );
                         }
                         i++;
                     });
                     form.render("select");
+
                 }
             }
         });
@@ -226,11 +230,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
 
     element.on('tab(customerTab)', function (data) {
         let d = data.elem.context.dataset;
-        console.log(d)
-        $('#type').val(d.type);
-        // $('#terminalType').val(d.terminal);
-        // active['reload'].call(this);
-        // initLayPage();
+        $('#entryType').val(d.entrytype);
+        initLayPage(formToJsonObject('searchForm'));
     });
 
     form.on('checkbox(checkAll)', function (data) {
@@ -257,6 +258,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         initLayPage(pageConf);
         return false;
     });
+
+
+
 
     function show_layer_msg(msg, icon, title, status) {
         layer.msg(msg, {
@@ -290,8 +294,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         return uuidArr;
     }
 
-
-
     //删除单个客户
     window.delOneCustomer = function (uuid) {
         layer.confirm('真的删除该客户吗', function (index) {
@@ -314,7 +316,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                             icon: 6,
                             time: 2000 //2秒关闭（如果不配置，默认是3秒）
                         }, function () {
-                            let pageConf = $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
+                            let pageConf = formToJsonObject('searchForm');
                             initLayPage(pageConf)
                         });
                     } else {
@@ -355,7 +357,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                             icon: 6,
                             time: 2000
                         }, function () {
-                            let pageConf = $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
+                            let pageConf = formToJsonObject('searchForm');
                             initLayPage(pageConf)
                         });
                     } else {
@@ -374,7 +376,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     window.toAddCustomer = function () {
         okLayer.open("首页 / 客户列表 / 添加用户", "/internal/customer/toCustomersAdd", "60%", "90%", null, function () {
             if (sign) {
-                let pageConf = $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
+                let pageConf = formToJsonObject('searchForm');
                 initLayPage(pageConf);
                 sign = false;
             }
@@ -387,7 +389,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             window[layero.find("iframe")[0]["name"]].initForm(uuid);
         }, function () {
             if (sign) {
-                let pageConf = $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
+                let pageConf = formToJsonObject('searchForm');
                 initLayPage(pageConf);
                 sign = false;
             }
@@ -420,7 +422,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                             icon: 6,
                             time: 1000
                         },function () {
-                            let pageConf = $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
+                            let pageConf = formToJsonObject('searchForm');
                             initLayPage(pageConf);
                         });
                     } else {
