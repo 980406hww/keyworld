@@ -111,26 +111,17 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             size: 'sm',
             id: 'keywordTable',
             even: true,//隔行背景
-            // toolbar: true,
             where: whereCondition,
             toolbar: "#toolbarTpl",
-            // defaultToolbar: ['filter', 'print', 'exports'], 对应列筛选 打印 导出
             defaultToolbar: ['filter'],
             contentType: 'application/json',
             cols: [[
                 {filed: 'uuid', type: 'checkbox', width: '35'},
                 {field: 'userID', title: '用户', width: '120',},
-                {
-                    field: 'contactPerson',
-                    title: '客户名称',
-                    width: '120',
-                    templet: '#toCustomerKeywordTpl'
-                },
+                {field: 'contactPerson', title: '客户名称', width: '120', templet: '#toCustomerKeywordTpl' },
                 {field: 'keyword', title: '关键字', width: '150'},
                 {field: 'url', title: '链接', width: '120'},
                 {field: 'bearPawNumber', title: '熊掌号', width: '100'},
-                // {field: 'originalUrl', title: '原始链接', width: '15%',},
-                // {field: 'terminalType', title: '终端', width: '5%'},
                 {field: 'title', title: '标题', width: '220'},
                 {field: 'currentIndexCount', title: '指数', width: '80', templet: '#indexCountTpl'},
                 {field: 'initialPosition', title: '初始排名', width: '80'},
@@ -139,39 +130,18 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 {field: 'optimizeGroupName', title: '优化分组', width: '100'},
                 {field: 'machineGroup', title: '机器分组', width: '100'},
                 {field: 'city', title: '目标城市', width: '80', hide: true},
-
-                {
-                    field: 'collectMethod',
-                    title: '收费方式',
-                    width: '80',
-                    templet: '#collectMethodTpl'
-                },
+                {field: 'collectMethod', title: '收费方式', width: '80', templet: '#collectMethodTpl' },
                 {field: 'optimizePlanCount', title: '要刷', width: '60',},
                 {field: 'optimizedCount', title: '已刷', width: '60'},
-                {
-                    field: 'invalidRefreshCount',
-                    title: '无效',
-                    width: '60',
-                    hide: true
-                },
-                {
-                    field: 'status',
-                    title: '状态',
-                    width: '60',
-                    templet: '#statusTpl'
-                },
-                {
-                    field: 'paymentStatus',
-                    title: '付费状态',
-                    width: '80',
-                    hide: true
-                },
+                {field: 'invalidRefreshCount', title: '无效', width: '60', hide: true },
+                {field: 'status', title: '状态', width: '60', templet: '#statusTpl' },
+                {field: 'paymentStatus', title: '付费状态', width: '80', hide: true },
                 {field: 'remarks', title: '备注', width: '100', hide: true},
                 {field: 'failedCause', title: '失败原因', width: '80', hide: true},
-                // {title: '操作', align: 'center',fixed:'right', width: '10%' , templet: '#operationTpl'}
             ]],
             height: 'full-150',
             done: function (res, curr, count) {
+                console.log(res)
                 let tables = document.getElementsByTagName('table');
                 if ((tables[2].offsetHeight || tables[2].clientHeight || tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight
                     || tables[2].parentElement.clientHeight || tables[2].scrollHeight)) {

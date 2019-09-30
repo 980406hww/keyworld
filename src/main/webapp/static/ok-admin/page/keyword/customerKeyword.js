@@ -139,7 +139,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 {filed: 'uuid', type: 'checkbox', width: '35'},
                 {field: 'keyword', title: '关键字', width: '150'},
                 {field: 'url', title: '链接', width: '140'},
-
                 {field: 'bearPawNumber', title: '熊掌号', align: 'center', width: '100'},
                 {field: 'title', title: '标题', width: '220'},
                 {field: 'currentIndexCount', title: '指数', align: 'center', width: '80', templet: '#indexCountTpl'},
