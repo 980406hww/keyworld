@@ -24,12 +24,10 @@
                     <div class="layui-card-body ">
                         <form class="layui-form layui-form-pane" id="searchForm">
                             <input type="text" hidden value="<#if customerUuid?exists>${customerUuid}</#if>" id="customerUuid" name="customerUuid">
-                            <input type="text" hidden value="<#if businessType?exists>${businessType}</#if>" id="typeTmp" name="typeTmp">
-                            <input type="text" hidden value="<#if terminalType?exists>${terminalType}</#if>" id="terminalTypeTmp" name="terminalTypeTmp">
                             <div class="my-collapse">
                                 <div>
-                                    <input type="hidden" name="type" id="type" value="pt">
-                                    <input type="hidden" name="terminalType" id="terminalType" value="PC">
+                                    <input type="hidden" name="type" id="type" value="<#if businessType?exists>${businessType}</#if>">
+                                    <input type="hidden" name="terminalType" id="terminalType" value="<#if terminalType2?exists>${terminalType2}</#if>">
                                     <div class="layui-inline">
                                         <input type="text" name="keyword" id="keyword" placeholder="请输入关键字" class="layui-input">
                                     </div>

@@ -318,7 +318,8 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         Customer customer = customerService.getCustomerByCustomerUuid(terminalType, businessType, customerUuid);
         mv.setViewName("keywords/customerKeyword");
         mv.addObject("businessType", businessType);
-        mv.addObject("terminalType", terminalType);
+        //取名叫terminalType会与session中存在的terminalType同名，值会被覆盖成session中的值
+        mv.addObject("terminalType2", terminalType);
         mv.addObject("customer", customer);
         mv.addObject("customerUuid", customerUuid);
         return mv;

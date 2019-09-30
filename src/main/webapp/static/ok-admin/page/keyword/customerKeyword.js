@@ -51,24 +51,18 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             type: 'get',
             success: function (res) {
                 if (res.code === 200) {
-                    // $("#tabItem").empty();
-                    let i = 0;
                     $.each(res.data, function (index, item) {
                         let businessItem = item.split("#");
-                        if (i === 0) {
                             $('#tabItem').append(
-                                '<li data-type="' + businessItem[0] + '" data-terminal="PC" class="layui-this">' + businessItem[1] + '电脑</li>' +
-                                '<li data-type="' + businessItem[0] + '" data-terminal="Phone">' + businessItem[1] + '手机</li>');
-                            $('#type').val(businessItem[0]);
-                            $('#terminalType').val('PC');
-                        }else {
-                            $('#tabItem').append(
-                                '<li data-type="' + businessItem[0] + '" data-terminal="PC">' + businessItem[1] + '电脑</li>' +
-                                '<li data-type="' + businessItem[0] + '" data-terminal="Phone">' + businessItem[1] + '手机</li>');
-                        }
-                        i++;
+                                '<li data-type="' + businessItem[0] + '" data-terminal="PC" lay-id="'+businessItem[0]+'PC">' + businessItem[1] + '电脑</li>' +
+                                '<li data-type="' + businessItem[0] + '" data-terminal="Phone" lay-id="'+businessItem[0]+'Phone">' + businessItem[1] + '手机</li>');
+
+
                     });
                     form.render("select");
+
+                    let keyTab = $('#type').val() + $('#terminalType').val();
+                    element.tabChange('keywordTab', keyTab);
                 }
             }
         });
@@ -365,7 +359,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
 
     function add_customer_keyword() {
         let customerUuid = $('#customerUuid').val();
-        let type = $('#typeTmp').val();
+        let type = $('#type').val();
         let terminalType = $('#terminalType').val();
         let data = {};
         data.customerUuid = customerUuid;
@@ -432,7 +426,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
 
     function download_keyword_url() {
         $("#customerUuidKU").val($("#customerUuid").val());
-        $("#terminalTypeKU").val($("#terminalTypeTmp").val());
+        $("#terminalTypeKU").val($("#terminalType").val());
         $("#keywordUrlForm").submit();
     }
 
