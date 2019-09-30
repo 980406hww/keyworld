@@ -1,5 +1,13 @@
 var sign = false;
 
+getHeight();
+
+function getHeight(){
+    let b = document.getElementById('customerBody');
+    let h = window.innerHeight || document.body.offsetHeight;
+    b.style.height = (h - 166) + 'px';
+}
+
 // layui相关
 layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function () {
     var element = layui.element;
