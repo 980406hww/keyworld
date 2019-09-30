@@ -3,7 +3,8 @@ let uuid_ = null;
 let layui_ = null;
 
 function initForm(data) {
-    uuid_ = data;
+    uuid_ = data.uuid;
+    document.getElementById('entryType').value = data.entryType;
     if (layui_ != null) {
         setForm(layui_, uuid_);
     }

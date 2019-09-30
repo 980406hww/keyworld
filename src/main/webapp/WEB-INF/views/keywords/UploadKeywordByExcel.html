@@ -11,10 +11,10 @@
 <div class="ok-body">
 
     <form class="layui-form layui-form-pane ok-form" enctype="multipart/form-data" id="uploadForm">
-        <input type="text" hidden value="<#if customerUuid?exists>${customerUuid}</#if>" id="customerUuid" name="customerUuid"/>
-        <input type="text" hidden value="<#if entry?exists>${entry}</#if>" id="entryType" name="entryType"/>
-        <input type="text" hidden value="<#if terminalType?exists>${terminalType}</#if>" id="terminalType" name="terminalType"/>
-        <input type="text" hidden value="<#if excelType?exists>${excelType}</#if>" id="excelType" name="excelType"/>
+        <input type="text" hidden value="" id="customerUuid" name="customerUuid"/>
+        <input type="text" hidden value="" id="entryType" name="entryType"/>
+        <input type="text" hidden value="" id="terminalType" name="terminalType"/>
+        <input type="text" hidden value="" id="excelType" name="excelType"/>
 
         <div class="layui-form-item">
             <div class="layui-upload">
@@ -32,8 +32,14 @@
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
-    var machineInfoType = null;
 
+    function initForm(data) {
+        console.log(data)
+        document.getElementById('customerUuid').value = data.customerUuid;
+        document.getElementById('entryType').value = data.type;
+        document.getElementById('terminalType').value = data.terminalType;
+        document.getElementById('excelType').value = data.excelType;
+    }
     layui.use(["form", "okLayer", "jquery", "layer", "upload"], function () {
         var form = layui.form;
         var okLayer = layui.okLayer;

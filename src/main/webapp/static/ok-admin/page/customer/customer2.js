@@ -17,7 +17,11 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     var okLayer = layui.okLayer;
     var laypage = layui.laypage;
 
-
+    $(window).resize(function(){
+        let b = document.getElementById('customerBody');
+        let h = window.innerHeight || document.body.offsetHeight;
+        b.style.height = (h - 166) + 'px';
+    });
     function formToJsonObject (form_id) {
         var formData = decodeURIComponent($("#" + form_id).serialize(), true);
         formData = formData.replace(/&/g, "\",\"");
@@ -31,7 +35,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     initLayPage(formToJsonObject('searchForm'));
 
     function initLayPage(pageConf) {
-        console.log(pageConf)
         if (!pageConf) {
             pageConf = {};
             pageConf.limit = 25;
@@ -85,9 +88,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             let item = '<div class="layui-col-md6 layui-col-sm6">' +
                 '   <div class="layadmin-contact-box">' +
                 '       <div class="layui-col-md5 layui-col-sm6">';
-            item += '           <h3 class="layadmin-title">' +
+            item += '           <h3 class="layadmin-title skip" title="'+obj.contactPerson+'">' +
                 '               <input type="checkbox" name="checkItem" value="' + obj.uuid + '" status="'+obj.status+'"lay-skin="primary" >' +
-                '               <strong>' + obj.contactPerson + '</strong>' +
+                '               <strong >' + obj.contactPerson + '</strong>' +
                 '           </h3>';
             item += '           <div class="layadmin-address">' +
                 '                   <strong>联系方式</strong>' +
@@ -267,9 +270,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         return false;
     });
 
-
-
-
     function show_layer_msg(msg, icon, title, status) {
         layer.msg(msg, {
             icon: icon,
@@ -382,7 +382,13 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
 
     // 添加客户
     window.toAddCustomer = function () {
-        okLayer.open("首页 / 客户列表 / 添加用户", "/internal/customer/toCustomersAdd", "60%", "90%", null, function () {
+        let entryType = $('#entryType').val();
+        let data = {};
+        data.uuid = null;
+        data.entryType = entryType;
+        okLayer.open("首页 / 客户列表 / 添加用户", "/internal/customer/toCustomersAdd", "60%", "90%", function(layero){
+            window[layero.find("iframe")[0]["name"]].initForm(data);
+        }, function () {
             if (sign) {
                 let pageConf = formToJsonObject('searchForm');
                 initLayPage(pageConf);
@@ -393,8 +399,12 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
 
     // 编辑表格获得表格数据
     window.editCustomer = function (uuid) {
+        let data = {};
+        let entryType = $('#entryType').val();
+        data.uuid = uuid;
+        data.entryType = entryType;
         okLayer.open("首页 / 客户列表 / 修改用户", "/internal/customer/toCustomersAdd", "60%", "90%", function (layero) {
-            window[layero.find("iframe")[0]["name"]].initForm(uuid);
+            window[layero.find("iframe")[0]["name"]].initForm(data);
         }, function () {
             if (sign) {
                 let pageConf = formToJsonObject('searchForm');

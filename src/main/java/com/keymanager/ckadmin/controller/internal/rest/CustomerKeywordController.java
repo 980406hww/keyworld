@@ -306,14 +306,10 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toCustomerKeywordAdd/{businessType}/{terminalType}/{customerUuid}")
-    public ModelAndView toCustomerKeywordAdd(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "customerUuid") Long customerUuid) {
+    @GetMapping(value = "/toCustomerKeywordAdd")
+    public ModelAndView toCustomerKeywordAdd() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/customerKeywordAdd");
-        mv.addObject("type", businessType);
-        mv.addObject("terminalType", terminalType);
-        mv.addObject("customerUuid", customerUuid);
         return mv;
     }
 
@@ -358,16 +354,10 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toUploadKeywords/{businessType}/{terminalType}/{customerUuid}/{excelType}")
-    public ModelAndView toUploadKeywords(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable("excelType") String excelType) {
+    @GetMapping(value = "/toUploadKeywords")
+    public ModelAndView toUploadKeywords() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/UploadKeywordByExcel");
-
-        mv.addObject("entry", businessType);
-        mv.addObject("terminalType", terminalType);
-        mv.addObject("customerUuid", customerUuid);
-        mv.addObject("excelType", excelType);
         return mv;
     }
 

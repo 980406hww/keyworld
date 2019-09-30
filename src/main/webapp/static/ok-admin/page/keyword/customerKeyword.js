@@ -367,8 +367,15 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         let customerUuid = $('#customerUuid').val();
         let type = $('#typeTmp').val();
         let terminalType = $('#terminalType').val();
-        let url = '/internal/customerKeyword/toCustomerKeywordAdd/' + type + '/' + terminalType + '/' + customerUuid;
-        okLayer.open("关键字管理 / 客户客户关键字 / 添加关键字", url, "60%", "90%", function (layero) { }, function () {
+        let data = {};
+        data.customerUuid = customerUuid;
+        data.type = type;
+        data.terminalType = terminalType;
+        data.uuid = null;
+        let url = '/internal/customerKeyword/toCustomerKeywordAdd';
+        okLayer.open("关键字管理 / 客户客户关键字 / 添加关键字", url, "60%", "90%", function (layero) {
+            window[layero.find("iframe")[0]["name"]].initForm(data);
+        }, function () {
             if (sign) {
                 active['reload'].call(this);
                 sign = false;
@@ -380,9 +387,16 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         let customerUuid = $('#customerUuid').val();
         let type = $('#type').val();
         let terminalType = $('#terminalType').val();
-        let url = '/internal/customerKeyword/toUploadKeywords/' + type + '/' + terminalType + '/' + customerUuid + '/' + excelType;
+        let data = {};
+        data.customerUuid = customerUuid;
+        data.type = type;
+        data.terminalType = terminalType;
+        data.excelType = excelType;
+        let url = '/internal/customerKeyword/toUploadKeywords';
         let msg = excelType === 'SuperUserSimple' ? '简化版' : '完整版';
-        okLayer.open("关键字管理 / 客户关键字 / Excel上传关键字(" + msg + ")", url, "30%", "25%", function (layero) { }, function () {
+        okLayer.open("关键字管理 / 客户关键字 / Excel上传关键字(" + msg + ")", url, "30%", "25%", function (layero) {
+            window[layero.find("iframe")[0]["name"]].initForm(data);
+        }, function () {
             if (sign) {
                 active['reload'].call(this);
                 sign = false;

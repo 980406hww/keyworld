@@ -155,7 +155,11 @@ html {
     box-shadow: 0 0 2px 2px hsla(0,0%,70%,.2);
 }
 
-
+.skip {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 
 /*分页*/
 #page_nav{
