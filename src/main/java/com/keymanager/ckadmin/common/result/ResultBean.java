@@ -14,12 +14,6 @@ public class ResultBean {
         this.data = data;
     }
 
-    public ResultBean(Integer code, String msg, String entryType) {
-        this.code = code;
-        this.msg = msg;
-        this.entryType = entryType;
-    }
-
     public ResultBean(Integer code, String msg, Object data) {
         this.code = code;
         this.msg = msg;

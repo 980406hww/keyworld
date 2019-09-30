@@ -3,19 +3,9 @@ let uuid_ = null;
 let layui_ = null;
 
 function initForm(data) {
-    uuid_ = data;
+    uuid_ = data.uuid;
+    document.getElementById('entryType').value = data.entryType;
     if (layui_ != null) {
-        let $ = layui.jquery;
-        let status_div = '<div class="layui-form-item" id="status_div">\n' +
-            '            <label class="layui-form-label">客户状态</label>\n' +
-            '            <div class="layui-input-block">\n' +
-            '                <select name="status">\n' +
-            '                    <option value="1" selected>激活</option>\n' +
-            '                    <option value="2">暂停</option>\n' +
-            '                </select>\n' +
-            '            </div>\n' +
-            '        </div>';
-        $("#type_div").after($(status_div));
         setForm(layui_, uuid_);
     }
 }
@@ -48,16 +38,6 @@ layui.use(["form", "okLayer", "jquery", "layer"], function () {
     let $ = layui.jquery;
 
     if (uuid_ !== null) {
-        let status_div = '<div class="layui-form-item" id="status_div">\n' +
-            '            <label class="layui-form-label">客户状态</label>\n' +
-            '            <div class="layui-input-block">\n' +
-            '                <select name="status">\n' +
-            '                    <option value="1" selected>激活</option>\n' +
-            '                    <option value="2">暂停</option>\n' +
-            '                </select>\n' +
-            '            </div>\n' +
-            '        </div>';
-        $("#type_div").after($(status_div));
         setForm(layui, uuid_);
     } else {
         layui_ = layui;
@@ -84,7 +64,6 @@ layui.use(["form", "okLayer", "jquery", "layer"], function () {
         }
 
         data.field.customerBusinessList = customerBusinessList;
-
         data.field.customerBusinessStr = customerBusinessStr;
         layer.confirm('确认保存？', {
             icon: 3,

@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * <p>
- * 算法测试任务表 服务实现接口
+ * 客户 服务实现接口
  * </p>
  *
  * @author lhc
@@ -16,9 +16,7 @@ import java.util.List;
  */
 public interface CustomerService extends IService<Customer> {
 
-
-    Page<Customer> searchCustomers(Page<Customer> page,
-        CustomerCriteria customerCriteria);
+    Page<Customer> searchCustomers(Page<Customer> page, CustomerCriteria customerCriteria);
 
     void saveCustomer(Customer customer, String loginName);
 
@@ -30,10 +28,19 @@ public interface CustomerService extends IService<Customer> {
 
     void changeCustomerDailyReportIdentify(long uuid, int identify);
 
-    Customer getCustomerWithKeywordCount(String terminalType, String entryType, long customerUuid,
-        String loginName);
+    Customer getCustomerWithKeywordCount(String terminalType, String entryType, long customerUuid, String loginName);
 
     List<Customer> getActiveCustomerSimpleInfo(CustomerCriteria customerCriteria);
 
     Customer getCustomer(Long customerUuid);
+
+    Customer getCustomerByCustomerUuid(String terminalType, String businessType, Long customerUuid);
+
+    List<Long> getActiveDailyReportIdentifyCustomerUuids(String userID);
+
+    List<String> getActiveDailyReportIdentifyUserIDs();
+
+    void changeSaleRemark(Long uuid, String saleRemark);
+
+    void changeRemark(Long uuid, String remark);
 }

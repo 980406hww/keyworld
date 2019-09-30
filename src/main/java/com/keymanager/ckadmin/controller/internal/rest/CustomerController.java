@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.UserInfo;
@@ -10,13 +11,17 @@ import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.util.ReflectUtils;
 import com.keymanager.ckadmin.util.SQLFilterUtils;
+import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.util.TerminalTypeMapping;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +38,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @RestController
 @RequestMapping("/internal/customer")
-public class CustomerController {
+public class CustomerController extends SpringMVCBaseController {
 
     private Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
@@ -62,8 +67,7 @@ public class CustomerController {
 
     @RequiresPermissions("/internal/customer/searchCustomers")
     @PostMapping(value = "/getCustomers")
-    public ResultBean getCustomers(HttpServletRequest request,
-        @RequestBody CustomerCriteria customerCriteria) {
+    public ResultBean getCustomers(@RequestBody CustomerCriteria customerCriteria) {
         ResultBean resultBean = new ResultBean();
         if (SQLFilterUtils.sqlInject(customerCriteria.toString())) {
             resultBean.setCode(400);
@@ -71,14 +75,17 @@ public class CustomerController {
             return resultBean;
         }
         try {
-            HttpSession session = request.getSession();
-//            String entryType = (String) session.getAttribute("entryType");
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
-//            customerCriteria.setEntryType(entryType);
-            customerCriteria.setTerminalType(terminalType);
+            ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
+            Set<String> roles = shiroUser.getRoles();
+            List<String> roleTypes = new ArrayList<>();
+            if (roles.contains("SEOSales")){
+                roleTypes.add("SEOSales");
+            }else if (roles.contains("NegativeSales")){
+                roleTypes.add("NegativeSales");
+            }
+            customerCriteria.setRoleTypes(roleTypes);
             Page<Customer> page = new Page<>(customerCriteria.getPage(), customerCriteria.getLimit());
-            String orderByField = ReflectUtils
-                .getTableFieldValue(Customer.class, customerCriteria.getOrderBy());
+            String orderByField = ReflectUtils.getTableFieldValue(Customer.class, customerCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {
                 page.setOrderByField(orderByField);
             }
@@ -88,7 +95,6 @@ public class CustomerController {
             page = customerService.searchCustomers(page, customerCriteria);
             List<Customer> customers = page.getRecords();
             resultBean.setCode(0);
-//            resultBean.setEntryType(entryType);
             resultBean.setCount(page.getTotal());
             resultBean.setMsg("");
             resultBean.setData(customers);
@@ -136,8 +142,7 @@ public class CustomerController {
             String entryType = (String) session.getAttribute("entryType");
             String loginName = (String) session.getAttribute("username");
             String terminalType = TerminalTypeMapping.getTerminalType(request);
-            Customer customer = customerService
-                .getCustomerWithKeywordCount(terminalType, entryType, uuid, loginName);
+            Customer customer = customerService.getCustomerWithKeywordCount(terminalType, entryType, uuid, loginName);
             if (customer != null) {
                 resultBean.setCode(200);
                 resultBean.setData(customer);
@@ -237,6 +242,62 @@ public class CustomerController {
             long uuid = Long.valueOf((String) requestMap.get("customerUuid"));
             int identify = Integer.valueOf((String) requestMap.get("identify"));
             customerService.changeCustomerDailyReportIdentify(uuid, identify);
+            return new ResultBean(200, "更新成功");
+        } catch (NumberFormatException e) {
+            logger.error(e.getMessage());
+            return new ResultBean(400, "更新失败");
+        }
+    }
+
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @GetMapping(value = "/getActiveCustomers2")
+    public ResultBean getActiveCustomers(CustomerCriteria customerCriteria, HttpSession session) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            Set<String> roles = getCurrentUser().getRoles();
+            if (!roles.contains("DepartmentManager")) {
+                String loginName = (String) session.getAttribute("username");
+                customerCriteria.setLoginName(loginName);
+            }
+            List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
+            resultBean.setData(customerList);
+            return resultBean;
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultBean.setCode(400);
+            resultBean.setMsg("error");
+            return resultBean;
+        }
+    }
+
+
+    /**
+     * 改变客户标签
+     */
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @PostMapping(value = "/changeSaleRemark2")
+    public ResultBean changeSaleRemark2(@RequestBody Map requestMap) {
+        try {
+            long uuid = Long.parseLong((String) requestMap.get("uuid"));
+            String saleRemark = (String) requestMap.get("saleRemark");
+            customerService.changeSaleRemark(uuid, saleRemark);
+            return new ResultBean(200, "更新成功");
+        } catch (NumberFormatException e) {
+            logger.error(e.getMessage());
+            return new ResultBean(400, "更新失败");
+        }
+    }
+
+    /**
+     * 改变销售详细备注
+     */
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @PostMapping(value = "/changeRemark2")
+    public ResultBean changeRemark2(@RequestBody Map requestMap) {
+        try {
+            long uuid = Long.parseLong((String) requestMap.get("uuid"));
+            String remark = (String) requestMap.get("remark");
+            customerService.changeRemark(uuid, remark);
             return new ResultBean(200, "更新成功");
         } catch (NumberFormatException e) {
             logger.error(e.getMessage());

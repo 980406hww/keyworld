@@ -1,5 +1,13 @@
 var sign = false;
 
+getHeight();
+
+function getHeight(){
+    let b = document.getElementById('customerBody');
+    let h = window.innerHeight || document.body.offsetHeight;
+    b.style.height = (h - 166) + 'px';
+}
+
 // layui相关
 layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function () {
     var element = layui.element;
@@ -9,7 +17,22 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     var okLayer = layui.okLayer;
     var laypage = layui.laypage;
 
-    initLayPage();
+    $(window).resize(function(){
+        let b = document.getElementById('customerBody');
+        let h = window.innerHeight || document.body.offsetHeight;
+        b.style.height = (h - 166) + 'px';
+    });
+    function formToJsonObject (form_id) {
+        var formData = decodeURIComponent($("#" + form_id).serialize(), true);
+        formData = formData.replace(/&/g, "\",\"");
+        formData = formData.replace(/=/g, "\":\"");
+        formData = "{\"" + formData + "\"}";
+        formData = $.parseJSON(formData);
+        return formData;
+    }
+
+    init_keyword_type();
+    initLayPage(formToJsonObject('searchForm'));
 
     function initLayPage(pageConf) {
         if (!pageConf) {
@@ -65,10 +88,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             let item = '<div class="layui-col-md6 layui-col-sm6">' +
                 '   <div class="layadmin-contact-box">' +
                 '       <div class="layui-col-md5 layui-col-sm6">';
-            item += '           <h3 class="layadmin-title">' +
+            item += '           <h3 class="layadmin-title skip" title="'+obj.contactPerson+'">' +
                 '               <input type="checkbox" name="checkItem" value="' + obj.uuid + '" status="'+obj.status+'"lay-skin="primary" >' +
-                '               <strong>' + obj.contactPerson + '</strong>' + '<i class="layui-icon layui-icon-right"></i> ' +
-                obj.type +
+                '               <strong >' + obj.contactPerson + '</strong>' +
                 '           </h3>';
             item += '           <div class="layadmin-address">' +
                 '                   <strong>联系方式</strong>' +
@@ -81,13 +103,15 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                 '               </div>';
             item += '           <div class="layadmin-address other_info">' +
                 '                   <strong>其他信息</strong>' +
-                '                   <p class="skip" title="'+obj.remark+'">客户状态:' + generate_customer_status(obj.status) +'</p>' +
-                '                   <p class="skip" title="'+obj.remark+'">是否产生日报表:<span id="dr'+obj.uuid+'">' + generate_customer_daily_report(obj.uuid, obj.status, obj.dailyReportIdentify) + '</span></p>' +
+                '                   <p class="skip" >客户类型:' + obj.type +'</p>' +
+                '                   <p class="skip" >所属用户:' + obj.loginName +'</p>' +
+                '                   <p class="skip" >客户状态:' + generate_customer_status(obj.status) +'</p>' +
+                '                   <p class="skip" >是否产生日报表:<span id="dr'+obj.uuid+'">' + generate_customer_daily_report(obj.uuid, obj.status, obj.dailyReportIdentify) + '</span></p>' +
                 '               </div>';
             item += '           <div class="layadmin-address ">' +
                 '                   <strong>备注</strong>' +
-                '                   <p class="skip" title="'+obj.remark+'">销售备注:' + obj.saleRemark + '</p>' +
-                '                   <p class="skip" title="'+obj.remark+'">备注:' + obj.remark + '</p>' +
+                '                   <p class="skip" title="'+obj.saleRemark+'" onclick=changeSaleRemark("'+obj.uuid+'","'+obj.saleRemark+'") >客户标签:<span id="saleRemark'+obj.uuid+'">' + obj.saleRemark + '</span></p>' +
+                '                   <p class="skip" title="'+obj.remark+'" onclick=changeRemark("'+obj.uuid+'","'+obj.remark+'") >销售详细备注:<span id="remark'+obj.uuid+'">' + obj.remark + '</span></p>' +
                 '               </div>' +
                 '       </div>';
             item += '   <div class="layui-col-md6  layui-col-sm6">' +
@@ -187,12 +211,39 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         })
     }
 
-    function formToJson(data) {
-        data = data.replace(/&/g, "\",\"");
-        data = data.replace(/=/g, "\":\"");
-        data = "{\"" + data + "\"}";
-        return data;
+    function init_keyword_type() {
+        $.ajax({
+            url: '/internal/common/getBusinessTypeByUserRole',
+            dataType: 'json',
+            async: false,
+            type: 'get',
+            success: function (res) {
+                if (res.code === 200) {
+                    let i = 0;
+                    $.each(res.data, function (index, item) {
+                        let businessItem = item.split("#");
+                        if (i === 0) {
+                            $('#tabItem').append(
+                                '<li data-entrytype="' + businessItem[0] + '" data-terminal="PC" class="layui-this">' + businessItem[1] + '</li>' );
+                            $('#entryType').val(businessItem[0]);
+                        }else {
+                            $('#tabItem').append(
+                                '<li data-entrytype="' + businessItem[0] + '" data-terminal="PC">' + businessItem[1] + '</li>' );
+                        }
+                        i++;
+                    });
+                    form.render("select");
+
+                }
+            }
+        });
     }
+
+    element.on('tab(customerTab)', function (data) {
+        let d = data.elem.context.dataset;
+        $('#entryType').val(d.entrytype);
+        initLayPage(formToJsonObject('searchForm'));
+    });
 
     form.on('checkbox(checkAll)', function (data) {
         if ($(this)[0].checked) {
@@ -227,9 +278,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             time: 2000,
             isOutAnim: false
         }, function () {
-            if (status) {
-                active['reload'].call(this);
-            }
+
         });
     }
 
@@ -253,8 +302,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         return uuidArr;
     }
 
-
-
     //删除单个客户
     window.delOneCustomer = function (uuid) {
         layer.confirm('真的删除该客户吗', function (index) {
@@ -277,7 +324,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                             icon: 6,
                             time: 2000 //2秒关闭（如果不配置，默认是3秒）
                         }, function () {
-                            let pageConf = $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
+                            let pageConf = formToJsonObject('searchForm');
                             initLayPage(pageConf)
                         });
                     } else {
@@ -318,7 +365,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                             icon: 6,
                             time: 2000
                         }, function () {
-                            let pageConf = $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
+                            let pageConf = formToJsonObject('searchForm');
                             initLayPage(pageConf)
                         });
                     } else {
@@ -335,9 +382,15 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
 
     // 添加客户
     window.toAddCustomer = function () {
-        okLayer.open("首页 / 客户列表 / 添加用户", "/internal/customer/toCustomersAdd", "60%", "90%", null, function () {
+        let entryType = $('#entryType').val();
+        let data = {};
+        data.uuid = null;
+        data.entryType = entryType;
+        okLayer.open("首页 / 客户列表 / 添加用户", "/internal/customer/toCustomersAdd", "60%", "90%", function(layero){
+            window[layero.find("iframe")[0]["name"]].initForm(data);
+        }, function () {
             if (sign) {
-                let pageConf = $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
+                let pageConf = formToJsonObject('searchForm');
                 initLayPage(pageConf);
                 sign = false;
             }
@@ -346,11 +399,15 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
 
     // 编辑表格获得表格数据
     window.editCustomer = function (uuid) {
+        let data = {};
+        let entryType = $('#entryType').val();
+        data.uuid = uuid;
+        data.entryType = entryType;
         okLayer.open("首页 / 客户列表 / 修改用户", "/internal/customer/toCustomersAdd", "60%", "90%", function (layero) {
-            window[layero.find("iframe")[0]["name"]].initForm(uuid);
+            window[layero.find("iframe")[0]["name"]].initForm(data);
         }, function () {
             if (sign) {
-                let pageConf = $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
+                let pageConf = formToJsonObject('searchForm');
                 initLayPage(pageConf);
                 sign = false;
             }
@@ -383,7 +440,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                             icon: 6,
                             time: 1000
                         },function () {
-                            let pageConf = $.parseJSON(formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
+                            let pageConf = formToJsonObject('searchForm');
                             initLayPage(pageConf);
                         });
                     } else {
@@ -405,31 +462,30 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             layer.msg('请激活客户', {icon: 5});
             return;
         }
-        layer.confirm("确定更新客户日报表状态吗", {icon: 3, title: '更新日报表状态'}, function (index) {
-            var postData = {};
-            postData.customerUuid = uuid;
-            postData.identify = newIdentify;
-            $.ajax({
-                url: '/internal/customer/changeCustomerDailyReportIdentify2',
-                type: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                data: JSON.stringify(postData),
-                success: function (result) {
-                    if (result.code === 200) {
-                        layer.msg('操作成功', {icon: 6, time:1000});
-                        $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, newIdentify))
-                    }
-                },
-                error: function () {
-                    layer.msg('操作失败', {icon: 5, time:1000});
-                    $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, oldIdentify))
+
+        var postData = {};
+        postData.customerUuid = uuid;
+        postData.identify = newIdentify;
+        $.ajax({
+            url: '/internal/customer/changeCustomerDailyReportIdentify2',
+            type: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(postData),
+            success: function (result) {
+                if (result.code === 200) {
+                    layer.msg('操作成功', {icon: 6, time:1000});
+                    $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, newIdentify))
                 }
-            });
-            layer.close(index);
+            },
+            error: function () {
+                layer.msg('操作失败', {icon: 5, time:1000});
+                $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, oldIdentify))
+            }
         });
+
     };
 
     //触发所选客户日报表
@@ -469,6 +525,88 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         });
     }
 
+    //改客户标签
+    window.changeSaleRemark = function (uuid, saleRemark) {
+        layer.prompt({
+            formType: 3,
+            value: saleRemark,
+            title: '客户标签',
+            yes: function (index, layero) {
+                var index2 = index;
+                var value = layero.find(".layui-layer-input").val();
+                var postData = {};
+                postData.uuid = uuid;
+                postData.saleRemark = value;
+                $.ajax({
+                    url: '/internal/customer/changeSaleRemark2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6);
+                            $('#saleRemark'+uuid).text(value);
+                            $('#saleRemark'+uuid).parent().attr("title",value);
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
+                });
+                layer.close(index2);
+                // });
+
+            }
+        });
+    }
+
+    //改客户标签
+    window.changeRemark = function (uuid, remark) {
+        layer.prompt({
+            formType: 2,
+            value: remark,
+            title: '销售详细备注',
+            yes: function (index, layero) {
+                var index2 = index;
+                var value = layero.find(".layui-layer-input").val();
+                var postData = {};
+                postData.uuid = uuid;
+                postData.remark = value;
+                $.ajax({
+                    url: '/internal/customer/changeRemark2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6);
+                            $('#remark'+uuid).text(value);
+                            $('#remark'+uuid).parent().attr("title",value);
+
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
+                });
+                layer.close(index2);
+                // });
+
+            }
+        });
+    }
 });
 
 let open = true;

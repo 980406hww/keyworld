@@ -23,8 +23,7 @@
         c.fCreateTime AS `createTime`
     </sql>
 
-    <select id="searchCustomers" parameterType="com.keymanager.ckadmin.criteria.CustomerCriteria"
-            resultType="com.keymanager.ckadmin.entity.Customer">
+    <select id="searchCustomers" parameterType="com.keymanager.ckadmin.criteria.CustomerCriteria" resultType="com.keymanager.ckadmin.entity.Customer">
         SELECT
         <include refid="colID"/>
         FROM t_customer c
@@ -47,11 +46,28 @@
         <if test="customerCriteria.loginName != null and customerCriteria.loginName != ''">
             AND c.fUserID  = #{customerCriteria.loginName}
         </if>
+        <if test="customerCriteria.entryType != null and customerCriteria.entryType != ''">
+            AND c.fEntryType  = #{customerCriteria.entryType}
+        </if>
         <if test="customerCriteria.status != null and customerCriteria.status != ''">
             AND c.fStatus = #{customerCriteria.status}
         </if>
-        <if test="customerCriteria.remark != null and customerCriteria.remark != ''">AND c.fRemark
-            LIKE CONCAT(#{customerCriteria.remark},'%')
+        <if test="customerCriteria.remark != null and customerCriteria.remark != ''">
+            AND c.fRemark LIKE CONCAT(#{customerCriteria.remark},'%')
+        </if>
+        <if test="customerCriteria.saleRemark != null and customerCriteria.saleRemark != ''">
+            AND c.fSaleRemark LIKE CONCAT(#{customerCriteria.saleRemark},'%')
+        </if>
+
+        <if test="customerCriteria.roleTypes != null and customerCriteria.roleTypes.size() > 0">
+            AND c.fUserID IN(
+            SELECT fLoginName FROM t_userinfo WHERE fUuid IN(
+                SELECT fUserID FROM t_user_role WHERE fRoleID = (
+                    SELECT fUuid FROM t_role WHERE fRoleName IN
+                        <foreach item="item" index="index" collection="customerCriteria.roleTypes" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+            )))
         </if>
     </select>
 
@@ -106,4 +122,37 @@
     <select id="lastInsertID" resultType="java.lang.Long">
         SELECT LAST_INSERT_ID()
     </select>
+
+    <select id="getCustomerByCustomerUuid" resultType="com.keymanager.ckadmin.entity.Customer">
+        SELECT fContactPerson AS 'contactPerson'
+        FROM t_customer
+        WHERE fUuid = #{customerUuid}
+    </select>
+
+    <select id="getActiveDailyReportIdentifyCustomerUuids" resultType="java.lang.Long">
+        SELECT c.fUuid
+        FROM t_customer c
+        WHERE c.fStatus = 1
+        AND c.fDailyReportIdentify = 1
+        <if test="userID != null and userID != ''"> AND c.fUserID = #{userID}</if>
+    </select>
+
+    <select id="getActiveDailyReportIdentifyUserIDs" resultType="java.lang.String">
+        SELECT DISTINCT c.fUserID
+        FROM t_customer c
+        WHERE c.fStatus = 1
+          AND c.fDailyReportIdentify = 1
+    </select>
+
+    <update id="changeSaleRemark">
+        UPDATE t_customer
+        SET fUpdateTime = NOW(), fSaleRemark = #{saleRemark}
+        WHERE fUuid = #{uuid}
+    </update>
+
+    <update id="changeRemark">
+        UPDATE t_customer
+        SET fUpdateTime = NOW(), fRemark = #{remark}
+        WHERE fUuid = #{uuid}
+    </update>
 </mapper>

@@ -1,0 +1,49 @@
+
+
+.layui-table-cell {
+    display: table-cell;
+    padding: 0 5px;
+    vertical-align: middle;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    word-break:break-all;
+}
+
+.details-header{
+    padding-right: 9px;
+}
+
+.my-opration-hide {
+    padding: 10px 10px 5px 15px;
+    /*width: 88%;*/
+    display: none;
+    position: absolute;
+    top: 51px;
+    left: 0;
+    z-index: 894;
+    background: #fff;
+    border-top: 1px #e6e6e6 solid;
+    border-bottom: 1px #e6e6e6 solid;
+    transition: visibility .6s;
+}
+
+.my-opration-hide .layui-btn-group {
+    margin: 0 10px 5px 0;
+}
+
+#searchEngineDiv .layui-unselect dl { max-height:20px; }
+
+table a:link{color:blue;}
+
+table  a:visited{color:purple;}
+
+table  a:hover{color:red;}
+
+table  a:active{color:darkslateblue;}
+
+.layui-table-page > div {
+    height: 26px;
+    position: fixed;
+    right: 25px;
+}

@@ -1,6 +1,7 @@
 package com.keymanager.ckadmin.criteria;
 
 import com.keymanager.ckadmin.criteria.base.BaseCriteria;
+import java.util.List;
 
 /**
  * @ClassName CustomerCriteria
@@ -16,10 +17,12 @@ public class CustomerCriteria extends BaseCriteria {
     private String wechat;
     private String telphone;
     private String loginName;
+    private String saleRemark;
     private String remark;
     private String entryType;
     private Integer status;
     private String terminalType;
+    private List<String> roleTypes;
 
     public String getContactPerson() {
         return contactPerson;
@@ -99,5 +102,21 @@ public class CustomerCriteria extends BaseCriteria {
 
     public void setWechat(String wechat) {
         this.wechat = wechat;
+    }
+
+    public String getSaleRemark() {
+        return saleRemark;
+    }
+
+    public void setSaleRemark(String saleRemark) {
+        this.saleRemark = saleRemark;
+    }
+
+    public List<String> getRoleTypes() {
+        return roleTypes;
+    }
+
+    public void setRoleTypes(List<String> roleTypes) {
+        this.roleTypes = roleTypes;
     }
 }

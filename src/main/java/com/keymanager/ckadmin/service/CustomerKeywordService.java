@@ -1,11 +1,18 @@
 package com.keymanager.ckadmin.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
+import com.keymanager.ckadmin.criteria.CustomerKeywordCleanTitleCriteria;
+import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
+import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
+
+import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
+import java.io.InputStream;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import java.util.List;
 import java.util.Map;
@@ -45,4 +52,48 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     KeywordCountVO getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String terminalType);
 
     void resetInvalidRefreshCount(RefreshStatisticsCriteria criteria);
+
+    Page<CustomerKeyword> searchKeywords(Page<CustomerKeyword> page, KeywordCriteria keywordCriteria);
+
+    void updateCustomerKeywordStatus(List<Long> customerKeywordUuids, Integer status);
+
+    void updateOptimizeGroupName(KeywordCriteria keywordCriteria);
+
+    void updateMachineGroup(KeywordCriteria keywordCriteria);
+
+    void updateBearPawNumber(KeywordCriteria keywordCriteria);
+
+    void deleteCustomerKeywordsByDeleteType(KeywordCriteria keywordCriteria);
+
+    Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, KeywordCriteria keywordCriteria);
+
+    void saveCustomerKeyword(CustomerKeyword customerKeyword, String userName);
+
+    void updateCustomerKeywordFromUI(CustomerKeyword customerKeyword, String userName);
+
+    void updateOptimizePlanCount(KeywordCriteria keywordCriteria);
+
+    boolean handleExcel(InputStream inputStream, String excelType, int parseInt, String entry, String terminalType, String userName) throws Exception;
+
+    List<CustomerKeyword> searchCustomerKeywordsForDailyReport(KeywordCriteria keywordCriteria);
+
+    List<String> getGroups(List<Long> customerUuids);
+
+    List<Long> getCustomerUuids(String entryType, String terminalType);
+
+    List<CustomerKeyword> searchCustomerKeywordInfo(KeywordCriteria keywordCriteria);
+
+    List<Map> searchAllKeywordAndUrl(Long customerUuid, String terminalType);
+
+    void updateSearchEngine(KeywordCriteria keywordCriteria);
+
+    void changeCustomerKeywordStatusInCKPage(CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria);
+
+    void cleanTitle(CustomerKeywordCleanTitleCriteria customerKeywordCleanTitleCriteria);
+
+    void deleteDuplicateKeywords(CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria);
+
+    CustomerKeyword getKeywordInfoByUuid(Long uuid);
+
+    void batchUpdateKeywords(KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO);
 }

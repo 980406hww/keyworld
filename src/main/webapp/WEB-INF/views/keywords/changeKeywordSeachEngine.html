@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>导入关键字</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <style>
+        .layui-form-select dl { max-height:150px; }
+    </style>
+</head>
+<body>
+<div class="ok-body">
+
+    <form class="layui-form layui-form-pane ok-form"  id="uploadForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">搜索引擎</label>
+            <div class="layui-input-block">
+                <select name="searchEngine" id="searchEngine" lay-search lay-verify="required">
+
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" id="save">保存</button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script>
+    let layui_ = null;
+    var postData = null;
+    function initForm(data){
+        postData = data;
+        if (layui_ != null){
+            init_searchEngine(layui_, postData)
+        }
+    }
+
+    function init_searchEngine(layui_, postData) {
+        var $ = layui_.jquery;
+        var form = layui_.form;
+        $.ajax({
+            url: '/internal/common/getSearchEngines',
+            dataType: 'json',
+            type: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({'terminalType': 'All'}),
+            success: function (data) {
+                if (data.code===200){
+                    $("#searchEngine").empty();
+                    $.each(data.data, function (index, item) {
+                        $('#searchEngine').append(
+                            '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
+                    });
+
+                    $("#searchEngine").val('百度');
+
+
+                    form.render("select");
+                }
+
+            }
+        });
+    }
+
+    layui.use(["form", "okLayer", "jquery", "layer", ], function () {
+        var form = layui.form;
+        var okLayer = layui.okLayer;
+        var $ = layui.jquery;
+
+        if (postData != null){
+            init_searchEngine(layui, postData)
+        }else {
+            layui_ = layui;
+        }
+
+        $('#save').click(function () {
+            postData.targetSearchEngine = $("#searchEngine").val();
+            $.ajax({
+                url: '/internal/customerKeyword/updateSearchEngine2',
+                type: 'post',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        okLayer.msg.greenTick("更新成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        layui.layer.msg(res.msg);
+                    }
+
+                }
+            });
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

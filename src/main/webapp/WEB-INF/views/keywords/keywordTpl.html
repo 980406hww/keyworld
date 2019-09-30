@@ -1,0 +1,104 @@
+
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+    <div class="layui-btn-group">
+        <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+        <button class="layui-btn layui-btn-sm" id="pause_keyword" lay-event="pause_keyword">
+            暂停
+        </button>
+        <button class="layui-btn layui-btn-sm" id="down_keyword" lay-event="down_keyword">
+            下架
+        </button>
+        <button class="layui-btn layui-btn-sm" id="active_keyword" lay-event="active_keyword">
+            激活
+        </button>
+    </@shiro.hasPermission>
+    </div>
+    <div class="layui-btn-group">
+        <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
+        <button class="layui-btn layui-btn-sm" id="change_selected_optimizedGroup" lay-event="change_selected_optimizedGroup">
+            修改选中优化组
+        </button>
+    </@shiro.hasPermission>
+    </div>
+    <div class="layui-btn-group">
+        <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordMachineGroup">
+
+        <button class="layui-btn layui-btn-sm" id="change_selected_machineGroup" lay-event="change_selected_machineGroup">
+            修改选中机器分组
+        </button>
+    </@shiro.hasPermission>
+    </div>
+    <div class="layui-btn-group">
+        <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
+
+        <button class="layui-btn layui-btn-sm" id="change_selected_bearPawNumber" lay-event="change_selected_bearPawNumber">
+            修改选中熊掌号
+        </button>
+    </@shiro.hasPermission>
+    </div>
+    <div class="layui-btn-group">
+        <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
+        <!--<button class="layui-btn layui-btn-sm" id="batch_modify" lay-event="batch_modify">
+            批量修改
+        </button>-->
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+    <button class="layui-btn layui-btn-sm layui-btn-danger" id="batch_delete" lay-event="batch_delete">
+        批量删除
+    </button>
+    </@shiro.hasPermission>
+    </div>
+</script>
+<!--模板-->
+<script type="text/html" id="toDateTime">
+    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+</script>
+
+<script type="text/html" id="statusTpl">
+    {{#  if(d.status === 1) { }}
+    <span style="color: green;">激活</span>
+    {{#  }else if(d.status === 2) { }}
+    <span style="color: blue;">新增</span>
+    {{#  }else if(d.status === 3) { }}
+    <span style="color: grey;">下架</span>
+    {{# }else{ }}
+    <span style="color: red;">暂停</span>
+    {{# } }}
+</script>
+
+<script type="text/html" id="indexCountTpl">
+    {{#  if(d.currentIndexCount === -1) { }}
+    未采集
+    {{#  }else if(d.currentIndexCount === -2) { }}
+    未收录
+    {{# }else{ }}
+    {{= d.currentIndexCount }}
+    {{# } }}
+</script>
+
+<script type="text/html" id="collectMethodTpl">
+    {{#  if(d.collectMethod === 'PerDay') { }}
+    按天
+    {{# }else if(d.collectMethod === 'PerTenDay'){ }}
+    十天
+    {{# }else if(d.collectMethod === 'PerSevenDay'){ }}
+    七天
+    {{#  }else{ }}
+    按月
+    {{# } }}
+</script>
+
+
+<script type="text/html" id="toCustomerKeywordTpl">
+    <a href="javascript:void(0)" onclick="toCustomerKeyword('{{d.customerUuid}}','{{d.contactPerson}}')">{{d.contactPerson}}</a>
+</script>
+
+<script type="text/html" id="operationTpl">
+    <@shiro.hasPermission name="/internal/customer/saveCustomer">
+    <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/customer/delCustomer">
+    <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+    </@shiro.hasPermission>
+</script>

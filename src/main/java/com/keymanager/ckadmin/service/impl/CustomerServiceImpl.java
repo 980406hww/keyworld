@@ -1,17 +1,13 @@
 package com.keymanager.ckadmin.service.impl;
 
-
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.dao.CustomerDao;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.service.CustomerBusinessService;
-import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
-
 import com.keymanager.ckadmin.service.CustomerService;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -19,14 +15,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
-
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 /**
  * <p>
- * 算法测试任务表 服务实现类
+ * 客户 服务实现类
  * </p>
  *
  * @author lhc
@@ -49,7 +43,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     public Page<Customer> searchCustomers(Page<Customer> page, CustomerCriteria customerCriteria) {
         List<Customer> customerList = customerDao.searchCustomers(page, customerCriteria);
         if (CollectionUtils.isNotEmpty(customerList)) {
-            List<Long> customerUuids = new ArrayList<Long>();
+            List<Long> customerUuids = new ArrayList<>();
             for (Customer customer : customerList) {
                 customerUuids.add(customer.getUuid());
             }
@@ -112,8 +106,8 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
             oldCustomer.setAlipay(customer.getAlipay());
             oldCustomer.setPaidFee(customer.getPaidFee());
             oldCustomer.setRemark(customer.getRemark());
-//            oldCustomer.setType(customer.getType());
-            oldCustomer.setStatus(customer.getStatus());
+            oldCustomer.setType(customer.getType());
+//            oldCustomer.setStatus(customer.getStatus());
             oldCustomer.setDailyReportIdentify(customer.getDailyReportIdentify());
             oldCustomer.setLoginName(customer.getLoginName());
 //            oldCustomer.setEntryType(customer.getEntryType());
@@ -125,7 +119,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     @Override
     public void deleteAll(List<String> uuids) {
         for (String uuid : uuids) {
-            deleteCustomer(Long.valueOf(uuid));
+            deleteCustomer(Long.parseLong(uuid));
         }
     }
 
@@ -172,5 +166,32 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     @Override
     public Customer getCustomer(Long customerUuid) {
         return customerDao.selectById(customerUuid);
+    }
+
+    @Override
+    public Customer getCustomerByCustomerUuid(String terminalType, String businessType, Long customerUuid) {
+        Customer customer = customerDao.getCustomerByCustomerUuid(customerUuid);
+//        customer.setKeywordCount(customerKeywordService.getCustomerKeywordCount(terminalType, businessType, customerUuid));
+        return customer;
+    }
+
+    @Override
+    public List<Long> getActiveDailyReportIdentifyCustomerUuids(String userID) {
+        return customerDao.getActiveDailyReportIdentifyCustomerUuids(userID);
+    }
+
+    @Override
+    public List<String> getActiveDailyReportIdentifyUserIDs() {
+        return customerDao.getActiveDailyReportIdentifyUserIDs();
+    }
+
+    @Override
+    public void changeSaleRemark(Long uuid, String saleRemark) {
+        customerDao.changeSaleRemark(uuid, saleRemark);
+    }
+
+    @Override
+    public void changeRemark(Long uuid, String remark) {
+        customerDao.changeRemark(uuid, remark);
     }
 }

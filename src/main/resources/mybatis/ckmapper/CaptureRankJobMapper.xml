@@ -46,4 +46,26 @@
         AND crj.fOperationType = #{operationType}
         LIMIT 1
     </select>
+
+    <select id="hasUncompletedCaptureRankJob" resultType="Long">
+        SELECT
+        1
+        FROM t_capture_rank_job c
+        WHERE (
+        c.fExectionStatus = 'New'
+        OR (c.fExectionStatus = 'Complete'
+        AND c.fExectionType = 'Everyday'
+        AND c.fLastExecutionDate &lt; curdate())
+        )
+        <if test="rankJobArea != null">
+            AND fRankJobArea = #{rankJobArea}
+        </if>
+        AND c.fCaptureRankJobStatus = 1
+        <if test="groupNames!=null"> and c.fGroupNames IN
+            <foreach collection="groupNames" item="groupName" open="(" separator="," close=")">
+                #{groupName}
+            </foreach>
+        </if>
+        LIMIT 1
+    </select>
 </mapper>

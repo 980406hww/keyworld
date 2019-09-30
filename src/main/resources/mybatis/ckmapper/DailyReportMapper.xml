@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.DailyReportDao">
+
+    <select id="findByStatus" resultType="com.keymanager.ckadmin.entity.DailyReport">
+        SELECT
+          dr.fUuid         AS 'uuid',
+          dr.fTerminalType AS 'terminalType',
+          dr.fTriggerTime  AS 'triggerTime',
+          dr.fCompleteTime AS 'completeTime',
+          dr.fStatus       AS 'status',
+          dr.fReportPath   AS 'reportPath',
+          dr.fUpdateTime   AS 'updateTime',
+          dr.fCreateTime   AS 'createTime'
+        FROM t_daily_report dr
+        WHERE dr.fStatus = #{status}
+        limit 1
+    </select>
+
+    <select id="searchCurrentDateCompletedReports" resultType="com.keymanager.ckadmin.entity.DailyReport">
+        SELECT
+          dr.fUuid         AS 'uuid',
+          dr.fTerminalType AS 'terminalType',
+          dr.fTriggerTime  AS 'triggerTime',
+          dr.fCompleteTime AS 'completeTime',
+          dr.fStatus       AS 'status',
+          dr.fReportPath   AS 'reportPath',
+          dr.fUpdateTime   AS 'updateTime',
+          dr.fCreateTime   AS 'createTime'
+        FROM t_daily_report dr
+        WHERE dr.fStatus = 'Completed'
+        AND dr.fCompleteTime > CURRENT_DATE()
+        <if test="userName != null and userName != ''">AND dr.fUserID = #{userName}</if>
+    </select>
+
+    <select id="selectLastId" resultType="long">
+        select LAST_INSERT_ID()
+    </select>
+
+    <delete id="deleteDailyReportFromAWeekAgo">
+        DELETE FROM t_daily_report WHERE fCreateTime &lt; DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+    </delete>
+
+    <select id="fetchDailyReportTriggeredInToday" resultType="com.keymanager.ckadmin.entity.DailyReport">
+        SELECT
+          dr.fUuid         AS 'uuid',
+          dr.fTerminalType AS 'terminalType',
+          dr.fTriggerTime  AS 'triggerTime',
+          dr.fCompleteTime AS 'completeTime',
+          dr.fStatus       AS 'status',
+          dr.fReportPath   AS 'reportPath',
+          dr.fUpdateTime   AS 'updateTime',
+          dr.fCreateTime   AS 'createTime'
+        FROM t_daily_report dr
+        WHERE dr.fTriggerMode = #{triggerMode}
+        AND dr.fCreateTime > CURRENT_DATE()
+        <if test="userID != null and userID != ''">AND dr.fUserID = #{userID} limit 1</if>
+    </select>
+</mapper>
