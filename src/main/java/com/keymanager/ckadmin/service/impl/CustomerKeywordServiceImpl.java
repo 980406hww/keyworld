@@ -26,8 +26,6 @@ import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 import java.io.InputStream;
 import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
-import com.keymanager.util.Utils;
-import com.keymanager.util.common.StringUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
