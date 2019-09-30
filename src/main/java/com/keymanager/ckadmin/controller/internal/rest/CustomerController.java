@@ -57,15 +57,6 @@ public class CustomerController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customer/searchCustomers")
-    @GetMapping(value = "/toCustomers2")
-    public ModelAndView toCustomers2() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("customers/customer2");
-        return mv;
-    }
-
-
-    @RequiresPermissions("/internal/customer/searchCustomers")
     @PostMapping(value = "/getCustomers")
     public ResultBean getCustomers(@RequestBody CustomerCriteria customerCriteria) {
         ResultBean resultBean = new ResultBean();
