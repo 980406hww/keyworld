@@ -44,6 +44,12 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierDao, Supplier> impl
         return page;
     }
 
+    @Override
+    public void deleteByUuid(Long uuid) {
+        supplierServiceTypeMappingService.deleteSupplierBySupplierCode(uuid);
+        supplierDao.deleteById(uuid);
+    }
+
     private void supplementServiceType(Supplier supplier) {
         List<SupplierServiceTypeMapping> supplierServiceTypeMappings = supplierServiceTypeMappingService.searchSupplierServiceTypeMappings(supplier.getUuid());
         for (SupplierServiceTypeMapping supplierServiceTypeMapping : supplierServiceTypeMappings) {

@@ -4,17 +4,15 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.SupplierCriteria;
 import com.keymanager.ckadmin.entity.Supplier;
-import com.keymanager.ckadmin.entity.SupplierServiceType;
 import com.keymanager.ckadmin.service.SupplierService;
 import com.keymanager.ckadmin.service.SupplierServiceTypeService;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Resource;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -55,6 +53,39 @@ public class SuppliersController {
             resultBean.setData(page.getRecords());
             resultBean.setCount(page.getTotal());
             resultBean.setMsg("success");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/supplier/deleteSupplier")
+    @RequestMapping(value = "/deleteSupplier/{uuid}", method = RequestMethod.GET)
+    public ResultBean deleteSupplier(@PathVariable("uuid") Long uuid) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        try {
+            supplierService.deleteByUuid(uuid);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+
+    //    @RequiresPermissions("/internal/supplier/deleteSupplier")
+    @RequestMapping(value = "/deleteSuppliers", method = RequestMethod.POST)
+    public ResultBean deleteSuppliers(@RequestBody List<Integer> uuids) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        try {
+            for (Integer uuid : uuids) {
+                supplierService.deleteByUuid((long) uuid);
+            }
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

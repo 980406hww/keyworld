@@ -17,4 +17,9 @@ public class SupplierServiceTypeMappingServiceImpl implements SupplierServiceTyp
     public List<SupplierServiceTypeMapping> searchSupplierServiceTypeMappings(Long supplierId) {
         return supplierServiceTypeMappingDao.searchSupplierServiceTypeMappings(supplierId);
     }
+
+    @Override
+    public void deleteSupplierBySupplierCode(Long uuid) {
+        supplierServiceTypeMappingDao.deleteSupplierServiceTypes(uuid);
+    }
 }

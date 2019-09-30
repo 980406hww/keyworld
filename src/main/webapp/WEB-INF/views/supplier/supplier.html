@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>供应商列表</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
     <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
     <style>
@@ -56,7 +58,6 @@
             height: 30px !important;
             line-height: 30px !important;
             padding: 0 18px;
-            background-color: #45a3c2;
             color: #fff;
             white-space: nowrap;
             text-align: center;
@@ -113,19 +114,14 @@
         .layui-table-body .laytable-cell-checkbox {
             text-align: center;
         }
+
+        .layui-table-body .laytable-cell-1-0-13 {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 <div class="ok-body">
-    <!--面包屑导航区域-->
-    <div class="ok-body-breadcrumb" style="margin: 5px 0">
-        <a><cite>终端管理</cite></a>
-        <a><cite>/</cite></a>
-        <a><cite>前往刷量统计</cite></a>
-        <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
-            <i class="layui-icon layui-icon-refresh"></i>
-        </a>
-    </div>
     <!--  条件搜索  -->
     <div class="layui-card ">
         <div class="layui-card-body ">
@@ -152,10 +148,10 @@
                             </button>
                         </div>
                         <div class="layui-inline">
-                            <button class="layui-btn">添加</button>
+                            <div class="my-btn layui-btn">添加</div>
                         </div>
                         <div class="layui-inline">
-                            <button class="layui-btn layui-btn-danger">删除所选</button>
+                            <div class="my-btn layui-btn-danger" onclick="deleteSuppliersByUuids()">删除所选</div>
                         </div>
                     </div>
                 </div>
@@ -177,12 +173,14 @@
     };
 
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],  function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
         var laydate = layui.laydate;
+        var layer = layui.layer;
+        var okLayer = layui.okLayer;
 
         init();
 
@@ -198,34 +196,103 @@
                 url: '/internal/suppliers/getSuppliersData',
                 page: true,
                 limit: 25,
-                limits: [10, 25, 50, 100],
+                limits: [10, 25, 50, 75, 100],
                 size: 'sm',
                 id: 'supplierTable',
                 even: true,//隔行背景
                 where: condition,
-                defaultToolbar: ['filter'],
+                defaultToolbar: [],
                 contentType: 'application/json',
-                cols: [[{filed: 'uuid', type: 'checkbox', width: '2%', align: 'center',templet:function (d) {
-                        return d.uuid;
-                    }},
-                    {filed: 'supplierName', title: '供应商名称', width: '7%', align: 'center',templet:function (d) {
-                            return d.supplierName;
-                        }},
-                    {filed: 'contactPerson', title: '联系人', width: '6%', align: 'center'},
-                    {filed: 'phone', title: '电话', width: '7%', align: 'center'},
-                    {filed: 'qq', title: 'QQ', width: '7%', align: 'center'},
-                    {filed: 'weChat', title: '微信', width: '7%', align: 'center'},
-                    {filed: 'address', title: '地址', width: '7%', align: 'center'},
-                    {title: '服务类型', width: '7%', align: 'center', templet: '#item'},
-                    {filed: 'url', title: 'URL', width: '7%', align: 'center'},
-                    {filed: 'email', title: '邮箱', width: '7%', align: 'center'},
-                    {filed: 'remark', title: '备注', width: '7%', align: 'center'},
-                    {title: '更新时间', width: '7%', align: 'center', templet: '#item2'},
-                    {title: '添加时间', width: '7%', align: 'center', templet: '#item3'},
-                    {title: '操作', width: '7%', align: 'center', templet: '#item4'}]],
-                height: 'full-118',
+                cols: [[
+                    {
+                        type: 'checkbox', width: '2%', align: 'center', templet: function (d) {
+                            return d.uuid;
+                        }
+                    },
+                    {
+                        title: '供应商名称', width: '7%', align: 'center', templet: function (d) {
+                            return d.supplierName === null ? '' : d.supplierName;
+                        }
+                    },
+                    {
+                        title: '联系人', width: '6%', align: 'center', templet: function (d) {
+                            return d.contactPerson === null ? '' : d.contactPerson;
+                        }
+                    },
+                    {
+                        title: '电话', width: '7%', align: 'center', templet: function (d) {
+                            return d.phone === null ? '' : d.phone;
+                        }
+                    },
+                    {
+                        title: 'QQ', width: '7%', align: 'center', templet: function (d) {
+                            return d.qq === null ? '' : d.qq;
+                        }
+                    },
+                    {
+                        title: '微信', width: '7%', align: 'center', templet: function (d) {
+                            return d.weChat === null ? '' : d.weChat;
+                        }
+                    },
+                    {
+                        title: '地址', width: '8%', align: 'center', templet: function (d) {
+                            return d.address === null ? '' : d.address;
+                        }
+                    },
+                    {
+                        title: '服务类型', width: '10%', align: 'center', templet: function (d) {
+                            if (d.supplierServiceTypeMappings === null) {
+                                return '';
+                            }
+                            let msg = '';
+                            for (let i = 0; i < d.supplierServiceTypeMappings.length; i++) {
+                                msg += d.supplierServiceTypeMappings[i].supplierServiceType.name + ' ';
+                            }
+                            return msg;
+                        }
+                    },
+                    {
+                        title: 'URL', width: '7%', align: 'center', templet: function (d) {
+                            return d.url === null ? '' : d.url;
+                        }
+                    },
+                    {
+                        title: '邮箱', width: '11%', align: 'center', templet: function (d) {
+                            return d.email === null ? '' : d.email;
+                        }
+                    },
+                    {
+                        title: '备注', width: '7%', align: 'center', templet: function (d) {
+                            return d.remark === null ? '' : d.remark;
+                        }
+                    },
+                    {
+                        title: '更新时间', width: '7%', align: 'center', templet: function (d) {
+                            if (d.updateTime === null) {
+                                return '';
+                            }
+                            return layui.util.toDateString(d.updateTime, 'yyyy-MM-dd');
+                        }
+                    },
+                    {
+                        title: '添加时间', width: '7%', align: 'center', templet: function (d) {
+                            if (d.createTime === null) {
+                                return '';
+                            }
+                            return layui.util.toDateString(d.createTime, 'yyyy-MM-dd');
+                        }
+                    },
+                    {
+                        title: '操作', width: '7%', align: 'center', templet: function (d) {
+                            let html = '<button style="height: 18px;line-height: 18px;" class="layui-btn layui-btn-xs" lay-event="upd">修改</button>';
+                            html += '<button style="height: 18px;line-height: 18px;" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>';
+                            return html;
+                        }
+                    }
+                ]],
+                height: 'full-74',
+                loading: true,
                 done: function (res, curr, count) {
-                    console.log(res)
                 }
             });
         }
@@ -243,14 +310,79 @@
             }
         };
 
+        function deleteSupplierByUuid(uuid) {
+            layer.confirm('确定删除该条记录！', function (index) {
+                $.ajax({
+                    url: '/internal/suppliers/deleteSupplier/' + uuid,
+                    dataType: 'json',
+                    type: 'get',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg("删除成功", 1, true);
+                            layer.close(index);
+                        } else {
+                            show_layer_msg("删除失败", 5, false);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg("删除失败", 5, false);
+                    }
+                });
+            });
+        }
+
+        window.deleteSuppliersByUuids = function () {
+            //获取选中数据
+            var checkStatus = table.checkStatus('supplierTable')
+                , data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                show_layer_msg("请选择需要删除的记录", 5, false);
+                return;
+            }
+            console.log(uuidArr);
+            layer.confirm('确定删除该条记录！', function (index) {
+                $.ajax({
+                    url: '/internal/suppliers/deleteSuppliers',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    data: JSON.stringify(uuidArr),
+                    success: function (res) {
+                        if (res.code === 200) {
+                            show_layer_msg("删除成功", 1, true);
+                            layer.close(index);
+                        } else {
+                            show_layer_msg("删除失败", 5, false);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg("删除失败", 5, false);
+                    }
+                });
+            });
+        };
+
+        table.on('tool(supplierTable)', function (obj) {
+            var data = obj.data, event = obj.event;
+            switch (event) {
+                case 'upd':
+                    console.log(data);
+                    break;
+                case 'del':
+                    deleteSupplierByUuid(data.uuid);
+                    break;
+            }
+        });
+
         form.on("submit(search)", function (data) {
             let condition = data.field;
-            if (condition.dayNum === '') {
-                condition.dayNum = 0;
-            }
-            if (!condition.groupNameFuzzyQuery) {
-                condition.groupNameFuzzyQuery = '';
-            }
             table.reload('supplierTable', {
                 where: condition,
                 page: {

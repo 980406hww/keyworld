@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface SupplierServiceTypeMappingDao {
 
     List<SupplierServiceTypeMapping> searchSupplierServiceTypeMappings(@Param("supplierUuid") Long supplierUuid);
+
+    void deleteSupplierServiceTypes(@Param("supplierUuid") Long supplierUuid);
 }

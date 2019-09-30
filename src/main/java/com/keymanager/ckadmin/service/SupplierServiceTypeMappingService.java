@@ -6,4 +6,6 @@ import java.util.List;
 public interface SupplierServiceTypeMappingService {
 
     List<SupplierServiceTypeMapping> searchSupplierServiceTypeMappings(Long supplierId);
+
+    void deleteSupplierBySupplierCode(Long uuid);
 }

@@ -8,4 +8,6 @@ import com.keymanager.ckadmin.entity.Supplier;
 public interface SupplierService extends IService<Supplier> {
 
     Page<Supplier> searchSuppliers(SupplierCriteria criteria);
+
+    void deleteByUuid(Long uuid);
 }
