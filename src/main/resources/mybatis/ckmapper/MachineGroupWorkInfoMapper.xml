@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.MachineGroupWorkInfoDao">
+
+    <select id="getMachineGroupWorkInfos" resultType="com.keymanager.ckadmin.entity.MachineGroupWorkInfo">
+        SELECT
+        ck.fMachineGroup AS "machineGroup",
+        ck.fType AS "type",
+        ck.fTerminalType AS "terminalType",
+        toc.fMaxInvalidCount AS "maxInvalidCount",
+        COUNT(1) AS "totalKeywordCount",
+        SUM(IF(ck.fOptimizeRemainingCount > 0, 1, 0)) AS "needOptimizeKeywordCount",
+        SUM(IF(ck.fInvalidRefreshCount >= toc.fMaxInvalidCount, 1, 0)) AS "invalidKeywordCount",
+        SUM(IF(ck.fOptimizedCount = 0, 1, 0)) AS "zeroOptimizedCount",
+        SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(), 1, 0)) AS "reachStandardKeywordCount",
+        SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(), ck.fTodayFee, 0)) AS "todaySubTotal",
+        SUM(ck.fOptimizePlanCount) AS "totalOptimizeCount",
+        SUM(ck.fOptimizedCount) AS "totalOptimizedCount",
+        SUM(ck.fOptimizeRemainingCount) AS "needOptimizeCount",
+        SUM(ck.fQueryCount) AS "queryCount"
+        FROM t_customer_keyword ck, t_group g, t_operation_combine toc
+        <if test="(criteria.userName != null and criteria.userName != '') ||
+                    (criteria.customerName!=null and criteria.customerName!='')">
+            , t_customer c
+        </if>
+        WHERE ck.fStatus = 1
+        <if test="(criteria.userName != null and criteria.userName != '') ||
+                    (criteria.customerName!=null and criteria.customerName!='')">
+            AND ck.fCustomerUuid = c.fUuid
+        </if>
+        AND toc.fUuid = g.fOperationCombineUuid
+        AND ck.fOptimizeGroupName = g.fGroupName
+        AND ck.fTerminalType = toc.fTerminalType
+        <if test="criteria.machineGroup!=null and criteria.machineGroup!=''">
+            <choose>
+                <when test="criteria.machineGroupFuzzyQuery == null or criteria.machineGroupFuzzyQuery == ''">
+                    AND ck.fMachineGroup = #{criteria.machineGroup}
+                </when>
+                <otherwise>
+                    AND ck.fMachineGroup like concat(#{criteria.machineGroup}, "%")
+                </otherwise>
+            </choose>
+        </if>
+        <if test="criteria.entryType!=null and criteria.entryType!=''">
+            AND ck.fType = #{criteria.entryType}
+        </if>
+        <if test="criteria.terminalType!=null and criteria.terminalType!=''">
+            AND ck.fTerminalType = #{criteria.terminalType}
+        </if>
+        <if test="criteria.customerName!=null and criteria.customerName!=''">
+            AND c.fContactPerson like concat('%', #{criteria.customerName}, "%")
+        </if>
+        GROUP BY ck.fMachineGroup, ck.fType, ck.fTerminalType
+        ORDER BY ck.fMachineGroup;
+    </select>
+
+
+    <select id="getHistoryMachineGroupWorkInfo" parameterType="com.keymanager.ckadmin.criteria.MachineGroupWorkInfoCriteria"
+        resultType="com.keymanager.ckadmin.entity.MachineGroupWorkInfo">
+        SELECT
+            mgwi.fMachineGroup AS 'machineGroup',
+            mgwi.fTotalKeywordCount AS 'totalKeywordCount',
+            mgwi.fNeedOptimizeKeywordCount AS 'needOptimizeKeywordCount',
+            mgwi.fInvalidKeywordCount AS 'invalidKeywordCount',
+            mgwi.fZeroOptimizedCount AS 'zeroOptimizedCount',
+            mgwi.fReachStandardKeywordCount AS 'reachStandardKeywordCount',
+            mgwi.fTodaySubTotal AS 'todaySubTotal',
+            mgwi.fTotalOptimizeCount AS 'totalOptimizeCount',
+            mgwi.fTotalOptimizedCount AS 'totalOptimizedCount',
+            mgwi.fNeedOptimizeCount AS 'needOptimizeCount',
+            mgwi.fQueryCount AS 'queryCount',
+            mgwi.fTotalMachineCount AS 'totalMachineCount',
+            mgwi.fUnworkMachineCount AS 'unworkMachineCount',
+            mgwi.fMaxInvalidCount AS 'maxInvalidCount',
+            mgwi.fIdleTotalMinutes AS 'idleTotalMinutes'
+        FROM t_machine_group_work_info mgwi
+        WHERE DATE_SUB(CURDATE(), INTERVAL #{criteria.dayNum} DAY) = mgwi.fCreateDate
+        AND mgwi.fType = #{criteria.entryType}
+        AND mgwi.fTerminalType = #{criteria.terminalType}
+        GROUP BY mgwi.fUuid
+        ORDER BY mgwi.fMachineGroup
+    </select>
+</mapper>

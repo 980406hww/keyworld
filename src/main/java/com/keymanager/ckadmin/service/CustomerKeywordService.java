@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.service;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
+import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
@@ -37,4 +38,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     List<CustomerKeywordSummaryInfoVO> searchCustomerKeywordSummaryInfo(String entryType, long customerUuid);
 
     KeywordCountVO getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String terminalType);
+
+    void resetInvalidRefreshCount(RefreshStatisticsCriteria criteria);
 }
