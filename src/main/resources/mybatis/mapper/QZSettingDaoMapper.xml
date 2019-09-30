@@ -515,4 +515,16 @@
         ORDER BY qzs.fUuid
         LIMIT 1
     </select>
+
+    <select id="getQZSettingByCustomerUuid" resultType="com.keymanager.monitoring.vo.QZSettingForSync">
+        SELECT
+            qs.fUuid AS uuid,
+            qs.fCustomerUuid AS customerUuid,
+            qs.fDomain AS domain,
+            qs.fSearchEngine AS searchEngine,
+            qs.fBearPawNumber AS bearPawNumber,
+            qs.fRenewalStatus AS renewalStatus
+        FROM t_qz_setting qs
+        WHERE qs.fCustomerUuid = #{customerUuid}
+    </select>
 </mapper>

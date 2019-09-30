@@ -7,11 +7,12 @@
 		<!-- Triggers集成 -->
 		<property name="triggers">
 			<list>
-				<ref bean="cronTriggerCacheCustomerKeyword" />
+				<!--<ref bean="cronTriggerCacheCustomerKeyword" />
 				<ref bean="cronTriggerCacheCrawlRankCustomerQZKeyword" />
 				<ref bean="cronTriggerCacheCrawlRankCustomerPTKeyword" />
 				<ref bean="cronTriggerCacheCheckingEnteredCustomerKeyword" />
-				<ref bean="cronTriggerUpdateOptimizedCount" />
+				<ref bean="cronTriggerUpdateOptimizedCount" />-->
+				<ref bean="cronTriggerCacheCustomerUuidForSyncData" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -80,6 +81,18 @@
 
 	<bean id="cronTriggerUpdateOptimizedCountSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="updateOptimizedCountSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--缓存需同步到简化版seo后台的数据信息-->
+	<bean id="cronTriggerCacheCustomerUuidForSyncData" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerCacheCustomerUuidForSyncDataSchedule" />
+		<property name="cronExpression" value="0 0/30 0-2,8-23 * * ?" />
+	</bean>
+
+	<bean id="cronTriggerCacheCustomerUuidForSyncDataSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" value="cacheCustomerUuidForSyncDataSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

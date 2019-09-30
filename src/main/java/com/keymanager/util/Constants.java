@@ -99,7 +99,8 @@ public class Constants {
     public final static String CONFIG_KEY_INDUSTRY_TEL_REG = "IndustryTelReg";
     public final static String CONFIG_TYPE_INDUSTRY_QQ_REG = "IndustryQqReg";
     public final static String CONFIG_KEY_INDUSTRY_QQ_REG = "IndustryQqReg";
-
+    public final static String CONFIG_TYPE_SYNC_CUSTOMER_DATA = "SyncCustomerData";
+    public final static String CONFIG_KEY_CUSTOMER_REMARK_INFO = "CustomerRemarkInfo";
 
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
     static {

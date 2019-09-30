@@ -170,4 +170,29 @@
         AND qzkri.fTerminalType = #{terminalType}
         AND qzkri.fWebsiteType = 'aiZhan'
     </select>
+
+    <select id="getQZKeywordRankInfoByQZSettingUuid" resultType="com.keymanager.monitoring.vo.QZKeywordRankForSync">
+        SELECT
+            qk.fUuid AS uuid,
+            qk.fQZSettingUuid AS qzSettingUuid,
+            qk.fTerminalType AS terminalType,
+            qk.fWebsiteType AS websiteType,
+            fDataProcessingStatus AS dataProcessingStatus,
+            qk.fTopTen AS topTen,
+            qk.fTopTwenty AS topTwenty,
+            qk.fTopThirty AS topThirty,
+            qk.fTopForty AS topForty,
+            qk.fTopFifty AS topFifty,
+            qk.fTopHundred AS topHundred,
+            qk.fDate AS date,
+            qk.fIncrease AS increase,
+            qk.fTodayDifference AS todayDifference,
+            qk.fOneWeekDifference AS oneWeenkDIfference,
+            qk.fBaiduRecordFullDate AS recordDate,
+            qk.fRecord AS record
+        FROM t_qz_keyword_rank_info qk
+        WHERE qk.fQZSettingUuid = #{qzSettingUuid}
+        AND qk.fDataProcessingStatus = 1
+        LIMIT 2
+    </select>
 </mapper>

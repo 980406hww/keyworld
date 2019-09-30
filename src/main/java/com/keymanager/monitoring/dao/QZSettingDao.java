@@ -7,6 +7,7 @@ import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.entity.QZSetting;
 import com.keymanager.monitoring.vo.DateRangeTypeVO;
 import com.keymanager.monitoring.vo.ExternalQzSettingVO;
+import com.keymanager.monitoring.vo.QZSettingForSync;
 import com.keymanager.monitoring.vo.QZSettingVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -58,5 +59,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     List<QZSetting> searchAllQZSettingForGenerateRankingCurve();
 
     ExternalQzSettingVO selectQZSettingForAutoOperate();
+
+    List<QZSettingForSync> getQZSettingByCustomerUuid(@Param("customerUuid") Long customerUuid);
 }
 

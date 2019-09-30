@@ -15,12 +15,10 @@ import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.ibatis.annotations.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -2194,6 +2192,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
             customerKeywordDao.batchUpdateIndexAndOptimizePlanCount(customerKeywords);
         }
+    }
+
+    public List<CustomerKeywordForSync> getCustomerKeywordByCustomerUuid(Long customerUuid) {
+        return customerKeywordDao.getCustomerKeywordByCustomerUuid(customerUuid);
     }
 }
 

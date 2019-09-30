@@ -15,6 +15,7 @@ import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordVO;
+import java.util.concurrent.LinkedBlockingQueue;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -59,6 +60,32 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	@Autowired
 	private OperationCombineService operationCombineService;
+
+	@Autowired
+	private ConfigService configService;
+
+	private static final HashMap<String, LinkedBlockingQueue> CUSTOMER_QUEUE_MAP = new HashMap<>();
+
+	public void cacheCustomerUuidForCustomerQueueMap() {
+		// todo 读取配置表需要同步的客户备注
+		Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_DATA, Constants.CONFIG_KEY_CUSTOMER_REMARK_INFO);
+		String syncCustomerRemarkStr = config.getValue();
+		String[] syncCustomerRemarks = syncCustomerRemarkStr.split(",");
+		// todo 每半小时清空customerQueueMap, 重新写入
+		CUSTOMER_QUEUE_MAP.clear();
+		for (String syncCustomerRemark : syncCustomerRemarks) {
+			if (StringUtil.isNotNullNorEmpty(syncCustomerRemark)) {
+				List<Long> uuidList = customerService.getCustomerUuidsByCustomerRemark(syncCustomerRemark);
+				if (CollectionUtils.isNotEmpty(uuidList)) {
+					LinkedBlockingQueue queue = new LinkedBlockingQueue(uuidList.size());
+					CUSTOMER_QUEUE_MAP.put(syncCustomerRemark, queue);
+					for (long uuid : uuidList) {
+						queue.offer(uuid);
+					}
+				}
+			}
+		}
+	}
 
 	public ExternalQzSettingVO getAvailableQZSetting(){
 		ExternalQzSettingVO externalQzSettingVO = qzSettingDao.selectQZSettingForAutoOperate();
@@ -1038,5 +1065,39 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public String findQZCustomer(String domain) {
 		return qzSettingDao.findQZCustomer(domain);
+	}
+
+	public Map<String, Object> getCustomerKeywordForDataSync(String key) {
+		Map<String, Object> map = null;
+		if (!CUSTOMER_QUEUE_MAP.isEmpty()) {
+			LinkedBlockingQueue linkedBlockingQueue = CUSTOMER_QUEUE_MAP.get(key);
+			if (null != linkedBlockingQueue && !linkedBlockingQueue.isEmpty()) {
+				Long customerUuid = (Long) linkedBlockingQueue.poll();
+				List<CustomerKeywordForSync> customerKeywords = customerKeywordService.getCustomerKeywordByCustomerUuid(customerUuid);
+				if (CollectionUtils.isNotEmpty(customerKeywords)) {
+					map = new HashMap<>(2);
+					map.put("customerKeywords", customerKeywords);
+					List<QZSettingForSync> qzSettingForSyncs = qzSettingDao.getQZSettingByCustomerUuid(customerUuid);
+					if (CollectionUtils.isNotEmpty(qzSettingForSyncs)) {
+						for (QZSettingForSync qzSettingForSync : qzSettingForSyncs) {
+							List<QZKeywordRankForSync> qzKeywordRankForSyncs = qzKeywordRankInfoService.getQZKeywordRankInfoByQZSettingUuid(qzSettingForSync.getUuid());
+							if (CollectionUtils.isNotEmpty(qzKeywordRankForSyncs)) {
+								for (QZKeywordRankForSync qzKeywordRankForSync : qzKeywordRankForSyncs) {
+									if (qzKeywordRankForSync.getWebsiteType().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
+										QZKeywordRankForSync anOtherQZKeywordRank = qzKeywordRankInfoService.searchAnOtherQZKeywordRanForSync(qzSettingForSync.getUuid());
+										if (null != anOtherQZKeywordRank) {
+											qzKeywordRankForSyncs.add(anOtherQZKeywordRank);
+										}
+									}
+								}
+								qzSettingForSync.setQzKeywordRankForSyncs(qzKeywordRankForSyncs);
+							}
+						}
+						map.put("qzSettingForSyncs", qzSettingForSyncs);
+					}
+				}
+			}
+		}
+		return map;
 	}
 }

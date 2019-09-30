@@ -14,8 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public interface
-CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
+public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void cleanSelectedCustomerKeywordTitle(@Param("uuids") List<String> uuids);
 
     void cleanCustomerTitle(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("customerUuid") String customerUuid);
@@ -268,4 +267,6 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void batchUpdateIndexAndOptimizePlanCount(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
 
     void batchUpdateOptimizedCountFromCache(@Param("updateOptimizedCountVOs") Collection<UpdateOptimizedCountSimpleVO> updateOptimizedCountVOs);
+
+    List<CustomerKeywordForSync> getCustomerKeywordByCustomerUuid(@Param("customerUuid") Long customerUuid);
 }

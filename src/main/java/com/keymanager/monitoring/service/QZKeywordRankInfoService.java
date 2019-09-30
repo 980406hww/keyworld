@@ -14,6 +14,7 @@ import com.keymanager.monitoring.vo.ExternalQZKeywordRankInfoResultVO;
 import com.keymanager.monitoring.vo.ExternalQzKeywordRankInfoVO;
 import com.keymanager.monitoring.vo.ExternalQzSettingVO;
 import com.keymanager.monitoring.vo.QZChargeRuleVO;
+import com.keymanager.monitoring.vo.QZKeywordRankForSync;
 import com.keymanager.util.Constants;
 import com.keymanager.util.PaginationRewriteQueryTotalInterceptor;
 import java.util.ArrayList;
@@ -256,5 +257,13 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
             rankInfo.setUpdateTime(new Date());
             qzKeywordRankInfoDao.updateById(rankInfo);
         }
+    }
+
+    public List<QZKeywordRankForSync> getQZKeywordRankInfoByQZSettingUuid(Long qzSettingUuid) {
+        return qzKeywordRankInfoDao.getQZKeywordRankInfoByQZSettingUuid(qzSettingUuid);
+    }
+
+    public QZKeywordRankForSync searchAnOtherQZKeywordRanForSync(Long qzSettingUuid) {
+        return qzKeywordRankInfoDao.searchAnOtherQZKeywordRanForSync(qzSettingUuid);
     }
 }
