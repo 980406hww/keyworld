@@ -60,7 +60,7 @@
         let layer = layui.layer;
 
         $.ajax({
-            url: '/internal/machineinfo/getMachineInfos',
+            url: '/internal/machineManage/getMachineInfos',
             type: 'get',
             dataType: 'json'
             , success: function (res) {
@@ -132,7 +132,7 @@
         function getMachineInfoBody(value, name) {
             let data = {name: name};
             $.ajax({
-                url: '/internal/machineinfo/getMachineInfoBody',
+                url: '/internal/machineManage/getMachineInfoBody',
                 type: 'post',
                 data: JSON.stringify(data),
                 headers: {

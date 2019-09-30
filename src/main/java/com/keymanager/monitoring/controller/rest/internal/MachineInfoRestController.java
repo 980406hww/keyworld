@@ -98,7 +98,7 @@ public class MachineInfoRestController extends SpringMVCBaseController {
             return constructMachineInfoModelAndView(request, machineInfoCriteria, Integer.parseInt(currentPageNumber), Integer.parseInt(pageSize), true);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ModelAndView("/machineInfo/machineInfo");
+            return new ModelAndView("machineManage/machineInfo");
         }
     }
 
@@ -109,13 +109,13 @@ public class MachineInfoRestController extends SpringMVCBaseController {
             return constructMachineInfoModelAndView(request, machineInfoCriteria, 1, 50, false);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ModelAndView("/machineInfo/machineInfo");
+            return new ModelAndView("machineManage/machineInfo");
         }
     }
 
     private ModelAndView constructMachineInfoModelAndView(HttpServletRequest request, MachineInfoCriteria machineInfoCriteria, int currentPageNumber, int pageSize, boolean normalSearchFlag) {
         long startMilleSeconds = System.currentTimeMillis();
-        ModelAndView modelAndView = new ModelAndView("/machineInfo/machineInfo");
+        ModelAndView modelAndView = new ModelAndView("machineManage/machineInfo");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         machineInfoCriteria.setTerminalType(terminalType);
         Set<String> switchGroups = getCurrentUser().getRoles();

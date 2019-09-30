@@ -2,8 +2,22 @@ package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.controller.SpringMVCBaseController;
+import com.keymanager.ckadmin.criteria.MachineInfoBatchUpdateCriteria;
+import com.keymanager.ckadmin.criteria.MachineInfoCriteria;
+import com.keymanager.ckadmin.entity.MachineInfo;
+import com.keymanager.ckadmin.entity.UserPageSetup;
+import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.MachineInfoService;
+import com.keymanager.ckadmin.service.PerformanceService;
+import com.keymanager.ckadmin.service.UserPageSetupService;
+import com.keymanager.util.FileUtil;
+import com.keymanager.util.TerminalTypeMapping;
+import com.keymanager.util.Utils;
+import java.io.File;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -21,6 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping(value = "/internal/machineManage")
 public class MachineInfoController extends SpringMVCBaseController {
+
     private static Logger logger = LoggerFactory.getLogger(MachineInfoController.class);
 
     @Resource(name = "machineInfoService2")
@@ -74,7 +89,7 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/uploadVPSFile")
     @RequestMapping(value = "/returnUploadFile", method = RequestMethod.POST)
-    public ResultBean returnUploadFile(){
+    public ResultBean returnUploadFile() {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
         return resultBean;
@@ -82,7 +97,7 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
     @RequestMapping(value = "/toBatchUpdateFailedReason", method = RequestMethod.GET)
-    public ModelAndView toBatchUpdateFailedReason(){
+    public ModelAndView toBatchUpdateFailedReason() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/BatchUpdateFailedReason");
         return mv;
@@ -90,7 +105,7 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
     @RequestMapping(value = "/toUpdateMachineInfo", method = RequestMethod.GET)
-    public ModelAndView toUpdateMachineInfo(){
+    public ModelAndView toUpdateMachineInfo() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/UpdateMachineInfo");
         return mv;
@@ -98,7 +113,7 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
     @RequestMapping(value = "/toAllowSwitchGroup", method = RequestMethod.GET)
-    public ModelAndView toAllowSwitchGroup(){
+    public ModelAndView toAllowSwitchGroup() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/AllowSwitchGroup");
         return mv;
@@ -106,7 +121,7 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
     @RequestMapping(value = "/toSwitchGroup", method = RequestMethod.GET)
-    public ModelAndView toSwitchGroup(){
+    public ModelAndView toSwitchGroup() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/SwitchGroup");
         return mv;
@@ -214,13 +229,13 @@ public class MachineInfoController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/machineInfo/updateMachineGroup")
-    @RequestMapping(value = "/updateMachineGroup",method = RequestMethod.POST)
+    @RequestMapping(value = "/updateMachineGroup", method = RequestMethod.POST)
     public ResultBean batchUpdateMachineGroup(@RequestBody MachineInfoCriteria machineInfoCriteria) {
         ResultBean resultBean = new ResultBean();
-        try{
+        try {
             machineInfoService.updateMachineGroup(machineInfoCriteria);
             resultBean.setCode(200);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg("未知错误");
@@ -232,14 +247,14 @@ public class MachineInfoController extends SpringMVCBaseController {
     @RequiresPermissions("/internal/machineInfo/uploadVPSFile")
     @RequestMapping(value = "/uploadVPSFile", method = RequestMethod.POST)
     public ResultBean uploadVPSFile(@RequestParam(value = "file", required = false) MultipartFile file,
-                                    @RequestParam(defaultValue = "common", name = "machineInfoType") String machineInfoType,
-                                    @RequestParam(defaultValue = "no", name = "downloadProgramType") String downloadProgramType, HttpServletRequest request){
+        @RequestParam(defaultValue = "common", name = "machineInfoType") String machineInfoType,
+        @RequestParam(defaultValue = "no", name = "downloadProgramType") String downloadProgramType, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         try {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
             String path = Utils.getWebRootPath() + "vpsfile";
             File targetFile = new File(path, "vps.txt");
-            if(!targetFile.exists()){
+            if (!targetFile.exists()) {
                 targetFile.mkdirs();
             }
             file.transferTo(targetFile);
@@ -258,7 +273,7 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
     @RequestMapping(value = "/reopenMachineInfo", method = RequestMethod.POST)
-    public ResultBean reopenMachineInfo(@RequestBody Map<String, Object> requestMap){
+    public ResultBean reopenMachineInfo(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
         try {
             List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
@@ -276,7 +291,7 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
     @RequestMapping(value = "/batchUpdateUpgradeFailedReason", method = RequestMethod.POST)
-    public ResultBean batchUpdateUpgradeFailedReason(@RequestBody Map<String, Object> requestMap){
+    public ResultBean batchUpdateUpgradeFailedReason(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
         try {
             List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
@@ -294,7 +309,7 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/changeStatus")
     @RequestMapping(value = "/changeStatus/{clientID}", method = RequestMethod.POST)
-    public ResultBean changeStatus(@PathVariable("clientID") String clientID){
+    public ResultBean changeStatus(@PathVariable("clientID") String clientID) {
         ResultBean resultBean = new ResultBean();
         try {
             machineInfoService.changeStatus(clientID);
@@ -310,12 +325,13 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/changeTerminalType")
     @RequestMapping(value = "/changeTerminalType", method = RequestMethod.POST)
-    public ResultBean changeTerminalType(@RequestBody Map<String, Object> requestMap, HttpServletRequest request){
+    public ResultBean changeTerminalType(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         String clientID = (String) requestMap.get("clientID");
         String terminalType = (String) requestMap.get("terminalType");
         try {
-            machineInfoService.changeTerminalType(clientID, TerminalTypeEnum.PC.name().equals(terminalType) ? TerminalTypeEnum.Phone.name() : TerminalTypeEnum.PC.name());
+            machineInfoService
+                .changeTerminalType(clientID, TerminalTypeEnum.PC.name().equals(terminalType) ? TerminalTypeEnum.Phone.name() : TerminalTypeEnum.PC.name());
             resultBean.setCode(200);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -328,7 +344,7 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
     @RequestMapping(value = "/updateStartUpStatusForCompleted", method = RequestMethod.POST)
-    public ResultBean updateStartUpStatusForCompleted(@RequestBody Map<String, Object> requestMap){
+    public ResultBean updateStartUpStatusForCompleted(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
         try {
             List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
@@ -345,24 +361,25 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/searchMachineInfos")
     @RequestMapping(value = "/getMachineInfos", method = RequestMethod.POST)
-    public ResultBean getMachineInfos(HttpServletRequest request, @RequestBody MachineInfoCriteria machineInfoCriteria){
+    public ResultBean getMachineInfos(HttpServletRequest request, @RequestBody MachineInfoCriteria machineInfoCriteria) {
         ResultBean resultBean = new ResultBean();
         try {
             String loginName = getCurrentUser().getLoginName();
             String requestURI = request.getRequestURI();
-            UserPageSetup userPageSetup = userPageSetupService.searchUserPageSetup(loginName,requestURI);
-            if(userPageSetup != null){
+            UserPageSetup userPageSetup = userPageSetupService.searchUserPageSetup(loginName, requestURI);
+            if (userPageSetup != null) {
                 machineInfoCriteria.setHiddenColumns(userPageSetup.getHiddenField());
-            }else {
-                userPageSetupService.addUserPageSetup(loginName,requestURI,machineInfoCriteria.getHiddenColumns());
+            } else {
+                userPageSetupService.addUserPageSetup(loginName, requestURI, machineInfoCriteria.getHiddenColumns());
             }
             Page<MachineInfo> page = new Page<>(machineInfoCriteria.getPage(), machineInfoCriteria.getLimit());
             long startMilleSeconds = System.currentTimeMillis();
             Set<String> switchGroups = getCurrentUser().getRoles();
-            if(!switchGroups.contains("DepartmentManager")) {
+            if (!switchGroups.contains("DepartmentManager")) {
                 machineInfoCriteria.setSwitchGroups(switchGroups);
             }
-            performanceService.addPerformanceLog(machineInfoCriteria.getTerminalType() + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
+            performanceService
+                .addPerformanceLog(machineInfoCriteria.getTerminalType() + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
             page = machineInfoService.searchMachineInfos(page, machineInfoCriteria, true);
             List<MachineInfo> machineInfos = page.getRecords();
             resultBean.setCode(0);
@@ -396,7 +413,7 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/deleteMachineInfos")
     @RequestMapping(value = "/deleteMachineInfos", method = RequestMethod.POST)
-    public ResultBean batchDeleteClientUpgrade(@RequestBody Map<String, Object> requestMap){
+    public ResultBean batchDeleteClientUpgrade(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
         try {
             List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
@@ -426,11 +443,12 @@ public class MachineInfoController extends SpringMVCBaseController {
         }
         return resultBean;
     }
+
     @RequiresPermissions("/internal/machineInfo/machineInfoStat")
     @RequestMapping(value = "/toMachineInfo", method = RequestMethod.GET)
     public ModelAndView toMachineInfo() {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("machineInfo/machineInfo");
+        mv.setViewName("machineManage/machineInfo");
         return mv;
     }
 

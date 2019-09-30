@@ -28,6 +28,7 @@ import com.keymanager.util.common.StringUtil;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -470,11 +471,6 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     @Override
-    public List<MachineGroupWorkInfo> searchMachineInfoFormMachineGroupWorkInfo(MachineGroupWorkInfoCriteria machineGroupWorkInfoCriteria) {
-        return null;
-    }
-
-    @Override
     public List<MachineInfoMachineGroupSummaryVO> searchMachineInfoMachineGroupSummaryVO(String machineGroup, String terminalType) {
         return null;
     }
@@ -482,7 +478,6 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     @Override
     public void updateMachine(String clientID, String city, String version, String freeSpace, String runningProgramType, int cpuCount,
             int memory) {
-
     }
 
     @Override

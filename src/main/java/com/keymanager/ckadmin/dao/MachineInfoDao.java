@@ -112,9 +112,7 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     void updateMachine(@Param("clientID") String clientID, @Param("city") String city, @Param("version") String version, @Param("freeSpace") String freeSpace, @Param("runningProgramType") String runningProgramType, @Param("cpuCount") int cpuCount, @Param("memory") int memory);
 
-    List<MachineGroupWorkInfo> searchMachineInfoFormMachineGroupWorkInfo(@Param("criteria") MachineGroupWorkInfoCriteria criteria);
-
     List<MachineInfoSummaryVO> getAllMachineInfo();
 
-    List<MachineInfoSummaryVO> getMachineInfoBody(@Param("city")
+    List<MachineInfoSummaryVO> getMachineInfoBody(@Param("city") String city);
 }

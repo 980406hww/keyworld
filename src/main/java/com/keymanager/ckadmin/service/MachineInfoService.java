@@ -19,16 +19,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 public interface MachineInfoService extends IService<MachineInfo> {
+
     void changeTerminalType(String clientID, String terminalType);
 
     void addSummaryMachineInfo(String terminalType, String clientID, String freeSpace, String version, String city);
 
-     void updateMachineInfoVersion(String clientID, String version, boolean hasKeyword);
+    void updateMachineInfoVersion(String clientID, String version, boolean hasKeyword);
 
     void logMachineInfoTime(String terminalType, String clientID, String status, String freeSpace, String version, String
-     city, int updateCount, String runningProgramType,int cpuCount,int memory);
+        city, int updateCount, String runningProgramType, int cpuCount, int memory);
 
     Page<MachineInfo> searchMachineInfos(Page<MachineInfo> page, MachineInfoCriteria machineInfoCriteria, boolean normalSearchFlag);
 
@@ -46,7 +48,7 @@ public interface MachineInfoService extends IService<MachineInfo> {
 
     void updateMachineInfoTargetVPSPassword(List<String> clientIDs, String targetVPSPassword);
 
-    void updateRenewalDate(String clientIDs,String settingType,String renewalDate);
+    void updateRenewalDate(String clientIDs, String settingType, String renewalDate);
 
     MachineInfo getMachineInfo(String clientID, String terminalType);
 
@@ -104,7 +106,7 @@ public interface MachineInfoService extends IService<MachineInfo> {
 
     void batchUpdateMachine(MachineInfoCriteria machineInfoCriteria);
 
-    void batchChangeStatus(String clientIDs,Boolean status);
+    void batchChangeStatus(String clientIDs, Boolean status);
 
     void batchChangeTerminalType(String[] clientIds, String terminalType);
 
@@ -119,7 +121,7 @@ public interface MachineInfoService extends IService<MachineInfo> {
     void updatePageNo(String clientID, int pageNo);
 
     List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(
-     CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
+        CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 
     List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(String clientIDPrefix, String city, String switchGroupName);
 
@@ -141,11 +143,9 @@ public interface MachineInfoService extends IService<MachineInfo> {
 
     void updateMachineGroupById(String clientID, String machineGroup);
 
-    List<MachineGroupWorkInfo> searchMachineInfoFormMachineGroupWorkInfo(MachineGroupWorkInfoCriteria machineGroupWorkInfoCriteria);
-
     List<MachineInfoMachineGroupSummaryVO> searchMachineInfoMachineGroupSummaryVO(String machineGroup, String terminalType);
 
-    void updateMachine(String clientID, String city, String version, String freeSpace, String runningProgramType,int cpuCount,int memory);
+    void updateMachine(String clientID, String city, String version, String freeSpace, String runningProgramType, int cpuCount, int memory);
 
     List<MachineGroupWorkInfo> searchMachineInfoFormMachineGroupWorkInfo(MachineGroupWorkInfoCriteria criteria);
 
