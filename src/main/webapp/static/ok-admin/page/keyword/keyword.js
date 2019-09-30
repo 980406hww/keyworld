@@ -141,7 +141,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             ]],
             height: 'full-150',
             done: function (res, curr, count) {
-                console.log(res)
                 let tables = document.getElementsByTagName('table');
                 if ((tables[2].offsetHeight || tables[2].clientHeight || tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight
                     || tables[2].parentElement.clientHeight || tables[2].scrollHeight)) {
