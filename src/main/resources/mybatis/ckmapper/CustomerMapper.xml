@@ -58,6 +58,17 @@
         <if test="customerCriteria.saleRemark != null and customerCriteria.saleRemark != ''">
             AND c.fSaleRemark LIKE CONCAT(#{customerCriteria.saleRemark},'%')
         </if>
+
+        <if test="customerCriteria.roleTypes != null and customerCriteria.roleTypes.size() > 0">
+            AND c.fUserID IN(
+            SELECT fLoginName FROM t_userinfo WHERE fUuid IN(
+                SELECT fUserID FROM t_user_role WHERE fRoleID = (
+                    SELECT fUuid FROM t_role WHERE fRoleName IN
+                        <foreach item="item" index="index" collection="customerCriteria.roleTypes" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+            )))
+        </if>
     </select>
 
     <select id="getActiveCustomerSimpleInfo" resultType="com.keymanager.ckadmin.entity.Customer">

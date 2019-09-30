@@ -11,7 +11,9 @@ import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.util.ReflectUtils;
 import com.keymanager.ckadmin.util.SQLFilterUtils;
+import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.util.TerminalTypeMapping;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +21,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,8 +67,7 @@ public class CustomerController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/customer/searchCustomers")
     @PostMapping(value = "/getCustomers")
-    public ResultBean getCustomers(HttpServletRequest request,
-        @RequestBody CustomerCriteria customerCriteria) {
+    public ResultBean getCustomers(@RequestBody CustomerCriteria customerCriteria) {
         ResultBean resultBean = new ResultBean();
         if (SQLFilterUtils.sqlInject(customerCriteria.toString())) {
             resultBean.setCode(400);
@@ -73,12 +75,15 @@ public class CustomerController extends SpringMVCBaseController {
             return resultBean;
         }
         try {
-            HttpSession session = request.getSession();
-//            String entryType = (String) session.getAttribute("entryType");
-
-//            customerCriteria.setEntryType(entryType);
-            //            String terminalType = TerminalTypeMapping.getTerminalType(request);
-//            customerCriteria.setTerminalType(terminalType);
+            ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
+            Set<String> roles = shiroUser.getRoles();
+            List<String> roleTypes = new ArrayList<>();
+            if (roles.contains("SEOSales")){
+                roleTypes.add("SEOSales");
+            }else if (roles.contains("NegativeSales")){
+                roleTypes.add("NegativeSales");
+            }
+            customerCriteria.setRoleTypes(roleTypes);
             Page<Customer> page = new Page<>(customerCriteria.getPage(), customerCriteria.getLimit());
             String orderByField = ReflectUtils.getTableFieldValue(Customer.class, customerCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {
@@ -90,7 +95,6 @@ public class CustomerController extends SpringMVCBaseController {
             page = customerService.searchCustomers(page, customerCriteria);
             List<Customer> customers = page.getRecords();
             resultBean.setCode(0);
-//            resultBean.setEntryType(entryType);
             resultBean.setCount(page.getTotal());
             resultBean.setMsg("");
             resultBean.setData(customers);
@@ -138,8 +142,7 @@ public class CustomerController extends SpringMVCBaseController {
             String entryType = (String) session.getAttribute("entryType");
             String loginName = (String) session.getAttribute("username");
             String terminalType = TerminalTypeMapping.getTerminalType(request);
-            Customer customer = customerService
-                .getCustomerWithKeywordCount(terminalType, entryType, uuid, loginName);
+            Customer customer = customerService.getCustomerWithKeywordCount(terminalType, entryType, uuid, loginName);
             if (customer != null) {
                 resultBean.setCode(200);
                 resultBean.setData(customer);
