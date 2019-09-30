@@ -44,7 +44,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Resource(name = "userInfoService2")
     private UserInfoService userInfoService;
 
-    private final static Map<String, LinkedBlockingQueue> machineGroupQueueMap = new HashMap<String, LinkedBlockingQueue>();
+    private final static Map<String, LinkedBlockingQueue> machineGroupQueueMap = new HashMap<>();
 
     @Override
     public void cacheCustomerKeywords() {
@@ -65,7 +65,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                     do {
                         optimizationKeywordVOS = customerKeywordDao.fetchCustomerKeywordsForCache(terminalTypeAndMachineGroups[0], terminalTypeAndMachineGroups[1], ((machineCount * 10) > 5000 ? 5000 : (machineCount * 10)));
                         if (CollectionUtils.isNotEmpty(optimizationKeywordVOS)) {
-                            List<Long> customerKeywordUuids = new ArrayList<Long>();
+                            List<Long> customerKeywordUuids = new ArrayList<>();
                             if (optimizationKeywordVOS.size() > machineCount) {
                                 for (OptimizationKeywordVO optimizationKeywordVO : optimizationKeywordVOS) {
                                     if (blockingQueue.offer(optimizationKeywordVO)) {
