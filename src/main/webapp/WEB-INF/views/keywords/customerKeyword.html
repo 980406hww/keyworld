@@ -101,9 +101,9 @@
                                             </div>
                                         </div>
                                         <div class="layui-inline">
-                                            <label class="layui-form-label">备注</label>
+                                            <label class="layui-form-label">客户标签</label>
                                             <div class="layui-input-inline">
-                                                <input type="text" name="remarks" id="remarks" placeholder="请输入备注" autocomplete="off" class="layui-input">
+                                                <input type="text" name="remarks" id="remarks" placeholder="请输入客户标签" autocomplete="off" class="layui-input">
                                             </div>
                                         </div>
                                         <div class="layui-inline">
@@ -221,10 +221,41 @@
 <script src="/static/ok-admin/page/keyword/customerKeyword.js"></script>
 <script src="/static/ok-admin/page/base/searchForm.js"></script>
 <#include "./customerKeywordTpl.html" />
+<form id="downloadKeywordForm" hidden lay-filter="downloadKeywordForm" method="post" action="/internal/customerKeyword/downloadCustomerKeywordInfo2">
 
+    <input type="hidden"  name="customerUuid" id="customerUuidHidden" value=""/>
+    <input type="hidden"  name="type" id="typeHidden" value=""/>
+    <input type="hidden"  name="terminalType" id="terminalTypeHidden" value=""/>
+    <input type="hidden"  name="keyword" id="keywordHidden" value=""/>
+    <input type="hidden"  name="url" id="urlHidden" value=""/>
+    <input type="hidden"  name="bearPawNumber" id="bearPawNumberHidden" value=""/>
+    <input type="hidden"  name="optimizeGroupName" id="optimizeGroupNameHidden" value=""/>
+    <input type="hidden"  name="status" id="statusHidden" value=""/>
+    <input type="hidden"  name="machineGroup" id="machineGroupHidden" value=""/>
+    <input type="hidden"  name="customerKeywordSource" id="customerKeywordSourceHidden" value=""/>
+    <input type="hidden"  name="remarks" id="remarksHidden" value=""/>
+    <input type="hidden"  name="failedCause" id="failedCauseHidden" value=""/>
+    <input type="hidden"  name="gtOptimizePlanCount" id="gtOptimizePlanCountHidden" value=""/>
+    <input type="hidden"  name="ltOptimizePlanCount" id="ltOptimizePlanCountHidden" value=""/>
+    <input type="hidden"  name="gtOptimizedCount" id="gtOptimizedCountHidden" value=""/>
+    <input type="hidden"  name="ltOptimizedCount" id="ltOptimizedCountHidden" value=""/>
+    <input type="hidden"  name="gtPosition" id="gtPositionHidden" value=""/>
+    <input type="hidden"  name="ltPosition" id="ltPositionHidden" value=""/>
+    <input type="hidden"  name="gtCurrentIndexCount" id="gtCurrentIndexCountHidden" value=""/>
+    <input type="hidden"  name="ltCurrentIndexCount" id="ltCurrentIndexCountHidden" value=""/>
+    <input type="hidden"  name="titleFlag" id="titleFlagHidden" value=""/>
+    <input type="hidden"  name="invalidRefreshCount" id="invalidRefreshCountHidden" value=""/>
+    <input type="hidden"  name="searchEngine" id="searchEngineHidden" value=""/>
+    <input type="hidden"  name="keywordEffect" id="keywordEffectHidden" value=""/>
+    <input type="hidden"  name="noPosition" id="noPositionHidden" value=""/>
+
+</form>
 </body>
 <form action="/internal/customerKeyword/keywordUrlExport2" method="post" id="keywordUrlForm">
-    <input id="customerUuidKU" name="customerUuid" hidden value=""/>
-    <input id="terminalTypeKU" name="terminalType" hidden value=""/>
+    <input type="hidden" id="customerUuidKU" name="customerUuid"  value=""/>
+    <input type="hidden" id="terminalTypeKU" name="terminalType" hidden value=""/>
 </form>
+
+
+
 </html>

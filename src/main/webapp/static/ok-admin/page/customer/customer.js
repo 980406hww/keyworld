@@ -74,7 +74,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                     }
                 });
                 init_data(result.data);
-                form.render()
+                form.render();
+                // layer.msg('加载完成', {icon: 6});
             },
             error: function () {
                 layer.msg('获取用户失败，请稍后再试', {icon: 5});
@@ -387,7 +388,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         let data = {};
         data.uuid = null;
         data.entryType = entryType;
-        okLayer.open("首页 / 客户列表 / 添加用户", "/internal/customer/toCustomersAdd", "60%", "90%", function(layero){
+        okLayer.open("首页 / 客户列表 / 添加用户", "/internal/customer/toCustomersAdd", "40%", "90%", function(layero){
             window[layero.find("iframe")[0]["name"]].initForm(data);
         }, function () {
             if (sign) {
@@ -404,7 +405,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         let entryType = $('#entryType').val();
         data.uuid = uuid;
         data.entryType = entryType;
-        okLayer.open("首页 / 客户列表 / 修改用户", "/internal/customer/toCustomersAdd", "60%", "90%", function (layero) {
+        okLayer.open("首页 / 客户列表 / 修改用户", "/internal/customer/toCustomersAdd", "40%", "90%", function (layero) {
             window[layero.find("iframe")[0]["name"]].initForm(data);
         }, function () {
             if (sign) {

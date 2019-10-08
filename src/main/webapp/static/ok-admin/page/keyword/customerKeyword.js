@@ -56,8 +56,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                             $('#tabItem').append(
                                 '<li data-type="' + businessItem[0] + '" data-terminal="PC" lay-id="'+businessItem[0]+'PC">' + businessItem[1] + '电脑</li>' +
                                 '<li data-type="' + businessItem[0] + '" data-terminal="Phone" lay-id="'+businessItem[0]+'Phone">' + businessItem[1] + '手机</li>');
-
-
                     });
                     form.render("select");
 
@@ -403,24 +401,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
     }
 
     function download_keyword_info() {
-        let postData = formToJsonObject('searchForm');
-        $.ajax({
-            url: '/internal/customerKeyword/downloadCustomerKeywordInfo2',
-            data: JSON.stringify(postData),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            async: false,
-            type: 'post',
-            success: function (res) {
-                if (res.code === 200) {
-                    show_layer_msg('导出成功', 6, false);
-                } else {
-                    show_layer_msg('未知错误！', 5);
-                }
-            }
+        let searchCriteriaArray = $('#searchForm').serializeArray();
+        let downloadKeywordForm = $('#downloadKeywordForm');
+        $.each(searchCriteriaArray, function (idx, val) {
+            downloadKeywordForm.find("#"+val.name+"Hidden").val(val.value === '' ? null : val.value);
         });
+
+        $("#downloadKeywordForm").submit();
     }
 
     function download_keyword_url() {
@@ -1233,12 +1220,14 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
 
     // 编辑表格获得表格数据
     function editKeyword(data) {
-        let customerUuid = $('#customerUuid').val();
-        let type = $('#type').val();
-        let terminalType = $('#terminalType').val();
-        let url = '/internal/customerKeyword/toCustomerKeywordAdd/' + type + '/' + terminalType + '/' + customerUuid;
+        let postData = {};
+        postData.uuid = data.uuid;
+        postData.customerUuid = $('#customerUuid').val();
+        postData.type = $('#type').val();
+        postData.terminalType = $('#terminalType').val();
+        let url = '/internal/customerKeyword/toCustomerKeywordAdd';
         okLayer.open("关键字统计 / 客户关键字 / 修改关键字", url, "60%", "90%", function (layero) {
-            window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
+            window[layero.find("iframe")[0]["name"]].initForm(postData);
         }, function () {
             if (sign) {
                 active['reload'].call(this);
