@@ -63,6 +63,169 @@
                         主页
                     </a>
                 </li>
+                <!--暂时使用写死的菜单，根据权限展示10.08-->
+                <li data-name="keyword" class="layui-nav-item ">
+                    <a href="javascript:;" lay-tips="关键字管理" lay-direction="2">
+                        <i class="layui-icon layui-icon-home"></i>
+                        <cite>关键字管理</cite>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <@shiro.hasPermission name="/internal/customerKeyword/toKeywords">
+                        <dd data-name="keyword-item">
+                            <a data-url="/internal/customerKeyword/toKeywords" lay-id="100">
+                                <i class="layui-icon layui-icon-align-right">
+                                </i><cite>关键字统计</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/positivelists/toSearchPositiveLists">
+                        <dd data-name="keyword-item">
+                            <a data-url="/internal/positivelists/toSearchPositiveLists" lay-id="101">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>优质清单</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/negativelists/toSearchNegativeLists">
+                        <dd data-name="keyword-item">
+                            <a data-url="/internal/negativelists/toSearchNegativeLists" lay-id="102">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>负面清单</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/customerKeyword/toMachineGroupAndSize">
+                        <dd data-name="keyword-item">
+                            <a data-url="/internal/customerKeyword/toMachineGroupAndSize" lay-id="102">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>机器分组工作统计</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                    </dl>
+                </li>
+                <li data-name="customer" class="layui-nav-item ">
+                    <a href="javascript:;" lay-tips="客户管理" lay-direction="2">
+                        <i class="layui-icon layui-icon-home"></i>
+                        <cite>客户管理</cite>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <@shiro.hasPermission name="/internal/customer/toCustomers">
+                        <dd data-name="customer-item" >
+                            <a data-url="/internal/customer/toCustomers" lay-id="104">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>客户列表</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                    </dl>
+                </li>
+                <li data-name="machine" class="layui-nav-item ">
+                    <a href="javascript:;" lay-tips="终端管理" lay-direction="2">
+                        <i class="layui-icon layui-icon-home"></i>
+                        <cite>终端管理</cite>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <@shiro.hasPermission name="/internal/clientUpgrade/toClientUpgrades2">
+                        <dd data-name="machine-item" >
+                            <a data-url="/internal/clientUpgrade/toClientUpgrades2" lay-id="105">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>机器升级</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/machineManage/toMachineInfos">
+                        <dd data-name="machine-item" >
+                            <a data-url="/internal/machineManage/toMachineInfos" lay-id="106">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>机器管理</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+
+                    </dl>
+                </li>
+                <li data-name="supplier" class="layui-nav-item ">
+                    <a href="javascript:;" lay-tips="供应商管理" lay-direction="2">
+                        <i class="layui-icon layui-icon-home"></i>
+                        <cite>供应商管理</cite>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <@shiro.hasPermission name="/internal/suppliers/toSuppliers">
+                        <dd data-name="supplier-item" >
+                            <a data-url="/internal/suppliers/toSuppliers" lay-id="107">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>供应商列表</cite>
+                            </a>
+                        </dd>
+                    </@shiro.hasPermission>
+                    </dl>
+                </li>
+                <li data-name="software" class="layui-nav-item ">
+                    <a href="javascript:;" lay-tips="应用程序管理" lay-direction="2">
+                        <i class="layui-icon layui-icon-home"></i>
+                        <cite>应用程序管理</cite>
+                    </a>
+                    <dl class="layui-nav-child">
+
+
+                    </dl>
+                </li>
+                <li data-name="other" class="layui-nav-item ">
+                    <a href="javascript:;" lay-tips="其他" lay-direction="2">
+                        <i class="layui-icon layui-icon-home" ></i>
+                        <cite>其他</cite>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <@shiro.hasPermission name="/internal/algorithmAutoTest/toAlgorithmTestPlans">
+                        <dd data-name="other-item" >
+                            <a data-url="/internal/algorithmAutoTest/toAlgorithmTestPlans" lay-id="108">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>测试计划列表</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/operationTypes/toSearchOperationTypeLists">
+                        <dd data-name="other-item" >
+                            <a data-url="/internal/operationTypes/toSearchOperationTypeLists" lay-id="109">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>操作类型管理</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/qzsetting/toQZSetttings">
+                        <dd data-name="other-item" >
+                            <a data-url="/internal/qzsetting/toQZSetttings" lay-id="110">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>全站信息设置</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                    </dl>
+                </li>
+
+                <@shiro.hasAnyRoles name="admin,Technical">
+                <li data-name="log" class="layui-nav-item ">
+                    <a href="javascript:;" lay-tips="日志监控" lay-direction="2">
+                        <i class="layui-icon layui-icon-home"></i>
+                        <cite>日志监控</cite>
+                    </a>
+                    <dl class="layui-nav-child">
+
+
+                    </dl>
+                </li>
+                <li data-name="permission" class="layui-nav-item ">
+                    <a href="javascript:;" lay-tips="权限管理" lay-direction="2">
+                        <i class="layui-icon layui-icon-home"></i>
+                        <cite>权限管理</cite>
+                    </a>
+                    <dl class="layui-nav-child">
+
+
+                    </dl>
+                </li>
+                </@shiro.hasAnyRoles>
             </ul>
         </div>
     </div>
@@ -113,6 +276,10 @@
                     <i class="ok-icon ok-iconairplay"></i>
                     <cite is-close=false>主页</cite>
                 </li>
+
+
+
+
             </ul>
             <div class="layui-tab-content ok-tab-content">
                 <div class="layui-tab-item layui-show">
