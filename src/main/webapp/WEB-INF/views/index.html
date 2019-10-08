@@ -72,7 +72,7 @@
                     <dl class="layui-nav-child">
                         <@shiro.hasPermission name="/internal/customerKeyword/toKeywords">
                         <dd data-name="keyword-item">
-                            <a data-url="/internal/customerKeyword/toKeywords" lay-id="100">
+                            <a data-url="/internal/customerKeyword/toKeywords" lay-id="keywordCount">
                                 <i class="layui-icon layui-icon-align-right">
                                 </i><cite>关键字统计</cite>
                             </a>
@@ -80,7 +80,7 @@
                         </@shiro.hasPermission>
                         <@shiro.hasPermission name="/internal/positivelists/toSearchPositiveLists">
                         <dd data-name="keyword-item">
-                            <a data-url="/internal/positivelists/toSearchPositiveLists" lay-id="101">
+                            <a data-url="/internal/positivelists/toSearchPositiveLists" lay-id="positiveList">
                                 <i class="layui-icon layui-icon-align-right"></i>
                                 <cite>优质清单</cite>
                             </a>
@@ -88,15 +88,23 @@
                         </@shiro.hasPermission>
                         <@shiro.hasPermission name="/internal/negativelists/toSearchNegativeLists">
                         <dd data-name="keyword-item">
-                            <a data-url="/internal/negativelists/toSearchNegativeLists" lay-id="102">
+                            <a data-url="/internal/negativelists/toSearchNegativeLists" lay-id="negativeList">
                                 <i class="layui-icon layui-icon-align-right"></i>
                                 <cite>负面清单</cite>
                             </a>
                         </dd>
                         </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/warnlists/toSearchWarnLists">
+                        <dd data-name="keyword-item">
+                            <a data-url="/internal/warnlists/toSearchWarnLists" lay-id="warn-list">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>前往预警清单</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
                         <@shiro.hasPermission name="/internal/customerKeyword/toMachineGroupAndSize">
                         <dd data-name="keyword-item">
-                            <a data-url="/internal/customerKeyword/toMachineGroupAndSize" lay-id="102">
+                            <a data-url="/internal/customerKeyword/toMachineGroupAndSize" lay-id="machineGroupAndSize">
                                 <i class="layui-icon layui-icon-align-right"></i>
                                 <cite>机器分组工作统计</cite>
                             </a>
@@ -112,7 +120,7 @@
                     <dl class="layui-nav-child">
                         <@shiro.hasPermission name="/internal/customer/toCustomers">
                         <dd data-name="customer-item" >
-                            <a data-url="/internal/customer/toCustomers" lay-id="104">
+                            <a data-url="/internal/customer/toCustomers" lay-id="customer">
                                 <i class="layui-icon layui-icon-align-right"></i>
                                 <cite>客户列表</cite>
                             </a>
@@ -128,7 +136,7 @@
                     <dl class="layui-nav-child">
                         <@shiro.hasPermission name="/internal/clientUpgrade/toClientUpgrades2">
                         <dd data-name="machine-item" >
-                            <a data-url="/internal/clientUpgrade/toClientUpgrades2" lay-id="105">
+                            <a data-url="/internal/clientUpgrade/toClientUpgrades2" lay-id="clientUpgrade">
                                 <i class="layui-icon layui-icon-align-right"></i>
                                 <cite>机器升级</cite>
                             </a>
@@ -136,9 +144,34 @@
                         </@shiro.hasPermission>
                         <@shiro.hasPermission name="/internal/machineManage/toMachineInfos">
                         <dd data-name="machine-item" >
-                            <a data-url="/internal/machineManage/toMachineInfos" lay-id="106">
+                            <a data-url="/internal/machineManage/toMachineInfos" lay-id="machineManage">
                                 <i class="layui-icon layui-icon-align-right"></i>
                                 <cite>机器管理</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/refreshstatistics/toRefreshStatistics">
+                        <dd data-name="machine-item" >
+                            <a data-url="/internal/refreshstatistics/toRefreshStatistics" lay-id="refreshStatistic">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>刷量统计</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+
+                        <@shiro.hasPermission name="/internal/refreshstatistics/toRefreshStatistics">
+                        <dd data-name="machine-item" >
+                            <a data-url="/internal/machinegroupstatistics/toMachineGroupStatistics" lay-id="machineGroupStatistic">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>机器分组统计</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/machineManage/toMachineInfo">
+                        <dd data-name="machine-item" >
+                            <a data-url="/internal/machineManage/toMachineInfo" lay-id="machineInfo">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>终端统计</cite>
                             </a>
                         </dd>
                         </@shiro.hasPermission>
@@ -153,7 +186,7 @@
                     <dl class="layui-nav-child">
                         <@shiro.hasPermission name="/internal/suppliers/toSuppliers">
                         <dd data-name="supplier-item" >
-                            <a data-url="/internal/suppliers/toSuppliers" lay-id="107">
+                            <a data-url="/internal/suppliers/toSuppliers" lay-id="supplier">
                                 <i class="layui-icon layui-icon-align-right"></i>
                                 <cite>供应商列表</cite>
                             </a>
@@ -179,7 +212,7 @@
                     <dl class="layui-nav-child">
                         <@shiro.hasPermission name="/internal/algorithmAutoTest/toAlgorithmTestPlans">
                         <dd data-name="other-item" >
-                            <a data-url="/internal/algorithmAutoTest/toAlgorithmTestPlans" lay-id="108">
+                            <a data-url="/internal/algorithmAutoTest/toAlgorithmTestPlans" lay-id="algorithmTestPlan">
                                 <i class="layui-icon layui-icon-align-right"></i>
                                 <cite>测试计划列表</cite>
                             </a>
@@ -187,7 +220,7 @@
                         </@shiro.hasPermission>
                         <@shiro.hasPermission name="/internal/operationTypes/toSearchOperationTypeLists">
                         <dd data-name="other-item" >
-                            <a data-url="/internal/operationTypes/toSearchOperationTypeLists" lay-id="109">
+                            <a data-url="/internal/operationTypes/toSearchOperationTypeLists" lay-id="operationTypeList">
                                 <i class="layui-icon layui-icon-align-right"></i>
                                 <cite>操作类型管理</cite>
                             </a>
@@ -195,7 +228,7 @@
                         </@shiro.hasPermission>
                         <@shiro.hasPermission name="/internal/qzsetting/toQZSetttings">
                         <dd data-name="other-item" >
-                            <a data-url="/internal/qzsetting/toQZSetttings" lay-id="110">
+                            <a data-url="/internal/qzsetting/toQZSetttings" lay-id="QZSettting">
                                 <i class="layui-icon layui-icon-align-right"></i>
                                 <cite>全站信息设置</cite>
                             </a>
