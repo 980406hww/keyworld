@@ -5,7 +5,7 @@ getHeight();
 function getHeight(){
     let b = document.getElementById('customerBody');
     let h = window.innerHeight || document.body.offsetHeight;
-    b.style.height = (h - 166) + 'px';
+    b.style.height = (h - 155) + 'px';
 }
 
 // layui相关
@@ -20,7 +20,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     $(window).resize(function(){
         let b = document.getElementById('customerBody');
         let h = window.innerHeight || document.body.offsetHeight;
-        b.style.height = (h - 166) + 'px';
+        b.style.height = (h - 155) + 'px';
     });
     function formToJsonObject (form_id) {
         var formData = decodeURIComponent($("#" + form_id).serialize(), true);
@@ -37,14 +37,14 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     function initLayPage(pageConf) {
         if (!pageConf) {
             pageConf = {};
-            pageConf.limit = 25;
+            pageConf.limit = 30;
             pageConf.page = 1;
         }
         if(!pageConf.page){
             pageConf.page = 1;
         }
         if (!pageConf.limit) {
-            pageConf.limit = 25;
+            pageConf.limit = 30;
         }
         $.ajax({
             url: '/internal/customer/getCustomers',
@@ -61,10 +61,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                     count: result.count,
                     curr: pageConf.page,
                     limit: pageConf.limit,
-                    limits: [10, 25, 50, 75, 100, 500, 1000],
+                    limits: [10, 30, 50, 100, 500, 1000],
                     first: '首页',
                     last: '尾页',
-                    layout: ['count', 'prev', 'page', 'next', 'limit'],
+                    layout: ['prev', 'page', 'next', 'count', 'limit'],
                     jump: function (obj, first) {
                         if (!first) {
                             pageConf.page = obj.curr;

@@ -61,9 +61,9 @@
             </button>
             </@shiro.hasPermission>
             <@shiro.hasPermission name="/SuperUserSimpleKeywordList.xls">
-            <button class="layui-btn layui-btn-sm" id="download_keyword_simple_excel" lay-event="download_keyword_simple_excel">
+            <a class="layui-btn layui-btn-sm" href="/SuperUserSimpleKeywordList.xls">
                 Excel简化版下载
-            </button>
+            </a>
             </@shiro.hasPermission>
             <@shiro.hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
             <button class="layui-btn layui-btn-sm" id="upload_keyword_full" lay-event="upload_keyword_full">
@@ -71,9 +71,9 @@
             </button>
             </@shiro.hasPermission>
             <@shiro.hasPermission name="/SuperUserFullKeywordList.xls">
-            <button class="layui-btn layui-btn-sm" id="download_keyword_full_excel" lay-event="download_keyword_full_excel">
+            <a class="layui-btn layui-btn-sm" href="/SuperUserFullKeywordList.xls">
                 Excel完整版下载
-            </button>
+            </a>
             </@shiro.hasPermission>
         </div>
 

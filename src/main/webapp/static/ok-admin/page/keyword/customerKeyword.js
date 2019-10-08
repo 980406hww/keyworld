@@ -271,14 +271,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             case 'upload_keyword_simple':
                 upload_keyword('SuperUserSimple');
                 break;
-            case 'download_keyword_simple_excel':
-                download_keyword_excel('SuperUserSimple');
-                break;
             case 'upload_keyword_full':
                 upload_keyword('SuperUserFull');
-                break;
-            case 'download_keyword_full_excel':
-                download_keyword_excel('SuperUserFull');
                 break;
             case 'download_daily_report':
                 download_daily_report();
@@ -393,11 +387,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 sign = false;
             }
         })
-    }
-
-    function download_keyword_excel(excelType) {
-        let url = excelType === 'SuperUserSimple' ? '/SuperUserSimpleKeywordList.xls' : '/SuperUserFullKeywordList.xls';
-        window.open(url, '_blank');
     }
 
     function download_keyword_info() {
