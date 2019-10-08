@@ -105,6 +105,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             elem: '#keywordTable',
             method: 'post',
             url: '/internal/customerKeyword/getKeywords',
+            autoSort: false,
             limit: 25,
             limits: [10, 25, 50, 75, 100, 500, 1000],
             page: true,
@@ -119,13 +120,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 {filed: 'uuid', type: 'checkbox', width: '35'},
                 {field: 'userID', title: '用户', width: '120',},
                 {field: 'contactPerson', title: '客户名称', width: '120', templet: '#toCustomerKeywordTpl' },
-                {field: 'keyword', title: '关键字', width: '150'},
+                {field: 'keyword', title: '关键字', width: '150', sort: true},
                 {field: 'url', title: '链接', width: '120'},
                 {field: 'bearPawNumber', title: '熊掌号', width: '100'},
                 {field: 'title', title: '标题', width: '220'},
                 {field: 'currentIndexCount', title: '指数', width: '80', templet: '#indexCountTpl'},
                 {field: 'initialPosition', title: '初始排名', width: '80'},
-                {field: 'currentPosition', title: '现排名', width: '80'},
+                {field: 'currentPosition', title: '现排名', width: '80', sort: true},
                 {field: 'searchEngine', title: '搜索引擎', width: '80'},
                 {field: 'optimizeGroupName', title: '优化分组', width: '100'},
                 {field: 'machineGroup', title: '机器分组', width: '100'},
@@ -152,7 +153,15 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         });
 
     }
-
+    table.on('sort(tableFilter)', function(obj){
+        let postData = formToJsonObject('searchForm');
+        postData.orderBy = obj.field;
+        postData.orderMode = obj.type === 'desc' ? '0' : '1';
+        table.reload('keywordTable', {
+            initSort: obj,
+            where: postData
+        });
+    });
     // 监听表头鼠标按下事件
     $(document).on('onMouseUp', 'thead', function (e) {
             let tables = document.getElementsByTagName('table');
