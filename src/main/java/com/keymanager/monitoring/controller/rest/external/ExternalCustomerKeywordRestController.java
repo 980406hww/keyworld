@@ -481,37 +481,33 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     }
 
     @RequestMapping(value = "/updateCustomerKeywordPosition", method = RequestMethod.POST)
-    public ResponseEntity<?> updateCustomerKeywordPosition(
-        @RequestBody Map<String, Object> requestMap) throws Exception {
-        String userName = (String) requestMap.get("userName");
-        String password = (String) requestMap.get("password");
-
-        Long customerKeywordUuid = Long.parseLong(requestMap.get("customerKeywordUuid").toString());
-        int position = (Integer) requestMap.get("position");
-        String ip = (String) requestMap.get("capturePositionIP");
-        String clientID = (String) requestMap.get("clientID");
-        String city = (String) requestMap.get("capturePositionCity");
-        Date startTime = new Date((Long) requestMap.get("startTime"));
+    public ResponseEntity<?> updateCustomerKeywordPosition(@RequestBody Map<String, String> requestMap) {
+        String userName = requestMap.get("userName");
+        String password = requestMap.get("password");
         try {
             if (validUser(userName, password)) {
+                Long customerKeywordUuid = Long.parseLong(requestMap.get("customerKeywordUuid"));
+                String type = requestMap.get("type");
+                int position = Integer.parseInt(requestMap.get("position"));
+                String ip = requestMap.get("capturePositionIP");
+                String clientID = requestMap.get("clientID");
+                String city = requestMap.get("capturePositionCity");
                 if (position > -1) {
-                    customerKeywordService
-                        .updateCustomerKeywordPosition(customerKeywordUuid, position,
-                            Utils.getCurrentTimestamp(), ip, city);
+                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, type, position, ip, city);
                 } else {
-                    customerKeywordService
-                        .updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
+                    long startTime = Long.parseLong(requestMap.get("startTime"));
+                    customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
                 }
                 if (StringUtil.isNotNullNorEmpty(clientID)) {
                     machineInfoService.updateMachineInfoForCapturePosition(clientID);
                 }
-                return new ResponseEntity<Object>(true, HttpStatus.OK);
+                return new ResponseEntity<Object>(HttpStatus.OK);
             }
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         } catch (Exception ex) {
-            ex.printStackTrace();
             logger.error("updateCustomerKeywordPosition:        " + ex.getMessage());
         }
-        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/getCustomerKeywordForCapturePosition", method = RequestMethod.POST)
