@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.SupplierServiceTypeDao">
+    <sql id="colID">
+        st.fUuid AS `uuid`,
+        st.fName AS `name`
+    </sql>
+
+    <select id="getSupplierType" resultType="com.keymanager.ckadmin.entity.SupplierServiceType">
+        SELECT
+        <include refid="colID"/>
+        FROM t_supplier_servicetype st
+        WHERE st.fUuid = #{supplierTypeUuid}
+    </select>
+
+    <select id="searchSupplierTypes" resultType="com.keymanager.ckadmin.entity.SupplierServiceType">
+        SELECT
+        <include refid="colID"/>
+        FROM t_supplier_servicetype st
+    </select>
+</mapper>
