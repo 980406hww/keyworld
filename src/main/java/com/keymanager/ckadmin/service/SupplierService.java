@@ -10,4 +10,8 @@ public interface SupplierService extends IService<Supplier> {
     Page<Supplier> searchSuppliers(SupplierCriteria criteria);
 
     void deleteByUuid(Long uuid);
+
+    void saveSupplier(Supplier supplier);
+
+    Supplier getSupplier(Long uuid);
 }

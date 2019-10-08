@@ -1,5 +1,6 @@
 package com.keymanager.ckadmin.service.impl;
 
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.dao.SupplierServiceTypeMappingDao;
 import com.keymanager.ckadmin.entity.SupplierServiceTypeMapping;
 import com.keymanager.ckadmin.service.SupplierServiceTypeMappingService;
@@ -8,7 +9,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 @Service("supplierServiceTypeMappingService2")
-public class SupplierServiceTypeMappingServiceImpl implements SupplierServiceTypeMappingService {
+public class SupplierServiceTypeMappingServiceImpl extends ServiceImpl<SupplierServiceTypeMappingDao, SupplierServiceTypeMapping> implements
+    SupplierServiceTypeMappingService {
 
     @Resource(name = "supplierServiceTypeMappingDao2")
     private SupplierServiceTypeMappingDao supplierServiceTypeMappingDao;

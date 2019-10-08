@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.SupplierCriteria;
 import com.keymanager.ckadmin.entity.Supplier;
+import com.keymanager.ckadmin.entity.SupplierServiceType;
 import com.keymanager.ckadmin.service.SupplierService;
 import com.keymanager.ckadmin.service.SupplierServiceTypeService;
 import java.util.List;
@@ -45,11 +46,7 @@ public class SuppliersController {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(0);
         try {
-//            List<SupplierServiceType> supplierServiceTypes = supplierServiceTypeService.searchSupplierServiceType();
             Page<Supplier> page = supplierService.searchSuppliers(criteria);
-//            Map<String, Object> data = new HashMap<>(2);
-//            data.put("supplier", page.getRecords());
-//            data.put("supplierType", supplierServiceTypes);
             resultBean.setData(page.getRecords());
             resultBean.setCount(page.getTotal());
             resultBean.setMsg("success");
@@ -86,6 +83,61 @@ public class SuppliersController {
             for (Integer uuid : uuids) {
                 supplierService.deleteByUuid((long) uuid);
             }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/supplier/searchSuppliers")
+    @GetMapping(value = "/toSaveSupplier")
+    public ModelAndView toSaveSupplier() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("supplier/supplierAdd");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/supplier/saveSupplier")
+    @RequestMapping(value = "/getSupplierInit", method = RequestMethod.GET)
+    public ResultBean getSupplierInit() {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        try {
+            List<SupplierServiceType> supplierServiceTypes = supplierServiceTypeService.searchSupplierServiceType();
+            resultBean.setData(supplierServiceTypes);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/supplier/saveSupplier")
+    @RequestMapping(value = "/getSupplier/{uuid}", method = RequestMethod.GET)
+    public ResultBean getSupplier(@PathVariable("uuid") Long uuid) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        try {
+            Supplier supplier = supplierService.getSupplier(uuid);
+            resultBean.setData(supplier);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/supplier/saveSupplier")
+    @RequestMapping(value = "/saveSupplier", method = RequestMethod.POST)
+    public ResultBean saveSupplier(@RequestBody Supplier supplier) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        try {
+            supplierService.saveSupplier(supplier);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

@@ -12,6 +12,7 @@ import com.keymanager.ckadmin.entity.SupplierServiceTypeMapping;
 import com.keymanager.ckadmin.service.SupplierService;
 import com.keymanager.ckadmin.service.SupplierServiceTypeMappingService;
 import com.keymanager.ckadmin.service.SupplierServiceTypeService;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,41 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierDao, Supplier> impl
     public void deleteByUuid(Long uuid) {
         supplierServiceTypeMappingService.deleteSupplierBySupplierCode(uuid);
         supplierDao.deleteById(uuid);
+    }
+
+    @Override
+    public void saveSupplier(Supplier supplier) {
+        if (null != supplier.getUuid()) {
+            updateSupplier(supplier);
+        } else {
+            supplierDao.insert(supplier);
+            for (SupplierServiceTypeMapping supplierServiceTypeMapping : supplier.getSupplierServiceTypeMappings()) {
+                supplierServiceTypeMapping.setSupplierUuid(supplier.getUuid());
+                supplierServiceTypeMapping.setSupplierServiceTypeUuid(supplierServiceTypeMapping.getSupplierServiceTypeUuid());
+                supplierServiceTypeMappingService.insert(supplierServiceTypeMapping);
+            }
+        }
+    }
+
+    @Override
+    public Supplier getSupplier(Long uuid) {
+        Supplier supplier = supplierDao.selectById(uuid);
+        if (supplier != null) {
+            supplementServiceType(supplier);
+        }
+        return supplier;
+    }
+
+    private void updateSupplier(Supplier supplier) {
+        supplierServiceTypeMappingService.deleteSupplierBySupplierCode(supplier.getUuid());
+        for (SupplierServiceTypeMapping supplierServiceTypeMapping : supplier.getSupplierServiceTypeMappings()) {
+            supplierServiceTypeMapping.setSupplierUuid(supplier.getUuid());
+            supplierServiceTypeMappingService.insert(supplierServiceTypeMapping);
+        }
+        List<SupplierServiceTypeMapping> supplierServiceTypeMappings = supplierServiceTypeMappingService.searchSupplierServiceTypeMappings(supplier.getUuid());
+        supplier.setSupplierServiceTypeMappings(supplierServiceTypeMappings);
+        supplier.setUpdateTime(new Date());
+        supplierDao.updateById(supplier);
     }
 
     private void supplementServiceType(Supplier supplier) {
