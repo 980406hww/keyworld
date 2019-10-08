@@ -5,21 +5,21 @@ package com.keymanager.monitoring.vo;
  */
 public class CustomerKeywordForSync {
 
-    private Long uuid;
+    private Long keywordId;
     private String terminalType;
-    private Long customerUuid;
+    private Long customerId;
     private String keyword;
     private Integer initialPosition;
     private Integer currentPosition;
     private Integer optimizePlanCount;
     private Integer optimizedCount;
 
-    public Long getUuid() {
-        return uuid;
+    public Long getKeywordId() {
+        return keywordId;
     }
 
-    public void setUuid(Long uuid) {
-        this.uuid = uuid;
+    public void setKeywordId(Long keywordId) {
+        this.keywordId = keywordId;
     }
 
     public String getTerminalType() {
@@ -30,12 +30,12 @@ public class CustomerKeywordForSync {
         this.terminalType = terminalType;
     }
 
-    public Long getCustomerUuid() {
-        return customerUuid;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomerUuid(Long customerUuid) {
-        this.customerUuid = customerUuid;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
     public String getKeyword() {

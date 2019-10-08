@@ -15,6 +15,7 @@ import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordVO;
+import java.util.Map.Entry;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -65,6 +66,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	private ConfigService configService;
 
 	private static final HashMap<String, LinkedBlockingQueue> CUSTOMER_QUEUE_MAP = new HashMap<>();
+
+	private static final HashMap<String, Object> CACHE_CUSTOMER_KEYWORD_FOR_SYNC = new HashMap<>();
 
 	public void cacheCustomerUuidForCustomerQueueMap() {
 		// todo 读取配置表需要同步的客户备注
@@ -1069,35 +1072,55 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public Map<String, Object> getCustomerKeywordForDataSync(String key) {
 		Map<String, Object> map = null;
-		if (!CUSTOMER_QUEUE_MAP.isEmpty()) {
-			LinkedBlockingQueue linkedBlockingQueue = CUSTOMER_QUEUE_MAP.get(key);
-			if (null != linkedBlockingQueue && !linkedBlockingQueue.isEmpty()) {
-				Long customerUuid = (Long) linkedBlockingQueue.poll();
-				List<CustomerKeywordForSync> customerKeywords = customerKeywordService.getCustomerKeywordByCustomerUuid(customerUuid);
-				if (CollectionUtils.isNotEmpty(customerKeywords)) {
-					map = new HashMap<>(2);
-					map.put("customerKeywords", customerKeywords);
-					List<QZSettingForSync> qzSettingForSyncs = qzSettingDao.getQZSettingByCustomerUuid(customerUuid);
-					if (CollectionUtils.isNotEmpty(qzSettingForSyncs)) {
-						for (QZSettingForSync qzSettingForSync : qzSettingForSyncs) {
-							List<QZKeywordRankForSync> qzKeywordRankForSyncs = qzKeywordRankInfoService.getQZKeywordRankInfoByQZSettingUuid(qzSettingForSync.getUuid());
-							if (CollectionUtils.isNotEmpty(qzKeywordRankForSyncs)) {
-								for (QZKeywordRankForSync qzKeywordRankForSync : qzKeywordRankForSyncs) {
-									if (qzKeywordRankForSync.getWebsiteType().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
-										QZKeywordRankForSync anOtherQZKeywordRank = qzKeywordRankInfoService.searchAnOtherQZKeywordRanForSync(qzSettingForSync.getUuid());
-										if (null != anOtherQZKeywordRank) {
-											qzKeywordRankForSyncs.add(anOtherQZKeywordRank);
+		if (!CACHE_CUSTOMER_KEYWORD_FOR_SYNC.isEmpty()) {
+			Entry<String, Object> entry = CACHE_CUSTOMER_KEYWORD_FOR_SYNC.entrySet().iterator().next();
+			List<CustomerKeywordForSync> customerKeywords = (List<CustomerKeywordForSync>) entry.getValue();
+			map = new HashMap<>(1);
+			map.put("customerKeywords", customerKeywords);
+			CACHE_CUSTOMER_KEYWORD_FOR_SYNC.remove(entry.getKey());
+			return map;
+		} else {
+			if (!CUSTOMER_QUEUE_MAP.isEmpty()) {
+				LinkedBlockingQueue linkedBlockingQueue = CUSTOMER_QUEUE_MAP.get(key);
+				if (null != linkedBlockingQueue && !linkedBlockingQueue.isEmpty()) {
+					Long customerUuid = (Long) linkedBlockingQueue.poll();
+					List<CustomerKeywordForSync> customerKeywords = customerKeywordService.getCustomerKeywordByCustomerUuid(customerUuid);
+					if (CollectionUtils.isNotEmpty(customerKeywords)) {
+						int size = customerKeywords.size();
+						int fromIndex = 0, toIndex = 10000;
+						do {
+							List<CustomerKeywordForSync> subList = customerKeywords.subList(fromIndex, toIndex > size ? size : toIndex);
+							CACHE_CUSTOMER_KEYWORD_FOR_SYNC.put("" + fromIndex + "-" + toIndex, subList);
+							fromIndex += 10000;
+							toIndex += 10000;
+						} while (fromIndex > size);
+
+						map = new HashMap<>(2);
+						map.put("customerKeywords", CACHE_CUSTOMER_KEYWORD_FOR_SYNC.get("0-10000"));
+						map.remove("0-10000");
+
+						List<QZSettingForSync> qzSettingForSyncs = qzSettingDao.getQZSettingByCustomerUuid(customerUuid);
+						if (CollectionUtils.isNotEmpty(qzSettingForSyncs)) {
+							for (QZSettingForSync qzSettingForSync : qzSettingForSyncs) {
+								List<QZKeywordRankForSync> qzKeywordRankForSyncs = qzKeywordRankInfoService.getQZKeywordRankInfoByQZSettingUuid(qzSettingForSync.getQsId());
+								if (CollectionUtils.isNotEmpty(qzKeywordRankForSyncs)) {
+									for (QZKeywordRankForSync qzKeywordRankForSync : qzKeywordRankForSyncs) {
+										if (qzKeywordRankForSync.getWebsiteType().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
+											QZKeywordRankForSync anOtherQZKeywordRank = qzKeywordRankInfoService.searchAnOtherQZKeywordRanForSync(qzSettingForSync.getQsId());
+											if (null != anOtherQZKeywordRank) {
+												qzKeywordRankForSyncs.add(anOtherQZKeywordRank);
+											}
 										}
 									}
+									qzSettingForSync.setQzKeywordRanks(qzKeywordRankForSyncs);
 								}
-								qzSettingForSync.setQzKeywordRankForSyncs(qzKeywordRankForSyncs);
 							}
+							map.put("qzSettingForSyncs", qzSettingForSyncs);
 						}
-						map.put("qzSettingForSyncs", qzSettingForSyncs);
 					}
 				}
 			}
+			return map;
 		}
-		return map;
 	}
 }

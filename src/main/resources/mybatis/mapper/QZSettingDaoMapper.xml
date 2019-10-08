@@ -518,12 +518,12 @@
 
     <select id="getQZSettingByCustomerUuid" resultType="com.keymanager.monitoring.vo.QZSettingForSync">
         SELECT
-            qs.fUuid AS uuid,
-            qs.fCustomerUuid AS customerUuid,
-            qs.fDomain AS domain,
-            qs.fSearchEngine AS searchEngine,
-            qs.fBearPawNumber AS bearPawNumber,
-            qs.fRenewalStatus AS renewalStatus
+            qs.fUuid AS 'qsId',
+            qs.fCustomerUuid AS 'customerId',
+            qs.fDomain AS 'domain',
+            qs.fSearchEngine AS 'searchEngine',
+            qs.fBearPawNumber AS 'bearPawId',
+            qs.fRenewalStatus AS 'renewalStatus'
         FROM t_qz_setting qs
         WHERE qs.fCustomerUuid = #{customerUuid}
     </select>

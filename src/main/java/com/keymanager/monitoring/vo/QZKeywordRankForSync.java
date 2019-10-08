@@ -2,11 +2,11 @@ package com.keymanager.monitoring.vo;
 
 public class QZKeywordRankForSync {
 
-    private Long uuid;
-    private Long qzSettingUuid;
+    private Long qkId;
+    private Long qsId;
     private String terminalType;
     private String websiteType;
-    private Boolean dataProcessingStatus;
+    private Boolean processingType;
     private String topTen;
     private String topTwenty;
     private String topThirty;
@@ -15,25 +15,25 @@ public class QZKeywordRankForSync {
     private String topHundred;
     private String date;
     private Double increase;
-    private Integer todayDifference;
-    private Integer oneWeekDifference;
+    private Integer todayDiffVal;
+    private Integer oneWeekDiffVal;
     private String recordDate;
     private String record;
 
-    public Long getUuid() {
-        return uuid;
+    public Long getQkId() {
+        return qkId;
     }
 
-    public void setUuid(Long uuid) {
-        this.uuid = uuid;
+    public void setQkId(Long qkId) {
+        this.qkId = qkId;
     }
 
-    public Long getQzSettingUuid() {
-        return qzSettingUuid;
+    public Long getQsId() {
+        return qsId;
     }
 
-    public void setQzSettingUuid(Long qzSettingUuid) {
-        this.qzSettingUuid = qzSettingUuid;
+    public void setQsId(Long qsId) {
+        this.qsId = qsId;
     }
 
     public String getTerminalType() {
@@ -52,12 +52,12 @@ public class QZKeywordRankForSync {
         this.websiteType = websiteType;
     }
 
-    public Boolean getDataProcessingStatus() {
-        return dataProcessingStatus;
+    public Boolean getProcessingType() {
+        return processingType;
     }
 
-    public void setDataProcessingStatus(Boolean dataProcessingStatus) {
-        this.dataProcessingStatus = dataProcessingStatus;
+    public void setProcessingType(Boolean processingType) {
+        this.processingType = processingType;
     }
 
     public String getTopTen() {
@@ -124,20 +124,20 @@ public class QZKeywordRankForSync {
         this.increase = increase;
     }
 
-    public Integer getTodayDifference() {
-        return todayDifference;
+    public Integer getTodayDiffVal() {
+        return todayDiffVal;
     }
 
-    public void setTodayDifference(Integer todayDifference) {
-        this.todayDifference = todayDifference;
+    public void setTodayDiffVal(Integer todayDiffVal) {
+        this.todayDiffVal = todayDiffVal;
     }
 
-    public Integer getOneWeekDifference() {
-        return oneWeekDifference;
+    public Integer getOneWeekDiffVal() {
+        return oneWeekDiffVal;
     }
 
-    public void setOneWeekDifference(Integer oneWeekDifference) {
-        this.oneWeekDifference = oneWeekDifference;
+    public void setOneWeekDiffVal(Integer oneWeekDiffVal) {
+        this.oneWeekDiffVal = oneWeekDiffVal;
     }
 
     public String getRecordDate() {

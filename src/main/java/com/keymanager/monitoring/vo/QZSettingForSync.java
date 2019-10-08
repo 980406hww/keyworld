@@ -7,29 +7,28 @@ import java.util.List;
  */
 public class QZSettingForSync {
 
-    private Long uuid;
-    private Long customerUuid;
+    private Long qsId;
+    private Long customerId;
     private String domain;
     private String searchEngine;
     private String bearPawNumber;
     private Boolean renewalStatus;
+    List<QZKeywordRankForSync> qzKeywordRanks;
 
-    List<QZKeywordRankForSync> qzKeywordRankForSyncs;
-
-    public Long getUuid() {
-        return uuid;
+    public Long getQsId() {
+        return qsId;
     }
 
-    public void setUuid(Long uuid) {
-        this.uuid = uuid;
+    public void setQsId(Long qsId) {
+        this.qsId = qsId;
     }
 
-    public Long getCustomerUuid() {
-        return customerUuid;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomerUuid(Long customerUuid) {
-        this.customerUuid = customerUuid;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
     public String getDomain() {
@@ -64,11 +63,11 @@ public class QZSettingForSync {
         this.renewalStatus = renewalStatus;
     }
 
-    public List<QZKeywordRankForSync> getQzKeywordRankForSyncs() {
-        return qzKeywordRankForSyncs;
+    public List<QZKeywordRankForSync> getQzKeywordRanks() {
+        return qzKeywordRanks;
     }
 
-    public void setQzKeywordRankForSyncs(List<QZKeywordRankForSync> qzKeywordRankForSyncs) {
-        this.qzKeywordRankForSyncs = qzKeywordRankForSyncs;
+    public void setQzKeywordRanks(List<QZKeywordRankForSync> qzKeywordRanks) {
+        this.qzKeywordRanks = qzKeywordRanks;
     }
 }
