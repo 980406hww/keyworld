@@ -3,8 +3,10 @@ package com.keymanager.ckadmin.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
+import com.keymanager.ckadmin.criteria.CustomerTypeCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 
+import com.keymanager.ckadmin.vo.CustomerTypeVO;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -40,4 +42,6 @@ public interface CustomerDao extends BaseMapper<Customer> {
     void changeSaleRemark(@Param("uuid") Long uuid, @Param("saleRemark") String SaleRemark);
 
     void changeRemark(@Param("uuid") Long uuid, @Param("remark") String remark);
+
+    List<CustomerTypeVO> searchCustomerTypes(@Param("customerTypeCriteria") CustomerTypeCriteria customerTypeCriteria);
 }

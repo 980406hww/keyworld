@@ -73,9 +73,14 @@
     {{#  }else if(d.currentIndexCount === -2) { }}
     未收录
     {{# }else{ }}
-    {{= d.currentIndexCount }}
+    <a href="http://index.baidu.com/v2/main/index.html#/trend/{{ d.keyword }}" target="_blank" title="查看历史排名" class="floatTd">{{= d.currentIndexCount }}</a>
     {{# } }}
 </script>
+
+<script type="text/html" id="currentPositionTpl">
+    <a href="{{d.searchEngineUrl}}" target="_blank">{{d.currentPosition}}</a>
+</script>
+
 
 <script type="text/html" id="collectMethodTpl">
     {{#  if(d.collectMethod === 'PerDay') { }}

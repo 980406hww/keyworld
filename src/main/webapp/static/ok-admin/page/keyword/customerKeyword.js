@@ -51,24 +51,16 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             type: 'get',
             success: function (res) {
                 if (res.code === 200) {
-                    // $("#tabItem").empty();
-                    let i = 0;
                     $.each(res.data, function (index, item) {
                         let businessItem = item.split("#");
-                        if (i === 0) {
                             $('#tabItem').append(
-                                '<li data-type="' + businessItem[0] + '" data-terminal="PC" class="layui-this">' + businessItem[1] + '电脑</li>' +
-                                '<li data-type="' + businessItem[0] + '" data-terminal="Phone">' + businessItem[1] + '手机</li>');
-                            $('#type').val(businessItem[0]);
-                            $('#terminalType').val('PC');
-                        }else {
-                            $('#tabItem').append(
-                                '<li data-type="' + businessItem[0] + '" data-terminal="PC">' + businessItem[1] + '电脑</li>' +
-                                '<li data-type="' + businessItem[0] + '" data-terminal="Phone">' + businessItem[1] + '手机</li>');
-                        }
-                        i++;
+                                '<li data-type="' + businessItem[0] + '" data-terminal="PC" lay-id="'+businessItem[0]+'PC">' + businessItem[1] + '电脑</li>' +
+                                '<li data-type="' + businessItem[0] + '" data-terminal="Phone" lay-id="'+businessItem[0]+'Phone">' + businessItem[1] + '手机</li>');
                     });
                     form.render("select");
+
+                    let keyTab = $('#type').val() + $('#terminalType').val();
+                    element.tabChange('keywordTab', keyTab);
                 }
             }
         });
@@ -129,7 +121,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             elem: '#keywordTable',
             method: 'post',
             url: '/internal/customerKeyword/getCustomerKeywords',
-            limit: 25,
+            limit: 50,
             limits: [10, 25, 50, 75, 100, 500, 1000],
             page: true,
             size: 'sm',
@@ -145,12 +137,11 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 {filed: 'uuid', type: 'checkbox', width: '35'},
                 {field: 'keyword', title: '关键字', width: '150'},
                 {field: 'url', title: '链接', width: '140'},
-
                 {field: 'bearPawNumber', title: '熊掌号', align: 'center', width: '100'},
                 {field: 'title', title: '标题', width: '220'},
                 {field: 'currentIndexCount', title: '指数', align: 'center', width: '80', templet: '#indexCountTpl'},
                 {field: 'initialPosition', title: '初始排名', align: 'center', width: '80'},
-                {field: 'currentPosition', title: '现排名', align: 'center', width: '80'},
+                {field: 'currentPosition', title: '现排名', align: 'center', width: '80', templet: '#currentPositionTpl'},
                 {field: 'searchEngine', title: '搜索引擎', align: 'center', width: '80'},
                 {field: 'collectMethod', title: '收费方式', align: 'center', width: '80', templet: '#collectMethodTpl'},
                 {field: 'optimizePlanCount', title: '要刷', align: 'center', width: '80'},
@@ -280,14 +271,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             case 'upload_keyword_simple':
                 upload_keyword('SuperUserSimple');
                 break;
-            case 'download_keyword_simple_excel':
-                download_keyword_excel('SuperUserSimple');
-                break;
             case 'upload_keyword_full':
                 upload_keyword('SuperUserFull');
-                break;
-            case 'download_keyword_full_excel':
-                download_keyword_excel('SuperUserFull');
                 break;
             case 'download_daily_report':
                 download_daily_report();
@@ -365,7 +350,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
 
     function add_customer_keyword() {
         let customerUuid = $('#customerUuid').val();
-        let type = $('#typeTmp').val();
+        let type = $('#type').val();
         let terminalType = $('#terminalType').val();
         let data = {};
         data.customerUuid = customerUuid;
@@ -404,35 +389,19 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         })
     }
 
-    function download_keyword_excel(excelType) {
-        let url = excelType === 'SuperUserSimple' ? '/SuperUserSimpleKeywordList.xls' : '/SuperUserFullKeywordList.xls';
-        window.open(url, '_blank');
-    }
-
     function download_keyword_info() {
-        let postData = formToJsonObject('searchForm');
-        $.ajax({
-            url: '/internal/customerKeyword/downloadCustomerKeywordInfo2',
-            data: JSON.stringify(postData),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            async: false,
-            type: 'post',
-            success: function (res) {
-                if (res.code === 200) {
-                    show_layer_msg('导出成功', 6, false);
-                } else {
-                    show_layer_msg('未知错误！', 5);
-                }
-            }
+        let searchCriteriaArray = $('#searchForm').serializeArray();
+        let downloadKeywordForm = $('#downloadKeywordForm');
+        $.each(searchCriteriaArray, function (idx, val) {
+            downloadKeywordForm.find("#"+val.name+"Hidden").val(val.value === '' ? null : val.value);
         });
+
+        $("#downloadKeywordForm").submit();
     }
 
     function download_keyword_url() {
         $("#customerUuidKU").val($("#customerUuid").val());
-        $("#terminalTypeKU").val($("#terminalTypeTmp").val());
+        $("#terminalTypeKU").val($("#terminalType").val());
         $("#keywordUrlForm").submit();
     }
 
@@ -1240,12 +1209,14 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
 
     // 编辑表格获得表格数据
     function editKeyword(data) {
-        let customerUuid = $('#customerUuid').val();
-        let type = $('#type').val();
-        let terminalType = $('#terminalType').val();
-        let url = '/internal/customerKeyword/toCustomerKeywordAdd/' + type + '/' + terminalType + '/' + customerUuid;
+        let postData = {};
+        postData.uuid = data.uuid;
+        postData.customerUuid = $('#customerUuid').val();
+        postData.type = $('#type').val();
+        postData.terminalType = $('#terminalType').val();
+        let url = '/internal/customerKeyword/toCustomerKeywordAdd';
         okLayer.open("关键字统计 / 客户关键字 / 修改关键字", url, "60%", "90%", function (layero) {
-            window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
+            window[layero.find("iframe")[0]["name"]].initForm(postData);
         }, function () {
             if (sign) {
                 active['reload'].call(this);

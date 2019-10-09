@@ -316,37 +316,39 @@ layui.define(["element", "jquery"], function (exports) {
    okTab.prototype.render = function (fun) {
       var _this = this;//data
       var _data = _this.tabConfig.data;
-      if(_this.tabConfig.url){
-         $.get(_this.tabConfig.url, function (res) {
-            _data = res;
-            if(typeof _this.tabConfig.parseData == "function"){
-               _data = _this.tabConfig.parseData(res);
-            }
-            $("#navBar").html(_this.navBar(_data));
-            element.render('nav');
-            $(window).resize(function () {
-               $("#navBar").height($(window).height() - 245);
-            });
-            if (typeof fun == "function") {
-               fun();
-            }
-         });
-      }else if($.type(_data) == 'array'){
-         if(_data.length < 1){
-            alert("菜单集合中无任何数据");
-         }
-         var _data = _this.tabConfig.data;
-         $("#navBar").html(_this.navBar(_data));
-         element.render('nav');
-         $(window).resize(function () {
-            $("#navBar").height($(window).height() - 245);
-         });
-         if (typeof fun == "function") {
-            fun();
-         }
-      }else{
-         alert("你的菜单配置有误请查看菜单配置说明");
-      }
+      element.render('nav');
+      //暂时停用动态加载菜单栏 10.08
+      // if(_this.tabConfig.url){
+      //    $.get(_this.tabConfig.url, function (res) {
+      //       _data = res;
+      //       if(typeof _this.tabConfig.parseData == "function"){
+      //          _data = _this.tabConfig.parseData(res);
+      //       }
+      //       $("#navBar").html(_this.navBar(_data));
+      //       element.render('nav');
+      //       $(window).resize(function () {
+      //          $("#navBar").height($(window).height() - 245);
+      //       });
+      //       if (typeof fun == "function") {
+      //          fun();
+      //       }
+      //    });
+      // }else if($.type(_data) == 'array'){
+      //    if(_data.length < 1){
+      //       alert("菜单集合中无任何数据");
+      //    }
+      //    var _data = _this.tabConfig.data;
+      //    $("#navBar").html(_this.navBar(_data));
+      //    element.render('nav');
+      //    $(window).resize(function () {
+      //       $("#navBar").height($(window).height() - 245);
+      //    });
+      //    if (typeof fun == "function") {
+      //       fun();
+      //    }
+      // }else{
+      //    alert("你的菜单配置有误请查看菜单配置说明");
+      // }
    };
 
    //刷新当前tab页

@@ -3,11 +3,13 @@ package com.keymanager.ckadmin.service.impl;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
+import com.keymanager.ckadmin.criteria.CustomerTypeCriteria;
 import com.keymanager.ckadmin.dao.CustomerDao;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.service.CustomerBusinessService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.CustomerService;
+import com.keymanager.ckadmin.vo.CustomerTypeVO;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -193,5 +195,10 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     @Override
     public void changeRemark(Long uuid, String remark) {
         customerDao.changeRemark(uuid, remark);
+    }
+
+    @Override
+    public List<CustomerTypeVO> searchCustomerTypeCount(CustomerTypeCriteria customerTypeCriteria) {
+        return customerDao.searchCustomerTypes(customerTypeCriteria);
     }
 }

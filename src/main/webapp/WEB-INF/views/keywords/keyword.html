@@ -27,6 +27,10 @@
                                 <div class="out-condition">
                                     <input type="hidden" name="type" id="type" value="pt">
                                     <input type="hidden" name="terminalType" id="terminalType" value="PC">
+                                    <input type="hidden" id="sevenDaysNoReachStandard" name="sevenDaysNoReachStandard" value=""/>
+                                    <input type="hidden" id="fifteenDaysNoReachStandard" name="fifteenDaysNoReachStandard" value=""/>
+                                    <input type="hidden" id="thirtyDaysNoReachStandard" name="thirtyDaysNoReachStandard" value=""/>
+
                                     <div class="layui-inline">
                                         <select name="searchEngine" id="searchEngine">
                                             <option value=''>搜索引擎</option>
@@ -48,6 +52,7 @@
                                         <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off"
                                                class="layui-input layui-input-text ">
                                     </div>
+
                                     <div class="layui-inline">
                                         <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索
                                         </button>
@@ -57,7 +62,7 @@
                                             更多条件
                                         </div>
                                     </div>
-                                    <div class="layui-inline">
+                                    <div class="layui-inline" id="resetBtnDiv">
                                         <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset" id="resetBtn">
                                             重置
                                         </button>
@@ -156,14 +161,13 @@
                                             </div>
                                         </div>
 
-                                        <div class="layui-inline">
+                                        <div class="layui-inline" id="invalidRefreshCountDiv">
                                             <label class="layui-form-label">无效点击数</label>
                                             <div class="layui-input-inline">
                                                 <input type="number" name="invalidRefreshCount" id="invalidRefreshCount" placeholder="请输入无效点击数" autocomplete="off"
                                                        class="layui-input">
                                             </div>
                                         </div>
-
 
                                         <div class="layui-inline">
                                             <label class="layui-form-label">创建日期范围</label>
@@ -190,6 +194,7 @@
                                 </div>
                             </div>
                         </form>
+
                     </div>
                 </div>
                 <!--数据表格-->

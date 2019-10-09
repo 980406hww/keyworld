@@ -1,133 +1,393 @@
 var sign = false;
-// 进度条加载提示
-// NProgress.start();
-// window.onload = function () {
-//     NProgress.done();
-// };
+
+getHeight();
+
+function getHeight(){
+    let b = document.getElementById('customerBody');
+    let h = window.innerHeight || document.body.offsetHeight;
+    b.style.height = (h - 155) + 'px';
+}
+
 // layui相关
-layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLayer', 'layer'], function () {
+layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function () {
     var element = layui.element;
-    var table = layui.table;
     var form = layui.form;
     var $ = layui.jquery;
-    var laydate = layui.laydate;
-    var okLayer = layui.okLayer;
     var layer = layui.layer;
-    var tablePlug = layui.tablePlug; //表格插件
+    var okLayer = layui.okLayer;
+    var laypage = layui.laypage;
 
-    tablePlug.enableTableFixedScroll(true);
-    var customerTable = table.render({
-        elem: '#customerTable',
-        method: 'post',
-        url: '/internal/customer/getCustomers',
-        limit: 25,
-        limits: [10, 25, 50, 75, 100, 500, 1000],
-        page: true,
-        autoSort: false,
-        size: 'sm',
-        id: 'customerTable',
-        even: true,//隔行背景
-        // toolbar: true,
-        toolbar: "#toolbarTpl",
-        // defaultToolbar: ['filter', 'print', 'exports'], 对应列筛选 打印 导出
-        defaultToolbar: ['filter'],
-        contentType: 'application/json',
-        cols: [[
-            /*templet: '#toDateTime'*/
-            {filed: 'uuid', type: 'checkbox', fixed: "left", width: '32'},
-            {field: 'uuid', title: '基本信息', fixed: "left", width: '680', align: 'center', templet: '#baseInfo'},
-            {field: 'uuid', title: '拥有业务', width: '680', align: 'center', templet: '#businessInfo'},
-            {field: 'uuid', title: '操作', fixed: "right", width: '100',align: 'center', templet: '#operationTpl',}
-        ]],
-        height: 'full-110',
-
-        done: function (res, curr, count) {
-            autoFixed($(this.elem[0]).next());
-        }
+    $(window).resize(function(){
+        let b = document.getElementById('customerBody');
+        let h = window.innerHeight || document.body.offsetHeight;
+        b.style.height = (h - 155) + 'px';
     });
+    function formToJsonObject (form_id) {
+        var formData = decodeURIComponent($("#" + form_id).serialize(), true);
+        formData = formData.replace(/&/g, "\",\"");
+        formData = formData.replace(/=/g, "\":\"");
+        formData = "{\"" + formData + "\"}";
+        formData = $.parseJSON(formData);
+        return formData;
+    }
 
-    //监听排序事件
-    table.on('sort(tableFilter)', function (obj) {
-        let data = $.parseJSON(formToJson($("#searchForm").serialize()));
-        data.orderBy = obj.field;
-        data.orderMode = obj.type === 'asc' ? 1 : 0;
+    init_keyword_type();
+    initLayPage(formToJsonObject('searchForm'));
 
-        table.reload('customerTable', {
-            where: data,
-            page: {
-                curr: 1
+    function initLayPage(pageConf) {
+        if (!pageConf) {
+            pageConf = {};
+            pageConf.limit = 30;
+            pageConf.page = 1;
+        }
+        if(!pageConf.page){
+            pageConf.page = 1;
+        }
+        if (!pageConf.limit) {
+            pageConf.limit = 30;
+        }
+        $.ajax({
+            url: '/internal/customer/getCustomers',
+            data: JSON.stringify(pageConf),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 20000,
+            type: 'POST',
+            success: function (result) {
+                laypage.render({
+                    elem: 'page_nav',
+                    count: result.count,
+                    curr: pageConf.page,
+                    limit: pageConf.limit,
+                    limits: [10, 30, 50, 100, 500, 1000],
+                    first: '首页',
+                    last: '尾页',
+                    layout: ['prev', 'page', 'next', 'count', 'limit'],
+                    jump: function (obj, first) {
+                        if (!first) {
+                            pageConf.page = obj.curr;
+                            pageConf.limit = obj.limit;
+                            initLayPage(pageConf);
+                        }
+                    }
+                });
+                init_data(result.data);
+                let entryType = $('#entryType').val();
+                let postData = {};
+                postData.entryType = entryType;
+                init_customerTypeCount(postData);
+                form.render();
+                // layer.msg('加载完成', {icon: 6});
+            },
+            error: function () {
+                layer.msg('获取用户失败，请稍后再试', {icon: 5});
             }
         });
+    }
+
+    function init_data(data) {
+        $("#data_list").html('');
+        $.each(data, function (index, obj) {
+            let item = '<div class="layui-col-md6 layui-col-sm6">' +
+                '   <div class="layadmin-contact-box">' +
+                '       <div class="layui-col-md5 layui-col-sm6">';
+            item += '           <h3 class="layadmin-title skip" title="'+obj.contactPerson+'">' +
+                '               <input type="checkbox" name="checkItem" value="' + obj.uuid + '" status="'+obj.status+'"lay-skin="primary" >' +
+                '               <strong >' + obj.contactPerson + '</strong>' +
+                '           </h3>';
+            item += '           <div class="layadmin-address">' +
+                '                   <strong>联系方式</strong>' +
+                '                   <br>' +
+                '                   电话:' + obj.telphone +
+                '                   <br>' +
+                '                   微信:' + obj.wechat +
+                '                   <br>' +
+                '                   QQ:' + obj.qq +
+                '               </div>';
+            item += '           <div class="layadmin-address other_info">' +
+                '                   <strong>其他信息</strong>' +
+                '                   <p class="skip" >客户类型:' + obj.type +'</p>' +
+                '                   <p class="skip" >所属用户:' + obj.loginName +'</p>' +
+                '                   <p class="skip" >客户状态:' + generate_customer_status(obj.status) +'</p>' +
+                '                   <p class="skip" >是否产生日报表:<span id="dr'+obj.uuid+'">' + generate_customer_daily_report(obj.uuid, obj.status, obj.dailyReportIdentify) + '</span></p>' +
+                '               </div>';
+            item += '           <div class="layadmin-address ">' +
+                '                   <strong>备注</strong>' +
+                '                   <p class="skip" title="'+obj.saleRemark+'" onclick=changeSaleRemark("'+obj.uuid+'","'+obj.saleRemark+'") >客户标签:<span id="saleRemark'+obj.uuid+'">' + obj.saleRemark + '</span></p>' +
+                '                   <p class="skip" title="'+obj.remark+'" onclick=changeRemark("'+obj.uuid+'","'+obj.remark+'") >销售详细备注:<span id="remark'+obj.uuid+'">' + obj.remark + '</span></p>' +
+                '               </div>' +
+                '       </div>';
+            item += '   <div class="layui-col-md6  layui-col-sm6">' +
+                '       <h3 class="layadmin-title">' +
+                '           <strong>拥有业务</strong>' +
+                '       </h3>';
+            let customerBusinessList = obj.customerBusinessList;
+            if (customerBusinessList !== null && customerBusinessList.length > 0) {
+                var contactPerson = obj.contactPerson.replace(/\s+/g, "");
+                $.each(obj.customerBusinessList, function (index, tmp) {
+                    let url = '', title = '', id = '';
+                    if (tmp === 'keyword') {
+                        let entryType = $('#entryType').val();
+                        url = '/internal/customerKeyword/toCustomerKeywords/' + entryType+'/PC/'+obj.uuid;
+                        title = contactPerson + '-关键字信息';
+                        id = contactPerson + '-关键字信息';
+                        item += '<div class="layadmin-address">' +
+                            '<strong>' +
+                            '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>单词业务</a>' +
+                            '</strong>' +
+                            '<br>';
+                        $.ajax({
+                            url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid,
+                            dataType: 'json',
+                            type: 'get',
+                            async: false,
+                            success: function (res) {
+                                if (res.code === 200) {
+                                    item += generate_keyword_info(res.data)
+                                } else {
+                                    item += '暂无数据'
+                                }
+                                item += '</div>';
+                            }
+                        });
+                    } else if (tmp === 'qzsetting') {
+                        url = '/internal/qzsetting/toQZSetttingsWithCustomerUuid/' + obj.uuid;
+                        title = contactPerson + '-全站信息';
+                        id = contactPerson + '-全站信息';
+                        item += '<div class="layadmin-address"><strong>' +
+                            '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>全站业务</a>' +
+                            '</strong>' +
+                            '<br>';
+                        $.ajax({
+                            url: '/internal/qzsetting/getQZSettingsCount/' + obj.uuid,
+                            dataType: 'json',
+                            type: 'get',
+                            async: false,
+                            success: function (res) {
+                                if (res.code === 200) {
+                                    item += generate_qzsetting_info(res.data)
+                                } else {
+                                    item += '暂无数据'
+                                }
+                                item +=
+                                    '</div>';
+
+                            }
+                        });
+                    } else if (tmp === 'fm') {
+                        url = '/internal/qzsetting/toFMWithCustomerUuid/' + obj.uuid;
+                        title = contactPerson + '-负面信息';
+                        id = contactPerson + '-负面信息';
+                        item += '<div class="layadmin-address"><strong>' +
+                            '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>负面业务</a>' +
+                            '</strong>' +
+                            '<br>' +
+                            '待做---占位符' +
+                            '</div>';
+                    }
+                });
+            } else {
+                item += '<div class="layadmin-address">\n' +
+                    '                <strong>暂无业务</strong>\n' +
+                    '    </div>';
+
+            }
+            item += '</div>';
+            item += '<div class="layui-col-md1 layui-col-sm6 operation">\n' +
+                '       <h3 class="layadmin-title">\n' +
+                '           <strong>操作</strong>\n' +
+                '       </h3>' +
+                '       <div class="layadmin-address">\n' +
+                '           <a href="javascript:void(0)" class="caller-fr" onclick=editCustomer("' + obj.uuid + '")>' +
+                '               修改\n' +
+                '               <i class="layui-icon layui-icon-edit"></i>\n' +
+                '           </a>\n' +
+                '       </div>' +
+                '       <div class="layadmin-address">\n' +
+                '           <a href="javascript:void(0)" class="caller-fr" onclick=delOneCustomer("' + obj.uuid + '")>' +
+                '                   删除\n' +
+                '               <i class="layui-icon layui-icon-close"></i>\n' +
+                '           </a>\n' +
+                '       </div>';
+            item += '</div>';
+            item += '</div>';
+            $("#data_list").append(item)
+        })
+    }
+
+    function init_keyword_type() {
+        $.ajax({
+            url: '/internal/common/getBusinessTypeByUserRole',
+            dataType: 'json',
+            async: false,
+            type: 'get',
+            success: function (res) {
+                if (res.code === 200) {
+                    let i = 0;
+                    $.each(res.data, function (index, item) {
+                        let businessItem = item.split("#");
+                        if (i === 0) {
+                            $('#tabItem').append(
+                                '<li data-entrytype="' + businessItem[0] + '" data-terminal="PC" class="layui-this">' + businessItem[1] + '</li>' );
+                            $('#entryType').val(businessItem[0]);
+                        }else {
+                            $('#tabItem').append(
+                                '<li data-entrytype="' + businessItem[0] + '" data-terminal="PC">' + businessItem[1] + '</li>' );
+                        }
+                        i++;
+                    });
+                    form.render("select");
+
+                }
+            }
+        });
+    }
+
+    element.on('tab(customerTab)', function (data) {
+        let d = data.elem.context.dataset;
+        $('#entryType').val(d.entrytype);
+        initLayPage(formToJsonObject('searchForm'));
+
+        let postData = {};
+        postData.entryType = d.entrytype;
+        init_customerTypeCount(postData);
     });
 
-    //监听工具条
-    table.on('tool(tableFilter)', function (obj) {
-        var data = obj.data;
-        switch (obj.event) {
-            case 'edit':
-                editCustomer(data);
-                break;
-            case 'del':
-                delOneCustomer(data);
-                break;
-        }
-    });
+    function init_customerTypeCount(data){
+        $.ajax({
+            url: '/internal/customer/searchCustomerTypeCount2',
+            data: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (res) {
+                let data = res.data;
+                let htm = '客户类型统计:';
+                $.each(data,function (index,item) {
+                    htm += '<a href="javascript:showCustomerByType(\''+item.type+'\')" >'+item.type+'('+item.customerCount+')</a>|'
+                });
 
-    table.on('toolbar(tableFilter)', function (obj) {
-        var data = obj.data, event = obj.event;
-        switch (event) {
-            case 'batchDeleteCustomer':
-                batchDeleteCustomer();
-                break;
-            case 'batchUpdateDailyReport':
-                batchUpdateDailyReport();
-                break;
-            case 'addUser':
-                toAddCustomer();
-                break
-        }
-    });
+                $('#customerTypeCountDiv').empty().append(htm.substring(0,htm.lastIndexOf("|")));
+            },
+            error: function () {
+                show_layer_msg('未达标统计失败', 5);
+            }
+        });
+    }
 
-    var active = {
-        reload: function () {
-            table.reload('customerTable', {
-                where: $.parseJSON(formToJson($("#searchForm").serialize())),
-                /*page: {
-                    curr: 1
-                }*/
-            });
-            $("#searchContent").removeClass("layui-show")
-        },
+    window.showCustomerByType = function (customerType){
+        $('#type').val(customerType);
+        // form.render()
+        $('#searchBtn').click();
+
     };
 
+    form.on('checkbox(checkAll)', function (data) {
+        if ($(this)[0].checked) {
+            $("input[name='checkItem']").each(function () {
+                this.checked = true;
+            })
+        } else {
+            $('input[name="checkItem"]').each(function () {
+                this.checked = false;
+            })
+        }
+        form.render('checkbox')
+
+    });
+
     form.on("submit(search)", function (data) {
-        table.reload('customerTable', {
-            where: data.field,
-            page: {
-                curr: 1
-            }
-        });
-        $("#searchContent").removeClass("layui-show");
+        var pageConf = data.field;
+        pageConf.limit = 50;
+        pageConf.page = 1;
+        if (!open) {
+            showCondition();
+        }
+        initLayPage(pageConf);
         return false;
     });
 
-    function formToJson(data) {
-        data = data.replace(/&/g, "\",\"");
-        data = data.replace(/=/g, "\":\"");
-        data = "{\"" + data + "\"}";
-        return data;
+    function show_layer_msg(msg, icon, title, status) {
+        layer.msg(msg, {
+            icon: icon,
+            title: title === undefined ? null : title,
+            anim: 5,
+            time: 2000,
+            isOutAnim: false
+        }, function () {
+
+        });
     }
 
-    function batchDeleteCustomer() {
-        var checkStatus = table.checkStatus('customerTable')
-            , data = checkStatus.data;
+    //获取选中客户uuid[]
+    function get_select_uuids(){
         var uuidArr = [];
-        $.each(data, function (index, item) {
-            uuidArr.push(item.uuid);
+        $('input[name="checkItem"]:checked').each(function () {
+            uuidArr.push(this.value)
         });
+        return uuidArr;
+    }
+
+    //获取选中的激活的客户uuid[]
+    function get_select_active_uuids(){
+        var uuidArr = [];
+        $('input[name="checkItem"]:checked').each(function () {
+            if (this.getAttribute("status") === '1') {
+                uuidArr.push(this.value);
+            }
+        });
+        return uuidArr;
+    }
+
+    //删除单个客户
+    window.delOneCustomer = function (uuid) {
+        layer.confirm('真的删除该客户吗', function (index) {
+            var uuidArr = [];
+            uuidArr.push(uuid);
+            var postData = {};
+            postData.uuids = uuidArr;
+            $.ajax({
+                url: '/internal/customer/deleteCustomers2',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result.code === 200) {
+                        layer.msg('操作成功', {
+                            icon: 6,
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            let pageConf = formToJsonObject('searchForm');
+                            initLayPage(pageConf)
+                        });
+                    } else {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                },
+                error: function () {
+                    layer.msg('操作失败', {icon: 5});
+
+                }
+            });
+            layer.close(index);
+        });
+    };
+
+    //批量删除
+    window.batchDelete = function () {
+        let uuidArr = get_select_uuids();
         if (uuidArr.length <= 0) {
-            layer.msg('请选择要操作的客户', {icon: 5});
-            return
+            show_layer_msg("请选择要删除的客户！！", 5);
+            return false;
         }
         layer.confirm("确定要删除所选客户吗", {icon: 3, title: '删除所选'}, function (index) {
             var postData = {};
@@ -147,7 +407,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
                             icon: 6,
                             time: 2000
                         }, function () {
-                            active['reload'].call(this);
+                            let pageConf = formToJsonObject('searchForm');
+                            initLayPage(pageConf)
                         });
                     } else {
                         layer.msg('操作失败', {icon: 5});
@@ -159,135 +420,47 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
             });
             layer.close(index);
         });
-    }
+    };
 
-    function batchUpdateDailyReport() {
-        var checkStatus = table.checkStatus('customerTable')
-            , data = checkStatus.data;
-        var uuidArr = [];
-        $.each(data, function (index, item) {
-            if (item.status === 1) {
-                uuidArr.push(item.uuid);
-            }
-        });
-        if (uuidArr.length <= 0) {
-            layer.msg('请选择要操作的客户', {icon: 5});
-            return
-        }
-        layer.confirm("确定更新所选客户日报表吗", {icon: 3, title: '更新日报表'}, function (index) {
-            var postData = {};
-            postData.uuids = uuidArr;
-            $.ajax({
-                url: '/internal/customer/updateCustomerDailyReportIdentify2',
-                data: JSON.stringify(postData),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                timeout: 5000,
-                type: 'POST',
-                success: function (result) {
-                    if (result.code === 200) {
-                        layer.msg('操作成功', {
-                            icon: 6,
-                            time: 2000
-                        }, function () {
-                            active['reload'].call(this);
-                        });
-                    } else {
-                        layer.msg('操作失败', {icon: 5});
-                    }
-                },
-                error: function () {
-                    layer.msg('操作失败', {icon: 5});
-                }
-            });
-            layer.close(index);
-        });
-    }
-
-    /* $.ajax({
-         url: '/internal/customer/getActiveUsers',
-         dataType: 'json',
-         type: 'get',
-         success: function (data) {
-             $("#loginName").empty();
-             $("#loginName").append('<option value="">请选择所属用户</option>');
-             $.each(data, function (index, item) {
-                 $('#loginName').append('<option value="' + item.loginName + '">' + item.userName + '</option>');
-             });
-             form.render("select");
-         }
-     });*/
-
-    // 编辑表格获得表格数据
-    function editCustomer(data) {
-        okLayer.open("首页 / 客户列表 / 修改用户", "/internal/customer/toCustomersAdd", "60%", "90%", function (layero) {
-            window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
+    // 添加客户
+    window.toAddCustomer = function () {
+        let entryType = $('#entryType').val();
+        let data = {};
+        data.uuid = null;
+        data.entryType = entryType;
+        okLayer.open("首页 / 客户列表 / 添加用户", "/internal/customer/toCustomersAdd", "40%", "90%", function(layero){
+            window[layero.find("iframe")[0]["name"]].initForm(data);
         }, function () {
             if (sign) {
-                active['reload'].call(this);
+                let pageConf = formToJsonObject('searchForm');
+                initLayPage(pageConf);
+                sign = false;
+            }
+        });
+    };
+
+    // 编辑表格获得表格数据
+    window.editCustomer = function (uuid) {
+        let data = {};
+        let entryType = $('#entryType').val();
+        data.uuid = uuid;
+        data.entryType = entryType;
+        okLayer.open("首页 / 客户列表 / 修改用户", "/internal/customer/toCustomersAdd", "40%", "90%", function (layero) {
+            window[layero.find("iframe")[0]["name"]].initForm(data);
+        }, function () {
+            if (sign) {
+                let pageConf = formToJsonObject('searchForm');
+                initLayPage(pageConf);
                 sign = false;
             }
         })
-    }
-
-    //删除单个客户
-    function delOneCustomer(data) {
-        layer.confirm('真的删除该客户吗', function (index) {
-            var uuidArr = [];
-            uuidArr.push(data.uuid);
-            var postData = {};
-            postData.uuids = uuidArr;
-            $.ajax({
-                url: '/internal/customer/deleteCustomers2',
-                data: JSON.stringify(postData),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                timeout: 5000,
-                type: 'POST',
-                success: function (result) {
-                    if (result.code === 200) {
-                        layer.msg('操作成功', {
-                            icon: 6,
-                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                        }, function () {
-                            active['reload'].call(this);
-                        });
-                    } else {
-                        layer.msg('操作失败', {icon: 5});
-                    }
-                },
-                error: function () {
-                    layer.msg('操作失败', {icon: 5});
-
-                }
-            });
-            layer.close(index);
-        });
-    }
-
-    $('#clearContactPerson').click(function () {
-        $('#contactPerson').val('');
-    });
-
-    // 添加客户
-    function toAddCustomer() {
-        okLayer.open("首页 / 客户列表 / 添加用户", "/internal/customer/toCustomersAdd", "60%", "90%", null, function () {
-            if (sign) {
-                active['reload'].call(this);
-                sign = false;
-            }
-        });
-    }
+    };
 
     //更新关键字状态
-    window.changeCustomerKeywordStatus = function changeCustomerKeywordStatus(customerUuid, status) {
-        if (status === 0) {
+    window.changeCustomerKeywordStatus = function (customerUuid, status) {
+        if (status === '0') {
             msg = "确定暂停所有关键字吗?"
-        } else if (status === 1) {
+        } else if (status === '1') {
             msg = "确定激活所有关键字吗?"
         }
         layer.confirm(msg, {icon: 3, title: '关键字状态'}, function (index) {
@@ -307,16 +480,17 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
                     if (result.code === 200) {
                         layer.msg('操作成功', {
                             icon: 6,
-                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                        }, function () {
-                            active['reload'].call(this);
+                            time: 1000
+                        },function () {
+                            let pageConf = formToJsonObject('searchForm');
+                            initLayPage(pageConf);
                         });
                     } else {
-                        layer.msg('操作失败', {icon: 5});
+                        layer.msg('操作失败', {icon: 5, time: 1000});
                     }
                 },
                 error: function () {
-                    layer.msg('操作失败', {icon: 5});
+                    layer.msg('操作失败', {icon: 5, time: 1000});
 
                 }
             });
@@ -324,14 +498,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
         });
     };
 
-    //
-    window.changeCustomerDailyReportIdentify = function changeCustomerDailyReportIdentify(uuid, status, oldIdentify,
-                                                                                          newIdentify, self) {
-        var select = $(self);
+    //改变日报表值
+    window.changeCustomerDailyReportIdentify = function (uuid, status, oldIdentify, newIdentify) {
         if (status !== '1') {
             layer.msg('请激活客户', {icon: 5});
             return;
         }
+
         var postData = {};
         postData.customerUuid = uuid;
         postData.identify = newIdentify;
@@ -345,140 +518,221 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'tablePlug', 'okLaye
             data: JSON.stringify(postData),
             success: function (result) {
                 if (result.code === 200) {
-                    layer.msg('操作成功', {icon: 6});
+                    layer.msg('操作成功', {icon: 6, time:1000});
+                    $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, newIdentify))
                 }
             },
             error: function () {
-                layer.msg('操作失败', {icon: 5});
-                select.val(oldIdentify);
+                layer.msg('操作失败', {icon: 5, time:1000});
+                $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, oldIdentify))
             }
         });
+
     };
 
-    /**
-     * 修正浮动栏高度
-     * @param tableElem 表格显示div
-     */
-    function autoFixed(tableElem) {
-        var $tableView = tableElem || $(".layui-table-view");
-        var dataIndex, trHeight;
-        $tableView.each(function () {
-            // 获取两侧浮动栏
-            var $fixed = $(this).find(".layui-table-fixed");
-            // 同步表头高度
-            $fixed.find(".layui-table-header tr").height($(this).find(".layui-table-header tr").eq(0).height());
-            // 遍历tr 修正浮动栏行高
-            $(this).find(".layui-table-main tr").each(function () {
-                dataIndex = $(this).attr("data-index");
-                trHeight = $(this).css("height");
-                $fixed.find("tr[data-index=" + dataIndex + "]").css("height", trHeight);
-            })
+    //触发所选客户日报表
+    window.batchUpdateDailyReport= function () { //获取选中数据
+        let uuidArr = get_select_active_uuids();
+        if (uuidArr.length <= 0) {
+            layer.msg('请选择要操作的激活的客户', {icon: 5});
+            return false;
+        }
+        layer.confirm("确定更新所选客户日报表吗", {icon: 3, title: '更新日报表'}, function (index) {
+            var postData = {};
+            postData.uuids = uuidArr;
+            $.ajax({
+                url: '/internal/customer/updateCustomerDailyReportIdentify2',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result.code === 200) {
+                        layer.msg('操作成功', {
+                            icon: 6,
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        });
+                    } else {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                },
+                error: function () {
+                    layer.msg('操作失败', {icon: 5});
+                }
+            });
+            layer.close(index);
         });
     }
 
-
-    // 监听表头鼠标按下事件
-    $(document).on('onMouseUp', 'thead',
-        function (e) {
-            var that = $(this);
-            $(document).one('mouseup', function () {
-                autoFixed(that.parents('.layui-table-view'));
-            })
-        }
-    );
-
-
-    window.generate_customer_business_td2 = function (data) {
-        let html = '';
-        let count = 0;
-        let customerBusinessList = data.customerBusinessList;
-        if (customerBusinessList !== null && customerBusinessList.length > 0) {
-
-            for (let index in customerBusinessList) {
-
-                var parm = {};
-                let url = '', title = '', id = '';
-
-                var contactPerson = data.contactPerson.replace(/\s+/g, "");
-                if (customerBusinessList[index] === 'keyword') {
-                    count++;
-                    url = '/internal/customerKeyword/searchCustomerKeywords/' + data.uuid;
-                    title = contactPerson + '-关键字信息';
-                    id = contactPerson + '-关键字信息';
-                    $.ajax({
-                        url: '/internal/customerKeyword/getCustomerKeywordsCount/' + data.uuid,
-                        dataType: 'json',
-                        type: 'get',
-                        async: false,
-                        success: function (res) {
-                            html += '<div class="layui-row" >\n' +
-                                '       <div class="layui-col-md5 td-border-right"><a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>关键字信息</a></div>\n' +
-                                '       <div class="layui-col-md7 td-border-right">';
-                            if (res.code === 200) {
-                                html += generate_keyword_info(res.data)
-                            } else {
-                                html += '暂无数据'
-                            }
-                            html +=
-                                '       </div>\n' +
-                                '   </div>';
-
+    //改客户标签
+    window.changeSaleRemark = function (uuid, saleRemark) {
+        layer.prompt({
+            formType: 3,
+            value: saleRemark,
+            title: '客户标签',
+            yes: function (index, layero) {
+                var index2 = index;
+                var value = layero.find(".layui-layer-input").val();
+                var postData = {};
+                postData.uuid = uuid;
+                postData.saleRemark = value;
+                $.ajax({
+                    url: '/internal/customer/changeSaleRemark2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6);
+                            $('#saleRemark'+uuid).text(value);
+                            $('#saleRemark'+uuid).parent().attr("title",value);
+                        } else {
+                            show_layer_msg('操作失败', 5);
                         }
-                    });
-                } else if (customerBusinessList[index] === 'qzsetting') {
-                    count++;
-                    url = '/internal/qzsetting/toQZSetttingsWithCustomerUuid/' + data.uuid;
-                    title = contactPerson + '-全站信息';
-                    id = contactPerson + '-全站信息';
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
+                });
+                layer.close(index2);
+                // });
 
-                    $.ajax({
-                        url: '/internal/qzsetting/getQZSettingsCount/' + data.uuid,
-                        dataType: 'json',
-                        type: 'get',
-                        async: false,
-                        success: function (res) {
-                            html += '<div class="layui-row" >\n' +
-                                '       <div class="layui-col-md5 td-border-right"><a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>全站信息</a></div>\n' +
-                                '       <div class="layui-col-md7 td-border-right">';
-                            if (res.code === 200) {
-                                html += generate_qzsetting_info(res.data)
-                            } else {
-                                html += '暂无数据'
-                            }
-                            html +=
-                                '       </div>\n' +
-                                '   </div>';
-
-                        }
-                    });
-
-                } else if (customerBusinessList[index] === 'fm') {
-                    count++;
-                    url = '/internal/productKeyword/searchProductKeywordsByCustomerUuid/' + data.uuid;
-                    title = contactPerson + '-负面信息';
-                    id = contactPerson + '-负面信息';
-                    html += '<div class="layui-row" >\n' +
-                        '       <div class="layui-col-md5 td-border-right">负面信息</div>\n' +
-                        '       <div class="layui-col-md7 td-border-right">' + '待做--占位符' +
-                        '       </div>\n' +
-                        '   </div>';
-                }
             }
-            for (count; count < 3; count++) {
-                html += '<div class="layui-row" >\n' +
-                    '       <div class="layui-col-md5 td-border-right">&nbsp;</div>\n' +
-                    '       <div class="layui-col-md7 td-border-right">' + '&nbsp;' +
-                    '       </div>\n' +
-                    '   </div>';
-            }
-        } else {
-            html += '暂无业务'
-        }
-        return html;
+        });
     }
 
+    //改客户标签
+    window.changeRemark = function (uuid, remark) {
+        layer.prompt({
+            formType: 2,
+            value: remark,
+            title: '销售详细备注',
+            yes: function (index, layero) {
+                var index2 = index;
+                var value = layero.find(".layui-layer-input").val();
+                var postData = {};
+                postData.uuid = uuid;
+                postData.remark = value;
+                $.ajax({
+                    url: '/internal/customer/changeRemark2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6);
+                            $('#remark'+uuid).text(value);
+                            $('#remark'+uuid).parent().attr("title",value);
+
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
+                });
+                layer.close(index2);
+                // });
+
+            }
+        });
+    }
 });
 
+let open = true;
+
+function showCondition() {
+    let searchContent = document.getElementById('searchContent');
+    if (open) {
+        searchContent.style.display = 'block';
+    } else {
+        searchContent.style.display = 'none';
+    }
+    open = !open;
+}
+
+function generate_customer_status(status){
+    let stat ='<span style="color: red;">暂停</span>';
+    if(status===1){
+        stat = '<span style="color: green;">激活</span>';
+    }
+    return stat;
+}
+
+function generate_customer_daily_report(uuid, status, oldIdentify){
+    uuid = uuid +'';
+    status = status+'';
+    oldIdentify = oldIdentify+'';
+    let newIdentify = '1';
+    let stat ='否';
+    if(oldIdentify === '1'){
+        stat = '是';
+        newIdentify = '0'
+    }
+
+    if (status === '1') {
+        stat += ' | <a href="javascript:void(0)" onclick=changeCustomerDailyReportIdentify(\'' + uuid + '\',\'' + status + '\',\'' + oldIdentify + '\',\'' + newIdentify + '\')>修改状态</a>';
+    }
+    return stat;
+}
+
+function generate_keyword_info(data) {
+    let htm = '';
+    if (data.totalCount > 0) {
+        htm += '<span>总数:' + data.totalCount + '&nbsp;&nbsp;&nbsp;&nbsp;</span>(';
+        if (data.totalCount === data.activeCount) {
+            htm += '<span style="color: green;">激活</span>' +
+                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","0")>暂停关键字</a>'
+        } else if (data.totalCount > 0 && data.activeCount > 0) {
+            htm += '<span style="color: yellowgreen;">部分暂停</span>' +
+                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","0")>暂停关键字</a>' +
+                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","1")>激活关键字</a>'
+        } else {
+            htm += '<span style="color: red;">暂停</span>' +
+                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","1")>激活关键字</a>'
+        }
+        htm += ')';
+    } else {
+        htm += '<a href="javascript:void(0)">暂无数据</a>'
+    }
+    return htm;
+}
+
+function generate_qzsetting_info(data) {
+    let htm = '';
+    if (data.totalCount > 0) {
+        htm += '<span>总数:' + data.totalCount + '&nbsp;&nbsp;&nbsp;&nbsp;</span>状态:';
+        if (data.activeCount > 0) {
+            htm += '<span style="color: green;">'+data.activeCount+'个续费|</span>'
+        }
+        if (data.pauseCount > 0) {
+            htm += '<span style="color: darkred;">'+data.pauseCount+'个暂停|</span>'
+
+        }
+        if (data.downCount > 0) {
+            htm += '<span style="color: grey;">'+data.downCount+'个下架|</span>'
+        }
+        if(data.otherCount > 0) {
+            htm += '<span style="color: lightgrey;">'+data.otherCount+'个其他|</span>'
+        }
+        htm = htm.substring(0, htm.lastIndexOf("|"));
+    } else {
+        htm += '<a href="javascript:void(0)">暂无数据</a>'
+    }
+    return htm;
+}
 
 function updateOrNewTab(url, tit, id) {
     var update = false;
@@ -501,111 +755,7 @@ function updateOrNewTab(url, tit, id) {
     parent.layui.element.tabChange('ok-tab', id)
 }
 
-function generate_customer_business_td(data) {
-    let html = '';
-    let customerBusinessList = data.customerBusinessList;
-    if (customerBusinessList !== null && customerBusinessList.length > 0) {
 
-        for (let index in customerBusinessList) {
-            var parm = {};
-            let url = '', title = '', id = '';
-            var contactPerson = data.contactPerson.replace(/\s+/g, "")
-            if (customerBusinessList[index] === 'keyword') {
-                url = '/internal/customerKeyword/searchCustomerKeywords/' + data.uuid;
-                title = contactPerson + '-关键字信息';
-                id = contactPerson + '-关键字信息';
-                html += '<button type="button" class="layui-btn layui-btn-xs" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>关键字信息</button>'
-            } else if (customerBusinessList[index] === 'qzsetting') {
-                url = '/internal/qzsetting/toQZSetttingsWithCustomerUuid/' + data.uuid;
-                title = contactPerson + '-全站信息';
-                id = contactPerson + '-全站信息';
-                html += '<button type="button" class="layui-btn layui-btn-xs" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>全站信息</button>'
-            } else if (customerBusinessList[index] === 'fm') {
-                url = '/internal/productKeyword/searchProductKeywordsByCustomerUuid/' + data.uuid;
-                title = contactPerson + '-负面信息';
-                id = contactPerson + '-负面信息';
-                html += '<button type="button" class="layui-btn layui-btn-xs" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>负面信息</button>'
-            }
-        }
-    }
-    return html;
-}
-
-
-function generate_keyword_info(data) {
-    let htm = '';
-    if (data.totalCount > 0) {
-        htm += '<span>总数:' + data.totalCount + '&nbsp;&nbsp;&nbsp;&nbsp;</span>(';
-        if (data.totalCount === data.activeCount) {
-            htm += '<span style="color: green;">激活</span>' +
-                '|<a href="javascript:changeCustomerKeywordStatus(\'' + data.customerUuid + '\', 0)">暂停关键字</a>'
-        } else if (data.totalCount > 0 && data.activeCount > 0) {
-            htm += '<span style="color: yellowgreen;">部分暂停</span>' +
-                '|<a href="javascript:changeCustomerKeywordStatus(\'' + data.customerUuid + '\', 0)">暂停关键字</a>' +
-                '|<a href="javascript:changeCustomerKeywordStatus(\'' + data.customerUuid + '\', 1)">激活关键字</a>'
-        } else {
-            htm += '<span style="color: red;">暂停</span>' +
-                '|<a href="javascript:changeCustomerKeywordStatus(\'' + data.customerUuid + '\', 1)">激活关键字</a>'
-        }
-        htm += ')';
-    } else {
-        htm += '<a href="javascript:void(0)">暂无数据</a>'
-    }
-    return htm;
-}
-
-
-function generate_qzsetting_info(data) {
-    let htm = '';
-    if (data.totalCount > 0) {
-        htm += '<span>总数:' + data.totalCount + '&nbsp;&nbsp;&nbsp;&nbsp;</span>(';
-        if (data.totalCount === data.activeCount) {
-            htm += '<span style="color: green;">激活</span>' +
-                '|<a href="javascript:changeQZSettingRenewalStatus(\'' + data.customerUuid + '\', 0)">暂停全站</a>'
-        } else if (data.totalCount > 0 && data.activeCount > 0) {
-            htm += '<span style="color: yellowgreen;">部分暂停</span>' +
-                '|<a href="javascript:changeQZSettingRenewalStatus(\'' + data.customerUuid + '\', 0)">暂停全站</a>' +
-                '|<a href="javascript:changeQZSettingRenewalStatus(\'' + data.customerUuid + '\', 3)">下架全站</a>'
-        } else {
-            htm += '<span style="color: red;">暂停</span>';
-
-        }
-        htm += ')';
-    } else {
-        htm += '<a href="javascript:void(0)">暂无数据</a>'
-    }
-    return htm;
-}
-
-function showContact(contactPerson, qq, wechat, telphone){
-    let title = contactPerson + '--联系方式';
-    let tabl = '<table class="layui-table" style="text-align: center">' +
-        '<tr>' +
-        '<td colspan="2">联系方式</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td width="50%">QQ</td>' +
-        '<td>'+qq+'</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td width="50%">微信</td>' +
-        '<td>'+wechat+'</td>' +
-        '</tr>' +'<tr>' +
-        '<td width="50%">联系电话</td>' +
-        '<td>'+telphone+'</td>' +
-        '</tr>' +
-        '   </table>';
-    layer.open( {
-        type:1,
-        title: title,
-        content: tabl,
-        // width:'40%',
-        shade:0.1,
-        area: ['360px', '280px'],
-        // resize: false,
-        btn:['确认']
-    });
-}
 
 
 

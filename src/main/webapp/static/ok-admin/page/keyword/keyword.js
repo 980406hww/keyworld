@@ -22,10 +22,46 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
     init_search();
 
     function init_search() {
+
         init_keyword_type();
         init_belong_user();
         init_searchEngine();
         get_keywords(formToJsonObject('searchForm'));
+        let type = $('#type').val();
+        if (type !== 'qz'){
+            if ($('#noReachStandardDiv').length === 0){
+                let noReachStandardDiv = '<div class="layui-inline count" id="noReachStandardDiv">\n'
+                    + '    激活未达标词统计:\n'
+                    + '    <a href="javascript:showNoReachStandardKeyword(30)" ></a>|\n'
+                    + '    <a href="javascript:showNoReachStandardKeyword(15)" ></a>|\n'
+                    + '    <a href="javascript:showNoReachStandardKeyword(7)" ></a>\n'
+                    + '</div>\n';
+                $("#resetBtnDiv").after($(noReachStandardDiv));
+            }
+            if ($('#noReachStandardDays').length === 0){
+                let noReachStandardDaysDiv ='<div class="layui-inline" id="noReachStandardDaysDiv">\n'
+                    + '                           <label class="layui-form-label">未达标天数</label>\n'
+                    + '                           <div class="layui-input-inline">\n'
+                    + '                               <input type="number" name="noReachStandardDays" id="noReachStandardDays" placeholder="请输入未达标天数" autocomplete="off"\n'
+                    + '                                   class="layui-input">\n'
+                    + '                           </div>\n'
+                    + '                       </div>';
+                $("#invalidRefreshCountDiv").after($(noReachStandardDaysDiv));
+            }
+            let terminalType = $('#terminalType').val();
+            let postData = {};
+            postData.type = type;
+            postData.terminalType = terminalType;
+            init_noReachStandard(postData);
+        } else {
+            if ($('#noReachStandardDiv').length >= 0) {
+                $('#noReachStandardDiv').remove();
+            }
+            if ($('#noReachStandardDaysDiv').length >= 0) {
+                $('#noReachStandardDaysDiv').remove();
+                // form.render();
+            }
+        }
     }
 
     function init_keyword_type() {
@@ -105,70 +141,40 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             elem: '#keywordTable',
             method: 'post',
             url: '/internal/customerKeyword/getKeywords',
-            limit: 25,
+            autoSort: false,
+            limit: 50,
             limits: [10, 25, 50, 75, 100, 500, 1000],
             page: true,
             size: 'sm',
             id: 'keywordTable',
             even: true,//隔行背景
-            // toolbar: true,
             where: whereCondition,
             toolbar: "#toolbarTpl",
-            // defaultToolbar: ['filter', 'print', 'exports'], 对应列筛选 打印 导出
             defaultToolbar: ['filter'],
             contentType: 'application/json',
             cols: [[
                 {filed: 'uuid', type: 'checkbox', width: '35'},
                 {field: 'userID', title: '用户', width: '120',},
-                {
-                    field: 'contactPerson',
-                    title: '客户名称',
-                    width: '120',
-                    templet: '#toCustomerKeywordTpl'
-                },
-                {field: 'keyword', title: '关键字', width: '150'},
+                {field: 'contactPerson', title: '客户名称', width: '120', templet: '#toCustomerKeywordTpl' },
+                {field: 'keyword', title: '关键字', width: '150', sort: true},
                 {field: 'url', title: '链接', width: '120'},
                 {field: 'bearPawNumber', title: '熊掌号', width: '100'},
-                // {field: 'originalUrl', title: '原始链接', width: '15%',},
-                // {field: 'terminalType', title: '终端', width: '5%'},
                 {field: 'title', title: '标题', width: '220'},
                 {field: 'currentIndexCount', title: '指数', width: '80', templet: '#indexCountTpl'},
                 {field: 'initialPosition', title: '初始排名', width: '80'},
-                {field: 'currentPosition', title: '现排名', width: '80'},
+                {field: 'currentPosition', title: '现排名', width: '80', sort: true, templet: '#currentPositionTpl'},
                 {field: 'searchEngine', title: '搜索引擎', width: '80'},
                 {field: 'optimizeGroupName', title: '优化分组', width: '100'},
                 {field: 'machineGroup', title: '机器分组', width: '100'},
                 {field: 'city', title: '目标城市', width: '80', hide: true},
-
-                {
-                    field: 'collectMethod',
-                    title: '收费方式',
-                    width: '80',
-                    templet: '#collectMethodTpl'
-                },
+                {field: 'collectMethod', title: '收费方式', width: '80', templet: '#collectMethodTpl' },
                 {field: 'optimizePlanCount', title: '要刷', width: '60',},
                 {field: 'optimizedCount', title: '已刷', width: '60'},
-                {
-                    field: 'invalidRefreshCount',
-                    title: '无效',
-                    width: '60',
-                    hide: true
-                },
-                {
-                    field: 'status',
-                    title: '状态',
-                    width: '60',
-                    templet: '#statusTpl'
-                },
-                {
-                    field: 'paymentStatus',
-                    title: '付费状态',
-                    width: '80',
-                    hide: true
-                },
+                {field: 'invalidRefreshCount', title: '无效', width: '60', hide: true },
+                {field: 'status', title: '状态', width: '60', templet: '#statusTpl' },
+                {field: 'paymentStatus', title: '付费状态', width: '80', hide: true },
                 {field: 'remarks', title: '备注', width: '100', hide: true},
                 {field: 'failedCause', title: '失败原因', width: '80', hide: true},
-                // {title: '操作', align: 'center',fixed:'right', width: '10%' , templet: '#operationTpl'}
             ]],
             height: 'full-150',
             done: function (res, curr, count) {
@@ -183,7 +189,15 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         });
 
     }
-
+    table.on('sort(tableFilter)', function(obj){
+        let postData = formToJsonObject('searchForm');
+        postData.orderBy = obj.field;
+        postData.orderMode = obj.type === 'desc' ? '0' : '1';
+        table.reload('keywordTable', {
+            initSort: obj,
+            where: postData
+        });
+    });
     // 监听表头鼠标按下事件
     $(document).on('onMouseUp', 'thead', function (e) {
             let tables = document.getElementsByTagName('table');
@@ -198,8 +212,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
     //监听工具条
     var active = {
         reload: function () {
+            let postData = formToJsonObject('searchForm');
+            if (!postData.noReachStandardDays) {
+                postData.noReachStandardDays = '';
+            }
             table.reload('keywordTable', {
-                where: formToJsonObject('searchForm'),
+                where: postData,
                 page: {
                     curr: 1 //从第一页开始
                 }
@@ -241,6 +259,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         if (!data.field.requireDelete){
             data.field.requireDelete = '';
         }
+        if (!data.field.noReachStandardDays){
+            data.field.noReachStandardDays = '';
+        }
+        // console.log(data.field)
         table.reload('keywordTable', {
             where: data.field,
             page: {
@@ -289,8 +311,74 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         let d = data.elem.context.dataset;
         $('#type').val(d.type);
         $('#terminalType').val(d.terminal);
+        if (d.type === 'qz') {
+            if ($('#noReachStandardDiv').length >= 0) {
+                $('#noReachStandardDiv').remove();
+            }
+            if ($('#noReachStandardDaysDiv').length >= 0) {
+                $('#noReachStandardDaysDiv').remove();
+                // form.render();
+            }
+        } else {
+            if ($('#noReachStandardDiv').length === 0) {
+                let noReachStandardDiv = '<div class="layui-inline count" id="noReachStandardDiv">\n'
+                    + '    激活未达标词统计:\n'
+                    + '    <a href="javascript:showNoReachStandardKeyword(30)" ></a>|\n'
+                    + '    <a href="javascript:showNoReachStandardKeyword(15)" ></a>|\n'
+                    + '    <a href="javascript:showNoReachStandardKeyword(7)" ></a>\n'
+                    + '</div>\n';
+                $("#resetBtnDiv").after($(noReachStandardDiv));
+            }
+            if ($('#noReachStandardDaysDiv').length === 0) {
+                let noReachStandardDaysDiv = '<div class="layui-inline" id="noReachStandardDaysDiv">\n'
+                    + '                           <label class="layui-form-label">未达标天数</label>\n'
+                    + '                           <div class="layui-input-inline">\n'
+                    + '                               <input type="number" name="noReachStandardDays" id="noReachStandardDays" placeholder="请输入未达标天数" autocomplete="off"\n'
+                    + '                                   class="layui-input">\n'
+                    + '                           </div>\n'
+                    + '                       </div>';
+                $("#invalidRefreshCountDiv").after($(noReachStandardDaysDiv));
+            }
+            $('#noReachStandardDays').val('');
+            let postData = {};
+            postData.type = d.type;
+            postData.terminalType = d.terminal;
+            init_noReachStandard(postData);
+        }
         active['reload'].call(this);
     });
+
+    function init_noReachStandard(data){
+        $.ajax({
+            url: '/internal/customerKeyword/searchCustomerKeywordForNoReachStandard2',
+            data: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 20000,
+            type: 'POST',
+            success: function (res) {
+                if (res.code === 200){
+                    let data = res.data;
+                    var noReachStandardDiv = $("#noReachStandardDiv");
+                    noReachStandardDiv.find("a").eq(0).text("超过30天(" + data.thirtyDaysNoReachStandard + ")");
+                    noReachStandardDiv.find("a").eq(1).text("超过15天(" + data.fifteenDaysNoReachStandard + ")");
+                    noReachStandardDiv.find("a").eq(2).text("超过7天(" + data.sevenDaysNoReachStandard + ")");
+                    var searchForm = $("#searchForm");
+                    searchForm.find("#thirtyDaysNoReachStandard").val(data.thirtyDaysNoReachStandard);
+                    searchForm.find("#fifteenDaysNoReachStandard").val(data.fifteenDaysNoReachStandard);
+                    searchForm.find("#sevenDaysNoReachStandard").val(data.sevenDaysNoReachStandard);
+                }else{
+                    show_layer_msg('未达标统计失败', 5);
+                }
+
+            },
+            error: function () {
+                show_layer_msg('未达标统计失败', 5);
+            }
+        });
+    }
 
     function updateCustomerKeywordStatus(status) {
         //获取选中数据
@@ -332,52 +420,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 }
             });
             layer.close(index);
-        });
-    }
-
-    function change_current_optimizedGroup() {
-        layer.prompt({
-            formType: 3,
-            value: '',
-            title: '新优化组',
-            // area: ['220px', '60px'], //自定义文本域宽高
-            yes: function (index, layero) {
-                var index2 = index;
-                var value = layero.find(".layui-layer-input").val();
-                if (value === '') {
-                    show_layer_msg('请输入新优化组！', 5, null, 1000);
-                    return;
-                }
-                // layer.confirm("确定修改当前词的优化组吗", {icon: 3, title: '修改优化组'}, function (index) {
-                var postData = formToJsonObject('searchForm');
-                postData.targetOptimizeGroupName = value;
-                $.ajax({
-                    url: '/internal/customerKeyword/updateOptimizeGroupName2',
-                    data: JSON.stringify(postData),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (result) {
-                        if (result.code === 200) {
-                            show_layer_msg('操作成功', 6, true);
-                        } else {
-                            show_layer_msg('操作失败', 5);
-                        }
-                    },
-                    error: function () {
-                        show_layer_msg('未知错误，请稍后重试', 5);
-                    },
-                    complete: function () {
-                        layer.close(index);
-                    }
-                });
-                layer.close(index2);
-                // });
-
-            }
         });
     }
 
@@ -436,51 +478,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         });
     }
 
-    function change_current_machineGroup() {
-        layer.prompt({
-            formType: 3,
-            value: '',
-            title: '新机器分组',
-            area: ['220px', '60px'], //自定义文本域宽高
-            yes: function (index, layero) {
-                var index2 = index;
-                var value = layero.find(".layui-layer-input").val();
-                if (value === '') {
-                    show_layer_msg('请输入新机器分组！', 5, null, 1000);
-                    return;
-                }
-                // layer.confirm("确定修改当前词的机器分组吗", {icon: 3, title: '修改机器分组'}, function (index) {
-                var postData = formToJsonObject('searchForm');
-                postData.targetMachineGroup = value;
-                $.ajax({
-                    url: '/internal/customerKeyword/updateMachineGroup2',
-                    data: JSON.stringify(postData),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (result) {
-                        if (result.code === 200) {
-                            show_layer_msg('操作成功', 6, true);
-                        } else {
-                            show_layer_msg('操作失败', 5);
-                        }
-                    },
-                    error: function () {
-                        show_layer_msg('未知错误，请稍后重试', 5);
-                    },
-                    complete: function () {
-                        layer.close(index);
-                    }
-                });
-                layer.close(index2);
-                // });
-            }
-        });
-    }
-
     function change_selected_machineGroup() {
         //获取选中数据
         var uuidArr = get_selected_uuid_arr();
@@ -507,49 +504,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 postData.targetMachineGroup = value;
                 $.ajax({
                     url: '/internal/customerKeyword/updateMachineGroup2',
-                    data: JSON.stringify(postData),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (result) {
-                        if (result.code === 200) {
-                            show_layer_msg('操作成功', 6, true);
-                        } else {
-                            show_layer_msg('操作失败', 5);
-                        }
-                    },
-                    error: function () {
-                        show_layer_msg('未知错误，请稍后重试', 5);
-                    }
-                });
-                layer.close(index2);
-
-
-            }
-        });
-    }
-
-    function change_current_bearPawNumber() {
-        layer.prompt({
-            formType: 3,
-            value: '',
-            title: '新熊掌号',
-            area: ['220px', '60px'], //自定义文本域宽高
-            yes: function (index, layero) {
-                var index2 = index;
-                var value = layero.find(".layui-layer-input").val();
-                if (value === '') {
-                    show_layer_msg('请输入新熊掌号！', 5, null, 1000);
-                    return;
-                }
-
-                var postData = formToJsonObject('searchForm');
-                postData.targetBearPawNumber = value;
-                $.ajax({
-                    url: '/internal/customerKeyword/updateBearPawNumber2',
                     data: JSON.stringify(postData),
                     headers: {
                         'Accept': 'application/json',
@@ -665,10 +619,15 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
     window.toCustomerKeyword = function (customerUuid, contactPerson) {
         // console.log(customerUuid,contactPerson);
         let businessType = $('#type').val();
-        let terminalType = $('#terminalType').val() === '' ? 'All' : $('#terminalType').val();
+        let terminalType = $('#terminalType').val();
         let url = '/internal/customerKeyword/toCustomerKeywords/' + businessType + '/' + terminalType + '/' + customerUuid;
         let tit = contactPerson + '--关键字列表';
         updateOrNewTab(url, tit, customerUuid);
+    };
+
+    window.showNoReachStandardKeyword = function(day){
+        $('#noReachStandardDays').val(day);
+        $('#searchBtn').click();
     }
 });
 

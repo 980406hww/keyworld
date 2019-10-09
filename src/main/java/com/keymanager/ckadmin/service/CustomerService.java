@@ -3,7 +3,9 @@ package com.keymanager.ckadmin.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
+import com.keymanager.ckadmin.criteria.CustomerTypeCriteria;
 import com.keymanager.ckadmin.entity.Customer;
+import com.keymanager.ckadmin.vo.CustomerTypeVO;
 import java.util.List;
 
 /**
@@ -43,4 +45,6 @@ public interface CustomerService extends IService<Customer> {
     void changeSaleRemark(Long uuid, String saleRemark);
 
     void changeRemark(Long uuid, String remark);
+
+    List<CustomerTypeVO> searchCustomerTypeCount(CustomerTypeCriteria customerTypeCriteria);
 }
