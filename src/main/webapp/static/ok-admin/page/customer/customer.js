@@ -745,7 +745,7 @@ function updateOrNewTab(url, tit, id) {
     });
     if (!update) {
         parent.layui.element.tabAdd('ok-tab', {
-                title: tit,
+                title: '<i class="layui-icon layui-icon-align-right">'+tit,
                 content: contentIframe,
                 id: id
             }

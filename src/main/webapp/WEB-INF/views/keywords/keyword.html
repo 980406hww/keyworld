@@ -44,13 +44,33 @@
                                     <div class="layui-inline" style="width: 140px">
                                         <input type="text" name="keyword" id="keyword" placeholder="请输入关键字" class="layui-input">
                                     </div>
-                                    <div class="layui-inline" style="width: 140px">
+                                    <div class="layui-inline" style="width: 130px">
                                         <input type="text" name="optimizeGroupName" id="optimizeGroupName" placeholder="请输入优化组名" autocomplete="off"
                                                class="layui-input layui-input-text">
                                     </div>
                                     <div class="layui-inline" style="width: 140px">
                                         <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off"
                                                class="layui-input layui-input-text ">
+                                    </div>
+                                    <div class="layui-inline" style="width: 135px">
+                                        排名
+                                        <div class="layui-input-inline" style="width: 50px;">
+                                            <input type="number" name="gtPosition" placeholder=">=" autocomplete="off" class="layui-input">
+                                        </div>
+                                        <div class="layui-input-inline" style="width: 50px;">
+                                            <input type="number" name="ltPosition" placeholder="<=" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="width: 140px">
+                                        <div class="layui-input-inline">
+                                            <select name="status" id="status">
+                                                <option value=''>关键字状态</option>
+                                                <option value='1'>激活</option>
+                                                <option value='2'>新增</option>
+                                                <option value='0'>暂不操作</option>
+                                                <option value='3'>下架</option>
+                                            </select>&nbsp;
+                                        </div>
                                     </div>
 
                                     <div class="layui-inline">
@@ -105,18 +125,7 @@
                                                 <input type="text" name="remarks" id="remarks" placeholder="请输入备注" autocomplete="off" class="layui-input">
                                             </div>
                                         </div>
-                                        <div class="layui-inline">
-                                            <label class="layui-form-label">关键字状态</label>
-                                            <div class="layui-input-inline">
-                                                <select name="status" id="status">
-                                                    <option value=''>关键字状态</option>
-                                                    <option value='1'>激活</option>
-                                                    <option value='2'>新增</option>
-                                                    <option value='0'>暂不操作</option>
-                                                    <option value='3'>下架</option>
-                                                </select>&nbsp;
-                                            </div>
-                                        </div>
+
                                         <div class="layui-inline">
                                             <label class="layui-form-label">失败原因</label>
                                             <div class="layui-input-inline">
@@ -151,15 +160,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="layui-inline">
-                                            <label class="layui-form-label">排名范围</label>
-                                            <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="number" name="gtPosition" placeholder=">=" autocomplete="off" class="layui-input">
-                                            </div>
-                                            <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="number" name="ltPosition" placeholder="<=" autocomplete="off" class="layui-input">
-                                            </div>
-                                        </div>
+
 
                                         <div class="layui-inline" id="invalidRefreshCountDiv">
                                             <label class="layui-form-label">无效点击数</label>
