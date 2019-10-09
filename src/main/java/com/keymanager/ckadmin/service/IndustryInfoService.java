@@ -21,7 +21,7 @@ public interface IndustryInfoService extends IService<IndustryInfo> {
 
     void updateIndustryUserID (List<String> uuids, String userID);
 
-    void deleteIndustries(String uuids);
+    void deleteIndustries(List<String> uuids);
 
     void updateIndustryInfoDetail(IndustryDetailCriteria criteria);
 

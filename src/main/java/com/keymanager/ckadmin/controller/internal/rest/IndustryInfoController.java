@@ -20,7 +20,9 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -50,9 +52,84 @@ public class IndustryInfoController {
         return mv;
     }
 
+    @RequiresPermissions("/internal/industry/saveIndustry")
+    @GetMapping("/toSaveIndustryInfo")
+    public ModelAndView toSaveIndustryInfo() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("industryList/AddIndustry");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/industry/saveIndustry")
+    @PostMapping("/saveIndustryInfo")
+    public ResultBean saveIndustryInfo(@RequestBody IndustryInfo industryInfo, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            String loginName = (String) request.getSession().getAttribute("username");
+            industryInfoService.saveIndustryInfo(industryInfo, loginName);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/industry/delIndustry")
+    @GetMapping("/delIndustryInfo/{uuid}")
+    public ResultBean delIndustryInfo(@PathVariable("uuid") Long uuid) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            industryInfoService.delIndustryInfo(uuid);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/industry/deleteIndustries")
+    @PostMapping("/deleteIndustries")
+    public ResultBean deleteIndustries(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            List<String> uuids = (List<String>) requestMap.get("uuids");
+            industryInfoService.deleteIndustries(uuids);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/industry/saveIndustry")
+    @GetMapping("/getIndustry/{uuid}")
+    public ResultBean getIndustry(@PathVariable("uuid") Long uuid) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            IndustryInfo industryInfo = industryInfoService.getIndustry(uuid);
+            resultBean.setCode(200);
+            resultBean.setData(industryInfo);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
     @RequiresPermissions("/internal/industry/searchIndustries")
     @PostMapping("/searchIndustries")
-    public ResultBean searchIndustriesPost(HttpServletRequest request, IndustryCriteria industryCriteria) {
+    public ResultBean searchIndustriesPost(HttpServletRequest request, @RequestBody IndustryCriteria industryCriteria) {
         ResultBean resultBean = new ResultBean();
         try {
             HttpSession session = request.getSession();
@@ -68,10 +145,39 @@ public class IndustryInfoController {
             }
             Page<IndustryInfo> page = new Page<>(industryCriteria.getPage(), industryCriteria.getLimit());
             page = industryInfoService.searchIndustries(page, industryCriteria);
+            List<IndustryInfo> industryInfoList = page.getRecords();
             resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
             resultBean.setMsg("success");
-            resultBean.setData(page);
+            resultBean.setData(industryInfoList);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @PostMapping("/returnSelectData")
+    public ResultBean returnSelectData(HttpServletRequest request, @RequestBody IndustryCriteria industryCriteria){
+        ResultBean resultBean = new ResultBean();
+        try {
+            HttpSession session = request.getSession();
+            String loginName = (String) session.getAttribute("username");
+            UserInfo user = userInfoService.getUserInfo(loginName);
+            List<UserInfo> activeUsers = userInfoService.findActiveUsers();
+            if (null == industryCriteria.getTerminalType()) {
+                industryCriteria.setTerminalType(TerminalTypeMapping.getTerminalType(request));
+            }
+            Map<String, String> searchEngineMap = configService.getSearchEngineMap(industryCriteria.getTerminalType());
+            Map<String, Object> data = new HashMap<>();
+            data.put("user", user);
+            data.put("activeUsers", activeUsers);
+            data.put("searchEngineMap", searchEngineMap);
+            resultBean.setCode(200);
+            resultBean.setMsg("success");
+            resultBean.setData(data);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

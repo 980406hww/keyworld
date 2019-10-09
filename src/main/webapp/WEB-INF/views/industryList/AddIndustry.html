@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <style>
+        .layui-btn {
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+<div class="ok-body">
+
+    <form class="layui-form layui-form-pane ok-form" lay-filter="addIndustry">
+        <div class="layui-form-item">
+            <input type="hidden" name="uuid">
+            <label class="layui-form-label">行业名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="industryName" placeholder="请输入行业名称" autocompvare="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">搜索引擎</label>
+            <div class="layui-input-block">
+                <select name="searchEngine" id="engines" lay-verify="required"></select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">起始网址</label>
+            <div class="layui-input-block">
+                <input type="text" name="targetUrl" placeholder="请输入起始网址" autocompvare="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">爬取页数</label>
+            <div class="layui-input-block">
+                <input type="number" name="pageNum" autocompvare="off" class="layui-input" lay-verify="required" min="0" value="1">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">每页条数</label>
+            <div class="layui-input-block">
+                <input type="number" name="pagePerNum" autocompvare="off" class="layui-input" lay-verify="required" min="0" step="10" value="10">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">爬取状态</label>
+            <div class="layui-input-block">
+                <select name="status" lay-verify="required">
+                    <option value="2">爬取完成</option>
+                    <option value="1">爬取中</option>
+                    <option value="0" selected>未爬取</option>
+                </select>
+            </div>
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="commit">确定</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script>
+
+    var uuid_ = null;
+    var layui_ = null;
+    var terminalTyle_ = null;
+
+    function initForm(data) {
+        uuid_ = data;
+        if (layui_ != null) {
+            setForm(layui_, uuid_);
+        }
+    }
+
+    function init_terminalType(terminalTyle) {
+        terminalTyle_ = terminalTyle
+    }
+
+    function setForm(l, u) {
+        l.jquery.ajax({
+            url: '/internal/industryList/getIndustry/' + u,
+            type: 'GET',
+            headers: {
+                "Accept": 'application/json',
+                "Content-Type": 'application/json'
+            },
+            success: function (res) {
+                if (res.code === 200) {
+                    layui.form.val("addIndustry", res.data);
+                } else {
+                    l.layer.msg(res.msg);
+                }
+            }
+        });
+    }
+
+    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+        var form = layui.form;
+        var okLayer = layui.okLayer;
+        var $ = layui.jquery;
+
+        if (uuid_ != null) {
+            setForm(layui, uuid_);
+        } else {
+            layui_ = layui;
+        }
+
+        init_SearchEngine();
+
+        function init_SearchEngine(){
+            var postData = {}
+            postData.terminalType = terminalTyle_
+            $.ajax({
+                url: '/internal/industryList/returnSelectData',
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                data: JSON.stringify(postData),
+                success: function (res) {
+                    if (res.code === 200) {
+                        var searchEngineList = res.data.searchEngineMap
+                        var searchEngine = $('#engines');
+                        searchEngine.append('<option value="" selected>引擎</option>');
+                        $.each(searchEngineList, function (index, item) {
+                            searchEngine.append('<option value="' + item + '">' + item + '</option>');
+                        });
+                        form.render("select")
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                },
+                error: function () {
+                    layer.msg('未知错误，请稍后重试！！')
+                }
+            });
+        }
+
+        form.on("submit(commit)", function (data) {
+            data.field.terminalType = terminalTyle_
+            $.ajax({
+                url: '/internal/industryList/saveIndustryInfo',
+                type: 'POST',
+                data: JSON.stringify(data.field),
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        okLayer.msg.greenTick("保存成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        layui.layer.msg(res.msg);
+                    }
+                }
+            });
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+    })
+
+</script>
+
+</body>
+</html>

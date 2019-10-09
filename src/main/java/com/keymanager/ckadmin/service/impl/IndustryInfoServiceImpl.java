@@ -77,8 +77,8 @@ public class IndustryInfoServiceImpl extends ServiceImpl<IndustryInfoDao, Indust
     }
 
     @Override
-    public void deleteIndustries(String uuids) {
-        industryInfoDao.deleteIndustries(Arrays.asList(uuids.split(",")));
+    public void deleteIndustries(List<String> uuids) {
+        industryInfoDao.deleteIndustries(uuids);
     }
 
     public synchronized Map getValidIndustryInfo() {
