@@ -300,15 +300,20 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             timeout: 5000,
             type: 'POST',
             success: function (res) {
-                let data = res.data;
-                var noReachStandardDiv = $("#noReachStandardDiv");
-                noReachStandardDiv.find("a").eq(0).text("超过30天(" + data.thirtyDaysNoReachStandard + ")");
-                noReachStandardDiv.find("a").eq(1).text("超过15天(" + data.fifteenDaysNoReachStandard + ")");
-                noReachStandardDiv.find("a").eq(2).text("超过7天(" + data.sevenDaysNoReachStandard + ")");
-                var searchForm = $("#searchForm");
-                searchForm.find("#thirtyDaysNoReachStandard").val(data.thirtyDaysNoReachStandard);
-                searchForm.find("#fifteenDaysNoReachStandard").val(data.fifteenDaysNoReachStandard);
-                searchForm.find("#sevenDaysNoReachStandard").val(data.sevenDaysNoReachStandard);
+                if (res.code === 200){
+                    let data = res.data;
+                    var noReachStandardDiv = $("#noReachStandardDiv");
+                    noReachStandardDiv.find("a").eq(0).text("超过30天(" + data.thirtyDaysNoReachStandard + ")");
+                    noReachStandardDiv.find("a").eq(1).text("超过15天(" + data.fifteenDaysNoReachStandard + ")");
+                    noReachStandardDiv.find("a").eq(2).text("超过7天(" + data.sevenDaysNoReachStandard + ")");
+                    var searchForm = $("#searchForm");
+                    searchForm.find("#thirtyDaysNoReachStandard").val(data.thirtyDaysNoReachStandard);
+                    searchForm.find("#fifteenDaysNoReachStandard").val(data.fifteenDaysNoReachStandard);
+                    searchForm.find("#sevenDaysNoReachStandard").val(data.sevenDaysNoReachStandard);
+                }else{
+                    show_layer_msg('未达标统计失败', 5);
+                }
+
             },
             error: function () {
                 show_layer_msg('未达标统计失败', 5);

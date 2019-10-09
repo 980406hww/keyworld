@@ -155,4 +155,13 @@
         SET fUpdateTime = NOW(), fRemark = #{remark}
         WHERE fUuid = #{uuid}
     </update>
+
+    <select id="searchCustomerTypes" parameterType="com.keymanager.ckadmin.criteria.CustomerTypeCriteria"
+        resultType="com.keymanager.ckadmin.vo.CustomerTypeVO">
+        SELECT fType as 'type', count(1) as 'customerCount'
+        FROM t_customer
+        WHERE fEntryType = #{customerTypeCriteria.entryType}
+        <if test="customerTypeCriteria.loginName != null and customerTypeCriteria.loginName != ''"> AND fUserID = #{customerTypeCriteria.loginName}</if>
+        GROUP BY fType
+    </select>
 </mapper>

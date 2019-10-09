@@ -74,6 +74,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                     }
                 });
                 init_data(result.data);
+                let entryType = $('#entryType').val();
+                let postData = {};
+                postData.entryType = entryType;
+                init_customerTypeCount(postData);
                 form.render();
                 // layer.msg('加载完成', {icon: 6});
             },
@@ -245,7 +249,43 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         let d = data.elem.context.dataset;
         $('#entryType').val(d.entrytype);
         initLayPage(formToJsonObject('searchForm'));
+
+        let postData = {};
+        postData.entryType = d.entrytype;
+        init_customerTypeCount(postData);
     });
+
+    function init_customerTypeCount(data){
+        $.ajax({
+            url: '/internal/customer/searchCustomerTypeCount2',
+            data: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (res) {
+                let data = res.data;
+                let htm = '客户类型统计:';
+                $.each(data,function (index,item) {
+                    htm += '<a href="javascript:showCustomerByType(\''+item.type+'\')" >'+item.type+'('+item.customerCount+')</a>|'
+                });
+
+                $('#customerTypeCountDiv').empty().append(htm.substring(0,htm.lastIndexOf("|")));
+            },
+            error: function () {
+                show_layer_msg('未达标统计失败', 5);
+            }
+        });
+    }
+
+    window.showCustomerByType = function (customerType){
+        $('#type').val(customerType);
+        // form.render()
+        $('#searchBtn').click();
+
+    };
 
     form.on('checkbox(checkAll)', function (data) {
         if ($(this)[0].checked) {
@@ -263,7 +303,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
 
     form.on("submit(search)", function (data) {
         var pageConf = data.field;
-        pageConf.limit = 25;
+        pageConf.limit = 50;
         pageConf.page = 1;
         if (!open) {
             showCondition();

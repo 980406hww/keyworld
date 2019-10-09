@@ -5,12 +5,17 @@ import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
+import com.keymanager.ckadmin.criteria.CustomerTypeCriteria;
+import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.UserInfo;
 import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.UserInfoService;
+import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.ReflectUtils;
 import com.keymanager.ckadmin.util.SQLFilterUtils;
+import com.keymanager.ckadmin.vo.CustomerTypeVO;
+import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.ArrayList;
@@ -47,6 +52,9 @@ public class CustomerController extends SpringMVCBaseController {
 
     @Resource(name = "userInfoService2")
     private UserInfoService userInfoService;
+
+    @Resource(name = "userRoleService2")
+    private UserRoleService userRoleService;
 
     @RequiresPermissions("/internal/customer/searchCustomers")
     @GetMapping(value = "/toCustomers")
@@ -293,6 +301,28 @@ public class CustomerController extends SpringMVCBaseController {
         } catch (NumberFormatException e) {
             logger.error(e.getMessage());
             return new ResultBean(400, "更新失败");
+        }
+    }
+
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywordLists")
+    @RequestMapping(value = "/searchCustomerTypeCount2", method = RequestMethod.POST)
+    public ResultBean searchCustomerTypeCount2(HttpSession session, @RequestBody CustomerTypeCriteria customerTypeCriteria) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            String loginName = (String) session.getAttribute("username");
+            boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(loginName));
+            if(!isDepartmentManager) {
+                customerTypeCriteria.setLoginName(loginName);
+            }
+            List<CustomerTypeVO> customerTypeVOList = customerService.searchCustomerTypeCount(customerTypeCriteria);
+            resultBean.setData(customerTypeVOList);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("fail");
+            return resultBean;
         }
     }
 
