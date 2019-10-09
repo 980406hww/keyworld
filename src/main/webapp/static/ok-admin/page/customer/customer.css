@@ -1,36 +1,53 @@
-.layui-input-inline input{
-    height: 30px;
+
+html {
+    background-color: #ffffff;
+}
+/*.layui-card-body{
+    padding-bottom: 0;
+}*/
+.my-collapse {
+    position: relative;
+    box-shadow: none;
+
 }
 
-.layui-form-pane .layui-form-label {
-    width: 116px;
-    padding: 8px 15px;
-    height: 30px;
-    line-height: 13px;
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 2px 0 0 2px;
-    text-align: center;
-    background-color: #FBFBFB;
-    overflow: hidden;
-    box-sizing: border-box
+.my-collapse * {
+    box-shadow: none;
 }
 
+.my-collapse > div:first-child {
+    background: #f2f2f2;
+    border: 1px solid #e6e6e6;
+}
 
+.my-collapse > div {
+    padding: 7px 10px;
+}
 
-.layui-colla-content {
+.my-hide {
+    padding-bottom: 1px !important;
     display: none;
-    padding: 5px 15px;
-    line-height: 22px;
-    color: #666;
+    position: absolute;
+    top: 45px;
+    left: 0;
+    z-index: 894;
+    background: #fff;
+    border-bottom: 1px #e6e6e6 solid;
+    border-left: 1px #e6e6e6 solid;
+    border-right: 1px #e6e6e6 solid;
+    transition: visibility .6s;
 }
 
-.layui-colla-content .layui-btn {
-    display: inline-block;
+.my-collapse button {
     height: 30px;
-    line-height: 13px;
+    line-height: 30px;
+}
+
+.my-collapse .my-btn {
+    height: 30px !important;
+    line-height: 30px !important;
     padding: 0 18px;
-    background-color: #009688;
+    background-color: #45a3c2;
     color: #fff;
     white-space: nowrap;
     text-align: center;
@@ -40,62 +57,192 @@
     cursor: pointer;
 }
 
-.layui-table-tool {
-    position: relative;
-    z-index: 890;
-    width: 100%;
-    min-height: 30px;
+.my-collapse .my-btn:hover {
+    opacity: .8;
+    transition: opacity 0.5s;
+}
+
+.layui-form-select input {
+    height: 30px;
+}
+
+.layui-inline input {
+    height: 30px;
+}
+
+.my-hide .layui-inline .layui-form-label {
+    height: 30px;
     line-height: 12px;
-    padding: 0 5px;
-    border-width: 0 0 1px;
+    width: 90px;
+    padding: 8px 0;
+}
+
+.layui-fluid{
+    padding: 0;
+}
+
+/*.out-condition{*/
+/*    padding-left: 10px;;*/
+/*}*/
+.out-condition .layui-select-title {
+    width: 140px;
+}
+
+.out-condition .layui-inline .layui-form-label {
+    height: 30px;
+    line-height: 12px;
+    width: 90px;
+    padding: 8px 0;
+}
+
+.out-condition .layui-unselect .layui-form-select {
+    padding: 0 0;
+
+}
+
+.out-condition .layui-input-inline .layui-input-text {
+    height: 30px;
+    width: 110px;
+}
+
+.layui-form-item .layui-inline {
+    padding: 5px 0px;
+    margin-bottom: 0px;
+    margin-right: 0px;
+}
+
+.my-collapse .layui-inline {
+    height: 30px;
+}
+
+/*.layui-tab-card {
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 2px;
+    box-shadow: #fff 0px 0px 0px 0px;
+    border: #fff;
+}*/
+
+#data_list {
+    padding-top: 10px;
+}
+
+.layui-tab{
+    margin: 10px;
+}
+
+/*操作*/
+.operation {
+    display: none;
+    font-size: 14px;
+}
+
+.operation a{
+    color: #1a81ea;
 }
 
 
-.layui-table-cell {
-    height: auto;
-    overflow: visible;
-    text-overflow: inherit;
-    white-space: normal;
-    padding: 0 !important;
+.layadmin-maillist-fluid .layadmin-contact-box:hover .operation{
+    display: block;
 }
 
-.layui-table-view .layui-table-body .layui-table td,
-.layui-table-view .layui-table-body .layui-table th {
-    padding: 0px 0px;
-    border-top: none;
-    border-left: none;
+.layadmin-maillist-fluid .layui-form-checkbox[lay-skin=primary] {
+    bottom: 2px;
 }
 
-.layui-table-view .layui-table-header .layui-table td,
-.layui-table-view .layui-table-header .layui-table th {
-    text-align: center;
+.layadmin-maillist-fluid .layadmin-contact-box:hover{
+    border: 1px solid #9ec9f4;
+    box-shadow: 0 0 2px 2px hsla(0,0%,70%,.2);
 }
 
-.layui-col-md5, .layui-col-md7{
-    border-right: 1px solid #e6e6e6;
-    border-bottom: 1px solid #e6e6e6;
-    padding: 5px;
-    /*text-indent: 10px;*/
-}
-
-.layui-laypage{
-    position:fixed;
-    right:20px;
-}
-
-.reamrk{
+.skip {
     overflow: hidden;
+    white-space: nowrap;
     text-overflow: ellipsis;
-    white-space: nowrap
 }
 
-.layui-table-body tr{
-    border-bottom: 1px solid black;
+/*分页*/
+#page_nav{
+    position: fixed;
+    bottom:0;
+    width: 100% !important;
+    height: 40px !important;
 }
 
-.op-btn-cell{
-    text-align: center;
-
-    font-size: 13px;
-    margin-top: 7px;
+.layui-laypage {
+    position: fixed;
+    right: 15px;
+    bottom:0;
+    margin: 0 0;
 }
+
+
+.layadmin-maillist-fluid .layadmin-title {
+    margin: 5px 0 10px 0;
+    height: 22px;
+}
+
+.layadmin-maillist-fluid .layadmin-contact-box {
+    padding: 10px;
+    padding-bottom: 0;
+    background-color: #fff;
+    border: 1px solid #e7eaec;
+    overflow: hidden;
+}
+
+
+.operation a{
+    color: #1a81ea;
+}
+
+.other_info a{
+    color: #1a81ea;
+}
+
+a:hover {
+    color: #1a81ea;
+}
+
+.layadmin-maillist-fluid .layadmin-address {
+    line-height: 1.3;
+    margin-bottom: 10px;
+}
+
+
+.count{
+    float: right;
+    font-size: 15px;
+    line-height: 30px;
+}
+.count a:link {
+    color: blue;
+}
+
+.count a:visited {
+    color: blue;
+}
+
+.count a:hover {
+    color: red;
+}
+
+.count a:active {
+    color: darkslateblue;
+}
+.layadmin-address a:link {
+    color: blue;
+}
+
+.layadmin-address a:visited {
+    color: blue;
+}
+
+.layadmin-address a:hover {
+    color: red;
+}
+
+.layadmin-address a:active {
+    color: darkslateblue;
+}
+
+

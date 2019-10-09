@@ -24,16 +24,48 @@
                     <div class="layui-card-body ">
                         <form class="layui-form layui-form-pane" id="searchForm">
                             <input type="text" hidden value="<#if customerUuid?exists>${customerUuid}</#if>" id="customerUuid" name="customerUuid">
-                            <input type="text" hidden value="<#if businessType?exists>${businessType}</#if>" id="typeTmp" name="typeTmp">
-                            <input type="text" hidden value="<#if terminalType?exists>${terminalType}</#if>" id="terminalTypeTmp" name="terminalTypeTmp">
                             <div class="my-collapse">
                                 <div>
-                                    <input type="hidden" name="type" id="type" value="pt">
-                                    <input type="hidden" name="terminalType" id="terminalType" value="PC">
-                                    <div class="layui-inline">
-                                        <input type="text" name="keyword" id="keyword" placeholder="请输入关键字" class="layui-input">
+                                    <input type="hidden" name="type" id="type" value="<#if businessType?exists>${businessType}</#if>">
+                                    <input type="hidden" name="terminalType" id="terminalType" value="<#if terminalType2?exists>${terminalType2}</#if>">
+
+                                    <div class="layui-inline" style="width: 140px">
+                                        <select name="searchEngine" id="searchEngine">
+                                            <option value=''>搜索引擎</option>
+                                        </select>
                                     </div>
 
+                                    <div class="layui-inline" style="width: 140px">
+                                        <input type="text" name="keyword" id="keyword" placeholder="请输入关键字" class="layui-input">
+                                    </div>
+                                    <div class="layui-inline" style="width: 130px">
+                                        <input type="text" name="optimizeGroupName" id="optimizeGroupName" placeholder="请输入优化组名" autocomplete="off"
+                                               class="layui-input layui-input-text">
+                                    </div>
+                                    <div class="layui-inline" style="width: 140px">
+                                        <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off"
+                                               class="layui-input layui-input-text ">
+                                    </div>
+                                    <div class="layui-inline" style="width: 135px">
+                                        排名
+                                        <div class="layui-input-inline" style="width: 50px;">
+                                            <input type="number" name="gtPosition" placeholder=">=" autocomplete="off" class="layui-input">
+                                        </div>
+                                        <div class="layui-input-inline" style="width: 50px;">
+                                            <input type="number" name="ltPosition" placeholder="<=" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="width: 140px">
+                                        <div class="layui-input-inline">
+                                            <select name="status" id="status">
+                                                <option value=''>关键字状态</option>
+                                                <option value='1'>激活</option>
+                                                <option value='2'>新增</option>
+                                                <option value='0'>暂不操作</option>
+                                                <option value='3'>下架</option>
+                                            </select>&nbsp;
+                                        </div>
+                                    </div>
                                     <div class="layui-inline">
                                         <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索</button>
                                     </div>
@@ -64,32 +96,6 @@
                                         </div>
 
                                         <div class="layui-inline">
-                                            <label class="layui-form-label">优化组名</label>
-                                            <div class="layui-input-inline">
-                                                <input type="text" name="optimizeGroupName" id="optimizeGroupName" placeholder="请输入优化组名" autocomplete="off"
-                                                       class="layui-input">
-                                            </div>
-                                        </div>
-                                        <div class="layui-inline">
-                                            <label class="layui-form-label">关键字状态</label>
-                                            <div class="layui-input-inline">
-                                                <select name="status" id="status">
-                                                    <option value=''>请选择关键字状态</option>
-                                                    <option value='1'>激活</option>
-                                                    <option value='2'>新增</option>
-                                                    <option value='0'>暂不操作</option>
-                                                    <option value='3'>下架</option>
-                                                </select>&nbsp;
-                                            </div>
-                                        </div>
-                                        <div class="layui-inline">
-                                            <label class="layui-form-label">机器分组</label>
-                                            <div class="layui-input-inline">
-                                                <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off" class="layui-input">
-                                            </div>
-                                        </div>
-
-                                        <div class="layui-inline">
                                             <label class="layui-form-label">关键字来源</label>
                                             <div class="layui-input-inline">
                                                 <select name="customerKeywordSource" id="customerKeywordSource">
@@ -103,9 +109,9 @@
                                             </div>
                                         </div>
                                         <div class="layui-inline">
-                                            <label class="layui-form-label">备注</label>
+                                            <label class="layui-form-label">客户标签</label>
                                             <div class="layui-input-inline">
-                                                <input type="text" name="remarks" id="remarks" placeholder="请输入备注" autocomplete="off" class="layui-input">
+                                                <input type="text" name="remarks" id="remarks" placeholder="请输入客户标签" autocomplete="off" class="layui-input">
                                             </div>
                                         </div>
                                         <div class="layui-inline">
@@ -143,16 +149,6 @@
                                         </div>
 
                                         <div class="layui-inline">
-                                            <label class="layui-form-label">排名范围</label>
-                                            <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="number" name="gtPosition" placeholder=">=" autocomplete="off" class="layui-input">
-                                            </div>
-                                            <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="number" name="ltPosition" placeholder="<=" autocomplete="off" class="layui-input">
-                                            </div>
-                                        </div>
-
-                                        <div class="layui-inline">
                                             <label class="layui-form-label">指数范围</label>
                                             <div class="layui-input-inline" style="width: 90.5px;">
                                                 <input type="number" name="gtCurrentIndexCount" placeholder=">=" autocomplete="off" class="layui-input">
@@ -178,15 +174,7 @@
                                                        class="layui-input">
                                             </div>
                                         </div>
-                                        <div class="layui-inline">
-                                            <label class="layui-form-label">搜索引擎</label>
-                                            <div class="layui-input-inline">
-                                                <select name="searchEngine" id="searchEngine">
-                                                    <option value=''>请选择搜索引擎</option>
 
-                                                </select>&nbsp;
-                                            </div>
-                                        </div>
                                         <div class="layui-inline">
                                             <label class="layui-form-label">关键词作用</label>
                                             <div class="layui-input-inline">
@@ -223,10 +211,41 @@
 <script src="/static/ok-admin/page/keyword/customerKeyword.js"></script>
 <script src="/static/ok-admin/page/base/searchForm.js"></script>
 <#include "./customerKeywordTpl.html" />
+<form id="downloadKeywordForm" hidden lay-filter="downloadKeywordForm" method="post" action="/internal/customerKeyword/downloadCustomerKeywordInfo2">
 
+    <input type="hidden"  name="customerUuid" id="customerUuidHidden" value=""/>
+    <input type="hidden"  name="type" id="typeHidden" value=""/>
+    <input type="hidden"  name="terminalType" id="terminalTypeHidden" value=""/>
+    <input type="hidden"  name="keyword" id="keywordHidden" value=""/>
+    <input type="hidden"  name="url" id="urlHidden" value=""/>
+    <input type="hidden"  name="bearPawNumber" id="bearPawNumberHidden" value=""/>
+    <input type="hidden"  name="optimizeGroupName" id="optimizeGroupNameHidden" value=""/>
+    <input type="hidden"  name="status" id="statusHidden" value=""/>
+    <input type="hidden"  name="machineGroup" id="machineGroupHidden" value=""/>
+    <input type="hidden"  name="customerKeywordSource" id="customerKeywordSourceHidden" value=""/>
+    <input type="hidden"  name="remarks" id="remarksHidden" value=""/>
+    <input type="hidden"  name="failedCause" id="failedCauseHidden" value=""/>
+    <input type="hidden"  name="gtOptimizePlanCount" id="gtOptimizePlanCountHidden" value=""/>
+    <input type="hidden"  name="ltOptimizePlanCount" id="ltOptimizePlanCountHidden" value=""/>
+    <input type="hidden"  name="gtOptimizedCount" id="gtOptimizedCountHidden" value=""/>
+    <input type="hidden"  name="ltOptimizedCount" id="ltOptimizedCountHidden" value=""/>
+    <input type="hidden"  name="gtPosition" id="gtPositionHidden" value=""/>
+    <input type="hidden"  name="ltPosition" id="ltPositionHidden" value=""/>
+    <input type="hidden"  name="gtCurrentIndexCount" id="gtCurrentIndexCountHidden" value=""/>
+    <input type="hidden"  name="ltCurrentIndexCount" id="ltCurrentIndexCountHidden" value=""/>
+    <input type="hidden"  name="titleFlag" id="titleFlagHidden" value=""/>
+    <input type="hidden"  name="invalidRefreshCount" id="invalidRefreshCountHidden" value=""/>
+    <input type="hidden"  name="searchEngine" id="searchEngineHidden" value=""/>
+    <input type="hidden"  name="keywordEffect" id="keywordEffectHidden" value=""/>
+    <input type="hidden"  name="noPosition" id="noPositionHidden" value=""/>
+
+</form>
 </body>
 <form action="/internal/customerKeyword/keywordUrlExport2" method="post" id="keywordUrlForm">
-    <input id="customerUuidKU" name="customerUuid" hidden value=""/>
-    <input id="terminalTypeKU" name="terminalType" hidden value=""/>
+    <input type="hidden" id="customerUuidKU" name="customerUuid"  value=""/>
+    <input type="hidden" id="terminalTypeKU" name="terminalType" hidden value=""/>
 </form>
+
+
+
 </html>

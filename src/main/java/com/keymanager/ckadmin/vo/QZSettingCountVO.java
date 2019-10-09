@@ -11,6 +11,9 @@ public class QZSettingCountVO {
     private Long customerUuid;
     private Integer totalCount;
     private Integer activeCount;
+    private Integer pauseCount;
+    private Integer downCount;
+    private Integer otherCount;
 
     public Long getCustomerUuid() {
         return customerUuid;
@@ -34,5 +37,29 @@ public class QZSettingCountVO {
 
     public void setActiveCount(Integer activeCount) {
         this.activeCount = activeCount;
+    }
+
+    public Integer getPauseCount() {
+        return pauseCount;
+    }
+
+    public void setPauseCount(Integer pauseCount) {
+        this.pauseCount = pauseCount;
+    }
+
+    public Integer getDownCount() {
+        return downCount;
+    }
+
+    public void setDownCount(Integer downCount) {
+        this.downCount = downCount;
+    }
+
+    public Integer getOtherCount() {
+        return otherCount;
+    }
+
+    public void setOtherCount(Integer otherCount) {
+        this.otherCount = otherCount;
     }
 }

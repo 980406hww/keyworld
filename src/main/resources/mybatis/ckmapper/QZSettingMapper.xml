@@ -281,10 +281,14 @@
     </update>
 
     <select id="getQZSettingsCountByCustomerUuid" resultType="com.keymanager.ckadmin.vo.QZSettingCountVO">
-        SELECT qz.fCustomerUuid              as 'customerUuid',
-               COUNT(1)                      as 'totalCount',
-               SUM(IF(qz.fRenewalStatus = 1, 1, 0)) AS 'activeCount'
+        SELECT qz.fCustomerUuid              AS 'customerUuid',
+               COUNT(1)                      AS 'totalCount',
+               SUM(IF(qz.fRenewalStatus = 1 OR qz.fRenewalStatus = 2 , 1, 0)) AS 'activeCount',
+               SUM(IF(qz.fRenewalStatus = 0 , 1, 0)) AS 'pauseCount',
+               SUM(IF(qz.fRenewalStatus = 3 , 1, 0)) AS 'downCount',
+               SUM(IF(qz.fRenewalStatus = 4 , 1, 0)) AS 'otherCount'
         FROM t_qz_setting qz
         WHERE qz.fCustomerUuid = #{customerUuid}
+        AND EXISTS ( SELECT 1 FROM t_qz_keyword_rank_info qk WHERE qk.fQZSettingUuid = qz.fUuid AND qk.fTerminalType = 'PC' AND qk.fDataProcessingStatus = 1)
     </select>
 </mapper>

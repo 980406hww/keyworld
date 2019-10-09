@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.CustomerKeywordCleanTitleCriteria;
 import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
+import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.dao.CustomerKeywordDao;
@@ -22,6 +23,7 @@ import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
+import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 import java.io.InputStream;
 import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
@@ -594,6 +596,21 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public void batchUpdateKeywords(KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO) {
         customerKeywordDao.batchUpdateKeywords(keywordStatusBatchUpdateVO.getUuids(), keywordStatusBatchUpdateVO.getKeywordChecks(), keywordStatusBatchUpdateVO.getKeywordValues());
+    }
+
+    @Override
+    public KeywordStandardVO searchCustomerKeywordForNoReachStandard(KeywordStandardCriteria KeywordStandardCriteria) {
+        KeywordStandardVO keywordStandardVO = new KeywordStandardVO();
+        KeywordStandardCriteria.setNoReachStandardDays(7);
+        int sevenDaysNoReachStandard = customerKeywordDao.searchCustomerKeywordForNoReachStandard(KeywordStandardCriteria);
+        KeywordStandardCriteria.setNoReachStandardDays(15);
+        int fifteenDaysNoReachStandard = customerKeywordDao.searchCustomerKeywordForNoReachStandard(KeywordStandardCriteria);
+        KeywordStandardCriteria.setNoReachStandardDays(30);
+        int thirtyDaysNoReachStandard = customerKeywordDao.searchCustomerKeywordForNoReachStandard(KeywordStandardCriteria);
+        keywordStandardVO.setSevenDaysNoReachStandard(sevenDaysNoReachStandard);
+        keywordStandardVO.setFifteenDaysNoReachStandard(fifteenDaysNoReachStandard);
+        keywordStandardVO.setThirtyDaysNoReachStandard(thirtyDaysNoReachStandard);
+        return keywordStandardVO;
     }
 }
 

@@ -485,6 +485,9 @@
         <if test="keywordCriteria.ltCurrentIndexCount != null">
             AND ck.fCurrentIndexCount &lt;= #{keywordCriteria.ltCurrentIndexCount}
         </if>
+        <if test="keywordCriteria.noReachStandardDays != null and keywordCriteria.noReachStandardDays > 0">
+            AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL #{keywordCriteria.noReachStandardDays} DAY)
+        </if>
     </sql>
 
     <sql id="updateCustomerKeywordsCriteria">
@@ -588,6 +591,9 @@
         </if>
         <if test="keywordCriteria.ltCurrentIndexCount != null">
             AND ck.fCurrentIndexCount &lt;= #{keywordCriteria.ltCurrentIndexCount}
+        </if>
+        <if test="keywordCriteria.noReachStandardDays != null and keywordCriteria.noReachStandardDays > 0">
+            AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL #{keywordCriteria.noReachStandardDays} DAY)
         </if>
     </sql>
 
@@ -965,4 +971,17 @@
             #{uuid}
         </foreach>
     </update>
+
+    <select id="searchCustomerKeywordForNoReachStandard" parameterType="com.keymanager.ckadmin.criteria.KeywordStandardCriteria" resultType="int">
+        SELECT
+        COUNT(1)
+        FROM
+        t_customer_keyword ck,
+        t_customer c
+        WHERE c.fUuid = ck.fCustomerUuid
+        AND ck.fStatus = #{keywordStandardCriteria.status}
+        AND ck.fType = #{keywordStandardCriteria.type}
+        AND ck.fTerminalType = #{keywordStandardCriteria.terminalType}
+        AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL #{keywordStandardCriteria.noReachStandardDays} DAY)
+    </select>
 </mapper>

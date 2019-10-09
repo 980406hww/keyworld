@@ -42,6 +42,7 @@ public class KeywordCriteria extends BaseCriteria {
     private Integer ltCurrentIndexCount;//指数结束
     private Integer titleFlag;//标题标志位
 
+    private Integer noReachStandardDays;//未达标天数
 
     private String targetOptimizeGroupName;
     private String targetMachineGroup;
@@ -342,4 +343,11 @@ public class KeywordCriteria extends BaseCriteria {
         this.targetSearchEngine = targetSearchEngine;
     }
 
+    public Integer getNoReachStandardDays() {
+        return noReachStandardDays;
+    }
+
+    public void setNoReachStandardDays(Integer noReachStandardDays) {
+        this.noReachStandardDays = noReachStandardDays;
+    }
 }

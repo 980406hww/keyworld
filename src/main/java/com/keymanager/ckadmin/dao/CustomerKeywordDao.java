@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
+import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
@@ -114,4 +115,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<String> searchDuplicateKeywords(@Param("customerKeywordUpdateStatusCriteria") CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria);
 
     void batchUpdateKeywords(@Param("uuids") List<String> uuids, @Param("keywordChecks") CustomerKeyword keywordChecks, @Param("keywordValues") CustomerKeyword keywordValues);
+
+    int searchCustomerKeywordForNoReachStandard(@Param("keywordStandardCriteria") KeywordStandardCriteria keywordStandardCriteria);
 }
