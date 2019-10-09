@@ -390,8 +390,8 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     @Override
-    public void batchChangeStatus(String clientIDs, Boolean status) {
-
+    public void batchChangeStatus(List<String> clientIDs, Boolean status) {
+        machineInfoDao.batchChangeStatus(clientIDs, status);
     }
 
     @Override
@@ -400,8 +400,8 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     @Override
-    public void batchChangeTerminalType(String[] clientIds, String terminalType) {
-
+    public void batchChangeTerminalType(List<String> clientIDs, String terminalType) {
+        machineInfoDao.batchChangeTerminalType(clientIDs, terminalType);
     }
 
     @Override

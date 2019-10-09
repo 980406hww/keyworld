@@ -104,6 +104,22 @@ public class MachineInfoController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/toBatchChangeTerminalType", method = RequestMethod.GET)
+    public ModelAndView toBatchChangeTerminalType() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/BatchChangeTerminalType");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/toBatchChangeStatus", method = RequestMethod.GET)
+    public ModelAndView toBatchChangeStatus() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/BatchChangeStatus");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
     @RequestMapping(value = "/toUpdateMachineInfo", method = RequestMethod.GET)
     public ModelAndView toUpdateMachineInfo() {
         ModelAndView mv = new ModelAndView();
@@ -321,9 +337,45 @@ public class MachineInfoController extends SpringMVCBaseController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/machineInfo/changeStatus")
+    @RequestMapping(value = "/batchChangeStatus", method = RequestMethod.POST)
+    public ResultBean batchChangeStatus(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
+        boolean valid = (boolean) requestMap.get("valid");
+        try {
+            machineInfoService.batchChangeStatus(clientIDs, valid);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/changeTerminalType")
+    @RequestMapping(value = "/batchChangeTerminalType", method = RequestMethod.POST)
+    public ResultBean batchChangeTerminalType(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
+        String terminalType = (String) requestMap.get("terminalType");
+        try {
+            machineInfoService.batchChangeTerminalType(clientIDs, terminalType);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
     @RequiresPermissions("/internal/machineInfo/changeTerminalType")
     @RequestMapping(value = "/changeTerminalType", method = RequestMethod.POST)
-    public ResultBean changeTerminalType(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+    public ResultBean changeTerminalType(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
         String clientID = (String) requestMap.get("clientID");
         String terminalType = (String) requestMap.get("terminalType");

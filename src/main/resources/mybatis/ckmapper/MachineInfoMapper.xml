@@ -412,7 +412,7 @@
         UPDATE t_machine_info
         SET fValid = #{valid}
         WHERE fClientID IN
-        <foreach collection="clientIds" item="clientID" open="(" close=")" separator=",">
+        <foreach collection="clientIDs" item="clientID" open="(" close=")" separator=",">
             #{clientID}
         </foreach>
     </update>
@@ -421,7 +421,7 @@
         UPDATE t_machine_info
         SET fTerminalType = #{terminalType}
         WHERE fClientID IN
-        <foreach collection="clientIds" item="clientID" open="(" close=")" separator=",">
+        <foreach collection="clientIDs" item="clientID" open="(" close=")" separator=",">
             #{clientID}
         </foreach>
     </update>

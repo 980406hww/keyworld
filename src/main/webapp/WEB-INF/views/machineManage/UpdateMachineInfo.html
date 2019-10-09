@@ -92,11 +92,11 @@
         clientID_ = data.clientID
         terminalType_ = data.terminalType
         if (layui_ != null) {
-            setForm(layui_, clientID_,terminalType_);
+            setForm(layui_, clientID_, terminalType_);
         }
     }
 
-    function setForm(l, clientID,terminalType){
+    function setForm(l, clientID, terminalType){
         var postData = {}
         postData.clientID = clientID
         postData.terminalType = terminalType
@@ -126,7 +126,7 @@
         var $ = layui.jquery;
 
         if (clientID_ != null) {
-            setForm(layui, clientID_);
+            setForm(layui, clientID_, terminalType_);
         } else {
             layui_ = layui;
         }

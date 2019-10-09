@@ -106,9 +106,9 @@ public interface MachineInfoService extends IService<MachineInfo> {
 
     void batchUpdateMachine(MachineInfoCriteria machineInfoCriteria);
 
-    void batchChangeStatus(String clientIDs, Boolean status);
+    void batchChangeStatus(List<String> clientIDs, Boolean status);
 
-    void batchChangeTerminalType(String[] clientIds, String terminalType);
+    void batchChangeTerminalType(List<String> clientIDs, String terminalType);
 
     Integer getUpgradingMachineCount(ClientUpgrade clientUpgrade);
 

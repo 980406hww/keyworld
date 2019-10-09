@@ -70,11 +70,11 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     void batchUpdateMachine(@Param("machineInfoCriteria") MachineInfoCriteria machineInfoCriteria);
 
-    void batchChangeStatus(@Param("clientIds") String[] clientIds, @Param("valid") Boolean valid);
+    void batchChangeStatus(@Param("clientIDs") List<String> clientIDs, @Param("valid") Boolean valid);
 
     void updateMachineTargetVersion(@Param("clientUpgrade") ClientUpgrade clientUpgrade);
 
-    void batchChangeTerminalType(@Param("clientIds") String[] clientIds, @Param("terminalType") String terminalType);
+    void batchChangeTerminalType(@Param("clientIDs") List<String> clientIDs, @Param("terminalType") String terminalType);
 
     String getMachineInfoID(@Param("vpsBackendSystemComputerID") String vpsBackendSystemComputerID);
 

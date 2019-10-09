@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>操作类型管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+    <style>
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
+
+        .layui-btn-xs{
+            height: 18px;
+            line-height: 18px;
+        }
+
+        /* 下拉条件框 */
+        .my-collapse {
+            position: relative;
+            box-shadow: none;
+        }
+
+        .my-collapse * {
+            box-shadow: none;
+        }
+
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 1px solid #e6e6e6;
+        }
+
+        .my-collapse > div {
+            padding: 6px 5px;
+        }
+        .my-collapse .my-btn {
+            height: 30px !important;
+            line-height: 30px !important;
+            padding: 0 18px;
+            background-color: #45a3c2;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .my-collapse .my-btn:hover {
+            opacity: .8;
+            transition: opacity 0.5s;
+        }
+
+        #searchContent input{
+            height: 38px;
+            width: 185px;
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+<div class="ok-body">
+    <div class="layui-tab layui-tab-card" lay-filter="keywordTab">
+        <ul class="layui-tab-title" id="tabItem">
+            <li lay-id="PC" class="layui-this" data-terminal="PC">PC</li>
+            <li lay-id="Phone" data-terminal="Phone">Phone</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-card ">
+                    <div class="layui-card-body ">
+                        <form class="layui-form layui-form-pane" id="searchForm">
+                            <div class="my-collapse">
+                                <div>
+                                    <input type="hidden" name="terminalType" id="terminalType">
+                                    <div class="layui-inline">
+                                        <input type="text" name="operationTypeName" id="operationTypeName" placeholder="请输入操作类型名称" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <button class="layui-collapse my-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <button style="background: #897c00;color: #ffffff" class="layui-collapse my-btn" type="reset" id="resetBtn">
+                                            重置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--数据表格-->
+                <table class="layui-hide" id="operationTypeTable" lay-filter="tableFilter"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+
+<script>
+    var sign = false;
+    // 进度条加载提示
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
+    // layui相关
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+        var okLayer = layui.okLayer;
+        var layer = layui.layer;
+
+        init_Search({'terminalType': 'PC'})
+
+        function init_Search(whereCondition){
+            table.render({
+                elem: '#operationTypeTable',
+                method: 'post',
+                url: '${ctx.path}/internal/operationTypes/searchOperationTypeLists',
+                limit: 50,
+                page: true,
+                autoSort: false,
+                size: 'sm',
+                id: 'operationTypeTable',
+                even: true,//隔行背景
+                toolbar: "#toolbarTpl",
+                defaultToolbar: [],
+                contentType: 'application/json',
+                where: whereCondition,
+                cols: [[
+                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '5%', align: 'center'},
+                    {field: 'operationTypeName', title: '操作类型名称', width: '15%', align: 'center'},
+                    {field: 'terminalType', title: '终端类型', width: '10%', align: 'center'},
+                    {field: 'remark', title: '备注', width: '23%', align: 'center'},
+                    {field: 'createTime', title: '创建时间', width: '13%', templet: '#toDateTime', align: 'center'},
+                    {field: 'updateTime', title: '更新时间', width: '13%', templet: '#toDateTime', align: 'center'},
+                    {field: 'status', title: '状态', align: 'center', width: '10%', align: 'center', templet: '#toStatus'},
+                    {title: '操作', align: 'center', width: '11%', align: 'center', templet: '#operationTpl', fixed: "right"},
+                ]],
+                height: 'full-150',
+
+                done: function (res, curr, count) {
+                }
+            });
+        }
+
+        element.on('tab(keywordTab)', function (data) {
+            var d = data.elem.context.dataset
+            $('#terminalType').val(d.terminal);
+            active['reload'].call(this);
+        });
+
+        var active = {
+            reload: function () {
+                var terminalType = $("#terminalType").val()
+                if(terminalType == '' || terminalType == null){
+                    terminalType = 'PC'
+                }
+                var data = {'terminalType': terminalType}
+                table.reload('operationTypeTable', {
+                    where: data,
+                    page: {
+                        curr: 1
+                    }
+                });
+            },
+        };
+
+        form.on("submit(search)", function (data) {
+            var postData = data.field
+            var terminalType = $("#terminalType").val()
+            if(terminalType == '' || terminalType == null){
+                terminalType = 'PC'
+            }
+            postData.terminalType = terminalType
+            init_Search(postData)
+            return false
+        });
+
+        table.on('tool(tableFilter)',function(obj){
+            var data = obj.data,event = obj.event;
+            switch (event) {
+                case 'deleteOperationType':
+                    deleteOperationType(data.uuid, data.operationTypeName);
+                    break;
+                case 'modifyOperationType':
+                    modifyOperationType(data.uuid);
+                    break;
+            }
+        });
+
+        table.on('toolbar(tableFilter)',function(obj){
+            var data = obj.data,event = obj.event;
+            switch (event) {
+                case 'toAddOperationType':
+                    toAddOperationType();
+                    break;
+                case 'deleteBatchOperationType':
+                    deleteBatchOperationType();
+                    break;
+            }
+        });
+
+        function modifyOperationType(data){
+            okLayer.open("首页/其他/修改操作类型", "/internal/operationTypes/toSaveOperationType", "35%", "60%", function(layero){
+                window[layero.find("iframe")[0]["name"]].initForm(data);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            },120);
+        }
+
+        function toAddOperationType() {
+            okLayer.open("首页/其他/添加操作类型", "/internal/operationTypes/toSaveOperationType", "35%", "60%", null, function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            },120);
+        }
+
+        function deleteOperationType(uuid, operationTypeName){
+            var postData = {}
+            postData.uuid = uuid;
+            postData.operationTypeName = operationTypeName;
+            postData.deleteType = "single";
+            layer.confirm('确认删除该操作类型？', {
+                icon: 3,
+                title: '删除操作类型',
+                btn: ['确认', '取消'],
+                yes: function () {
+                    $.ajax({
+                        url: '/internal/operationTypes/deleteOperationType',
+                        type: 'POST',
+                        headers: {
+                            "Accept": 'application/json',
+                            "Content-Type": 'application/json'
+                        },
+                        data: JSON.stringify(postData),
+                        success: function (res) {
+                            if (res.code === 200) {
+                                var data = {}
+                                table.reload('operationTypeTable', {
+                                    where: data,
+                                    page: {
+                                        curr: 1
+                                    }
+                                });
+                                layer.msg("删除成功")
+                            } else {
+                                layer.msg(res.msg)
+                            }
+                        },
+                        error: function () {
+                            layer.msg('未知错误，请稍后重试！！')
+                        }
+                    });
+                }, btn2: function (index) {
+                    layer.close(index);
+                }
+            });
+        }
+
+        function deleteBatchOperationType(){
+            var checkStatus = table.checkStatus('operationTypeTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要操作的操作类型', {icon: 5});
+                return
+            }
+            layer.confirm("确定要删除所选操作类型吗", {icon: 3, title: '删除所选'}, function (index) {
+                var postData = {};
+                postData.uuids = uuidArr;
+                $.ajax({
+                    url: '/internal/operationTypes/deleteOperationType',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 2000
+                            }, function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            layer.msg('操作失败', {icon: 5});
+                        }
+                    },
+                    error: function () {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                });
+                layer.close(index);
+            });
+        }
+
+    });
+
+</script>
+
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+    <div class="layui-btn-container">
+    <@shiro.hasRole name="AlgorithmGroup">
+        <button class="layui-btn layui-btn-sm" id="addMachine" lay-event="toAddOperationType">添加</button>
+        <button class="layui-btn layui-btn-danger layui-btn-sm" id="deleteBatchOperationType" lay-event="deleteBatchOperationType">
+            <i class="layui-icon layui-icon-delete"></i>删除所选
+        </button>
+    </@shiro.hasRole>
+    </div>
+</script>
+
+<script type="text/html" id="toDateTime">
+    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+</script>
+
+<script type="text/html" id="toStatus">
+    <span>
+        {{# if(d.status == 1) { }}
+            有效
+        {{# }else{ }}
+        {{#     if(d.status == 0){ }}
+                    无效
+        {{#     }else{ }}
+                    测试中
+        {{#     } }}
+        {{# } }}
+    </span>
+</script>
+
+<script type="text/html" id="operationTpl">
+    <div class="layui-btn-group">
+    <@shiro.hasRole name="AlgorithmGroup">
+        <button type="button" class="layui-btn layui-btn-xs" lay-event="modifyOperationType" id="modifyOperationType">修改</button>
+        <button type="button" class="layui-btn layui-btn-xs" lay-event="deleteOperationType" id="deleteOperationType">删除</button>
+    </@shiro.hasRole>
+    </div>
+</script>
+
+</body>
+</html>
