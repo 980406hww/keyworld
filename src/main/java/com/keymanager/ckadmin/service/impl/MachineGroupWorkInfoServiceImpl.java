@@ -64,7 +64,17 @@ public class MachineGroupWorkInfoServiceImpl implements MachineGroupWorkInfoServ
             total.setTodaySubTotal(total.getTodaySubTotal() + machineGroupWorkInfo.getTodaySubTotal());
             total.setMaxInvalidCount(machineGroupWorkInfo.getMaxInvalidCount());
             total.setIdleTotalMinutes(total.getIdleTotalMinutes() + machineGroupWorkInfo.getIdleTotalMinutes());
+            machineGroupWorkInfo.setAvgOptimizedCount();
+            machineGroupWorkInfo.setInvalidKeywordPercentage();
+            machineGroupWorkInfo.setInvalidOptimizePercentage();
+            machineGroupWorkInfo.setReachStandardPercentage();
+            machineGroupWorkInfo.setIdlePercentage();
         }
+        total.setAvgOptimizedCount();
+        total.setInvalidKeywordPercentage();
+        total.setInvalidOptimizePercentage();
+        total.setReachStandardPercentage();
+        total.setIdlePercentage();
         machineGroupWorkInfos.add(0, total);
     }
 }

@@ -73,6 +73,50 @@ public class RefreshStatRecord implements Serializable {
     @TableField(value = "fCreateDate")
     private Date createDate;
 
+    @TableField(exist = false)
+    private Double reachStandardPercentage;
+
+    @TableField(exist = false)
+    private Double invalidKeywordPercentage;
+
+    @TableField(exist = false)
+    private Double avgOptimizedCount;
+
+    @TableField(exist = false)
+    private Double invalidOptimizePercentage;
+
+    public Double getReachStandardPercentage() {
+        return reachStandardPercentage;
+    }
+
+    public void setReachStandardPercentage() {
+        this.reachStandardPercentage = (this.totalKeywordCount > 0) ? (this.reachStandardKeywordCount * 1.0) / this.totalKeywordCount * 100 : 0;
+    }
+
+    public Double getInvalidKeywordPercentage() {
+        return invalidKeywordPercentage;
+    }
+
+    public void setInvalidKeywordPercentage() {
+        this.invalidKeywordPercentage = (this.totalKeywordCount > 0) ? ((this.invalidKeywordCount * 1.0) / this.totalKeywordCount) * 100 : 0;
+    }
+
+    public Double getAvgOptimizedCount() {
+        return avgOptimizedCount;
+    }
+
+    public void setAvgOptimizedCount() {
+        this.avgOptimizedCount = (this.totalKeywordCount > 0) ? this.totalOptimizedCount * 1.0 / this.totalKeywordCount : 0;
+    }
+
+    public Double getInvalidOptimizePercentage() {
+        return invalidOptimizePercentage;
+    }
+
+    public void setInvalidOptimizePercentage() {
+        this.invalidOptimizePercentage = (this.queryCount > 0) ? (((this.queryCount - this.totalOptimizedCount) * 1.0) / this.queryCount) * 100 : 0;
+    }
+
     public Long getUuid() {
         return uuid;
     }

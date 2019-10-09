@@ -117,71 +117,78 @@
 </head>
 <body>
 <div class="ok-body">
-    <!--面包屑导航区域-->
-    <div class="ok-body-breadcrumb" style="margin: 5px 0">
-        <a><cite>终端管理</cite></a>
-        <a><cite>/</cite></a>
-        <a><cite>前往刷量统计</cite></a>
-        <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
-            <i class="layui-icon layui-icon-refresh"></i>
-        </a>
-    </div>
-    <!--  条件搜索  -->
-    <div class="layui-card ">
-        <div class="layui-card-body ">
-            <form class="layui-form layui-form-pane" id="searchForm">
-                <div class="my-collapse">
-                    <div>
-                        <div class="layui-inline">
-                            <select name="entryType" lay-filter="entryType">
-                                <option value="qz">全站链接</option>
-                                <option value="pt" selected>普通链接</option>
-                                <option value="fm">负面链接</option>
-                                <option value="bc">BC链接</option>
-                            </select>
-                        </div>
-                        <div class="layui-inline">
-                            <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" class="layui-input">
-                        </div>
-                        <div class="layui-inline">
-                            <input type="checkbox" name="machineGroupFuzzyQuery" title="模糊搜索">
-                        </div>
-                        <div class="layui-inline">
-                            <input type="text" name="customerName" id="customerName" placeholder="请输入客户名称" class="layui-input">
-                        </div>
-                        <!--                        <div class="layui-inline">-->
-                        <!--                            <select name="categoryTag">-->
-                        <!--                                <option value="">请选择分类标签</option>-->
-                        <!--                            </select>-->
-                        <!--                        </div>-->
-                        <div class="layui-inline">
-                            <select name="dayNum">
-                                <option value="">请选择历史记录</option>
-                                <option value="1">一天前</option>
-                                <option value="2">两天前</option>
-                                <option value="3">三天前</option>
-                                <option value="4">四天前</option>
-                                <option value="5">五天前</option>
-                                <option value="6">六天前</option>
-                            </select>
-                        </div>
-                        <div class="layui-inline">
-                            <button class="layui-btn" lay-submit lay-filter="search"
-                                    id="searchBtn">搜索
-                            </button>
-                        </div>
-                        <div class="layui-inline">
-                            <button style="background: #897c00;color: #ffffff" class="layui-btn"
-                                    type="reset">
-                                重置
-                            </button>
-                        </div>
+    <div class="layui-tab layui-tab-card" lay-filter="machineGroupTab">
+        <ul class="layui-tab-title" id="tabItem">
+            <li data-type="pt" data-terminal="PC" class="layui-this">单词电脑</li>
+            <li data-type="pt" data-terminal="Phone">单词手机</li>
+            <li data-type="qz" data-terminal="PC">整站电脑</li>
+            <li data-type="qz" data-terminal="Phone">整站手机</li>
+            <li data-type="fm" data-terminal="PC">负面电脑</li>
+            <li data-type="fm" data-terminal="Phone">负面手机</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-card ">
+                    <div class="layui-card-body ">
+                        <form class="layui-form layui-form-pane" id="searchForm">
+                            <div class="my-collapse">
+                                <div>
+<!--                                    <div class="layui-inline">-->
+<!--                                        <select name="entryType" lay-filter="entryType">-->
+<!--                                            <option value="qz">全站链接</option>-->
+<!--                                            <option value="pt" selected>普通链接</option>-->
+<!--                                            <option value="fm">负面链接</option>-->
+<!--                                            <option value="bc">BC链接</option>-->
+<!--                                        </select>-->
+<!--                                    </div>-->
+                                    <input type="hidden" id="entryType" name="entryType" value="pt">
+                                    <input type="hidden" id="terminalType" name="terminalType" value="PC">
+                                    <div class="layui-inline">
+                                        <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" class="layui-input">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input type="checkbox" name="machineGroupFuzzyQuery" title="模糊搜索">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input type="text" name="customerName" id="customerName" placeholder="请输入客户名称" class="layui-input">
+                                    </div>
+                                    <!--                        <div class="layui-inline">-->
+                                    <!--                            <select name="categoryTag">-->
+                                    <!--                                <option value="">请选择分类标签</option>-->
+                                    <!--                            </select>-->
+                                    <!--                        </div>-->
+                                    <div class="layui-inline">
+                                        <select name="dayNum">
+                                            <option value="">请选择历史记录</option>
+                                            <option value="1">一天前</option>
+                                            <option value="2">两天前</option>
+                                            <option value="3">三天前</option>
+                                            <option value="4">四天前</option>
+                                            <option value="5">五天前</option>
+                                            <option value="6">六天前</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <button class="layui-btn" lay-submit lay-filter="search"
+                                                id="searchBtn">搜索
+                                        </button>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <button style="background: #897c00;color: #ffffff" class="layui-btn"
+                                                type="reset">
+                                            重置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+                <!--数据表格-->
+                <table class="layui-hide" id="machineTable" lay-filter="machineTable"></table>
+            </div>
         </div>
     </div>
-
     <!--TODO 跳转旧的页面-->
     <form id="searchCustomerKeywordForm" style="display: none;" method="post" target="_blank"
           action="/internal/customerKeyword/searchCustomerKeywordLists">
@@ -190,9 +197,6 @@
         <input type="hidden" name="noReachStandardDays" id="noReachStandardDays" value=""/>
         <input type="hidden" name="status" id="status" value="1"/>
     </form>
-
-    <!--数据表格-->
-    <table class="layui-hide" id="machineTable" lay-filter="machineTable"></table>
 </div>
 <!--js逻辑-->
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
@@ -206,7 +210,8 @@
     };
 
     // layui相关
-    layui.use(['table', 'form', 'jquery'], function () {
+    layui.use(['element', 'table', 'form', 'jquery'], function () {
+        var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
@@ -290,26 +295,22 @@
                 defaultToolbar: ['filter'],
                 contentType: 'application/json',
                 cols: [[
-                    {filed: 'uuid', type: 'checkbox', width: '2%', rowspan: 2},
+                    {filed: 'uuid', type: 'checkbox', width: '2%', align: 'center', rowspan: 2},
                     {
-                        title: '类型', width: '10%', align: 'center', templet: function (d) {
+                        field: 'machineGroup', title: '类型', width: '10%', align: 'center', rowspan: 2, sort: true, templet: function (d) {
                             if (d.machineGroup === '总计') {
                                 return d.machineGroup;
                             }
                             return '<a href="javascript:searchCustomerKeywords(\'' + d.machineGroup + '\')" style="color: blue">' + d.machineGroup + '</a>';
-                        }, rowspan: 2
-                    },
-                    {title: '关键字', width: '37%', align: 'center', colspan: 7},
-                    {title: '刷的次数', width: '58%', align: 'center', colspan: 6},
-                    {title: '机器数', width: '15%', align: 'center', colspan: 3}
-                ], [
-                    {
-                        title: '总数', width: '5%', align: 'center', templet: function (d) {
-                            return d.totalKeywordCount;
                         }
                     },
+                    {title: '关键字', width: '37%', align: 'center', colspan: 7},
+                    {title: '刷的次数', width: '36%', align: 'center', colspan: 6},
+                    {title: '机器数', width: '15%', align: 'center', colspan: 3}
+                ], [
+                    {field: 'totalKeywordCount', title: '总数', width: '5%', align: 'center', sort: true},
                     {
-                        title: '达标数(金额)', width: '6%', align: 'center', templet: function (d) {
+                        field: 'reachStandardKeywordCount', title: '达标数(金额)', width: '6%', align: 'center', sort: true, templet: function (d) {
                             if (d.reachStandardKeywordCount > 0) {
                                 if (d.machineGroup === '总计') {
                                     return '<a href="javascript:findKeyword(\'\', \'\')" style="color: blue">' + d.reachStandardKeywordCount + '('
@@ -323,17 +324,16 @@
                         }
                     },
                     {
-                        title: '达标率', width: '5%', align: 'center', templet: function (d) {
-                            let reachStandardPercentage = (d.reachStandardKeywordCount * 1.0) / d.totalKeywordCount * 100;
-                            if (reachStandardPercentage > 0) {
-                                return reachStandardPercentage.toFixed(2) + '%';
+                        field: 'reachStandardPercentage', title: '达标率', width: '5%', align: 'center', sort: true, templet: function (d) {
+                            if (d.reachStandardPercentage > 0) {
+                                return d.reachStandardPercentage.toFixed(2) + '%';
                             } else {
                                 return '';
                             }
                         }
                     },
                     {
-                        title: '没有刷量', width: '5%', align: 'center', templet: function (d) {
+                        field: 'zeroOptimizedCount', title: '没有刷量', width: '5%', align: 'center', sort: true, templet: function (d) {
                             if (d.zeroOptimizedCount > 0) {
                                 return d.zeroOptimizedCount;
                             } else {
@@ -342,7 +342,7 @@
                         }
                     },
                     {
-                        title: '待刷数', width: '5%', align: 'center', templet: function (d) {
+                        field: 'needOptimizeKeywordCount', title: '待刷数', width: '5%', align: 'center', sort: true, templet: function (d) {
                             if (d.needOptimizeKeywordCount > 0) {
                                 return d.needOptimizeKeywordCount;
                             } else {
@@ -351,7 +351,7 @@
                         }
                     },
                     {
-                        title: '无效刷量', width: '6%', align: 'center', templet: function (d) {
+                        field: 'invalidKeywordCount', title: '无效刷量', width: '6%', align: 'center', sort: true, templet: function (d) {
                             if (d.invalidKeywordCount > 0) {
                                 let html = '';
                                 if (d.machineGroup === '总计') {
@@ -379,18 +379,17 @@
                         }
                     },
                     {
-                        title: '无效占比', width: '5%', align: 'center', templet: function (d) {
-                            let invalidKeywordPercentage = (d.totalKeywordCount > 0) ? ((d.invalidKeywordCount * 1.0) / d.totalKeywordCount) * 100 : 0;
-                            if (invalidKeywordPercentage > 0) {
-                                let color = invalidKeywordPercentage > 20 ? "red" : (invalidKeywordPercentage > 10 ? "purple" : "#000");
-                                return '<span style="color: ' + color + '">' + invalidKeywordPercentage.toFixed(2) + '%</span>';
+                        field: 'invalidKeywordPercentage', title: '无效占比', width: '5%', align: 'center', sort: true, templet: function (d) {
+                            if (d.invalidKeywordPercentage > 0) {
+                                let color = d.invalidKeywordPercentage > 20 ? "red" : (d.invalidKeywordPercentage > 10 ? "purple" : "#000");
+                                return '<span style="color: ' + color + '">' + d.invalidKeywordPercentage.toFixed(2) + '%</span>';
                             } else {
                                 return '';
                             }
                         }
                     },
                     {
-                        title: '总次数', width: '6%', align: 'center', templet: function (d) {
+                        field: 'totalOptimizeCount', title: '总次数', width: '5%', align: 'center', sort: true, templet: function (d) {
                             if (d.totalOptimizeCount > 0) {
                                 return d.totalOptimizeCount;
                             } else {
@@ -399,7 +398,7 @@
                         }
                     },
                     {
-                        title: '已刷次数', width: '5%', align: 'center', templet: function (d) {
+                        field: 'totalOptimizedCount', title: '已刷次数', width: '6%', align: 'center', sort: true, templet: function (d) {
                             if (d.totalOptimizedCount > 0) {
                                 return d.totalOptimizedCount;
                             } else {
@@ -408,7 +407,7 @@
                         }
                     },
                     {
-                        title: '待刷次数', width: '6%', align: 'center', templet: function (d) {
+                        field: 'needOptimizeCount', title: '待刷次数', width: '6%', align: 'center', sort: true, templet: function (d) {
                             if (d.needOptimizeCount > 0) {
                                 return d.needOptimizeCount;
                             } else {
@@ -417,18 +416,17 @@
                         }
                     },
                     {
-                        title: '平均有效刷量', width: '7%', align: 'center', templet: function (d) {
-                            if (d.totalOptimizedCount > 0) {
-                                let avgOptimizedCount = d.totalOptimizedCount / d.totalKeywordCount;
-                                let color = avgOptimizedCount <= 30 ? "red" : "black";
-                                return '<span style="color: ' + color + '">' + avgOptimizedCount.toFixed(2) + '</span>';
+                        field: 'avgOptimizedCount', title: '平均有效刷量', width: '7%', align: 'center', sort: true, templet: function (d) {
+                            if (d.avgOptimizedCount > 0) {
+                                let color = d.avgOptimizedCount <= 30 ? "red" : "black";
+                                return '<span style="color: ' + color + '">' + d.avgOptimizedCount.toFixed(2) + '</span>';
                             } else {
                                 return '';
                             }
                         }
                     },
                     {
-                        title: '取词次数', width: '6%', align: 'center', templet: function (d) {
+                        field: 'queryCount', title: '取词次数', width: '6%', align: 'center', sort: true, templet: function (d) {
                             if (d.queryCount > 0) {
                                 return d.queryCount;
                             } else {
@@ -437,18 +435,17 @@
                         }
                     },
                     {
-                        title: '无效占比', width: '6%', align: 'center', templet: function (d) {
-                            let invalidOptimizePercentage = (d.queryCount > 0) ? (((d.queryCount - d.totalOptimizedCount)) / d.queryCount) * 100 : 0;
-                            if (invalidOptimizePercentage > 0) {
-                                let color = invalidOptimizePercentage > 20 ? "red" : (invalidOptimizePercentage > 10 ? "purple" : "#000");
-                                return '<span style="color: ' + color + '">' + invalidOptimizePercentage.toFixed(2) + '%</span>';
+                        field: 'invalidOptimizePercentage', title: '无效占比', width: '6%', align: 'center', sort: true, templet: function (d) {
+                            if (d.invalidOptimizePercentage > 0) {
+                                let color = d.invalidOptimizePercentage > 20 ? "red" : (d.invalidOptimizePercentage > 10 ? "purple" : "#000");
+                                return '<span style="color: ' + color + '">' + d.invalidOptimizePercentage.toFixed(2) + '%</span>';
                             } else {
                                 return '';
                             }
                         }
                     },
                     {
-                        title: '总数', width: '5%', align: 'center', templet: function (d) {
+                        field: 'totalMachineCount', title: '总数', width: '5%', align: 'center', sort: true, templet: function (d) {
                             if (d.totalMachineCount > 0) {
                                 return d.totalMachineCount;
                             } else {
@@ -457,17 +454,16 @@
                         }
                     },
                     {
-                        title: '空闲率', width: '5%', align: 'center', templet: function (d) {
-                            let idlePercentage = d.idleTotalMinutes / (d.totalMachineCount * 24 * 60.0) * 100;
-                            if (idlePercentage > 0) {
-                                return idlePercentage.toFixed(2) + '%';
+                        field: 'idlePercentage', title: '空闲率', width: '5%', align: 'center', sort: true, templet: function (d) {
+                            if (d.idlePercentage > 0) {
+                                return d.idlePercentage.toFixed(2) + '%';
                             } else {
                                 return '';
                             }
                         }
                     },
                     {
-                        title: '已停数', width: '5%', align: 'center', templet: function (d) {
+                        field: 'unworkMachineCount', title: '已停数', width: '5%', align: 'center', sort: true, templet: function (d) {
                             if (d.unworkMachineCount > 0) {
                                 if (d.machineGroup === '总计') {
                                     return '<a target="_blank" href="javascript:findMachineInfo(\'\')">d.unworkMachineCount</a>';
@@ -479,14 +475,21 @@
                         }
                     }
                 ]],
-                height: 'full-118',
+                height: 'full-148',
                 done: function (res, curr, count) {
                 }
             });
         }
         </@shiro.hasPermission>
 
-        form.on('select(entryType)', function (data) {
+        // form.on('select(entryType)', function (data) {
+        //     active['reload'].call(this);
+        // });
+
+        element.on('tab(machineGroupTab)', function (data) {
+            let d = data.elem.context.dataset;
+            $('#entryType').val(d.type);
+            $('#terminalType').val(d.terminal);
             active['reload'].call(this);
         });
 
