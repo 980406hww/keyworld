@@ -31,7 +31,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         if (type !== 'qz'){
             if ($('#noReachStandardDiv').length === 0){
                 let noReachStandardDiv = '<div class="layui-inline count" id="noReachStandardDiv">\n'
-                    + '    激活未达标词统计:\n'
+                    + '    未达标统计:\n'
                     + '    <a href="javascript:showNoReachStandardKeyword(30)" ></a>|\n'
                     + '    <a href="javascript:showNoReachStandardKeyword(15)" ></a>|\n'
                     + '    <a href="javascript:showNoReachStandardKeyword(7)" ></a>\n'
@@ -322,7 +322,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         } else {
             if ($('#noReachStandardDiv').length === 0) {
                 let noReachStandardDiv = '<div class="layui-inline count" id="noReachStandardDiv">\n'
-                    + '    激活未达标词统计:\n'
+                    + '    未达标统计:\n'
                     + '    <a href="javascript:showNoReachStandardKeyword(30)" ></a>|\n'
                     + '    <a href="javascript:showNoReachStandardKeyword(15)" ></a>|\n'
                     + '    <a href="javascript:showNoReachStandardKeyword(7)" ></a>\n'
