@@ -20,7 +20,7 @@ public class CacheCustomerUuidForSyncDataSchedule {
     public void runTask() {
         logger.info("============= " + " Cache CustomerUuid For Sync Data Task " + "===================");
         try {
-            // todo 定时缓存需要同步的关键词，站点信息，曲线信息
+            // todo 定时缓存需要同步的客户id
             qzSettingService.cacheCustomerUuidForCustomerQueueMap();
         } catch (Exception e) {
             e.printStackTrace();

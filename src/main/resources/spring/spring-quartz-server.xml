@@ -92,7 +92,7 @@
 	</bean>
 
 	<bean id="cronTriggerCacheCustomerUuidForSyncDataSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" value="cacheCustomerUuidForSyncDataSchedule" />
+		<property name="targetObject" ref="cacheCustomerUuidForSyncDataSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

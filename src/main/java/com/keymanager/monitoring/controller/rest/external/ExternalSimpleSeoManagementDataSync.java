@@ -33,7 +33,7 @@ public class ExternalSimpleSeoManagementDataSync extends SpringMVCBaseController
         try {
             if (validUser(userName, password)) {
                 // todo 从全局缓存map中拿数据  一次拿一个客户id下的10000个关键词，站点信息，曲线信息 (已取过的不在获取)
-                String key = requestMap.get("remark");
+                String key = requestMap.get("customerType");
                 Map<String, Object> map = qzSettingService.getCustomerKeywordForDataSync(key);
                 return new ResponseEntity<>(map, HttpStatus.OK);
             }

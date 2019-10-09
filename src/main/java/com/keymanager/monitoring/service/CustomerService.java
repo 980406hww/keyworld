@@ -275,7 +275,7 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 		return customerDao.getActiveDailyReportIdentifyUserIDs();
     }
 
-    public List<Long> getCustomerUuidsByCustomerRemark(String remark) {
-		return customerDao.getCustomerUuidsByCustomerRemark(remark);
+    public List<Long> getCustomerUuidsByCustomerType(String customerType) {
+		return customerDao.getCustomerUuidsByCustomerType(customerType);
     }
 }

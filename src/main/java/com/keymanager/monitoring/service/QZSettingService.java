@@ -70,20 +70,22 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	private static final HashMap<String, Object> CACHE_CUSTOMER_KEYWORD_FOR_SYNC = new HashMap<>();
 
 	public void cacheCustomerUuidForCustomerQueueMap() {
-		// todo 读取配置表需要同步的客户备注
-		Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_DATA, Constants.CONFIG_KEY_CUSTOMER_REMARK_INFO);
-		String syncCustomerRemarkStr = config.getValue();
-		String[] syncCustomerRemarks = syncCustomerRemarkStr.split(",");
-		// todo 每半小时清空customerQueueMap, 重新写入
-		CUSTOMER_QUEUE_MAP.clear();
-		for (String syncCustomerRemark : syncCustomerRemarks) {
-			if (StringUtil.isNotNullNorEmpty(syncCustomerRemark)) {
-				List<Long> uuidList = customerService.getCustomerUuidsByCustomerRemark(syncCustomerRemark);
-				if (CollectionUtils.isNotEmpty(uuidList)) {
-					LinkedBlockingQueue queue = new LinkedBlockingQueue(uuidList.size());
-					CUSTOMER_QUEUE_MAP.put(syncCustomerRemark, queue);
-					for (long uuid : uuidList) {
-						queue.offer(uuid);
+		// todo 读取配置表需要同步的客户类型
+		Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_DATA, Constants.CONFIG_KEY_CUSTOMER_TYPE_INFO);
+		if (null != config) {
+			String syncCustomerTypeStr = config.getValue();
+			String[] syncCustomerTypes = syncCustomerTypeStr.split(",");
+			// todo 每半小时清空customerQueueMap, 重新写入
+			CUSTOMER_QUEUE_MAP.clear();
+			for (String syncCustomerType : syncCustomerTypes) {
+				if (StringUtil.isNotNullNorEmpty(syncCustomerType)) {
+					List<Long> uuidList = customerService.getCustomerUuidsByCustomerType(syncCustomerType);
+					if (CollectionUtils.isNotEmpty(uuidList)) {
+						LinkedBlockingQueue queue = new LinkedBlockingQueue(uuidList.size());
+						CUSTOMER_QUEUE_MAP.put(syncCustomerType, queue);
+						for (long uuid : uuidList) {
+							queue.offer(uuid);
+						}
 					}
 				}
 			}
@@ -1097,7 +1099,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 						map = new HashMap<>(2);
 						map.put("customerKeywords", CACHE_CUSTOMER_KEYWORD_FOR_SYNC.get("0-10000"));
-						map.remove("0-10000");
+						CACHE_CUSTOMER_KEYWORD_FOR_SYNC.remove("0-10000");
 
 						List<QZSettingForSync> qzSettingForSyncs = qzSettingDao.getQZSettingByCustomerUuid(customerUuid);
 						if (CollectionUtils.isNotEmpty(qzSettingForSyncs)) {
