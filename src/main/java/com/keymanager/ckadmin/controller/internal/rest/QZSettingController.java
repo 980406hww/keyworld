@@ -565,9 +565,15 @@ public class QZSettingController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/qzsetting/searchQZSettings")
     @GetMapping(value = "/toQZSetttingsWithCustomerUuid/{customerUuid}")
-    public ModelAndView toQZSetttingsWithCustomerUuid(@PathVariable Long customerUuid, HttpServletRequest request) {
+    public ModelAndView toQZSetttingsWithCustomerUuid(@PathVariable(name = "customerUuid") Long customerUuid, HttpServletRequest request) {
         ModelAndView mv = new ModelAndView();
-        request.setAttribute("customerUuidTmp",customerUuid);
+//        request.setAttribute("customerUuidTmp",customerUuid);
+        int isSEOSales = 0;
+        if (getCurrentUser().getRoles().contains("SEOSales")) {
+            isSEOSales = 1;
+        }
+        mv.addObject("isSEOSales",isSEOSales);
+        mv.addObject("customerUuidTmp", customerUuid);
         mv.setViewName("qzsettings/qzsetting");
         return mv;
     }
@@ -578,7 +584,7 @@ public class QZSettingController extends SpringMVCBaseController {
      * @return
      */
     @GetMapping("/getQZSettingsCount/{customerUuid}")
-    public ResultBean getOperationCombines(@PathVariable Long customerUuid) {
+    public ResultBean getOperationCombines(@PathVariable(name = "customerUuid") Long customerUuid) {
         ResultBean resultBean = new ResultBean();
         try {
             QZSettingCountVO qzSettingCountVO = qzSettingService.getQZSettingsCountByCustomerUuid(customerUuid);

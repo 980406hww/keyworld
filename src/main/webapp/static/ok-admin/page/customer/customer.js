@@ -673,19 +673,21 @@ function generate_keyword_info(data) {
 function generate_qzsetting_info(data) {
     let htm = '';
     if (data.totalCount > 0) {
-        htm += '<span>总数:' + data.totalCount + '&nbsp;&nbsp;&nbsp;&nbsp;</span>(';
-        if (data.totalCount === data.activeCount) {
-            htm += '<span style="color: green;">激活</span>' +
-                '|<a href="javascript:changeQZSettingRenewalStatus(\'' + data.customerUuid + '\', 0)">暂停全站</a>'
-        } else if (data.totalCount > 0 && data.activeCount > 0) {
-            htm += '<span style="color: yellowgreen;">部分暂停</span>' +
-                '|<a href="javascript:changeQZSettingRenewalStatus(\'' + data.customerUuid + '\', 0)">暂停全站</a>' +
-                '|<a href="javascript:changeQZSettingRenewalStatus(\'' + data.customerUuid + '\', 3)">下架全站</a>'
-        } else {
-            htm += '<span style="color: red;">暂停</span>';
+        htm += '<span>总数:' + data.totalCount + '&nbsp;&nbsp;&nbsp;&nbsp;</span>状态:';
+        if (data.activeCount > 0) {
+            htm += '<span style="color: green;">'+data.activeCount+'个续费|</span>'
+        }
+        if (data.pauseCount > 0) {
+            htm += '<span style="color: darkred;">'+data.pauseCount+'个暂停|</span>'
 
         }
-        htm += ')';
+        if (data.downCount > 0) {
+            htm += '<span style="color: grey;">'+data.downCount+'个下架|</span>'
+        }
+        if(data.otherCount > 0) {
+            htm += '<span style="color: lightgrey;">'+data.otherCount+'个其他|</span>'
+        }
+        htm = htm.substring(0, htm.lastIndexOf("|"));
     } else {
         htm += '<a href="javascript:void(0)">暂无数据</a>'
     }
