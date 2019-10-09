@@ -20,4 +20,6 @@ public interface UserInfoDao extends BaseMapper<UserInfo> {
 
     List<UserInfo> selectUserInfos (@Param("organizationID") long organizationID);
 
+    UserInfo getUserInfo(@Param("loginName")String loginName);
+
 }

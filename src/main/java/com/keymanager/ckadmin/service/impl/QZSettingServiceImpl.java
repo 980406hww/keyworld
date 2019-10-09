@@ -218,6 +218,11 @@ public class QZSettingServiceImpl extends
         return split;
     }
 
+    @Override
+    public String findQZCustomer(String domain) {
+        return qzSettingDao.findQZCustomer(domain);
+    }
+
     private void getQZSettingGroupInfo(Map<String, Object> rankInfoVoMap, long uuid, String terminalType, String optimizeGroupName) {
         rankInfoVoMap.put("customerKeywordCount", qzSettingDao.getQZSettingGroupInfo(terminalType, optimizeGroupName));
         rankInfoVoMap.put("operationCombineName", operationCombineService.getOperationCombineName(optimizeGroupName));

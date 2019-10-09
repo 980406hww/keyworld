@@ -45,4 +45,14 @@
         WHERE fLoginName = #{loginName}
     </select>
 
+    <!--原userDao的方法-->
+    <select id="getUserInfo" resultType="com.keymanager.ckadmin.entity.UserInfo">
+        SELECT
+        <include refid="colID"/>
+        FROM t_userinfo u
+        WHERE
+        u.fLoginName = #{loginName}
+        AND u.fStatus = 0
+    </select>
+
 </mapper>

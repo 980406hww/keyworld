@@ -35,6 +35,11 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
     private OrganizationService organizationService;
 
     @Override
+    public UserInfo getUserInfo(String loginName) {
+        return userInfoDao.getUserInfo(loginName);
+    }
+
+    @Override
     public List<UserInfo> findActiveUsers() {
         Config config = configDao.getConfig(Constants.CONFIG_TYPE_EXTERNALUSER, Constants.CONFIG_KEY_EXTERNALUSER);
         return userInfoDao.findActiveUsers(config.getValue());

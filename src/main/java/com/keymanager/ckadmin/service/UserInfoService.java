@@ -13,6 +13,8 @@ import java.util.List;
  */
 public interface UserInfoService extends IService<UserInfo> {
 
+    UserInfo getUserInfo(String loginName);
+
     List<UserInfo> findActiveUsers();
 
     Long getUuidByLoginName(String userName);

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.IndustryDetailDao">
+
+    <sql id="selectCol">
+        tid.fUuid       AS 'uuid',
+        tid.fIndustryID AS 'industryID',
+        tid.fWebsite    AS 'website',
+        tid.fTitle      AS 'title',
+        tid.fQQ         AS 'qq',
+        tid.fTelephone  AS 'telephone',
+        tid.fWeight     AS 'weight',
+        tid.fIdentifyCustomer  AS 'identifyCustomer',
+        tid.fRemark     AS 'remark',
+        tid.fLevel      AS 'level',
+        tid.fCreateTime AS 'createTime',
+        tid.fUpdateTime AS 'updateTime'
+    </sql>
+
+    <select id="searchIndustryDetails" resultType="com.keymanager.ckadmin.entity.IndustryDetail">
+        SELECT
+        <include refid="selectCol"/>
+        FROM t_industry_detail tid
+        WHERE 1 = 1
+        <if test="industryDetailCriteria.industryID != null and industryDetailCriteria.industryID != ''">
+            AND tid.fIndustryID = #{industryDetailCriteria.industryID}
+        </if>
+        <if test="industryDetailCriteria.website != null and industryDetailCriteria.website != ''">
+            AND tid.fWebsite LIKE '${industryDetailCriteria.website}%'
+        </if>
+        <if test="industryDetailCriteria.weight != null and industryDetailCriteria.weight != ''">
+            AND tid.fWeight = #{industryDetailCriteria.weight}
+        </if>
+        <if test="industryDetailCriteria.remark != null and industryDetailCriteria.remark != ''">
+            AND tid.fRemark LIKE '${industryDetailCriteria.remark}%'
+        </if>
+    </select>
+
+    <delete id="delIndustryDetailsByIndustryID">
+        DELETE FROM t_industry_detail WHERE fIndustryID = #{industryID}
+    </delete>
+
+    <delete id="deleteIndustryDetails">
+        DELETE FROM t_industry_detail
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </delete>
+
+    <update id="updateIndustryDetailRemark">
+        UPDATE t_industry_detail SET fRemark = #{remark} WHERE fUuid = #{uuid}
+    </update>
+
+    <select id="findExistingIndustryDetail" resultType="com.keymanager.ckadmin.entity.IndustryDetail">
+        SELECT
+        <include refid="selectCol"/>
+        FROM t_industry_detail tid
+        WHERE tid.fIndustryID = #{industryID}
+        AND tid.fWebsite LIKE '${website}%'
+        LIMIT 1
+    </select>
+
+    <select id="findIndustryDetailCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_industry_detail tid WHERE tid.fIndustryID = #{industryID}
+    </select>
+    
+    <delete id="removeUselessIndustryDetail">
+        DELETE FROM t_industry_detail WHERE fIndustryID = #{industryID} AND fQQ = '' AND fTelephone = ''
+    </delete>
+
+    <select id="getIndustryInfos" resultType="java.util.Map">
+        SELECT
+            tii.fIndustryName AS 'industryName',
+            tid.fWebsite      AS 'website',
+            tid.fQQ           AS 'qq',
+            tid.fTelephone    AS 'telephone',
+            tid.fWeight       AS 'weight',
+            tid.fIdentifyCustomer  AS 'identifyCustomer',
+            tid.fRemark       AS 'remark'
+        FROM t_industry_detail tid
+        LEFT JOIN t_industry_info tii
+        ON tid.fIndustryID = tii.fUuid
+        WHERE tid.fIndustryID = #{uuid}
+    </select>
+</mapper>

@@ -28,6 +28,8 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     int selectLastId();
 
+    String findQZCustomer(@Param("domain") String domain);
+
     void updateQZSettingGroup(@Param("qzSetting") QZSetting qzSetting);
 
     void batchUpdateQZSettingUpdateStatus(@Param("uuids") String uuids);
