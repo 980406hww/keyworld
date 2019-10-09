@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.criteria.CustomerKeywordCleanTitleCriteria;
 import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
@@ -14,6 +15,7 @@ import com.keymanager.ckadmin.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.PerformanceService;
+import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.UserInfoService;
@@ -25,6 +27,7 @@ import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 import com.keymanager.ckadmin.webDo.KeywordCountDO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
+import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +41,8 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -587,6 +592,23 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResultBean(400, "error");
+        }
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywordLists")
+    @RequestMapping(value = "/searchCustomerKeywordForNoReachStandard2", method = RequestMethod.POST)
+    public ResultBean searchCustomerKeywordForNoReachStandard(@RequestBody KeywordStandardCriteria keywordStandardCriteria) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            keywordStandardCriteria.setStatus(1);
+            KeywordStandardVO keywordStandardVO = customerKeywordService.searchCustomerKeywordForNoReachStandard(keywordStandardCriteria);
+            resultBean.setData(keywordStandardVO);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("fail");
+            return resultBean;
         }
     }
 }

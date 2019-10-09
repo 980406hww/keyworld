@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.service.IService;
 import com.keymanager.ckadmin.criteria.CustomerKeywordCleanTitleCriteria;
 import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
+import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 
+import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 import java.io.InputStream;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
@@ -96,4 +98,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     CustomerKeyword getKeywordInfoByUuid(Long uuid);
 
     void batchUpdateKeywords(KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO);
+
+    KeywordStandardVO searchCustomerKeywordForNoReachStandard(KeywordStandardCriteria keywordStandardCriteria);
 }

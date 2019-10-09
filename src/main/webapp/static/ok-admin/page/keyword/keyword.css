@@ -27,4 +27,26 @@ table  a:active{color:darkslateblue;}
 }
 
 
+.count{
+    display: none;
+    float: right;
+    font-size: 15px;
+    line-height: 30px;
+}
+.count a:link {
+    color: blue;
+}
+
+.count a:visited {
+    color: blue;
+}
+
+.count a:hover {
+    color: red;
+}
+
+.count a:active {
+    color: darkslateblue;
+}
+
 
