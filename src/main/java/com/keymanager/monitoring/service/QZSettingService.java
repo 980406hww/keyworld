@@ -1091,11 +1091,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 						int size = customerKeywords.size();
 						int fromIndex = 0, toIndex = 10000;
 						do {
-							List<CustomerKeywordForSync> subList = customerKeywords.subList(fromIndex, toIndex > size ? size : toIndex);
+							List<CustomerKeywordForSync> subList = customerKeywords.subList(fromIndex, (toIndex > size ? size : toIndex));
 							CACHE_CUSTOMER_KEYWORD_FOR_SYNC.put("" + fromIndex + "-" + toIndex, subList);
 							fromIndex += 10000;
 							toIndex += 10000;
-						} while (fromIndex > size);
+						} while (fromIndex < size);
 
 						map = new HashMap<>(2);
 						map.put("customerKeywords", CACHE_CUSTOMER_KEYWORD_FOR_SYNC.get("0-10000"));

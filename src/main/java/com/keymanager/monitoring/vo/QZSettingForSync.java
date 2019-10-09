@@ -11,9 +11,9 @@ public class QZSettingForSync {
     private Long customerId;
     private String domain;
     private String searchEngine;
-    private String bearPawNumber;
+    private String bearPawId;
     private Boolean renewalStatus;
-    List<QZKeywordRankForSync> qzKeywordRanks;
+    private List<QZKeywordRankForSync> qzKeywordRanks;
 
     public Long getQsId() {
         return qsId;
@@ -47,12 +47,12 @@ public class QZSettingForSync {
         this.searchEngine = searchEngine;
     }
 
-    public String getBearPawNumber() {
-        return bearPawNumber;
+    public String getBearPawId() {
+        return bearPawId;
     }
 
-    public void setBearPawNumber(String bearPawNumber) {
-        this.bearPawNumber = bearPawNumber;
+    public void setBearPawId(String bearPawId) {
+        this.bearPawId = bearPawId;
     }
 
     public Boolean getRenewalStatus() {
