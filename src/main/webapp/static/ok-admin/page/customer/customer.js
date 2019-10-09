@@ -129,13 +129,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                 $.each(obj.customerBusinessList, function (index, tmp) {
                     let url = '', title = '', id = '';
                     if (tmp === 'keyword') {
-                        let entryType = $('#entryType').val();
-                        url = '/internal/customerKeyword/toCustomerKeywords/' + entryType+'/PC/'+obj.uuid;
-                        title = contactPerson + '-关键字信息';
-                        id = contactPerson + '-关键字信息';
+
                         item += '<div class="layadmin-address">' +
                             '<strong>' +
-                            '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>单词业务</a>' +
+                            '单词业务' +
                             '</strong>' +
                             '<br>';
                         $.ajax({
@@ -145,7 +142,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                             async: false,
                             success: function (res) {
                                 if (res.code === 200) {
-                                    item += generate_keyword_info(res.data)
+                                    item += generate_keyword_info(obj, res.data)
                                 } else {
                                     item += '暂无数据'
                                 }
@@ -153,11 +150,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                             }
                         });
                     } else if (tmp === 'qzsetting') {
-                        url = '/internal/qzsetting/toQZSetttingsWithCustomerUuid/' + obj.uuid;
-                        title = contactPerson + '-全站信息';
-                        id = contactPerson + '-全站信息';
+
                         item += '<div class="layadmin-address"><strong>' +
-                            '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>全站业务</a>' +
+                            '全站业务' +
                             '</strong>' +
                             '<br>';
                         $.ajax({
@@ -167,7 +162,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                             async: false,
                             success: function (res) {
                                 if (res.code === 200) {
-                                    item += generate_qzsetting_info(res.data)
+                                    item += generate_qzsetting_info(obj, res.data)
                                 } else {
                                     item += '暂无数据'
                                 }
@@ -688,10 +683,16 @@ function generate_customer_daily_report(uuid, status, oldIdentify){
     return stat;
 }
 
-function generate_keyword_info(data) {
+function generate_keyword_info(obj, data) {
     let htm = '';
+
     if (data.totalCount > 0) {
-        htm += '<span>总数:' + data.totalCount + '&nbsp;&nbsp;&nbsp;&nbsp;</span>(';
+        let entryType = document.getElementById('entryType').value;
+        let url = '/internal/customerKeyword/toCustomerKeywords/' + entryType+'/PC/'+obj.uuid;
+        let contactPerson = obj.contactPerson.replace(/\s+/g, "");
+        let title = contactPerson + '-关键字信息';
+        let id = contactPerson + '-关键字信息';
+        htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>总数:' + data.totalCount + '</span></a>&nbsp;&nbsp;&nbsp;&nbsp;(';
         if (data.totalCount === data.activeCount) {
             htm += '<span style="color: green;">激活</span>' +
                 '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","0")>暂停关键字</a>'
@@ -705,15 +706,21 @@ function generate_keyword_info(data) {
         }
         htm += ')';
     } else {
-        htm += '<a href="javascript:void(0)">暂无数据</a>'
+        htm += '<span>暂无数据</span>'
     }
     return htm;
 }
 
-function generate_qzsetting_info(data) {
+function generate_qzsetting_info(obj, data) {
     let htm = '';
+
     if (data.totalCount > 0) {
-        htm += '<span>总数:' + data.totalCount + '&nbsp;&nbsp;&nbsp;&nbsp;</span>状态:';
+        let entryType = document.getElementById('entryType').value;
+        let url = '/internal/qzsetting/toQZSetttingsWithCustomerUuid/'+obj.uuid;
+        let contactPerson = obj.contactPerson.replace(/\s+/g, "");
+        let title = contactPerson + '-全站信息';
+        let id = contactPerson + '-全站信息';
+        htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>总数:' + data.totalCount + '</span></a>&nbsp;&nbsp;状态:';
         if (data.activeCount > 0) {
             htm += '<span style="color: green;">'+data.activeCount+'个续费|</span>'
         }
@@ -729,7 +736,7 @@ function generate_qzsetting_info(data) {
         }
         htm = htm.substring(0, htm.lastIndexOf("|"));
     } else {
-        htm += '<a href="javascript:void(0)">暂无数据</a>'
+        htm += '<span>暂无数据</span>'
     }
     return htm;
 }
@@ -745,7 +752,7 @@ function updateOrNewTab(url, tit, id) {
     });
     if (!update) {
         parent.layui.element.tabAdd('ok-tab', {
-                title: '<i class="layui-icon layui-icon-align-right">'+tit,
+                title: '<i class="layui-icon layui-icon-align-right"></i>&nbsp;&nbsp;&nbsp;'+tit,
                 content: contentIframe,
                 id: id
             }

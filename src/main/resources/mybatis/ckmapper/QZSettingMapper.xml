@@ -289,5 +289,6 @@
                SUM(IF(qz.fRenewalStatus = 4 , 1, 0)) AS 'otherCount'
         FROM t_qz_setting qz
         WHERE qz.fCustomerUuid = #{customerUuid}
+        AND EXISTS ( SELECT 1 FROM t_qz_keyword_rank_info qk WHERE qk.fQZSettingUuid = qz.fUuid AND qk.fTerminalType = 'PC' AND qk.fDataProcessingStatus = 1)
     </select>
 </mapper>

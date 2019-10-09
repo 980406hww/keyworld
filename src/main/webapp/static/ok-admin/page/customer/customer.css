@@ -229,5 +229,20 @@ a:hover {
 .count a:active {
     color: darkslateblue;
 }
+.layadmin-address a:link {
+    color: blue;
+}
+
+.layadmin-address a:visited {
+    color: blue;
+}
+
+.layadmin-address a:hover {
+    color: red;
+}
+
+.layadmin-address a:active {
+    color: darkslateblue;
+}
 
 
