@@ -22,18 +22,45 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
     init_search();
 
     function init_search() {
+
         init_keyword_type();
         init_belong_user();
         init_searchEngine();
         get_keywords(formToJsonObject('searchForm'));
         let type = $('#type').val();
         if (type !== 'qz'){
-            $('#noReachStandardDiv').css("display","block")
+            if ($('#noReachStandardDiv').length === 0){
+                let noReachStandardDiv = '<div class="layui-inline count" id="noReachStandardDiv">\n'
+                    + '    激活未达标词统计:\n'
+                    + '    <a href="javascript:showNoReachStandardKeyword(30)" ></a>|\n'
+                    + '    <a href="javascript:showNoReachStandardKeyword(15)" ></a>|\n'
+                    + '    <a href="javascript:showNoReachStandardKeyword(7)" ></a>\n'
+                    + '</div>\n';
+                $("#resetBtnDiv").after($(noReachStandardDiv));
+            }
+            if ($('#noReachStandardDays').length === 0){
+                let noReachStandardDaysDiv ='<div class="layui-inline" id="noReachStandardDaysDiv">\n'
+                    + '                           <label class="layui-form-label">未达标天数</label>\n'
+                    + '                           <div class="layui-input-inline">\n'
+                    + '                               <input type="number" name="noReachStandardDays" id="noReachStandardDays" placeholder="请输入未达标天数" autocomplete="off"\n'
+                    + '                                   class="layui-input">\n'
+                    + '                           </div>\n'
+                    + '                       </div>';
+                $("#invalidRefreshCountDiv").after($(noReachStandardDaysDiv));
+            }
             let terminalType = $('#terminalType').val();
             let postData = {};
             postData.type = type;
             postData.terminalType = terminalType;
             init_noReachStandard(postData);
+        } else {
+            if ($('#noReachStandardDiv').length >= 0) {
+                $('#noReachStandardDiv').remove();
+            }
+            if ($('#noReachStandardDaysDiv').length >= 0) {
+                $('#noReachStandardDaysDiv').remove();
+                // form.render();
+            }
         }
     }
 
@@ -185,8 +212,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
     //监听工具条
     var active = {
         reload: function () {
+            let postData = formToJsonObject('searchForm');
+            if (!postData.noReachStandardDays) {
+                postData.noReachStandardDays = '';
+            }
             table.reload('keywordTable', {
-                where: formToJsonObject('searchForm'),
+                where: postData,
                 page: {
                     curr: 1 //从第一页开始
                 }
@@ -228,6 +259,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         if (!data.field.requireDelete){
             data.field.requireDelete = '';
         }
+        if (!data.field.noReachStandardDays){
+            data.field.noReachStandardDays = '';
+        }
+        // console.log(data.field)
         table.reload('keywordTable', {
             where: data.field,
             page: {
@@ -276,15 +311,39 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         let d = data.elem.context.dataset;
         $('#type').val(d.type);
         $('#terminalType').val(d.terminal);
-        if (d.type==='qz'){
-            $('#noReachStandardDiv').css("display","none");
-            $('#noReachStandardDays').val("");
-        }else{
+        if (d.type === 'qz') {
+            if ($('#noReachStandardDiv').length >= 0) {
+                $('#noReachStandardDiv').remove();
+            }
+            if ($('#noReachStandardDaysDiv').length >= 0) {
+                $('#noReachStandardDaysDiv').remove();
+                // form.render();
+            }
+        } else {
+            if ($('#noReachStandardDiv').length === 0) {
+                let noReachStandardDiv = '<div class="layui-inline count" id="noReachStandardDiv">\n'
+                    + '    激活未达标词统计:\n'
+                    + '    <a href="javascript:showNoReachStandardKeyword(30)" ></a>|\n'
+                    + '    <a href="javascript:showNoReachStandardKeyword(15)" ></a>|\n'
+                    + '    <a href="javascript:showNoReachStandardKeyword(7)" ></a>\n'
+                    + '</div>\n';
+                $("#resetBtnDiv").after($(noReachStandardDiv));
+            }
+            if ($('#noReachStandardDaysDiv').length === 0) {
+                let noReachStandardDaysDiv = '<div class="layui-inline" id="noReachStandardDaysDiv">\n'
+                    + '                           <label class="layui-form-label">未达标天数</label>\n'
+                    + '                           <div class="layui-input-inline">\n'
+                    + '                               <input type="number" name="noReachStandardDays" id="noReachStandardDays" placeholder="请输入未达标天数" autocomplete="off"\n'
+                    + '                                   class="layui-input">\n'
+                    + '                           </div>\n'
+                    + '                       </div>';
+                $("#invalidRefreshCountDiv").after($(noReachStandardDaysDiv));
+            }
+            $('#noReachStandardDays').val('');
             let postData = {};
             postData.type = d.type;
             postData.terminalType = d.terminal;
             init_noReachStandard(postData);
-            $('#noReachStandardDiv').css("display","block")
         }
         active['reload'].call(this);
     });
@@ -297,7 +356,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            timeout: 5000,
+            timeout: 20000,
             type: 'POST',
             success: function (res) {
                 if (res.code === 200){

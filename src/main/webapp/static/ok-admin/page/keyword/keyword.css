@@ -28,7 +28,6 @@ table  a:active{color:darkslateblue;}
 
 
 .count{
-    display: none;
     float: right;
     font-size: 15px;
     line-height: 30px;
