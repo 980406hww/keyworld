@@ -7,7 +7,6 @@ import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.MachineGroupWorkInfoService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
-import com.keymanager.util.TerminalTypeMapping;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -51,8 +50,6 @@ public class MachineGroupWorkInfoController {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(0);
         try {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
-            criteria.setTerminalType(terminalType);
             HttpSession session = request.getSession();
             String userName = (String) session.getAttribute("username");
             boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));

@@ -74,6 +74,61 @@ public class MachineGroupWorkInfo implements Serializable {
     @TableField(value = "fCreateDate")
     private Date createDate;
 
+    @TableField(exist = false)
+    private Double reachStandardPercentage;
+
+    @TableField(exist = false)
+    private Double invalidKeywordPercentage;
+
+    @TableField(exist = false)
+    private Double avgOptimizedCount;
+
+    @TableField(exist = false)
+    private Double invalidOptimizePercentage;
+
+    @TableField(exist = false)
+    private Double idlePercentage;
+
+    public void setReachStandardPercentage() {
+        this.reachStandardPercentage = (this.totalKeywordCount > 0) ? (this.reachStandardKeywordCount * 1.0) / this.totalKeywordCount * 100 : 0;
+    }
+
+    public void setInvalidKeywordPercentage() {
+        this.invalidKeywordPercentage = (this.totalKeywordCount > 0) ? ((this.invalidKeywordCount * 1.0) / this.totalKeywordCount) * 100 : 0;
+    }
+
+    public void setAvgOptimizedCount() {
+        this.avgOptimizedCount = (this.totalKeywordCount > 0) ? this.totalOptimizedCount * 1.0 / this.totalKeywordCount : 0;
+    }
+
+    public void setInvalidOptimizePercentage() {
+        this.invalidOptimizePercentage = (this.queryCount > 0) ? (((this.queryCount - this.totalOptimizedCount) * 1.0) / this.queryCount) * 100 : 0;
+    }
+
+    public void setIdlePercentage() {
+        this.idlePercentage = (this.totalMachineCount > 0) ? this.idleTotalMinutes / (this.totalMachineCount * 24 * 60.0) * 100 : 0;
+    }
+
+    public Double getAvgOptimizedCount() {
+        return avgOptimizedCount;
+    }
+
+    public Double getReachStandardPercentage() {
+        return reachStandardPercentage;
+    }
+
+    public Double getIdlePercentage() {
+        return idlePercentage;
+    }
+
+    public Double getInvalidKeywordPercentage() {
+        return invalidKeywordPercentage;
+    }
+
+    public Double getInvalidOptimizePercentage() {
+        return invalidOptimizePercentage;
+    }
+
     public Long getUuid() {
         return uuid;
     }
@@ -82,31 +137,19 @@ public class MachineGroupWorkInfo implements Serializable {
         this.uuid = uuid;
     }
 
-    public double getInvalidKeywordPercentage() {
-        return (this.getTotalKeywordCount() > 0) ? ((this.getInvalidKeywordCount() * 1.0) / this.getTotalKeywordCount()) * 100 : 0;
-    }
-
-    public double getInvalidOptimizePercentage() {
-        return (this.getQueryCount() > 0) ? (((this.getQueryCount() - this.getTotalOptimizedCount()) * 1.0) / this.getQueryCount()) * 100 : 0;
-    }
-
-    public double getReachStandardPercentage() {
-        return (this.getReachStandardKeywordCount() * 1.0) / this.getTotalKeywordCount() * 100;
-    }
-
     public String getType() {
         return type;
     }
 
-    public void setType (String type) {
+    public void setType(String type) {
         this.type = type;
     }
 
-    public String getTerminalType () {
+    public String getTerminalType() {
         return terminalType;
     }
 
-    public void setTerminalType (String terminalType) {
+    public void setTerminalType(String terminalType) {
         this.terminalType = terminalType;
     }
 
@@ -182,7 +225,6 @@ public class MachineGroupWorkInfo implements Serializable {
         this.unworkMachineCount = unworkMachineCount;
     }
 
-
     public int getMaxInvalidCount() {
         return maxInvalidCount;
     }
@@ -229,15 +271,6 @@ public class MachineGroupWorkInfo implements Serializable {
 
     public void setIdleTotalMinutes(long idleTotalMinutes) {
         this.idleTotalMinutes = idleTotalMinutes;
-    }
-
-    public double getIdlePercentage() {
-        if (this.getIdleTotalMinutes() > 0) {
-            BigDecimal b = new BigDecimal(this.getIdleTotalMinutes() / (this.getTotalMachineCount() * 24 * 60.0));
-            return b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100;
-        } else {
-            return 0;
-        }
     }
 
     public String getMachineGroup() {

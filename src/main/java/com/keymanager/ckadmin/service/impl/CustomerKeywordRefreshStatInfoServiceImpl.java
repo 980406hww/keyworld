@@ -38,7 +38,15 @@ public class CustomerKeywordRefreshStatInfoServiceImpl implements CustomerKeywor
             total.setReachStandardKeywordCount(total.getReachStandardKeywordCount() + refreshStatRecord.getReachStandardKeywordCount());
             total.setTodaySubTotal(total.getTodaySubTotal() + refreshStatRecord.getTodaySubTotal());
             total.setMaxInvalidCount(refreshStatRecord.getMaxInvalidCount());
+            refreshStatRecord.setAvgOptimizedCount();
+            refreshStatRecord.setInvalidKeywordPercentage();
+            refreshStatRecord.setInvalidOptimizePercentage();
+            refreshStatRecord.setReachStandardPercentage();
         }
+        total.setAvgOptimizedCount();
+        total.setInvalidKeywordPercentage();
+        total.setInvalidOptimizePercentage();
+        total.setReachStandardPercentage();
         refreshStatRecords.add(0, total);
     }
 }
