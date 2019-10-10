@@ -157,6 +157,13 @@ html {
     box-shadow: 0 0 2px 2px hsla(0, 0%, 80%, .2);
 }
 
+.data-item:hover .operation{
+    display: block;
+}
+.operation a{
+    color: #1a81ea;
+}
+
 .data-head {
     height: 30px;
     /*border-bottom: 1px solid #e6e6e6;*/

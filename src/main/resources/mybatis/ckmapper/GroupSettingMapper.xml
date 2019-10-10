@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.GroupSettingDao">
+
+    <sql id="selectCol">
+        gs.fUuid AS "uuid",
+        gs.fOperationType AS "operationType",
+        gs.fMachineUsedPercent AS "machineUsedPercent",
+        gs.fPage AS "page",
+        gs.fPageSize AS "pageSize",
+        gs.fZhanneiPercent AS "zhanneiPercent",
+        gs.fZhanwaiPercent AS "zhanwaiPercent",
+        gs.fKuaizhaoPercent AS "kuaizhaoPercent",
+        gs.fBaiduSemPercent AS "baiduSemPercent",
+        gs.fDragPercent AS "dragPercent",
+        gs.fSpecialCharPercent AS "specialCharPercent",
+        gs.fMultiBrowser AS "multiBrowser",
+        gs.fClearCookie AS "clearCookie",
+        gs.fDisableStatistics AS "disableStatistics",
+        gs.fDisableVisitWebsite AS "disableVisitWebsite",
+        gs.fEntryPageMinCount AS "entryPageMinCount",
+        gs.fEntryPageMaxCount AS "entryPageMaxCount",
+        gs.fPageRemainMinTime AS "pageRemainMinTime",
+        gs.fPageRemainMaxTime AS "pageRemainMaxTime",
+        gs.fInputDelayMinTime AS "inputDelayMinTime",
+        gs.fInputDelayMaxTime AS "inputDelayMaxTime",
+        gs.fSlideDelayMinTime AS "slideDelayMinTime",
+        gs.fSlideDelayMaxTime AS "slideDelayMaxTime",
+        gs.fTitleRemainMinTime AS "titleRemainMinTime",
+        gs.fTitleRemainMaxTime AS "titleRemainMaxTime",
+        gs.fOptimizeKeywordCountPerIP AS "optimizeKeywordCountPerIP",
+        gs.fOneIPOneUser AS "oneIPOneUser",
+        gs.fRandomlyClickNoResult AS "randomlyClickNoResult",
+        gs.fJustVisitSelfPage AS "justVisitSelfPage",
+        gs.fSleepPer2Words AS "sleepPer2Words",
+        gs.fSupportPaste AS "supportPaste",
+        gs.fMoveRandomly AS "moveRandomly",
+        gs.fParentSearchEntry AS "parentSearchEntry",
+        gs.fClearLocalStorage AS "clearLocalStorage",
+        gs.fLessClickAtNight AS "lessClickAtNight",
+        gs.fSameCityUser AS "sameCityUser",
+        gs.fLocateTitlePosition AS "locateTitlePosition",
+        gs.fBaiduAllianceEntry AS "baiduAllianceEntry",
+        gs.fJustClickSpecifiedTitle AS "justClickSpecifiedTitle",
+        gs.fRandomlyClickMoreLink AS "randomlyClickMoreLink",
+        gs.fMoveUp20 AS "moveUp20",
+        gs.fWaitTimeAfterOpenBaidu AS "waitTimeAfterOpenBaidu",
+        gs.fWaitTimeBeforeClick AS "waitTimeBeforeClick",
+        gs.fWaitTimeAfterClick AS "waitTimeAfterClick",
+        gs.fMaxUserCount AS "maxUserCount",
+        gs.fOptimizeRelatedKeyword AS "optimizeRelatedKeyword"
+    </sql>
+
+    <select id="searchGroupSettings" resultType="com.keymanager.ckadmin.entity.GroupSetting">
+        SELECT
+            gs.fUuid               AS "uuid",
+            gs.fOperationType      AS "operationType",
+            gs.fMachineUsedPercent AS "machineUsedPercent",
+            gs.fPage               AS "page",
+            gs.fPageSize           AS "pageSize",
+            gs.fClearCookie        AS "clearCookie",
+            gs.fDisableStatistics  AS "disableStatistics",
+            gs.fDisableVisitWebsite AS "disableVisitWebsite",
+            gs.fEntryPageMinCount AS "entryPageMinCount",
+            gs.fEntryPageMaxCount AS "entryPageMaxCount",
+            gs.fPageRemainMinTime AS "pageRemainMinTime",
+            gs.fPageRemainMaxTime AS "pageRemainMaxTime",
+            gs.fInputDelayMinTime AS "inputDelayMinTime",
+            gs.fInputDelayMaxTime AS "inputDelayMaxTime",
+            gs.fSlideDelayMinTime AS "slideDelayMinTime",
+            gs.fSlideDelayMaxTime AS "slideDelayMaxTime",
+            gs.fTitleRemainMinTime AS "titleRemainMinTime",
+            gs.fTitleRemainMaxTime AS "titleRemainMaxTime",
+            gs.fOptimizeKeywordCountPerIP AS "optimizeKeywordCountPerIP",
+            gs.fRandomlyClickNoResult AS "randomlyClickNoResult"
+        FROM t_group_setting gs
+        WHERE gs.fOperationCombineUuid = #{operationCombineUuid}
+        ORDER BY gs.fCreateTime DESC
+    </select>
+
+    <select id="searchGroupSettingsSortingPercentage" resultType="com.keymanager.ckadmin.entity.GroupSetting">
+        SELECT
+        <include refid="selectCol" />
+        FROM t_group_setting gs
+        WHERE gs.fOperationCombineUuid = #{operationCombineUuid}
+        ORDER BY gs.fMachineUsedPercent
+    </select>
+
+    <insert id="saveGroupSetting">
+        INSERT INTO t_group_setting(
+            fOperationCombineUuid,
+            fOperationType,
+            fMachineUsedPercent,
+            fPage,
+            fPageSize,
+            fZhanneiPercent, fZhanwaiPercent, fKuaizhaoPercent, fBaiduSemPercent, fDragPercent, fSpecialCharPercent, fMultiBrowser,
+            fClearCookie,
+            fDisableStatistics,
+            fEntryPageMinCount,
+            fEntryPageMaxCount,
+            fDisableVisitWebsite,
+            fPageRemainMinTime,
+            fPageRemainMaxTime,
+            fInputDelayMinTime,
+            fInputDelayMaxTime,
+            fSlideDelayMinTime,
+            fSlideDelayMaxTime,
+            fTitleRemainMinTime,
+            fTitleRemainMaxTime,
+            fOptimizeKeywordCountPerIP,
+            fRandomlyClickNoResult,
+            fOneIPOneUser, fJustVisitSelfPage, fSleepPer2Words, fSupportPaste, fMoveRandomly, fParentSearchEntry, fClearLocalStorage, fLessClickAtNight, fSameCityUser,
+            fLocateTitlePosition, fBaiduAllianceEntry, fJustClickSpecifiedTitle, fRandomlyClickMoreLink, fMoveUp20, fWaitTimeAfterOpenBaidu, fWaitTimeBeforeClick,
+            fWaitTimeAfterClick, fMaxUserCount, fOptimizeRelatedKeyword,
+            fCreateTime
+          )
+          VALUES (
+            #{groupSetting.operationCombineUuid},
+            #{groupSetting.operationType},
+            #{groupSetting.machineUsedPercent},
+            #{groupSetting.page},
+            #{groupSetting.pageSize},
+            0, 0, 0, 0, 0, 0, 1,
+            #{groupSetting.clearCookie},
+            #{groupSetting.disableStatistics},
+            #{groupSetting.entryPageMinCount},
+            #{groupSetting.entryPageMaxCount},
+            #{groupSetting.disableVisitWebsite},
+            #{groupSetting.pageRemainMinTime},
+            #{groupSetting.pageRemainMaxTime},
+            #{groupSetting.inputDelayMinTime},
+            #{groupSetting.inputDelayMaxTime},
+            #{groupSetting.slideDelayMinTime},
+            #{groupSetting.slideDelayMaxTime},
+            #{groupSetting.titleRemainMinTime},
+            #{groupSetting.titleRemainMaxTime},
+            #{groupSetting.optimizeKeywordCountPerIP},
+            #{groupSetting.randomlyClickNoResult},
+            0, 1, 1, 1, 1, 0, 1, 0, 0,
+            0, 0, 0, 0, 0, 1000, 1000,
+            5000, 300, 0,
+            NOW()
+          )
+    </insert>
+
+    <update id="updateGroupSetting">
+        UPDATE t_group_setting
+        SET fUpdateTime = NOW()
+        <if test="gs.operationType==1"> ,fOperationType = #{groupSetting.operationType}</if>
+        <if test="gs.machineUsedPercent==1"> ,fMachineUsedPercent = #{groupSetting.machineUsedPercent}</if>
+        <if test="gs.disableStatistics==1"> ,fDisableStatistics = #{groupSetting.disableStatistics}</if>
+        <if test="gs.disableVisitWebsite==1"> ,fDisableVisitWebsite = #{groupSetting.disableVisitWebsite}</if>
+        <if test="gs.page==1"> ,fPage = #{groupSetting.page}</if>
+        <if test="gs.pageSize==1"> ,fPageSize = #{groupSetting.pageSize}</if>
+        <if test="gs.clearCookie==1"> ,fClearCookie = #{groupSetting.clearCookie}</if>
+        <if test="gs.entryPageMinCount==1"> ,fEntryPageMinCount = #{groupSetting.entryPageMinCount}</if>
+        <if test="gs.entryPageMaxCount==1"> ,fEntryPageMaxCount = #{groupSetting.entryPageMaxCount}</if>
+        <if test="gs.pageRemainMinTime==1"> ,fPageRemainMinTime = #{groupSetting.pageRemainMinTime}</if>
+        <if test="gs.pageRemainMaxTime==1"> ,fPageRemainMaxTime = #{groupSetting.pageRemainMaxTime}</if>
+        <if test="gs.inputDelayMinTime==1"> ,fInputDelayMinTime = #{groupSetting.inputDelayMinTime}</if>
+        <if test="gs.inputDelayMaxTime==1"> ,fInputDelayMaxTime = #{groupSetting.inputDelayMaxTime}</if>
+        <if test="gs.slideDelayMinTime==1"> ,fSlideDelayMinTime = #{groupSetting.slideDelayMinTime}</if>
+        <if test="gs.slideDelayMaxTime==1"> ,fSlideDelayMaxTime = #{groupSetting.slideDelayMaxTime}</if>
+        <if test="gs.titleRemainMinTime==1"> ,fTitleRemainMinTime = #{groupSetting.titleRemainMinTime}</if>
+        <if test="gs.titleRemainMaxTime==1"> ,fTitleRemainMaxTime = #{groupSetting.titleRemainMaxTime}</if>
+        <if test="gs.optimizeKeywordCountPerIP==1"> ,fOptimizeKeywordCountPerIP = #{groupSetting.optimizeKeywordCountPerIP}</if>
+        <if test="gs.randomlyClickNoResult==1"> ,fRandomlyClickNoResult = #{groupSetting.randomlyClickNoResult}</if>
+        WHERE fUuid = #{groupSetting.uuid}
+    </update>
+
+    <delete id="deleteGroupSettingByOperationCombineUuid">
+        DELETE FROM t_group_setting WHERE fOperationCombineUuid = #{operationCombineUuid}
+    </delete>
+
+    <select id="getGroupSettingUuids" resultType="java.lang.Long">
+        SELECT gs.fUuid
+        FROM t_group_setting gs
+        WHERE gs.fOperationCombineUuid = #{operationCombineUuid}
+    </select>
+</mapper>
