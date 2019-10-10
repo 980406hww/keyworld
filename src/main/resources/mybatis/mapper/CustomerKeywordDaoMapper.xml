@@ -1828,6 +1828,7 @@
     <select id="getCustomerKeywordByCustomerUuid" resultType="com.keymanager.monitoring.vo.CustomerKeywordForSync">
         SELECT
             ck.fUuid AS 'keywordId',
+            ck.fUrl  AS 'url',
             ck.fTerminalType AS 'terminalType',
             ck.fCustomerUuid AS 'customerId',
             ck.fKeyword AS 'keyword',

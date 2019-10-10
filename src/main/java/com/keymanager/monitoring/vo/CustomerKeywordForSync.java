@@ -6,6 +6,7 @@ package com.keymanager.monitoring.vo;
 public class CustomerKeywordForSync {
 
     private Long keywordId;
+    private String url;
     private String terminalType;
     private Long customerId;
     private String keyword;
@@ -20,6 +21,14 @@ public class CustomerKeywordForSync {
 
     public void setKeywordId(Long keywordId) {
         this.keywordId = keywordId;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getTerminalType() {

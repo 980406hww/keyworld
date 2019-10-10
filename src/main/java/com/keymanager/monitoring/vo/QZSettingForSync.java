@@ -13,6 +13,8 @@ public class QZSettingForSync {
     private String searchEngine;
     private String bearPawId;
     private Boolean renewalStatus;
+    private String pcGroup;
+    private String phoneGroup;
     private List<QZKeywordRankForSync> qzKeywordRanks;
 
     public Long getQsId() {
@@ -61,6 +63,22 @@ public class QZSettingForSync {
 
     public void setRenewalStatus(Boolean renewalStatus) {
         this.renewalStatus = renewalStatus;
+    }
+
+    public String getPcGroup() {
+        return pcGroup;
+    }
+
+    public void setPcGroup(String pcGroup) {
+        this.pcGroup = pcGroup;
+    }
+
+    public String getPhoneGroup() {
+        return phoneGroup;
+    }
+
+    public void setPhoneGroup(String phoneGroup) {
+        this.phoneGroup = phoneGroup;
     }
 
     public List<QZKeywordRankForSync> getQzKeywordRanks() {

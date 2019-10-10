@@ -1087,6 +1087,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				if (null != linkedBlockingQueue && !linkedBlockingQueue.isEmpty()) {
 					Long customerUuid = (Long) linkedBlockingQueue.poll();
 					List<CustomerKeywordForSync> customerKeywords = customerKeywordService.getCustomerKeywordByCustomerUuid(customerUuid);
+					map = new HashMap<>(2);
 					if (CollectionUtils.isNotEmpty(customerKeywords)) {
 						int size = customerKeywords.size();
 						int fromIndex = 0, toIndex = 10000;
@@ -1097,7 +1098,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 							toIndex += 10000;
 						} while (fromIndex < size);
 
-						map = new HashMap<>(2);
 						map.put("customerKeywords", CACHE_CUSTOMER_KEYWORD_FOR_SYNC.get("0-10000"));
 						CACHE_CUSTOMER_KEYWORD_FOR_SYNC.remove("0-10000");
 
@@ -1105,15 +1105,17 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 						if (CollectionUtils.isNotEmpty(qzSettingForSyncs)) {
 							for (QZSettingForSync qzSettingForSync : qzSettingForSyncs) {
 								List<QZKeywordRankForSync> qzKeywordRankForSyncs = qzKeywordRankInfoService.getQZKeywordRankInfoByQZSettingUuid(qzSettingForSync.getQsId());
+								List<QZKeywordRankForSync> otherKeywordRankForSyncs = new ArrayList<>();
 								if (CollectionUtils.isNotEmpty(qzKeywordRankForSyncs)) {
 									for (QZKeywordRankForSync qzKeywordRankForSync : qzKeywordRankForSyncs) {
-										if (qzKeywordRankForSync.getWebsiteType().equals(Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD)) {
+										if (Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD.equals(qzKeywordRankForSync.getWebsiteType())) {
 											QZKeywordRankForSync anOtherQZKeywordRank = qzKeywordRankInfoService.searchAnOtherQZKeywordRanForSync(qzSettingForSync.getQsId());
 											if (null != anOtherQZKeywordRank) {
-												qzKeywordRankForSyncs.add(anOtherQZKeywordRank);
+												otherKeywordRankForSyncs.add(anOtherQZKeywordRank);
 											}
 										}
 									}
+									qzKeywordRankForSyncs.addAll(otherKeywordRankForSyncs);
 									qzSettingForSync.setQzKeywordRanks(qzKeywordRankForSyncs);
 								}
 							}
