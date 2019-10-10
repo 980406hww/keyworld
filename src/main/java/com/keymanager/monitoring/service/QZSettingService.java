@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.QZSettingDao;
+import com.keymanager.monitoring.dao.SysCustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
 import com.keymanager.monitoring.enums.QZCaptureTitleLogStatusEnum;
@@ -65,6 +66,15 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	@Autowired
 	private ConfigService configService;
 
+	@Autowired
+	private SysQZSettingService sysQZSettingService;
+
+	@Autowired
+	private SysQZKeywordRankService sysQZKeywordRankService;
+
+	@Autowired
+	private SysCustomerKeywordService sysCustomerKeywordService;
+
 	private static final HashMap<String, LinkedBlockingQueue> CUSTOMER_QUEUE_MAP = new HashMap<>();
 
 	private static final HashMap<String, Object> CACHE_CUSTOMER_KEYWORD_FOR_SYNC = new HashMap<>();
@@ -86,6 +96,52 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 						for (long uuid : uuidList) {
 							queue.offer(uuid);
 						}
+					}
+				}
+			}
+		}
+	}
+
+	public void syncQZCustomerKeyword() {
+		// todo 读取配置表需要同步的客户网站标签
+		Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_QZ_CUSTOMER_KEYWORD, Constants.CONFIG_KEY_SYNC_QZ_CUSTOMER_TAG);
+		if (null != config) {
+			String syncQZCustomerTagStr = config.getValue();
+			if (StringUtil.isNotNullNorEmpty(syncQZCustomerTagStr)) {
+				String[] syncQZCustomerTags = syncQZCustomerTagStr.split(",");
+				for (String qzCustomerTag : syncQZCustomerTags) {
+					// todo 根据网站标签查找操作中的站点信息，进行转储，利用站点id转储站点曲线信息（百度就要爱站/5118，非百度就要指定词）
+					List<QZSettingForSync> qzSettingForSyncs = qzSettingDao.getAvailableQZSettingsByTagName(qzCustomerTag);
+					List<QZKeywordRankForSync> qzKeywordRanks = new ArrayList<>();
+					if (CollectionUtils.isNotEmpty(qzSettingForSyncs)) {
+						for (QZSettingForSync qzSettingForSync : qzSettingForSyncs) {
+							String searchEngine = qzSettingForSync.getSearchEngine();
+							List<QZKeywordRankForSync> qzKeywordRankForSyncs = qzKeywordRankInfoService.getQZKeywordRankInfoByQZSettingUuid(qzSettingForSync.getQsId());
+							if (CollectionUtils.isNotEmpty(qzKeywordRankForSyncs)) {
+								for (QZKeywordRankForSync qzKeywordRankForSync : qzKeywordRankForSyncs) {
+									if (Constants.SEARCH_ENGINE_BAIDU.equals(searchEngine)) {
+										if (Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD.equals(qzKeywordRankForSync.getWebsiteType())) {
+											QZKeywordRankForSync anOtherQZKeywordRanForSync = qzKeywordRankInfoService.searchAnOtherQZKeywordRanForSync(qzSettingForSync.getQsId());
+											if (null != anOtherQZKeywordRanForSync) {
+												qzKeywordRanks.add(anOtherQZKeywordRanForSync);
+											}
+										} else {
+											qzKeywordRanks.add(qzKeywordRankForSync);
+										}
+									} else {
+										qzKeywordRanks.add(qzKeywordRankForSync);
+									}
+								}
+							}
+							// todo 转储关键词信息
+							sysCustomerKeywordService.batchInsertCustomerKeywordByCustomerUuid(qzSettingForSync.getCustomerId(), qzSettingForSync.getQsId());
+						}
+						// todo 转储站点曲线信息
+						if (CollectionUtils.isNotEmpty(qzKeywordRanks)) {
+							sysQZKeywordRankService.replaceQZKeywordRanks(qzKeywordRanks);
+						}
+						// todo 转储站点信息
+						sysQZSettingService.replaceQZSettings(qzSettingForSyncs, qzCustomerTag);
 					}
 				}
 			}

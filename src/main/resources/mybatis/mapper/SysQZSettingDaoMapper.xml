@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.SysQZSettingDao">
+
+    <insert id="replaceQZSettings">
+        REPLACE INTO sys_qz_setting VALUES
+        <foreach collection="qzSettingForSyncs" item="qzSettingForSync" separator=",">
+            (
+                #{qzSettingForSync.qsId},
+                #{qzSettingForSync.customerId},
+                #{qzSettingForSync.domain},
+                #{qzSettingForSync.searchEngine},
+                #{qzSettingForSync.bearPawId},
+                #{qzSettingForSync.renewalStatus},
+                #{qzSettingForSync.pcGroup},
+                #{qzSettingForSync.phoneGroup},
+                #{qzCustomerTag}
+            )
+        </foreach>
+    </insert>
+
+    <select id="getQZSettings" resultType="com.keymanager.monitoring.entity.SysQZSetting">
+        SELECT
+            qs.QS_ID	   AS 'qsId',
+            qs.CUSTOMER_ID AS 'customerId',
+            qs.DOMAIN      AS 'domain',
+            qs.SEARCH_ENGINE AS 'searchEngine',
+            qs.BEAR_PAW_ID   AS 'bearPawId',
+            qs.PC_GROUP AS 'pcGroup',
+            qs.PHONE_GROUP AS 'phoneGroup'
+        FROM sys_qz_setting qs
+        WHERE 1 = 1
+        <if test="qzSettingSearchDto.account != null"> AND EXISTS (SELECT 1 FROM sys_customer c WHERE c.CUSTOMER_ID = qs.CUSTOMER_ID AND c.ACCOUNT = #{qzSettingSearchDto.account}) </if>
+        <if test="qzSettingSearchDto.domain != null and qzSettingSearchDto.domain != ''"> AND qs.DOMAIN = #{qzSettingSearchDto.domain} </if>
+        <if test="qzSettingSearchDto.searchEngine != 'All'"> AND qs.SEARCH_ENGINE = #{qzSettingSearchDto.searchEngine} </if>
+        <choose>
+            <when test="qzSettingSearchDto.terminalType == 'PC'">
+                AND qs.PC_GROUP &gt; ''
+            </when>
+            <when test="qzSettingSearchDto.terminalType == 'Phone'">
+                AND qs.PHONE_GROUP &gt; ''
+            </when>
+        </choose>
+    </select>
+
+    <select id="searchQZSettingSearchEngineMap" resultType="java.lang.String">
+        SELECT DISTINCT qs.SEARCH_ENGINE AS 'searchEngine'
+        FROM sys_qz_setting qs
+        WHERE 1 = 1
+        <if test="account != null"> AND EXISTS (SELECT 1 FROM sys_customer c WHERE c.CUSTOMER_ID = qs.CUSTOMER_ID AND c.ACCOUNT = #{account}) </if>
+        <choose>
+            <when test="terminalType == 'PC'">
+                AND qs.PC_GROUP &gt; ''
+            </when>
+            <when test="terminalType == 'Phone'">
+                AND qs.PHONE_GROUP &gt; ''
+            </when>
+        </choose>
+    </select>
+</mapper>

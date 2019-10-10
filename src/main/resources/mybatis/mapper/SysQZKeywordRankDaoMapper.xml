@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.SysQZKeywordRankDao">
+
+    <insert id="replaceQZKeywordRanks">
+        REPLACE INTO sys_qz_keyword_rank VALUES
+        <foreach collection="qzKeywordRanks" item="qzKeywordRank" separator=",">
+            (
+                #{qzKeywordRank.qkId},
+                #{qzKeywordRank.qsId},
+                #{qzKeywordRank.terminalType},
+                #{qzKeywordRank.websiteType},
+                #{qzKeywordRank.processingType},
+                #{qzKeywordRank.topTen},
+                #{qzKeywordRank.topTwenty},
+                #{qzKeywordRank.topThirty},
+                #{qzKeywordRank.topForty},
+                #{qzKeywordRank.topFifty},
+                #{qzKeywordRank.topHundred},
+                #{qzKeywordRank.date},
+                #{qzKeywordRank.increase},
+                #{qzKeywordRank.todayDiffVal},
+                #{qzKeywordRank.oneWeekDiffVal},
+                #{qzKeywordRank.recordDate},
+                #{qzKeywordRank.record},
+                #{qzKeywordRank.initTopTenNum},
+                #{qzKeywordRank.initTopFiftyNum}
+            )
+        </foreach>
+    </insert>
+
+    <select id="getQZKeywordRanks" resultType="com.keymanager.monitoring.entity.SysQZKeywordRank">
+        SELECT
+            qzkri.QS_ID          AS 'qsId',
+            qzkri.TERMINAL_TYPE  AS 'terminalType',
+            qzkri.WEBSITE_TYPE   AS 'websiteType',
+            qzkri.PROCESSING_TYPE AS 'processingType',
+            qzkri.TOP_TEN        AS 'topTen',
+            qzkri.TOP_TWENTY     AS 'topTwenty',
+            qzkri.TOP_THIRTY     AS 'topThirty',
+            qzkri.TOP_FORTY      AS 'topForty',
+            qzkri.TOP_FIFTY      AS 'topFifty',
+            qzkri.TOP_HUNDRED    AS 'topHundred',
+            qzkri.INIT_TOP_TEN_NUM   AS 'initTopTenNum',
+            qzkri.INIT_TOP_FIFTY_NUM AS 'initTopFiftyNum',
+            qzkri.DATE        AS 'date',
+            qzkri.INCREASE    AS 'increase',
+            qzkri.RECORD      AS 'record',
+            qzkri.RECORD_DATE AS 'recordDate'
+        FROM sys_qz_keyword_rank qzkri
+        WHERE qzkri.QS_ID = #{qsId}
+        AND qzkri.TERMINAL_TYPE = #{terminalType}
+    </select>
+</mapper>

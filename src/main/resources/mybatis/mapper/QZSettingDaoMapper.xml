@@ -529,4 +529,19 @@
         FROM t_qz_setting qs
         WHERE qs.fCustomerUuid = #{customerUuid}
     </select>
+
+    <select id="getAvailableQZSettingsByTagName" resultType="com.keymanager.monitoring.vo.QZSettingForSync">
+        SELECT
+            qs.fUuid AS 'qsId',
+            qs.fCustomerUuid AS 'customerId',
+            qs.fDomain AS 'domain',
+            qs.fSearchEngine AS 'searchEngine',
+            qs.fBearPawNumber AS 'bearPawId',
+            qs.fRenewalStatus AS 'renewalStatus',
+            qs.fPcGroup AS 'pcGroup',
+            qs.fPhoneGroup AS 'phoneGroup'
+        FROM t_qz_setting qs
+        WHERE qs.fRenewalStatus = 1
+        AND EXISTS (SELECT 1 FROM t_qz_category_tag qct WHERE qct.fQZSettingUuid = qs.fUuid AND qct.fTagName = #{qzCustomerTag})
+    </select>
 </mapper>

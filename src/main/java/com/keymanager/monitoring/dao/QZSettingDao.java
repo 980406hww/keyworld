@@ -61,5 +61,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     ExternalQzSettingVO selectQZSettingForAutoOperate();
 
     List<QZSettingForSync> getQZSettingByCustomerUuid(@Param("customerUuid") Long customerUuid);
+
+    List<QZSettingForSync> getAvailableQZSettingsByTagName(@Param("qzCustomerTag") String qzCustomerTag);
 }
 

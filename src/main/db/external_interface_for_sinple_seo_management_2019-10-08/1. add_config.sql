@@ -1,3 +1,3 @@
 ﻿
-# 需同步的客户分组 多个用逗号,分隔 如: 阿卡索,苞米豆,阿卡索客户
-INSERT INTO db_keywrod.`t_config` VALUES('SyncCustomerData', 'CustomerTypeInfo', '阿卡索');
+# 需同步的全站网站标签 多个用逗号,分隔 如: 阿卡索,苞米豆,团贷网
+INSERT INTO t_config VALUES('SyncQZCustomerKeyword', 'SyncQZCustomerTag', '阿卡索');

@@ -1,25 +1,115 @@
-package com.keymanager.monitoring.vo;
+package com.keymanager.monitoring.entity;
 
-public class QZKeywordRankForSync {
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+import java.io.Serializable;
 
+/**
+ * <p>
+ *     站点曲线数据表
+ * </p>
+ * @author shunshikj40
+ */
+@TableName("sys_qz_keyword_rank")
+public class SysQZKeywordRank implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    /**
+     * 主键ID
+     */
+    @TableId(value = "QK_ID", type = IdType.ID_WORKER)
     private Long qkId;
+    /**
+     * 站点ID
+     */
+    @TableField(value = "QS_ID")
     private Long qsId;
+    /**
+     * 终端类型
+     */
+    @TableField(value = "TERMINAL_TYPE")
     private String terminalType;
+    /**
+     * 网站种类
+     */
+    @TableField(value = "WEBSITE_TYPE")
     private String websiteType;
+    /**
+     * 处理类型
+     */
+    @TableField(value = "PROCESSING_TYPE")
     private Boolean processingType;
+    /**
+     * 前10曲线数据
+     */
+    @TableField(value = "TOP_TEN")
     private String topTen;
+    /**
+     * 前20曲线数据
+     */
+    @TableField(value = "TOP_TWENTY")
     private String topTwenty;
+    /**
+     * 前30曲线数据
+     */
+    @TableField(value = "TOP_THIRTY")
     private String topThirty;
+    /**
+     * 前40曲线数据
+     */
+    @TableField(value = "TOP_FORTY")
     private String topForty;
+    /**
+     * 前50曲线数据
+     */
+    @TableField(value = "TOP_FIFTY")
     private String topFifty;
+    /**
+     * 前100曲线数据
+     */
+    @TableField(value = "TOP_HUNDRED")
     private String topHundred;
+    /**
+     * 关键词趋势曲线 月日（横坐标）
+     */
+    @TableField(value = "DATE")
     private String date;
+    /**
+     * 一周涨幅
+     */
+    @TableField(value = "INCREASE")
     private Double increase;
+    /**
+     * 今日top10差值
+     */
+    @TableField(value = "TODAY_DIFF_VAL")
     private Integer todayDiffVal;
+    /**
+     * 一周top10差值
+     */
+    @TableField(value = "ONE_WEEK_DIFF_VAL")
     private Integer oneWeekDiffVal;
+    /**
+     * 收录曲线 年月日（横坐标）
+     */
+    @TableField(value = "RECORD_DATE")
     private String recordDate;
+    /**
+     * 收录曲线
+     */
+    @TableField(value = "RECORD")
     private String record;
+    /**
+     * 初始前10
+     */
+    @TableField(value = "INIT_TOP_TEN_NUM")
     private Integer initTopTenNum;
+    /**
+     * 初始前50
+     */
+    @TableField(value = "INIT_TOP_FIFTY_NUM")
     private Integer initTopFiftyNum;
 
     public Long getQkId() {

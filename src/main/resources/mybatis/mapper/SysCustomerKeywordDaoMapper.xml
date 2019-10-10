@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.SysCustomerKeywordDao">
+
+    <insert id="batchInsertCustomerKeywordByCustomerUuid">
+        INSERT INTO sys_customer_keyword
+		SELECT
+            qs.fUuid AS 'QS_ID',
+            ck.fUrl  AS 'URL',
+            ck.fTerminalType AS 'TERMINAL_TYPE',
+            ck.fCustomerUuid AS 'CUSTOMER_ID',
+            ck.fKeyword AS 'KEYWORD',
+            ck.fInitialPosition AS 'INITIAL_POSITION',
+            ck.fCurrentPosition AS 'CURRENT_POSITION',
+            ck.fOptimizePlanCount AS 'OPTIMIZE_PLAN_COUNT',
+            ck.fOptimizedCount AS 'OPTIMIZED_COUNT',
+            CURRENT_DATE() AS 'CREATE_TIME'
+		FROM t_customer_keyword ck
+		LEFT JOIN t_qz_setting qs
+		ON qs.fCustomerUuid = ck.fCustomerUuid
+		WHERE ck.fCustomerUuid = #{customerUuid}
+		AND qs.fUuid = #{qsId}
+    </insert>
+</mapper>
