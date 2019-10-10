@@ -175,6 +175,14 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/groupsetting/toGroupSettings">
+                        <dd data-name="machine-item" >
+                            <a data-url="/internal/groupsetting/toGroupSettings" lay-id="groupSetting">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>分组信息设置</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
 
                     </dl>
                 </li>
@@ -226,7 +234,7 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
-                        <@shiro.hasPermission name="/internal/qzsetting/toQZSetttings">
+                        <@shiro.hasPermission name="/internal/qzsetting/searchQZSettings">
                         <dd data-name="other-item" >
                             <a data-url="/internal/qzsetting/toQZSetttings" lay-id="QZSettting">
                                 <i class="layui-icon layui-icon-align-right"></i>
