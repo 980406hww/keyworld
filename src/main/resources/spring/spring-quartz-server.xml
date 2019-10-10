@@ -7,11 +7,11 @@
 		<!-- Triggers集成 -->
 		<property name="triggers">
 			<list>
-				<!--<ref bean="cronTriggerCacheCustomerKeyword" />
+				<ref bean="cronTriggerCacheCustomerKeyword" />
 				<ref bean="cronTriggerCacheCrawlRankCustomerQZKeyword" />
 				<ref bean="cronTriggerCacheCrawlRankCustomerPTKeyword" />
 				<ref bean="cronTriggerCacheCheckingEnteredCustomerKeyword" />
-				<ref bean="cronTriggerUpdateOptimizedCount" />-->
+				<ref bean="cronTriggerUpdateOptimizedCount" />
 				<ref bean="cronTriggerCacheCustomerUuidForSyncData" />
 			</list>
 		</property>
@@ -88,7 +88,7 @@
 	<!--缓存需同步到简化版seo后台的数据信息-->
 	<bean id="cronTriggerCacheCustomerUuidForSyncData" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerCacheCustomerUuidForSyncDataSchedule" />
-		<property name="cronExpression" value="0 0/30 0-2,8-23 * * ?" />
+		<property name="cronExpression" value="0 0/30 6-23 * * ?" />
 	</bean>
 
 	<bean id="cronTriggerCacheCustomerUuidForSyncDataSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
