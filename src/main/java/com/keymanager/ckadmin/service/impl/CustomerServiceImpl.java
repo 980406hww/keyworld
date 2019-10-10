@@ -27,8 +27,7 @@ import org.springframework.stereotype.Service;
  * @since 2019-08-16
  */
 @Service("customerService2")
-public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> implements
-    CustomerService {
+public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> implements CustomerService {
 
     @Resource(name = "customerDao2")
     private CustomerDao customerDao;
@@ -52,7 +51,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
             for (Map map : customerCustomerBusinessMapList) {
                 customerCustomerBusinessMap.put((Integer) map.get("customerUuid"), map);
             }
-            for (Customer customer :customerList){
+            for (Customer customer : customerList) {
                 Map map = customerCustomerBusinessMap.get(customer.getUuid().intValue());
                 if (map != null) {
                     String customerBusinessStr = (String) map.get("customerBusinessStr");
@@ -72,7 +71,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
         if (null != customer.getUuid()) {
             updateCustomer(customer, loginName);
             customerBusinessService.deleteByCustomerUuid(customer.getUuid());
-            if (CollectionUtils.isNotEmpty(customer.getCustomerBusinessList())){
+            if (CollectionUtils.isNotEmpty(customer.getCustomerBusinessList())) {
                 customerBusinessService.saveCustomerBusiness(customer);
             }
         } else {//添加
@@ -80,7 +79,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
             customer.setLoginName(loginName);
             customer.setStatus(1);
             customerDao.insert(customer);
-            if (CollectionUtils.isNotEmpty(customer.getCustomerBusinessList())){
+            if (CollectionUtils.isNotEmpty(customer.getCustomerBusinessList())) {
                 customerBusinessService.saveCustomerBusiness(customer);
             }
         }
@@ -143,7 +142,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
 
         if (customer != null) {
             List<String> customerBusinessList = customerBusinessService.getCustomerBusinessStrByCustomerUuid(customerUuid);
-            if (CollectionUtils.isNotEmpty(customerBusinessList)){
+            if (CollectionUtils.isNotEmpty(customerBusinessList)) {
                 customer.setCustomerBusinessList(customerBusinessList);
             }
             /*if (!customer.getLoginName().equals(loginName)) {
@@ -193,5 +192,10 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     @Override
     public void changeRemark(Long uuid, String remark) {
         customerDao.changeRemark(uuid, remark);
+    }
+
+    @Override
+    public List<Customer> searchCustomersWithKeyword(List<String> groupNames, String terminalType) {
+        return customerDao.searchCustomerWithKeyword(groupNames, terminalType);
     }
 }

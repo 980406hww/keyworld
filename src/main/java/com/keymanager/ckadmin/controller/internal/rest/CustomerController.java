@@ -78,9 +78,9 @@ public class CustomerController extends SpringMVCBaseController {
             ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
             Set<String> roles = shiroUser.getRoles();
             List<String> roleTypes = new ArrayList<>();
-            if (roles.contains("SEOSales")){
+            if (roles.contains("SEOSales")) {
                 roleTypes.add("SEOSales");
-            }else if (roles.contains("NegativeSales")){
+            } else if (roles.contains("NegativeSales")) {
                 roleTypes.add("NegativeSales");
             }
             customerCriteria.setRoleTypes(roleTypes);
@@ -115,8 +115,6 @@ public class CustomerController extends SpringMVCBaseController {
 
     /**
      * 跳转添加或修改用户页面
-     *
-     * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @GetMapping(value = "/toCustomersAdd")
@@ -128,10 +126,6 @@ public class CustomerController extends SpringMVCBaseController {
 
     /**
      * 获得用户信息
-     *
-     * @param uuid
-     * @param request
-     * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @GetMapping(value = "/getCustomersMsgById/{uuid}")
@@ -161,10 +155,6 @@ public class CustomerController extends SpringMVCBaseController {
 
     /**
      * 添加用户
-     * @param customer
-     * @param result
-     * @param session
-     * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @PostMapping(value = "/saveCustomer2")
@@ -194,8 +184,6 @@ public class CustomerController extends SpringMVCBaseController {
 
     /**
      * 批量删除客户
-     * @param requestMap
-     * @return
      */
     @RequiresPermissions("/internal/customer/deleteCustomers")
     @PostMapping(value = "/deleteCustomers2")
@@ -212,9 +200,6 @@ public class CustomerController extends SpringMVCBaseController {
 
     /**
      * 更新客户日报表
-     *
-     * @param requestMap
-     * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @PostMapping(value = "/updateCustomerDailyReportIdentify2")
@@ -231,9 +216,6 @@ public class CustomerController extends SpringMVCBaseController {
 
     /**
      * 改变客户是否产生日报表标志位值
-     *
-     * @param requestMap
-     * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @PostMapping(value = "/changeCustomerDailyReportIdentify2")
@@ -305,4 +287,18 @@ public class CustomerController extends SpringMVCBaseController {
         }
     }
 
+    @RequestMapping(value = "/searchCustomersWithKeyword2", method = RequestMethod.POST)
+    public ResultBean searchCustomersWithKeyword(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            List<String> groupNames = (List<String>) requestMap.get("groupNames");
+            resultBean.setData(customerService.searchCustomersWithKeyword(groupNames, terminalType));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setMsg(e.getMessage());
+            resultBean.setCode(400);
+        }
+        return resultBean;
+    }
 }

@@ -118,6 +118,12 @@
         .layui-table-body .laytable-cell-1-0-13 {
             text-align: center;
         }
+
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
     </style>
 </head>
 <body>
@@ -345,8 +351,7 @@
                 show_layer_msg("请选择需要删除的记录", 5, false);
                 return;
             }
-            console.log(uuidArr);
-            layer.confirm('确定删除该条记录！', function (index) {
+            layer.confirm('确定删除所选记录？', function (index) {
                 $.ajax({
                     url: '/internal/suppliers/deleteSuppliers',
                     headers: {

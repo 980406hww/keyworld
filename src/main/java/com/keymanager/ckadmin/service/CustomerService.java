@@ -43,4 +43,6 @@ public interface CustomerService extends IService<Customer> {
     void changeSaleRemark(Long uuid, String saleRemark);
 
     void changeRemark(Long uuid, String remark);
+
+    List<Customer> searchCustomersWithKeyword(List<String> groupNames, String terminalType);
 }

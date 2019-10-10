@@ -40,4 +40,6 @@ public interface CustomerDao extends BaseMapper<Customer> {
     void changeSaleRemark(@Param("uuid") Long uuid, @Param("saleRemark") String SaleRemark);
 
     void changeRemark(@Param("uuid") Long uuid, @Param("remark") String remark);
+
+    List<Customer> searchCustomerWithKeyword(@Param("groupNames") List<String> groupNames,@Param("terminalType") String terminalType);
 }

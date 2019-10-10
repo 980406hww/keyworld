@@ -8,6 +8,7 @@ import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.vo.CodeNameVo;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 
@@ -96,4 +97,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     CustomerKeyword getKeywordInfoByUuid(Long uuid);
 
     void batchUpdateKeywords(KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO);
+
+    List<CodeNameVo> searchGroupsByTerminalType(String terminalType);
 }

@@ -20,6 +20,7 @@ import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
+import com.keymanager.ckadmin.vo.CodeNameVo;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
@@ -47,8 +48,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service("customerKeywordService2")
-public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, CustomerKeyword> implements
-    CustomerKeywordService {
+public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, CustomerKeyword> implements CustomerKeywordService {
 
     private static Logger logger = LoggerFactory.getLogger(CustomerKeywordServiceImpl.class);
 
@@ -86,7 +86,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                 if (currentSize < (machineCount * 4)) {
                     List<OptimizationKeywordVO> optimizationKeywordVOS = null;
                     do {
-                        optimizationKeywordVOS = customerKeywordDao.fetchCustomerKeywordsForCache(terminalTypeAndMachineGroups[0], terminalTypeAndMachineGroups[1], ((machineCount * 10) > 5000 ? 5000 : (machineCount * 10)));
+                        optimizationKeywordVOS = customerKeywordDao
+                            .fetchCustomerKeywordsForCache(terminalTypeAndMachineGroups[0], terminalTypeAndMachineGroups[1],
+                                ((machineCount * 10) > 5000 ? 5000 : (machineCount * 10)));
                         if (CollectionUtils.isNotEmpty(optimizationKeywordVOS)) {
                             List<Long> customerKeywordUuids = new ArrayList<>();
                             if (optimizationKeywordVOS.size() > machineCount) {
@@ -113,7 +115,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                                         if (optimizationKeywordVO.getQueryInterval() == 0) {
                                             optimizationKeywordVO.setQueryInterval(5000);
                                         }
-                                        int maxOptimizeCount = Math.round(DateUtils.getFragmentInSeconds(Calendar.getInstance(), Calendar.DATE) / (optimizationKeywordVO.getQueryInterval()));
+                                        int maxOptimizeCount = Math.round(
+                                            DateUtils.getFragmentInSeconds(Calendar.getInstance(), Calendar.DATE) / (optimizationKeywordVO.getQueryInterval()));
                                         Integer repeatCount = customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid());
                                         if (repeatCount == null) {
                                             customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), 0);
@@ -123,7 +126,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                                             blockingQueue.offer(optimizationKeywordVO);
                                             optimizationKeywordVO.setOptimizedCount(optimizationKeywordVO.getOptimizedCount() + 1);
                                             hasNewElement = true;
-                                            customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(), (customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid()) + 1));
+                                            customerKeywordUuidAndRepeatCount.put(optimizationKeywordVO.getUuid(),
+                                                (customerKeywordUuidAndRepeatCount.get(optimizationKeywordVO.getUuid()) + 1));
                                             count++;
                                             if (count > (machineCount * 4)) {
                                                 break;
@@ -146,7 +150,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                                         if (customerKeywordUuidAndRepeatCount.get(customerKeywordUuid) < 2) {
                                             customerKeywordUuids.add(customerKeywordUuid);
                                         } else {
-                                            customerKeywordUuidAndRepeatCount.put(customerKeywordUuid, (customerKeywordUuidAndRepeatCount.get(customerKeywordUuid) - 1));
+                                            customerKeywordUuidAndRepeatCount
+                                                .put(customerKeywordUuid, (customerKeywordUuidAndRepeatCount.get(customerKeywordUuid) - 1));
                                         }
                                     }
                                     for (Long customerKeywordUuid : customerKeywordUuids) {
@@ -243,18 +248,20 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         customerKeyword.setKeyword(customerKeyword.getKeyword().trim());
 
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
-            CustomerKeyword customerKeyword1 = customerKeywordDao.getOneSameCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl(), customerKeyword.getTitle());
-            if (customerKeyword1 != null ) {
+            CustomerKeyword customerKeyword1 = customerKeywordDao
+                .getOneSameCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(),
+                    customerKeyword.getUrl(), customerKeyword.getTitle());
+            if (customerKeyword1 != null) {
                 detectCustomerKeywordEffect(customerKeyword, customerKeyword1);
                 return null;
             }
         }
 
-        if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType()) ) {
+        if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
             CustomerKeyword customerKeyword1 = customerKeywordDao
                 .getOneSimilarCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), originalUrl,
                     customerKeyword.getTitle());
-            if (customerKeyword1 != null ) {
+            if (customerKeyword1 != null) {
                 detectCustomerKeywordEffect(customerKeyword, customerKeyword1);
                 return null;
             }
@@ -593,7 +600,13 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     //客户关键字批量设置
     @Override
     public void batchUpdateKeywords(KeywordStatusBatchUpdateVO keywordStatusBatchUpdateVO) {
-        customerKeywordDao.batchUpdateKeywords(keywordStatusBatchUpdateVO.getUuids(), keywordStatusBatchUpdateVO.getKeywordChecks(), keywordStatusBatchUpdateVO.getKeywordValues());
+        customerKeywordDao.batchUpdateKeywords(keywordStatusBatchUpdateVO.getUuids(), keywordStatusBatchUpdateVO.getKeywordChecks(),
+            keywordStatusBatchUpdateVO.getKeywordValues());
+    }
+
+    @Override
+    public List<CodeNameVo> searchGroupsByTerminalType(String terminalType) {
+        return customerKeywordDao.searchGroupsByTerminalType(terminalType);
     }
 }
 
