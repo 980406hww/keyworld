@@ -1,5 +1,5 @@
 getHeight();
-
+var sign = false;
 function getHeight(){
     let b = document.getElementById('groupSettingBody');
     let h = window.innerHeight || document.body.offsetHeight;
@@ -13,9 +13,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     var layer = layui.layer;
     var okLayer = layui.okLayer;
     var laypage = layui.laypage;
-
+    var operationTypes ;
     element.on('tab(groupSettingTab)', function (data) {
-        $('#terminalType').val($(this).text())
+        $('#terminalType').val($(this).text());
+        init_operationType();
         initLayPage(formToJsonObject('searchForm'));
     });
 
@@ -40,6 +41,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             success: function (res) {
                 if (res.code === 200){
                     let data =res.data;
+                    operationTypes = data;
                     $("#operationType").empty().append('<option value="">请选择操作类型</option>');
                     $.each(data, function (index, item) {
                         $('#operationType').append(
@@ -114,6 +116,23 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         initLayPage(pageConf);
         return false;
     });
+
+    window.toGroupSettingAdd = function(){
+        let data = {};
+        data.operationTypes = operationTypes;
+        data.remainAccount = 100;
+        data.currentAccount = 0;
+        data.terminalType = $('#terminalType').val();
+        okLayer.open("终端管理 / 分组信息 / 添加操作组合", "/internal/groupsetting/toGroupSettingAdd", "60%", "90%", function(layero){
+            window[layero.find("iframe")[0]["name"]].initForm(data);
+        }, function () {
+            if (sign) {
+                let pageConf = formToJsonObject('searchForm');
+                initLayPage(pageConf);
+                sign = false;
+            }
+        });
+    }
 
     function initLayPage(pageConf) {
         if (!pageConf) {

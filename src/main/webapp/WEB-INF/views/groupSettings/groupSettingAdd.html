@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>添加</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="/static/ok-admin/page/customer/customerAdd.css">
+    <style>
+
+        .layui-btn {
+            width: 150px;
+        }
+
+        .layui-form-item .layui-inline {
+            margin-bottom: 0;
+            margin-right: 0;
+        }
+
+        .layui-form-item .layui-input-inline {
+
+            margin-right: 0;
+        }
+
+        .layui-form-mid {
+            text-align: center;
+            float: left;
+            display: block;
+            padding: 9px 0 !important;
+            line-height: 20px;
+            margin-right: 10px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="ok-body">
+    <!--form表单-->
+    <form class="layui-form layui-form-pane ok-form" lay-filter="addCustomer">
+        <input type="hidden" name="uuid" value=""/>
+        <input type="hidden" name="terminalType" id="terminalType" value=""/>
+        <input type="hidden" name="operationCombineUuid" id="operationCombineUuid" value=""/>
+        <div class="layui-row">
+            <div class="layui-col-md12">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 100%"><h3>基本信息</h3></label>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">操作组合</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="settingOperationCombineName" placeholder="请输入操作组合" autocomplete="off"
+                               class="layui-input" lay-verify="required">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">分组</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="settingGroup" placeholder="请输入分组,多个用逗号分割" autocomplete="off"
+                               class="layui-input" lay-verify="required">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">操作类型</label>
+                    <div class="layui-input-block">
+                        <select name="operationType" id="operationType">
+                            <option value="">请选择操作类型</option>
+                        </select>
+
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">网站统计</label>
+                    <div class="layui-input-block ">
+                        <div class="layui-input">
+                            <input type="radio" name="disableStatistics" value="0" title="开放" checked>
+                            <input type="radio" name="disableStatistics" value="1" title="关闭">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md12">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">分组设置占比(%)</label>
+                        <div class="layui-input-block">
+                            <input type="hidden" name="remainAccount" id="remainAccount" value="100">
+                            <input type="hidden" name="currentAccount" id="currentAccount" value="0">
+                            <input type="number" name="machineUsedPercent" id="machineUsedPercent" placeholder="请输入分组占比" autocomplete="off" onchange="recalculateUnusedPercent(this)"
+                                   class="layui-input" lay-verify="required|number|numberLimit">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 100%;text-align: left">当前剩余 <span id="unusedPercent">100</span>%</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">是否访问目标网站</label>
+                    <div class="layui-input-block ">
+                        <div class="layui-input">
+                            <input type="radio" name="disableVisitWebsite" value="0" title="访问" checked>
+                            <input type="radio" name="disableVisitWebsite" value="1" title="不访问">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">页数</label>
+                    <div class="layui-input-block ">
+                        <input type="text" name="page" placeholder="请输入页数" autocomplete="off" value="5" class="layui-input"/>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">每页条数</label>
+                    <div class="layui-input-block ">
+                        <div class="layui-input">
+                            <input type="radio" name="pageSize" value="0" title="10" checked/>
+                            <input type="radio" name="pageSize" value="1" title="20"/>
+                            <input type="radio" name="pageSize" value="2" title="50"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">无效点击数</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="maxInvalidCount" placeholder="请输入无效点击量" autocomplete="off" value="8" class="layui-input"/>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md12">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 100%"><h3>其他设置</h3></label>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">Cookie设置</label>
+                    <div class="layui-input-block">
+                        <select name="clearCookie" id="clearCookie">
+                            <option value="0">不清理Cookie</option>
+                            <option value="1">每次都清理Cookie</option>
+                            <option value="2">随机清理Cookie</option>
+                            <option value="3">N次操作清理Cookie</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">进入页次数</label>
+                        <div class="layui-input-inline" style="width: 147.5px;">
+                            <input type="number" name="entryPageMinCount" value="0" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid">-</div>
+                        <div class="layui-input-inline" style="width:147.5px;">
+                            <input type="number" name="entryPageMaxCount" value="0" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">页面停留时间(毫秒)</label>
+                        <div class="layui-input-inline" style="width: 147.5px;">
+                            <input type="number" name="pageRemainMinTime" value="3000" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid">-</div>
+                        <div class="layui-input-inline" style="width:147.5px;">
+                            <input type="number" name="pageRemainMaxTime" value="5000" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">输入延时(毫秒)</label>
+                        <div class="layui-input-inline" style="width: 147.5px;">
+                            <input type="number" name="inputDelayMinTime" value="50" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid">-</div>
+                        <div class="layui-input-inline" style="width:147.5px;">
+                            <input type="number" name="inputDelayMaxTime" value="80" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">滑动延时(毫秒)</label>
+                        <div class="layui-input-inline" style="width: 147.5px;">
+                            <input type="number" name="slideDelayMinTime" value="700" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid">-</div>
+                        <div class="layui-input-inline" style="width:147.5px;">
+                            <input type="number" name="slideDelayMaxTime" value="1500" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">标题停留(毫秒)</label>
+                        <div class="layui-input-inline" style="width: 147.5px;">
+                            <input type="number" name="titleRemainMinTime" value="1000" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid">-</div>
+                        <div class="layui-input-inline" style="width:147.5px;">
+                            <input type="number" name="titleRemainMaxTime" value="3000" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">刷多少个词换IP</label>
+                    <div class="layui-input-block ">
+                        <input type="number" name="optimizeKeywordCountPerIP" placeholder="请输入分组占比" autocomplete="off" value="1" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">没结果随机点</label>
+                    <div class="layui-input-block ">
+                        <div class="layui-input">
+                            <input type="radio" name="randomlyClickNoResult" value="0" title="是" checked/>
+                            <input type="radio" name="randomlyClickNoResult" value="1" title="否"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="save">确定</button>
+                <button type="reset" class="layui-btn layui-btn-primary">
+                    重置
+                </button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">
+                    取消
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--js逻辑-->
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<!--<script src="/static/ok-admin/page/customer/customerAdd.js"></script>-->
+<script>
+
+    let layui_ = null;
+    var uuid_ = null;
+    let operationTypes = null;
+
+    function initForm(data) {
+        // console.log(data)
+        // uuid_ = data.uuid;
+        operationTypes = data.operationTypes;
+        document.getElementById('terminalType').value = data.terminalType;
+        document.getElementById('remainAccount').value = data.remainAccount;
+        document.getElementById('unusedPercent').value = data.remainAccount;
+        document.getElementById('currentAccount').value = data.currentAccount;
+        document.getElementById('machineUsedPercent').value = data.currentAccount;
+        if (layui_ != null) {
+            init_operationType(layui_, operationTypes)
+        }
+    }
+
+    function init_operationType(layui_, operationTypes) {
+        let $ = layui_.jquery;
+        let form = layui.form;
+        $("#operationType").empty().append('<option value="">请选择操作类型</option>');
+        $.each(operationTypes, function (index, item) {
+            $('#operationType').append('<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
+        });
+        form.render("select");
+    }
+
+    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+        let form = layui.form;
+        let okLayer = layui.okLayer;
+        let $ = layui.jquery;
+        let layer = layui.layer;
+
+        if (operationTypes != null) {
+            init_operationType(layui, operationTypes)
+        } else {
+            layui_ = layui;
+        }
+
+        function show_layer_msg(msg, icon, status, time, title) {
+            layer.msg(msg, {
+                icon: icon,
+                title: title === undefined ? null : title,
+                anim: 5,
+                time: time === undefined ? 2000 : time,
+                isOutAnim: false
+            }, function () {
+                if (status) {
+                    active['reload'].call(this);
+                }
+            });
+        }
+
+        window.recalculateUnusedPercent = function (_elem) {
+            let totalPercent = parseInt($('#remainAccount').val()) + parseInt($('#currentAccount').val());
+            let allocPercent = parseInt(_elem.value);
+            if (allocPercent < 0 || allocPercent > 100 || allocPercent > totalPercent) {
+                $(_elem).addClass("layui-form-danger").focus();
+                show_layer_msg("请输入正确的分组占比且不能大于剩余占比", 5)
+            } else {
+                $('#unusedPercent').text(totalPercent - allocPercent)
+            }
+        }
+
+        form.on("submit(save)", function (data) {
+            var data = data.field;
+            var operationCombine = {};
+            operationCombine.operationCombineName = data.settingOperationCombineName;
+            operationCombine.terminalType = data.terminalType;
+            operationCombine.maxInvalidCount = data.maxInvalidCount === "" ? 8 : data.maxInvalidCount;
+            let groupNames = data.settingGroup.replace(/[，|\r\n]/g, ',').replace(/[\s+]/g, '');
+            if (groupNames.substring(groupNames.length - 1) === ',') {
+                groupNames = groupNames.substring(0, groupNames.length - 1);
+            }
+            var groupNameArr = groupNames.split(',');
+            groupNameArr = groupNameArr.filter(function (groupName, index) {
+                return groupNameArr.indexOf(groupName) === index && groupName !== '';
+            });
+            if (groupNameArr.length > 0) {
+                operationCombine.groupNames = groupNameArr;
+            }
+
+            operationCombine.groupSetting = data;
+            console.log(operationCombine);
+            $.ajax({
+                url: '/internal/operationcombine/saveOperationCombine2',
+                type: 'post',
+                data: JSON.stringify(operationCombine),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        okLayer.msg.greenTick("保存成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        layui.layer.msg(res.msg);
+                    }
+                }
+            });
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+        form.verify({
+            numberLimit: [
+                /^([1-9]\d?|100)$/,
+                "请1-100范围内的数字"
+            ],
+            tagNames: [
+                /(^$)|(^[\u4e00-\u9fa50-9a-zA-Z,]+$)/,
+                "请正确输入标签,例如：阿卡索,MBA,算法"
+            ]
+        });
+    })
+
+
+</script>
+</body>
+</html>

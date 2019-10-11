@@ -1,10 +1,12 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.criteria.OperationCombineCriteria;
 import com.keymanager.ckadmin.service.OperationCombineService;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,4 +87,19 @@ public class OperationCombineController {
         }
     }
 
+    @RequiresPermissions("/internal/operationCombine/saveOperationCombine")
+    @PostMapping("/saveOperationCombine2")
+    public ResultBean saveOperationCombine(@RequestBody OperationCombineCriteria operationCombineCriteria, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200,"success");
+        try {
+            operationCombineCriteria.setCreator((String) request.getSession().getAttribute("username"));
+            operationCombineService.saveOperationCombine(operationCombineCriteria);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
+import com.keymanager.ckadmin.entity.GroupSetting;
 import com.keymanager.ckadmin.entity.OperationCombine;
 import com.keymanager.ckadmin.service.GroupSettingService;
 import com.keymanager.ckadmin.service.OperationCombineService;
@@ -13,6 +14,8 @@ import javax.annotation.Resource;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -84,6 +87,30 @@ public class GroupSettingController {
         try {
             List<String> operationTypeValues = operationTypeService.getOperationTypeValuesByRole(terminalType);
             resultBean.setData(operationTypeValues);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("服务端错误");
+            return resultBean;
+        }
+    }
+
+    @RequiresPermissions("/internal/groupsetting/saveGroupSetting")
+    @GetMapping("/toGroupSettingAdd")
+    public ModelAndView toGroupSettingAdd() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("groupSettings/groupSettingAdd");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/groupsetting/saveGroupSetting")
+    @PostMapping("/saveGroupSetting2")
+    public ResultBean saveGroupSetting(@RequestBody GroupSetting groupSetting) {
+        ResultBean resultBean = new ResultBean(200, "success");
+
+        try {
+            groupSettingService.saveGroupSetting(groupSetting);
             return resultBean;
         } catch (Exception e) {
             logger.error(e.getMessage());
