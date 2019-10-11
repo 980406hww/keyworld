@@ -2193,10 +2193,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordDao.batchUpdateIndexAndOptimizePlanCount(customerKeywords);
         }
     }
-
-    public List<CustomerKeywordForSync> getCustomerKeywordByCustomerUuid(Long customerUuid) {
-        return customerKeywordDao.getCustomerKeywordByCustomerUuid(customerUuid);
-    }
 }
 
 

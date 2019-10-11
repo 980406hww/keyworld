@@ -1824,19 +1824,4 @@
             WHERE fUuid = #{customerKeyword.uuid}
         </foreach>
     </update>
-
-    <select id="getCustomerKeywordByCustomerUuid" resultType="com.keymanager.monitoring.vo.CustomerKeywordForSync">
-        SELECT
-            ck.fUuid AS 'keywordId',
-            ck.fUrl  AS 'url',
-            ck.fTerminalType AS 'terminalType',
-            ck.fCustomerUuid AS 'customerId',
-            ck.fKeyword AS 'keyword',
-            ck.fInitialPosition AS 'initialPosition',
-            ck.fCurrentPosition AS 'currentPosition',
-            ck.fOptimizePlanCount AS 'optimizePlanCount',
-            ck.fOptimizedCount AS 'optimizedCount'
-        FROM t_customer_keyword ck
-        WHERE ck.fCustomerUuid = #{customerUuid}
-    </select>
 </mapper>

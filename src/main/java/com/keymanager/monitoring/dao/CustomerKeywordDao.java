@@ -267,6 +267,4 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void batchUpdateIndexAndOptimizePlanCount(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
 
     void batchUpdateOptimizedCountFromCache(@Param("updateOptimizedCountVOs") Collection<UpdateOptimizedCountSimpleVO> updateOptimizedCountVOs);
-
-    List<CustomerKeywordForSync> getCustomerKeywordByCustomerUuid(@Param("customerUuid") Long customerUuid);
 }

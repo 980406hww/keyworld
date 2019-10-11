@@ -75,33 +75,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	@Autowired
 	private SysCustomerKeywordService sysCustomerKeywordService;
 
-	private static final HashMap<String, LinkedBlockingQueue> CUSTOMER_QUEUE_MAP = new HashMap<>();
-
-	private static final HashMap<String, Object> CACHE_CUSTOMER_KEYWORD_FOR_SYNC = new HashMap<>();
-
-	public void cacheCustomerUuidForCustomerQueueMap() {
-		// todo 读取配置表需要同步的客户类型
-		Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_DATA, Constants.CONFIG_KEY_CUSTOMER_TYPE_INFO);
-		if (null != config) {
-			String syncCustomerTypeStr = config.getValue();
-			String[] syncCustomerTypes = syncCustomerTypeStr.split(",");
-			// todo 每半小时清空customerQueueMap, 重新写入
-			CUSTOMER_QUEUE_MAP.clear();
-			for (String syncCustomerType : syncCustomerTypes) {
-				if (StringUtil.isNotNullNorEmpty(syncCustomerType)) {
-					List<Long> uuidList = customerService.getCustomerUuidsByCustomerType(syncCustomerType);
-					if (CollectionUtils.isNotEmpty(uuidList)) {
-						LinkedBlockingQueue queue = new LinkedBlockingQueue(uuidList.size());
-						CUSTOMER_QUEUE_MAP.put(syncCustomerType, queue);
-						for (long uuid : uuidList) {
-							queue.offer(uuid);
-						}
-					}
-				}
-			}
-		}
-	}
-
 	public void syncQZCustomerKeyword() {
 		// todo 读取配置表需要同步的客户网站标签
 		Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_QZ_CUSTOMER_KEYWORD, Constants.CONFIG_KEY_SYNC_QZ_CUSTOMER_TAG);
@@ -1126,61 +1099,5 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public String findQZCustomer(String domain) {
 		return qzSettingDao.findQZCustomer(domain);
-	}
-
-	public Map<String, Object> getCustomerKeywordForDataSync(String key) {
-		Map<String, Object> map = null;
-		if (!CACHE_CUSTOMER_KEYWORD_FOR_SYNC.isEmpty()) {
-			Entry<String, Object> entry = CACHE_CUSTOMER_KEYWORD_FOR_SYNC.entrySet().iterator().next();
-			List<CustomerKeywordForSync> customerKeywords = (List<CustomerKeywordForSync>) entry.getValue();
-			map = new HashMap<>(1);
-			map.put("customerKeywords", customerKeywords);
-			CACHE_CUSTOMER_KEYWORD_FOR_SYNC.remove(entry.getKey());
-			return map;
-		} else {
-			if (!CUSTOMER_QUEUE_MAP.isEmpty()) {
-				LinkedBlockingQueue linkedBlockingQueue = CUSTOMER_QUEUE_MAP.get(key);
-				if (null != linkedBlockingQueue && !linkedBlockingQueue.isEmpty()) {
-					Long customerUuid = (Long) linkedBlockingQueue.poll();
-					List<CustomerKeywordForSync> customerKeywords = customerKeywordService.getCustomerKeywordByCustomerUuid(customerUuid);
-					map = new HashMap<>(2);
-					if (CollectionUtils.isNotEmpty(customerKeywords)) {
-						int size = customerKeywords.size();
-						int fromIndex = 0, toIndex = 10000;
-						do {
-							List<CustomerKeywordForSync> subList = customerKeywords.subList(fromIndex, (toIndex > size ? size : toIndex));
-							CACHE_CUSTOMER_KEYWORD_FOR_SYNC.put("" + fromIndex + "-" + toIndex, subList);
-							fromIndex += 10000;
-							toIndex += 10000;
-						} while (fromIndex < size);
-
-						map.put("customerKeywords", CACHE_CUSTOMER_KEYWORD_FOR_SYNC.get("0-10000"));
-						CACHE_CUSTOMER_KEYWORD_FOR_SYNC.remove("0-10000");
-
-						List<QZSettingForSync> qzSettingForSyncs = qzSettingDao.getQZSettingByCustomerUuid(customerUuid);
-						if (CollectionUtils.isNotEmpty(qzSettingForSyncs)) {
-							for (QZSettingForSync qzSettingForSync : qzSettingForSyncs) {
-								List<QZKeywordRankForSync> qzKeywordRankForSyncs = qzKeywordRankInfoService.getQZKeywordRankInfoByQZSettingUuid(qzSettingForSync.getQsId());
-								List<QZKeywordRankForSync> otherKeywordRankForSyncs = new ArrayList<>();
-								if (CollectionUtils.isNotEmpty(qzKeywordRankForSyncs)) {
-									for (QZKeywordRankForSync qzKeywordRankForSync : qzKeywordRankForSyncs) {
-										if (Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD.equals(qzKeywordRankForSync.getWebsiteType())) {
-											QZKeywordRankForSync anOtherQZKeywordRank = qzKeywordRankInfoService.searchAnOtherQZKeywordRanForSync(qzSettingForSync.getQsId());
-											if (null != anOtherQZKeywordRank) {
-												otherKeywordRankForSyncs.add(anOtherQZKeywordRank);
-											}
-										}
-									}
-									qzKeywordRankForSyncs.addAll(otherKeywordRankForSyncs);
-									qzSettingForSync.setQzKeywordRanks(qzKeywordRankForSyncs);
-								}
-							}
-							map.put("qzSettingForSyncs", qzSettingForSyncs);
-						}
-					}
-				}
-			}
-			return map;
-		}
 	}
 }
