@@ -8,6 +8,7 @@ package com.keymanager.ckadmin.util;
  * @Version 1.0
  */
 public class Constants {
+
     public final static String CONFIG_TYPE_EXTERNALUSER = "ExternalUser";
     public final static String CONFIG_KEY_EXTERNALUSER = "ExternalUser";
 
@@ -16,6 +17,10 @@ public class Constants {
     public final static String EXCEL_TYPE_SUPER_USER_SIMPLE = "SuperUserSimple";
     public final static String EXCEL_TYPE_SUPER_USER_FULL = "SuperUserFull";
     public final static String EXCEL_TYPE_SUPER_INDUSTRY_SIMPLE = "SuperIndustrySimple";
+
+    public final static String CONFIG_TYPE_CAPTURE_RANKING = "CaptureRanking";
+    public final static String CONFIG_TYPE_RANK_JOB_CITY = "RankJobCity";
+    public final static String CONFIG_TYPE_WEBSITE_CHECK_SIGN = "WebsiteCheckSign";
 
     public final static String ALL_SEARCH_ENGINE = "All";
     public final static String SEARCH_ENGINE_BAIDU = "百度";

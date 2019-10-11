@@ -15,5 +15,9 @@ public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
     void deleteCaptureRankJob(@Param("qzSettingUuid") Long qzSettingUuid,
         @Param("operationType") String operationType);
 
-    Long hasUncompletedCaptureRankJob(@Param("groupNames") List<String> groupNames, @Param("rankJobArea")String rankJobArea);
+    Long hasUncompletedCaptureRankJob(@Param("groupNames") List<String> groupNames, @Param("rankJobArea") String rankJobArea);
+
+    void changeCaptureRankJobStatuses(@Param("uuids") List<Long> uuids, @Param("updateBy") String updateBy, @Param("captureRankJobStatus") boolean status);
+
+    void resetCaptureRankJobs(@Param("uuids") List<Long> uuids);
 }

@@ -438,6 +438,12 @@
             padding: 0;
         }
 
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
+
         /* 下拉条件框 */
         .my-collapse {
             position: relative;
@@ -635,8 +641,7 @@
                                     <input type="hidden" name="checkStatus" id="checkStatus" value="">
                                     <input hidden value='<#if Request.customerUuidTmp?exists>${Request.customerUuidTmp}</#if>'
                                            id="customerUuidTmp">
-                                    <div class="layui-form-item" style="margin-bottom: 0"
-                                         lay-filter="loginNameFilter">
+                                    <div class="layui-form-item" style="margin-bottom: 0" lay-filter="loginNameFilter">
                                         <div class="layui-inline">
                                             <label class="layui-form-label">客户</label>
                                             <div class="layui-input-inline">
@@ -945,7 +950,7 @@
                         {filed: 'uuid', type: 'checkbox', fixed: "left", width: '2%'},
                         {filed: 'uuid', title: '记录', width: '98%', templet: '#item'}
                     ]],
-                    height: 'full-146',
+                    height: 'full-136',
                     loading: true,
                     done: function (res, curr, count) {
                         successTable(res, whereCondition);

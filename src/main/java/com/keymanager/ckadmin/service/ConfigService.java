@@ -1,6 +1,7 @@
 package com.keymanager.ckadmin.service;
 
 import com.keymanager.ckadmin.entity.Config;
+import java.util.List;
 import java.util.Map;
 
 public interface ConfigService {
@@ -11,4 +12,5 @@ public interface ConfigService {
 
     Config getConfig(String configType, String key);
 
+    List<String> getRankJobCity();
 }

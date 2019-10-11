@@ -6,6 +6,7 @@ import com.keymanager.ckadmin.entity.Config;
 import com.keymanager.ckadmin.service.ConfigService;
 
 import com.keymanager.ckadmin.util.Constants;
+import java.util.List;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,17 @@ public class ConfigServiceImpl implements ConfigService {
 //    @Cacheable(value = "configList", key = "#configType + #key")
     public Config getConfig(String configType, String key) {
         return configDao.getConfig(configType, key);
+    }
+
+    @Override
+    public List<String> getRankJobCity() {
+        Config config = getConfig(Constants.CONFIG_TYPE_RANK_JOB_CITY, "RankJobCity");
+        if (config != null) {
+            String[] cities = config.getValue().split(",");
+            Arrays.sort(cities);
+            return Arrays.asList(cities);
+        }
+        return null;
     }
 
     @Override

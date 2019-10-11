@@ -8,6 +8,7 @@ import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.vo.CodeNameVo;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
@@ -117,4 +118,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void batchUpdateKeywords(@Param("uuids") List<String> uuids, @Param("keywordChecks") CustomerKeyword keywordChecks, @Param("keywordValues") CustomerKeyword keywordValues);
 
     int searchCustomerKeywordForNoReachStandard(@Param("keywordStandardCriteria") KeywordStandardCriteria keywordStandardCriteria);
+
+    List<CodeNameVo> searchGroupsByTerminalType(@Param("terminalType") String terminalType);
 }
