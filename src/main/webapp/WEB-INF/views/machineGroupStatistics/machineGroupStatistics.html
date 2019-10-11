@@ -189,13 +189,10 @@
             </div>
         </div>
     </div>
-    <!--TODO 跳转旧的页面-->
-    <form id="searchCustomerKeywordForm" style="display: none;" method="post" target="_blank"
-          action="/internal/customerKeyword/searchCustomerKeywordLists">
+    <form id="searchMachineInfoForm" style="display: none;" method="post" target="_blank"
+          action="/internal/machineInfo/searchBadMachineInfo">
+        <input type="hidden" name="hasProblem" value="hasProblem"/>
         <input type="hidden" name="machineGroup" id="openMachineGroup" value=""/>
-        <input type="hidden" name="invalidRefreshCount" id="invalidRefreshCount" value=""/>
-        <input type="hidden" name="noReachStandardDays" id="noReachStandardDays" value=""/>
-        <input type="hidden" name="status" id="status" value="1"/>
     </form>
 </div>
 <!--js逻辑-->
@@ -218,21 +215,37 @@
 
         <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
         window.searchCustomerKeywords = function (machineGroup) {
-            $("#searchCustomerKeywordForm").find("#openMachineGroup").val(machineGroup);
-            $("#searchCustomerKeywordForm").submit();
+            let url = '/internal/customerKeyword/toKeywords';
+            let id = machineGroup + '-关键字统计-O-FMG';
+            let data = {
+                machineGroup: machineGroup,
+                status: '1',
+                type: document.getElementById('entryType').value,
+                terminal: document.getElementById('terminalType').value
+            };
+            updateOrNewTab(url, id, id ,data);
         };
         </@shiro.hasPermission>
 
         <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
-        window.findKeyword = function (optimizeGroupName, invalidRefreshCount) {
-            if (invalidRefreshCount == null) {
-                $("#searchCustomerKeywordForm").find("#noReachStandardDays").val(-1);
-            } else {
-                $("#searchCustomerKeywordForm").find("#noReachStandardDays").val(0);
+        window.findKeyword = function (machineGroup, invalidRefreshCount) {
+            let url = '/internal/customerKeyword/toKeywords';
+            let id = machineGroup + '-关键字-N-FMG';
+            let data = {
+                status: '1',
+                type: document.getElementById('entryType').value,
+                terminal: document.getElementById('terminalType').value
+            };
+            if (machineGroup && machineGroup !== '') {
+                data.machineGroup = machineGroup;
             }
-            $("#searchCustomerKeywordForm").find("#invalidRefreshCount").val(invalidRefreshCount);
-            $("#searchCustomerKeywordForm").find("#optimizeGroupName").val(optimizeGroupName);
-            $("#searchCustomerKeywordForm").submit();
+            if (invalidRefreshCount && invalidRefreshCount !== '') {
+                data.nrsd = '0';
+                data.irc = invalidRefreshCount;
+            } else {
+                data.nrsd = '-1';
+            }
+            updateOrNewTab(url, id, id ,data);
         };
         </@shiro.hasPermission>
 
@@ -542,6 +555,35 @@
                     active['reload'].call(this);
                 }
             });
+        }
+
+        function updateOrNewTab(url, tit, id ,data) {
+            var update = false;
+            var contentIframe = "<iframe src='" + url + "' lay-id='" + id + "'frameborder='0' scrolling='yes' width='100%' height='100%'";
+            if (data.machineGroup) {
+                contentIframe += " data-machine-group='" + data.machineGroup + "'";
+            }
+            if (data.nrsd) {
+                contentIframe += " data-nrsd='" + data.nrsd + "'";
+            }
+            if (data.irc) {
+                contentIframe += " data-irc='" + data.irc + "'";
+            }
+            contentIframe += " data-status='" + data.status + "' data-type='" + data.type + "' data-terminal='" + data.terminal + "'></iframe>";
+            parent.layui.$('.layui-tab-title li').each(function () {
+                if (id === this.getAttribute('lay-id')) {
+                    update = true;
+                }
+            });
+            if (!update) {
+                parent.layui.element.tabAdd('ok-tab', {
+                        title: '<i class="layui-icon layui-icon-align-right"></i>&nbsp;&nbsp;&nbsp;' + tit,
+                        content: contentIframe,
+                        id: id
+                    }
+                );
+            }
+            parent.layui.element.tabChange('ok-tab', id)
         }
     });
 </script>
