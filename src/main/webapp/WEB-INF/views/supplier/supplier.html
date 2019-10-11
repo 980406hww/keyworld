@@ -143,22 +143,28 @@
                         <div class="layui-inline">
                             <input type="text" name="phone" placeholder="请输入联系电话" class="layui-input">
                         </div>
+                        <@shiro.hasPermission name="/internal/supplier/searchSuppliers">
                         <div class="layui-inline">
                             <button class="layui-btn" lay-submit lay-filter="search"
                                     id="searchBtn">搜索
                             </button>
                         </div>
+                        </@shiro.hasPermission>
                         <div class="layui-inline">
                             <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">
                                 重置
                             </button>
                         </div>
+                        <@shiro.hasPermission name="/internal/supplier/saveSupplier">
                         <div class="layui-inline">
                             <div class="my-btn layui-btn" onclick="toSaveSupplier()">添加</div>
                         </div>
+                        </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/supplier/deleteSuppliers">
                         <div class="layui-inline">
                             <div class="my-btn layui-btn-danger" onclick="deleteSuppliersByUuids()">删除所选</div>
                         </div>
+                        </@shiro.hasPermission>
                     </div>
                 </div>
             </form>
@@ -292,8 +298,13 @@
                     },
                     {
                         title: '操作', width: '7%', align: 'center', templet: function (d) {
-                            let html = '<button style="height: 18px;line-height: 18px;" class="layui-btn layui-btn-xs" lay-event="upd">修改</button>';
+                            let html = '';
+                            <@shiro.hasPermission name="/internal/supplier/saveSupplier">
+                            html += '<button style="height: 18px;line-height: 18px;" class="layui-btn layui-btn-xs" lay-event="upd">修改</button>';
+                            </@shiro.hasPermission>
+                            <@shiro.hasPermission name="/internal/supplier/deleteSupplier">
                             html += '<button style="height: 18px;line-height: 18px;" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>';
+                            </@shiro.hasPermission>
                             return html;
                         }
                     }
