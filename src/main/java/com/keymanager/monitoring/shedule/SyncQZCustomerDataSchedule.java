@@ -10,20 +10,20 @@ import org.springframework.stereotype.Component;
  * @author shunshikj40
  */
 @Component
-public class CacheCustomerUuidForSyncDataSchedule {
+public class SyncQZCustomerDataSchedule {
 
-    private static final Logger logger = LoggerFactory.getLogger(CacheCustomerUuidForSyncDataSchedule.class);
+    private static final Logger logger = LoggerFactory.getLogger(SyncQZCustomerDataSchedule.class);
 
     @Autowired
     private QZSettingService qzSettingService;
 
     public void runTask() {
-        logger.info("============= " + " Cache CustomerUuid For Sync Data Task " + "===================");
+        logger.info("============= " + " Sync QZ Customer Data Schedule Task " + "===================");
         try {
             qzSettingService.syncQZCustomerKeyword();
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(" Cache CustomerUuid For Sync Data Task is error" + e.getMessage());
+            logger.error(" Sync QZ Customer Data Schedule Task is error" + e.getMessage());
         }
     }
 }

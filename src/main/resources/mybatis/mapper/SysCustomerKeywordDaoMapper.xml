@@ -21,4 +21,8 @@
 		WHERE ck.fCustomerUuid = #{customerUuid}
 		AND qs.fUuid = #{qsId}
     </insert>
+
+    <delete id="cleanSysCustomerKeywordCreateOverOneWeek">
+        DELETE FROM sys_customer_keyword WHERE CREATE_TIME &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY);
+    </delete>
 </mapper>

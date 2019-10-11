@@ -15,4 +15,9 @@ public interface SysCustomerKeywordDao extends BaseMapper<SysCustomerKeyword> {
      * @param qsId
      */
     void batchInsertCustomerKeywordByCustomerUuid(@Param("customerUuid") Long customerUuid, @Param("qsId") Long qsId);
+
+    /**
+     * 定时删除创建超过七天的同步关键词
+     */
+    void cleanSysCustomerKeywordCreateOverOneWeek();
 }

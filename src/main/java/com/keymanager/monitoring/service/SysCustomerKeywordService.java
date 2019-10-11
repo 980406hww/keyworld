@@ -18,4 +18,9 @@ public class SysCustomerKeywordService extends ServiceImpl<SysCustomerKeywordDao
     public void batchInsertCustomerKeywordByCustomerUuid(Long customerUuid, Long qsId) {
         sysCustomerKeywordDao.batchInsertCustomerKeywordByCustomerUuid(customerUuid, qsId);
     }
+
+
+    public void cleanSysCustomerKeywordCreateOverOneWeek() {
+        sysCustomerKeywordDao.cleanSysCustomerKeywordCreateOverOneWeek();
+    }
 }
