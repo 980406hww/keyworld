@@ -22,11 +22,32 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
     init_search();
 
     function init_search() {
-
-        init_keyword_type();
         init_belong_user();
         init_searchEngine();
-        get_keywords(formToJsonObject('searchForm'));
+        let this_ = window.parent.document.getElementsByTagName('iframe');
+        this_ = this_[this_.length - 1];
+        let d = this_.dataset;
+        if (d.length !== 0) {
+            document.getElementById('type').value = d.type;
+            document.getElementById('terminalType').value = d.terminal;
+            let statuses = document.getElementById('status').children;
+            for (let i = 0; i < statuses.length; i++) {
+                if (statuses[i].value === d.status) {
+                    statuses[i].setAttribute('selected', '');
+                }
+            }
+            init_keyword_type(d);
+        } else {
+            init_keyword_type();
+        }
+        if (d.group) {
+            document.getElementById('optimizeGroupName').value = d.group;
+        } else if (d.machineGroup) {
+            document.getElementById('machineGroup').value = d.machineGroup;
+        }
+        if (d.irc) {
+            document.getElementById('invalidRefreshCount').value = d.irc;
+        }
         let type = $('#type').val();
         if (type !== 'qz'){
             if ($('#noReachStandardDiv').length === 0){
@@ -38,16 +59,19 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                     + '</div>\n';
                 $("#resetBtnDiv").after($(noReachStandardDiv));
             }
-            if ($('#noReachStandardDays').length === 0){
-                let noReachStandardDaysDiv ='<div class="layui-inline" id="noReachStandardDaysDiv">\n'
+            if ($('#noReachStandardDays').length === 0) {
+                let noReachStandardDaysDiv = '<div class="layui-inline" id="noReachStandardDaysDiv">\n'
                     + '                           <label class="layui-form-label">未达标天数</label>\n'
                     + '                           <div class="layui-input-inline">\n'
-                    + '                               <input type="number" name="noReachStandardDays" id="noReachStandardDays" placeholder="请输入未达标天数" autocomplete="off"\n'
-                    + '                                   class="layui-input">\n'
+                    + '                               <input type="number" name="noReachStandardDays" id="noReachStandardDays" placeholder="请输入未达标天数" autocomplete="off"\n';
+                if (d.nrsd) {
+                    noReachStandardDaysDiv += ' value="' + d.nrsd + '"';
+                }
+                noReachStandardDaysDiv += ' class="layui-input">\n'
                     + '                           </div>\n'
                     + '                       </div>';
                 $("#invalidRefreshCountDiv").after($(noReachStandardDaysDiv));
-            }
+            }0
             let terminalType = $('#terminalType').val();
             let postData = {};
             postData.type = type;
@@ -62,9 +86,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 // form.render();
             }
         }
+        get_keywords(formToJsonObject('searchForm'));
     }
 
-    function init_keyword_type() {
+    function init_keyword_type(data) {
         $.ajax({
             url: '/internal/common/getBusinessTypeByUserRole',
             dataType: 'json',
@@ -73,22 +98,37 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             success: function (res) {
                 if (res.code === 200) {
                     // $("#tabItem").empty();
-                    let i = 0;
+                    let i = 0, one = 'pt', flag = true;
                     $.each(res.data, function (index, item) {
                         let businessItem = item.split("#");
-                        if (i === 0) {
-                            $('#tabItem').append(
-                                '<li data-type="' + businessItem[0] + '" data-terminal="PC" class="layui-this">' + businessItem[1] + '电脑</li>' +
-                                '<li data-type="' + businessItem[0] + '" data-terminal="Phone">' + businessItem[1] + '手机</li>');
-                            $('#type').val(businessItem[0]);
-                            $('#terminalType').val('PC');
-                        }else {
-                            $('#tabItem').append(
-                                '<li data-type="' + businessItem[0] + '" data-terminal="PC">' + businessItem[1] + '电脑</li>' +
-                                '<li data-type="' + businessItem[0] + '" data-terminal="Phone">' + businessItem[1] + '手机</li>');
+                        $('#tabItem').append(
+                            '<li data-type="' + businessItem[0] + '" data-terminal="PC">' + businessItem[1] + '电脑</li>' +
+                            '<li data-type="' + businessItem[0] + '" data-terminal="Phone">' + businessItem[1] + '手机</li>');
+                        if (i++ === 0) {
+                            one = businessItem[0];
                         }
-                        i++;
                     });
+                    let tabItem = document.getElementById('tabItem').children;
+                    if (data) {
+                        for (let i = 0; i < tabItem.length; i++) {
+                            if (tabItem[i].dataset.type === data.type && tabItem[i].dataset.terminal === data.terminal) {
+                                flag = false;
+                                $('#type').val(data.type);
+                                $('#terminalType').val(data.terminal);
+                                tabItem[i].classList.add('layui-this');
+                                break;
+                            }
+                        }
+                    } else {
+                        tabItem[0].classList.add('layui-this');
+                        $('#type').val(one);
+                        $('#terminalType').val('PC');
+                    }
+                    if (flag) {
+                        tabItem[0].classList.add('layui-this');
+                        $('#type').val(one);
+                        $('#terminalType').val('PC');
+                    }
                     form.render("select");
                 }
             }
@@ -617,7 +657,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
     }
 
     window.toCustomerKeyword = function (customerUuid, contactPerson) {
-        // console.log(customerUuid,contactPerson);
         let businessType = $('#type').val();
         let terminalType = $('#terminalType').val();
         let url = '/internal/customerKeyword/toCustomerKeywords/' + businessType + '/' + terminalType + '/' + customerUuid;

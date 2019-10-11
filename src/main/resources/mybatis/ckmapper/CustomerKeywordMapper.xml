@@ -984,4 +984,19 @@
         AND ck.fTerminalType = #{keywordStandardCriteria.terminalType}
         AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL #{keywordStandardCriteria.noReachStandardDays} DAY)
     </select>
+
+    <select id="searchGroupsByTerminalType" resultType="com.keymanager.ckadmin.vo.CodeNameVo">
+        SELECT
+            fOptimizeGroupName as 'name'
+        FROM
+            t_customer_keyword
+        WHERE
+            fTerminalType = #{terminalType}
+        AND
+            fOptimizeGroupName IS NOT NULL
+        AND
+            fOptimizeGroupName &gt; ''
+        GROUP BY
+            fOptimizeGroupName
+    </select>
 </mapper>

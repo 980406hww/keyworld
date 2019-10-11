@@ -77,9 +77,9 @@ public class CustomerController extends SpringMVCBaseController {
             ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
             Set<String> roles = shiroUser.getRoles();
             List<String> roleTypes = new ArrayList<>();
-            if (roles.contains("SEOSales")){
+            if (roles.contains("SEOSales")) {
                 roleTypes.add("SEOSales");
-            }else if (roles.contains("NegativeSales")){
+            } else if (roles.contains("NegativeSales")) {
                 roleTypes.add("NegativeSales");
             }
             customerCriteria.setRoleTypes(roleTypes);
@@ -326,4 +326,18 @@ public class CustomerController extends SpringMVCBaseController {
         }
     }
 
+    @RequestMapping(value = "/searchCustomersWithKeyword2", method = RequestMethod.POST)
+    public ResultBean searchCustomersWithKeyword(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            List<String> groupNames = (List<String>) requestMap.get("groupNames");
+            resultBean.setData(customerService.searchCustomersWithKeyword(groupNames, terminalType));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setMsg(e.getMessage());
+            resultBean.setCode(400);
+        }
+        return resultBean;
+    }
 }

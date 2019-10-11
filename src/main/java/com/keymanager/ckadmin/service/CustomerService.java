@@ -47,4 +47,6 @@ public interface CustomerService extends IService<Customer> {
     void changeRemark(Long uuid, String remark);
 
     List<CustomerTypeVO> searchCustomerTypeCount(CustomerTypeCriteria customerTypeCriteria);
+
+    List<Customer> searchCustomersWithKeyword(List<String> groupNames, String terminalType);
 }

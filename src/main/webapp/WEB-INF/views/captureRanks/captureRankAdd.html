@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>添加</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="/static/layui/add-or-upd.css">
+    <link rel="stylesheet" href="/static/ok-admin/css/scroll-bar.css">
+    <style>
+        .layui-btn {
+            width: 150px;
+        }
+
+        .four-row .layui-form-label {
+            width: 140px;
+        }
+
+        .four-row .layui-input-block {
+            margin-left: 140px;
+        }
+
+        .my-text {
+            text-indent: 10px;
+            line-height: 38px;
+        }
+
+        .ds input, .ds button {
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .ds .layui-form-label {
+            line-height: 12px;
+        }
+
+        .ds .layui-input-block {
+            min-height: 30px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <!--form表单-->
+    <form class="layui-form layui-form-pane ok-form" lay-filter="save">
+        <div class="ok-body">
+            <input type="hidden" name="uuid" value=""/>
+            <div class="layui-form-item">
+                <label class="layui-form-label">优化组名</label>
+                <div class="layui-input-block">
+                    <select id="groups" name="groups" lay-verify="required" lay-filter="groups" lay-search>
+                        <option value="">请选择优化组名</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">客户</label>
+                <div class="layui-input-block">
+                    <select id="customers" name="customers" lay-search>
+                        <option value="">请先选择优化组名</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-col-md6 padding-ten-right">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">任务区域</label>
+                        <div class="layui-input-block">
+                            <select id="rankJobArea" name="rankJobArea" lay-verify="required">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6 padding-ten-left">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">任务城市</label>
+                        <div class="layui-input-block">
+                            <select id="rankJobCity" name="rankJobCity">
+                                <option value="">请选择任务城市</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-col-md6 padding-ten-right">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">任务类型</label>
+                        <div class="layui-input-block">
+                            <select name="rankJobType" lay-verify="required">
+                                <option value="Common" selected>普通任务</option>
+                                <option value="DropDown">下拉词任务</option>
+                                <option value="Other">其他</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6 padding-ten-left">
+                    <div class="layui-form-item" pane>
+                        <label class="layui-form-label">执行方式</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="exectionType" value="Once" title="一次" checked>
+                            <input type="radio" name="exectionType" value="Everyday" title="每天">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row" id="zxsj">
+                <div class="layui-col-md10 padding-ten-right">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">执行时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="ds" name="dates" lay-verify="dates" class="layui-input" disabled placeholder="请填写执行时间">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md2 padding-ten-left" style="text-align: right">
+                    <div class="layui-btn" style="width: 100%" onclick="openDS()">填写时间</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">采集天数间隔</label>
+                <div class="layui-input-block">
+                    <input type="number" name="captureDaysInterval" class="layui-input" value="1" min="0" placeholder="请输入采集天数间隔">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">抓取记录数</label>
+                <div class="layui-input-block">
+                    <input type="number" name="rowNumber" class="layui-input" value="100" min="0" step="50" placeholder="请输入抓取记录数">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">抓取间隔(毫秒)</label>
+                <div class="layui-input-block">
+                    <input type="number" name="captureInterval" class="layui-input" value="500" min="0" step="500" placeholder="请输入抓取间隔(毫秒)">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">每页条数</label>
+                <div class="layui-input-block">
+                    <input type="number" name="pageSize" class="layui-input" value="50" min="0" step="10" placeholder="请输入每页条数">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">换IP间隔</label>
+                <div class="layui-input-block">
+                    <input type="number" name="executionCycle" class="layui-input" value="0" min="0" step="50" placeholder="请输入换IP间隔">
+                </div>
+            </div>
+        </div>
+        <div style="height: 58px;"></div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="commit">确定</button>
+                <button type="reset" class="layui-btn layui-btn-primary">
+                    重置
+                </button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">
+                    取消
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--js逻辑-->
+<script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script>
+    let uuid_ = null;
+    let layui_ = null;
+    let flag_ = false;
+    let group_ = '';
+    let area_ = '中国';
+    let city_ = '';
+
+    /**
+     * 供上方调用
+     * 初始化数据使用
+     */
+    function initForm(data) {
+        uuid_ = data;
+        if (layui_ != null) {
+            setForm(layui_, uuid_);
+        }
+    }
+
+    /**
+     * 初始化数据
+     * @param l layui对象
+     * @param u 需要修改的站点uuid
+     */
+    function setForm(l, u) {
+        l.jquery.ajax({
+            url: '/internal/captureRanks/getCaptureRankJob/' + u,
+            type: 'get',
+            dataType: 'json',
+            success: function (res) {
+                if (res.code === 200) {
+                    let d = res.data, d_n = {};
+                    d_n.captureDaysInterval = d.captureDaysInterval;
+                    d_n.captureInterval = d.captureInterval;
+                    d_n.customers = d.customerUuid;
+                    d_n.dates = d.exectionTime;
+                    d_n.exectionType = d.exectionType;
+                    d_n.executionCycle = d.executionCycle;
+                    d_n.groups = d.groupNames;
+                    d_n.pageSize = d.pageSize;
+                    d_n.rankJobArea = d.rankJobArea;
+                    d_n.rankJobCity = d.rankJobCity;
+                    d_n.rankJobType = d.rankJobType;
+                    d_n.rowNumber = d.rowNumber;
+                    d_n.uuid = d.uuid;
+                    if (!flag_) {
+                        group_ = d.groupNames;
+                        area_ = d.rankJobArea;
+                        city_ = d.rankJobCity;
+                    }
+                    l.form.val("save", d_n);
+                    getCustomerByGroup(d.groupNames, d.customerUuid);
+                    zxsj(l, d.exectionTime);
+                } else {
+                    l.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
+                }
+            }, error: function () {
+                l.layer.msg('未知错误');
+            }
+        });
+    }
+
+    function zxsj(l, t) {
+        let zxsj = document.getElementById('zxsj');
+        zxsj.innerHTML = '<label class="layui-form-label">执行时间</label><div class="layui-input-block"><input type="text" name="dates" lay-verify="dates" class="layui-input" placeholder="请输入执行时间"></div>';
+        zxsj.classList.add('layui-form-item');
+        zxsj.classList.remove('layui-row');
+        let input = zxsj.getElementsByTagName('input')[0];
+        input.value = t;
+        l.laydate.render({
+            elem: input,
+            type: 'time',
+            trigger: 'click'
+        })
+    }
+
+    layui.use(["form", "okLayer", "jquery", "layer", "laydate"], function () {
+        let form = layui.form;
+        let okLayer = layui.okLayer;
+        let $ = layui.jquery;
+        let layer = layui.layer;
+        let laydate = layui.laydate;
+
+        if (uuid_ != null) {
+            setForm(layui, uuid_);
+        } else {
+            layui_ = layui;
+        }
+
+        window.getInitData = function () {
+            $.ajax({
+                url: '/internal/captureRanks/getInitDataForAdd',
+                type: 'get',
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        group(res.data.groups);
+                        rankJobArea(res.data.rankJobArea);
+                        rankJobCity(res.data.rankJobCityList);
+                        flag_ = true;
+                        form.render('select');
+                    } else {
+                        layer.msg(res.msg === null || res.msg === '' ? '请稍后再试' : res.msg);
+                    }
+                }
+            });
+        };
+
+        function group(group) {
+            let groups = document.getElementById('groups');
+            let html = '<option value="">请选择优化组名</option>';
+            for (let i = 0; i < group.length; i++) {
+                if (group[i].name === group_) {
+                    html += '<option value="' + group[i].name + '" selected>' + group[i].name + '</option>';
+                } else {
+                    html += '<option value="' + group[i].name + '">' + group[i].name + '</option>';
+                }
+            }
+            groups.innerHTML = html;
+        }
+
+        function rankJobArea(area) {
+            let rankJobArea = document.getElementById('rankJobArea');
+            let html = '';
+            for (let k in area) {
+                if (area[k] === area_) {
+                    html += '<option value="' + k + '" selected>' + area[k] + '</option>';
+                } else {
+                    html += '<option value="' + k + '">' + area[k] + '</option>';
+                }
+            }
+            rankJobArea.innerHTML = html;
+        }
+
+        function rankJobCity(city) {
+            let rankJobCity = document.getElementById('rankJobCity');
+            let html = '<option value="">请选择任务城市</option>';
+            for (let i = 0; i < city.length; i++) {
+                if (city[i] === city_) {
+                    html += '<option value="' + city[i] + '" selected>' + city[i] + '</option>';
+                } else {
+                    html += '<option value="' + city[i] + '">' + city[i] + '</option>';
+                }
+            }
+            rankJobCity.innerHTML = html;
+        }
+
+        form.on("select(groups)", function (data) {
+            if (data.value === '') {
+                let customers = document.getElementById('customers');
+                customers.innerHTML = '<option value="">请先选择优化组名</option>';
+                form.render('select');
+                return;
+            }
+            getCustomerByGroup(data.value);
+        });
+
+        window.getCustomerByGroup = function (v, cu) {
+            let groupList = [];
+            groupList.push(v);
+            let d = {};
+            d.groupNames = groupList;
+            $.ajax({
+                url: '/internal/customer/searchCustomersWithKeyword2',
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(d),
+                success: function (res) {
+                    if (res.code === 200) {
+                        customer(res.data, cu);
+                    } else {
+                        layer.msg(res.msg === null || res.msg === '' ? '请稍后再试' : res.msg);
+                    }
+                }
+            });
+        };
+
+        function customer(customer, cu) {
+            let customers = document.getElementById('customers');
+            let html = '<option value="">请选择客户</option>';
+            for (let i = 0; i < customer.length; i++) {
+                if (customer[i].uuid === cu) {
+                    html += '<option value="' + customer[i].uuid + '" selected>' + customer[i].contactPerson + '</option>';
+                } else {
+                    html += '<option value="' + customer[i].uuid + '">' + customer[i].contactPerson + '</option>';
+                }
+            }
+            customers.innerHTML = html;
+            form.render('select');
+        }
+
+        window.openDS = function () {
+            let html = '';
+            let header = '<div id="ds-box" class="ds" style="padding: 10px 20px 10px 0">';
+            let body = '<div class="layui-row">' +
+                '<div class="layui-col-md10 padding-ten-right">' +
+                '<div class="layui-form-item">' +
+                '<label class="layui-form-label">执行时间</label>' +
+                '<div class="layui-input-block">' +
+                '<input type="text" class="layui-input" placeholder="请选择时间">' +
+                '</div></div></div>' +
+                '<div class="layui-col-md2 padding-ten-left" style="text-align: right">' +
+                '<button class="layui-btn" style="width: 100%" onclick="addDS(this)">添加</button>' +
+                '</div></div>';
+            let footer = '</div>';
+            let ds = document.getElementById('ds');
+            if (ds.value !== '') {
+                let dates = ds.value.split(',');
+                body = '';
+                for (let i = 0; i < dates.length; i++) {
+                    body += '<div class="layui-row">' +
+                        '<div class="layui-col-md10 padding-ten-right">' +
+                        '<div class="layui-form-item">' +
+                        '<label class="layui-form-label">执行时间</label>' +
+                        '<div class="layui-input-block">' +
+                        '<input type="text" class="layui-input" value="';
+                    body += dates[i];
+                    if (i === 0) {
+                        body += '" placeholder="请选择时间">' +
+                            '</div></div></div>' +
+                            '<div class="layui-col-md2 padding-ten-left" style="text-align: right">' +
+                            '<button class="layui-btn" style="width: 100%" onclick="addDS(this)">添加</button>' +
+                            '</div></div>';
+                    } else {
+                        body += '" placeholder="请选择时间">' +
+                            '</div></div></div>' +
+                            '<div class="layui-col-md2 padding-ten-left" style="text-align: right">' +
+                            '<button class="layui-btn layui-btn-danger" style="width: 100%" onclick="delDS(this)">取消</button>' +
+                            '</div></div>';
+                    }
+                }
+            }
+            html = header + body + footer;
+            layer.open({
+                type: 1,
+                title: '时间选择',
+                content: html,
+                shadeClose: true,
+                resize: false,
+                area: '400px',
+                offset: '60px',
+                btn: ['确认', '取消'],
+                yes: function (index) {
+                    let inputs = document.getElementById('ds-box').getElementsByTagName('input');
+                    let value = '';
+                    for (let i = 0; i < inputs.length; i++) {
+                        if (inputs[i].value === '') {
+                            continue;
+                        }
+                        value += inputs[i].value;
+                        value += ',';
+                    }
+                    ds.value = value.substring(0, value.length - 1);
+                    layer.close(index);
+                }, btn2: function (index) {
+                    layer.close(index);
+                }, success: function () {
+                    let inputs = document.getElementById('ds-box').getElementsByTagName('input');
+                    for (let i = 0; i < inputs.length; i++) {
+                        laydate.render({
+                            elem: inputs[i],
+                            type: 'time',
+                            trigger: 'click'
+                        });
+                    }
+                }
+            });
+        };
+
+        window.addDS = function () {
+            let dsBox = document.getElementById('ds-box');
+            let body = '<div class="layui-col-md10 padding-ten-right">' +
+                '<div class="layui-form-item">' +
+                '<label class="layui-form-label">执行时间</label>' +
+                '<div class="layui-input-block">' +
+                '<input type="text" class="layui-input" placeholder="请选择时间">' +
+                '</div></div></div>' +
+                '<div class="layui-col-md2 padding-ten-left" style="text-align: right">' +
+                '<button class="layui-btn layui-btn-danger" style="width: 100%" onclick="delDS(this)">取消</button>' +
+                '</div>';
+            let child = document.createElement('DIV');
+            child.classList.add('layui-row');
+            child.innerHTML = body;
+            dsBox.appendChild(child);
+            laydate.render({
+                elem: child.getElementsByTagName('input')[0],
+                type: 'time',
+                trigger: 'click'
+            });
+        };
+
+        window.delDS = function (e) {
+            let _this = e.parentElement.parentElement;
+            _this.parentElement.removeChild(_this);
+        };
+
+        form.on("submit(commit)", function (data) {
+            let d = data.field, p_d = {}, crj = {}, et = [];
+            crj.uuid = d.uuid === "" ? null : d.uuid;
+            crj.captureDaysInterval = d.captureDaysInterval;
+            crj.captureInterval = d.captureInterval;
+            crj.customerUuid = d.customers;
+            crj.exectionType = d.exectionType;
+            crj.executionCycle = d.executionCycle;
+            crj.groupNames = d.groups;
+            crj.pageSize = d.pageSize;
+            crj.rankJobArea = d.rankJobArea;
+            crj.rankJobCity = d.rankJobCity;
+            crj.rankJobType = d.rankJobType;
+            crj.rowNumber = d.rowNumber;
+            p_d.captureRankJob = crj;
+            let dates = d.dates.split(',');
+            for (let i = 0; i < dates.length; i++) {
+                et.push(dates[i]);
+            }
+            p_d.executeTimes = et;
+            console.log(p_d);
+            commit(p_d, function (d) {
+            });
+            return false;
+        });
+
+        function commit(p_d, call) {
+            $.ajax({
+                url: '/internal/captureRanks/saveCaptureRankJob',
+                type: 'post',
+                data: JSON.stringify(p_d),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        if (res.data) {
+                            call(res.data);
+                        }
+                        okLayer.msg.greenTick("保存成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        layer.msg(res.msg, {icon: 5, time: 1000});
+                    }
+                },
+                error: function () {
+                    layer.msg("保存失败");
+                }
+            });
+        }
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+        });
+
+        form.verify({
+            dates: function (value) {
+                if (/^$/.test(value)) {
+                    return '执行时间必须填项一个';
+                }
+            }
+        });
+
+        getInitData();
+    })
+    ;
+</script>
+</body>
+</html>

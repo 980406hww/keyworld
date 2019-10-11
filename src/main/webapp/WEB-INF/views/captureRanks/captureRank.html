@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>抓排名任务管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="/static/ok-admin/css/scroll-bar.css">
+    <style>
+        /* 下拉条件框 */
+        .my-collapse {
+            position: relative;
+            box-shadow: none;
+        }
+
+        .my-collapse * {
+            box-shadow: none;
+        }
+
+        .my-collapse .layui-form-select dl,
+        .my-collapse .layui-form-select .layui-anim {
+            top: 33px !important;
+        }
+
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 1px solid #e6e6e6;
+        }
+
+        .my-collapse > div {
+            padding: 6px 5px;
+        }
+
+        .my-hide {
+            padding-bottom: 1px !important;
+            display: none;
+            position: absolute;
+            top: 44px;
+            left: 0;
+            z-index: 894;
+            background: #fff;
+            border-left: 1px solid #e6e6e6;
+            border-right: 1px solid #e6e6e6;
+            border-bottom: 1px solid #e6e6e6;
+            border-bottom-right-radius: 2px;
+            border-bottom-left-radius: 2px;
+        }
+
+        .my-collapse button {
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .my-collapse .my-btn {
+            height: 30px !important;
+            line-height: 30px !important;
+            padding: 0 18px;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .my-collapse .my-btn:hover {
+            opacity: .8;
+            transition: opacity 0.5s;
+        }
+
+        .layui-input-inline input {
+            height: 30px;
+        }
+
+        .layui-form-pane .layui-form-label {
+            width: 116px;
+            padding: 8px 15px;
+            height: 30px;
+            line-height: 13px;
+            border-width: 1px;
+            border-style: solid;
+            border-radius: 2px 0 0 2px;
+            text-align: center;
+            background-color: #FBFBFB;
+            overflow: hidden;
+            box-sizing: border-box
+        }
+
+        .layui-inline label {
+            border-right: none;
+        }
+
+        .layui-form-pane .layui-form-checkbox {
+            margin: 0;
+        }
+
+        .layui-inline input {
+            width: 150px;
+            height: 30px;
+        }
+
+        .layui-table-body .layui-table-cell {
+            /*text-align: left;*/
+        }
+
+        .layui-table-cell {
+            display: table-cell;
+            padding: 0 3px;
+            vertical-align: middle;
+            overflow: visible;
+            text-overflow: clip;
+            white-space: normal;
+            word-break: break-all;
+        }
+
+        .layui-table-body .laytable-cell-1-0-15, .layui-table-body .laytable-cell-1-0-16 {
+            padding: 0 11px !important;
+        }
+
+        .layui-table-body .laytable-cell-checkbox {
+            text-align: center;
+        }
+
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
+
+        .layui-btn-xs {
+            height: 18px;
+            line-height: 18px;
+        }
+
+        .layui-table-cell .layui-btn-danger {
+            margin-left: 2px !important;
+        }
+    </style>
+</head>
+<body>
+<div class="ok-body">
+    <!--  条件搜索  -->
+    <div class="layui-card ">
+        <div class="layui-card-body ">
+            <form class="layui-form layui-form-pane" id="searchForm">
+                <div class="my-collapse">
+                    <div>
+                        <div class="layui-inline">
+                            <input type="text" name="groupNames" placeholder="请输入组名" class="layui-input">
+                        </div>
+                        <div class="layui-inline">
+                            <input type="checkbox" name="groupNameFuzzyQuery" title="模糊搜索">
+                        </div>
+                        <div class="layui-inline">
+                            <select name="exectionType" id="exectionType">
+                                <option value="">请选择执行类型</option>
+                                <option value="Once">一次</option>
+                                <option value="EveryDay">每天</option>
+                            </select>
+                        </div>
+                        <div class="layui-inline">
+                            <select name="exectionStatus" id="exectionStatus">
+                                <option value="">请选择执行状态</option>
+                                <option value="New">New</option>
+                                <option value="Processing">Processing</option>
+                                <option value="Checking">Checking</option>
+                                <option value="Complete">Complete</option>
+                            </select>
+                        </div>
+                        <div class="layui-inline">
+                            <select name="rankJobType" id="rankJobType">
+                                <option value="">请选择任务类型</option>
+                                <option value="Common">普通</option>
+                                <option value="Station">整站</option>
+                                <option value="DropDown">下拉词</option>
+                                <option value="Other">其他</option>
+                            </select>
+                        </div>
+                        <div class="layui-inline">
+                            <select name="rankJobArea" id="rankJobArea">
+                                <option value="">请选择任务区域</option>
+                            </select>
+                        </div>
+                        <div class="layui-inline">
+                            <select name="rankJobCity" id="rankJobCity">
+                                <option value="">请选择任务城市</option>
+                            </select>
+                        </div>
+                        <@shiro.hasPermission name="/internal/captureRank/searchCaptureRankJobs">
+                        <div class="layui-inline">
+                            <button class="layui-btn" lay-submit lay-filter="search"
+                                    id="searchBtn">搜索
+                            </button>
+                        </div>
+                        </@shiro.hasPermission>
+                        <div class="layui-inline">
+                            <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">
+                                重置
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--数据表格-->
+    <table class="layui-hide" id="captureRankTable" lay-filter="captureRankTable"></table>
+</div>
+<!--js逻辑-->
+<script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script>
+    let rankJobAreaMap = null;
+
+    // 进度条加载提示
+    NProgress.start();
+
+    window.onload = function () {
+        NProgress.done();
+    };
+
+    var sign = false;
+
+    // layui相关
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+        var layer = layui.layer;
+        var okLayer = layui.okLayer;
+
+        function initFrom() {
+            $.ajax({
+                url: '/internal/captureRanks/getInitData',
+                dataType: 'json',
+                type: 'get',
+                success: function (res) {
+                    if (res.code === 200) {
+                        rankJobArea(res.data.rankJobArea);
+                        rankJobCity(res.data.rankJobCityList);
+                        form.render('select');
+                        init();
+                    } else {
+                        show_layer_msg("请稍后再试", 5, false);
+                    }
+                },
+                error: function () {
+                    show_layer_msg("请稍后再试", 5, false);
+                }
+            });
+        }
+
+        function rankJobArea(area) {
+            rankJobAreaMap = area;
+            let rankJobArea = document.getElementById('rankJobArea');
+            let html = '<option value="">请选择任务区域</option>';
+            for (let k in area) {
+                html += '<option value="' + k + '">' + area[k] + '</option>';
+            }
+            rankJobArea.innerHTML = html;
+        }
+
+        function rankJobCity(city) {
+            let rankJobCity = document.getElementById('rankJobCity');
+            let html = '<option value="">请选择任务城市</option>';
+            for (let i = 0; i < city.length; i++) {
+                html += '<option value="' + city[i] + '">' + city[i] + '</option>';
+            }
+            rankJobCity.innerHTML = html;
+        }
+
+        function init() {
+            let condition = $.parseJSON(formToJson($("#searchForm").serialize()));
+            tableInit(condition);
+        }
+
+        function tableInit(condition) {
+            table.render({
+                elem: '#captureRankTable',
+                method: 'post',
+                url: '/internal/captureRanks/getCaptureRankJobs',
+                page: true,
+                limit: 25,
+                limits: [10, 25, 50, 75, 100],
+                size: 'sm',
+                id: 'captureRankTable',
+                toolbar: '#toolbarTpl',
+                even: true,//隔行背景
+                where: condition,
+                defaultToolbar: [],
+                contentType: 'application/json',
+                cols: [[
+                    {filed: 'uuid', type: 'checkbox', width: '2%', align: 'center'},
+                    {field: 'groupNames', title: '组名', width: '5%', align: 'center'},
+                    {field: 'contactPerson', title: '客户', width: '5%', align: 'center'},
+                    {
+                        field: 'exectionType', title: '执行类型', width: '4%', align: 'center', templet: function (d) {
+                            if (d.exectionType === 'Everyday') {
+                                return '每天';
+                            }
+                            return '一次';
+                        }
+                    },
+                    {
+                        field: 'exectionTime', title: '执行时间', width: '4%', align: 'center', templet: function (d) {
+                            return d.exectionTime.substring(0, 5);
+                        }
+                    },
+                    {field: 'lastExecutionDate', title: '最后执行日期', width: '5.6%', align: 'center'},
+                    {
+                        field: 'exectionStatus', title: '状态', width: '4%', align: 'center', templet: function (d) {
+                            if (d.captureRankJobStatus === false) {
+                                return d.exectionStatus + '<br><span style="color: red">暂停中</span>'
+                            }
+                            return d.exectionStatus;
+                        }
+                    },
+                    {
+                        field: 'rankJobType', title: '任务类型', width: '4%', align: 'center', templet: function (d) {
+                            if (d.rankJobType === 'Common' && d.qzSettingUuid === null) {
+                                return '普通';
+                            } else if (d.qzSettingUuid !== null) {
+                                return '全站';
+                            } else if (d.rankJobType === 'DropDown') {
+                                return '下拉词';
+                            } else {
+                                return '其他';
+                            }
+                        }
+                    },
+                    {
+                        field: 'rankJobArea', title: '任务区域', width: '4%', align: 'center', templet: function (d) {
+                            return rankJobAreaMap === null ? d.rankJobArea : rankJobAreaMap[d.rankJobArea] ? rankJobAreaMap[d.rankJobArea] : '';
+                        }
+                    },
+                    {field: 'rankJobCity', title: '任务城市', width: '4%', align: 'center'},
+                    {field: 'rowNumber', title: '抓取记录数', width: '5%', align: 'center'},
+                    {field: 'captureDaysInterval', title: '采集天数间隔(天)', width: '6.6%', align: 'center'},
+                    {field: 'captureInterval', title: '抓取间隔(ms)', width: '6%', align: 'center'},
+                    {field: 'executionCycle', title: '换IP间隔', width: '4%', align: 'center'},
+                    {field: 'pageSize', title: '每页条数', width: '4%', align: 'center'},
+                    {
+                        field: 'startTime', title: '抓取开始时间', width: '5.6%', align: 'center', templet: function (d) {
+                            return layui.util.toDateString(d.startTime, 'yyyy-MM-dd HH:mm');
+                        }
+                    },
+                    {
+                        field: 'endTime', title: '抓取结束时间', width: '5.6%', align: 'center', templet: function (d) {
+                            return layui.util.toDateString(d.endTime, 'yyyy-MM-dd HH:mm');
+                        }
+                    },
+                    {field: 'updateBy', title: '修改人', width: '4.2%', align: 'center'},
+                    {
+                        field: 'updateTime', title: '修改时间', width: '4.6%', align: 'center', templet: function (d) {
+                            return layui.util.toDateString(d.updateTime, 'yyyy-MM-dd HH:mm');
+                        }
+                    },
+                    {field: 'createBy', title: '创建人', width: '4.2%', align: 'center'},
+                    {
+                        field: 'createTime', title: '创建时间', width: '4.6%', align: 'center', templet: function (d) {
+                            return layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm');
+                        }
+                    },
+                    {title: '操作', width: '6%', align: 'center', templet: '#item'}
+                ]],
+                height: 'full-74',
+                loading: true,
+                done: function (res, curr, count) {
+                    jz();
+                }
+            });
+        }
+
+        function jz() {
+            let tables = document.getElementsByTagName('table');
+            let t_h = tables[1].offsetHeight || tables[1].clientHeight || tables[1].scrollHeight;
+            let t_p_h = tables[1].parentElement.offsetHeight || tables[1].parentElement.clientHeight || tables[1].scrollHeight;
+            let t_w = tables[1].offsetWidth || tables[1].clientWidth || tables[1].scrollWidth;
+            let t_p_w = tables[1].parentElement.offsetWidth || tables[1].parentElement.clientWidth || tables[1].scrollWidth;
+            if (t_h > t_p_h) {
+                document.getElementsByClassName('layui-table-header')[0].classList.add('details-header');
+            } else {
+                if (t_w === t_p_w) {
+                    let ths = document.getElementsByClassName('layui-table-header')[0].getElementsByTagName('th');
+                    ths[ths.length - 1].style.borderRight = '0';
+                }
+                document.getElementsByClassName('layui-table-header')[0].classList.remove('details-header');
+            }
+        }
+
+        // 监听表头鼠标按下事件
+        $(document).on('onMouseUp', 'thead', function () {
+                jz();
+            }
+        );
+
+        //监听工具条
+        var active = {
+            reload: function () {
+                let condition = $.parseJSON(formToJson($("#searchForm").serialize()));
+                table.reload('captureRankTable', {
+                    where: condition,
+                    page: {
+                        curr: 1
+                    }
+                });
+            }
+        };
+
+        function deleteCaptureRanksByUuid(uuid) {
+            layer.confirm('确定删除该条记录！', function (index) {
+                $.ajax({
+                    url: '/internal/captureRanks/deleteCaptureRankJob/' + uuid,
+                    dataType: 'json',
+                    type: 'get',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg("删除成功", 1, true);
+                            layer.close(index);
+                        } else {
+                            show_layer_msg("删除失败", 5, false);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg("删除失败", 5, false);
+                    }
+                });
+            });
+        }
+
+        window.deleteCaptureRanksByUuids = function () {
+            //获取选中数据
+            var checkStatus = table.checkStatus('captureRankTable')
+                , data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                show_layer_msg("请选择需要删除的任务", 5, false);
+                return;
+            }
+            layer.confirm('确定删除所选任务？', function (index) {
+                $.ajax({
+                    url: '/internal/captureRanks/deleteCaptureRankJobs',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    data: JSON.stringify(uuidArr),
+                    success: function (res) {
+                        if (res.code === 200) {
+                            show_layer_msg("删除成功", 1, true);
+                            layer.close(index);
+                        } else {
+                            show_layer_msg("删除失败", 5, false);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg("删除失败", 5, false);
+                    }
+                });
+            });
+        };
+
+        window.toSaveCaptureRanks = function () {
+            okLayer.open("关键字管理 / 抓排名任务管理 / 添加任务", "/internal/captureRanks/toSaveCaptureRanks", "60%", "70%", null, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, '40px');
+        };
+
+        function toSaveCaptureRanksEdit(uuid) {
+            okLayer.open("关键字管理 / 抓排名任务管理 / 修改任务", "/internal/captureRanks/toSaveCaptureRanks", "60%", "70%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initForm(uuid);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, '40px');
+        }
+
+        function changeCaptureRankJobStatus(uuid, status) {
+            let msg = status ? '确认要激活任务吗?' : '确认要暂停任务吗?';
+            layer.confirm(msg, function (index) {
+                let p_d = {};
+                p_d.uuid = uuid;
+                p_d.captureRankJobStatus = status;
+                $.ajax({
+                    url: '/internal/captureRanks/changeCaptureRankJobStatus',
+                    dataType: 'json',
+                    type: 'post',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(p_d),
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg("操作成功", 1, true);
+                            layer.close(index);
+                        } else {
+                            show_layer_msg("操作失败", 5, false);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg("操作失败", 5, false);
+                    }
+                });
+            });
+        }
+
+        window.changeCaptureRankJobStatuses = function (status) {
+            //获取选中数据
+            var checkStatus = table.checkStatus('captureRankTable')
+                , data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            let msg_one = '请选择需要暂停的任务';
+            let msg_two = '确定暂停所选任务？';
+            if (status) {
+                msg_one = '请选择需要激活的任务';
+                msg_two = '确定激活所选任务？';
+            }
+            if (uuidArr.length <= 0) {
+                show_layer_msg(msg_one, 5, false);
+                return;
+            }
+            let p_d = {};
+            p_d.uuids = uuidArr;
+            p_d.status = status;
+            layer.confirm(msg_two, function (index) {
+                $.ajax({
+                    url: '/internal/captureRanks/changeCaptureRankJobStatuses',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    data: JSON.stringify(p_d),
+                    success: function (res) {
+                        if (res.code === 200) {
+                            show_layer_msg("操作成功", 1, true);
+                            layer.close(index);
+                        } else {
+                            show_layer_msg("操作失败", 5, false);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg("操作失败", 5, false);
+                    }
+                });
+            });
+        };
+
+        window.resetCaptureRankJobs = function () {
+            //获取选中数据
+            var checkStatus = table.checkStatus('captureRankTable')
+                , data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                show_layer_msg("请选择需要重置的任务", 5, false);
+                return;
+            }
+            layer.confirm('确定重置所选任务？', function (index) {
+                $.ajax({
+                    url: '/internal/captureRanks/resetCaptureRankJobs',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    data: JSON.stringify(uuidArr),
+                    success: function (res) {
+                        if (res.code === 200) {
+                            show_layer_msg("操作成功", 1, true);
+                            layer.close(index);
+                        } else {
+                            show_layer_msg("操作失败", 5, false);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg("操作失败", 5, false);
+                    }
+                });
+            });
+        };
+
+        table.on('tool(captureRankTable)', function (obj) {
+            var data = obj.data, event = obj.event;
+            switch (event) {
+                case 'upd':
+                    toSaveCaptureRanksEdit(data.uuid);
+                    break;
+                case 'del':
+                    deleteCaptureRanksByUuid(data.uuid);
+                    break;
+                case 'stop':
+                    changeCaptureRankJobStatus(data.uuid, false);
+                    break;
+                case 'noStop':
+                    changeCaptureRankJobStatus(data.uuid, true);
+                    break;
+            }
+        });
+
+        form.on("submit(search)", function (data) {
+            let condition = data.field;
+            if (!condition.groupNameFuzzyQuery) {
+                condition.groupNameFuzzyQuery = null;
+            }
+            console.log(condition);
+            table.reload('captureRankTable', {
+                where: condition,
+                page: {
+                    curr: 1
+                }
+            });
+            return false;
+        });
+
+        function formToJson(data) {
+            data = data.replace(/&/g, "\",\"");
+            data = data.replace(/=/g, "\":\"");
+            data = "{\"" + data + "\"}";
+            return data;
+        }
+
+        function show_layer_msg(msg, icon, status, title) {
+            layer.msg(msg, {
+                icon: icon,
+                title: title === undefined ? null : title,
+                anim: 5,
+                time: 1000,
+                isOutAnim: false
+            }, function () {
+                if (status) {
+                    active['reload'].call(this);
+                }
+            });
+        }
+
+        initFrom();
+    });
+</script>
+<script type="text/html" id="toolbarTpl">
+    <div class="my-collapse">
+        <@shiro.hasPermission name="/internal/captureRank/saveCaptureRankJob">
+        <button class="layui-btn" onclick="toSaveCaptureRanks()">添加任务</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/captureRank/deleteCaptureRankJobs">
+        <button class="layui-btn layui-btn-danger" onclick="deleteCaptureRanksByUuids()">删除所选</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
+        <button class="layui-btn" onclick="changeCaptureRankJobStatuses(true)">激活所选</button>
+        <button class="layui-btn" onclick="changeCaptureRankJobStatuses(false)">暂停所选</button>
+        </@shiro.hasPermission>
+        <button class="layui-btn" onclick="resetCaptureRankJobs()">重置任务</button>
+    </div>
+</script>
+<script type="text/html" id="item">
+    <@shiro.hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
+    {{# if(d.captureRankJobStatus){ }}
+    <button class="layui-btn layui-btn-xs" lay-event="stop">暂停</button>
+    {{# }else{ }}
+    <button class="layui-btn layui-btn-xs" lay-event="noStop">取消暂停</button>
+    {{# } }}
+    <br>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/captureRank/saveCaptureRankJob">
+    <button class="layui-btn layui-btn-xs" lay-event="upd">修改</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/captureRank/deleteCaptureRankJob">
+    <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>
+    </@shiro.hasPermission>
+</script>
+</body>
+</html>
