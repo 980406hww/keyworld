@@ -657,7 +657,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
     }
 
     window.toCustomerKeyword = function (customerUuid, contactPerson) {
-        // console.log(customerUuid,contactPerson);
         let businessType = $('#type').val();
         let terminalType = $('#terminalType').val();
         let url = '/internal/customerKeyword/toCustomerKeywords/' + businessType + '/' + terminalType + '/' + customerUuid;
