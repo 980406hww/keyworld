@@ -13,14 +13,80 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     var layer = layui.layer;
     var okLayer = layui.okLayer;
     var laypage = layui.laypage;
+
     element.on('tab(groupSettingTab)', function (data) {
         $('#terminalType').val($(this).text())
         initLayPage(formToJsonObject('searchForm'));
     });
+
     $(window).resize(function(){
         getHeight();
     });
-    initLayPage(formToJsonObject('searchForm'));
+    init();
+
+    function init(){
+        init_operationType();
+        initLayPage(formToJsonObject('searchForm'));
+    }
+
+    function init_operationType(){
+        let terminalType = $('#terminalType').val();
+        $.ajax({
+            url: '/internal/groupsetting/getOperationTypes/'+terminalType,
+            dataType: 'json',
+            type: 'post',
+            async: false,
+            dataType:'json',
+            success: function (res) {
+                if (res.code === 200){
+                    let data =res.data;
+                    $("#operationType").empty().append('<option value="">请选择操作类型</option>');
+                    $.each(data, function (index, item) {
+                        $('#operationType').append(
+                            '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
+                    });
+                    form.render("select");
+                }
+            }
+        });
+    }
+
+    form.on('select(operationTypeFilter)', function(data){
+        if(data.elem.value !== ''){
+            $('#hasOperation').prop("checked",true);
+            $('#noOperation').prop("checked",false);
+            $('#hasRemainingAccount').prop("checked",false);
+        }else {
+            $('#hasOperation').prop("checked",false);
+            $('#noOperation').prop("checked",false);
+            $('#hasRemainingAccount').prop("checked",false);
+        }
+
+        form.render('checkbox');
+    });
+
+    form.on('checkbox(oneChecked)', function(data){
+        if (data.elem.checked){
+            switch(data.elem.id){
+                case 'hasOperation':
+                    $('#noOperation').prop("checked",false);
+                    $('#hasRemainingAccount').prop("checked",false);
+                    break;
+                case 'noOperation':
+                    $('#hasOperation').prop("checked",false);
+                    $('#hasRemainingAccount').prop("checked",false);
+                    break;
+                case 'hasRemainingAccount':
+                    $('#noOperation').prop("checked",false);
+                    $('#hasOperation').prop("checked",false);
+                    break;
+            }
+            form.render('checkbox');
+            $('#searchBtn').click();
+        }
+
+    });
+
     function formToJsonObject (form_id) {
         var formData = decodeURIComponent($("#" + form_id).serialize(), true);
         formData = formData.replace(/&/g, "\",\"");
@@ -29,6 +95,26 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         formData = $.parseJSON(formData);
         return formData;
     }
+
+    form.on('submit(search)', function (data) {
+        var pageConf = data.field;
+        if (pageConf.hasOperation){
+            pageConf.hasOperation = true;
+        }
+        if (pageConf.noOperation){
+            pageConf.hasOperation = false;
+        }
+        if (pageConf.hasRemainingAccount){
+            pageConf.hasRemainingAccount = true;
+        }else{
+            pageConf.hasRemainingAccount = false;
+        }
+        pageConf.limit = 50;
+        pageConf.page = 1;
+        initLayPage(pageConf);
+        return false;
+    });
+
     function initLayPage(pageConf) {
         if (!pageConf) {
             pageConf = {};
@@ -72,10 +158,11 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
 
             },
             error: function () {
-                layer.msg('获取用户失败，请稍后再试', {icon: 5});
+                layer.msg('获取分组信息失败，请稍后再试', {icon: 5});
             }
         });
     }
+
     function init_data(data) {
         $("#data_list").html('');
         $.each(data, function (index, item) {
@@ -178,7 +265,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             type: 'POST',
             dataType:'json',
             success: function (res) {
-                console.log(res)
                 if (res.code === 200){
                     let data = res.data;
                     var groupNameStr = "";

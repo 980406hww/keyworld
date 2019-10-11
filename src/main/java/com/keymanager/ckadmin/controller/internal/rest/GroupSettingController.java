@@ -6,6 +6,7 @@ import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.entity.OperationCombine;
 import com.keymanager.ckadmin.service.GroupSettingService;
 import com.keymanager.ckadmin.service.OperationCombineService;
+import com.keymanager.ckadmin.service.OperationTypeService;
 import com.keymanager.ckadmin.util.SQLFilterUtils;
 import java.util.List;
 import javax.annotation.Resource;
@@ -13,6 +14,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +39,9 @@ public class GroupSettingController {
 
     @Resource(name = "operationCombineService2")
     private OperationCombineService operationCombineService;
+
+    @Resource(name = "operationTypeService2")
+    private OperationTypeService operationTypeService;
 
     @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
     @GetMapping("/toGroupSettings")
@@ -70,6 +75,22 @@ public class GroupSettingController {
             return resultBean;
         }
         return resultBean;
+    }
+
+    @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
+    @PostMapping("/getOperationTypes/{terminalType}")
+    public ResultBean getOperationTypes(@PathVariable(name = "terminalType") String terminalType){
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            List<String> operationTypeValues = operationTypeService.getOperationTypeValuesByRole(terminalType);
+            resultBean.setData(operationTypeValues);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("服务端错误");
+            return resultBean;
+        }
     }
 
 }

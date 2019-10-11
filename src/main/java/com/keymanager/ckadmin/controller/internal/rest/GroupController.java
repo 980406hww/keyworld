@@ -37,13 +37,11 @@ public class GroupController extends SpringMVCBaseController {
         try {
             Long operationCombineUuid = null;
             if (null != requestMap.get("operationCombineUuid")) {
-                operationCombineUuid = Long
-                    .valueOf((String) requestMap.get("operationCombineUuid"));
+                operationCombineUuid = Long.valueOf((String) requestMap.get("operationCombineUuid"));
             }
             List<String> groupNames = (List<String>) requestMap.get("groupNames");
             String loginName = getCurrentUser().getLoginName();
-            groupService
-                .updateGroupOperationCombineUuid(operationCombineUuid, groupNames, loginName);
+            groupService.updateGroupOperationCombineUuid(operationCombineUuid, groupNames, loginName);
             resultBean.setCode(200);
             resultBean.setMsg("success");
         } catch (Exception e) {

@@ -132,18 +132,8 @@ html {
     color: #1a81ea;
 }
 
-
-.layadmin-maillist-fluid .layadmin-contact-box:hover .operation {
-    display: block;
-}
-
-.layadmin-maillist-fluid .layui-form-checkbox[lay-skin=primary] {
-    bottom: 2px;
-}
-
-.layadmin-maillist-fluid .layadmin-contact-box:hover {
-    border: 1px solid #9ec9f4;
-    box-shadow: 0 0 2px 2px hsla(0, 0%, 70%, .2);
+.layui-form-pane .layui-form-checkbox {
+    margin: 0px 0 0px 0px;
 }
 
 .skip {

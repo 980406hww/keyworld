@@ -26,33 +26,41 @@
 
                         <input type="checkbox" name="checkAll" lay-skin="primary" lay-filter="checkAll">
                         <div class="layui-inline" style="width: 160px">
-                            <input type="text" name="contactPerson" id="contactPerson" placeholder="请输入操作组合名称" class="layui-input">
+                            <input type="text" name="operationCombineName" id="operationCombineName" placeholder="请输入操作组合名称" class="layui-input">
                         </div>
 
                         <div class="layui-inline" style="width: 140px">
                             <div class="layui-input-inline">
-                                <input type="text" name="saleRemark" id="saleRemark" placeholder="请输入优化组名" autocomplete="off" class="layui-input">
+                                <input type="text" name="optimizedGroupName" id="optimizedGroupName" placeholder="请输入优化组名" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline" style="width: 160px">
                             <div class="layui-input-inline">
-                                <select name="type" id="type">
+                                <select name="operationType" id="operationType" lay-filter="operationTypeFilter">
                                     <option value="">请选择操作类型</option>
-                                    <option value="普通客户">普通客户</option>
-                                    <option value="测试客户">测试客户</option>
                                 </select>
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <button class="layui-btn" lay-submit="" lay-filter="search"
-                                    id="searchBtn">搜索
-                            </button>
+<!--                            <div class="layui-input-inline">-->
+                                <input type="checkbox" name="hasOperation" id="hasOperation" title="有操作类型" lay-filter="oneChecked"/>
+<!--                            </div>-->
                         </div>
                         <div class="layui-inline">
-                            <div class="layui-collapse my-btn" onclick="showCondition()">
-                                更多条件
+                            <div class="layui-input-inline">
+                                <input type="checkbox" name="noOperation" id="noOperation" title="无操作类型" lay-filter="oneChecked"/>
                             </div>
                         </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <input type="checkbox" name="hasRemainingAccount" id="hasRemainingAccount" title="剩分组设置占比" lay-filter="oneChecked"/>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <button class="layui-btn" lay-submit="" lay-filter="search"id="searchBtn">搜索</button>
+                        </div>
+
                         <div class="layui-inline">
                             <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">
                                 重置
