@@ -5,16 +5,10 @@ import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.entity.OperationCombine;
 import com.keymanager.ckadmin.service.GroupSettingService;
-import com.keymanager.ckadmin.util.ReflectUtils;
+import com.keymanager.ckadmin.service.OperationCombineService;
 import com.keymanager.ckadmin.util.SQLFilterUtils;
-import com.keymanager.monitoring.common.shiro.ShiroUser;
-import com.keymanager.monitoring.controller.rest.internal.GroupSettingRestController;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import javax.annotation.Resource;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +31,12 @@ import org.springframework.web.servlet.ModelAndView;
 public class GroupSettingController {
 
     private static Logger logger = LoggerFactory.getLogger(GroupSettingController.class);
+
     @Resource(name = "groupSettingService2")
     private GroupSettingService groupSettingService;
+
+    @Resource(name = "operationCombineService2")
+    private OperationCombineService operationCombineService;
 
     @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
     @GetMapping("/toGroupSettings")

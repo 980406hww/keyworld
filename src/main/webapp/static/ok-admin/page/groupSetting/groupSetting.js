@@ -14,9 +14,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     var okLayer = layui.okLayer;
     var laypage = layui.laypage;
     element.on('tab(groupSettingTab)', function (data) {
-        console.log(this); //当前Tab标题所在的原始DOM元素
-        // console.log(data.index); //得到当前Tab的所在下标
-        // console.log(data.elem); //得到当前的Tab大容器
+        $('#terminalType').val($(this).text())
+        initLayPage(formToJsonObject('searchForm'));
     });
     $(window).resize(function(){
         getHeight();
@@ -80,18 +79,17 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     function init_data(data) {
         $("#data_list").html('');
         $.each(data, function (index, item) {
-            console.log(item.groupSettings)
             let htm = '';
             htm += '<div class="data-item">\n'
                 +'<input type="hidden" name="operationCombineUuid" value="'+item.uuid+'}">'
                 + '                        <div class="layui-row">\n'
                 + '                            <div class="layui-col-md12">\n'
                 + '                                <div class="data-head">\n'
-                + '                                     <div class="layui-col-md1 skip">'+item.operationCombineName+'</div>\n'
+                + '                                     <div class="layui-col-md1 skip importantText" title="'+item.operationCombineName+'---'+item.remainingAccount+'%">'+item.operationCombineName+'</div>\n'
                 + '                                     <div class="layui-col-md1">'+item.creator+'</div>\n'
-                + '                                     <div class="layui-col-md1">最大无效点击数:'+item.maxInvalidCount+'</div>\n'
-                + '                                     <div class="layui-col-md6">分组:'+getGroupNameStrByUuid(item.uuid)+'</div>\n'
-                + '                                     <div class="layui-col-md3 operation" title="操作">\n'
+                + '                                     <div class="layui-col-md1" onclick=changeMaxInvalidCount("'+item.uuid+'")>最大无效点击数:<span id="maxInvalidCount'+item.uuid+'">'+item.maxInvalidCount+'</span></div>\n'
+                + '                                     <div class="layui-col-md6 skip" onclick=changeGroupNames("'+item.uuid+'")>分组:<span id="groupNameStr'+item.uuid+'">'+getGroupNameStrByUuid(item.uuid)+'</span></div>\n'
+                + '                                     <div class="layui-col-md3 head-operation" title="操作">\n'
                 + '                                         <div class="layui-col-md2">'
                 + '                                              <a href="javascript:void(0)" onclick=showGroupQueueDialog("' + item.uuid + '")>分组详情 </a>'
                 + '                                          </div>\n'
@@ -112,9 +110,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                     + '                                <div class="data-body">\n'
                     + '                                    <div class="body-title">\n'
                     + '                                            <div class="layui-col-md1" style="width: 10%">操作类型</div>\n'
-                    + '                                            <div class="layui-col-md1"style="width: 10%">分组设置占比</div>\n'
+                    + '                                            <div class="layui-col-md1"style="width: 9%">分组设置占比</div>\n'
                     + '                                            <div class="layui-col-md1"style="width: 8%">网站统计</div>\n'
-                    + '                                            <div class="layui-col-md1"style="width: 8%">目标网站</div>\n'
+                    + '                                            <div class="layui-col-md1"style="width: 9%">是否访问目标网站</div>\n'
                     + '                                            <div class="layui-col-md1"style="width: 7%">页数</div>\n'
                     + '                                            <div class="layui-col-md1"style="width: 7%">每页条数</div>\n'
                     + '                                            <div class="layui-col-md1"style="width: 10%">Cookie设置</div>\n'
@@ -128,13 +126,13 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                         + '                                         <div class="layui-col-md1" style="width: 10%">'
                         +                                               groupSetting.operationType
                         + '                                         </div>\n'
-                        + '                                         <div class="layui-col-md1"style="width: 10%">'
+                        + '                                         <div class="layui-col-md1"style="width: 9%">'
                         +                                               groupSetting.machineUsedPercent+'%'
                         + '                                         </div>\n'
                         + '                                         <div class="layui-col-md1"style="width: 8%">'
                         +                                               getStatisticText(groupSetting.disableStatistics)
                         + '                                         </div>\n'
-                        + '                                         <div class="layui-col-md1"style="width: 8%">'
+                        + '                                         <div class="layui-col-md1"style="width: 9%">'
                         +                                               getVisitWebsiteText(groupSetting.disableVisitWebsite)
                         + '                                         </div>\n'
                         + '                                         <div class="layui-col-md1"style="width: 7%">'
@@ -155,7 +153,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                         + '                                        <div class="layui-col-md1"style="width: 10%">'
                         +                                               getRandomlyClickNoResultText(groupSetting.randomlyClickNoResult)
                         + '                                        </div>\n'
-                        + '                                        <div class="layui-col-md1"style="width: 10%">'
+                        + '                                        <div class="layui-col-md1 body-operation"style="width: 10%">'
                         + '                                             <a href="javascript:void(0)" onclick=showGroupSettingDialog("' + groupSetting.uuid +'")>修改 </a>'
                         + '                                             <a href="javascript:void(0)" onclick=delGroupSetting("' + groupSetting.uuid + '")>删除 </a>'
                         + '                                         </div>'
@@ -169,9 +167,158 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             }
 
 
-            $("#data_list").append(htm)
-            $("#data_list").trigger("create");
+            $("#data_list").append(htm);
+            // $("#data_list").trigger("create");
         })
+    }
+
+    window.getGroupNameStrByUuid = function(uuid){
+        $.ajax({
+            url: '/internal/operationcombine/getGroupNames2/' + uuid,
+            type: 'POST',
+            dataType:'json',
+            success: function (res) {
+                console.log(res)
+                if (res.code === 200){
+                    let data = res.data;
+                    var groupNameStr = "";
+                    if (data.length === 0) {
+                        groupNameStr = '暂无';
+                    } else {
+                        $.each(data, function (idx, value) {
+                            groupNameStr += value + ",";
+                        });
+                        groupNameStr = groupNameStr.substring(0, groupNameStr.length-1);
+                    }
+                    $('#groupNameStr'+uuid).text(groupNameStr);
+                    $('#groupNameStr'+uuid).attr("title",groupNameStr);
+
+                }else {
+                    show_layer_msg('获取操作组合下的分组数据失败！', 5, );
+                }
+            },
+            error: function () {
+                show_layer_msg('获取操作组合下的分组数据失败！', 5, );
+            }
+        });
+    }
+
+    window.changeMaxInvalidCount = function(operationCombineUuid){
+        let oldMaxInvalidCount = $('#maxInvalidCount'+operationCombineUuid).text();
+        layer.prompt({
+            formType: 3,
+            value: oldMaxInvalidCount,
+            title: '新无效最大点击数',
+            area: ['220px', '60px'], //自定义文本域宽高
+            yes: function (index, layero) {
+                var index2 = index;
+                var value = layero.find(".layui-layer-input").val();
+                if (value === '') {
+                    show_layer_msg('请输入最大无效点击数！', 5, null, 1000);
+                    return;
+                } else if (!/^\d+$/.test(value)) {
+                    show_layer_msg('请输入正确数字！', 5, null, 1000);
+                    return;
+                }
+                var postData = {};
+                postData.uuid = operationCombineUuid;
+                postData.maxInvalidCount = value;
+                $.ajax({
+                    url: '/internal/operationcombine/updateMaxInvalidCount2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, );
+                            $('#maxInvalidCount'+operationCombineUuid).text(value)
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    }
+
+                });
+                layer.close(index2);
+
+
+            }
+        });
+    };
+
+    window.uniqueGroupName = function unique(a) {
+        var seen = {};
+        return a.filter(function(item) {
+            return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+        });
+    };
+
+    window.changeGroupNames = function(operationCombineUuid){
+        let oldGroupNameStr = $('#groupNameStr'+operationCombineUuid).text();
+        layer.prompt({
+            formType: 2,
+            value: oldGroupNameStr === '暂无' ? '' : oldGroupNameStr,
+            title: '新分组标签',
+            area: ['600px', '80px'], //自定义文本域宽高
+            yes: function (index, layero) {
+                var index2 = index;
+                var value = layero.find(".layui-layer-input").val();
+                if (value === '') {
+                    show_layer_msg('请输入新分组标签！', 5, null, 1000);
+                    return;
+                }
+                value = value.replace(/( )+/g,"").replace(/(，)+|(,)+/g, ",").split(",");
+                let groups = uniqueGroupName(value);
+                var postData = {};
+                postData.operationCombineUuid = operationCombineUuid;
+                postData.groupNames = groups;
+                $.ajax({
+                    url: '/internal/group/saveGroupsBelowOperationCombine2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 10000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6);
+                            $('#groupNameStr'+operationCombineUuid).text(groups.join(","));
+                            $('#groupNameStr'+operationCombineUuid).attr("title",groups.join(","));
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                        layer.close(index2);
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                        layer.close(index2);
+                    }
+                });
+
+            }
+        });
+    };
+
+    function show_layer_msg(msg, icon, status, time, title) {
+        layer.msg(msg, {
+            icon: icon,
+            title: title === undefined ? null : title,
+            anim: 5,
+            time: time === undefined ? 2000 : time,
+            isOutAnim: false
+        }, function () {
+            if (status) {
+                active['reload'].call(this);
+            }
+        });
     }
 
     window.getStatisticText  = function(disableStatistics){
@@ -244,27 +391,23 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         return htm;
     };
 
-    window.getGroupNameStrByUuid = function (uuid) {
-        return uuid+'分组分组分组'
-    };
-
     window.showGroupQueueDialog = function (uuid) {
-
+        console.log(uuid)
     };
 
     window.showGroupSettingDialog = function (uuid) {
-
+        console.log(uuid)
     };
 
     window.showUpdateGroupDialog = function (uuid) {
-
+        console.log(uuid)
     };
 
     window.delOperationCombine = function (uuid) {
-
+        console.log(uuid)
     };
 
     window.delGroupSetting = function (uuid) {
-
+        console.log(uuid)
     };
 });

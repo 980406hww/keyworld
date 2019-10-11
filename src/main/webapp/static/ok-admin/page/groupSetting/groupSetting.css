@@ -112,6 +112,8 @@ html {
     height: 30px;
 }
 
+/*数据体*/
+
 #data_list {
     padding-top: 10px;
 }
@@ -121,7 +123,7 @@ html {
 }
 
 /*操作*/
-.operation {
+.head-operation {
     display: none;
     font-size: 14px;
 }
@@ -156,11 +158,16 @@ html {
     border: 1px solid #e6e6e6;
     box-shadow: 0 0 2px 2px hsla(0, 0%, 80%, .2);
 }
+.data-item:hover{
+    border: 1px solid #9ec9f4;
+    box-shadow: 0 0 2px 2px hsla(0,0%,70%,.2);
+}
 
-.data-item:hover .operation{
+.data-item:hover .head-operation{
     display: block;
 }
-.operation a{
+
+.head-operation a{
     color: #1a81ea;
 }
 
@@ -190,6 +197,7 @@ html {
     border-top: 1px solid #e6e6e6;
     border-right: 1px solid #e6e6e6;
 }
+
 .body-title > div:last-child{
     height: 24px;
     line-height: 28px;
@@ -214,6 +222,14 @@ html {
     line-height: 32px;
     border-top: 1px solid #e6e6e6;
     /*border-right: 1px solid #e6e6e6;*/
+}
+
+.body-operation a{
+    color: blue;
+}
+
+.importantText{
+    color: #0c7df5;
 }
 /*分页*/
 #page_nav {

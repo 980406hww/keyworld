@@ -16,4 +16,61 @@
         DELETE FROM t_group
         WHERE fGroupName = #{groupName}
     </delete>
+
+    <select id="getGroupNames" resultType="java.lang.String">
+        SELECT
+            g.fGroupName AS 'groupName'
+        FROM t_group g
+                 LEFT JOIN t_operation_combine toc
+                           ON toc.fUuid = g.fOperationCombineUuid
+        WHERE g.fOperationCombineUuid = #{operationCombineUuid}
+        ORDER BY g.fCreateTime
+    </select>
+
+    <select id="searchExistingGroupUuid" resultType="java.lang.Long">
+        SELECT
+            g.fUuid AS 'groupUuid'
+        FROM t_group g
+        WHERE g.fGroupName = #{groupName}
+        LIMIT 1
+    </select>
+
+    <insert id="insertBatchGroups">
+        INSERT INTO t_group(fGroupName, fOperationCombineUuid, fCreateBy)
+        VALUES
+        <foreach collection="operationCombineCriteria.groupNames" item="groupName" separator=",">
+            (
+            #{groupName},
+            #{operationCombineCriteria.operationCombineUuid},
+            #{operationCombineCriteria.creator}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteGroupByGroupName">
+        DELETE FROM t_group
+        WHERE fOperationCombineUuid = #{operationCombineUuid}
+        AND fGroupName IN (
+        <foreach collection="groupNames" item="groupName" separator=",">
+            #{groupName}
+        </foreach>
+        )
+    </delete>
+
+    <update id="updateGroupOperationUuid">
+        UPDATE t_group
+        SET fUpdateTime = NOW(),
+        <choose>
+            <when test="operationCombineUuid == null">
+                fOperationCombineUuid = NULL
+            </when>
+            <otherwise>
+                fOperationCombineUuid = #{operationCombineUuid}
+            </otherwise>
+        </choose>
+        WHERE fUuid IN
+        <foreach collection="groupUuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
 </mapper>
