@@ -49,7 +49,14 @@ public class IndustryDetailServiceImpl extends ServiceImpl<IndustryDetailDao, In
 
     @Override
     public IndustryDetail getIndustryDetail(long uuid) {
-        return industryDetailDao.selectById(uuid);
+        IndustryDetail industryDetail = industryDetailDao.selectById(uuid);
+        if (null != industryDetail.getQq() && !"".equals(industryDetail.getQq())) {
+            industryDetail.setQq(industryDetail.getQq().replaceAll(",", "\r\n"));
+        }
+        if (null != industryDetail.getTelephone() && !"".equals(industryDetail.getTelephone())) {
+            industryDetail.setTelephone(industryDetail.getTelephone().replaceAll(",", "\r\n"));
+        }
+        return industryDetail;
     }
 
     @Override
@@ -72,8 +79,8 @@ public class IndustryDetailServiceImpl extends ServiceImpl<IndustryDetailDao, In
     }
 
     @Override
-    public void deleteIndustryDetails(String uuids) {
-        industryDetailDao.deleteIndustryDetails(Arrays.asList(uuids.split(",")));
+    public void deleteIndustryDetails(List<String> uuids) {
+        industryDetailDao.deleteIndustryDetails(uuids);
     }
 
     @Override

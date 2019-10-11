@@ -335,13 +335,24 @@
             var checkStatus = table.checkStatus('industryListTable');
             var data = checkStatus.data;
             var uuidArr = [];
+            var count = 0
             $.each(data, function (index, item) {
+                if(item.detailCount > 0){
+                    count = count + 1
+                }
                 uuidArr.push(item.uuid);
             });
+
             if (uuidArr.length <= 0) {
                 layer.msg('请选择要要导出网站联系信息的行业', {icon: 5});
                 return
             }
+
+            if(count <= 0){
+                layer.msg('所选行业暂无相关网站信息', {icon: 5});
+                return
+            }
+
             var IndustryDetailInfoCsvExportFrom = $("#IndustryDetailInfoCsvExportFrom");
             $("#industryUuids").val(uuidArr);
             IndustryDetailInfoCsvExportFrom.submit();

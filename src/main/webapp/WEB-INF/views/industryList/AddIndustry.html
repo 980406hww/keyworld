@@ -74,6 +74,7 @@
     var uuid_ = null;
     var layui_ = null;
     var terminalTyle_ = null;
+    var searchEngine_ = null;
 
     function initForm(data) {
         uuid_ = data;
@@ -96,6 +97,7 @@
             },
             success: function (res) {
                 if (res.code === 200) {
+                    searchEngine_ = res.data.searchEngine
                     layui.form.val("addIndustry", res.data);
                 } else {
                     l.layer.msg(res.msg);
@@ -132,9 +134,12 @@
                     if (res.code === 200) {
                         var searchEngineList = res.data.searchEngineMap
                         var searchEngine = $('#engines');
-                        searchEngine.append('<option value="" selected>引擎</option>');
                         $.each(searchEngineList, function (index, item) {
-                            searchEngine.append('<option value="' + item + '">' + item + '</option>');
+                            if(searchEngine_ == item){
+                                searchEngine.append('<option value="' + item + '" selected>' + item + '</option>');
+                            }else{
+                                searchEngine.append('<option value="' + item + '">' + item + '</option>');
+                            }
                         });
                         form.render("select")
                     } else {

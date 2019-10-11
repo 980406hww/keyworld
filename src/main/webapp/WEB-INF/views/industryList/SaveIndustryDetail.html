@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <style>
+        .layui-btn {
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+<div class="ok-body">
+
+    <form class="layui-form layui-form-pane ok-form" lay-filter="addIndustryDetail">
+        <input type="hidden" name="uuid">
+        <div id="addData">
+            <div class="layui-form-item">
+                <label class="layui-form-label">网站域名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="website" placeholder="网站域名" autocompvare="off" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">权重</label>
+                <div class="layui-input-block">
+                    <select name="weight">
+                        <option value="0" selected>0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">爬取层级</label>
+                <div class="layui-input-block">
+                    <input type="text" name="level" value="1" autocompvare="off" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">联系QQ</label>
+                <div class="layui-input-block">
+                    <textarea id="qq" name="qq" placeholder="请输入QQ，多个请换行" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">联系电话</label>
+                <div class="layui-input-block">
+                    <textarea id="telephone" name="telephone" placeholder="请输入电话，多个请换行" class="layui-textarea"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">销售备注</label>
+            <div class="layui-input-block">
+                <textarea name="remark" placeholder="请填写备注" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="commit">确定</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script>
+
+    var uuid_ = null;
+    var layui_ = null;
+    var industryID = null
+
+    function initForm(data, industryUuid) {
+        uuid_ = data;
+        industryID = industryUuid
+        var childs = document.getElementById('addData').childNodes;
+        for (var i = childs.length - 1; i >= 0; i--) {
+            document.getElementById('addData').removeChild(childs[i]);
+        }
+    }
+
+    function initIndustryID(industryUuid) {
+        industryID = industryUuid
+    }
+
+    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+        var form = layui.form;
+        var okLayer = layui.okLayer;
+        var $ = layui.jquery;
+
+        form.on("submit(commit)", function (data) {
+            if(uuid_ == null){
+                var qq = data.field.qq
+                console.log(qq)
+                if (qq != '') {
+                    data.field.qq = qq.replace(/[\r\n]/g, ",").replace(/[\s+]/g, "");
+                }
+                var telephone = data.field.telephone
+                if (telephone != '') {
+                    data.field.telephone = telephone.replace(/[\r\n]/g, ",").replace(/[\s+]/g, "");
+                }
+            }else{
+                data.field.uuid = uuid_
+            }
+            data.field.industryID = industryID
+            $.ajax({
+                url: '/internal/industryDetails/saveIndustryDetail',
+                type: 'POST',
+                data: JSON.stringify(data.field),
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        okLayer.msg.greenTick("保存成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        layui.layer.msg(res.msg);
+                    }
+                }
+            });
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+    })
+
+</script>
+
+</body>
+</html>

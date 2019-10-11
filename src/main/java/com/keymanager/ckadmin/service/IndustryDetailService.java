@@ -19,7 +19,7 @@ public interface IndustryDetailService extends IService<IndustryDetail> {
 
     void delIndustryDetail(long uuid);
 
-    void deleteIndustryDetails(String uuids);
+    void deleteIndustryDetails(List<String> uuids);
 
     void updateIndustryDetailRemark(long uuid, String remark);
 

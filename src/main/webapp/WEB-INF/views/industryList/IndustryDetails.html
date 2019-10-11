@@ -40,6 +40,20 @@
         #weight-box input{
             width: 100px;
         }
+
+        .layui-table-cell {
+            display: table-cell;
+            padding: 0 3px;
+            vertical-align: middle;
+            overflow: visible;
+            text-overflow: clip;
+            white-space: normal;
+            word-break: break-all;
+        }
+
+        .details-header{
+            padding-right: 9px;
+        }
     </style>
 </head>
 <body>
@@ -128,7 +142,6 @@
         form.on("submit(search)", function (data) {
             var postData = data.field
             postData.industryID = industryUuid
-            console.log(postData)
             searchDetailList(postData)
             return false
         });
@@ -149,67 +162,85 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '5%', align: 'center'},
-                    {field: 'website', title: '网站URL', width: '10%', align: 'center'},
-                    {field: 'title', title: '标题', width: '14%', align: 'center'},
-                    {field: 'qq', title: 'QQ', width: '10%', align: 'center'},
-                    {field: 'telephone', title: '电话', width: '10%', align: 'center'},
-                    {field: 'weight', title: '权重', width: '15%', align: 'center'},
+                    {filed: 'uuid', type: 'checkbox', width: '3%', align: 'center'},
+                    {field: 'website', title: '网站URL', width: '12%', align: 'center'},
+                    {field: 'title', title: '标题', width: '17%', align: 'center'},
+                    {field: 'qq', title: 'QQ', width: '9%', align: 'center'},
+                    {field: 'telephone', title: '电话', width: '11%', align: 'center'},
+                    {field: 'weight', title: '权重', width: '5%', align: 'center'},
                     {field: 'identifyCustomer', title: '客户标注', width: '10%', align: 'center'},
-                    {field: 'remark', title: '销售备注', width: '10%', align: 'center'},
-                    {field: 'level', title: '层级', width: '10%', align: 'center'},
-                    {field: 'updateTime', title: '修改时间', width: '12%', templet: '#toDateTime', align: 'center'},
-                    {field: 'createTime', title: '创建时间', width: '12%', templet: '#toDateTime', align: 'center'},
-                    {title: '操作', templet: '#operationTpl', align: 'center', width: '14%', align: 'center'}
+                    {field: 'remark', title: '销售备注', width: '18%', align: 'center'},
+                    {field: 'level', title: '层级', width: '5%', align: 'center'},
+                    {field: 'updateTime', title: '修改时间', width: '7%', templet: '#toUpdateTime', align: 'center'},
+                    {field: 'createTime', title: '创建时间', width: '7%', templet: '#toDateTime', align: 'center'},
+                    {title: '操作', templet: '#operationTpl', align: 'center', width: '10%', align: 'center'}
                 ]],
                 height: 'full-115',
                 done: function (res, curr, count) {
+                    jz();
                 }
             });
         }
 
-        function showNegativeListDialog() {
-            okLayer.open("首页/关键字列表/添加负面清单", "/internal/negativelists/toSaveNegativeList", "60%", "70%", null, function(){
+        $(document).on('onMouseUp', 'thead', function() {
+            jz();
+        });
+
+        function jz() {
+            let tables = document.getElementsByTagName('table');
+            let t_h = tables[2].offsetHeight || tables[2].clientHeight || tables[2].scrollHeight;
+            let t_p_h = tables[2].parentElement.offsetHeight || tables[2].parentElement.clientHeight || tables[2].scrollHeight;
+            let t_w = tables[1].offsetWidth || tables[1].clientWidth || tables[1].scrollWidth;
+            let t_p_w = tables[1].parentElement.offsetWidth || tables[1].parentElement.clientWidth || tables[1].scrollWidth;
+            if (t_h > t_p_h) {
+                document.getElementsByClassName('layui-table-header')[0].classList.add('details-header');
+            } else {
+                if (t_w === t_p_w) {
+                    let ths = document.getElementsByClassName('layui-table-header')[0].getElementsByTagName('th');
+                    ths[ths.length - 1].style.borderRight = '0';
+                }
+                document.getElementsByClassName('layui-table-header')[0].classList.remove('details-header');
+            }
+        }
+
+        function toSaveIndustryDetail() {
+            okLayer.open("首页/行业联系信息/添加信息", "/internal/industryDetails/toSaveIndustryDetail", "30%", "73%",  function(layero){
+                window[layero.find("iframe")[0]["name"]].initIndustryID(industryUuid);
+            }, function(){
                 if(sign){
                     active['reload'].call(this);
                     sign = false;
                 }
-            });
+            }, 100);
         }
 
-        function modifyNegativeList(data){
-            okLayer.open("首页/关键字列表/修改负面清单", "/internal/negativelists/toSaveNegativeList", "60%", "70%", function(layero){
-                window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
+        function updateIndustryDetailRemark(data){
+            okLayer.open("首页/行业联系信息/修改销售备注", "/internal/industryDetails/toSaveIndustryDetail", "30%", "30%", function(layero){
+                window[layero.find("iframe")[0]["name"]].initForm(data.uuid, industryUuid);
             },function(){
                 if(sign){
                     active['reload'].call(this);
                     sign = false;
                 }
-            });
+            }, 150);
         }
 
-        function deleteNegativeList(uuid){
-            layer.confirm('确认删除该清单？', {
+        function deleteIndustryDetail(uuid){
+            layer.confirm('确认删除该网站联系信息？', {
                 icon: 3,
-                title: '删除清单',
+                title: '删除网站联系信息',
                 btn: ['确认', '取消'],
                 yes: function () {
                     $.ajax({
-                        url: '/internal/negativelists/deleteNegativeList/' + uuid,
-                        type: 'POST',
+                        url: '/internal/industryDetails/delIndustryDetail/' + uuid,
+                        type: 'GET',
                         headers: {
                             "Accept": 'application/json',
                             "Content-Type": 'application/json'
                         },
                         success: function (res) {
                             if (res.code === 200) {
-                                var data = {}
-                                table.reload('negativeListTable', {
-                                    where: data,
-                                    page: {
-                                        curr: 1
-                                    }
-                                });
+                                active['reload'].call(this);
                                 layer.msg("删除成功")
                             } else {
                                 layer.msg(res.msg)
@@ -226,22 +257,22 @@
             });
         }
 
-        function deleteNegatives(){
-            var checkStatus = table.checkStatus('negativeListTable');
+        function deleteIndustryDetails(){
+            var checkStatus = table.checkStatus('industryDetailTable');
             var data = checkStatus.data;
             var uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的清单', {icon: 5});
+                layer.msg('请选择要操作网站', {icon: 5});
                 return
             }
-            layer.confirm("确定要删除所选清单吗", {icon: 3, title: '删除所选'}, function (index) {
+            layer.confirm("确定要删除所选网站联系信息吗", {icon: 3, title: '删除所选'}, function (index) {
                 var postData = {};
                 postData.uuids = uuidArr;
                 $.ajax({
-                    url: '/internal/negativelists/deleteNegativeLists',
+                    url: '/internal/industryDetails/deleteIndustryDetails',
                     data: JSON.stringify(postData),
                     headers: {
                         'Accept': 'application/json',
@@ -269,14 +300,47 @@
             });
         }
 
+        function removeUselessIndustryDetail(){
+            layer.confirm("确定要移除无qq/电话信息吗", {icon: 3, title: '删除所选'}, function (index) {
+                $.ajax({
+                    url: '/internal/industryDetails/removeUselessIndustryDetail/' + industryUuid,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'GET',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 2000
+                            }, function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            layer.msg('操作失败', {icon: 5});
+                        }
+                    },
+                    error: function () {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                });
+                layer.close(index);
+            });
+        }
+
         table.on('toolbar(tableFilter)',function(obj){
             var data = obj.data,event = obj.event;
             switch (event) {
-                case 'showNegativeListDialog':
-                    showNegativeListDialog();
+                case 'toSaveIndustryDetail':
+                    toSaveIndustryDetail();
                     break;
-                case 'deleteNegatives':
-                    deleteNegatives();
+                case 'deleteIndustryDetails':
+                    deleteIndustryDetails();
+                    break;
+                case 'removeUselessIndustryDetail':
+                    removeUselessIndustryDetail();
                     break;
             }
         });
@@ -284,11 +348,11 @@
         table.on('tool(tableFilter)',function(obj){
             var data = obj.data,event = obj.event;
             switch (event) {
-                case 'modifyNegativeList':
-                    modifyNegativeList(data);
+                case 'updateIndustryDetailRemark':
+                    updateIndustryDetailRemark(data);
                     break;
-                case 'deleteNegativeList':
-                    deleteNegativeList(data.uuid);
+                case 'deleteIndustryDetail':
+                    deleteIndustryDetail(data.uuid);
                     break;
             }
         });
@@ -297,16 +361,21 @@
 
 </script>
 <script type="text/html" id="toDateTime">
-    {{layui.util.toDateString(d.createTime)}}
+    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+</script>
+
+<script type="text/html" id="toUpdateTime">
+    {{layui.util.toDateString(d.updateTime, 'yyyy-MM-dd')}}
 </script>
 
 <script type="text/html" id="toolbarTpl">
     <div class="layui-btn-container">
-        <@shiro.hasPermission name="/internal/negativelist/saveNegativeList">
-        <button class="layui-btn layui-btn-sm" id="addMachine" lay-event="showNegativeListDialog">添加</button>
+        <@shiro.hasPermission name="/internal/industryDetail/saveIndustryDetail">
+        <button class="layui-btn layui-btn-sm" lay-event="toSaveIndustryDetail">添加</button>
+        <button class="layui-btn layui-btn-sm" lay-event="removeUselessIndustryDetail">移除无用数据</button>
     </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/negativelist/deleteNegativeLists">
-    <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="deleteNegatives">
+    <@shiro.hasPermission name="/internal/industryDetail/deleteIndustryDetails">
+    <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="deleteIndustryDetails">
         <i class="layui-icon layui-icon-delete"></i>删除所选
     </button>
     </@shiro.hasPermission>
@@ -315,11 +384,11 @@
 
 <script type="text/html" id="operationTpl">
     <div class="layui-btn-group">
-        <@shiro.hasPermission name="/internal/negativelist/saveNegativeList">
-        <button type="button" class="layui-btn layui-btn-xs" lay-event="modifyNegativeList">修改</button>
+        <@shiro.hasPermission name="/internal/industryDetail/saveIndustryDetail">
+        <button type="button" class="layui-btn layui-btn-xs" lay-event="updateIndustryDetailRemark">修改销售备注</button>
     </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/negativelist/deleteNegativeList">
-    <button type="button" class="layui-btn layui-btn-xs" lay-event="deleteNegativeList">删除</button>
+    <@shiro.hasPermission name="/internal/industryDetail/delIndustryDetail">
+    <button type="button" class="layui-btn layui-btn-xs" lay-event="deleteIndustryDetail">删除</button>
     </@shiro.hasPermission>
     </div>
 </script>
