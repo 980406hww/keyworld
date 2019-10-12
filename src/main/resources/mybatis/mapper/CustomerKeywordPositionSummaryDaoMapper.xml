@@ -2,10 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.CustomerKeywordPositionSummaryDao">
     <insert id="addPositionSummary" parameterType="com.keymanager.monitoring.entity.CustomerKeywordPositionSummary">
-        INSERT INTO t_ck_position_summary (fCustomerKeywordUuid, fPosition, fCreateDate) VALUES
-        <foreach collection="ckPositionSummaryListForUpdate" item="ckPositionSummary" separator=",">
-            (#{ckPositionSummary.customerKeywordUuid}, #{ckPositionSummary.position}, CURRENT_DATE())
-        </foreach>
+        INSERT INTO t_ck_position_summary
+            (fCustomerKeywordUuid,
+             fPosition,
+             fCreateDate)
+        VALUES (#{customerKeywordPositionSummary.customerKeywordUuid},
+            #{customerKeywordPositionSummary.position},
+            CURRENT_DATE())
     </insert>
 
     <select id="getTodayPositionSummary" resultType="com.keymanager.monitoring.entity.CustomerKeywordPositionSummary">
@@ -22,14 +25,4 @@
     <delete id="deletePositionSummaryFromAWeekAgo">
         DELETE FROM t_ck_position_summary WHERE fCreateDate &lt; DATE_SUB(CURDATE(), INTERVAL 7 DAY)
     </delete>
-
-    <select id="searchOneWeekPositionByCustomerUuid" resultType="java.lang.Integer">
-        SELECT fPosition FROM t_ck_position_summary WHERE fCustomerKeywordUuid = #{customerKeywordUuid} GROUP BY fCreateDate ORDER BY fCreateDate DESC LIMIT 6
-    </select>
-
-    <update id="updatePositionSummary">
-        <foreach collection="ckPositionSummaryListForUpdate" item="ckPositionSummary" separator=";">
-            UPDATE t_ck_position_summary SET fPosition = #{ckPositionSummary.position} WHERE fUuid = #{ckPositionSummary.uuid}
-        </foreach>
-    </update>
 </mapper>

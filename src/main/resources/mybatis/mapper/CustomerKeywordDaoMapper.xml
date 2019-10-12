@@ -566,11 +566,11 @@
     </select>
 
     <update id="resetOptimizationInfoForNoOptimizeDate" timeout="200000">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fQueryInterval = (24*60*60)/fOptimizeTodayCount, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate IS NULL
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeTodayCount = fOptimizePlanCount * ROUND((RAND()*0.7+0.5),1), fQueryInterval = (24*60*60)/fOptimizeTodayCount, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate IS NULL
     </update>
 
     <update id="resetOptimizationInfo">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fQueryInterval = (24*60*60)/fOptimizeTodayCount, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate <![CDATA[<]]> CURRENT_DATE() LIMIT 200000
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeTodayCount = fOptimizePlanCount * ROUND((RAND()*0.7+0.5),1), fQueryInterval = (24*60*60)/fOptimizeTodayCount, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate <![CDATA[<]]> CURRENT_DATE() LIMIT 200000
     </update>
 
     <select id="searchRemainingOptimizationCount" resultType="java.util.Map">
@@ -1045,36 +1045,20 @@
     </update>
 
     <update id="updatePosition">
-        <foreach collection="updateCustomerKeywordPositionVos" item="updateCustomerKeywordPositionVo" separator=";">
-            UPDATE t_customer_keyword
-            <set>
-                fCurrentPosition = IF(fLastReachStandardDate = CURRENT_DATE(), IF(#{updateCustomerKeywordPositionVo.position} > 0 AND #{updateCustomerKeywordPositionVo.position} &lt; fCurrentPosition, #{updateCustomerKeywordPositionVo.position}, fCurrentPosition), #{updateCustomerKeywordPositionVo.position}),
-                fInitialPosition = IFNULL(fInitialPosition, #{updateCustomerKeywordPositionVo.position}),
-                fCapturePositionQueryTime = IFNULL(#{updateCustomerKeywordPositionVo.capturePositionQueryTime}, fCapturePositionQueryTime),
-                fCapturePositionIP = #{updateCustomerKeywordPositionVo.ip}, fCapturePositionCity = #{updateCustomerKeywordPositionVo.city},
-                <choose>
-                    <when test="updateCustomerKeywordPositionVo.type == 'qz'">
-                        fLastReachStandardDate = IF(#{updateCustomerKeywordPositionVo.position} &gt; 0 AND fCurrentPosition &lt;= 10, CURRENT_DATE(), fLastReachStandardDate)
-                        <if test="needReduceFlag == true">
-                            fOptimizeTodayCount = IF(fKeywordEffect = 'Important', IF(fOptimizePlanCount * ROUND((RAND(1) * 0.4 + 0.4), 1) &lt; 20, 20, fOptimizePlanCount * ROUND((RAND(1) * 0.4 + 0.4), 1)), IF(fOptimizePlanCount * ROUND((RAND(1) * 0.4 + 0.4), 1) &lt; 4, 4, fOptimizePlanCount * ROUND((RAND(1) * 0.4 + 0.4), 1))),
-                        </if>
-                        <if test="needReduceFlag == false">
-                            fOptimizeTodayCount = IF(fKeywordEffect = 'Important', IF(fOptimizePlanCount * ROUND((RAND(1) * 0.7 + 0.5), 1) &lt; 20, 20, fOptimizePlanCount * ROUND((RAND(1) * 0.7 + 0.5), 1)), IF(fOptimizePlanCount * ROUND((RAND(1) * 0.7 + 0.5), 1) &lt; 4, 4, fOptimizePlanCount * ROUND((RAND(1) * 0.7 + 0.5), 1))),
-                        </if>
-                    </when>
-                    <otherwise>
-                        fOptimizeTodayCount = IF(fOptimizePlanCount * ROUND((RAND(1) * 0.7 + 0.5), 1) &lt; 20, 20, fOptimizePlanCount * ROUND((RAND(1) * 0.7 + 0.5), 1)),
-                        <if test="updateCustomerKeywordPositionVo.todayFee != null">
-                            fTodayFee = IF(fLastReachStandardDate = CURRENT_DATE(), IF(fTodayFee > #{updateCustomerKeywordPositionVo.todayFee} OR #{updateCustomerKeywordPositionVo.todayFee} IS NULL, fTodayFee, #{updateCustomerKeywordPositionVo.todayFee}), #{updateCustomerKeywordPositionVo.todayFee}),
-                            fLastReachStandardDate = CURRENT_DATE(),
-                        </if>
-                    </otherwise>
-                </choose>
-                fCaptureStatus = 0,
-                fUpdateTime = NOW()
-            </set>
-            WHERE fUuid = #{updateCustomerKeywordPositionVo.customerKeywordUuid}
-        </foreach>
+        UPDATE
+            t_customer_keyword
+        SET
+            fCurrentPosition = IF(fLastReachStandardDate = CURRENT_DATE(),IF(#{position} > 0 AND #{position} &lt; fCurrentPosition, #{position}, fCurrentPosition), #{position}),
+            fInitialPosition = IFNULL(fInitialPosition, #{position}),
+            fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
+            fTodayFee = if(fLastReachStandardDate = CURRENT_DATE(), if(fTodayFee > #{todayFee} OR #{todayFee} is null, fTodayFee, #{todayFee}), #{todayFee}),
+            fCapturePositionIP = #{ip}, fCapturePositionCity = #{city},
+            <if test="todayFee != null">
+                fLastReachStandardDate = CURRENT_DATE(),
+            </if>
+            fCaptureStatus = 0,
+            fUpdateTime = NOW()
+        WHERE fUuid = #{uuid}
     </update>
 
     <select id="takeOptimizationCountExceptionUsers" resultType="com.keymanager.monitoring.vo.OptimizationCountVO">
@@ -1287,12 +1271,10 @@
     </update>
 
     <update id="updateCustomerKeywordQueryTime">
-        <foreach collection="updateCustomerKeywordPositionVos" item="updateCustomerKeywordPositionVo" separator=";">
-            UPDATE t_customer_keyword
-            SET fCaptureStatus = 0,
-            fCapturePositionQueryTime = #{updateCustomerKeywordPositionVo.capturePositionQueryTime}
-            WHERE fUuid = #{updateCustomerKeywordPositionVo.customerKeywordUuid}
-        </foreach>
+        UPDATE t_customer_keyword
+        SET fCaptureStatus = 0,
+        fCapturePositionQueryTime = #{capturePositionQueryTime}
+        WHERE fUuid = #{customerKeywordUuid}
     </update>
 
     <update id="updateKeywordCustomerUuid">
@@ -1423,7 +1405,7 @@
         <if test="keywordChecks.optimizePlanCount==1">
             , fOptimizePlanCount = #{keywordStatus.optimizePlanCount}
             , fOptimizeRemainingCount = IF(#{keywordStatus.optimizePlanCount} - fOptimizedCount > 0, #{keywordStatus.optimizePlanCount} - fOptimizedCount, 0)
-            , fOptimizeTodayCount = IF(#{keywordStatus.optimizePlanCount} > 0, #{keywordStatus.optimizePlanCount} * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
+            , fOptimizeTodayCount = IF(fOptimizePlanCount > 0, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
             , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
             , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
         </if>
@@ -1604,27 +1586,27 @@
                 #{customerKeyword.lastReachStandardDate},
                 <choose>
                     <when test="customerKeyword.positionFirstFee != null">#{customerKeyword.positionFirstFee},</when>
-                    <when test="customerKeyword.positionFirstFee == null">NULL,</when>
+                    <when test="customerKeyword.positionFirstFee == null">0.00,</when>
                 </choose>
                 <choose>
                     <when test="customerKeyword.positionSecondFee != null">#{customerKeyword.positionSecondFee},</when>
-                    <when test="customerKeyword.positionSecondFee == null">NULL,</when>
+                    <when test="customerKeyword.positionSecondFee == null">0.00,</when>
                 </choose>
                 <choose>
                     <when test="customerKeyword.positionThirdFee != null">#{customerKeyword.positionThirdFee},</when>
-                    <when test="customerKeyword.positionThirdFee == null">NULL,</when>
+                    <when test="customerKeyword.positionThirdFee == null">0.00,</when>
                 </choose>
                 <choose>
                     <when test="customerKeyword.positionForthFee != null">#{customerKeyword.positionForthFee},</when>
-                    <when test="customerKeyword.positionForthFee == null">NULL,</when>
+                    <when test="customerKeyword.positionForthFee == null">0.00,</when>
                 </choose>
                 <choose>
                     <when test="customerKeyword.positionFifthFee != null">#{customerKeyword.positionFifthFee},</when>
-                    <when test="customerKeyword.positionFifthFee == null">NULL,</when>
+                    <when test="customerKeyword.positionFifthFee == null">0.00,</when>
                 </choose>
                 <choose>
                     <when test="customerKeyword.positionFirstPageFee != null">#{customerKeyword.positionFirstPageFee},</when>
-                    <when test="customerKeyword.positionFirstPageFee == null">NULL,</when>
+                    <when test="customerKeyword.positionFirstPageFee == null">0.00,</when>
                 </choose>
                 #{customerKeyword.capturePositionQueryTime},
                 #{customerKeyword.collectMethod},
@@ -1836,7 +1818,7 @@
                 , fCaptureIndexQueryTime = DATE_SUB(NOW(), INTERVAL 30 MINUTE)
             </if>
             , fOptimizePlanCount = #{customerKeyword.optimizePlanCount}
-            , fOptimizeTodayCount = #{customerKeyword.optimizePlanCount} * ROUND(RAND() * 0.7 + 0.5)
+            , fOptimizeTodayCount = fOptimizePlanCount * ROUND(RAND() * 0.7 + 0.5)
             , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
             , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
             WHERE fUuid = #{customerKeyword.uuid}

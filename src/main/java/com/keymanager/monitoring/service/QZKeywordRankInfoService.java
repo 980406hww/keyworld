@@ -60,15 +60,20 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     }
 
     public synchronized List<ExternalQzSettingVO> getQZSettingTask() {
-        Config taskNumber = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING, Constants.CONFIG_KEY_QZ_TASKNUMBER);
-        Config config = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_CRAWLER_HOUR);
+        Config taskNumber = configService
+            .getConfig(Constants.CONFIG_TYPE_QZSETTING, Constants.CONFIG_KEY_QZ_TASKNUMBER);
+        Config config = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK,
+            Constants.CONFIG_KEY_CRAWLER_HOUR);
 
-        List<ExternalQzSettingVO> qzSettingTasks = qzSettingService.getQZSettingTask(Integer.parseInt(config.getValue()), Integer.parseInt(taskNumber.getValue()));
+        List<ExternalQzSettingVO> qzSettingTasks = qzSettingService
+            .getQZSettingTask(Integer.parseInt(config.getValue()),
+                Integer.parseInt(taskNumber.getValue()));
 
         if (CollectionUtils.isNotEmpty(qzSettingTasks)) {
             List<Long> uuids = new ArrayList<>();
             for (ExternalQzSettingVO qzSettingVo : qzSettingTasks) {
-                List<String> types = qzKeywordRankInfoDao.getQZKeywordRankInfoTypes(qzSettingVo.getUuid());
+                List<String> types = qzKeywordRankInfoDao
+                    .getQZKeywordRankInfoTypes(qzSettingVo.getUuid());
                 if (CollectionUtils.isNotEmpty(types)) {
                     qzSettingVo.setTypeList(types);
                     uuids.add(qzSettingVo.getUuid());
