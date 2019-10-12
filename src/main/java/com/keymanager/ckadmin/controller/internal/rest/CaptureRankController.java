@@ -8,7 +8,6 @@ import com.keymanager.ckadmin.enums.RankJobAreaEnum;
 import com.keymanager.ckadmin.service.CaptureRankJobService;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
-import com.keymanager.util.TerminalTypeMapping;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,10 +49,9 @@ public class CaptureRankController {
 
     @RequiresPermissions("/internal/captureRank/searchCaptureRankJobs")
     @RequestMapping(value = "/getCaptureRankJobs", method = RequestMethod.POST)
-    public ResultBean searchCaptureRankingJobs(@RequestBody CaptureRankJobSearchCriteria criteria, HttpServletRequest request) {
+    public ResultBean searchCaptureRankingJobs(@RequestBody CaptureRankJobSearchCriteria criteria) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(0);
-        criteria.setOperationType(TerminalTypeMapping.getTerminalType(request));
         criteria.setRankJobType(null == criteria.getRankJobType() || "".equals(criteria.getRankJobType()) ? "Common" : criteria.getRankJobType());
         try {
             Page<CaptureRankJob> page = captureRankJobService.selectPageByCriteria(criteria);
@@ -94,15 +92,15 @@ public class CaptureRankController {
     }
 
     @RequiresPermissions("/internal/captureRank/saveCaptureRankJob")
-    @RequestMapping(value = "/getInitDataForAdd", method = RequestMethod.GET)
-    public ResultBean getInitDataForAdd(HttpServletRequest request) {
+    @RequestMapping(value = "/getInitDataForAdd/{terminal}", method = RequestMethod.GET)
+    public ResultBean getInitDataForAdd(@PathVariable String terminal) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
         Map<String, Object> data = new HashMap<>(2);
         try {
             data.put("rankJobArea", RankJobAreaEnum.changeToMap());
             data.put("rankJobCityList", configService.getRankJobCity());
-            data.put("groups", customerKeywordService.searchGroupsByTerminalType(TerminalTypeMapping.getTerminalType(request)));
+            data.put("groups", customerKeywordService.searchGroupsByTerminalType(terminal));
             resultBean.setData(data);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -117,9 +115,8 @@ public class CaptureRankController {
     public ResultBean saveCaptureRankJob(@RequestBody Map map, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
             String loginName = request.getSession().getAttribute("username").toString();
-            captureRankJobService.saveCaptureRankJob(map, terminalType, loginName);
+            captureRankJobService.saveCaptureRankJob(map, loginName);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setMsg(e.getMessage());

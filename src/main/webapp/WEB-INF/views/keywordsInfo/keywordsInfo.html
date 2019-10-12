@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>取词清单</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
+    <style>
+        /* 下拉条件框 */
+        .my-collapse {
+            position: relative;
+            box-shadow: none;
+        }
+
+        .my-collapse * {
+            box-shadow: none;
+        }
+
+        .my-collapse .layui-form-select dl,
+        .my-collapse .layui-form-select .layui-anim {
+            top: 33px !important;
+        }
+
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 1px solid #e6e6e6;
+        }
+
+        .my-collapse > div {
+            padding: 6px 5px;
+        }
+
+        .my-hide {
+            padding-bottom: 1px !important;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top: 43px;
+            left: 0;
+            z-index: 894;
+            background: #fff;
+            border-left: 1px solid #e6e6e6;
+            border-right: 1px solid #e6e6e6;
+            border-bottom: 1px solid #e6e6e6;
+            border-bottom-right-radius: 2px;
+            border-bottom-left-radius: 2px;
+        }
+
+        .my-collapse button {
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .my-collapse .my-btn {
+            height: 30px !important;
+            line-height: 30px !important;
+            padding: 0 18px;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .my-collapse .my-btn:hover {
+            opacity: .8;
+            transition: opacity 0.5s;
+        }
+
+        .layui-input-inline input {
+            height: 30px;
+        }
+
+        .layui-form-pane .layui-form-label {
+            width: 116px;
+            padding: 8px 15px;
+            height: 30px;
+            line-height: 13px;
+            border-width: 1px;
+            border-style: solid;
+            border-radius: 2px 0 0 2px;
+            text-align: center;
+            background-color: #FBFBFB;
+            overflow: hidden;
+            box-sizing: border-box
+        }
+
+        .layui-inline label {
+            border-right: none;
+        }
+
+        .layui-form-pane .layui-form-checkbox {
+            margin: 0;
+        }
+
+        .layui-inline input {
+            width: 160px;
+            height: 30px;
+        }
+
+        /*.layui-table-body .layui-table-cell {
+                    text-align: left;
+                }
+
+                .layui-table-body .laytable-cell-checkbox {
+                    text-align: center;
+                }
+
+                .layui-table-body .laytable-cell-1-0-13 {
+                    text-align: center;
+                }*/
+
+        .show-msg {
+            color: blue;
+            cursor: pointer;
+        }
+
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
+    </style>
+</head>
+<body>
+<div class="ok-body">
+    <div class="layui-tab layui-tab-card" lay-filter="tab">
+        <ul class="layui-tab-title" id="tabItem">
+            <li data-terminal="PC" style="width: 100px" class="layui-this">电脑</li>
+            <li data-terminal="Phone" style="width: 100px">手机</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <!--  条件搜索  -->
+                <div class="layui-card ">
+                    <div class="layui-card-body ">
+                        <form class="layui-form layui-form-pane" id="searchForm">
+                            <div class="my-collapse">
+                                <div>
+                                    <input name="terminalType" id="terminalType" type="hidden" value="PC">
+                                    <div class="layui-inline">
+                                        <input type="text" name="userName" placeholder="请输入账户名称" class="layui-input" autocomplete="off">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <select name="searchEngine" id="searchEngine">
+                                            <option value="">请选择搜索引擎</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <select name="operationType">
+                                            <option value="">请选择操作类型</option>
+                                            <option value="add">add</option>
+                                            <option value="delete">delete</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input type="text" name="keywordInfo" placeholder="请输入关键词信息" class="layui-input" autocomplete="off">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input type="text" name="createTime" id="createTime" placeholder="请选择日期" class="layui-input" autocomplete="off">
+                                    </div>
+                                    <@shiro.hasPermission name="/internal/keywordInfo/searchKeywordInfos">
+                                    <div class="layui-inline">
+                                        <button class="layui-btn" lay-submit lay-filter="search"
+                                                id="searchBtn">搜索
+                                        </button>
+                                    </div>
+                                    </@shiro.hasPermission>
+                                    <div class="layui-inline">
+                                        <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">
+                                            重置
+                                        </button>
+                                    </div>
+                                    <!--                        <div class="layui-inline">-->
+                                    <!--                            <div class="my-btn layui-btn" onclick="">添加</div>-->
+                                    <!--                        </div>-->
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--数据表格-->
+                <table class="layui-hide" id="keywordsInfoTable" lay-filter="keywordsInfoTable"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--js逻辑-->
+<script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script>
+    // 进度条加载提示
+    NProgress.start();
+
+    window.onload = function () {
+        NProgress.done();
+    };
+
+    var sign = false;
+
+    // layui相关
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+        var layer = layui.layer;
+        var okLayer = layui.okLayer;
+
+        init();
+
+        function init() {
+            init_searchEngine($('#terminalType').val());
+            let condition = formToJsonObject("searchForm");
+            tableInit(condition);
+        }
+
+        function tableInit(condition) {
+            table.render({
+                elem: '#keywordsInfoTable',
+                method: 'post',
+                url: '/internal/keywordsInfo/getKeywordsInfoData',
+                page: true,
+                limit: 25,
+                limits: [10, 25, 50, 75, 100],
+                size: 'sm',
+                id: 'keywordsInfoTable',
+                even: true,//隔行背景
+                where: condition,
+                defaultToolbar: [],
+                contentType: 'application/json',
+                cols: [[
+                    {filed: 'id', type: 'checkbox', width: '3%', align: 'center'},
+                    {field: 'userName', title: '账户名称', width: '10%', align: 'center'},
+                    {field: 'searchEngine', title: '搜索引擎以及端口', width: '10%', align: 'center'},
+                    {field: 'operationType', title: '操作类型', width: '8%', align: 'center'},
+                    {field: 'keywordCount', title: '词数', width: '6%', align: 'center'},
+                    {
+                        field: 'keywordInfo', title: '关键词信息', width: '51%', align: 'center', templet: function (d) {
+                            let msg = d.keywordInfo.replace(new RegExp('\n', 'g'), '<br>');
+                            return '<span class="show-msg" onclick="showMsg(\'' + msg + '\')">' + d.keywordInfo.replace(new RegExp('\n', 'g'), ' ') + '</span>';
+                        }
+                    },
+                    {
+                        field: 'createTime', title: '创建时间', width: '12%', align: 'center', templet: function (d) {
+                            return layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss');
+                        }
+                    }
+                ]],
+                height: 'full-150',
+                loading: true,
+                done: function (res, curr, count) {
+                }
+            });
+        }
+
+        window.showMsg = function (content) {
+            let html = '<div style="text-align: center;padding: 10px 10px 0 10px;line-height: 22px;font-size: 16px;">';
+            html += content;
+            html += '</div>';
+            layer.open({
+                type: 1,
+                title: '关键字详情',
+                content: html,
+                shadeClose: true,
+                resize: false,
+                area: '500px',
+                offset: '100px',
+                btn: ['确认'],
+                yes: function (index) {
+                    layer.close(index);
+                }
+            });
+        };
+
+        //监听工具条
+        var active = {
+            reload: function () {
+                let condition = formToJsonObject("searchForm");
+                table.reload('keywordsInfoTable', {
+                    where: condition,
+                    page: {
+                        curr: 1
+                    }
+                });
+            }
+        };
+
+        element.on('tab(tab)', function (data) {
+            let terminalType = data.elem.context.dataset.terminal;
+            $('#terminalType').val(terminalType);
+            init_searchEngine(terminalType);
+            active['reload'].call(this);
+        });
+
+        form.on("submit(search)", function (data) {
+            let condition = data.field;
+            table.reload('keywordsInfoTable', {
+                where: condition,
+                page: {
+                    curr: 1
+                }
+            });
+            return false;
+        });
+
+        function formToJsonObject(form_id) {
+            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
+            formData = formData.replace(/&/g, "\",\"");
+            formData = formData.replace(/=/g, "\":\"");
+            formData = "{\"" + formData + "\"}";
+            formData = $.parseJSON(formData);
+            return formData;
+        }
+
+        function show_layer_msg(msg, icon, status, title) {
+            layer.msg(msg, {
+                icon: icon,
+                title: title === undefined ? null : title,
+                anim: 5,
+                time: 1000,
+                isOutAnim: false
+            }, function () {
+                if (status) {
+                    active['reload'].call(this);
+                }
+            });
+        }
+
+        function init_searchEngine(terminalType) {
+            $.ajax({
+                url: '/internal/qzsetting/getQZSettingSearchEngineMap/' + terminalType,
+                type: 'get',
+                asyns: false,
+                // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
+                dataType: 'json',
+                success: function (data) {
+                    $("#searchEngine").empty();
+                    $("#searchEngine").append('<option value="">请选择搜索引擎</option>');
+                    $.each(data.data, function (index, item) {
+                        let ttse = item.searchEngineName.replace(terminalType, '');
+                        if (ttse !== 'All') {
+                            $('#searchEngine').append(
+                                '<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
+                        }
+                    });
+                    form.render("select");
+                }
+            });
+        }
+
+        //常规用法
+        laydate.render({
+            elem: '#createTime'
+        });
+    });
+</script>
+</body>
+</html>

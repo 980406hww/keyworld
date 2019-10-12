@@ -98,7 +98,7 @@
                         <dd data-name="keyword-item">
                             <a data-url="/internal/warnlists/toSearchWarnLists" lay-id="warn-list">
                                 <i class="layui-icon layui-icon-align-right"></i>
-                                <cite>前往预警清单</cite>
+                                <cite>预警清单</cite>
                             </a>
                         </dd>
                         </@shiro.hasPermission>
@@ -107,6 +107,22 @@
                             <a data-url="/internal/customerKeyword/toMachineGroupAndSize" lay-id="machineGroupAndSize">
                                 <i class="layui-icon layui-icon-align-right"></i>
                                 <cite>机器分组工作统计</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/captureRank/searchCaptureRankJobs">
+                        <dd data-name="keyword-item">
+                            <a data-url="/internal/captureRanks/toCaptureRank" lay-id="captureRanks">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>抓排名任务管理</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/keywordInfo/searchKeywordInfos">
+                        <dd data-name="keyword-item">
+                            <a data-url="/internal/keywordsInfo/toKeywordsInfo" lay-id="keywordInfo">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>客户提交词</cite>
                             </a>
                         </dd>
                         </@shiro.hasPermission>

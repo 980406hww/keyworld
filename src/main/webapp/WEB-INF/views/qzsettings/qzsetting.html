@@ -1115,8 +1115,7 @@
 
         var active = {
             reload: function () {
-                let condition = $.parseJSON(
-                    formToJson(decodeURIComponent($("#searchForm").serialize(), true)));
+                let condition = formToJsonObject("searchForm");
                 table.reload('qzSettingTable', {
                     where: condition,
                     page: {
@@ -1129,11 +1128,13 @@
             }
         };
 
-        function formToJson(data) {
-            data = data.replace(/&/g, "\",\"");
-            data = data.replace(/=/g, "\":\"");
-            data = "{\"" + data + "\"}";
-            return data;
+        function formToJsonObject(form_id) {
+            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
+            formData = formData.replace(/&/g, "\",\"");
+            formData = formData.replace(/=/g, "\":\"");
+            formData = "{\"" + formData + "\"}";
+            formData = $.parseJSON(formData);
+            return formData;
         }
 
         function getQZKeywordRankInfo(postData, callback) {

@@ -122,11 +122,10 @@ public class CaptureRankJobServiceImpl extends ServiceImpl<CaptureRankJobDao, Ca
     }
 
     @Override
-    public void saveCaptureRankJob(Map map, String terminalType, String loginName) {
+    public void saveCaptureRankJob(Map map, String loginName) {
         CaptureRankJob captureRankJob = JSON.parseObject(JSON.toJSONString(map.get("captureRankJob")), CaptureRankJob.class);
         captureRankJob.setUpdateTime(new Date());
         captureRankJob.setUpdateBy(loginName);
-        captureRankJob.setOperationType(terminalType);
         List list = (List) map.get("executeTimes");
         if (captureRankJob.getUuid() != null) {
             Date date = Utils.parseDate((String) list.get(0), "HH:mm:ss");

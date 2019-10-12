@@ -20,7 +20,7 @@ public interface CaptureRankJobService extends IService<CaptureRankJob> {
 
     Page<CaptureRankJob> selectPageByCriteria(CaptureRankJobSearchCriteria criteria);
 
-    void saveCaptureRankJob(Map map, String terminalType, String loginName);
+    void saveCaptureRankJob(Map map, String loginName);
 
     CaptureRankJob getCaptureRankJobAndCustomerName(Long uuid);
 

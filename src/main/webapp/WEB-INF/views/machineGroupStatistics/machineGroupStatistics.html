@@ -144,13 +144,13 @@
                                     <input type="hidden" id="entryType" name="entryType" value="pt">
                                     <input type="hidden" id="terminalType" name="terminalType" value="PC">
                                     <div class="layui-inline">
-                                        <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" class="layui-input">
+                                        <input type="text" autocomplete="off" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" class="layui-input">
                                     </div>
                                     <div class="layui-inline">
                                         <input type="checkbox" name="machineGroupFuzzyQuery" title="模糊搜索">
                                     </div>
                                     <div class="layui-inline">
-                                        <input type="text" name="customerName" id="customerName" placeholder="请输入客户名称" class="layui-input">
+                                        <input type="text" autocomplete="off" name="customerName" id="customerName" placeholder="请输入客户名称" class="layui-input">
                                     </div>
                                     <!--                        <div class="layui-inline">-->
                                     <!--                            <select name="categoryTag">-->
@@ -261,7 +261,7 @@
             condition.customerName = customerName;
             condition.groupName = groupName;
             condition.fullMatchGroup = fullMatchGroup;
-            condition.entryType = $.parseJSON(formToJson($("#searchForm").serialize())).entryType;
+            condition.entryType = formToJsonObject("searchForm").entryType;
             $.ajax({
                 url: '/internal/customerKeyword/resetInvalidRefresh',
                 data: JSON.stringify(condition),
@@ -286,7 +286,7 @@
         init();
 
         function init() {
-            let condition = $.parseJSON(formToJson($("#searchForm").serialize()));
+            let condition = formToJsonObject("searchForm");
             if (condition.dayNum === '') {
                 condition.dayNum = 0;
             }
@@ -509,7 +509,7 @@
         //监听工具条
         var active = {
             reload: function () {
-                let condition = $.parseJSON(formToJson($("#searchForm").serialize()));
+                let condition = formToJsonObject("searchForm");
                 if (condition.dayNum === '') {
                     condition.dayNum = 0;
                 }
@@ -536,11 +536,13 @@
             return false;
         });
 
-        function formToJson(data) {
-            data = data.replace(/&/g, "\",\"");
-            data = data.replace(/=/g, "\":\"");
-            data = "{\"" + data + "\"}";
-            return data;
+        function formToJsonObject(form_id) {
+            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
+            formData = formData.replace(/&/g, "\",\"");
+            formData = formData.replace(/=/g, "\":\"");
+            formData = "{\"" + formData + "\"}";
+            formData = $.parseJSON(formData);
+            return formData;
         }
 
         function show_layer_msg(msg, icon, status, title) {

@@ -135,13 +135,13 @@
                 <div class="my-collapse">
                     <div>
                         <div class="layui-inline">
-                            <input type="text" name="contactPerson" placeholder="请输入联系人" class="layui-input">
+                            <input type="text" autocomplete="off" name="contactPerson" placeholder="请输入联系人" class="layui-input">
                         </div>
                         <div class="layui-inline">
-                            <input type="text" name="qq" placeholder="请输入QQ" class="layui-input">
+                            <input type="text" autocomplete="off" name="qq" placeholder="请输入QQ" class="layui-input">
                         </div>
                         <div class="layui-inline">
-                            <input type="text" name="phone" placeholder="请输入联系电话" class="layui-input">
+                            <input type="text" autocomplete="off" name="phone" placeholder="请输入联系电话" class="layui-input">
                         </div>
                         <@shiro.hasPermission name="/internal/supplier/searchSuppliers">
                         <div class="layui-inline">
@@ -199,7 +199,7 @@
         init();
 
         function init() {
-            let condition = $.parseJSON(formToJson($("#searchForm").serialize()));
+            let condition = formToJsonObject("searchForm");
             tableInit(condition);
         }
 
@@ -319,7 +319,7 @@
         //监听工具条
         var active = {
             reload: function () {
-                let condition = $.parseJSON(formToJson($("#searchForm").serialize()));
+                let condition = formToJsonObject("searchForm");
                 table.reload('supplierTable', {
                     where: condition,
                     page: {
@@ -430,11 +430,13 @@
             return false;
         });
 
-        function formToJson(data) {
-            data = data.replace(/&/g, "\",\"");
-            data = data.replace(/=/g, "\":\"");
-            data = "{\"" + data + "\"}";
-            return data;
+        function formToJsonObject(form_id) {
+            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
+            formData = formData.replace(/&/g, "\",\"");
+            formData = formData.replace(/=/g, "\":\"");
+            formData = "{\"" + formData + "\"}";
+            formData = $.parseJSON(formData);
+            return formData;
         }
 
         function show_layer_msg(msg, icon, status, title) {
