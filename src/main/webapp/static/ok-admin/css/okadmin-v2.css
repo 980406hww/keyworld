@@ -8,16 +8,19 @@
     line-height: inherit;
     font-size: 16px;
 }
+
 /**不显示滚动条样式*/
-.not-scroll::-webkit-scrollbar{
+.not-scroll::-webkit-scrollbar {
     height: 0;
     width: 0;
     background: transparent;
     display: none;
 }
-.scrollBody::-webkit-scrollbar{
+
+.scrollBody::-webkit-scrollbar {
     display: none;
 }
+
 /**去掉after**/
 .no-line.layui-this:after {
     background: transparent !important;
@@ -406,7 +409,7 @@
 }
 
 .ok-tab .layui-tab-title {
-    margin: 0 80px 0 40px;
+    margin: 0 220px 0 80px;
     overflow-x: hidden !important;
     overflow-y: hidden !important;
     width: max-content !important;
@@ -467,20 +470,23 @@
 }
 
 /*中国天气样式*/
-.weather-ok{
+.weather-ok {
     height: 49px;
     line-height: 49px;
 }
-.weather-ok .iframe-style{
+
+.weather-ok .iframe-style {
     /*height: 415px;*/
     /*height: 375px;*/
     height: 50px;
     padding-top: 5px;
     box-sizing: border-box;
 }
-.weather-ok .iframe-style:hover{
+
+.weather-ok .iframe-style:hover {
     height: 380px;
 }
+
 /*主体内容样式*/
 .okadmin .content-body {
     position: absolute;
@@ -491,6 +497,7 @@
     z-index: 1;
     overflow: hidden
 }
+
 .okadmin .content-body:after {
     content: "";
     max-height: 1px;
@@ -519,10 +526,11 @@
 }
 
 /*主体内容选项卡内容样式*/
-.content-body .layui-tab{
+.content-body .layui-tab {
     margin: 0;
     /*position: relative;*/
 }
+
 .okadmin .content-body .layui-tab-content {
     position: absolute;
     top: 40px;
@@ -637,9 +645,11 @@
     background: rgba(0, 0, 0, .5);
     display: none;
 }
-@media screen and (max-width: 970px) {/*当屏幕宽度小于970时执行*/
-    .ok-hide-md{
-        display: none!important;
+
+@media screen and (max-width: 970px) {
+    /*当屏幕宽度小于970时执行*/
+    .ok-hide-md {
+        display: none !important;
     }
 }
 

@@ -120,6 +120,10 @@
         display: none;
     }
 
+    .my-height {
+        line-height: 40px !important;
+    }
+
     .layui-table-page > div {
         height: 26px;
         position: fixed;
@@ -131,8 +135,8 @@
 <div class="ok-body">
     <div class="layui-tab layui-tab-card" lay-filter="keywordTab">
         <ul class="layui-tab-title" id="tabItem">
-            <li lay-id="PC" class="layui-this" data-terminal="PC">PC</li>
-            <li lay-id="Phone" data-terminal="Phone">Phone</li>
+            <li lay-id="PC" class="layui-this" data-terminal="PC">电脑</li>
+            <li lay-id="Phone" data-terminal="Phone">手机</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
@@ -377,8 +381,6 @@
             for (var i = 0; i < l; i++) {
                 if (cell[i].innerHTML.indexOf('<br>') === -1) {
                     cell[i].classList.add('my-height');
-                }else if (cell[i].innerHTML.indexOf('VNC') !== -1){
-                    cell[i].classList.add('my-height-ts');
                 }
             }
         }
