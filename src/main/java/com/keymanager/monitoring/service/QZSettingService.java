@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.dao.QZSettingDao;
-import com.keymanager.monitoring.dao.SysCustomerKeywordDao;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.enums.CustomerKeywordSourceEnum;
 import com.keymanager.monitoring.enums.QZCaptureTitleLogStatusEnum;
@@ -16,8 +15,6 @@ import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordVO;
-import java.util.Map.Entry;
-import java.util.concurrent.LinkedBlockingQueue;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -66,15 +63,6 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	@Autowired
 	private ConfigService configService;
 
-	@Autowired
-	private SysQZSettingService sysQZSettingService;
-
-	@Autowired
-	private SysQZKeywordRankService sysQZKeywordRankService;
-
-	@Autowired
-	private SysCustomerKeywordService sysCustomerKeywordService;
-
 	public void syncQZCustomerKeyword() {
 		// todo 读取配置表需要同步的客户网站标签
 		Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_QZ_CUSTOMER_KEYWORD, Constants.CONFIG_KEY_SYNC_QZ_CUSTOMER_TAG);
@@ -107,14 +95,14 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 								}
 							}
 							// todo 转储关键词信息
-							sysCustomerKeywordService.batchInsertCustomerKeywordByCustomerUuid(qzSettingForSync.getCustomerId(), qzSettingForSync.getQsId());
+							customerKeywordService.batchInsertCustomerKeywordByCustomerUuid(qzSettingForSync.getCustomerId(), qzSettingForSync.getQsId());
 						}
 						// todo 转储站点曲线信息
 						if (CollectionUtils.isNotEmpty(qzKeywordRanks)) {
-							sysQZKeywordRankService.replaceQZKeywordRanks(qzKeywordRanks);
+							qzKeywordRankInfoService.replaceQZKeywordRanks(qzKeywordRanks);
 						}
 						// todo 转储站点信息
-						sysQZSettingService.replaceQZSettings(qzSettingForSyncs, qzCustomerTag);
+						qzSettingDao.replaceQZSettings(qzSettingForSyncs, qzCustomerTag);
 					}
 				}
 			}

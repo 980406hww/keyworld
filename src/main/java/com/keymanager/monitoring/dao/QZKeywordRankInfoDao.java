@@ -39,4 +39,10 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
     List<QZKeywordRankForSync> getQZKeywordRankInfoByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid);
 
     QZKeywordRankForSync searchAnOtherQZKeywordRanForSync(@Param("qzSettingUuid") Long qzSettingUuid);
+
+    /**
+     * replace 站点曲线数据
+     * @param qzKeywordRanks
+     */
+    void replaceQZKeywordRanks(@Param("qzKeywordRanks") List<QZKeywordRankForSync> qzKeywordRanks);
 }

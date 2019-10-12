@@ -2193,6 +2193,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordDao.batchUpdateIndexAndOptimizePlanCount(customerKeywords);
         }
     }
+
+    public void batchInsertCustomerKeywordByCustomerUuid(Long customerUuid, Long qsId) {
+        customerKeywordDao.batchInsertCustomerKeywordByCustomerUuid(customerUuid, qsId);
+    }
+
+    public void cleanSysCustomerKeywordCreateOverOneWeek() {
+        customerKeywordDao.cleanSysCustomerKeywordCreateOverOneWeek();
+    }
 }
 
 

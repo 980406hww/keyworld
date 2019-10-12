@@ -544,4 +544,21 @@
         WHERE qs.fRenewalStatus = 1
         AND EXISTS (SELECT 1 FROM t_qz_category_tag qct WHERE qct.fQZSettingUuid = qs.fUuid AND qct.fTagName = #{qzCustomerTag})
     </select>
+
+    <insert id="replaceQZSettings">
+        REPLACE INTO sys_qz_setting VALUES
+        <foreach collection="qzSettingForSyncs" item="qzSettingForSync" separator=",">
+            (
+            #{qzSettingForSync.qsId},
+            #{qzSettingForSync.customerId},
+            #{qzSettingForSync.domain},
+            #{qzSettingForSync.searchEngine},
+            #{qzSettingForSync.bearPawId},
+            #{qzSettingForSync.renewalStatus},
+            #{qzSettingForSync.pcGroup},
+            #{qzSettingForSync.phoneGroup},
+            #{qzCustomerTag}
+            )
+        </foreach>
+    </insert>
 </mapper>

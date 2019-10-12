@@ -225,4 +225,31 @@
         AND qk.fWebsiteType = 'aiZhan'
         LIMIT 1
     </select>
+
+    <insert id="replaceQZKeywordRanks">
+        REPLACE INTO sys_qz_keyword_rank VALUES
+        <foreach collection="qzKeywordRanks" item="qzKeywordRank" separator=",">
+            (
+            #{qzKeywordRank.qkId},
+            #{qzKeywordRank.qsId},
+            #{qzKeywordRank.terminalType},
+            #{qzKeywordRank.websiteType},
+            #{qzKeywordRank.processingType},
+            #{qzKeywordRank.topTen},
+            #{qzKeywordRank.topTwenty},
+            #{qzKeywordRank.topThirty},
+            #{qzKeywordRank.topForty},
+            #{qzKeywordRank.topFifty},
+            #{qzKeywordRank.topHundred},
+            #{qzKeywordRank.date},
+            #{qzKeywordRank.increase},
+            #{qzKeywordRank.todayDiffVal},
+            #{qzKeywordRank.oneWeekDiffVal},
+            #{qzKeywordRank.recordDate},
+            #{qzKeywordRank.record},
+            #{qzKeywordRank.initTopTenNum},
+            #{qzKeywordRank.initTopFiftyNum}
+            )
+        </foreach>
+    </insert>
 </mapper>

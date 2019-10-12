@@ -266,4 +266,8 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     public QZKeywordRankForSync searchAnOtherQZKeywordRanForSync(Long qzSettingUuid) {
         return qzKeywordRankInfoDao.searchAnOtherQZKeywordRanForSync(qzSettingUuid);
     }
+
+    public void replaceQZKeywordRanks(List<QZKeywordRankForSync> qzKeywordRanks) {
+        qzKeywordRankInfoDao.replaceQZKeywordRanks(qzKeywordRanks);
+    }
 }

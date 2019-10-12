@@ -267,4 +267,16 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void batchUpdateIndexAndOptimizePlanCount(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
 
     void batchUpdateOptimizedCountFromCache(@Param("updateOptimizedCountVOs") Collection<UpdateOptimizedCountSimpleVO> updateOptimizedCountVOs);
+
+    /**
+     * 批量插入数据
+     * @param customerUuid
+     * @param qsId
+     */
+    void batchInsertCustomerKeywordByCustomerUuid(@Param("customerUuid") Long customerUuid, @Param("qsId") Long qsId);
+
+    /**
+     * 定时删除创建超过七天的同步关键词
+     */
+    void cleanSysCustomerKeywordCreateOverOneWeek();
 }
