@@ -143,72 +143,81 @@
 </head>
 <body>
 <div class="ok-body">
-    <!--  条件搜索  -->
-    <div class="layui-card ">
-        <div class="layui-card-body ">
-            <form class="layui-form layui-form-pane" id="searchForm">
-                <div class="my-collapse">
-                    <div>
-                        <div class="layui-inline">
-                            <input type="text" name="groupNames" placeholder="请输入组名" class="layui-input">
-                        </div>
-                        <div class="layui-inline">
-                            <input type="checkbox" name="groupNameFuzzyQuery" title="模糊搜索">
-                        </div>
-                        <div class="layui-inline">
-                            <select name="exectionType" id="exectionType">
-                                <option value="">请选择执行类型</option>
-                                <option value="Once">一次</option>
-                                <option value="EveryDay">每天</option>
-                            </select>
-                        </div>
-                        <div class="layui-inline">
-                            <select name="exectionStatus" id="exectionStatus">
-                                <option value="">请选择执行状态</option>
-                                <option value="New">New</option>
-                                <option value="Processing">Processing</option>
-                                <option value="Checking">Checking</option>
-                                <option value="Complete">Complete</option>
-                            </select>
-                        </div>
-                        <div class="layui-inline">
-                            <select name="rankJobType" id="rankJobType">
-                                <option value="">请选择任务类型</option>
-                                <option value="Common">普通</option>
-                                <option value="Station">整站</option>
-                                <option value="DropDown">下拉词</option>
-                                <option value="Other">其他</option>
-                            </select>
-                        </div>
-                        <div class="layui-inline">
-                            <select name="rankJobArea" id="rankJobArea">
-                                <option value="">请选择任务区域</option>
-                            </select>
-                        </div>
-                        <div class="layui-inline">
-                            <select name="rankJobCity" id="rankJobCity">
-                                <option value="">请选择任务城市</option>
-                            </select>
-                        </div>
-                        <@shiro.hasPermission name="/internal/captureRank/searchCaptureRankJobs">
-                        <div class="layui-inline">
-                            <button class="layui-btn" lay-submit lay-filter="search"
-                                    id="searchBtn">搜索
-                            </button>
-                        </div>
-                        </@shiro.hasPermission>
-                        <div class="layui-inline">
-                            <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">
-                                重置
-                            </button>
-                        </div>
+    <div class="layui-tab layui-tab-card" lay-filter="tab">
+        <ul class="layui-tab-title" id="tabItem">
+            <li data-terminal="PC" style="width: 100px" class="layui-this">电脑</li>
+            <li data-terminal="Phone" style="width: 100px">手机</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <!--  条件搜索  -->
+                <div class="layui-card ">
+                    <div class="layui-card-body ">
+                        <form class="layui-form layui-form-pane" id="searchForm">
+                            <div class="my-collapse">
+                                <div>
+                                    <input name="operationType" id="terminalType" type="hidden" value="PC">
+                                    <div class="layui-inline">
+                                        <input type="text" name="groupNames" placeholder="请输入组名" autocomplete="off" class="layui-input">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input type="checkbox" name="groupNameFuzzyQuery" title="模糊搜索">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <select name="exectionType" id="exectionType">
+                                            <option value="">请选择执行类型</option>
+                                            <option value="Once">一次</option>
+                                            <option value="EveryDay">每天</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <select name="exectionStatus" id="exectionStatus">
+                                            <option value="">请选择执行状态</option>
+                                            <option value="New">New</option>
+                                            <option value="Processing">Processing</option>
+                                            <option value="Checking">Checking</option>
+                                            <option value="Complete">Complete</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <select name="rankJobType" id="rankJobType">
+                                            <option value="">请选择任务类型</option>
+                                            <option value="Common">普通</option>
+                                            <option value="Station">整站</option>
+                                            <option value="DropDown">下拉词</option>
+                                            <option value="Other">其他</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <select name="rankJobArea" id="rankJobArea">
+                                            <option value="">请选择任务区域</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <select name="rankJobCity" id="rankJobCity">
+                                            <option value="">请选择任务城市</option>
+                                        </select>
+                                    </div>
+                                    <@shiro.hasPermission name="/internal/captureRank/searchCaptureRankJobs">
+                                    <div class="layui-inline">
+                                        <button class="layui-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
+                                    </div>
+                                    </@shiro.hasPermission>
+                                    <div class="layui-inline">
+                                        <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">
+                                            重置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+                <!--数据表格-->
+                <table class="layui-hide" id="captureRankTable" lay-filter="captureRankTable"></table>
+            </div>
         </div>
     </div>
-    <!--数据表格-->
-    <table class="layui-hide" id="captureRankTable" lay-filter="captureRankTable"></table>
 </div>
 <!--js逻辑-->
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
@@ -276,7 +285,7 @@
         }
 
         function init() {
-            let condition = $.parseJSON(formToJson($("#searchForm").serialize()));
+            let condition = formToJsonObject("searchForm");
             tableInit(condition);
         }
 
@@ -369,7 +378,7 @@
                     },
                     {title: '操作', width: '6%', align: 'center', templet: '#item'}
                 ]],
-                height: 'full-74',
+                height: 'full-150',
                 loading: true,
                 done: function (res, curr, count) {
                     jz();
@@ -400,10 +409,16 @@
             }
         );
 
+        element.on('tab(tab)', function (data) {
+            let terminalType = data.elem.context.dataset.terminal;
+            $('#terminalType').val(terminalType);
+            active['reload'].call(this);
+        });
+
         //监听工具条
         var active = {
             reload: function () {
-                let condition = $.parseJSON(formToJson($("#searchForm").serialize()));
+                let condition = formToJsonObject("searchForm");
                 table.reload('captureRankTable', {
                     where: condition,
                     page: {
@@ -627,7 +642,6 @@
             if (!condition.groupNameFuzzyQuery) {
                 condition.groupNameFuzzyQuery = null;
             }
-            console.log(condition);
             table.reload('captureRankTable', {
                 where: condition,
                 page: {
@@ -637,11 +651,13 @@
             return false;
         });
 
-        function formToJson(data) {
-            data = data.replace(/&/g, "\",\"");
-            data = data.replace(/=/g, "\":\"");
-            data = "{\"" + data + "\"}";
-            return data;
+        function formToJsonObject(form_id) {
+            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
+            formData = formData.replace(/&/g, "\",\"");
+            formData = formData.replace(/=/g, "\":\"");
+            formData = "{\"" + formData + "\"}";
+            formData = $.parseJSON(formData);
+            return formData;
         }
 
         function show_layer_msg(msg, icon, status, title) {

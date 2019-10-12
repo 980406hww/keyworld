@@ -217,7 +217,7 @@
 
         function init() {
             init_searchEngine($('#terminalType').val());
-            let condition = $.parseJSON(formToJson($("#searchForm").serialize()));
+            let condition = formToJsonObject("searchForm");
             tableInit(condition);
         }
 
@@ -282,7 +282,7 @@
         //监听工具条
         var active = {
             reload: function () {
-                let condition = $.parseJSON(formToJson($("#searchForm").serialize()));
+                let condition = formToJsonObject("searchForm");
                 table.reload('keywordsInfoTable', {
                     where: condition,
                     page: {
@@ -310,11 +310,13 @@
             return false;
         });
 
-        function formToJson(data) {
-            data = data.replace(/&/g, "\",\"");
-            data = data.replace(/=/g, "\":\"");
-            data = "{\"" + data + "\"}";
-            return data;
+        function formToJsonObject(form_id) {
+            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
+            formData = formData.replace(/&/g, "\",\"");
+            formData = formData.replace(/=/g, "\":\"");
+            formData = "{\"" + formData + "\"}";
+            formData = $.parseJSON(formData);
+            return formData;
         }
 
         function show_layer_msg(msg, icon, status, title) {

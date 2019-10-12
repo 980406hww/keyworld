@@ -46,6 +46,7 @@
     <form class="layui-form layui-form-pane ok-form" lay-filter="save">
         <div class="ok-body">
             <input type="hidden" name="uuid" value=""/>
+            <input name="operationType" id="operationType" type="hidden" value="">
             <div class="layui-form-item">
                 <label class="layui-form-label">优化组名</label>
                 <div class="layui-input-block">
@@ -111,7 +112,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">执行时间</label>
                         <div class="layui-input-block">
-                            <input type="text" id="ds" name="dates" lay-verify="dates" class="layui-input" disabled placeholder="请填写执行时间">
+                            <input type="text" id="ds" autocomplete="off" name="dates" lay-verify="dates" class="layui-input" disabled placeholder="请填写执行时间">
                         </div>
                     </div>
                 </div>
@@ -122,31 +123,31 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">采集天数间隔</label>
                 <div class="layui-input-block">
-                    <input type="number" name="captureDaysInterval" class="layui-input" value="1" min="0" placeholder="请输入采集天数间隔">
+                    <input type="number" autocomplete="off" name="captureDaysInterval" class="layui-input" value="1" min="0" placeholder="请输入采集天数间隔">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">抓取记录数</label>
                 <div class="layui-input-block">
-                    <input type="number" name="rowNumber" class="layui-input" value="100" min="0" step="50" placeholder="请输入抓取记录数">
+                    <input type="number" autocomplete="off" name="rowNumber" class="layui-input" value="100" min="0" step="50" placeholder="请输入抓取记录数">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">抓取间隔(毫秒)</label>
                 <div class="layui-input-block">
-                    <input type="number" name="captureInterval" class="layui-input" value="500" min="0" step="500" placeholder="请输入抓取间隔(毫秒)">
+                    <input type="number" autocomplete="off" name="captureInterval" class="layui-input" value="500" min="0" step="500" placeholder="请输入抓取间隔(毫秒)">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">每页条数</label>
                 <div class="layui-input-block">
-                    <input type="number" name="pageSize" class="layui-input" value="50" min="0" step="10" placeholder="请输入每页条数">
+                    <input type="number" autocomplete="off" name="pageSize" class="layui-input" value="50" min="0" step="10" placeholder="请输入每页条数">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">换IP间隔</label>
                 <div class="layui-input-block">
-                    <input type="number" name="executionCycle" class="layui-input" value="0" min="0" step="50" placeholder="请输入换IP间隔">
+                    <input type="number" autocomplete="off" name="executionCycle" class="layui-input" value="0" min="0" step="50" placeholder="请输入换IP间隔">
                 </div>
             </div>
         </div>
@@ -230,7 +231,7 @@
 
     function zxsj(l, t) {
         let zxsj = document.getElementById('zxsj');
-        zxsj.innerHTML = '<label class="layui-form-label">执行时间</label><div class="layui-input-block"><input type="text" name="dates" lay-verify="dates" class="layui-input" placeholder="请输入执行时间"></div>';
+        zxsj.innerHTML = '<label class="layui-form-label">执行时间</label><div class="layui-input-block"><input type="text"  autocomplete="off" name="dates" lay-verify="dates" class="layui-input" placeholder="请输入执行时间"></div>';
         zxsj.classList.add('layui-form-item');
         zxsj.classList.remove('layui-row');
         let input = zxsj.getElementsByTagName('input')[0];
@@ -256,8 +257,10 @@
         }
 
         window.getInitData = function () {
+            let terminal = window.parent.document.getElementById('terminalType').value;
+            document.getElementById('operationType').value = terminal;
             $.ajax({
-                url: '/internal/captureRanks/getInitDataForAdd',
+                url: '/internal/captureRanks/getInitDataForAdd/' + terminal,
                 type: 'get',
                 dataType: 'json',
                 success: function (res) {
@@ -368,7 +371,7 @@
                 '<div class="layui-form-item">' +
                 '<label class="layui-form-label">执行时间</label>' +
                 '<div class="layui-input-block">' +
-                '<input type="text" class="layui-input" placeholder="请选择时间">' +
+                '<input type="text"  autocomplete="off" class="layui-input" placeholder="请选择时间">' +
                 '</div></div></div>' +
                 '<div class="layui-col-md2 padding-ten-left" style="text-align: right">' +
                 '<button class="layui-btn" style="width: 100%" onclick="addDS(this)">添加</button>' +
@@ -384,7 +387,7 @@
                         '<div class="layui-form-item">' +
                         '<label class="layui-form-label">执行时间</label>' +
                         '<div class="layui-input-block">' +
-                        '<input type="text" class="layui-input" value="';
+                        '<input type="text"  autocomplete="off" class="layui-input" value="';
                     body += dates[i];
                     if (i === 0) {
                         body += '" placeholder="请选择时间">' +
@@ -444,7 +447,7 @@
                 '<div class="layui-form-item">' +
                 '<label class="layui-form-label">执行时间</label>' +
                 '<div class="layui-input-block">' +
-                '<input type="text" class="layui-input" placeholder="请选择时间">' +
+                '<input type="text"  autocomplete="off" class="layui-input" placeholder="请选择时间">' +
                 '</div></div></div>' +
                 '<div class="layui-col-md2 padding-ten-left" style="text-align: right">' +
                 '<button class="layui-btn layui-btn-danger" style="width: 100%" onclick="delDS(this)">取消</button>' +
@@ -468,6 +471,7 @@
         form.on("submit(commit)", function (data) {
             let d = data.field, p_d = {}, crj = {}, et = [];
             crj.uuid = d.uuid === "" ? null : d.uuid;
+            crj.operationType = d.operationType;
             crj.captureDaysInterval = d.captureDaysInterval;
             crj.captureInterval = d.captureInterval;
             crj.customerUuid = d.customers;
@@ -485,7 +489,6 @@
                 et.push(dates[i]);
             }
             p_d.executeTimes = et;
-            console.log(p_d);
             commit(p_d, function (d) {
             });
             return false;
