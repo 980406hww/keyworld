@@ -698,9 +698,17 @@
                     when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then #{updateOptimizedCountVO.totalSucceedCount}
                 </foreach>
             </trim>
-            <trim prefix="fInvalidRefreshCount = fInvalidRefreshCount - (case" suffix="end),">
+            <trim prefix="fInvalidRefreshCount = (case" suffix="end),">
                 <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
-                    when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then (#{updateOptimizedCountVO.totalCount} - #{updateOptimizedCountVO.lastContinueFailedCount})
+                    when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then
+                    <choose>
+                        <when test="updateOptimizedCountVO.totalSucceedCount == 0">
+                            fInvalidRefreshCount = fInvalidRefreshCount
+                        </when>
+                        <otherwise>
+                            fInvalidRefreshCount = 0
+                        </otherwise>
+                    </choose>
                 </foreach>
             </trim>
             fInvalidFlag = if(fInvalidRefreshCount > 8, 1, 0), fLastOptimizeDateTime = now(), fQueryTime = if(fOptimizePlanCount > fOptimizedCount, fQueryTime, DATE_ADD(NOW(), INTERVAL 1 DAY)), fUpdateTime = NOW()
