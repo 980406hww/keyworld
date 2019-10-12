@@ -36,11 +36,10 @@ public class KeywordsInfoController {
 
     @RequiresPermissions("/internal/keywordInfo/searchKeywordInfos")
     @RequestMapping(value = "/getKeywordsInfoData", method = RequestMethod.POST)
-    public ResultBean getKeywordsInfoData(@RequestBody KeywordInfoCriteria criteria, HttpServletRequest request) {
+    public ResultBean getKeywordsInfoData(@RequestBody KeywordInfoCriteria criteria) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(0);
         try {
-            criteria.setTerminalType(TerminalTypeMapping.getTerminalType(request));
             Page<KeywordInfo> page = keywordInfoService.searchKeywordInfos(criteria);
             resultBean.setData(page.getRecords());
             resultBean.setCount(page.getTotal());
