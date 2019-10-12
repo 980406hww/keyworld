@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>网站管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+    <style>
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
+
+        .layui-btn-xs{
+            height: 18px;
+            line-height: 18px;
+        }
+
+        /* 下拉条件框 */
+        .my-collapse {
+            position: relative;
+            box-shadow: none;
+        }
+
+        .my-collapse * {
+            box-shadow: none;
+        }
+
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 1px solid #e6e6e6;
+        }
+
+        .my-collapse > div {
+            padding: 6px 5px;
+        }
+        .my-collapse .my-btn {
+            height: 30px !important;
+            line-height: 30px !important;
+            padding: 0 18px;
+            background-color: #45a3c2;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .my-collapse .my-btn:hover {
+            opacity: .8;
+            transition: opacity 0.5s;
+        }
+
+        #searchContent input{
+            height: 38px;
+            width: 185px;
+            display: inline;
+        }
+
+        #engine-box input{
+            height: 30px;
+            width: 120px;
+        }
+
+        #user-box input{
+            height: 30px;
+            width: 150px;
+        }
+
+        #status-box input{
+            height: 30px;
+            width: 120px;
+        }
+    </style>
+</head>
+<body>
+<div class="ok-body">
+    <div class="layui-tab layui-tab-card" lay-filter="keywordTab">
+<!--        <ul class="layui-tab-title" id="tabItem">-->
+<!--            <li lay-id="PC" class="layui-this" data-terminal="PC">PC</li>-->
+<!--            <li lay-id="Phone" data-terminal="Phone">Phone</li>-->
+<!--        </ul>-->
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-card ">
+                    <div class="layui-card-body ">
+                        <form class="layui-form layui-form-pane" id="searchForm">
+                            <div class="my-collapse">
+                                <div>
+<!--                                    <div class="layui-inline">-->
+<!--                                        <input type="text" name="industryName" id="industryName" placeholder="请输入行业名称" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">-->
+<!--                                    </div>-->
+<!--                                    <div class="layui-inline" id="engine-box">-->
+<!--                                        <select name="searchEngine" id="engine"></select>-->
+<!--                                    </div>-->
+<!--                                    <div class="layui-inline" id="user-box">-->
+<!--                                        <select name="loginName" id="activeUsers"></select>-->
+<!--                                    </div>-->
+<!--                                    <div class="layui-inline" id="status-box">-->
+<!--                                        <select name="status">-->
+<!--                                            <option value="" selected>爬取状态</option>-->
+<!--                                            <option value="2">爬取完成</option>-->
+<!--                                            <option value="1">爬取中</option>-->
+<!--                                            <option value="0">未爬取</option>-->
+<!--                                        </select>-->
+<!--                                    </div>-->
+                                    <div class="layui-inline">
+                                        <button class="layui-collapse my-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <button style="background: #897c00;color: #ffffff" class="layui-collapse my-btn" type="reset" id="resetBtn">
+                                            重置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--数据表格-->
+                <table class="layui-hide" id="websiteListTable" lay-filter="tableFilter"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="IndustryDetailInfoCsvExportFrom" method="post" action="/internal/industryList/downloadIndustryInfo">
+    <input type="hidden" name="industryUuids" id="industryUuids" value="">
+</form>
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+
+<script>
+    var sign = false;
+    // 进度条加载提示
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
+
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+        var okLayer = layui.okLayer;
+        var layer = layui.layer;
+
+        init_Search()
+        // init_SelectData()
+
+        function init_SelectData(){
+            var postData = {}
+            var terminalType = $("#terminalType").val()
+            if(terminalType == '' || terminalType == null){
+                terminalType = 'PC'
+            }
+            postData.terminalType = terminalType
+            $.ajax({
+                url: '/internal/industryList/returnSelectData',
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                data: JSON.stringify(postData),
+                success: function (res) {
+                    if (res.code === 200) {
+                        var searchEngineList = res.data.searchEngineMap
+                        var activeUsersList = res.data.activeUsers
+                        var user = res.data.user
+                        var searchEngine = $('#engine');
+                        var activeUsers = $('#activeUsers');
+                        searchEngine.empty();
+                        activeUsers.empty();
+                        searchEngine.append('<option value="" selected>引擎</option>');
+                        activeUsers.append('<option value="" selected>用户名称</option>');
+                        activeUsers.append('<option value="' + user.loginName + '">' + '只显示自己' + '</option>');
+                        $.each(searchEngineList, function (index, item) {
+                            searchEngine.append('<option value="' + item + '">' + item + '</option>');
+                        });
+                        $.each(activeUsersList, function (index, item) {
+                            activeUsers.append('<option value="' + item.loginName + '">' + item.userName + '</option>');
+                        });
+                        form.render("select")
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                },
+                error: function () {
+                    layer.msg('未知错误，请稍后重试！！')
+                }
+            });
+        }
+
+        function init_Search(whereCondition){
+            table.render({
+                elem: '#websiteListTable',
+                method: 'post',
+                url: '${ctx.path}/internal/websites/searchWebsites',
+                limit: 50,
+                page: true,
+                autoSort: false,
+                size: 'sm',
+                id: 'websiteListTable',
+                even: true,//隔行背景
+                toolbar: "#toolbarTpl",
+                defaultToolbar: [],
+                contentType: 'application/json',
+                where: whereCondition,
+                cols: [[
+                    {filed: 'uuid', type: 'checkbox', width: '3%', align: 'center', rowspan: 2},
+                    {field: 'websiteName', title: '网站名称', width: '10%', align: 'center', rowspan: 2},
+                    {field: '', title: '所属行业类型', width: '8%', align: 'center', rowspan: 2},
+                    {field: 'accessFailCount', title: '访问失败次数', width: '6%', align: 'center', rowspan: 2},
+                    {field: 'accessFailTime', title: '发现故障时间', width: '7%', align: 'center', templet: '#url', rowspan: 2},
+                    {field: 'lastAccessTime', title: '最近访问时间', width: '7%', align: 'center', rowspan: 2},
+                    {field: 'updateTime', title: '更新时间', align: 'center', width: '7%', align: 'center', rowspan: 2},
+                    {field: '', title: '域名信息', align: 'center', width: '28%', colspan: 7},
+                    {field: '', title: '后台信息', align: 'center', width: '28%', colspan: 7},
+                    {field: '', title: '数据库信息', align: 'center', width: '16%', colspan: 4},
+                    {field: '', title: '服务器信息', align: 'center', width: '14%', colspan: 6},
+                    {title: '操作', align: 'center', width: '7%', align: 'center', templet: '#operationTpl', fixed: "right", rowspan: 2}
+                ],[
+                    {field: 'domain', title: '网站域名', width: '4%', align: 'center'},
+                    {field: '', title: '销售网站类型', width: '4%', align: 'center'},
+                    {field: 'friendlyLinkCount', title: '友情链接', width: '4%', align: 'center'},
+                    {field: 'advertisingCount', title: '广告', width: '4%', align: 'center'},
+                    {field: 'registrar', title: '注册商', width: '4%', align: 'center'},
+                    {field: 'analysis', title: '解析商', width: '4%', align: 'center'},
+                    {field: 'expiryTime', title: '到期时间', width: '4%', align: 'center'},
+                    {field: 'backendDomain', title: '后台链接', width: '4%', align: 'center'},
+                    {field: 'backendUserName', title: '后台用户', width: '4%', align: 'center'},
+                    {field: 'backendPassword', title: '后台密码', width: '4%', align: 'center'},
+                    {field: '', title: '更新销售信息状态', width: '4%', align: 'center'},
+                    {field: '', title: '更新友链信息状态', width: '4%', align: 'center'},
+                    {field: '', title: '更新广告信息状态', width: '4%', align: 'center'},
+                    {field: 'backgroundLoginStatus', title: '后台登陆状态', width: '4%', align: 'center'},
+                    {field: 'databaseName', title: '数据库名称', width: '4%', align: 'center'},
+                    {field: 'databaseUserName', title: '用户名', width: '4%', align: 'center'},
+                    {field: 'databasePassword', title: '密码', width: '4%', align: 'center'},
+                    {field: 'databaseStatus', title: '数据库登陆状态', width: '4%', align: 'center'},
+                    {field: 'serverIP', title: 'IP', width: '4%', align: 'center'},
+                    {field: 'serverUserName', title: '用户名', width: '4%', align: 'center'},
+                    {field: 'serverPassword', title: '密码', width: '4%', align: 'center'},
+                    {field: 'serverPort', title: '端口', width: '4%', align: 'center'},
+                    {field: 'indexFileStatus', title: 'index文件状态', width: '4%', align: 'center'},
+                    {field: 'sftpStatus', title: 'sftp服务状态', width: '4%', align: 'center'},
+                ]],
+                height: 'full-150',
+                done: function (res, curr, count) {
+                }
+            });
+        }
+
+        element.on('tab(keywordTab)', function (data) {
+            var d = data.elem.context.dataset
+            $('#terminalType').val(d.terminal);
+            active['reload'].call(this);
+        });
+
+        var active = {
+            reload: function () {
+                var terminalType = $("#terminalType").val()
+                if(terminalType == '' || terminalType == null){
+                    terminalType = 'PC'
+                }
+                var data = {'terminalType': terminalType}
+                table.reload('industryListTable', {
+                    where: data,
+                    page: {
+                        curr: 1
+                    }
+                });
+            },
+        };
+
+        form.on("submit(search)", function (data) {
+            var postData = data.field
+            var terminalType = $("#terminalType").val()
+            if(terminalType == '' || terminalType == null){
+                terminalType = 'PC'
+            }
+            postData.terminalType = terminalType
+            init_Search(postData)
+            return false
+        });
+
+        table.on('tool(tableFilter)',function(obj){
+            var data = obj.data,event = obj.event;
+            switch (event) {
+                case 'delIndustryInfo':
+                    delIndustryInfo(data.uuid);
+                    break;
+                case 'modifyIndustryInfo':
+                    modifyIndustryInfo(data.uuid);
+                    break;
+                case 'searchIndustryDetail':
+                    searchIndustryDetail(data.uuid);
+                    break;
+            }
+        });
+
+        table.on('toolbar(tableFilter)',function(obj){
+            var data = obj.data,event = obj.event;
+            switch (event) {
+                case 'toAddIndustry':
+                    toAddIndustry();
+                    break;
+                case 'deleteIndustries':
+                    deleteIndustries();
+                    break;
+                case 'updateOwner':
+                    updateOwner();
+                    break;
+                case 'updateStatus':
+                    updateStatus();
+                    break;
+                case 'downLoadTemplate':
+                    downLoadTemplate();
+                    break;
+                case 'downloadIndustryInfos':
+                    downloadIndustryInfos();
+                    break;
+                case 'uploadIndustryInfo':
+                    uploadIndustryInfo('SuperIndustrySimple');
+                    break;
+            }
+        });
+
+        function searchIndustryDetail(uuid) {
+            window.open("/internal/industryDetails/toIndustryDetails/" + uuid)
+        }
+
+        function uploadIndustryInfo(excelType){
+            var terminalType = $("#terminalType").val()
+            if(terminalType == '' || terminalType == null){
+                terminalType = 'PC'
+            }
+            okLayer.open("首页/行业列表/上传Excel", "/internal/industryList/toUploadIndustryInfo", "25%", "20%", function(layero){
+                window[layero.find("iframe")[0]["name"]].initData(excelType, terminalType);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            },150);
+            return false;
+        }
+
+        function downloadIndustryInfos(){
+            var checkStatus = table.checkStatus('industryListTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            var count = 0
+            $.each(data, function (index, item) {
+                if(item.detailCount > 0){
+                    count = count + 1
+                }
+                uuidArr.push(item.uuid);
+            });
+
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要要导出网站联系信息的行业', {icon: 5});
+                return
+            }
+
+            if(count <= 0){
+                layer.msg('所选行业暂无相关网站信息', {icon: 5});
+                return
+            }
+
+            var IndustryDetailInfoCsvExportFrom = $("#IndustryDetailInfoCsvExportFrom");
+            $("#industryUuids").val(uuidArr);
+            IndustryDetailInfoCsvExportFrom.submit();
+        }
+
+        function downLoadTemplate() {
+            window.location.href = "/SuperIndustrySimpleList.xls"
+        }
+
+        function updateStatus(){
+            var checkStatus = table.checkStatus('industryListTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                if(item.status == "1"){
+
+                }else{
+                    uuidArr.push(item.uuid);
+                }
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要操作的行业', {icon: 5});
+                return
+            }
+            var postData = {};
+            postData.uuids = uuidArr;
+            $.ajax({
+                url: '/internal/industryList/updateIndustryStatus',
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                data: JSON.stringify(postData),
+                success: function (res) {
+                    if (res.code === 200) {
+                        active['reload'].call(this);
+                        layer.msg("操作成功")
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                },
+                error: function () {
+                    layer.msg('未知错误，请稍后重试！！')
+                }
+            });
+        }
+
+        function updateOwner(){
+            var checkStatus = table.checkStatus('industryListTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要操作的行业', {icon: 5});
+                return
+            }
+            var postData = {};
+            postData.uuids = uuidArr;
+            okLayer.open("首页/行业列表/修改客户归属", "/internal/industryList/updateOwner", "30%", "35%", function(layero){
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            },150);
+            return false;
+        }
+
+        function modifyIndustryInfo(data){
+            okLayer.open("首页/行业列表/修改行业", "/internal/industryList/toSaveIndustryInfo", "35%", "60%", function(layero){
+                window[layero.find("iframe")[0]["name"]].initForm(data);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            },120);
+        }
+
+        function toAddIndustry() {
+            var terminalType = $("#terminalType").val()
+            if(terminalType == '' || terminalType == null){
+                terminalType = 'PC'
+            }
+            okLayer.open("首页/行业列表/添加行业", "/internal/industryList/toSaveIndustryInfo", "35%", "60%", function(layero){
+                window[layero.find("iframe")[0]["name"]].init_terminalType(terminalType);
+            }, function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            },120);
+        }
+
+        function delIndustryInfo(uuid){
+            layer.confirm('确认删除该行业？', {
+                icon: 3,
+                title: '删除行业',
+                btn: ['确认', '取消'],
+                yes: function () {
+                    $.ajax({
+                        url: '/internal/industryList/delIndustryInfo/' + uuid,
+                        type: 'GET',
+                        headers: {
+                            "Accept": 'application/json',
+                            "Content-Type": 'application/json'
+                        },
+                        success: function (res) {
+                            if (res.code === 200) {
+                                var data = {}
+                                table.reload('industryListTable', {
+                                    where: data,
+                                    page: {
+                                        curr: 1
+                                    }
+                                });
+                                layer.msg("删除成功")
+                            } else {
+                                layer.msg(res.msg)
+                            }
+                        },
+                        error: function () {
+                            layer.msg('未知错误，请稍后重试！！')
+                        }
+                    });
+                }, btn2: function (index) {
+                    layer.close(index);
+                }
+            });
+        }
+
+        function deleteIndustries(){
+            var checkStatus = table.checkStatus('industryListTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要操作的行业', {icon: 5});
+                return
+            }
+            layer.confirm("确定要删除所选行业吗", {icon: 3, title: '删除所选'}, function (index) {
+                var postData = {};
+                postData.uuids = uuidArr;
+                $.ajax({
+                    url: '/internal/industryList/deleteIndustries',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 2000
+                            }, function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            layer.msg('操作失败', {icon: 5});
+                        }
+                    },
+                    error: function () {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                });
+                layer.close(index);
+            });
+        }
+
+    });
+
+</script>
+
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+    <div class="layui-btn-container">
+        <@shiro.hasPermission name="/internal/industry/saveIndustry">
+        <button class="layui-btn layui-btn-sm" lay-event="toAddIndustry">添加</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/industry/deleteIndustries">
+    <button class="layui-btn layui-btn-danger layui-btn-sm" lay-event="deleteIndustries">
+        <i class="layui-icon layui-icon-delete"></i>删除所选
+    </button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/industry/updateIndustryUserID">
+    <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="updateOwner">
+        <i class="layui-icon layui-icon-edit"></i>修改客户归属
+    </button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/industry/saveIndustry">
+    <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="updateStatus">
+        <i class="layui-icon layui-icon-download-circle"></i>马上爬取
+    </button>
+    </@shiro.hasPermission>
+    <div class="layui-btn-group">
+        <@shiro.hasPermission name="/internal/industry/saveIndustry">
+        <button class="layui-btn layui-btn-sm" lay-event="downloadIndustryInfos">导出网站联系信息</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/industry/uploadIndustryInfos">
+    <button class="layui-btn layui-btn-sm" lay-event="uploadIndustryInfo">Excel上传</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/SuperIndustrySimpleList.xls">
+    <button class="layui-btn layui-btn-sm" lay-event="downLoadTemplate">模板下载</button>
+    </@shiro.hasPermission>
+    </div>
+    </div>
+</script>
+
+<script type="text/html" id="toDateTime">
+    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+</script>
+
+<script type="text/html" id="industryNames">
+    <a href="#" lay-event="searchIndustryDetail" style="color: #0c7df5;">{{d.industryName}}({{d.detailCount}})</a>
+</script>
+
+<script type="text/html" id="url">
+    <a href="{{d.targetUrl}}" style="color: #0c7df5;" target="_blank">{{d.targetUrl == null ? '' :  d.targetUrl}}</a>
+</script>
+
+<script type="text/html" id="toStatus">
+    <span>
+        {{# if(d.status == 1) { }}
+        <span style="color: darkorange;" >爬取中</span>
+        {{# }else if(d.status == 2){ }}
+        <span style="color: forestgreen;">爬取完成</span>
+        {{# }else{ }}
+        <span style="color: red;">未爬取</span>
+        {{# } }}
+    </span>
+</script>
+
+<script type="text/html" id="operationTpl">
+    <div class="layui-btn-group">
+        <@shiro.hasPermission name="/internal/industry/saveIndustry">
+        <button type="button" class="layui-btn layui-btn-xs" lay-event="modifyIndustryInfo" id="modifyIndustryInfo">修改</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/industry/delIndustry">
+    <button type="button" class="layui-btn layui-btn-xs" lay-event="delIndustryInfo" id="delIndustryInfo">删除</button>
+    </@shiro.hasPermission>
+    </div>
+</script>
+
+</body>
+</html>

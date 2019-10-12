@@ -13,4 +13,6 @@ public interface ConfigService {
     Config getConfig(String configType, String key);
 
     List<String> getRankJobCity();
+
+    void refreshWebsiteCheckSign(String websiteCheckSign);
 }
