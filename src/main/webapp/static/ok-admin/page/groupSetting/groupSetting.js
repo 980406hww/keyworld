@@ -132,7 +132,28 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                 sign = false;
             }
         });
-    }
+    };
+
+    window.toGroupSettingUpdate = function(operationCombineUuid, operationCombineName, remainingAccount, machineUsedPercent, uuid){
+        let data = {};
+        let groupNames = $('#groupNameStr' + operationCombineUuid).text() === '暂无' ? '' : $('#groupNameStr' + operationCombineUuid).text();
+        data.uuid = uuid;
+        data.operationCombineName = operationCombineName;
+        data.groupNames = groupNames;
+        data.operationTypes = operationTypes;
+        data.remainAccount = remainingAccount;
+        data.currentAccount = machineUsedPercent;
+        data.terminalType = $('#terminalType').val();
+        okLayer.open("终端管理 / 分组信息 / 更新操作组合(需要更新的字段请点击标红)", "/internal/groupsetting/toGroupSettingUpdate", "60%", "90%", function(layero){
+            window[layero.find("iframe")[0]["name"]].initForm(data);
+        }, function () {
+            if (sign) {
+                let pageConf = formToJsonObject('searchForm');
+                initLayPage(pageConf);
+                sign = false;
+            }
+        });
+    };
 
     function initLayPage(pageConf) {
         if (!pageConf) {
@@ -183,6 +204,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     }
 
     function init_data(data) {
+        console.log(data)
         $("#data_list").html('');
         $.each(data, function (index, item) {
             let htm = '';
@@ -260,7 +282,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                         +                                               getRandomlyClickNoResultText(groupSetting.randomlyClickNoResult)
                         + '                                        </div>\n'
                         + '                                        <div class="layui-col-md1 body-operation"style="width: 10%">'
-                        + '                                             <a href="javascript:void(0)" onclick=showGroupSettingDialog("' + groupSetting.uuid +'")>修改 </a>'
+                        + '                                             <a href="javascript:void(0)" onclick=toGroupSettingUpdate("' + item.uuid +'","' + item.operationCombineName +'","' + item.remainingAccount +'","' + groupSetting.machineUsedPercent +'","' + groupSetting.uuid +'")>修改 </a>'
                         + '                                             <a href="javascript:void(0)" onclick=delGroupSetting("' + groupSetting.uuid + '")>删除 </a>'
                         + '                                         </div>'
                         + '                                    </div>\n';

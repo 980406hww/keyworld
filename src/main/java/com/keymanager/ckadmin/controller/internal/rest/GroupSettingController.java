@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
+import com.keymanager.ckadmin.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.ckadmin.entity.GroupSetting;
 import com.keymanager.ckadmin.entity.OperationCombine;
 import com.keymanager.ckadmin.service.GroupSettingService;
@@ -108,9 +109,49 @@ public class GroupSettingController {
     @PostMapping("/saveGroupSetting2")
     public ResultBean saveGroupSetting(@RequestBody GroupSetting groupSetting) {
         ResultBean resultBean = new ResultBean(200, "success");
-
         try {
             groupSettingService.saveGroupSetting(groupSetting);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("服务端错误");
+            return resultBean;
+        }
+    }
+
+    @RequiresPermissions("/internal/groupsetting/saveGroupSetting")
+    @GetMapping("/toGroupSettingUpdate")
+    public ModelAndView toGroupSettingUpdate() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("groupSettings/groupSettingUpdate");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
+    @PostMapping(value = "/getGroupSettingByUuid/{uuid}")
+    public ResultBean getGroupSettingByUuid(@PathVariable(name = "uuid") Long uuid) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            GroupSetting groupSetting = groupSettingService.getGroupSettingByUuid(uuid);
+            resultBean.setCode(200);
+            resultBean.setMsg("");
+            resultBean.setData(groupSetting);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/groupsetting/updateGroupSetting")
+    @PostMapping("/updateGroupSetting2")
+    public ResultBean updateGroupSetting(@RequestBody UpdateGroupSettingCriteria updateGroupSettingCriteria) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            groupSettingService.updateGroupSetting(updateGroupSettingCriteria);
             return resultBean;
         } catch (Exception e) {
             logger.error(e.getMessage());

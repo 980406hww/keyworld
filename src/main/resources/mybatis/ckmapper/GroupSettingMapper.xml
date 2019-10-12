@@ -177,4 +177,31 @@
         FROM t_group_setting gs
         WHERE gs.fOperationCombineUuid = #{operationCombineUuid}
     </select>
+
+    <select id="getGroupSettingByUuid" resultType="com.keymanager.ckadmin.entity.GroupSetting">
+        SELECT
+            gs.fUuid               AS "uuid",
+            gs.fOperationCombineUuid AS "operationCombineUuid",
+            gs.fOperationType      AS "operationType",
+            gs.fMachineUsedPercent AS "machineUsedPercent",
+            gs.fPage               AS "page",
+            gs.fPageSize           AS "pageSize",
+            gs.fClearCookie        AS "clearCookie",
+            gs.fDisableStatistics  AS "disableStatistics",
+            gs.fDisableVisitWebsite AS "disableVisitWebsite",
+            gs.fEntryPageMinCount AS "entryPageMinCount",
+            gs.fEntryPageMaxCount AS "entryPageMaxCount",
+            gs.fPageRemainMinTime AS "pageRemainMinTime",
+            gs.fPageRemainMaxTime AS "pageRemainMaxTime",
+            gs.fInputDelayMinTime AS "inputDelayMinTime",
+            gs.fInputDelayMaxTime AS "inputDelayMaxTime",
+            gs.fSlideDelayMinTime AS "slideDelayMinTime",
+            gs.fSlideDelayMaxTime AS "slideDelayMaxTime",
+            gs.fTitleRemainMinTime AS "titleRemainMinTime",
+            gs.fTitleRemainMaxTime AS "titleRemainMaxTime",
+            gs.fOptimizeKeywordCountPerIP AS "optimizeKeywordCountPerIP",
+            gs.fRandomlyClickNoResult AS "randomlyClickNoResult"
+        FROM t_group_setting gs
+        WHERE gs.fUuid = #{uuid}
+    </select>
 </mapper>

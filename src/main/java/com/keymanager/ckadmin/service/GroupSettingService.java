@@ -29,4 +29,6 @@ public interface GroupSettingService extends IService<GroupSetting> {
     void updateGroupSetting(GroupSetting gs, GroupSetting groupSetting);
 
     void deleteGroupSettingByOperationCombineUuid(long operationCombineUuid);
+
+    GroupSetting getGroupSettingByUuid(Long uuid);
 }
