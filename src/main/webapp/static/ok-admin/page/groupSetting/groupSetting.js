@@ -117,10 +117,33 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         return false;
     });
 
-    window.toGroupSettingAdd = function(){
+    window.toOperationCombineAdd = function(){
         let data = {};
         data.operationTypes = operationTypes;
+        data.operationCombineUuid = null;
         data.remainAccount = 100;
+        data.currentAccount = 0;
+        data.terminalType = $('#terminalType').val();
+        okLayer.open("终端管理 / 分组信息 / 添加操作组合", "/internal/groupsetting/toGroupSettingAdd", "60%", "90%", function(layero){
+            window[layero.find("iframe")[0]["name"]].initForm(data);
+        }, function () {
+            if (sign) {
+                let pageConf = formToJsonObject('searchForm');
+                initLayPage(pageConf);
+                sign = false;
+            }
+        });
+    };
+
+    window.toGroupSettingAdd = function(operationCombineUuid,operationCombineName,maxInvalidCount,remainAccount){
+        let data = {};
+        let groupNames = $('#groupNameStr' + operationCombineUuid).text() === '暂无' ? '' : $('#groupNameStr' + operationCombineUuid).text();
+        data.operationCombineUuid = operationCombineUuid;
+        data.operationCombineName = operationCombineName;
+        data.maxInvalidCount = maxInvalidCount;
+        data.groupNames = groupNames;
+        data.operationTypes = operationTypes;
+        data.remainAccount = remainAccount;
         data.currentAccount = 0;
         data.terminalType = $('#terminalType').val();
         okLayer.open("终端管理 / 分组信息 / 添加操作组合", "/internal/groupsetting/toGroupSettingAdd", "60%", "90%", function(layero){
@@ -223,7 +246,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     }
 
     function init_data(data) {
-        console.log(data)
         $("#data_list").html('');
         $.each(data, function (index, item) {
             let htm = '';
@@ -241,10 +263,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                 + '                                              <a href="javascript:void(0)" onclick=showGroupQueueDialog("' + item.uuid + '")>分组详情 </a>'
                 + '                                          </div>\n'
                 + '                                         <div class="layui-col-md3">'
-                + '                                              <a href="javascript:void(0)" onclick=showGroupSettingDialog("' + item.uuid + '")>新增操作组设置 </a>'
+                + '                                              <a href="javascript:void(0)" onclick=toGroupSettingAdd("' + item.uuid + '","' + item.operationCombineName + '","' + item.maxInvalidCount + '","'+item.remainingAccount+'")>新增操作组 </a>'
                 + '                                         </div>\n'
                 + '                                         <div class="layui-col-md4">'
-                + '                                              <a href="javascript:void(0)" onclick=toGroupSettingBatchUpdate("' + item.uuid +'","' + item.operationCombineName +'")>批量修改操作组设置 </a>'
+                + '                                              <a href="javascript:void(0)" onclick=toGroupSettingBatchUpdate("' + item.uuid +'","' + item.operationCombineName +'")>批量修改操作组 </a>'
                 + '                                         </div>\n'
                 + '                                         <div class="layui-col-md3">'
                 + '                                              <a href="javascript:void(0)" onclick=delOperationCombine("' + item.uuid + '")>删除操作组合 </a>'
@@ -312,10 +334,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                     + '                    </div>\n'
                     + '                </div>';
             }
-
-
             $("#data_list").append(htm);
-            // $("#data_list").trigger("create");
         })
     }
 
@@ -347,7 +366,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                 show_layer_msg('获取操作组合下的分组数据失败！', 5, );
             }
         });
-    }
+    };
 
     window.changeMaxInvalidCount = function(operationCombineUuid){
         let oldMaxInvalidCount = $('#maxInvalidCount'+operationCombineUuid).text();
