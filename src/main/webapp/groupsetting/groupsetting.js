@@ -439,7 +439,6 @@ function isChecked(id, dialogDiv) {
 type: 控制方式 status: 分组分割 isBatchUpdate: 批量修改标志 operationCombineUuid: 操作组合uuid
  */
 function saveGroupSetting(type, status, isBatchUpdate, operationCombineUuid){
-    debugger
     var dialogDiv;
     if (isBatchUpdate === 1) {
         dialogDiv = $("#updateGroupSettingDialog");

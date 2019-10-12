@@ -161,4 +161,20 @@ public class GroupSettingController {
         }
     }
 
+    @RequiresPermissions("/internal/groupsetting/findGroupSetting")
+    @PostMapping("/getGroupSettingCount2/{operationCombineUuid}")
+    public ResultBean getGroupSettingCount(@PathVariable("operationCombineUuid") long operationCombineUuid) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            int groupSettingCount = groupSettingService.getGroupSettingUuids(operationCombineUuid).size();
+            resultBean.setData(groupSettingCount);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("服务端错误");
+            return resultBean;
+        }
+    }
+
 }

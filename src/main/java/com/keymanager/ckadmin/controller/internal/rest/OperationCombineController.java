@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.OperationCombineCriteria;
+import com.keymanager.ckadmin.criteria.UpdateGroupSettingCriteria;
 import com.keymanager.ckadmin.service.OperationCombineService;
 import java.util.List;
 import java.util.Map;
@@ -94,6 +95,22 @@ public class OperationCombineController {
         try {
             operationCombineCriteria.setCreator((String) request.getSession().getAttribute("username"));
             operationCombineService.saveOperationCombine(operationCombineCriteria);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+    }
+
+    @RequiresPermissions("/internal/operationCombine/updateOperationCombine")
+    @PostMapping("/updateOperationCombine2/{operationCombineUuid}")
+    public ResultBean updateOperationCombine(@PathVariable("operationCombineUuid") long operationCombineUuid,
+        @RequestBody UpdateGroupSettingCriteria updateGroupSettingCriteria) {
+        ResultBean resultBean = new ResultBean(200,"success");
+        try {
+            operationCombineService.updateOperationCombine(operationCombineUuid, updateGroupSettingCriteria);
             return resultBean;
         } catch (Exception e) {
             logger.error(e.getMessage());

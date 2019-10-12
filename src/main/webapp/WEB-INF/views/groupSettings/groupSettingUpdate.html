@@ -47,7 +47,7 @@
                     <label class="layui-form-label" style="width: 100%"><h3>基本信息</h3></label>
                 </div>
             </div>
-            <div class="layui-col-md6">
+            <div class="layui-col-md12">
                 <div class="layui-form-item">
                     <label class="layui-form-label">操作组合</label>
                     <div class="layui-input-block" onclick="checkItem(this)">
@@ -56,15 +56,7 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-col-md6">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">分组</label>
-                    <div class="layui-input-block" onclick="checkItem(this)">
-                        <input type="text" name="settingGroup" id="settingGroup" placeholder="请输入分组,多个用逗号分割" autocomplete="off"
-                               class="layui-input" >
-                    </div>
-                </div>
-            </div>
+
             <div class="layui-col-md6">
                 <div class="layui-form-item">
                     <label class="layui-form-label">操作类型</label>
@@ -102,7 +94,7 @@
                 </div>
                 <div class="layui-col-md6">
                     <div class="layui-form-item">
-                        <label class="layui-form-label" style="width: 100%;text-align: left">当前剩余 <span id="unusedPercent"></span>%</label>
+                        <label class="layui-form-label" style="width: 100%;text-align: left">当前剩余 <span id="unusedPercent"></span>% ; <span style="display: none" id="ocspan"> 需要分配操作数量：<span id="operationCombineCount" ></span></span></label>
                     </div>
                 </div>
             </div>
@@ -273,9 +265,6 @@
                 <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">
                     取消
                 </button>
-                <button class="layui-btn layui-btn-primary" id="test" style="margin-right: 20px">
-                    c测试
-                </button>
             </div>
         </div>
     </form>
@@ -293,7 +282,6 @@
     let operationTypes = null;
 
     function initForm(data) {
-        console.log(data)
         uuid_ = data.uuid;
         uuids_ = data.uuids;
         operationCombineUuid_ = data.operationCombineUuid;
@@ -301,22 +289,39 @@
         document.getElementById('uuid').value = data.uuid;
         document.getElementById('settingOperationCombineName').value = data.operationCombineName;
         document.getElementById('operationCombineUuid').value = data.operationCombineUuid;
-        document.getElementById('settingGroup').value = data.groupNames;
         document.getElementById('terminalType').value = data.terminalType;
         document.getElementById('remainAccount').value = data.remainAccount;
         document.getElementById('unusedPercent').innerHTML = data.remainAccount;
         document.getElementById('currentAccount').value = data.currentAccount;
         document.getElementById('machineUsedPercent').value = data.currentAccount;
         if (layui_ != null) {
-            init_operationType(layui_, operationTypes)
+            init_operationType(layui_, operationTypes);
+            if (uuid_ != null ){
+                document.getElementById('settingMaxInvalidCount').disabled = true;
+                setForm(layui_, uuid_);
+            }else{
+                init_operationCombineCount(layui_, data.operationCombineUuid);
+            }
         }
-        if (uuid_ != null ){
-            document.getElementById('settingGroup').disabled = true;
-            document.getElementById('settingMaxInvalidCount').disabled = true;
-            setForm(layui_, uuid_);
-        }
-    }
 
+    }
+    function init_operationCombineCount(layui_, operationCombineUuid){
+        var $ = layui.jquery;
+        var form = layui.form;
+        $.ajax({
+            url: '/internal/groupsetting/getGroupSettingCount2/' + operationCombineUuid,
+            type: 'post',
+            dataType: 'json',
+            success: function (res) {
+                if (res.code === 200) {
+                    $('#operationCombineCount').text(res.data)
+                    $('#ocspan').css('display','inline-block')
+                } else {
+                    layui.layer.msg(res.msg);
+                }
+            }
+        });
+    }
     function setForm(layui_, uuid){
         var $ = layui.jquery;
         var form = layui.form;
@@ -326,8 +331,6 @@
             dataType: 'json',
             success: function (res) {
                 if (res.code === 200) {
-                    console.log(res.data)
-                    // init_searchEngine();
                     form.val("updateGroupSetting", res.data);
                 } else {
                     layui.layer.msg(res.msg);
@@ -353,7 +356,6 @@
         let layer = layui.layer;
 
         document.onkeydown=function(e){
-            // console.log(e.target.id)
             var isie = !!(document.all);
             var key;
             var ev;
@@ -405,12 +407,23 @@
         window.recalculateUnusedPercent = function (_elem) {
             let totalPercent = parseInt($('#remainAccount').val()) + parseInt($('#currentAccount').val());
             let allocPercent = parseInt(_elem.value);
-            if (allocPercent < 0 || allocPercent > 100 || allocPercent > totalPercent) {
-                $(_elem).addClass("layui-form-danger").focus();
-                show_layer_msg("请输入正确的分组占比且不能大于剩余占比", 5)
-            } else {
-                $('#unusedPercent').text(totalPercent - allocPercent)
+            if (uuid_ != null){
+                if (allocPercent < 0 || allocPercent > 100 || allocPercent > totalPercent) {
+                    $(_elem).addClass("layui-form-danger").focus();
+                    show_layer_msg("请输入正确的分组占比且不能大于剩余占比", 5)
+                } else {
+                    $('#unusedPercent').text(totalPercent - allocPercent)
+                }
+            }else {
+                let operationCombineCount = parseInt($('#operationCombineCount').text());
+                if (allocPercent * operationCombineCount > totalPercent) {
+                    $(_elem).addClass("layui-form-danger").focus();
+                    show_layer_msg("请输入正确的分组占比且不能大于剩余占比", 5)
+                } else {
+                    $('#unusedPercent').text(totalPercent - allocPercent * operationCombineCount)
+                }
             }
+
         }
 
         window.checkItem = function (self) {
@@ -438,6 +451,7 @@
             var data = data.field;
             var postData = {};
             let groupSetting = data;
+            groupSetting.remainingAccount = parseInt($('#unusedPercent').text());
             groupSetting.operationCombineName = data.settingOperationCombineName;
             groupSetting.terminalType = data.terminalType;
             groupSetting.maxInvalidCount = data.settingMaxInvalidCount === "" ? 8 : data.settingMaxInvalidCount;
@@ -447,14 +461,20 @@
             }
             groupSettingCheck['operationCombineName'] = groupSettingCheck['settingOperationCombineName'];
             groupSettingCheck['maxInvalidCount'] = groupSettingCheck['settingMaxInvalidCount'];
-            console.log(groupSettingCheck)
-            console.log(groupSetting)
             postData.gs = groupSettingCheck;
             postData.groupSetting = groupSetting;
             // return false;
             let url = '/internal/groupsetting/updateGroupSetting2';
             if (uuid_ === null ){
-                url = '/internal/operationCombine/updateOperationCombine/' + operationCombineUuid_;
+                url = '/internal/operationcombine/updateOperationCombine2/' + operationCombineUuid_;
+                let totalPercent = parseInt($('#remainAccount').val()) + parseInt($('#currentAccount').val());
+                let allocPercent = parseInt(groupSetting.machineUsedPercent);
+                let operationCombineCount = parseInt($('#operationCombineCount').text());
+                if (allocPercent * operationCombineCount > totalPercent) {
+                    $('#machineUsedPercent').addClass("layui-form-danger").focus();
+                    show_layer_msg("请输入正确的分组占比且不能大于剩余占比", 5);
+                    return false;
+                }
             }
             $.ajax({
                 url: url,
@@ -481,11 +501,6 @@
         $('#close').click(function () {
             parent.layer.close(parent.layer.getFrameIndex(window.name));
             return false;
-        });
-
-        $('#test').click(function () {
-           isChecked2('slideDelayMinTime');
-            return false
         });
 
         form.verify({

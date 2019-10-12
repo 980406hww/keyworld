@@ -136,15 +136,34 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
 
     window.toGroupSettingUpdate = function(operationCombineUuid, operationCombineName, remainingAccount, machineUsedPercent, uuid){
         let data = {};
-        let groupNames = $('#groupNameStr' + operationCombineUuid).text() === '暂无' ? '' : $('#groupNameStr' + operationCombineUuid).text();
         data.uuid = uuid;
         data.operationCombineName = operationCombineName;
-        data.groupNames = groupNames;
+        data.operationCombineUuid = operationCombineUuid;
         data.operationTypes = operationTypes;
         data.remainAccount = remainingAccount;
         data.currentAccount = machineUsedPercent;
         data.terminalType = $('#terminalType').val();
-        okLayer.open("终端管理 / 分组信息 / 更新操作组合(需要更新的字段请点击标红)", "/internal/groupsetting/toGroupSettingUpdate", "60%", "90%", function(layero){
+        okLayer.open("终端管理 / 分组信息 / 更新操作组合<span style='color: red'>(需要更新的字段请点击标红)</span>", "/internal/groupsetting/toGroupSettingUpdate", "60%", "90%", function(layero){
+            window[layero.find("iframe")[0]["name"]].initForm(data);
+        }, function () {
+            if (sign) {
+                let pageConf = formToJsonObject('searchForm');
+                initLayPage(pageConf);
+                sign = false;
+            }
+        });
+    };
+
+    window.toGroupSettingBatchUpdate = function(operationCombineUuid, operationCombineName){
+        let data = {};
+        data.uuid = null;
+        data.operationCombineName = operationCombineName;
+        data.operationCombineUuid = operationCombineUuid;
+        data.operationTypes = operationTypes;
+        data.remainAccount = 100;
+        data.currentAccount = 0;
+        data.terminalType = $('#terminalType').val();
+        okLayer.open("终端管理 / 分组信息 / 批量设置操作组合<span style='color: red'>(需要更新的字段请点击标红)</span>", "/internal/groupsetting/toGroupSettingUpdate", "60%", "90%", function(layero){
             window[layero.find("iframe")[0]["name"]].initForm(data);
         }, function () {
             if (sign) {
@@ -225,7 +244,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                 + '                                              <a href="javascript:void(0)" onclick=showGroupSettingDialog("' + item.uuid + '")>新增操作组设置 </a>'
                 + '                                         </div>\n'
                 + '                                         <div class="layui-col-md4">'
-                + '                                              <a href="javascript:void(0)" onclick=showUpdateGroupDialog("' + item.uuid + '")>批量修改操作组设置 </a>'
+                + '                                              <a href="javascript:void(0)" onclick=toGroupSettingBatchUpdate("' + item.uuid +'","' + item.operationCombineName +'")>批量修改操作组设置 </a>'
                 + '                                         </div>\n'
                 + '                                         <div class="layui-col-md3">'
                 + '                                              <a href="javascript:void(0)" onclick=delOperationCombine("' + item.uuid + '")>删除操作组合 </a>'
