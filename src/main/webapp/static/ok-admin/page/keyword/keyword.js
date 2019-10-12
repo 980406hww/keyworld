@@ -60,7 +60,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                 $("#resetBtnDiv").after($(noReachStandardDiv));
             }
             if ($('#noReachStandardDays').length === 0) {
-                let noReachStandardDaysDiv = '<div class="layui-inline" id="noReachStandardDaysDiv">\n'
+                let noReachStandardDaysDiv = '<div class="layui-inline" id="noReachStandardDaysDiv" style="margin-left: 4px;">\n'
                     + '                           <label class="layui-form-label">未达标天数</label>\n'
                     + '                           <div class="layui-input-inline">\n'
                     + '                               <input type="number" name="noReachStandardDays" id="noReachStandardDays" placeholder="请输入未达标天数" autocomplete="off"\n';

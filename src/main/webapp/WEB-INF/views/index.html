@@ -110,6 +110,14 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/keywordInfo/searchKeywordInfos">
+                        <dd data-name="keyword-item">
+                            <a data-url="/internal/keywordsInfo/toKeywordsInfo" lay-id="keywordInfo">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>客户提交词</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
                     </dl>
                 </li>
                 <li data-name="customer" class="layui-nav-item ">
