@@ -987,16 +987,29 @@
 
     <select id="searchGroupsByTerminalType" resultType="com.keymanager.ckadmin.vo.CodeNameVo">
         SELECT
-            fOptimizeGroupName as 'name'
+        fOptimizeGroupName as 'name'
         FROM
-            t_customer_keyword
+        t_customer_keyword
         WHERE
-            fTerminalType = #{terminalType}
+        fTerminalType = #{terminalType}
         AND
-            fOptimizeGroupName IS NOT NULL
+        fOptimizeGroupName IS NOT NULL
         AND
-            fOptimizeGroupName &gt; ''
+        fOptimizeGroupName &gt; ''
         GROUP BY
-            fOptimizeGroupName
+        fOptimizeGroupName
+    </select>
+
+    <select id="getAvailableOptimizationGroups" resultType="com.keymanager.ckadmin.vo.GroupVO">
+        SELECT
+        ck.fOptimizeGroupName AS 'groupName'
+        FROM t_customer_keyword ck
+        WHERE ck.fTerminalType = #{groupSettingCriteria.terminalType}
+        <if test="groupSettingCriteria.optimizedGroupName != null and groupSettingCriteria.optimizedGroupName != ''">
+            AND ck.fOptimizeGroupName LIKE CONCAT(#{groupSettingCriteria.optimizedGroupName},'%')
+        </if>
+        AND ck.fOptimizeGroupName > ''
+        AND ck.fStatus = 1
+        GROUP BY ck.fOptimizeGroupName
     </select>
 </mapper>

@@ -16,7 +16,7 @@ public interface OperationTypeService extends IService<OperationType> {
 
     List getOperationTypeValues(String terminalType);
 
-    List getOperationTypeValuesByRole(String terminalType);
+    List<String> getOperationTypeValuesByRole(String terminalType);
 
     void clearOperationTypeCache(String terminalType);
 }

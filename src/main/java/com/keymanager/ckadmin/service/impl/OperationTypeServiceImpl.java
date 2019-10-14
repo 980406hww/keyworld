@@ -58,7 +58,7 @@ public class OperationTypeServiceImpl extends ServiceImpl<OperationTypeDao, Oper
     }
 
     @Override
-    public List getOperationTypeValuesByRole(String terminalType) {
+    public List<String> getOperationTypeValuesByRole(String terminalType) {
         Subject subject = SecurityUtils.getSubject();
         int flag = 0;
         if (subject.hasRole("AlgorithmGroup")) {
