@@ -357,16 +357,17 @@
         }
 
         form.on("submit(save)", function (data) {
-            var data = data.field;
+            var field = data.field;
             var operationCombine = {};
             let url = '/internal/groupsetting/saveGroupSetting2';
             if (operationCombineUuid_ == null){
                 url = '/internal/operationcombine/saveOperationCombine2';
-                operationCombine.operationCombineName = data.settingOperationCombineName;
-                operationCombine.terminalType = data.terminalType;
-                operationCombine.maxInvalidCount = data.maxInvalidCount === "" ? 8 : data.maxInvalidCount;
-                data.remainingAccount = parseInt($('#unusedPercent').text());
-                let groupNames = data.settingGroup.replace(/[，|\r\n]/g, ',').replace(/[\s+]/g, '');
+
+                operationCombine.operationCombineName = field.settingOperationCombineName;
+                operationCombine.terminalType = field.terminalType;
+                operationCombine.maxInvalidCount = field.maxInvalidCount === "" ? 8 : field.maxInvalidCount;
+                field.remainingAccount = parseInt($('#unusedPercent').text());
+                let groupNames = field.settingGroup.replace(/[，|\r\n]/g, ',').replace(/[\s+]/g, '');
                 if (groupNames.substring(groupNames.length - 1) === ',') {
                     groupNames = groupNames.substring(0, groupNames.length - 1);
                 }
@@ -377,9 +378,16 @@
                 if (groupNameArr.length > 0) {
                     operationCombine.groupNames = groupNameArr;
                 }
-                operationCombine.groupSetting = data;
+                operationCombine.groupSetting = field;
             }else{
-                operationCombine = data
+                let totalPercent = parseInt($('#remainAccount').val()) + parseInt($('#currentAccount').val());
+                let allocPercent = parseInt(field.machineUsedPercent);
+                if (allocPercent > totalPercent) {
+                    $('#machineUsedPercent').addClass("layui-form-danger").focus();
+                    show_layer_msg("请输入正确的分组占比且不能大于剩余占比", 5);
+                    return false;
+                }
+                operationCombine = field
             }
 
             $.ajax({
