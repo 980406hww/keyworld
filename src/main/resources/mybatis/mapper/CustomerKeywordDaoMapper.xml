@@ -1848,4 +1848,8 @@
     <delete id="cleanSysCustomerKeywordCreateOverOneWeek">
         DELETE FROM sys_customer_keyword WHERE CREATE_TIME &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY);
     </delete>
+
+    <select id="searchExistingSysCustomerKeywordQsId" resultType="java.lang.Long">
+        SELECT QS_ID FROM sys_customer_keyword sck WHERE QS_ID = #{qsId} AND CREATE_TIME = CURRENT_DATE() LIMIT 1
+    </select>
 </mapper>
