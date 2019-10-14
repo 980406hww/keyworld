@@ -77,22 +77,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 					if (CollectionUtils.isNotEmpty(qzSettingForSyncs)) {
 						for (QZSettingForSync qzSettingForSync : qzSettingForSyncs) {
 							String searchEngine = qzSettingForSync.getSearchEngine();
-							List<QZKeywordRankForSync> qzKeywordRankForSyncs = qzKeywordRankInfoService.getQZKeywordRankInfoByQZSettingUuid(qzSettingForSync.getQsId());
+							int limitRow = qzSettingForSync.getPcGroup() != null ? 1 : 0;
+							limitRow = qzSettingForSync.getPhoneGroup() != null ? (limitRow + 1) : limitRow;
+							List<QZKeywordRankForSync> qzKeywordRankForSyncs = qzKeywordRankInfoService.getQZKeywordRankInfoByQZSettingUuid(qzSettingForSync.getQsId(), searchEngine, limitRow);
 							if (CollectionUtils.isNotEmpty(qzKeywordRankForSyncs)) {
-								for (QZKeywordRankForSync qzKeywordRankForSync : qzKeywordRankForSyncs) {
-									if (Constants.SEARCH_ENGINE_BAIDU.equals(searchEngine)) {
-										if (Constants.QZ_CHARGE_RULE_STANDARD_SPECIES_DESIGNATION_WORD.equals(qzKeywordRankForSync.getWebsiteType())) {
-											QZKeywordRankForSync anOtherQZKeywordRanForSync = qzKeywordRankInfoService.searchAnOtherQZKeywordRanForSync(qzSettingForSync.getQsId());
-											if (null != anOtherQZKeywordRanForSync) {
-												qzKeywordRanks.add(anOtherQZKeywordRanForSync);
-											}
-										} else {
-											qzKeywordRanks.add(qzKeywordRankForSync);
-										}
-									} else {
-										qzKeywordRanks.add(qzKeywordRankForSync);
-									}
-								}
+								qzKeywordRanks.addAll(qzKeywordRankForSyncs);
 							}
 							// todo 转储关键词信息
 							customerKeywordService.batchInsertCustomerKeywordByCustomerUuid(qzSettingForSync.getCustomerId(), qzSettingForSync.getQsId());

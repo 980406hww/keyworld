@@ -194,36 +194,15 @@
             qk.fCreateTopFiftyNum AS 'initTopFiftyNum'
         FROM t_qz_keyword_rank_info qk
         WHERE qk.fQZSettingUuid = #{qzSettingUuid}
-        AND qk.fDataProcessingStatus = 1
-        LIMIT 2
-    </select>
-
-    <select id="searchAnOtherQZKeywordRanForSync" resultType="com.keymanager.monitoring.vo.QZKeywordRankForSync">
-        SELECT
-            qk.fUuid AS 'qkId',
-            qk.fQZSettingUuid AS 'qsId',
-            qk.fTerminalType AS 'terminalType',
-            qk.fWebsiteType AS 'websiteType',
-            qk.fDataProcessingStatus AS 'processingType',
-            qk.fTopTen AS 'topTen',
-            qk.fTopTwenty AS 'topTwenty',
-            qk.fTopThirty AS 'topThirty',
-            qk.fTopForty AS 'topForty',
-            qk.fTopFifty AS 'topFifty',
-            qk.fTopHundred AS 'topHundred',
-            qk.fDate AS 'date',
-            qk.fIncrease AS 'increase',
-            qk.fTodayDifference AS 'todayDiffVal',
-            qk.fOneWeekDifference AS 'oneWeekDiffVal',
-            qk.fBaiduRecordFullDate AS 'recordDate',
-            qk.fRecord AS 'record',
-            qk.fCreateTopTenNum AS 'initTopTenNum',
-            qk.fCreateTopFiftyNum AS 'initTopFiftyNum'
-        FROM t_qz_keyword_rank_info qk
-        WHERE qk.fQZSettingUuid = #{qzSettingUuid}
-        AND qk.fDataProcessingStatus = 0
-        AND qk.fWebsiteType = 'aiZhan'
-        LIMIT 1
+        <choose>
+            <when test="searchEngine == '百度'">
+                AND qk.fWebsiteType = 'xt'
+            </when>
+            <otherwise>
+                AND qk.fWebsiteType = 'designationWord'
+            </otherwise>
+        </choose>
+        LIMIT #{limitRow}
     </select>
 
     <insert id="replaceQZKeywordRanks">

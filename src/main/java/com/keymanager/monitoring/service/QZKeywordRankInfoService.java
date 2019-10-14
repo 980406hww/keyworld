@@ -254,12 +254,8 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         }
     }
 
-    public List<QZKeywordRankForSync> getQZKeywordRankInfoByQZSettingUuid(Long qzSettingUuid) {
-        return qzKeywordRankInfoDao.getQZKeywordRankInfoByQZSettingUuid(qzSettingUuid);
-    }
-
-    public QZKeywordRankForSync searchAnOtherQZKeywordRanForSync(Long qzSettingUuid) {
-        return qzKeywordRankInfoDao.searchAnOtherQZKeywordRanForSync(qzSettingUuid);
+    public List<QZKeywordRankForSync> getQZKeywordRankInfoByQZSettingUuid(Long qzSettingUuid, String searchEngine, int limitRow) {
+        return qzKeywordRankInfoDao.getQZKeywordRankInfoByQZSettingUuid(qzSettingUuid, searchEngine, limitRow);
     }
 
     public void replaceQZKeywordRanks(List<QZKeywordRankForSync> qzKeywordRanks) {
