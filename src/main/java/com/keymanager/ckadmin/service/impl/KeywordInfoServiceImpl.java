@@ -17,7 +17,7 @@ public class KeywordInfoServiceImpl extends ServiceImpl<KeywordInfoDao, KeywordI
     @Override
     public Page<KeywordInfo> searchKeywordInfos(KeywordInfoCriteria criteria) {
         Page<KeywordInfo> page = new Page<>(criteria.getPage(), criteria.getLimit());
-        page.setOrderByField("createTime");
+        page.setOrderByField("fCreateTime");
         page.setAsc(false);
         Wrapper<KeywordInfo> wrapper = new EntityWrapper<>();
         wrapper.like("fUserName", criteria.getUserName());

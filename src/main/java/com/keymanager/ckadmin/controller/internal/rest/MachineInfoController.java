@@ -12,7 +12,6 @@ import com.keymanager.ckadmin.service.MachineInfoService;
 import com.keymanager.ckadmin.service.PerformanceService;
 import com.keymanager.ckadmin.service.UserPageSetupService;
 import com.keymanager.util.FileUtil;
-import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import java.io.File;
 import java.util.List;
@@ -49,7 +48,7 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/searchMachineInfos")
     @RequestMapping(value = "/toMachineInfos", method = RequestMethod.GET)
-    public ModelAndView toMachineInfo(HttpServletRequest request) {
+    public ModelAndView toMachineInfos() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/machineManage");
         return mv;
