@@ -250,6 +250,14 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/negativeKeywordName/searchNegativeKeywordNames">
+                        <dd data-name="other-item" >
+                            <a data-url="/internal/negativeKeywords/toNegativeKeywords" lay-id="negativeKeywords">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>负面信息抓取</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
                     </dl>
                 </li>
 
@@ -328,10 +336,6 @@
                     <i class="ok-icon ok-iconairplay"></i>
                     <cite is-close=false>主页</cite>
                 </li>
-
-
-
-
             </ul>
             <div class="layui-tab-content ok-tab-content">
                 <div class="layui-tab-item layui-show">

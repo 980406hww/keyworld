@@ -92,7 +92,7 @@ public class QZChargeStatusController {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(0);
         Page<QZChargeStatus> page = new Page<>(criteria.getPage(), criteria.getLimit());
-        page.setOrderByField("createTime");
+        page.setOrderByField("fCreateTime");
         page.setAsc(false);
         Wrapper<QZChargeStatus> wrapper = new EntityWrapper<>();
         wrapper.where("fQZSettingUuid = {0}", criteria.getQzSettingUuid());
