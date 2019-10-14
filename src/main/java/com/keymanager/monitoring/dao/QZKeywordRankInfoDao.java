@@ -36,9 +36,7 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
 
     List<QZKeywordRankInfo> searchExistingExtraQZKeywordRankInfo (@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType")String terminalType);
 
-    List<QZKeywordRankForSync> getQZKeywordRankInfoByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid);
-
-    QZKeywordRankForSync searchAnOtherQZKeywordRanForSync(@Param("qzSettingUuid") Long qzSettingUuid);
+    List<QZKeywordRankForSync> getQZKeywordRankInfoByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid, @Param("searchEngine") String searchEngine, @Param("limitRow") int limitRow);
 
     /**
      * replace 站点曲线数据
