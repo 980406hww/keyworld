@@ -250,7 +250,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         $.each(data, function (index, item) {
             let htm = '';
             htm += '<div class="data-item">\n'
-                +'<input type="hidden" name="operationCombineUuid" value="'+item.uuid+'}">'
+                +'<input type="hidden" name="operationCombineUuid" value="'+item.uuid+'">'
                 + '                        <div class="layui-row">\n'
                 + '                            <div class="layui-col-md12">\n'
                 + '                                <div class="data-head">\n'
@@ -435,12 +435,17 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             yes: function (index, layero) {
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
-                if (value === '') {
-                    show_layer_msg('请输入新分组标签！', 5, null, 1000);
-                    return;
+                let groups = [];
+                if (value !== ''){
+                    value = value.replace(/( )+/g,"").replace(/(，)+|(,)+/g, ",").split(",");
+                    value = uniqueGroupName(value);
+                    $.each(value, function (idx, val) {
+                        if (val !== "") {
+                            groups.push($.trim(val));
+                        }
+                    });
                 }
-                value = value.replace(/( )+/g,"").replace(/(，)+|(,)+/g, ",").split(",");
-                let groups = uniqueGroupName(value);
+
                 var postData = {};
                 postData.operationCombineUuid = operationCombineUuid;
                 postData.groupNames = groups;
@@ -455,9 +460,15 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            show_layer_msg('操作成功', 6);
-                            $('#groupNameStr'+operationCombineUuid).text(groups.join(","));
-                            $('#groupNameStr'+operationCombineUuid).attr("title",groups.join(","));
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                // $('#groupNameStr'+operationCombineUuid).text(groups.join(","));
+                                // $('#groupNameStr'+operationCombineUuid).attr("title",groups.join(","));
+                                let pageConf = formToJsonObject('searchForm');
+                                initLayPage(pageConf);
+                            });
                         } else {
                             show_layer_msg('操作失败', 5);
                         }
