@@ -291,4 +291,45 @@
         WHERE qz.fCustomerUuid = #{customerUuid}
         AND EXISTS ( SELECT 1 FROM t_qz_keyword_rank_info qk WHERE qk.fQZSettingUuid = qz.fUuid AND qk.fTerminalType = 'PC' AND qk.fDataProcessingStatus = 1)
     </select>
+
+    <select id="getAvailableOptimizationGroups" resultType="com.keymanager.ckadmin.vo.GroupVO">
+        SELECT
+        <choose>
+            <when test="groupSettingCriteria.terminalType =='PC'">
+                qs.fPcGroup AS 'groupName'
+            </when>
+            <otherwise>
+                qs.fPhoneGroup AS 'groupName'
+            </otherwise>
+        </choose>
+        FROM t_qz_setting qs
+        WHERE (qs.fRenewalStatus = 1 OR qs.fRenewalStatus = 2)
+        <choose>
+            <when test="groupSettingCriteria.terminalType =='PC'">
+                AND qs.fPcGroup > ''
+            </when>
+            <otherwise>
+                AND qs.fPhoneGroup > ''
+            </otherwise>
+        </choose>
+        <if test="groupSettingCriteria.optimizedGroupName != null and groupSettingCriteria.optimizedGroupName != ''">
+            <choose>
+                <when test="groupSettingCriteria.terminalType =='PC'">
+                    AND qs.fPcGroup LIKE CONCAT(#{groupSettingCriteria.optimizedGroupName},'%')
+                </when>
+                <otherwise>
+                    AND qs.fPhoneGroup LIKE CONCAT(#{groupSettingCriteria.optimizedGroupName},'%')
+                </otherwise>
+            </choose>
+        </if>
+        GROUP BY
+        <choose>
+            <when test="groupSettingCriteria.terminalType =='PC'">
+                qs.fPcGroup
+            </when>
+            <otherwise>
+                qs.fPhoneGroup
+            </otherwise>
+        </choose>
+    </select>
 </mapper>

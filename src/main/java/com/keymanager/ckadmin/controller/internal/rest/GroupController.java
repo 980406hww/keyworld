@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
+import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.criteria.OperationCombineCriteria;
 import com.keymanager.ckadmin.service.GroupService;
 import com.keymanager.ckadmin.vo.GroupVO;
@@ -12,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -95,6 +98,39 @@ public class GroupController extends SpringMVCBaseController {
         try {
             List<Long> groupUuids = (List<Long>) requestMap.get("groupUuids");
             groupService.deleteGroupsBelowOperationCombine(groupUuids);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("服务端错误");
+            return resultBean;
+        }
+    }
+
+    @RequiresPermissions("/internal/group/getAvailableOptimizationGroups")
+    @PostMapping("/getAvailableOptimizationGroups2")
+    public ResultBean getAvailableOptimizationGroups(@RequestBody GroupSettingCriteria groupSettingCriteria) {
+        ResultBean resultBean = new ResultBean(0, "success");
+        try {
+            List<GroupVO> availableOptimizationGroups = groupService.getAvailableOptimizationGroups(groupSettingCriteria);
+            resultBean.setCount(availableOptimizationGroups.size());
+            resultBean.setData(availableOptimizationGroups);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("服务端错误");
+            return resultBean;
+        }
+    }
+
+    @RequiresPermissions("/internal/group/batchAddGroups")
+    @PostMapping("/batchAddGroups2")
+    public ResultBean batchAddGroups(@RequestBody OperationCombineCriteria operationCombineCriteria, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            operationCombineCriteria.setCreator((String) request.getSession().getAttribute("username"));
+            groupService.batchAddGroups(operationCombineCriteria);
             return resultBean;
         } catch (Exception e) {
             logger.error(e.getMessage());

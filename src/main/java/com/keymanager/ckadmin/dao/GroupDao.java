@@ -21,7 +21,7 @@ public interface GroupDao extends BaseMapper<Group> {
 
     void deleteByGroupName(@Param("groupName") String groupName);
 
-    List<String> getOptimizationGroups(@Param("terminalType") String terminalType);
+    List<GroupVO> getOptimizationGroups(@Param("terminalType") String terminalType);
 
     List<String> getGroupNames (@Param("operationCombineUuid") long operationCombineUuid);
 

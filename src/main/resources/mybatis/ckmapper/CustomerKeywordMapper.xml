@@ -984,4 +984,19 @@
         AND ck.fTerminalType = #{keywordStandardCriteria.terminalType}
         AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL #{keywordStandardCriteria.noReachStandardDays} DAY)
     </select>
+
+    <select id="getAvailableOptimizationGroups" resultType="com.keymanager.ckadmin.vo.GroupVO">
+        SELECT
+        ck.fOptimizeGroupName AS 'groupName'
+        FROM t_customer_keyword ck
+        WHERE ck.fTerminalType = #{groupSettingCriteria.terminalType}
+        <if test="groupSettingCriteria.optimizedGroupName != null and groupSettingCriteria.optimizedGroupName != ''">
+            AND ck.fOptimizeGroupName LIKE CONCAT(#{groupSettingCriteria.optimizedGroupName},'%')
+        </if>
+        AND ck.fOptimizeGroupName > ''
+        AND ck.fStatus = 1
+        GROUP BY ck.fOptimizeGroupName
+    </select>
+
+
 </mapper>

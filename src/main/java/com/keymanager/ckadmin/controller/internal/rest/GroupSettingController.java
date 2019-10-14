@@ -197,4 +197,12 @@ public class GroupSettingController {
         mv.setViewName("groupSettings/groupDetail");
         return mv;
     }
+
+    @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
+    @GetMapping("/toSearchNeedAddGroup")
+    public ModelAndView toSearchNeedAddGroup() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("groupSettings/searchNeedAddGroup");
+        return mv;
+    }
 }

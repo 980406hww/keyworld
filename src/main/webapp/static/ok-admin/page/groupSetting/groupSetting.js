@@ -124,7 +124,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         data.remainAccount = 100;
         data.currentAccount = 0;
         data.terminalType = $('#terminalType').val();
-        okLayer.open("终端管理 / 分组信息 / 添加操作组合", "/internal/groupsetting/toGroupSettingAdd", "60%", "90%", function(layero){
+        okLayer.open("终端管理 / 分组信息 / 添加操作组合", "/internal/groupsetting/toGroupSettingAdd", "40%", "90%", function(layero){
             window[layero.find("iframe")[0]["name"]].initForm(data);
         }, function () {
             if (sign) {
@@ -134,6 +134,20 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             }
         });
     };
+
+    window.toSearchNeedAddGroup = function(){
+        let data = {};
+        data.terminalType = $('#terminalType').val();
+        okLayer.open("终端管理 / 分组信息 / 查询需要添加的优化组", "/internal/groupsetting/toSearchNeedAddGroup", "60%", "90%", function(layero){
+            window[layero.find("iframe")[0]["name"]].initForm(data);
+        }, function () {
+            if (sign) {
+                let pageConf = formToJsonObject('searchForm');
+                initLayPage(pageConf);
+                sign = false;
+            }
+        });
+    }
 
     window.toGroupSettingAdd = function(operationCombineUuid,operationCombineName,maxInvalidCount,remainAccount){
         let data = {};

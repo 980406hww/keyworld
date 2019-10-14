@@ -86,4 +86,14 @@
         </if>
         ORDER BY g.fCreateTime
     </select>
+
+    <select id="getOptimizationGroups" resultType="com.keymanager.ckadmin.vo.GroupVO">
+        SELECT
+            g.fGroupName AS 'groupName'
+        FROM t_group g
+                 LEFT JOIN t_operation_combine toc
+                           ON toc.fUuid = g.fOperationCombineUuid
+        WHERE toc.fTerminalType = #{terminalType}
+        GROUP BY g.fGroupName
+    </select>
 </mapper>
