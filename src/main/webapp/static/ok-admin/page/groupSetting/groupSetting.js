@@ -279,52 +279,53 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                     + '                                <div class="data-body">\n'
                     + '                                    <div class="body-title">\n'
                     + '                                            <div class="layui-col-md1" style="width: 10%">操作类型</div>\n'
-                    + '                                            <div class="layui-col-md1"style="width: 9%">分组设置占比</div>\n'
-                    + '                                            <div class="layui-col-md1"style="width: 8%">网站统计</div>\n'
-                    + '                                            <div class="layui-col-md1"style="width: 9%">是否访问目标网站</div>\n'
-                    + '                                            <div class="layui-col-md1"style="width: 7%">页数</div>\n'
-                    + '                                            <div class="layui-col-md1"style="width: 7%">每页条数</div>\n'
-                    + '                                            <div class="layui-col-md1"style="width: 10%">Cookie设置</div>\n'
-                    + '                                            <div class="layui-col-md1"style="width: 10%">进入页次数</div>\n'
-                    + '                                            <div class="layui-col-md2"style="width: 10%">刷多少个词换IP</div>\n'
-                    + '                                            <div class="layui-col-md1"style="width: 10%">没结果随机点</div>\n'
-                    + '                                            <div class="layui-col-md1"style="width: 10%">操作</div>\n'
+                    + '                                            <div class="layui-col-md1" style="width: 9%">分组设置占比</div>\n'
+                    + '                                            <div class="layui-col-md1" style="width: 8%">网站统计</div>\n'
+                    + '                                            <div class="layui-col-md1" style="width: 9%">是否访问目标网站</div>\n'
+                    + '                                            <div class="layui-col-md1" style="width: 7%">页数</div>\n'
+                    + '                                            <div class="layui-col-md1" style="width: 7%">每页条数</div>\n'
+                    + '                                            <div class="layui-col-md1" style="width: 10%">Cookie设置</div>\n'
+                    + '                                            <div class="layui-col-md1" style="width: 10%">进入页次数</div>\n'
+                    + '                                            <div class="layui-col-md2" style="width: 10%">刷多少个词换IP</div>\n'
+                    + '                                            <div class="layui-col-md1" style="width: 10%">没结果随机点</div>\n'
+                    + '                                            <div class="layui-col-md1" style="width: 10%">操作</div>\n'
                     + '                                    </div>\n';
                 $.each(item.groupSettings, function (index2, groupSetting) {
                     htm +='                                    <div class="body-content">\n'
                         + '                                         <div class="layui-col-md1" style="width: 10%">'
                         +                                               groupSetting.operationType
                         + '                                         </div>\n'
-                        + '                                         <div class="layui-col-md1"style="width: 9%">'
+                        + '                                         <div class="layui-col-md1" style="width: 9%">'
                         +                                               groupSetting.machineUsedPercent+'%'
                         + '                                         </div>\n'
-                        + '                                         <div class="layui-col-md1"style="width: 8%">'
+                        + '                                         <div class="layui-col-md1" style="width: 8%">'
                         +                                               getStatisticText(groupSetting.disableStatistics)
                         + '                                         </div>\n'
-                        + '                                         <div class="layui-col-md1"style="width: 9%">'
+                        + '                                         <div class="layui-col-md1" style="width: 9%">'
                         +                                               getVisitWebsiteText(groupSetting.disableVisitWebsite)
                         + '                                         </div>\n'
-                        + '                                         <div class="layui-col-md1"style="width: 7%">'
+                        + '                                         <div class="layui-col-md1" style="width: 7%">'
                         +                                               groupSetting.page
                         + '                                         </div>\n'
-                        + '                                         <div class="layui-col-md1"style="width: 7%">'
+                        + '                                         <div class="layui-col-md1" style="width: 7%">'
                         +                                               getPageSizeText(groupSetting.pageSize)
                         + '                                         </div>\n'
-                        + '                                         <div class="layui-col-md1"style="width: 10%">'
+                        + '                                         <div class="layui-col-md1" style="width: 10%">'
                         +                                               getCookieText(groupSetting.clearCookie)
                         + '                                         </div>\n'
-                        + '                                         <div class="layui-col-md1"style="width: 10%">'
+                        + '                                         <div class="layui-col-md1" style="width: 10%">'
                         +                                               groupSetting.entryPageMinCount + ' - ' + groupSetting.entryPageMaxCount
                         + '                                         </div>\n'
-                        + '                                         <div class="layui-col-md2"style="width: 10%">'
+                        + '                                         <div class="layui-col-md2" style="width: 10%">'
                         +                                               groupSetting.optimizeKeywordCountPerIP
                         + '                                        </div>\n'
-                        + '                                        <div class="layui-col-md1"style="width: 10%">'
+                        + '                                        <div class="layui-col-md1" style="width: 10%">'
                         +                                               getRandomlyClickNoResultText(groupSetting.randomlyClickNoResult)
                         + '                                        </div>\n'
-                        + '                                        <div class="layui-col-md1 body-operation"style="width: 10%">'
+                        + '                                        <div class="layui-col-md1 body-operation" style="width: 10%">'
+                        + '                                             <input type="hidden" value="'+item.groupSettings.length+'" id="groupSettingCount'+item.uuid+'"/>'
                         + '                                             <a href="javascript:void(0)" onclick=toGroupSettingUpdate("' + item.uuid +'","' + item.operationCombineName +'","' + item.remainingAccount +'","' + groupSetting.machineUsedPercent +'","' + groupSetting.uuid +'")>修改 </a>'
-                        + '                                             <a href="javascript:void(0)" onclick=delGroupSetting("' + groupSetting.uuid + '")>删除 </a>'
+                        + '                                             <a href="javascript:void(0)" onclick=delGroupSetting("' + item.uuid + '","' + groupSetting.uuid + '")>删除 </a>'
                         + '                                         </div>'
                         + '                                    </div>\n';
                 });
@@ -344,7 +345,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             type: 'POST',
             dataType:'json',
             success: function (res) {
-                if (res.code === 200){
+                if (res.code === 200) {
                     let data = res.data;
                     var groupNameStr = "";
                     if (data.length === 0) {
@@ -353,13 +354,13 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                         $.each(data, function (idx, value) {
                             groupNameStr += value + ",";
                         });
-                        groupNameStr = groupNameStr.substring(0, groupNameStr.length-1);
+                        groupNameStr = groupNameStr.substring(0, groupNameStr.length - 1);
                     }
-                    $('#groupNameStr'+uuid).text(groupNameStr);
-                    $('#groupNameStr'+uuid).attr("title",groupNameStr);
+                    $('#groupNameStr' + uuid).text(groupNameStr);
+                    $('#groupNameStr' + uuid).attr("title", groupNameStr);
 
-                }else {
-                    show_layer_msg('获取操作组合下的分组数据失败！', 5, );
+                } else {
+                    show_layer_msg('获取操作组合下的分组数据失败！', 5,);
                 }
             },
             error: function () {
@@ -556,23 +557,113 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         return htm;
     };
 
+
     window.showGroupQueueDialog = function (uuid) {
-        console.log(uuid)
+        let data = {};
+        data.uuid = uuid;
+        okLayer.open("终端管理 / 分组信息 / 分组详情<span style='color: red'>(需要删除的分组请取消选中)</span>", "/internal/groupsetting/toGroupDetail", "40%", "90%", function(layero){
+            window[layero.find("iframe")[0]["name"]].initForm(data);
+        }, function () {
+            if (sign) {
+                let pageConf = formToJsonObject('searchForm');
+                initLayPage(pageConf);
+                sign = false;
+            }
+        });
     };
 
-    window.showGroupSettingDialog = function (uuid) {
-        console.log(uuid)
+    window.delOperationCombine = function (operationCombineUuid) {
+        $.ajax({
+            url: '/internal/operationcombine/getGroupNames2/' + operationCombineUuid,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if (result.code === 200) {
+                    let data = result.data;
+                    if (data.length > 0){
+                        show_layer_msg("删除操作组合前请先移除该操作组合下的所有分组！！！", 5)
+                    }else{
+                        layer.confirm('确定删除此操作组合吗', function (index) {
+                            $.ajax({
+                                url: '/internal/operationcombine/delOperationCombine2/' + operationCombineUuid,
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                timeout: 5000,
+                                type: 'POST',
+                                success: function (result) {
+                                    if (result.code === 200) {
+                                        layer.msg('操作成功', {
+                                            icon: 6,
+                                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                        }, function () {
+                                            let pageConf = formToJsonObject('searchForm');
+                                            initLayPage(pageConf)
+                                        });
+                                    } else {
+                                        layer.msg('操作失败', {icon: 5});
+                                    }
+                                },
+                                error: function () {
+                                    layer.msg('操作失败', {icon: 5});
+
+                                }
+                            });
+                            layer.close(index);
+                        });
+                    }
+
+                } else {
+                    layer.msg('操作失败', {icon: 5});
+                }
+            },
+            error: function () {
+                layer.msg('操作失败', {icon: 5});
+
+            }
+        });
     };
 
-    window.showUpdateGroupDialog = function (uuid) {
-        console.log(uuid)
-    };
+    window.delGroupSetting = function (operationCombineUuid, groupSettingUuid) {
+        let groupSettingCount = parseInt($('#groupSettingCount'+operationCombineUuid).val());
+        if (groupSettingCount === 1){
+            show_layer_msg("这是最后一个优化组设置，请直接删除操作组合！！！", 5)
+            return false
+        }
+        layer.confirm('确定删除此操作类型吗', function (index) {
+            $.ajax({
+                url: '/internal/groupsetting/delGroupSetting2/' + groupSettingUuid,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result.code === 200) {
+                        layer.msg('操作成功', {
+                            icon: 6,
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            let pageConf = formToJsonObject('searchForm');
+                            initLayPage(pageConf)
+                        });
+                    } else {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                },
+                error: function () {
+                    layer.msg('操作失败', {icon: 5});
 
-    window.delOperationCombine = function (uuid) {
-        console.log(uuid)
-    };
-
-    window.delGroupSetting = function (uuid) {
+                }
+            });
+            layer.close(index);
+        });
         console.log(uuid)
     };
 });

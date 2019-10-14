@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.service;
 import com.baomidou.mybatisplus.service.IService;
 import com.keymanager.ckadmin.criteria.OperationCombineCriteria;
 import com.keymanager.ckadmin.entity.Group;
+import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.OperationCombineVO;
 import java.util.List;
 
@@ -20,4 +21,8 @@ public interface GroupService extends IService<Group> {
     List<OperationCombineVO> searchGroupsBelowOperationCombine (Long operationCombineUuid, String groupName);
 
     void updateGroupsBelowOperationCombine (List<Long> groupUuids, Long operationCombineUuid);
+
+    List<GroupVO> getGroupsByOperationCombineUuid(Long operationCombineUuid, String groupName);
+
+    void deleteGroupsBelowOperationCombine(List<Long> groupUuids);
 }

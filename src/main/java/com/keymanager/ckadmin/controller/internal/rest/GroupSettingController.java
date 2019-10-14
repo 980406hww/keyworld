@@ -15,8 +15,6 @@ import javax.annotation.Resource;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -177,4 +175,26 @@ public class GroupSettingController {
         }
     }
 
+    @RequiresPermissions("/internal/groupsetting/delGroupSetting")
+    @PostMapping("/delGroupSetting2/{uuid}")
+    public ResultBean delGroupSetting(@PathVariable("uuid") long uuid) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            groupSettingService.deleteGroupSetting(uuid);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("服务端错误");
+            return resultBean;
+        }
+    }
+
+    @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
+    @GetMapping("/toGroupDetail")
+    public ModelAndView toGroupDetail() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("groupSettings/groupDetail");
+        return mv;
+    }
 }

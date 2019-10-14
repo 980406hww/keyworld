@@ -4,6 +4,7 @@ import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.OperationCombineCriteria;
 import com.keymanager.ckadmin.service.GroupService;
+import com.keymanager.ckadmin.vo.GroupVO;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -11,8 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,6 +61,40 @@ public class GroupController extends SpringMVCBaseController {
             String userName = (String) request.getSession().getAttribute("username");
             operationCombineCriteria.setCreator(userName);
             groupService.saveGroupsBelowOperationCombine(operationCombineCriteria);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("服务端错误");
+            return resultBean;
+        }
+    }
+
+    @RequiresPermissions("/internal/group/saveGroupsBelowOperationCombine")
+    @PostMapping("/getGroupsByOperationCombine/{operationCombineUuid}")
+    public ResultBean saveGroupsBelowOperationCombine(@PathVariable(name = "operationCombineUuid") Long operationCombineUuid, @RequestBody Map requestMap) {
+        ResultBean resultBean = new ResultBean(0, "success");
+        try {
+            String groupName = (String) requestMap.get("groupName");
+            List<GroupVO> groupVOS = groupService.getGroupsByOperationCombineUuid(operationCombineUuid, groupName);
+            resultBean.setData(groupVOS);
+            resultBean.setCount(groupVOS.size());
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("服务端错误");
+            return resultBean;
+        }
+    }
+
+    @RequiresPermissions("/internal/group/saveGroupsBelowOperationCombine")
+    @PostMapping("/deleteGroupsBelowOperationCombine2")
+    public ResultBean deleteGroupsBelowOperationCombine(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            List<Long> groupUuids = (List<Long>) requestMap.get("groupUuids");
+            groupService.deleteGroupsBelowOperationCombine(groupUuids);
             return resultBean;
         } catch (Exception e) {
             logger.error(e.getMessage());

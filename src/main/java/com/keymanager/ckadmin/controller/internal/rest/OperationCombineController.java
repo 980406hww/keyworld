@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -119,4 +117,21 @@ public class OperationCombineController {
             return resultBean;
         }
     }
+
+    @RequiresPermissions("/internal/operationCombine/delOperationCombine")
+    @PostMapping("/delOperationCombine2/{uuid}")
+    public ResultBean deleteOperationCombine(@PathVariable("uuid") long uuid) {
+        ResultBean resultBean = new ResultBean(200,"success");
+        try {
+            operationCombineService.deleteOperationCombine(uuid);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+    }
+
+
 }

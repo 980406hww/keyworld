@@ -73,4 +73,17 @@
             #{uuid}
         </foreach>
     </update>
+
+    <select id="getGroupsByOperationCombineUuid" resultType="com.keymanager.ckadmin.vo.GroupVO">
+        SELECT
+            g.fUuid AS 'groupUuid',
+            g.fGroupName AS 'groupName'
+        FROM t_group g
+        LEFT JOIN t_operation_combine toc ON toc.fUuid = g.fOperationCombineUuid
+        WHERE g.fOperationCombineUuid = #{operationCombineUuid}
+        <if test="groupName != null and groupName != ''">
+            AND g.fGroupName LIKE CONCAT(#{groupName},'%')
+        </if>
+        ORDER BY g.fCreateTime
+    </select>
 </mapper>

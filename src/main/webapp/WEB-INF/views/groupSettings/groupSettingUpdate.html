@@ -306,8 +306,8 @@
 
     }
     function init_operationCombineCount(layui_, operationCombineUuid){
-        var $ = layui.jquery;
-        var form = layui.form;
+        var $ = layui_.jquery;
+        var form = layui_.form;
         $.ajax({
             url: '/internal/groupsetting/getGroupSettingCount2/' + operationCombineUuid,
             type: 'post',
@@ -323,8 +323,8 @@
         });
     }
     function setForm(layui_, uuid){
-        var $ = layui.jquery;
-        var form = layui.form;
+        var $ = layui_.jquery;
+        var form = layui_.form;
         $.ajax({
             url: '/internal/groupsetting/getGroupSettingByUuid/' + uuid,
             type: 'post',
@@ -333,7 +333,7 @@
                 if (res.code === 200) {
                     form.val("updateGroupSetting", res.data);
                 } else {
-                    layui.layer.msg(res.msg);
+                    layui_.layer.msg(res.msg);
                 }
             }
         });
@@ -341,7 +341,7 @@
 
     function init_operationType(layui_, operationTypes) {
         let $ = layui_.jquery;
-        let form = layui.form;
+        let form = layui_.form;
         $("#operationType").empty().append('<option value="">请选择操作类型</option>');
         $.each(operationTypes, function (index, item) {
             $('#operationType').append('<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素

@@ -7,6 +7,7 @@ import com.keymanager.ckadmin.dao.GroupDao;
 import com.keymanager.ckadmin.entity.Group;
 import com.keymanager.ckadmin.service.GroupService;
 import com.keymanager.ckadmin.service.OperationCombineService;
+import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.OperationCombineVO;
 import java.util.ArrayList;
 import java.util.Date;
@@ -100,5 +101,15 @@ public class GroupServiceImpl extends ServiceImpl<GroupDao, Group> implements Gr
         if (!operationCombineCriteria.isOnlySaveStatus() && !existingGroupNameMap.isEmpty()) {
             groupDao.deleteGroupByGroupName(operationCombineCriteria.getOperationCombineUuid(), new ArrayList<String>(existingGroupNameMap.values()));
         }
+    }
+
+    @Override
+    public List<GroupVO> getGroupsByOperationCombineUuid(Long operationCombineUuid, String groupName) {
+        return groupDao.getGroupsByOperationCombineUuid(operationCombineUuid, groupName);
+    }
+
+    @Override
+    public void deleteGroupsBelowOperationCombine(List<Long> groupUuids) {
+        groupDao.deleteBatchIds(groupUuids);
     }
 }
