@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.SalesManageDao">
+
+    <select id="getSalesManages" parameterType="com.keymanager.ckadmin.entity.SalesManage"
+            resultType="com.keymanager.ckadmin.entity.SalesManage">
+        SELECT
+        fUuid AS 'uuid',
+        fSalesName AS 'salesName',
+        fTelephone AS 'telephone',
+        fQQ AS 'qq',
+        fWeChat AS 'weChat',
+        fQuickResponseCode AS 'quickResponseCode',
+        fEmail AS 'email',
+        fManagePart AS 'managePart',
+        fCreateTime AS 'createTime',
+        fUpdateTime AS 'updateTime'
+        FROM
+        t_sales_manage
+        WHERE 1 = 1
+        <if test="salesManage.salesName != null and salesManage.salesName != ''">
+            AND fSalesName like '%${salesManage.salesName}%'
+        </if>
+    </select>
+
+    <select id="selectAllSalesInfo" parameterType="java.lang.String" resultType="com.keymanager.ckadmin.vo.SalesManageVO">
+        SELECT
+        fSalesName AS 'salesName',
+        fTelephone AS 'telephone',
+        fQQ AS 'qq',
+        fWeChat AS 'weChat',
+        fQuickResponseCode AS 'quickResponseCode',
+        fEmail AS 'email',
+        fManagePart AS 'managePart'
+        FROM
+        t_sales_manage
+        WHERE
+        fManagePart = #{websiteType}
+    </select>
+
+</mapper>

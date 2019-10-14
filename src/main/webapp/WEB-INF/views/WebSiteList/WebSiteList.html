@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>行业列表</title>
+    <title>网站管理</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
@@ -82,10 +82,10 @@
 <body>
 <div class="ok-body">
     <div class="layui-tab layui-tab-card" lay-filter="keywordTab">
-        <ul class="layui-tab-title" id="tabItem">
-            <li lay-id="PC" class="layui-this" data-terminal="PC">电脑</li>
-            <li lay-id="Phone" data-terminal="Phone">手机</li>
-        </ul>
+<!--        <ul class="layui-tab-title" id="tabItem">-->
+<!--            <li lay-id="PC" class="layui-this" data-terminal="PC">PC</li>-->
+<!--            <li lay-id="Phone" data-terminal="Phone">Phone</li>-->
+<!--        </ul>-->
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
                 <div class="layui-card ">
@@ -93,24 +93,23 @@
                         <form class="layui-form layui-form-pane" id="searchForm">
                             <div class="my-collapse">
                                 <div>
-                                    <input type="hidden" name="terminalType" id="terminalType">
-                                    <div class="layui-inline">
-                                        <input type="text" name="industryName" id="industryName" placeholder="请输入行业名称" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
-                                    </div>
-                                    <div class="layui-inline" id="engine-box">
-                                        <select name="searchEngine" id="engine"></select>
-                                    </div>
-                                    <div class="layui-inline" id="user-box">
-                                        <select name="loginName" id="activeUsers"></select>
-                                    </div>
-                                    <div class="layui-inline" id="status-box">
-                                        <select name="status">
-                                            <option value="" selected>爬取状态</option>
-                                            <option value="2">爬取完成</option>
-                                            <option value="1">爬取中</option>
-                                            <option value="0">未爬取</option>
-                                        </select>
-                                    </div>
+<!--                                    <div class="layui-inline">-->
+<!--                                        <input type="text" name="industryName" id="industryName" placeholder="请输入行业名称" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">-->
+<!--                                    </div>-->
+<!--                                    <div class="layui-inline" id="engine-box">-->
+<!--                                        <select name="searchEngine" id="engine"></select>-->
+<!--                                    </div>-->
+<!--                                    <div class="layui-inline" id="user-box">-->
+<!--                                        <select name="loginName" id="activeUsers"></select>-->
+<!--                                    </div>-->
+<!--                                    <div class="layui-inline" id="status-box">-->
+<!--                                        <select name="status">-->
+<!--                                            <option value="" selected>爬取状态</option>-->
+<!--                                            <option value="2">爬取完成</option>-->
+<!--                                            <option value="1">爬取中</option>-->
+<!--                                            <option value="0">未爬取</option>-->
+<!--                                        </select>-->
+<!--                                    </div>-->
                                     <div class="layui-inline">
                                         <button class="layui-collapse my-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
                                     </div>
@@ -125,7 +124,7 @@
                     </div>
                 </div>
                 <!--数据表格-->
-                <table class="layui-hide" id="industryListTable" lay-filter="tableFilter"></table>
+                <table class="layui-hide" id="websiteListTable" lay-filter="tableFilter"></table>
             </div>
         </div>
     </div>
@@ -155,8 +154,8 @@
         var okLayer = layui.okLayer;
         var layer = layui.layer;
 
-        init_Search({'terminalType': 'PC'})
-        init_SelectData()
+        init_Search()
+        // init_SelectData()
 
         function init_SelectData(){
             var postData = {}
@@ -204,33 +203,59 @@
 
         function init_Search(whereCondition){
             table.render({
-                elem: '#industryListTable',
+                elem: '#websiteListTable',
                 method: 'post',
-                url: '${ctx.path}/internal/industryList/searchIndustries',
+                url: '${ctx.path}/internal/websites/searchWebsites',
                 limit: 50,
                 page: true,
                 autoSort: false,
                 size: 'sm',
-                id: 'industryListTable',
+                id: 'websiteListTable',
                 even: true,//隔行背景
                 toolbar: "#toolbarTpl",
                 defaultToolbar: [],
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '5%', align: 'center'},
-                    {field: 'userID', title: '用户名称', width: '10%', align: 'center'},
-                    {field: 'industryName', title: '行业名称', width: '13%', align: 'center', templet: '#industryNames'},
-                    {field: 'searchEngine', title: '搜索引擎', width: '10%', align: 'center'},
-                    {field: 'targetUrl', title: '目标起始网址', width: '17%', align: 'center', templet: '#url'},
-                    {field: 'pageNum', title: '爬取页数', width: '7%', align: 'center'},
-                    {field: 'pagePerNum', title: '每页条数', align: 'center', width: '7%', align: 'center'},
-                    {field: 'status', title: '状态', align: 'center', width: '10%', align: 'center', templet: '#toStatus'},
-                    {field: 'createTime', title: '创建时间', align: 'center', width: '10%', align: 'center', templet: '#toDateTime'},
-                    {title: '操作', align: 'center', width: '11%', align: 'center', templet: '#operationTpl', fixed: "right"},
+                    {filed: 'uuid', type: 'checkbox', width: '3%', align: 'center', rowspan: 2},
+                    {field: 'websiteName', title: '网站名称', width: '10%', align: 'center', rowspan: 2},
+                    {field: '', title: '所属行业类型', width: '8%', align: 'center', rowspan: 2},
+                    {field: 'accessFailCount', title: '访问失败次数', width: '6%', align: 'center', rowspan: 2},
+                    {field: 'accessFailTime', title: '发现故障时间', width: '7%', align: 'center', templet: '#url', rowspan: 2},
+                    {field: 'lastAccessTime', title: '最近访问时间', width: '7%', align: 'center', rowspan: 2},
+                    {field: 'updateTime', title: '更新时间', align: 'center', width: '7%', align: 'center', rowspan: 2},
+                    {field: '', title: '域名信息', align: 'center', width: '28%', colspan: 7},
+                    {field: '', title: '后台信息', align: 'center', width: '28%', colspan: 7},
+                    {field: '', title: '数据库信息', align: 'center', width: '16%', colspan: 4},
+                    {field: '', title: '服务器信息', align: 'center', width: '14%', colspan: 6},
+                    {title: '操作', align: 'center', width: '7%', align: 'center', templet: '#operationTpl', fixed: "right", rowspan: 2}
+                ],[
+                    {field: 'domain', title: '网站域名', width: '4%', align: 'center'},
+                    {field: '', title: '销售网站类型', width: '4%', align: 'center'},
+                    {field: 'friendlyLinkCount', title: '友情链接', width: '4%', align: 'center'},
+                    {field: 'advertisingCount', title: '广告', width: '4%', align: 'center'},
+                    {field: 'registrar', title: '注册商', width: '4%', align: 'center'},
+                    {field: 'analysis', title: '解析商', width: '4%', align: 'center'},
+                    {field: 'expiryTime', title: '到期时间', width: '4%', align: 'center'},
+                    {field: 'backendDomain', title: '后台链接', width: '4%', align: 'center'},
+                    {field: 'backendUserName', title: '后台用户', width: '4%', align: 'center'},
+                    {field: 'backendPassword', title: '后台密码', width: '4%', align: 'center'},
+                    {field: '', title: '更新销售信息状态', width: '4%', align: 'center'},
+                    {field: '', title: '更新友链信息状态', width: '4%', align: 'center'},
+                    {field: '', title: '更新广告信息状态', width: '4%', align: 'center'},
+                    {field: 'backgroundLoginStatus', title: '后台登陆状态', width: '4%', align: 'center'},
+                    {field: 'databaseName', title: '数据库名称', width: '4%', align: 'center'},
+                    {field: 'databaseUserName', title: '用户名', width: '4%', align: 'center'},
+                    {field: 'databasePassword', title: '密码', width: '4%', align: 'center'},
+                    {field: 'databaseStatus', title: '数据库登陆状态', width: '4%', align: 'center'},
+                    {field: 'serverIP', title: 'IP', width: '4%', align: 'center'},
+                    {field: 'serverUserName', title: '用户名', width: '4%', align: 'center'},
+                    {field: 'serverPassword', title: '密码', width: '4%', align: 'center'},
+                    {field: 'serverPort', title: '端口', width: '4%', align: 'center'},
+                    {field: 'indexFileStatus', title: 'index文件状态', width: '4%', align: 'center'},
+                    {field: 'sftpStatus', title: 'sftp服务状态', width: '4%', align: 'center'},
                 ]],
                 height: 'full-150',
-
                 done: function (res, curr, count) {
                 }
             });
@@ -540,33 +565,33 @@
     <div class="layui-btn-container">
         <@shiro.hasPermission name="/internal/industry/saveIndustry">
         <button class="layui-btn layui-btn-sm" lay-event="toAddIndustry">添加</button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/industry/deleteIndustries">
-        <button class="layui-btn layui-btn-danger layui-btn-sm" lay-event="deleteIndustries">
-            <i class="layui-icon layui-icon-delete"></i>删除所选
-        </button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/industry/updateIndustryUserID">
-        <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="updateOwner">
-            <i class="layui-icon layui-icon-edit"></i>修改客户归属
-        </button>
-        </@shiro.hasPermission>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/industry/deleteIndustries">
+    <button class="layui-btn layui-btn-danger layui-btn-sm" lay-event="deleteIndustries">
+        <i class="layui-icon layui-icon-delete"></i>删除所选
+    </button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/industry/updateIndustryUserID">
+    <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="updateOwner">
+        <i class="layui-icon layui-icon-edit"></i>修改客户归属
+    </button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/industry/saveIndustry">
+    <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="updateStatus">
+        <i class="layui-icon layui-icon-download-circle"></i>马上爬取
+    </button>
+    </@shiro.hasPermission>
+    <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/industry/saveIndustry">
-        <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="updateStatus">
-            <i class="layui-icon layui-icon-download-circle"></i>马上爬取
-        </button>
-        </@shiro.hasPermission>
-        <div class="layui-btn-group">
-            <@shiro.hasPermission name="/internal/industry/saveIndustry">
-            <button class="layui-btn layui-btn-sm" lay-event="downloadIndustryInfos">导出网站联系信息</button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/industry/uploadIndustryInfos">
-            <button class="layui-btn layui-btn-sm" lay-event="uploadIndustryInfo">Excel上传</button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/SuperIndustrySimpleList.xls">
-            <button class="layui-btn layui-btn-sm" lay-event="downLoadTemplate">模板下载</button>
-            </@shiro.hasPermission>
-        </div>
+        <button class="layui-btn layui-btn-sm" lay-event="downloadIndustryInfos">导出网站联系信息</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/industry/uploadIndustryInfos">
+    <button class="layui-btn layui-btn-sm" lay-event="uploadIndustryInfo">Excel上传</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/SuperIndustrySimpleList.xls">
+    <button class="layui-btn layui-btn-sm" lay-event="downLoadTemplate">模板下载</button>
+    </@shiro.hasPermission>
+    </div>
     </div>
 </script>
 
@@ -598,10 +623,10 @@
     <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/industry/saveIndustry">
         <button type="button" class="layui-btn layui-btn-xs" lay-event="modifyIndustryInfo" id="modifyIndustryInfo">修改</button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/industry/delIndustry">
-        <button type="button" class="layui-btn layui-btn-xs" lay-event="delIndustryInfo" id="delIndustryInfo">删除</button>
-        </@shiro.hasPermission>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/industry/delIndustry">
+    <button type="button" class="layui-btn layui-btn-xs" lay-event="delIndustryInfo" id="delIndustryInfo">删除</button>
+    </@shiro.hasPermission>
     </div>
 </script>
 

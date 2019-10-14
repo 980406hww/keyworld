@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 
 @TableName(value = "t_config")
-public class Config {
+public class Config extends BaseEntity{
 
     @TableField(value = "fConfigType")
     private String configType;

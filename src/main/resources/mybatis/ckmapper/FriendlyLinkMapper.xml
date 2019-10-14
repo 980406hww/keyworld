@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.FriendlyLinkDao">
+
+    <sql id="friendlyLinkColID">
+        fl.fUuid	AS	'uuid',
+        fl.fWebsiteUuid AS 'websiteUuid',
+        fl.fCustomerUuid AS 'customerUuid',
+        fl.fFriendlyLinkId AS 'friendlyLinkId',
+        fl.fFriendlyLinkWebName AS 'friendlyLinkWebName',
+        fl.fFriendlyLinkUrl AS 'friendlyLinkUrl',
+        fl.fFriendlyLinkSortRank AS 'friendlyLinkSortRank',
+        fl.fFriendlyLinkMsg AS 'friendlyLinkMsg',
+        fl.fFriendlyLinkEmail AS 'friendlyLinkEmail',
+        fl.fFriendlyLinkLogo AS 'friendlyLinkLogo',
+        fl.fFriendlyLinkDtime AS 'friendlyLinkDtime',
+        fl.fFriendlyLinkType AS 'friendlyLinkType',
+        fl.fFriendlyLinkIsCheck AS 'friendlyLinkIsCheck',
+        fl.fExpirationTime AS 'expirationTime',
+        fl.fRenewTime AS 'renewTime',
+        fl.fCreateTime AS 'createTime',
+        fl.fUpdateTime AS 'updateTime'
+    </sql>
+
+    <select id="searchFriendlyLinkListsPage" parameterType="com.keymanager.ckadmin.entity.FriendlyLink" resultType="com.keymanager.ckadmin.entity.FriendlyLink">
+        SELECT
+        c.fContactPerson AS 'customerInfo',
+        <include refid="friendlyLinkColID"/>
+        FROM t_friendly_link fl
+        JOIN t_customer c
+        ON fl.fCustomerUuid = c.fUuid
+        WHERE fl.fWebsiteUuid = #{friendlyLinkCriteria.websiteUuid}
+        <if test="friendlyLinkCriteria.friendlyLinkIsCheck != 0">
+            <choose>
+                <when test="friendlyLinkCriteria.friendlyLinkIsCheck == 1">
+                    AND fl.fFriendlyLinkIsCheck = 1
+                </when>
+                <otherwise>
+                    AND fl.fFriendlyLinkIsCheck = 2
+                </otherwise>
+            </choose>
+        </if>
+        <if test="friendlyLinkCriteria.friendlyLinkWebName != null and friendlyLinkCriteria.friendlyLinkWebName != ''">
+            AND fl.fFriendlyLinkWebName LIKE '${friendlyLinkCriteria.friendlyLinkWebName}%'
+        </if>
+        <if test="friendlyLinkCriteria.friendlyLinkUrl != null and friendlyLinkCriteria.friendlyLinkUrl != ''">
+            AND fl.fFriendlyLinkUrl LIKE '%${friendlyLinkCriteria.friendlyLinkUrl}%'
+        </if>
+        <if test="friendlyLinkCriteria.customerInfo != null and friendlyLinkCriteria.customerInfo != ''">
+            AND c.fContactPerson LIKE '${friendlyLinkCriteria.customerInfo}%'
+        </if>
+        <if test="friendlyLinkCriteria.expire != null and friendlyLinkCriteria.expire != ''">
+            AND fl.fExpirationTime <![CDATA[<]]> NOW()
+        </if>
+    </select>
+
+    <select id="getFriendlyLink" parameterType="com.keymanager.ckadmin.entity.FriendlyLink" resultType="com.keymanager.ckadmin.entity.FriendlyLink">
+        SELECT
+        c.fContactPerson AS 'customerInfo',
+        <include refid="friendlyLinkColID"/>
+        FROM t_friendly_link fl
+        JOIN t_customer c
+        ON fl.fCustomerUuid = c.fUuid
+        WHERE fl.fUuid = #{uuid}
+    </select>
+
+    <select id="selectMaxSortRank" resultType="java.lang.Integer">
+        SELECT IFNULL(MAX(fFriendlyLinkSortRank),0)
+        FROM t_friendly_link
+        WHERE fWebsiteUuid = #{websiteUuid}
+    </select>
+
+    <update id="retreatSortRank">
+        UPDATE
+        t_friendly_link
+        SET
+        fFriendlyLinkSortRank = fFriendlyLinkSortRank + 1
+        WHERE fWebsiteUuid = #{websiteUuid}
+        AND fFriendlyLinkSortRank > #{friendlyLinkSortRank}
+    </update>
+
+    <update id="updateCentreSortRank">
+        UPDATE
+        t_friendly_link
+        SET
+        fFriendlyLinkSortRank = fFriendlyLinkSortRank + 1
+        WHERE fWebsiteUuid = #{websiteUuid}
+        AND fFriendlyLinkSortRank >= #{beginSortRank}
+        AND fFriendlyLinkSortRank <![CDATA[<]]> #{endSortRank}
+    </update>
+
+    <select id="searchFriendlyLinkids" resultType="java.lang.String">
+        SELECT
+        fFriendlyLinkId
+        FROM t_friendly_link
+        WHERE fWebsiteUuid = #{websiteUuid}
+        AND fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </select>
+
+    <select id="searchOriginalSortRank" resultType="java.util.Map">
+        SELECT
+            fUuid AS 'uuid',
+            fFriendlyLinkId AS 'friendlyLinkId',
+            fFriendlyLinkSortRank AS 'friendlyLinkSortRank'
+        FROM t_friendly_link
+        WHERE fWebsiteUuid = #{websiteUuid}
+        AND fFriendlyLinkUrl = #{originalFriendlyLinkUrl}
+    </select>
+
+    <select id="searchFriendlyLinkidsByUrl" resultType="java.lang.String">
+        SELECT
+            fFriendlyLinkId
+        FROM t_friendly_link
+        WHERE fWebsiteUuid = #{websiteUuid}
+        AND fFriendlyLinkUrl = #{originalFriendlyLinkUrl}
+    </select>
+
+    <delete id="batchDeleteFriendlyLinkByUrl">
+        DELETE FROM t_friendly_link
+        WHERE fFriendlyLinkUrl = #{friendlyLinkUrl}
+        AND fWebsiteUuid IN
+        <foreach collection="websiteUuids" item="websiteUuid" open="(" separator="," close=")">
+            #{websiteUuid}
+        </foreach>
+    </delete>
+
+    <select id="getFriendlyLinkByUrl" resultType="com.keymanager.ckadmin.entity.FriendlyLink">
+        SELECT
+        c.fContactPerson AS 'customerInfo',
+        <include refid="friendlyLinkColID"/>
+        FROM t_friendly_link fl
+        JOIN t_customer c
+        ON fl.fCustomerUuid = c.fUuid
+        WHERE fl.fWebsiteUuid = #{websiteUuid}
+        AND fFriendlyLinkUrl = #{friendlyLinkUrl}
+        limit 1
+    </select>
+
+    <select id="selectByWebsiteId" resultType="java.lang.Integer">
+        SELECT
+        fFriendlyLinkId
+        FROM t_friendly_link fl
+        WHERE fl.fWebsiteUuid = #{websiteUuid}
+    </select>
+
+    <select id="selectIdByFriendlyLinkId" resultType="java.lang.Long">
+        SELECT fUuid
+        FROM t_friendly_link
+        WHERE fWebsiteUuid = #{websiteUuid}
+        AND fFriendlyLinkId = #{friendlyLinkId}
+    </select>
+
+    <select id="searchFriendlyLinkCount" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM t_friendly_link
+        WHERE fWebsiteUuid = #{websiteUuid}
+    </select>
+</mapper>

@@ -48,10 +48,10 @@
 
 /**图表样式**/
 .map-body{
-    height: 360px;
+    height: 355px;
 }
 .map-china{
-    height: 360px;
+    height: 340px;
 }
 /***进度条***/
 .progress-box {

@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.service.impl;
 import com.keymanager.ckadmin.dao.ConfigDao;
 
 import com.keymanager.ckadmin.entity.Config;
+import com.keymanager.ckadmin.service.ConfigCacheService;
 import com.keymanager.ckadmin.service.ConfigService;
 
 import com.keymanager.ckadmin.util.Constants;
@@ -20,6 +21,9 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Resource(name = "configDao2")
     private ConfigDao configDao;
+
+    @Resource(name = "configCacheService2")
+    private ConfigCacheService configCacheService;
 
     @Override
 //    @Cacheable(value = "configList", key = "#configType + #key")
@@ -60,5 +64,19 @@ public class ConfigServiceImpl implements ConfigService {
             return searchEngines;
         }
         return null;
+    }
+
+    @Override
+    public void refreshWebsiteCheckSign(String websiteCheckSign){
+        Config config = new Config();
+        config.setConfigType(Constants.CONFIG_TYPE_WEBSITE_CHECK_SIGN);
+        config.setKey("WebsiteCheck");
+        config.setValue(websiteCheckSign);
+        updateConfig(config);
+    }
+
+    public void updateConfig(Config config) {
+        configDao.updateConfig(config);
+        configCacheService.configCacheEvict(config);
     }
 }
