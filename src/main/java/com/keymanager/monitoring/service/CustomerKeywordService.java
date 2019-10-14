@@ -2195,7 +2195,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void batchInsertCustomerKeywordByCustomerUuid(Long customerUuid, Long qsId) {
-        customerKeywordDao.batchInsertCustomerKeywordByCustomerUuid(customerUuid, qsId);
+        // TODO 关键词不是replace同步 跑几次有几次的数据 所以需要做判断
+        Long existQsId = customerKeywordDao.searchExistingSysCustomerKeywordQsId(qsId);
+        if (null == existQsId) {
+            customerKeywordDao.batchInsertCustomerKeywordByCustomerUuid(customerUuid, qsId);
+        }
     }
 
     public void cleanSysCustomerKeywordCreateOverOneWeek() {

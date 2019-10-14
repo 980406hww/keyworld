@@ -279,4 +279,11 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
      * 定时删除创建超过七天的同步关键词
      */
     void cleanSysCustomerKeywordCreateOverOneWeek();
+
+    /**
+     * 根据qsId判断站点关键词当天是否已同步
+     * @param qsId
+     * @return
+     */
+    Long searchExistingSysCustomerKeywordQsId(@Param("qsId") Long qsId);
 }
