@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
+import com.keymanager.ckadmin.criteria.PTKeywordCountCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.criteria.CustomerKeywordCleanTitleCriteria;
 import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.entity.UserInfo;
 import com.keymanager.ckadmin.excel.operator.CustomerKeywordAndUrlCvsExportWriter;
 import com.keymanager.ckadmin.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.ckadmin.service.ConfigService;
@@ -25,17 +27,20 @@ import com.keymanager.ckadmin.util.ReflectUtils;
 import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
+import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.webDo.KeywordCountDO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -606,5 +611,96 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             resultBean.setMsg("fail");
             return resultBean;
         }
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/toPTKeywordCount")
+    public ModelAndView toPTKeywordCount() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/ptKeywordCount");
+        return mv;
+    }
+
+    @PostMapping("/getSearchData")
+    public ResultBean returnSelectData(HttpServletRequest request, @RequestBody PTKeywordCountCriteria ptKeywordCriteria){
+        ResultBean resultBean = new ResultBean();
+        try {
+            HttpSession session = request.getSession();
+            String loginName = (String) session.getAttribute("username");
+            UserInfo user = userInfoService.getUserInfo(loginName);
+            List<UserInfo> activeUsers = userInfoService.findActiveUsers();
+            if (null == ptKeywordCriteria.getTerminalType()) {
+                ptKeywordCriteria.setTerminalType(TerminalTypeMapping.getTerminalType(request));
+            }
+            Map<String, String> searchEngineMap = configService.getSearchEngineMap(ptKeywordCriteria.getTerminalType());
+            Map<String, Object> data = new HashMap<>();
+            data.put("user", user);
+            data.put("activeUsers", activeUsers);
+            data.put("searchEngineMap", searchEngineMap);
+            resultBean.setCode(200);
+            resultBean.setMsg("success");
+            resultBean.setData(data);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+
+    @RequiresPermissions("/internal/customerKeyword/searchKeywordAmountCountLists")
+    @PostMapping(value = "/getPTKeywords")
+    public ResultBean getPTKeywords(@RequestBody PTKeywordCountCriteria keywordCriteria, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            Page<PTkeywordCountVO> page = new Page(keywordCriteria.getPage(), keywordCriteria.getLimit());
+            String orderByField = ReflectUtils.getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
+            if (StringUtils.isNotEmpty(orderByField)) {
+                page.setOrderByField(orderByField);
+                if (keywordCriteria.getOrderMode() != null && keywordCriteria.getOrderMode() == 0) {
+                    page.setAsc(false);
+                }
+            }
+            page = customerKeywordService.searchPTKeywordCount(page, keywordCriteria);
+            List<PTkeywordCountVO> keywords = page.getRecords();
+            resultBean.setCode(0);
+            resultBean.setCount(page.getTotal());
+            resultBean.setMsg("success");
+            resultBean.setData(keywords);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/toKeywords/{businessType}/{terminalType}/{keyword}")
+    public ModelAndView toKeywords(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
+        @PathVariable(name = "keyword") String keyword) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/customerKeyword");
+        mv.addObject("businessType", businessType);
+        //取名叫terminalType会与session中存在的terminalType同名，值会被覆盖成session中的值
+        mv.addObject("terminalType2", terminalType);
+        mv.addObject("keyword2", keyword);
+        return mv;
+    }
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/toKeywordsWithPosition/{businessType}/{terminalType}/{keyword}/{position}")
+    public ModelAndView toKeywordsWithPosition(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
+        @PathVariable(name = "keyword") String keyword, @PathVariable(name = "keyword") Integer position) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/customerKeyword");
+        mv.addObject("businessType", businessType);
+        //取名叫terminalType会与session中存在的terminalType同名，值会被覆盖成session中的值
+        mv.addObject("terminalType2", terminalType);
+        mv.addObject("keyword2", keyword);
+        mv.addObject("position", position);
+        return mv;
     }
 }

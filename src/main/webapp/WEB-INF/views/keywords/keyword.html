@@ -25,8 +25,8 @@
                         <form class="layui-form layui-form-pane" id="searchForm">
                             <div class="my-collapse">
                                 <div class="out-condition">
-                                    <input type="hidden" name="type" id="type" value="pt">
-                                    <input type="hidden" name="terminalType" id="terminalType" value="PC">
+                                    <input type="hidden" name="type" id="type" value="<#if businessType?exists>${businessType?exists}<#else>pt</#if>">
+                                    <input type="hidden" name="terminalType" id="terminalType" value="<#if terminalType2?exists>${terminalType2?exists}<#else>PC</#if>">
                                     <input type="hidden" id="sevenDaysNoReachStandard" name="sevenDaysNoReachStandard" value=""/>
                                     <input type="hidden" id="fifteenDaysNoReachStandard" name="fifteenDaysNoReachStandard" value=""/>
                                     <input type="hidden" id="thirtyDaysNoReachStandard" name="thirtyDaysNoReachStandard" value=""/>
@@ -42,7 +42,7 @@
                                         </select>
                                     </div>
                                     <div class="layui-inline" style="width: 140px">
-                                        <input type="text" name="keyword" id="keyword" placeholder="请输入关键字" class="layui-input">
+                                        <input type="text" name="keyword" id="keyword" value="<#if keyword?exists>${keyword?exists}</#if>" placeholder="请输入关键字" class="layui-input">
                                     </div>
                                     <div class="layui-inline" style="width: 130px">
                                         <input type="text" name="optimizeGroupName" id="optimizeGroupName" placeholder="请输入优化组名" autocomplete="off"
@@ -58,7 +58,7 @@
                                             <input type="number" name="gtPosition" placeholder=">=" autocomplete="off" class="layui-input">
                                         </div>
                                         <div class="layui-input-inline" style="width: 50px;">
-                                            <input type="number" name="ltPosition" placeholder="<=" autocomplete="off" class="layui-input">
+                                            <input type="number" name="ltPosition" placeholder="<=" value="<#if ltPosition?exists>${ltPosition?exists}</#if>" autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline" style="width: 140px">

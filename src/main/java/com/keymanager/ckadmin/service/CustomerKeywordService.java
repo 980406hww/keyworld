@@ -7,6 +7,7 @@ import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
 import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
+import com.keymanager.ckadmin.criteria.PTKeywordCountCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
@@ -17,6 +18,7 @@ import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 
+import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import java.io.InputStream;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import java.util.List;
@@ -107,4 +109,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     List<CodeNameVo> searchGroupsByTerminalType(String terminalType);
 
     List<GroupVO> getAvailableOptimizationGroups(GroupSettingCriteria groupSettingCriteria);
+
+    Page<PTkeywordCountVO> searchPTKeywordCount(Page<PTkeywordCountVO> page, PTKeywordCountCriteria keywordCriteria);
 }

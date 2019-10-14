@@ -102,6 +102,14 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/customerKeyword/toPTKeywordCount">
+                        <dd data-name="keyword-item">
+                            <a data-url="/internal/customerKeyword/toPTKeywordCount" lay-id="ptKeywordCount">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>单词统计</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
                         <@shiro.hasPermission name="/internal/customerKeyword/toMachineGroupAndSize">
                         <dd data-name="keyword-item">
                             <a data-url="/internal/customerKeyword/toMachineGroupAndSize" lay-id="machineGroupAndSize">

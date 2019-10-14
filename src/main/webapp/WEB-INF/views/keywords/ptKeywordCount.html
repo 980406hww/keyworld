@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>单词统计</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+    <link rel="stylesheet" href="/static/ok-admin/page/base/searchForm.css">
+    <style>
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
+    </style>
+</head>
+<body>
+<div class="ok-body">
+    <div class="layui-tab layui-tab-card" lay-filter="keywordTab">
+        <ul class="layui-tab-title">
+            <li class="layui-this" data-terminal="PC">PC</li>
+            <li data-terminal="Phone">Phone</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <!--模糊搜索区域-->
+                <div class="layui-card ">
+                    <div class="layui-card-body ">
+                        <form class="layui-form layui-form-pane" id="searchForm">
+                            <input type="text" hidden value="<#if customerUuid?exists>${customerUuid}</#if>" id="customerUuid" name="customerUuid">
+                            <div class="my-collapse">
+                                <div>
+                                    <input type="hidden" name="terminalType" id="terminalType" value="PC">
+                                    <div class="layui-inline" style="width: 140px">
+                                        <input type="text" name="keyword" id="keyword" placeholder="请输入关键字" class="layui-input">
+                                    </div>
+                                    <div class="layui-inline" style="width: 140px">
+                                        <select name="searchEngine" id="searchEngine">
+                                            <option value=''>搜索引擎</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="layui-inline" style="width: 140px">
+                                        <select name="userName" id="userName">
+                                            <option value=''>用户名称</option>
+                                        </select>
+                                    </div>
+
+
+                                    <div class="layui-inline">
+                                        <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索</button>
+                                    </div>
+
+                                    <div class="layui-inline">
+                                        <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset" id="resetBtn">
+                                            重置
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--数据表格-->
+                <table class="layui-hide" id="keywordTable" lay-filter="tableFilter"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--js逻辑-->
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script>
+    var sign = false;
+    // 进度条加载提示
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
+
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var layer = layui.layer;
+
+        init_search_data();
+        init_table_data(formToJsonObject('searchForm'));
+
+        function init_search_data() {
+            var postData = {};
+            var terminalType = $("#terminalType").val();
+            if (terminalType === '' || terminalType == null) {
+                terminalType = 'PC'
+            }
+            postData.terminalType = terminalType;
+            $.ajax({
+                url: '/internal/customerKeyword/getSearchData',
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                data: JSON.stringify(postData),
+                success: function (res) {
+                    if (res.code === 200) {
+                        var searchEngineList = res.data.searchEngineMap;
+                        var activeUsersList = res.data.activeUsers;
+                        var user = res.data.user;
+                        var searchEngine = $('#searchEngine');
+                        var activeUsers = $('#userName');
+                        searchEngine.empty();
+                        activeUsers.empty();
+                        searchEngine.append('<option value="" selected>全部</option>');
+                        activeUsers.append('<option value="" selected>所有</option>');
+                        activeUsers.append('<option value="' + user.loginName + '">' + '只显示自己' + '</option>');
+                        $.each(searchEngineList, function (index, item) {
+                            searchEngine.append('<option value="' + item + '">' + item + '</option>');
+                        });
+                        $.each(activeUsersList, function (index, item) {
+                            activeUsers.append('<option value="' + item.loginName + '">' + item.userName + '</option>');
+                        });
+                        form.render("select")
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                },
+                error: function () {
+                    layer.msg('未知错误，请稍后重试！！')
+                }
+            });
+        }
+
+        function formToJsonObject(form_id) {
+            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
+            formData = formData.replace(/&/g, "\",\"");
+            formData = formData.replace(/=/g, "\":\"");
+            formData = "{\"" + formData + "\"}";
+            formData = $.parseJSON(formData);
+            return formData;
+        }
+
+        function init_table_data(whereCondition) {
+            whereCondition.entryType = 'pt';
+            table.render({
+                elem: '#keywordTable',
+                method: 'post',
+                url: '/internal/customerKeyword/getPTKeywords',
+                limit: 50,
+                page: true,
+                autoSort: false,
+                size: 'sm',
+                id: 'keywordTable',
+                even: true,//隔行背景
+                contentType: 'application/json',
+                where: whereCondition,
+                cols: [[
+                    {field: 'keyword', title: '关键字', width: '20%', align: 'center', templet: '#toKeywordTpl'},
+                    {field: 'searchEngine', title: '搜索引擎', width: '14%', align: 'center'},
+                    {field: 'keywordCount', title: '单词总数', width: '14%', align: 'center',},
+                    {field: 'userCount', title: '用户总数', width: '14%', align: 'center'},
+                    {field: 'customerCount', title: '客户总数', width: '12%', align: 'center'},
+                    {field: 'topThree', title: '前三数量', align: 'center', width: '12%', templet: '#toKeywordTop3Tpl'},
+                    {field: 'topTen', title: '前十数量', align: 'center', width: '12%', templet: '#toKeywordTop10Tpl'},
+                ]],
+                height: 'full-150',
+                done: function (res, curr, count) {
+
+                }
+            });
+        }
+
+        element.on('tab(keywordTab)', function (data) {
+            var d = data.elem.context.dataset;
+            $('#terminalType').val(d.terminal);
+            active['reload'].call(this);
+        });
+
+        var active = {
+            reload: function () {
+                let data = formToJsonObject('searchForm');
+                data.entryType = 'pt';
+                table.reload('keywordTable', {
+                    where: data,
+                    page: {
+                        curr: 1
+                    }
+                });
+            },
+        };
+
+        form.on("submit(search)", function (data) {
+            var postData = data.field;
+            postData.entryType = 'pt';
+            table.reload('keywordTable', {
+                where: postData,
+                page: {
+                    curr: 1
+                }
+            });
+            return false
+        });
+
+    });
+
+    function toKeyword(keyword) {
+        let terminalType = document.getElementById('terminalType').value;
+        let url = '/internal/customerKeyword/toKeywords/pt/' + terminalType + '/' + keyword;
+        let title = '关键字:' + keyword + '详情';
+        updateOrNewTab(url, title, keyword)
+    }
+
+    function toKeywordWithPosition(keyword, position) {
+        let terminalType = document.getElementById('terminalType').value;
+        let url = '/internal/customerKeyword/toKeywords/pt/' + terminalType + '/' + keyword + '/' + position;
+        let title = '关键字:' + keyword + '排名详情';
+        updateOrNewTab(url, title, keyword + position)
+    }
+
+    function updateOrNewTab(url, tit, id) {
+        var update = false;
+        var contentIframe = ("<iframe src='" + url + "' lay-id='" + id
+            + "'frameborder='0' scrolling='yes' width='100%' height='100%'></iframe>");
+        parent.layui.$('.layui-tab-title li').each(function () {
+            if (id === this.getAttribute('lay-id')) {
+                update = true;
+            }
+        });
+        if (!update) {
+            parent.layui.element.tabAdd('ok-tab', {
+                    title: '<i class="layui-icon">&#xe648;</i> ' + tit,
+                    content: contentIframe,
+                    id: id
+                }
+            );
+        }
+        parent.layui.element.tabChange('ok-tab', id)
+    }
+
+</script>
+<#include  "./ptKeywordCountTpl.html" />
+
+
+</body>
+
+
+</html>
