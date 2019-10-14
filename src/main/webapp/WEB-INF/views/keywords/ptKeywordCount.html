@@ -15,6 +15,22 @@
             position: fixed;
             right: 25px;
         }
+         a:link {
+            color: blue;
+        }
+
+         a:visited {
+            color: blue;
+        }
+
+         a:hover {
+            color: red;
+        }
+
+         a:active {
+            color: darkslateblue;
+        }
+
     </style>
 </head>
 <body>
@@ -160,17 +176,17 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {field: 'keyword', title: '关键字', width: '20%', align: 'center', templet: '#toKeywordTpl'},
-                    {field: 'searchEngine', title: '搜索引擎', width: '14%', align: 'center'},
-                    {field: 'keywordCount', title: '单词总数', width: '14%', align: 'center',},
-                    {field: 'userCount', title: '用户总数', width: '14%', align: 'center'},
-                    {field: 'customerCount', title: '客户总数', width: '12%', align: 'center'},
-                    {field: 'topThree', title: '前三数量', align: 'center', width: '12%', templet: '#toKeywordTop3Tpl'},
-                    {field: 'topTen', title: '前十数量', align: 'center', width: '12%', templet: '#toKeywordTop10Tpl'},
+                    {field: 'keyword', title: '关键字', width: '20%',templet: '#tokeywordTpl' },
+                    {field: 'searchEngine', title: '搜索引擎', width: '13%',  },
+                    {field: 'keywordCount', title: '单词总数', width: '13%', },
+                    {field: 'userCount', title: '用户总数', width: '13%', },
+                    {field: 'customerCount', title: '客户总数', width: '13%',  },
+                    {field: 'topThree', title: '前三数量', width: '13%', templet: '#tokeywordTop3Tpl' },
+                    {field: 'topTen', title: '前十数量', width: '13%', templet: '#tokeywordTop10Tpl' },
                 ]],
                 height: 'full-150',
                 done: function (res, curr, count) {
-
+                    console.log(res.data)
                 }
             });
         }
@@ -211,13 +227,16 @@
     function toKeyword(keyword) {
         let terminalType = document.getElementById('terminalType').value;
         let url = '/internal/customerKeyword/toKeywords/pt/' + terminalType + '/' + keyword;
+        url = encodeURI(encodeURI(url))
+        console.log(url)
         let title = '关键字:' + keyword + '详情';
         updateOrNewTab(url, title, keyword)
     }
 
     function toKeywordWithPosition(keyword, position) {
         let terminalType = document.getElementById('terminalType').value;
-        let url = '/internal/customerKeyword/toKeywords/pt/' + terminalType + '/' + keyword + '/' + position;
+        let url = '/internal/customerKeyword/toKeywordsWithPosition/pt/' + terminalType + '/' + keyword + '/' + position;
+        url = encodeURI(encodeURI(url))
         let title = '关键字:' + keyword + '排名详情';
         updateOrNewTab(url, title, keyword + position)
     }

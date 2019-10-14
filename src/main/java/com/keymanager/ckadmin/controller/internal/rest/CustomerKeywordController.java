@@ -31,6 +31,8 @@ import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.webDo.KeywordCountDO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.util.TerminalTypeMapping;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -681,26 +683,28 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
     @GetMapping(value = "/toKeywords/{businessType}/{terminalType}/{keyword}")
     public ModelAndView toKeywords(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "keyword") String keyword) {
+        @PathVariable(name = "keyword") String keyword) throws UnsupportedEncodingException {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("keywords/customerKeyword");
+        mv.setViewName("keywords/keyword");
         mv.addObject("businessType", businessType);
         //取名叫terminalType会与session中存在的terminalType同名，值会被覆盖成session中的值
         mv.addObject("terminalType2", terminalType);
-        mv.addObject("keyword2", keyword);
+        keyword = URLDecoder.decode(keyword, "UTF-8");
+        mv.addObject("kw123", keyword);
         return mv;
     }
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
     @GetMapping(value = "/toKeywordsWithPosition/{businessType}/{terminalType}/{keyword}/{position}")
     public ModelAndView toKeywordsWithPosition(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "keyword") String keyword, @PathVariable(name = "keyword") Integer position) {
+        @PathVariable(name = "keyword") String keyword, @PathVariable(name = "position") Integer position) throws UnsupportedEncodingException {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("keywords/customerKeyword");
+        mv.setViewName("keywords/keyword");
         mv.addObject("businessType", businessType);
         //取名叫terminalType会与session中存在的terminalType同名，值会被覆盖成session中的值
         mv.addObject("terminalType2", terminalType);
-        mv.addObject("keyword2", keyword);
-        mv.addObject("position", position);
+        keyword = URLDecoder.decode(keyword, "UTF-8");
+        mv.addObject("kw123", keyword);
+        mv.addObject("pst123", position);
         return mv;
     }
 }
