@@ -92,11 +92,18 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         $.each(data, function (index, obj) {
             let item = '<div class="layui-col-md6 layui-col-sm6">' +
                 '   <div class="layadmin-contact-box">' +
-                '       <div class="layui-col-md5 layui-col-sm6">';
+                '       <div class="layui-col-md6 layui-col-sm6">';
             item += '           <h3 class="layadmin-title skip" title="'+obj.contactPerson+'">' +
                 '               <input type="checkbox" name="checkItem" value="' + obj.uuid + '" status="'+obj.status+'"lay-skin="primary" >' +
                 '               <strong >' + obj.contactPerson + '</strong>' +
                 '           </h3>';
+            item += '           <div class="layadmin-address other_info">' +
+                '                   <strong>描述信息</strong>' +
+                '                   <p class="skip" >客户类型:' + obj.type +'</p>' +
+                '                   <p class="skip" >所属用户:' + obj.loginName +'</p>' +
+                '                   <p class="skip" >客户状态:' + generate_customer_status(obj.status) +'</p>' +
+                '                   <p class="skip" >是否产生日报表:<span id="dr'+obj.uuid+'">' + generate_customer_daily_report(obj.uuid, obj.status, obj.dailyReportIdentify) + '</span></p>' +
+                '               </div>';
             item += '           <div class="layadmin-address">' +
                 '                   <strong>联系方式</strong>' +
                 '                   <br>' +
@@ -106,23 +113,17 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                 '                   <br>' +
                 '                   QQ:' + obj.qq +
                 '               </div>';
-            item += '           <div class="layadmin-address other_info">' +
-                '                   <strong>其他信息</strong>' +
-                '                   <p class="skip" >客户类型:' + obj.type +'</p>' +
-                '                   <p class="skip" >所属用户:' + obj.loginName +'</p>' +
-                '                   <p class="skip" >客户状态:' + generate_customer_status(obj.status) +'</p>' +
-                '                   <p class="skip" >是否产生日报表:<span id="dr'+obj.uuid+'">' + generate_customer_daily_report(obj.uuid, obj.status, obj.dailyReportIdentify) + '</span></p>' +
-                '               </div>';
             item += '           <div class="layadmin-address ">' +
                 '                   <strong>备注</strong>' +
                 '                   <p class="skip" title="'+obj.saleRemark+'" onclick=changeSaleRemark("'+obj.uuid+'","'+obj.saleRemark+'") >客户标签:<span id="saleRemark'+obj.uuid+'">' + obj.saleRemark + '</span></p>' +
                 '                   <p class="skip" title="'+obj.remark+'" onclick=changeRemark("'+obj.uuid+'","'+obj.remark+'") >销售详细备注:<span id="remark'+obj.uuid+'">' + obj.remark + '</span></p>' +
                 '               </div>' +
-                '       </div>';
-            item += '   <div class="layui-col-md6  layui-col-sm6">' +
+                '      </div>';
+            item += '   <div class="layui-col-md5  layui-col-sm6" style="margin-top: 37px">';
+                /*+
                 '       <h3 class="layadmin-title">' +
                 '           <strong>拥有业务</strong>' +
-                '       </h3>';
+                '       </h3>';*/
             let customerBusinessList = obj.customerBusinessList;
             if (customerBusinessList !== null && customerBusinessList.length > 0) {
                 var contactPerson = obj.contactPerson.replace(/\s+/g, "");
@@ -150,7 +151,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                             }
                         });
                     } else if (tmp === 'qzsetting') {
-
                         item += '<div class="layadmin-address"><strong>' +
                             '全站业务' +
                             '</strong>' +
@@ -164,11 +164,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                                 if (res.code === 200) {
                                     item += generate_qzsetting_info(obj, res.data)
                                 } else {
-                                    item += '暂无数据'
+                                    item += '暂无数据';
                                 }
-                                item +=
-                                    '</div>';
-
+                                item += '</div>';
                             }
                         });
                     } else if (tmp === 'fm') {
@@ -187,7 +185,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                 item += '<div class="layadmin-address">\n' +
                     '                <strong>暂无业务</strong>\n' +
                     '    </div>';
-
             }
             item += '</div>';
             item += '<div class="layui-col-md1 layui-col-sm6 operation">\n' +
