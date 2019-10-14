@@ -25,7 +25,7 @@ public interface WebsiteService extends IService<Website> {
 
     void deleteWebsite(Long uuid);
 
-    void deleteWebsites(List<String> uuids);
+    void deleteWebsites(List<Integer> uuids);
 
     void resetWebsiteAccessFailCount(List<String> uuids);
 
