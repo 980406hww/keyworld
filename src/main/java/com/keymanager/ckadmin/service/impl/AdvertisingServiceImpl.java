@@ -62,7 +62,7 @@ public class AdvertisingServiceImpl extends ServiceImpl<AdvertisingDao, Advertis
     }
 
     public void delAdvertisings(Map map){
-        Long websiteUuid = Long.valueOf((Integer)map.get("websiteUuid"));
+        Long websiteUuid = Long.valueOf((String) map.get("websiteUuid"));
         List<String> uuids = (List<String>) map.get("uuids");
         List<String> AdvertisingIds = advertisingDao.searchAdvertisingIds(websiteUuid, uuids);
         String[] uuidArrays = new String[AdvertisingIds.size()];
@@ -76,6 +76,11 @@ public class AdvertisingServiceImpl extends ServiceImpl<AdvertisingDao, Advertis
         String[] uuidArrays = {String.valueOf(advertising.getAdvertisingId())};
         deleteConnectionCMS(Long.valueOf(advertising.getWebsiteUuid()), uuidArrays);
         advertisingDao.deleteById(uuid);
+    }
+
+    public Page<Advertising> searchAdvertisingList(Page<Advertising> page, AdvertisingCriteria advertisingCriteria){
+        page.setRecords(advertisingDao.searchAdvertisingListsPage(page, advertisingCriteria));
+        return page;
     }
 
     public void updateAdvertising(Advertising advertising){
@@ -307,8 +312,8 @@ public class AdvertisingServiceImpl extends ServiceImpl<AdvertisingDao, Advertis
     }
 
     public void pushAdvertising(Map map){
-        List<String> uuids = (List<String>) map.get("uuids");
-        for (String uuid: uuids ) {
+        List<Integer> uuids = (List<Integer>) map.get("uuids");
+        for (Integer uuid: uuids ) {
             Advertising advertising = advertisingDao.selectById(Long.valueOf(uuid));
             if (advertising.getAdvertisingId() == 0){
                 Map normBodyMap = new HashMap();

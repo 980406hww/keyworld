@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
+import com.keymanager.ckadmin.criteria.SalesInfoCriteria;
 import com.keymanager.ckadmin.entity.SalesManage;
 import com.keymanager.ckadmin.vo.SalesManageVO;
 
@@ -17,5 +18,5 @@ public interface SalesManageService extends IService<SalesManage> {
 
     SalesManage getSalesManageByUuid(Long uuid);
 
-    List<SalesManage> SearchSalesManages(SalesManage salesManage, Page<SalesManage> page);
+    Page<SalesManage> SearchSalesManages(SalesInfoCriteria salesInfoCriteria, Page<SalesManage> page);
 }

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <style>
+        .layui-btn {
+            width: 150px;
+        }
+
+        .layui-input-block input{
+            height: 30px;
+        }
+
+        .layui-input-block p{
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .layui-form-pane .layui-form-label{
+            height: 30px;
+            line-height: 30px;
+            padding: 0px 15px !important;
+        }
+    </style>
+</head>
+<body>
+<div class="ok-body">
+
+    <form class="layui-form layui-form-pane ok-form" lay-filter="advertisingForm">
+        <div class="layui-form-item">
+            <input type="hidden" name="uuid">
+            <label class="layui-form-label">广告位标识</label>
+            <div class="layui-input-block">
+                <p id="adPositionId" class="layui-input"></p>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">广告标识</label>
+            <div class="layui-input-block">
+                <input type="text" name="advertisingTagname" id="advertisingTagname" autocompvare="off" class="layui-input" lay-verify="required" onkeyup="changeAdpositionIdValue(this.value)">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="customerInfo" autocompvare="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">广告位名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="advertisingAdName" autocompvare="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">广告分类</label>
+            <div class="layui-input-block">
+                <input type="text" name="advertisingType" autocompvare="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">广告投放范围</label>
+            <div class="layui-input-block">
+                <input type="text" name="advertisingArcType" autocompvare="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">时间限制</label>
+            <div class="layui-input-block">
+                <input name="advertisingTimeSet" type="radio" value="0" checked/>永不过期&nbsp;
+                <input name="advertisingTimeSet" type="radio" value="1"/>在设定时间内有效
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">投放时间</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" id="advertisingStarttime" name="advertisingStarttime" readonly>
+            </div>
+        </div>
+        <table border="0" id="advertisingBodyCheckedTable" style="display: block;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">广告内容</label>
+                <div class="layui-input-block">
+                    <input name="advertisingBodyChecked" type="radio" value="code" lay-filter="advertisingBodyChecked" checked/>代码
+                    <input name="advertisingBodyChecked" type="radio" value="txt" lay-filter="advertisingBodyChecked"/>文字
+                    <input name="advertisingBodyChecked" type="radio" value="img" lay-filter="advertisingBodyChecked"/>图片
+                    <input name="advertisingBodyChecked" type="radio" value="flash" lay-filter="advertisingBodyChecked"/>Flash
+                </div>
+            </div>
+        </table>
+        <table border="0" id="code" style="display: none;">
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">广告代码</label>
+                <div class="layui-input-block">
+                    <textarea name="htmlcode" placeholder="请填写广告代码，支持html代码" autocompvare="off" class="layui-textarea" lay-verify="required"></textarea>
+                </div>
+            </div>
+        </table>
+        <table border="0" id="txt" style="display: none;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">文字内容</label>
+                <div class="layui-input-block">
+                    <input type="text" name="txtTitle" autocompvare="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">文字链接</label>
+                <div class="layui-input-block">
+                    <input type="text" name="txtLink" autocompvare="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">文字颜色</label>
+                <div class="layui-input-block">
+                    <input type="text" name="txtColor" autocompvare="off" class="layui-input" placeholder="例如:red,#EF8684">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">文字大小</label>
+                <div class="layui-input-block">
+                    <input type="text" name="txtSize" autocompvare="off" class="layui-input" placeholder="例如:4px,12px">
+                </div>
+            </div>
+        </table>
+        <table border="0" id="img" style="display: none;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">图片地址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="imgUrl" autocompvare="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">图片链接</label>
+                <div class="layui-input-block">
+                    <input type="text" name="imgLink" autocompvare="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">图片宽度</label>
+                <div class="layui-input-block">
+                    <input type="text" name="imgWidth" autocompvare="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">图片高度</label>
+                <div class="layui-input-block">
+                    <input type="text" name="imgHeight" autocompvare="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">图片描述</label>
+                <div class="layui-input-block">
+                    <input type="text" name="imgDescrip" autocompvare="off" class="layui-input">
+                </div>
+            </div>
+        </table>
+        <table border="0" id="flash" style="display: none;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">flash链接</label>
+                <div class="layui-input-block">
+                    <input type="text" name="flashLink" autocompvare="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">flash宽度</label>
+                <div class="layui-input-block">
+                    <input type="text" name="flashWidth" autocompvare="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">flash高度</label>
+                <div class="layui-input-block">
+                    <input type="text" name="flashHeight" autocompvare="off" class="layui-input">
+                </div>
+            </div>
+        </table>
+        <table border="0" id="advertisingNormbodyTable" style="display: none;">
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">正常显示内容</label>
+                <div class="layui-input-block">
+                    <textarea id="advertisingNormbody" autocompvare="off" class="layui-textarea" lay-verify="required"></textarea>
+                </div>
+            </div>
+        </table>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">过期显示内容</label>
+            <div class="layui-input-block">
+                <textarea name="advertisingExpbody" autocompvare="off" class="layui-textarea" lay-verify="required"></textarea>
+            </div>
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="commit">确定</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script>
+
+    var uuid_ = null;
+    var layui_ = null;
+    var terminalTyle_ = null;
+    var searchEngine_ = null;
+
+    function initForm(data) {
+        uuid_ = data;
+        if (layui_ != null) {
+            setForm(layui_, uuid_);
+        }
+    }
+
+    function initWebSiteID(data) {
+
+    }
+
+    function setForm(l, u) {
+        l.jquery.ajax({
+            url: '/internal/industryList/getIndustry/' + u,
+            type: 'GET',
+            headers: {
+                "Accept": 'application/json',
+                "Content-Type": 'application/json'
+            },
+            success: function (res) {
+                if (res.code === 200) {
+                    searchEngine_ = res.data.searchEngine
+                    layui.form.val("addIndustry", res.data);
+                } else {
+                    l.layer.msg(res.msg);
+                }
+            }
+        });
+    }
+
+    /**
+     * 动态展示广告位标识，根据广告标识所填写内容变化
+     *  内容格式如下：{dede:myad name='广告位标识'/}
+     */
+    function changeAdpositionIdValue(value) {
+        var api = layui_.jquery("#adPositionId");
+        var htm = '';
+        if(value == "" || value==null){
+            htm ='{dede:myad name=\'广告位标识\'/}'
+        }else{
+            htm =' {dede:myad name=\''+value+'\'/}';
+        }
+        api.text(htm);
+    }
+
+    layui.use(["form", "okLayer", "jquery", "layer", "laydate"], function () {
+        var form = layui.form;
+        var okLayer = layui.okLayer;
+        var $ = layui.jquery;
+        var laydate = layui.laydate
+
+        if (uuid_ != null) {
+            setForm(layui, uuid_);
+        } else {
+            layui_ = layui;
+        }
+
+        laydate.render({
+            elem: '#advertisingStarttime',
+            type: 'datetime',
+            range: ' - ',
+            format: 'yyyy/MM/dd'
+        });
+
+        init_SearchEngine();
+
+        function init_SearchEngine(){
+            var postData = {}
+            postData.terminalType = terminalTyle_
+            $.ajax({
+                url: '/internal/industryList/returnSelectData',
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                data: JSON.stringify(postData),
+                success: function (res) {
+                    if (res.code === 200) {
+                        var searchEngineList = res.data.searchEngineMap
+                        var searchEngine = $('#engines');
+                        $.each(searchEngineList, function (index, item) {
+                            if(searchEngine_ == item){
+                                searchEngine.append('<option value="' + item + '" selected>' + item + '</option>');
+                            }else{
+                                searchEngine.append('<option value="' + item + '">' + item + '</option>');
+                            }
+                        });
+                        form.render("select")
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                },
+                error: function () {
+                    layer.msg('未知错误，请稍后重试！！')
+                }
+            });
+        }
+
+        form.on("radio(advertisingBodyChecked)", function(data){
+            var type = data.value
+            console.log(type)
+            var advertisingForm = $("#advertisingForm");
+            var code = advertisingForm.find("#code");
+            var txt = advertisingForm.find("#txt");
+            var img = advertisingForm.find("#img");
+            var flash = advertisingForm.find("#flash");
+            var advertisingBodyCheckedTable = advertisingForm.find("#advertisingBodyCheckedTable");
+            var advertisingNormbodyTable = advertisingForm.find("#advertisingNormbodyTable");
+            var advertisingTagname = advertisingForm.find('#advertisingTagname');
+            code.css("display","none");
+            txt.css("display","none");
+            img.css("display","none");
+            flash.css("display","none");
+            advertisingBodyCheckedTable.css("display","none");
+            advertisingNormbodyTable.css("display","none");
+            advertisingTagname.removeAttr("readonly");
+            if ("code" == type){
+                advertisingBodyCheckedTable.css("display","block");
+                code.css("display","block");
+            } else if ("txt" == type){
+                advertisingBodyCheckedTable.css("display","block");
+                txt.css("display","block");
+            } else if ("img" == type){
+                advertisingBodyCheckedTable.css("display","block");
+                img.css("display","block");
+            } else if ("flash" == type) {
+                advertisingBodyCheckedTable.css("display","block");
+                flash.css("display","block");
+            }else {
+                advertisingNormbodyTable.css("display","block");
+                advertisingTagname.attr("readonly","readonly");
+            }
+        });
+
+        form.on("submit(commit)", function (data) {
+            data.field.terminalType = terminalTyle_
+            $.ajax({
+                url: '/internal/industryList/saveIndustryInfo',
+                type: 'POST',
+                data: JSON.stringify(data.field),
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        okLayer.msg.greenTick("保存成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        layui.layer.msg(res.msg);
+                    }
+                }
+            });
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+    })
+
+</script>
+
+</body>
+</html>

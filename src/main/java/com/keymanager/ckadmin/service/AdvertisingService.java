@@ -1,5 +1,6 @@
 package com.keymanager.ckadmin.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.keymanager.ckadmin.criteria.AdvertisingAllTypeAndCustomerListCriteria;
 import com.keymanager.ckadmin.criteria.AdvertisingCriteria;
@@ -21,6 +22,8 @@ public interface AdvertisingService extends IService<Advertising> {
     void delAdvertisings(Map map);
 
     void delAdvertising(Long uuid);
+
+    Page<Advertising> searchAdvertisingList(Page<Advertising> page, AdvertisingCriteria advertisingCriteria);
 
     void updateAdvertising(Advertising advertising);
 

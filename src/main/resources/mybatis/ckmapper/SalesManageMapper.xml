@@ -18,8 +18,8 @@
         FROM
         t_sales_manage
         WHERE 1 = 1
-        <if test="salesManage.salesName != null and salesManage.salesName != ''">
-            AND fSalesName like '%${salesManage.salesName}%'
+        <if test="salesInfoCriteria.salesName != null and salesInfoCriteria.salesName != ''">
+            AND fSalesName like '%${salesInfoCriteria.salesName}%'
         </if>
     </select>
 
