@@ -49,43 +49,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             document.getElementById('invalidRefreshCount').value = d.irc;
         }
         let type = $('#type').val();
-        if (type !== 'qz'){
-            if ($('#noReachStandardDiv').length === 0){
-                let noReachStandardDiv = '<div class="layui-inline count" id="noReachStandardDiv">\n'
-                    + '    未达标统计:\n'
-                    + '    <a href="javascript:showNoReachStandardKeyword(30)" ></a>|\n'
-                    + '    <a href="javascript:showNoReachStandardKeyword(15)" ></a>|\n'
-                    + '    <a href="javascript:showNoReachStandardKeyword(7)" ></a>\n'
-                    + '</div>\n';
-                $("#resetBtnDiv").after($(noReachStandardDiv));
-            }
-            if ($('#noReachStandardDays').length === 0) {
-                let noReachStandardDaysDiv = '<div class="layui-inline" id="noReachStandardDaysDiv" style="margin-left: 4px;">\n'
-                    + '                           <label class="layui-form-label">未达标天数</label>\n'
-                    + '                           <div class="layui-input-inline">\n'
-                    + '                               <input type="number" name="noReachStandardDays" id="noReachStandardDays" placeholder="请输入未达标天数" autocomplete="off"\n';
-                if (d.nrsd) {
-                    noReachStandardDaysDiv += ' value="' + d.nrsd + '"';
-                }
-                noReachStandardDaysDiv += ' class="layui-input">\n'
-                    + '                           </div>\n'
-                    + '                       </div>';
-                $("#invalidRefreshCountDiv").after($(noReachStandardDaysDiv));
-            }0
-            let terminalType = $('#terminalType').val();
-            let postData = {};
-            postData.type = type;
-            postData.terminalType = terminalType;
-            init_noReachStandard(postData);
-        } else {
-            if ($('#noReachStandardDiv').length >= 0) {
-                $('#noReachStandardDiv').remove();
-            }
-            if ($('#noReachStandardDaysDiv').length >= 0) {
-                $('#noReachStandardDaysDiv').remove();
-                // form.render();
-            }
-        }
+
         get_keywords(formToJsonObject('searchForm'));
     }
 
@@ -249,6 +213,18 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             }
         }
     );
+
+    form.verify({
+        positiveInteger: [
+            /(^$)|(^[0-9]*[1-9][0-9]*$)/,
+            "请输入合适的正整数、如：1、2、3"
+        ],
+        telPhone: [
+            /(^$)|(^(13[0-9]|14[5-9]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[13589])\d{8}$)/,
+            "请输入正确格式手机号码"
+        ]
+    });
+
     //监听工具条
     var active = {
         reload: function () {
@@ -351,40 +327,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         let d = data.elem.context.dataset;
         $('#type').val(d.type);
         $('#terminalType').val(d.terminal);
-        if (d.type === 'qz') {
-            if ($('#noReachStandardDiv').length >= 0) {
-                $('#noReachStandardDiv').remove();
-            }
-            if ($('#noReachStandardDaysDiv').length >= 0) {
-                $('#noReachStandardDaysDiv').remove();
-                // form.render();
-            }
-        } else {
-            if ($('#noReachStandardDiv').length === 0) {
-                let noReachStandardDiv = '<div class="layui-inline count" id="noReachStandardDiv">\n'
-                    + '    未达标统计:\n'
-                    + '    <a href="javascript:showNoReachStandardKeyword(30)" ></a>|\n'
-                    + '    <a href="javascript:showNoReachStandardKeyword(15)" ></a>|\n'
-                    + '    <a href="javascript:showNoReachStandardKeyword(7)" ></a>\n'
-                    + '</div>\n';
-                $("#resetBtnDiv").after($(noReachStandardDiv));
-            }
-            if ($('#noReachStandardDaysDiv').length === 0) {
-                let noReachStandardDaysDiv = '<div class="layui-inline" id="noReachStandardDaysDiv">\n'
-                    + '                           <label class="layui-form-label">未达标天数</label>\n'
-                    + '                           <div class="layui-input-inline">\n'
-                    + '                               <input type="number" name="noReachStandardDays" id="noReachStandardDays" placeholder="请输入未达标天数" autocomplete="off"\n'
-                    + '                                   class="layui-input">\n'
-                    + '                           </div>\n'
-                    + '                       </div>';
-                $("#invalidRefreshCountDiv").after($(noReachStandardDaysDiv));
-            }
-            $('#noReachStandardDays').val('');
-            let postData = {};
-            postData.type = d.type;
-            postData.terminalType = d.terminal;
-            init_noReachStandard(postData);
-        }
+
         active['reload'].call(this);
     });
 

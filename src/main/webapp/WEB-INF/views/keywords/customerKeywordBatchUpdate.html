@@ -45,7 +45,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">域名</label>
                         <div class="layui-input-block" onclick="checkItem(this)">
-                            <input type="text" name="url" id="url" placeholder="" autocomplete="off" class="layui-input"/>
+                            <input type="text" name="url" id="url" placeholder="" autocomplete="off" class="layui-input" lay-verify="domain"/>
                         </div>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">指数</label>
                         <div class="layui-input-block" onclick="checkItem(this)">
-                            <input type="number" name="initialIndexCount" id="initialIndexCount" placeholder="" autocomplete="off" class="layui-input"/>
+                            <input type="number" name="initialIndexCount" id="initialIndexCount" placeholder="" autocomplete="off" class="layui-input" lay-verify="index"/>
                         </div>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">排名</label>
                         <div class="layui-input-block" onclick="checkItem(this)">
-                            <input type="number" name="initialPosition" id="initialPosition" placeholder="" autocomplete="off" class="layui-input"/>
+                            <input type="number" name="initialPosition" id="initialPosition" placeholder="" autocomplete="off" class="layui-input" lay-verify="positiveInteger"/>
                         </div>
                     </div>
                 </div>
@@ -147,7 +147,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">第一报价</label>
                         <div class="layui-input-block" onclick="checkItem(this)" >
-                            <input type="number" name="positionFirstFee" id="positionFirstFee" placeholder="" autocomplete="off" class="layui-input"/>
+                            <input type="number" name="positionFirstFee" id="positionFirstFee" placeholder="" autocomplete="off" class="layui-input" lay-verify="positiveInteger"/>
                         </div>
                     </div>
                 </div>
@@ -156,7 +156,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">第五报价</label>
                         <div class="layui-input-block" onclick="checkItem(this)" >
-                            <input type="number" name="positionFifthFee" id="positionFifthFee" placeholder="" autocomplete="off" class="layui-input"/>
+                            <input type="number" name="positionFifthFee" id="positionFifthFee" placeholder="" autocomplete="off" class="layui-input" lay-verify="positiveInteger"/>
                         </div>
                     </div>
                 </div>
@@ -166,7 +166,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">第二报价</label>
                         <div class="layui-input-block" onclick="checkItem(this)" >
-                            <input type="number" name="positionSecondFee" id="positionSecondFee" placeholder="" autocomplete="off" class="layui-input"/>
+                            <input type="number" name="positionSecondFee" id="positionSecondFee" placeholder="" autocomplete="off" class="layui-input" lay-verify="positiveInteger"/>
                         </div>
                     </div>
                 </div>
@@ -175,7 +175,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">首页报价</label>
                         <div class="layui-input-block" onclick="checkItem(this)" >
-                            <input type="number" name="positionFirstPageFee" id="positionFirstPageFee" placeholder="" autocomplete="off" class="layui-input"/>
+                            <input type="number" name="positionFirstPageFee" id="positionFirstPageFee" placeholder="" autocomplete="off" class="layui-input" lay-verify="positiveInteger"/>
                         </div>
                     </div>
                 </div>
@@ -186,7 +186,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">第三报价</label>
                         <div class="layui-input-block" onclick="checkItem(this)" >
-                            <input type="number" name="positionThirdFee" id="positionThirdFee" placeholder="" autocomplete="off" class="layui-input"/>
+                            <input type="number" name="positionThirdFee" id="positionThirdFee" placeholder="" autocomplete="off" class="layui-input" lay-verify="positiveInteger"/>
                         </div>
                     </div>
                 </div>
@@ -211,7 +211,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">第四报价</label>
                         <div class="layui-input-block" onclick="checkItem(this)" >
-                            <input type="number" name="positionForthFee" id="positionForthFee" placeholder="" autocomplete="off" class="layui-input"/>
+                            <input type="number" name="positionForthFee" id="positionForthFee" placeholder="" autocomplete="off" class="layui-input" lay-verify="positiveInteger"/>
                         </div>
                     </div>
                 </div>
@@ -381,6 +381,26 @@
         $('#close').click(function () {
             parent.layer.close(parent.layer.getFrameIndex(window.name));
             return false;
+        });
+
+        form.verify({
+            domain: [
+                /^([\u4e00-\u9fa50-9]+|[a-z0-9]+)\.([\u4e00-\u9fa5]+|[a-z]+|ac.cn|bj.cn|sh.cn|tj.cn|cq.cn|he.cn|sn.cn|sx.cn|nm.cn|ln.cn|jl.cn|hl.cn|js.cn|zj.cn|ah.cn|fj.cn|jx.cn|sd.cn|ha.cn|hb.cn|hn.cn|gd.cn|gx.cn|hi.cn|sc.cn|gz.cn|yn.cn|gs.cn|qh.cn|nx.cn|xj.cn|tw.cn|hk.cn|mo.cn|xz.cn|com.cn|net.cn|org.cn|gov.cn|.com.hk)$/,
+                "请正确输入域名,例如baidu.com,不能填写www.baidu.com,map.baidu.com等"
+            ],
+            tagNames: [
+                /(^$)|(^[\u4e00-\u9fa50-9a-zA-Z,]+$)/,
+                "请正确输入标签,例如：阿卡索,MBA,算法"
+            ],
+            index:[
+                /(^$)|(^[\-][0-3]$)|(^[0-9]*[1-9][0-9]*$)/,
+                "请正确输入指数,最小为-3，不能为小数"
+            ],
+            positiveInteger: [
+                /(^$)|(^[0-9]*[1-9][0-9]*$)/,
+                "请正确输入数值、如：1、25、300等正整数"
+            ],
+
         });
 
     })
