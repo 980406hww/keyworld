@@ -102,6 +102,14 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/customerKeyword/toPTKeywordCount">
+                        <dd data-name="keyword-item">
+                            <a data-url="/internal/customerKeyword/toPTKeywordCount" lay-id="ptKeywordCount">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>单词统计</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
                         <@shiro.hasPermission name="/internal/customerKeyword/toMachineGroupAndSize">
                         <dd data-name="keyword-item">
                             <a data-url="/internal/customerKeyword/toMachineGroupAndSize" lay-id="machineGroupAndSize">
@@ -191,6 +199,14 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/groupsetting/toGroupSettings">
+                        <dd data-name="machine-item" >
+                            <a data-url="/internal/groupsetting/toGroupSettings" lay-id="groupSetting">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>分组信息设置</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
 
                     </dl>
                 </li>
@@ -234,6 +250,14 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/website/searchWebsites">
+                        <dd data-name="other-item" >
+                            <a data-url="/internal/websites/toWebSiteList" lay-id="webSiteList">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>网站管理</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
                         <@shiro.hasPermission name="/internal/operationTypes/toSearchOperationTypeLists">
                         <dd data-name="other-item" >
                             <a data-url="/internal/operationTypes/toSearchOperationTypeLists" lay-id="operationTypeList">
@@ -247,6 +271,14 @@
                             <a data-url="/internal/qzsetting/toQZSetttings" lay-id="QZSettting">
                                 <i class="layui-icon layui-icon-align-right"></i>
                                 <cite>全站信息设置</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/negativeKeywordName/searchNegativeKeywordNames">
+                        <dd data-name="other-item" >
+                            <a data-url="/internal/negativeKeywords/toNegativeKeywords" lay-id="negativeKeywords">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>负面信息抓取</cite>
                             </a>
                         </dd>
                         </@shiro.hasPermission>
@@ -328,10 +360,6 @@
                     <i class="ok-icon ok-iconairplay"></i>
                     <cite is-close=false>主页</cite>
                 </li>
-
-
-
-
             </ul>
             <div class="layui-tab-content ok-tab-content">
                 <div class="layui-tab-item layui-show">

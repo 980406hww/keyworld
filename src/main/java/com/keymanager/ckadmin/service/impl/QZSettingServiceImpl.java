@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.service.impl;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.ExternalQZSettingCriteria;
+import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
@@ -12,6 +13,7 @@ import com.keymanager.ckadmin.entity.CaptureRankJob;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.entity.Group;
 import com.keymanager.ckadmin.entity.QZCategoryTag;
 import com.keymanager.ckadmin.entity.QZChargeRule;
 import com.keymanager.ckadmin.entity.QZKeywordRankInfo;
@@ -22,6 +24,7 @@ import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.*;
 import com.keymanager.ckadmin.service.QZChargeRuleService;
 import com.keymanager.ckadmin.vo.ExternalQZSettingVO;
+import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.QZKeywordRankInfoVO;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.vo.QZSettingCountVO;
@@ -879,5 +882,10 @@ public class QZSettingServiceImpl extends
     @Override
     public QZSettingCountVO getQZSettingsCountByCustomerUuid(Long customerUuid) {
         return qzSettingDao.getQZSettingsCountByCustomerUuid(customerUuid);
+    }
+
+    @Override
+    public List<GroupVO> getAvailableOptimizationGroups (GroupSettingCriteria groupSettingCriteria) {
+        return qzSettingDao.getAvailableOptimizationGroups(groupSettingCriteria);
     }
 }

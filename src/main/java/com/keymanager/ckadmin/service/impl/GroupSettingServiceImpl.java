@@ -109,4 +109,9 @@ public class GroupSettingServiceImpl extends ServiceImpl<GroupSettingDao, GroupS
     public void deleteGroupSettingByOperationCombineUuid (long operationCombineUuid) {
         groupSettingDao.deleteGroupSettingByOperationCombineUuid(operationCombineUuid);
     }
+
+    @Override
+    public GroupSetting getGroupSettingByUuid(Long uuid) {
+        return groupSettingDao.getGroupSettingByUuid(uuid);
+    }
 }

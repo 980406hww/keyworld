@@ -89,9 +89,9 @@ public class WebsiteServiceImpl extends ServiceImpl<WebsiteDao, Website> impleme
         websiteDao.deleteById(uuid);
     }
 
-    public void deleteWebsites(List<String> uuids) {
-        for (String uuid : uuids) {
-            deleteWebsite(Long.parseLong(uuid));
+    public void deleteWebsites(List<Integer> uuids) {
+        for (Integer uuid : uuids) {
+            deleteWebsite(Long.valueOf(uuid));
         }
     }
 

@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.CustomerKeywordCleanTitleCriteria;
 import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
+import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
+import com.keymanager.ckadmin.criteria.PTKeywordCountCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.dao.CustomerKeywordDao;
@@ -23,9 +25,12 @@ import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.CodeNameVo;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
+import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
+import com.keymanager.ckadmin.vo.PTkeywordCountVO;
+import com.keymanager.monitoring.vo.keywordAmountCountVo;
 import java.io.InputStream;
 import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
@@ -624,6 +629,19 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         keywordStandardVO.setFifteenDaysNoReachStandard(fifteenDaysNoReachStandard);
         keywordStandardVO.setThirtyDaysNoReachStandard(thirtyDaysNoReachStandard);
         return keywordStandardVO;
+    }
+
+    @Override
+    public List<GroupVO> getAvailableOptimizationGroups(GroupSettingCriteria groupSettingCriteria) {
+        return customerKeywordDao.getAvailableOptimizationGroups(groupSettingCriteria);
+    }
+
+    @Override
+    public Page<PTkeywordCountVO> searchPTKeywordCount(Page<PTkeywordCountVO> page, PTKeywordCountCriteria keywordCriteria) {
+        long startMilleSeconds = System.currentTimeMillis();
+        List<PTkeywordCountVO> ptkeywordCountVOS = customerKeywordDao.searchPTKeywordCount(page, keywordCriteria);
+        page.setRecords(ptkeywordCountVOS);
+        return page;
     }
 }
 

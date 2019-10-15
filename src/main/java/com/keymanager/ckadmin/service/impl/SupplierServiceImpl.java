@@ -32,7 +32,7 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierDao, Supplier> impl
     @Override
     public Page<Supplier> searchSuppliers(SupplierCriteria criteria) {
         Page<Supplier> page = new Page<>(criteria.getPage(), criteria.getLimit());
-        page.setOrderByField("createTime");
+        page.setOrderByField("fCreateTime");
         page.setAsc(false);
         Wrapper<Supplier> wrapper = new EntityWrapper<>();
         wrapper.like("fContactperson", criteria.getContactPerson());

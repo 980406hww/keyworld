@@ -4,17 +4,21 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.keymanager.ckadmin.criteria.CustomerKeywordCleanTitleCriteria;
 import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
+import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
+import com.keymanager.ckadmin.criteria.PTKeywordCountCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.vo.CodeNameVo;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
+import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 
+import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import java.io.InputStream;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import java.util.List;
@@ -103,4 +107,8 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     KeywordStandardVO searchCustomerKeywordForNoReachStandard(KeywordStandardCriteria keywordStandardCriteria);
 
     List<CodeNameVo> searchGroupsByTerminalType(String terminalType);
+
+    List<GroupVO> getAvailableOptimizationGroups(GroupSettingCriteria groupSettingCriteria);
+
+    Page<PTkeywordCountVO> searchPTKeywordCount(Page<PTkeywordCountVO> page, PTKeywordCountCriteria keywordCriteria);
 }

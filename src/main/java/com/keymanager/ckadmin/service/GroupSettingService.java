@@ -10,23 +10,25 @@ import java.util.List;
 
 public interface GroupSettingService extends IService<GroupSetting> {
 
-    public Page<OperationCombine> searchGroupSettings(Page<OperationCombine> page, GroupSettingCriteria groupSettingCriteria);
+    Page<OperationCombine> searchGroupSettings(Page<OperationCombine> page, GroupSettingCriteria groupSettingCriteria);
 
-    public void deleteGroupSetting (long uuid);
+    void deleteGroupSetting(long uuid);
 
-    public GroupSetting findGroupSetting (long uuid);
+    GroupSetting findGroupSetting(long uuid);
 
-    public void saveGroupSetting (GroupSetting groupSetting);
+    void saveGroupSetting(GroupSetting groupSetting);
 
-    public void updateGroupSetting (UpdateGroupSettingCriteria updateGroupSettingCriteria);
+    void updateGroupSetting(UpdateGroupSettingCriteria updateGroupSettingCriteria);
 
-    public GroupSetting getGroupSettingViaPercentage(String groupName, String terminalType);
+    GroupSetting getGroupSettingViaPercentage(String groupName, String terminalType);
 
-    public GroupSetting getGroupSetting(OperationCombine operationCombine);
+    GroupSetting getGroupSetting(OperationCombine operationCombine);
 
-    public List<Long> getGroupSettingUuids (long operationCombineUuid);
+    List<Long> getGroupSettingUuids(long operationCombineUuid);
 
-    public void updateGroupSetting(GroupSetting gs, GroupSetting groupSetting);
+    void updateGroupSetting(GroupSetting gs, GroupSetting groupSetting);
 
-    public void deleteGroupSettingByOperationCombineUuid (long operationCombineUuid);
+    void deleteGroupSettingByOperationCombineUuid(long operationCombineUuid);
+
+    GroupSetting getGroupSettingByUuid(Long uuid);
 }

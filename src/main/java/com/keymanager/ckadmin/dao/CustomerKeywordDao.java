@@ -3,14 +3,18 @@ package com.keymanager.ckadmin.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
+import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
+import com.keymanager.ckadmin.criteria.PTKeywordCountCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.vo.CodeNameVo;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
+import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
+import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,4 +124,8 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     int searchCustomerKeywordForNoReachStandard(@Param("keywordStandardCriteria") KeywordStandardCriteria keywordStandardCriteria);
 
     List<CodeNameVo> searchGroupsByTerminalType(@Param("terminalType") String terminalType);
+
+    List<GroupVO> getAvailableOptimizationGroups(@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
+
+    List<PTkeywordCountVO> searchPTKeywordCount(Page<PTkeywordCountVO> page, @Param("keywordCriteria") PTKeywordCountCriteria keywordCriteria);
 }

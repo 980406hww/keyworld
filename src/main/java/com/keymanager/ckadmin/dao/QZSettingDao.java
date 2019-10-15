@@ -3,9 +3,11 @@ package com.keymanager.ckadmin.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 
+import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSearchCriteria;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.vo.ExternalQZSettingVO;
+import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.QZSettingCountVO;
 import com.keymanager.ckadmin.vo.QZSettingVO;
 import java.util.List;
@@ -49,5 +51,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     void updateQzSetting(@Param("qzSetting") QZSetting qzSetting);
 
     QZSettingCountVO getQZSettingsCountByCustomerUuid(@Param("customerUuid") Long customerUuid);
+
+    List<GroupVO> getAvailableOptimizationGroups(@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 }
 
