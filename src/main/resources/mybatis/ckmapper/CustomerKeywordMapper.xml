@@ -488,6 +488,9 @@
         <if test="keywordCriteria.noReachStandardDays != null and keywordCriteria.noReachStandardDays > 0">
             AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL #{keywordCriteria.noReachStandardDays} DAY)
         </if>
+        <if test="keywordCriteria.keywordEffect != null and keywordCriteria.keywordEffect != ''">
+            AND ck.fKeywordEffect = #{keywordCriteria.keywordEffect}
+        </if>
     </sql>
 
     <sql id="updateCustomerKeywordsCriteria">
@@ -594,6 +597,9 @@
         </if>
         <if test="keywordCriteria.noReachStandardDays != null and keywordCriteria.noReachStandardDays > 0">
             AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL #{keywordCriteria.noReachStandardDays} DAY)
+        </if>
+        <if test="keywordCriteria.keywordEffect != null and keywordCriteria.keywordEffect != ''">
+            AND ck.fKeywordEffect = #{keywordCriteria.keywordEffect}
         </if>
     </sql>
 
@@ -855,7 +861,7 @@
         <if test="customerKeywordUpdateStatusCriteria.type != null and customerKeywordUpdateStatusCriteria.type != ''">
             AND ck.fType = #{customerKeywordUpdateStatusCriteria.type}
         </if>
-        <if test="customerKeywordUpdateStatusCriteria.terminalType != null || customerKeywordUpdateStatusCriteria.terminalType != ''">
+        <if test="customerKeywordUpdateStatusCriteria.terminalType != null and customerKeywordUpdateStatusCriteria.terminalType != ''">
             AND ck.fTerminalType = #{customerKeywordUpdateStatusCriteria.terminalType}
         </if>
     </update>

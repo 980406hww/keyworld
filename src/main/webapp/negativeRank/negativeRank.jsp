@@ -108,11 +108,12 @@
 <%@ include file="/commons/loadjs.jsp"%>
 <script src="${staticPath}/negativeRank/negativeRank.js"></script>
 <script language="javascript">
-    <shiro:hasPermission name="/internal/negativeRank/updateNegativeRankKeyword">
+<%--    <shiro:hasPermission name="/internal/negativeRank/updateNegativeRankKeyword">--%>
     $(function () {
         $('table td').click(function(){
             if(!$(this).is('.input')){
                 if($(this).is("td[name='clickEvent']")){
+                    console.log(this)
                     var notModified = $(this).text();
                     $(this).addClass('input').html('<input type="text" style="width: 100%" value="'+ $(this).text() +'"/>').find('input').focus().blur(function(){
                         var negativeRank = {};
@@ -138,7 +139,8 @@
                             var rankTag = $(this).parent().siblings("td[name='clickEvent']");
                             $(this).parent().removeClass('input').html($(this).val() || '');
                             negativeRank.negativeCount = count(rankTag);
-                            updateNegativeRank(negativeRank);
+                            console.log(count(rankTag))
+                            // updateNegativeRank(negativeRank);
                         }else {
                             $(this).parent().removeClass('input').html($(this).val() || '');
                         }
@@ -169,7 +171,7 @@
             }
         });
     }
-    </shiro:hasPermission>
+<%--    </shiro:hasPermission>--%>
 </script>
 </body>
 </html>

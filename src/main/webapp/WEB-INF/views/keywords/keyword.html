@@ -143,20 +143,20 @@
                                         <div class="layui-inline">
                                             <label class="layui-form-label">要刷数量范围</label>
                                             <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="number" name="gtOptimizePlanCount" placeholder=">=" autocomplete="off" class="layui-input">
+                                                <input type="number" name="gtOptimizePlanCount" placeholder=">=" autocomplete="off" class="layui-input" lay-verify="positiveInteger">
                                             </div>
                                             <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="number" name="ltOptimizePlanCount" placeholder="<=" autocomplete="off" class="layui-input">
+                                                <input type="number" name="ltOptimizePlanCount" placeholder="<=" autocomplete="off" class="layui-input" lay-verify="positiveInteger">
                                             </div>
                                         </div>
 
                                         <div class="layui-inline">
                                             <label class="layui-form-label">已刷数量范围</label>
                                             <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="number" name="gtOptimizedCount" placeholder=">=" autocomplete="off" class="layui-input">
+                                                <input type="number" name="gtOptimizedCount" placeholder=">=" autocomplete="off" class="layui-input" lay-verify="positiveInteger">
                                             </div>
                                             <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="number" name="ltOptimizedCount" placeholder="<=" autocomplete="off" class="layui-input">
+                                                <input type="number" name="ltOptimizedCount" placeholder="<=" autocomplete="off" class="layui-input" lay-verify="positiveInteger">
                                             </div>
                                         </div>
 
@@ -166,7 +166,7 @@
                                             <label class="layui-form-label">无效点击数</label>
                                             <div class="layui-input-inline">
                                                 <input type="number" name="invalidRefreshCount" id="invalidRefreshCount" placeholder="请输入无效点击数" autocomplete="off"
-                                                       class="layui-input">
+                                                       class="layui-input" lay-verify="positiveInteger">
                                             </div>
                                         </div>
 
