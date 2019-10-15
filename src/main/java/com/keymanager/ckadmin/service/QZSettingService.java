@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.keymanager.ckadmin.criteria.ExternalQZSettingCriteria;
+import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
@@ -11,6 +12,7 @@ import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
 import com.keymanager.ckadmin.entity.QZCategoryTag;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.vo.ExternalQZSettingVO;
+import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.vo.QZSettingCountVO;
 
@@ -70,4 +72,6 @@ public interface QZSettingService extends IService<QZSetting> {
     QZSettingCountVO getQZSettingsCountByCustomerUuid( Long customerUuid);
 
     String findQZCustomer(String domain);
+
+    List<GroupVO> getAvailableOptimizationGroups(GroupSettingCriteria groupSettingCriteria);
 }

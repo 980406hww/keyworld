@@ -1,0 +1,238 @@
+
+html {
+    background-color: #ffffff;
+}
+
+/*.layui-card-body{
+    padding-bottom: 0;
+}*/
+.my-collapse {
+    position: relative;
+    box-shadow: none;
+
+}
+
+.my-collapse * {
+    box-shadow: none;
+}
+
+.my-collapse > div:first-child {
+    background: #f2f2f2;
+    border: 1px solid #e6e6e6;
+}
+
+.my-collapse > div {
+    padding: 7px 10px;
+}
+
+.my-hide {
+    padding-bottom: 1px !important;
+    display: none;
+    position: absolute;
+    top: 45px;
+    left: 0;
+    z-index: 894;
+    background: #fff;
+    border-bottom: 1px #e6e6e6 solid;
+    border-left: 1px #e6e6e6 solid;
+    border-right: 1px #e6e6e6 solid;
+    transition: visibility .6s;
+}
+
+.my-collapse button {
+    height: 30px;
+    line-height: 30px;
+}
+
+.my-collapse .my-btn {
+    height: 30px !important;
+    line-height: 30px !important;
+    padding: 0 18px;
+    background-color: #45a3c2;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.my-collapse .my-btn:hover {
+    opacity: .8;
+    transition: opacity 0.5s;
+}
+
+.layui-form-select input {
+    height: 30px;
+}
+
+.layui-inline input {
+    height: 30px;
+}
+
+.my-hide .layui-inline .layui-form-label {
+    height: 30px;
+    line-height: 12px;
+    width: 90px;
+    padding: 8px 0;
+}
+
+.layui-fluid {
+    padding: 0;
+}
+
+.out-condition .layui-inline .layui-form-label {
+    height: 30px;
+    line-height: 12px;
+    width: 90px;
+    padding: 8px 0;
+}
+
+.out-condition .layui-select-title, .out-condition .layui-unselect .layui-form-select {
+    width: 160px;
+}
+
+.out-condition .layui-unselect .layui-form-select {
+    padding: 0 0;
+}
+
+.out-condition .layui-input-inline .layui-input-text {
+    height: 30px;
+    width: 110px;
+}
+
+.layui-form-item .layui-inline {
+    padding: 5px 0px;
+    margin-bottom: 0px;
+    margin-right: 0px;
+}
+
+.my-collapse .layui-inline {
+    height: 30px;
+}
+
+/*数据体*/
+
+#data_list {
+    padding-top: 10px;
+}
+
+.layui-tab {
+    margin: 10px;
+}
+
+/*操作*/
+.head-operation {
+    display: none;
+    font-size: 14px;
+}
+
+.operation a {
+    color: #1a81ea;
+}
+
+.layui-form-pane .layui-form-checkbox {
+    margin: 0px 0 0px 0px;
+}
+
+.skip {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.data-item {
+    margin-top: 15px ;
+    border: 1px solid #e6e6e6;
+    box-shadow: 0 0 2px 2px hsla(0, 0%, 80%, .2);
+}
+.data-item:hover{
+    border: 1px solid #9ec9f4;
+    box-shadow: 0 0 2px 2px hsla(0,0%,70%,.2);
+}
+
+.data-item:hover .head-operation{
+    display: block;
+}
+
+.head-operation a{
+    color: #1a81ea;
+}
+
+.data-head {
+    height: 30px;
+    /*border-bottom: 1px solid #e6e6e6;*/
+    font-size: 16px;
+    padding: 0 10px;
+
+}
+
+.data-head > div {
+    height: 30px;
+    line-height: 32px;
+    font-size: 14px;
+}
+
+.body-title {
+    height: 24px !important;
+    text-align: center;
+    font-size: 14px;
+}
+
+.body-title > div {
+    height: 24px;
+    line-height: 28px;
+    border-top: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
+}
+
+.body-title > div:last-child{
+    height: 24px;
+    line-height: 28px;
+    border-top: 1px solid #e6e6e6;
+    /*border-right: 1px solid #e6e6e6;*/
+}
+
+.body-content {
+    text-align: center;
+    font-size: 14px;
+}
+
+.body-content > div {
+    height: 30px;
+    line-height: 32px;
+    border-top: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
+}
+
+.body-content > div:last-child{
+    height: 30px;
+    line-height: 32px;
+    border-top: 1px solid #e6e6e6;
+    /*border-right: 1px solid #e6e6e6;*/
+}
+
+.body-operation a{
+    color: blue;
+}
+
+.importantText{
+    color: #0c7df5;
+}
+/*分页*/
+#page_nav {
+    position: fixed;
+    bottom: 0;
+    width: 100% !important;
+    height: 40px !important;
+}
+
+.layui-laypage {
+    position: fixed;
+    right: 15px;
+    bottom: 0;
+    margin: 0 0;
+}
+

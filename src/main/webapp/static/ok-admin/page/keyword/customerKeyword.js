@@ -151,6 +151,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 {field: 'failedCause', title: '失败原因', align: 'center', width: '100',},
                 {field: 'optimizeGroupName', title: '优化分组', align: 'center', width: '80'},
                 {field: 'machineGroup', title: '机器分组', align: 'center', width: '80'},
+                {field: 'remarks', title: '备注', align: 'center', width: '80', hide: true},
                 {title: '操作', align: 'center', width: '120', templet: '#operationTpl'}
             ]],
             height: 'full-150',

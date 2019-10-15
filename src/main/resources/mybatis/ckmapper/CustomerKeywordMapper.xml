@@ -488,6 +488,9 @@
         <if test="keywordCriteria.noReachStandardDays != null and keywordCriteria.noReachStandardDays > 0">
             AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL #{keywordCriteria.noReachStandardDays} DAY)
         </if>
+        <if test="keywordCriteria.keywordEffect != null and keywordCriteria.keywordEffect != ''">
+            AND ck.fKeywordEffect = #{keywordCriteria.keywordEffect}
+        </if>
     </sql>
 
     <sql id="updateCustomerKeywordsCriteria">
@@ -594,6 +597,9 @@
         </if>
         <if test="keywordCriteria.noReachStandardDays != null and keywordCriteria.noReachStandardDays > 0">
             AND ck.fLastReachStandardDate &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL #{keywordCriteria.noReachStandardDays} DAY)
+        </if>
+        <if test="keywordCriteria.keywordEffect != null and keywordCriteria.keywordEffect != ''">
+            AND ck.fKeywordEffect = #{keywordCriteria.keywordEffect}
         </if>
     </sql>
 
@@ -855,7 +861,7 @@
         <if test="customerKeywordUpdateStatusCriteria.type != null and customerKeywordUpdateStatusCriteria.type != ''">
             AND ck.fType = #{customerKeywordUpdateStatusCriteria.type}
         </if>
-        <if test="customerKeywordUpdateStatusCriteria.terminalType != null || customerKeywordUpdateStatusCriteria.terminalType != ''">
+        <if test="customerKeywordUpdateStatusCriteria.terminalType != null and customerKeywordUpdateStatusCriteria.terminalType != ''">
             AND ck.fTerminalType = #{customerKeywordUpdateStatusCriteria.terminalType}
         </if>
     </update>
@@ -987,16 +993,59 @@
 
     <select id="searchGroupsByTerminalType" resultType="com.keymanager.ckadmin.vo.CodeNameVo">
         SELECT
-            fOptimizeGroupName as 'name'
+        fOptimizeGroupName as 'name'
         FROM
-            t_customer_keyword
+        t_customer_keyword
         WHERE
-            fTerminalType = #{terminalType}
+        fTerminalType = #{terminalType}
         AND
-            fOptimizeGroupName IS NOT NULL
+        fOptimizeGroupName IS NOT NULL
         AND
-            fOptimizeGroupName &gt; ''
+        fOptimizeGroupName &gt; ''
         GROUP BY
-            fOptimizeGroupName
+        fOptimizeGroupName
+    </select>
+
+    <select id="getAvailableOptimizationGroups" resultType="com.keymanager.ckadmin.vo.GroupVO">
+        SELECT
+        ck.fOptimizeGroupName AS 'groupName'
+        FROM t_customer_keyword ck
+        WHERE ck.fTerminalType = #{groupSettingCriteria.terminalType}
+        <if test="groupSettingCriteria.optimizedGroupName != null and groupSettingCriteria.optimizedGroupName != ''">
+            AND ck.fOptimizeGroupName LIKE CONCAT(#{groupSettingCriteria.optimizedGroupName},'%')
+        </if>
+        AND ck.fOptimizeGroupName > ''
+        AND ck.fStatus = 1
+        GROUP BY ck.fOptimizeGroupName
+    </select>
+
+    <select id="searchPTKeywordCount" parameterType="com.keymanager.ckadmin.criteria.PTKeywordCountCriteria" resultType="com.keymanager.ckadmin.vo.PTkeywordCountVO">
+        SELECT
+        ck.fTerminalType	AS	'terminalType',
+        ck.fCustomerUuid	AS	'customerUuid',
+        ck.fKeyword	AS	'keyword',
+        ck.fSearchEngine	AS	'searchEngine',
+        COUNT(1) AS 'keywordCount',
+        SUM(IF(ck.fCurrentPosition BETWEEN 1 AND 3, 1, 0)) AS 'topThree',
+        SUM(IF(ck.fCurrentPosition BETWEEN 1 AND 10, 1, 0)) AS 'topTen',
+        COUNT( DISTINCT ck.fCustomerUuid) AS 'customerCount',
+        COUNT(DISTINCT c.fUserID) AS 'userCount'
+        FROM
+        t_customer_keyword ck,
+        t_customer c
+        WHERE c.fUuid = ck.fCustomerUuid
+        AND ck.fType = 'pt'
+        AND ck.fTerminalType = #{keywordCriteria.terminalType}
+        <if test="keywordCriteria.keyword != null and keywordCriteria.keyword != ''">
+            AND ck.fKeyword like concat(#{keywordCriteria.keyword}, '%')
+        </if>
+        <if test="keywordCriteria.searchEngine != null and keywordCriteria.searchEngine != ''">
+            AND ck.fSearchEngine = #{keywordCriteria.searchEngine}
+        </if>
+        <if test="keywordCriteria.userName != null and keywordCriteria.userName != ''">
+            AND c.fUserID = #{keywordCriteria.userName}
+        </if>
+        GROUP BY ck.fKeyword, ck.fSearchEngine
+        ORDER BY keywordCount DESC
     </select>
 </mapper>

@@ -31,4 +31,6 @@ public class Constants {
     public final static String SEARCH_ENGINE_BING = "必应";
     public final static String SEARCH_ENGINE_BING_CHINA = "必应中国";
     public final static String SEARCH_ENGINE_BING_JAPAN = "必应日本";
+
+    public final static String CONFIG_TYPE_NEGATIVE_KEYWORD = "NegativeKeyword";
 }

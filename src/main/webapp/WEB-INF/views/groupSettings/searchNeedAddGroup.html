@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>关键字列表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+<!--    <link rel="stylesheet" href="/static/ok-admin/page/base/searchForm.css">-->
+</head>
+<body>
+<div class="ok-body">
+    <!--模糊搜索区域-->
+    <div class="layui-card ">
+        <div class="layui-card-body ">
+            <form class="layui-form layui-form-pane" id="searchForm">
+                <input type="hidden" name="terminalType" id="terminalType" value=""/>
+                <div class="layui-inline">
+                    <label class="layui-form-label">组名来源</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="optimizedGroupNameSearchSource" value="true" title="关键字" checked="">
+                        <input type="radio" name="optimizedGroupNameSearchSource" value="false" title="全站">
+                    </div>
+
+                </div>
+                <div class="layui-inline">
+                    <input type="text" name="optimizedGroupName" id="optimizedGroupName" placeholder="请输入优化组名" autocomplete="off"
+                           class="layui-input layui-input-text">
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!--数据表格-->
+    <table class="layui-hide" id="groupTable" lay-filter="tableFilter"></table>
+
+    <div class="layui-form">
+        <div class="layui-input-inline" style="width: 200px; height: 30px">
+            <select id="update_qz_operation_combine" lay-search>
+                <option value="">修改所选站点操作组合</option>
+
+            </select>
+        </div>
+
+    </div>
+
+
+</div>
+<div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+    <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+        <button class="layui-btn" id="save" style="margin-right: 20px;width: 150px">
+            保存操作
+        </button>
+        <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px;width: 150px">
+            关闭
+        </button>
+    </div>
+</div>
+
+<!--js逻辑-->
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script>
+
+    let layui_ = null;
+    var uuid_ = null;
+    var groupTable;
+    var terminalType_ = '';
+
+    function initForm(data) {
+        // console.log(data)
+        // uuid_ = data.uuid;
+        document.getElementById('terminalType').value = data.terminalType;
+        terminalType_ = data.terminalType;
+    }
+
+    layui.use(["form", "okLayer", "table", "jquery", "layer"], function () {
+        let form = layui.form;
+        let okLayer = layui.okLayer;
+        let $ = layui.jquery;
+        let layer = layui.layer;
+        let table = layui.table;
+
+        let whereCondition = formToJsonObject('searchForm');
+        init_table(whereCondition);
+
+        get_operation_combine_list($('#terminalType').val());
+        function init_table(whereCondition){
+            groupTable = table.render({
+                elem: '#groupTable',
+                method: 'post',
+                url: '/internal/group/getAvailableOptimizationGroups2',
+                size: 'sm',
+                where: whereCondition,
+                id: 'groupTable',
+                page: false,
+                even: true,//隔行背景
+                contentType: 'application/json',
+                cols: [[
+                    {type: 'checkbox', width: '5%', LAY_CHECKED: true},
+                    {field: 'groupName', title: '分组名称', width: '95%', align: 'center'},
+                ]],
+                height: 'full-160',
+                done: function (res, curr, count) {
+
+                }
+            });
+        }
+
+        function get_operation_combine_list(terminalType) {
+            /*动态加载操作组合列表*/
+            $.ajax({
+                url: '/internal/operationcombine/getOperationCombines/' + terminalType,
+                type: 'get',
+                asyns: true,
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        let operation_combine_select = $("#update_qz_operation_combine");
+                        operation_combine_select.empty();
+                        $.each(res.data, function (i, v) {
+                            let option = $("<option value='" + v.uuid + "'>" + v.operationCombineName + "</option>");
+                            operation_combine_select.append(option);
+                        });
+                        form.render("select");
+                    }
+                }
+            });
+        }
+
+        function formToJsonObject (form_id) {
+            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
+            formData = formData.replace(/&/g, "\",\"");
+            formData = formData.replace(/=/g, "\":\"");
+            formData = "{\"" + formData + "\"}";
+            formData = $.parseJSON(formData);
+            return formData;
+        }
+
+        function show_layer_msg(msg, icon, status, time, title) {
+            layer.msg(msg, {
+                icon: icon,
+                title: title === undefined ? null : title,
+                anim: 5,
+                time: time === undefined ? 2000 : time,
+                isOutAnim: false
+            }, function () {
+                if (status) {
+                    active['reload'].call(this);
+                }
+            });
+        }
+
+        form.on("submit(search)", function (data) {
+            table.reload('groupTable', {
+                where: data.field,
+
+            });
+            return false;
+        });
+
+        $('#save').click(function () {
+            var checkStatus = table.checkStatus('groupTable')
+                , data = checkStatus.data;
+            if (data.length === 0){
+                show_layer_msg("请选择需要添加的优化组！！",5);
+                return false
+            }
+            let groupNames = [];
+            $.each(data, function (index, item) {
+                groupNames.push(item.groupName)
+            });
+            var postData = {};
+            postData.operationCombineUuid = $('#update_qz_operation_combine').val();
+            postData.groupNames = groupNames;
+            postData.onlySaveStatus = true;
+            $.ajax({
+                url: '/internal/group/batchAddGroups2',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(postData),
+                timeout: 10000,
+                type: 'POST',
+                success: function (result) {
+                    if (result.code === 200) {
+                        layer.msg('操作成功', {
+                            icon: 6,
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                },
+                error: function () {
+                    layer.msg('操作失败', {icon: 5});
+
+                }
+            });
+
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+    })
+
+
+</script>
+</body>
+</html>

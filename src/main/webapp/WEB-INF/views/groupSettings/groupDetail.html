@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>关键字列表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+    <link rel="stylesheet" href="/static/ok-admin/page/base/searchForm.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--模糊搜索区域-->
+    <div class="layui-card ">
+        <div class="layui-card-body ">
+            <form class="layui-form layui-form-pane" id="searchForm">
+                <div class="my-collapse">
+                    <div class="out-condition">
+                        <div class="layui-inline" >
+                            <input type="text" name="groupName" id="groupName" placeholder="请输入优化组名" autocomplete="off"
+                                   class="layui-input layui-input-text">
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <!--数据表格-->
+    <table class="layui-hide" id="groupTable" lay-filter="tableFilter"></table>
+</div>
+<div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+    <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+        <button class="layui-btn" id="save" style="margin-right: 20px;width: 150px">
+            保存操作
+        </button>
+        <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px;width: 150px">
+            关闭
+        </button>
+    </div>
+</div>
+
+<!--js逻辑-->
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script>
+
+    let layui_ = null;
+    var uuid_ = null;
+    var groupTable ;
+    var unselectUuidArr = [];
+    function initForm(data) {
+        // console.log(data)
+        uuid_ = data.uuid;
+    }
+
+    layui.use(["form", "okLayer","table", "jquery", "layer"], function () {
+        let form = layui.form;
+        let okLayer = layui.okLayer;
+        let $ = layui.jquery;
+        let layer = layui.layer;
+        let table = layui.table;
+
+        groupTable = table.render({
+            elem: '#groupTable',
+            method: 'post',
+            url: '/internal/group/getGroupsByOperationCombine/' + uuid_,
+            size: 'sm',
+            id: 'groupTable',
+            page: false,
+            even: true,//隔行背景
+            contentType: 'application/json',
+            cols: [[
+                {filed: 'groupUuid', type: 'checkbox', width: '5%',LAY_CHECKED:true},
+                {field: 'groupName', title: '分组名称', width: '95%',align:'center'},
+            ]],
+            height: 'full-140',
+            done: function (res, curr, count) {
+                $.each(res.data,function (idx, item) {
+                    unselectUuidArr.push(item.groupUuid)
+                })
+            }
+        });
+
+        function show_layer_msg(msg, icon, status, time, title) {
+            layer.msg(msg, {
+                icon: icon,
+                title: title === undefined ? null : title,
+                anim: 5,
+                time: time === undefined ? 2000 : time,
+                isOutAnim: false
+            }, function () {
+                if (status) {
+                    active['reload'].call(this);
+                }
+            });
+        }
+
+        form.on("submit(search)", function (data) {
+            unselectUuidArr = [];
+            table.reload('groupTable', {
+                where: data.field,
+
+            });
+            return false;
+        });
+
+        Array.prototype.indexOf = function(uuid) {
+            for (var i = 0; i < this.length; i++) if (this[i] == uuid) return i;
+            return -1;
+        };
+
+        Array.prototype.remove = function(uuid) {
+            var index = this.indexOf(uuid);
+            if (index > -1) this.splice(index, 1);
+        };
+
+        $('#save').click(function () {
+
+            var checkStatus = table.checkStatus('groupTable')
+                , data = checkStatus.data;
+            $.each(data, function (index, item) {
+                unselectUuidArr.remove(item.groupUuid)
+            });
+            var postData = {};
+            postData.groupUuids = unselectUuidArr;
+            $.ajax({
+                url: '/internal/group/deleteGroupsBelowOperationCombine2',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(postData),
+                timeout: 10000,
+                type: 'POST',
+                success: function (result) {
+                    if (result.code === 200) {
+                        layer.msg('操作成功', {
+                            icon: 6,
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                },
+                error: function () {
+                    layer.msg('操作失败', {icon: 5});
+
+                }
+            });
+
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+    })
+
+
+</script>
+</body>
+</html>

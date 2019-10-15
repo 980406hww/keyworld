@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.keymanager.ckadmin.criteria.GroupCriteria;
 import com.keymanager.ckadmin.criteria.OperationCombineCriteria;
 import com.keymanager.ckadmin.entity.Group;
+import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.OperationCombineVO;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -20,7 +21,7 @@ public interface GroupDao extends BaseMapper<Group> {
 
     void deleteByGroupName(@Param("groupName") String groupName);
 
-    List<String> getOptimizationGroups(@Param("terminalType") String terminalType);
+    List<GroupVO> getOptimizationGroups(@Param("terminalType") String terminalType);
 
     List<String> getGroupNames (@Param("operationCombineUuid") long operationCombineUuid);
 
@@ -42,4 +43,7 @@ public interface GroupDao extends BaseMapper<Group> {
     Group findExistingGroup (@Param("optimizeGroupName") String optimizeGroupName);
 
     void saveExternalGroup(@Param("groupCriteria") GroupCriteria groupCriteria);
+
+    List<GroupVO> getGroupsByOperationCombineUuid(@Param("operationCombineUuid") Long operationCombineUuid, @Param("groupName") String groupName);
+
 }

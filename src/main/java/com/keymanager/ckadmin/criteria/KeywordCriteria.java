@@ -41,6 +41,7 @@ public class KeywordCriteria extends BaseCriteria {
     private Integer gtCurrentIndexCount;//指数起始
     private Integer ltCurrentIndexCount;//指数结束
     private Integer titleFlag;//标题标志位
+    private String keywordEffect;
 
     private Integer noReachStandardDays;//未达标天数
 
@@ -349,5 +350,13 @@ public class KeywordCriteria extends BaseCriteria {
 
     public void setNoReachStandardDays(Integer noReachStandardDays) {
         this.noReachStandardDays = noReachStandardDays;
+    }
+
+    public String getKeywordEffect() {
+        return keywordEffect;
+    }
+
+    public void setKeywordEffect(String keywordEffect) {
+        this.keywordEffect = keywordEffect;
     }
 }

@@ -102,6 +102,22 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/customerKeyword/toPTKeywordCount">
+                        <dd data-name="keyword-item">
+                            <a data-url="/internal/customerKeyword/toPTKeywordCount" lay-id="ptKeywordCount">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>单词统计</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/negativeRank/toNegativeRanks">
+                        <dd data-name="keyword-item">
+                            <a data-url="/internal/negativeRank/toNegativeRanks" lay-id="negativeRanks">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>负面排名</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
                         <@shiro.hasPermission name="/internal/customerKeyword/toMachineGroupAndSize">
                         <dd data-name="keyword-item">
                             <a data-url="/internal/customerKeyword/toMachineGroupAndSize" lay-id="machineGroupAndSize">
@@ -188,6 +204,14 @@
                             <a data-url="/internal/machineManage/toMachineInfo" lay-id="machineInfo">
                                 <i class="layui-icon layui-icon-align-right"></i>
                                 <cite>终端统计</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/groupsetting/toGroupSettings">
+                        <dd data-name="machine-item" >
+                            <a data-url="/internal/groupsetting/toGroupSettings" lay-id="groupSetting">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>分组信息设置</cite>
                             </a>
                         </dd>
                         </@shiro.hasPermission>

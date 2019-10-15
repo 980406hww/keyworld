@@ -247,33 +247,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
 
         let postData = {};
         postData.entryType = d.entrytype;
-        init_customerTypeCount(postData);
     });
 
-    function init_customerTypeCount(data){
-        $.ajax({
-            url: '/internal/customer/searchCustomerTypeCount2',
-            data: JSON.stringify(data),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            timeout: 5000,
-            type: 'POST',
-            success: function (res) {
-                let data = res.data;
-                let htm = '客户类型统计:';
-                $.each(data,function (index,item) {
-                    htm += '<a href="javascript:showCustomerByType(\''+item.type+'\')" >'+item.type+'('+item.customerCount+')</a>|'
-                });
 
-                $('#customerTypeCountDiv').empty().append(htm.substring(0,htm.lastIndexOf("|")));
-            },
-            error: function () {
-                show_layer_msg('未达标统计失败', 5);
-            }
-        });
-    }
 
     window.showCustomerByType = function (customerType){
         $('#type').val(customerType);
@@ -644,6 +620,21 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             }
         });
     }
+
+    form.verify({
+        qq: [
+            /(^$)|(^[1-9]\d{4,14}$)/,
+            "请输入正确格式QQ"
+        ],
+        noSpace: [
+            /(^$)|(^[^ ]+$)/,
+            "请勿输入空格！"
+        ],
+        telPhone: [
+            /(^$)|(^(13[0-9]|14[5-9]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[13589])\d{8}$)/,
+            "请输入正确格式手机号码"
+        ]
+    });
 });
 
 let open = true;
@@ -690,8 +681,8 @@ function generate_keyword_info(obj, data) {
         let entryType = document.getElementById('entryType').value;
         let url = '/internal/customerKeyword/toCustomerKeywords/' + entryType+'/PC/'+obj.uuid;
         let contactPerson = obj.contactPerson.replace(/\s+/g, "");
-        let title = contactPerson + '-关键字信息';
-        let id = contactPerson + '-关键字信息';
+        let title = contactPerson + '-关键字列表';
+        let id = contactPerson + '-关键字列表';
         htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>总数:' + data.totalCount + '</span></a>&nbsp;&nbsp;&nbsp;&nbsp;(';
         if (data.totalCount === data.activeCount) {
             htm += '<span style="color: green;">激活</span>' +
