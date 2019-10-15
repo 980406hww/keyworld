@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.ScreenedWebsiteDao">
+
+    <select id="searchCustomerKeywordListsPage" parameterType="com.keymanager.monitoring.entity.ScreenedWebsite" resultType="com.keymanager.monitoring.entity.ScreenedWebsite">
+        SELECT
+        fUuid	AS	'uuid',
+        fOptimizeGroupName AS 'optimizeGroupName',
+        fScreenedWebsite AS 'screenedWebsite',
+        fCreateTime AS 'createTime',
+        fUpdateTime AS 'updateTime'
+        FROM t_screened_website
+        WHERE 1=1
+        <if test="ScreenedWebsiteCriteria.optimizeGroupName != null and ScreenedWebsiteCriteria.optimizeGroupName != ''">
+            <choose>
+                <when test="ScreenedWebsiteCriteria.groupNameFuzzyQuery == 1">
+                    AND fOptimizeGroupName like '${ScreenedWebsiteCriteria.optimizeGroupName}%'
+                </when>
+                <otherwise>
+                    AND fOptimizeGroupName = #{ScreenedWebsiteCriteria.optimizeGroupName}
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <select id="getScreenedWebsiteByOptimizeGroupName" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+        fScreenedWebsite AS 'screenedWebsite'
+        FROM t_screened_website
+        WHERE fOptimizeGroupName = #{optimizeGroupName}
+    </select>
+</mapper>

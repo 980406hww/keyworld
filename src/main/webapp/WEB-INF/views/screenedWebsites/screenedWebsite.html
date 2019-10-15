@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>单词统计</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+    <link rel="stylesheet" href="/static/ok-admin/page/base/searchForm.css">
+    <style>
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
+
+        .layui-table-cell a:link {
+            color: blue;
+        }
+
+        .layui-table-cell a:visited {
+            color: blue;
+        }
+
+        .layui-table-cell a:hover {
+            color: red;
+        }
+
+        .layui-table-cell a:active {
+            color: darkslateblue;
+        }
+
+    </style>
+</head>
+<body>
+<div class="ok-body">
+
+    <div class="layui-tab-item layui-show">
+        <!--模糊搜索区域-->
+        <div class="layui-card ">
+            <div class="layui-card-body ">
+                <form class="layui-form layui-form-pane" id="searchForm">
+                    <div class="my-collapse">
+                        <div>
+                            <div class="layui-inline">
+                                <input type="text" name="keyword" list="keyword_list" id="keyword" placeholder="请输入关键字" class="layui-input">
+                            </div>
+                            <div class="layui-inline">
+                                <select name="searchEngine" id="searchEngine">
+                                    <option value="">全部搜索引擎</option>
+                                    <option value="百度电脑">百度电脑</option>
+                                    <option value="百度手机">百度手机</option>
+                                    <option value="搜狗电脑">搜狗电脑</option>
+                                    <option value="搜狗手机">搜狗手机</option>
+                                    <option value="360电脑">360电脑</option>
+                                    <option value="360手机">360手机</option>
+                                    <option value="神马">神马</option>
+                                </select>
+                            </div>
+
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" id="createTime" name="createTime" placeholder="请选择日期">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索</button>
+                            </div>
+
+                            <div class="layui-inline">
+                                <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset" id="resetBtn">
+                                    重置
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!--数据表格-->
+        <table class="layui-hide" id="screenedWebsiteTable" lay-filter="tableFilter"></table>
+    </div>
+
+</div>
+<!--js逻辑-->
+
+<datalist id="keyword_list">
+
+</datalist>
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script>
+    var sign = false;
+    // 进度条加载提示
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
+
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#createTime',
+        });
+
+        init_search_data();
+        init_table_data(formToJsonObject('searchForm'));
+
+        function init_search_data() {
+            $.ajax({
+                url: '/internal/negativeRank/getNegativeKeywords',
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        var keywordData = res.data;
+                        var keyword_list = $('#keyword_list');
+                        keyword_list.empty();
+                        console.log(keywordData)
+                        $.each(keywordData, function (index, item) {
+                            keyword_list.append('<option value="' + item + '">' + item + '</option>');
+                        });
+                        form.render("select")
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                },
+                error: function () {
+                    layer.msg('未知错误，请稍后重试！！')
+                }
+            });
+        }
+
+        function formToJsonObject(form_id) {
+            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
+            formData = formData.replace(/&/g, "\",\"");
+            formData = formData.replace(/=/g, "\":\"");
+            formData = "{\"" + formData + "\"}";
+            formData = $.parseJSON(formData);
+            return formData;
+        }
+
+        function init_table_data(whereCondition) {
+            whereCondition.entryType = 'pt';
+            table.render({
+                elem: '#screenedWebsiteTable',
+                method: 'post',
+                url: '/internal/negativeRank/getNegativeRanks',
+                limit: 50,
+                page: true,
+                autoSort: false,
+                size: 'sm',
+                id: 'screenedWebsiteTable',
+                even: true,//隔行背景
+                contentType: 'application/json',
+                where: whereCondition,
+                cols: [[
+                    {field: 'keyword', title: '关键字', width: '16%',},
+                    {field: 'searchEngine', title: '搜索引擎', width: '6%',},
+                    {field: 'negativeCount', title: '负面总数', width: '6%', align: 'center'},
+                    {field: 'firstPageRanks', title: '首页负面排名', width: '11%', event: 'updateFirstPageRanks'},
+                    {field: 'secondPageRanks', title: '第二页负面排名', width: '11%', event: 'updateSecondPageRanks'},
+                    {field: 'thirdPageRanks', title: '第三页负面排名', width: '11%', event: 'updateThirdPageRanks'},
+                    {field: 'fourthPageRanks', title: '第四页负面排名', width: '11%', event: 'updateFourthPageRanks'},
+                    {field: 'fifthPageRanks', title: '第五页负面排名', width: '11%', event: 'updateFifthPageRanks'},
+                    {field: 'otherPageRanks', title: '其他负面排名', width: '11%', event: 'updateOtherPageRanks'},
+                    {field: 'createTime', title: '创建时间', width: '6%', templet: '#toDateTime'},
+                ]],
+                height: 'full-90',
+                done: function (res, curr, count) {
+                    console.log(res.data)
+                }
+            });
+        }
+
+    <@shiro.hasPermission name="/internal/negativeRank/updateNegativeRankKeyword">
+        table.on('tool(tableFilter)', function (obj) {
+            var data = obj.data, event = obj.event;
+            switch (event) {
+                case 'updateFirstPageRanks':
+                    updateNegativeRank(data.uuid, "firstPageRanks");
+                    break;
+                case 'updateSecondPageRanks':
+                    updateNegativeRank(data.uuid, "secondPageRanks");
+                    break;
+                case 'updateThirdPageRanks':
+                    updateNegativeRank(data.uuid, "thirdPageRanks");
+                    break;
+                case 'updateFourthPageRanks':
+                    updateNegativeRank(data.uuid, "fourthPageRanks");
+                    break;
+                case 'updateFifthPageRanks':
+                    updateNegativeRank(data.uuid, "fifthPageRanks");
+                    break;
+                case 'updateOtherPageRanks':
+                    updateNegativeRank(data.uuid, "otherPageRanks");
+                    break;
+                default:
+                    break;
+            }
+        });
+
+
+            function updateNegativeRank(uuid, rankType, oldValue) {
+            console.log(uuid);
+            console.log(rankType);
+            let tit = '';
+            switch (rankType) {
+                case 'firstPageRanks':
+                    tit = '修改首页负面排名';
+                    break;
+                case 'secondPageRanks':
+                    tit = '修改第二页负面排名';
+                    break;
+                case 'thirdPageRanks':
+                    tit = '修改第三页负面排名';
+                    break;
+                case 'fourthPageRanks':
+                    tit = '修改第四页负面排名';
+                    break;
+                case 'fifthPageRanks':
+                    tit = '修改第五页负面排名';
+                    break;
+                case 'otherPageRanks':
+                    tit = '修改其他负面排名';
+                    break;
+                default:
+                    break;
+            }
+            layer.prompt({
+                formType: 3,
+                value: oldValue,
+                title: tit,
+                yes: function (index, layero) {
+                    var index2 = index;
+                    var value = layero.find(".layui-layer-input").val();
+                    var postData = {};
+                    postData.uuid = uuid;
+                    postData[rankType] = value;
+                    let negativeCount = value.replace(/( )+/g,"").replace(/(，)+|(,)+/g, ",").split(",").length;
+                    postData.negativeCount = negativeCount;
+                    $.ajax({
+                        url: '/internal/negativeRank/updateNegativeRankKeyword2',
+                        data: JSON.stringify(postData),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        timeout: 5000,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result.code === 200) {
+                                show_layer_msg('操作成功', 6);
+                                active['reload'].call(this);
+                            } else {
+                                show_layer_msg('操作失败', 5);
+                            }
+                        },
+                        error: function () {
+                            show_layer_msg('未知错误，请稍后重试', 5);
+                        }
+                    });
+                    layer.close(index2);
+                    // });
+
+                }
+            });
+        }
+    </@shiro.hasPermission>
+
+        function show_layer_msg(msg, icon, title, status) {
+            layer.msg(msg, {
+                icon: icon,
+                title: title === undefined ? null : title,
+                anim: 5,
+                time: 2000,
+                isOutAnim: false
+            }, function () {
+
+            });
+        }
+
+        var active = {
+            reload: function () {
+                let data = formToJsonObject('searchForm');
+                data.entryType = 'pt';
+                table.reload('keywordTable', {
+                    where: data,
+                    page: {
+                        curr: 1
+                    }
+                });
+            },
+        };
+
+        form.on("submit(search)", function (data) {
+            var postData = data.field;
+            table.reload('screenedWebsiteTable', {
+                where: postData,
+                page: {
+                    curr: 1
+                }
+            });
+            return false
+        });
+
+
+
+
+    });
+
+</script>
+<!--模板-->
+<script type="text/html" id="toDateTime">
+    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+</script>
+
+
+
+</body>
+
+
+</html>
