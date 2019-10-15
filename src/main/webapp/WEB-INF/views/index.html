@@ -110,6 +110,14 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/negativeRank/toNegativeRanks">
+                        <dd data-name="keyword-item">
+                            <a data-url="/internal/negativeRank/toNegativeRanks" lay-id="negativeRanks">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>负面排名</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
                         <@shiro.hasPermission name="/internal/customerKeyword/toMachineGroupAndSize">
                         <dd data-name="keyword-item">
                             <a data-url="/internal/customerKeyword/toMachineGroupAndSize" lay-id="machineGroupAndSize">

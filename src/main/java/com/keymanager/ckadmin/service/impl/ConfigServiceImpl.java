@@ -7,7 +7,9 @@ import com.keymanager.ckadmin.service.ConfigCacheService;
 import com.keymanager.ckadmin.service.ConfigService;
 
 import com.keymanager.ckadmin.util.Constants;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -78,5 +80,21 @@ public class ConfigServiceImpl implements ConfigService {
     public void updateConfig(Config config) {
         configDao.updateConfig(config);
         configCacheService.configCacheEvict(config);
+    }
+
+    @Override
+    public Set<String> getNegativeKeyword(){
+        List<Config> configs = findConfigs(Constants.CONFIG_TYPE_NEGATIVE_KEYWORD);
+        Set<String> keywords=new HashSet<>();
+        for (Config config : configs){
+            String[] ky=config.getValue().split(",");
+            keywords.addAll(Arrays.asList(ky));
+        }
+        return keywords;
+    }
+
+    @Override
+    public List<Config> findConfigs(String configType) {
+        return configDao.findConfigs(configType);
     }
 }
