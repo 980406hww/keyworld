@@ -196,8 +196,6 @@
                         var websiteTypeMap = res.data.websiteTypeMap
                         var industry = $('#industry');
                         var websiteType = $('#websiteType');
-                        industry.append('<option value="" selected>请选择所属行业类型</option>');
-                        websiteType.append('<option value="" selected>请选择销售网站类型</option>');
                         $.each(industryTypeMap, function (index, item) {
                             industry.append('<option value="' + index + '" >' + item + '</option>');
                         });

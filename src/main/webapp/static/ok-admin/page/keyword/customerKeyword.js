@@ -40,6 +40,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         init_keyword_type();
         // init_belong_user();
         init_searchEngine();
+        if (qzBusiness === 'qz') {
+            if_from_qz(layui);
+        }
         get_keywords(formToJsonObject('searchForm'));
     }
 
@@ -107,9 +110,11 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 $("#searchEngine").append(
                     '<option value="">请选择搜索引擎</option>');
                 $.each(data.data, function (index, item) {
-                    $('#searchEngine').append(
-                        '<option value="' + item + '">' + item
-                        + '</option>');// 下拉菜单里添加元素
+                    if (item === search){
+                        $('#searchEngine').append('<option value="' + item + '" selected>' + item + '</option>');// 下拉菜单里添加元素
+                    }else {
+                        $('#searchEngine').append('<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
+                    }
                 });
                 form.render("select");
             }

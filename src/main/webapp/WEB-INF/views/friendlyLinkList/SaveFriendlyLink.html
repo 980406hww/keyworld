@@ -2,9 +2,388 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <style>
+        .layui-btn {
+            width: 150px;
+        }
+
+        .layui-input-block input{
+            height: 30px;
+        }
+
+        .layui-input-block p{
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .layui-form-pane .layui-form-label{
+            height: 30px;
+            line-height: 30px;
+            padding: 0px 15px !important;
+        }
+        .layui-form-pane .layui-form-radio, .layui-form-pane .layui-form-switch{
+            margin-top: 1px;
+            margin-right: 0px;
+            margin-left: 20px;
+            padding-right: 2px !important;
+        }
+    </style>
 </head>
 <body>
-fri
+<div class="ok-body">
+
+    <form class="layui-form layui-form-pane ok-form" lay-filter="friendlyLinkForm" id="friendlyLinkForm">
+        <div class="layui-form-item">
+            <input type="hidden" name="uuid">
+            <input type="hidden" name="friendlyLinkId" id="friendlyLinkId">
+            <label class="layui-form-label">用户名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="customerInfo" autocompvare="off" class="layui-input" list="customer_list" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">网站名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="friendlyLinkWebName" id="friendlyLinkWebName" autocompvare="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">网址</label>
+            <div class="layui-input-block">
+                <input type="text" name="friendlyLinkUrl" id="friendlyLinkUrl" placeholder="默认没有http://会加上" autocompvare="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">网站排序</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="originalSortRank" id="originalSortRank">
+                <input type="text" name="friendlyLinkSortRank" id="friendlyLinkSortRank" placeholder="不填写则排在最后面" autocompvare="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">站长Email</label>
+            <div class="layui-input-block">
+                <input type="text" name="friendlyLinkEmail" autocompvare="off" class="layui-input" placeholder="不填写默认为空">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">网站类型</label>
+            <div class="layui-input-block">
+                <input type="text" name="friendlyLinkType" id="friendlyLinkType" list="friendlyLinkType_list" autocompvare="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">页面选择</label>
+            <div class="layui-input-block">
+                <input name="friendlyLinkIsCheck" type="radio" value="2" checked/>首页
+                <input name="friendlyLinkIsCheck" type="radio" value="1"/>内容页
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">到期时间</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" id="expirationTime" name="expirationTime" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">续费时间</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" id="renewTime" name="renewTime" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">网站Logo</label>
+            <div class="layui-input-block">
+<!--                <input type="text" class="layui-input" id="renewTime" name="renewTime" readonly>-->
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">网站简况</label>
+            <div class="layui-input-block">
+                <textarea name="friendlyLinkMsg" autocompvare="off" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="commit">确定</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<datalist id="customer_list"></datalist>
+<datalist id="advertisingType_list"></datalist>
+<datalist id="friendlyLinkType_list"></datalist>
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script>
+
+    var uuid_ = null;
+    var layui_ = null;
+    var websiteUuid_ = null;
+
+    function initForm(uuid, websiteUuid) {
+        uuid_ = uuid;
+        websiteUuid_ = websiteUuid
+        if (layui_ != null) {
+            setForm(layui_, uuid_);
+        }
+    }
+
+    function initWebSiteID(websiteUuid) {
+        websiteUuid_ = websiteUuid
+    }
+
+    function setForm(l, u) {
+        l.jquery.ajax({
+            url: '/internal/friendlyLinks/getFriendlyLink/' + u,
+            type: 'GET',
+            headers: {
+                "Accept": 'application/json',
+                "Content-Type": 'application/json'
+            },
+            success: function (res) {
+                if (res.code === 200) {
+                    layui.form.val("friendlyLinkForm", res.data);
+                } else {
+                    l.layer.msg(res.msg);
+                }
+            }
+        });
+    }
+
+    /**
+     * 动态展示广告位标识，根据广告标识所填写内容变化
+     *  内容格式如下：{dede:myad name='广告位标识'/}
+     */
+    function changeAdpositionIdValue(value) {
+        var api = layui_.jquery("#adPositionId");
+        var htm = '';
+        if(value == "" || value==null){
+            htm ='{dede:myad name=\'广告位标识\'/}'
+        }else{
+            htm =' {dede:myad name=\''+value+'\'/}';
+        }
+        api.text(htm);
+    }
+
+    layui.use(["form", "okLayer", "jquery", "layer", "laydate"], function () {
+        var form = layui.form;
+        var okLayer = layui.okLayer;
+        var $ = layui.jquery;
+        var laydate = layui.laydate
+
+        if (uuid_ != null) {
+            setForm(layui, uuid_);
+        } else {
+            layui_ = layui;
+        }
+
+        if(uuid_ == null){
+            changeFriendlyLinkBody("0")
+        }else{
+            changeFriendlyLinkBody("all")
+        }
+
+        init_Select();
+
+        laydate.render({
+            elem: '#expirationTime',
+        });
+
+        laydate.render({
+            elem: '#renewTime',
+        });
+
+        function init_Select(){
+            $.ajax({
+                url: "/internal/friendlyLinks/searchFriendlyLinkAllTypeAndCustomerList/" + websiteUuid_,
+                type: "GET",
+                success: function (advertisingAllTypeAndCustomerList) {
+                    $("#customer_list").find('option').remove();
+                    $("#advertisingType_list").find('option').remove();
+                    $("#advertisingArcType_list").find('option').remove();
+                    if (advertisingAllTypeAndCustomerList.customerList != null) {
+                        $.each(advertisingAllTypeAndCustomerList.customerList, function (idx, val) {
+                            $("#customer_list").append("<option value='" + val.contactPerson + "_" + val.uuid + "'></option>")
+                        });
+                    }
+                    $("#advertisingType_list").append("<option value='默认分类_0'></option>");
+                    if (advertisingAllTypeAndCustomerList.advertisingType[0] != null) {
+                        $.each(advertisingAllTypeAndCustomerList.advertisingType, function (idx, val) {
+                            $("#advertisingType_list").append("<option value='"  +val.typename + "_"  + val.id + "'></option>")
+                        });
+                    }
+                    $("#advertisingArcType_list").append("<option value='没有同名标识所有栏目_0'></option>");
+                    if (advertisingAllTypeAndCustomerList.advertisingArcType[0] != null) {
+                        $.each(advertisingAllTypeAndCustomerList.advertisingArcType, function (idx, val) {
+                            $("#advertisingArcType_list").append("<option value='" + val.typename + "_" + val.id + "'></option>")
+                        });
+                    }
+                },
+                error: function () {
+                    layer.msg("获取信息失败！");
+                }
+            });
+        }
+
+        function changeFriendlyLinkBody(type) {
+            var friendlyLinkForm = $("#friendlyLinkForm");
+            var code = friendlyLinkForm.find("#code");
+            var txt = friendlyLinkForm.find("#txt");
+            var img = friendlyLinkForm.find("#img");
+            var flash = friendlyLinkForm.find("#flash");
+            var advertisingBodyCheckedTable = friendlyLinkForm.find("#advertisingBodyCheckedTable");
+            var advertisingNormbodyTable = friendlyLinkForm.find("#advertisingNormbodyTable");
+            var advertisingTagname = friendlyLinkForm.find('#advertisingTagname');
+            code.css("display","none");
+            txt.css("display","none");
+            img.css("display","none");
+            flash.css("display","none");
+            advertisingBodyCheckedTable.css("display","none");
+            advertisingNormbodyTable.css("display","none");
+            advertisingTagname.removeAttr("readonly");
+            if ("0" == type){
+                advertisingBodyCheckedTable.css("display","block");
+                code.css("display","block");
+            } else if ("1" == type){
+                advertisingBodyCheckedTable.css("display","block");
+                txt.css("display","block");
+            } else if ("2" == type){
+                advertisingBodyCheckedTable.css("display","block");
+                img.css("display","block");
+            } else if ("3" == type) {
+                advertisingBodyCheckedTable.css("display","block");
+                flash.css("display","block");
+            }else {
+                advertisingNormbodyTable.css("display","block");
+                advertisingTagname.attr("readonly","readonly");
+            }
+        }
+
+        form.on("radio(advertisingBodyChecked)", function(data){
+            var type = data.value
+            changeFriendlyLinkBody(type)
+        });
+
+        form.on("submit(commit)", function (data) {
+            if(data.field.advertisingTime != null || data.field.advertisingTime !== ''){
+                var str = data.field.advertisingTime.split(" - ");
+                data.field.advertisingStarttime = str[0];
+                data.field.advertisingEndtime = str[1];
+            }
+            var advertising = {};
+            var customerInfo = data.field.customerInfo;
+            var customerUuid = customerInfo.split('_')[customerInfo.split('_').length - 1];
+            var advertisingTagname = data.field.advertisingTagname;
+            var advertisingAdName = data.field.advertisingAdName;
+            var advertisingType = data.field.advertisingType;
+            var advertisingTypeId = advertisingType.split('_')[advertisingType.split('_').length - 1];
+            var advertisingArcType = data.field.advertisingArcType;
+            var advertisingArcTypeId = advertisingArcType.split('_')[advertisingArcType.split('_').length - 1];
+            var advertisingTimeSet = data.field.advertisingTimeSet;
+            var advertisingBodyChecked = data.field.advertisingBodyChecked;
+            var advertisingExpbody = data.field.advertisingExpbody;
+            advertising.websiteUuid = $.trim(websiteUuid_);
+            advertising.customerInfo = $.trim(customerInfo);
+            advertising.customerUuid = $.trim(customerUuid);
+            advertising.advertisingAdName = $.trim(advertisingAdName);
+            advertising.advertisingTagname = $.trim(advertisingTagname);
+            advertising.advertisingType = $.trim(advertisingType);
+            advertising.advertisingTypeId = $.trim(advertisingTypeId);
+            advertising.advertisingArcType = $.trim(advertisingArcType);
+            advertising.advertisingArcTypeId = $.trim(advertisingArcTypeId);
+            advertising.advertisingTimeSet = $.trim(advertisingTimeSet);
+            advertising.advertisingStarttime = $.trim(data.field.advertisingStarttime);
+            advertising.advertisingEndtime = $.trim(data.field.advertisingEndtime);
+            advertising.advertisingExpbody = $.trim(advertisingExpbody);
+            if(uuid_ == null){
+                var normbody = {}
+                if (advertisingBodyChecked == 0){
+                    normbody.style = "code";
+                    normbody.htmlcode = data.field.htmlcode;
+                }else if (advertisingBodyChecked == 1){
+                    normbody.style = "txt";
+                    normbody.title = data.field.txtTitle;
+                    normbody.link = data.field.txtLink;
+                    normbody.color = data.field.txtColor;
+                    normbody.size = data.field.txtSize;
+                }else if (advertisingBodyChecked == 2){
+                    normbody.style = "img";
+                    normbody.url = data.field.imgUrl;
+                    normbody.link = data.field.imgLink;
+                    normbody.width = data.field.imgWidth;
+                    normbody.height = data.field.imgHeight;
+                }else {
+                    normbody.style = "flash";
+                    normbody.link = data.field.flashLink;
+                    normbody.width = data.field.flashWidth;
+                    normbody.height = data.field.flashHeight;
+                }
+                advertising.normbody = normbody;
+                console.log(advertising)
+                $.ajax({
+                    url: '/internal/friendlyLinks/saveFriendlyLink',
+                    type: 'POST',
+                    data: JSON.stringify(advertising),
+                    headers: {
+                        "Accept": 'application/json',
+                        "Content-Type": 'application/json'
+                    },
+                    success: function (res) {
+                        if (res.code === 200) {
+                            okLayer.msg.greenTick("保存成功", function () {
+                                parent.window.sign = true;
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            });
+                        } else {
+                            layui.layer.msg(res.msg);
+                        }
+                    }
+                });
+            }else{
+                var advertisingNormbody = data.field.advertisingNormbody;
+                advertising.uuid = uuid_;
+                advertising.advertisingId = data.field.advertisingId;
+                advertising.advertisingNormbody = $.trim(advertisingNormbody);
+                console.log(advertising)
+                $.ajax({
+                    url: '/internal/friendlyLinks/updateFriendlyLink',
+                    type: 'POST',
+                    data: JSON.stringify(advertising),
+                    headers: {
+                        "Accept": 'application/json',
+                        "Content-Type": 'application/json'
+                    },
+                    success: function (res) {
+                        if (res.code === 200) {
+                            okLayer.msg.greenTick("修改成功", function () {
+                                parent.window.sign = true;
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            });
+                        } else {
+                            layui.layer.msg(res.msg);
+                        }
+                    }
+                });
+            }
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+    })
+
+</script>
+
 </body>
 </html>

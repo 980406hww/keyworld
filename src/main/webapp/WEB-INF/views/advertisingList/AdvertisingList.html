@@ -382,8 +382,8 @@
 
 <script type="text/html" id="toolbarTpl">
     <div class="layui-btn-container">
-    <button class="layui-btn layui-btn-sm" lay-event="showAdvertisingDialog">添加</button>
     <@shiro.hasPermission name="/internal/advertising/saveAdvertisings">
+    <button class="layui-btn layui-btn-sm" lay-event="showAdvertisingDialog">添加</button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/advertising/pushAdvertising">
     <button class="layui-btn layui-btn-sm" lay-event="pushAdvertising">推送所选信息到远程服务</button>

@@ -26,7 +26,7 @@ public class SalesManageServiceImpl extends ServiceImpl<SalesManageDao, SalesMan
         salesManageDao.deleteById(uuid);
     }
 
-    public void deleteBeachSalesManage(List uuids) {
+    public void deleteBatchSalesManage(List uuids) {
         salesManageDao.deleteBatchIds(uuids);
     }
 

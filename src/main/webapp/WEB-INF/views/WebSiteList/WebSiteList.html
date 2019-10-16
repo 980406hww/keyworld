@@ -408,7 +408,9 @@
         form.on("submit(search)", function (data) {
             var postData = data.field
             if(postData.friendlyLinkUrl != ""){
-                postData.friendlyLinkUrl = 'http://' + postData.friendlyLinkUrl
+                if(postData.friendlyLinkUrl.indexOf('http://') == -1){
+                    postData.friendlyLinkUrl = 'http://' + postData.friendlyLinkUrl
+                }
             }
             init_Search(postData)
             return false

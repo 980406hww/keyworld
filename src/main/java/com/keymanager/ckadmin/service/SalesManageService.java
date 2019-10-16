@@ -14,7 +14,7 @@ public interface SalesManageService extends IService<SalesManage> {
 
     void deleteSalesManage(Long uuid);
 
-    void deleteBeachSalesManage(List uuids);
+    void deleteBatchSalesManage(List uuids);
 
     SalesManage getSalesManageByUuid(Long uuid);
 

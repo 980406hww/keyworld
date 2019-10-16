@@ -120,7 +120,7 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
-                        <@shiro.hasPermission name="/internal/captureRank/searchCaptureRankJobs">
+                        <@shiro.hasPermission name="/internal/captureRanks/toCaptureRank">
                         <dd data-name="keyword-item">
                             <a data-url="/internal/captureRanks/toCaptureRank" lay-id="captureRanks">
                                 <i class="layui-icon layui-icon-align-right"></i>
@@ -128,7 +128,7 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
-                        <@shiro.hasPermission name="/internal/keywordInfo/searchKeywordInfos">
+                        <@shiro.hasPermission name="/internal/keywordsInfo/toKeywordsInfo">
                         <dd data-name="keyword-item">
                             <a data-url="/internal/keywordsInfo/toKeywordsInfo" lay-id="keywordInfo">
                                 <i class="layui-icon layui-icon-align-right"></i>
@@ -252,11 +252,19 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
-                        <@shiro.hasPermission name="/internal/website/searchWebsites">
+                        <@shiro.hasPermission name="/internal/websites/toWebSiteList">
                         <dd data-name="other-item" >
                             <a data-url="/internal/websites/toWebSiteList" lay-id="webSiteList">
                                 <i class="layui-icon layui-icon-align-right"></i>
                                 <cite>网站管理</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/salesManage/searchSalesManageLists">
+                        <dd data-name="other-item" >
+                            <a data-url="/internal/salesInfo/toSalesInfo" lay-id="salesInfoList">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>销售信息管理</cite>
                             </a>
                         </dd>
                         </@shiro.hasPermission>
@@ -268,7 +276,7 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
-                        <@shiro.hasPermission name="/internal/qzsetting/searchQZSettings">
+                        <@shiro.hasPermission name="/internal/qzsetting/toQZSetttings">
                         <dd data-name="other-item" >
                             <a data-url="/internal/qzsetting/toQZSetttings" lay-id="QZSettting">
                                 <i class="layui-icon layui-icon-align-right"></i>
@@ -276,7 +284,7 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
-                        <@shiro.hasPermission name="/internal/negativeKeywordName/searchNegativeKeywordNames">
+                        <@shiro.hasPermission name="/internal/negativeKeywords/toNegativeKeywords">
                         <dd data-name="other-item" >
                             <a data-url="/internal/negativeKeywords/toNegativeKeywords" lay-id="negativeKeywords">
                                 <i class="layui-icon layui-icon-align-right"></i>

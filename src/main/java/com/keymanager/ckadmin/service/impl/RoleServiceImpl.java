@@ -23,28 +23,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- *
  * Role 表数据服务层接口实现类
- *
  */
 @Service("roleService2")
 public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements RoleService {
 
-    @Resource(name="roleDao2")
+    @Resource(name = "roleDao2")
     private RoleDao roleDao;
 
-    @Resource(name="userRoleDao2")
+    @Resource(name = "userRoleDao2")
     private UserRoleDao userRoleDao;
 
     @Resource(name = "roleResourceDao2")
     private RoleResourceDao roleResourceDao;
-    
+
     public List<Role> selectAll() {
         EntityWrapper<Role> wrapper = new EntityWrapper<Role>();
         wrapper.orderBy("fSequence");
         return roleDao.selectList(wrapper);
     }
-    
 
 
     @Override
@@ -54,7 +51,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements RoleS
         roleResource.setRoleID(roleId);
         roleResourceDao.delete(new EntityWrapper<RoleResource>(roleResource));
 
-        if(!StringUtils.isBlank(resourceIds)) {
+        if (!StringUtils.isBlank(resourceIds)) {
             String[] resourceIdArray = resourceIds.split(",");
             for (String resourceId : resourceIdArray) {
                 roleResource = new RoleResource();
@@ -69,19 +66,23 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements RoleS
     public List<Long> selectResourceIdListByRoleId(Long id) {
         return roleDao.selectResourceIdListByRoleId(id);
     }
-    
+
     @Override
-    public Map<String, Set<String>> selectResourceMapByUserId(Long userId) {
-        Map<String, Set<String>> resourceMap = new HashMap<String, Set<String>>();
+    public Map<String, Set<String>> selectResourceMapByUserId(Long userId, String version) {
+        Map<String, Set<String>> resourceMap = new HashMap<>();
         List<Long> roleIdList = userRoleDao.selectRoleIdListByUserId(userId);
-        Set<String> urlSet = new HashSet<String>();
-        Set<String> roles = new HashSet<String>();
+        Set<String> urlSet = new HashSet<>();
+        Set<String> roles = new HashSet<>();
+        Map<String, Object> condition = new HashMap<>(2);
+        condition.put("version", version);
         for (Long roleId : roleIdList) {
-            List<Map<Long, String>> resourceList = roleDao.selectResourceListByRoleId(roleId);
+            condition.put("id", roleId);
+            List<Map<String, String>> resourceList = roleDao.selectResourceListByRoleId(condition);
             if (resourceList != null) {
-                for (Map<Long, String> map : resourceList) {
-                    if (map!=null&&StringUtils.isNotBlank(map.get("url"))) {
+                for (Map<String, String> map : resourceList) {
+                    if (map != null && StringUtils.isNotBlank(map.get("url"))) {
                         urlSet.add(map.get("url"));
+                        roles.add(map.get("roleName"));
                     }
                 }
             }
