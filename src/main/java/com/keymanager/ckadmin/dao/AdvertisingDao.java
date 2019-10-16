@@ -13,7 +13,7 @@ import java.util.Map;
 @Repository(value = "advertisingDao2")
 public interface AdvertisingDao extends BaseMapper<Advertising> {
 
-    List<Advertising> searchAdvertisingListsPage(Page<Advertising> page, @Param("advertisingCriteria") AdvertisingCriteria advertisingCriteria);
+    List<Advertising> searchAdvertisingListsPage(@Param("page") Page<Advertising> page, @Param("advertisingCriteria") AdvertisingCriteria advertisingCriteria);
 
     Advertising getAdvertising(@Param("uuid") Long uuid);
 

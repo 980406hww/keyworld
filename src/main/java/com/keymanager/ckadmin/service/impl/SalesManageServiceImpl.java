@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.service.impl;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.ckadmin.criteria.SalesInfoCriteria;
 import com.keymanager.ckadmin.dao.SalesManageDao;
 import com.keymanager.ckadmin.entity.SalesManage;
 import com.keymanager.ckadmin.service.SalesManageService;
@@ -33,8 +34,9 @@ public class SalesManageServiceImpl extends ServiceImpl<SalesManageDao, SalesMan
         return salesManageDao.selectById(uuid);
     }
 
-    public List<SalesManage> SearchSalesManages(SalesManage salesManage, Page<SalesManage> page) {
-        return salesManageDao.getSalesManages(page, salesManage);
+    public Page<SalesManage> SearchSalesManages(SalesInfoCriteria salesInfoCriteria, Page<SalesManage> page) {
+        page.setRecords(salesManageDao.getSalesManages(page, salesInfoCriteria));
+        return page;
     }
 
 }
