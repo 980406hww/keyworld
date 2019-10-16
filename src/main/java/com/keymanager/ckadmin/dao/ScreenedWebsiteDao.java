@@ -13,7 +13,9 @@ import org.springframework.stereotype.Repository;
 public interface ScreenedWebsiteDao extends BaseMapper<ScreenedWebsite> {
 
     List<ScreenedWebsite> searchCustomerKeywordListsPage(Page<ScreenedWebsite> page,
-        @Param("ScreenedWebsiteCriteria") ScreenedWebsiteCriteria ScreenedWebsiteCriteria);
+        @Param("screenedWebsiteCriteria") ScreenedWebsiteCriteria screenedWebsiteCriteria);
 
     String getScreenedWebsiteByOptimizeGroupName(@Param("optimizeGroupName") String optimizeGroupName);
+
+    Integer checkGroupExist(@Param("screenedWebsiteCriteria") ScreenedWebsiteCriteria screenedWebsiteCriteria);
 }

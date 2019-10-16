@@ -45,25 +45,7 @@
                     <div class="my-collapse">
                         <div>
                             <div class="layui-inline">
-                                <input type="text" name="keyword" list="keyword_list" id="keyword" placeholder="请输入关键字" class="layui-input">
-                            </div>
-                            <div class="layui-inline">
-                                <select name="searchEngine" id="searchEngine">
-                                    <option value="">全部搜索引擎</option>
-                                    <option value="百度电脑">百度电脑</option>
-                                    <option value="百度手机">百度手机</option>
-                                    <option value="搜狗电脑">搜狗电脑</option>
-                                    <option value="搜狗手机">搜狗手机</option>
-                                    <option value="360电脑">360电脑</option>
-                                    <option value="360手机">360手机</option>
-                                    <option value="神马">神马</option>
-                                </select>
-                            </div>
-
-                            <div class="layui-inline">
-                                <div class="layui-input-inline">
-                                    <input type="text" class="layui-input" id="createTime" name="createTime" placeholder="请选择日期">
-                                </div>
+                                <input type="text" name="optimizeGroupName"  id="optimizeGroupName" placeholder="请输入优化组名" class="layui-input">
                             </div>
 
                             <div class="layui-inline">
@@ -87,10 +69,6 @@
 
 </div>
 <!--js逻辑-->
-
-<datalist id="keyword_list">
-
-</datalist>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
 <script>
@@ -107,42 +85,9 @@
         var form = layui.form;
         var $ = layui.jquery;
         var layer = layui.layer;
-        var laydate = layui.laydate;
+        var okLayer = layui.okLayer;
 
-        laydate.render({
-            elem: '#createTime',
-        });
-
-        init_search_data();
         init_table_data(formToJsonObject('searchForm'));
-
-        function init_search_data() {
-            $.ajax({
-                url: '/internal/negativeRank/getNegativeKeywords',
-                type: 'POST',
-                headers: {
-                    "Accept": 'application/json',
-                    "Content-Type": 'application/json'
-                },
-                success: function (res) {
-                    if (res.code === 200) {
-                        var keywordData = res.data;
-                        var keyword_list = $('#keyword_list');
-                        keyword_list.empty();
-                        console.log(keywordData)
-                        $.each(keywordData, function (index, item) {
-                            keyword_list.append('<option value="' + item + '">' + item + '</option>');
-                        });
-                        form.render("select")
-                    } else {
-                        layer.msg(res.msg)
-                    }
-                },
-                error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
-                }
-            });
-        }
 
         function formToJsonObject(form_id) {
             var formData = decodeURIComponent($("#" + form_id).serialize(), true);
@@ -158,26 +103,23 @@
             table.render({
                 elem: '#screenedWebsiteTable',
                 method: 'post',
-                url: '/internal/negativeRank/getNegativeRanks',
+                url: '/internal/screenedWebsite/getScreenedWebsites',
                 limit: 50,
                 page: true,
                 autoSort: false,
                 size: 'sm',
+                toolbar: "#toolbarTpl",
+                defaultToolbar: [],
                 id: 'screenedWebsiteTable',
                 even: true,//隔行背景
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {field: 'keyword', title: '关键字', width: '16%',},
-                    {field: 'searchEngine', title: '搜索引擎', width: '6%',},
-                    {field: 'negativeCount', title: '负面总数', width: '6%', align: 'center'},
-                    {field: 'firstPageRanks', title: '首页负面排名', width: '11%', event: 'updateFirstPageRanks'},
-                    {field: 'secondPageRanks', title: '第二页负面排名', width: '11%', event: 'updateSecondPageRanks'},
-                    {field: 'thirdPageRanks', title: '第三页负面排名', width: '11%', event: 'updateThirdPageRanks'},
-                    {field: 'fourthPageRanks', title: '第四页负面排名', width: '11%', event: 'updateFourthPageRanks'},
-                    {field: 'fifthPageRanks', title: '第五页负面排名', width: '11%', event: 'updateFifthPageRanks'},
-                    {field: 'otherPageRanks', title: '其他负面排名', width: '11%', event: 'updateOtherPageRanks'},
-                    {field: 'createTime', title: '创建时间', width: '6%', templet: '#toDateTime'},
+                    {filed: 'uuid', type: 'checkbox', width: '4%'},
+                    {field: 'optimizeGroupName', title: '优化组名', width: '24%',align: 'center'},
+                    {field: 'screenedWebsite', title: '屏蔽网站', width: '28%', align: 'center'},
+                    {field: 'createTime', title: '创建时间', width: '20%', align: 'center', templet: '#toDateTime'},
+                    {title: '操作', width: '24%', align: 'center', templet: '#operationTpl'},
                 ]],
                 height: 'full-90',
                 done: function (res, curr, count) {
@@ -185,101 +127,136 @@
                 }
             });
         }
-
-    <@shiro.hasPermission name="/internal/negativeRank/updateNegativeRankKeyword">
-        table.on('tool(tableFilter)', function (obj) {
+        //监听头部工具条
+        table.on('toolbar(tableFilter)', function (obj) {
             var data = obj.data, event = obj.event;
             switch (event) {
-                case 'updateFirstPageRanks':
-                    updateNegativeRank(data.uuid, "firstPageRanks");
+                case 'add':
+                    add_screened_website();
                     break;
-                case 'updateSecondPageRanks':
-                    updateNegativeRank(data.uuid, "secondPageRanks");
-                    break;
-                case 'updateThirdPageRanks':
-                    updateNegativeRank(data.uuid, "thirdPageRanks");
-                    break;
-                case 'updateFourthPageRanks':
-                    updateNegativeRank(data.uuid, "fourthPageRanks");
-                    break;
-                case 'updateFifthPageRanks':
-                    updateNegativeRank(data.uuid, "fifthPageRanks");
-                    break;
-                case 'updateOtherPageRanks':
-                    updateNegativeRank(data.uuid, "otherPageRanks");
+                case 'delete_selected':
+                    batch_delete_byUuids();
                     break;
                 default:
                     break;
             }
         });
 
-
-            function updateNegativeRank(uuid, rankType, oldValue) {
-            console.log(uuid);
-            console.log(rankType);
-            let tit = '';
-            switch (rankType) {
-                case 'firstPageRanks':
-                    tit = '修改首页负面排名';
+        //监听操作列
+        table.on('tool(tableFilter)', function (obj) {
+            var data = obj.data;
+            switch (obj.event) {
+                case 'edit':
+                    update_screened_website(data.uuid);
                     break;
-                case 'secondPageRanks':
-                    tit = '修改第二页负面排名';
-                    break;
-                case 'thirdPageRanks':
-                    tit = '修改第三页负面排名';
-                    break;
-                case 'fourthPageRanks':
-                    tit = '修改第四页负面排名';
-                    break;
-                case 'fifthPageRanks':
-                    tit = '修改第五页负面排名';
-                    break;
-                case 'otherPageRanks':
-                    tit = '修改其他负面排名';
-                    break;
-                default:
+                case 'del':
+                    del_one(data);
                     break;
             }
-            layer.prompt({
-                formType: 3,
-                value: oldValue,
-                title: tit,
-                yes: function (index, layero) {
-                    var index2 = index;
-                    var value = layero.find(".layui-layer-input").val();
-                    var postData = {};
-                    postData.uuid = uuid;
-                    postData[rankType] = value;
-                    let negativeCount = value.replace(/( )+/g,"").replace(/(，)+|(,)+/g, ",").split(",").length;
-                    postData.negativeCount = negativeCount;
-                    $.ajax({
-                        url: '/internal/negativeRank/updateNegativeRankKeyword2',
-                        data: JSON.stringify(postData),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        timeout: 5000,
-                        type: 'POST',
-                        success: function (result) {
-                            if (result.code === 200) {
-                                show_layer_msg('操作成功', 6);
-                                active['reload'].call(this);
-                            } else {
-                                show_layer_msg('操作失败', 5);
-                            }
-                        },
-                        error: function () {
-                            show_layer_msg('未知错误，请稍后重试', 5);
-                        }
-                    });
-                    layer.close(index2);
-                    // });
+        });
 
+        function add_screened_website() {
+            let url = '/internal/screenedWebsite/toScreenedWebsitesAdd';
+            okLayer.open("其他 / 屏蔽网站设置 / 添加屏蔽网站", url, "60%", "60%", function (layero) {
+                // window[layero.find("iframe")[0]["name"]].initForm(data);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
                 }
+            })
+        }
+
+        function update_screened_website(uuid) {
+            let url = '/internal/screenedWebsite/toScreenedWebsitesAdd';
+            okLayer.open("其他 / 屏蔽网站设置 / 添加屏蔽网站", url, "60%", "60%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initForm(uuid);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            })
+        }
+
+        function batch_delete_byUuids() {
+            var checkStatus = table.checkStatus('screenedWebsiteTable')
+                , data = checkStatus.data;
+            var uuidArr = [];
+            var optimizeGroupNameList= [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+                optimizeGroupNameList.push(item.optimizeGroupName);
+            });
+            if (uuidArr.length <= 0) {
+                show_layer_msg('请选择要操作的优化组', 5);
+                return false;
+            }
+            layer.confirm("确定删除选中优化组吗", {icon: 3, title: '删除选中优化组'}, function (index) {
+                var postData = {};
+                postData.uuids = uuidArr;
+                postData.optimizeGroupNameList = optimizeGroupNameList;
+                $.ajax({
+                    url: '/internal/screenedWebsite/delScreenedWebsite2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            show_layer_msg('操作成功', 6, true);
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    },
+                    complete: function () {
+                        layer.close(index);
+                    }
+                });
             });
         }
-    </@shiro.hasPermission>
+
+        function del_one(data) {
+            layer.confirm('真的删除该优化组设置吗', function (index) {
+                var postData = {};
+                postData.uuid = data.uuid;
+                postData.optimizeGroupName = data.optimizeGroupName;
+                postData.deleteType = "delScreenedWebsite";
+                $.ajax({
+                    url: '/internal/screenedWebsite/delScreenedWebsite2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            layer.msg('操作失败', {icon: 5});
+                        }
+                    },
+                    error: function () {
+                        layer.msg('操作失败', {icon: 5});
+
+                    }
+                });
+                layer.close(index);
+            });
+        }
 
         function show_layer_msg(msg, icon, title, status) {
             layer.msg(msg, {
@@ -297,7 +274,7 @@
             reload: function () {
                 let data = formToJsonObject('searchForm');
                 data.entryType = 'pt';
-                table.reload('keywordTable', {
+                table.reload('screenedWebsiteTable', {
                     where: data,
                     page: {
                         curr: 1
@@ -317,9 +294,6 @@
             return false
         });
 
-
-
-
     });
 
 </script>
@@ -327,9 +301,20 @@
 <script type="text/html" id="toDateTime">
     {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
 </script>
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+    <button class="layui-btn layui-btn-sm " id="add" lay-event="add">
+        添加
+    </button>
+    <button class="layui-btn layui-btn-sm layui-btn-danger" id="delete_selected" lay-event="delete_selected">
+        删除所选
+    </button>
+</script>
 
-
-
+<script type="text/html" id="operationTpl">
+    <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
+    <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+</script>
 </body>
 
 

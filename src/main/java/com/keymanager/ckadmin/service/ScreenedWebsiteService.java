@@ -20,4 +20,6 @@ public interface ScreenedWebsiteService {
     String getScreenedWebsiteByOptimizeGroupName(String optimizeGroupName);
 
     Boolean postScreenedWebsiteRequest(String optimizeGroupName, String userName, String password);
+
+    Integer checkGroupExist(ScreenedWebsiteCriteria screenedWebsiteCriteria);
 }

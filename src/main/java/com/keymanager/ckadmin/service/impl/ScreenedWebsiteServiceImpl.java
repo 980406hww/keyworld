@@ -76,7 +76,7 @@ public class ScreenedWebsiteServiceImpl extends ServiceImpl<ScreenedWebsiteDao, 
                 }
             }
         } else {
-            screenedWebsiteDao.deleteById(Long.valueOf((String) map.get("uuid")));
+            screenedWebsiteDao.deleteById(((Integer) map.get("uuid")).longValue());
             screenedWebsiteListCacheService.screenedWebsiteListCacheEvict((String) map.get("optimizeGroupName"));
             result = postScreenedWebsiteRequest((String) map.get("optimizeGroupName"), userName, password);
         }
@@ -99,5 +99,10 @@ public class ScreenedWebsiteServiceImpl extends ServiceImpl<ScreenedWebsiteDao, 
         requestMap.put("password", password);
         requestMap.put("optimizeGroupName", optimizeGroupName);
         return restTemplate.postForObject(webPath + "/external/screenedWebsite/evictScreenedWebsiteCache", requestMap, Boolean.class);
+    }
+
+    @Override
+    public Integer checkGroupExist(ScreenedWebsiteCriteria screenedWebsiteCriteria) {
+        return screenedWebsiteDao.checkGroupExist(screenedWebsiteCriteria);
     }
 }
