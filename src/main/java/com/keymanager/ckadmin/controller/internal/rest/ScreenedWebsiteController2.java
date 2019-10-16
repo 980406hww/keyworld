@@ -123,7 +123,7 @@ public class ScreenedWebsiteController2 {
         return resultBean;
     }
 
-    @PostMapping(value = "/saveScreenedWebsite")
+    @PostMapping(value = "/saveScreenedWebsite2")
     public ResultBean saveScreenedWebsite(@RequestBody ScreenedWebsite screenedWebsite, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         try {
