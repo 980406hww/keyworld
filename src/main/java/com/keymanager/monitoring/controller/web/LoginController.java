@@ -69,7 +69,6 @@ public class LoginController extends BaseController {
     @GetMapping("login")
     @CsrfToken(create = true)
     public String login(HttpSession session) {
-        ModelAndView mv = new ModelAndView();
         logger.info("GET请求登录");
         if (SecurityUtils.getSubject().isAuthenticated()) {
             if (Constants.OLD_PERMISSION_VERSION.equals(session.getAttribute("version"))) {
