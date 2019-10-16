@@ -32,7 +32,35 @@
         AND u.fUuid = ur.fUserID
         AND ur.fRoleID = rr.fRoleID)
         AND s.fResourceType = 0
+        AND (s.fVersion = #{version} OR s.fVersion = '')
         ORDER BY s.fSequence
     </select>
 
+    <select id="selectTreeByPid" resultType="java.util.HashMap" parameterType="java.lang.Long">
+        SELECT B.fUuid,
+        A.LEVEL
+        FROM (
+                 SELECT @ids AS _ids,
+                        (
+                            SELECT @ids := GROUP_CONCAT(fUuid)
+                            FROM t_resource
+                            WHERE FIND_IN_SET(fParentID, @ids)
+                        )            AS cids,
+                        @l := @l + 1 AS LEVEL
+                 FROM t_resource,
+                      (SELECT @ids := #{pid}, @l := 0) b
+                 WHERE @ids IS NOT NULL
+             ) A,
+             t_resource B
+        WHERE A.LEVEL != 1
+          AND FIND_IN_SET(B.fUuid, A._ids)
+    </select>
+
+    <select id="updChildVersion">
+        UPDATE t_resource SET fVersion = #{version}
+        WHERE fUuid IN
+        <foreach item="item" collection="items" open="(" separator="," close=")">
+            #{item.fUuid}
+        </foreach>
+    </select>
 </mapper>

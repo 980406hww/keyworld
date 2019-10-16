@@ -11,157 +11,196 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- *
  * 资源
- *
  */
 @TableName(value = "t_resource")
 public class Resource implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@TableId(value = "fUuid", type= IdType.AUTO)
-	private Long id;
+    @TableId(value = "fUuid", type = IdType.AUTO)
+    private Long id;
 
-	@NotBlank
-	@TableField(value = "fResourceName")
-	private String resourceName;/** 资源名称 */
+    @NotBlank
+    @TableField(value = "fResourceName")
+    private String resourceName;
+    /**
+     * 资源名称
+     */
 
-	@TableField(value = "fUrl")
-	private String url;/** 资源路径 */
+    @TableField(value = "fUrl")
+    private String url;
+    /**
+     * 资源路径
+     */
 
-	@TableField(value = "fOpenMode")
-	private String openMode;/** 打开方式 ajax,iframe */
+    @TableField(value = "fOpenMode")
+    private String openMode;
+    /**
+     * 打开方式 ajax,iframe
+     */
 
-	@TableField(value = "fDescription")
-	private String description;/** 资源介绍 */
+    @TableField(value = "fDescription")
+    private String description;
+    /**
+     * 资源介绍
+     */
 
-	@TableField(value = "fIconCls")
-	@JsonProperty("iconCls")
-	private String icon;/** 资源图标 */
+    @TableField(value = "fIconCls")
+    @JsonProperty("iconCls")
+    private String icon;
+    /**
+     * 资源图标
+     */
 
-	@TableField(value = "fParentID")
-	private Long parentID;/** 父级资源id */
+    @TableField(value = "fParentID")
+    private Long parentID;
+    /**
+     * 父级资源id
+     */
 
-	@TableField(value = "fSequence")
-	private Integer sequence;	/** 排序 */
+    @TableField(value = "fSequence")
+    private Integer sequence;
+    /**
+     * 排序
+     */
 
-	@TableField(value = "fStatus")
-	private Integer status;/** 状态 */
+    @TableField(value = "fStatus")
+    private Integer status;
+    /**
+     * 状态
+     */
 
-	@TableField(value = "fOpened")
-	private Integer opened;/** 打开的 */
+    @TableField(value = "fOpened")
+    private Integer opened;
+    /**
+     * 打开的
+     */
 
-	@TableField(value = "fResourceType")
-	private Integer resourceType;/** 资源类别 */
+    @TableField(value = "fResourceType")
+    private Integer resourceType;
+    /**
+     * 资源类别
+     */
 
-	@TableField(value = "fUpdateTime")
-	private Date updateTime;
+    @TableField(value = "fUpdateTime")
+    private Date updateTime;
 
-	@TableField(value = "fCreateTime")
-	private Date createTime;
+    @TableField(value = "fCreateTime")
+    private Date createTime;
 
-	public String getResourceName() {
-		return resourceName;
-	}
+    @TableField(value = "fVersion")
+    private String version;
 
-	public void setResourceName(String resourceName) {
-		this.resourceName = resourceName;
-	}
+    public String getVersion() {
+        return version;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public String getResourceName() {
+        return resourceName;
+    }
 
-	public String getOpenMode() {
-		return openMode;
-	}
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
+    }
 
-	public void setOpenMode(String openMode) {
-		this.openMode = openMode;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getOpenMode() {
+        return openMode;
+    }
 
-	public String getIcon() {
-		return icon;
-	}
+    public void setOpenMode(String openMode) {
+        this.openMode = openMode;
+    }
 
-	public void setIcon(String icon) {
-		this.icon = icon;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public Long getParentID() {
-		return parentID;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setParentID(Long parentID) {
-		this.parentID = parentID;
-	}
+    public String getIcon() {
+        return icon;
+    }
 
-	public Integer getSequence() {
-		return sequence;
-	}
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 
-	public void setSequence(Integer sequence) {
-		this.sequence = sequence;
-	}
+    public Long getParentID() {
+        return parentID;
+    }
 
-	public Integer getStatus() {
-		return status;
-	}
+    public void setParentID(Long parentID) {
+        this.parentID = parentID;
+    }
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+    public Integer getSequence() {
+        return sequence;
+    }
 
-	public Integer getOpened() {
-		return opened;
-	}
+    public void setSequence(Integer sequence) {
+        this.sequence = sequence;
+    }
 
-	public void setOpened(Integer opened) {
-		this.opened = opened;
-	}
+    public Integer getStatus() {
+        return status;
+    }
 
-	public Integer getResourceType() {
-		return resourceType;
-	}
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
-	public void setResourceType(Integer resourceType) {
-		this.resourceType = resourceType;
-	}
+    public Integer getOpened() {
+        return opened;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public void setOpened(Integer opened) {
+        this.opened = opened;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Integer getResourceType() {
+        return resourceType;
+    }
 
-	public Date getUpdateTime() {
-		return updateTime;
-	}
+    public void setResourceType(Integer resourceType) {
+        this.resourceType = resourceType;
+    }
 
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Date getCreateTime() {
-		return createTime;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 }

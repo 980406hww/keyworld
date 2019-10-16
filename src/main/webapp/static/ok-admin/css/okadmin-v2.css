@@ -100,10 +100,10 @@
 }
 
 /**在tab导航中去掉首页标签的删除按钮 */
-.ok-tab-title li strong[is-close="false"] ~ i.layui-tab-close,
-.ok-tab-title li[tab="index"] i.layui-tab-close {
-    display: none !important;
-}
+/*.ok-tab-title li strong[is-close="false"] ~ i.layui-tab-close,*/
+/*.ok-tab-title li[tab="index"] i.layui-tab-close {*/
+/*    display: none !important;*/
+/*}*/
 
 /**头部**/
 .okadmin .okadmin-header {

@@ -6,10 +6,14 @@ import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.NegativeKeywordNameCriteria;
 import com.keymanager.ckadmin.entity.NegativeKeywordName;
 import com.keymanager.ckadmin.entity.NegativeKeywordNamePositionInfo;
+import com.keymanager.ckadmin.excel.operator.NegativeKeywordNameExcelWriter;
 import com.keymanager.ckadmin.service.NegativeKeywordNamePositionInfoService;
 import com.keymanager.ckadmin.service.NegativeKeywordNameService;
+import com.keymanager.ckadmin.util.Utils;
 import java.util.List;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,6 +95,31 @@ public class NegativeKeywordNameController extends SpringMVCBaseController {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/negativeKeywordName/downloadNegativeKeywordInfo")
+    @RequestMapping(value = "/downloadNegativeKeywordInfo", method = RequestMethod.POST)
+    public ResultBean downloadCustomerKeywordInfo(HttpServletResponse response, NegativeKeywordNameCriteria negativeKeywordNameCriteria) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        try {
+            List<NegativeKeywordName> negativeKeywordNames = negativeKeywordNameService.findAllNegativeKeywordName(negativeKeywordNameCriteria);
+            if (!Utils.isEmpty(negativeKeywordNames)) {
+                NegativeKeywordNameExcelWriter excelWriter = new NegativeKeywordNameExcelWriter();
+                excelWriter.writeDataToExcel(negativeKeywordNames);
+                String fileName = negativeKeywordNameCriteria.getGroup() + ".xls";
+                fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
+                byte[] buffer = excelWriter.getExcelContentBytes();
+                downExcelFile(response, fileName, buffer);
+            } else {
+                resultBean.setCode(300);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+            resultBean.setCode(400);
         }
         return resultBean;
     }

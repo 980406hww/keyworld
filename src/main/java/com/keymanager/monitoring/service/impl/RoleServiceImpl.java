@@ -12,15 +12,14 @@ import com.keymanager.monitoring.dao.UserRoleDao;
 import com.keymanager.monitoring.entity.Role;
 import com.keymanager.monitoring.entity.RoleResource;
 import com.keymanager.monitoring.service.IRoleService;
+import com.keymanager.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 /**
- *
  * Role 表数据服务层接口实现类
- *
  */
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRoleService {
@@ -31,21 +30,21 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
     private UserRoleDao userRoleDao;
     @Autowired
     private RoleResourceDao roleResourceDao;
-    
+
     public List<Role> selectAll() {
         EntityWrapper<Role> wrapper = new EntityWrapper<Role>();
         wrapper.orderBy("fSequence");
         return roleDao.selectList(wrapper);
     }
-    
+
     @Override
     public void selectDataGrid(PageInfo pageInfo) {
         Page<Role> page = new Page<Role>(pageInfo.getNowpage(), pageInfo.getSize());
-        
+
         EntityWrapper<Role> wrapper = new EntityWrapper<Role>();
         wrapper.orderBy(pageInfo.getSort(), pageInfo.getOrder().equalsIgnoreCase("ASC"));
         selectPage(page, wrapper);
-        
+
         pageInfo.setRows(page.getRecords());
         pageInfo.setTotal(page.getTotal());
     }
@@ -68,9 +67,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
         // 先删除后添加,有点爆力
         RoleResource roleResource = new RoleResource();
         roleResource.setRoleID(roleId);
-        roleResourceDao.delete(new EntityWrapper<RoleResource>(roleResource));
+        roleResourceDao.delete(new EntityWrapper<>(roleResource));
 
-        if(!StringUtils.isBlank(resourceIds)) {
+        if (!StringUtils.isBlank(resourceIds)) {
             String[] resourceIdArray = resourceIds.split(",");
             for (String resourceId : resourceIdArray) {
                 roleResource = new RoleResource();
@@ -85,19 +84,23 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
     public List<Long> selectResourceIdListByRoleId(Long id) {
         return roleDao.selectResourceIdListByRoleId(id);
     }
-    
+
     @Override
-    public Map<String, Set<String>> selectResourceMapByUserId(Long userId) {
-        Map<String, Set<String>> resourceMap = new HashMap<String, Set<String>>();
+    public Map<String, Set<String>> selectResourceMapByUserId(Long userId, String version) {
+        Map<String, Set<String>> resourceMap = new HashMap<>();
         List<Long> roleIdList = userRoleDao.selectRoleIdListByUserId(userId);
-        Set<String> urlSet = new HashSet<String>();
-        Set<String> roles = new HashSet<String>();
+        Set<String> urlSet = new HashSet<>();
+        Set<String> roles = new HashSet<>();
+        Map<String, Object> condition = new HashMap<>(2);
+        condition.put("version", version);
         for (Long roleId : roleIdList) {
-            List<Map<Long, String>> resourceList = roleDao.selectResourceListByRoleId(roleId);
+            condition.put("id", roleId);
+            List<Map<String, String>> resourceList = roleDao.selectResourceListByRoleId(condition);
             if (resourceList != null) {
-                for (Map<Long, String> map : resourceList) {
-                    if (map!=null&&StringUtils.isNotBlank(map.get("url"))) {
+                for (Map<String, String> map : resourceList) {
+                    if (map != null && StringUtils.isNotBlank(map.get("url"))) {
                         urlSet.add(map.get("url"));
+                        roles.add(map.get("roleName"));
                     }
                 }
             }

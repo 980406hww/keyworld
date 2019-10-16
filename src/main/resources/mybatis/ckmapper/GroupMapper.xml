@@ -96,4 +96,11 @@
         WHERE toc.fTerminalType = #{terminalType}
         GROUP BY g.fGroupName
     </select>
+
+    <select id="getAllGroupNames" resultType="java.lang.String">
+        SELECT
+            g.fGroupName AS 'groupName'
+        FROM t_group g
+        ORDER BY g.fCreateTime
+    </select>
 </mapper>

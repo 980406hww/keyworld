@@ -95,8 +95,17 @@
             </tr>
             <tr>
                 <td>上级资源</td>
-                <td colspan="3"><select id="resourceEditPid" name="parentID" style="width: 200px; height: 29px;"></select>
-                <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#resourceEditPid').combotree('clear');" >清空</a></td>
+                <td>
+                    <select id="resourceEditPid" name="parentID" style="width: 120px; height: 29px;"></select>
+                    <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#resourceEditPid').combotree('clear');" >清空</a>
+                </td>
+                <td>版本号</td>
+                <td>
+                    <select name="version" class="easyui-combobox" data-options="width:140,height:29,editable:false,panelHeight:'auto'">
+                        <option value="1.0">1.0</option>
+                        <option value="2.0">2.0</option>
+                    </select>
+                </td>
             </tr>
         </table>
     </form>

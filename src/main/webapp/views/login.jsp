@@ -27,11 +27,17 @@
             <img id="captcha" alt="验证码" src="${path }/captcha" data-src="${path }/captcha?t=" style="vertical-align:middle;border-radius:4px;width:94.5px;height:35px;cursor:pointer;">
         </P>
         <span style="position: relative;float: left;margin-left: 54px;">
-            <select id="entryType" name="entryType" style="width: 120px;height:20px;padding:0px;" class="ipt">
+            <select id="entryType" name="entryType" style="width: 92px;height:20px;padding:0px;" class="ipt">
                 <option value="qz">全站链接</option>
                 <option value="pt">普通链接</option>
                 <option value="fm">负面链接</option>
                 <option value="bc">其他</option>
+            </select>
+        </span>
+        <span style="position: relative;float: left;margin-left: 4px;">
+            <select name="version" style="width: 53px;height:20px;padding:0px;" class="ipt">
+                <option value="1.0">旧版</option>
+                <option value="2.0">新版</option>
             </select>
         </span>
         <span style="position: relative;text-align: left;margin-right:120px; margin-top: 2px">

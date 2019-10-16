@@ -35,42 +35,41 @@
     <select id="selectResourceListByRoleIdList" resultType="Resource"
             parameterType="java.lang.Long">
         SELECT
-            DISTINCT rs.fUuid AS `id`,
-            rs.fResourceName AS `resourceName`,
-            rs.fUrl AS `url`,
-            rs.fOpenMode AS `openMode`,
-            rs.fDescription AS `description`,
-            rs.fIconCls AS `icon`,
-            rs.fParentID AS `parentID`,
-            rs.fSequence AS `sequence`,
-            rs.fStatus AS `status`,
-            rs.fOpened AS `opened`,
-            rs.fResourceType AS `resourceType`,
-            rs.fUpdateTime AS `updateIime`,
-            rs.fCreateTime AS `createTime`
+        DISTINCT rs.fUuid AS `id`,
+        rs.fResourceName AS `resourceName`,
+        rs.fUrl AS `url`,
+        rs.fOpenMode AS `openMode`,
+        rs.fDescription AS `description`,
+        rs.fIconCls AS `icon`,
+        rs.fParentID AS `parentID`,
+        rs.fSequence AS `sequence`,
+        rs.fStatus AS `status`,
+        rs.fOpened AS `opened`,
+        rs.fResourceType AS `resourceType`,
+        rs.fUpdateTime AS `updateIime`,
+        rs.fCreateTime AS `createTime`
         FROM
-            t_role r
+        t_role r
         LEFT JOIN t_role_resource e ON r.fUuid = e.fRoleID
         LEFT JOIN t_resource rs ON e.fResourceID = rs.fUuid
         WHERE
-            r.fUuid in
-            <foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
-                #{item}
-            </foreach>
+        r.fUuid in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
         AND rs.fResourceType = 0
         ORDER BY rs.fSequence
     </select>
 
-    <select id="selectResourceListByRoleId" resultType="java.util.HashMap" parameterType="java.lang.Long">
+    <select id="selectResourceListByRoleId" resultType="java.util.HashMap" parameterType="java.util.HashMap">
         SELECT
-            e.fUuid AS id,
-            rs.fUrl AS url
+            rs.fUrl AS url,
+            r.fRoleName AS roleName
         FROM
             t_role r
         LEFT JOIN t_role_resource e ON r.fUuid = e.fRoleID
         LEFT JOIN t_resource rs ON e.fResourceID = rs.fUuid
-        WHERE
-            r.fUuid = #{id}
+        WHERE r.fUuid = #{condition.id}
+        AND (rs.fVersion = #{condition.version} OR rs.fVersion = '')
     </select>
-
 </mapper>

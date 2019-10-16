@@ -5,6 +5,10 @@ import com.keymanager.monitoring.enums.TerminalTypeEnum;
 import java.util.*;
 
 public class Constants {
+
+    public final static String OLD_PERMISSION_VERSION = "1.0";
+    public final static String NEW_PERMISSION_VERSION = "2.0";
+
     public final static String ROW_SPLITTOR = "__row__";
     public final static String HEADER_SPLITTOR = "__header__";
     public final static String SUB_ROW_SPLITTOR = "__subrow__";
@@ -102,6 +106,7 @@ public class Constants {
 
 
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
+
     static {
         ACCOUNT_LOG_STATUS_MAP.put(ACCOUNT_LOG_STATUS_UN_PAID, "未付");
         ACCOUNT_LOG_STATUS_MAP.put(ACCOUNT_LOG_STATUS_PAID_PARTIALLY, "已付部分");
@@ -130,6 +135,7 @@ public class Constants {
     public final static String DAILY_REPORT_PERCENTAGE = "DailyReportPercentage";
 
     public final static Map<String, String> SEARCH_ENGINE_URL_MAP = new HashMap<String, String>();
+
     static {
         SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_BAIDU + "_" + TerminalTypeEnum.PC.name(), "http://www.baidu.com/s?wd=");
         SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_360 + "_" + TerminalTypeEnum.PC.name(), "http://www.so.com/s?q=");
@@ -147,12 +153,13 @@ public class Constants {
     }
 
     public final static Map<String, String> SEARCH_ENGINE_MAP = new LinkedHashMap<String, String>();
+
     static {
         SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_BAIDU, TerminalTypeEnum.PC.name());
-        SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_BAIDU  + TerminalTypeEnum.Phone.name(), TerminalTypeEnum.Phone.name());
+        SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_BAIDU + TerminalTypeEnum.Phone.name(), TerminalTypeEnum.Phone.name());
 
         SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_SOGOU, TerminalTypeEnum.PC.name());
-        SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_SOGOU+ TerminalTypeEnum.Phone.name(), TerminalTypeEnum.Phone.name());
+        SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_SOGOU + TerminalTypeEnum.Phone.name(), TerminalTypeEnum.Phone.name());
 
         SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_360, TerminalTypeEnum.PC.name());
         SEARCH_ENGINE_MAP.put(SEARCH_ENGINE_360 + TerminalTypeEnum.Phone.name(), TerminalTypeEnum.Phone.name());
@@ -166,23 +173,26 @@ public class Constants {
     }
 
     public final static Map<String, String> CLIENT_STATUS_VALID_MAP = new LinkedHashMap<String, String>();
+
     static {
-        CLIENT_STATUS_VALID_MAP.put("全部","");
-        CLIENT_STATUS_VALID_MAP.put("暂停","0");
-        CLIENT_STATUS_VALID_MAP.put("监控中","1");
+        CLIENT_STATUS_VALID_MAP.put("全部", "");
+        CLIENT_STATUS_VALID_MAP.put("暂停", "0");
+        CLIENT_STATUS_VALID_MAP.put("监控中", "1");
     }
 
     public final static Map<String, String> CLIENT_STATUS_ORDERBY_MAP = new LinkedHashMap<String, String>();
+
     static {
-        CLIENT_STATUS_ORDERBY_MAP.put("fClientID","ID");
-        CLIENT_STATUS_ORDERBY_MAP.put("fLastVisitTime","最后工作时间");
-        CLIENT_STATUS_ORDERBY_MAP.put("fLastSendNotificationTime","发通知时间");
-        CLIENT_STATUS_ORDERBY_MAP.put("fRestartTime","重启时间");
-        CLIENT_STATUS_ORDERBY_MAP.put("fRestartOrderingTime","重启排序时间");
-        CLIENT_STATUS_ORDERBY_MAP.put("fRestartCount desc","重启次数");
+        CLIENT_STATUS_ORDERBY_MAP.put("fClientID", "ID");
+        CLIENT_STATUS_ORDERBY_MAP.put("fLastVisitTime", "最后工作时间");
+        CLIENT_STATUS_ORDERBY_MAP.put("fLastSendNotificationTime", "发通知时间");
+        CLIENT_STATUS_ORDERBY_MAP.put("fRestartTime", "重启时间");
+        CLIENT_STATUS_ORDERBY_MAP.put("fRestartOrderingTime", "重启排序时间");
+        CLIENT_STATUS_ORDERBY_MAP.put("fRestartCount desc", "重启次数");
     }
 
     public final static List<String> QZSETTING_STATUS_LIST = new ArrayList<String>();
+
     static {
         QZSETTING_STATUS_LIST.add("");
         QZSETTING_STATUS_LIST.add("Processing");
@@ -191,6 +201,7 @@ public class Constants {
     }
 
     public final static Map<String, String> QZ_RANK_STANDARD_SPECIES_MAP = new LinkedHashMap<>();
+
     static {
         QZ_RANK_STANDARD_SPECIES_MAP.put("全部", "");
         QZ_RANK_STANDARD_SPECIES_MAP.put("爱站", "aiZhan");
@@ -200,6 +211,7 @@ public class Constants {
     }
 
     public final static Map<String, String> QZ_OPERATION_OPTIMIZATION_TYPE_MAP = new LinkedHashMap<>();
+
     static {
         QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("全部", "");
         QZ_OPERATION_OPTIMIZATION_TYPE_MAP.put("主优化", "1");
@@ -208,6 +220,7 @@ public class Constants {
     }
 
     public final static List<String> QZSETTING_WEIGHT_LIST = new ArrayList<>();
+
     static {
         QZSETTING_WEIGHT_LIST.add("0");
         QZSETTING_WEIGHT_LIST.add("1");

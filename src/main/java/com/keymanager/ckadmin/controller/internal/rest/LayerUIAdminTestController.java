@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * @ClassName ExternalLayerUIAdminTestRestController
+ * @ClassName LayerUIAdminTestRestController
  * @Description TODO
  * @Author lhc
  * @Date 2019/8/30 9:34
@@ -40,7 +40,7 @@ public class LayerUIAdminTestController {
     @RequestMapping("/home")
     public ModelAndView toConsole() {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("home/home");
+        mv.setViewName("keywords/keyword");
         return mv;
     }
 

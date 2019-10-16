@@ -10,9 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 /**
- *
  * UserRole 表数据库控制层接口
- *
  */
 public interface UserRoleDao extends BaseMapper<UserRole> {
 
@@ -24,5 +22,4 @@ public interface UserRoleDao extends BaseMapper<UserRole> {
 
     @Delete("DELETE FROM t_user_role WHERE fUserID = #{userId}")
     int deleteByUserId(@Param("userId") Long userId);
-
 }
