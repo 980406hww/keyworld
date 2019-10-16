@@ -70,7 +70,6 @@
         LEFT JOIN t_role_resource e ON r.fUuid = e.fRoleID
         LEFT JOIN t_resource rs ON e.fResourceID = rs.fUuid
         WHERE r.fUuid = #{condition.id}
-        AND (rs.fVersion like CONCAT('%',#{condition.version},'%') OR rs.fVersion = '')
+        AND (rs.fVersion = #{condition.version} OR rs.fVersion = '')
     </select>
-
 </mapper>

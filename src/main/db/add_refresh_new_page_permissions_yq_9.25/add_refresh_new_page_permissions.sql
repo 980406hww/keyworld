@@ -35,3 +35,43 @@ VALUES ('前往抓排名任务管理', '/internal/captureRanks/toCaptureRank', '
 INSERT INTO t_role_resource(fRoleID, fResourceID) SELECT tem_role.fUuid, tem_resource.fUuid FROM (
       (SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('Technical')) tem_role,
       (SELECT tr.fUuid FROM t_resource tr WHERE tr.fResourceName = '前往抓排名任务管理') tem_resource);
+
+#新增前往客户提交词页面
+INSERT INTO `db_keyword`.`t_resource`(`fResourceName`, `fUrl`, `fIconCls`,
+	`fParentID`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`,  `fCreateTime` , `fVersion`)
+VALUES ('前往客户提交词页面', '/internal/keywordsInfo/toKeywordsInfo', 'fi-thumbnails',
+	(SELECT r.fUuid FROM t_resource r WHERE r.fUrl = '#' AND r.fResourceName = "关键字管理"), 1, 0, 1, 0, NOW(), '2.0');
+# 将前往关键字统计权限分配给技术角色
+INSERT INTO t_role_resource(fRoleID, fResourceID) SELECT tem_role.fUuid, tem_resource.fUuid FROM (
+      (SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('Technical')) tem_role,
+      (SELECT tr.fUuid FROM t_resource tr WHERE tr.fResourceName = '前往客户提交词页面') tem_resource);
+
+#新增前往客户提交词页面
+INSERT INTO `db_keyword`.`t_resource`(`fResourceName`, `fUrl`, `fIconCls`,
+	`fParentID`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`,  `fCreateTime` , `fVersion`)
+VALUES ('前往客户提交词', '/internal/keywordsInfo/toKeywordsInfo', 'fi-thumbnails',
+	(SELECT r.fUuid FROM t_resource r WHERE r.fUrl = '#' AND r.fResourceName = "关键字管理"), 1, 0, 1, 0, NOW(), '2.0');
+# 将前往关键字统计权限分配给技术角色
+INSERT INTO t_role_resource(fRoleID, fResourceID) SELECT tem_role.fUuid, tem_resource.fUuid FROM (
+      (SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('Technical')) tem_role,
+      (SELECT tr.fUuid FROM t_resource tr WHERE tr.fResourceName = '前往客户提交词') tem_resource);
+
+#新增前往全站信息设置页面
+INSERT INTO `db_keyword`.`t_resource`(`fResourceName`, `fUrl`, `fIconCls`,
+	`fParentID`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`,  `fCreateTime` , `fVersion`)
+VALUES ('前往全站信息设置', '/internal/qzsetting/toQZSetttings', 'fi-thumbnails',
+	(SELECT r.fUuid FROM t_resource r WHERE r.fUrl = '#' AND r.fResourceName = "其他"), 1, 0, 1, 0, NOW(), '2.0');
+# 将前往关键字统计权限分配给技术角色
+INSERT INTO t_role_resource(fRoleID, fResourceID) SELECT tem_role.fUuid, tem_resource.fUuid FROM (
+      (SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('Technical')) tem_role,
+      (SELECT tr.fUuid FROM t_resource tr WHERE tr.fResourceName = '前往全站信息设置') tem_resource);
+
+#新增前往负面信息抓取页面
+INSERT INTO `db_keyword`.`t_resource`(`fResourceName`, `fUrl`, `fIconCls`,
+	`fParentID`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`,  `fCreateTime` , `fVersion`)
+VALUES ('前往负面信息抓取', '/internal/negativeKeywords/toNegativeKeywords', 'fi-thumbnails',
+	(SELECT r.fUuid FROM t_resource r WHERE r.fUrl = '#' AND r.fResourceName = "其他"), 1, 0, 1, 0, NOW(), '2.0');
+# 将前往关键字统计权限分配给技术角色
+INSERT INTO t_role_resource(fRoleID, fResourceID) SELECT tem_role.fUuid, tem_resource.fUuid FROM (
+      (SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('Technical')) tem_role,
+      (SELECT tr.fUuid FROM t_resource tr WHERE tr.fResourceName = '前往负面信息抓取') tem_resource);

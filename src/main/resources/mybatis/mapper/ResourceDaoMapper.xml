@@ -32,7 +32,7 @@
         AND u.fUuid = ur.fUserID
         AND ur.fRoleID = rr.fRoleID)
         AND s.fResourceType = 0
-        AND (s.fVersion like CONCAT('%',#{version},'%') OR s.fVersion = '')
+        AND (s.fVersion = #{version} OR s.fVersion = '')
         ORDER BY s.fSequence
     </select>
 
