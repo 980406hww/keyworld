@@ -85,6 +85,7 @@ public class QZKeywordRankInfoServiceImpl extends
         qzSettingCountNumCriteria.setUpOneWeekDiff(oneWeekDiff);
         return qzSettingCountNumCriteria;
     }
+
     @Override
     public List<ExternalQZSettingVO> getQZSettingTask() {
         Config taskNumberConfig = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING, Constants.CONFIG_KEY_QZ_TASKNUMBER);
@@ -142,32 +143,31 @@ public class QZKeywordRankInfoServiceImpl extends
         qzSettingService.updateQzSetting(qzSetting);
     }
 
-    private QZKeywordRankInfo getQZKeywordRankInfo(ExternalQZKeywordRankInfoVO ExternalQZKeywordRankInfoVO, long qzSettingUuid) {
+    private QZKeywordRankInfo getQZKeywordRankInfo(ExternalQZKeywordRankInfoVO externalQZKeywordRankInfoVo, long qzSettingUuid) {
         QZKeywordRankInfo qzKeywordRankInfo = new QZKeywordRankInfo();
         qzKeywordRankInfo.setQzSettingUuid(qzSettingUuid);
-        qzKeywordRankInfo.setTerminalType(ExternalQZKeywordRankInfoVO.getTerminalType());
-        qzKeywordRankInfo.setTopHundred(ExternalQZKeywordRankInfoVO.getTopHundred());
-        qzKeywordRankInfo.setTopFifty(ExternalQZKeywordRankInfoVO.getTopFifty());
-        qzKeywordRankInfo.setTopForty(ExternalQZKeywordRankInfoVO.getTopForty());
-        qzKeywordRankInfo.setTopThirty(ExternalQZKeywordRankInfoVO.getTopThirty());
-        qzKeywordRankInfo.setTopTwenty(ExternalQZKeywordRankInfoVO.getTopTwenty());
-        qzKeywordRankInfo.setTopTen(ExternalQZKeywordRankInfoVO.getTopTen());
-        qzKeywordRankInfo.setFullDate(ExternalQZKeywordRankInfoVO.getFullDate());
-        qzKeywordRankInfo.setDate(ExternalQZKeywordRankInfoVO.getDate());
-        qzKeywordRankInfo.setWebsiteType(ExternalQZKeywordRankInfoVO.getWebsiteType());
-        qzKeywordRankInfo.setDataProcessingStatus(ExternalQZKeywordRankInfoVO.getDataProcessingStatus());
-        qzKeywordRankInfo.setBaiduRecord(ExternalQZKeywordRankInfoVO.getBaiduRecord());
-        qzKeywordRankInfo.setBaiduRecordFullDate(ExternalQZKeywordRankInfoVO.getBaiduRecordFullDate());
+        qzKeywordRankInfo.setTerminalType(externalQZKeywordRankInfoVo.getTerminalType());
+        qzKeywordRankInfo.setTopHundred(externalQZKeywordRankInfoVo.getTopHundred());
+        qzKeywordRankInfo.setTopFifty(externalQZKeywordRankInfoVo.getTopFifty());
+        qzKeywordRankInfo.setTopForty(externalQZKeywordRankInfoVo.getTopForty());
+        qzKeywordRankInfo.setTopThirty(externalQZKeywordRankInfoVo.getTopThirty());
+        qzKeywordRankInfo.setTopTwenty(externalQZKeywordRankInfoVo.getTopTwenty());
+        qzKeywordRankInfo.setTopTen(externalQZKeywordRankInfoVo.getTopTen());
+        qzKeywordRankInfo.setFullDate(externalQZKeywordRankInfoVo.getFullDate());
+        qzKeywordRankInfo.setDate(externalQZKeywordRankInfoVo.getDate());
+        qzKeywordRankInfo.setWebsiteType(externalQZKeywordRankInfoVo.getWebsiteType());
+        qzKeywordRankInfo.setDataProcessingStatus(externalQZKeywordRankInfoVo.getDataProcessingStatus());
+        qzKeywordRankInfo.setBaiduRecord(externalQZKeywordRankInfoVo.getBaiduRecord());
+        qzKeywordRankInfo.setBaiduRecordFullDate(externalQZKeywordRankInfoVo.getBaiduRecordFullDate());
 
         // 查询达标规则是否是other
         String standardSpecies = qzOperationTypeService.findQZChargeRuleStandardSpecies(qzSettingUuid, qzKeywordRankInfo.getTerminalType());
         if (qzKeywordRankInfo.getDataProcessingStatus() && !"other".equals(standardSpecies)) {
-            if (StringUtils.isNotBlank(ExternalQZKeywordRankInfoVO.getTopTen())) {
+            if (StringUtils.isNotBlank(externalQZKeywordRankInfoVo.getTopTen())) {
                 this.setIncreaseAndTodayDifference(qzKeywordRankInfo);
             }
 
-            List<QZChargeRuleVO> chargeRuleVos = qzChargeRuleService.findQZChargeRules(qzSettingUuid, ExternalQZKeywordRankInfoVO.getTerminalType(),
-                ExternalQZKeywordRankInfoVO.getWebsiteType());
+            List<QZChargeRuleVO> chargeRuleVos = qzChargeRuleService.findQZChargeRules(qzSettingUuid, externalQZKeywordRankInfoVo.getTerminalType(), externalQZKeywordRankInfoVo.getWebsiteType());
             if (CollectionUtils.isNotEmpty(chargeRuleVos)) {
                 Map standard = this.standardCalculation(chargeRuleVos, qzKeywordRankInfo);
                 qzKeywordRankInfo.setDifferenceValue(Double.parseDouble(standard.get("differenceValue").toString()));
@@ -175,7 +175,7 @@ public class QZKeywordRankInfoServiceImpl extends
                 qzKeywordRankInfo.setSumSeries(Integer.parseInt(standard.get("sumSeries").toString()));
                 qzKeywordRankInfo.setCurrentPrice(Integer.parseInt(standard.get("currentPrice").toString()));
 
-                QZOperationType qzOperationType = qzOperationTypeService.searchQZOperationType(qzSettingUuid, ExternalQZKeywordRankInfoVO.getTerminalType());
+                QZOperationType qzOperationType = qzOperationTypeService.searchQZOperationType(qzSettingUuid, externalQZKeywordRankInfoVo.getTerminalType());
                 // 0 代表没有达标, 1 代表已经达标, 2 代表第一次达标
                 int isStandardFlag = 0;
                 if (qzKeywordRankInfo.getAchieveLevel() > 0) {
@@ -187,8 +187,7 @@ public class QZKeywordRankInfoServiceImpl extends
                 qzOperationTypeService.updateQZOperationTypeStandardTime(qzOperationType.getUuid(), isStandardFlag);
             }
         } else {
-            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoDao.searchExistingExtraQZKeywordRankInfo(qzKeywordRankInfo.getQzSettingUuid(),
-                qzKeywordRankInfo.getTerminalType());
+            List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoDao.searchExistingExtraQZKeywordRankInfo(qzKeywordRankInfo.getQzSettingUuid(), qzKeywordRankInfo.getTerminalType());
             int index = 1;
             if ("other".equals(standardSpecies)) {
                 index = 0;
@@ -202,8 +201,7 @@ public class QZKeywordRankInfoServiceImpl extends
         return qzKeywordRankInfo;
     }
 
-    private void setIncreaseAndTodayDifference(
-        QZKeywordRankInfo qzKeywordRankInfo) {
+    private void setIncreaseAndTodayDifference(QZKeywordRankInfo qzKeywordRankInfo) {
         DecimalFormat decimalFormat = new DecimalFormat("0.0000");
         String[] arr = qzKeywordRankInfo.getTopTen().replace("[", "").replace("]", "").split(", ");
         int oneWeekDiff = Integer.parseInt(arr[0]) - Integer.parseInt(arr[6]);
@@ -222,8 +220,7 @@ public class QZKeywordRankInfoServiceImpl extends
         qzKeywordRankInfo.setOneWeekDifference(oneWeekDiff);
     }
 
-    private Map standardCalculation(List<QZChargeRuleVO> chargeRuleVos,
-        QZKeywordRankInfo qzKeywordRankInfo) {
+    private Map standardCalculation(List<QZChargeRuleVO> chargeRuleVos, QZKeywordRankInfo qzKeywordRankInfo) {
         DecimalFormat decimalFormat = new DecimalFormat("0.0000");
         int topTen = Integer.parseInt(
             qzKeywordRankInfo.getTopTen().replace("[", "").replace("]", "").split(",")[0]);
