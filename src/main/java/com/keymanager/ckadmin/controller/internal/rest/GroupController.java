@@ -139,4 +139,19 @@ public class GroupController extends SpringMVCBaseController {
             return resultBean;
         }
     }
+
+    @PostMapping("/getAllGroupNames")
+    public ResultBean getAllGroupNames(){
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            List<String> groupNames = groupService.getAllGroupNames();
+            resultBean.setData(groupNames);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("服务端错误");
+            return resultBean;
+        }
+    }
 }

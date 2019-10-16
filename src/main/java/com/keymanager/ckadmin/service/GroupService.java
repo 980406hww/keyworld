@@ -30,4 +30,6 @@ public interface GroupService extends IService<Group> {
     List<GroupVO> getAvailableOptimizationGroups(GroupSettingCriteria groupSettingCriteria);
 
     void batchAddGroups(OperationCombineCriteria operationCombineCriteria);
+
+    List<String> getAllGroupNames();
 }

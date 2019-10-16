@@ -35,7 +35,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">优化组名</label>
                 <div class="layui-input-block">
-                    <input type="text" name="optimizeGroupName" id="optimizeGroupName" placeholder="请输入优化组名" autocomplete="off" class="layui-input"
+                    <input type="text" name="optimizeGroupName" id="optimizeGroupName" list="group_list" placeholder="请输入优化组名" autocomplete="off" class="layui-input"
                            lay-verify="required">
                 </div>
             </div>
@@ -63,6 +63,9 @@
         </div>
     </form>
 </div>
+<datalist id="group_list">
+
+</datalist>
 <!--js逻辑-->
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script>
@@ -111,6 +114,34 @@
             setForm(layui, uuid_);
         } else {
             layui_ = layui;
+        }
+        init_optimizeGroupName();
+
+        function init_optimizeGroupName(){
+            $.ajax({
+                url: '/internal/group/getAllGroupNames',
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        var groupData = res.data;
+                        var group_list = $('#group_list');
+                        group_list.empty();
+                        $.each(groupData, function (index, item) {
+                            group_list.append('<option value="' + item + '">' + item + '</option>');
+                        });
+                        form.render("select")
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                },
+                error: function () {
+                    layer.msg('未知错误，请稍后重试！！')
+                }
+            });
         }
 
         function show_layer_msg(msg, icon, title, status) {

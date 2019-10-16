@@ -46,4 +46,5 @@ public interface GroupDao extends BaseMapper<Group> {
 
     List<GroupVO> getGroupsByOperationCombineUuid(@Param("operationCombineUuid") Long operationCombineUuid, @Param("groupName") String groupName);
 
+    List<String> getAllGroupNames();
 }

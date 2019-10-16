@@ -162,4 +162,9 @@ public class GroupServiceImpl extends ServiceImpl<GroupDao, Group> implements Gr
         operationCombineCriteria.setMaxInvalidCount(operationCombine.getMaxInvalidCount());
         this.saveGroupsBelowOperationCombine(operationCombineCriteria);
     }
+
+    @Override
+    public List<String> getAllGroupNames() {
+        return groupDao.getAllGroupNames();
+    }
 }

@@ -129,7 +129,6 @@
                         var keywordData = res.data;
                         var keyword_list = $('#keyword_list');
                         keyword_list.empty();
-                        console.log(keywordData)
                         $.each(keywordData, function (index, item) {
                             keyword_list.append('<option value="' + item + '">' + item + '</option>');
                         });
