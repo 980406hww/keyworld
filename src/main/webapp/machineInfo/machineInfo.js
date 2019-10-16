@@ -602,7 +602,6 @@ function saveChangeSetting(clientIDs){
         var postData = {};
         postData.mi = mi;
         postData.machineInfo = machineInfo;
-        console.log(postData)
         $.ajax({
             url: '/internal/machineInfo/batchUpdateMachineInfo',
             data: JSON.stringify(postData),

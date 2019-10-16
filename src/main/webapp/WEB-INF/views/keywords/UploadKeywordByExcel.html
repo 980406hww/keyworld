@@ -34,7 +34,6 @@
 <script>
 
     function initForm(data) {
-        console.log(data)
         document.getElementById('customerUuid').value = data.customerUuid;
         document.getElementById('entryType').value = data.type;
         document.getElementById('terminalType').value = data.terminalType;
@@ -74,7 +73,6 @@
                 dataType: 'json',
                 success: function (res) {
                     if (res.code === 200) {
-                        console.log(res.code);
                         okLayer.msg.greenTick("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
