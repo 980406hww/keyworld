@@ -40,7 +40,7 @@ public class LayerUIAdminTestController {
     @RequestMapping("/home")
     public ModelAndView toConsole() {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("keywords/keyword");
+        mv.setViewName("home/home");
         return mv;
     }
 

@@ -312,9 +312,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             case 'change_selected_bearPawNumber':
                 change_selected_bearPawNumber();
                 break;
-            case 'batch_modify':
-                batch_modify();
-                break;
             case 'batch_delete':
                 batch_delete();
                 break;
@@ -373,12 +370,24 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
 
             return
         }
-        if (status === 0) {
-            msg = '确认要暂停选中的关键字吗';
-        } else {
-            msg = '确认要上线选中的关键字吗';
+        let msg;
+        let title;
+        switch (status) {
+            case 0:
+                msg = '确认要暂停选中的关键字吗';
+                title = '暂停所选';
+                break;
+            case 1:
+                msg = '确认要上线选中的关键字吗';
+                title = '激活选中的关键字吗';
+                break;
+            default:
+                msg = '确认要下架选中的关键字吗';
+                title = '下架所选';
+                break;
         }
-        layer.confirm(msg, {icon: 3, title: '暂停所选'}, function (index) {
+
+        layer.confirm(msg, {icon: 3, title: title}, function (index) {
             var postData = {};
             postData.uuids = uuidArr;
             postData.status = status;
