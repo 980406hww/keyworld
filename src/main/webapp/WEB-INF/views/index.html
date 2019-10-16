@@ -284,6 +284,14 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/screenedWebsite/toScreenedWebsites">
+                        <dd data-name="other-item" >
+                            <a data-url="/internal/screenedWebsite/toScreenedWebsites" lay-id="screenedWebsites">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>网站屏蔽设置</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
                     </dl>
                 </li>
 
