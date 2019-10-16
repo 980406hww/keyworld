@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Date;
 
 /**
  * @description：资源管理
@@ -30,8 +29,6 @@ public class ResourceController extends BaseController {
 
     /**
      * 菜单树
-     *
-     * @return
      */
     @PostMapping("/tree")
     @ResponseBody
@@ -42,15 +39,12 @@ public class ResourceController extends BaseController {
 
     /**
      * 资源管理页
-     *
-     * @return
      */
     @GetMapping("/manager")
     public String manager(HttpServletRequest request, String resource) {
-        String requestURI=request.getRequestURI();
-        if(null==resource || (!resource.equals("/login") && !resource.equals("/index")))
-        {
-            request.getSession().setAttribute("requestURI",requestURI);
+        String requestURI = request.getRequestURI();
+        if (null == resource || (!resource.equals("/login") && !resource.equals("/index"))) {
+            request.getSession().setAttribute("requestURI", requestURI);
             return "redirect:/index";
         }
         return "/views/admin/resource/resource";
@@ -58,8 +52,6 @@ public class ResourceController extends BaseController {
 
     /**
      * 资源管理列表
-     *
-     * @return
      */
     @PostMapping("/treeGrid")
     @ResponseBody
@@ -69,8 +61,6 @@ public class ResourceController extends BaseController {
 
     /**
      * 添加资源页
-     *
-     * @return
      */
     @GetMapping("/addPage")
     public String addPage() {
@@ -79,9 +69,6 @@ public class ResourceController extends BaseController {
 
     /**
      * 添加资源
-     *
-     * @param resource
-     * @return
      */
     @RequestMapping("/add")
     @ResponseBody
@@ -115,10 +102,6 @@ public class ResourceController extends BaseController {
 
     /**
      * 编辑资源页
-     *
-     * @param model
-     * @param id
-     * @return
      */
     @RequestMapping("/editPage")
     public String editPage(Model model, Long id) {
@@ -129,9 +112,6 @@ public class ResourceController extends BaseController {
 
     /**
      * 编辑资源
-     *
-     * @param resource
-     * @return
      */
     @RequestMapping("/edit")
     @ResponseBody
@@ -141,15 +121,12 @@ public class ResourceController extends BaseController {
         if (null != type && type == 0) {
             resource.setOpenMode(null);
         }
-        resourceService.updateById(resource);
+        resourceService.updResourceById(resource);
         return renderSuccess("编辑成功！");
     }
 
     /**
      * 删除资源
-     *
-     * @param id
-     * @return
      */
     @RequestMapping("/delete")
     @ResponseBody

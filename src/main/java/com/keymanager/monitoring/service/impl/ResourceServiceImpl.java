@@ -13,9 +13,11 @@ import com.keymanager.monitoring.service.IResourceService;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Resource 表数据服务层接口实现类
@@ -117,7 +119,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceDao, Resource> impl
 
     @Override
     public List<Tree> selectTree(ShiroUser shiroUser) {
-        List<Tree> trees = new ArrayList<Tree>();
+        List<Tree> trees = new ArrayList<>();
         // shiro中缓存的用户角色
         Set<String> roles = shiroUser.getRoles();
         if (roles == null) {
@@ -163,6 +165,20 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceDao, Resource> impl
             trees.add(tree);
         }
         return trees;
+    }
+
+    @Override
+    @Transactional
+    public void updResourceById(Resource resource) {
+        Resource old = resourceDao.selectById(resource.getId());
+        List<Map<String, Object>> tree = resourceDao.selectTreeByPid(resource.getId());
+        if (null != tree && !tree.isEmpty()) {
+            resourceDao.updChildVersion(resource.getVersion(), tree);
+        }
+        if ("#".equals(old.getUrl()) && null == old.getParentID()) {
+            resource.setVersion(null);
+        }
+        resourceDao.updateById(resource);
     }
 
     @Override
