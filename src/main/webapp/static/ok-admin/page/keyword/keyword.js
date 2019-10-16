@@ -49,7 +49,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
             document.getElementById('invalidRefreshCount').value = d.irc;
         }
         let type = $('#type').val();
-
         get_keywords(formToJsonObject('searchForm'));
     }
 

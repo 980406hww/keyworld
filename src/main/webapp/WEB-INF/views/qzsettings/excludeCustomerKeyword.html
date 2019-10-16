@@ -136,7 +136,6 @@
         }
 
         form.on("submit(save)", function (data) {
-            console.log(data);
             var postData = data.field;
             let keywordStr = postData.customerKeywordDialogContent;
             keywordStr = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "");

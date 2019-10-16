@@ -268,8 +268,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                 + '                        <div class="layui-row">\n'
                 + '                            <div class="layui-col-md12">\n'
                 + '                                <div class="data-head">\n'
-                + '                                     <div class="layui-col-md1 skip importantText" title="'+item.operationCombineName+'---'+item.remainingAccount+'%">'+item.operationCombineName+'</div>\n'
-                + '                                     <div class="layui-col-md1">'+item.creator+'</div>\n'
+                + '                                     <div class="layui-col-md2 skip importantText" title="'+item.operationCombineName+'---'+item.remainingAccount+'%">'+ item.creator + '&nbsp;&nbsp;&nbsp;&nbsp;' + item.operationCombineName+'</div>\n'
                 + '                                     <div class="layui-col-md1" onclick=changeMaxInvalidCount("'+item.uuid+'")>最大无效点击数:<span id="maxInvalidCount'+item.uuid+'">'+item.maxInvalidCount+'</span></div>\n'
                 + '                                     <div class="layui-col-md6 skip" onclick=changeGroupNames("'+item.uuid+'")>分组:<span id="groupNameStr'+item.uuid+'">'+getGroupNameStrByUuid(item.uuid)+'</span></div>\n'
                 + '                                     <div class="layui-col-md3 head-operation" title="操作">\n'
@@ -374,11 +373,11 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                     $('#groupNameStr' + uuid).attr("title", groupNameStr);
 
                 } else {
-                    show_layer_msg('获取操作组合下的分组数据失败！', 5,);
+                    show_layer_msg('获取操作组合下的分组数据失败！', 5);
                 }
             },
             error: function () {
-                show_layer_msg('获取操作组合下的分组数据失败！', 5, );
+                show_layer_msg('获取操作组合下的分组数据失败！', 5);
             }
         });
     };
@@ -394,10 +393,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
                 if (value === '') {
-                    show_layer_msg('请输入最大无效点击数！', 5, null, 1000);
+                    show_layer_msg('请输入最大无效点击数！', 5, false, 1000);
                     return;
                 } else if (!/^\d+$/.test(value)) {
-                    show_layer_msg('请输入正确数字！', 5, null, 1000);
+                    show_layer_msg('请输入正确数字！', 5, false, 1000);
                     return;
                 }
                 var postData = {};
@@ -414,7 +413,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            show_layer_msg('操作成功', 6, );
+                            show_layer_msg('操作成功', 6);
                             $('#maxInvalidCount'+operationCombineUuid).text(value)
                         } else {
                             show_layer_msg('操作失败', 5);
@@ -445,7 +444,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             formType: 2,
             value: oldGroupNameStr === '暂无' ? '' : oldGroupNameStr,
             title: '新分组标签',
-            area: ['600px', '80px'], //自定义文本域宽高
+            area: ['800px', '300px'], //自定义文本域宽高
             yes: function (index, layero) {
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
@@ -478,8 +477,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                                 icon: 6,
                                 time: 2000 //2秒关闭（如果不配置，默认是3秒）
                             }, function () {
-                                // $('#groupNameStr'+operationCombineUuid).text(groups.join(","));
-                                // $('#groupNameStr'+operationCombineUuid).attr("title",groups.join(","));
                                 let pageConf = formToJsonObject('searchForm');
                                 initLayPage(pageConf);
                             });
@@ -657,7 +654,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     window.delGroupSetting = function (operationCombineUuid, groupSettingUuid) {
         let groupSettingCount = parseInt($('#groupSettingCount'+operationCombineUuid).val());
         if (groupSettingCount === 1){
-            show_layer_msg("这是最后一个优化组设置，请直接删除操作组合！！！", 5)
+            show_layer_msg("这是最后一个优化组设置，请直接删除操作组合！！！", 5);
             return false
         }
         layer.confirm('确定删除此操作类型吗', function (index) {
@@ -673,7 +670,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                     if (result.code === 200) {
                         layer.msg('操作成功', {
                             icon: 6,
-                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            time: 2000
                         }, function () {
                             let pageConf = formToJsonObject('searchForm');
                             initLayPage(pageConf)
@@ -689,6 +686,5 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             });
             layer.close(index);
         });
-        console.log(uuid)
     };
 });

@@ -105,7 +105,6 @@
         form.on("submit(commit)", function (data) {
             if(uuid_ == null){
                 var qq = data.field.qq
-                console.log(qq)
                 if (qq != '') {
                     data.field.qq = qq.replace(/[\r\n]/g, ",").replace(/[\s+]/g, "");
                 }

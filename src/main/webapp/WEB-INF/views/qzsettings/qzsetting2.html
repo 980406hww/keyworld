@@ -1977,7 +1977,6 @@
             let d = {};
             if (td_l.length > 2) {
                 this_ = this_.previousElementSibling.previousElementSibling.children[0].children;
-                console.log(this_);
                 d.uuid = this_[0].value;
                 d.content = this_[1].value;
             } else {
@@ -1985,7 +1984,6 @@
             }
             d.customerUuid = document.getElementById('customerUuid').value;
             d.terminalType = document.getElementById('terminalType').value;
-            console.log(d);
             $.ajax({
                 url: '/internal/notebook/saveUserNoteBook',
                 type: 'POST',

@@ -176,13 +176,13 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {field: 'keyword', title: '关键字', width: '20%',templet: '#tokeywordTpl' },
-                    {field: 'searchEngine', title: '搜索引擎', width: '13%',  },
-                    {field: 'keywordCount', title: '单词总数', width: '13%', },
-                    {field: 'userCount', title: '用户总数', width: '13%', },
-                    {field: 'customerCount', title: '客户总数', width: '13%',  },
-                    {field: 'topThree', title: '前三数量', width: '13%', templet: '#tokeywordTop3Tpl' },
-                    {field: 'topTen', title: '前十数量', width: '13%', templet: '#tokeywordTop10Tpl' },
+                    {field: 'keyword', title: '关键字', width: '22%',templet: '#tokeywordTpl' },
+                    {field: 'searchEngine', title: '搜索引擎', width: '13%', align: 'center'},
+                    {field: 'keywordCount', title: '单词总数', width: '13%', align: 'center'},
+                    {field: 'userCount', title: '用户总数', width: '13%', align: 'center'},
+                    {field: 'customerCount', title: '客户总数', width: '13%',  align: 'center'},
+                    {field: 'topThree', title: '前三数量', width: '13%', align: 'center', templet: '#tokeywordTop3Tpl' },
+                    {field: 'topTen', title: '前十数量', width: '13%', align: 'center', templet: '#tokeywordTop10Tpl' },
                 ]],
                 height: 'full-150',
                 done: function (res, curr, count) {
@@ -226,8 +226,7 @@
     function toKeyword(keyword) {
         let terminalType = document.getElementById('terminalType').value;
         let url = '/internal/customerKeyword/toKeywords/pt/' + terminalType + '/' + keyword;
-        url = encodeURI(encodeURI(url))
-        console.log(url)
+        url = encodeURI(encodeURI(url));
         let title = '关键字:' + keyword + '详情';
         updateOrNewTab(url, title, keyword)
     }

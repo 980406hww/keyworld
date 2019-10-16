@@ -269,7 +269,6 @@
         let layer = layui.layer;
 
         document.onkeydown=function(e){
-            // console.log(e.target.id)
             var isie = !!(document.all);
             var key;
             var ev;
@@ -319,21 +318,16 @@
         }
 
         window.checkItem = function (self) {
-            // var color = $(self).css("color");
             var color = $($(self).siblings()[0]).css("color");
-            // console.log($(self).siblings()[0])
             if(color === "rgb(0, 0, 0)") {
 
                 $($(self).siblings()[0]).css("color", "red");
             } else {
-                // $(self).css("color", "black");
                 $($(self).siblings()[0]).css("color", "black");
             }
         };
 
         function isChecked(id) {
-            // console.log($('#'+id).parent().siblings()[0])
-            // console.log($($('#'+id).parent().siblings()[0]).css("color"))
             var color =  $($('#'+id).parent().siblings()[0]).css("color");
             if(color === "rgb(255, 0, 0)") {
                 return "1";
@@ -346,7 +340,6 @@
             var postData = {};
             postData.uuids = baseData.uuids;
             postData.keywordValues = data.field;
-            // console.log(postData);
             let keywordChecks = {};
             for (var key in data.field)
             {
@@ -354,8 +347,6 @@
 
             }
             postData.keywordChecks = keywordChecks;
-            console.log(postData)
-            // return false;
             $.ajax({
                 url: '/internal/customerKeyword/batchUpdateKeywords2',
                 type: 'post',

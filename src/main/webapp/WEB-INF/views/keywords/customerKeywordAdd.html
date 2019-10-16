@@ -282,7 +282,6 @@
             dataType: 'json',
             success: function (res) {
                 if (res.code === 200) {
-                    // console.log(res.data)
                     init_searchEngine();
                     form.val("saveKeyword", res.data);
                 } else {
@@ -330,8 +329,6 @@
 
         form.on("submit(save)", function (data) {
             var postData = data.field;
-            console.log(postData);
-            // return false;
             $.ajax({
                 url: '/internal/customerKeyword/saveCustomerKeyword2',
                 type: 'post',

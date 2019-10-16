@@ -52,7 +52,7 @@ html {
     color: #fff;
     white-space: nowrap;
     text-align: center;
-    font-size: 14px;
+    font-size: 12px;
     border: none;
     border-radius: 2px;
     cursor: pointer;
@@ -164,7 +164,7 @@ html {
 .data-head {
     height: 30px;
     /*border-bottom: 1px solid #e6e6e6;*/
-    font-size: 16px;
+    font-size: 14px;
     padding: 0 10px;
 
 }
@@ -178,7 +178,7 @@ html {
 .body-title {
     height: 24px !important;
     text-align: center;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .body-title > div {

@@ -77,7 +77,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                 let entryType = $('#entryType').val();
                 let postData = {};
                 postData.entryType = entryType;
-                init_customerTypeCount(postData);
+                // init_customerTypeCount(postData);
                 form.render();
                 // layer.msg('加载完成', {icon: 6});
             },

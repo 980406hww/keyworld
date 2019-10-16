@@ -185,11 +185,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     @Override
     public List<MachineGroupQueueVO> getMachineGroupAndSize() {
-        List<MachineGroupQueueVO> machineGroupQueueVOS = new ArrayList<>();
+        List<MachineGroupQueueVO> machineGroupQueueVos = new ArrayList<>();
         for (Map.Entry<String, LinkedBlockingQueue> entry : machineGroupQueueMap.entrySet()) {
-            machineGroupQueueVOS.add(new MachineGroupQueueVO(entry.getKey(), entry.getValue().size()));
+            machineGroupQueueVos.add(new MachineGroupQueueVO(entry.getKey(), entry.getValue().size()));
         }
-        return machineGroupQueueVOS;
+        return machineGroupQueueVos;
     }
 
     @Override

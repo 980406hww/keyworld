@@ -3,8 +3,7 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.ckadmin.dao.OperationCombineDao">
 
-    <select id="searchOperationCombines"
-        resultType="com.keymanager.ckadmin.entity.OperationCombine">
+    <select id="searchOperationCombines" resultType="com.keymanager.ckadmin.entity.OperationCombine">
         SELECT
         toc.fUuid AS "uuid",
         toc.fOperationCombineName AS "operationCombineName",

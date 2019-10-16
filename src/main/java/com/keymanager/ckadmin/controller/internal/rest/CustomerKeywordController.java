@@ -102,15 +102,15 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         long startMilleSeconds = System.currentTimeMillis();
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         try {
-            List<MachineGroupQueueVO> machineGroupQueueVOS = customerKeywordService.getMachineGroupAndSize();
+            List<MachineGroupQueueVO> machineGroupQueueVos = customerKeywordService.getMachineGroupAndSize();
             performanceService.addPerformanceLog(terminalType + ":showMachineGroupAndSize", (System.currentTimeMillis() - startMilleSeconds), null);
             resultBean.setCode(0);
             resultBean.setMsg("success");
-            resultBean.setData(machineGroupQueueVOS);
+            resultBean.setData(machineGroupQueueVos);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -693,6 +693,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         mv.addObject("kw123", keyword);
         return mv;
     }
+
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
     @GetMapping(value = "/toKeywordsWithPosition/{businessType}/{terminalType}/{keyword}/{position}")
     public ModelAndView toKeywordsWithPosition(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
