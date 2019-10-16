@@ -1,5 +1,6 @@
 package com.keymanager.ckadmin.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.keymanager.ckadmin.criteria.FriendlyLinkCriteria;
 import com.keymanager.ckadmin.entity.FriendlyLink;
@@ -14,6 +15,8 @@ import java.util.Map;
 public interface FriendlyLinkService extends IService<FriendlyLink> {
 
     ModelAndView constructSearchFriendlyLinkListsModelAndView(int currentPageNumber, int pageSize, FriendlyLinkCriteria friendlyLinkCriteria);
+
+    Page<FriendlyLink> searchFriendlyLinkList(Page<FriendlyLink> page, FriendlyLinkCriteria friendlyLinkCriteria);
 
     void saveFriendlyLink(MultipartFile file, FriendlyLink friendlyLink);
 

@@ -3,8 +3,311 @@
 <head>
     <meta charset="UTF-8">
     <title>销售信息管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+    <style>
+        .layui-inline input {
+            width: 150px;
+            height: 30px;
+        }
+        .my-collapse button {
+            height: 30px;
+            line-height: 30px;
+        }
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 1px solid #e6e6e6;
+        }
+
+        .my-collapse > div {
+            padding: 6px 5px;
+        }
+
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
+    </style>
 </head>
 <body>
-销售信息
+<div class="ok-body">
+    <div class="layui-card ">
+        <div class="layui-card-body ">
+            <form class="layui-form layui-form-pane" id="searchForm">
+                <div class="my-collapse">
+                    <div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <input type="text" name="salesName" placeholder="销售人员名称" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <button class="layui-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
+                            </div>
+                            <div class="layui-input-inline">
+                                <button class="layui-btn" style="background: #897c00;color: #ffffff" type="reset">重置</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table class="layui-hide" id="salesListTable" lay-filter="tableFilter"></table>
+</div>
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script>
+    var sign = false;
+    // 进度条加载提示
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
+    // layui相关
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+        var okLayer = layui.okLayer;
+        var layer = layui.layer;
+
+        var active = {
+            reload: function () {
+                var terminalType = $("#terminalType").val()
+                var data = {'terminalType': terminalType}
+                table.reload('salesListTable', {
+                    where: data,
+                    page: {
+                        curr: 1
+                    }
+                });
+            },
+        };
+
+        searchSalesInfo()
+
+        form.on("submit(search)", function (data) {
+            var postData = data.field
+            searchSalesInfo(postData)
+            return false
+        });
+
+        function searchSalesInfo(whereCondition){
+            table.render({
+                elem: '#salesListTable',
+                method: 'post',
+                url: '${ctx.path}/internal/salesInfo/searchSalesInfos',
+                limit: 50,
+                page: true,
+                autoSort: false,
+                size: 'sm',
+                id: 'salesListTable',
+                even: true,
+                toolbar: "#toolbarTpl",
+                defaultToolbar: [],
+                contentType: 'application/json',
+                where: whereCondition,
+                cols: [[
+                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '3%', align: 'center'},
+                    {field: 'salesName', title: '销售名称', width: '7%', align: 'center'},
+                    {field: 'telephone', title: '电话号码', width: '10%', align: 'center'},
+                    {field: 'qq', title: 'QQ', width: '10%', align: 'center'},
+                    {field: 'weChat', title: '微信', width: '10%', align: 'center'},
+                    {field: 'quickResponseCode', title: '二维码链接', width: '19%', align: 'center'},
+                    {field: 'email', title: '邮箱', width: '12%', align: 'center'},
+                    {field: 'managePart', title: '负责部分', width: '8%', align: 'center',templet: '#managePart'},
+                    {field: 'createTime', title: '创建日期', width: '7%', templet: '#toDateTime', align: 'center'},
+                    {field: 'updateTime', title: '修改日期', width: '7%', templet: '#toUpdateTime', align: 'center'},
+                    {title: '操作', templet: '#operationTpl', align: 'center', width: '7%', align: 'center', fixed: "right"}
+                ]],
+                height: 'full-75',
+                done: function (res, curr, count) {
+                }
+            });
+        }
+
+        function showSalesInfoDialog() {
+            okLayer.open("首页/其他/添加销售信息", "/internal/salesInfo/toAddSalesInfo", "35%", "50%", null, function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            },70);
+        }
+
+        function modifySalesInfo(data){
+            okLayer.open("首页/其他/修改销售信息", "/internal/salesInfo/toAddSalesInfo", "35%", "50%", function(layero){
+                window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            },70);
+        }
+
+        function deleteSalesInfo(uuid){
+            layer.confirm('确认删除该销售信息？', {
+                icon: 3,
+                title: '删除销售信息',
+                btn: ['确认', '取消'],
+                yes: function () {
+                    $.ajax({
+                        url: '/internal/salesInfo/deleteSalesManage/' + uuid,
+                        type: 'GET',
+                        headers: {
+                            "Accept": 'application/json',
+                            "Content-Type": 'application/json'
+                        },
+                        success: function (res) {
+                            if (res.code === 200) {
+                                var data = {}
+                                table.reload('salesListTable', {
+                                    where: data,
+                                    page: {
+                                        curr: 1
+                                    }
+                                });
+                                layer.msg("删除成功")
+                            } else {
+                                layer.msg(res.msg)
+                            }
+                        },
+                        error: function () {
+                            layer.msg('未知错误，请稍后重试！！')
+                        }
+                    });
+                },
+                btn2: function (index) {
+                    layer.close(index);
+                }
+            });
+        }
+
+        function deleteSalesInfos(){
+            var checkStatus = table.checkStatus('salesListTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要操作的销售信息', {icon: 5});
+                return
+            }
+            layer.confirm("确定要删除所选销售信息吗", {icon: 3, title: '删除所选'}, function (index) {
+                var postData = {};
+                postData.uuids = uuidArr;
+                $.ajax({
+                    url: '/internal/salesInfo/deleteBatchSalesManage',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 2000
+                            }, function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            layer.msg('操作失败', {icon: 5});
+                        }
+                    },
+                    error: function () {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                });
+                layer.close(index);
+            });
+        }
+
+        table.on('toolbar(tableFilter)',function(obj){
+            var data = obj.data,event = obj.event;
+            switch (event) {
+                case 'showSalesInfoDialog':
+                    showSalesInfoDialog();
+                    break;
+                case 'deleteSalesInfos':
+                    deleteSalesInfos();
+                    break;
+            }
+        });
+
+        table.on('tool(tableFilter)',function(obj){
+            var data = obj.data,event = obj.event;
+            switch (event) {
+                case 'modifySalesInfo':
+                    modifySalesInfo(data);
+                    break;
+                case 'deleteSalesInfo':
+                    deleteSalesInfo(data.uuid);
+                    break;
+            }
+        });
+
+    });
+
+</script>
+<script type="text/html" id="toDateTime">
+    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+</script>
+
+<script type="text/html" id="toUpdateTime">
+    {{layui.util.toDateString(d.updateTime, 'yyyy-MM-dd')}}
+</script>
+
+<script type="text/html" id="managePart">
+    {{# if(d.managePart == 'ASO'){ }}
+    ASO
+    {{# }else if(d.managePart == 'Amazon'){ }}
+    亚马逊
+    {{# }else if(d.managePart == 'Negative'){ }}
+    负面处理
+    {{# }else if(d.managePart == 'Station'){ }}
+    整站排名
+    {{# }else if(d.managePart == 'CustomerSite'){ }}
+    客户站点
+    {{# }else if(d.managePart == 'InformationSite'){ }}
+    资讯站点
+    {{# } }}
+</script>
+
+<script type="text/html" id="toolbarTpl">
+    <div class="layui-btn-container">
+        <@shiro.hasPermission name="/internal/salesManage/saveSalesInfo">
+        <button class="layui-btn layui-btn-sm" id="addMachine" lay-event="showSalesInfoDialog">添加</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/salesManage/deleteSalesInfo">
+    <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="deleteSalesInfos">
+        <i class="layui-icon layui-icon-delete"></i>删除所选
+    </button>
+    </@shiro.hasPermission>
+    </div>
+</script>
+
+<script type="text/html" id="operationTpl">
+    <div class="layui-btn-group">
+        <@shiro.hasPermission name="/internal/salesManage/updateSalesInfo">
+        <button type="button" class="layui-btn layui-btn-xs" lay-event="modifySalesInfo">修改</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/salesManage/deleteSalesInfo">
+    <button type="button" class="layui-btn layui-btn-xs" lay-event="deleteSalesInfo">删除</button>
+    </@shiro.hasPermission>
+    </div>
+</script>
 </body>
 </html>

@@ -2,8 +2,11 @@ package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.criteria.AdvertisingAllTypeAndCustomerListCriteria;
 import com.keymanager.ckadmin.criteria.AdvertisingCriteria;
+import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.entity.Advertising;
+import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.service.AdvertisingService;
 import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.monitoring.common.result.Result;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +33,7 @@ public class AdvertisingController {
     @Resource(name = "advertisingService2")
     private AdvertisingService advertisingService;
 
-//    @RequiresPermissions("/internal/advertising/saveAdvertisings")
+    @RequiresPermissions("/internal/advertising/saveAdvertisings")
     @GetMapping("/toSaveAdvertising")
     public ModelAndView toSaveAdvertising() {
         ModelAndView mv = new ModelAndView();
@@ -37,7 +41,7 @@ public class AdvertisingController {
         return mv;
     }
 
-//    @RequiresPermissions("/internal/advertising/saveAdvertisings")
+    @RequiresPermissions("/internal/advertising/saveAdvertisings")
     @PostMapping("/saveAdvertising")
     public ResultBean saveAdvertising(@RequestBody Advertising advertising){
         ResultBean resultBean = new ResultBean();
@@ -53,7 +57,7 @@ public class AdvertisingController {
         return resultBean;
     }
 
-//    @RequiresPermissions("/internal/advertising/saveAdvertising")
+    @RequiresPermissions("/internal/advertising/saveAdvertising")
     @PostMapping("/updateAdvertising")
     public ResultBean updateAdvertising(@RequestBody Advertising advertising){
         ResultBean resultBean = new ResultBean();
@@ -61,6 +65,28 @@ public class AdvertisingController {
             advertisingService.updateAdvertising(advertising);
             resultBean.setCode(200);
         }catch (Exception e){
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/advertising/saveAdvertisings")
+    @GetMapping(value = "/searchAdvertisingAllTypeAndCustomerList/{websiteUuid}")
+    public ResultBean searchAdvertisingAllTypeAndCustomerList(@PathVariable Long websiteUuid, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            CustomerCriteria customerCriteria = new CustomerCriteria();
+            String entryType = (String) request.getSession().getAttribute("entryType");
+            customerCriteria.setEntryType(entryType);
+            List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
+            AdvertisingAllTypeAndCustomerListCriteria advertisingAllTypeAndCustomerListCriteria = advertisingService.searchAdvertisingAllTypeList(websiteUuid);
+            advertisingAllTypeAndCustomerListCriteria.setCustomerList(customerList);
+            resultBean.setCode(200);
+            resultBean.setData(advertisingAllTypeAndCustomerListCriteria);
+        } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg("未知错误");
