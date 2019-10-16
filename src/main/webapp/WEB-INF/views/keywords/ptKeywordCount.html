@@ -227,7 +227,6 @@
         let terminalType = document.getElementById('terminalType').value;
         let url = '/internal/customerKeyword/toKeywords/pt/' + terminalType + '/' + keyword;
         url = encodeURI(encodeURI(url))
-        console.log(url)
         let title = '关键字:' + keyword + '详情';
         updateOrNewTab(url, title, keyword)
     }

@@ -15,7 +15,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     var laypage = layui.laypage;
     var operationTypes ;
     element.on('tab(groupSettingTab)', function (data) {
-        $('#terminalType').val($(this).text());
+        var d = data.elem.context.dataset
+        $('#terminalType').val(d.terminal);
         init_operationType();
         initLayPage(formToJsonObject('searchForm'));
     });

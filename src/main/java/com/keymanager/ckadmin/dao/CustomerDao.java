@@ -46,4 +46,6 @@ public interface CustomerDao extends BaseMapper<Customer> {
     List<CustomerTypeVO> searchCustomerTypes(@Param("customerTypeCriteria") CustomerTypeCriteria customerTypeCriteria);
 
     List<Customer> searchCustomerWithKeyword(@Param("groupNames") List<String> groupNames,@Param("terminalType") String terminalType);
+
+    void saveExternalCustomer(Customer customer);
 }

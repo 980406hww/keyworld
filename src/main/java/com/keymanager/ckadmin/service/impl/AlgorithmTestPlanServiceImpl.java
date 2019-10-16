@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.AlgorithmTestCriteria;
 import com.keymanager.ckadmin.dao.AlgorithmTestPlanDao;
+import com.keymanager.ckadmin.dao.AlgorithmTestTaskDao;
 import com.keymanager.ckadmin.entity.AlgorithmTestPlan;
 import com.keymanager.ckadmin.service.AlgorithmTestPlanService;
 
+import com.keymanager.monitoring.service.AlgorithmTestTaskService;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
@@ -29,6 +31,9 @@ public class AlgorithmTestPlanServiceImpl extends ServiceImpl<AlgorithmTestPlanD
     @Resource(name = "algorithmTestPlanDao2")
     private AlgorithmTestPlanDao algorithmTestPlanDao;
 
+    @Resource(name = "algorithmTestTaskDao2")
+    private AlgorithmTestTaskDao algorithmTestTaskDao;
+
     @Override
     public Page<AlgorithmTestPlan> searchAlgorithmTestPlans(Page<AlgorithmTestPlan> page, AlgorithmTestCriteria algorithmTestCriteria) {
         List<AlgorithmTestPlan> algorithmTestPlanList = algorithmTestPlanDao.searchAlgorithmTestPlans(page, algorithmTestCriteria);
@@ -45,5 +50,35 @@ public class AlgorithmTestPlanServiceImpl extends ServiceImpl<AlgorithmTestPlanD
             algorithmTestPlan.setUpdateTime(new Date());
             algorithmTestPlanDao.updateById(algorithmTestPlan);
         }
+    }
+
+    @Override
+    public AlgorithmTestPlan getAlgorithmTestPlanByUuid(Long uuid) {
+        return algorithmTestPlanDao.getAlgorithmTestPlanByUuid(uuid);
+    }
+
+    @Override
+    public void deletePlanAndTaskByPlanId(Long uuid) {
+        this.deleteById(uuid);
+        algorithmTestTaskDao.deleteTaskByPlanUuid(uuid);
+    }
+
+    @Override
+    public void deletePlanAndTaskByPlanIds(List<Long> PlanUuids) {
+        this.deleteBatchIds(PlanUuids);
+        algorithmTestTaskDao.deleteTaskByPlanUuids(PlanUuids);
+    }
+
+    @Override
+    public void changeAlgorithmTestPlanStatus(Integer uuid, Integer status) {
+        AlgorithmTestPlan algorithmTestPlan = new AlgorithmTestPlan();
+        algorithmTestPlan.setUuid(uuid.longValue());
+        algorithmTestPlan.setStatus(status);
+        algorithmTestPlanDao.updateById(algorithmTestPlan);
+    }
+
+    @Override
+    public void updateAlgorithmTestPlansStatus(List<Integer> uuids, Integer status) {
+        algorithmTestPlanDao.updateAlgorithmTestPlansStatus(uuids,status);
     }
 }

@@ -14,6 +14,8 @@ import com.keymanager.ckadmin.service.UserPageSetupService;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -529,5 +531,16 @@ public class MachineInfoController extends SpringMVCBaseController {
             resultBean.setMsg(e.getMessage());
         }
         return resultBean;
+    }
+
+
+    @RequiresPermissions("/internal/machineInfo/searchMachineInfos")
+    @RequestMapping(value = "/toMachineInfoFromATP/{machineGroup}", method = RequestMethod.GET)
+    public ModelAndView toMachineInfoFromATP(@PathVariable(name = "machineGroup") String machineGroup) throws UnsupportedEncodingException {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/machineManage");
+        machineGroup = URLDecoder.decode(machineGroup, "UTF-8");
+        mv.addObject("machineGroupFromATP",machineGroup);
+        return mv;
     }
 }

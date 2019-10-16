@@ -180,7 +180,6 @@
                 ]],
                 height: 'full-90',
                 done: function (res, curr, count) {
-                    console.log(res.data)
                 }
             });
         }
@@ -214,8 +213,6 @@
 
 
             function updateNegativeRank(uuid, rankType, oldValue) {
-            console.log(uuid);
-            console.log(rankType);
             let tit = '';
             switch (rankType) {
                 case 'firstPageRanks':

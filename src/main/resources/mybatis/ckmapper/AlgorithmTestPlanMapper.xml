@@ -3,24 +3,26 @@
 <mapper namespace="com.keymanager.ckadmin.dao.AlgorithmTestPlanDao">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.keymanager.ckadmin.entity.AlgorithmTestPlan">
-        <id column="fUuid" property="uuid"/>
-        <result column="fAlgorithmTestPlanName" property="algorithmTestPlanName"/>
-        <result column="fOperationCombineName" property="operationCombineName"/>
-        <result column="fTerminalType" property="terminalType"/>
-        <result column="fSearchEngine" property="searchEngine"/>
-        <result column="fMachineGroup" property="machineGroup"/>
-        <result column="fTestIntervalDay" property="testIntervalDay"/>
-        <result column="fTestKeywordCount" property="testKeywordCount"/>
-        <result column="fTestkeywordRankBegin" property="testkeywordRankBegin"/>
-        <result column="fTestkeywordRankEnd" property="testkeywordRankEnd"/>
-        <result column="fOptimizePlanCount" property="optimizePlanCount"/>
-        <result column="fStatus" property="status"/>
-        <result column="fExecuteQueryTime" property="executeQueryTime"/>
-        <result column="fExcuteStatus" property="excuteStatus"/>
-        <result column="fCreateBy" property="createBy"/>
-        <result column="fCreateTime" property="createTime"/>
-        <result column="fUpdateTime" property="updateTime"/>
+    <resultMap id="BaseResultMap" type="com.keymanager.monitoring.entity.AlgorithmTestPlan">
+        <id column="fUuid" property="uuid" />
+        <result column="fAlgorithmTestPlanName" property="algorithmTestPlanName" />
+        <result column="fOperationCombineName" property="operationCombineName" />
+        <result column="fTerminalType" property="terminalType" />
+        <result column="fSearchEngine" property="searchEngine" />
+        <result column="fMachineGroup" property="machineGroup" />
+        <result column="fTestIntervalDay" property="testIntervalDay" />
+        <result column="fTestKeywordCount" property="testKeywordCount" />
+        <result column="fTestkeywordRankBegin" property="testkeywordRankBegin" />
+        <result column="fTestkeywordRankEnd" property="testkeywordRankEnd" />
+        <result column="fOptimizePlanCount" property="optimizePlanCount" />
+        <result column="fStatus" property="status" />
+        <result column="fExecuteQueryTime" property="executeQueryTime" />
+        <result column="fExcuteStatus" property="excuteStatus" />
+        <result column="fExcuteType" property="excuteType" />
+        <result column="fExcuteCount" property="excuteCount" />
+        <result column="fCreateBy" property="createBy" />
+        <result column="fCreateTime" property="createTime" />
+        <result column="fUpdateTime" property="updateTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -39,6 +41,8 @@
         atp.fStatus AS status,
         atp.fExecuteQueryTime AS executeQueryTime,
         atp.fExcuteStatus AS excuteStatus,
+        atp.fExcuteType AS excuteType,
+        atp.fExcuteCount AS excuteCount,
         atp.fCreateBy AS createBy,
         atp.fCreateTime AS createTime,
         atp.fUpdateTime AS updateTime
@@ -87,5 +91,13 @@
             #{uuid}
         </foreach>
     </update>
+
+    <select id="getAlgorithmTestPlanByUuid" resultType="com.keymanager.ckadmin.entity.AlgorithmTestPlan">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        t_algorithm_test_plan atp
+        WHERE atp.fUuid = #{uuid}
+    </select>
 
 </mapper>

@@ -20,4 +20,8 @@ import org.springframework.stereotype.Repository;
 public interface AlgorithmTestPlanDao extends BaseMapper<AlgorithmTestPlan> {
 
     List<AlgorithmTestPlan> searchAlgorithmTestPlans(Page<AlgorithmTestPlan> page, @Param("algorithmTestCriteria") AlgorithmTestCriteria algorithmTestCriteria);
+
+    AlgorithmTestPlan getAlgorithmTestPlanByUuid(@Param("uuid") Long uuid);
+
+    void updateAlgorithmTestPlansStatus(@Param("uuids") List<Integer> uuids,@Param("status") Integer status);
 }
