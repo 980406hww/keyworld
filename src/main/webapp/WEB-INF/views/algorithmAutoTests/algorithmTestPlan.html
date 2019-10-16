@@ -1,205 +1,545 @@
-<#import "/commons/global.html" as ctx>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>文章列表</title>
+    <title>测试计划列表</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_693759_wytlyqhtdtj1nhfr.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+    <link rel="stylesheet" href="/static/ok-admin/page/base/searchForm.css">
+    <style>
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
+
+        .layui-table-cell a:link {
+            color: blue;
+        }
+
+        .layui-table-cell a:visited {
+            color: blue;
+        }
+
+        .layui-table-cell a:hover {
+            color: red;
+        }
+
+        .layui-table-cell a:active {
+            color: darkslateblue;
+        }
+
+    </style>
 </head>
 <body>
 <div class="ok-body">
-    <!--面包屑导航区域-->
-    <div class="ok-body-breadcrumb">
-            <span class="layui-breadcrumb">
-                <a><cite>其他</cite></a>
-                <a><cite>测试计划列表</cite></a>
-            </span>
-        <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
-            <i class="layui-icon layui-icon-refresh"></i>
-        </a>
-    </div>
-    <!--模糊搜索区域-->
 
-    <div class="layui-card">
-        <div class="layui-card-body ">
-            <div class="layui-collapse" lay-filter="test">
-                <div class="layui-colla-item">
-                    <h2 class="layui-colla-title">条件筛选<i class="layui-icon layui-colla-icon"></i></h2>
-                    <div class="layui-colla-content" id="searchContent">
-                        <div class="" id="searchForm">
+    <div class="layui-tab-item layui-show">
+        <!--模糊搜索区域-->
+        <div class="layui-card ">
+            <div class="layui-card-body ">
+                <form class="layui-form layui-form-pane" id="searchForm">
+                    <div class="my-collapse">
+                        <div>
+                            <div class="layui-inline">
+                                <input type="text" name="algorithmTestPlanName" id="algorithmTestPlanName" placeholder="测试计划名称" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                            <div class="layui-inline">
+                                <input type="text" name="operationCombineName" id="operationCombineName" placeholder="操作组合名称" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                            <div class="layui-inline">
+                                <input type="text" name="machineGroup" id="machineGroup" placeholder="机器分组" autocomplete="off"
+                                       class="layui-input">
+                            </div>
 
-                            <div class="layui-form-item">
-                                <div class="layui-inline">
-                                    <div class="layui-input-inline" style="width: 150px;">
-                                        <input type="text" name="algorithmTestPlanName" id="algorithmTestPlanName"
-                                               placeholder="测试计划名称" autocomplete="off"
-                                               class="layui-input">
-                                    </div>
-                                </div>
+                            <div class="layui-inline">
+                                <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索</button>
+                            </div>
 
-                                <div class="layui-inline">
-                                    <div class="layui-input-inline" style="width: 150px;">
-                                        <input type="text" name="algorithmTestPlanName" id="operationCombineName"
-                                               placeholder="操作组合名称" autocomplete="off"
-                                               class="layui-input">
-                                    </div>
-                                </div>
-
-                                <div class="layui-inline">
-                                    <div class="layui-input-inline" style="width: 150px;">
-                                        <input type="text" name="algorithmTestPlanName" id="machineGroup"
-                                               placeholder="机器分组" autocomplete="off"
-                                               class="layui-input">
-                                    </div>
-                                </div>
-
-                                <div class="layui-inline">
-                                    <div class="layui-input-block">
-                                        <button class="layui-btn" data-type="reload" id="searchBtn">立即提交</button>
-                                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                                    </div>
-                                </div>
+                            <div class="layui-inline">
+                                <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset" id="resetBtn">
+                                    重置
+                                </button>
                             </div>
                         </div>
+
                     </div>
-                </div>
+                </form>
             </div>
         </div>
-
+        <!--数据表格-->
+        <table class="layui-hide" id="algorithmTestPlanTable" lay-filter="tableFilter"></table>
     </div>
 
-    <!--工具栏-->
-    <okToolbar>
-        <button class="layui-btn" id="add-model">添加</button>
-        <button class="layui-btn layui-btn-normal" id="batchEnabled">
-            <i class="iconfont icon-shangsheng"></i>批量上架
-        </button>
-        <button class="layui-btn layui-btn-warm" id="batchDisabled">
-            <i class="iconfont icon-web-icon-"></i>批量下架
-        </button>
-        <button class="layui-btn layui-btn-danger" id="batchDel">
-            <i class="layui-icon layui-icon-delete"></i>批量删除
-        </button>
-        <button class="layui-btn" id="addUser">
-            <i class="layui-icon">&#xe61f;</i>添加文章
-        </button>
-        <span>共有数据：<i id="countNum"></i> 条</span>
-    </okToolbar>
-
-    <!--数据表格-->
-    <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
 </div>
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
 <script>
+    var sign = false;
     // 进度条加载提示
     NProgress.start();
     window.onload = function () {
         NProgress.done();
-    }
-    // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer'], function () {
+    };
+
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
-        var laydate = layui.laydate;
+        var layer = layui.layer;
         var okLayer = layui.okLayer;
 
-        laydate.render({
-            elem: '#startTime',
-            type: "datetime"
-        });
+        init_table_data(formToJsonObject('searchForm'));
 
-        laydate.render({
-            elem: '#endTime',
-            type: "datetime"
-        });
+        function formToJsonObject(form_id) {
+            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
+            formData = formData.replace(/&/g, "\",\"");
+            formData = formData.replace(/=/g, "\":\"");
+            formData = "{\"" + formData + "\"}";
+            formData = $.parseJSON(formData);
+            return formData;
+        }
 
-        let myTable = table.render({
-            elem: '#tableId',
-            method: 'post',
-            url: '${ctx.path}/internal/algorithmAutoTest/getAlgorithmTestPlans',
-            // limit: 10,
-            page: true,
-            id: 'tableId',
-            even: true,//隔行背景
-            contentType: 'application/json',
-            cols: [[
-                {type: 'checkbox', fixed: "left", width: '3%'},
-                {field: 'uuid', title: 'ID', sort: true, width: '7%'},
-                {field: 'algorithmTestPlanName', title: '测试计划名称', width: '15%'},
-                {field: 'operationCombineName', title: '链接', width: '15%'},
-                {field: 'terminalType', title: '阅读量', width: '10%'},
-                {field: 'searchEngine', title: '发布者', width: '10%'},
-                {field: 'machineGroup', title: '置顶', width: '10%'},
-                {field: 'testIntervalDay', title: '状态', width: '10%'},
-                {title: '操作', templet: '#operationTpl', align: 'center', width: '20%'}
-            ]],
-            done: function (res, curr, count) {
-                $("#countNum").text(count);
+        function init_table_data(whereCondition) {
+            whereCondition.entryType = 'pt';
+            table.render({
+                elem: '#algorithmTestPlanTable',
+                method: 'post',
+                url: '/internal/algorithmAutoTest/getAlgorithmTestPlans',
+                limit: 50,
+                page: true,
+                autoSort: false,
+                size: 'sm',
+                toolbar: "#toolbarTpl",
+                defaultToolbar: ['filter'],
+                id: 'algorithmTestPlanTable',
+                even: true,//隔行背景
+                contentType: 'application/json',
+                where: whereCondition,
+                cols: [[
+                    {type: 'checkbox', fixed: "left", width: '35'},
+                    {field: 'algorithmTestPlanName', title: '测试计划名称', width: '160'},
+                    {field: 'operationCombineName', title: '操作组合名称', width: '140',templet:'#toOperationCombineTpl',event: 'toOperationCombine'},
+                    {field: 'terminalType', title: '终端类型', width: '80'},
+                    {field: 'searchEngine', title: '搜索引擎', width: '80'},
+                    {field: 'machineGroup', title: '机器分组', width: '100', templet:'#toMachineManageTpl',event: 'toMachineManage'},
+                    {field: 'excuteType', title: '执行类型', width: '80'},
+                    {field: 'excuteCount', title: '已执行次数', width: '90'},
+                    {field: 'testIntervalDay', title: '执行间隔(天)', width: '110'},
+                    {field: 'testKeywordCount', title: '测试词数', width: '80'},
+                    {field: 'testIntervalDay', title: '测试排名区间', width: '110'},
+                    {field: 'optimizePlanCount', title: '刷量', width: '60'},
+                    {field: 'status', title: '状态', width: '60', templet:'#statusTpl'},
+                    {field: 'executeQueryTime', title: '上次执行时间', width: '110', templet: '#toDateTime'},
+                    {field: 'createBy', title: '创建人', width: '90'},
+                    {field: 'createTime', title: '创建时间', width: '100', templet: '#toDateTime'},
+                    {title: '操作', templet: '#operationTpl', align: 'center', width: '300',fixed: "right"}
+                ]],
+                height: 'full-90',
+                done: function (res, curr, count) {
+                }
+            });
+        }
+
+        //监听头部工具条
+        table.on('toolbar(tableFilter)', function (obj) {
+            var data = obj.data, event = obj.event;
+            switch (event) {
+                case 'add':
+                    add_algorithmTestPlan();
+                    break;
+                case 'stop_selected':
+                    change_status_by_uuids(0);
+                    break;
+                case 'active_selected':
+                    change_status_by_uuids(1);
+                    break;
+                case 'delete_selected':
+                    batch_delete_byUuids();
+                    break;
+                default:
+                    break;
             }
         });
 
+        //监听操作列
         table.on('tool(tableFilter)', function (obj) {
+            var data = obj.data;
             switch (obj.event) {
+                case 'toOperationCombine':
+                    toOperationCombine(data.operationCombineName);
+                    break;
+                case 'toMachineManage':
+                    toMachineManage(data.machineGroup);
+                    break;
                 case 'edit':
-                    editAlgorithmAutoTest(obj.data);
+                    update_algorithmTestPlan(data.uuid);
+                    break;
+                case 'change_status':
+                    change_status(data.uuid, data.status);
+                    break;
+                case 'show_task_data':
+                    show_task_data(data.uuid);
+                    break;
+                case 'show_test_data_statistics':
+                    show_test_data_statistics(data.uuid);
                     break;
                 case 'del':
-                    // delAlgorithmAutoTest(obj.data);
+                    del_one(data);
                     break;
             }
         });
 
-        // 编辑表格获得表格数据
-        function editAlgorithmAutoTest(data) {
-            okLayer.open("编辑", "/internal/algorithmAutoTest/toAlgorithmTestPlanAdd", "90%", "90%", function (layero) {
-                window[layero.find("iframe")[0]["name"]].initForm(data);
+        function add_algorithmTestPlan() {
+            let url = '/internal/algorithmAutoTest/toAlgorithmTestPlanAdd';
+            okLayer.open("其他 / 测试计划管理 / 添加测试计划", url, "60%", "90%", function (layero) {
             }, function () {
-                myTable.reload();
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
             })
+        }
+
+        function update_algorithmTestPlan(uuid) {
+
+            let url = '/internal/algorithmAutoTest/toAlgorithmTestPlanAdd';
+            okLayer.open("其他 / 测试计划管理 / 添加测试计划", url, "60%", "90%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initForm(uuid);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            })
+        }
+
+        function change_status_by_uuids(status) {
+            var checkStatus = table.checkStatus('algorithmTestPlanTable')
+                , data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                show_layer_msg('请选择要操作的计划', 5);
+                return false;
+            }
+            let msg = '确定暂停这些计划吗';
+            if (status === 1) {
+                msg = '确定激活这些计划吗';
+            }
+            layer.confirm(msg, {icon: 3, title: '删除选中计划'}, function (index) {
+                var postData = {};
+                postData.uuids = uuidArr;
+                postData.status = status;
+                $.ajax({
+                    url: '/internal/algorithmAutoTest/updateAlgorithmTestPlansStatus2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 10000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    },
+                    complete: function () {
+                        layer.close(index);
+                    }
+                });
+            });
+        }
+
+        function batch_delete_byUuids() {
+            var checkStatus = table.checkStatus('algorithmTestPlanTable')
+                , data = checkStatus.data;
+            var uuidArr = [];
+            var optimizeGroupNameList = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+                optimizeGroupNameList.push(item.optimizeGroupName);
+            });
+            if (uuidArr.length <= 0) {
+                show_layer_msg('请选择要操作的计划', 5);
+                return false;
+            }
+            layer.confirm("确定删除选中计划吗", {icon: 3, title: '删除选中计划'}, function (index) {
+                var postData = {};
+                postData.uuids = uuidArr;
+                postData.optimizeGroupNameList = optimizeGroupNameList;
+                $.ajax({
+                    url: '/internal/algorithmAutoTest/deleteAlgorithmTestPlans2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 10000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    },
+                    complete: function () {
+                        layer.close(index);
+                    }
+                });
+            });
+        }
+
+        function del_one(data) {
+            layer.confirm('真的删除该计划吗', function (index) {
+                $.ajax({
+                    url: '/internal/algorithmAutoTest/deleteAlgorithmTestPlan2/' + data.uuid,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 10000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            layer.msg('操作失败', {icon: 5});
+                        }
+                    },
+                    error: function () {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                });
+                layer.close(index);
+            });
+        }
+
+        function change_status(uuid, status) {
+            var checkStatus = table.checkStatus('algorithmTestPlanTable')
+                , data = checkStatus.data;
+
+            if (status === 0) {
+                status = 1;
+            } else {
+                status = 0;
+            }
+            var postData = {};
+            postData.uuid = uuid;
+            postData.status = status;
+            $.ajax({
+                url: '/internal/algorithmAutoTest/changeAlgorithmTestPlanStatus2',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 10000,
+                type: 'POST',
+                success: function (result) {
+                    if (result.code === 200) {
+                        layer.msg('操作成功', {
+                            icon: 6,
+                            time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            active['reload'].call(this);
+                        });
+                    } else {
+                        show_layer_msg('操作失败', 5);
+                    }
+                },
+                error: function () {
+                    show_layer_msg('未知错误，请稍后重试', 5);
+                },
+
+            });
+
+        }
+
+
+        function show_task_data(uuid){
+            let url = '/internal/algorithmAutoTest/toShowTaskData';
+            okLayer.open("其他 / 测试计划管理 / 展示历史统计数据", url, "60%", "90%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initForm(uuid);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            })
+        }
+
+        function show_test_data_statistics(uuid){
+            let url = '/internal/algorithmAutoTest/toShowTestPlanDataStatistics';
+            okLayer.open("其他 / 测试计划管理 / 展示历史统计数据", url, "60%", "90%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initForm(uuid);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            })
+        }
+
+        function show_layer_msg(msg, icon, title, status) {
+            layer.msg(msg, {
+                icon: icon,
+                title: title === undefined ? null : title,
+                anim: 5,
+                time: 2000,
+                isOutAnim: false
+            }, function () {
+
+            });
         }
 
         var active = {
             reload: function () {
-                var algorithmTestPlanName = $('#algorithmTestPlanName').val().trim();
-                var operationCombineName = $('#operationCombineName').val().trim();
-                var machineGroup = $('#machineGroup').val().trim();
-                table.reload('tableId', {
-                    where: {
-                        algorithmTestPlanName: algorithmTestPlanName,
-                        operationCombineName: operationCombineName,
-                        machineGroup: machineGroup
+                let data = formToJsonObject('searchForm');
+                data.entryType = 'pt';
+                table.reload('algorithmTestPlanTable', {
+                    where: data,
+                    page: {
+                        curr: 1
                     }
                 });
-                $("#searchContent").removeClass("layui-show")
-            }
+            },
         };
-        $('#searchForm #searchBtn').on('click', function () {
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
+
+        form.on("submit(search)", function (data) {
+            var postData = data.field;
+            table.reload('algorithmTestPlanTable', {
+                where: postData,
+                page: {
+                    curr: 1
+                }
+            });
+            return false
         });
 
-        $('#add-model').click(function () {
-            okLayer.open("添加", "/internal/algorithmAutoTest/toAlgorithmTestPlanAdd", "90%", "90%", null, function () {
-                myTable.reload();
-            });
+
+        function toOperationCombine(operationCombineName){
+            let url = '/internal/groupsetting/toGroupSettingFromATP/'+operationCombineName;
+            url = encodeURI(encodeURI(url))
+            let title = '操作组合:' + operationCombineName + '详情';
+            updateOrNewTab(url, title, operationCombineName)
+        }
+
+        function toMachineManage(machineGroup){
+            let url = '/internal/machineManage/toMachineInfoFromATP/'+machineGroup;
+            url = encodeURI(encodeURI(url))
+            let title = '机器分组:' + machineGroup + '详情';
+            updateOrNewTab(url, title, machineGroup)
+        }
+
+    });
+
+    function updateOrNewTab(url, tit, id) {
+        var update = false;
+        var contentIframe = ("<iframe src='" + url + "' lay-id='" + id
+            + "'frameborder='0' scrolling='yes' width='100%' height='100%'></iframe>");
+        parent.layui.$('.layui-tab-title li').each(function () {
+            if (id === this.getAttribute('lay-id')) {
+                update = true;
+            }
         });
-    })
+        if (!update) {
+            parent.layui.element.tabAdd('ok-tab', {
+                    title: '<i class="layui-icon layui-icon-align-right"></i>&nbsp;&nbsp;&nbsp;'+tit,
+                    content: contentIframe,
+                    id: id
+                }
+            );
+        }
+
+        parent.layui.element.tabChange('ok-tab', id)
+    }
 
 </script>
 <!--模板-->
+<script type="text/html" id="toDateTime">
+    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+</script>
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+    <button class="layui-btn layui-btn-sm " id="add" lay-event="add">
+        添加
+    </button>
+    <button class="layui-btn layui-btn-sm " id="stop_selected" lay-event="stop_selected">
+        暂停所选
+    </button>
+    <button class="layui-btn layui-btn-sm " id="active_selected" lay-event="active_selected">
+        激活所选
+    </button>
+    <button class="layui-btn layui-btn-sm layui-btn-danger" id="delete_selected" lay-event="delete_selected">
+        删除所选
+    </button>
+</script>
+
+<script type="text/html" id="toOperationCombineTpl">
+    <a href="javascript:void(0)" >{{d.operationCombineName}}</a>
+</script>
+
+<script type="text/html" id="toMachineManageTpl">
+    <a href="javascript:void(0)" >{{d.machineGroup}}</a>
+</script>
+
+<script type="text/html" id="statusTpl">
+    {{#  if(d.status === 1) { }}
+    <span style="color: green;">激活</span>
+    {{# }else{ }}
+    <span style="color: red;">暂停</span>
+    {{# } }}
+</script>
 
 <script type="text/html" id="operationTpl">
-    <a href="javascript:;" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>
-    <a href="javascript:;" title="删除" lay-event="del"><i class="layui-icon">&#xe640;</i></a>
+    <div class="layui-btn-group">
+        <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
+        {{# if(d.status===0){ }}
+        <button type="button" class="layui-btn layui-btn-xs" lay-event="change_status">激活</button>
+        {{# }else{ }}
+        <button type="button" class="layui-btn layui-btn-warm layui-btn-xs" lay-event="change_status">暂停</button>
+        {{# } }}
+        <button type="button" class="layui-btn layui-btn-xs" lay-event="show_task_data">查看任务记录</button>
+        <button type="button" class="layui-btn layui-btn-xs" lay-event="show_test_data_statistics">查看历史统计</button>
+        <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+    </div>
 </script>
 </body>
+
+
 </html>

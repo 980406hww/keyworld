@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.AlgorithmTestResultStatisticsDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keymanager.ckadmin.entity.AlgorithmTestDataStatistics">
+        <id column="fUuid" property="Uuid" />
+        <result column="fAlgorithmTestPlanUuid" property="algorithmTestPlanUuid" />
+        <result column="fAlgorithmTestTaskUuid" property="algorithmTestTaskUuid" />
+        <result column="fContactPerson" property="contactPerson" />
+        <result column="fTopTenCount" property="topTenCount" />
+        <result column="fZeroOptimizedCount" property="zeroOptimizedCount" />
+        <result column="fRankChangeRate" property="rankChangeRate" />
+        <result column="fRecordDate" property="recordDate" />
+        <result column="fCreateTime" property="createTime" />
+        <result column="fUpdateTime" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        fUuid AS uuid,
+        fAlgorithmTestPlanUuid AS algorithmTestPlanUuid,
+        fAlgorithmTestTaskUuid AS algorithmTestTaskUuid,
+        fContactPerson AS contactPerson,
+        fTopTenCount AS topTenCount,
+        fZeroOptimizedCount AS zeroOptimizedCount,
+        fRankChangeRate AS rankChangeRate,
+        fRecordDate AS recordDate,
+        fCreateTime AS createTime,
+        fUpdateTime AS updateTime
+    </sql>
+
+    <select id="saveAlgorithmTaskDataDaily">
+        INSERT INTO t_algorithm_test_data_statistics (
+        fAlgorithmTestPlanUuid,
+        fAlgorithmTestTaskUuid,
+        fContactPerson,
+        fTopTenCount,
+        fZeroOptimizedCount,
+        fRankChangeRate,
+        fRecordDate)
+        SELECT
+            atp.fUuid AS 'algorithmTestPlanUuid',
+            att.fUuid AS 'algorithmTestTaskUuid',
+            c.fContactPerson AS 'contactPerson' ,
+            SUM(IF(ck.fCurrentPosition BETWEEN 1 AND 10, 1, 0)) AS 'topTenCount',
+            SUM(IF(ck.fOptimizedCount = 0, 1, 0)) AS "zeroOptimizedCount",
+            concat(CONVERT (SUM(IF(ck.fCurrentPosition BETWEEN 1 AND 10, 1, 0)) / count(1)*100,DECIMAL(10,2)),'%') AS 'fRankChangeRate',
+            NOW()
+        FROM t_customer_keyword ck, t_algorithm_test_task att, t_customer c, t_algorithm_test_plan atp
+        WHERE ck.fStatus = 1
+        AND att.fCustomerName = c.fContactPerson
+        AND ck.fCustomerUuid = c.fUuid
+        ANd att.fAlgorithmTestPlanUuid = atp.fUuid
+        GROUP BY ck.fCustomerUuid
+    </select>
+
+    <select id="selectAlgorithmTestResultStatisticsByAlgorithmTestPlanUuid" resultType="com.keymanager.ckadmin.entity.AlgorithmTestDataStatistics">
+        SELECT
+        <include refid="Base_Column_List"></include>
+        FROM t_algorithm_test_data_statistics atds
+        WHERE atds.fAlgorithmTestPlanUuid = #{algorithmTestPlanUuid}
+    </select>
+</mapper>

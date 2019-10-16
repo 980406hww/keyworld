@@ -52,6 +52,7 @@ public class SalesInfoController {
                 salesManage.setCreateTime(new Date());
             }
             salesManage.setUpdateTime(new Date());
+            salesManageService.insertOrUpdate(salesManage);
             resultBean.setCode(200);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -117,12 +118,12 @@ public class SalesInfoController {
     }
 
     @RequiresPermissions("/internal/salesManage/deleteSalesInfo")
-    @PostMapping("/deleteBeachSalesManage")
-    public ResultBean deleteBeachSalesManage(@RequestBody Map<String, Object> requestMap) {
+    @PostMapping("/deleteBatchSalesManage")
+    public ResultBean deleteBatchSalesManage(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
         try {
             List<String> uuids = (List<String>) requestMap.get("uuids");
-            salesManageService.deleteBeachSalesManage(uuids);
+            salesManageService.deleteBatchSalesManage(uuids);
             resultBean.setCode(200);
         } catch (Exception e) {
             logger.error(e.getMessage());

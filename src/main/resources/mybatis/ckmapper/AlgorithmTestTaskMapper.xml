@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.AlgorithmTestTaskDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.keymanager.ckadmin.entity.AlgorithmTestTask">
+        <id column="fUuid" property="uuid" />
+        <id column="fAlgorithmTestPlanUuid" property="algorithmTestPlanUuid" />
+        <result column="fKeywordGroup" property="keywordGroup" />
+        <result column="fCustomerName" property="customerName" />
+        <result column="fActualKeywordCount" property="actualKeywordCount" />
+        <result column="fStartDate" property="startDate" />
+        <result column="fCreateTime" property="createTime" />
+        <result column="fUpdateTime" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        atk.fUuid AS uuid,
+        atk.fAlgorithmTestPlanUuid AS algorithmTestPlanUuid,
+        atk.fKeywordGroup AS keywordGroup,
+        atk.fCustomerName AS customerName,
+        atk.fActualKeywordCount AS actualKeywordCount,
+        atk.fStartDate AS startDate,
+        atk.fCreateTime AS createTime,
+        atk.fUpdateTime AS updateTime
+    </sql>
+    
+    <select id="selectAlgorithmTestTasksByAlgorithmTestPlanUuid" resultType="com.keymanager.ckadmin.entity.AlgorithmTestTask">
+        SELECT
+            <include refid="Base_Column_List"></include>
+        FROM t_algorithm_test_task atk
+        WHERE atk.fAlgorithmTestPlanUuid = #{algorithmTestPlanUuid}
+    </select>
+
+    <insert id="saveAlgorithmTestTask">
+        INSERT INTO t_algorithm_test_task ( fAlgorithmTestPlanUuid, fKeywordGroup, fCustomerName, fActualKeywordCount, fStartDate )
+        VALUES (#{algorithmTestTask.algorithmTestPlanUuid}, #{algorithmTestTask.keywordGroup}, #{algorithmTestTask.customerName},
+                #{algorithmTestTask.actualKeywordCount}, #{algorithmTestTask.startDate} )
+    </insert>
+
+    <delete id="deleteTaskByPlanUuid">
+        DELETE FROM t_algorithm_test_task
+        WHERE fAlgorithmTestPlanUuid = #{planUuid}
+    </delete>
+
+    <delete id="deleteTaskByPlanUuids">
+        DELETE FROM t_algorithm_test_task
+        WHERE fAlgorithmTestPlanUuid IN
+        <foreach collection="planUuids" item="planUuid" open="(" close=")" separator=",">
+            #{planUuid}
+        </foreach>
+    </delete>
+</mapper>

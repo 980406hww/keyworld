@@ -5,8 +5,6 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 /**
@@ -18,7 +16,7 @@ import java.util.Date;
  * @since 2019-08-16
  */
 @TableName("t_algorithm_test_plan")
-public class AlgorithmTestPlan {
+public class AlgorithmTestPlan{
 
     private static final long serialVersionUID = 1L;
 
@@ -31,72 +29,60 @@ public class AlgorithmTestPlan {
     /**
      * 算法测试计划名称
      */
-    @NotNull
     @TableField("fAlgorithmTestPlanName")
     private String algorithmTestPlanName;
 
     /**
      * 操作组合名称
      */
-    @NotNull
     @TableField("fOperationCombineName")
     private String operationCombineName;
 
     /**
      * 终端类型
      */
-    @NotNull
     @TableField("fTerminalType")
     private String terminalType;
 
     /**
      * 搜索引擎
      */
-    @NotNull
     @TableField("fSearchEngine")
     private String searchEngine;
 
     /**
      * 机器分组
      */
-    @NotNull
     @TableField("fMachineGroup")
     private String machineGroup;
 
     /**
      * 测试间隔日期（每隔多少天生成一批测试数据）
      */
-    @NotNull
     @TableField("fTestIntervalDay")
     private Integer testIntervalDay;
 
     /**
      * 测试词数
      */
-    @NotNull
     @TableField("fTestKeywordCount")
     private Integer testKeywordCount;
 
     /**
      * 测试词排名区间
      */
-    @NotNull
-    @Pattern(regexp = "^\\d+$", message = "请输入数字")
     @TableField("fTestkeywordRankBegin")
     private String testkeywordRankBegin;
 
     /**
      * 测试词排名区间
      */
-    @NotNull
-    @Pattern(regexp = "^\\d+$", message = "请输入数字")
     @TableField("fTestkeywordRankEnd")
     private String testkeywordRankEnd;
 
     /**
      * 刷量
      */
-    @NotNull
     @TableField("fOptimizePlanCount")
     private Integer optimizePlanCount;
 
@@ -118,6 +104,17 @@ public class AlgorithmTestPlan {
     @TableField("fExcuteStatus")
     private Integer excuteStatus;
 
+    /**
+     * 执行类型 0:一次、1:多次
+     */
+    @TableField("fExcuteType")
+    private Integer excuteType;
+
+    /**
+     * 执行次数
+     */
+    @TableField("fExcuteCount")
+    private Integer excuteCount;
     /**
      * 创建人
      */
@@ -272,26 +269,19 @@ public class AlgorithmTestPlan {
         this.updateTime = updateTime;
     }
 
-    @Override
-    public String toString() {
-        return "AlgorithmTestPlan{" +
-            "uuid=" + uuid +
-            ", algorithmTestPlanName='" + algorithmTestPlanName + '\'' +
-            ", operationCombineName='" + operationCombineName + '\'' +
-            ", terminalType='" + terminalType + '\'' +
-            ", searchEngine='" + searchEngine + '\'' +
-            ", machineGroup='" + machineGroup + '\'' +
-            ", testIntervalDay=" + testIntervalDay +
-            ", testKeywordCount=" + testKeywordCount +
-            ", testkeywordRankBegin='" + testkeywordRankBegin + '\'' +
-            ", testkeywordRankEnd='" + testkeywordRankEnd + '\'' +
-            ", optimizePlanCount=" + optimizePlanCount +
-            ", status=" + status +
-            ", executeQueryTime=" + executeQueryTime +
-            ", excuteStatus=" + excuteStatus +
-            ", createBy='" + createBy + '\'' +
-            ", createTime=" + createTime +
-            ", updateTime=" + updateTime +
-            '}';
+    public Integer getExcuteType() {
+        return excuteType;
+    }
+
+    public void setExcuteType(Integer excuteType) {
+        this.excuteType = excuteType;
+    }
+
+    public Integer getExcuteCount() {
+        return excuteCount;
+    }
+
+    public void setExcuteCount(Integer excuteCount) {
+        this.excuteCount = excuteCount;
     }
 }

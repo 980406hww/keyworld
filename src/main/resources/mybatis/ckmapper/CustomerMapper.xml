@@ -164,4 +164,9 @@
         <if test="customerTypeCriteria.loginName != null and customerTypeCriteria.loginName != ''"> AND fUserID = #{customerTypeCriteria.loginName}</if>
         GROUP BY fType
     </select>
+
+    <insert id="saveExternalCustomer" parameterType="com.keymanager.ckadmin.entity.Customer" useGeneratedKeys="true" keyProperty="uuid" keyColumn="fUuid">
+        INSERT INTO t_customer (fUserID, fEntryType, fContactPerson, fType, fSearchEngine, fRemark, fStatus)
+        VALUES(#{loginName},#{entryType},#{contactPerson}, #{type}, #{searchEngine},#{remark},#{status})
+    </insert>
 </mapper>

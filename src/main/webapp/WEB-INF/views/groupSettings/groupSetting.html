@@ -13,9 +13,10 @@
 <body>
 <div class="layui-tab layui-tab-card" lay-filter="groupSettingTab">
     <ul class="layui-tab-title">
-        <li class="layui-this">PC</li>
-        <li>Phone</li>
-
+       <!-- <li class="layui-this">PC</li>
+        <li>Phone</li>-->
+        <li lay-id="PC" class="layui-this" data-terminal="PC">电脑</li>
+        <li lay-id="Phone" data-terminal="Phone">手机</li>
     </ul>
     <div class="layui-tab-content">
         <div class="layui-tab-item layui-show">
@@ -24,7 +25,8 @@
                 <div class="my-collapse">
                     <div class="out-condition">
                         <div class="layui-inline" style="width: 160px">
-                            <input type="text" name="operationCombineName" id="operationCombineName" placeholder="请输入操作组合名称" class="layui-input">
+                            <input type="text" name="operationCombineName" id="operationCombineName" value="<#if operationCombineNameFromATP?exists>${operationCombineNameFromATP}</#if>"
+                                   placeholder="请输入操作组合名称" class="layui-input">
                         </div>
 
                         <div class="layui-inline" style="width: 140px">

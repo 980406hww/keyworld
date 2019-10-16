@@ -624,7 +624,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @PostMapping("/getSearchData")
-    public ResultBean returnSelectData(HttpServletRequest request, @RequestBody PTKeywordCountCriteria ptKeywordCriteria){
+    public ResultBean returnSelectData(HttpServletRequest request, @RequestBody PTKeywordCountCriteria ptKeywordCriteria) {
         ResultBean resultBean = new ResultBean();
         try {
             HttpSession session = request.getSession();
@@ -696,7 +696,8 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
     @GetMapping(value = "/toKeywordsWithPosition/{businessType}/{terminalType}/{keyword}/{position}")
-    public ModelAndView toKeywordsWithPosition(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
+    public ModelAndView toKeywordsWithPosition(@PathVariable(name = "businessType") String businessType,
+        @PathVariable(name = "terminalType") String terminalType,
         @PathVariable(name = "keyword") String keyword, @PathVariable(name = "position") Integer position) throws UnsupportedEncodingException {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/keyword");
@@ -706,6 +707,23 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         keyword = URLDecoder.decode(keyword, "UTF-8");
         mv.addObject("kw123", keyword);
         mv.addObject("pst123", position);
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/toKeywordsWithQZ/{businessType}/{terminalType}/{customerUuid}/{group}/{search}")
+    public ModelAndView toKeywordsWithQZ(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
+        @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "group") String group, @PathVariable(name = "search") String search)
+        throws UnsupportedEncodingException {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/customerKeyword");
+        mv.addObject("businessType", businessType);
+        mv.addObject("terminalType2", terminalType);
+        mv.addObject("customerUuid", customerUuid);
+        mv.addObject("group", group);
+        mv.addObject("status", 1);
+        search = URLDecoder.decode(search, "UTF-8");
+        mv.addObject("search", search);
         return mv;
     }
 }

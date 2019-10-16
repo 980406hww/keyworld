@@ -57,6 +57,12 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
         return modelAndView;
     }
 
+    @Override
+    public Page<FriendlyLink> searchFriendlyLinkList(Page<FriendlyLink> page, FriendlyLinkCriteria friendlyLinkCriteria) {
+        page.setRecords(friendlyLinkDao.searchFriendlyLinkListsPage(page, friendlyLinkCriteria));
+        return page;
+    }
+
     public void saveFriendlyLink(MultipartFile file, FriendlyLink friendlyLink){
         saveOrUpdateConnectionCMS(friendlyLink, file, WebsiteRemoteConnectionEnum.add.name());
         if (friendlyLink.getFriendlyLinkSortRank() != -1){

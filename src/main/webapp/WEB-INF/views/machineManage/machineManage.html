@@ -146,12 +146,12 @@
                         <form class="layui-form layui-form-pane" id="searchForm">
                             <div class="my-collapse">
                                 <div>
-                                    <input type="hidden" name="terminalType" id="terminalType">
+                                    <input type="hidden" name="terminalType" id="terminalType" value="PC">
                                     <div class="layui-inline">
                                         <input type="text" name="clientID" id="clientID" placeholder="请输入客户端ID" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
                                     </div>
                                     <div class="layui-inline">
-                                        <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
+                                        <input type="text" name="machineGroup" id="machineGroup" value="<#if machineGroupFromATP?exists>${machineGroupFromATP}</#if>" placeholder="请输入机器分组" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
                                     </div>
                                     <div class="layui-inline" id="fuzzy-box">
                                         <input type="checkbox" name="machineGroupFuzzyQuery" title="模糊搜索">
@@ -300,7 +300,8 @@
         var okLayer = layui.okLayer;
         var layer = layui.layer;
 
-        searchMachine({'terminalType': 'PC'})
+        searchMachine(formToJsonObject('searchForm'))
+        // searchMachine({'terminalType': 'PC'})
 
         form.on('select(terminalTypeFilter)', function (data) {
             var val = data.value
@@ -931,6 +932,15 @@
                 });
                 layer.close(index);
             });
+        }
+
+        function formToJsonObject (form_id) {
+            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
+            formData = formData.replace(/&/g, "\",\"");
+            formData = formData.replace(/=/g, "\":\"");
+            formData = "{\"" + formData + "\"}";
+            formData = $.parseJSON(formData);
+            return formData;
         }
 
     });

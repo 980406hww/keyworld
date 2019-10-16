@@ -1,27 +1,19 @@
-<#import "/commons/global.html" as ctx>
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>添加</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
 </head>
 <body>
-<div class="ok-body">
-    <!--面包屑导航区域-->
-    <div class="ok-body-breadcrumb">
-        <span class="layui-breadcrumb" style="visibility: visible;">
-            <a><cite>首页</cite></a>
-            <span lay-separator="">/</span>
-            <a><cite>其他</cite></a>
-            <span lay-separator="">/</span>
-            <a><cite>测试计划管理</cite></a>
-        </span>
-    </div>
+
+
     <!--form表单-->
-    <form class="layui-form layui-form-pane ok-form" lay-filter="addFilter">
+    <form class="layui-form layui-form-pane ok-form" lay-filter="save">
+        <div class="ok-body">
         <div class="layui-form-item">
             <label class="layui-form-label">测试计划名称</label>
             <input type="hidden" name="uuid">
@@ -58,7 +50,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">机器分组</label>
             <div class="layui-input-block">
-                <input type="text" name="machineGroup" placeholder="请输入机器分组" autocomplete="off" class="layui-input"
+                <input type="text" name="machineGroup" placeholder="请输入机器分组" value="qz" autocomplete="off" class="layui-input"
                        lay-verify="required">
             </div>
         </div>
@@ -66,61 +58,92 @@
             <label class="layui-form-label">测试间隔天数</label>
             <div class="layui-input-block">
                 <input type="number" name="testIntervalDay" value="7" autocomplete="off" class="layui-input"
-                       lay-verify="number">
+                       lay-verify="positiveInteger">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">测试词数</label>
             <div class="layui-input-block">
                 <input type="number" name="testKeywordCount" value="40" autocomplete="off" class="layui-input"
-                       lay-verify="number">
+                       lay-verify="positiveInteger">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">测试词排名起始</label>
             <div class="layui-input-block">
                 <input type="number" name="testkeywordRankBegin" value="40" autocomplete="off" class="layui-input"
-                       lay-verify="number">
+                       lay-verify="positiveInteger">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">测试词排名结束</label>
             <div class="layui-input-block">
                 <input type="number" name="testkeywordRankEnd" value="50" autocomplete="off" class="layui-input"
-                       lay-verify="number">
+                       lay-verify="positiveInteger">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">刷量</label>
             <div class="layui-input-block">
                 <input type="number" name="optimizePlanCount" value="50" autocomplete="off" class="layui-input"
-                       lay-verify="number">
+                       lay-verify="positiveInteger">
             </div>
         </div>
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="add">确定</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+        <div style="height: 58px;"></div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="commit">确定</button>
+                <button type="reset" class="layui-btn layui-btn-primary">
+                    重置
+                </button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">
+                    取消
+                </button>
             </div>
         </div>
     </form>
-</div>
+
 <!--js逻辑-->
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
 
-    let initData = null;
+    let uuid_ = null;
+    let layui_ = null;
 
     function initForm(data) {
-        var jsonString = JSON.stringify(data);
-        initData = JSON.parse(jsonString);
+        uuid_ = data;
+        if (layui_ != null) {
+            setForm(layui_, uuid_);
+        }
     }
 
-    layui.use(["form", "okLayer", "jquery"], function () {
+    /**
+     * 初始化数据
+     * @param l layui对象
+     * @param u 需要修改的站点uuid
+     */
+    function setForm(l, u) {
+        l.jquery.ajax({
+            url: '/internal/algorithmAutoTest/getAlgorithmTestPlan2/' + u,
+            type: 'post',
+            dataType: 'json',
+            success: function (res) {
+                if (res.code === 200) {
+                    l.form.val("save", res.data);
+                } else {
+                    l.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
+                }
+            }
+        });
+    }
+
+    layui.use(["form", "okLayer", "jquery", "layer"], function () {
         let form = layui.form;
         let okLayer = layui.okLayer;
         let $ = layui.jquery;
+        let layer = layui.layer;
 
         $.ajax({
             url: '/internal/algorithmAutoTest/getAlgorithmTestPlanAddData',
@@ -135,13 +158,6 @@
                     html += "<option value='";
                     html += item;
                     html += "'";
-                    if (initData == null) {
-                        if (item == '百度')
-                            html += "selected = 'selected'";
-                    } else {
-                        if (item == initData.searchEngine)
-                            html += "selected = 'selected'";
-                    }
                     html += ">";
                     html += res.data.searchEngineMap[item];
                     html += "</option>";
@@ -152,31 +168,48 @@
             }
         });
 
-        if (initData != null) {
-            layui.form.val("addFilter", initData);
+        if (uuid_ != null) {
+            setForm(layui, uuid_);
+        } else {
+            layui_ = layui;
         }
 
-        form.on("submit(add)", function (data) {
+        form.on("submit(commit)", function (data) {
             $.ajax({
                 url: '/internal/algorithmAutoTest/postAlgorithmTestPlanAddData',
                 type: 'post',
-                // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
-                data: data.field,
-                dataType: 'json',
+                data: JSON.stringify(data.field),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
                 success: function (res) {
-                    // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
-                    // 客户端会主观认为服务端返回的就是 JSON 格式的字符串
-                    if (res.code == 200) {
+                    if (res.code === 200) {
                         okLayer.msg.greenTick("保存成功", function () {
+                            parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        okLayer.msg.greenTick(res.msg, function () {
-                        });
+                        layer.msg(res.msg, {icon: 5, time: 1000});
                     }
                 }
             });
             return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+        });
+
+        form.verify({
+            positiveInteger: [
+                /(^$)|(^[0-9]*[1-9][0-9]*$)/,
+                "请输入合适的正整数、如：1、2、3"
+            ],
+            telPhone: [
+                /(^$)|(^(13[0-9]|14[5-9]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[13589])\d{8}$)/,
+                "请输入正确格式手机号码"
+            ]
         });
     })
 

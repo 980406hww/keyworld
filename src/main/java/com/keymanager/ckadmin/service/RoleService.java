@@ -8,9 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
  * Role 表数据服务层接口
- *
  */
 public interface RoleService extends IService<Role> {
 
@@ -18,7 +16,7 @@ public interface RoleService extends IService<Role> {
 
     void updateRoleResource(Long id, String resourceIds);
 
-    Map<String, Set<String>> selectResourceMapByUserId(Long userId);
+    Map<String, Set<String>> selectResourceMapByUserId(Long userId, String version);
 
     Long selectUuidByRoleName(String departmentManager);
 }

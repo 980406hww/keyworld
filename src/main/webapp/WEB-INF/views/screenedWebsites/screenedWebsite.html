@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>单词统计</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+    <link rel="stylesheet" href="/static/ok-admin/page/base/searchForm.css">
+    <style>
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
+
+        .layui-table-cell a:link {
+            color: blue;
+        }
+
+        .layui-table-cell a:visited {
+            color: blue;
+        }
+
+        .layui-table-cell a:hover {
+            color: red;
+        }
+
+        .layui-table-cell a:active {
+            color: darkslateblue;
+        }
+
+    </style>
+</head>
+<body>
+<div class="ok-body">
+
+    <div class="layui-tab-item layui-show">
+        <!--模糊搜索区域-->
+        <div class="layui-card ">
+            <div class="layui-card-body ">
+                <form class="layui-form layui-form-pane" id="searchForm">
+                    <div class="my-collapse">
+                        <div>
+                            <div class="layui-inline">
+                                <input type="text" name="optimizeGroupName" id="optimizeGroupName" placeholder="请输入优化组名" class="layui-input">
+                            </div>
+
+                            <div class="layui-inline">
+                                <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索</button>
+                            </div>
+
+                            <div class="layui-inline">
+                                <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset" id="resetBtn">
+                                    重置
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!--数据表格-->
+        <table class="layui-hide" id="screenedWebsiteTable" lay-filter="tableFilter"></table>
+    </div>
+
+</div>
+<!--js逻辑-->
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script>
+    var sign = false;
+    // 进度条加载提示
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
+
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var okLayer = layui.okLayer;
+
+        init_table_data(formToJsonObject('searchForm'));
+
+        function formToJsonObject(form_id) {
+            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
+            formData = formData.replace(/&/g, "\",\"");
+            formData = formData.replace(/=/g, "\":\"");
+            formData = "{\"" + formData + "\"}";
+            formData = $.parseJSON(formData);
+            return formData;
+        }
+
+        function init_table_data(whereCondition) {
+            whereCondition.entryType = 'pt';
+            table.render({
+                elem: '#screenedWebsiteTable',
+                method: 'post',
+                url: '/internal/screenedWebsite/getScreenedWebsites',
+                limit: 50,
+                page: true,
+                autoSort: false,
+                size: 'sm',
+                toolbar: "#toolbarTpl",
+                defaultToolbar: [],
+                id: 'screenedWebsiteTable',
+                even: true,//隔行背景
+                contentType: 'application/json',
+                where: whereCondition,
+                cols: [[
+                    {filed: 'uuid', type: 'checkbox', width: '4%'},
+                    {field: 'optimizeGroupName', title: '优化组名', width: '24%', align: 'center'},
+                    {field: 'screenedWebsite', title: '屏蔽网站', width: '28%', align: 'center'},
+                    {field: 'createTime', title: '创建时间', width: '20%', align: 'center', templet: '#toDateTime'},
+                    {title: '操作', width: '24%', align: 'center', templet: '#operationTpl'},
+                ]],
+                height: 'full-90',
+                done: function (res, curr, count) {
+                }
+            });
+        }
+
+        //监听头部工具条
+        table.on('toolbar(tableFilter)', function (obj) {
+            var data = obj.data, event = obj.event;
+            switch (event) {
+                case 'add':
+                    add_screened_website();
+                    break;
+                case 'delete_selected':
+                    batch_delete_byUuids();
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        //监听操作列
+        table.on('tool(tableFilter)', function (obj) {
+            var data = obj.data;
+            switch (obj.event) {
+                case 'edit':
+                    update_screened_website(data.uuid);
+                    break;
+                case 'del':
+                    del_one(data);
+                    break;
+            }
+        });
+
+        function add_screened_website() {
+            let url = '/internal/screenedWebsite/toScreenedWebsitesAdd';
+            okLayer.open("其他 / 屏蔽网站设置 / 添加屏蔽网站", url, "60%", "60%", function (layero) {
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            })
+        }
+
+        function update_screened_website(uuid) {
+            let url = '/internal/screenedWebsite/toScreenedWebsitesAdd';
+            okLayer.open("其他 / 屏蔽网站设置 / 添加屏蔽网站", url, "60%", "60%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initForm(uuid);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            })
+        }
+
+        function batch_delete_byUuids() {
+            var checkStatus = table.checkStatus('screenedWebsiteTable')
+                , data = checkStatus.data;
+            var uuidArr = [];
+            var optimizeGroupNameList = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+                optimizeGroupNameList.push(item.optimizeGroupName);
+            });
+            if (uuidArr.length <= 0) {
+                show_layer_msg('请选择要操作的优化组', 5);
+                return false;
+            }
+            layer.confirm("确定删除选中优化组吗", {icon: 3, title: '删除选中优化组'}, function (index) {
+                var postData = {};
+                postData.uuids = uuidArr;
+                postData.optimizeGroupNameList = optimizeGroupNameList;
+                $.ajax({
+                    url: '/internal/screenedWebsite/delScreenedWebsite2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 10000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            show_layer_msg('操作失败', 5);
+                        }
+                    },
+                    error: function () {
+                        show_layer_msg('未知错误，请稍后重试', 5);
+                    },
+                    complete: function () {
+                        layer.close(index);
+                    }
+                });
+            });
+        }
+
+        function del_one(data) {
+            layer.confirm('真的删除该优化组设置吗', function (index) {
+                var postData = {};
+                postData.uuid = data.uuid;
+                postData.optimizeGroupName = data.optimizeGroupName;
+                postData.deleteType = "delScreenedWebsite";
+                $.ajax({
+                    url: '/internal/screenedWebsite/delScreenedWebsite2',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 10000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            layer.msg('操作失败', {icon: 5});
+                        }
+                    },
+                    error: function () {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                });
+                layer.close(index);
+            });
+        }
+
+        function show_layer_msg(msg, icon, title, status) {
+            layer.msg(msg, {
+                icon: icon,
+                title: title === undefined ? null : title,
+                anim: 5,
+                time: 2000,
+                isOutAnim: false
+            }, function () {
+
+            });
+        }
+
+        var active = {
+            reload: function () {
+                let data = formToJsonObject('searchForm');
+                data.entryType = 'pt';
+                table.reload('screenedWebsiteTable', {
+                    where: data,
+                    page: {
+                        curr: 1
+                    }
+                });
+            },
+        };
+
+        form.on("submit(search)", function (data) {
+            var postData = data.field;
+            table.reload('screenedWebsiteTable', {
+                where: postData,
+                page: {
+                    curr: 1
+                }
+            });
+            return false
+        });
+
+    });
+
+</script>
+<!--模板-->
+<script type="text/html" id="toDateTime">
+    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+</script>
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+    <button class="layui-btn layui-btn-sm " id="add" lay-event="add">
+        添加
+    </button>
+    <button class="layui-btn layui-btn-sm layui-btn-danger" id="delete_selected" lay-event="delete_selected">
+        删除所选
+    </button>
+</script>
+
+<script type="text/html" id="operationTpl">
+    <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
+    <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+</script>
+</body>
+
+
+</html>
