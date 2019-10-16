@@ -11,4 +11,6 @@ public interface NegativeKeywordNameService extends IService<NegativeKeywordName
     Page<NegativeKeywordName> searchNegativeKeywordNames(NegativeKeywordNameCriteria criteria);
 
     List<String> getGroups();
+
+    List<NegativeKeywordName> findAllNegativeKeywordName(NegativeKeywordNameCriteria criteria);
 }

@@ -25,7 +25,7 @@ $(function () {
         success:function(result){
             result = $.parseJSON(result);
             if (result.success) {
-                window.location.href = basePath + '/internal/customerKeyword/searchCustomerKeywordLists';
+                window.location.href = basePath + '/login';
             }else{
                 // 刷新验证码
                 $("#captcha")[0].click();

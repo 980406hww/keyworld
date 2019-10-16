@@ -37,4 +37,15 @@ public class NegativeKeywordNameServiceImpl extends ServiceImpl<NegativeKeywordN
     public List<String> getGroups() {
         return negativeKeywordNameDao.getGroups();
     }
+
+    @Override
+    public List<NegativeKeywordName> findAllNegativeKeywordName(NegativeKeywordNameCriteria criteria) {
+        Wrapper<NegativeKeywordName> wrapper = new EntityWrapper<>();
+        wrapper.eq("fGroup", criteria.getGroup());
+        if (null != criteria.getHasEmail() && !"".equals(criteria.getHasEmail())) {
+            wrapper.isNotNull("fEmail");
+            wrapper.where("fEmail != {0}", "");
+        }
+        return negativeKeywordNameDao.selectList(wrapper);
+    }
 }

@@ -3,10 +3,20 @@ package com.keymanager.monitoring.vo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 
 public class ExtendedUsernamePasswordToken extends UsernamePasswordToken {
+
     private String entryType;
     private String terminalType;
+    private String version;
 
-    public ExtendedUsernamePasswordToken(String userName, String password){
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public ExtendedUsernamePasswordToken(String userName, String password) {
         super(userName, password);
     }
 

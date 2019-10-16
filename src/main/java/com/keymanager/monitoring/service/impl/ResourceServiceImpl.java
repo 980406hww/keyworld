@@ -18,12 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- *
  * Resource 表数据服务层接口实现类
- *
  */
 @Service
 public class ResourceServiceImpl extends ServiceImpl<ResourceDao, Resource> implements IResourceService {
+
     private static final int RESOURCE_MENU = 0; // 菜单
 
     @Autowired
@@ -34,14 +33,14 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceDao, Resource> impl
     private RoleDao roleDao;
     @Autowired
     private RoleResourceDao roleResourceDao;
-    
+
     @Override
     public List<Resource> selectAll() {
         EntityWrapper<Resource> wrapper = new EntityWrapper<Resource>();
         wrapper.orderBy("fSequence");
         return resourceDao.selectList(wrapper);
     }
-    
+
     public List<Resource> selectByType(Integer type) {
         EntityWrapper<Resource> wrapper = new EntityWrapper<Resource>();
         Resource resource = new Resource();
@@ -50,7 +49,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceDao, Resource> impl
         wrapper.orderBy("fSequence");
         return resourceDao.selectList(wrapper);
     }
-    
+
     @Override
     public List<Tree> selectAllMenu() {
         List<Tree> trees = new ArrayList<Tree>();
@@ -72,12 +71,12 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceDao, Resource> impl
         }
         return trees;
     }
-    
+
     @Override
-    public List<Tree> selectAuthorizationMenu(String loginName) {
+    public List<Tree> selectAuthorizationMenu(String loginName, String version) {
         List<Tree> trees = new ArrayList<Tree>();
         // 查询权限菜单
-        List<Resource> resources = resourceDao.selectAuthorizationMenu(loginName);
+        List<Resource> resources = resourceDao.selectAuthorizationMenu(loginName, version);
         if (resources == null) {
             return trees;
         }
@@ -115,7 +114,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceDao, Resource> impl
         }
         return trees;
     }
-    
+
     @Override
     public List<Tree> selectTree(ShiroUser shiroUser) {
         List<Tree> trees = new ArrayList<Tree>();
@@ -166,10 +165,10 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceDao, Resource> impl
         return trees;
     }
 
-	@Override
-	public boolean deleteById(Serializable resourceId) {
-		roleResourceDao.deleteByResourceId(resourceId);
-		return super.deleteById(resourceId);
-	}
+    @Override
+    public boolean deleteById(Serializable resourceId) {
+        roleResourceDao.deleteByResourceId(resourceId);
+        return super.deleteById(resourceId);
+    }
 
 }

@@ -7,11 +7,9 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- *
  * Resource 表数据库控制层接口
- *
  */
 public interface ResourceDao extends BaseMapper<Resource> {
 
-    List<Resource> selectAuthorizationMenu(@Param("loginName") String loginName);
+    List<Resource> selectAuthorizationMenu(@Param("loginName") String loginName, @Param("version") String version);
 }
