@@ -20,4 +20,6 @@ public interface IResourceService extends IService<Resource> {
     List<Tree> selectAllTree();
 
     List<Tree> selectTree(ShiroUser shiroUser);
+
+    void updResourceById(Resource resource);
 }

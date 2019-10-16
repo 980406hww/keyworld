@@ -67,7 +67,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
         // 先删除后添加,有点爆力
         RoleResource roleResource = new RoleResource();
         roleResource.setRoleID(roleId);
-        roleResourceDao.delete(new EntityWrapper<RoleResource>(roleResource));
+        roleResourceDao.delete(new EntityWrapper<>(roleResource));
 
         if (!StringUtils.isBlank(resourceIds)) {
             String[] resourceIdArray = resourceIds.split(",");

@@ -70,7 +70,7 @@
             }, {
                 field : 'status',
                 title : '状态',
-                width : 40,
+                width : 50,
                 formatter : function(value, row, index) {
                     switch (value) {
                     case 0:
@@ -80,6 +80,10 @@
                     }
                 }
             }, {
+                field : 'version',
+                title : '版本号',
+                width : 50
+            },{
                 field : 'action',
                 title : '操作',
                 width : 140,
