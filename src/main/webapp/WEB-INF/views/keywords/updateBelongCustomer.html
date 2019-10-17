@@ -52,7 +52,6 @@
         var $ = layui.jquery;
 
         window.init_targetCustomers = function(){
-            console.log(1);
             $.ajax({
                 url: '/internal/customer/getTargetCustomers/'+entryType_,
                 type: 'POST',
@@ -76,7 +75,7 @@
                     layer.msg('未知错误，请稍后重试！！')
                 }
             });
-        }
+        };
 
         form.on("submit(commit)", function (data) {
             var postData = {};
