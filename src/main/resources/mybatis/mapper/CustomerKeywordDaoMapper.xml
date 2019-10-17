@@ -1841,6 +1841,7 @@
             ck.fTerminalType AS 'TERMINAL_TYPE',
             ck.fCustomerUuid AS 'CUSTOMER_ID',
             ck.fKeyword AS 'KEYWORD',
+            ck.fStatus AS 'STATUS',
             ck.fInitialPosition AS 'INITIAL_POSITION',
             ck.fCurrentPosition AS 'CURRENT_POSITION',
             ck.fOptimizePlanCount AS 'OPTIMIZE_PLAN_COUNT',
