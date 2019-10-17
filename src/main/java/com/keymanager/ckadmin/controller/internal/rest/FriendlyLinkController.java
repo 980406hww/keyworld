@@ -155,7 +155,7 @@ public class FriendlyLinkController {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/friendlyLink/saveFriendlyLink")
+//    @RequiresPermissions("/internal/friendlyLink/saveFriendlyLink")
     @RequestMapping(value = "/searchFriendlyLinkTypeList/{websiteUuid}", method = RequestMethod.GET)
     public ResultBean  searchFriendlyLinkTypeList(@PathVariable Long websiteUuid) {
         ResultBean resultBean = new ResultBean();
