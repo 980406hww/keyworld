@@ -19,6 +19,7 @@ import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +31,8 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -66,7 +69,7 @@ public class CustomerController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/customer/searchCustomers")
     @PostMapping(value = "/getCustomers")
-    public ResultBean getCustomers(@RequestBody CustomerCriteria customerCriteria) {
+    public ResultBean getCustomers(@RequestBody CustomerCriteria customerCriteria, HttpSession session) {
         ResultBean resultBean = new ResultBean();
         if (SQLFilterUtils.sqlInject(customerCriteria.toString())) {
             resultBean.setCode(400);
@@ -90,6 +93,11 @@ public class CustomerController extends SpringMVCBaseController {
             }
             if (customerCriteria.getOrderMode() != null && customerCriteria.getOrderMode() == 0) {
                 page.setAsc(false);
+            }
+            String loginName = (String) session.getAttribute("username");
+            boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(loginName));
+            if(!isDepartmentManager) {
+                customerCriteria.setLoginName(loginName);
             }
             page = customerService.searchCustomers(page, customerCriteria);
             List<Customer> customers = page.getRecords();
@@ -337,6 +345,70 @@ public class CustomerController extends SpringMVCBaseController {
             logger.error(e.getMessage());
             resultBean.setMsg(e.getMessage());
             resultBean.setCode(400);
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @GetMapping(value = "/toUpdateBelongUser")
+    public ModelAndView toUpdateBelongUser() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("customers/updateBelongUser");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @RequestMapping(value = "/updateCustomerUserID2" , method = RequestMethod.POST)
+    public ResultBean updateCustomerUserID2(@RequestBody Map<String, Object> requestMap){
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
+            String userID = (String) requestMap.get("userID");
+            customerService.updateCustomerUserID(uuids, userID);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setMsg(e.getMessage());
+            resultBean.setCode(400);
+        }
+        return resultBean;
+    }
+
+    @PostMapping("/getActiveUsersForChangeBelong")
+    public ResultBean getActiveUsersForChangeBelong(){
+        ResultBean resultBean = new ResultBean();
+        try {
+            List<UserInfo> activeUsers = userInfoService.findActiveUsers();
+            resultBean.setCode(200);
+            resultBean.setMsg("success");
+            resultBean.setData(activeUsers);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @PostMapping("/getTargetCustomers/{entryType}")
+    public ResultBean getTargetCustomers(@PathVariable(name = "entryType")String entryType, HttpSession session){
+        ResultBean resultBean = new ResultBean();
+        try {
+            String loginName = (String) session.getAttribute("username");
+            String  accountName=null;
+            Set<String> roles = getCurrentUser().getRoles();
+            if(!roles.contains("DepartmentManager")) {
+                accountName=loginName;
+            }
+            List<Customer> customerList = customerService.searchTargetCustomers(entryType, accountName);
+            resultBean.setCode(200);
+            resultBean.setMsg("success");
+            resultBean.setData(customerList);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
         }
         return resultBean;
     }

@@ -36,23 +36,28 @@
                                     </div>
 
                                     <div class="layui-inline" style="width: 140px">
-                                        <input type="text" name="keyword" id="keyword" placeholder="请输入关键字" class="layui-input">
+                                        <input type="text" name="keyword" id="keyword" placeholder="请输入关键字" class="layui-input"
+                                               onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                     </div>
                                     <div class="layui-inline" style="width: 130px">
                                         <input type="text" name="optimizeGroupName" id="optimizeGroupName" placeholder="请输入优化组名" autocomplete="off"
-                                               value="<#if group?exists>${group}</#if>" class="layui-input layui-input-text">
+                                               value="<#if group?exists>${group}</#if>" class="layui-input layui-input-text"
+                                               onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                     </div>
                                     <div class="layui-inline" style="width: 140px">
                                         <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off"
-                                               class="layui-input layui-input-text ">
+                                               class="layui-input layui-input-text "
+                                               onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                     </div>
                                     <div class="layui-inline" style="width: 135px">
                                         排名
                                         <div class="layui-input-inline" style="width: 50px;">
-                                            <input type="number" name="gtPosition" placeholder=">=" autocomplete="off" class="layui-input">
+                                            <input type="text" name="gtPosition" placeholder=">=" autocomplete="off" class="layui-input"
+                                                   onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" lay-verify="positiveInteger">
                                         </div>
                                         <div class="layui-input-inline" style="width: 50px;">
-                                            <input type="number" name="ltPosition" placeholder="<=" autocomplete="off" class="layui-input">
+                                            <input type="text" name="ltPosition" placeholder="<=" autocomplete="off" class="layui-input"
+                                                   onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" lay-verify="positiveInteger">
                                         </div>
                                     </div>
                                     <div class="layui-inline" style="width: 140px">
@@ -101,21 +106,24 @@
                                         <div class="layui-inline">
                                             <label class="layui-form-label">链接</label>
                                             <div class="layui-input-inline">
-                                                <input type="text" name="url" id="url" placeholder="请输入链接" autocomplete="off" class="layui-input">
+                                                <input type="text" name="url" id="url" placeholder="请输入链接" autocomplete="off" class="layui-input"
+                                                       onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                             </div>
                                         </div>
 
                                         <div class="layui-inline">
                                             <label class="layui-form-label">熊掌号</label>
                                             <div class="layui-input-inline">
-                                                <input type="text" name="bearPawNumber" id="bearPawNumber" placeholder="请输入熊掌号" autocomplete="off" class="layui-input">
+                                                <input type="text" name="bearPawNumber" id="bearPawNumber" placeholder="请输入熊掌号" autocomplete="off" class="layui-input"
+                                                       onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                             </div>
                                         </div>
 
                                         <div class="layui-inline">
                                             <label class="layui-form-label">关键字备注</label>
                                             <div class="layui-input-inline">
-                                                <input type="text" name="remarks" id="remarks" placeholder="请输入关键字备注" autocomplete="off" class="layui-input">
+                                                <input type="text" name="remarks" id="remarks" placeholder="请输入关键字备注" autocomplete="off" class="layui-input"
+                                                       onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                             </div>
                                         </div>
                                         <div class="layui-inline">
@@ -135,30 +143,36 @@
                                         <div class="layui-inline">
                                             <label class="layui-form-label">要刷数量范围</label>
                                             <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="number" name="gtOptimizePlanCount" placeholder=">=" autocomplete="off" class="layui-input">
+                                                <input type="text" name="gtOptimizePlanCount" placeholder=">=" autocomplete="off" class="layui-input"
+                                                       onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
                                             </div>
                                             <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="number" name="ltOptimizePlanCount" placeholder="<=" autocomplete="off" class="layui-input">
+                                                <input type="text" name="ltOptimizePlanCount" placeholder="<=" autocomplete="off" class="layui-input"
+                                                       onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
                                             </div>
                                         </div>
 
                                         <div class="layui-inline">
                                             <label class="layui-form-label">已刷数量范围</label>
                                             <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="number" name="gtOptimizedCount" placeholder=">=" autocomplete="off" class="layui-input">
+                                                <input type="text" name="gtOptimizedCount" placeholder=">=" autocomplete="off" class="layui-input"
+                                                       onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
                                             </div>
                                             <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="number" name="ltOptimizedCount" placeholder="<=" autocomplete="off" class="layui-input">
+                                                <input type="text" name="ltOptimizedCount" placeholder="<=" autocomplete="off" class="layui-input"
+                                                       onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
                                             </div>
                                         </div>
 
                                         <div class="layui-inline">
                                             <label class="layui-form-label">指数范围</label>
                                             <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="number" name="gtCurrentIndexCount" placeholder=">=" autocomplete="off" class="layui-input">
+                                                <input type="text" name="gtCurrentIndexCount" placeholder=">=" autocomplete="off" class="layui-input"
+                                                       onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
                                             </div>
                                             <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="number" name="ltCurrentIndexCount" placeholder="<=" autocomplete="off" class="layui-input">
+                                                <input type="text" name="ltCurrentIndexCount" placeholder="<=" autocomplete="off" class="layui-input"
+                                                       onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
                                             </div>
                                         </div>
                                         <div class="layui-inline">
@@ -174,8 +188,9 @@
                                         <div class="layui-inline">
                                             <label class="layui-form-label">无效点击数</label>
                                             <div class="layui-input-inline">
-                                                <input type="number" name="invalidRefreshCount" id="invalidRefreshCount" placeholder="请输入无效点击数" autocomplete="off"
-                                                       class="layui-input">
+                                                <input type="text" name="invalidRefreshCount" id="invalidRefreshCount" placeholder="请输入无效点击数" autocomplete="off"
+                                                       onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');"
+                                                       class="layui-input" lay-verify="positiveInteger" />
                                             </div>
                                         </div>
                                         <div class="layui-inline">

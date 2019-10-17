@@ -28,6 +28,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         formData = formData.replace(/=/g, "\":\"");
         formData = "{\"" + formData + "\"}";
         formData = $.parseJSON(formData);
+        $.each(formData,function(idx,item){
+            formData[idx] = $.trim(item)
+        });
         return formData;
     }
 
@@ -273,6 +276,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         var pageConf = data.field;
         pageConf.limit = 50;
         pageConf.page = 1;
+        $.each(pageConf,function(idx,item){
+            pageConf[idx] = $.trim(item)
+        });
         if (!open) {
             showCondition();
         }
@@ -535,6 +541,24 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         });
     }
 
+
+    window.batchUpdateBelongUser = function(){
+        let uuidArr = get_select_uuids();
+        if (uuidArr.length <= 0) {
+            layer.msg('请选择要操作的客户', {icon: 5});
+            return false;
+        }
+        okLayer.open("首页 / 客户列表 / 修改客户所属", "/internal/customer/toUpdateBelongUser", "40%", "50%", function(layero){
+            window[layero.find("iframe")[0]["name"]].initForm(uuidArr);
+        }, function () {
+            if (sign) {
+                let pageConf = formToJsonObject('searchForm');
+                initLayPage(pageConf);
+                sign = false;
+            }
+        });
+    }
+
     //改客户标签
     window.changeSaleRemark = function (uuid, saleRemark) {
         layer.prompt({
@@ -675,8 +699,7 @@ function generate_keyword_info(obj, data) {
     let htm = '';
 
     if (data.totalCount > 0) {
-        let entryType = document.getElementById('entryType').value;
-        let url = '/internal/customerKeyword/toCustomerKeywords/' + entryType+'/PC/'+obj.uuid;
+        let url = '/internal/customerKeyword/toCustomerKeywords/pt/PC/'+obj.uuid;
         let contactPerson = obj.contactPerson.replace(/\s+/g, "");
         let title = contactPerson + '-关键字列表';
         let id = contactPerson + '-关键字列表';

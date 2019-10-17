@@ -169,4 +169,23 @@
         INSERT INTO t_customer (fUserID, fEntryType, fContactPerson, fType, fSearchEngine, fRemark, fStatus)
         VALUES(#{loginName},#{entryType},#{contactPerson}, #{type}, #{searchEngine},#{remark},#{status})
     </insert>
+
+    <update id="updateCustomerUserID">
+        UPDATE t_customer
+        SET fUserID = #{userID}
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" close=")" separator=",">
+            #{uuid}
+        </foreach>
+    </update>
+
+    <select id="searchTargetCustomers"
+        resultType="com.keymanager.ckadmin.entity.Customer">
+        SELECT
+        <include refid="colID"/>
+        FROM t_customer c
+        WHERE c.fEntryType = #{entryType}
+        <if test="loginName != null and loginName != ''">AND c.fUserID = #{loginName}</if>
+        order by c.fUpdateTime DESC
+    </select>
 </mapper>

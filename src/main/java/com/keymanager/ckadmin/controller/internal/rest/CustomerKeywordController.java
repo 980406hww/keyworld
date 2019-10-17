@@ -47,6 +47,8 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -414,7 +416,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     @GetMapping(value = "/toUploadKeywords")
     public ModelAndView toUploadKeywords() {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("keywords/UploadKeywordByExcel");
+        mv.setViewName("keywords/uploadKeywordByExcel");
         return mv;
     }
 
@@ -725,5 +727,30 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         search = URLDecoder.decode(search, "UTF-8");
         mv.addObject("search", search);
         return mv;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
+    @GetMapping(value = "/toUpdateBelongCustomer")
+    public ModelAndView toUpdateBelongCustomer() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/updateBelongCustomer");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
+    @RequestMapping(value = "/updateKeywordCustomerUuid2" , method = RequestMethod.POST)
+    public ResultBean updateKeywordCustomerUuid(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            List<String> keywordUuids = (List<String>)requestMap.get("uuids");
+            String customerUuid = (String)requestMap.get("customerUuid");
+            String terminalType = (String)requestMap.get("terminalType");
+            customerKeywordService.updateKeywordCustomerUuid(keywordUuids,customerUuid,terminalType);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setMsg(e.getMessage());
+            resultBean.setCode(400);
+        }
+        return resultBean;
     }
 }

@@ -643,6 +643,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         page.setRecords(ptkeywordCountVOS);
         return page;
     }
+
+    @Override
+    public void updateKeywordCustomerUuid(List<String> keywordUuids, String customerUuid, String terminalType) {
+        customerKeywordDao.updateKeywordCustomerUuid(keywordUuids, customerUuid, terminalType);
+    }
 }
 
 

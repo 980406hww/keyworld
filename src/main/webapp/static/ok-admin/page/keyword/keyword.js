@@ -277,6 +277,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         if (!data.field.noReachStandardDays){
             data.field.noReachStandardDays = '';
         }
+        $.each(data.field,function(idx,item){
+            data.field[idx] = $.trim(item)
+        });
         // console.log(data.field)
         table.reload('keywordTable', {
             where: data.field,

@@ -205,4 +205,15 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     public List<Customer> searchCustomersWithKeyword(List<String> groupNames, String terminalType) {
         return customerDao.searchCustomerWithKeyword(groupNames, terminalType);
     }
+
+    @Override
+    public void updateCustomerUserID(List<Integer> uuids, String userID) {
+        customerDao.updateCustomerUserID(uuids, userID);
+    }
+
+    @Override
+    public List<Customer> searchTargetCustomers(String entryType, String accountName) {
+        List<Customer> customers = customerDao.searchTargetCustomers(entryType, accountName);
+        return customers;
+    }
 }

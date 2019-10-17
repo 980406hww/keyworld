@@ -75,3 +75,13 @@ VALUES ('前往负面信息抓取', '/internal/negativeKeywords/toNegativeKeywor
 INSERT INTO t_role_resource(fRoleID, fResourceID) SELECT tem_role.fUuid, tem_resource.fUuid FROM (
       (SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('Technical')) tem_role,
       (SELECT tr.fUuid FROM t_resource tr WHERE tr.fResourceName = '前往负面信息抓取') tem_resource);
+
+#新增前往负面词设置页面
+INSERT INTO `db_keyword`.`t_resource`(`fResourceName`, `fUrl`, `fIconCls`,
+	`fParentID`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`,  `fCreateTime` , `fVersion`)
+VALUES ('前往负面词设置', '/internal/configs/toNegativeSetting', 'fi-thumbnails',
+	(SELECT r.fUuid FROM t_resource r WHERE r.fUrl = '#' AND r.fResourceName = "其他"), 1, 0, 1, 0, NOW(), '2.0');
+# 将前往关键字统计权限分配给技术角色
+INSERT INTO t_role_resource(fRoleID, fResourceID) SELECT tem_role.fUuid, tem_resource.fUuid FROM (
+      (SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('Technical')) tem_role,
+      (SELECT tr.fUuid FROM t_resource tr WHERE tr.fResourceName = '前往负面词设置') tem_resource);
