@@ -266,6 +266,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             case 'change_select_optimizePlanCount':
                 change_select_optimizePlanCount();
                 break;
+            case 'update_belong_customer':
+                batchUpdateBelongUser();
+                break;
             case 'batch_update':
                 batch_update_ByUuids();
                 break;
@@ -357,6 +360,30 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 break;
         }
     });
+
+    function batchUpdateBelongUser (){
+        let uuidArr = get_selected_uuid_arr();
+        if (uuidArr.length <= 0) {
+            layer.msg('请选择要操作的关键字', {icon: 5});
+            return false;
+        }
+
+        let entryType = $('#type').val();
+        let terminalType = $('#terminalType').val();
+        let data ={};
+        data.uuids = uuidArr;
+        data.entryType = entryType;
+        data.terminalType = terminalType;
+        okLayer.open("首页 / 客户列表 / 修改客户所属", "/internal/customerKeyword/toUpdateBelongCustomer", "40%", "50%", function(layero){
+            window[layero.find("iframe")[0]["name"]].initForm(data);
+        }, function () {
+            if (sign) {
+                let pageConf = formToJsonObject('searchForm');
+                get_keywords(pageConf);
+                sign = false;
+            }
+        });
+    }
 
     function add_customer_keyword() {
         let customerUuid = $('#customerUuid').val();

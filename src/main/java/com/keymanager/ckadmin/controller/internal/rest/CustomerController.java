@@ -384,4 +384,27 @@ public class CustomerController extends SpringMVCBaseController {
         }
         return resultBean;
     }
+
+    @PostMapping("/getTargetCustomers/{entryType}")
+    public ResultBean getTargetCustomers(@PathVariable(name = "entryType")String entryType, HttpSession session){
+        ResultBean resultBean = new ResultBean();
+        try {
+            String loginName = (String) session.getAttribute("username");
+            String  accountName=null;
+            Set<String> roles = getCurrentUser().getRoles();
+            if(!roles.contains("DepartmentManager")) {
+                accountName=loginName;
+            }
+            List<Customer> customerList = customerService.searchTargetCustomers(entryType, accountName);
+            resultBean.setCode(200);
+            resultBean.setMsg("success");
+            resultBean.setData(customerList);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
 }

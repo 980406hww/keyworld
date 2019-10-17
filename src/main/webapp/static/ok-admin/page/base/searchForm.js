@@ -21,7 +21,6 @@ layui.use(['jquery'], function () {
         $.each(formData,function(idx,item){
             formData[idx] = $.trim(item)
         });
-        console.log(formData);
         return formData;
     }
 });

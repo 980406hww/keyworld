@@ -50,4 +50,6 @@ public interface CustomerDao extends BaseMapper<Customer> {
     void saveExternalCustomer(Customer customer);
 
     void updateCustomerUserID(@Param("uuids") List<Integer> uuids, @Param("userID") String userID);
+
+    List<Customer> searchTargetCustomers(@Param("entryType")String entryType,@Param("loginName")String loginName);
 }

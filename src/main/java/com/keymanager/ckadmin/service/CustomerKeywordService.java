@@ -111,4 +111,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     List<GroupVO> getAvailableOptimizationGroups(GroupSettingCriteria groupSettingCriteria);
 
     Page<PTkeywordCountVO> searchPTKeywordCount(Page<PTkeywordCountVO> page, PTKeywordCountCriteria keywordCriteria);
+
+    void updateKeywordCustomerUuid(List<String> keywordUuids, String customerUuid, String terminalType);
 }

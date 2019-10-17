@@ -210,4 +210,10 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     public void updateCustomerUserID(List<Integer> uuids, String userID) {
         customerDao.updateCustomerUserID(uuids, userID);
     }
+
+    @Override
+    public List<Customer> searchTargetCustomers(String entryType, String accountName) {
+        List<Customer> customers = customerDao.searchTargetCustomers(entryType, accountName);
+        return customers;
+    }
 }

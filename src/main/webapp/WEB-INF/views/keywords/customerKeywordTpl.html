@@ -20,6 +20,13 @@
         </button>
     </div>
     </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-sm layui-btn-warm" id="update_belong_customer" lay-event="update_belong_customer">
+            更改所选词客户
+        </button>
+    </div>
+    </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
     <div class="layui-btn-group">
         <button class="layui-btn layui-btn-sm layui-btn-warm" id="batch_update" lay-event="batch_update">

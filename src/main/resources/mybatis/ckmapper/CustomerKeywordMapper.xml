@@ -1049,4 +1049,16 @@
         GROUP BY ck.fKeyword, ck.fSearchEngine
         ORDER BY keywordCount DESC
     </select>
+
+
+    <update id="updateKeywordCustomerUuid">
+        UPDATE t_customer_keyword
+        SET  fCustomerUuid = #{customerUuid}
+        WHERE
+        fTerminalType = #{terminalType}
+        AND fUuid IN
+        <foreach item = "item" index = "index" collection = "keywordUuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
 </mapper>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <style>
+        .layui-form-selected dl{
+            max-height: 250px;
+        }
+    </style>
+</head>
+<body>
+<div class="ok-body">
+
+    <form class="layui-form layui-form-pane ok-form" lay-filter="UpdateOwner">
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属客户</label>
+            <div class="layui-input-block">
+                <select name="targetCustomer" id="targetCustomer" lay-verify="required"></select>
+            </div>
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="commit">确定</button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script>
+
+    var layui_ = null;
+    var uuids_ = null;
+    var entryType_ = null;
+    var terminalType_ = null;
+
+    function initForm(data) {
+        uuids_ = data.uuids;
+        entryType_ = data.entryType;
+        terminalType_ = data.terminalType;
+        init_targetCustomers();
+    }
+
+    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+        var form = layui.form;
+        var okLayer = layui.okLayer;
+        var $ = layui.jquery;
+
+        window.init_targetCustomers = function(){
+            console.log(1);
+            $.ajax({
+                url: '/internal/customer/getTargetCustomers/'+entryType_,
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        var targetCustomer = $('#targetCustomer');
+                        targetCustomer.append('<option value="" selected>请选择所属客户名称</option>');
+                        $.each(res.data, function (index, item) {
+                            targetCustomer.append('<option value="' + item.uuid + '">' + item.contactPerson + '</option>');
+                        });
+                        form.render("select")
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                },
+                error: function () {
+                    layer.msg('未知错误，请稍后重试！！')
+                }
+            });
+        }
+
+        form.on("submit(commit)", function (data) {
+            var postData = {};
+            postData.uuids = uuids_;
+            postData.terminalType = terminalType_;
+            postData.customerUuid = data.field.targetCustomer;
+            $.ajax({
+                url: '/internal/customerKeyword/updateKeywordCustomerUuid2',
+                type: 'post',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                success: function (res) {
+                    if (res.code === 200) {
+                        okLayer.msg.greenTick("修改成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        layui.layer.msg(res.msg);
+                    }
+                }
+            });
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+    });
+</script>
+
+</body>
+</html>
