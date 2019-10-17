@@ -20,4 +20,10 @@ public interface ConfigService {
     Set<String> getNegativeKeyword();
 
     List<Config> findConfigs(String configType);
+
+    void updateNegativeKeywordsFromConfig(String negativeKeywords);
+
+    void refreshCustomerNegativeKeywords(String searchEngine, String negativeKeywords);
+
+    void refreshWebsiteWhiteList(String websiteWhiteList);
 }

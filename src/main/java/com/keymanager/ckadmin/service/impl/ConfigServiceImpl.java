@@ -69,7 +69,7 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public void refreshWebsiteCheckSign(String websiteCheckSign){
+    public void refreshWebsiteCheckSign(String websiteCheckSign) {
         Config config = new Config();
         config.setConfigType(Constants.CONFIG_TYPE_WEBSITE_CHECK_SIGN);
         config.setKey("WebsiteCheck");
@@ -83,11 +83,11 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public Set<String> getNegativeKeyword(){
+    public Set<String> getNegativeKeyword() {
         List<Config> configs = findConfigs(Constants.CONFIG_TYPE_NEGATIVE_KEYWORD);
-        Set<String> keywords=new HashSet<>();
-        for (Config config : configs){
-            String[] ky=config.getValue().split(",");
+        Set<String> keywords = new HashSet<>();
+        for (Config config : configs) {
+            String[] ky = config.getValue().split(",");
             keywords.addAll(Arrays.asList(ky));
         }
         return keywords;
@@ -96,5 +96,32 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     public List<Config> findConfigs(String configType) {
         return configDao.findConfigs(configType);
+    }
+
+    @Override
+    public void updateNegativeKeywordsFromConfig(String negativeKeywords) {
+        Config config = new Config();
+        config.setConfigType(Constants.CONFIG_TYPE_TJ_XG);
+        config.setKey(Constants.CONFIG_KEY_NEGATIVE_KEYWORDS);
+        config.setValue(negativeKeywords);
+        updateConfig(config);
+    }
+
+    @Override
+    public void refreshCustomerNegativeKeywords(String searchEngine, String negativeKeywords) {
+        Config config = new Config();
+        config.setConfigType(Constants.CONFIG_TYPE_NEGATIVE_KEYWORD);
+        config.setKey(searchEngine);
+        config.setValue(negativeKeywords);
+        updateConfig(config);
+    }
+
+    @Override
+    public void refreshWebsiteWhiteList(String websiteWhiteList) {
+        Config config = new Config();
+        config.setConfigType(Constants.CONFIG_TYPE_WEBSITE_WHITE_LIST);
+        config.setKey(Constants.CONFIG_KEY_URL);
+        config.setValue(websiteWhiteList);
+        updateConfig(config);
     }
 }
