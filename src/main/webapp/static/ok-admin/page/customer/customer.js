@@ -681,8 +681,7 @@ function generate_keyword_info(obj, data) {
     let htm = '';
 
     if (data.totalCount > 0) {
-        let entryType = document.getElementById('entryType').value;
-        let url = '/internal/customerKeyword/toCustomerKeywords/' + entryType+'/PC/'+obj.uuid;
+        let url = '/internal/customerKeyword/toCustomerKeywords/pt/PC/'+obj.uuid;
         let contactPerson = obj.contactPerson.replace(/\s+/g, "");
         let title = contactPerson + '-关键字列表';
         let id = contactPerson + '-关键字列表';
