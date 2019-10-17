@@ -444,6 +444,37 @@
             right: 25px;
         }
 
+        .layui-form-pane .layui-form-checkbox{
+            margin: 4px 0 !important;
+        }
+
+        .layui-form-checkbox[lay-skin=primary]{
+            padding-left: 22px !important;
+        }
+
+        .layui-form-checkbox[lay-skin=primary] span{
+            position: relative;
+            top: -0.8px;
+            padding-right: 6px;
+        }
+
+        .sort-box {
+            line-height: 28px;
+            padding-left: 84px;
+            border-top: 1px solid #e6e6e6;
+            border-right: 1px solid #e6e6e6;
+            border-bottom: 1px solid #e6e6e6;
+            background: #fff;
+        }
+
+        .status-box .layui-form-label{
+            display: block !important;
+            padding: 0 !important;
+            text-align: center !important;
+            line-height: 28px !important;
+            width: 76px;
+        }
+
         /* 下拉条件框 */
         .my-collapse {
             position: relative;
@@ -506,11 +537,6 @@
         .my-collapse .my-btn:hover {
             opacity: .8;
             transition: opacity 0.5s;
-        }
-
-        .radio-box {
-            position: relative;
-            top: 2px;
         }
 
         .my-collapse .layui-form-radio {
@@ -613,24 +639,35 @@
                                         </div>
                                     </div>
                                     <div class="layui-inline" onclick="resetHidden()">
-                                        <button style="background: #897c00;color: #ffffff" class="layui-btn"
-                                                type="reset" id="resetBtn">
+                                        <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset" id="resetBtn">
                                             重置
                                         </button>
                                     </div>
-                                    <div class="layui-inline radio-box">
-                                        <div pane>
-                                            <input type="radio" name="sort" value="-1" title="正常" lay-filter="sort" class="phone-input">
-                                            <input type="radio" name="sort" value="1" title="骤降(0)" lay-filter="sort" class="phone-input">
-                                            <input type="radio" name="sort" value="2" title="无变化(0)" lay-filter="sort" class="phone-input">
-                                            <input type="radio" name="sort" value="3" title="暴涨(0)" lay-filter="sort" class="phone-input">
-                                            <input type="radio" name="sort" value="7" title="下降(0)" lay-filter="sort" class="phone-input">
-                                            <input type="radio" name="sort" value="8" title="不变(0)" lay-filter="sort" class="phone-input">
-                                            <input type="radio" name="sort" value="9" title="上升(0)" lay-filter="sort" class="phone-input">
-                                            <input type="radio" name="sort" value="4" title="达标(0)" lay-filter="sort" class="phone-input">
-                                            <input type="radio" name="sort" value="5" title="未达标(0)" lay-filter="sort" class="phone-input">
-                                            <input type="radio" name="sort" value="6" title="接近达标(0)" lay-filter="sort" class="phone-input">
-                                        </div>
+                                    <div class="layui-inline status-box">
+                                            <div class="layui-inline" style="margin-left: 4px">
+                                                <label class="layui-form-label">暴涨暴停</label>
+                                                <div class="sort-box" style="min-width: 338px">
+                                                    <input type="checkbox" name="bzbtSort" value="1" title="骤降(0)" lay-filter="bzbtSort" lay-skin="primary">
+                                                    <input type="checkbox" name="bzbtSort" value="2" title="无变化(0)" lay-filter="bzbtSort" lay-skin="primary">
+                                                    <input type="checkbox" name="bzbtSort" value="3" title="暴涨(0)" lay-filter="bzbtSort" lay-skin="primary">
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">今日趋势</label>
+                                                <div class="sort-box"style="min-width: 322px">
+                                                    <input type="checkbox" name="jrqsSort" value="7" title="下降(0)" lay-filter="jrqsSort" lay-skin="primary">
+                                                    <input type="checkbox" name="jrqsSort" value="8" title="不变(0)" lay-filter="jrqsSort" lay-skin="primary">
+                                                    <input type="checkbox" name="jrqsSort" value="9" title="上升(0)" lay-filter="jrqsSort" lay-skin="primary">
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">达标统计</label>
+                                                <div class="sort-box" style="min-width: 364px">
+                                                    <input type="checkbox" name="dbtjSort" value="4" title="达标(0)" lay-filter="dbtjSort" lay-skin="primary">
+                                                    <input type="checkbox" name="dbtjSort" value="5" title="未达标(0)" lay-filter="dbtjSort" lay-skin="primary">
+                                                    <input type="checkbox" name="dbtjSort" value="6" title="接近达标(0)" lay-filter="dbtjSort" lay-skin="primary">
+                                                </div>
+                                            </div>
                                     </div>
                                 </div>
                                 <div class="my-hide" id="searchContent">
@@ -638,7 +675,6 @@
                                     <input type="hidden" name="terminalType" id="terminalType" value="PC"/>
                                     <input type="hidden" name="userInfoID" id="userInfoID" value="">
                                     <input type="hidden" name="organizationID" id="organizationID" value="">
-                                    <input type="hidden" name="checkStatus" id="checkStatus" value="">
                                     <input hidden value='<#if Request.customerUuidTmp?exists>${Request.customerUuidTmp}</#if>'
                                            id="customerUuidTmp">
                                     <div class="layui-form-item" style="margin-bottom: 0" lay-filter="loginNameFilter">
@@ -767,7 +803,6 @@
     function resetHidden() {
         document.getElementById('userInfoID').value = '';
         document.getElementById('organizationID').value = '';
-        document.getElementById('checkStatus').value = '';
     }
 
     var sign = false;
@@ -918,7 +953,15 @@
                     return false;
                 }
             }
-
+            if (!data.field.bzbtSort){
+                data.field.bzbtSort = null;
+            }
+            if (!data.field.jrqsSort){
+                data.field.jrqsSort = null;
+            }
+            if (!data.field.dbtjSort){
+                data.field.dbtjSort = null;
+            }
             get_qzsetting(data.field);
             return false;
         });
@@ -983,7 +1026,9 @@
         }
 
         function initSortRadio(condition) {
-            let radio = document.getElementsByName('sort');
+            let bzbtSort = document.getElementsByName('bzbtSort');
+            let jrqsSort = document.getElementsByName('jrqsSort');
+            let dbtjSort = document.getElementsByName('dbtjSort');
             $.ajax({
                 url: '/internal/qzkeywordrank/searchCountNumOfQZKeywordRankInfoNew',
                 type: 'POST',
@@ -994,28 +1039,29 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        radio[1].title = "骤降(" + res.data.downNum + ")";
-                        radio[2].title = "无变化(" + res.data.unchangedNum + ")";
-                        radio[3].title = "暴涨(" + res.data.upNum + ")";
-                        radio[4].title = "下降(" + res.data.downDifferenceNum + ")";
-                        radio[5].title = "不变(" + res.data.unchangedDifferenceNum + ")";
-                        radio[6].title = "上升(" + res.data.upDifferenceNum + ")";
-                        radio[7].title = "达标(" + res.data.atLeastStandardNum + ")";
-                        radio[8].title = "未达标(" + res.data.neverStandardNum + ")";
-                        radio[9].title = "接近达标(" + res.data.closeStandardNum + ")";
+                        bzbtSort[0].title = "骤降(" + res.data.downNum + ")";
+                        bzbtSort[1].title = "无变化(" + res.data.unchangedNum + ")";
+                        bzbtSort[2].title = "暴涨(" + res.data.upNum + ")";
+                        jrqsSort[0].title = "下降(" + res.data.downDifferenceNum + ")";
+                        jrqsSort[1].title = "不变(" + res.data.unchangedDifferenceNum + ")";
+                        jrqsSort[2].title = "上升(" + res.data.upDifferenceNum + ")";
+                        dbtjSort[0].title = "达标(" + res.data.atLeastStandardNum + ")";
+                        dbtjSort[1].title = "未达标(" + res.data.neverStandardNum + ")";
+                        dbtjSort[2].title = "接近达标(" + res.data.closeStandardNum + ")";
                         form.render('radio');
-                        radio[1].nextElementSibling.title = "网站关键词(PC,Phone)一星期排名趋势涨幅<"
+                        bzbtSort[0].nextElementSibling.title = "网站关键词(PC,Phone)一星期排名趋势涨幅<"
                             + res.data.upperValue + ", 且下降至少" + res.data.upOneWeekDiff + "个词";
-                        radio[2].nextElementSibling.title = "网站关键词(PC,Phone)一星期排名趋势涨幅不变";
-                        radio[3].nextElementSibling.title = "网站关键词(PC,Phone)一星期排名趋势涨幅>"
+                        bzbtSort[1].nextElementSibling.title = "网站关键词(PC,Phone)一星期排名趋势涨幅不变";
+                        bzbtSort[2].nextElementSibling.title = "网站关键词(PC,Phone)一星期排名趋势涨幅>"
                             + res.data.upperValue + ", 且上涨至少" + res.data.upOneWeekDiff + "个词";
-                        radio[4].nextElementSibling.title = "网站关键词(PC,Phone)今天前10下降";
-                        radio[5].nextElementSibling.title = "网站关键词(PC,Phone)今天前10不变";
-                        radio[6].nextElementSibling.title = "网站关键词(PC,Phone)今天前10上升";
-                        radio[7].nextElementSibling.title = "标识最少有一条规则达标";
-                        radio[8].nextElementSibling.title = "标识一条规则都未达标";
-                        radio[9].nextElementSibling.title = "标识下条规则接近达标, 未完成度<"
+                        jrqsSort[0].nextElementSibling.title = "网站关键词(PC,Phone)今天前10下降";
+                        jrqsSort[1].nextElementSibling.title = "网站关键词(PC,Phone)今天前10不变";
+                        jrqsSort[2].nextElementSibling.title = "网站关键词(PC,Phone)今天前10上升";
+                        dbtjSort[0].nextElementSibling.title = "标识最少有一条规则达标";
+                        dbtjSort[1].nextElementSibling.title = "标识一条规则都未达标";
+                        dbtjSort[2].nextElementSibling.title = "标识下条规则接近达标, 未完成度<"
                             + res.data.differenceValue;
+                        form.render('checkbox');
                     } else {
                         show_layer_msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg, 5);
                     }
@@ -1091,12 +1137,42 @@
             });
         }
 
-        form.on('radio(sort)', function (d) {
-            if (d === '-1') {
-                document.getElementById('checkStatus').value = '';
-            } else {
-                document.getElementById('checkStatus').value = d.value;
+        form.on('checkbox(bzbtSort)', function (data) {
+            let bzbtSort = document.getElementsByName('bzbtSort');
+            if (data.elem.checked) {
+                for (let i = 0; i < 3; i++) {
+                    if (bzbtSort[i].value !== data.value) {
+                        bzbtSort[i].checked = false;
+                    }
+                }
             }
+            form.render("checkbox");
+            active['reload'].call(this);
+        });
+
+        form.on('checkbox(jrqsSort)', function (data) {
+            let jrqsSort = document.getElementsByName('jrqsSort');
+            if (data.elem.checked) {
+                for (let i = 0; i < 3; i++) {
+                    if (jrqsSort[i].value !== data.value) {
+                        jrqsSort[i].checked = false;
+                    }
+                }
+            }
+            form.render("checkbox");
+            active['reload'].call(this);
+        });
+
+        form.on('checkbox(dbtjSort)', function (data) {
+            let dbtjSort = document.getElementsByName('dbtjSort');
+            if (data.elem.checked) {
+                for (let i = 0; i < 3; i++) {
+                    if (dbtjSort[i].value !== data.value) {
+                        dbtjSort[i].checked = false;
+                    }
+                }
+            }
+            form.render("checkbox");
             active['reload'].call(this);
         });
 
@@ -1116,6 +1192,15 @@
         var active = {
             reload: function () {
                 let condition = formToJsonObject("searchForm");
+                if (!condition.bzbtSort) {
+                    condition.bzbtSort = null;
+                }
+                if (!condition.jrqsSort) {
+                    condition.jrqsSort = null;
+                }
+                if (!condition.dbtjSort) {
+                    condition.dbtjSort = null;
+                }
                 table.reload('qzSettingTable', {
                     where: condition,
                     page: {
