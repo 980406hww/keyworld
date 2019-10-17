@@ -214,23 +214,23 @@
     {{#  }else if(d.currentIndexCount === -2) { }}
     未收录
     {{# }else{ }}
-    <a href="http://index.baidu.com/v2/main/index.html#/trend/{{ d.keyword }}" target="_blank" title="查看历史排名" class="floatTd">{{= d.currentIndexCount }}</a>
+    <a href="http://index.baidu.com/v2/main/index.html#/trend/{{ d.keyword }}" target="_blank" title="查看百度指数" class="floatTd">{{= d.currentIndexCount }}</a>
     {{# } }}
 </script>
 
 <script type="text/html" id="currentPositionTpl">
-    <a href="{{d.searchEngineUrl}}" target="_blank">{{d.currentPosition}}</a>
+    <a href="{{d.searchEngineUrl}}" target="_blank" title="排名采集城市:{{= d.capturePositionCity}}&#10;排名采集时间:{{layui.util.toDateString(d.capturePositionQueryTime, 'yyyy-MM-dd')}}">{{d.currentPosition}}</a>
 </script>
 
 <script type="text/html" id="collectMethodTpl">
     {{#  if(d.collectMethod === 'PerDay') { }}
-    按天
+    <span title="优化日期: {{layui.util.toDateString(d.optimizeDate, 'yyyy-MM-dd')}}&#10;要刷: {{d.optimizePlanCount}}&#10;已刷: {{d.optimizedCount}}">按天</span>
     {{# }else if(d.collectMethod === 'PerTenDay'){ }}
-    十天
+    <span title="优化日期: {{layui.util.toDateString(d.optimizeDate, 'yyyy-MM-dd')}}&#10;要刷: {{d.optimizePlanCount}}&#10;已刷: {{d.optimizedCount}}">十天</span>
     {{# }else if(d.collectMethod === 'PerSevenDay'){ }}
-    七天
+    <span title="优化日期: {{layui.util.toDateString(d.optimizeDate, 'yyyy-MM-dd')}}&#10;要刷: {{d.optimizePlanCount}}&#10;已刷: {{d.optimizedCount}}">七天</span>
     {{#  }else{ }}
-    按月
+    <span title="优化日期: {{layui.util.toDateString(d.optimizeDate, 'yyyy-MM-dd')}}&#10;要刷: {{d.optimizePlanCount}}&#10;已刷: {{d.optimizedCount}}">按月</span>
     {{# } }}
 </script>
 
