@@ -173,6 +173,7 @@
         table.on('tool(tableFilter)', function (obj) {
             var data = obj.data;
             switch (obj.event) {
+
                 case 'toOperationCombine':
                     toOperationCombine(data.operationCombineName);
                     break;
@@ -451,20 +452,23 @@
             return false
         });
 
+        <@shiro.hasPermission name="/internal/groupsetting/searchGroupSettings">
+            function toOperationCombine(operationCombineName){
+                let url = '/internal/groupsetting/toGroupSettingFromATP/'+operationCombineName;
+                url = encodeURI(encodeURI(url));
+                let title = '操作组合:' + operationCombineName + '详情';
+                updateOrNewTab(url, title, operationCombineName)
+            }
+        </@shiro.hasPermission>
 
-        function toOperationCombine(operationCombineName){
-            let url = '/internal/groupsetting/toGroupSettingFromATP/'+operationCombineName;
-            url = encodeURI(encodeURI(url))
-            let title = '操作组合:' + operationCombineName + '详情';
-            updateOrNewTab(url, title, operationCombineName)
-        }
-
-        function toMachineManage(machineGroup){
-            let url = '/internal/machineManage/toMachineInfoFromATP/'+machineGroup;
-            url = encodeURI(encodeURI(url))
-            let title = '机器分组:' + machineGroup + '详情';
-            updateOrNewTab(url, title, machineGroup)
-        }
+        <@shiro.hasPermission name="/internal/machineInfo/searchMachineInfos">
+            function toMachineManage(machineGroup){
+                let url = '/internal/machineManage/toMachineInfoFromATP/'+machineGroup;
+                url = encodeURI(encodeURI(url));
+                let title = '机器分组:' + machineGroup + '详情';
+                updateOrNewTab(url, title, machineGroup)
+            }
+        </@shiro.hasPermission>
 
     });
 
@@ -496,18 +500,25 @@
 </script>
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
+
+    <@shiro.hasPermission name="/internal/algorithmAutoTest/saveAlgorithmTestPlan">
     <button class="layui-btn layui-btn-sm " id="add" lay-event="add">
         添加
     </button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/algorithmAutoTest/changeAlgorithmTestPlanStatus">
     <button class="layui-btn layui-btn-sm " id="stop_selected" lay-event="stop_selected">
         暂停所选
     </button>
     <button class="layui-btn layui-btn-sm " id="active_selected" lay-event="active_selected">
         激活所选
     </button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/algorithmAutoTest/deleteAlgorithmTestPlan">
     <button class="layui-btn layui-btn-sm layui-btn-danger" id="delete_selected" lay-event="delete_selected">
         删除所选
     </button>
+    </@shiro.hasPermission>
 </script>
 
 <script type="text/html" id="toOperationCombineTpl">
@@ -528,15 +539,23 @@
 
 <script type="text/html" id="operationTpl">
     <div class="layui-btn-group">
-        <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
-        {{# if(d.status===0){ }}
-        <button type="button" class="layui-btn layui-btn-xs" lay-event="change_status">激活</button>
-        {{# }else{ }}
-        <button type="button" class="layui-btn layui-btn-warm layui-btn-xs" lay-event="change_status">暂停</button>
-        {{# } }}
+        <@shiro.hasPermission name="/internal/algorithmAutoTest/saveAlgorithmTestPlan">
+            <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/algorithmAutoTest/changeAlgorithmTestPlanStatus">
+            {{# if(d.status===0){ }}
+                <button type="button" class="layui-btn layui-btn-xs" lay-event="change_status">激活</button>
+            {{# }else{ }}
+                <button type="button" class="layui-btn layui-btn-warm layui-btn-xs" lay-event="change_status">暂停</button>
+            {{# } }}
+        </@shiro.hasPermission>
         <button type="button" class="layui-btn layui-btn-xs" lay-event="show_task_data">查看任务记录</button>
-        <button type="button" class="layui-btn layui-btn-xs" lay-event="show_test_data_statistics">查看历史统计</button>
-        <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+        <@shiro.hasPermission name="/internal/algorithmAutoTest/showTestDataStatistics">
+            <button type="button" class="layui-btn layui-btn-xs" lay-event="show_test_data_statistics">查看历史统计</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/algorithmAutoTest/deleteAlgorithmTestPlan">
+            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+        </@shiro.hasPermission>
     </div>
 </script>
 </body>
