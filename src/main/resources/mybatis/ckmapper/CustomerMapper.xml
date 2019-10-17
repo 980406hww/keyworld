@@ -169,4 +169,13 @@
         INSERT INTO t_customer (fUserID, fEntryType, fContactPerson, fType, fSearchEngine, fRemark, fStatus)
         VALUES(#{loginName},#{entryType},#{contactPerson}, #{type}, #{searchEngine},#{remark},#{status})
     </insert>
+
+    <update id="updateCustomerUserID">
+        UPDATE t_customer
+        SET fUserID = #{userID}
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" close=")" separator=",">
+            #{uuid}
+        </foreach>
+    </update>
 </mapper>

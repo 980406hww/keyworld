@@ -541,6 +541,24 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         });
     }
 
+
+    window.batchUpdateBelongUser = function(){
+        let uuidArr = get_select_uuids();
+        if (uuidArr.length <= 0) {
+            layer.msg('请选择要操作的客户', {icon: 5});
+            return false;
+        }
+        okLayer.open("首页 / 客户列表 / 修改客户所属", "/internal/customer/toUpdateBelongUser", "40%", "50%", function(layero){
+            window[layero.find("iframe")[0]["name"]].initForm(uuidArr);
+        }, function () {
+            if (sign) {
+                let pageConf = formToJsonObject('searchForm');
+                initLayPage(pageConf);
+                sign = false;
+            }
+        });
+    }
+
     //改客户标签
     window.changeSaleRemark = function (uuid, saleRemark) {
         layer.prompt({

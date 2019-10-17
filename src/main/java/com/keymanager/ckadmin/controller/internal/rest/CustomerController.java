@@ -19,6 +19,7 @@ import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +31,8 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -337,6 +340,47 @@ public class CustomerController extends SpringMVCBaseController {
             logger.error(e.getMessage());
             resultBean.setMsg(e.getMessage());
             resultBean.setCode(400);
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @GetMapping(value = "/toUpdateBelongUser")
+    public ModelAndView toUpdateBelongUser() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("customers/updateBelongUser");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @RequestMapping(value = "/updateCustomerUserID2" , method = RequestMethod.POST)
+    public ResultBean updateCustomerUserID2(@RequestBody Map<String, Object> requestMap){
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
+            String userID = (String) requestMap.get("userID");
+            customerService.updateCustomerUserID(uuids, userID);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setMsg(e.getMessage());
+            resultBean.setCode(400);
+        }
+        return resultBean;
+    }
+
+    @PostMapping("/getActiveUsersForChangeBelong")
+    public ResultBean getActiveUsersForChangeBelong(){
+        ResultBean resultBean = new ResultBean();
+        try {
+            List<UserInfo> activeUsers = userInfoService.findActiveUsers();
+            resultBean.setCode(200);
+            resultBean.setMsg("success");
+            resultBean.setData(activeUsers);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
         }
         return resultBean;
     }

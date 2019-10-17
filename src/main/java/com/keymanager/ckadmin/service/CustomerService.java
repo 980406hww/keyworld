@@ -49,4 +49,6 @@ public interface CustomerService extends IService<Customer> {
     List<CustomerTypeVO> searchCustomerTypeCount(CustomerTypeCriteria customerTypeCriteria);
 
     List<Customer> searchCustomersWithKeyword(List<String> groupNames, String terminalType);
+
+    void updateCustomerUserID(List<Integer> uuids, String userID);
 }
