@@ -149,6 +149,9 @@
             formData = formData.replace(/=/g, "\":\"");
             formData = "{\"" + formData + "\"}";
             formData = $.parseJSON(formData);
+            $.each(formData,function(idx,item){
+                formData[idx] = $.trim(item)
+            });
             return formData;
         }
 
@@ -304,6 +307,9 @@
 
         form.on("submit(search)", function (data) {
             var postData = data.field;
+            $.each(postData,function(idx,item){
+                postData[idx] = $.trim(item)
+            });
             table.reload('negativeRankTable', {
                 where: postData,
                 page: {

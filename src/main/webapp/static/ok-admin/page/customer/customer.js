@@ -28,6 +28,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         formData = formData.replace(/=/g, "\":\"");
         formData = "{\"" + formData + "\"}";
         formData = $.parseJSON(formData);
+        $.each(formData,function(idx,item){
+            formData[idx] = $.trim(item)
+        });
         return formData;
     }
 
@@ -273,6 +276,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         var pageConf = data.field;
         pageConf.limit = 50;
         pageConf.page = 1;
+        $.each(pageConf,function(idx,item){
+            pageConf[idx] = $.trim(item)
+        });
         if (!open) {
             showCondition();
         }

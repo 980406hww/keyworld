@@ -238,6 +238,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         if (!data.field.noPosition){
             data.field.noPosition = '';
         }
+        $.each(data.field,function(idx,item){
+            data.field[idx] = $.trim(item)
+
+        });
         table.reload('keywordTable', {
             where: data.field,
             page: {
