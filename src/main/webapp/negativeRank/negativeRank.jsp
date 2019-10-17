@@ -108,7 +108,7 @@
 <%@ include file="/commons/loadjs.jsp"%>
 <script src="${staticPath}/negativeRank/negativeRank.js"></script>
 <script language="javascript">
-<%--    <shiro:hasPermission name="/internal/negativeRank/updateNegativeRankKeyword">--%>
+    <shiro:hasPermission name="/internal/negativeRank/updateNegativeRankKeyword">
     $(function () {
         $('table td').click(function(){
             if(!$(this).is('.input')){
@@ -171,7 +171,7 @@
             }
         });
     }
-<%--    </shiro:hasPermission>--%>
+    </shiro:hasPermission>
 </script>
 </body>
 </html>
