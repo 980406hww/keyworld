@@ -16,7 +16,9 @@ public class QZSettingSearchCriteria extends BaseCriteria {
     private String updateStatus;
     private Integer dateRangeType;
     private Integer renewalStatus;
-    private Integer checkStatus;
+    private Integer bzbtSort;
+    private Integer jrqsSort;
+    private Integer dbtjSort;
     private String terminalType;
     private String categoryTag;
     private String createTime;
@@ -113,12 +115,28 @@ public class QZSettingSearchCriteria extends BaseCriteria {
         this.dateRangeType = dateRangeType;
     }
 
-    public Integer getCheckStatus() {
-        return checkStatus;
+    public Integer getBzbtSort() {
+        return bzbtSort;
     }
 
-    public void setCheckStatus(Integer checkStatus) {
-        this.checkStatus = checkStatus;
+    public void setBzbtSort(Integer bzbtSort) {
+        this.bzbtSort = bzbtSort;
+    }
+
+    public Integer getJrqsSort() {
+        return jrqsSort;
+    }
+
+    public void setJrqsSort(Integer jrqsSort) {
+        this.jrqsSort = jrqsSort;
+    }
+
+    public Integer getDbtjSort() {
+        return dbtjSort;
+    }
+
+    public void setDbtjSort(Integer dbtjSort) {
+        this.dbtjSort = dbtjSort;
     }
 
     public String getTerminalType() {

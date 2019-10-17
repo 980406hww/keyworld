@@ -80,35 +80,43 @@
             FROM t_qz_keyword_rank_info qk
             WHERE qk.fQZSettingUuid = qs.fUuid
             AND qk.fTerminalType = #{qzSettingSearchCriteria.terminalType}
-            <if test="qzSettingSearchCriteria.checkStatus != null">
+            <if test="qzSettingSearchCriteria.bzbtSort != null">
                 <choose>
-                    <when test="qzSettingSearchCriteria.checkStatus == 1">
+                    <when test="qzSettingSearchCriteria.bzbtSort == 1">
                         AND qk.fIncrease &lt;= -0.1
                         AND qk.fOneWeekDifference &lt;= -5
                     </when>
-                    <when test="qzSettingSearchCriteria.checkStatus == 2">
+                    <when test="qzSettingSearchCriteria.bzbtSort == 2">
                         AND qk.fIncrease = 0
                     </when>
-                    <when test="qzSettingSearchCriteria.checkStatus == 3">
+                    <when test="qzSettingSearchCriteria.bzbtSort == 3">
                         AND qk.fIncrease &gt;= 0.1
                         AND qk.fOneWeekDifference &gt;= 5
                     </when>
-                    <when test="qzSettingSearchCriteria.checkStatus == 4">
+                </choose>
+            </if>
+            <if test="qzSettingSearchCriteria.dbtjSort != null">
+                <choose>
+                    <when test="qzSettingSearchCriteria.dbtjSort == 4">
                         AND qk.fAchieveLevel &gt; 0
                     </when>
-                    <when test="qzSettingSearchCriteria.checkStatus == 5">
+                    <when test="qzSettingSearchCriteria.dbtjSort == 5">
                         AND qk.fAchieveLevel = 0
                     </when>
-                    <when test="qzSettingSearchCriteria.checkStatus == 6">
+                    <when test="qzSettingSearchCriteria.dbtjSort == 6">
                         AND qk.fDifferenceValue &lt;= 0.1
                     </when>
-                    <when test="qzSettingSearchCriteria.checkStatus == 7">
+                </choose>
+            </if>
+            <if test="qzSettingSearchCriteria.jrqsSort != null">
+                <choose>
+                    <when test="qzSettingSearchCriteria.jrqsSort == 7">
                         AND qk.fTodayDifference &lt; 0
                     </when>
-                    <when test="qzSettingSearchCriteria.checkStatus == 8">
+                    <when test="qzSettingSearchCriteria.jrqsSort == 8">
                         AND qk.fTodayDifference = 0
                     </when>
-                    <when test="qzSettingSearchCriteria.checkStatus == 9">
+                    <when test="qzSettingSearchCriteria.jrqsSort == 9">
                         AND qk.fTodayDifference &gt; 0
                     </when>
                 </choose>

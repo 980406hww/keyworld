@@ -107,8 +107,7 @@ public class QZSettingServiceImpl extends
     private QZCaptureTitleLogService qzCaptureTitleLogService;
 
     @Override
-    public Page<QZSetting> searchQZSetting(Page<QZSetting> page,
-        QZSettingSearchCriteria qzSettingCriteria) {
+    public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingCriteria) {
         page.setRecords(qzSettingDao.searchQZSettings(page, qzSettingCriteria));
         return page;
     }
