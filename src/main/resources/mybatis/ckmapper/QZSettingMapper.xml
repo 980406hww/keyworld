@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.ckadmin.dao.QZSettingDao">
     <select id="searchQZSettings" resultType="com.keymanager.ckadmin.entity.QZSetting">
         SELECT
@@ -10,7 +10,7 @@
         c.fContactPerson AS 'contactPerson',
         o.fOrganizationName AS 'organizationName',
         qs.fDomain AS 'domain',
-        qs.fSearchEngine  AS 'searchEngine',
+        qs.fSearchEngine AS 'searchEngine',
         qs.fBearPawNumber AS 'bearPawNumber',
         <choose>
             <when test="qzSettingSearchCriteria.terminalType == 'PC'">
@@ -34,11 +34,17 @@
         LEFT JOIN t_organization o
         ON o.fUuid = u.fOrganizationID
         WHERE 1 = 1
-        <if test="qzSettingSearchCriteria.loginName != null and qzSettingSearchCriteria.loginName != ''">AND c.fUserID = #{qzSettingSearchCriteria.loginName}</if>
-        <if test="qzSettingSearchCriteria.organizationID != null and qzSettingSearchCriteria.organizationID != ''">AND o.fUuid = #{qzSettingSearchCriteria.organizationID}</if>
-        <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid = #{qzSettingSearchCriteria.customerUuid}</if>
+        <if test="qzSettingSearchCriteria.loginName != null and qzSettingSearchCriteria.loginName != ''">AND c.fUserID = #{qzSettingSearchCriteria.loginName}
+        </if>
+        <if test="qzSettingSearchCriteria.organizationID != null and qzSettingSearchCriteria.organizationID != ''">AND o.fUuid =
+            #{qzSettingSearchCriteria.organizationID}
+        </if>
+        <if test="qzSettingSearchCriteria.customerUuid != null and qzSettingSearchCriteria.customerUuid != ''">AND qs.fCustomerUuid =
+            #{qzSettingSearchCriteria.customerUuid}
+        </if>
         <if test="qzSettingSearchCriteria.domain != null and qzSettingSearchCriteria.domain != ''">AND qs.fDomain = #{qzSettingSearchCriteria.domain}</if>
-        <if test="qzSettingSearchCriteria.userInfoID != null and qzSettingSearchCriteria.userInfoID != ''">AND u.fUuid = #{qzSettingSearchCriteria.userInfoID}</if>
+        <if test="qzSettingSearchCriteria.userInfoID != null and qzSettingSearchCriteria.userInfoID != ''">AND u.fUuid = #{qzSettingSearchCriteria.userInfoID}
+        </if>
         <if test="qzSettingSearchCriteria.searchEngine != 'All'">AND qs.fSearchEngine = #{qzSettingSearchCriteria.searchEngine}</if>
         <choose>
             <when test="qzSettingSearchCriteria.terminalType == 'PC'">
@@ -47,10 +53,13 @@
             </when>
             <when test="qzSettingSearchCriteria.terminalType == 'Phone'">
                 AND qs.fPhoneGroup &gt; ''
-                <if test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">AND qs.fPhoneGroup = #{qzSettingSearchCriteria.group}</if>
+                <if test="qzSettingSearchCriteria.group != null and qzSettingSearchCriteria.group != ''">AND qs.fPhoneGroup = #{qzSettingSearchCriteria.group}
+                </if>
             </when>
         </choose>
-        <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus = #{qzSettingSearchCriteria.updateStatus}</if>
+        <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus =
+            #{qzSettingSearchCriteria.updateStatus}
+        </if>
         <if test="qzSettingSearchCriteria.renewalStatus != null">AND qs.fRenewalStatus = #{qzSettingSearchCriteria.renewalStatus}</if>
         <if test="qzSettingSearchCriteria.autoCrawlKeywordFlag != null">AND qs.fAutoCrawlKeywordFlag = #{qzSettingSearchCriteria.autoCrawlKeywordFlag}</if>
         <if test="qzSettingSearchCriteria.standardSpecies != null and qzSettingSearchCriteria.standardSpecies != ''">
@@ -76,7 +85,7 @@
             )
         </if>
         <if test="qzSettingSearchCriteria.bzbtSort != null or qzSettingSearchCriteria.dbtjSort != null or qzSettingSearchCriteria.jrqsSort != null">
-        AND EXISTS (
+            AND EXISTS (
             SELECT 1
             FROM t_qz_keyword_rank_info qk
             WHERE qk.fQZSettingUuid = qs.fUuid
@@ -123,13 +132,17 @@
                 </choose>
             </if>
             AND qk.fDataProcessingStatus = 1
-        )
+            )
         </if>
         <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
             AND EXISTS (SELECT 1 FROM t_qz_category_tag qc WHERE qc.fQZSettingUuid = qs.fUuid AND qc.fTagName = #{qzSettingSearchCriteria.categoryTag})
         </if>
-        <if test="qzSettingSearchCriteria.createTime != null and qzSettingSearchCriteria.createTime != ''">AND qs.fCreateTime &gt;= #{qzSettingSearchCriteria.createTime}</if>
-        <if test="qzSettingSearchCriteria.createTimePrefix != null and qzSettingSearchCriteria.createTimePrefix != ''">AND qs.fCreateTime &lt;= #{qzSettingSearchCriteria.createTimePrefix}</if>
+        <if test="qzSettingSearchCriteria.createTime != null and qzSettingSearchCriteria.createTime != ''">AND qs.fCreateTime &gt;=
+            #{qzSettingSearchCriteria.createTime}
+        </if>
+        <if test="qzSettingSearchCriteria.createTimePrefix != null and qzSettingSearchCriteria.createTimePrefix != ''">AND qs.fCreateTime &lt;=
+            #{qzSettingSearchCriteria.createTimePrefix}
+        </if>
         <choose>
             <when test="qzSettingSearchCriteria.dateRangeType == 0">
                 AND EXISTS (select qs.fUuid from t_qz_operation_type ot where qs.fUuid = ot.fQZSettingUuid and ot.fNextChargeDate = CURDATE())
@@ -153,14 +166,14 @@
 
     <select id="searchQZSettingSearchEngines" resultType="com.keymanager.ckadmin.vo.QZSettingVO">
         SELECT
-        	qs.fSearchEngine AS 'searchEngine',
-        	qs.fPcGroup AS 'pcGroup',
-        	qs.fPhoneGroup AS 'phoneGroup'
+        qs.fSearchEngine AS 'searchEngine',
+        qs.fPcGroup AS 'pcGroup',
+        qs.fPhoneGroup AS 'phoneGroup'
         FROM t_qz_setting qs
         WHERE 1 = 1
-    	<if test="customerUuid != null and customerUuid != ''">AND qs.fCustomerUuid = #{customerUuid}
-    	</if>
-    	<if test="domain != null and domain != ''">AND qs.fDomain = #{domain}</if>
+        <if test="customerUuid != null and customerUuid != ''">AND qs.fCustomerUuid = #{customerUuid}
+        </if>
+        <if test="domain != null and domain != ''">AND qs.fDomain = #{domain}</if>
     </select>
 
     <select id="getQZSettingGroupInfo" resultType="java.lang.Integer">
@@ -345,4 +358,13 @@
             </otherwise>
         </choose>
     </select>
+
+    <update id="updateCustomerUuidByQzUuids">
+        UPDATE t_qz_setting
+        SET fCustomerUuid = #{customerUuid}
+        WHERE fUuid IN
+        <foreach item="item" collection="qzUuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
 </mapper>

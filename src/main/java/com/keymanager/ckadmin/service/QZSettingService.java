@@ -69,9 +69,11 @@ public interface QZSettingService extends IService<QZSetting> {
 
     void updateQzSetting(QZSetting qzSetting);
 
-    QZSettingCountVO getQZSettingsCountByCustomerUuid( Long customerUuid);
+    QZSettingCountVO getQZSettingsCountByCustomerUuid(Long customerUuid);
 
     String findQZCustomer(String domain);
 
     List<GroupVO> getAvailableOptimizationGroups(GroupSettingCriteria groupSettingCriteria);
+
+    void updateQZSettingFrom(Long customerUuid, List<Long> uuids);
 }

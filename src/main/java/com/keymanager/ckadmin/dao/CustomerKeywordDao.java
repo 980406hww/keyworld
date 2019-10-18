@@ -131,4 +131,5 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateKeywordCustomerUuid(@Param("keywordUuids") List<String> keywordUuids, @Param("customerUuid") String customerUuid, @Param("terminalType") String terminalType);
 
+    void updateCustomerUuidByQzUuids(@Param("customerUuid") Long customerUuid, @Param("qzUuids") List<Long> qzUuids);
 }

@@ -648,6 +648,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     public void updateKeywordCustomerUuid(List<String> keywordUuids, String customerUuid, String terminalType) {
         customerKeywordDao.updateKeywordCustomerUuid(keywordUuids, customerUuid, terminalType);
     }
+
+    @Override
+    public void updateCustomerUuidByQzUuids(Long customerUuid, List<Long> qzUuids) {
+        customerKeywordDao.updateCustomerUuidByQzUuids(customerUuid, qzUuids);
+    }
 }
 
 
