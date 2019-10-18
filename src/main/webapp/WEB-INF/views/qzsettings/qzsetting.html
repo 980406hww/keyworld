@@ -745,6 +745,12 @@
                                         </div>
                                     </div>
                                     <div class="layui-inline">
+                                        <label class="layui-form-label">创建时间</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" class="layui-input" id="time1" name="createTimes" placeholder="请选择日期">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
                                         <label class="layui-form-label">达标优化类型</label>
                                         <div class="layui-input-inline">
                                             <select name="optimizationType" id="optimizationType">
@@ -753,13 +759,6 @@
                                                 <option value="2">次优化</option>
                                                 <option value="0">辅助优化</option>
                                             </select>
-                                        </div>
-                                    </div>
-                                    <div class="layui-inline">
-                                        <label class="layui-form-label">创建时间</label>
-                                        <div class="layui-input-inline">
-                                            <input type="text" class="layui-input" id="createTimes"
-                                                   name="createTimes" readonly placeholder="请选择日期">
                                         </div>
                                     </div>
                                     <div class="layui-inline">
@@ -819,10 +818,6 @@
         var layer = layui.layer;
         var laydate = layui.laydate;
 
-        laydate.render({
-            elem: '#createTimes',
-            range: true
-        });
         let customerUuid = $("#customerUuidTmp").val();
         let whereCondition = {searchEngine: '百度', terminalType: 'PC'};
         if (customerUuid && customerUuid !== "") {
@@ -3098,6 +3093,12 @@
                 }
             })
         };
+
+        laydate.render({
+            elem: '#time1',
+            range: true,
+            target: 'click'
+        });
     });
 </script>
 
