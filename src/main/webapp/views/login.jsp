@@ -37,7 +37,7 @@
         <span style="position: relative;float: left;margin-left: 4px;">
             <select name="version" style="width: 53px;height:20px;padding:0px;" class="ipt">
                 <option value="1.0">旧版</option>
-                <option value="2.0">新版</option>
+                <option value="2.0" selected>新版</option>
             </select>
         </span>
         <span style="position: relative;text-align: left;margin-right:120px; margin-top: 2px">

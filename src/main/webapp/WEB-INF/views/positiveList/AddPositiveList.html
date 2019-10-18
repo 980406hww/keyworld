@@ -32,13 +32,13 @@
         <div class="layui-form-item">
             <label class="layui-form-label">URL</label>
             <div class="layui-input-block">
-                <input type="text" name="url" placeholder="请输入URL" autocompvare="off" class="layui-input" lay-verify="required">
+                <input type="text" name="url" placeholder="请输入URL" autocompvare="off" class="layui-input" lay-verify="url">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">原始URL</label>
             <div class="layui-input-block">
-                <input type="text" name="originalUrl" placeholder="请输入原始URL" autocompvare="off" class="layui-input" lay-verify="required">
+                <input type="text" name="originalUrl" placeholder="请输入原始URL" autocompvare="off" class="layui-input" lay-verify="url">
             </div>
         </div>
         <div class="layui-form-item">
@@ -50,7 +50,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">排名</label>
             <div class="layui-input-block">
-                <input type="text" name="position" placeholder="请输入排名" autocompvare="off" class="layui-input">
+                <input type="text" name="position" placeholder="请输入排名" autocompvare="off" class="layui-input" lay-verify="number">
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
@@ -138,6 +138,25 @@
         $('#close').click(function () {
             parent.layer.close(parent.layer.getFrameIndex(window.name));
             return false;
+        });
+
+        form.verify({
+            url: function(value, item){
+                if(value != ""){
+                    if(value.indexOf(".") == -1){
+                        return "请输入正确url"
+                    }
+                }else{
+                    return "url不能为空"
+                }
+            },
+            number: function(value, item){
+                if(value != ""){
+                    if(!/^[1-9]\d*$/.test(value)){
+                        return "请输入大于0的整数排名"
+                    }
+                }
+            }
         });
 
     })
