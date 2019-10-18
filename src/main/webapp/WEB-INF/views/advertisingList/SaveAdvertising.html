@@ -76,16 +76,16 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">投放时间</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" id="advertisingTime" name="advertisingTime" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">时间限制</label>
             <div class="layui-input-block">
                 <input name="advertisingTimeSet" type="radio" value="0" checked/>永不过期&nbsp;
                 <input name="advertisingTimeSet" type="radio" value="1"/>在设定时间内有效
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">投放时间</label>
-            <div class="layui-input-block">
-                <input type="text" class="layui-input" id="advertisingTime" name="advertisingTime" readonly>
             </div>
         </div>
         <div border="0" id="advertisingBodyCheckedTable" style="display: block;">
@@ -229,7 +229,7 @@
 
     function initWebSiteID(websiteUuid) {
         websiteUuid_ = websiteUuid
-        // init_Select();
+        init_Select();
     }
 
     function setForm(l, u) {
@@ -246,7 +246,7 @@
                     friendlyLinkType_ = res.data.friendlyLinkType;
                     advertisingArcType_ = res.data.advertisingArcType;
                     layui.form.val("advertisingForm", res.data);
-                    // init_Select();
+                    init_Select();
                 } else {
                     l.layer.msg(res.msg);
                 }
@@ -292,9 +292,7 @@
             range: true,
         });
 
-        init_SelectData();
-
-        function init_SelectData(){
+        window.init_SelectData = function(){
             $.ajax({
                 url: "/internal/advertisingList/searchAdvertisingAllTypeAndCustomerList/" + websiteUuid_,
                 type: "GET",

@@ -18,7 +18,7 @@
                 <input type="text" id="machineGroup" name="machineGroup" lay-verify="required" placeholder="请输入机器分组" autocomplete="off" class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item">
+        <div class="layui-form-item" pane>
             <label class="layui-form-label">允许换组</label>
             <div class="layui-input-block">
                 <input type="radio" name="allowSwitchGroup" value="0" title="不允许" checked>
@@ -34,43 +34,43 @@
         <div class="layui-form-item">
             <label class="layui-form-label">主机</label>
             <div class="layui-input-block">
-                <input type="text" id="host" name="host" lay-verify="required" placeholder="请输入主机" autocomplete="off" class="layui-input">
+                <input type="text" id="host" name="host" lay-verify="ip" placeholder="请输入主机" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">端口</label>
             <div class="layui-input-block">
-                <input type="text" id="port" name="port" lay-verify="required" placeholder="请输入端口" autocomplete="off" class="layui-input">
+                <input type="text" id="port" name="port" lay-verify="port" placeholder="请输入端口" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">VNC和操作系统用户名</label>
             <div class="layui-input-block">
-                <input type="text" id="csUserName" name="csUserName" lay-verify="required" value="Administrator" autocomplete="off" class="layui-input">
+                <input type="text" id="csUserName" name="csUserName" lay-verify="admin" value="Administrator" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">VPS后台系统电脑ID</label>
             <div class="layui-input-block">
-                <input type="text" id="vpsBackendSystemComputerID" name="vpsBackendSystemComputerID" lay-verify="required" placeholder="请输入VPS后台系统电脑ID" autocomplete="off" class="layui-input">
+                <input type="text" id="vpsBackendSystemComputerID" name="vpsBackendSystemComputerID" lay-verify="id" placeholder="请输入VPS后台系统电脑ID" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">VPS后台系统密码</label>
             <div class="layui-input-block">
-                <input type="text" id="vpsBackendSystemPassword" name="vpsBackendSystemPassword" lay-verify="required" placeholder="请输入VPS后台系统密码" autocomplete="off" class="layui-input">
+                <input type="text" id="vpsBackendSystemPassword" name="vpsBackendSystemPassword" lay-verify="pass" placeholder="请输入VPS后台系统密码" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">宽带账号</label>
             <div class="layui-input-block">
-                <input type="text" id="broadbandAccount" name="broadbandAccount" lay-verify="required" placeholder="请输入宽带账号" autocomplete="off" class="layui-input">
+                <input type="text" id="broadbandAccount" name="broadbandAccount" lay-verify="account" placeholder="请输入宽带账号" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">宽带密码</label>
             <div class="layui-input-block">
-                <input type="text" id="broadbandPassword" name="broadbandPassword" lay-verify="required" placeholder="请输入宽带密码" autocomplete="off" class="layui-input">
+                <input type="text" id="broadbandPassword" name="broadbandPassword" lay-verify="pass" placeholder="请输入宽带密码" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
@@ -170,6 +170,33 @@
         $('#close').click(function () {
             parent.layer.close(parent.layer.getFrameIndex(window.name));
             return false;
+        });
+
+        form.verify({
+            ip: [
+                /^(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|[1-9])\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)$/,
+                "请输入正确的ip地址"
+            ],
+            port: [
+                /^[0-9]\d*$/,
+                "请输入正确的端口号"
+            ],
+            admin: [
+                /^[-_a-zA-Z0-9]{1,16}$/,
+                "用户名不符合规范"
+            ],
+            id: [
+                /^[-_a-zA-Z0-9]{1,16}$/,
+                "id不符合规范"
+            ],
+            account: [
+                /^[-_a-zA-Z0-9]{1,16}$/,
+                "账号不符合规范"
+            ],
+            pass: [
+                /^[-_a-zA-Z0-9]{1,16}$/,
+                "密码必须为字母、数字或下划线"
+            ]
         });
 
     });

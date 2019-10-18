@@ -21,7 +21,6 @@
             <input type="hidden" name="uuid">
             <div class="layui-input-block">
                 <select name="programType" lay-verify="required">
-                    <option value="">请选择程序类型</option>
                     <option value="New">New</option>
                     <option value="Old">Old</option>
                 </select>
@@ -49,7 +48,6 @@
             <label class="layui-form-label">升级状态</label>
             <div class="layui-input-block">
                 <select name="status" lay-verify="required">
-                    <option value="">请选择升级状态</option>
                     <option value="true">开始</option>
                     <option value="false">暂停</option>
                 </select>
@@ -119,6 +117,13 @@
             if(terminalType_ != null || terminalType_ != ''){
                 data.field.terminalType = terminalType_
             }
+            var v1 = data.field.version
+            var v2 = data.field.targetVersion
+            var result = versionStringCompare(v1, v2)
+            if(result != -1){
+                layer.msg("目标版本不能低于当前版本！")
+                return false
+            }
             var data = JSON.stringify(data.field)
             $.ajax({
                 url: '/internal/clientUpgrade/saveClientUpgrade2',
@@ -141,6 +146,27 @@
             });
             return false;
         });
+
+        function versionStringCompare(preVersion, lastVersion){
+            var sources = preVersion.split('.');
+            var dests = lastVersion.split('.');
+            var maxL = Math.max(sources.length, dests.length);
+            var result = 0;
+            for (let i = 0; i < maxL; i++) {
+                let preValue = sources.length>i ? sources[i]:0;
+                let preNum = isNaN(Number(preValue)) ? preValue.charCodeAt() : Number(preValue);
+                let lastValue = dests.length>i ? dests[i]:0;
+                let lastNum =  isNaN(Number(lastValue)) ? lastValue.charCodeAt() : Number(lastValue);
+                if (preNum < lastNum) {
+                    result = -1;
+                    break;
+                } else if (preNum > lastNum) {
+                    result = 1;
+                    break;
+                }
+            }
+            return result;
+        }
 
         $('#close').click(function () {
             parent.layer.close(parent.layer.getFrameIndex(window.name));

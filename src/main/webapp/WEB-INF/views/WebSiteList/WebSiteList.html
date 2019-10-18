@@ -443,8 +443,8 @@
                 case 'deleteWebsites':
                     deleteWebsites();
                     break;
-                case 'updateOwner':
-                    updateOwner();
+                case 'synchronousFriendlyLink':
+                    synchronousFriendlyLink();
                     break;
                 case 'updateStatus':
                     updateStatus();
@@ -469,114 +469,8 @@
             window.open("/internal/websites/toFriendlyLink/" + uuid)
         }
 
-        function uploadIndustryInfo(excelType){
-            var terminalType = $("#terminalType").val()
-            if(terminalType == '' || terminalType == null){
-                terminalType = 'PC'
-            }
-            okLayer.open("首页/行业列表/上传Excel", "/internal/websites/toUploadIndustryInfo", "25%", "20%", function(layero){
-                window[layero.find("iframe")[0]["name"]].initData(excelType, terminalType);
-            },function(){
-                if(sign){
-                    active['reload'].call(this);
-                    sign = false;
-                }
-            },150);
-            return false;
-        }
+        function synchronousFriendlyLink(){
 
-        function downloadIndustryInfos(){
-            var checkStatus = table.checkStatus('websiteListTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
-            var count = 0
-            $.each(data, function (index, item) {
-                if(item.detailCount > 0){
-                    count = count + 1
-                }
-                uuidArr.push(item.uuid);
-            });
-
-            if (uuidArr.length <= 0) {
-                layer.msg('请选择要要导出网站联系信息的行业', {icon: 5});
-                return
-            }
-
-            if(count <= 0){
-                layer.msg('所选行业暂无相关网站信息', {icon: 5});
-                return
-            }
-
-            var IndustryDetailInfoCsvExportFrom = $("#IndustryDetailInfoCsvExportFrom");
-            $("#industryUuids").val(uuidArr);
-            IndustryDetailInfoCsvExportFrom.submit();
-        }
-
-        function downLoadTemplate() {
-            window.location.href = "/SuperIndustrySimpleList.xls"
-        }
-
-        function updateStatus(){
-            var checkStatus = table.checkStatus('websiteListTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
-            $.each(data, function (index, item) {
-                if(item.status == "1"){
-
-                }else{
-                    uuidArr.push(item.uuid);
-                }
-            });
-            if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的行业', {icon: 5});
-                return
-            }
-            var postData = {};
-            postData.uuids = uuidArr;
-            $.ajax({
-                url: '/internal/websites/updateIndustryStatus',
-                type: 'POST',
-                headers: {
-                    "Accept": 'application/json',
-                    "Content-Type": 'application/json'
-                },
-                data: JSON.stringify(postData),
-                success: function (res) {
-                    if (res.code === 200) {
-                        active['reload'].call(this);
-                        layer.msg("操作成功")
-                    } else {
-                        layer.msg(res.msg)
-                    }
-                },
-                error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
-                }
-            });
-        }
-
-        function updateOwner(){
-            var checkStatus = table.checkStatus('websiteListTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
-            $.each(data, function (index, item) {
-                uuidArr.push(item.uuid);
-            });
-            if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的行业', {icon: 5});
-                return
-            }
-            var postData = {};
-            postData.uuids = uuidArr;
-            okLayer.open("首页/行业列表/修改客户归属", "/internal/websites/updateOwner", "30%", "35%", function(layero){
-                window[layero.find("iframe")[0]["name"]].initData(postData);
-            },function(){
-                if(sign){
-                    active['reload'].call(this);
-                    sign = false;
-                }
-            },150);
-            return false;
         }
 
         function modifyWebsiteInfo(data){
