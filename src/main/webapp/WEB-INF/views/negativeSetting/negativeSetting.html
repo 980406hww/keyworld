@@ -301,22 +301,42 @@
                 show_layer_msg("只能选择TXT文件！", 2);
                 return false;
             }
-            try {
-                let reader = new FileReader();
-                reader.readAsText(file, 'gb2312');
-                // 读取完文件之后会回来这里
-                reader.onload = function (e) {
-                    if (flag === 1) {
-                        document.getElementById('customerNegativeKeywords').value = e.target.result;
+            let p_d = new FormData();
+            p_d.append('file', file);
+            $.ajax({
+                url: '/internal/configs/getFileMsg',
+                type: 'post',
+                data: p_d,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function (res) {
+                    console.log(res);
+                    if (res.code === 200) {
+                        try {
+                            let reader = new FileReader();
+                            reader.readAsText(file, res.data);
+                            // 读取完文件之后会回来这里
+                            reader.onload = function (e) {
+                                if (flag === 1) {
+                                    document.getElementById('customerNegativeKeywords').value = e.target.result;
+                                } else {
+                                    document.getElementById('websiteWhiteList').value = e.target.result;
+                                }
+                            };
+                        } catch (e) {
+                            show_layer_msg("读取失败！", 2);
+                            console.error(e);
+                        }
+                        ele.value = '';
                     } else {
-                        document.getElementById('websiteWhiteList').value = e.target.result;
+                        show_layer_msg(res.msg ? res.msg : '请稍后在试', 5);
                     }
-                };
-            } catch (e) {
-                show_layer_msg("读取失败！", 2);
-                console.error(e);
-            }
-            ele.value = '';
+                },
+                error: function () {
+                    show_layer_msg('请稍后再试', 5);
+                }
+            });
         };
 
         function distinctKeywords(str, flag) {

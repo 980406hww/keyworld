@@ -54,7 +54,7 @@ public class NegativeKeywordNameServiceImpl extends ServiceImpl<NegativeKeywordN
 
     @Override
     public void insertBatchByTxtFile(File file, String group) {
-        List<String> companyNames = FileUtil.readTxtFile(file, "UTF-8");
+        List<String> companyNames = FileUtil.readTxtFile(file, FileUtil.getFileCharset(file));
         int rowCount = 5000;
         if (!Utils.isEmpty(companyNames)) {
             int listSize = companyNames.size();

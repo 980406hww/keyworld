@@ -203,7 +203,7 @@
 
         function add_algorithmTestPlan() {
             let url = '/internal/algorithmAutoTest/toAlgorithmTestPlanAdd';
-            okLayer.open("其他 / 测试计划管理 / 添加测试计划", url, "60%", "90%", function (layero) {
+            okLayer.open("其他 / 测试计划管理 / 添加测试计划", url, "60%", "80%", function (layero) {
             }, function () {
                 if (sign) {
                     active['reload'].call(this);
@@ -215,7 +215,7 @@
         function update_algorithmTestPlan(uuid) {
 
             let url = '/internal/algorithmAutoTest/toAlgorithmTestPlanAdd';
-            okLayer.open("其他 / 测试计划管理 / 添加测试计划", url, "60%", "90%", function (layero) {
+            okLayer.open("其他 / 测试计划管理 / 修改测试计划", url, "60%", "80%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(uuid);
             }, function () {
                 if (sign) {
@@ -397,7 +397,7 @@
 
         function show_task_data(uuid){
             let url = '/internal/algorithmAutoTest/toShowTaskData';
-            okLayer.open("其他 / 测试计划管理 / 展示历史统计数据", url, "60%", "90%", function (layero) {
+            okLayer.open("其他 / 测试计划管理 / 查看任务计划", url, "60%", "70%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(uuid);
             }, function () {
                 if (sign) {
@@ -409,7 +409,7 @@
 
         function show_test_data_statistics(uuid){
             let url = '/internal/algorithmAutoTest/toShowTestPlanDataStatistics';
-            okLayer.open("其他 / 测试计划管理 / 展示历史统计数据", url, "60%", "90%", function (layero) {
+            okLayer.open("其他 / 测试计划管理 / 展示历史统计数据", url, "60%", "70%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(uuid);
             }, function () {
                 if (sign) {
