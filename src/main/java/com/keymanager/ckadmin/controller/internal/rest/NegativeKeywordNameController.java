@@ -9,10 +9,11 @@ import com.keymanager.ckadmin.entity.NegativeKeywordNamePositionInfo;
 import com.keymanager.ckadmin.excel.operator.NegativeKeywordNameExcelWriter;
 import com.keymanager.ckadmin.service.NegativeKeywordNamePositionInfoService;
 import com.keymanager.ckadmin.service.NegativeKeywordNameService;
+import com.keymanager.ckadmin.util.FileUtil;
 import com.keymanager.ckadmin.util.Utils;
+import java.io.File;
 import java.util.List;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -21,7 +22,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
@@ -119,6 +122,28 @@ public class NegativeKeywordNameController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             e.printStackTrace();
+            resultBean.setCode(400);
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/negativeKeywordName/searchNegativeKeywordNames")
+    @RequestMapping(value = "/postNegativeExcel", method = RequestMethod.POST)
+    public ResultBean postNegativeExcel(@RequestParam(value = "file") MultipartFile file, @RequestParam(value = "group") String group) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        try {
+            String path = Utils.getWebRootPath() + "txtTemp";
+            File targetFile = new File(path, "company.txt");
+            if (!targetFile.exists()) {
+                targetFile.mkdirs();
+            }
+            file.transferTo(targetFile);
+            negativeKeywordNameService.insertBatchByTxtFile(targetFile, group);
+            FileUtil.delFolder(path);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setMsg(e.getMessage());
             resultBean.setCode(400);
         }
         return resultBean;
