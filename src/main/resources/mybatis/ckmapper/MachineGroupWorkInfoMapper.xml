@@ -32,14 +32,7 @@
         AND ck.fOptimizeGroupName = g.fGroupName
         AND ck.fTerminalType = toc.fTerminalType
         <if test="criteria.machineGroup!=null and criteria.machineGroup!=''">
-            <choose>
-                <when test="criteria.machineGroupFuzzyQuery == null or criteria.machineGroupFuzzyQuery == ''">
-                    AND ck.fMachineGroup = #{criteria.machineGroup}
-                </when>
-                <otherwise>
-                    AND ck.fMachineGroup like concat(#{criteria.machineGroup}, "%")
-                </otherwise>
-            </choose>
+            AND ck.fMachineGroup like concat(#{criteria.machineGroup}, "%")
         </if>
         <if test="criteria.entryType!=null and criteria.entryType!=''">
             AND ck.fType = #{criteria.entryType}

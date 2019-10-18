@@ -27,7 +27,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
         let this_ = window.parent.document.getElementsByTagName('iframe');
         this_ = this_[this_.length - 1];
         let d = this_.dataset;
-        if (d.length !== 0) {
+        if (d.type && d.terminal && d.status) {
             document.getElementById('type').value = d.type;
             document.getElementById('terminalType').value = d.terminal;
             let statuses = document.getElementById('status').children;
@@ -65,33 +65,24 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                     $.each(res.data, function (index, item) {
                         let businessItem = item.split("#");
                         $('#tabItem').append(
-                            '<li data-type="' + businessItem[0] + '" data-terminal="PC">' + businessItem[1] + '电脑</li>' +
-                            '<li data-type="' + businessItem[0] + '" data-terminal="Phone">' + businessItem[1] + '手机</li>');
+                            '<li data-type="' + businessItem[0] + '" data-terminal="PC" lay-id="'+businessItem[0] +'PC">' + businessItem[1] + '电脑</li>' +
+                            '<li data-type="' + businessItem[0] + '" data-terminal="Phone" lay-id="'+businessItem[0]+'Phone">' + businessItem[1] + '手机</li>');
                         if (i++ === 0) {
                             one = businessItem[0];
                         }
                     });
                     let tabItem = document.getElementById('tabItem').children;
                     if (data) {
-                        for (let i = 0; i < tabItem.length; i++) {
-                            if (tabItem[i].dataset.type === data.type && tabItem[i].dataset.terminal === data.terminal) {
-                                flag = false;
-                                $('#type').val(data.type);
-                                $('#terminalType').val(data.terminal);
-                                tabItem[i].classList.add('layui-this');
-                                break;
-                            }
-                        }
+                        $('#type').val(data.type);
+                        $('#terminalType').val(data.terminal);
+                        element.tabChange('keywordTab', data.type+data.terminal);
                     } else {
                         tabItem[0].classList.add('layui-this');
                         $('#type').val(one);
-                        $('#terminalType').val('PC');
+                        $('#terminalType').val(terminal225);
+                        element.tabChange('keywordTab', one+terminal225);
                     }
-                    if (flag) {
-                        tabItem[0].classList.add('layui-this');
-                        $('#type').val(one);
-                        $('#terminalType').val('PC');
-                    }
+
                     form.render("select");
                 }
             }
@@ -112,6 +103,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                         + item.userName
                         + '</option>');// 下拉菜单里添加元素
                 });
+                if (belongUser !== '' || belongUser != null) {
+                    $("#userName").val(belongUser)
+                }
                 form.render("select");
             }
         });
@@ -134,6 +128,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'],
                     $('#searchEngine').append(
                         '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
                 });
+                if (searchEngine != null || searchEngine != null) {
+                    $("#searchEngine").val(searchEngine)
+                }
                 form.render("select");
             }
         });

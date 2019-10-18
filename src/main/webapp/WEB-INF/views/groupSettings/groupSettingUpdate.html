@@ -94,7 +94,7 @@
                 </div>
                 <div class="layui-col-md6">
                     <div class="layui-form-item">
-                        <label class="layui-form-label" style="width: 100%;text-align: left">当前剩余 <span id="unusedPercent"></span>% ; <span style="display: none" id="ocspan"> 需要分配操作数量：<span id="operationCombineCount" ></span></span></label>
+                        <label class="layui-form-label" style="width: 100%;text-align: left">当前剩余 <span id="unusedPercent"></span>% <span style="display: none" id="ocspan"> ; 需要分配操作数量：<span id="operationCombineCount" ></span></span></label>
                     </div>
                 </div>
             </div>
@@ -115,7 +115,8 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">页数</label>
                     <div class="layui-input-block " onclick="checkItem(this)">
-                        <input type="text" name="page" id="page" placeholder="请输入页数" autocomplete="off" value="5" class="layui-input"/>
+                        <input type="text" name="page" id="page" placeholder="请输入页数" autocomplete="off" value="5" class="layui-input"
+                               onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
                     </div>
                 </div>
             </div>
@@ -138,7 +139,8 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">无效点击数</label>
                     <div class="layui-input-block" onclick="checkItem(this)">
-                        <input type="number" name="settingMaxInvalidCount" id="settingMaxInvalidCount" placeholder="请输入无效点击量" autocomplete="off" value="8" class="layui-input"/>
+                        <input type="number" name="settingMaxInvalidCount" id="settingMaxInvalidCount" placeholder="请输入无效点击量" autocomplete="off" value="8" class="layui-input"
+                               onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
                     </div>
                 </div>
             </div>
@@ -166,11 +168,13 @@
                     <div class="layui-inline" >
                         <label class="layui-form-label">进入页次数</label>
                         <div class="layui-input-inline" style="width: 147.5px;" onclick="checkItem(this)">
-                            <input type="number" name="entryPageMinCount" id="entryPageMinCount" value="0" class="layui-input">
+                            <input type="number" name="entryPageMinCount" id="entryPageMinCount" value="0" class="layui-input"
+                                   onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
                         </div>
                         <div class="layui-form-mid">-</div>
                         <div class="layui-input-inline" style="width:147.5px;" onclick="checkItem(this)">
-                            <input type="number" name="entryPageMaxCount" id="entryPageMaxCount" value="0" class="layui-input">
+                            <input type="number" name="entryPageMaxCount" id="entryPageMaxCount" value="0" class="layui-input"
+                                   onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
                         </div>
                     </div>
                 </div>
@@ -181,11 +185,13 @@
                     <div class="layui-inline" >
                         <label class="layui-form-label">页面停留时间(毫秒)</label>
                         <div class="layui-input-inline" style="width: 147.5px;" onclick="checkItem(this)">
-                            <input type="number" name="pageRemainMinTime" id="pageRemainMinTime" value="3000" class="layui-input">
+                            <input type="number" name="pageRemainMinTime" id="pageRemainMinTime" value="3000" class="layui-input"
+                                   onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');"  />
                         </div>
                         <div class="layui-form-mid">-</div>
                         <div class="layui-input-inline" style="width:147.5px;" onclick="checkItem(this)">
-                            <input type="number" name="pageRemainMaxTime" id="pageRemainMaxTime" value="5000" class="layui-input">
+                            <input type="number" name="pageRemainMaxTime" id="pageRemainMaxTime" value="5000" class="layui-input"
+                                   onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');"  />
                         </div>
                     </div>
                 </div>
@@ -196,11 +202,13 @@
                     <div class="layui-inline" >
                         <label class="layui-form-label">输入延时(毫秒)</label>
                         <div class="layui-input-inline" style="width: 147.5px;" onclick="checkItem(this)">
-                            <input type="number" name="inputDelayMinTime" id="inputDelayMinTime" value="50" class="layui-input">
+                            <input type="number" name="inputDelayMinTime" id="inputDelayMinTime" value="50" class="layui-input"
+                                   onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
                         </div>
                         <div class="layui-form-mid">-</div>
                         <div class="layui-input-inline" style="width:147.5px;" onclick="checkItem(this)">
-                            <input type="number" name="inputDelayMaxTime" id="inputDelayMaxTime" value="80" class="layui-input">
+                            <input type="number" name="inputDelayMaxTime" id="inputDelayMaxTime" value="80" class="layui-input"
+                                   onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');"  />
                         </div>
                     </div>
 
@@ -211,11 +219,13 @@
                     <div class="layui-inline" >
                         <label class="layui-form-label">滑动延时(毫秒)</label>
                         <div class="layui-input-inline" style="width: 147.5px;" onclick="checkItem(this)">
-                            <input type="number" name="slideDelayMinTime" id="slideDelayMinTime" value="700" class="layui-input">
+                            <input type="number" name="slideDelayMinTime" id="slideDelayMinTime" value="700" class="layui-input"
+                                   onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
                         </div>
                         <div class="layui-form-mid">-</div>
                         <div class="layui-input-inline" style="width:147.5px;" onclick="checkItem(this)">
-                            <input type="number" name="slideDelayMaxTime" id="slideDelayMaxTime" value="1500" class="layui-input">
+                            <input type="number" name="slideDelayMaxTime" id="slideDelayMaxTime" value="1500" class="layui-input"
+                                   onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
                         </div>
                     </div>
 
@@ -226,11 +236,13 @@
                     <div class="layui-inline" >
                         <label class="layui-form-label">标题停留(毫秒)</label>
                         <div class="layui-input-inline" style="width: 147.5px;" onclick="checkItem(this)">
-                            <input type="number" name="titleRemainMinTime" id="titleRemainMinTime" value="1000" class="layui-input">
+                            <input type="number" name="titleRemainMinTime" id="titleRemainMinTime" value="1000" class="layui-input"
+                                   onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
                         </div>
                         <div class="layui-form-mid">-</div>
                         <div class="layui-input-inline" style="width:147.5px;" onclick="checkItem(this)">
-                            <input type="number" name="titleRemainMaxTime" id="titleRemainMaxTime" value="3000" class="layui-input">
+                            <input type="number" name="titleRemainMaxTime" id="titleRemainMaxTime" value="3000" class="layui-input"
+                                   onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
                         </div>
                     </div>
                 </div>
@@ -240,7 +252,8 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">刷多少个词换IP</label>
                     <div class="layui-input-block " onclick="checkItem(this)">
-                        <input type="number" name="optimizeKeywordCountPerIP" id="optimizeKeywordCountPerIP" placeholder="请输入分组占比" autocomplete="off" value="1" class="layui-input">
+                        <input type="text" name="optimizeKeywordCountPerIP" id="optimizeKeywordCountPerIP" placeholder="请输入分组占比" autocomplete="off" value="1" class="layui-input"
+                               onkeyup="this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
                     </div>
                 </div>
             </div>
@@ -507,6 +520,10 @@
             numberLimit: [
                 /^([1-9]\d?|100)$/,
                 "请1-100范围内的数字"
+            ],
+            positiveInteger: [
+                /(^$)|(^[0-9]*[1-9][0-9]*$)/,
+                "请输入合适的正整数、如：1、2、3"
             ],
             tagNames: [
                 /(^$)|(^[\u4e00-\u9fa50-9a-zA-Z,]+$)/,

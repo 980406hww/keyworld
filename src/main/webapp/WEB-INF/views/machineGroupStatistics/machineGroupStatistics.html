@@ -147,9 +147,6 @@
                                         <input type="text" autocomplete="off" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" class="layui-input">
                                     </div>
                                     <div class="layui-inline">
-                                        <input type="checkbox" name="machineGroupFuzzyQuery" title="模糊搜索">
-                                    </div>
-                                    <div class="layui-inline">
                                         <input type="text" autocomplete="off" name="customerName" id="customerName" placeholder="请输入客户名称" class="layui-input">
                                     </div>
                                     <!--                        <div class="layui-inline">-->
@@ -259,7 +256,7 @@
         window.resetInvaidRefreshCount = function (groupName, customerName, fullMatchGroup) {
             let condition = {};
             condition.customerName = customerName;
-            condition.groupName = groupName;
+            condition.machineGroup = groupName;
             condition.fullMatchGroup = fullMatchGroup;
             condition.entryType = formToJsonObject("searchForm").entryType;
             $.ajax({

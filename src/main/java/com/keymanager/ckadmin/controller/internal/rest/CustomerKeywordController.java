@@ -3,13 +3,13 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.ckadmin.common.result.ResultBean;
-import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
-import com.keymanager.ckadmin.criteria.PTKeywordCountCriteria;
-import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.criteria.CustomerKeywordCleanTitleCriteria;
 import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
+import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
+import com.keymanager.ckadmin.criteria.PTKeywordCountCriteria;
+import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.entity.UserInfo;
@@ -17,16 +17,16 @@ import com.keymanager.ckadmin.excel.operator.CustomerKeywordAndUrlCvsExportWrite
 import com.keymanager.ckadmin.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
-import com.keymanager.ckadmin.service.PerformanceService;
-import com.keymanager.ckadmin.vo.KeywordStandardVO;
-import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import com.keymanager.ckadmin.service.CustomerService;
+import com.keymanager.ckadmin.service.PerformanceService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.ReflectUtils;
 import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
+import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
+import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.webDo.KeywordCountDO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
@@ -47,8 +47,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -683,23 +681,32 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toKeywords/{businessType}/{terminalType}/{keyword}")
+    @GetMapping(value = "/toKeywordsFromPT/{businessType}/{terminalType}/{searchEngine}/{belongUser}/{keyword}")
     public ModelAndView toKeywords(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
+        @PathVariable(name = "searchEngine") String searchEngine, @PathVariable(name = "belongUser") String belongUser,
         @PathVariable(name = "keyword") String keyword) throws UnsupportedEncodingException {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/keyword");
         mv.addObject("businessType", businessType);
         //取名叫terminalType会与session中存在的terminalType同名，值会被覆盖成session中的值
         mv.addObject("terminalType2", terminalType);
+        searchEngine = URLDecoder.decode(searchEngine, "UTF-8");
         keyword = URLDecoder.decode(keyword, "UTF-8");
+        if (!("null").equals(searchEngine)) {
+            mv.addObject("se123", searchEngine);
+        }
+        if (!("null").equals(belongUser)) {
+            mv.addObject("belongUser", belongUser);
+        }
         mv.addObject("kw123", keyword);
         return mv;
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toKeywordsWithPosition/{businessType}/{terminalType}/{keyword}/{position}")
+    @GetMapping(value = "/toKeywordsFromPTWithPosition/{businessType}/{terminalType}/{searchEngine}/{belongUser}/{keyword}/{position}")
     public ModelAndView toKeywordsWithPosition(@PathVariable(name = "businessType") String businessType,
-        @PathVariable(name = "terminalType") String terminalType,
+        @PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "searchEngine") String searchEngine,
+        @PathVariable(name = "belongUser") String belongUser,
         @PathVariable(name = "keyword") String keyword, @PathVariable(name = "position") Integer position) throws UnsupportedEncodingException {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/keyword");
@@ -738,14 +745,14 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
-    @RequestMapping(value = "/updateKeywordCustomerUuid2" , method = RequestMethod.POST)
+    @RequestMapping(value = "/updateKeywordCustomerUuid2", method = RequestMethod.POST)
     public ResultBean updateKeywordCustomerUuid(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
-            List<String> keywordUuids = (List<String>)requestMap.get("uuids");
-            String customerUuid = (String)requestMap.get("customerUuid");
-            String terminalType = (String)requestMap.get("terminalType");
-            customerKeywordService.updateKeywordCustomerUuid(keywordUuids,customerUuid,terminalType);
+            List<String> keywordUuids = (List<String>) requestMap.get("uuids");
+            String customerUuid = (String) requestMap.get("customerUuid");
+            String terminalType = (String) requestMap.get("terminalType");
+            customerKeywordService.updateKeywordCustomerUuid(keywordUuids, customerUuid, terminalType);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setMsg(e.getMessage());
