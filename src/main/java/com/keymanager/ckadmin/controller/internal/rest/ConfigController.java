@@ -57,7 +57,7 @@ public class ConfigController {
         return resultBean;
     }
 
-    //    @RequiresPermissions("/internal/config/updateNegativeKeywords")
+    @RequiresPermissions("/internal/config/updateNegativeKeywords")
     @RequestMapping(value = "/updateNegativeKeywords", method = RequestMethod.POST)
     public ResultBean updateNegativeKeywords(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean(200, "success");

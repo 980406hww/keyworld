@@ -78,7 +78,7 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
     }
 
     public void delFriendlyLinks(Map map){
-        Long websiteUuid = Long.valueOf((Integer)map.get("websiteUuid"));
+        Long websiteUuid = Long.valueOf((String)map.get("websiteUuid"));
         List<String> uuids = (List<String>) map.get("uuids");
         List<String> friendlyLinkids = friendlyLinkDao.searchFriendlyLinkids(websiteUuid, uuids);
         String[] uuidArrays = new String[friendlyLinkids.size()];
@@ -350,8 +350,8 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
     }
 
     public void pushFriendlyLink(Map map){
-        List<String> uuids = (List<String>) map.get("uuids");
-        for (String uuid: uuids) {
+        List<Integer> uuids = (List<Integer>) map.get("uuids");
+        for (Integer uuid: uuids) {
             FriendlyLink friendlyLink = friendlyLinkDao.selectById(Long.valueOf(uuid));
             if (friendlyLink.getFriendlyLinkId() == 0){
                 saveOrUpdateConnectionCMS(friendlyLink, null, WebsiteRemoteConnectionEnum.add.name());

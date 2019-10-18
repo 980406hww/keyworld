@@ -75,6 +75,7 @@
             AND qot.fIsDeleted = 0
             )
         </if>
+        <if test="qzSettingSearchCriteria.bzbtSort != null or qzSettingSearchCriteria.dbtjSort != null or qzSettingSearchCriteria.jrqsSort != null">
         AND EXISTS (
             SELECT 1
             FROM t_qz_keyword_rank_info qk
@@ -123,6 +124,7 @@
             </if>
             AND qk.fDataProcessingStatus = 1
         )
+        </if>
         <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
             AND EXISTS (SELECT 1 FROM t_qz_category_tag qc WHERE qc.fQZSettingUuid = qs.fUuid AND qc.fTagName = #{qzSettingSearchCriteria.categoryTag})
         </if>

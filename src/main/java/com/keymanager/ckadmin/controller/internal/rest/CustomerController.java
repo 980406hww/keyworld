@@ -69,7 +69,7 @@ public class CustomerController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/customer/searchCustomers")
     @PostMapping(value = "/getCustomers")
-    public ResultBean getCustomers(@RequestBody CustomerCriteria customerCriteria) {
+    public ResultBean getCustomers(@RequestBody CustomerCriteria customerCriteria, HttpSession session) {
         ResultBean resultBean = new ResultBean();
         if (SQLFilterUtils.sqlInject(customerCriteria.toString())) {
             resultBean.setCode(400);
@@ -93,6 +93,11 @@ public class CustomerController extends SpringMVCBaseController {
             }
             if (customerCriteria.getOrderMode() != null && customerCriteria.getOrderMode() == 0) {
                 page.setAsc(false);
+            }
+            String loginName = (String) session.getAttribute("username");
+            boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(loginName));
+            if(!isDepartmentManager) {
+                customerCriteria.setLoginName(loginName);
             }
             page = customerService.searchCustomers(page, customerCriteria);
             List<Customer> customers = page.getRecords();

@@ -382,27 +382,27 @@
 
 <script type="text/html" id="toolbarTpl">
     <div class="layui-btn-container">
-    <@shiro.hasPermission name="/internal/advertising/saveAdvertisings">
     <button class="layui-btn layui-btn-sm" lay-event="showAdvertisingDialog">添加</button>
+    <@shiro.hasPermission name="/internal/advertising/saveAdvertisings">
     </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/advertising/pushAdvertising">
     <button class="layui-btn layui-btn-sm" lay-event="pushAdvertising">推送所选信息到远程服务</button>
+    <@shiro.hasPermission name="/internal/advertising/pushAdvertising">
     </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/advertising/deleteAdvertisings">
     <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="deleteBatchAdvertising">
         <i class="layui-icon layui-icon-delete"></i>删除所选
     </button>
+    <@shiro.hasPermission name="/internal/advertising/deleteAdvertisings">
     </@shiro.hasPermission>
     </div>
 </script>
 
 <script type="text/html" id="operationTpl">
     <div class="layui-btn-group">
-        <@shiro.hasPermission name="/internal/advertising/saveAdvertising">
-        <button type="button" class="layui-btn layui-btn-xs" lay-event="updateAdvertising">修改</button>
+    <button type="button" class="layui-btn layui-btn-xs" lay-event="updateAdvertising">修改</button>
+    <@shiro.hasPermission name="/internal/advertising/saveAdvertising">
     </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/advertising/deleteAdvertising">
     <button type="button" class="layui-btn layui-btn-xs" lay-event="deleteAdvertising">删除</button>
+    <@shiro.hasPermission name="/internal/advertising/deleteAdvertising">
     </@shiro.hasPermission>
     </div>
 </script>

@@ -99,14 +99,42 @@
                     zoom: 1.2,
                     label: {
                         normal: {
-                            show: true
-                        },
-                        emphasis: {
-                            show: true
+                            show: true,
+                            textStyle: {
+                                color: '#000',                //文字颜色
+                                fontSize: 13,                  //字体大小
+                            },
+                            formatter: function (v) {
+                                v.value = !v.value ? '暂无' : v.value + '台';
+                                return v.name + ' ' + v.value;
+                            }
                         }
                     },
                     data: data
-                }]
+                }],//左侧小导航图标
+                visualMap: {
+                    show: true,
+                    left: 20,
+                    top: 20,
+                    splitList: [
+                        {start: 50},
+                        {start: 31, end: 50},
+                        {start: 16, end: 30},
+                        {start: 5, end: 15},
+                        {start: 0, end: 4},
+                        {start: -1, end: 0},
+                    ],
+                    color: ['#2474ef', '#b0ccd2'],
+                    formatter: function (s, e) {
+                        if (e === Infinity) {
+                            return '机器数 ：> ' + s;
+                        } else if (e === 0) {
+                            return '机器数 ：暂无';
+                        } else {
+                            return '机器数 ：' + s + ' - ' + e;
+                        }
+                    }
+                }
             };
             myChart.setOption(option, true);
             myChart.on('click', function (params) {
@@ -121,6 +149,9 @@
 
         function handle(data) {
             for (let i = 0; i < data.length; i++) {
+                if (!data[i].value) {
+                    data[i].value = 0;
+                }
                 data[i].itemStyle = {
                     normal: {
                         areaColor: '#' + colors[i]
