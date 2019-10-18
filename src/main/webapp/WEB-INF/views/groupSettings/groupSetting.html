@@ -121,7 +121,19 @@
             var d = data.elem.context.dataset
             $('#terminalType').val(d.terminal);
             init_operationType();
-            initLayPage(formToJsonObject('searchForm'));
+            let pageConf = formToJsonObject('searchForm')
+            if (pageConf.hasOperation){
+                pageConf.hasOperation = true;
+            }
+            if (pageConf.noOperation){
+                pageConf.hasOperation = false;
+            }
+            if (pageConf.hasRemainingAccount){
+                pageConf.hasRemainingAccount = true;
+            }else{
+                pageConf.hasRemainingAccount = false;
+            }
+            initLayPage(pageConf);
         });
 
         $(window).resize(function(){
@@ -239,6 +251,17 @@
             }, function () {
                 if (sign) {
                     let pageConf = formToJsonObject('searchForm');
+                    if (pageConf.hasOperation){
+                        pageConf.hasOperation = true;
+                    }
+                    if (pageConf.noOperation){
+                        pageConf.hasOperation = false;
+                    }
+                    if (pageConf.hasRemainingAccount){
+                        pageConf.hasRemainingAccount = true;
+                    }else{
+                        pageConf.hasRemainingAccount = false;
+                    }
                     initLayPage(pageConf);
                     sign = false;
                 }
@@ -248,11 +271,22 @@
         window.toSearchNeedAddGroup = function(){
             let data = {};
             data.terminalType = $('#terminalType').val();
-            okLayer.open("终端管理 / 分组信息 / 查询需要添加的优化组", "/internal/groupsetting/toSearchNeedAddGroup", "60%", "90%", function(layero){
+            okLayer.open("终端管理 / 分组信息 / 查询需要添加的优化组", "/internal/groupsetting/toSearchNeedAddGroup", "30%", "90%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             }, function () {
                 if (sign) {
                     let pageConf = formToJsonObject('searchForm');
+                    if (pageConf.hasOperation){
+                        pageConf.hasOperation = true;
+                    }
+                    if (pageConf.noOperation){
+                        pageConf.hasOperation = false;
+                    }
+                    if (pageConf.hasRemainingAccount){
+                        pageConf.hasRemainingAccount = true;
+                    }else{
+                        pageConf.hasRemainingAccount = false;
+                    }
                     initLayPage(pageConf);
                     sign = false;
                 }
@@ -275,6 +309,17 @@
             }, function () {
                 if (sign) {
                     let pageConf = formToJsonObject('searchForm');
+                    if (pageConf.hasOperation){
+                        pageConf.hasOperation = true;
+                    }
+                    if (pageConf.noOperation){
+                        pageConf.hasOperation = false;
+                    }
+                    if (pageConf.hasRemainingAccount){
+                        pageConf.hasRemainingAccount = true;
+                    }else{
+                        pageConf.hasRemainingAccount = false;
+                    }
                     initLayPage(pageConf);
                     sign = false;
                 }
@@ -295,6 +340,17 @@
             }, function () {
                 if (sign) {
                     let pageConf = formToJsonObject('searchForm');
+                    if (pageConf.hasOperation){
+                        pageConf.hasOperation = true;
+                    }
+                    if (pageConf.noOperation){
+                        pageConf.hasOperation = false;
+                    }
+                    if (pageConf.hasRemainingAccount){
+                        pageConf.hasRemainingAccount = true;
+                    }else{
+                        pageConf.hasRemainingAccount = false;
+                    }
                     initLayPage(pageConf);
                     sign = false;
                 }
@@ -315,6 +371,17 @@
             }, function () {
                 if (sign) {
                     let pageConf = formToJsonObject('searchForm');
+                    if (pageConf.hasOperation){
+                        pageConf.hasOperation = true;
+                    }
+                    if (pageConf.noOperation){
+                        pageConf.hasOperation = false;
+                    }
+                    if (pageConf.hasRemainingAccount){
+                        pageConf.hasRemainingAccount = true;
+                    }else{
+                        pageConf.hasRemainingAccount = false;
+                    }
                     initLayPage(pageConf);
                     sign = false;
                 }
@@ -593,6 +660,17 @@
                                     time: 2000 //2秒关闭（如果不配置，默认是3秒）
                                 }, function () {
                                     let pageConf = formToJsonObject('searchForm');
+                                    if (pageConf.hasOperation){
+                                        pageConf.hasOperation = true;
+                                    }
+                                    if (pageConf.noOperation){
+                                        pageConf.hasOperation = false;
+                                    }
+                                    if (pageConf.hasRemainingAccount){
+                                        pageConf.hasRemainingAccount = true;
+                                    }else{
+                                        pageConf.hasRemainingAccount = false;
+                                    }
                                     initLayPage(pageConf);
                                 });
                             } else {
@@ -703,6 +781,17 @@
             }, function () {
                 if (sign) {
                     let pageConf = formToJsonObject('searchForm');
+                    if (pageConf.hasOperation){
+                        pageConf.hasOperation = true;
+                    }
+                    if (pageConf.noOperation){
+                        pageConf.hasOperation = false;
+                    }
+                    if (pageConf.hasRemainingAccount){
+                        pageConf.hasRemainingAccount = true;
+                    }else{
+                        pageConf.hasRemainingAccount = false;
+                    }
                     initLayPage(pageConf);
                     sign = false;
                 }
@@ -741,6 +830,17 @@
                                                 time: 2000 //2秒关闭（如果不配置，默认是3秒）
                                             }, function () {
                                                 let pageConf = formToJsonObject('searchForm');
+                                                if (pageConf.hasOperation){
+                                                    pageConf.hasOperation = true;
+                                                }
+                                                if (pageConf.noOperation){
+                                                    pageConf.hasOperation = false;
+                                                }
+                                                if (pageConf.hasRemainingAccount){
+                                                    pageConf.hasRemainingAccount = true;
+                                                }else{
+                                                    pageConf.hasRemainingAccount = false;
+                                                }
                                                 initLayPage(pageConf)
                                             });
                                         } else {
@@ -792,6 +892,17 @@
                                 time: 2000
                             }, function () {
                                 let pageConf = formToJsonObject('searchForm');
+                                if (pageConf.hasOperation){
+                                    pageConf.hasOperation = true;
+                                }
+                                if (pageConf.noOperation){
+                                    pageConf.hasOperation = false;
+                                }
+                                if (pageConf.hasRemainingAccount){
+                                    pageConf.hasRemainingAccount = true;
+                                }else{
+                                    pageConf.hasRemainingAccount = false;
+                                }
                                 initLayPage(pageConf)
                             });
                         } else {

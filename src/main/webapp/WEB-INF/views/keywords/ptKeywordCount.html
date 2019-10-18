@@ -37,8 +37,8 @@
 <div class="ok-body">
     <div class="layui-tab layui-tab-card" lay-filter="keywordTab">
         <ul class="layui-tab-title">
-            <li class="layui-this" data-terminal="PC">PC</li>
-            <li data-terminal="Phone">Phone</li>
+            <li class="layui-this" data-terminal="PC">电脑</li>
+            <li data-terminal="Phone">手机</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
@@ -51,7 +51,8 @@
                                 <div>
                                     <input type="hidden" name="terminalType" id="terminalType" value="PC">
                                     <div class="layui-inline" style="width: 140px">
-                                        <input type="text" name="keyword" id="keyword" placeholder="请输入关键字" class="layui-input">
+                                        <input type="text" name="keyword" id="keyword" placeholder="请输入关键字" class="layui-input"
+                                               onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                     </div>
                                     <div class="layui-inline" style="width: 140px">
                                         <select name="searchEngine" id="searchEngine">
@@ -64,7 +65,6 @@
                                             <option value=''>用户名称</option>
                                         </select>
                                     </div>
-
 
                                     <div class="layui-inline">
                                         <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索</button>
@@ -158,6 +158,9 @@
             formData = formData.replace(/=/g, "\":\"");
             formData = "{\"" + formData + "\"}";
             formData = $.parseJSON(formData);
+            $.each(formData,function(idx,item){
+                formData[idx] = $.trim(item)
+            });
             return formData;
         }
 
@@ -212,6 +215,9 @@
         form.on("submit(search)", function (data) {
             var postData = data.field;
             postData.entryType = 'pt';
+            $.each(postData,function(idx,item){
+                postData[idx] = $.trim(item)
+            });
             table.reload('keywordTable', {
                 where: postData,
                 page: {
@@ -225,7 +231,9 @@
 
     function toKeyword(keyword) {
         let terminalType = document.getElementById('terminalType').value;
-        let url = '/internal/customerKeyword/toKeywords/pt/' + terminalType + '/' + keyword;
+        let searchEngine = document.getElementById('searchEngine').value===''?'null':document.getElementById('searchEngine').value;
+        let belongUser = document.getElementById('userName').value===''?'null':document.getElementById('userName').value;
+        let url = '/internal/customerKeyword/toKeywordsFromPT/pt/' + terminalType + '/' +searchEngine+'/'+belongUser+'/'+ keyword;
         url = encodeURI(encodeURI(url));
         let title = '关键字:' + keyword + '详情';
         updateOrNewTab(url, title, keyword)
@@ -233,8 +241,10 @@
 
     function toKeywordWithPosition(keyword, position) {
         let terminalType = document.getElementById('terminalType').value;
-        let url = '/internal/customerKeyword/toKeywordsWithPosition/pt/' + terminalType + '/' + keyword + '/' + position;
-        url = encodeURI(encodeURI(url))
+        let searchEngine = document.getElementById('searchEngine').value===''?'null':document.getElementById('searchEngine').value;
+        let belongUser = document.getElementById('userName').value===''?'null':document.getElementById('userName').value;
+        let url = '/internal/customerKeyword/toKeywordsFromPTWithPosition/pt/' + terminalType + '/' +searchEngine+'/'+belongUser+'/'+ keyword + '/' + position;
+        url = encodeURI(encodeURI(url));
         let title = '关键字:' + keyword + '排名详情';
         updateOrNewTab(url, title, keyword + position)
     }
