@@ -37,7 +37,9 @@
                 </div>
                 <div class="layui-row">
                     <div class="layui-col-md6 padding-ten-right">
+                        <@shiro.hasPermission name="/internal/config/updateNegativeKeywords">
                         <button class="layui-btn" style="width: 100%;" lay-submit lay-filter="commitNegativeKeywords">更新</button>
+                        </@shiro.hasPermission>
                     </div>
                     <div class="layui-col-md6 padding-ten-left">
                         <div style="background: #897c00;color: #ffffff;width: 100%;" class="layui-btn" onclick="resetNegativeKeywords()">重置</div>
@@ -66,14 +68,18 @@
                 </div>
                 <div class="layui-row">
                     <div class="layui-col-md6 padding-ten-right">
+                        <@shiro.hasPermission name="/internal/config/refreshCustomerNegativeKeywords">
                         <button class="layui-btn" style="width: 100%;" lay-submit lay-filter="commitCustomerNegativeKeywords">更新</button>
+                        </@shiro.hasPermission>
                     </div>
                     <div class="layui-col-md6 padding-ten-left">
+                        <@shiro.hasPermission name="/internal/config/updateCustomerNegativeKeywords">
                         <div style="background: #2f6289;color: #ffffff;width: 100%;" class="layui-btn">
                             选择文件
                             <input type="file" accept="text/plain" onchange="readTxtContent(this,1)"
                                    style="display: block;width: 100%;height: 100%;opacity: 0;cursor: pointer;position: absolute;left: 0;top: 0">
                         </div>
+                        </@shiro.hasPermission>
                     </div>
                 </div>
             </form>
@@ -89,14 +95,18 @@
                 </div>
                 <div class="layui-row">
                     <div class="layui-col-md6 padding-ten-right">
+                        <@shiro.hasPermission name="/internal/config/refreshCustomerNegativeKeywords">
                         <button class="layui-btn" style="width: 100%;" lay-submit lay-filter="commitWebsiteWhiteList">更新</button>
+                        </@shiro.hasPermission>
                     </div>
                     <div class="layui-col-md6 padding-ten-left">
+                        <@shiro.hasPermission name="/internal/config/updateWebsiteWhiteList">
                         <div style="background: #2f6289;color: #ffffff;width: 100%;" class="layui-btn">
                             选择文件
                             <input type="file" accept="text/plain" onchange="readTxtContent(this,2)"
                                    style="display: block;width: 100%;height: 100%;opacity: 0;cursor: pointer;position: absolute;left: 0;top: 0">
                         </div>
+                        </@shiro.hasPermission>
                     </div>
                 </div>
             </form>
@@ -293,7 +303,7 @@
             }
             try {
                 let reader = new FileReader();
-                reader.readAsText(file, 'UTF-8');
+                reader.readAsText(file, 'gb2312');
                 // 读取完文件之后会回来这里
                 reader.onload = function (e) {
                     if (flag === 1) {
