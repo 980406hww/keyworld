@@ -255,7 +255,10 @@
 
         form.on("submit(commitWebsiteWhiteList)", function (data) {
             let websiteWhiteList = data.field.websiteWhiteList;
-            websiteWhiteList = distinctKeywords(websiteWhiteList.replace(new RegExp('\n', 'g'), ',').replace(new RegExp('，', 'g'), ','));
+            websiteWhiteList = distinctKeywords(websiteWhiteList.replace(new RegExp('\n', 'g'), ',').replace(new RegExp('，', 'g'), ','), true);
+            if ('wu-<>wu<>-wu' === websiteWhiteList) {
+                return false;
+            }
             $.ajax({
                 url: '/internal/configs/refreshWebsiteWhiteList',
                 data: JSON.stringify({websiteWhiteList: websiteWhiteList}),
@@ -306,11 +309,20 @@
             ele.value = '';
         };
 
-        function distinctKeywords(str) {
+        function distinctKeywords(str, flag) {
             let strArr = str.split(',');
             let obj = {}, newArr = [];
             for (let i = 0; i < strArr.length; i++) {
                 if (!obj[strArr[i]] && strArr[i] !== '') {
+                    if (strArr[i] === '') {
+                        continue;
+                    }
+                    if (flag) {
+                        if (!/\./.test(strArr[i]) || /\.$/.test(strArr[i])) {
+                            show_layer_msg("网站白名单每行都需要拥有网址喔", 2);
+                            return 'wu-<>wu<>-wu';
+                        }
+                    }
                     newArr.push(strArr[i]);
                     obj[strArr[i]] = 'exist'
                 }
@@ -334,7 +346,7 @@
 
         form.verify({
             regexp: [
-                /(^$)|(^[a-zA-Z0-9\u4e00-\u9fa5,，\n ]+$)/,
+                /(^$)|(^[a-zA-Z0-9\u4e00-\u9fa5.,，\n ]+$)/,
                 "负面词每个单词使用,号分隔,不能含有其他字符"
             ]
         });

@@ -1996,18 +1996,18 @@
 
         function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames,
             operationCombineName) {
-            div.parent().find(".other-rank .line1").find("#customerKeywordCount").text(
-                customerKeywordCount);
-            if (categoryTagNames.length > 0) {
-                var tagNameStr = "";
-                var span = $(div).parent().parent().parent().find(".header span.tagNames");
-                $.each(categoryTagNames, function (idx, val) {
-                    tagNameStr += val + ",";
-                });
-                $(span).find("a.tagNameStr").html(tagNameStr.substring(0, tagNameStr.length - 1));
-                $(span).find("a.tagNameStr").attr('title', tagNameStr.substring(0, tagNameStr.length - 1))
+            div.parent().find(".other-rank .line1").find("#customerKeywordCount").text(customerKeywordCount);
+            if (categoryTagNames) {
+                if (categoryTagNames.length > 0) {
+                    var tagNameStr = "";
+                    var span = $(div).parent().parent().parent().find(".header span.tagNames");
+                    $.each(categoryTagNames, function (idx, val) {
+                        tagNameStr += val + ",";
+                    });
+                    $(span).find("a.tagNameStr").html(tagNameStr.substring(0, tagNameStr.length - 1));
+                    $(span).find("a.tagNameStr").attr('title', tagNameStr.substring(0, tagNameStr.length - 1))
+                }
             }
-
             if (operationCombineName !== null) {
                 div.find("#operationCombine span").prop("title", operationCombineName);
                 div.find("#operationCombine span a").text(operationCombineName);
