@@ -535,12 +535,13 @@ public class MachineInfoController extends SpringMVCBaseController {
 
 
     @RequiresPermissions("/internal/machineInfo/searchMachineInfos")
-    @RequestMapping(value = "/toMachineInfoFromATP/{machineGroup}", method = RequestMethod.GET)
-    public ModelAndView toMachineInfoFromATP(@PathVariable(name = "machineGroup") String machineGroup) throws UnsupportedEncodingException {
+    @RequestMapping(value = "/toMachineInfoFromATP/{terminalType}/{machineGroup}", method = RequestMethod.GET)
+    public ModelAndView toMachineInfoFromATP(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "machineGroup") String machineGroup) throws UnsupportedEncodingException {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/machineManage");
         machineGroup = URLDecoder.decode(machineGroup, "UTF-8");
         mv.addObject("machineGroupFromATP",machineGroup);
+        mv.addObject("terminalTypeFromATP",terminalType);
         return mv;
     }
 }

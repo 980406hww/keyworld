@@ -20,7 +20,7 @@
     <div class="layui-tab-content">
         <div class="layui-tab-item layui-show">
             <form class="layui-form layui-form-pane" id="searchForm">
-                <input type="hidden" name="terminalType" id="terminalType" value="PC">
+                <input type="hidden" name="terminalType" id="terminalType" value="<#if terminalTypeFromATP?exists>${terminalTypeFromATP}<#else>PC</#if>">
                 <div class="my-collapse">
                     <div class="out-condition">
                         <div class="layui-inline" style="width: 160px">
@@ -117,6 +117,9 @@
         var okLayer = layui.okLayer;
         var laypage = layui.laypage;
         var operationTypes ;
+
+        let ternimalType225 = $('#terminalType').val();
+        element.tabChange('groupSettingTab', ternimalType225);
         element.on('tab(groupSettingTab)', function (data) {
             var d = data.elem.context.dataset
             $('#terminalType').val(d.terminal);

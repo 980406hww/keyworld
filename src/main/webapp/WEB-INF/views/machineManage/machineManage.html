@@ -146,7 +146,7 @@
                         <form class="layui-form layui-form-pane" id="searchForm">
                             <div class="my-collapse">
                                 <div>
-                                    <input type="hidden" name="terminalType" id="terminalType" value="PC">
+                                    <input type="hidden" name="terminalType" id="terminalType" value="<#if terminalTypeFromATP?exists>${terminalTypeFromATP}<#else>PC</#if>">
                                     <div class="layui-inline">
                                         <input type="text" name="clientID" id="clientID" placeholder="请输入客户端ID" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
                                     </div>
@@ -299,6 +299,9 @@
         var laydate = layui.laydate;
         var okLayer = layui.okLayer;
         var layer = layui.layer;
+
+        let ternimalType225 = $('#terminalType').val();
+        element.tabChange('keywordTab', ternimalType225);
 
         searchMachine(formToJsonObject('searchForm'))
         // searchMachine({'terminalType': 'PC'})

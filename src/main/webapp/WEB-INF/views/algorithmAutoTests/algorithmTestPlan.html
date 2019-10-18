@@ -178,10 +178,10 @@
             switch (obj.event) {
 
                 case 'toOperationCombine':
-                    toOperationCombine(data.operationCombineName);
+                    toOperationCombine(data);
                     break;
                 case 'toMachineManage':
-                    toMachineManage(data.machineGroup);
+                    toMachineManage(data);
                     break;
                 case 'edit':
                     update_algorithmTestPlan(data.uuid);
@@ -459,20 +459,20 @@
         });
 
         <@shiro.hasPermission name="/internal/groupsetting/searchGroupSettings">
-            function toOperationCombine(operationCombineName){
-                let url = '/internal/groupsetting/toGroupSettingFromATP/'+operationCombineName;
+            function toOperationCombine(data){
+                let url = '/internal/groupsetting/toGroupSettingFromATP/'+data.terminalType +'/'+data.operationCombineName;
                 url = encodeURI(encodeURI(url));
-                let title = '操作组合:' + operationCombineName + '详情';
-                updateOrNewTab(url, title, operationCombineName)
+                let title = '操作组合:' + data.operationCombineName + '详情';
+                updateOrNewTab(url, title, data.operationCombineName)
             }
         </@shiro.hasPermission>
 
         <@shiro.hasPermission name="/internal/machineInfo/searchMachineInfos">
-            function toMachineManage(machineGroup){
-                let url = '/internal/machineManage/toMachineInfoFromATP/'+machineGroup;
+            function toMachineManage(data){
+                let url = '/internal/machineManage/toMachineInfoFromATP/'+data.terminalType +'/'+data.machineGroup;
                 url = encodeURI(encodeURI(url));
-                let title = '机器分组:' + machineGroup + '详情';
-                updateOrNewTab(url, title, machineGroup)
+                let title = '机器分组:' + data.machineGroup + '详情';
+                updateOrNewTab(url, title, data.machineGroup)
             }
         </@shiro.hasPermission>
 
