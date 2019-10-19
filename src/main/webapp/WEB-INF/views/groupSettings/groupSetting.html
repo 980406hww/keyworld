@@ -98,6 +98,8 @@
 
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/page/base/searchForm.js"></script>
+
 <!--<script src="/static/ok-admin/page/groupSetting/groupSetting.js"></script>-->
 <script>
 
@@ -207,18 +209,6 @@
             }
 
         });
-
-        function formToJsonObject (form_id) {
-            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
-            formData = formData.replace(/&/g, "\",\"");
-            formData = formData.replace(/=/g, "\":\"");
-            formData = "{\"" + formData + "\"}";
-            formData = $.parseJSON(formData);
-            $.each(formData,function(idx,item){
-                formData[idx] = $.trim(item)
-            });
-            return formData;
-        }
 
         form.on('submit(search)', function (data) {
             var pageConf = data.field;

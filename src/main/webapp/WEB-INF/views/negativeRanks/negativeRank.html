@@ -93,6 +93,8 @@
 </datalist>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/page/base/searchForm.js"></script>
+
 <script>
     var sign = false;
     // 进度条加载提示
@@ -141,18 +143,6 @@
                     layer.msg('未知错误，请稍后重试！！')
                 }
             });
-        }
-
-        function formToJsonObject(form_id) {
-            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
-            formData = formData.replace(/&/g, "\",\"");
-            formData = formData.replace(/=/g, "\":\"");
-            formData = "{\"" + formData + "\"}";
-            formData = $.parseJSON(formData);
-            $.each(formData,function(idx,item){
-                formData[idx] = $.trim(item)
-            });
-            return formData;
         }
 
         function init_table_data(whereCondition) {

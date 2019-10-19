@@ -19,7 +19,7 @@ layui.use(['jquery'], function () {
         formData = "{\"" + formData + "\"}";
         formData = $.parseJSON(formData);
         $.each(formData,function(idx,item){
-            formData[idx] = $.trim(item)
+            formData[idx] = $.trim(item).replace(/\+/g,"")
         });
         return formData;
     }

@@ -80,6 +80,7 @@
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/page/base/searchForm.js"></script>
 <script>
     var sign = false;
     // 进度条加载提示
@@ -97,18 +98,6 @@
         var okLayer = layui.okLayer;
 
         init_table_data(formToJsonObject('searchForm'));
-
-        function formToJsonObject(form_id) {
-            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
-            formData = formData.replace(/&/g, "\",\"");
-            formData = formData.replace(/=/g, "\":\"");
-            formData = "{\"" + formData + "\"}";
-            formData = $.parseJSON(formData);
-            $.each(formData,function(idx,item){
-                formData[idx] = $.trim(item)
-            });
-            return formData;
-        }
 
         function init_table_data(whereCondition) {
             whereCondition.entryType = 'pt';
@@ -434,6 +423,9 @@
         var active = {
             reload: function () {
                 let data = formToJsonObject('searchForm');
+                $.each(data,function(idx,item){
+                    data[idx] = $.trim(item)
+                });
                 data.entryType = 'pt';
                 table.reload('algorithmTestPlanTable', {
                     where: data,
@@ -447,7 +439,7 @@
         form.on("submit(search)", function (data) {
             var postData = data.field;
             $.each(postData,function(idx,item){
-                postData[idx] = $.trim(item)
+                postData[idx] = $.trim(item).replace(/\+/g,"");
             });
             table.reload('algorithmTestPlanTable', {
                 where: postData,

@@ -22,17 +22,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         let h = window.innerHeight || document.body.offsetHeight;
         b.style.height = (h - 155) + 'px';
     });
-    function formToJsonObject (form_id) {
-        var formData = decodeURIComponent($("#" + form_id).serialize(), true);
-        formData = formData.replace(/&/g, "\",\"");
-        formData = formData.replace(/=/g, "\":\"");
-        formData = "{\"" + formData + "\"}";
-        formData = $.parseJSON(formData);
-        $.each(formData,function(idx,item){
-            formData[idx] = $.trim(item)
-        });
-        return formData;
-    }
 
     init_keyword_type();
     initLayPage(formToJsonObject('searchForm'));
