@@ -153,6 +153,16 @@
                         </dd>
                         </@shiro.hasPermission>
                     </dl>
+                    <dl class="layui-nav-child">
+                        <@shiro.hasPermission name="/internal/industryList/toIndustryList">
+                        <dd data-name="customer-item" >
+                            <a data-url="/internal/industryList/toIndustryList" lay-id="industryList">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>行业列表</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                    </dl>
                 </li>
                 <li data-name="machine" class="layui-nav-item ">
                     <a href="javascript:;" lay-tips="终端管理" lay-direction="2">

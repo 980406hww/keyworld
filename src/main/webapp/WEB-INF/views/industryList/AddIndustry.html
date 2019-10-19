@@ -20,7 +20,7 @@
             <input type="hidden" name="uuid">
             <label class="layui-form-label">行业名称</label>
             <div class="layui-input-block">
-                <input type="text" name="industryName" placeholder="请输入行业名称" autocompvare="off" class="layui-input" lay-verify="required">
+                <input type="text" name="industryName" placeholder="请输入行业名称" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item">
@@ -32,19 +32,19 @@
         <div class="layui-form-item">
             <label class="layui-form-label">起始网址</label>
             <div class="layui-input-block">
-                <input type="text" name="targetUrl" placeholder="请输入起始网址" autocompvare="off" class="layui-input" lay-verify="required">
+                <input type="text" name="targetUrl" placeholder="请输入起始网址" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">爬取页数</label>
             <div class="layui-input-block">
-                <input type="number" name="pageNum" autocompvare="off" class="layui-input" lay-verify="required" min="0" value="1">
+                <input type="number" name="pageNum" autocomplete="off" class="layui-input" lay-verify="required|number" min="0" value="1">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">每页条数</label>
             <div class="layui-input-block">
-                <input type="number" name="pagePerNum" autocompvare="off" class="layui-input" lay-verify="required" min="0" step="10" value="10">
+                <input type="number" name="pagePerNum" autocomplete="off" class="layui-input" lay-verify="required|number" min="0" step="10" value="10">
             </div>
         </div>
         <div class="layui-form-item">
@@ -181,6 +181,12 @@
             return false;
         });
 
+        form.verify({
+            number: [
+                /^[1-9]\d*$/,
+                '只能输入正整数喔'
+            ]
+        });
     })
 
 </script>

@@ -26,7 +26,7 @@
         <if test="industryCriteria.industryName != null and industryCriteria.industryName != ''">AND tii.fIndustryName = #{industryCriteria.industryName}</if>
         <if test="industryCriteria.terminalType != null and industryCriteria.terminalType != ''">AND tii.fTerminalType = #{industryCriteria.terminalType}</if>
         <if test="industryCriteria.status != null and industryCriteria.status != ''">AND tii.fStatus = #{industryCriteria.status}</if>
-        GROUP BY tii.fCreateTime DESC
+        ORDER BY tii.fCreateTime DESC
     </select>
 
     <update id="updateIndustryUserID">

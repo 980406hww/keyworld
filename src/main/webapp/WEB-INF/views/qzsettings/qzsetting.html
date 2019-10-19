@@ -398,17 +398,10 @@
         }
 
         .layui-form-pane .layui-form-label {
-            width: 116px;
-            padding: 8px 15px;
             height: 30px;
-            line-height: 13px;
-            border-width: 1px;
-            border-style: solid;
-            border-radius: 2px 0 0 2px;
-            text-align: center;
-            background-color: #FBFBFB;
-            overflow: hidden;
-            box-sizing: border-box
+            line-height: 12px;
+            width: 100px;
+            padding: 8px 0;
         }
 
         div.layui-row.body .col-1 h5,
@@ -620,17 +613,21 @@
                             <div class="my-collapse">
                                 <div>
                                     <div class="layui-inline" style="width: 120px;height: 30px">
-                                        <select name="terminalSearchEngine" id="terminalSearchEngine"
-                                                lay-filter="terminalSearchEngineFilter"></select>
+                                        <select name="terminalSearchEngine" id="terminalSearchEngine" lay-filter="terminalSearchEngineFilter"></select>
                                     </div>
                                     <div class="layui-inline">
                                         <input type="text" name="domain" id="domain" placeholder="请输入域名"
                                                autocomplete="off" onblur="checkDomain()" style="width: 150px;height: 30px"
                                                onmouseleave="checkDomain()" class="layui-input">
                                     </div>
+<!--                                    <div class="layui-inline">-->
+<!--                                        <label class="layui-form-label">创建时间</label>-->
+<!--                                        <div class="layui-input-inline">-->
+<!--                                            <input type="text" class="layui-input" id="createTimes" name="createTimes" placeholder="请选择日期">-->
+<!--                                        </div>-->
+<!--                                    </div>-->
                                     <div class="layui-inline">
-                                        <button class="layui-btn" lay-submit lay-filter="search"
-                                                id="searchBtn">搜索
+                                        <button class="layui-btn" lay-submit lay-filter="search" id="searchBtn">搜索
                                         </button>
                                     </div>
                                     <div class="layui-inline">
@@ -747,7 +744,7 @@
                                     <div class="layui-inline">
                                         <label class="layui-form-label">创建时间</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" class="layui-input" id="time1" name="createTimes" placeholder="请选择日期">
+                                            <input type="text" class="layui-input" id="createTimes" name="createTimes" placeholder="请选择日期">
                                         </div>
                                     </div>
                                     <div class="layui-inline">
@@ -800,6 +797,7 @@
     }
 
     function resetHidden() {
+        document.getElementById('searchEngine').value = '百度';
         document.getElementById('userInfoID').value = '';
         document.getElementById('organizationID').value = '';
     }
@@ -817,6 +815,11 @@
         var treeSelect = layui.treeSelect;
         var layer = layui.layer;
         var laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#createTimes',
+            range: true,
+        });
 
         let customerUuid = $("#customerUuidTmp").val();
         let whereCondition = {searchEngine: '百度', terminalType: 'PC'};
@@ -959,6 +962,7 @@
             if (!data.field.dbtjSort){
                 data.field.dbtjSort = null;
             }
+            console.log(data.field);
             get_qzsetting(data.field);
             return false;
         });
@@ -1174,8 +1178,7 @@
         });
 
         form.on('select(terminalSearchEngineFilter)', function (data) {
-            let val = data.value;
-            $('#searchEngine').val(val);
+            document.getElementById('searchEngine').value = data.value;
             active['reload'].call(this);
         });
 
@@ -3096,12 +3099,6 @@
                 }
             })
         };
-
-        laydate.render({
-            elem: '#time1',
-            range: true,
-            target: 'click'
-        });
     });
 </script>
 
