@@ -78,17 +78,11 @@
         }
 
         .layui-form-pane .layui-form-label {
-            width: 116px;
-            padding: 8px 15px;
-            height: 30px;
-            line-height: 13px;
-            border-width: 1px;
-            border-style: solid;
-            border-radius: 2px 0 0 2px;
-            text-align: center;
-            background-color: #FBFBFB;
-            overflow: hidden;
-            box-sizing: border-box
+            width: 142px;
+        }
+
+        .layui-input-block {
+            margin-left: 142px !important;
         }
 
         .layui-inline label {
@@ -126,6 +120,19 @@
             position: fixed;
             right: 25px;
         }
+
+        #fileName {
+            height: 38px;
+            width: 300px;
+            text-align: left;
+            line-height: 38px;
+            display: inline;
+            box-sizing: border-box;
+            padding-left: 20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -152,7 +159,7 @@
                             <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">重置</button>
                         </div>
                         <div class="layui-inline">
-                            <div class="my-btn layui-btn" onclick="">导入数据</div>
+                            <div class="my-btn layui-btn" onclick="postNegativeExcel()">导入数据</div>
                         </div>
                         <div class="layui-inline">
                             <div class="my-btn layui-btn" onclick="getNegativeExcel()">导出数据</div>
@@ -209,8 +216,8 @@
                 method: 'post',
                 url: '/internal/negativeKeywords/getNegativeKeywords',
                 page: true,
-                limit: 25,
-                limits: [10, 25, 50, 75, 100],
+                limit: 100,
+                limits: [50, 100, 200, 500, 1000],
                 size: 'sm',
                 id: 'table',
                 even: true,//隔行背景
@@ -218,15 +225,15 @@
                 defaultToolbar: [],
                 contentType: 'application/json',
                 cols: [[
-                    {field: 'uuid', title: '编号', width: '5.2%', align: 'center'},
+                    // {field: 'uuid', title: '编号', width: '5.2%', align: 'center'},
                     {
-                        field: 'name', title: '名称', width: '14%', align: 'center', templet: function (d) {
+                        field: 'name', title: '名称', width: '15%', align: 'center', templet: function (d) {
                             return '<span class="show-msg" onclick="findPositionInfos(\'' + d.uuid + '\')">' + d.name + '</span>';
                         }
                     },
-                    {field: 'group', title: '分组', width: '7%', align: 'center'},
-                    {field: 'officialUrl', title: '官网网址', width: '12%', align: 'center'},
-                    {field: 'email', title: '邮箱', width: '13.9%', align: 'center'},
+                    {field: 'group', title: '分组', width: '7.5%', align: 'center'},
+                    {field: 'officialUrl', title: '官网网址', width: '13%', align: 'center'},
+                    {field: 'email', title: '邮箱', width: '16.5%', align: 'center'},
                     {
                         field: 'rankCaptured', title: '采集电脑', width: '5%', align: 'center', templet: function (d) {
                             return d.rankCaptured ? "是" : "否";
@@ -262,6 +269,9 @@
                     where: condition,
                     page: {
                         curr: 1
+                    },
+                    done: function (res, curr, count) {
+                        init_group();
                     }
                 });
             }
@@ -321,6 +331,77 @@
                 },
                 error: function () {
                     show_layer_msg('未知错误，请稍后再试', 5);
+                }
+            });
+        };
+
+        window.showName = function (e) {
+            document.getElementById("fileName").innerText = e.value;
+        };
+
+        window.postNegativeExcel = function () {
+            let html = '<div style="margin: 10px 10px 0 10px;">'
+                + '<form class="layui-form layui-form-pane ok-form">'
+                + '        <div class="layui-form-item">'
+                + '            <label class="layui-form-label">分组名称</label>'
+                + '            <div class="layui-input-block">'
+                + '                <input type="text" name="groupFileName" id="groupFileName"  autocomplete="off" class="layui-input">'
+                + '            </div>'
+                + '        </div>'
+                + '<div class="layui-form-item">'
+                + '            <div style="position: relative;">'
+                + '                <div class="layui-btn layui-btn-radius layui-btn-normal" style="cursor: pointer; height: 38px; width: 142px;">'
+                + '                    <i class="layui-icon">&#xe67c;</i>选择文件'
+                + '                </div>'
+                + '                <input id="file" title="" name="file" accept="text/plain" type="file" onchange="showName(this)" style="cursor: pointer; opacity: 0; position: absolute; left: 0; height: 38px; width: 142px;">'
+                + '                <div id="fileName"></div>'
+                + '            </div>'
+                + '</div></div></form>';
+            layer.open({
+                type: 1,
+                title: '排名信息',
+                content: html,
+                shadeClose: true,
+                resize: false,
+                area: '460px',
+                offset: '80px',
+                btn: ['确定', ['取消']],
+                yes: function (index) {
+                    let groupFileName = document.getElementById('groupFileName').value;
+                    let file = document.getElementById('file');
+                    if (groupFileName.trim() === '' || file.value === '') {
+                        show_layer_msg('请确保数据完整', 2);
+                        return false;
+                    }
+                    let p_d = new FormData();
+                    p_d.append('group', groupFileName);
+                    p_d.append('file', file.files[0]);
+                    $.ajax({
+                        url: '/internal/negativeKeywords/postNegativeExcel',
+                        type: 'post',
+                        data: p_d,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'json',
+                        success: function (res) {
+                            console.log(res);
+                            if (res.code === 200) {
+                                show_layer_msg("上传成功", 1, true);
+                                layer.close(index);
+                            } else {
+                                show_layer_msg(res.msg ? res.msg : '请稍后在试', 5);
+                            }
+                        },
+                        error: function () {
+                            show_layer_msg('请稍后再试', 5);
+                        }
+                    });
+                },
+                btn2: function (index) {
+                    layer.close(index);
+                },
+                success: function () {
+                    document.getElementById('groupFileName').value = 'company' + layui.util.toDateString(new Date(), 'MMdd');
                 }
             });
         };

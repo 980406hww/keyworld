@@ -60,7 +60,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     /**
      * 获取网站分类标签
-     * @return
      */
     @GetMapping(value = "/getCategoryTag")
     public ResultBean getCategoryTag(HttpServletRequest request) {
@@ -82,7 +81,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     /**
      * 获取客户列表
-     * @return
      */
     @GetMapping(value = "/getActiveCustomer")
     public ResultBean getActiveCustomer(HttpServletRequest request) {
@@ -114,7 +112,7 @@ public class QZSettingController extends SpringMVCBaseController {
         if (getCurrentUser().getRoles().contains("SEOSales")) {
             isSEOSales = 1;
         }
-        mv.addObject("isSEOSales",isSEOSales);
+        mv.addObject("isSEOSales", isSEOSales);
         return mv;
     }
 
@@ -178,8 +176,8 @@ public class QZSettingController extends SpringMVCBaseController {
         try {
             List<QZSearchEngineVO> qzSearchEngine = qzSettingService.searchQZSettingSearchEngineMap(new QZSettingCriteria(), 0);
             List<QZSearchEngineVO> data = new ArrayList<>();
-            for (QZSearchEngineVO qz:qzSearchEngine){
-                if (terminal.equals(qz.getTerminalType())){
+            for (QZSearchEngineVO qz : qzSearchEngine) {
+                if (terminal.equals(qz.getTerminalType())) {
                     data.add(qz);
                 }
             }
@@ -232,9 +230,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     /**
      * 排除词回显
-     * @param request
-     * @param qzSettingExcludeCustomerKeywordsCriteria
-     * @return
      */
     @PostMapping(value = "/echoExcludeKeyword2")
     public ResultBean echoExcludeKeyword(HttpServletRequest request,
@@ -257,10 +252,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     /**
      * 指定排除词
-     *
-     * @param request
-     * @param qzSettingExcludeCustomerKeywordsCriteria
-     * @return
      */
     @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/excludeQZSettingCustomerKeywords2")
@@ -297,10 +288,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     /**
      * 添加关键词
-     *
-     * @param request
-     * @param qzSettingSaveCustomerKeywordsCriteria
-     * @return
      */
     @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/saveQZSettingCustomerKeywords2")
@@ -324,8 +311,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     /**
      * 删除站点信息 —— 单个
-     * @param uuid
-     * @return
      */
     @RequiresPermissions("/internal/qzsetting/delete")
     @PostMapping(value = "/delete2/{uuid}")
@@ -345,8 +330,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     /**
      * 删除站点信息 —— 批量
-     * @param requestMap
-     * @return
      */
     @RequiresPermissions("/internal/qzsetting/deleteQZSettings")
     @PostMapping(value = "/deleteQZSettings2")
@@ -367,9 +350,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     /**
      * 获得初始用户列表
-     *
-     * @param request
-     * @return
      */
     @RequiresPermissions("/internal/qzsetting/searchQZSettings")
     @GetMapping(value = "/getSaveQZSettingsMsg")
@@ -400,10 +380,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     /**
      * 站点信息  修改 || 保存
-     *
-     * @param qzSetting
-     * @param session
-     * @return
      */
     @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/saveQZSetting")
@@ -434,9 +410,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     /**
      * 站点信息回显
-     *
-     * @param uuid
-     * @return
      */
     @GetMapping(value = "/getQZSettingsMsg/{uuid}")
     public ResultBean getQZSettingsMsg(@PathVariable Long uuid) {
@@ -470,9 +443,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     /**
      * 马上更新 - 批量
-     *
-     * @param requestMap
-     * @return
      */
     @RequiresPermissions("/internal/qzsetting/updateImmediately")
     @PostMapping(value = "/batchUpdateQZSettingUpdateStatus")
@@ -493,9 +463,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     /**
      * 暂停续费 || 下架整站 - 批量
-     *
-     * @param requestMap
-     * @return
      */
     @RequiresPermissions("/internal/qzsetting/updateRenewalStatus")
     @PostMapping(value = "/batchUpdateRenewalStatus")
@@ -516,9 +483,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     /**
      * 修改站点状态 - 单个
-     *
-     * @param requestMap
-     * @return
      */
     @PostMapping(value = "/updRenewalStatus")
     public ResultBean updRenewalStatus(@RequestBody Map<String, Integer> requestMap) {
@@ -538,9 +502,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     /**
      * 修改站点关联的标签
-     *
-     * @param map
-     * @return
      */
     @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/updQzCategoryTags")
@@ -550,7 +511,9 @@ public class QZSettingController extends SpringMVCBaseController {
         try {
             String userName = (String) request.getSession().getAttribute("username");
             List<String> uuids = (List<String>) map.get("uuids");
-            List<QZCategoryTag> targetQZCategoryTags = new ObjectMapper().convertValue(map.get("targetQZCategoryTags"), new TypeReference<List<QZCategoryTag>>() {});
+            List<QZCategoryTag> targetQZCategoryTags = new ObjectMapper()
+                .convertValue(map.get("targetQZCategoryTags"), new TypeReference<List<QZCategoryTag>>() {
+                });
             qzSettingService.updateQzCategoryTags(uuids, targetQZCategoryTags, userName);
         } catch (Exception ex) {
             logger.error(ex.getMessage());
@@ -572,7 +535,7 @@ public class QZSettingController extends SpringMVCBaseController {
         if (getCurrentUser().getRoles().contains("SEOSales")) {
             isSEOSales = 1;
         }
-        mv.addObject("isSEOSales",isSEOSales);
+        mv.addObject("isSEOSales", isSEOSales);
         mv.addObject("customerUuidTmp", customerUuid);
         mv.setViewName("qzsettings/qzsetting");
         return mv;
@@ -580,8 +543,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     /**
      * 根据用户id获取全站统计信息
-     * @param customerUuid
-     * @return
      */
     @GetMapping("/getQZSettingsCount/{customerUuid}")
     public ResultBean getOperationCombines(@PathVariable(name = "customerUuid") Long customerUuid) {
@@ -596,6 +557,29 @@ public class QZSettingController extends SpringMVCBaseController {
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
             return resultBean;
+        }
+        return resultBean;
+    }
+
+    @GetMapping(value = "/toUpdateQZSettingFrom")
+    public ModelAndView toUpdateQZSettingFrom() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("qzsettings/updateQZSettingFrom");
+        return mv;
+    }
+
+    @PostMapping(value = "/updateQZSettingFrom")
+    public ResultBean updateQZSettingFrom(@RequestBody Map<String, Object> map) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(200);
+        try {
+            Long customerUuid = Long.parseLong((String) map.get("customerUuid"));
+            List<Long> uuids = (List<Long>) map.get("uuids");
+            qzSettingService.updateQZSettingFrom(customerUuid, uuids);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+            resultBean.setMsg(ex.getMessage());
+            resultBean.setCode(400);
         }
         return resultBean;
     }

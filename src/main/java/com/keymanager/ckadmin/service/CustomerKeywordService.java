@@ -113,4 +113,10 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     Page<PTkeywordCountVO> searchPTKeywordCount(Page<PTkeywordCountVO> page, PTKeywordCountCriteria keywordCriteria);
 
     void updateKeywordCustomerUuid(List<String> keywordUuids, String customerUuid, String terminalType);
+
+    void updateCustomerUuidByQzUuids(Long customerUuid, List<Long> qzUuids);
+
+    void editOptimizePlanCountByCustomerUuid(String terminalType, String entryType, Long customerUuid, Integer optimizePlanCount, String settingType);
+
+    void editCustomerOptimizePlanCount(Integer optimizePlanCount, String settingType, List<String> uuids);
 }

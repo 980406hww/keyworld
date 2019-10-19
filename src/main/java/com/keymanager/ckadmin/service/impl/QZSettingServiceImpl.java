@@ -54,6 +54,7 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -700,7 +701,8 @@ public class QZSettingServiceImpl extends
             if (CollectionUtils.isNotEmpty(qzSettingCriteria.getCustomerKeywordVos())) {
                 List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(qzSettingCriteria.getUuid());
                 //取用户全站类别下所有关键字
-                List<CustomerKeywordSummaryInfoVO> customerKeywordSummaryInfoVos = customerKeywordService.searchCustomerKeywordSummaryInfo("qz", qzSettingCriteria.getCustomerUuid());
+                List<CustomerKeywordSummaryInfoVO> customerKeywordSummaryInfoVos = customerKeywordService
+                    .searchCustomerKeywordSummaryInfo("qz", qzSettingCriteria.getCustomerUuid());
                 Map<String, Set<String>> customerKeywordSummaryInfoMaps = new HashMap<>(500);
                 int pcKeywordCountNum = 0, phoneKeywordCountNum = 0;
                 //关键字分类
@@ -884,7 +886,14 @@ public class QZSettingServiceImpl extends
     }
 
     @Override
-    public List<GroupVO> getAvailableOptimizationGroups (GroupSettingCriteria groupSettingCriteria) {
+    public List<GroupVO> getAvailableOptimizationGroups(GroupSettingCriteria groupSettingCriteria) {
         return qzSettingDao.getAvailableOptimizationGroups(groupSettingCriteria);
+    }
+
+    @Override
+    @Transactional
+    public void updateQZSettingFrom(Long customerUuid, List<Long> uuids) {
+        customerKeywordService.updateCustomerUuidByQzUuids(customerUuid, uuids);
+        qzSettingDao.updateCustomerUuidByQzUuids(customerUuid, uuids);
     }
 }

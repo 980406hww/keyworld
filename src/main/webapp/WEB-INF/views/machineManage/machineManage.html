@@ -146,7 +146,7 @@
                         <form class="layui-form layui-form-pane" id="searchForm">
                             <div class="my-collapse">
                                 <div>
-                                    <input type="hidden" name="terminalType" id="terminalType" value="PC">
+                                    <input type="hidden" name="terminalType" id="terminalType" value="<#if terminalTypeFromATP?exists>${terminalTypeFromATP}<#else>PC</#if>">
                                     <div class="layui-inline">
                                         <input type="text" name="clientID" id="clientID" placeholder="请输入客户端ID" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
                                     </div>
@@ -166,6 +166,7 @@
                                     <div class="layui-inline">
                                         <input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID" placeholder="请输入服务器ID" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
                                     </div>
+                                    <@shiro.hasRole name="Operation">
                                     <div class="layui-inline" id="runningProgramType-box">
                                         <select name="runningProgramType">
                                             <option value='' selected>请选择运行程序类型</option>
@@ -175,7 +176,11 @@
                                             <option value='Rank'>Rank</option>
                                         </select>
                                     </div>
-                                    <div class="layui-inline">
+                                    </@shiro.hasRole>
+                                    <@shiro.lacksRole name="Operation">
+                                    <input type="hidden" name="runningProgramType" value="Rank">
+                                    </@shiro.lacksRole>
+                                <div class="layui-inline">
                                         <input type="checkbox" name="hasProblem" value="hasProblem" title="停了">
                                         <input type="checkbox" name="noUpgrade" value="noUpgrade" title="没升级">
                                     </div>
@@ -300,6 +305,9 @@
         var okLayer = layui.okLayer;
         var layer = layui.layer;
 
+        let ternimalType225 = $('#terminalType').val();
+        element.tabChange('keywordTab', ternimalType225);
+
         searchMachine(formToJsonObject('searchForm'))
         // searchMachine({'terminalType': 'PC'})
 
@@ -311,6 +319,20 @@
         });
 
         form.on("submit(search)", function (data) {
+            if(data.field.gtMemory != ""){
+                if(!/^[0-9]+$/.test(data.field.gtMemory)){
+                    layer.msg("内存必须为正整数！")
+                    $("#gtMemory").val('')
+                    return false
+                }
+            }
+            if(data.field.ltMemory != ""){
+                if(!/^[0-9]+$/.test(data.field.ltMemory)){
+                    layer.msg("内存必须为正整数！")
+                    $("#ltMemory").val('')
+                    return false
+                }
+            }
             var postData = data.field
             var terminalType = $("#terminalType").val()
             if(terminalType == '' || terminalType == null){
@@ -334,7 +356,7 @@
                 method: 'post',
                 url: '/internal/machineManage/getMachineInfos',
                 limit: 50,
-                limits: [10, 25, 50, 75, 100, 500, 1000],
+                limits: [10, 25, 50, 75, 100],
                 page: true,
                 size: 'sm',
                 id: 'machineManageTable',
@@ -363,7 +385,7 @@
                     {field: 'vpsBackendSystemComputerIDs', align: 'center', title: '服务器ID', width: '82', templet: '#vpsBackendSystemComputerIDs'},
                     {title: '操作', templet: '#operationTpl', align: 'center',fixed: "right",width: '178'}
                 ]],
-                height: 'full-165',
+                height: 'full-155',
                 done: function (res, curr, count) {
                     handleStyle();
                 }
@@ -794,9 +816,9 @@
                 obj = null;
             } catch (e) {
                 if (e.name === "ReferenceError") {
-                    alert("请更换到带IE内核的浏览器！")
+                    layer.msg('请更换到带IE内核的浏览器！', {icon: 5});
                 } else {
-                    alert("未找到对应的.vnc文件或其他的错误")
+                    layer.msg('未找到对应的.vnc文件或其他的错误', {icon: 5});
                 }
             }
         }
@@ -1091,19 +1113,19 @@
     {{# if(d.valid){ }}
     {{#     if(d.red){ }}
     {{#         if(d.remainingKeyword == 1){ }}
-    <font color="#0099FF">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    <font color="#0099FF">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}</font>
     {{#          }else{    }}
-    <font color="#FF0000">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    <font color="#FF0000">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}</font>
     {{#          } }}
     {{#     }else if(d.orange){ }}
-    <font color="#e86e33">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    <font color="#e86e33">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}</font>
     {{#     }else if(d.yellow){ }}
-    <font color="#ef00ff">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    <font color="#ef00ff">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}</font>
     {{#     }else{ }}
-    <font color="#2BD54D">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    <font color="#2BD54D">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}</font>
     {{#     } }}
     {{# }else{ }}
-    <font color="#2BD54D">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    <font color="#2BD54D">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}</font>
     {{# } }}
 </script>
 
@@ -1382,7 +1404,7 @@
             <button class="layui-btn layui-btn-xs" lay-event="toUpdateMachineInfo">修改</button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/machineInfo/deleteMachineInfo">
-            <button class="layui-btn layui-btn-xs" lay-event="deleteMachine">删除</button>
+            <button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deleteMachine">删除</button>
         </@shiro.hasPermission>
     </div>
     <br>

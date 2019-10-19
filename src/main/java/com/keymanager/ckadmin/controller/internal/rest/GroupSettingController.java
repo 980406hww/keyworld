@@ -209,12 +209,13 @@ public class GroupSettingController {
     }
 
     @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
-    @GetMapping("/toGroupSettingFromATP/{operationCombineName}")
-    public ModelAndView toGroupSettingFromATP(@PathVariable(name = "operationCombineName") String operationCombineName) throws UnsupportedEncodingException {
+    @GetMapping("/toGroupSettingFromATP/{terminalType}/{operationCombineName}")
+    public ModelAndView toGroupSettingFromATP(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "operationCombineName") String operationCombineName) throws UnsupportedEncodingException {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("groupSettings/groupSetting");
         operationCombineName = URLDecoder.decode(operationCombineName, "UTF-8");
         mv.addObject("operationCombineNameFromATP",operationCombineName);
+        mv.addObject("terminalTypeFromATP",terminalType);
         return mv;
     }
 

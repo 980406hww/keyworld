@@ -807,6 +807,7 @@
 
     var sign = false;
     var noteAddRow = true;
+    var toUpdateQZSettingFromData = null;
     // layui相关
     layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'treeSelect', 'laydate'], function () {
         var element = layui.element;
@@ -920,6 +921,7 @@
                 type: 'get',
                 success: function (res) {
                     if (res.code === 200) {
+                        toUpdateQZSettingFromData = res.data;
                         $("#customerUuid").empty();
                         $("#customerUuid").append('<option value="">请选择客户</option>');
                         $.each(res.data, function (index, item) {
@@ -2047,6 +2049,9 @@
                 case 'batchUpdateQZSettingUpdateStatus':
                     batchUpdateQZSettingUpdateStatus();
                     break;
+                case 'batchUpdateQZSettingFrom':
+                    batchUpdateQZSettingFrom();
+                    break;
                 case 'batchUpdateRenewalStatusToNormal':
                     saveChargeStatus(1);
                     break;
@@ -2786,7 +2791,10 @@
                         optimizeGroupName: optimizeGroupName
                     });
                 }, function () {
-
+                    if (sign) {
+                        active['reload'].call(this);
+                        sign = false;
+                    }
                 },'40px'
             );
         };
@@ -2905,6 +2913,31 @@
         }
 
         /**
+         * 修改整站所属
+         */
+        function batchUpdateQZSettingFrom() {
+            //获取选中数据
+            let checkStatus = table.checkStatus('qzSettingTable')
+                , data = checkStatus.data;
+            if (checkStatus.data.length === 0) {
+                show_layer_msg('请选择要操作的站点', 5);
+                return;
+            }
+            if (!toUpdateQZSettingFromData) {
+                show_layer_msg('暂无客户列表', 5);
+                return;
+            }
+            okLayer.open("其他 / 全站信息设置 / 修改整站归属", "/internal/qzsetting/toUpdateQZSettingFrom", "40%", "50%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initForm(toUpdateQZSettingFromData, data);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, '40px');
+        }
+
+        /**
          * 暂停续费 || 下架整站 - 批量
          */
         function batchUpdateRenewalStatus(renewalStatus) {
@@ -2980,7 +3013,8 @@
             });
             if (!update) {
                 parent.layui.element.tabAdd('ok-tab', {
-                        title: '<i class="layui-icon">&#xe648;</i> ' + tit,
+                    title: '<strong style="display: none;" is-close="true" lay-id="'+id+'" data-url="'+url+'"></strong>' +
+                        '<i class="layui-icon">&#xe648;</i> ' + tit,
                         content: contentIframe,
                         id: id
                     }
@@ -3098,6 +3132,9 @@
         <i style="font-size: 15px !important;" class="layui-icon">&#xe666;</i>马上更新
     </button>
     </@shiro.hasPermission>
+    <button class="layui-btn layui-btn-sm" lay-event="batchUpdateQZSettingFrom">
+        <i style="font-size: 15px !important;" class="layui-icon">&#xe642;</i>修改整站归属
+    </button>
     <#if isSEOSales==0>
     <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToNormal">
         <i class="layui-icon">&#x1005;</i>正常续费

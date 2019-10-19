@@ -5,16 +5,15 @@
         {{#
             var businessType = document.getElementById('type').value;
             if(businessType !=='qz'){  }}
+            <div class="layui-btn-group">
                 <button class="layui-btn layui-btn-sm" id="add_customer_keyword" lay-event="add_customer_keyword">
                     添加
                 </button>
+            </div>
         {{#  }  }}
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customerKeyword/editOptimizePlanCount">
     <div class="layui-btn-group">
-        <button class="layui-btn layui-btn-sm" id="change_current_optimizePlanCount" lay-event="change_current_optimizePlanCount">
-            修改当前刷量
-        </button>
         <button class="layui-btn layui-btn-sm" id="change_select_optimizePlanCount" lay-event="change_select_optimizePlanCount">
             修改所选刷量
         </button>

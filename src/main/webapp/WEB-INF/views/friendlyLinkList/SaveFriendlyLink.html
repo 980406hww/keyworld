@@ -132,6 +132,7 @@
     var originalSortRank_ = null;
     var customerUuid_ = null;
     var friendlyLinkType_ = null;
+    var flag_ = false;
 
     function initForm(uuid, websiteUuid) {
         uuid_ = uuid;
@@ -143,7 +144,6 @@
 
     function initWebSiteID(websiteUuid) {
         websiteUuid_ = websiteUuid
-        init_Select();
     }
 
     function setForm(l, u) {
@@ -164,6 +164,7 @@
                 var renewTime = new Date(res.data.renewTime);
                 res.data.renewTime = renewTime.getFullYear() + '-' +
                     (renewTime.getMonth()+1 < 10 ? '0'+(renewTime.getMonth()+1) : renewTime.getMonth()+1) + '-' + renewTime.getDate();
+                delete res.data['friendlyLinkLogo']
                 init_Select();
                 if (res.code === 200) {
                     layui.form.val("friendlyLinkForm", res.data);
@@ -184,6 +185,17 @@
             setForm(layui, uuid_);
         } else {
             layui_ = layui;
+            init_Select2();
+        }
+
+        window.init_Select = function(){
+            init_customerInfo();
+            init_friendlyLinkType();
+        }
+
+        function init_Select2(){
+            init_customerInfo();
+            init_friendlyLinkType();
         }
 
         laydate.render({
@@ -194,7 +206,7 @@
             elem: '#renewTime',
         });
 
-        window.init_Select = function(){
+        function init_customerInfo(){
             $.ajax({
                 url: "/internal/customer/getActiveCustomers2",
                 type: "GET",
@@ -219,7 +231,9 @@
                     layer.msg("获取信息失败！");
                 }
             });
+        }
 
+        function init_friendlyLinkType(){
             $.ajax({
                 url: "/internal/friendlyLinks/searchFriendlyLinkTypeList/" + websiteUuid_,
                 type: "GET",
@@ -294,7 +308,7 @@
             var friendlyLinkLogo = $('#friendlyLinkLogo')[0].files[0];
 
             var formData = new FormData();
-            formData.append('file', friendlyLinkLogo);
+            formData.append('file', $('#friendlyLinkLogo')[0].files[0]);
             formData.append('websiteUuid', websiteUuid_);
             formData.append('customerInfo', $.trim(customerInfo));
             formData.append('customerUuid', $.trim(customerUuid));

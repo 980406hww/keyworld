@@ -178,10 +178,10 @@
             switch (obj.event) {
 
                 case 'toOperationCombine':
-                    toOperationCombine(data.operationCombineName);
+                    toOperationCombine(data);
                     break;
                 case 'toMachineManage':
-                    toMachineManage(data.machineGroup);
+                    toMachineManage(data);
                     break;
                 case 'edit':
                     update_algorithmTestPlan(data.uuid);
@@ -203,7 +203,7 @@
 
         function add_algorithmTestPlan() {
             let url = '/internal/algorithmAutoTest/toAlgorithmTestPlanAdd';
-            okLayer.open("其他 / 测试计划管理 / 添加测试计划", url, "60%", "90%", function (layero) {
+            okLayer.open("其他 / 测试计划管理 / 添加测试计划", url, "60%", "80%", function (layero) {
             }, function () {
                 if (sign) {
                     active['reload'].call(this);
@@ -215,7 +215,7 @@
         function update_algorithmTestPlan(uuid) {
 
             let url = '/internal/algorithmAutoTest/toAlgorithmTestPlanAdd';
-            okLayer.open("其他 / 测试计划管理 / 添加测试计划", url, "60%", "90%", function (layero) {
+            okLayer.open("其他 / 测试计划管理 / 修改测试计划", url, "60%", "80%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(uuid);
             }, function () {
                 if (sign) {
@@ -397,7 +397,7 @@
 
         function show_task_data(uuid){
             let url = '/internal/algorithmAutoTest/toShowTaskData';
-            okLayer.open("其他 / 测试计划管理 / 展示历史统计数据", url, "60%", "90%", function (layero) {
+            okLayer.open("其他 / 测试计划管理 / 查看任务计划", url, "60%", "70%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(uuid);
             }, function () {
                 if (sign) {
@@ -409,7 +409,7 @@
 
         function show_test_data_statistics(uuid){
             let url = '/internal/algorithmAutoTest/toShowTestPlanDataStatistics';
-            okLayer.open("其他 / 测试计划管理 / 展示历史统计数据", url, "60%", "90%", function (layero) {
+            okLayer.open("其他 / 测试计划管理 / 展示历史统计数据", url, "60%", "70%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(uuid);
             }, function () {
                 if (sign) {
@@ -459,20 +459,20 @@
         });
 
         <@shiro.hasPermission name="/internal/groupsetting/searchGroupSettings">
-            function toOperationCombine(operationCombineName){
-                let url = '/internal/groupsetting/toGroupSettingFromATP/'+operationCombineName;
+            function toOperationCombine(data){
+                let url = '/internal/groupsetting/toGroupSettingFromATP/'+data.terminalType +'/'+data.operationCombineName;
                 url = encodeURI(encodeURI(url));
-                let title = '操作组合:' + operationCombineName + '详情';
-                updateOrNewTab(url, title, operationCombineName)
+                let title = '操作组合:' + data.operationCombineName + '详情';
+                updateOrNewTab(url, title, data.operationCombineName)
             }
         </@shiro.hasPermission>
 
         <@shiro.hasPermission name="/internal/machineInfo/searchMachineInfos">
-            function toMachineManage(machineGroup){
-                let url = '/internal/machineManage/toMachineInfoFromATP/'+machineGroup;
+            function toMachineManage(data){
+                let url = '/internal/machineManage/toMachineInfoFromATP/'+data.terminalType +'/'+data.machineGroup;
                 url = encodeURI(encodeURI(url));
-                let title = '机器分组:' + machineGroup + '详情';
-                updateOrNewTab(url, title, machineGroup)
+                let title = '机器分组:' + data.machineGroup + '详情';
+                updateOrNewTab(url, title, data.machineGroup)
             }
         </@shiro.hasPermission>
 
@@ -489,7 +489,8 @@
         });
         if (!update) {
             parent.layui.element.tabAdd('ok-tab', {
-                    title: '<i class="layui-icon layui-icon-align-right"></i>&nbsp;&nbsp;&nbsp;'+tit,
+                title: '<strong style="display: none;" is-close="true" lay-id="'+id+'" data-url="'+url+'"></strong>' +
+                    '<i class="layui-icon">&#xe648;</i> ' + tit,
                     content: contentIframe,
                     id: id
                 }

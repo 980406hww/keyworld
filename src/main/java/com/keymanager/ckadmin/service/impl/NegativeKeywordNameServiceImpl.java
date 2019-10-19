@@ -8,6 +8,9 @@ import com.keymanager.ckadmin.criteria.NegativeKeywordNameCriteria;
 import com.keymanager.ckadmin.dao.NegativeKeywordNameDao;
 import com.keymanager.ckadmin.entity.NegativeKeywordName;
 import com.keymanager.ckadmin.service.NegativeKeywordNameService;
+import com.keymanager.ckadmin.util.FileUtil;
+import com.keymanager.ckadmin.util.Utils;
+import java.io.File;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -47,5 +50,23 @@ public class NegativeKeywordNameServiceImpl extends ServiceImpl<NegativeKeywordN
             wrapper.where("fEmail != {0}", "");
         }
         return negativeKeywordNameDao.selectList(wrapper);
+    }
+
+    @Override
+    public void insertBatchByTxtFile(File file, String group) {
+        List<String> companyNames = FileUtil.readTxtFile(file, FileUtil.getFileCharset(file));
+        int rowCount = 5000;
+        if (!Utils.isEmpty(companyNames)) {
+            int listSize = companyNames.size();
+            int insertCount = listSize / 5000;
+            for (int i = 0; i < insertCount; i++) {
+                negativeKeywordNameDao.insertBatchByList(group, companyNames.subList(0, rowCount));
+                companyNames.subList(0, rowCount).clear();
+            }
+            if (!Utils.isEmpty(companyNames)) {
+                negativeKeywordNameDao.insertBatchByList(group, companyNames);
+            }
+
+        }
     }
 }

@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
 <!--    <link rel="stylesheet" href="/static/ok-admin/page/base/searchForm.css">-->
+    <style>
+        .layui-form-radio {
+             margin: 0 0;
+        }
+    </style>
 </head>
 <body>
 <div class="ok-body">
@@ -18,8 +23,8 @@
             <form class="layui-form layui-form-pane" id="searchForm">
                 <input type="hidden" name="terminalType" id="terminalType" value=""/>
                 <div class="layui-inline">
-                    <label class="layui-form-label">组名来源</label>
-                    <div class="layui-input-block">
+                    <label class="layui-form-label" style="width: 60px">来源</label>
+                    <div class="layui-input-block" style="margin-left: 60px">
                         <input type="radio" name="optimizedGroupNameSearchSource" value="true" title="关键字" checked="">
                         <input type="radio" name="optimizedGroupNameSearchSource" value="false" title="全站">
                     </div>
@@ -104,7 +109,7 @@
                 contentType: 'application/json',
                 cols: [[
                     {type: 'checkbox', width: '5%', LAY_CHECKED: true},
-                    {field: 'groupName', title: '分组名称', width: '95%', align: 'center'},
+                    {field: 'groupName', title: '分组名称', width: '95%'},
                 ]],
                 height: 'full-160',
                 done: function (res, curr, count) {

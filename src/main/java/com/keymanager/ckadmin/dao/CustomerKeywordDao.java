@@ -13,14 +13,12 @@ import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.vo.CodeNameVo;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.GroupVO;
+import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
-import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.keymanager.ckadmin.vo.KeywordCountVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -130,5 +128,11 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<PTkeywordCountVO> searchPTKeywordCount(Page<PTkeywordCountVO> page, @Param("keywordCriteria") PTKeywordCountCriteria keywordCriteria);
 
     void updateKeywordCustomerUuid(@Param("keywordUuids") List<String> keywordUuids, @Param("customerUuid") String customerUuid, @Param("terminalType") String terminalType);
+
+    void updateCustomerUuidByQzUuids(@Param("customerUuid") Long customerUuid, @Param("qzUuids") List<Long> qzUuids);
+
+    void editOptimizePlanCountByCustomerUuid(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("customerUuid") Long customerUuid, @Param("optimizePlanCount") Integer optimizePlanCount, @Param("settingType") String settingType);
+
+    void editCustomerOptimizePlanCount(@Param("optimizePlanCount") Integer optimizePlanCount, @Param("settingType") String settingType, @Param("uuids") List<String> uuids);
 
 }

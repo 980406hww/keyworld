@@ -59,11 +59,11 @@
                                     <div class="layui-inline" style="width: 135px">
                                         排名
                                         <div class="layui-input-inline" style="width: 50px;">
-                                            <input type="text" name="gtPosition" placeholder=">=" value="" autocomplete="off" class="layui-input"
+                                            <input type="number" name="gtPosition" placeholder=">=" value="" autocomplete="off" class="layui-input"
                                                    onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" lay-verify="positiveInteger"/>
                                         </div>
                                         <div class="layui-input-inline" style="width: 50px;">
-                                            <input type="text" name="ltPosition" placeholder="<=" value="<#if pst123?exists>${pst123}<#else></#if>" autocomplete="off"
+                                            <input type="number" name="ltPosition" placeholder="<=" value="<#if pst123?exists>${pst123}<#else></#if>" autocomplete="off"
                                                    onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" class="layui-input" lay-verify="positiveInteger"/>
                                         </div>
                                     </div>
@@ -149,11 +149,11 @@
                                         <div class="layui-inline">
                                             <label class="layui-form-label">要刷数量范围</label>
                                             <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="text" name="gtOptimizePlanCount" placeholder=">=" autocomplete="off" class="layui-input"
+                                                <input type="number" name="gtOptimizePlanCount" placeholder=">=" autocomplete="off" class="layui-input"
                                                        onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" lay-verify="positiveInteger">
                                             </div>
                                             <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="text" name="ltOptimizePlanCount" placeholder="<=" autocomplete="off" class="layui-input"
+                                                <input type="number" name="ltOptimizePlanCount" placeholder="<=" autocomplete="off" class="layui-input"
                                                        onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" lay-verify="positiveInteger">
                                             </div>
                                         </div>
@@ -161,11 +161,11 @@
                                         <div class="layui-inline">
                                             <label class="layui-form-label">已刷数量范围</label>
                                             <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="text" name="gtOptimizedCount" placeholder=">=" autocomplete="off" class="layui-input"
+                                                <input type="number" name="gtOptimizedCount" placeholder=">=" autocomplete="off" class="layui-input"
                                                        onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" lay-verify="positiveInteger">
                                             </div>
                                             <div class="layui-input-inline" style="width: 90.5px;">
-                                                <input type="text" name="ltOptimizedCount" placeholder="<=" autocomplete="off" class="layui-input"
+                                                <input type="number" name="ltOptimizedCount" placeholder="<=" autocomplete="off" class="layui-input"
                                                        onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" lay-verify="positiveInteger">
                                             </div>
                                         </div>
@@ -173,7 +173,7 @@
                                         <div class="layui-inline" id="invalidRefreshCountDiv">
                                             <label class="layui-form-label">无效点击数</label>
                                             <div class="layui-input-inline">
-                                                <input type="text" name="invalidRefreshCount" id="invalidRefreshCount" placeholder="请输入无效点击数" autocomplete="off"
+                                                <input type="number" name="invalidRefreshCount" id="invalidRefreshCount" placeholder="请输入无效点击数" autocomplete="off"
                                                        onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');"
                                                        class="layui-input" lay-verify="positiveInteger">
                                             </div>
@@ -216,6 +216,11 @@
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script>
+    var searchEngine = '<#if se123?exists>${se123}</#if>';
+    var belongUser = '<#if belongUser?exists>${belongUser}</#if>';
+    var terminal225 = '<#if terminalType2?exists>${terminalType2}<#else>PC</#if>';
+</script>
 <script src="/static/ok-admin/page/keyword/keyword.js"></script>
 <script src="/static/ok-admin/page/base/searchForm.js"></script>
 <#include  "./keywordTpl.html" />
