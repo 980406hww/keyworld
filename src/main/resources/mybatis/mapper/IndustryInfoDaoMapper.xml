@@ -69,6 +69,37 @@
         LIMIT 1
     </select>
 
+    <select id="getValidIndustryInfoByName" resultType="com.keymanager.monitoring.vo.IndustryInfoVO">
+        SELECT
+        tii.fUuid         AS 'uuid',
+        tii.fSearchEngine AS 'searchEngine',
+        tii.fTerminalType AS 'terminalType',
+        tii.fIndustryName AS 'industryName',
+        tii.fTargetUrl    AS 'targetUrl',
+        tii.fPageNum      AS 'pageNum',
+        tii.fPagePerNum   AS 'pagePerNum'
+        FROM t_industry_info tii
+        WHERE (tii.fStatus = 0
+        OR (tii.fStatus = 1 AND tii.fUpdateTime &lt; DATE_SUB(NOW(), INTERVAL 4 HOUR))
+        )
+        <if test="customer != null and customer != ''">
+            AND tii.fUserID = #{customer}
+        </if>
+        <if test="industryList != null">
+            <!--AND tii.fIndustryName like CONCAT('%',#{industry},'%')-->
+            <!--AND tii.fIndustryName in
+            <foreach collection="industry" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>-->
+            AND
+            <foreach collection="industryList" index="index" item="item" open="(" >
+                tii.fIndustryName like '%' || #{item} || '%' or
+            </foreach>
+            1 != 1)
+        </if>
+        LIMIT 1
+    </select>
+
     <update id="updateIndustryStatus">
         UPDATE t_industry_info
         SET fStatus = 0, fUpdateTime = NOW()
