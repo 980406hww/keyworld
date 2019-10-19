@@ -2791,7 +2791,10 @@
                         optimizeGroupName: optimizeGroupName
                     });
                 }, function () {
-
+                    if (sign) {
+                        active['reload'].call(this);
+                        sign = false;
+                    }
                 },'40px'
             );
         };
