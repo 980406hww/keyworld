@@ -5,12 +5,16 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.SalesInfoCriteria;
 import com.keymanager.ckadmin.dao.SalesManageDao;
 import com.keymanager.ckadmin.entity.SalesManage;
+import com.keymanager.ckadmin.enums.WebsiteTypeEnum;
 import com.keymanager.ckadmin.service.SalesManageService;
 import com.keymanager.ckadmin.vo.SalesManageVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.Wrapper;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service(value = "salesManageService2")
 public class SalesManageServiceImpl extends ServiceImpl<SalesManageDao, SalesManage> implements SalesManageService {
@@ -31,12 +35,39 @@ public class SalesManageServiceImpl extends ServiceImpl<SalesManageDao, SalesMan
     }
 
     public SalesManage getSalesManageByUuid(Long uuid) {
-        return salesManageDao.selectById(uuid);
+        SalesManage salesManage = salesManageDao.selectById(uuid);
+        return parseManagePart(salesManage);
+    }
+
+    public List<String> getAllSalesName(){
+        return salesManageDao.selectAllSalesName();
     }
 
     public Page<SalesManage> SearchSalesManages(SalesInfoCriteria salesInfoCriteria, Page<SalesManage> page) {
-        page.setRecords(salesManageDao.getSalesManages(page, salesInfoCriteria));
+        List<SalesManage> salesManages = salesManageDao.getSalesManages(page, salesInfoCriteria);
+        List<SalesManage> sms = new ArrayList<>();
+        for(SalesManage s : salesManages){
+            sms.add(parseManagePart(s));
+        }
+        page.setRecords(sms);
         return page;
+    }
+
+    private SalesManage parseManagePart(SalesManage salesManage){
+        Map<String, String> typeMap = WebsiteTypeEnum.changeToMap();
+        String str  = salesManage.getManagePart();
+        if(str.indexOf(",") == -1){
+            salesManage.setManagePart(typeMap.get(str));
+        }else{
+            String[] split = str.split(",");
+            String str2 = "";
+            for(String tmp : split){
+                str2 = str2 + typeMap.get(tmp) + ",";
+            }
+            str2 = str2.substring(0,str2.length() - 1);
+            salesManage.setManagePart(str2);
+        }
+        return salesManage;
     }
 
 }

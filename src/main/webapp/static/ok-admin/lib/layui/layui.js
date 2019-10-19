@@ -47,6 +47,7 @@ if (!Object.assign) {
     tree: "modules/tree",
     treeSelect: "modules/treeSelect",
     authtree: "modules/authtree",
+    formSelects: "modules/formSelects",
     table: "modules/table",
     element: "modules/element",
     rate: "modules/rate",

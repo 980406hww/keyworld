@@ -21,6 +21,9 @@
         <if test="salesInfoCriteria.salesName != null and salesInfoCriteria.salesName != ''">
             AND fSalesName like '%${salesInfoCriteria.salesName}%'
         </if>
+        <if test="salesInfoCriteria.managePart != null and salesInfoCriteria.managePart != ''">
+            AND fManagePart like '%${salesInfoCriteria.managePart}%'
+        </if>
     </select>
 
     <select id="selectAllSalesInfo" parameterType="java.lang.String" resultType="com.keymanager.ckadmin.vo.SalesManageVO">
@@ -36,6 +39,13 @@
         t_sales_manage
         WHERE
         fManagePart = #{websiteType}
+    </select>
+
+    <select id="selectAllSalesName" resultType="java.lang.String">
+        SELECT
+        fSalesName AS 'salesName'
+        FROM
+        t_sales_manage
     </select>
 
 </mapper>
