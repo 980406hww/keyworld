@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改刷量</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="ok-body">
+
+    <form class="layui-form layui-form-pane ok-form" lay-filter="UploadVPSFile" enctype="multipart/form-data" id="uploadForm">
+
+        <div class="layui-form-item" pane>
+            <label class="layui-form-label">范围</label>
+            <div class="layui-input-block">
+                <input type="radio" name="range" value="all" title="所有的" checked>
+                <input type="radio" name="range" value="appoint" title="选中的">
+            </div>
+        </div>
+        <div class="layui-form-item" pane>
+            <label class="layui-form-label">类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="settingType" value="setCurrentCount" title="按当前刷量加减" checked>
+                <input type="radio" name="settingType" value="setSpecificCount" title="指定刷量">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">刷量</label>
+            <div class="layui-input-block">
+                <input type="number" name="optimizePlanCount" id="optimizePlanCount" placeholder="请输入刷量" autocomplete="off" value="" class="layui-input" lay-verify="required|number|integer"/>
+            </div>
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="commit">确定</button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script>
+    var uuids_ = null;
+    var customerUuid_ = null;
+    var terminalType_ = null;
+    var entryType_ = null;
+
+    function initForm(data){
+        uuids_ = data.uuids;
+        customerUuid_ = data.customerUuid;
+        terminalType_ = data.terminalType;
+        entryType_ = data.entryType;
+    }
+
+    function initData(data1, data2) {
+        machineInfoType = data1
+        terminalType = data2
+        if(machineInfoType == "startUp") {
+            document.getElementById("programType").style.visibility = "visible"
+        } else {
+            document.getElementById("programType").style.visibility = "hidden"
+        }
+    }
+
+    layui.use(["form", "okLayer", "jquery", "layer", "upload"], function () {
+        var form = layui.form;
+        var okLayer = layui.okLayer;
+        var $ = layui.jquery;
+
+        form.on("submit(commit)", function (data) {
+            let postData = data.field;
+            if (postData.range === 'all'){
+                postData.customerUuid = customerUuid_;
+                postData.terminalType = terminalType_;
+                postData.entryType = entryType_;
+                postData.uuids = null;
+            }else{
+                if (uuids_.length === 0){
+                    show_layer_msg("请选中要修改的词！",5);
+                    return false;
+                }
+                postData.uuids = uuids_;
+                postData.customerUuid = null;
+                postData.terminalType = null;
+                postData.entryType = null;
+            }
+            $.ajax({
+                url: '/internal/customerKeyword/editOptimizePlanCount2',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (res) {
+                    if (res.code === 200) {
+                        okLayer.msg.greenTick("保存成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        layui.layer.msg(res.msg);
+                    }
+                },
+                error: function () {
+                }
+            });
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+        form.verify({
+            integer: [
+                /(^-?[1-9]\d*$)/,
+                "请输入正确格式QQ"
+            ],
+        });
+
+    });
+</script>
+</body>
+</html>

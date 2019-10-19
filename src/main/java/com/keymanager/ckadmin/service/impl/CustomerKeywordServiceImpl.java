@@ -653,6 +653,16 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     public void updateCustomerUuidByQzUuids(Long customerUuid, List<Long> qzUuids) {
         customerKeywordDao.updateCustomerUuidByQzUuids(customerUuid, qzUuids);
     }
+
+    @Override
+    public void editOptimizePlanCountByCustomerUuid(String terminalType, String entryType, Long customerUuid, Integer optimizePlanCount, String settingType) {
+        customerKeywordDao.editOptimizePlanCountByCustomerUuid(terminalType, entryType, customerUuid, optimizePlanCount, settingType);
+    }
+
+    @Override
+    public void editCustomerOptimizePlanCount(Integer optimizePlanCount, String settingType, List<String> uuids) {
+        customerKeywordDao.editCustomerOptimizePlanCount(optimizePlanCount, settingType, uuids);
+    }
 }
 
 

@@ -920,57 +920,22 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
     function change_select_optimizePlanCount() {
         //获取选中数据
         var uuidArr = get_selected_uuid_arr();
-        if (uuidArr.length <= 0) {
-            show_layer_msg('请选择要操作的词', 5);
-            return
-        }
-        layer.prompt({
-            formType: 3,
-            value: '',
-            title: '新刷量',
-            area: ['220px', '60px'], //自定义文本域宽高
-            yes: function (index, layero) {
-                var index2 = index;
-                var value = layero.find(".layui-layer-input").val();
-                if (value === '') {
-                    show_layer_msg('请输入新刷量！', 5, null, 1000);
-                    return;
-                } else if (!/^\d+$/.test(value)) {
-                    show_layer_msg('请输入正确数字！', 5, null, 1000);
-                    return;
-                }
 
-                var postData = {};
-                postData.uuids = uuidArr;
-                postData.terminalType = $('#terminalType').val();
-                postData.type = $('#type').val();
-                postData.targetOptimizePlanCount = value;
-                $.ajax({
-                    url: '/internal/customerKeyword/updateOptimizePlanCount2',
-                    data: JSON.stringify(postData),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (result) {
-                        if (result.code === 200) {
-                            show_layer_msg('操作成功', 6, true);
-                        } else {
-                            show_layer_msg('操作失败', 5);
-                        }
-                    },
-                    error: function () {
-                        show_layer_msg('未知错误，请稍后重试', 5);
-                    }
-
-                });
-                layer.close(index2);
-
-
+        let data = {};
+        data.uuids = uuidArr;
+        data.customerUuid = $('#customerUuid').val();
+        data.terminalType = $('#terminalType').val();
+        data.entryType = $('#type').val();
+        okLayer.open("首页 / 客户关键字 / 修改刷量", "/internal/customerKeyword/toUpdateOptimizePlanCount", "40%", "50%", function(layero){
+            window[layero.find("iframe")[0]["name"]].initForm(data);
+        }, function () {
+            if (sign) {
+                let pageConf = formToJsonObject('searchForm');
+                get_keywords(pageConf);
+                sign = false;
             }
         });
+
     }
 
     function change_current_machineGroup() {
