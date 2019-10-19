@@ -25,13 +25,14 @@
 <div class="ok-body">
 
     <form class="layui-form layui-form-pane ok-form" lay-filter="UploadExcel" enctype="multipart/form-data" id="uploadForm">
-        <div>请选择要上传的文件(<font color="red">.xls, .xlsx</font>)<div/>
+        <div style="margin-bottom: 10px;text-indent: 6px;">请选择要上传的文件(<font color="red">.xls, .xlsx</font>)</div>
         <div class="layui-form-item">
             <div style="position: relative;">
                 <div class="layui-btn layui-btn-radius layui-btn-normal" style="cursor: pointer; height: 38px; width: 142px;">
                     <i class="layui-icon">&#xe67c;</i>上传Excel文件
                 </div>
-                <input id="upload" title="" name="file" type="file" onchange="showName(this)" style="cursor: pointer; opacity: 0; position: absolute; left: 0; height: 38px; width: 142px;">
+                <input id="upload" title="" name="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+                       type="file" onchange="showName(this)" style="cursor: pointer; opacity: 0; position: absolute; left: 0; height: 38px; width: 142px;">
                 <div id="fileName"></div>
             </div>
         </div>

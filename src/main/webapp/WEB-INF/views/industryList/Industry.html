@@ -65,7 +65,7 @@
 
         #engine-box input{
             height: 30px;
-            width: 120px;
+            width: 150px;
         }
 
         #user-box input{
@@ -75,7 +75,7 @@
 
         #status-box input{
             height: 30px;
-            width: 120px;
+            width: 150px;
         }
     </style>
 </head>
@@ -182,14 +182,16 @@
                         var activeUsers = $('#activeUsers');
                         searchEngine.empty();
                         activeUsers.empty();
-                        searchEngine.append('<option value="" selected>引擎</option>');
+                        searchEngine.append('<option value="" selected>搜索引擎</option>');
                         activeUsers.append('<option value="" selected>用户名称</option>');
                         activeUsers.append('<option value="' + user.loginName + '">' + '只显示自己' + '</option>');
                         $.each(searchEngineList, function (index, item) {
                             searchEngine.append('<option value="' + item + '">' + item + '</option>');
                         });
                         $.each(activeUsersList, function (index, item) {
-                            activeUsers.append('<option value="' + item.loginName + '">' + item.userName + '</option>');
+                            if (user.loginName !== item.loginName){
+                                activeUsers.append('<option value="' + item.loginName + '">' + item.userName + '</option>');
+                            }
                         });
                         form.render("select")
                     } else {
@@ -224,10 +226,10 @@
                     {field: 'searchEngine', title: '搜索引擎', width: '10%', align: 'center'},
                     {field: 'targetUrl', title: '目标起始网址', width: '17%', align: 'center', templet: '#url'},
                     {field: 'pageNum', title: '爬取页数', width: '7%', align: 'center'},
-                    {field: 'pagePerNum', title: '每页条数', align: 'center', width: '7%', align: 'center'},
-                    {field: 'status', title: '状态', align: 'center', width: '10%', align: 'center', templet: '#toStatus'},
-                    {field: 'createTime', title: '创建时间', align: 'center', width: '10%', align: 'center', templet: '#toDateTime'},
-                    {title: '操作', align: 'center', width: '11%', align: 'center', templet: '#operationTpl', fixed: "right"},
+                    {field: 'pagePerNum', title: '每页条数', width: '7%', align: 'center'},
+                    {field: 'status', title: '状态', width: '10%', align: 'center', templet: '#toStatus'},
+                    {field: 'createTime', title: '创建时间', width: '10%', align: 'center', templet: '#toDateTime'},
+                    {title: '操作', width: '11%', align: 'center', templet: '#operationTpl', fixed: "right"},
                 ]],
                 height: 'full-150',
 
@@ -279,7 +281,7 @@
                     modifyIndustryInfo(data.uuid);
                     break;
                 case 'searchIndustryDetail':
-                    searchIndustryDetail(data.uuid);
+                    searchIndustryDetail(data.uuid,data.industryName);
                     break;
             }
         });
@@ -311,8 +313,29 @@
             }
         });
 
-        function searchIndustryDetail(uuid) {
-            window.open("/internal/industryDetails/toIndustryDetails/" + uuid)
+        function searchIndustryDetail(uuid, name) {
+            updateOrNewTab("/internal/industryDetails/toIndustryDetails/" + uuid, name + "的信息", uuid + name);
+        }
+
+        function updateOrNewTab(url, tit, id) {
+            var update = false;
+            var contentIframe = ("<iframe src='" + url + "' lay-id='" + id
+                + "'frameborder='0' scrolling='yes' width='100%' height='100%'></iframe>");
+            parent.layui.$('.layui-tab-title li').each(function () {
+                if (id === this.getAttribute('lay-id')) {
+                    update = true;
+                }
+            });
+            if (!update) {
+                parent.layui.element.tabAdd('ok-tab', {
+                        title: '<strong style="display: none;" is-close="true" lay-id="'+id+'" data-url="'+url+'"></strong>' +
+                            '<i class="layui-icon">&#xe648;</i> ' + tit,
+                        content: contentIframe,
+                        id: id
+                    }
+                );
+            }
+            parent.layui.element.tabChange('ok-tab', id)
         }
 
         function uploadIndustryInfo(excelType){
@@ -320,7 +343,7 @@
             if(terminalType == '' || terminalType == null){
                 terminalType = 'PC'
             }
-            okLayer.open("首页/行业列表/上传Excel", "/internal/industryList/toUploadIndustryInfo", "25%", "20%", function(layero){
+            okLayer.open("首页 / 行业列表 / 上传Excel", "/internal/industryList/toUploadIndustryInfo", "25%", "20%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initData(excelType, terminalType);
             },function(){
                 if(sign){
@@ -362,19 +385,17 @@
             window.location.href = "/SuperIndustrySimpleList.xls"
         }
 
-        function updateStatus(){
+        function updateStatus() {
             var checkStatus = table.checkStatus('industryListTable');
             var data = checkStatus.data;
             var uuidArr = [];
             $.each(data, function (index, item) {
-                if(item.status == "1"){
-
-                }else{
+                if (item.status === 2) {
                     uuidArr.push(item.uuid);
                 }
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的行业', {icon: 5});
+                layer.msg(data.length > 0 ? '请选择可操作的行业喔' : '请选择要操作的行业', {icon: 5});
                 return
             }
             var postData = {};
@@ -414,7 +435,7 @@
             }
             var postData = {};
             postData.uuids = uuidArr;
-            okLayer.open("首页/行业列表/修改客户归属", "/internal/industryList/updateOwner", "30%", "35%", function(layero){
+            okLayer.open("首页 / 行业列表 / 修改客户归属", "/internal/industryList/updateOwner", "30%", "35%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initData(postData);
             },function(){
                 if(sign){
@@ -426,7 +447,7 @@
         }
 
         function modifyIndustryInfo(data){
-            okLayer.open("首页/行业列表/修改行业", "/internal/industryList/toSaveIndustryInfo", "35%", "60%", function(layero){
+            okLayer.open("首页 / 行业列表 / 修改行业", "/internal/industryList/toSaveIndustryInfo", "35%", "60%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             },function(){
                 if(sign){
@@ -441,7 +462,7 @@
             if(terminalType == '' || terminalType == null){
                 terminalType = 'PC'
             }
-            okLayer.open("首页/行业列表/添加行业", "/internal/industryList/toSaveIndustryInfo", "35%", "60%", function(layero){
+            okLayer.open("首页 / 行业列表 / 添加行业", "/internal/industryList/toSaveIndustryInfo", "35%", "60%", function(layero){
                 window[layero.find("iframe")[0]["name"]].init_terminalType(terminalType);
             }, function(){
                 if(sign){

@@ -233,12 +233,10 @@ public class IndustryInfoController {
             HttpSession session = request.getSession();
             String loginName = (String) session.getAttribute("username");
             UserInfo user = userInfoService.getUserInfo(loginName);
-            List<UserInfo> activeUsers = userInfoService.findActiveUsers();
             if (null == industryCriteria.getTerminalType()) {
                 industryCriteria.setTerminalType(TerminalTypeMapping.getTerminalType(request));
             }
-            boolean isDepartmentManager = userRoleService.isDepartmentManager(user.getUuid());
-            if (!isDepartmentManager) {
+            if (!userRoleService.isDepartmentManager(user.getUuid())) {
                 industryCriteria.setLoginName(loginName);
             }
             Page<IndustryInfo> page = new Page<>(industryCriteria.getPage(), industryCriteria.getLimit());
