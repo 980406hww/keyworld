@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.keymanager.monitoring.dao.UpdateKeywordBearsPawNumberDao">
+
+    <sql id="distinctUrlKeyword">
+        ck.fUuid	AS	'uuid',
+        ck.fKeyword	AS	'keyword',
+        ck.fUrl	AS	'url'
+    </sql>
+
+
+    <select id="getCustomerKeywordDistinctUrl" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
+        SELECT
+        <include refid="distinctUrlKeyword"/>
+        from t_customer_keyword ck
+        LEFT JOIN t_customer c
+        ON c.fUuid = ck.fCustomerUuid
+        WHERE ck.fStatus = 1
+        AND ck.fType != 'fm' and ck.fUrl is not null
+        GROUP BY ck.fUrl
+    </select>
+
+    <update id="updateBearPawByUrl">
+        update t_customer_keyword
+        set fBearPawNumber = #{xzNumber}
+        where fUrl like CONCAT('%',#{url},'%')
+    </update>
+
+</mapper>
