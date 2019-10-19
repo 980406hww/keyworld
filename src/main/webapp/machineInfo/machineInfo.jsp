@@ -191,6 +191,7 @@
                         <option value='Completed'>Completed</option>
                         <option value='Error'>Error</option>
                     </select>&nbsp;&nbsp;
+                    <shiro:hasRole name="Operation">
                     运行程序类型:
                     <select name="runningProgramType" id="runningProgramType">
                         <option value=''>All</option>
@@ -199,7 +200,10 @@
                         <option value='Super'>Super</option>
                         <option value='Rank'>Rank</option>
                     </select>
-
+                    </shiro:hasRole>
+                    <shiro:lacksRole name="Operation">
+                        <input type="hidden" name="runningProgramType" value="Rank" id="runningProgramType">
+                    </shiro:lacksRole>
                     <shiro:hasPermission name="/internal/machineInfo/searchMachineInfos">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" onclick="resetPageNumber()" value=" 查询 ">
                     </shiro:hasPermission>

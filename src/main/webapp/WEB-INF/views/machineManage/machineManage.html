@@ -166,6 +166,7 @@
                                     <div class="layui-inline">
                                         <input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID" placeholder="请输入服务器ID" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
                                     </div>
+                                    <@shiro.hasRole name="Operation">
                                     <div class="layui-inline" id="runningProgramType-box">
                                         <select name="runningProgramType">
                                             <option value='' selected>请选择运行程序类型</option>
@@ -175,7 +176,11 @@
                                             <option value='Rank'>Rank</option>
                                         </select>
                                     </div>
-                                    <div class="layui-inline">
+                                    </@shiro.hasRole>
+                                    <@shiro.lacksRole name="Operation">
+                                    <input type="hidden" name="runningProgramType" value="Rank">
+                                    </@shiro.lacksRole>
+                                <div class="layui-inline">
                                         <input type="checkbox" name="hasProblem" value="hasProblem" title="停了">
                                         <input type="checkbox" name="noUpgrade" value="noUpgrade" title="没升级">
                                     </div>

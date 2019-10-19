@@ -760,4 +760,36 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         }
         return resultBean;
     }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/toUpdateOptimizePlanCount")
+    public ModelAndView toUpdateOptimizePlanCount() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/updateOptimizePlanCount");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/editOptimizePlanCount")
+    @RequestMapping(value = "/editOptimizePlanCount2", method = RequestMethod.POST)
+    public ResultBean editOptimizePlanCount(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            List<String> uuids = (List<String>) requestMap.get("uuids");
+            String customerUuid = (String) requestMap.get("customerUuid");
+            String settingType = (String) requestMap.get("settingType");
+            String optimizePlanCount = (String) requestMap.get("optimizePlanCount");
+            if (customerUuid != null) {
+                String terminalType = (String) requestMap.get("terminalType");
+                String entryType = (String) requestMap.get("entryType");
+                customerKeywordService.editOptimizePlanCountByCustomerUuid(terminalType, entryType, Long.parseLong(customerUuid), Integer.parseInt(optimizePlanCount), settingType);
+            } else {
+                customerKeywordService.editCustomerOptimizePlanCount(Integer.parseInt(optimizePlanCount), settingType, uuids);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setMsg(e.getMessage());
+            resultBean.setCode(400);
+        }
+        return resultBean;
+    }
 }
