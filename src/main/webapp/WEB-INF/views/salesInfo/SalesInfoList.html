@@ -42,7 +42,12 @@
                     <div>
                         <div class="layui-inline">
                             <div class="layui-input-inline">
-                                <input type="text" name="salesName" placeholder="销售人员名称" autocomplete="off" class="layui-input">
+                                <select name="salesName" id="salesName" lay-search></select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <select name="managePart" id="managePart" lay-search></select>
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -93,12 +98,68 @@
         };
 
         searchSalesInfo()
+        initSalesName()
+        initManagePart()
 
         form.on("submit(search)", function (data) {
             var postData = data.field
             searchSalesInfo(postData)
             return false
         });
+
+        function initManagePart(){
+            $.ajax({
+                url: '/internal/salesInfo/returnWebsiteTypeMap',
+                type: 'GET',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        var websiteTypeMap = res.data
+                        var managePart = $('#managePart');
+                        managePart.append('<option value="" >负责部分</option>')
+                        $.each(websiteTypeMap, function (index, item) {
+                            managePart.append('<option value="' + index + '" >' + item + '</option>');
+                        });
+                        form.render("select")
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                },
+                error: function () {
+                    layer.msg('未知错误，请稍后重试！！')
+                }
+            });
+        }
+
+        function initSalesName() {
+            $.ajax({
+                url: '/internal/salesInfo/returnSalesName',
+                type: 'GET',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        var salesNameList = res.data
+                        var salesName = $('#salesName');
+                        salesName.append('<option value="" >销售名称</option>')
+                        $.each(salesNameList, function (index, item) {
+                            salesName.append('<option value="' + item + '" >' + item + '</option>');
+                        });
+                        form.render("select")
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                },
+                error: function () {
+                    layer.msg('未知错误，请稍后重试！！')
+                }
+            });
+        }
 
         function searchSalesInfo(whereCondition){
             table.render({
@@ -123,7 +184,7 @@
                     {field: 'weChat', title: '微信', width: '10%', align: 'center'},
                     {field: 'quickResponseCode', title: '二维码链接', width: '19%', align: 'center'},
                     {field: 'email', title: '邮箱', width: '12%', align: 'center'},
-                    {field: 'managePart', title: '负责部分', width: '8%', align: 'center',templet: '#managePart'},
+                    {field: 'managePart', title: '负责部分', width: '8%', align: 'center'},
                     {field: 'createTime', title: '创建日期', width: '7%', templet: '#toDateTime', align: 'center'},
                     {field: 'updateTime', title: '修改日期', width: '7%', templet: '#toUpdateTime', align: 'center'},
                     {title: '操作', templet: '#operationTpl', align: 'center', width: '7%', align: 'center', fixed: "right"}
@@ -268,22 +329,6 @@
 
 <script type="text/html" id="toUpdateTime">
     {{layui.util.toDateString(d.updateTime, 'yyyy-MM-dd')}}
-</script>
-
-<script type="text/html" id="managePart">
-    {{# if(d.managePart == 'ASO'){ }}
-    ASO
-    {{# }else if(d.managePart == 'Amazon'){ }}
-    亚马逊
-    {{# }else if(d.managePart == 'Negative'){ }}
-    负面处理
-    {{# }else if(d.managePart == 'Station'){ }}
-    整站排名
-    {{# }else if(d.managePart == 'CustomerSite'){ }}
-    客户站点
-    {{# }else if(d.managePart == 'InformationSite'){ }}
-    资讯站点
-    {{# } }}
 </script>
 
 <script type="text/html" id="toolbarTpl">

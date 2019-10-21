@@ -19,4 +19,6 @@ public interface SalesManageService extends IService<SalesManage> {
     SalesManage getSalesManageByUuid(Long uuid);
 
     Page<SalesManage> SearchSalesManages(SalesInfoCriteria salesInfoCriteria, Page<SalesManage> page);
+
+    List<String> getAllSalesName();
 }

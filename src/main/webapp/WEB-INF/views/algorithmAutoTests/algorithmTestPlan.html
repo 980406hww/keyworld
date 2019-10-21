@@ -80,6 +80,7 @@
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<!--<script src="/static/ok-admin/page/base/searchForm.js"></script>-->
 <script>
     var sign = false;
     // 进度条加载提示
@@ -88,27 +89,16 @@
         NProgress.done();
     };
 
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','common'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
         var layer = layui.layer;
         var okLayer = layui.okLayer;
+        var common = layui.common;
 
-        init_table_data(formToJsonObject('searchForm'));
-
-        function formToJsonObject(form_id) {
-            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
-            formData = formData.replace(/&/g, "\",\"");
-            formData = formData.replace(/=/g, "\":\"");
-            formData = "{\"" + formData + "\"}";
-            formData = $.parseJSON(formData);
-            $.each(formData,function(idx,item){
-                formData[idx] = $.trim(item)
-            });
-            return formData;
-        }
+        init_table_data(common.formToJsonObject('searchForm'));
 
         function init_table_data(whereCondition) {
             whereCondition.entryType = 'pt';
@@ -181,6 +171,7 @@
                     toOperationCombine(data);
                     break;
                 case 'toMachineManage':
+
                     toMachineManage(data);
                     break;
                 case 'edit':
@@ -233,7 +224,7 @@
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                show_layer_msg('请选择要操作的计划', 5);
+                common.show_layer_msg('请选择要操作的计划', 5);
                 return false;
             }
             let msg = '确定暂停这些计划吗';
@@ -262,11 +253,11 @@
                                 active['reload'].call(this);
                             });
                         } else {
-                            show_layer_msg('操作失败', 5);
+                            common._msg('操作失败', 5);
                         }
                     },
                     error: function () {
-                        show_layer_msg('未知错误，请稍后重试', 5);
+                        common.show_layer_msg('未知错误，请稍后重试', 5);
                     },
                     complete: function () {
                         layer.close(index);
@@ -285,7 +276,7 @@
                 optimizeGroupNameList.push(item.optimizeGroupName);
             });
             if (uuidArr.length <= 0) {
-                show_layer_msg('请选择要操作的计划', 5);
+                common.show_layer_msg('请选择要操作的计划', 5);
                 return false;
             }
             layer.confirm("确定删除选中计划吗", {icon: 3, title: '删除选中计划'}, function (index) {
@@ -310,11 +301,11 @@
                                 active['reload'].call(this);
                             });
                         } else {
-                            show_layer_msg('操作失败', 5);
+                            common.show_layer_msg('操作失败', 5);
                         }
                     },
                     error: function () {
-                        show_layer_msg('未知错误，请稍后重试', 5);
+                        common.show_layer_msg('未知错误，请稍后重试', 5);
                     },
                     complete: function () {
                         layer.close(index);
@@ -383,11 +374,11 @@
                             active['reload'].call(this);
                         });
                     } else {
-                        show_layer_msg('操作失败', 5);
+                        common.show_layer_msg('操作失败', 5);
                     }
                 },
                 error: function () {
-                    show_layer_msg('未知错误，请稍后重试', 5);
+                    common.show_layer_msg('未知错误，请稍后重试', 5);
                 },
 
             });
@@ -419,21 +410,12 @@
             })
         }
 
-        function show_layer_msg(msg, icon, title, status) {
-            layer.msg(msg, {
-                icon: icon,
-                title: title === undefined ? null : title,
-                anim: 5,
-                time: 2000,
-                isOutAnim: false
-            }, function () {
-
-            });
-        }
-
         var active = {
             reload: function () {
-                let data = formToJsonObject('searchForm');
+                let data = common.formToJsonObject('searchForm');
+                $.each(data,function(idx,item){
+                    data[idx] = $.trim(item)
+                });
                 data.entryType = 'pt';
                 table.reload('algorithmTestPlanTable', {
                     where: data,
@@ -447,7 +429,7 @@
         form.on("submit(search)", function (data) {
             var postData = data.field;
             $.each(postData,function(idx,item){
-                postData[idx] = $.trim(item)
+                postData[idx] = $.trim(item).replace(/\+/g,"");
             });
             table.reload('algorithmTestPlanTable', {
                 where: postData,
@@ -463,7 +445,7 @@
                 let url = '/internal/groupsetting/toGroupSettingFromATP/'+data.terminalType +'/'+data.operationCombineName;
                 url = encodeURI(encodeURI(url));
                 let title = '操作组合:' + data.operationCombineName + '详情';
-                updateOrNewTab(url, title, data.operationCombineName)
+                common.updateOrNewTab(url, title, data.operationCombineName)
             }
         </@shiro.hasPermission>
 
@@ -472,33 +454,12 @@
                 let url = '/internal/machineManage/toMachineInfoFromATP/'+data.terminalType +'/'+data.machineGroup;
                 url = encodeURI(encodeURI(url));
                 let title = '机器分组:' + data.machineGroup + '详情';
-                updateOrNewTab(url, title, data.machineGroup)
+                common.updateOrNewTab(url, title, data.machineGroup)
             }
         </@shiro.hasPermission>
 
     });
 
-    function updateOrNewTab(url, tit, id) {
-        var update = false;
-        var contentIframe = ("<iframe src='" + url + "' lay-id='" + id
-            + "'frameborder='0' scrolling='yes' width='100%' height='100%'></iframe>");
-        parent.layui.$('.layui-tab-title li').each(function () {
-            if (id === this.getAttribute('lay-id')) {
-                update = true;
-            }
-        });
-        if (!update) {
-            parent.layui.element.tabAdd('ok-tab', {
-                title: '<strong style="display: none;" is-close="true" lay-id="'+id+'" data-url="'+url+'"></strong>' +
-                    '<i class="layui-icon">&#xe648;</i> ' + tit,
-                    content: contentIframe,
-                    id: id
-                }
-            );
-        }
-
-        parent.layui.element.tabChange('ok-tab', id)
-    }
 
 </script>
 <!--模板-->

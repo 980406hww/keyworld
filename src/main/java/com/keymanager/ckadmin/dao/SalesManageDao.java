@@ -20,4 +20,6 @@ public interface SalesManageDao extends BaseMapper<SalesManage> {
     List<SalesManageVO> selectAllSalesInfo(@Param("websiteType") String websiteType);
 
     List<SalesManage> getSalesManages(Page<SalesManage> page, @Param("salesInfoCriteria") SalesInfoCriteria salesInfoCriteria);
+
+    List<String> selectAllSalesName();
 }
