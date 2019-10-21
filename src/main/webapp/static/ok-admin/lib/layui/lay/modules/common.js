@@ -21,16 +21,16 @@ layui.define(['jquery', 'layer',], function (exports) {
             });
             return jsonObject;
         },
-        showSuccessMsg: function (msg, reload) {
+        showSuccessMsg: function (msg, callback = function () {
+
+        }) {
             layer.msg(msg, {
                 icon: 6,
                 anim: 5,
                 time: 1000,
                 isOutAnim: false
             }, function () {
-                if (reload) {
-                    active['reload'].call(this);
-                }
+                callback()
             });
         },
         showFailMsg: function (msg) {
