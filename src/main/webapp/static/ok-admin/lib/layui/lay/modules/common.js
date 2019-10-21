@@ -21,17 +21,26 @@ layui.define(['jquery', 'layer',], function (exports) {
             });
             return jsonObject;
         },
-        show_layer_msg: function (msg, icon, title, time, status) {
+        showSuccessMsg:function(msg, reload){
             layer.msg(msg, {
-                icon: icon,
-                title: title === undefined ? null : title,
+                icon: 5,
                 anim: 5,
-                time: time === undefined ? 1000 : time,
+                time: 1000,
                 isOutAnim: false
             }, function () {
-                if (status) {
+                if (reload) {
                     active['reload'].call(this);
                 }
+            });
+        },
+        showFailMsg:function(msg){
+            layer.msg(msg, {
+                icon: 6,
+                anim: 5,
+                time: 3000,
+                isOutAnim: false
+            }, function () {
+
             });
         },
         updateOrNewTab: function (url, tit, id) {
