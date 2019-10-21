@@ -98,7 +98,7 @@
 
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
-<script src="/static/ok-admin/page/base/searchForm.js"></script>
+<!--<script src="/static/ok-admin/page/base/searchForm.js"></script>-->
 
 <!--<script src="/static/ok-admin/page/groupSetting/groupSetting.js"></script>-->
 <script>
@@ -111,22 +111,23 @@
         b.style.height = (h - 155) + 'px';
     }
 
-    layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function () {
+    layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'], function () {
         var element = layui.element;
         var form = layui.form;
         var $ = layui.jquery;
         var layer = layui.layer;
         var okLayer = layui.okLayer;
         var laypage = layui.laypage;
+        var common = layui.common;
         var operationTypes ;
 
         let ternimalType225 = $('#terminalType').val();
         element.tabChange('groupSettingTab', ternimalType225);
         element.on('tab(groupSettingTab)', function (data) {
-            var d = data.elem.context.dataset
+            var d = data.elem.context.dataset;
             $('#terminalType').val(d.terminal);
             init_operationType();
-            let pageConf = formToJsonObject('searchForm')
+            let pageConf = common.formToJsonObject('searchForm');
             if (pageConf.hasOperation){
                 pageConf.hasOperation = true;
             }
@@ -148,7 +149,7 @@
 
         function init(){
             init_operationType();
-            initLayPage(formToJsonObject('searchForm'));
+            initLayPage(common.formToJsonObject('searchForm'));
         }
 
         function init_operationType(){
@@ -243,7 +244,7 @@
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             }, function () {
                 if (sign) {
-                    let pageConf = formToJsonObject('searchForm');
+                    let pageConf = common.formToJsonObject('searchForm');
                     if (pageConf.hasOperation){
                         pageConf.hasOperation = true;
                     }
@@ -268,7 +269,7 @@
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             }, function () {
                 if (sign) {
-                    let pageConf = formToJsonObject('searchForm');
+                    let pageConf = common.formToJsonObject('searchForm');
                     if (pageConf.hasOperation){
                         pageConf.hasOperation = true;
                     }
@@ -301,7 +302,7 @@
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             }, function () {
                 if (sign) {
-                    let pageConf = formToJsonObject('searchForm');
+                    let pageConf = common.formToJsonObject('searchForm');
                     if (pageConf.hasOperation){
                         pageConf.hasOperation = true;
                     }
@@ -332,7 +333,7 @@
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             }, function () {
                 if (sign) {
-                    let pageConf = formToJsonObject('searchForm');
+                    let pageConf = common.formToJsonObject('searchForm');
                     if (pageConf.hasOperation){
                         pageConf.hasOperation = true;
                     }
@@ -363,7 +364,7 @@
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             }, function () {
                 if (sign) {
-                    let pageConf = formToJsonObject('searchForm');
+                    let pageConf = common.formToJsonObject('searchForm');
                     if (pageConf.hasOperation){
                         pageConf.hasOperation = true;
                     }
@@ -424,7 +425,7 @@
 
                 },
                 error: function () {
-                    layer.msg('获取分组信息失败，请稍后再试', {icon: 5});
+                    common.showFailMsg('获取分组信息失败，请稍后再试');
                 }
             });
         }
@@ -548,11 +549,11 @@
                         $('#groupNameStr' + uuid).attr("title", groupNameStr);
 
                     } else {
-                        show_layer_msg('获取操作组合下的分组数据失败！', 5);
+                        common.showFailMsg('获取操作组合下的分组数据失败！');
                     }
                 },
                 error: function () {
-                    show_layer_msg('获取操作组合下的分组数据失败！', 5);
+                    common.showFailMsg('获取操作组合下的分组数据失败！');
                 }
             });
         };
@@ -568,10 +569,10 @@
                     var index2 = index;
                     var value = layero.find(".layui-layer-input").val();
                     if (value === '') {
-                        show_layer_msg('请输入最大无效点击数！', 5, false, 1000);
+                        common.showFailMsg('请输入最大无效点击数！');
                         return;
                     } else if (!/^\d+$/.test(value)) {
-                        show_layer_msg('请输入正确数字！', 5, false, 1000);
+                        common.showFailMsg('请输入正确数字！');
                         return;
                     }
                     var postData = {};
@@ -588,14 +589,14 @@
                         type: 'POST',
                         success: function (result) {
                             if (result.code === 200) {
-                                show_layer_msg('操作成功', 6);
+                                common.showSuccessMsg('操作成功');
                                 $('#maxInvalidCount'+operationCombineUuid).text(value)
                             } else {
-                                show_layer_msg('操作失败', 5);
+                                common.showFailMsg('操作失败');
                             }
                         },
                         error: function () {
-                            show_layer_msg('未知错误，请稍后重试', 5);
+                            common.showFailMsg('未知错误，请稍后重试');
                         }
 
                     });
@@ -648,11 +649,8 @@
                         type: 'POST',
                         success: function (result) {
                             if (result.code === 200) {
-                                layer.msg('操作成功', {
-                                    icon: 6,
-                                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                                }, function () {
-                                    let pageConf = formToJsonObject('searchForm');
+                                common.showSuccessMsg('操作成功', function () {
+                                    let pageConf = common.formToJsonObject('searchForm');
                                     if (pageConf.hasOperation){
                                         pageConf.hasOperation = true;
                                     }
@@ -667,12 +665,12 @@
                                     initLayPage(pageConf);
                                 });
                             } else {
-                                show_layer_msg('操作失败', 5);
+                                common.showFailMsg('操作失败');
                             }
                             layer.close(index2);
                         },
                         error: function () {
-                            show_layer_msg('未知错误，请稍后重试', 5);
+                            common.showFailMsg('未知错误，请稍后重试');
                             layer.close(index2);
                         }
                     });
@@ -680,20 +678,6 @@
                 }
             });
         };
-
-        function show_layer_msg(msg, icon, status, time, title) {
-            layer.msg(msg, {
-                icon: icon,
-                title: title === undefined ? null : title,
-                anim: 5,
-                time: time === undefined ? 2000 : time,
-                isOutAnim: false
-            }, function () {
-                if (status) {
-                    active['reload'].call(this);
-                }
-            });
-        }
 
         window.getStatisticText  = function(disableStatistics){
             let htm = '';
@@ -773,7 +757,7 @@
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             }, function () {
                 if (sign) {
-                    let pageConf = formToJsonObject('searchForm');
+                    let pageConf = common.formToJsonObject('searchForm');
                     if (pageConf.hasOperation){
                         pageConf.hasOperation = true;
                     }
@@ -805,7 +789,7 @@
                     if (result.code === 200) {
                         let data = result.data;
                         if (data.length > 0){
-                            show_layer_msg("删除操作组合前请先移除该操作组合下的所有分组！！！", 5)
+                            common.showFailMsg("删除操作组合前请先移除该操作组合下的所有分组！！！")
                         }else{
                             layer.confirm('确定删除此操作组合吗', function (index) {
                                 $.ajax({
@@ -818,11 +802,8 @@
                                     type: 'POST',
                                     success: function (result) {
                                         if (result.code === 200) {
-                                            layer.msg('操作成功', {
-                                                icon: 6,
-                                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                                            }, function () {
-                                                let pageConf = formToJsonObject('searchForm');
+                                            connom.showSuccessMsg('操作成功', function () {
+                                                let pageConf = common.formToJsonObject('searchForm');
                                                 if (pageConf.hasOperation){
                                                     pageConf.hasOperation = true;
                                                 }
@@ -837,11 +818,11 @@
                                                 initLayPage(pageConf)
                                             });
                                         } else {
-                                            layer.msg('操作失败', {icon: 5});
+                                            connom.showFailMsg('操作失败');
                                         }
                                     },
                                     error: function () {
-                                        layer.msg('操作失败', {icon: 5});
+                                        common.showFailMsg('操作失败');
 
                                     }
                                 });
@@ -850,11 +831,11 @@
                         }
 
                     } else {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 },
                 error: function () {
-                    layer.msg('操作失败', {icon: 5});
+                    common.showFailMsg('操作失败');
 
                 }
             });
@@ -866,7 +847,7 @@
 
             let groupSettingCount = parseInt($('#groupSettingCount'+operationCombineUuid).val());
             if (groupSettingCount === 1){
-                show_layer_msg("这是最后一个优化组设置，请直接删除操作组合！！！", 5);
+                common.showFailMsg("这是最后一个优化组设置，请直接删除操作组合！！！");
                 return false
             }
             layer.confirm('确定删除此操作类型吗', function (index) {
@@ -880,11 +861,8 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
-                                let pageConf = formToJsonObject('searchForm');
+                            common.showSuccessMsg('操作成功', function () {
+                                let pageConf = common.formToJsonObject('searchForm');
                                 if (pageConf.hasOperation){
                                     pageConf.hasOperation = true;
                                 }
@@ -899,11 +877,11 @@
                                 initLayPage(pageConf)
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
 
                     }
                 });

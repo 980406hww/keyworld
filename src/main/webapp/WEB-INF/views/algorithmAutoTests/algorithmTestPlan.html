@@ -80,7 +80,6 @@
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
-<!--<script src="/static/ok-admin/page/base/searchForm.js"></script>-->
 <script>
     var sign = false;
     // 进度条加载提示
@@ -224,7 +223,7 @@
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                common.show_layer_msg('请选择要操作的计划', 5);
+                common.showFailMsg('请选择要操作的计划');
                 return false;
             }
             let msg = '确定暂停这些计划吗';
@@ -246,18 +245,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            common._msg('操作失败', 5);
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        common.show_layer_msg('未知错误，请稍后重试', 5);
+                        common.showFailMsg('未知错误，请稍后重试');
                     },
                     complete: function () {
                         layer.close(index);
@@ -276,7 +272,7 @@
                 optimizeGroupNameList.push(item.optimizeGroupName);
             });
             if (uuidArr.length <= 0) {
-                common.show_layer_msg('请选择要操作的计划', 5);
+                common.showFailMsg('请选择要操作的计划');
                 return false;
             }
             layer.confirm("确定删除选中计划吗", {icon: 3, title: '删除选中计划'}, function (index) {
@@ -294,18 +290,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            common.show_layer_msg('操作失败', 5);
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        common.show_layer_msg('未知错误，请稍后重试', 5);
+                        common.showFailMsg('未知错误，请稍后重试');
                     },
                     complete: function () {
                         layer.close(index);
@@ -326,18 +319,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);
@@ -367,18 +357,13 @@
                 type: 'POST',
                 success: function (result) {
                     if (result.code === 200) {
-                        layer.msg('操作成功', {
-                            icon: 6,
-                            time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                        }, function () {
-                            active['reload'].call(this);
-                        });
+                        common.showSuccessMsg('操作成功',active['reload'].call(this);)
                     } else {
-                        common.show_layer_msg('操作失败', 5);
+                        common.showFailMsg('操作失败');
                     }
                 },
                 error: function () {
-                    common.show_layer_msg('未知错误，请稍后重试', 5);
+                    common.showFailMsg('未知错误，请稍后重试');
                 },
 
             });
@@ -413,9 +398,7 @@
         var active = {
             reload: function () {
                 let data = common.formToJsonObject('searchForm');
-                $.each(data,function(idx,item){
-                    data[idx] = $.trim(item)
-                });
+                data = common.jsonObjectTrim(data);
                 data.entryType = 'pt';
                 table.reload('algorithmTestPlanTable', {
                     where: data,
@@ -428,9 +411,7 @@
 
         form.on("submit(search)", function (data) {
             var postData = data.field;
-            $.each(postData,function(idx,item){
-                postData[idx] = $.trim(item).replace(/\+/g,"");
-            });
+            postData = common.jsonObjectTrim(postData);
             table.reload('algorithmTestPlanTable', {
                 where: postData,
                 page: {
