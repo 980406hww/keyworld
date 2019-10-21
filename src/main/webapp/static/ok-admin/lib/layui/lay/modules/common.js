@@ -15,13 +15,13 @@ layui.define(['jquery', 'layer',], function (exports) {
             });
             return formData;
         },
-        JsonObjectTrim:function(jsonObject){
+        jsonObjectTrim: function (jsonObject) {
             $.each(jsonObject, function (idx, item) {
                 jsonObject[idx] = $.trim(item).replace(/\+/g, "")
             });
             return jsonObject;
         },
-        showSuccessMsg:function(msg, reload){
+        showSuccessMsg: function (msg, reload) {
             layer.msg(msg, {
                 icon: 6,
                 anim: 5,
@@ -33,7 +33,7 @@ layui.define(['jquery', 'layer',], function (exports) {
                 }
             });
         },
-        showFailMsg:function(msg){
+        showFailMsg: function (msg) {
             layer.msg(msg, {
                 icon: 5,
                 anim: 5,
