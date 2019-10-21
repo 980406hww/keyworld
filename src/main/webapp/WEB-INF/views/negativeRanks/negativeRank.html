@@ -93,7 +93,6 @@
 </datalist>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
-<script src="/static/ok-admin/page/base/searchForm.js"></script>
 
 <script>
     var sign = false;
@@ -103,20 +102,21 @@
         NProgress.done();
     };
 
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','common'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
         var layer = layui.layer;
         var laydate = layui.laydate;
+        var common = layui.common;
 
         laydate.render({
             elem: '#createTime',
         });
 
         init_search_data();
-        init_table_data(formToJsonObject('searchForm'));
+        init_table_data(common.formToJsonObject('searchForm'));
 
         function init_search_data() {
             $.ajax({
@@ -284,7 +284,7 @@
 
         var active = {
             reload: function () {
-                let data = formToJsonObject('searchForm');
+                let data = common.formToJsonObject('searchForm');
                 data.entryType = 'pt';
                 table.reload('keywordTable', {
                     where: data,

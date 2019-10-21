@@ -274,9 +274,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
         if (!data.field.noReachStandardDays){
             data.field.noReachStandardDays = '';
         }
-        $.each(data.field,function(idx,item){
-            data.field[idx] = $.trim(item)
-        });
+        data.field = common.jsonObjectTrim(data.field);
         // console.log(data.field)
         table.reload('keywordTable', {
             where: data.field,
@@ -349,12 +347,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                     searchForm.find("#fifteenDaysNoReachStandard").val(data.fifteenDaysNoReachStandard);
                     searchForm.find("#sevenDaysNoReachStandard").val(data.sevenDaysNoReachStandard);
                 }else{
-                    common.show_layer_msg('未达标统计失败', 5);
+                    common.showFailMsg('未达标统计失败');
                 }
 
             },
             error: function () {
-                common.show_layer_msg('未达标统计失败', 5);
+                common.showFailMsg('未达标统计失败');
             }
         });
     }
@@ -365,7 +363,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
         var uuidArr = get_selected_uuid_arr();
 
         if (uuidArr.length <= 0) {
-            common.show_layer_msg('请选择要操作的词', 5);
+            common.showFailMsg('请选择要操作的词');
 
             return
         }
@@ -401,13 +399,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 type: 'POST',
                 success: function (result) {
                     if (result.code === 200) {
-                        common.show_layer_msg('操作成功', 6, null,1000,true);
+                        common.showSuccessMsg('操作成功', active['reload'].call(this));
                     } else {
-                        common.show_layer_msg('操作失败', 5);
+                        common.showFailMsg('操作失败');
                     }
                 },
                 error: function () {
-                    common.show_layer_msg('未知错误，请稍后重试', 5);
+                    common.showFailMsg('未知错误，请稍后重试');
                 }
             });
             layer.close(index);
@@ -418,7 +416,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
         //获取选中数据
         var uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
-            common.show_layer_msg('请选择要操作的词', 5);
+            common.showFailMsg('请选择要操作的词');
             return
         }
         layer.prompt({
@@ -430,7 +428,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
                 if (value === '') {
-                    common.show_layer_msg('请输入新优化组！', 5, null, 1000);
+                    common.showFailMsg('请输入新优化组！');
                     return;
                 }
                 // layer.confirm("确定修改选中词的优化组吗", {icon: 3, title: '修改优化组'}, function (index) {
@@ -449,13 +447,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.show_layer_msg('操作成功', 6, null,1000,true);
+                            common.showSuccessMsg('操作成功', active['reload'].call(this));
                         } else {
-                            common.show_layer_msg('操作失败', 5);
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        common.show_layer_msg('未知错误，请稍后重试', 5);
+                        common.showFailMsg('未知错误，请稍后重试');
                     },
                     complete: function () {
                         layer.close(index);
@@ -473,7 +471,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
         //获取选中数据
         var uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
-            common.show_layer_msg('请选择要操作的词', 5);
+            common.showFailMsg('请选择要操作的词');
             return
         }
         layer.prompt({
@@ -485,7 +483,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
                 if (value === '') {
-                    common.show_layer_msg('请输入新机器分组！', 5, null, 1000);
+                    common.showFailMsg('请输入新机器分组！');
                     return;
                 }
 
@@ -504,13 +502,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.show_layer_msg('操作成功', 6, null,1000,true);
+                            common.showSuccessMsg('操作成功', active['reload'].call(this));
                         } else {
-                            common.show_layer_msg('操作失败', 5);
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        common.show_layer_msg('未知错误，请稍后重试', 5);
+                        common.showFailMsg('未知错误，请稍后重试');
                     }
                 });
                 layer.close(index2);
@@ -524,7 +522,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
         //获取选中数据
         var uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
-            common.show_layer_msg('请选择要操作的词', 5);
+            common.showFailMsg('请选择要操作的词');
             return
         }
 
@@ -537,7 +535,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
                 if (value === '') {
-                    common.show_layer_msg('请输入新熊掌号！', 5, null, 1000);
+                    common.showFailMsg('请输入新熊掌号！');
                     return;
                 }
 
@@ -556,13 +554,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.show_layer_msg('操作成功', 6, null,1000,true);
+                            common.showSuccessMsg('操作成功', active['reload'].call(this));
                         } else {
-                            common.show_layer_msg('操作失败', 5);
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        common.show_layer_msg('未知错误，请稍后重试', 5);
+                        common.showFailMsg('未知错误，请稍后重试');
                     }
                 });
                 layer.close(index2);
@@ -574,7 +572,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
     function batch_delete() {
         var uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
-            common.show_layer_msg('请选择要操作的词', 5);
+            common.showFailMsg('请选择要操作的词');
             return false;
         }
         layer.confirm("确定删除选中词吗", {icon: 3, title: '删除选中词'}, function (index) {
@@ -592,13 +590,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 type: 'POST',
                 success: function (result) {
                     if (result.code === 200) {
-                        common.show_layer_msg('操作成功', 6, null,1000,true);
+                        common.showSuccessMsg('操作成功', active['reload'].call(this));
                     } else {
-                        common.show_layer_msg('操作失败', 5);
+                        common.showFailMsg('操作失败');
                     }
                 },
                 error: function () {
-                    common.show_layer_msg('未知错误，请稍后重试', 5);
+                    common.showFailMsg('未知错误，请稍后重试');
                 },
                 complete: function () {
                     layer.close(index);

@@ -68,23 +68,12 @@
         }
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer", "upload"], function () {
+    layui.use(["form", "okLayer", "jquery", "layer", "upload",'common'], function () {
         var form = layui.form;
         var okLayer = layui.okLayer;
+        var common = layui.common;
         var $ = layui.jquery;
 
-
-        function show_layer_msg(msg, icon, title, time) {
-            layer.msg(msg, {
-                icon: icon,
-                title: title === undefined ? null : title,
-                anim: 5,
-                time: time === undefined ? 1000 : time,
-                isOutAnim: false
-            }, function () {
-
-            });
-        }
 
         form.on("submit(commit)", function (data) {
             let postData = data.field;
@@ -95,7 +84,7 @@
                 postData.uuids = null;
             }else{
                 if (uuids_.length === 0){
-                    show_layer_msg("请选中要修改的词！",5);
+                    common.showFailMsg("请选中要修改的词！");
                     return false;
                 }
                 postData.uuids = uuids_;

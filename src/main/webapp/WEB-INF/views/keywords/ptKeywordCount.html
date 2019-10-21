@@ -204,7 +204,7 @@
         form.on("submit(search)", function (data) {
             var postData = data.field;
             postData.entryType = 'pt';
-            postData = common.JsonObjectTrim(postData);
+            postData = common.jsonObjectTrim(postData);
             table.reload('keywordTable', {
                 where: postData,
                 page: {

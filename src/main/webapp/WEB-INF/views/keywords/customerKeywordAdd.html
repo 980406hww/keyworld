@@ -338,6 +338,7 @@
 
         form.on("submit(save)", function (data) {
             var postData = data.field;
+            postData = common.jsonObjectTrim(postData);
             $.ajax({
                 url: '/internal/customerKeyword/saveCustomerKeyword2',
                 type: 'post',
