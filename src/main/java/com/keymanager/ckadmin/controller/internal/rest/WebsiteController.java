@@ -33,7 +33,7 @@ public class WebsiteController {
     @GetMapping("/toAddWebsite")
     public ModelAndView toAddWebsite(){
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("WebSiteList/AddWebsite");
+        mv.setViewName("webSiteList/AddWebsite");
         return mv;
     }
 

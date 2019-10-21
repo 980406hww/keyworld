@@ -571,6 +571,24 @@
         .hs {
             color: #ffba00 !important;
         }
+
+        .table-tips .layui-layer-content{
+            padding: 8px !important;
+        }
+
+        .table-tips .layui-layer-content{
+            background-color: #fff !important;
+            color: #000 !important;
+            font-size: 14px;
+        }
+
+        .table-tips .layui-layer-TipsG {
+            display: none;
+        }
+
+        .table-tips .my-padding {
+            padding: 2px 10px;
+        }
     </style>
     <script>
         Date.prototype.format = function (fmt) {
@@ -1078,7 +1096,7 @@
                 data["standardTime"] === null ? "无" : toDateFormat(
                     new Date(data["standardTime"])));
             let font = td.find(".standard-info").find("div.line1 a font");
-            font.text("￥ " + data["price"]);
+            font.text(data["price"] ? "￥ " + data["price"] : "￥ " + 0);
             if (data["price"] > 0) {
                 font.css("background-color", "mediumseagreen");
             }
@@ -2313,6 +2331,92 @@
             }
         };
 
+        let tableTips_ = null;
+
+        window.showTableTip = function (e, uuid) {
+            if (uuid !== null && uuid !== "null" && uuid !== "" && uuid !== "0" && uuid !== 0) {
+                var postData = {};
+                postData.uuid = uuid;
+                postData.terminalType = document.getElementById('terminalType').value;
+                $.ajax({
+                    url: '/internal/qzsetting/getChargeRuleMsg',
+                    type: 'POST',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    success: function (res) {
+                        if (res.code === 200) {
+                            let arr = res.data;
+                            let herder = '爱站';
+                            switch (res.data[0].standardSpecies) {
+                                case 'aiZhan':
+                                    herder = '爱站';
+                                    break;
+                                case '5118':
+                                    herder = '5118';
+                                    break;
+                                case 'designationWord':
+                                    herder = '指定词';
+                                    break;
+                                default:
+                                    herder = '爱站';
+                                    break;
+                            }
+                            let html = '<div><table border="0" width="100%">' +
+                                '<tbody><tr class="my-bg"><td colspan="5" class="my-header-title my-header-btn">' +
+                                '<div style="max-width: none" class="my-label my-padding">' + herder +
+                                '</div></td></tr><tr class="my-bg">' +
+                                '<td class="my-header-title" style="min-width: 60px">' +
+                                '<div class="my-label my-padding">序号</div>' +
+                                '</td><td class="my-header-title" style="min-width: 80px">' +
+                                '<div class="my-label my-padding">起始词量</div>' +
+                                '</td><td class="my-header-title" style="min-width: 80px">' +
+                                '<div class="my-label my-padding">终止词量</div>' +
+                                '</td><td class="my-header-title my-header-btn" style="min-width: 60px">' +
+                                '<div class="my-label my-padding">价格</div>' +
+                                '</td></tr>';
+                            for (let i = 0; i < arr.length; i++) {
+                                html += '<tr>\n                                    <td class="my-left">\n                                        <div class="my-label my-padding">';
+                                html += i + 1;
+                                html += '</div>\n                                    </td>\n                                    <td class="my-left">\n                                        <div class="my-label my-padding">';
+                                html += arr[i].startKeywordCount ? arr[i].startKeywordCount : '';
+                                html += '</div>\n                                    </td>\n                                    <td class="my-left">\n                                        <div class="my-label my-padding">';
+                                html += arr[i].endKeywordCount ? arr[i].endKeywordCount : '';
+                                html += '</div>\n                                    </td>\n                                    <td class="my-left my-header-btn">\n                                        <div class="my-label my-padding">';
+                                html += arr[i].amount ? arr[i].amount : '';
+                                html += '</div>\n                                    </td></tr>';
+                            }
+                            html += noteBookHtmlFooter;
+                            tableTips_ = layer.tips(html, e, {
+                                tips: 1, time: 20000, area: 'auto', maxWidth: '800',
+                                success: function (e) {
+                                    e[0].classList.add('table-tips');
+                                    let top = e[0].style.top;
+                                    top = parseFloat(top.substring(0, top.length - 2));
+                                    e[0].style.top = (top + 40) + 'px';
+                                }
+                            });
+                        } else if (res.code === 300) {
+                            show_layer_msg("暂无数据");
+                        } else {
+                            show_layer_msg(res.msg);
+                        }
+
+                    }
+                });
+            } else {
+                tableTips_ = layer.tips('暂无数据~', e, {tips: 1, time:0});
+            }
+        };
+
+        window.closeTableTip = function(){
+            if (tableTips_!==null){
+                layer.close(tableTips_);
+            }
+        };
+
         window.showChargeLog = function (uuid) {
             $.ajax({
                 url: '/internal/qzchargelog/qzChargesLogsList/' + uuid,
@@ -3270,11 +3374,11 @@
         <div class="layui-col-md2 standard-info">
             <div class="layui-col-md12 line1">
                 <div class="layui-col-md12">
-                    <span>
+                    <span class="show-table">
                         <a href="javascript:;" qzsettinguuid="{{d.uuid}}">
                         {{#  if(d.organizationName !== '优化部') { }}
-                            <font
-                                style="background-color: palevioletred;font-size: 14px;">￥ 0</font>
+                            <font  onmouseover="showTableTip(this,'{{d.uuid}}')" onmouseout="closeTableTip()"
+                                   style="background-color: palevioletred;font-size: 14px;">￥ 0</font>
                         {{#  } }}
                         </a>
                     </span>

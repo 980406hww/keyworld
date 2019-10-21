@@ -38,4 +38,21 @@
         AND cr.fStandardSpecies = #{websiteType}
         ORDER BY cr.fStandardSpecies
     </select>
+
+    <select id="searchQZChargeRuleStandardInfoVos" resultType="com.keymanager.ckadmin.vo.QZChargeRuleStandardInfoVO">
+        SELECT
+            qk.fAchieveLevel AS 'achieveLevel',
+            qc.fStandardSpecies AS 'standardSpecies',
+            qc.fStartKeywordCount AS 'startKeywordCount',
+            qc.fEndKeywordCount AS 'endKeywordCount',
+            qc.fAmount AS 'amount'
+        FROM t_qz_charge_rule qc
+        LEFT JOIN t_qz_operation_type qot
+        ON qot.fUuid = qc.fQZOperationTypeUuid
+        LEFT JOIN t_qz_keyword_rank_info qk
+        ON qk.fQZSettingUuid = qot.fQZSettingUuid
+        WHERE qot.fQZSettingUuid = #{qzSettingUuid}
+        AND qot.fOperationtype = #{terminalType}
+        GROUP BY qc.fUuid
+    </select>
 </mapper>
