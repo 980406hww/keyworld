@@ -4,6 +4,8 @@ import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.entity.DailyReport;
+import com.keymanager.ckadmin.enums.EntryTypeEnum;
 import com.keymanager.ckadmin.excel.operator.CustomerKeywordDailyReportExcelWriter;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.CustomerService;
@@ -88,6 +90,24 @@ public class DailyReportController {
                 resultBean.setMsg("error");
                 return resultBean;
             }
+        }
+        return resultBean;
+    }
+
+    @RequestMapping(value = "/searchCurrentDateCompletedReports2", method = RequestMethod.GET)
+    public ResultBean searchCurrentDateCompletedReports(HttpServletRequest request) throws Exception{
+        ResultBean resultBean = new ResultBean(200,"success");
+        try {
+            String userName = (String) request.getSession().getAttribute("username");
+            String entryType = "pt";
+            List<DailyReport> dailyReports = dailyReportService.searchCurrentDateCompletedReports(EntryTypeEnum.bc.name().equalsIgnoreCase(entryType) ? null : userName);
+            resultBean.setData(dailyReports);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+            resultBean.setCode(400);
+            resultBean.setMsg("error");
+            return resultBean;
         }
         return resultBean;
     }

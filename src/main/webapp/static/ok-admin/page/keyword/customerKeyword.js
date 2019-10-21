@@ -220,7 +220,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 }
             });
         },
-
     };
 
 

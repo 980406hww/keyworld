@@ -235,9 +235,16 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
         let d = data.elem.context.dataset;
         $('#entryType').val(d.entrytype);
         initLayPage(common.formToJsonObject('searchForm'));
-
-        let postData = {};
-        postData.entryType = d.entrytype;
+        if (d.entrytype ==='pt'){
+            if (window.hasPer){
+                var intervalId = setInterval(function () {
+                    layui.searchCurrentDateCompletedReports();
+                }, 1000 * 30);
+                window.searchCurrentDateCompletedReportsIntervalId = intervalId;
+            }
+        }else {
+            window.clearInterval(searchCurrentDateCompletedReportsIntervalId);
+        }
     });
 
 
@@ -296,6 +303,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
         });
         return uuidArr;
     }
+
 
     //删除单个客户
     window.delOneCustomer = function (uuid) {
