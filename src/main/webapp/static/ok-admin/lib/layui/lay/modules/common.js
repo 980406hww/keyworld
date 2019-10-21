@@ -23,7 +23,7 @@ layui.define(['jquery', 'layer',], function (exports) {
         },
         showSuccessMsg:function(msg, reload){
             layer.msg(msg, {
-                icon: 5,
+                icon: 6,
                 anim: 5,
                 time: 1000,
                 isOutAnim: false
@@ -35,7 +35,7 @@ layui.define(['jquery', 'layer',], function (exports) {
         },
         showFailMsg:function(msg){
             layer.msg(msg, {
-                icon: 6,
+                icon: 5,
                 anim: 5,
                 time: 3000,
                 isOutAnim: false
