@@ -239,6 +239,30 @@
                     </dl>
                 </li>
                 <li data-name="other" class="layui-nav-item ">
+                    <a href="javascript:;" lay-tips="网站管理" lay-direction="2">
+                        <i class="layui-icon layui-icon-home" ></i>
+                        <cite>网站管理</cite>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <@shiro.hasPermission name="/internal/websites/toWebSiteList">
+                        <dd data-name="other-item" >
+                            <a data-url="/internal/websites/toWebSiteList" lay-id="webSiteList">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>网站列表</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                        <@shiro.hasPermission name="/internal/salesManage/searchSalesManageLists">
+                        <dd data-name="other-item" >
+                            <a data-url="/internal/salesInfo/toSalesInfo" lay-id="salesInfoList">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>销售信息列表</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
+                    </dl>
+                </li>
+                <li data-name="other" class="layui-nav-item ">
                     <a href="javascript:;" lay-tips="其他" lay-direction="2">
                         <i class="layui-icon layui-icon-home" ></i>
                         <cite>其他</cite>
@@ -252,22 +276,22 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
-                        <@shiro.hasPermission name="/internal/websites/toWebSiteList">
-                        <dd data-name="other-item" >
-                            <a data-url="/internal/websites/toWebSiteList" lay-id="webSiteList">
-                                <i class="layui-icon layui-icon-align-right"></i>
-                                <cite>网站管理</cite>
-                            </a>
-                        </dd>
-                        </@shiro.hasPermission>
-                        <@shiro.hasPermission name="/internal/salesManage/searchSalesManageLists">
-                        <dd data-name="other-item" >
-                            <a data-url="/internal/salesInfo/toSalesInfo" lay-id="salesInfoList">
-                                <i class="layui-icon layui-icon-align-right"></i>
-                                <cite>销售信息管理</cite>
-                            </a>
-                        </dd>
-                        </@shiro.hasPermission>
+<!--                        <@shiro.hasPermission name="/internal/websites/toWebSiteList">-->
+<!--                        <dd data-name="other-item" >-->
+<!--                            <a data-url="/internal/websites/toWebSiteList" lay-id="webSiteList">-->
+<!--                                <i class="layui-icon layui-icon-align-right"></i>-->
+<!--                                <cite>网站管理</cite>-->
+<!--                            </a>-->
+<!--                        </dd>-->
+<!--                        </@shiro.hasPermission>-->
+<!--                        <@shiro.hasPermission name="/internal/salesManage/searchSalesManageLists">-->
+<!--                        <dd data-name="other-item" >-->
+<!--                            <a data-url="/internal/salesInfo/toSalesInfo" lay-id="salesInfoList">-->
+<!--                                <i class="layui-icon layui-icon-align-right"></i>-->
+<!--                                <cite>销售信息管理</cite>-->
+<!--                            </a>-->
+<!--                        </dd>-->
+<!--                        </@shiro.hasPermission>-->
                         <@shiro.hasPermission name="/internal/operationTypes/toSearchOperationTypeLists">
                         <dd data-name="other-item" >
                             <a data-url="/internal/operationTypes/toSearchOperationTypeLists" lay-id="operationTypeList">

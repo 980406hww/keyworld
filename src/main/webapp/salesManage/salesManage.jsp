@@ -37,7 +37,6 @@
                         <shiro:hasPermission name="/internal/salesManage/searchSalesInfo">
                         销售人员名称:
                         <input type="text" name="salesName" id="salesName" style="width: 160px;" value="${salesManage.salesName}" title="">
-                        &nbsp;
                         <input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()" value=" 查询 ">
                         </shiro:hasPermission>
                         &nbsp;
@@ -116,8 +115,7 @@
             <tr>
                 <td style="width:70px" align="right">负责部分:</td>
                 <td>
-                    <select id="managePart" name="managePart" style="width: 180px" title="">
-                        <option value="" selected="selected">请选择</option>
+                    <select class="easyui-combobox" name="managePart" id="managePart" style="width: 180px;" multiple>
                         <c:forEach items="${websiteTypeMap}" var="websiteType">
                             <option value="${websiteType.key}">${websiteType.value}</option>
                         </c:forEach>
@@ -141,7 +139,7 @@
                 <td width=80>${salesManage.weChat}</td>
                 <td width=120>${salesManage.quickResponseCode}</td>
                 <td width=80>${salesManage.email}</td>
-                <td style="text-align: center" width=70>${websiteTypeMap[salesManage.managePart]}</td>
+                <td style="text-align: center" width=70>${salesManage.managePart}</td>
                 <td width=80 style="text-align: center">
                     <fmt:formatDate value="${salesManage.createTime}" pattern="yyyy-MM-dd"/>
                 </td>
@@ -186,6 +184,10 @@
 <script src="${staticPath}/static/qrCode/reqrcode.js"></script>
 <script src="${staticPath}/salesManage/salesManage.js"></script>
 <script type="text/javascript">
+    $('#managePart').combobox({
+        valueField:'id',
+        textField:'text'
+    });
     $(function () {
         window.onresize = function () {
             $("#showScreenedWebsiteDiv").css("margin-top", $("#topDiv").height());
