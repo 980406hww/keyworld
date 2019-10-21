@@ -350,7 +350,7 @@
                 where: whereCondition,
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', width: '3%', align: 'center', rowspan: 2, fixed: "left"},
-                    {field: 'websiteName', title: '网站名称', width: '15%', align: 'center', rowspan: 2},
+                    {field: 'websiteName', title: '网站名称', width: '15%', align: 'center', rowspan: 2, templet: '#websiteName'},
                     {field: 'industry', title: '所属行业类型', width: '8%', align: 'center', rowspan: 2, templet: '#industry'},
                     {field: 'accessFailCount', title: '访问失败次数', width: '8%', align: 'center', rowspan: 2},
                     {field: 'accessFailTime', title: '发现故障时间', width: '10%', align: 'center', templet: '#accessFailTime', rowspan: 2},
@@ -431,6 +431,9 @@
                 case 'toAdvertising':
                     toAdvertising(data.uuid);
                     break;
+                case 'toDomain':
+                    toDomain(data.uuid, data.domain);
+                    break;
             }
         });
 
@@ -446,20 +449,38 @@
                 case 'synchronousFriendlyLink':
                     synchronousFriendlyLink();
                     break;
-                case 'updateStatus':
-                    updateStatus();
-                    break;
-                case 'downLoadTemplate':
-                    downLoadTemplate();
-                    break;
-                case 'downloadIndustryInfos':
-                    downloadIndustryInfos();
-                    break;
-                case 'uploadIndustryInfo':
-                    uploadIndustryInfo('SuperIndustrySimple');
+                case 'putSalesInfoToWebsite':
+                    putSalesInfoToWebsite();
                     break;
             }
         });
+
+        function toDomain(id, domain){
+            var url = 'http://' + domain;
+            var title = domain;
+            updateOrNewTab(url, title, id)
+        }
+
+        function updateOrNewTab(url, tit, id) {
+            var update = false;
+            var contentIframe = ("<iframe src='" + url + "' lay-id='" + id
+                + "'frameborder='0' scrolling='yes' width='100%' height='100%'></iframe>");
+            parent.layui.$('.layui-tab-title li').each(function () {
+                if (id === this.getAttribute('lay-id')) {
+                    update = true;
+                }
+            });
+            if (!update) {
+                parent.layui.element.tabAdd('ok-tab', {
+                        title: '<strong style="display: none;" is-close="true" lay-id="'+id+'" data-url="'+url+'"></strong>' +
+                            '<i class="layui-icon">&#xe648;</i> ' + tit,
+                        content: contentIframe,
+                        id: id
+                    }
+                );
+            }
+            parent.layui.element.tabChange('ok-tab', id)
+        }
 
         function toAdvertising(uuid) {
             window.open("/internal/websites/toAdvertising/" + uuid)
@@ -491,6 +512,49 @@
                     sign = false;
                 }
             },20);
+        }
+
+        function putSalesInfoToWebsite(){
+            var checkStatus = table.checkStatus('websiteListTable');
+            var data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                layer.msg('请选择要操作的网站', {icon: 5});
+                return
+            }
+            layer.confirm("确定要更新销售信息到这些网站吗?", {icon: 3, title: '删除所选'}, function (index) {
+                var postData = {};
+                postData.uuids = uuidArr;
+                $.ajax({
+                    url: '/internal/websites/putSalesInfoToWebsite',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            layer.msg('操作成功', {
+                                icon: 6,
+                                time: 2000
+                            }, function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            layer.msg('操作失败', {icon: 5});
+                        }
+                    },
+                    error: function () {
+                        layer.msg('操作失败', {icon: 5});
+                    }
+                });
+                layer.close(index);
+            });
         }
 
         function delWebsite(uuid){
@@ -626,6 +690,12 @@
     {{d.accessFailTime == null ? "" :layui.util.toDateString(d.accessFailTime, 'yyyy-MM-dd HH:mm:ss')}}
 </script>
 
+<script type="text/html" id="websiteName">
+    <div style ="text-align: left;">
+        {{d.websiteName}}
+    </div>
+</script>
+
 <script type="text/html" id="lastAccessTime">
     {{d.lastAccessTime == null ? "" :layui.util.toDateString(d.lastAccessTime, 'yyyy-MM-dd HH:mm:ss')}}
 </script>
@@ -759,7 +829,9 @@
 </script>
 
 <script type="text/html" id="domain">
-    <a href="http://{{d.domain}}" style="color: #0c7df5;" target="_blank">{{d.domain == null ? '' :  d.domain}}</a>
+    <div style="text-align: left;">
+        <a href="#" lay-event="toDomain" style="color: #0c7df5;">{{d.domain == null ? '' :  d.domain}}</a>
+    </div>
 </script>
 
 <script type="text/html" id="friendlyLinkCount">

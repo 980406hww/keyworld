@@ -116,12 +116,21 @@
             <tr>
                 <td style="width:70px" align="right">负责部分:</td>
                 <td>
-                    <select id="managePart" name="managePart" style="width: 180px" title="">
-                        <option value="" selected="selected">请选择</option>
-                        <c:forEach items="${websiteTypeMap}" var="websiteType">
-                            <option value="${websiteType.key}">${websiteType.value}</option>
-                        </c:forEach>
-                    </select>
+<%--                    <select id="managePart" name="managePart" style="width: 180px;" title="">--%>
+<%--                        <option value="" selected="selected">请选择</option>--%>
+<%--                        <c:forEach items="${websiteTypeMap}" var="websiteType">--%>
+<%--                            <option value="${websiteType.key}">${websiteType.value}</option>--%>
+<%--                        </c:forEach>--%>
+<%--                    </select>--%>
+                    <input class="easyui-combobox" name="managePart" id="managePart" style="width: 180px;" data-options="
+                                    method:'get',
+                                    valueField:'id',
+                                    textField:'text',
+                                    value:[1,3],
+                                    multiple:true,
+                                    panelHeight:'auto',
+                                    label: 'Language:',
+                                    labelPosition: 'top' ">
                 </td>
             </tr>
         </table>
@@ -141,7 +150,7 @@
                 <td width=80>${salesManage.weChat}</td>
                 <td width=120>${salesManage.quickResponseCode}</td>
                 <td width=80>${salesManage.email}</td>
-                <td style="text-align: center" width=70>${websiteTypeMap[salesManage.managePart]}</td>
+                <td style="text-align: center" width=70>${salesManage.managePart}</td>
                 <td width=80 style="text-align: center">
                     <fmt:formatDate value="${salesManage.createTime}" pattern="yyyy-MM-dd"/>
                 </td>

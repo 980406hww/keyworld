@@ -35,7 +35,7 @@
         FROM
         t_sales_manage
         WHERE
-        fManagePart = #{websiteType}
+        fManagePart like '%${websiteType}%'
     </select>
 
 </mapper>

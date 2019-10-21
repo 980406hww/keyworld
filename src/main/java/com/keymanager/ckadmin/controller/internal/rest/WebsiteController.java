@@ -61,6 +61,23 @@ public class WebsiteController {
         return mv;
     }
 
+    @RequiresPermissions("/internal/website/putSalesInfoToWebsite")
+    @PostMapping(value = "/putSalesInfoToWebsite")
+    public ResultBean putSalesInfoToWebsite(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            List uuids = (List) requestMap.get("uuids");
+            websiteService.putSalesInfoToWebsite(uuids);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
     @RequiresPermissions("/internal/friendlyLink/synchronousFriendlyLink")
     @RequestMapping(value = "/synchronousFriendlyLink", method = RequestMethod.POST)
     public ResultBean synchronousFriendlyLink(@RequestBody Map<String, Object> requestMap) {
