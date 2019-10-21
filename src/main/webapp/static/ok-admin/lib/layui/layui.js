@@ -60,6 +60,7 @@ if (!Object.assign) {
     jquery: "modules/jquery",
     mobile: "modules/mobile",
     tablePlug: "plug/tablePlug/tablePlug",
+    common: "modules/common",
     "layui.all": "../layui.all",
     okLayer: "okmodules/okLayer"
   },okmodules);
