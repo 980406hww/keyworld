@@ -57,7 +57,7 @@ public class WebsiteController {
     @GetMapping("/toWebSiteList")
     public ModelAndView toWebSiteList(){
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("WebSiteList/WebSiteList");
+        mv.setViewName("webSiteList/WebSiteList");
         return mv;
     }
 

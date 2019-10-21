@@ -268,7 +268,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         $.each(pageConf,function(idx,item){
             pageConf[idx] = $.trim(item)
         });
-        if (!open) {
+        if (!open2) {
             showCondition();
         }
         initLayPage(pageConf);
@@ -647,16 +647,16 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     });
 });
 
-let open = true;
+let open2 = true;
 
 function showCondition() {
     let searchContent = document.getElementById('searchContent');
-    if (open) {
+    if (open2) {
         searchContent.style.display = 'block';
     } else {
         searchContent.style.display = 'none';
     }
-    open = !open;
+    open2 = !open2;
 }
 
 function generate_customer_status(status){
