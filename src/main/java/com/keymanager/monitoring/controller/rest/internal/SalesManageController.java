@@ -72,6 +72,16 @@ public class SalesManageController extends SpringMVCBaseController {
         return modelAndView;
     }
 
+    @RequestMapping(value = "/returnWebsiteType", method = RequestMethod.GET)
+    public ResponseEntity<?> returnWebsiteType(){
+        try {
+            return new ResponseEntity<Object>(WebsiteTypeEnum.changeToMap(), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @RequiresPermissions("/internal/salesManage/updateSalesInfo")
     @RequestMapping(value = "/getSalesManage/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> getSalesManage(@PathVariable("uuid") Long uuid) {

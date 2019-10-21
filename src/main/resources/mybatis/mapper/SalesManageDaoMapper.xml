@@ -21,6 +21,9 @@
         <if test="salesManage.salesName != null and salesManage.salesName != ''">
             AND fSalesName like '%${salesManage.salesName}%'
         </if>
+        <if test="salesManage.managePart != null and salesManage.managePart != ''">
+            AND fManagePart like '%${salesManage.managePart}%'
+        </if>
     </select>
 
     <select id="selectAllSalesInfo" parameterType="java.lang.String" resultType="com.keymanager.monitoring.vo.SalesManageVO">

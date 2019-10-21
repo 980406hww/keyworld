@@ -133,7 +133,7 @@ function saveOperationType(uuid) {
     salesManage.qq = $.trim(salesManageForm.find("#qq").val());
     salesManage.weChat = $.trim(salesManageForm.find("#weChat").val());
     salesManage.email = $.trim(salesManageForm.find("#email").val());
-    salesManage.managePart = $.trim(salesManageForm.find("#managePart").val());
+    salesManage.managePart = $.trim(salesManageForm.find("#managePart").combobox("getValues").join(","));
     salesManage.quickResponseCode = $.trim(salesManageForm.find("#quickResponseCode").val());
     if (salesManage.salesName == null || salesManage.salesName == "") {
         $().toastmessage('showErrorToast', "请输入销售名称！", false);

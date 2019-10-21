@@ -37,7 +37,6 @@
                         <shiro:hasPermission name="/internal/salesManage/searchSalesInfo">
                         销售人员名称:
                         <input type="text" name="salesName" id="salesName" style="width: 160px;" value="${salesManage.salesName}" title="">
-                        &nbsp;
                         <input type="submit" class="ui-button ui-widget ui-corner-all" onclick="resetPageNumber()" value=" 查询 ">
                         </shiro:hasPermission>
                         &nbsp;
@@ -116,21 +115,11 @@
             <tr>
                 <td style="width:70px" align="right">负责部分:</td>
                 <td>
-<%--                    <select id="managePart" name="managePart" style="width: 180px;" title="">--%>
-<%--                        <option value="" selected="selected">请选择</option>--%>
-<%--                        <c:forEach items="${websiteTypeMap}" var="websiteType">--%>
-<%--                            <option value="${websiteType.key}">${websiteType.value}</option>--%>
-<%--                        </c:forEach>--%>
-<%--                    </select>--%>
-                    <input class="easyui-combobox" name="managePart" id="managePart" style="width: 180px;" data-options="
-                                    method:'get',
-                                    valueField:'id',
-                                    textField:'text',
-                                    value:[1,3],
-                                    multiple:true,
-                                    panelHeight:'auto',
-                                    label: 'Language:',
-                                    labelPosition: 'top' ">
+                    <select class="easyui-combobox" name="managePart" id="managePart" style="width: 180px;" multiple>
+                        <c:forEach items="${websiteTypeMap}" var="websiteType">
+                            <option value="${websiteType.key}">${websiteType.value}</option>
+                        </c:forEach>
+                    </select>
                 </td>
             </tr>
         </table>
@@ -195,6 +184,10 @@
 <script src="${staticPath}/static/qrCode/reqrcode.js"></script>
 <script src="${staticPath}/salesManage/salesManage.js"></script>
 <script type="text/javascript">
+    $('#managePart').combobox({
+        valueField:'id',
+        textField:'text'
+    });
     $(function () {
         window.onresize = function () {
             $("#showScreenedWebsiteDiv").css("margin-top", $("#topDiv").height());
