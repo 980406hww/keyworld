@@ -119,12 +119,6 @@
 <div class="ok-body">
     <div class="layui-tab layui-tab-card" lay-filter="refreshTab">
         <ul class="layui-tab-title" id="tabItem">
-            <li data-type="pt" data-terminal="PC" class="layui-this">单词电脑</li>
-            <li data-type="pt" data-terminal="Phone">单词手机</li>
-            <li data-type="qz" data-terminal="PC">整站电脑</li>
-            <li data-type="qz" data-terminal="Phone">整站手机</li>
-            <li data-type="fm" data-terminal="PC">负面电脑</li>
-            <li data-type="fm" data-terminal="Phone">负面手机</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
@@ -281,7 +275,45 @@
             if (condition.dayNum === '') {
                 condition.dayNum = 0;
             }
+            init_keyword_type();
             tableInit(condition);
+        }
+
+        function init_keyword_type(data) {
+            $.ajax({
+                url: '/internal/common/getBusinessTypeByUserRole',
+                dataType: 'json',
+                async: false,
+                type: 'get',
+                success: function (res) {
+                    if (res.code === 200) {
+                        // $("#tabItem").empty();
+                        let i = 0, one = 'pt', flag = true;
+                        $.each(res.data, function (index, item) {
+                            let businessItem = item.split("#");
+                            $('#tabItem').append(
+                                '<li data-type="' + businessItem[0] + '" data-terminal="PC" lay-id="'+businessItem[0] +'PC">' + businessItem[1] + '电脑</li>' +
+                                '<li data-type="' + businessItem[0] + '" data-terminal="Phone" lay-id="'+businessItem[0]+'Phone">' + businessItem[1] + '手机</li>');
+                            if (i++ === 0) {
+                                one = businessItem[0];
+                            }
+                        });
+                        let tabItem = document.getElementById('tabItem').children;
+                        if (data) {
+                            $('#entryType').val(data.type);
+                            $('#terminalType').val(data.terminal);
+                            element.tabChange('refreshTab', data.type+data.terminal);
+                        } else {
+                            tabItem[0].classList.add('layui-this');
+                            $('#entryType').val(one);
+                            $('#terminalType').val("PC");
+                            element.tabChange('refreshTab', one+"PC");
+                        }
+
+                        form.render("select");
+                    }
+                }
+            });
         }
 
         <@shiro.hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
