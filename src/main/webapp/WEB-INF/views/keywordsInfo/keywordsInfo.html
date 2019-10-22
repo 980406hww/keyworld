@@ -203,7 +203,7 @@
     var sign = false;
 
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 'common'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
@@ -211,12 +211,13 @@
         var laydate = layui.laydate;
         var layer = layui.layer;
         var okLayer = layui.okLayer;
+        var common = layui.common;
 
         init();
 
         function init() {
             init_searchEngine($('#terminalType').val());
-            let condition = formToJsonObject("searchForm");
+            let condition = common.formToJsonObject("searchForm");
             tableInit(condition);
         }
 
@@ -241,7 +242,7 @@
                     {field: 'operationType', title: '操作类型', width: '8%', align: 'center'},
                     {field: 'keywordCount', title: '词数', width: '6%', align: 'center'},
                     {
-                        field: 'keywordInfo', title: '关键词信息', width: '51%', align: 'center', templet: function (d) {
+                        field: 'keywordInfo', title: '关键词信息', width: '51%', align: 'left', templet: function (d) {
                             let msg = d.keywordInfo.replace(new RegExp('\n', 'g'), '<br>');
                             return '<span class="show-msg" onclick="showMsg(\'' + msg + '\')">' + d.keywordInfo.replace(new RegExp('\n', 'g'), ' ') + '</span>';
                         }
@@ -281,7 +282,7 @@
         //监听工具条
         var active = {
             reload: function () {
-                let condition = formToJsonObject("searchForm");
+                let condition = common.formToJsonObject("searchForm");
                 table.reload('keywordsInfoTable', {
                     where: condition,
                     page: {
@@ -300,6 +301,7 @@
 
         form.on("submit(search)", function (data) {
             let condition = data.field;
+            condition = common.jsonObjectTrim(condition);
             table.reload('keywordsInfoTable', {
                 where: condition,
                 page: {
@@ -308,29 +310,6 @@
             });
             return false;
         });
-
-        function formToJsonObject(form_id) {
-            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
-            formData = formData.replace(/&/g, "\",\"");
-            formData = formData.replace(/=/g, "\":\"");
-            formData = "{\"" + formData + "\"}";
-            formData = $.parseJSON(formData);
-            return formData;
-        }
-
-        function show_layer_msg(msg, icon, status, title) {
-            layer.msg(msg, {
-                icon: icon,
-                title: title === undefined ? null : title,
-                anim: 5,
-                time: 1000,
-                isOutAnim: false
-            }, function () {
-                if (status) {
-                    active['reload'].call(this);
-                }
-            });
-        }
 
         function init_searchEngine(terminalType) {
             $.ajax({

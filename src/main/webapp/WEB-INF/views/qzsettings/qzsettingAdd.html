@@ -706,7 +706,7 @@
                     // }
                     flag_ = false;
                 } else {
-                    l.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
+                    l.common.showFailMsg('数据获取失败');
                 }
             }
         });
@@ -941,12 +941,13 @@
         // }
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer", "laydate"], function () {
+    layui.use(["form", "okLayer", "jquery", "layer", "laydate", "common"], function () {
         let form = layui.form;
         let okLayer = layui.okLayer;
         let $ = layui.jquery;
         let layer = layui.layer;
         let laydate = layui.laydate;
+        let common = layui.common;
 
         if (uuid_ != null) {
             setForm(layui, uuid_);
@@ -1006,7 +1007,7 @@
                                 customerInput.setAttribute('disabled', '');
                             }
                         } else {
-                            layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
+                            common.showFailMsg('数据获取失败');
                         }
                     }
                 });
@@ -1199,7 +1200,7 @@
         //     </form>`;
 
         form.on("submit(commitQZSetting)", function (data) {
-            let d = data.field, p_d = {};
+            let d = common.jsonObjectTrim(data.field), p_d = {};
             if (!((d.computer === 'on' && d.optimizationComType === '1') || (d.phone === 'on'
                 && d.optimizationPhoneType === '1'))) {
                 okLayer.msg.redCry('必须选择电脑或手机中至少一个且至少拥有一个主优化', null);
@@ -1516,11 +1517,11 @@
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layer.msg(res.msg, {icon: 5, time: 1000});
+                        common.showFailMsg('保存失败');
                     }
                 },
                 error: function () {
-                    layer.msg("保存失败");
+                    common.showFailMsg('网络异常请稍后再试');
                 }
             });
         }

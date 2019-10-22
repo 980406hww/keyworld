@@ -132,7 +132,7 @@
     }
 
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 'common'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
@@ -140,6 +140,7 @@
         var laydate = layui.laydate;
         var layer = layui.layer;
         var okLayer = layui.okLayer;
+        var common = layui.common;
 
         init();
 
@@ -178,17 +179,17 @@
 
                     }
                 },
-                error: function (err) {
-                    show_layer_msg("网络错误请稍后再试", 2);
+                error: function () {
+                    common.showFailMsg('网络异常请稍后再试');
                 }
             });
         }
 
         form.on("submit(commitNegativeKeywords)", function (data) {
-            let negativeKeywords = data.field.negativeKeywords;
+            let negativeKeywords = data.field.negativeKeywords.trim();
             negativeKeywords = distinctKeywords(negativeKeywords.replace(new RegExp('\n', 'g'), ',').replace(new RegExp('，', 'g'), ','));
             if (window.negativeKeywords === negativeKeywords) {
-                show_layer_msg("更新成功", 1, true);
+                common.showSuccessMsg('更新成功', l_r());
                 return false;
             }
             $.ajax({
@@ -202,13 +203,13 @@
                 type: 'POST',
                 success: function (res) {
                     if (res.code === 200) {
-                        show_layer_msg("更新成功", 1, true);
+                        common.showSuccessMsg('更新成功', l_r());
                     } else {
-                        show_layer_msg(res.msg, 5);
+                        common.showFailMsg('更新失败');
                     }
                 },
                 error: function () {
-                    show_layer_msg("网络错误请稍后再试", 2);
+                    common.showFailMsg('网络异常请稍后再试');
                 }
             });
             return false;
@@ -224,17 +225,17 @@
                         document.getElementById('customerNegativeKeywords').value = res.data.replace(/,/g, '\n');
                     } else {
                         console.log(res);
-                        show_layer_msg(res.msg, 5);
+                        common.showFailMsg('数据获取失败');
                     }
                 },
                 error: function () {
-                    show_layer_msg("网络错误请稍后再试", 2);
+                    common.showFailMsg('网络异常请稍后再试');
                 }
             });
         });
 
         form.on("submit(commitCustomerNegativeKeywords)", function (data) {
-            let negativeKeywords = data.field.customerNegativeKeywords;
+            let negativeKeywords = data.field.customerNegativeKeywords.trim();
             negativeKeywords = distinctKeywords(negativeKeywords.replace(new RegExp('\n', 'g'), ',').replace(new RegExp('，', 'g'), ','));
             let config = {};
             config.negativeKeywords = negativeKeywords;
@@ -251,20 +252,20 @@
                 dataType: 'json',
                 success: function (res) {
                     if (res.code === 200) {
-                        show_layer_msg("更新成功", 1, true);
+                        common.showSuccessMsg('更新成功', l_r());
                     } else {
-                        show_layer_msg(res.msg, 5);
+                        common.showFailMsg('更新失败');
                     }
                 },
                 error: function () {
-                    show_layer_msg("网络错误请稍后再试", 2);
+                    common.showFailMsg('网络异常请稍后再试');
                 }
             });
             return false;
         });
 
         form.on("submit(commitWebsiteWhiteList)", function (data) {
-            let websiteWhiteList = data.field.websiteWhiteList;
+            let websiteWhiteList = data.field.websiteWhiteList.trim();
             websiteWhiteList = distinctKeywords(websiteWhiteList.replace(new RegExp('\n', 'g'), ',').replace(new RegExp('，', 'g'), ','), true);
             if ('wu-<>wu<>-wu' === websiteWhiteList) {
                 return false;
@@ -280,13 +281,13 @@
                 dataType: 'json',
                 success: function (res) {
                     if (res.code === 200) {
-                        show_layer_msg("更新成功", 1, true);
+                        common.showSuccessMsg('更新成功', l_r());
                     } else {
-                        show_layer_msg(res.msg, 5);
+                        common.showFailMsg('更新失败');
                     }
                 },
                 error: function () {
-                    show_layer_msg("网络错误请稍后再试", 2);
+                    common.showFailMsg('网络异常请稍后再试');
                 }
             });
             return false;
@@ -298,7 +299,7 @@
             }
             let file = ele.files[0];
             if (file.name.substring(file.name.lastIndexOf('.')) !== '.txt') {
-                show_layer_msg("只能选择TXT文件！", 2);
+                common.showFailMsg('只能选择TXT文件');
                 return false;
             }
             let p_d = new FormData();
@@ -324,16 +325,16 @@
                                 }
                             };
                         } catch (e) {
-                            show_layer_msg("读取失败！", 2);
+                            common.showFailMsg('读取失败');
                             console.error(e);
                         }
                         ele.value = '';
                     } else {
-                        show_layer_msg(res.msg ? res.msg : '请稍后在试', 5);
+                        common.showFailMsg('数据获取失败');
                     }
                 },
                 error: function () {
-                    show_layer_msg('请稍后再试', 5);
+                    common.showFailMsg('网络异常请稍后再试');
                 }
             });
         };
@@ -348,7 +349,7 @@
                     }
                     if (flag) {
                         if (!/\./.test(strArr[i]) || /\.$/.test(strArr[i])) {
-                            show_layer_msg("网站白名单每行都需要拥有网址喔", 2);
+                            common.showFailMsg('网站白名单每行都需要拥有网址喔');
                             return 'wu-<>wu<>-wu';
                         }
                     }
@@ -359,18 +360,8 @@
             return newArr.toString();
         }
 
-        function show_layer_msg(msg, icon, status, title) {
-            layer.msg(msg, {
-                icon: icon,
-                title: title === undefined ? null : title,
-                anim: 5,
-                time: 1000,
-                isOutAnim: false
-            }, function () {
-                if (status) {
-                    location.reload();
-                }
-            });
+        function l_r() {
+            location.reload();
         }
 
         form.verify({

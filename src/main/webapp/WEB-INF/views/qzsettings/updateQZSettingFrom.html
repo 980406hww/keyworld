@@ -74,10 +74,11 @@
         }
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+    layui.use(["form", "okLayer", "jquery", "layer", "common"], function () {
         var form = layui.form;
         var okLayer = layui.okLayer;
         var $ = layui.jquery;
+        var common = layui.common;
 
         if (data_ != null) {
             get_data(layui, data_);
@@ -86,6 +87,7 @@
         }
 
         form.on("submit(commit)", function (data) {
+            data.filed = common.jsonObjectTrim(data.filed);
             if (!qzUuids_) {
                 okLayer.msg.greenTick("修改成功", function () {
                     parent.layer.close(parent.layer.getFrameIndex(window.name));
@@ -117,7 +119,7 @@
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg('修改失败');
                     }
                 }
             });
