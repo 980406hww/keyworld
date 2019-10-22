@@ -95,10 +95,10 @@
         form.render("select");
         $("#domain").val(data.domain);
         $("#optimizeGroupName").val(data.optimizeGroupName);
-        echoExcludeKeyword($, data.qzSettingUuid, data.terminalType)
+        echoExcludeKeyword($, data.qzSettingUuid, data.terminalType, layui_.common);
     }
 
-    function echoExcludeKeyword($, qzSettingUuid, terminalType) {
+    function echoExcludeKeyword($, qzSettingUuid, terminalType, common) {
         var postData = {};
         postData.qzSettingUuid = qzSettingUuid;
         postData.terminalType = terminalType;
@@ -117,17 +117,18 @@
                     $("#customerKeywordDialogContent").val(result.data.keyword);
                 }
             },
-            error: function (result) {
-                l.layer.msg(result.msg);
+            error: function () {
+                common.showFailMsg('网络异常请稍后再试');
             }
         });
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+    layui.use(["form", "okLayer", "jquery", "layer", "common"], function () {
         let form = layui.form;
         let okLayer = layui.okLayer;
         let $ = layui.jquery;
         let layer = layui.layer;
+        let common = layui.common;
 
         if (data_ != null) {
             setForm(layui, data_);
@@ -136,7 +137,7 @@
         }
 
         form.on("submit(save)", function (data) {
-            var postData = data.field;
+            var postData = common.jsonObjectTrim(data.field);
             let keywordStr = postData.customerKeywordDialogContent;
             keywordStr = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "");
             if (keywordStr.substring(keywordStr.length - 1) === ',') {
@@ -163,7 +164,7 @@
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
+                        common.showFailMsg('保存失败');
                     }
                 }
             });

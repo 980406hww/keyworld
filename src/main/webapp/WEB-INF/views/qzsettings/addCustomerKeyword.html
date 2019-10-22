@@ -150,11 +150,12 @@
         $("#optimizeGroupName").val(data.optimizeGroupName);
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+    layui.use(["form", "okLayer", "jquery", "layer", "common"], function () {
         let form = layui.form;
         let okLayer = layui.okLayer;
         let $ = layui.jquery;
         let layer = layui.layer;
+        let common = layui.common;
 
         if (data_ != null) {
             setForm(layui, data_);
@@ -179,13 +180,13 @@
                     });
                     form.render('radio');
                 } else {
-                    layer.msg(res.msg);
+                    common.showFailMsg('数据获取失败');
                 }
             }
         });
 
         form.on("submit(save)", function (data) {
-            var postData = data.field;
+            var postData = common.jsonObjectTrim(data.field);
             var terminalTypes = [];
             let keywordStr = postData.customerKeywordDialogContent;
             keywordStr = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "");
@@ -222,7 +223,7 @@
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
+                        common.showFailMsg('保存失败');
                     }
                 }
             });

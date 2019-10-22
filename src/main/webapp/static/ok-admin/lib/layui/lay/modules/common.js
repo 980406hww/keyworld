@@ -17,7 +17,7 @@ layui.define(['jquery', 'layer',], function (exports) {
         },
         jsonObjectTrim: function (jsonObject) {
             $.each(jsonObject, function (idx, item) {
-                jsonObject[idx] = $.trim(item).replace(/\+/g, "")
+                jsonObject[idx] = $.trim(item).replace(/ /g, "")
             });
             return jsonObject;
         },

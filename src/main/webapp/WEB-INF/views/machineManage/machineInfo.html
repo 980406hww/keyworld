@@ -2,7 +2,7 @@
 <html lang="en" style="height: 100%">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>终端统计</title>
     <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="/static/ok-admin/css/scroll-bar.css">
     <style>
@@ -53,11 +53,12 @@
         'FBE0EC', 'FBE0EC', 'FBE0EC', 'FCE1D8', 'FCE1D8', 'FCE1D8'];
 
     // layui相关
-    layui.use(['table', 'form', 'jquery', 'layer'], function () {
+    layui.use(['table', 'form', 'jquery', 'layer', 'common'], function () {
         let table = layui.table;
         let form = layui.form;
         let $ = layui.jquery;
         let layer = layui.layer;
+        let common = layui.common;
 
         $.ajax({
             url: '/internal/machineManage/getMachineInfos',
@@ -66,8 +67,6 @@
             , success: function (res) {
                 if (res.code === 200) {
                     init(res.data);
-                } else {
-
                 }
             }
         });
@@ -142,7 +141,7 @@
                     getMachineInfoBody(params.data.value, params.data.name);
                 } else {
                     document.getElementById('showData').style.display = 'none';
-                    layer.msg("暂无数据", {icon: 5});
+                    common.showFailMsg('暂无数据');
                 }
             });
         }
@@ -175,7 +174,7 @@
                     if (res.code === 200) {
                         showHide(value, res.data);
                     } else {
-                        layer.msg(res.msg ? res.msg : "暂无数据", {icon: 5});
+                        common.showFailMsg('暂无数据');
                     }
                 }
             });
