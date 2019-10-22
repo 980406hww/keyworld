@@ -15,12 +15,10 @@ import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.ibatis.annotations.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,50 +128,52 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void updateOptimizedCount(){
-        if(updateOptimizedResultQueue.size() > 1000) {
-            int times = 0;
-            do {
-                Map<String, UpdateOptimizedCountVO> updateOptimizedCountVOMap = new HashMap<String, UpdateOptimizedCountVO>();
-                Map<Long, UpdateOptimizedCountSimpleVO> updateOptimizedCountSimpleVOMap = new HashMap<Long, UpdateOptimizedCountSimpleVO>();
-                for(int i = 0; i < 1000; i++) {
-                    Object obj = updateOptimizedResultQueue.poll();
-                    if (obj != null) {
-                        UpdateOptimizedCountVO updateOptimizedCountVO = (UpdateOptimizedCountVO) obj;
-                        UpdateOptimizedCountVO tmpUpdateOptimizedCountVO = updateOptimizedCountVOMap.get(updateOptimizedCountVO.getClientID());
+        int times = 0;
+        boolean queueEmptied = false;
+        do {
+            Map<String, UpdateOptimizedCountVO> updateOptimizedCountVOMap = new HashMap<String, UpdateOptimizedCountVO>();
+            Map<Long, UpdateOptimizedCountSimpleVO> updateOptimizedCountSimpleVOMap = new HashMap<Long, UpdateOptimizedCountSimpleVO>();
+            for(int i = 0; i < 1000; i++) {
+                Object obj = updateOptimizedResultQueue.poll();
+                if (obj != null) {
+                    UpdateOptimizedCountVO updateOptimizedCountVO = (UpdateOptimizedCountVO) obj;
+                    UpdateOptimizedCountVO tmpUpdateOptimizedCountVO = updateOptimizedCountVOMap.get(updateOptimizedCountVO.getClientID());
 
-                        updateOptimizedCountVOMap.put(updateOptimizedCountVO.getClientID(), updateOptimizedCountVO);
-                        if(tmpUpdateOptimizedCountVO == null){
-                            tmpUpdateOptimizedCountVO = updateOptimizedCountVO;
-                        }
-                        updateOptimizedCountVO.setTotalCount(tmpUpdateOptimizedCountVO.getTotalCount() + 1);
-                        updateOptimizedCountVO.setTotalSucceedCount(tmpUpdateOptimizedCountVO.getTotalSucceedCount() + updateOptimizedCountVO.getCount());
-                        if(updateOptimizedCountVO.getCount() > 0){
-                            updateOptimizedCountVO.setLastContinueFailedCount(0);
-                        }else{
-                            updateOptimizedCountVO.setLastContinueFailedCount(tmpUpdateOptimizedCountVO.getLastContinueFailedCount() + 1);
-                        }
-
-                        UpdateOptimizedCountSimpleVO tmpUpdateOptimizedSimpleCountVO = updateOptimizedCountSimpleVOMap.get(updateOptimizedCountVO.getCustomerKeywordUuid());
-
-                        if(tmpUpdateOptimizedSimpleCountVO == null) {
-                            tmpUpdateOptimizedSimpleCountVO = new UpdateOptimizedCountSimpleVO();
-                            tmpUpdateOptimizedSimpleCountVO.setCustomerKeywordUuid(updateOptimizedCountVO.getCustomerKeywordUuid());
-                            updateOptimizedCountSimpleVOMap.put(updateOptimizedCountVO.getCustomerKeywordUuid(), tmpUpdateOptimizedSimpleCountVO);
-                        }
-                        tmpUpdateOptimizedSimpleCountVO.setTotalCount(tmpUpdateOptimizedSimpleCountVO.getTotalCount() + 1);
-                        if(updateOptimizedCountVO.getCount() > 0){
-                            tmpUpdateOptimizedSimpleCountVO.setLastContinueFailedCount(0);
-                            tmpUpdateOptimizedSimpleCountVO.setTotalSucceedCount(tmpUpdateOptimizedSimpleCountVO.getTotalSucceedCount() + 1);
-                        }else{
-                            tmpUpdateOptimizedSimpleCountVO.setLastContinueFailedCount(tmpUpdateOptimizedSimpleCountVO.getLastContinueFailedCount() + 1);
-                        }
+                    updateOptimizedCountVOMap.put(updateOptimizedCountVO.getClientID(), updateOptimizedCountVO);
+                    if(tmpUpdateOptimizedCountVO == null){
+                        tmpUpdateOptimizedCountVO = updateOptimizedCountVO;
                     }
+                    updateOptimizedCountVO.setTotalCount(tmpUpdateOptimizedCountVO.getTotalCount() + 1);
+                    updateOptimizedCountVO.setTotalSucceedCount(tmpUpdateOptimizedCountVO.getTotalSucceedCount() + updateOptimizedCountVO.getCount());
+                    if(updateOptimizedCountVO.getCount() > 0){
+                        updateOptimizedCountVO.setLastContinueFailedCount(0);
+                    }else{
+                        updateOptimizedCountVO.setLastContinueFailedCount(tmpUpdateOptimizedCountVO.getLastContinueFailedCount() + 1);
+                    }
+
+                    UpdateOptimizedCountSimpleVO tmpUpdateOptimizedSimpleCountVO = updateOptimizedCountSimpleVOMap.get(updateOptimizedCountVO.getCustomerKeywordUuid());
+
+                    if(tmpUpdateOptimizedSimpleCountVO == null) {
+                        tmpUpdateOptimizedSimpleCountVO = new UpdateOptimizedCountSimpleVO();
+                        tmpUpdateOptimizedSimpleCountVO.setCustomerKeywordUuid(updateOptimizedCountVO.getCustomerKeywordUuid());
+                        updateOptimizedCountSimpleVOMap.put(updateOptimizedCountVO.getCustomerKeywordUuid(), tmpUpdateOptimizedSimpleCountVO);
+                    }
+                    tmpUpdateOptimizedSimpleCountVO.setTotalCount(tmpUpdateOptimizedSimpleCountVO.getTotalCount() + 1);
+                    if(updateOptimizedCountVO.getCount() > 0){
+                        tmpUpdateOptimizedSimpleCountVO.setLastContinueFailedCount(0);
+                        tmpUpdateOptimizedSimpleCountVO.setTotalSucceedCount(tmpUpdateOptimizedSimpleCountVO.getTotalSucceedCount() + 1);
+                    }else{
+                        tmpUpdateOptimizedSimpleCountVO.setLastContinueFailedCount(tmpUpdateOptimizedSimpleCountVO.getLastContinueFailedCount() + 1);
+                    }
+                }else{
+                    queueEmptied = true;
+                    break;
                 }
-                customerKeywordDao.batchUpdateOptimizedCountFromCache(updateOptimizedCountSimpleVOMap.values());
-                machineInfoService.updateOptimizationResultFromCache(updateOptimizedCountVOMap.values());
-                times++;
-            } while (times < 20 && updateOptimizedResultQueue.size() > 1000);
-        }
+            }
+            customerKeywordDao.batchUpdateOptimizedCountFromCache(updateOptimizedCountSimpleVOMap.values());
+            machineInfoService.updateOptimizationResultFromCache(updateOptimizedCountVOMap.values());
+            times++;
+        } while (times < 20 && updateOptimizedResultQueue.size() > 100 && !queueEmptied);
     }
 
     public void cacheCustomerKeywords() {
@@ -2192,6 +2192,18 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             }
             customerKeywordDao.batchUpdateIndexAndOptimizePlanCount(customerKeywords);
         }
+    }
+
+    public void batchInsertCustomerKeywordByCustomerUuid(Long customerUuid, Long qsId) {
+        // TODO 关键词不是replace同步 跑几次有几次的数据 所以需要做判断
+        Long existQsId = customerKeywordDao.searchExistingSysCustomerKeywordQsId(qsId);
+        if (null == existQsId) {
+            customerKeywordDao.batchInsertCustomerKeywordByCustomerUuid(customerUuid, qsId);
+        }
+    }
+
+    public void cleanSysCustomerKeywordCreateOverOneWeek() {
+        customerKeywordDao.cleanSysCustomerKeywordCreateOverOneWeek();
     }
 }
 

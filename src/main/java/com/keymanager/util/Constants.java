@@ -103,7 +103,10 @@ public class Constants {
     public final static String CONFIG_KEY_INDUSTRY_TEL_REG = "IndustryTelReg";
     public final static String CONFIG_TYPE_INDUSTRY_QQ_REG = "IndustryQqReg";
     public final static String CONFIG_KEY_INDUSTRY_QQ_REG = "IndustryQqReg";
-
+    public final static String CONFIG_TYPE_SYNC_CUSTOMER_DATA = "SyncCustomerData";
+    public final static String CONFIG_KEY_CUSTOMER_TYPE_INFO = "CustomerTypeInfo";
+    public final static String CONFIG_TYPE_SYNC_QZ_CUSTOMER_KEYWORD = "SyncQZCustomerKeyword";
+    public final static String CONFIG_KEY_SYNC_QZ_CUSTOMER_TAG = "SyncQZCustomerTag";
 
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
 
@@ -145,7 +148,7 @@ public class Constants {
         SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_GOOGLE + "_" + TerminalTypeEnum.PC.name(), "http://m.sm.cn/s?q=");
 
         SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_BAIDU + "_" + TerminalTypeEnum.Phone.name(), "http://m.baidu.com/s?wd=");
-        SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_360 + "_" + TerminalTypeEnum.Phone.name(), "http://www.so.com/s?q=");
+        SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_360 + "_" + TerminalTypeEnum.Phone.name(), "http://m.so.com/s?q=");
         SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_SOGOU + "_" + TerminalTypeEnum.Phone.name(), "https://m.sogou.com/web/searchList.jsp?keyword=");
         SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_SM + "_" + TerminalTypeEnum.Phone.name(), "http://m.sm.cn/s?q=");
         SEARCH_ENGINE_URL_MAP.put(SEARCH_ENGINE_BING + "_" + TerminalTypeEnum.Phone.name(), "http://m.sm.cn/s?q=");
