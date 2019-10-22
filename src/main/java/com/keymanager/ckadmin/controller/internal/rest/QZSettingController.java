@@ -12,6 +12,7 @@ import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.service.*;
 import com.keymanager.ckadmin.enums.KeywordEffectEnum;
+import com.keymanager.ckadmin.vo.QZChargeRuleStandardInfoVO;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.vo.QZSettingCountVO;
@@ -57,6 +58,9 @@ public class QZSettingController extends SpringMVCBaseController {
 
     @Resource(name = "qzChargeLogService2")
     private QZChargeLogService qzChargeLogService;
+
+    @Resource(name = "qzChargeRuleService2")
+    private QZChargeRuleService qzChargeRuleService;
 
     /**
      * 获取网站分类标签
@@ -576,6 +580,25 @@ public class QZSettingController extends SpringMVCBaseController {
             Long customerUuid = Long.parseLong((String) map.get("customerUuid"));
             List<Long> uuids = (List<Long>) map.get("uuids");
             qzSettingService.updateQZSettingFrom(customerUuid, uuids);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+            resultBean.setMsg(ex.getMessage());
+            resultBean.setCode(400);
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/qzsetting/searchQZSettings")
+    @RequestMapping(value = "/getChargeRuleMsg", method = RequestMethod.POST)
+    public ResultBean getChargeRules(@RequestBody QZSettingSearchCriteria criteria) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            List<QZChargeRuleStandardInfoVO> data = qzChargeRuleService.searchChargeRules(criteria);
+            if (null == data || data.isEmpty()) {
+                resultBean.setCode(300);
+            } else {
+                resultBean.setData(data);
+            }
         } catch (Exception ex) {
             logger.error(ex.getMessage());
             resultBean.setMsg(ex.getMessage());

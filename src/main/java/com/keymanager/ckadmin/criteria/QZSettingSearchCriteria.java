@@ -4,6 +4,7 @@ import com.keymanager.ckadmin.criteria.base.BaseCriteria;
 
 public class QZSettingSearchCriteria extends BaseCriteria {
 
+    private Long uuid;
     private String loginName;
     private String customerUuid;
     private String customerUuids;
@@ -26,6 +27,14 @@ public class QZSettingSearchCriteria extends BaseCriteria {
     private String standardSpecies;
     private Integer optimizationType;
     private Boolean autoCrawlKeywordFlag;
+
+    public Long getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(Long uuid) {
+        this.uuid = uuid;
+    }
 
     public String getCustomerUuids() {
         return customerUuids;

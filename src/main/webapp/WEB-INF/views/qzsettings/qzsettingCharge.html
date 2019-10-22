@@ -343,18 +343,19 @@
                             break;
                     }
                 } else {
-                    l.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
+                    l.common.showFailMsg('数据获取失败');
                 }
             }
         });
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer", 'laydate'], function () {
+    layui.use(["form", "okLayer", "jquery", "layer", 'laydate', 'common'], function () {
         let form = layui.form;
         let okLayer = layui.okLayer;
         let $ = layui.jquery;
         let layer = layui.layer;
         let laydate = layui.laydate;
+        let common = layui.common;
 
         if (data_ != null) {
             setForm(layui, data_);
@@ -406,6 +407,7 @@
 
         form.on("submit(commitCharge)", function (data) {
             let p_d = [];
+            data.filed = common.jsonObjectTrim(data.filed);
             if (data.field.computer === 'on') {
                 let d = {};
                 d.qzOperationTypeUuid = data.field.pcQzOperationTypeUuid;
@@ -459,7 +461,7 @@
                                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                                         });
                                     } else {
-                                        layui.layer.msg(res.msg);
+                                        common.showFailMsg('保存失败');
                                     }
                                 }
                             });
@@ -470,11 +472,11 @@
                             });
                         }
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg('数据获取失败');
                     }
                 },
                 error: function () {
-                    layui.layer.msg('未知错误，请稍后重试', 5);
+                    common.showFailMsg('网络异常请稍后再试');
                 }
             });
             return false;

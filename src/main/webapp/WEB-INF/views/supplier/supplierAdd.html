@@ -172,17 +172,18 @@
                     }
                     l.form.val("save", d_n);
                 } else {
-                    l.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
+                    l.common.showFailMsg('数据获取失败');
                 }
             }
         });
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+    layui.use(["form", "okLayer", "jquery", "layer", 'common'], function () {
         let form = layui.form;
         let okLayer = layui.okLayer;
         let $ = layui.jquery;
         let layer = layui.layer;
+        let common = layui.common;
 
         if (uuid_ != null) {
             setForm(layui, uuid_);
@@ -198,7 +199,7 @@
                 success: function (res) {
                     if (res.code === 200) {
                         let supplierNexus = document.getElementById('supplierNexus');
-                        let html = '<input type="checkbox" name="type[all]" lay-skin="primary" lay-filter="supplierNexus" value="all" title="全选">';
+                        let html = '<input type="checkbox" name="type[all]" class="all" lay-skin="primary" lay-filter="supplierNexus" value="all" title="全选">';
                         supplierNexus.innerHTML = '';
                         for (let i = 0; i < res.data.length; i++) {
                             html += '<input type="checkbox" class="ck" name="type[' + res.data[i].name
@@ -208,7 +209,7 @@
                         supplierNexus.innerHTML = html;
                         form.render('checkbox');
                     } else {
-                        layer.msg(res.msg === null || res.msg === '' ? '请稍后再试' : res.msg);
+                        common.showFailMsg('数据获取失败');
                     }
                 }
             });
@@ -216,32 +217,41 @@
 
         //监听指定开关
         form.on('checkbox(supplierNexus)', function (data) {
+            let cks = document.getElementsByClassName('ck');
             if (data.value === 'all') {
-                let cks = document.getElementsByClassName('ck');
                 if (data.elem.checked === true) {
                     for (let i = 0; i < cks.length; i++) {
-                        cks[i].setAttribute('checked', '');
-                    }
-                    form.render('checkbox');
-                    let sns = document.getElementById('supplierNexus').children;
-                    for (let i = 1; i < sns.length; i += 2) {
-                        sns[i].classList.add('layui-form-checked');
+                        cks[i].checked = true;
                     }
                 } else {
                     for (let i = 0; i < cks.length; i++) {
-                        cks[i].removeAttribute('checked');
+                        cks[i].checked = false;
                     }
-                    form.render('checkbox');
-                    let sns = document.getElementById('supplierNexus').children;
-                    for (let i = 1; i < sns.length; i += 2) {
-                        sns[i].classList.remove('layui-form-checked');
+                }
+            } else {
+                let all = document.getElementsByClassName('all');
+                if (all) {
+                    if (data.elem.checked === true) {
+                        let j = 0;
+                        for (let i = 0; i < cks.length; i++) {
+                            if (cks[i].checked){
+                                j++;
+                            }
+                        }
+                        if (j === 3) {
+                            all[0].checked = true;
+                        }
+                    } else {
+                        all[0].checked = false;
                     }
                 }
             }
+            form.render('checkbox');
         });
 
         form.on("submit(commit)", function (data) {
             let d = data.field, p_d = {};
+            d = common.jsonObjectTrim(d);
             p_d.address = d.address;
             p_d.contactPerson = d.contactPerson;
             p_d.email = d.email;
@@ -289,11 +299,11 @@
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layer.msg(res.msg, {icon: 5, time: 1000});
+                        common.showFailMsg('保存失败');
                     }
                 },
                 error: function () {
-                    layer.msg("保存失败");
+                    common.showFailMsg('网络异常请稍后再试');
                 }
             });
         }

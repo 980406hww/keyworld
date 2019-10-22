@@ -9,13 +9,14 @@ function getHeight(){
 }
 
 // layui相关
-layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function () {
+layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'], function () {
     var element = layui.element;
     var form = layui.form;
     var $ = layui.jquery;
     var layer = layui.layer;
     var okLayer = layui.okLayer;
     var laypage = layui.laypage;
+    var common = layui.common;
 
     $(window).resize(function(){
         let b = document.getElementById('customerBody');
@@ -24,7 +25,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     });
 
     init_keyword_type();
-    initLayPage(formToJsonObject('searchForm'));
+    initLayPage(common.formToJsonObject('searchForm'));
 
     function initLayPage(pageConf) {
         if (!pageConf) {
@@ -59,6 +60,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                     layout: ['prev', 'page', 'next', 'count', 'limit'],
                     jump: function (obj, first) {
                         if (!first) {
+                            pageConf = common.formToJsonObject('searchForm');
                             pageConf.page = obj.curr;
                             pageConf.limit = obj.limit;
                             initLayPage(pageConf);
@@ -66,15 +68,15 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                     }
                 });
                 init_data(result.data);
-                let entryType = $('#entryType').val();
-                let postData = {};
-                postData.entryType = entryType;
+                // let entryType = $('#entryType').val();
+                // let postData = {};
+                // postData.entryType = entryType;
                 // init_customerTypeCount(postData);
                 form.render();
                 // layer.msg('加载完成', {icon: 6});
             },
             error: function () {
-                layer.msg('获取用户失败，请稍后再试', {icon: 5});
+                common.showFailMsg('获取用户失败，请稍后再试');
             }
         });
     }
@@ -232,10 +234,17 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     element.on('tab(customerTab)', function (data) {
         let d = data.elem.context.dataset;
         $('#entryType').val(d.entrytype);
-        initLayPage(formToJsonObject('searchForm'));
-
-        let postData = {};
-        postData.entryType = d.entrytype;
+        initLayPage(common.formToJsonObject('searchForm'));
+        if (d.entrytype ==='pt'){
+            if (window.hasPer){
+                var intervalId = setInterval(function () {
+                    layui.searchCurrentDateCompletedReports();
+                }, 1000 * 30);
+                window.searchCurrentDateCompletedReportsIntervalId = intervalId;
+            }
+        }else {
+            window.clearInterval(searchCurrentDateCompletedReportsIntervalId);
+        }
     });
 
 
@@ -274,19 +283,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         initLayPage(pageConf);
         return false;
     });
-
-    function show_layer_msg(msg, icon, title, status) {
-        layer.msg(msg, {
-            icon: icon,
-            title: title === undefined ? null : title,
-            anim: 5,
-            time: 2000,
-            isOutAnim: false
-        }, function () {
-
-        });
-    }
-
+    
     //获取选中客户uuid[]
     function get_select_uuids(){
         var uuidArr = [];
@@ -307,6 +304,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
         return uuidArr;
     }
 
+
     //删除单个客户
     window.delOneCustomer = function (uuid) {
         layer.confirm('真的删除该客户吗', function (index) {
@@ -325,19 +323,16 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                 type: 'POST',
                 success: function (result) {
                     if (result.code === 200) {
-                        layer.msg('操作成功', {
-                            icon: 6,
-                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                        }, function () {
-                            let pageConf = formToJsonObject('searchForm');
+                        common.showSuccessMsg('操作成功',function () {
+                            let pageConf = common.formToJsonObject('searchForm');
                             initLayPage(pageConf)
                         });
                     } else {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 },
                 error: function () {
-                    layer.msg('操作失败', {icon: 5});
+                    common.showFailMsg('操作失败');
 
                 }
             });
@@ -349,7 +344,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     window.batchDelete = function () {
         let uuidArr = get_select_uuids();
         if (uuidArr.length <= 0) {
-            show_layer_msg("请选择要删除的客户！！", 5);
+            common.showFailMsg("请选择要删除的客户！！");
             return false;
         }
         layer.confirm("确定要删除所选客户吗", {icon: 3, title: '删除所选'}, function (index) {
@@ -366,19 +361,16 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                 type: 'POST',
                 success: function (result) {
                     if (result.code === 200) {
-                        layer.msg('操作成功', {
-                            icon: 6,
-                            time: 2000
-                        }, function () {
-                            let pageConf = formToJsonObject('searchForm');
+                        common.showSuccessMsg('操作成功', function () {
+                            let pageConf = common.formToJsonObject('searchForm');
                             initLayPage(pageConf)
                         });
                     } else {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 },
                 error: function () {
-                    layer.msg('操作失败', {icon: 5});
+                    common.showFailMsg('操作失败');
                 }
             });
             layer.close(index);
@@ -395,7 +387,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             window[layero.find("iframe")[0]["name"]].initForm(data);
         }, function () {
             if (sign) {
-                let pageConf = formToJsonObject('searchForm');
+                let pageConf = common.formToJsonObject('searchForm');
                 initLayPage(pageConf);
                 sign = false;
             }
@@ -412,7 +404,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             window[layero.find("iframe")[0]["name"]].initForm(data);
         }, function () {
             if (sign) {
-                let pageConf = formToJsonObject('searchForm');
+                let pageConf = common.formToJsonObject('searchForm');
                 initLayPage(pageConf);
                 sign = false;
             }
@@ -430,6 +422,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             var data = {};
             data.customerUuid = customerUuid;
             data.status = status;
+            data.entryType = $('#entryType').val();
             $.ajax({
                 url: '/internal/customerKeyword/changeCustomerKeywordStatus2',
                 data: JSON.stringify(data),
@@ -441,20 +434,16 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                 type: 'POST',
                 success: function (result) {
                     if (result.code === 200) {
-                        layer.msg('操作成功', {
-                            icon: 6,
-                            time: 1000
-                        },function () {
-                            let pageConf = formToJsonObject('searchForm');
+                        common.showSuccessMsg('操作成功', function () {
+                            let pageConf = common.formToJsonObject('searchForm');
                             initLayPage(pageConf);
                         });
                     } else {
-                        layer.msg('操作失败', {icon: 5, time: 1000});
+                        common.showFailMsg('操作失败');
                     }
                 },
                 error: function () {
-                    layer.msg('操作失败', {icon: 5, time: 1000});
-
+                    common.showFailMsg('操作失败');
                 }
             });
             layer.close(index);
@@ -464,7 +453,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     //改变日报表值
     window.changeCustomerDailyReportIdentify = function (uuid, status, oldIdentify, newIdentify) {
         if (status !== '1') {
-            layer.msg('请激活客户', {icon: 5});
+            common.showFailMsg('请激活客户');
             return;
         }
 
@@ -481,12 +470,12 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
             data: JSON.stringify(postData),
             success: function (result) {
                 if (result.code === 200) {
-                    layer.msg('操作成功', {icon: 6, time:1000});
+                    common.showSuccessMsg('操作成功');
                     $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, newIdentify))
                 }
             },
             error: function () {
-                layer.msg('操作失败', {icon: 5, time:1000});
+                common.showFailMsg('操作失败');
                 $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, oldIdentify))
             }
         });
@@ -497,7 +486,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     window.batchUpdateDailyReport= function () { //获取选中数据
         let uuidArr = get_select_active_uuids();
         if (uuidArr.length <= 0) {
-            layer.msg('请选择要操作的激活的客户', {icon: 5});
+            common.showFailMsg('请选择要操作的激活的客户');
             return false;
         }
         layer.confirm("确定更新所选客户日报表吗", {icon: 3, title: '更新日报表'}, function (index) {
@@ -514,16 +503,13 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                 type: 'POST',
                 success: function (result) {
                     if (result.code === 200) {
-                        layer.msg('操作成功', {
-                            icon: 6,
-                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                        });
+                        common.showSuccessMsg('操作成功!')
                     } else {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 },
                 error: function () {
-                    layer.msg('操作失败', {icon: 5});
+                    common.showFailMsg('操作失败');
                 }
             });
             layer.close(index);
@@ -534,14 +520,14 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
     window.batchUpdateBelongUser = function(){
         let uuidArr = get_select_uuids();
         if (uuidArr.length <= 0) {
-            layer.msg('请选择要操作的客户', {icon: 5});
+            common.showFailMsg('请选择要操作的客户');
             return false;
         }
         okLayer.open("首页 / 客户列表 / 修改客户所属", "/internal/customer/toUpdateBelongUser", "40%", "50%", function(layero){
             window[layero.find("iframe")[0]["name"]].initForm(uuidArr);
         }, function () {
             if (sign) {
-                let pageConf = formToJsonObject('searchForm');
+                let pageConf = common.formToJsonObject('searchForm');
                 initLayPage(pageConf);
                 sign = false;
             }
@@ -571,15 +557,15 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            show_layer_msg('操作成功', 6);
+                            common.showSuccessMsg('操作成功');
                             $('#saleRemark'+uuid).text(value);
                             $('#saleRemark'+uuid).parent().attr("title",value);
                         } else {
-                            show_layer_msg('操作失败', 5);
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        show_layer_msg('未知错误，请稍后重试', 5);
+                        common.showFailMsg('未知错误，请稍后重试');
                     }
                 });
                 layer.close(index2);
@@ -612,16 +598,16 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer'], function
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            show_layer_msg('操作成功', 6);
+                            common.showSuccessMsg('操作成功');
                             $('#remark'+uuid).text(value);
                             $('#remark'+uuid).parent().attr("title",value);
 
                         } else {
-                            show_layer_msg('操作失败', 5);
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        show_layer_msg('未知错误，请稍后重试', 5);
+                        common.showFailMsg('未知错误，请稍后重试');
                     }
                 });
                 layer.close(index2);

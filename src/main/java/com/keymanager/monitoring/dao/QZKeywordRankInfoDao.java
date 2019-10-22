@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.keymanager.monitoring.criteria.QZSettingCountNumCriteria;
 import com.keymanager.monitoring.criteria.QZSettingSearchCriteria;
 import com.keymanager.monitoring.entity.QZKeywordRankInfo;
+import com.keymanager.monitoring.vo.QZKeywordRankForSync;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -34,4 +35,12 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
     QZKeywordRankInfo selectByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType);
 
     List<QZKeywordRankInfo> searchExistingExtraQZKeywordRankInfo (@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType")String terminalType);
+
+    List<QZKeywordRankForSync> getQZKeywordRankInfoByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid, @Param("searchEngine") String searchEngine, @Param("limitRow") int limitRow);
+
+    /**
+     * replace 站点曲线数据
+     * @param qzKeywordRanks
+     */
+    void replaceQZKeywordRanks(@Param("qzKeywordRanks") List<QZKeywordRankForSync> qzKeywordRanks);
 }

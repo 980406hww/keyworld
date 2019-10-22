@@ -157,8 +157,8 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     public ResultBean changeCustomerKeywordStatus(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         try {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
-            String entryType = (String) request.getSession().getAttribute("entryType");
             String customerUuid = (String) requestMap.get("customerUuid");
+            String entryType = (String) requestMap.get("entryType");
             String status = (String) requestMap.get("status");
             customerKeywordService.changeCustomerKeywordStatus(terminalType, entryType, Long.parseLong(customerUuid), Integer.parseInt(status));
             return new ResultBean(200, "success");

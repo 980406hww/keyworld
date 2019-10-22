@@ -144,11 +144,11 @@
                         });
                         form.render("select")
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg)
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！')
                 }
             });
         }
@@ -204,7 +204,7 @@
         form.on("submit(search)", function (data) {
             var postData = data.field;
             postData.entryType = 'pt';
-            postData = common.JsonObjectTrim(postData);
+            postData = common.jsonObjectTrim(postData);
             table.reload('keywordTable', {
                 where: postData,
                 page: {

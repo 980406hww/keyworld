@@ -65,10 +65,7 @@
                         $('#searchEngine').append(
                             '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
                     });
-
                     $("#searchEngine").val('百度');
-
-
                     form.render("select");
                 }
 
@@ -76,9 +73,10 @@
         });
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer", ], function () {
+    layui.use(["form", "okLayer", "jquery", "layer", 'common'], function () {
         var form = layui.form;
         var okLayer = layui.okLayer;
+        var common = layui.common;
         var $ = layui.jquery;
 
         if (postData != null){
@@ -99,12 +97,12 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("更新成功", function () {
+                        common.showSuccessMsg("更新成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
 
                 }

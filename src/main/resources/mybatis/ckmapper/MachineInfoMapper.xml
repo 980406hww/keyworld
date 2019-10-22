@@ -372,7 +372,13 @@
 
     <update id="batchUpdateMachine" parameterType="com.keymanager.ckadmin.criteria.MachineInfoCriteria">
         UPDATE t_machine_info mi
-        SET mi.fMachineGroup = #{machineInfoCriteria.targetMachineGroup},mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName},mi.fAllowSwitchGroup = #{machineInfoCriteria.allowSwitchGroup}
+        SET mi.fAllowSwitchGroup = #{machineInfoCriteria.allowSwitchGroup}
+        <if test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''">
+            ,mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName}
+        </if>
+        <if test="machineInfoCriteria.targetMachineGroup != null and machineInfoCriteria.targetMachineGroup != ''">
+            ,mi.fMachineGroup = #{machineInfoCriteria.targetMachineGroup}
+        </if>
         WHERE 1=1
         <if test="machineInfoCriteria.clientIDs != null">AND mi.fClientID IN
             <foreach item="item" collection="machineInfoCriteria.clientIDs" open="(" separator="," close=")">

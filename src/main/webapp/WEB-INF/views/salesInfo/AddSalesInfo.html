@@ -21,37 +21,37 @@
         <div class="layui-form-item">
             <label class="layui-form-label">销售名称</label>
             <div class="layui-input-block">
-                <input type="text" name="salesName" autocompvare="off" class="layui-input" lay-verify="required">
+                <input type="text" name="salesName" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">电话号码</label>
             <div class="layui-input-block">
-                <input type="text" name="telephone" autocompvare="off" class="layui-input" lay-verify="telephone">
+                <input type="text" name="telephone" autocomplete="off" class="layui-input" lay-verify="telephone">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">QQ号</label>
             <div class="layui-input-block">
-                <input type="text" name="qq" autocompvare="off" class="layui-input" lay-verify="required">
+                <input type="text" name="qq" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">微信号</label>
             <div class="layui-input-block">
-                <input type="text" name="weChat" autocompvare="off" class="layui-input" lay-verify="required">
+                <input type="text" name="weChat" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">二维码链接</label>
             <div class="layui-input-block">
-                <input type="text" name="quickResponseCode" autocompvare="off" class="layui-input">
+                <input type="text" name="quickResponseCode" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">邮箱</label>
             <div class="layui-input-block">
-                <input type="text" name="email" autocompvare="off" class="layui-input" lay-verify="email">
+                <input type="text" name="email" autocomplete="off" class="layui-input" lay-verify="email">
             </div>
         </div>
         <div class="layui-form-item">
@@ -61,12 +61,6 @@
                         xm-select-show-count="3" lay-verify="required"></select>
             </div>
         </div>
-<!--        <div class="layui-form-item">-->
-<!--            <label class="layui-form-label">负责部分</label>-->
-<!--            <div class="layui-input-block">-->
-<!--                <select name="managePart" id="managePart" lay-verify="required"></select>-->
-<!--            </div>-->
-<!--        </div>-->
         <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
             <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
                 <button class="layui-btn" lay-submit lay-filter="commit">确定</button>
@@ -167,12 +161,11 @@
         var $ = layui.jquery;
         var formSelects = layui.formSelects;
 
-        initFormSelect(layui);
-
         if (uuid_ != null) {
             setForm(layui, uuid_);
         } else {
             layui_ = layui;
+            initFormSelect(layui);
         }
 
         form.on("submit(commit)", function (data) {

@@ -42,5 +42,8 @@ public interface CustomerDao extends BaseMapper<Customer> {
     void updateCustomerDailyReportIdentify (@Param("uuids") String[] list);
 
     void saveExternalCustomer(Customer customer);
+
     List<String> getActiveDailyReportIdentifyUserIDs();
+
+    List<Long> getCustomerUuidsByCustomerType(@Param("customerType") String customerType);
 }

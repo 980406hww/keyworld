@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.keymanager.ckadmin.entity.QZChargeRule;
+import com.keymanager.ckadmin.vo.QZChargeRuleStandardInfoVO;
 import com.keymanager.ckadmin.vo.QZChargeRuleVO;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -18,4 +19,6 @@ public interface QZChargeRuleDao extends BaseMapper<QZChargeRule> {
 
     List<QZChargeRuleVO> findQZChargeRules(@Param("qzSettingUuid") Long qzSettingUuid,
         @Param("operationType") String operationType, @Param("websiteType") String websiteType);
+
+    List<QZChargeRuleStandardInfoVO> searchQZChargeRuleStandardInfoVos(@Param("qzSettingUuid") Long uuid, @Param("terminalType") String terminalType);
 }

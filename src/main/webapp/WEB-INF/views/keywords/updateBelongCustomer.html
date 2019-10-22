@@ -46,10 +46,11 @@
         init_targetCustomers();
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+    layui.use(["form", "okLayer", "jquery", "layer",'common'], function () {
         var form = layui.form;
         var okLayer = layui.okLayer;
         var $ = layui.jquery;
+        var common = layui.common;
 
         window.init_targetCustomers = function(){
             $.ajax({
@@ -68,11 +69,11 @@
                         });
                         form.render("select")
                     } else {
-                        layer.msg(res.msg)
+                       common.showFailMsg(res.msg)
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！')
                 }
             });
         };
@@ -93,12 +94,12 @@
                 timeout: 5000,
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("修改成功", function () {
+                        common.showSuccessMsg("修改成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });

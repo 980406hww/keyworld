@@ -256,11 +256,12 @@
         baseData = data;
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+    layui.use(["form", "okLayer", "jquery", "layer",'common'], function () {
         let form = layui.form;
         let okLayer = layui.okLayer;
         let $ = layui.jquery;
         let layer = layui.layer;
+        let common = layui.common;
 
         document.onkeydown=function(e){
             var isie = !!(document.all);
@@ -351,12 +352,12 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });

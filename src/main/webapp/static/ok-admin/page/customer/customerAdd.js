@@ -5,7 +5,7 @@ let layui_ = null;
 function initForm(data) {
     uuid_ = data.uuid;
     document.getElementById('entryType').value = data.entryType;
-    if (layui_ != null) {
+    if (layui_ != null && uuid_ !=null) {
         setForm(layui_, uuid_);
     }
 }
@@ -23,7 +23,7 @@ function setForm(l, u) {
                 for (let index in customerBusinessList) {
                     res.data['customerBusinessList['+customerBusinessList[index]+']'] = customerBusinessList[index];
                 }
-                layui.form.val("addCustomer", res.data);
+                l.form.val("addCustomer", res.data);
 
             } else {
                 l.layer.msg(res.msg);

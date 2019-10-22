@@ -38,7 +38,7 @@
         FROM
         t_sales_manage
         WHERE
-        fManagePart = #{websiteType}
+        fManagePart like '%${websiteType}%'
     </select>
 
     <select id="selectAllSalesName" resultType="java.lang.String">

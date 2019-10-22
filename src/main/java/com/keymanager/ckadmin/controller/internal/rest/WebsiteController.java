@@ -33,7 +33,7 @@ public class WebsiteController {
     @GetMapping("/toAddWebsite")
     public ModelAndView toAddWebsite(){
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("WebSiteList/AddWebsite");
+        mv.setViewName("webSiteList/AddWebsite");
         return mv;
     }
 
@@ -59,6 +59,23 @@ public class WebsiteController {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("webSiteList/WebSiteList");
         return mv;
+    }
+
+    @RequiresPermissions("/internal/website/putSalesInfoToWebsite")
+    @PostMapping(value = "/putSalesInfoToWebsite")
+    public ResultBean putSalesInfoToWebsite(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            List uuids = (List) requestMap.get("uuids");
+            websiteService.putSalesInfoToWebsite(uuids);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
     }
 
     @RequiresPermissions("/internal/friendlyLink/synchronousFriendlyLink")

@@ -17,19 +17,19 @@ layui.define(['jquery', 'layer',], function (exports) {
         },
         jsonObjectTrim: function (jsonObject) {
             $.each(jsonObject, function (idx, item) {
-                jsonObject[idx] = $.trim(item).replace(/\+/g, "")
+                jsonObject[idx] = $.trim(item).replace(/ /g, "")
             });
             return jsonObject;
         },
-        showSuccessMsg: function (msg, reload) {
+        showSuccessMsg: function (msg, callback) {
             layer.msg(msg, {
                 icon: 6,
                 anim: 5,
                 time: 1000,
                 isOutAnim: false
             }, function () {
-                if (reload) {
-                    active['reload'].call(this);
+                if (callback){
+                    callback()
                 }
             });
         },
