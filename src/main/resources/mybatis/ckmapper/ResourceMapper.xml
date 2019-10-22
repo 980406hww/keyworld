@@ -39,6 +39,7 @@
                 AND s.fParentID = #{parentId}
             </otherwise>
         </choose>
+        AND fVersion = '2.0'
         AND s.fResourceType = 0
         ORDER BY s.fSequence
     </select>
