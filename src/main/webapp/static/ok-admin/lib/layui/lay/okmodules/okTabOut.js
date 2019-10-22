@@ -37,7 +37,7 @@ layui.define(["element", "jquery"], function (exports) {
       this.tabConfig = {
         openTabNum: 30, //最大可打开窗口数量默认30
         tabFilter: "ok-tab", //添加窗口的filter
-        url: "/external/layer/menu" //获取菜单的接口地址
+        url: "/internal/layer/menu" //获取菜单的接口地址
       }
     };
   /**

@@ -10,7 +10,7 @@ import com.keymanager.monitoring.entity.BaseEntity;
  * 角色资源
  *
  */
-@TableName(value = "t_role_resource")
+@TableName(value = "t_role_resource_new")
 public class RoleResource extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;

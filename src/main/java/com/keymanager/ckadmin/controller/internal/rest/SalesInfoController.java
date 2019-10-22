@@ -27,7 +27,7 @@ public class SalesInfoController {
     @Resource(name = "salesManageService2")
     private SalesManageService salesManageService;
 
-    @RequiresPermissions("/internal/salesManage/searchSalesManageLists")
+    @RequiresPermissions("/internal/salesInfo/toSalesInfo")
     @GetMapping("/toSalesInfo")
     public ModelAndView toSalesInfo() {
         ModelAndView mv = new ModelAndView();
@@ -63,7 +63,6 @@ public class SalesInfoController {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/salesManage/searchSalesManageLists")
     @PostMapping("/searchSalesInfos")
     public ResultBean searchSalesInfos(@RequestBody SalesInfoCriteria salesInfoCriteria) {
         ResultBean resultBean = new ResultBean();

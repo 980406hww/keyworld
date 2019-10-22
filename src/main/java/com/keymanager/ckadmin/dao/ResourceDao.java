@@ -17,6 +17,5 @@ public interface ResourceDao extends BaseMapper<Resource> {
 
     List<Resource> selectAuthorizationMenu(@Param("loginName") String loginName);
 
-    List<Resource> selectAuthorizationResource(@Param("loginName") String loginName,
-        @Param("parentId") Long parentId);
+    List<Resource> selectAuthorizationResource(@Param("loginName") String loginName, @Param("parentId") Long parentId);
 }

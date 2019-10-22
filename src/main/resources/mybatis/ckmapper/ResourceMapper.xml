@@ -22,12 +22,12 @@
     <select id="selectAuthorizationResource" resultType="com.keymanager.ckadmin.entity.Resource">
         SELECT
         <include refid="colID"/>
-        FROM t_resource s
+        FROM t_resource_new s
         WHERE s.fUuid IN (SELECT
         rr.fResourceID
         FROM t_userinfo u,
         t_user_role ur,
-        t_role_resource rr
+        t_role_resource_new rr
         WHERE u.fLoginName = #{loginName}
         AND u.fUuid = ur.fUserID
         AND ur.fRoleID = rr.fRoleID)

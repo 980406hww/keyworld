@@ -651,8 +651,6 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         return resultBean;
     }
 
-
-    @RequiresPermissions("/internal/customerKeyword/searchKeywordAmountCountLists")
     @PostMapping(value = "/getPTKeywords")
     public ResultBean getPTKeywords(@RequestBody PTKeywordCountCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();

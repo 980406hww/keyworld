@@ -47,7 +47,6 @@ public class GroupSettingController {
     @Resource(name = "operationTypeService2")
     private OperationTypeService operationTypeService;
 
-    @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
     @GetMapping("/toGroupSettings")
     public ModelAndView toGroupSettings() {
         ModelAndView mv = new ModelAndView();
@@ -55,7 +54,6 @@ public class GroupSettingController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
     @PostMapping(value = "/getGroupSettings")
     public ResultBean getGroupSettings(@RequestBody GroupSettingCriteria groupSettingCriteria) {
         ResultBean resultBean = new ResultBean();
@@ -81,7 +79,6 @@ public class GroupSettingController {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
     @PostMapping("/getOperationTypes/{terminalType}")
     public ResultBean getOperationTypes(@PathVariable(name = "terminalType") String terminalType){
         ResultBean resultBean = new ResultBean(200, "success");
@@ -128,7 +125,6 @@ public class GroupSettingController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
     @PostMapping(value = "/getGroupSettingByUuid/{uuid}")
     public ResultBean getGroupSettingByUuid(@PathVariable(name = "uuid") Long uuid) {
         ResultBean resultBean = new ResultBean();
@@ -192,7 +188,6 @@ public class GroupSettingController {
         }
     }
 
-    @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
     @GetMapping("/toGroupDetail")
     public ModelAndView toGroupDetail() {
         ModelAndView mv = new ModelAndView();
@@ -200,7 +195,6 @@ public class GroupSettingController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
     @GetMapping("/toSearchNeedAddGroup")
     public ModelAndView toSearchNeedAddGroup() {
         ModelAndView mv = new ModelAndView();
@@ -208,7 +202,6 @@ public class GroupSettingController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
     @GetMapping("/toGroupSettingFromATP/{terminalType}/{operationCombineName}")
     public ModelAndView toGroupSettingFromATP(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "operationCombineName") String operationCombineName) throws UnsupportedEncodingException {
         ModelAndView mv = new ModelAndView();

@@ -70,7 +70,6 @@ public class OperationCombineController {
         }
     }
 
-    @RequiresPermissions("/internal/groupsetting/searchGroupSettings")
     @PostMapping("/getGroupNames2/{uuid}")
     public ResultBean getGroupNames (@PathVariable(name = "uuid") long uuid) {
         ResultBean resultBean = new ResultBean(200,"success");

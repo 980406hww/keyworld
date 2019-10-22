@@ -46,7 +46,6 @@ public class NegativeRankController2 {
     @Resource(name = "configService2")
     private ConfigService configService;
 
-    @RequiresPermissions("/internal/negativeRank/searchNegativeRanks")
     @GetMapping(value = "/toNegativeRanks")
     public ModelAndView toCustomers() {
         ModelAndView mv = new ModelAndView();
@@ -54,7 +53,6 @@ public class NegativeRankController2 {
         return mv;
     }
 
-    @RequiresPermissions("/internal/negativeRank/searchNegativeRanks")
     @PostMapping(value = "/getNegativeRanks")
     public ResultBean getCustomers(@RequestBody NegativeRankCriteria negativeRankCriteria) {
         ResultBean resultBean = new ResultBean();
@@ -80,7 +78,6 @@ public class NegativeRankController2 {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/negativeRank/searchNegativeRanks")
     @PostMapping(value = "/getNegativeKeywords")
     public ResultBean getNegativeKeywords() {
         ResultBean resultBean = new ResultBean();

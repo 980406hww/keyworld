@@ -4,11 +4,6 @@ layui.use(['element', 'layer', 'okUtils', 'okTab'], function () {
     okUtils = layui.okUtils,
     $ = layui.jquery,
     layer = layui.layer,
-    // 暂时停用动态加载菜单 10.08
-    // okTab = layui.okTab({
-    //   url: "/internal/layer/menu",
-    //   openTabNum: 30 //允许同时选项卡的个数
-    // });
     okTab = layui.okTab();
 
   okTab.render(function () {
