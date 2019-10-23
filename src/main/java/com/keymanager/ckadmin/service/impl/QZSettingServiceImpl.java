@@ -896,4 +896,9 @@ public class QZSettingServiceImpl extends
         customerKeywordService.updateCustomerUuidByQzUuids(customerUuid, uuids);
         qzSettingDao.updateCustomerUuidByQzUuids(customerUuid, uuids);
     }
+
+    @Override
+    public List<QZSetting> selectByUuids(List uuids) {
+        return qzSettingDao.selectByUuids(uuids);
+    }
 }

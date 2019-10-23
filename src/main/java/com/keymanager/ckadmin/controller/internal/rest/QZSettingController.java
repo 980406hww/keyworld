@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.keymanager.ckadmin.annotation.QzStatusMon;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
@@ -318,6 +319,7 @@ public class QZSettingController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/qzsetting/delete")
     @PostMapping(value = "/delete2/{uuid}")
+    @QzStatusMon(type = 3)
     public ResultBean deleteQZSetting(@PathVariable("uuid") Long uuid) {
         ResultBean resultBean = new ResultBean();
         try {
@@ -337,9 +339,11 @@ public class QZSettingController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/qzsetting/deleteQZSettings")
     @PostMapping(value = "/deleteQZSettings2")
+    @QzStatusMon(type = 4)
     public ResultBean deleteQZSettings(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
         try {
+
             List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
             qzSettingService.deleteAll(uuids);
             resultBean.setCode(200);
@@ -387,6 +391,7 @@ public class QZSettingController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/saveQZSetting")
+    @QzStatusMon(type = 1)
     public ResultBean saveQZSetting(@RequestBody QZSetting qzSetting, HttpSession session) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
@@ -399,11 +404,7 @@ public class QZSettingController extends SpringMVCBaseController {
                 }
             }
             String userName = (String) session.getAttribute("username");
-            Long uuid = qzSettingService.saveQZSetting(qzSetting, userName);
-            if (null != uuid) {
-                resultBean.setData(qzChargeLogService.getQZChargeLog(uuid));
-            }
-            return resultBean;
+            qzSettingService.saveQZSetting(qzSetting, userName);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

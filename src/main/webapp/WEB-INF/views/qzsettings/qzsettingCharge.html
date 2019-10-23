@@ -302,7 +302,7 @@
             success: function (res) {
                 if (res.code === 200) {
                     d.siteStatus = d.renewalStatus + '';
-                    siteStatus =  d.siteStatus;
+                    siteStatus = d.siteStatus;
                     let arr = res.data;
                     for (let i = 0; i < arr.length; i++) {
                         if (arr[i].operationType === 'PC') {
@@ -435,49 +435,32 @@
             let postData = {};
             postData.uuid = data_.uuid;
             postData.renewalStatus = data.field.siteStatus;
+            let n_p_d = {};
+            n_p_d.data = p_d;
+            n_p_d.msg = postData;
             $.ajax({
-                url: '/internal/qzsetting/updRenewalStatus',
-                data: JSON.stringify(postData),
+                url: '/internal/qzchargelog/saveQZChargeLogs',
+                type: 'post',
+                data: JSON.stringify(n_p_d),
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                type: 'POST',
                 success: function (res) {
                     if (res.code === 200) {
-                        if (postData.renewalStatus === '1') {
-                            $.ajax({
-                                url: '/internal/qzchargelog/saveQZChargeLogs',
-                                type: 'post',
-                                data: JSON.stringify(p_d),
-                                headers: {
-                                    'Accept': 'application/json',
-                                    'Content-Type': 'application/json'
-                                },
-                                success: function (res) {
-                                    if (res.code === 200) {
-                                        okLayer.msg.greenTick("保存成功", function () {
-                                            parent.window.sign = true;
-                                            parent.layer.close(parent.layer.getFrameIndex(window.name));
-                                        });
-                                    } else {
-                                        common.showFailMsg('保存失败');
-                                    }
-                                }
-                            });
-                        } else {
-                            okLayer.msg.greenTick("保存成功", function () {
-                                parent.window.sign = true;
-                                parent.layer.close(parent.layer.getFrameIndex(window.name));
-                            });
-                        }
+                        okLayer.msg.greenTick("保存成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
                     } else {
-                        common.showFailMsg('数据获取失败');
+                        common.showFailMsg('保存失败');
                     }
-                },
+                }
+                ,
                 error: function () {
                     common.showFailMsg('网络异常请稍后再试');
                 }
+
             });
             return false;
         });
@@ -517,7 +500,6 @@
             }
         });
     })
-
 </script>
 </body>
 </html>
