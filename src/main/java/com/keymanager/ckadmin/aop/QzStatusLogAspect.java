@@ -7,7 +7,6 @@ import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.entity.QZChargeLog;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.entity.QzChargeMon;
-import com.keymanager.ckadmin.service.QZOperationTypeService;
 import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.service.QzChargeMonService;
 import java.lang.reflect.Method;
@@ -33,9 +32,6 @@ public class QzStatusLogAspect {
 
     @Resource(name = "qzSettingService2")
     QZSettingService qzSettingService;
-
-    @Resource(name = "qzOperationTypeService2")
-    private QZOperationTypeService qzOperationTypeService;
 
     @Pointcut("@annotation(com.keymanager.ckadmin.annotation.QzStatusMon)")
     public void controllerAspect() {}

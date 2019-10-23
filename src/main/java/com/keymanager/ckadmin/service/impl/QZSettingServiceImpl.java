@@ -19,6 +19,7 @@ import com.keymanager.ckadmin.entity.QZChargeRule;
 import com.keymanager.ckadmin.entity.QZKeywordRankInfo;
 import com.keymanager.ckadmin.entity.QZOperationType;
 import com.keymanager.ckadmin.entity.QZSetting;
+import com.keymanager.ckadmin.entity.QzChargeMon;
 import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.*;
@@ -106,6 +107,9 @@ public class QZSettingServiceImpl extends
 
     @Resource(name = "qzCaptureTitleLogService2")
     private QZCaptureTitleLogService qzCaptureTitleLogService;
+
+    @Resource(name = "qzChargeMonService2")
+    QzChargeMonService qzChargeMonService;
 
     @Override
     public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingCriteria) {
@@ -384,6 +388,17 @@ public class QZSettingServiceImpl extends
                 qzCategoryTag.setQzSettingUuid(qzSettingUuid);
                 qzCategoryTagService.insert(qzCategoryTag);
             }
+
+            //日志监控块
+            //判断整站状态是否为其他
+            if (qzSetting.getRenewalStatus() == 4) {
+                return qzSettingUuid;
+            }
+            QzChargeMon qzChargeMon = new QzChargeMon();
+            qzChargeMon.setOperationType(2);
+            qzChargeMon.setOperationObj(qzSetting.getUuid().toString());
+            qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
+            qzChargeMonService.insert(qzChargeMon);
         }
         return qzSettingUuid;
     }

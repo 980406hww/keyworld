@@ -20,6 +20,7 @@ import com.keymanager.ckadmin.vo.QZSettingCountVO;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -57,11 +58,11 @@ public class QZSettingController extends SpringMVCBaseController {
     @Resource(name = "qzCategoryTagService2")
     private QZCategoryTagService qzCategoryTagService;
 
-    @Resource(name = "qzChargeLogService2")
-    private QZChargeLogService qzChargeLogService;
-
     @Resource(name = "qzChargeRuleService2")
     private QZChargeRuleService qzChargeRuleService;
+
+    @Resource(name = "qzChargeMonService2")
+    private QzChargeMonService qzChargeMonService;
 
     /**
      * 获取网站分类标签
@@ -319,10 +320,11 @@ public class QZSettingController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/qzsetting/delete")
     @PostMapping(value = "/delete2/{uuid}")
-    @QzStatusMon(type = 3)
     public ResultBean deleteQZSetting(@PathVariable("uuid") Long uuid) {
         ResultBean resultBean = new ResultBean();
         try {
+            // 日志监控
+            saveQzChargeMon(uuid, 3);
             qzSettingService.deleteOne(uuid);
             resultBean.setCode(200);
             resultBean.setMsg("删除站点成功");
@@ -343,8 +345,9 @@ public class QZSettingController extends SpringMVCBaseController {
     public ResultBean deleteQZSettings(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
         try {
-
             List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
+            // 日志监控
+            updQzStatusMonLows(uuids);
             qzSettingService.deleteAll(uuids);
             resultBean.setCode(200);
             resultBean.setMsg("删除站点成功");
@@ -391,7 +394,6 @@ public class QZSettingController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/saveQZSetting")
-    @QzStatusMon(type = 1)
     public ResultBean saveQZSetting(@RequestBody QZSetting qzSetting, HttpSession session) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
@@ -606,5 +608,47 @@ public class QZSettingController extends SpringMVCBaseController {
             resultBean.setCode(400);
         }
         return resultBean;
+    }
+
+    private void saveQzChargeMon(Long uuid, Integer operationType) {
+        QZSetting qzSetting = qzSettingService.selectById(uuid);
+        if (qzSetting.getRenewalStatus() == 4) {
+            return;
+        }
+        QzChargeMon qzChargeMon = new QzChargeMon();
+        qzChargeMon.setOperationType(operationType);
+        qzChargeMon.setOperationObj(uuid.toString());
+        qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
+        qzChargeMonService.insert(qzChargeMon);
+    }
+
+    private void updQzStatusMonLows(List<Integer> uuids) {
+        if (null == uuids || uuids.isEmpty()) {
+            return;
+        }
+        List<QZSetting> qzSettings = qzSettingService.selectByUuids(uuids);
+        StringBuilder objStr = new StringBuilder();
+        Set<String> ses = new HashSet<>();
+        for (QZSetting qzSetting : qzSettings) {
+            if (qzSetting.getRenewalStatus() == 4) {
+                continue;
+            }
+            objStr.append(qzSetting.getUuid());
+            objStr.append(",");
+            ses.add(qzSetting.getSearchEngine());
+        }
+        if (ses.isEmpty()) {
+            return;
+        }
+        StringBuilder amountStr = new StringBuilder();
+        for (String se : ses) {
+            amountStr.append(se);
+            amountStr.append(",");
+        }
+        QzChargeMon qzChargeMon = new QzChargeMon();
+        qzChargeMon.setOperationType(3);
+        qzChargeMon.setOperationObj(objStr.substring(0, objStr.length() - 1));
+        qzChargeMon.setSearchEngine(amountStr.substring(0, amountStr.length() - 1));
+        qzChargeMonService.insert(qzChargeMon);
     }
 }
