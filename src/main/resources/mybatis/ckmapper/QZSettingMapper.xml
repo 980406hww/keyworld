@@ -367,4 +367,14 @@
             #{item}
         </foreach>
     </update>
+
+
+    <select id="getQZUuidsByUserID" resultType="java.lang.Long">
+        SELECT fUuid FROM t_qz_setting WHERE fCustomerUuid IN(
+            SELECT fCustomerUuid FROM t_customer WHERE fUserID = #{userID})
+        <if test="searchEngine!=null and searchEngine!=''">
+            AND fSearchEngine = #{searchEngine}
+        </if>
+
+    </select>
 </mapper>

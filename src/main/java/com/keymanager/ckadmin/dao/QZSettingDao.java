@@ -55,5 +55,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     List<GroupVO> getAvailableOptimizationGroups(@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
     void updateCustomerUuidByQzUuids(@Param("customerUuid") Long customerUuid, @Param("qzUuids") List<Long> qzUuids);
+
+    List<Long> getQZUuidsByUserID(@Param("userID") String userID,@Param("searchEngine")String searchEngine);
 }
 

@@ -7,11 +7,12 @@
 		<!-- Triggers集成 -->
 		<property name="triggers">
 			<list>
-				<ref bean="cronTriggerCacheCustomerKeyword" />
-				<ref bean="cronTriggerCacheCrawlRankCustomerQZKeyword" />
-				<ref bean="cronTriggerCacheCrawlRankCustomerPTKeyword" />
-				<ref bean="cronTriggerCacheCheckingEnteredCustomerKeyword" />
-				<ref bean="cronTriggerUpdateOptimizedCount" />
+<!--				<ref bean="cronTriggerCacheCustomerKeyword" />-->
+<!--				<ref bean="cronTriggerCacheCrawlRankCustomerQZKeyword" />-->
+<!--				<ref bean="cronTriggerCacheCrawlRankCustomerPTKeyword" />-->
+<!--				<ref bean="cronTriggerCacheCheckingEnteredCustomerKeyword" />-->
+<!--				<ref bean="cronTriggerUpdateOptimizedCount" />-->
+				<ref bean="cronTriggerQZRateStatistics" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -80,6 +81,18 @@
 
 	<bean id="cronTriggerUpdateOptimizedCountSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="updateOptimizedCountSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--全站自动更新涨幅-->
+	<bean id="cronTriggerQZRateStatistics" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerQZRateStatisticsSchedule" />
+		<property name="cronExpression" value="0 0 0/2 * * ?" />
+	</bean>
+
+	<bean id="cronTriggerQZRateStatisticsSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="generateQZRateStatisticsSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

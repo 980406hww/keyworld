@@ -76,4 +76,6 @@ public interface QZSettingService extends IService<QZSetting> {
     List<GroupVO> getAvailableOptimizationGroups(GroupSettingCriteria groupSettingCriteria);
 
     void updateQZSettingFrom(Long customerUuid, List<Long> uuids);
+
+    List<Long> getQZUuidsByUserID(String userID, String searchEngine);
 }
