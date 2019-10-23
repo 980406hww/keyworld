@@ -171,8 +171,7 @@
                                         </button>
                                     </div>
                                     <div class="layui-inline">
-                                        <button style="background: #897c00;color: #ffffff" class="layui-btn"
-                                                type="reset">
+                                        <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">
                                             重置
                                         </button>
                                     </div>
@@ -209,7 +208,7 @@
         <@shiro.hasPermission name = "/internal/customerKeyword/searchCustomerKeywordLists" >
         window.searchCustomerKeywords = function (group) {
             let url = '/internal/customerKeyword/toKeywords';
-            let id = group + '-关键字-O-FRS';
+            let id = group + '-关键字';
             let data = {
                 group: group,
                 status: '1',
@@ -223,7 +222,7 @@
         <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
         window.findKeyword = function (optimizeGroupName, invalidRefreshCount) {
             let url = '/internal/customerKeyword/toKeywords';
-            let id = optimizeGroupName + '-关键字-N-FRS';
+            let id = optimizeGroupName + '-无效关键字';
             let data = {
                 status: '1',
                 type: document.getElementById('entryType').value,
