@@ -283,7 +283,7 @@
     var s_c = 0;
 
     function showCondition() {
-        var searchContent = document.getElementById('searchContent');
+        let searchContent = document.getElementById('searchContent');
         if (s_c++ % 2 === 0) {
             searchContent.style.display = 'block';
         } else {
@@ -291,17 +291,16 @@
         }
     }
 
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
-        var element = layui.element;
-        var table = layui.table;
-        var form = layui.form;
-        var $ = layui.jquery;
-        var laydate = layui.laydate;
-        var okLayer = layui.okLayer;
-        var layer = layui.layer;
+    layui.use(['table', 'form', 'jquery', 'okLayer', 'layer', "common"], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let $ = layui.jquery;
+        let okLayer = layui.okLayer;
+        let layer = layui.layer;
+        let common = layui.common;
 
-        init_Search()
-        init_SelectData()
+        init_Search();
+        init_SelectData();
 
         function init_SelectData(){
             $.ajax({
@@ -313,15 +312,15 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        var industryTypeMap = res.data.industryTypeMap
-                        var websiteTypeMap = res.data.websiteTypeMap
-                        var putSalesInfoSignMap = res.data.putSalesInfoSignMap
-                        var websiteSynchronousSignMap = res.data.websiteSynchronousSignMap
-                        var industry = $('#industryTypes');
-                        var websiteType = $('#websiteTypes');
-                        var updateSalesInfoSign = $('#updateSalesInfoSigns');
-                        var synchronousFriendlyLinkSigns = $('#synchronousFriendlyLinkSigns');
-                        var synchronousAdvertisingSigns = $('#synchronousAdvertisingSigns');
+                        let industryTypeMap = res.data.industryTypeMap;
+                        let websiteTypeMap = res.data.websiteTypeMap;
+                        let putSalesInfoSignMap = res.data.putSalesInfoSignMap;
+                        let websiteSynchronousSignMap = res.data.websiteSynchronousSignMap;
+                        let industry = $('#industryTypes');
+                        let websiteType = $('#websiteTypes');
+                        let updateSalesInfoSign = $('#updateSalesInfoSigns');
+                        let synchronousFriendlyLinkSigns = $('#synchronousFriendlyLinkSigns');
+                        let synchronousAdvertisingSigns = $('#synchronousAdvertisingSigns');
                         industry.append('<option value="" selected>请选择所属行业类型</option>');
                         websiteType.append('<option value="" selected>请选择销售网站类型</option>');
                         updateSalesInfoSign.append('<option value="" selected>请选择销售更新状态</option>');
@@ -342,11 +341,11 @@
                         });
                         form.render("select")
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg)
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！')
                 }
             });
         }
@@ -413,9 +412,8 @@
 
         var active = {
             reload: function () {
-                var data = {}
                 table.reload('websiteListTable', {
-                    where: data,
+                    where: {},
                     page: {
                         curr: 1
                     }
@@ -424,9 +422,9 @@
         };
 
         form.on("submit(search)", function (data) {
-            var postData = data.field
-            if(postData.friendlyLinkUrl != ""){
-                if(postData.friendlyLinkUrl.indexOf('http://') == -1){
+            let postData = data.field
+            if(postData.friendlyLinkUrl !== ""){
+                if(postData.friendlyLinkUrl.indexOf('http://') === -1){
                     postData.friendlyLinkUrl = 'http://' + postData.friendlyLinkUrl
                 }
             }
@@ -436,7 +434,7 @@
         });
 
         table.on('tool(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            let data = obj.data,event = obj.event;
             switch (event) {
                 case 'delWebsite':
                     delWebsite(data.uuid);
@@ -450,11 +448,13 @@
                 case 'toAdvertising':
                     toAdvertising(data.uuid);
                     break;
+                default:
+                    break;
             }
         });
 
         table.on('toolbar(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            let data = obj.data,event = obj.event;
             switch (event) {
                 case 'toAddWebsite':
                     toAddWebsite();
@@ -477,6 +477,8 @@
                 case 'uploadIndustryInfo':
                     uploadIndustryInfo('SuperIndustrySimple');
                     break;
+                default:
+                    break;
             }
         });
 
@@ -489,8 +491,8 @@
         }
 
         function updateOrNewTab(url, tit, id) {
-            var update = false;
-            var contentIframe = ("<iframe src='" + url + "' lay-id='" + id
+            let update = false;
+            let contentIframe = ("<iframe src='" + url + "' lay-id='" + id
                 + "'frameborder='0' scrolling='yes' width='100%' height='100%'></iframe>");
             parent.layui.$('.layui-tab-title li').each(function () {
                 if (id === this.getAttribute('lay-id')) {
@@ -548,20 +550,20 @@
                         },
                         success: function (res) {
                             if (res.code === 200) {
-                                var data = {}
-                                table.reload('websiteListTable', {
-                                    where: data,
-                                    page: {
-                                        curr: 1
-                                    }
+                                commonshowSuccessMsg("删除成功", function () {
+                                    table.reload('websiteListTable', {
+                                        where: {},
+                                        page: {
+                                            curr: 1
+                                        }
+                                    });
                                 });
-                                layer.msg("删除成功")
                             } else {
-                                layer.msg(res.msg)
+                                common.showFailMsg(res.msg)
                             }
                         },
                         error: function () {
-                            layer.msg('未知错误，请稍后重试！！')
+                            common.showFailMsg('未知错误，请稍后重试！！')
                         }
                     });
                 }, btn2: function (index) {
@@ -571,18 +573,18 @@
         }
 
         function deleteWebsites(){
-            var checkStatus = table.checkStatus('websiteListTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
+            let checkStatus = table.checkStatus('websiteListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的网站', {icon: 5});
-                return
+                common.showFailMsg('请选择要操作的网站');
+                return false;
             }
             layer.confirm("确定要删除所选网站吗", {icon: 3, title: '删除所选'}, function (index) {
-                var postData = {};
+                let postData = {};
                 postData.uuids = uuidArr;
                 $.ajax({
                     url: '/internal/websites/deleteWebsites',
@@ -595,22 +597,19 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);
-            });
+            })
         }
 
     });

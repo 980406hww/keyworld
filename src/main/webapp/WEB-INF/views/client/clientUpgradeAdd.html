@@ -66,9 +66,9 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
 
-    var uuid_ = null;
-    var layui_ = null;
-    var terminalType_ = null;
+    let uuid_ = null;
+    let layui_ = null;
+    let terminalType_ = null;
 
     function initForm(data) {
         uuid_ = data.uuid;
@@ -90,22 +90,21 @@
                 'Content-Type': 'application/json'
             },
             success: function (res) {
-                var data = res.data
-                data.status = data.status + ""
+                let data = res.data;
+                data.status = data.status + "";
                 if (res.code === 200) {
                     layui.form.val("addClientUpgrade", data);
                 } else {
-                    l.layer.msg(res.msg);
+                    l.layer.msg(res.msg, {icon:5, time: 3000});
                 }
             }
         });
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
-        var form = layui.form;
-        var okLayer = layui.okLayer;
-        var $ = layui.jquery;
-        var layer = layui.layer;
+    layui.use(["form", "common", "jquery", "layer"], function () {
+        let form = layui.form;
+        let common = layui.common;
+        let $ = layui.jquery;
 
         if (uuid_ != null) {
             setForm(layui, uuid_);
@@ -114,33 +113,32 @@
         }
 
         form.on("submit(commitClientUpgrade)", function (data) {
-            if(terminalType_ != null || terminalType_ != ''){
-                data.field.terminalType = terminalType_
+            if(terminalType_ != null || terminalType_ !== ''){
+                data.field.terminalType = terminalType_;
             }
-            var v1 = data.field.version
-            var v2 = data.field.targetVersion
-            var result = versionStringCompare(v1, v2)
-            if(result != -1){
-                layer.msg("目标版本不能低于当前版本！")
+            let v1 = data.field.version;
+            let v2 = data.field.targetVersion;
+            let result = versionStringCompare(v1, v2);
+            if(result !== -1){
+                common.showFailMsg("目标版本不能低于当前版本！");
                 return false
             }
-            var data = JSON.stringify(data.field)
             $.ajax({
                 url: '/internal/clientUpgrade/saveClientUpgrade2',
                 type: 'post',
-                data: data,
+                data: JSON.stringify(data.field),
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });
@@ -148,10 +146,10 @@
         });
 
         function versionStringCompare(preVersion, lastVersion){
-            var sources = preVersion.split('.');
-            var dests = lastVersion.split('.');
-            var maxL = Math.max(sources.length, dests.length);
-            var result = 0;
+            let sources = preVersion.split('.');
+            let dests = lastVersion.split('.');
+            let maxL = Math.max(sources.length, dests.length);
+            let result = 0;
             for (let i = 0; i < maxL; i++) {
                 let preValue = sources.length>i ? sources[i]:0;
                 let preNum = isNaN(Number(preValue)) ? preValue.charCodeAt() : Number(preValue);

@@ -149,25 +149,25 @@
         NProgress.done();
     };
 
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 'common'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
-        var laydate = layui.laydate;
         var okLayer = layui.okLayer;
         var layer = layui.layer;
+        var common = layui.common;
 
-        init_Search({'terminalType': 'PC'})
-        init_SelectData()
+        init_Search({'terminalType': 'PC'});
+        init_SelectData();
 
         function init_SelectData(){
             var postData = {}
-            var terminalType = $("#terminalType").val()
-            if(terminalType == '' || terminalType == null){
+            var terminalType = $("#terminalType").val();
+            if(terminalType === '' || terminalType == null){
                 terminalType = 'PC'
             }
-            postData.terminalType = terminalType
+            postData.terminalType = terminalType;
             $.ajax({
                 url: '/internal/industryList/returnSelectData',
                 type: 'POST',
@@ -178,9 +178,9 @@
                 data: JSON.stringify(postData),
                 success: function (res) {
                     if (res.code === 200) {
-                        var searchEngineList = res.data.searchEngineMap
-                        var activeUsersList = res.data.activeUsers
-                        var user = res.data.user
+                        var searchEngineList = res.data.searchEngineMap;
+                        var activeUsersList = res.data.activeUsers;
+                        var user = res.data.user;
                         var searchEngine = $('#engine');
                         var activeUsers = $('#activeUsers');
                         searchEngine.empty();
@@ -198,11 +198,11 @@
                         });
                         form.render("select")
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg);
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！');
                 }
             });
         }
@@ -217,7 +217,7 @@
                 autoSort: false,
                 size: 'sm',
                 id: 'industryListTable',
-                even: true,//隔行背景
+                even: true,
                 toolbar: "#toolbarTpl",
                 defaultToolbar: [],
                 contentType: 'application/json',
@@ -225,9 +225,9 @@
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', fixed: "left", width: '5%', align: 'center'},
                     {field: 'userID', title: '用户名称', width: '10%', align: 'center'},
-                    {field: 'industryName', title: '行业名称', width: '13%', align: 'center', templet: '#industryNames'},
+                    {field: 'industryName', title: '行业名称', width: '13%', align: 'left', templet: '#industryNames'},
                     {field: 'searchEngine', title: '搜索引擎', width: '10%', align: 'center'},
-                    {field: 'targetUrl', title: '目标起始网址', width: '17%', align: 'center', templet: '#url'},
+                    {field: 'targetUrl', title: '目标起始网址', width: '17%', align: 'left', templet: '#url'},
                     {field: 'pageNum', title: '爬取页数', width: '7%', align: 'center'},
                     {field: 'pagePerNum', title: '每页条数', width: '7%', align: 'center'},
                     {field: 'status', title: '状态', width: '10%', align: 'center', templet: '#toStatus'},
@@ -235,25 +235,24 @@
                     {title: '操作', width: '11%', align: 'center', templet: '#operationTpl', fixed: "right"},
                 ]],
                 height: 'full-150',
-
                 done: function (res, curr, count) {
                 }
             });
         }
 
         element.on('tab(keywordTab)', function (data) {
-            var d = data.elem.context.dataset
+            var d = data.elem.context.dataset;
             $('#terminalType').val(d.terminal);
             active['reload'].call(this);
         });
 
         var active = {
             reload: function () {
-                var terminalType = $("#terminalType").val()
-                if(terminalType == '' || terminalType == null){
+                var terminalType = $("#terminalType").val();
+                if(terminalType === '' || terminalType == null){
                     terminalType = 'PC'
                 }
-                var data = {'terminalType': terminalType}
+                var data = {'terminalType': terminalType};
                 table.reload('industryListTable', {
                     where: data,
                     page: {
@@ -264,13 +263,13 @@
         };
 
         form.on("submit(search)", function (data) {
-            var postData = data.field
-            var terminalType = $("#terminalType").val()
-            if(terminalType == '' || terminalType == null){
+            var postData = data.field;
+            var terminalType = $("#terminalType").val();
+            if(terminalType === '' || terminalType == null){
                 terminalType = 'PC'
             }
-            postData.terminalType = terminalType
-            init_Search(postData)
+            postData.terminalType = terminalType;
+            init_Search(postData);
             return false
         });
 
@@ -285,6 +284,8 @@
                     break;
                 case 'searchIndustryDetail':
                     searchIndustryDetail(data.uuid,data.industryName);
+                    break;
+                default:
                     break;
             }
         });
@@ -312,6 +313,8 @@
                     break;
                 case 'uploadIndustryInfo':
                     uploadIndustryInfo('SuperIndustrySimple');
+                    break;
+                default:
                     break;
             }
         });
@@ -342,8 +345,8 @@
         }
 
         function uploadIndustryInfo(excelType){
-            var terminalType = $("#terminalType").val()
-            if(terminalType == '' || terminalType == null){
+            var terminalType = $("#terminalType").val();
+            if(terminalType === '' || terminalType == null){
                 terminalType = 'PC'
             }
             okLayer.open("首页 / 行业列表 / 上传Excel", "/internal/industryList/toUploadIndustryInfo", "25%", "20%", function(layero){
@@ -361,7 +364,7 @@
             var checkStatus = table.checkStatus('industryListTable');
             var data = checkStatus.data;
             var uuidArr = [];
-            var count = 0
+            var count = 0;
             $.each(data, function (index, item) {
                 if(item.detailCount > 0){
                     count = count + 1
@@ -370,12 +373,12 @@
             });
 
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要要导出网站联系信息的行业', {icon: 5});
+                common.showFailMsg('请选择要要导出网站联系信息的行业');
                 return
             }
 
             if(count <= 0){
-                layer.msg('所选行业暂无相关网站信息', {icon: 5});
+                common.showFailMsg('所选行业暂无相关网站信息');
                 return
             }
 
@@ -398,7 +401,7 @@
                 }
             });
             if (uuidArr.length <= 0) {
-                layer.msg(data.length > 0 ? '请选择可操作的行业喔' : '请选择要操作的行业', {icon: 5});
+                common.showFailMsg(data.length > 0 ? '请选择可操作的行业' : '请选择要操作的行业');
                 return
             }
             var postData = {};
@@ -413,14 +416,15 @@
                 data: JSON.stringify(postData),
                 success: function (res) {
                     if (res.code === 200) {
-                        active['reload'].call(this);
-                        layer.msg("操作成功")
+                        common.showSuccessMsg("操作成功", function () {
+                            active['reload'].call(this);
+                        });
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg);
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！');
                 }
             });
         }
@@ -433,7 +437,7 @@
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的行业', {icon: 5});
+                common.showFailMsg('请选择要操作的行业');
                 return
             }
             var postData = {};
@@ -461,8 +465,8 @@
         }
 
         function toAddIndustry() {
-            var terminalType = $("#terminalType").val()
-            if(terminalType == '' || terminalType == null){
+            var terminalType = $("#terminalType").val();
+            if(terminalType === '' || terminalType == null){
                 terminalType = 'PC'
             }
             okLayer.open("首页 / 行业列表 / 添加行业", "/internal/industryList/toSaveIndustryInfo", "35%", "60%", function(layero){
@@ -490,20 +494,20 @@
                         },
                         success: function (res) {
                             if (res.code === 200) {
-                                var data = {}
+                                var data = {};
                                 table.reload('industryListTable', {
                                     where: data,
                                     page: {
                                         curr: 1
                                     }
                                 });
-                                layer.msg("删除成功")
+                                common.showSuccessMsg("删除成功");
                             } else {
-                                layer.msg(res.msg)
+                                common.showFailMsg(res.msg)
                             }
                         },
                         error: function () {
-                            layer.msg('未知错误，请稍后重试！！')
+                            common.showFailMsg('未知错误，请稍后重试！！')
                         }
                     });
                 }, btn2: function (index) {
@@ -520,7 +524,7 @@
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的行业', {icon: 5});
+                common.showFailMsg('请选择要操作的行业');
                 return
             }
             layer.confirm("确定要删除所选行业吗", {icon: 3, title: '删除所选'}, function (index) {
@@ -537,18 +541,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);

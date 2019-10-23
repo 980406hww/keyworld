@@ -74,11 +74,10 @@
         }
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer", "common"], function () {
-        var form = layui.form;
-        var okLayer = layui.okLayer;
-        var $ = layui.jquery;
-        var common = layui.common;
+    layui.use(["form", "jquery", "layer", "common"], function () {
+        let form = layui.form;
+        let $ = layui.jquery;
+        let common = layui.common;
 
         if (data_ != null) {
             get_data(layui, data_);
@@ -89,7 +88,7 @@
         form.on("submit(commit)", function (data) {
             data.filed = common.jsonObjectTrim(data.filed);
             if (!qzUuids_) {
-                okLayer.msg.greenTick("修改成功", function () {
+                common.showSuccessMsg("修改成功", function () {
                     parent.layer.close(parent.layer.getFrameIndex(window.name));
                 });
                 return false;
@@ -102,7 +101,6 @@
                 uuids: qzUuids,
                 customerUuid: data.field.customerUuid
             };
-            console.log(p_d);
             $.ajax({
                 url: '/internal/qzsetting/updateQZSettingFrom',
                 type: 'post',
@@ -114,7 +112,7 @@
                 dataType: 'json',
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("修改成功", function () {
+                        common.showSuccessMsg("修改成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });

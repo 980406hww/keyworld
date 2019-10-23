@@ -11,8 +11,7 @@ function initForm(data) {
 }
 
 function setForm(l, u) {
-    var $ = l.jquery;
-    var form = l.form;
+    let $ = l.jquery;
     l.jquery.ajax({
         url: '/internal/customer/getCustomersMsgById/' + u,
         type: 'get',
@@ -26,15 +25,15 @@ function setForm(l, u) {
                 l.form.val("addCustomer", res.data);
 
             } else {
-                l.layer.msg(res.msg);
+                l.layer.msg(res.msg, {icon:5, time: 3000});
             }
         }
     });
 }
 
-layui.use(["form", "okLayer", "jquery", "layer"], function () {
+layui.use(["form", "common", "jquery", "layer"], function () {
     let form = layui.form;
-    let okLayer = layui.okLayer;
+    let common = layui.common;
     let $ = layui.jquery;
 
     if (uuid_ !== null) {
@@ -44,23 +43,21 @@ layui.use(["form", "okLayer", "jquery", "layer"], function () {
     }
 
     form.on("submit(commitCustomer)", function (data) {
-        // var postData = data.field;
-        var customerBusinessStr = "";
-        var customerBusinessList= [];
+        let customerBusinessStr = "";
+        let customerBusinessList= [];
         if (data.field['customerBusinessList[keyword]']){
-            customerBusinessList.push(data.field['customerBusinessList[keyword]'])
-            delete data.field['customerBusinessList[keyword]']
+            customerBusinessList.push(data.field['customerBusinessList[keyword]']);
+            delete data.field['customerBusinessList[keyword]'];
         }
 
         if (data.field['customerBusinessList[qzsetting]']){
-            customerBusinessList.push(data.field['customerBusinessList[qzsetting]'])
-            delete data.field['customerBusinessList[qzsetting]']
+            customerBusinessList.push(data.field['customerBusinessList[qzsetting]']);
+            delete data.field['customerBusinessList[qzsetting]'];
         }
 
         if (data.field['customerBusinessList[fm]']){
-            customerBusinessList.push(data.field['customerBusinessList[fm]'])
-            delete data.field['customerBusinessList[fm]']
-
+            customerBusinessList.push(data.field['customerBusinessList[fm]']);
+            delete data.field['customerBusinessList[fm]'];
         }
 
         data.field.customerBusinessList = customerBusinessList;
@@ -81,12 +78,12 @@ layui.use(["form", "okLayer", "jquery", "layer"], function () {
                     success: function (res) {
                         if (res.code === 200) {
                             layer.close(index);
-                            okLayer.msg.greenTick("保存成功", function () {
+                            common.showSuccessMsg("保存成功", function () {
                                 parent.window.sign = true;
                                 parent.layer.close(parent.layer.getFrameIndex(window.name));
                             });
                         } else {
-                            layui.layer.msg(res.msg);
+                            common.showFailMsg(res.msg);
                         }
                     }
                 });

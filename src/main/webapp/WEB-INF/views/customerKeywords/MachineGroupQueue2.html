@@ -33,13 +33,10 @@
         NProgress.done();
     };
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
-        var element = layui.element;
+    layui.use(['table', 'form', 'jquery', 'layer'], function () {
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
-        var laydate = layui.laydate;
-        var okLayer = layui.okLayer;
         var layer = layui.layer;
 
         var active = {
@@ -91,6 +88,8 @@
             switch (event) {
                 case 'searchMachineGroupAndSize':
                     searchMachineGroupAndSize();
+                    break;
+                default:
                     break;
             }
         });

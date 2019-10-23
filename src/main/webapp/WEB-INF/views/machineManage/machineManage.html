@@ -305,57 +305,55 @@
             searchContent.style.display = 'none';
         }
     }
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', "common"], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
-        var laydate = layui.laydate;
         var okLayer = layui.okLayer;
         var layer = layui.layer;
+        var common = layui.common;
 
         let ternimalType225 = $('#terminalType').val();
         element.tabChange('keywordTab', ternimalType225);
 
-        searchMachine(formToJsonObject('searchForm'))
-        // searchMachine({'terminalType': 'PC'})
+        searchMachine(common.formToJsonObject('searchForm'));
 
         form.on('select(terminalTypeFilter)', function (data) {
-            var val = data.value
-            var whereCondition = {'terminalType': val}
+            let val = data.value;
+            let whereCondition = {'terminalType': val};
             $('#terminalType').val(val);
             searchMachine(whereCondition)
         });
 
         form.on("submit(search)", function (data) {
-            if(data.field.gtMemory != ""){
+            if(data.field.gtMemory !== ""){
                 if(!/^[0-9]+$/.test(data.field.gtMemory)){
-                    layer.msg("内存必须为正整数！")
-                    $("#gtMemory").val('')
+                    common.showFailMsg("内存必须为正整数！");
+                    $("#gtMemory").val('');
                     return false
                 }
             }
-            if(data.field.ltMemory != ""){
+            if(data.field.ltMemory !== ""){
                 if(!/^[0-9]+$/.test(data.field.ltMemory)){
-                    layer.msg("内存必须为正整数！")
-                    $("#ltMemory").val('')
+                    common.showFailMsg("内存必须为正整数！");
+                    $("#ltMemory").val('');
                     return false
                 }
             }
-            var postData = data.field
-            var terminalType = $("#terminalType").val()
-            if(terminalType == '' || terminalType == null){
-                terminalType = 'PC'
+            let postData = data.field;
+            let terminalType = $("#terminalType").val();
+            if(terminalType === '' || terminalType == null){
                 postData.terminalType = 'PC'
             }
-            if(data.field.hasOrNoMachineGroup != ""){
-                if(data.field.hasOrNoMachineGroup == "hasMachineGroup"){
+            if(data.field.hasOrNoMachineGroup !== ""){
+                if(data.field.hasOrNoMachineGroup === "hasMachineGroup"){
                     postData.hasMachineGroup = "hasMachineGroup"
                 }else{
                     postData.noMachineGroup = "noMachineGroup"
                 }
             }
-            searchMachine(postData)
+            searchMachine(postData);
             return false
         });
 
@@ -402,15 +400,15 @@
         }
 
         element.on('tab(keywordTab)', function (data) {
-            var d = data.elem.context.dataset
+            let d = data.elem.context.dataset;
             $('#terminalType').val(d.terminal);
             active['reload'].call(this);
         });
 
         function handleStyle() {
-            var cell = document.getElementsByClassName('layui-table-cell');
-            var l = cell.length;
-            for (var i = 0; i < l; i++) {
+            let cell = document.getElementsByClassName('layui-table-cell');
+            let l = cell.length;
+            for (let i = 0; i < l; i++) {
                 if (cell[i].innerHTML.indexOf('<br>') === -1) {
                     cell[i].classList.add('my-height');
                 }
@@ -419,11 +417,11 @@
 
         var active = {
             reload: function () {
-                var terminalType = $("#terminalType").val()
-                if(terminalType == '' || terminalType == null){
+                let terminalType = $("#terminalType").val();
+                if(terminalType === '' || terminalType == null){
                     terminalType = 'PC'
                 }
-                var data = {'terminalType': terminalType}
+                let data = {'terminalType': terminalType};
                 table.reload('machineManageTable', {
                     where: data,
                     page: {
@@ -434,17 +432,13 @@
         };
 
         table.on('toolbar(tableFilter)',function (obj) {
-            var data = obj.data;
-            var event = obj.event;
+            let data = obj.data, event = obj.event;
             switch (event) {
-                case 'showSearch':
-                    showSearch();
-                    break;
                 case 'batchDeleteMachines':
                     batchDeleteMachines();
                     break;
                 case 'showReopenClientDialog':
-                    showReopenClientDialog(data);
+                    showReopenClientDialog();
                     break;
                 case 'finishStartUp':
                     finishStartUp();
@@ -482,21 +476,23 @@
                 case 'BatchChangeStatus(\'false\')':
                     BatchChangeStatus(false);
                     break;
+                default:
+                    break;
             }
         });
 
         function BatchChangeStatus(flag){
-            var checkStatus = table.checkStatus('machineManageTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
+            let checkStatus = table.checkStatus('machineManageTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.clientID);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要开始监控的机器', {icon: 5});
-                return
+                common.showFailMsg('请选择要开始监控的机器');
+                return false;
             }
-            var postData = {};
+            let postData = {};
             postData.clientIDs = uuidArr;
             postData.valid = flag;
             $.ajax({
@@ -510,29 +506,28 @@
                 timeout: 5000,
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             active['reload'].call(this);
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });
-            return false;
         }
 
         function toBatchChangeTerminalType() {
-            var checkStatus = table.checkStatus('machineManageTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
+            let checkStatus = table.checkStatus('machineManageTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.clientID);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要修改终端类型的机器', {icon: 5});
-                return
+                common.showFailMsg('请选择要修改终端类型的机器');
+                return false;
             }
-            var postData = {};
+            let postData = {};
             postData.clientIDs = uuidArr;
             okLayer.open("首页 / 终端列表 / 修改终端分组信息", "/internal/machineManage/toBatchChangeTerminalType", "35%", "18%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initData(postData);
@@ -541,24 +536,46 @@
                     active['reload'].call(this);
                     sign = false;
                 }
-            }, '180px')
-            return false;
+            }, '180px');
         }
 
         function batchUpdateMachine() {
-            var checkStatus = table.checkStatus('machineManageTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
+            let checkStatus = table.checkStatus('machineManageTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.clientID);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要修改换组状态的机器', {icon: 5});
-                return
+                common.showFailMsg('请选择要修改换组状态的机器');
+                return false;
             }
-            var postData = {};
+            let postData = {};
             postData.clientIDs = uuidArr;
             okLayer.open("首页 / 终端列表 / 修改终端分组信息", "/internal/machineManage/toBatchUpdateMachine", "30%", "30%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, '180px');
+        }
+
+        function toAllowSwitchGroup(){
+            let checkStatus = table.checkStatus('machineManageTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.clientID);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要修改换组状态的机器');
+                return
+            }
+            let postData = {};
+            postData.clientIDs = uuidArr;
+            okLayer.open("首页 / 终端列表 / 修改终端是否可换组", "/internal/machineManage/toAllowSwitchGroup", "30%", "18%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initData(postData);
             },function(){
                 if(sign){
@@ -569,42 +586,18 @@
             return false;
         }
 
-        function toAllowSwitchGroup(){
-            var checkStatus = table.checkStatus('machineManageTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
-            $.each(data, function (index, item) {
-                uuidArr.push(item.clientID);
-            });
-            if (uuidArr.length <= 0) {
-                layer.msg('请选择要修改换组状态的机器', {icon: 5});
-                return
-            }
-            var postData = {};
-            postData.clientIDs = uuidArr;
-            okLayer.open("首页 / 终端列表 / 修改终端是否可换组", "/internal/machineManage/toAllowSwitchGroup", "30%", "18%", function (layero) {
-                window[layero.find("iframe")[0]["name"]].initData(postData);
-            },function(){
-                if(sign){
-                    active['reload'].call(this);
-                    sign = false;
-                }
-            }, '180px')
-            return false;
-        }
-
         function toSwitchGroup(){
-            var checkStatus = table.checkStatus('machineManageTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
+            let checkStatus = table.checkStatus('machineManageTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.clientID);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要修改流转分组的机器', {icon: 5});
+                common.showFailMsg('请选择要修改流转分组的机器');
                 return
             }
-            var postData = {};
+            let postData = {};
             postData.clientIDs = uuidArr;
             okLayer.open("首页 / 终端列表 / 修改终端流转分组", "/internal/machineManage/toSwitchGroup", "30%", "18%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initData(postData);
@@ -613,22 +606,22 @@
                     active['reload'].call(this);
                     sign = false;
                 }
-            }, '180px')
+            }, '180px');
             return false;
         }
 
         function toBatchUpdateFailedReason(){
-            var checkStatus = table.checkStatus('machineManageTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
+            let checkStatus = table.checkStatus('machineManageTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.clientID);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要修改失败原因的机器', {icon: 5});
+                common.showFailMsg('请选择要修改失败原因的机器');
                 return
             }
-            var postData = {};
+            let postData = {};
             postData.clientIDs = uuidArr;
             okLayer.open("首页 / 终端列表 / 修改失败原因", "/internal/machineManage/toBatchUpdateFailedReason", "30%", "18%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initData(postData);
@@ -637,27 +630,27 @@
                     active['reload'].call(this);
                     sign = false;
                 }
-            }, '180px')
+            }, '180px');
             return false;
         }
 
         function batchUpdateMachineGroup(changeType){
-            var postData = {};
-            if(changeType == 'selected'){
-                var checkStatus = table.checkStatus('machineManageTable');
-                var data = checkStatus.data;
-                var uuidArr = [];
+            let postData = {};
+            if(changeType === 'selected'){
+                let checkStatus = table.checkStatus('machineManageTable');
+                let data = checkStatus.data;
+                let uuidArr = [];
                 $.each(data, function (index, item) {
                     uuidArr.push(item.clientID);
                 });
                 if (uuidArr.length <= 0) {
-                    layer.msg('请选择要修改机器分组的终端', {icon: 5});
-                    return
+                    common.showFailMsg('请选择要修改机器分组的终端');
+                    return false;
                 }
                 postData.clientIDs = uuidArr;
             }else{
-                var whereCondition = {}
-                var obj = $("#searchForm").serializeArray()
+                let whereCondition = {};
+                let obj = $("#searchForm").serializeArray();
                 $.each(obj, function() {
                     if (whereCondition[this.name]) {
                         if (!whereCondition[this.name].push) {
@@ -680,12 +673,12 @@
         }
 
         function showUploadVPSDialog(machineInfoType) {
-            var height = "22%"
-            if(machineInfoType == 'common'){
+            let height = "22%";
+            if(machineInfoType === 'common'){
                 height = "18%"
             }
-            var terminalType = $("#terminalType").val()
-            if(terminalType == '' || terminalType == null){
+            let terminalType = $("#terminalType").val();
+            if(terminalType === '' || terminalType == null){
                 terminalType = 'PC'
             }
             okLayer.open("首页 / 终端列表 / 上传VPS", "/internal/machineManage/toUploadVPSFile", "35%", height, function (layero) {
@@ -699,17 +692,17 @@
         }
 
         function finishStartUp() {
-            var checkStatus = table.checkStatus('machineManageTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
+            let checkStatus = table.checkStatus('machineManageTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.clientID);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要重开的机器', {icon: 5});
+                common.showFailMsg('请选择要重开的机器');
                 return
             }
-            var postData = {};
+            let postData = {};
             postData.clientIDs = uuidArr;
             $.ajax({
                 url: '/internal/machineManage/updateStartUpStatusForCompleted',
@@ -722,29 +715,29 @@
                 timeout: 5000,
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             active['reload'].call(this);
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });
             return false;
         }
 
-        function showReopenClientDialog(data){
-            var checkStatus = table.checkStatus('machineManageTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
+        function showReopenClientDialog(){
+            let checkStatus = table.checkStatus('machineManageTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.clientID);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要重开的机器', {icon: 5});
+                common.showFailMsg('请选择要重开的机器');
                 return
             }
-            var postData = {};
+            let postData = {};
             postData.clientIDs = uuidArr;
 
             okLayer.open("首页 / 终端列表 / 重开机器", "/internal/machineManage/toReopenClient", "35%", "18%", function (layero) {
@@ -758,8 +751,8 @@
         }
 
         table.on('tool(tableFilter)',function (obj) {
-            var data = obj.data;
-            var event = obj.event;
+            let data = obj.data;
+            let event = obj.event;
             switch (event) {
                 case 'deleteMachine':
                     deleteMachine(data.clientID);
@@ -779,22 +772,24 @@
                 case 'connectVNC':
                     connectVNC(data.host, data.port, data.userName, data.password);
                     break;
+                default:
+                    break;
             }
         });
 
         function connectVNC(host, port, vncUser, vncPwd){
             try {
-                var fso = new ActiveXObject("Scripting.FileSystemObject");
+                let fso = new ActiveXObject("Scripting.FileSystemObject");
                 if (!fso.FolderExists("C:\\vnc")) {
                     fso.CreateFolder ("C:\\vnc");
                 }
 
-                var fileName = "C:\\vnc\\temp_openVNC_file.vnc";
+                let fileName = "C:\\vnc\\temp_openVNC_file.vnc";
                 if (fso.FileExists(fileName)) {
-                    var f1 = fso.GetFile(fileName);
+                    let f1 = fso.GetFile(fileName);
                     f1.Delete();
                 }
-                var tf = fso.CreateTextFile(fileName, true, false);
+                let tf = fso.CreateTextFile(fileName, true, false);
                 tf.WriteLine("[Connection]");
                 tf.WriteLine("Host=" + host);
                 tf.WriteLine("Port=" + port);
@@ -820,20 +815,20 @@
                 tf.close();
                 tf = null;
                 // 运行
-                var obj = new ActiveXObject("wscript.shell");
+                let obj = new ActiveXObject("wscript.shell");
                 obj.run(fileName);
                 obj = null;
             } catch (e) {
                 if (e.name === "ReferenceError") {
-                    layer.msg('请更换到带IE内核的浏览器！', {icon: 5});
+                    common.showFailMsg('请更换到带IE内核的浏览器！');
                 } else {
-                    layer.msg('未找到对应的.vnc文件或其他的错误', {icon: 5});
+                    common.showFailMsg('未找到对应的.vnc文件或其他的错误');
                 }
             }
         }
 
         function changeTerminalType(clientID, terminalType) {
-            var postData = {};
+            let postData = {};
             postData.clientID = clientID;
             postData.terminalType = terminalType;
             $.ajax({
@@ -846,14 +841,15 @@
                 data: JSON.stringify(postData),
                 success: function (res) {
                     if (res.code === 200) {
-                        active['reload'].call(this);
-                        layer.msg("操作成功")
+                        common.showSuccessMsg("操作成功", function () {
+                            active['reload'].call(this);
+                        });
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg)
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！')
                 }
             });
         }
@@ -868,14 +864,15 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        active['reload'].call(this);
-                        layer.msg("操作成功")
+                        common.showSuccessMsg("操作成功", function () {
+                            active['reload'].call(this);
+                        });
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg)
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！')
                 }
             });
         }
@@ -906,14 +903,16 @@
                         },
                         success: function (res) {
                             if (res.code === 200) {
-                                active['reload'].call(this);
-                                layer.msg("删除成功")
+                                layer.close(index_);
+                                common.showSuccessMsg("删除成功", function () {
+                                    active['reload'].call(this);
+                                });
                             } else {
-                                layer.msg(res.msg)
+                                common.showFailMsg(res.msg)
                             }
                         },
                         error: function () {
-                            layer.msg('未知错误，请稍后重试！！')
+                            common.showFailMsg('未知错误，请稍后重试！！')
                         }
                     });
                 }, btn2: function (index) {
@@ -923,18 +922,18 @@
         }
 
         function batchDeleteMachines() {
-            var checkStatus = table.checkStatus('machineManageTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
+            let checkStatus = table.checkStatus('machineManageTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.clientID);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要删除的机器', {icon: 5});
-                return
+                common.showFailMsg('请选择要删除的机器');
+                return false;
             }
             layer.confirm("确定要删除所选机器吗", {icon: 3, title: '删除所选'}, function (index) {
-                var postData = {};
+                let postData = {};
                 postData.clientIDs = uuidArr;
                 $.ajax({
                     url: '/internal/machineManage/deleteMachineInfos',
@@ -947,33 +946,20 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
+                            common.showSuccessMsg("操作成功", function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);
             });
         }
-
-        function formToJsonObject (form_id) {
-            var formData = decodeURIComponent($("#" + form_id).serialize(), true);
-            formData = formData.replace(/&/g, "\",\"");
-            formData = formData.replace(/=/g, "\":\"");
-            formData = "{\"" + formData + "\"}";
-            formData = $.parseJSON(formData);
-            return formData;
-        }
-
     });
 </script>
 

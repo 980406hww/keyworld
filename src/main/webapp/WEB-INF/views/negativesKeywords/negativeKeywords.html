@@ -199,14 +199,11 @@
     var sign = false;
 
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 'common'], function () {
-        var element = layui.element;
+    layui.use(['table', 'form', 'jquery', 'layer', 'common'], function () {
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
-        var laydate = layui.laydate;
         var layer = layui.layer;
-        var okLayer = layui.okLayer;
         var common = layui.common;
 
         init();
@@ -396,8 +393,10 @@
                         success: function (res) {
                             console.log(res);
                             if (res.code === 200) {
-                                common.showSuccessMsg('上传成功',active['reload'].call(this));
                                 layer.close(index);
+                                common.showSuccessMsg('上传成功', function () {
+                                    active['reload'].call(this);
+                                });
                             } else {
                                 common.showFailMsg('上传失败');
                             }

@@ -113,20 +113,19 @@
         NProgress.done();
     };
 
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
-        var element = layui.element;
-        var table = layui.table;
-        var form = layui.form;
-        var $ = layui.jquery;
-        var laydate = layui.laydate;
-        var okLayer = layui.okLayer;
-        var layer = layui.layer;
+    layui.use(['table', 'form', 'jquery', 'okLayer', 'layer', "common"], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let $ = layui.jquery;
+        let okLayer = layui.okLayer;
+        let layer = layui.layer;
+        let common = layui.common;
 
-        var websiteUuid = $("#websiteUuid").val()
+        let websiteUuid = $("#websiteUuid").val();
 
-        var active = {
+        let active = {
             reload: function () {
-                var data = {'websiteUuid': websiteUuid}
+                let data = {'websiteUuid': websiteUuid};
                 table.reload('advertisingListTable', {
                     where: data,
                     page: {
@@ -136,12 +135,12 @@
             },
         };
 
-        searchAdvertisingList({'websiteUuid': websiteUuid})
+        searchAdvertisingList({'websiteUuid': websiteUuid});
 
         form.on("submit(search)", function (data) {
-            var postData = data.field
-            postData.websiteUuid = websiteUuid
-            searchAdvertisingList(postData)
+            let postData = data.field;
+            postData.websiteUuid = websiteUuid;
+            searchAdvertisingList(postData);
             return false
         });
 
@@ -238,14 +237,15 @@
                         },
                         success: function (res) {
                             if (res.code === 200) {
-                                active['reload'].call(this);
-                                layer.msg("删除成功")
+                                common.showSuccessMsg("删除成功", function () {
+                                    active['reload'].call(this);
+                                });
                             } else {
-                                layer.msg(res.msg)
+                                common.showFailMsg(res.msg);
                             }
                         },
                         error: function () {
-                            layer.msg('未知错误，请稍后重试！！')
+                            common.showFailMsg('未知错误，请稍后重试！！');
                         }
                     });
                 },
@@ -256,18 +256,18 @@
         }
 
         function deleteBatchAdvertising(){
-            var checkStatus = table.checkStatus('advertisingListTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
+            let checkStatus = table.checkStatus('advertisingListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的广告', {icon: 5});
+                common.showFailMsg('请选择要操作的广告');
                 return
             }
             layer.confirm("确定要删除所选广告信息吗", {icon: 3, title: '删除所选'}, function (index) {
-                var postData = {};
+                let postData = {};
                 postData.uuids = uuidArr;
                 postData.websiteUuid = websiteUuid;
                 $.ajax({
@@ -281,18 +281,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);
@@ -300,18 +297,18 @@
         }
 
         function pushAdvertising(){
-            var checkStatus = table.checkStatus('advertisingListTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
+            let checkStatus = table.checkStatus('advertisingListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的广告', {icon: 5});
-                return
+                common.showFailMsg('请选择要操作的广告');
+                return false;
             }
             layer.confirm("确定要推送这些链接到远程吗", {icon: 3, title: '推送'}, function (index) {
-                var postData = {};
+                let postData = {};
                 postData.uuids = uuidArr;
                 $.ajax({
                     url: '/internal/advertisingList/pushAdvertising',
@@ -324,18 +321,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);
@@ -343,7 +337,7 @@
         }
 
         table.on('toolbar(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            let data = obj.data,event = obj.event;
             switch (event) {
                 case 'showAdvertisingDialog':
                     showAdvertisingDialog();
@@ -354,11 +348,13 @@
                 case 'pushAdvertising':
                     pushAdvertising();
                     break;
+                default:
+                    break;
             }
         });
 
         table.on('tool(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            let data = obj.data,event = obj.event;
             switch (event) {
                 case 'updateAdvertising':
                     updateAdvertising(data);
@@ -366,9 +362,10 @@
                 case 'deleteAdvertising':
                     deleteAdvertising(data.uuid);
                     break;
+                default:
+                    break;
             }
         });
-
     });
 
 </script>

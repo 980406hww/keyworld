@@ -53,19 +53,18 @@
 <script>
 
     let layui_ = null;
-    var uuid_ = null;
-    var groupTable ;
-    var unselectUuidArr = [];
+    let uuid_ = null;
+    let groupTable ;
+    let unselectUuidArr = [];
     function initForm(data) {
         uuid_ = data.uuid;
     }
 
-    layui.use(["form", "okLayer","table", "jquery", "layer"], function () {
+    layui.use(["form", "table", "jquery", "layer", "common"], function () {
         let form = layui.form;
-        let okLayer = layui.okLayer;
         let $ = layui.jquery;
-        let layer = layui.layer;
         let table = layui.table;
+        let common = layui.common;
 
         groupTable = table.render({
             elem: '#groupTable',
@@ -88,20 +87,6 @@
             }
         });
 
-        function show_layer_msg(msg, icon, status, time, title) {
-            layer.msg(msg, {
-                icon: icon,
-                title: title === undefined ? null : title,
-                anim: 5,
-                time: time === undefined ? 2000 : time,
-                isOutAnim: false
-            }, function () {
-                if (status) {
-                    active['reload'].call(this);
-                }
-            });
-        }
-
         form.on("submit(search)", function (data) {
             unselectUuidArr = [];
             table.reload('groupTable', {
@@ -112,23 +97,23 @@
         });
 
         Array.prototype.indexOf = function(uuid) {
-            for (var i = 0; i < this.length; i++) if (this[i] == uuid) return i;
+            for (let i = 0; i < this.length; i++) if (this[i] === uuid) return i;
             return -1;
         };
 
         Array.prototype.remove = function(uuid) {
-            var index = this.indexOf(uuid);
+            let index = this.indexOf(uuid);
             if (index > -1) this.splice(index, 1);
         };
 
         $('#save').click(function () {
 
-            var checkStatus = table.checkStatus('groupTable')
+            let checkStatus = table.checkStatus('groupTable')
                 , data = checkStatus.data;
             $.each(data, function (index, item) {
                 unselectUuidArr.remove(item.groupUuid)
             });
-            var postData = {};
+            let postData = {};
             postData.groupUuids = unselectUuidArr;
             $.ajax({
                 url: '/internal/group/deleteGroupsBelowOperationCombine2',
@@ -141,19 +126,16 @@
                 type: 'POST',
                 success: function (result) {
                     if (result.code === 200) {
-                        layer.msg('操作成功', {
-                            icon: 6,
-                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                        }, function () {
+                        common.showSuccessMsg('操作成功', function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 },
                 error: function () {
-                    layer.msg('操作失败', {icon: 5});
+                    common.showFailMsg('操作失败');
 
                 }
             });

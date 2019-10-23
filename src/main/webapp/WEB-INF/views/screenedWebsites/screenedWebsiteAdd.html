@@ -95,7 +95,7 @@
                 if (res.code === 200) {
                     l.form.val("save", res.data);
                 } else {
-                    l.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
+                    l.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg, {icon: 5, time: 3000});
                 }
             }
         });
@@ -103,9 +103,8 @@
 
     layui.use(["form", "okLayer", "jquery", "layer"], function () {
         let form = layui.form;
-        let okLayer = layui.okLayer;
         let $ = layui.jquery;
-        let layer = layui.layer;
+        let common = layui.common;
 
         if (uuid_ != null) {
             setForm(layui, uuid_);
@@ -124,8 +123,8 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        var groupData = res.data;
-                        var group_list = $('#optimizeGroupName');
+                        let groupData = res.data;
+                        let group_list = $('#optimizeGroupName');
                         group_list.empty();
                         group_list.append('<option value="">请选择分组</option>');
                         $.each(groupData, function (index, item) {
@@ -133,33 +132,19 @@
                         });
                         form.render("select")
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg);
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg("未知错误，请稍后重试！！");
                 }
             });
         }
 
-        function show_layer_msg(msg, icon, title, status) {
-            layer.msg(msg, {
-                icon: icon,
-                title: title === undefined ? null : title,
-                anim: 5,
-                time: 2000,
-                isOutAnim: false
-            }, function () {
-
-            });
-        }
-
         form.on("submit(commit)", function (data) {
-
             if (checkGroupExist(data.field)){
                 $('#optimizeGroupName').addClass("layui-form-danger").focus();
-                show_layer_msg("该优化组已存在对应的屏蔽网站列表，请返回前往修改！", 5);
-
+                common.showFailMsg("该优化组已存在对应的屏蔽网站列表，请返回前往修改！");
                 return false;
             }
             $.ajax({
@@ -172,19 +157,16 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        if (res.data) {
-                            call(res.data);
-                        }
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layer.msg(res.msg, {icon: 5, time: 1000});
+                        common.showFailMsg(res.msg);
                     }
                 },
                 error: function () {
-                    layer.msg("保存失败");
+                    common.showFailMsg("保存失败");
                 }
             });
             return false;
@@ -210,7 +192,7 @@
                         }
                     },
                     error: function () {
-                        layer.msg("查询失败");
+                        common.showFailMsg("查询失败");
                         exit = true;
                     }
                 });

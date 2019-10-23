@@ -77,27 +77,25 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
 <script>
-    var sign = false;
+    let sign = false;
     // 进度条加载提示
     NProgress.start();
     window.onload = function () {
         NProgress.done();
     };
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
-        var element = layui.element;
-        var table = layui.table;
-        var form = layui.form;
-        var $ = layui.jquery;
-        var laydate = layui.laydate;
-        var okLayer = layui.okLayer;
-        var layer = layui.layer;
+    layui.use(['table', 'form', 'jquery', 'okLayer', 'layer', "common"], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let $ = layui.jquery;
+        let okLayer = layui.okLayer;
+        let layer = layui.layer;
+        let common = layui.common;
 
-        var active = {
+        let active = {
             reload: function () {
-                var data = {}
                 table.reload('warnListTable', {
-                    where: data,
+                    where: {},
                     page: {
                         curr: 1
                     }
@@ -105,11 +103,11 @@
             },
         };
 
-        searchWarnList()
+        searchWarnList();
 
         form.on("submit(search)", function (data) {
-            var postData = data.field
-            searchWarnList(postData)
+            let postData = data.field;
+            searchWarnList(postData);
             return false
         });
 
@@ -180,20 +178,20 @@
                         },
                         success: function (res) {
                             if (res.code === 200) {
-                                var data = {}
-                                table.reload('warnListTable', {
-                                    where: data,
-                                    page: {
-                                        curr: 1
-                                    }
+                                common.showSuccessMsg("删除成功", function() {
+                                    table.reload('warnListTable', {
+                                        where: {},
+                                        page: {
+                                            curr: 1
+                                        }
+                                    });
                                 });
-                                layer.msg("删除成功")
                             } else {
-                                layer.msg(res.msg)
+                                common.showFailMsg(res.msg)
                             }
                         },
                         error: function () {
-                            layer.msg('未知错误，请稍后重试！！')
+                            common.showFailMsg('未知错误，请稍后重试！！')
                         }
                     });
                 },
@@ -204,18 +202,18 @@
         }
 
         function deleteWarns(){
-            var checkStatus = table.checkStatus('warnListTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
+            let checkStatus = table.checkStatus('warnListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的清单', {icon: 5});
+                common.showFailMsg('请选择要操作的清单');
                 return
             }
             layer.confirm("确定要删除所选清单吗", {icon: 3, title: '删除所选'}, function (index) {
-                var postData = {};
+                let postData = {};
                 postData.uuids = uuidArr;
                 $.ajax({
                     url: '/internal/warnlists/deleteWarnLists',
@@ -228,18 +226,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);
@@ -247,7 +242,7 @@
         }
 
         table.on('toolbar(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            let data = obj.data,event = obj.event;
             switch (event) {
                 case 'showWarnListDialog':
                     showWarnListDialog();
@@ -255,17 +250,21 @@
                 case 'deleteWarns':
                     deleteWarns();
                     break;
+                default:
+                    break;
             }
         });
 
         table.on('tool(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            let data = obj.data,event = obj.event;
             switch (event) {
                 case 'modifyWarnList':
                     modifyWarnList(data);
                     break;
                 case 'deleteWarnList':
                     deleteWarnList(data.uuid);
+                    break;
+                default:
                     break;
             }
         });

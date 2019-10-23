@@ -128,20 +128,19 @@
         NProgress.done();
     };
 
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
-        var element = layui.element;
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 'common'], function () {
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
-        var laydate = layui.laydate;
         var okLayer = layui.okLayer;
         var layer = layui.layer;
+        var common = layui.common;
 
-        var websiteUuid = $("#websiteUuid").val()
+        var websiteUuid = $("#websiteUuid").val();
 
         var active = {
             reload: function () {
-                var data = {'websiteUuid': websiteUuid}
+                var data = {'websiteUuid': websiteUuid};
                 table.reload('friendlyLinksTable', {
                     where: data,
                     page: {
@@ -151,12 +150,12 @@
             },
         };
 
-        searchFriendlyLinkList({'websiteUuid': websiteUuid})
+        searchFriendlyLinkList({'websiteUuid': websiteUuid});
 
         form.on("submit(search)", function (data) {
-            var postData = data.field
-            postData.websiteUuid = websiteUuid
-            searchFriendlyLinkList(postData)
+            var postData = data.field;
+            postData.websiteUuid = websiteUuid;
+            searchFriendlyLinkList(postData);
             return false
         });
 
@@ -188,7 +187,7 @@
                     {field: 'friendlyLinkDtime', title: '申请时间', width: '7%', templet: '#friendlyLinkDtime', align: 'center'},
                     {field: 'expirationTime', title: '到期时间', width: '7%', templet: '#expirationTime', align: 'center'},
                     {field: 'renewTime', title: '续费时间', width: '7%', templet: '#toRenewTime', align: 'center'},
-                    {title: '操作', templet: '#operationTpl', align: 'center', width: '10%', align: 'center'}
+                    {title: '操作', templet: '#operationTpl', width: '10%', align: 'center'}
                 ]],
                 height: 'full-75',
                 done: function (res, curr, count) {
@@ -255,14 +254,15 @@
                         },
                         success: function (res) {
                             if (res.code === 200) {
-                                active['reload'].call(this);
-                                layer.msg("删除成功")
+                                common.showSuccessMsg("删除成功", function () {
+                                    active['reload'].call(this);
+                                });
                             } else {
-                                layer.msg(res.msg)
+                                common.showFailMsg(res.msg);
                             }
                         },
                         error: function () {
-                            layer.msg('未知错误，请稍后重试！！')
+                            common.showFailMsg('未知错误，请稍后重试！！');
                         }
                     });
                 },
@@ -280,7 +280,7 @@
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的友链', {icon: 5});
+                common.showFailMsg('请选择要操作的友链');
                 return
             }
             layer.confirm("确定要删除所选友链信息吗", {icon: 3, title: '删除所选'}, function (index) {
@@ -298,18 +298,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);
@@ -324,7 +321,7 @@
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的友链', {icon: 5});
+                common.showFailMsg('请选择要操作的友链');
                 return
             }
             layer.confirm("确定要推送这些链接到远程吗", {icon: 3, title: '推送'}, function (index) {
@@ -341,18 +338,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);
@@ -371,6 +365,8 @@
                 case 'pushFriendlyLink':
                     pushFriendlyLink();
                     break;
+                default:
+                    break;
             }
         });
 
@@ -382,6 +378,8 @@
                     break;
                 case 'deleteFriendlyLink':
                     deleteFriendlyLink(data.uuid);
+                    break;
+                default:
                     break;
             }
         });

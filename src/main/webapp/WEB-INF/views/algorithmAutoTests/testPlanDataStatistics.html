@@ -37,18 +37,15 @@
 <script>
 
     let layui_ = null;
-    var uuid_ = null;
-    var groupTable ;
+    let uuid_ = null;
+    let groupTable ;
     function initForm(data) {
-        // console.log(data)
         uuid_ = data;
     }
 
-    layui.use(["form", "okLayer","table", "jquery", "layer"], function () {
+    layui.use(["form", "table", "jquery", "layer"], function () {
         let form = layui.form;
-        let okLayer = layui.okLayer;
         let $ = layui.jquery;
-        let layer = layui.layer;
         let table = layui.table;
 
         groupTable = table.render({
@@ -75,24 +72,9 @@
             }
         });
 
-        function show_layer_msg(msg, icon, status, time, title) {
-            layer.msg(msg, {
-                icon: icon,
-                title: title === undefined ? null : title,
-                anim: 5,
-                time: time === undefined ? 2000 : time,
-                isOutAnim: false
-            }, function () {
-                if (status) {
-                    active['reload'].call(this);
-                }
-            });
-        }
-
         form.on("submit(search)", function (data) {
             table.reload('groupTable', {
                 where: data.field,
-
             });
             return false;
         });

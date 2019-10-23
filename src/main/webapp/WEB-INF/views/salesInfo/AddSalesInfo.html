@@ -75,10 +75,9 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
 
-    var uuid_ = null;
-    var layui_ = null;
-    var managePart_ = null;
-    var flag = false;
+    let uuid_ = null;
+    let layui_ = null;
+    let flag = false;
 
     function initForm(data) {
         uuid_ = data;
@@ -100,7 +99,7 @@
                     initFormSelect(l,res.data.managePart);
                     layui.form.val("addSalesInfoList", res.data);
                 } else {
-                    l.layer.msg(res.msg);
+                    l.layer.msg(res.msg, {icon: 5, time: 3000});
                 }
             }
         });
@@ -138,11 +137,11 @@
                     });
                     l.formSelects.render();
                 } else {
-                    layer.msg(res.msg)
+                    l.layer.msg(res.msg, {icon: 5, time: 3000});
                 }
             },
             error: function(){
-                layer.msg('未知错误，请稍后重试！！')
+                l.layer.msg('未知错误，请稍后重试！！', {icon: 5, time: 3000});
             }
         });
     }
@@ -155,11 +154,10 @@
         }
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer", "formSelects"], function () {
-        var form = layui.form;
-        var okLayer = layui.okLayer;
-        var $ = layui.jquery;
-        var formSelects = layui.formSelects;
+    layui.use(["form", "common", "jquery", "layer", "formSelects"], function () {
+        let form = layui.form;
+        let $ = layui.jquery;
+        let common = layui.common;
 
         if (uuid_ != null) {
             setForm(layui, uuid_);
@@ -179,12 +177,12 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });

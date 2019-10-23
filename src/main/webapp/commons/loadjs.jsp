@@ -8,4 +8,3 @@
 <script src="${staticPath }/js/jquery.multiselect.js"></script>
 <link rel="stylesheet" href="${staticPath}/ui/jquery-ui.css">
 <link rel="stylesheet" href="${staticPath}/static/css/common.css">
-<script language="javascript" type="text/javascript" src="/common.js"></script>

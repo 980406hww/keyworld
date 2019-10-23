@@ -270,7 +270,7 @@
 <script>
 
     let layui_ = null;
-    var uuid_ = null;
+    let uuid_ = null;
 
     function initForm(data) {
         uuid_ = data.uuid;
@@ -291,9 +291,9 @@
         document.getElementById('positionFifthFee').value = val
     }
 
-    function setForm(layui, uuid) {
-        var $ = layui.jquery;
-        var form = layui.form;
+    function setForm(layui_, uuid) {
+        let $ = layui_.jquery;
+        let form = layui_.form;
         $.ajax({
             url: '/internal/customerKeyword/getKeywordInfoByUuid/' + uuid,
             type: 'post',
@@ -303,17 +303,15 @@
                     init_searchEngine();
                     form.val("saveKeyword", res.data);
                 } else {
-                    layui.layer.msg(res.msg);
+                    layui_.layer.msg(res.msg, {icon:5, time: 3000});
                 }
             }
         });
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer",'common'], function () {
+    layui.use(["form", "jquery", "layer",'common'], function () {
         let form = layui.form;
-        let okLayer = layui.okLayer;
         let $ = layui.jquery;
-        let layer = layui.layer;
         let common = layui.common;
 
         window.init_searchEngine = function () {
@@ -347,7 +345,7 @@
         }
 
         form.on("submit(save)", function (data) {
-            var postData = data.field;
+            let postData = data.field;
             postData = common.jsonObjectTrim(postData);
             $.ajax({
                 url: '/internal/customerKeyword/saveCustomerKeyword2',

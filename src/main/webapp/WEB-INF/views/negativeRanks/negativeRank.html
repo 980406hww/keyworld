@@ -97,21 +97,20 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
 
 <script>
-    var sign = false;
+    let sign = false;
     // 进度条加载提示
     NProgress.start();
     window.onload = function () {
         NProgress.done();
     };
 
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','common'], function () {
-        var element = layui.element;
-        var table = layui.table;
-        var form = layui.form;
-        var $ = layui.jquery;
-        var layer = layui.layer;
-        var laydate = layui.laydate;
-        var common = layui.common;
+    layui.use(['table', 'form', 'jquery', 'laydate', 'layer', 'common'], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let $ = layui.jquery;
+        let layer = layui.layer;
+        let laydate = layui.laydate;
+        let common = layui.common;
 
         laydate.render({
             elem: '#createTime',
@@ -130,20 +129,20 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        var keywordData = res.data;
-                        var keyword_list = $('#keyword');
+                        let keywordData = res.data;
+                        let keyword_list = $('#keyword');
                         keyword_list.empty();
                         keyword_list.append('<option value="">请选择关键字</option>');
                         $.each(keywordData, function (index, item) {
                             keyword_list.append('<option value="' + item + '">' + item + '</option>');
                         });
-                        form.render("select")
+                        form.render("select");
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg);
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！');
                 }
             });
         }
@@ -182,7 +181,7 @@
 
     <@shiro.hasPermission name="/internal/negativeRank/updateNegativeRankKeyword">
         table.on('tool(tableFilter)', function (obj) {
-            var data = obj.data, event = obj.event;
+            let data = obj.data, event = obj.event;
             switch (event) {
                 case 'updateFirstPageRanks':
                     updateNegativeRank(data.uuid, "firstPageRanks");
@@ -237,13 +236,12 @@
                 value: oldValue,
                 title: tit,
                 yes: function (index, layero) {
-                    var index2 = index;
-                    var value = layero.find(".layui-layer-input").val();
-                    var postData = {};
+                    let index2 = index;
+                    let value = layero.find(".layui-layer-input").val();
+                    let postData = {};
                     postData.uuid = uuid;
                     postData[rankType] = value;
-                    let negativeCount = value.replace(/( )+/g,"").replace(/(，)+|(,)+/g, ",").split(",").length;
-                    postData.negativeCount = negativeCount;
+                    postData.negativeCount = value.replace(/( )+/g,"").replace(/(，)+|(,)+/g, ",").split(",").length;
                     $.ajax({
                         url: '/internal/negativeRank/updateNegativeRankKeyword2',
                         data: JSON.stringify(postData),
@@ -255,8 +253,9 @@
                         type: 'POST',
                         success: function (result) {
                             if (result.code === 200) {
-                                common.showSuccessMsg('操作成功', active['reload'].call(this));
-
+                                common.showSuccessMsg('操作成功', function () {
+                                    active['reload'].call(this);
+                                });
                             } else {
                                 common.showFailMsg('操作失败',);
                             }
@@ -266,14 +265,12 @@
                         }
                     });
                     layer.close(index2);
-                    // });
-
                 }
             });
         }
     </@shiro.hasPermission>
 
-        var active = {
+        let active = {
             reload: function () {
                 let data = common.formToJsonObject('searchForm');
                 data.entryType = 'pt';
@@ -287,7 +284,7 @@
         };
 
         form.on("submit(search)", function (data) {
-            var postData = data.field;
+            let postData = data.field;
             postData = common.jsonObjectTrim(postData)
             table.reload('negativeRankTable', {
                 where: postData,

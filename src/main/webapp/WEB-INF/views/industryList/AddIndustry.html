@@ -71,10 +71,10 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
 
-    var uuid_ = null;
-    var layui_ = null;
-    var terminalTyle_ = null;
-    var searchEngine_ = null;
+    let uuid_ = null;
+    let layui_ = null;
+    let terminalTyle_ = null;
+    let searchEngine_ = null;
 
     function initForm(data) {
         uuid_ = data;
@@ -97,19 +97,19 @@
             },
             success: function (res) {
                 if (res.code === 200) {
-                    searchEngine_ = res.data.searchEngine
+                    searchEngine_ = res.data.searchEngine;
                     layui.form.val("addIndustry", res.data);
                 } else {
-                    l.layer.msg(res.msg);
+                    l.layer.msg(res.msg, {icon:5, time: 3000});
                 }
             }
         });
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
-        var form = layui.form;
-        var okLayer = layui.okLayer;
-        var $ = layui.jquery;
+    layui.use(["form", "common", "jquery", "layer"], function () {
+        let form = layui.form;
+        let common = layui.common;
+        let $ = layui.jquery;
 
         if (uuid_ != null) {
             setForm(layui, uuid_);
@@ -120,8 +120,8 @@
         init_SearchEngine();
 
         function init_SearchEngine(){
-            var postData = {}
-            postData.terminalType = terminalTyle_
+            let postData = {};
+            postData.terminalType = terminalTyle_;
             $.ajax({
                 url: '/internal/industryList/returnSelectData',
                 type: 'POST',
@@ -132,28 +132,28 @@
                 data: JSON.stringify(postData),
                 success: function (res) {
                     if (res.code === 200) {
-                        var searchEngineList = res.data.searchEngineMap
-                        var searchEngine = $('#engines');
+                        let searchEngineList = res.data.searchEngineMap;
+                        let searchEngine = $('#engines');
                         $.each(searchEngineList, function (index, item) {
-                            if(searchEngine_ == item){
+                            if(searchEngine_ === item){
                                 searchEngine.append('<option value="' + item + '" selected>' + item + '</option>');
                             }else{
                                 searchEngine.append('<option value="' + item + '">' + item + '</option>');
                             }
                         });
-                        form.render("select")
+                        form.render("select");
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg);
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！');
                 }
             });
         }
 
         form.on("submit(commit)", function (data) {
-            data.field.terminalType = terminalTyle_
+            data.field.terminalType = terminalTyle_;
             $.ajax({
                 url: '/internal/industryList/saveIndustryInfo',
                 type: 'POST',
@@ -164,12 +164,12 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });

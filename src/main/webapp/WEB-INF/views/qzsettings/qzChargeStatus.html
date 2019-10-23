@@ -69,13 +69,8 @@
         });
     }
 
-    layui.use(["form", 'table', "okLayer", "jquery", "layer", 'laydate'], function () {
-        let form = layui.form;
-        let okLayer = layui.okLayer;
+    layui.use(["jquery", "layer"], function () {
         let $ = layui.jquery;
-        let layer = layui.layer;
-        let laydate = layui.laydate;
-
         if (uuid_ != null) {
             setForm(layui, uuid_);
         } else {

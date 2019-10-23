@@ -64,8 +64,8 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
 
-    var uuid_ = null;
-    var layui_ = null;
+    let uuid_ = null;
+    let layui_ = null;
 
     function initForm(data) {
         uuid_ = data;
@@ -86,16 +86,16 @@
                 if (res.code === 200) {
                     layui.form.val("addOperationType", res.data);
                 } else {
-                    l.layer.msg(res.msg);
+                    l.layer.msg(res.msg, {icon: 5, time: 3000});
                 }
             }
         });
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
-        var form = layui.form;
-        var okLayer = layui.okLayer;
-        var $ = layui.jquery;
+    layui.use(["form", "jquery", "layer", "common"], function () {
+        let form = layui.form;
+        let $ = layui.jquery;
+        let common = layui.common;
 
         if (uuid_ != null) {
             setForm(layui, uuid_);
@@ -114,12 +114,12 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });

@@ -136,8 +136,8 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
 
-    var uuid_ = null;
-    var layui_ = null;
+    let uuid_ = null;
+    let layui_ = null;
 
     function initForm(data) {
         uuid_ = data;
@@ -165,11 +165,11 @@
         });
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer", "laydate","util"], function () {
-        var form = layui.form;
-        var okLayer = layui.okLayer;
-        var $ = layui.jquery;
-        var laydate = layui.laydate;
+    layui.use(["form", "common", "jquery", "layer", "laydate", "util"], function () {
+        let form = layui.form;
+        let common = layui.common;
+        let $ = layui.jquery;
+        let laydate = layui.laydate;
 
         if (uuid_ != null) {
             setForm(layui, uuid_);
@@ -193,10 +193,10 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        var industryTypeMap = res.data.industryTypeMap
-                        var websiteTypeMap = res.data.websiteTypeMap
-                        var industry = $('#industry');
-                        var websiteType = $('#websiteType');
+                        let industryTypeMap = res.data.industryTypeMap;
+                        let websiteTypeMap = res.data.websiteTypeMap;
+                        let industry = $('#industry');
+                        let websiteType = $('#websiteType');
                         $.each(industryTypeMap, function (index, item) {
                             industry.append('<option value="' + index + '" >' + item + '</option>');
                         });
@@ -205,11 +205,11 @@
                         });
                         form.render("select")
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg)
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！')
                 }
             });
         }
@@ -225,12 +225,12 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });
@@ -244,7 +244,7 @@
 
         form.verify({
             website: function (value, item) {
-                if (value.indexOf(".") == -1) {
+                if (value.indexOf(".") === -1) {
                     return "请输入正确网址"
                 }
             },

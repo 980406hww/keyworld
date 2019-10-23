@@ -12,8 +12,6 @@
 <body>
 <div class="layui-tab layui-tab-card" lay-filter="groupSettingTab">
     <ul class="layui-tab-title">
-       <!-- <li class="layui-this">PC</li>
-        <li>Phone</li>-->
         <li lay-id="PC" class="layui-this" data-terminal="PC">电脑</li>
         <li lay-id="Phone" data-terminal="Phone">手机</li>
     </ul>
@@ -96,11 +94,8 @@
 </div>
 <div id="page_nav"></div>
 
-
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
-<!--<script src="/static/ok-admin/page/base/searchForm.js"></script>-->
 
-<!--<script src="/static/ok-admin/page/groupSetting/groupSetting.js"></script>-->
 <script>
 
     getHeight();
@@ -159,7 +154,6 @@
                 dataType: 'json',
                 type: 'post',
                 async: false,
-                dataType:'json',
                 success: function (res) {
                     if (res.code === 200){
                         let data =res.data;
@@ -204,6 +198,8 @@
                         $('#noOperation').prop("checked",false);
                         $('#hasOperation').prop("checked",false);
                         break;
+                    default:
+                        return;
                 }
                 form.render('checkbox');
                 $('#searchBtn').click();
@@ -285,7 +281,7 @@
                     sign = false;
                 }
             });
-        }
+        };
 
         window.toGroupSettingAdd = function(operationCombineUuid,operationCombineName,maxInvalidCount,remainAccount){
             let data = {};
@@ -422,7 +418,6 @@
                         }
                     });
                     init_data(result.data);
-
                 },
                 error: function () {
                     common.showFailMsg('获取分组信息失败，请稍后再试');
@@ -608,7 +603,7 @@
         };
 
         window.uniqueGroupName = function unique(a) {
-            var seen = {};
+            let seen = {};
             return a.filter(function(item) {
                 return seen.hasOwnProperty(item) ? false : (seen[item] = true);
             });
@@ -681,25 +676,20 @@
 
         window.getStatisticText  = function(disableStatistics){
             let htm = '';
-            switch (disableStatistics) {
-                case 0:
-                    htm = '开放';
-                    break;
-                default:
-                    htm = '关闭';
-
+            if (disableStatistics === 0) {
+                htm = '开放';
+            } else {
+                htm = '关闭';
             }
             return htm;
         };
 
         window.getVisitWebsiteText  = function(disableVisitWebsite){
             let htm = '';
-            switch (disableVisitWebsite) {
-                case 0:
-                    htm = '访问';
-                    break;
-                default:
-                    htm = '不访问';
+            if (disableVisitWebsite === 0) {
+                htm = '访问';
+            } else {
+                htm = '不访问';
             }
             return htm;
         };
@@ -715,6 +705,7 @@
                     break;
                 default:
                     htm = '50';
+                    break;
             }
             return htm;
         };
@@ -733,18 +724,17 @@
                     break;
                 default:
                     htm = 'N次操作清理Cookie';
+                    break;
             }
             return htm;
         };
 
         window.getRandomlyClickNoResultText  = function(randomlyClickNoResult){
             let htm = '';
-            switch (randomlyClickNoResult) {
-                case 1:
-                    htm = '是';
-                    break;
-                default:
-                    htm = '否';
+            if (randomlyClickNoResult === 1) {
+                htm = '是';
+            } else {
+                htm = '否';
             }
             return htm;
         };
@@ -802,7 +792,7 @@
                                     type: 'POST',
                                     success: function (result) {
                                         if (result.code === 200) {
-                                            connom.showSuccessMsg('操作成功', function () {
+                                            common.showSuccessMsg('操作成功', function () {
                                                 let pageConf = common.formToJsonObject('searchForm');
                                                 if (pageConf.hasOperation){
                                                     pageConf.hasOperation = true;
@@ -818,7 +808,7 @@
                                                 initLayPage(pageConf)
                                             });
                                         } else {
-                                            connom.showFailMsg('操作失败');
+                                            common.showFailMsg('操作失败');
                                         }
                                     },
                                     error: function () {

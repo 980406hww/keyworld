@@ -244,12 +244,11 @@
     var sign = false;
 
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 'common'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'common'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
-        var laydate = layui.laydate;
         var layer = layui.layer;
         var okLayer = layui.okLayer;
         var common = layui.common;
@@ -446,10 +445,11 @@
                     type: 'get',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.showSuccessMsg('删除成功',active['reload'].call(this));
-                            layer.close(index);
+                            common.showSuccessMsg('删除成功', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
-                            common.showFailMsg(res.msg ? res.msg : '删除失败');
+                            common.showFailMsg(result.msg ? result.msg : '删除失败');
                         }
                     },
                     error: function () {
@@ -483,8 +483,9 @@
                     data: JSON.stringify(uuidArr),
                     success: function (res) {
                         if (res.code === 200) {
-                            common.showSuccessMsg('删除成功',active['reload'].call(this));
-                            layer.close(index);
+                            common.showSuccessMsg('删除成功', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
                             common.showFailMsg(res.msg ? res.msg : '删除失败');
                         }
@@ -533,8 +534,9 @@
                     data: JSON.stringify(p_d),
                     success: function (res) {
                         if (res.code === 200) {
-                            common.showSuccessMsg('操作成功',active['reload'].call(this));
-                            layer.close(index);
+                            common.showSuccessMsg('操作成功', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
                             common.showFailMsg(res.msg ? res.msg : '操作失败');
                         }
@@ -579,8 +581,9 @@
                     data: JSON.stringify(p_d),
                     success: function (res) {
                         if (res.code === 200) {
-                            common.showSuccessMsg('操作成功',active['reload'].call(this));
-                            layer.close(index);
+                            common.showSuccessMsg('操作成功', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
                             common.showFailMsg(res.msg ? res.msg : '操作失败');
                         }
@@ -616,8 +619,9 @@
                     data: JSON.stringify(uuidArr),
                     success: function (res) {
                         if (res.code === 200) {
-                            common.showSuccessMsg('操作成功',active['reload'].call(this));
-                            layer.close(index);
+                            common.showSuccessMsg('操作成功', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
                             common.showFailMsg(res.msg ? res.msg : '操作失败');
                         }
@@ -643,6 +647,8 @@
                     break;
                 case 'noStop':
                     changeCaptureRankJobStatus(data.uuid, true);
+                    break;
+                default:
                     break;
             }
         });

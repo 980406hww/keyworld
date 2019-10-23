@@ -41,11 +41,11 @@
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
-    var uuid_ = null;
-    var layui_ = null;
-    var clientIDs = null;
-    var count_l = 0;
-    var count_j = 0;
+    let uuid_ = null;
+    let layui_ = null;
+    let clientIDs = null;
+    let count_l = 0;
+    let count_j = 0;
 
     function initData(data) {
         clientIDs = data.clientIDs
@@ -60,15 +60,15 @@
         }
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
-        var form = layui.form;
-        var okLayer = layui.okLayer;
-        var $ = layui.jquery;
+    layui.use(["form", "common", "jquery", "layer"], function () {
+        let form = layui.form;
+        let common = layui.common;
+        let $ = layui.jquery;
 
         document.onkeydown=function(e){
-            var isie = !!(document.all);
-            var key;
-            var ev;
+            let isie = !!(document.all);
+            let key;
+            let ev;
             if(isie){//IE浏览器
                 key = window.event.keyCode;
                 ev = window.event;
@@ -78,7 +78,7 @@
             }
             if(key===9){//IE浏览器
                 // document.getElementById(e.target.id).focus()
-                okLayer.msg.yellowSigh("请不要使用tab键切换输入框！",null);
+                common.showFailMsg("请不要使用tab键切换输入框！");
                 e.target.focus();
                 if(isie){
                     ev.keyCode=0;
@@ -96,7 +96,7 @@
         });
 
         form.on("submit(commit)", function (data) {
-            var postData = {};
+            let postData = {};
             postData.clientIDs = clientIDs;
             postData.allowSwitchGroup = data.field.allowSwitchGroup;
             if (document.getElementById('lzfz').style.color === 'red') {
@@ -116,12 +116,12 @@
                 timeout: 5000,
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("修改成功", function () {
+                        common.showSuccessMsg("修改成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });
