@@ -288,9 +288,9 @@
 <script>
 
     let layui_ = null;
-    var uuid_ = null;
-    var uuids_ = null;
-    var operationCombineUuid_ = null;
+    let uuid_ = null;
+    let uuids_ = null;
+    let operationCombineUuid_ = null;
     let operationTypes = null;
 
     function initForm(data) {
@@ -318,8 +318,8 @@
 
     }
     function init_operationCombineCount(layui_, operationCombineUuid){
-        var $ = layui_.jquery;
-        var form = layui_.form;
+        let $ = layui_.jquery;
+        let form = layui_.form;
         $.ajax({
             url: '/internal/groupsetting/getGroupSettingCount2/' + operationCombineUuid,
             type: 'post',
