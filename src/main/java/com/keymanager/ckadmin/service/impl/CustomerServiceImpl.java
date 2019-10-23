@@ -46,6 +46,13 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
         if (CollectionUtils.isNotEmpty(customerList)) {
             List<Long> customerUuids = new ArrayList<>();
             for (Customer customer : customerList) {
+                if (!customer.getLoginName().equals(customerCriteria.getLoginName())) {
+                    customer.setSaleRemark("");
+                    customer.setTelphone("");
+                    customer.setQq("");
+                    customer.setEmail("");
+                    customer.setWechat("");
+                }
                 customerUuids.add(customer.getUuid());
             }
             List<Map> customerCustomerBusinessMapList = customerBusinessService.getCustomerBusinessMapList(customerUuids);
@@ -147,12 +154,14 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
             if (CollectionUtils.isNotEmpty(customerBusinessList)) {
                 customer.setCustomerBusinessList(customerBusinessList);
             }
-            /*if (!customer.getLoginName().equals(loginName)) {
+
+            if (!customer.getLoginName().equals(loginName)) {
                 customer.setEmail(null);
                 customer.setQq(null);
                 customer.setTelphone(null);
                 customer.setSaleRemark(null);
             }
+            /*
             customer.setKeywordCount(customerKeywordService
                 .getCustomerKeywordCount(terminalType, entryType, customerUuid));*/
         }
