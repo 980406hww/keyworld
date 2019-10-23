@@ -50,8 +50,8 @@ public class GroupSettingServiceImpl extends ServiceImpl<GroupSettingDao, GroupS
 
     @Override
     public void saveGroupSetting (GroupSetting groupSetting) {
-        groupSettingDao.saveGroupSetting(groupSetting);
         operationCombineService.updateOperationCombineRemainingAccount(groupSetting.getOperationCombineUuid(), groupSetting.getRemainingAccount());
+        groupSettingDao.saveGroupSetting(groupSetting);
     }
 
     @Override

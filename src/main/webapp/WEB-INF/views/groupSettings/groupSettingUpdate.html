@@ -61,8 +61,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">操作类型</label>
                     <div class="layui-input-block" onclick="checkItem(this)">
-                        <select name="operationType" id="operationType" lay-verify="required">
-                            <option value="">请选择操作类型</option>
+                        <select name="operationType" id="operationType" >
                         </select>
 
                     </div>
@@ -324,10 +323,11 @@
         $.ajax({
             url: '/internal/groupsetting/getGroupSettingCount2/' + operationCombineUuid,
             type: 'post',
+            async:false,
             dataType: 'json',
             success: function (res) {
                 if (res.code === 200) {
-                    $('#operationCombineCount').text(res.data)
+                    $('#operationCombineCount').text(res.data);
                     $('#ocspan').css('display','inline-block')
                 } else {
                     layui.layer.msg(res.msg);
@@ -335,6 +335,7 @@
             }
         });
     }
+
     function setForm(layui_, uuid){
         var $ = layui_.jquery;
         var form = layui_.form;
@@ -355,7 +356,6 @@
     function init_operationType(layui_, operationTypes) {
         let $ = layui_.jquery;
         let form = layui_.form;
-        $("#operationType").empty().append('<option value="">请选择操作类型</option>');
         $.each(operationTypes, function (index, item) {
             $('#operationType').append('<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
         });
@@ -400,6 +400,8 @@
         }
         if (uuid_ != null){
             setForm(layui, uuid_);
+        }else{
+            init_operationCombineCount(layui, operationCombineUuid_)
         }
 
 

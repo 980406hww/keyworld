@@ -70,7 +70,6 @@
                     <label class="layui-form-label">操作类型</label>
                     <div class="layui-input-block">
                         <select name="operationType" id="operationType">
-                            <option value="">请选择操作类型</option>
                         </select>
 
                     </div>
@@ -297,7 +296,9 @@
     var uuid_ = null;
     let operationTypes = null;
     let operationCombineUuid_ = null;
+    let data_ = null;
     function initForm(data) {
+        data_ = data;
         operationTypes = data.operationTypes;
         operationCombineUuid_ = data.operationCombineUuid;
         document.getElementById('terminalType').value = data.terminalType;
@@ -308,22 +309,24 @@
         document.getElementById('machineUsedPercent').value = data.currentAccount;
         if (layui_ != null) {
             init_operationType(layui_, operationTypes);
-            if (operationCombineUuid_ != null){
-                document.getElementById('settingOperationCombineName').value = data.operationCombineName;
-                document.getElementById('settingGroup').value = data.groupNames;
-                document.getElementById('maxInvalidCount').value = data.maxInvalidCount;
-                document.getElementById('settingOperationCombineName').disabled = true;
-                document.getElementById('settingGroup').disabled = true;
-                document.getElementById('maxInvalidCount').disabled = true;
-                document.getElementById('settingGroup').removeAttribute('lay-verify');
-            }
+            setForm(data)
         }
     }
-
+    function setForm(data){
+        if (operationCombineUuid_ != null){
+            document.getElementById('settingOperationCombineName').value = data.operationCombineName;
+            document.getElementById('settingGroup').value = data.groupNames;
+            document.getElementById('maxInvalidCount').value = data.maxInvalidCount;
+            document.getElementById('settingOperationCombineName').disabled = true;
+            document.getElementById('settingGroup').disabled = true;
+            document.getElementById('maxInvalidCount').disabled = true;
+            document.getElementById('settingGroup').removeAttribute('lay-verify');
+        }
+    }
     function init_operationType(layui_, operationTypes) {
         let $ = layui_.jquery;
         let form = layui.form;
-        $("#operationType").empty().append('<option value="">请选择操作类型</option>');
+        $("#operationType").empty();
         $.each(operationTypes, function (index, item) {
             $('#operationType').append('<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
         });
@@ -340,6 +343,9 @@
             init_operationType(layui, operationTypes)
         } else {
             layui_ = layui;
+        }
+        if (operationCombineUuid_ != null) {
+            setForm(data_)
         }
 
         function show_layer_msg(msg, icon, status, time, title) {
@@ -377,6 +383,7 @@
                 operationCombine.operationCombineName = field.settingOperationCombineName;
                 operationCombine.terminalType = field.terminalType;
                 operationCombine.maxInvalidCount = field.maxInvalidCount === "" ? 8 : field.maxInvalidCount;
+
                 field.remainingAccount = parseInt($('#unusedPercent').text());
                 let groupNames = field.settingGroup.replace(/[，|\r\n]/g, ',').replace(/[\s+]/g, '');
                 if (groupNames.substring(groupNames.length - 1) === ',') {
@@ -398,7 +405,8 @@
                     show_layer_msg("请输入正确的分组占比且不能大于剩余占比", 5);
                     return false;
                 }
-                operationCombine = field
+                operationCombine = field;
+                operationCombine.remainingAccount = parseInt($('#unusedPercent').text());
             }
 
             $.ajax({

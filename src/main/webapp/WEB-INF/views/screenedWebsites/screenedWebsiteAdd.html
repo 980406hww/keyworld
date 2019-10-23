@@ -35,8 +35,9 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">优化组名</label>
                 <div class="layui-input-block">
-                    <input type="text" name="optimizeGroupName" id="optimizeGroupName" list="group_list" placeholder="请输入优化组名" autocomplete="off" class="layui-input"
-                           lay-verify="required">
+                    <select name="optimizeGroupName" id="optimizeGroupName" lay-verify="required">
+
+                    </select>
                 </div>
             </div>
             <div class="layui-form-item layui-form-text">
@@ -63,9 +64,6 @@
         </div>
     </form>
 </div>
-<datalist id="group_list">
-
-</datalist>
 <!--js逻辑-->
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script>
@@ -127,8 +125,9 @@
                 success: function (res) {
                     if (res.code === 200) {
                         var groupData = res.data;
-                        var group_list = $('#group_list');
+                        var group_list = $('#optimizeGroupName');
                         group_list.empty();
+                        group_list.append('<option value="">请选择分组</option>');
                         $.each(groupData, function (index, item) {
                             group_list.append('<option value="' + item + '">' + item + '</option>');
                         });
