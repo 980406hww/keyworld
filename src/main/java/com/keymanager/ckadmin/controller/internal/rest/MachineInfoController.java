@@ -5,12 +5,14 @@ import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.MachineInfoBatchUpdateCriteria;
 import com.keymanager.ckadmin.criteria.MachineInfoCriteria;
+import com.keymanager.ckadmin.criteria.MachineInfoGroupStatCriteria;
 import com.keymanager.ckadmin.entity.MachineInfo;
 import com.keymanager.ckadmin.entity.UserPageSetup;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.MachineInfoService;
 import com.keymanager.ckadmin.service.PerformanceService;
 import com.keymanager.ckadmin.service.UserPageSetupService;
+import com.keymanager.ckadmin.vo.MachineInfoGroupSummaryVO;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import java.io.File;
@@ -24,12 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -141,6 +138,14 @@ public class MachineInfoController extends SpringMVCBaseController {
     public ModelAndView toSwitchGroup() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/SwitchGroup");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/machineInfoGroupStat")
+    @RequestMapping(value = "/toMachineInfoGroupStat", method = RequestMethod.GET)
+    public ModelAndView toMachineInfoGroupStat() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/machineInfoGroupStat");
         return mv;
     }
 
@@ -543,5 +548,25 @@ public class MachineInfoController extends SpringMVCBaseController {
         mv.addObject("machineGroupFromATP",machineGroup);
         mv.addObject("terminalTypeFromATP",terminalType);
         return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/machineInfoGroupStat")
+    @PostMapping(value = "/machineInfoGroupStat")
+    public ResultBean machineInfoGroupStat(@RequestBody MachineInfoGroupStatCriteria machineInfoGroupStatCriteria) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            Page<MachineInfoGroupSummaryVO> page = new Page<>(machineInfoGroupStatCriteria.getPage(), machineInfoGroupStatCriteria.getLimit());
+            page = machineInfoService.searchMachineInfoGroupSummaryVO(page, machineInfoGroupStatCriteria);
+            List<MachineInfoGroupSummaryVO> machineInfoGroupSummaryVOs = page.getRecords();
+            resultBean.setData(machineInfoGroupSummaryVOs);
+            resultBean.setCount(page.getTotal());
+            resultBean.setMsg("success");
+            resultBean.setCode(0);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
     }
 }

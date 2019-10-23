@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-table-body tr td:nth-child(1),td:nth-child(2),td:nth-child(3),td:nth-child(4),td:nth-child(5),td:nth-child(6) {
+            text-align: left;
+        }
         .layui-inline input {
             width: 150px;
             height: 30px;
@@ -127,10 +130,10 @@
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', width: '35'},
                     {field: 'keyword', title: '关键字', width: '10%', align: 'center'},
-                    {field: 'title', title: '标题', width: '14%'},
-                    {field: 'url', title: 'URL', width: '10%'},
+                    {field: 'title', title: '标题', width: '14%', align: 'center'},
+                    {field: 'url', title: 'URL', width: '10%', align: 'center'},
                     {field: 'bearPawNumber', title: '熊掌号', width: '10%', align: 'center'},
-                    {field: 'desc', title: '描述', width: '15%'},
+                    {field: 'desc', title: '描述', width: '18%', align: 'center'},
                     {field: 'position', title: '排名', width: '10%', align: 'center'},
                     {field: 'createTime', title: '采集日期', width: '12%', templet: '#toDateTime', align: 'center'},
                     {title: '操作', templet: '#operationTpl', align: 'center', width: '14%', align: 'center'}
@@ -276,7 +279,7 @@
 </script>
 
 <script type="text/html" id="toolbarTpl">
-    <div class="layui-btn-container">
+    <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/positivelist/savePositiveList">
         <button class="layui-btn layui-btn-sm" id="addMachine" lay-event="showPositiveListDialog">添加</button>
     </@shiro.hasPermission>

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.criteria.MachineGroupWorkInfoCriteria;
 import com.keymanager.ckadmin.criteria.MachineInfoCriteria;
+import com.keymanager.ckadmin.criteria.MachineInfoGroupStatCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.ClientUpgrade;
 import com.keymanager.ckadmin.entity.CustomerKeywordTerminalRefreshStatRecord;
@@ -86,7 +87,7 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(@Param("clientIDPrefix") String clientIDPrefix, @Param("city") String city, @Param("switchGroupName") String switchGroupName);
 
-    List<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(@Param("group") String group, @Param("terminalType") String terminalType);
+    List<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(Page<MachineInfoGroupSummaryVO> page, @Param("machineInfoGroupStatCriteria") MachineInfoGroupStatCriteria machineInfoGroupStatCriteria);
 
     List<MachineInfo> searchRestartingMachineInfos();
 

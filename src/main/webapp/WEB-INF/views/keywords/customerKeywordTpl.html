@@ -1,57 +1,44 @@
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
-
+    <div class="layui-btn-group">
     <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
         {{#
             var businessType = document.getElementById('type').value;
             if(businessType !=='qz'){  }}
-            <div class="layui-btn-group">
-                <button class="layui-btn layui-btn-sm" id="add_customer_keyword" lay-event="add_customer_keyword">
-                    添加
-                </button>
-            </div>
+            <button class="layui-btn layui-btn-sm" id="add_customer_keyword" lay-event="add_customer_keyword">
+                添加
+            </button>
         {{#  }  }}
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customerKeyword/editOptimizePlanCount">
-    <div class="layui-btn-group">
         <button class="layui-btn layui-btn-sm" id="change_select_optimizePlanCount" lay-event="change_select_optimizePlanCount">
             修改所选刷量
         </button>
-    </div>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
-    <div class="layui-btn-group">
         <button class="layui-btn layui-btn-sm layui-btn-warm" id="update_belong_customer" lay-event="update_belong_customer">
             更改所选词客户
         </button>
-    </div>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
-    <div class="layui-btn-group">
         <button class="layui-btn layui-btn-sm layui-btn-warm" id="batch_update" lay-event="batch_update">
             批量设置
         </button>
-    </div>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
     {{#
         var businessType = document.getElementById('type').value;
         if(businessType==='qz'){  }}
-            <div class="layui-btn-group">
-                <button class="layui-btn layui-btn-sm layui-btn-danger" id="delete_same_keyword" lay-event="delete_same_keyword">
-                    删除重复关键字
-                </button>
-            </div>
-    {{#  }  }}
+            <button class="layui-btn layui-btn-sm layui-btn-danger" id="delete_same_keyword" lay-event="delete_same_keyword">
+                删除重复关键字
+            </button>
+        {{#  }  }}
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
-    <div class="layui-btn-group">
         <button class="layui-btn layui-btn-sm layui-btn-danger" id="batch_delete" lay-event="batch_delete">
             批量删除
         </button>
-    </div>
     </@shiro.hasPermission>
-    <div class="layui-btn-group">
         <button class="layui-btn layui-btn-sm layui-btn-warm" id="more_operation" lay-event="more_operation">
             更多功能
         </button>

@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-table-body tr td:nth-child(2),td:nth-child(3),td:nth-child(5) {
+            text-align: left;
+        }
         .layui-table-page > div {
             height: 26px;
             position: fixed;
@@ -560,25 +563,25 @@
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
     <div class="layui-btn-container">
-        <@shiro.hasPermission name="/internal/industry/saveIndustry">
-        <button class="layui-btn layui-btn-sm" lay-event="toAddIndustry">添加</button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/industry/deleteIndustries">
-        <button class="layui-btn layui-btn-danger layui-btn-sm" lay-event="deleteIndustries">
-            <i class="layui-icon layui-icon-delete"></i>删除所选
-        </button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/industry/updateIndustryUserID">
-        <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="updateOwner">
-            <i class="layui-icon layui-icon-edit"></i>修改客户归属
-        </button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/industry/saveIndustry">
-        <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="updateStatus">
-            <i class="layui-icon layui-icon-download-circle"></i>马上爬取
-        </button>
-        </@shiro.hasPermission>
         <div class="layui-btn-group">
+            <@shiro.hasPermission name="/internal/industry/saveIndustry">
+            <button class="layui-btn layui-btn-sm" lay-event="toAddIndustry">添加</button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/industry/deleteIndustries">
+            <button class="layui-btn layui-btn-danger layui-btn-sm" lay-event="deleteIndustries">
+                <i class="layui-icon layui-icon-delete"></i>删除所选
+            </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/industry/updateIndustryUserID">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="updateOwner">
+                <i class="layui-icon layui-icon-edit"></i>修改客户归属
+            </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/industry/saveIndustry">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="updateStatus">
+                <i class="layui-icon layui-icon-download-circle"></i>马上爬取
+            </button>
+            </@shiro.hasPermission>
             <@shiro.hasPermission name="/internal/industry/saveIndustry">
             <button class="layui-btn layui-btn-sm" lay-event="downloadIndustryInfos">导出网站联系信息</button>
             </@shiro.hasPermission>

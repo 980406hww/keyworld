@@ -104,8 +104,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 '               </div>';
             item += '           <div class="layadmin-address ">' +
                 '                   <strong>备注</strong>' +
-                '                   <p class="skip" title="'+obj.saleRemark+'" onclick=changeSaleRemark("'+obj.uuid+'","'+obj.saleRemark+'") >客户标签:<span id="saleRemark'+obj.uuid+'">' + obj.saleRemark + '</span></p>' +
-                '                   <p class="skip" title="'+obj.remark+'" onclick=changeRemark("'+obj.uuid+'","'+obj.remark+'") >销售详细备注:<span id="remark'+obj.uuid+'">' + obj.remark + '</span></p>' +
+                '                   <p class="skip" title="'+obj.saleRemark+'" onclick=changeSaleRemark("'+obj.uuid+'","'+obj.saleRemark+'") >客户标签:<span style="color: #00a65a" id="saleRemark'+obj.uuid+'">' + obj.saleRemark + '</span></p>' +
+                '                   <p class="skip" title="'+obj.remark+'" onclick=changeRemark("'+obj.uuid+'","'+obj.remark+'") >销售详细备注:<span style="color: #00a65a" id="remark'+obj.uuid+'">' + obj.remark + '</span></p>' +
                 '               </div>' +
                 '      </div>';
             item += '   <div class="layui-col-md5  layui-col-sm6" style="margin-top: 37px">';

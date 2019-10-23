@@ -32,6 +32,9 @@
             color: darkslateblue;
         }
 
+        .layui-form-selected dl{
+            max-width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -45,7 +48,9 @@
                     <div class="my-collapse">
                         <div>
                             <div class="layui-inline">
-                                <input type="text" name="keyword" list="keyword_list" id="keyword" placeholder="请输入关键字" class="layui-input">
+                                <select name="keyword" id="keyword" lay-search>
+                                </select>
+
                             </div>
                             <div class="layui-inline">
                                 <select name="searchEngine" id="searchEngine">
@@ -88,9 +93,6 @@
 </div>
 <!--js逻辑-->
 
-<datalist id="keyword_list">
-
-</datalist>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
 
@@ -128,8 +130,9 @@
                 success: function (res) {
                     if (res.code === 200) {
                         let keywordData = res.data;
-                        let keyword_list = $('#keyword_list');
+                        let keyword_list = $('#keyword');
                         keyword_list.empty();
+                        keyword_list.append('<option value="">请选择关键字</option>');
                         $.each(keywordData, function (index, item) {
                             keyword_list.append('<option value="' + item + '">' + item + '</option>');
                         });

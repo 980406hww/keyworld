@@ -12,42 +12,34 @@
         <button class="layui-btn layui-btn-sm" id="active_keyword" lay-event="active_keyword">
             激活
         </button>
-    </@shiro.hasPermission>
-    </div>
-    <div class="layui-btn-group">
+        </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
         <button class="layui-btn layui-btn-sm" id="change_selected_optimizedGroup" lay-event="change_selected_optimizedGroup">
             修改选中优化组
         </button>
-    </@shiro.hasPermission>
-    </div>
-    <div class="layui-btn-group">
+        </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordMachineGroup">
 
         <button class="layui-btn layui-btn-sm" id="change_selected_machineGroup" lay-event="change_selected_machineGroup">
             修改选中机器分组
         </button>
-    </@shiro.hasPermission>
-    </div>
-    <div class="layui-btn-group">
+        </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
 
         <button class="layui-btn layui-btn-sm" id="change_selected_bearPawNumber" lay-event="change_selected_bearPawNumber">
             修改选中熊掌号
         </button>
-    </@shiro.hasPermission>
-    </div>
-    <div class="layui-btn-group">
+        </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
         <!--<button class="layui-btn layui-btn-sm" id="batch_modify" lay-event="batch_modify">
             批量修改
         </button>-->
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-    <button class="layui-btn layui-btn-sm layui-btn-danger" id="batch_delete" lay-event="batch_delete">
-        批量删除
-    </button>
-    </@shiro.hasPermission>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+        <button class="layui-btn layui-btn-sm layui-btn-danger" id="batch_delete" lay-event="batch_delete">
+            批量删除
+        </button>
+        </@shiro.hasPermission>
     </div>
 </script>
 <!--模板-->
