@@ -668,16 +668,16 @@
 <script type="text/html" id="toolbarTpl">
     <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/captureRank/saveCaptureRankJob">
-        <button class="layui-btn" onclick="toSaveCaptureRanks()">添加任务</button>
+        <button class="layui-btn layui-btn-sm" onclick="toSaveCaptureRanks()">添加任务</button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/captureRank/deleteCaptureRankJobs">
-        <button class="layui-btn layui-btn-danger" onclick="deleteCaptureRanksByUuids()">删除所选</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteCaptureRanksByUuids()">删除所选</button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
-        <button class="layui-btn" onclick="changeCaptureRankJobStatuses(true)">激活所选</button>
-        <button class="layui-btn" onclick="changeCaptureRankJobStatuses(false)">暂停所选</button>
+        <button class="layui-btn layui-btn-sm" onclick="changeCaptureRankJobStatuses(true)">激活所选</button>
+        <button class="layui-btn layui-btn-sm" onclick="changeCaptureRankJobStatuses(false)">暂停所选</button>
         </@shiro.hasPermission>
-        <button class="layui-btn" onclick="resetCaptureRankJobs()">重置任务</button>
+        <button class="layui-btn layui-btn-sm" onclick="resetCaptureRankJobs()">重置任务</button>
     </div>
 </script>
 <script type="text/html" id="item">
