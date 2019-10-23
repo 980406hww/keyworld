@@ -369,7 +369,10 @@
     </update>
 
     <select id="selectByUuids" parameterType="java.util.ArrayList" resultType="com.keymanager.ckadmin.entity.QZSetting">
-        SELECT fRenewalStatus AS 'renewalStatus',fUuid AS 'uuid',fSearchEngine AS 'searchEngine' FROM t_qz_setting
+        SELECT fRenewalStatus AS 'renewalStatus',fUuid AS 'uuid',
+        fSearchEngine AS 'searchEngine',fPcGroup AS 'pcGroup',
+        fPhoneGroup AS 'phoneGroup'
+        FROM t_qz_setting
         WHERE fUuid IN
         <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
             #{uuid}

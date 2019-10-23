@@ -341,7 +341,6 @@ public class QZSettingController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/qzsetting/deleteQZSettings")
     @PostMapping(value = "/deleteQZSettings2")
-    @QzStatusMon(type = 4)
     public ResultBean deleteQZSettings(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
         try {
@@ -664,10 +663,16 @@ public class QZSettingController extends SpringMVCBaseController {
             amountStr.append(se);
             amountStr.append(",");
         }
+        StringBuilder terminalStr = new StringBuilder();
+        for (String terminal : terminals) {
+            terminalStr.append(terminal);
+            terminalStr.append(",");
+        }
         QzChargeMon qzChargeMon = new QzChargeMon();
         qzChargeMon.setOperationType(3);
         qzChargeMon.setOperationObj(objStr.substring(0, objStr.length() - 1));
         qzChargeMon.setSearchEngine(amountStr.substring(0, amountStr.length() - 1));
+        qzChargeMon.setTerminalType(terminalStr.substring(0, terminalStr.length() - 1));
         qzChargeMonService.insert(qzChargeMon);
     }
 }
