@@ -15,9 +15,6 @@
         .layui-table-body .laytable-cell-checkbox {
             text-align: center;
         }
-        .layui-table tr .layui-table-col-special .layui-table-cell{
-            text-align: center;
-        }
         /* 下拉条件框 */
         .my-collapse {
             position: relative;
@@ -111,18 +108,6 @@
             width: 160px;
             height: 30px;
         }
-
-        /*.layui-table-body .layui-table-cell {
-                    text-align: left;
-                }
-
-                .layui-table-body .laytable-cell-checkbox {
-                    text-align: center;
-                }
-
-                .layui-table-body .laytable-cell-1-0-13 {
-                    text-align: center;
-                }*/
 
         .show-msg {
             color: blue;
@@ -251,7 +236,7 @@
                     {field: 'operationType', title: '操作类型', width: '8%', align: 'center'},
                     {field: 'keywordCount', title: '词数', width: '6%', align: 'center'},
                     {
-                        field: 'keywordInfo', title: '关键词信息', width: '51%', align: 'left', templet: function (d) {
+                        field: 'keywordInfo', title: '关键词信息', width: '51%', align: 'center', templet: function (d) {
                             let msg = d.keywordInfo.replace(new RegExp('\n', 'g'), '<br>');
                             return '<span class="show-msg" onclick="showMsg(\'' + msg + '\')">' + d.keywordInfo.replace(new RegExp('\n', 'g'), ' ') + '</span>';
                         }

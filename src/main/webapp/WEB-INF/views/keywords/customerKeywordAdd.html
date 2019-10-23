@@ -30,7 +30,7 @@
                         <label class="layui-form-label" style="width: 100%"><h3>基本信息</h3></label>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">关键字</label>
                         <div class="layui-input-block">
@@ -38,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">标题</label>
                         <div class="layui-input-block">
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">域名</label>
                         <div class="layui-input-block">
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">原始域名</label>
                         <div class="layui-input-block">
@@ -68,7 +68,7 @@
 
             </div>
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">熊掌号</label>
                         <div class="layui-input-block">
@@ -76,7 +76,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">目标城市</label>
                         <div class="layui-input-block">
@@ -88,7 +88,7 @@
             </div>
 
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">优化组</label>
                         <div class="layui-input-block">
@@ -96,7 +96,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">机器分组</label>
                         <div class="layui-input-block">
@@ -107,7 +107,7 @@
             </div>
 
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">指数</label>
                         <div class="layui-input-block">
@@ -116,7 +116,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">排名</label>
                         <div class="layui-input-block">
@@ -128,7 +128,7 @@
             </div>
             <div class="layui-row">
 
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">搜索引擎</label>
                         <div class="layui-input-block">
@@ -138,7 +138,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">排序</label>
                         <div class="layui-input-block">
@@ -153,17 +153,17 @@
                 </div>
             </div>
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">第一报价</label>
                         <div class="layui-input-block">
                             <input type="number" name="positionFirstFee" id="positionFirstFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="positiveInteger"/>
+                                   lay-verify="positiveInteger" oninput="getFirstFee(this.value)"/>
                         </div>
                     </div>
                 </div>
 
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">第五报价</label>
                         <div class="layui-input-block">
@@ -174,7 +174,7 @@
                 </div>
             </div>
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">第二报价</label>
                         <div class="layui-input-block">
@@ -184,7 +184,7 @@
                     </div>
                 </div>
 
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">首页报价</label>
                         <div class="layui-input-block">
@@ -196,7 +196,7 @@
             </div>
 
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">第三报价</label>
                         <div class="layui-input-block">
@@ -205,7 +205,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">收费状态</label>
                         <div class="layui-input-block">
@@ -222,16 +222,16 @@
             </div>
 
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">第四报价</label>
                         <div class="layui-input-block">
                             <input type="number" name="positionForthFee" id="positionForthFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="positiveInteger"/>
+                                   lay-verify="positiveInteger" oninput="getForthFee(this.value)"/>
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">收费方式</label>
                         <div class="layui-input-block">
@@ -280,6 +280,15 @@
         if (layui_ != null && uuid_ != null) {
             setForm(layui_, uuid_)
         }
+    }
+
+    function getFirstFee(val) {
+        document.getElementById('positionSecondFee').value = val
+        document.getElementById('positionThirdFee').value = val
+    }
+
+    function getForthFee(val) {
+        document.getElementById('positionFifthFee').value = val
     }
 
     function setForm(layui, uuid) {

@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <link rel="stylesheet" href="/static/ok-admin/page/base/searchForm.css">
     <style>
+        .layui-table-body tr td:nth-child(1) {
+            text-align: left;
+        }
         .layui-table-page > div {
             height: 26px;
             position: fixed;
@@ -168,7 +171,7 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {field: 'keyword', title: '关键字', width: '22%',templet: '#tokeywordTpl' },
+                    {field: 'keyword', title: '关键字', width: '22%',templet: '#tokeywordTpl', align: 'center'},
                     {field: 'searchEngine', title: '搜索引擎', width: '13%', align: 'center'},
                     {field: 'keywordCount', title: '单词总数', width: '13%', align: 'center'},
                     {field: 'userCount', title: '用户总数', width: '13%', align: 'center'},
