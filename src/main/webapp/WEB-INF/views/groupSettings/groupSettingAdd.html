@@ -294,7 +294,7 @@
 <script>
 
     let layui_ = null;
-    var uuid_ = null;
+    let uuid_ = null;
     let operationTypes = null;
     let operationCombineUuid_ = null;
     function initForm(data) {
@@ -330,11 +330,10 @@
         form.render("select");
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+    layui.use(["form", "jquery", "layer", "common"], function () {
         let form = layui.form;
-        let okLayer = layui.okLayer;
         let $ = layui.jquery;
-        let layer = layui.layer;
+        let common = layui.common;
 
         if (operationTypes != null) {
             init_operationType(layui, operationTypes)
@@ -342,34 +341,20 @@
             layui_ = layui;
         }
 
-        function show_layer_msg(msg, icon, status, time, title) {
-            layer.msg(msg, {
-                icon: icon,
-                title: title === undefined ? null : title,
-                anim: 5,
-                time: time === undefined ? 2000 : time,
-                isOutAnim: false
-            }, function () {
-                if (status) {
-                    active['reload'].call(this);
-                }
-            });
-        }
-
         window.recalculateUnusedPercent = function (_elem) {
             let totalPercent = parseInt($('#remainAccount').val()) + parseInt($('#currentAccount').val());
             let allocPercent = parseInt(_elem.value);
             if (allocPercent < 0 || allocPercent > 100 || allocPercent > totalPercent) {
                 $(_elem).addClass("layui-form-danger").focus();
-                show_layer_msg("请输入正确的分组占比且不能大于剩余占比", 5)
+                common.showFailMsg("请输入正确的分组占比且不能大于剩余占比");
             } else {
                 $('#unusedPercent').text(totalPercent - allocPercent)
             }
-        }
+        };
 
         form.on("submit(save)", function (data) {
-            var field = data.field;
-            var operationCombine = {};
+            let field = data.field;
+            let operationCombine = {};
             let url = '/internal/groupsetting/saveGroupSetting2';
             if (operationCombineUuid_ == null){
                 url = '/internal/operationcombine/saveOperationCombine2';
@@ -382,7 +367,7 @@
                 if (groupNames.substring(groupNames.length - 1) === ',') {
                     groupNames = groupNames.substring(0, groupNames.length - 1);
                 }
-                var groupNameArr = groupNames.split(',');
+                let groupNameArr = groupNames.split(',');
                 groupNameArr = groupNameArr.filter(function (groupName, index) {
                     return groupNameArr.indexOf(groupName) === index && groupName !== '';
                 });
@@ -395,7 +380,7 @@
                 let allocPercent = parseInt(field.machineUsedPercent);
                 if (allocPercent > totalPercent) {
                     $('#machineUsedPercent').addClass("layui-form-danger").focus();
-                    show_layer_msg("请输入正确的分组占比且不能大于剩余占比", 5);
+                    common.showFailMsg("请输入正确的分组占比且不能大于剩余占比");
                     return false;
                 }
                 operationCombine = field
@@ -411,12 +396,12 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });

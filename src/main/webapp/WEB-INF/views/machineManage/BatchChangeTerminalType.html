@@ -29,21 +29,21 @@
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
-    var uuid_ = null;
-    var layui_ = null;
-    var clientIDs = null;
+    let uuid_ = null;
+    let layui_ = null;
+    let clientIDs = null;
 
     function initData(data) {
         clientIDs = data.clientIDs
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
-        var form = layui.form;
-        var okLayer = layui.okLayer;
-        var $ = layui.jquery;
+    layui.use(["form", "common", "jquery", "layer"], function () {
+        let form = layui.form;
+        let common = layui.common;
+        let $ = layui.jquery;
 
         form.on("submit(commit)", function (data) {
-            var postData = {};
+            let postData = {};
             postData.clientIDs = clientIDs;
             postData.terminalType = data.field.terminalType;
             $.ajax({
@@ -57,12 +57,12 @@
                 timeout: 5000,
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("修改成功", function () {
+                        common.showSuccessMsg("修改成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });

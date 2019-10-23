@@ -256,11 +256,9 @@
         baseData = data;
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer",'common'], function () {
+    layui.use(["form", "jquery", "layer", 'common'], function () {
         let form = layui.form;
-        let okLayer = layui.okLayer;
         let $ = layui.jquery;
-        let layer = layui.layer;
         let common = layui.common;
 
         document.onkeydown=function(e){
@@ -275,8 +273,7 @@
                 ev = e;
             }
             if(key===9){//IE浏览器
-                // document.getElementById(e.target.id).focus()
-                okLayer.msg.yellowSigh("请不要使用tab键切换输入框！",null);
+                common.showFailMsg("请不要使用tab键切换输入框！");
                 e.target.focus();
                 if(isie){
                     ev.keyCode=0;

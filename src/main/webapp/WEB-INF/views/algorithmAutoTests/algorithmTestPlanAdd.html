@@ -133,22 +133,20 @@
                 if (res.code === 200) {
                     l.form.val("save", res.data);
                 } else {
-                    l.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg);
+                    l.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg, {icon: 5, time: 3000});
                 }
             }
         });
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+    layui.use(["form", "jquery", "layer", "common"], function () {
         let form = layui.form;
-        let okLayer = layui.okLayer;
         let $ = layui.jquery;
-        let layer = layui.layer;
+        let common = layui.common;
 
         $.ajax({
             url: '/internal/algorithmAutoTest/getAlgorithmTestPlanAddData',
             type: 'get',
-            // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
             dataType: 'json',
             success: function (res) {
                 // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
@@ -188,12 +186,12 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layer.msg(res.msg, {icon: 5, time: 1000});
+                        common.showFailMsg(res.msg);
                     }
                 }
             });

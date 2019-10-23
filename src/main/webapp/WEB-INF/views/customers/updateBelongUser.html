@@ -33,23 +33,23 @@
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
-    var uuid_ = null;
-    var layui_ = null;
-    var uuids_ = null;
+    let uuid_ = null;
+    let layui_ = null;
+    let uuids_ = null;
 
     function initForm(data) {
         uuids_ = data
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
-        var form = layui.form;
-        var okLayer = layui.okLayer;
-        var $ = layui.jquery;
+    layui.use(["form", "common", "jquery", "layer"], function () {
+        let form = layui.form;
+        let common = layui.common;
+        let $ = layui.jquery;
 
-        init_ActiveUsers()
+        init_ActiveUsers();
 
         function init_ActiveUsers(){
-            var data = {}
+            let data = {};
             $.ajax({
                 url: '/internal/customer/getActiveUsersForChangeBelong',
                 type: 'POST',
@@ -60,24 +60,24 @@
                 data: JSON.stringify(data),
                 success: function (res) {
                     if (res.code === 200) {
-                        var activeUsers = $('#userID');
+                        let activeUsers = $('#userID');
                         activeUsers.append('<option value="" selected>用户名称</option>');
                         $.each(res.data, function (index, item) {
                             activeUsers.append('<option value="' + item.loginName + '">' + item.userName + '</option>');
                         });
-                        form.render("select")
+                        form.render("select");
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg);
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！');
                 }
             });
         }
 
         form.on("submit(commit)", function (data) {
-            var postData = {};
+            let postData = {};
             postData.uuids = uuids_;
             postData.userID = data.field.userID;
             $.ajax({
@@ -91,12 +91,12 @@
                 timeout: 5000,
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("修改成功", function () {
+                        common.showSuccessMsg("修改成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });

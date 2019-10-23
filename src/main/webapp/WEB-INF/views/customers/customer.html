@@ -140,11 +140,9 @@
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
-<!--<script src="/static/ok-admin/page/base/searchForm.js"></script>-->
 <script src="/static/ok-admin/page/customer/customer.js"></script>
 <script>
     layui.define(['layer', 'jquery'], function (exports) {
-        var table = layui.table;
         var $ = layui.jquery;
         exports('searchCurrentDateCompletedReports', function () {//函数参数
             var htm = '';
@@ -165,7 +163,7 @@
                             htm +='  <a class="layui-btn layui-btn-sm" href="' + val.reportPath + '">下载日报表(' + ((date.getHours() < 10) ? '0'
                                 + date.getHours() : date.getHours()) + ':' + ((date.getMinutes() < 10) ? '0' + date.getMinutes()
                                 : date.getMinutes()) + ')</a><br>';
-                        })
+                        });
                         $('#showDailyReportsDiv').empty().append(htm);
 
                     } else {

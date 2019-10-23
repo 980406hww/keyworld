@@ -258,7 +258,9 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        common.showSuccessMsg('重置成功',active['reload'].call(this));
+                        common.showSuccessMsg('重置成功', function () {
+                            active['reload'].call(this);
+                        });
                     } else {
                         common.showFailMsg('重置失败');
                     }

@@ -80,8 +80,7 @@
         NProgress.done();
     };
 
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','common'], function () {
-        var element = layui.element;
+    layui.use(['table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','common'], function () {
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
@@ -145,6 +144,8 @@
                 case 'del':
                     del_one(data);
                     break;
+                default:
+                    break;
             }
         });
 
@@ -199,8 +200,9 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.showSuccessMsg('操作成功!', active['reload'].call(this));
-
+                            common.showSuccessMsg('操作成功!', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -232,8 +234,9 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.showSuccessMsg('操作成功',active['reload'].call(this));
-
+                            common.showSuccessMsg('操作成功', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
                             common.showFailMsg('操作失败');
                         }

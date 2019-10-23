@@ -322,7 +322,7 @@ layui.define(["element", "jquery"], function (exports) {
         var _this = this;//data
         var _data = _this.tabConfig.data;
         element.render('nav');
-        //暂时停用动态加载菜单栏 10.08
+        // 10.08  10.21
         if(_this.tabConfig.url){
            $.get(_this.tabConfig.url, function (res) {
               _data = res;

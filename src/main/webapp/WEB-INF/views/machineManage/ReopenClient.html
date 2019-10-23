@@ -38,10 +38,10 @@
         clientIDs = data.clientIDs
     }
     
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+    layui.use(["form", "jquery", "layer", "common"], function () {
         var form = layui.form;
-        var okLayer = layui.okLayer;
         var $ = layui.jquery;
+        var common = layui.common;
 
         form.on("submit(commit)", function (data) {
             var postData = {};
@@ -58,12 +58,12 @@
                 timeout: 5000,
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.mag);
                     }
                 }
             });

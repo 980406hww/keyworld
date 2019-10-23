@@ -58,23 +58,22 @@
 
     function showName(e) {
         var files = e.files;
-        var fileName = files.item(0).name;
-        document.getElementById("fileName").innerText = fileName
+        document.getElementById("fileName").innerText = files.item(0).name;
     }
 
     function initData(data1, data2) {
-        machineInfoType = data1
-        terminalType = data2
-        if(machineInfoType == "startUp") {
+        machineInfoType = data1;
+        terminalType = data2;
+        if(machineInfoType === "startUp") {
             document.getElementById("programType").style.visibility = "visible"
         } else {
             document.getElementById("programType").style.visibility = "hidden"
         }
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer", "upload"], function () {
+    layui.use(["form", "common", "jquery", "layer", "upload"], function () {
         var form = layui.form;
-        var okLayer = layui.okLayer;
+        var common = layui.common;
         var $ = layui.jquery;
         var upload = layui.upload;
 
@@ -91,21 +90,21 @@
         });
 
         form.on("submit(commit)", function (data) {
-            var fileValue = $('#uploadForm').find("#upload").val()
-            if(fileValue == ""){
-                layer.msg("请选择要上传的VPS文件!")
+            let fileValue = $('#uploadForm').find("#upload").val();
+            if(fileValue === ""){
+                common.showFailMsg("请选择要上传的VPS文件!");
                 return false;
             }
-            var posIndex = fileValue.indexOf(".txt");
-            if (posIndex == -1) {
-                layer.msg("只能上传txt文件!")
+            let posIndex = fileValue.indexOf(".txt");
+            if (posIndex === -1) {
+                common.showFailMsg("只能上传txt文件!");
                 return false;
             }
-            var postData = new FormData();
-            postData.append('machineInfoType', machineInfoType)
-            postData.append('file', $("#uploadForm").find("#upload")[0].files[0])
-            postData.append('terminalType', terminalType)
-            if(machineInfoType == 'startUp'){
+            let postData = new FormData();
+            postData.append('machineInfoType', machineInfoType);
+            postData.append('file', $("#uploadForm").find("#upload")[0].files[0]);
+            postData.append('terminalType', terminalType);
+            if(machineInfoType === 'startUp'){
                 postData.append('downloadProgramType', data.field.downloadProgramType)
             }
             $.ajax({
@@ -117,14 +116,14 @@
                 processData: false,
                 contentType: false,
                 success: function (res) {
-                    var data = JSON.parse(res)
-                    if (data.code == 200) {
-                        okLayer.msg.greenTick("上传成功", function () {
+                    let data = JSON.parse(res);
+                    if (data.code === 200) {
+                        common.showSuccessMsg("上传成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
 
                 }

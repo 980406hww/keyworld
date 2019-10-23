@@ -84,22 +84,22 @@
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
-    var layui_ = null
-    var clientID_ = null
-    var terminalType_ = null
+    let layui_ = null;
+    let clientID_ = null;
+    let terminalType_ = null;
 
     function initMachineInfo(data) {
-        clientID_ = data.clientID
-        terminalType_ = data.terminalType
+        clientID_ = data.clientID;
+        terminalType_ = data.terminalType;
         if (layui_ != null) {
             setForm(layui_, clientID_, terminalType_);
         }
     }
 
     function setForm(l, clientID, terminalType){
-        var postData = {}
-        postData.clientID = clientID
-        postData.terminalType = terminalType
+        let postData = {};
+        postData.clientID = clientID;
+        postData.terminalType = terminalType;
         l.jquery.ajax({
             url: '/internal/machineManage/getMachineInfo/' + clientID + '/' + terminalType,
                 type: 'post',
@@ -110,20 +110,20 @@
                 },
                 timeout: 5000,
                 success: function (res) {
-                    var data = res.data
+                    var data = res.data;
                     if (res.code === 200) {
                         layui.form.val("UpdateMachineInfo", data);
                     } else {
-                        l.layer.msg(res.msg);
+                        l.layer.msg(res.msg, {icon: 5, time: 3000});
                     }
                 }
         });
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
-        var form = layui.form;
-        var okLayer = layui.okLayer;
-        var $ = layui.jquery;
+    layui.use(["form", "jquery", "layer", 'common'], function () {
+        let form = layui.form;
+        let $ = layui.jquery;
+        let common = layui.common;
 
         if (clientID_ != null) {
             setForm(layui, clientID_, terminalType_);
@@ -132,8 +132,8 @@
         }
 
         function isChecked(id) {
-            var color = $("#UpdateMachineDialog").find("#" + id).parent().css("color");
-            if(color == "rgb(255, 0, 0)") {
+            let color = $("#UpdateMachineDialog").find("#" + id).parent().css("color");
+            if(color === "rgb(255, 0, 0)") {
                 return "1";
             } else {
                 return "0";
@@ -141,7 +141,7 @@
         }
 
         form.on("submit(commit)", function (data) {
-            var machineInfo = {};
+            let machineInfo;
             machineInfo = data.field;
             machineInfo.clientID = clientID_;
             $.ajax({
@@ -155,12 +155,12 @@
                 timeout: 5000,
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });

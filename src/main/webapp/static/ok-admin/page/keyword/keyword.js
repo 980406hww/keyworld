@@ -399,7 +399,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 type: 'POST',
                 success: function (result) {
                     if (result.code === 200) {
-                        common.showSuccessMsg('操作成功', active['reload'].call(this));
+                        common.showSuccessMsg('操作成功', function () {
+                            active['reload'].call(this);
+                        });
                     } else {
                         common.showFailMsg('操作失败');
                     }
@@ -431,7 +433,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                     common.showFailMsg('请输入新优化组！');
                     return;
                 }
-                // layer.confirm("确定修改选中词的优化组吗", {icon: 3, title: '修改优化组'}, function (index) {
                 var postData = {};
                 postData.uuids = uuidArr;
                 postData.terminalType = $('#terminalType').val();
@@ -447,7 +448,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.showSuccessMsg('操作成功', active['reload'].call(this));
+                            common.showSuccessMsg('操作成功', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -461,8 +464,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
 
                 });
                 layer.close(index2);
-                // });
-
             }
         });
     }
@@ -502,7 +503,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.showSuccessMsg('操作成功', active['reload'].call(this));
+                            common.showSuccessMsg('操作成功', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -554,7 +557,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.showSuccessMsg('操作成功', active['reload'].call(this));
+                            common.showSuccessMsg('操作成功', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -564,7 +569,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                     }
                 });
                 layer.close(index2);
-
             }
         });
     }
@@ -590,7 +594,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 type: 'POST',
                 success: function (result) {
                     if (result.code === 200) {
-                        common.showSuccessMsg('操作成功', active['reload'].call(this));
+                        common.showSuccessMsg('操作成功', function () {
+                            active['reload'].call(this);
+                        });
                     } else {
                         common.showFailMsg('操作失败');
                     }

@@ -178,11 +178,9 @@
         });
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer", 'common'], function () {
+    layui.use(["form", "jquery", "layer", 'common'], function () {
         let form = layui.form;
-        let okLayer = layui.okLayer;
         let $ = layui.jquery;
-        let layer = layui.layer;
         let common = layui.common;
 
         if (uuid_ != null) {
@@ -294,7 +292,7 @@
                         if (res.data) {
                             call(res.data);
                         }
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });

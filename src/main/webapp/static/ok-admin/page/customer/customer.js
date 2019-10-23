@@ -68,12 +68,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                     }
                 });
                 init_data(result.data);
-                // let entryType = $('#entryType').val();
-                // let postData = {};
-                // postData.entryType = entryType;
-                // init_customerTypeCount(postData);
                 form.render();
-                // layer.msg('加载完成', {icon: 6});
             },
             error: function () {
                 common.showFailMsg('获取用户失败，请稍后再试');
@@ -503,7 +498,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 type: 'POST',
                 success: function (result) {
                     if (result.code === 200) {
-                        common.showSuccessMsg('操作成功!')
+                        common.showSuccessMsg('操作成功!');
                     } else {
                         common.showFailMsg('操作失败');
                     }
@@ -601,7 +596,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             common.showSuccessMsg('操作成功');
                             $('#remark'+uuid).text(value);
                             $('#remark'+uuid).parent().attr("title",value);
-
                         } else {
                             common.showFailMsg('操作失败');
                         }

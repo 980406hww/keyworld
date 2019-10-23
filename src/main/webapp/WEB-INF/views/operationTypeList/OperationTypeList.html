@@ -113,16 +113,16 @@
         NProgress.done();
     };
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'common'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
-        var laydate = layui.laydate;
         var okLayer = layui.okLayer;
         var layer = layui.layer;
+        var common = layui.common;
 
-        init_Search({'terminalType': 'PC'})
+        init_Search({'terminalType': 'PC'});
 
         function init_Search(whereCondition){
             table.render({
@@ -157,18 +157,18 @@
         }
 
         element.on('tab(keywordTab)', function (data) {
-            var d = data.elem.context.dataset
+            var d = data.elem.context.dataset;
             $('#terminalType').val(d.terminal);
             active['reload'].call(this);
         });
 
         var active = {
             reload: function () {
-                var terminalType = $("#terminalType").val()
-                if(terminalType == '' || terminalType == null){
+                var terminalType = $("#terminalType").val();
+                if(terminalType === '' || terminalType == null){
                     terminalType = 'PC'
                 }
-                var data = {'terminalType': terminalType}
+                var data = {'terminalType': terminalType};
                 table.reload('operationTypeTable', {
                     where: data,
                     page: {
@@ -179,13 +179,13 @@
         };
 
         form.on("submit(search)", function (data) {
-            var postData = data.field
-            var terminalType = $("#terminalType").val()
-            if(terminalType == '' || terminalType == null){
+            var postData = data.field;
+            var terminalType = $("#terminalType").val();
+            if(terminalType === '' || terminalType == null){
                 terminalType = 'PC'
             }
-            postData.terminalType = terminalType
-            init_Search(postData)
+            postData.terminalType = terminalType;
+            init_Search(postData);
             return false
         });
 
@@ -198,6 +198,8 @@
                 case 'modifyOperationType':
                     modifyOperationType(data.uuid);
                     break;
+                default:
+                    break;
             }
         });
 
@@ -209,6 +211,8 @@
                     break;
                 case 'deleteBatchOperationType':
                     deleteBatchOperationType();
+                    break;
+                default:
                     break;
             }
         });
@@ -234,7 +238,7 @@
         }
 
         function deleteOperationType(uuid, operationTypeName){
-            var postData = {}
+            let postData = {};
             postData.uuid = uuid;
             postData.operationTypeName = operationTypeName;
             postData.deleteType = "single";
@@ -253,20 +257,20 @@
                         data: JSON.stringify(postData),
                         success: function (res) {
                             if (res.code === 200) {
-                                var data = {}
-                                table.reload('operationTypeTable', {
-                                    where: data,
-                                    page: {
-                                        curr: 1
-                                    }
+                                common.showSuccessMsg("删除成功", function () {
+                                    table.reload('operationTypeTable', {
+                                        where: {},
+                                        page: {
+                                            curr: 1
+                                        }
+                                    });
                                 });
-                                layer.msg("删除成功")
                             } else {
-                                layer.msg(res.msg)
+                                common.showFailMsg(res.msg);
                             }
                         },
                         error: function () {
-                            layer.msg('未知错误，请稍后重试！！')
+                            common.showFailMsg('未知错误，请稍后重试！！');
                         }
                     });
                 }, btn2: function (index) {
@@ -283,7 +287,7 @@
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的操作类型', {icon: 5});
+                common.showFailMsg('请选择要操作的操作类型');
                 return
             }
             layer.confirm("确定要删除所选操作类型吗", {icon: 3, title: '删除所选'}, function (index) {
@@ -300,18 +304,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);

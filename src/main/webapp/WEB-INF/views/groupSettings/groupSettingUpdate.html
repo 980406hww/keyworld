@@ -289,9 +289,9 @@
 <script>
 
     let layui_ = null;
-    var uuid_ = null;
-    var uuids_ = null;
-    var operationCombineUuid_ = null;
+    let uuid_ = null;
+    let uuids_ = null;
+    let operationCombineUuid_ = null;
     let operationTypes = null;
 
     function initForm(data) {
@@ -318,26 +318,26 @@
         }
 
     }
+
     function init_operationCombineCount(layui_, operationCombineUuid){
-        var $ = layui_.jquery;
-        var form = layui_.form;
+        let $ = layui_.jquery;
         $.ajax({
             url: '/internal/groupsetting/getGroupSettingCount2/' + operationCombineUuid,
             type: 'post',
             dataType: 'json',
             success: function (res) {
                 if (res.code === 200) {
-                    $('#operationCombineCount').text(res.data)
-                    $('#ocspan').css('display','inline-block')
+                    $('#operationCombineCount').text(res.data);
+                    $('#ocspan').css('display','inline-block');
                 } else {
-                    layui.layer.msg(res.msg);
+                    layui_.layer.msg(res.msg, {icon: 5, time: 3000});
                 }
             }
         });
     }
     function setForm(layui_, uuid){
-        var $ = layui_.jquery;
-        var form = layui_.form;
+        let $ = layui_.jquery;
+        let form = layui_.form;
         $.ajax({
             url: '/internal/groupsetting/getGroupSettingByUuid/' + uuid,
             type: 'post',
@@ -346,7 +346,7 @@
                 if (res.code === 200) {
                     form.val("updateGroupSetting", res.data);
                 } else {
-                    layui_.layer.msg(res.msg);
+                    layui_.layer.msg(res.msg, {icon:5, time: 3000});
                 }
             }
         });
@@ -362,16 +362,15 @@
         form.render("select");
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
+    layui.use(["form", "common", "jquery", "layer"], function () {
         let form = layui.form;
-        let okLayer = layui.okLayer;
+        let common = layui.common;
         let $ = layui.jquery;
-        let layer = layui.layer;
 
         document.onkeydown=function(e){
-            var isie = !!(document.all);
-            var key;
-            var ev;
+            let isie = !!(document.all);
+            let key;
+            let ev;
             if(isie){//IE浏览器
                 key = window.event.keyCode;
                 ev = window.event;
@@ -381,7 +380,7 @@
             }
             if(key===9){//IE浏览器
                 // document.getElementById(e.target.id).focus()
-                okLayer.msg.yellowSigh("请不要使用tab键切换输入框！",null);
+                common.showFailMsg("请不要使用tab键切换输入框！");
                 e.target.focus();
                 if(isie){
                     ev.keyCode=0;
@@ -398,23 +397,8 @@
         } else {
             layui_ = layui;
         }
-        if (uuid_ != null){
+        if (uuid_ != null) {
             setForm(layui, uuid_);
-        }
-
-
-        function show_layer_msg(msg, icon, status, time, title) {
-            layer.msg(msg, {
-                icon: icon,
-                title: title === undefined ? null : title,
-                anim: 5,
-                time: time === undefined ? 2000 : time,
-                isOutAnim: false
-            }, function () {
-                if (status) {
-                    active['reload'].call(this);
-                }
-            });
         }
 
         window.recalculateUnusedPercent = function (_elem) {
@@ -423,7 +407,7 @@
             if (uuid_ != null){
                 if (allocPercent < 0 || allocPercent > 100 || allocPercent > totalPercent) {
                     $(_elem).addClass("layui-form-danger").focus();
-                    show_layer_msg("请输入正确的分组占比且不能大于剩余占比", 5)
+                    common.showFailMsg("请输入正确的分组占比且不能大于剩余占比");
                 } else {
                     $('#unusedPercent').text(totalPercent - allocPercent)
                 }
@@ -431,7 +415,7 @@
                 let operationCombineCount = parseInt($('#operationCombineCount').text());
                 if (allocPercent * operationCombineCount > totalPercent) {
                     $(_elem).addClass("layui-form-danger").focus();
-                    show_layer_msg("请输入正确的分组占比且不能大于剩余占比", 5)
+                    common.showFailMsg("请输入正确的分组占比且不能大于剩余占比");
                 } else {
                     $('#unusedPercent').text(totalPercent - allocPercent * operationCombineCount)
                 }
@@ -440,7 +424,7 @@
         }
 
         window.checkItem = function (self) {
-            var color = $($(self).siblings()[0]).css("color");
+            let color = $($(self).siblings()[0]).css("color");
             if(color === "rgb(0, 0, 0)") {
 
                 $($(self).siblings()[0]).css("color", "red");
@@ -451,8 +435,8 @@
         };
 
         function isChecked(id) {
-            // var color =  $($('#'+id).parent().siblings()[0]).css("color");
-            var color =  $($('#'+id).closest('.layui-form-item').find('.layui-form-label')[0]).css("color");
+            // let color =  $($('#'+id).parent().siblings()[0]).css("color");
+            let color =  $($('#'+id).closest('.layui-form-item').find('.layui-form-label')[0]).css("color");
             if(color === "rgb(255, 0, 0)") {
                 return "1";
             } else {
@@ -461,22 +445,21 @@
         }
 
         form.on("submit(save)", function (data) {
-            var data = data.field;
-            var postData = {};
-            let groupSetting = data;
+            let data_ = data.field;
+            let postData = {};
+            let groupSetting = data_;
             groupSetting.remainingAccount = parseInt($('#unusedPercent').text());
-            groupSetting.operationCombineName = data.settingOperationCombineName;
-            groupSetting.terminalType = data.terminalType;
-            groupSetting.maxInvalidCount = data.settingMaxInvalidCount === "" ? 8 : data.settingMaxInvalidCount;
+            groupSetting.operationCombineName = data_.settingOperationCombineName;
+            groupSetting.terminalType = data_.terminalType;
+            groupSetting.maxInvalidCount = data_.settingMaxInvalidCount === "" ? 8 : data_.settingMaxInvalidCount;
             let groupSettingCheck = {};
-            for (var key in data) {
+            for (let key in data_) {
                 groupSettingCheck[key] = isChecked(key)
             }
             groupSettingCheck['operationCombineName'] = groupSettingCheck['settingOperationCombineName'];
             groupSettingCheck['maxInvalidCount'] = groupSettingCheck['settingMaxInvalidCount'];
             postData.gs = groupSettingCheck;
             postData.groupSetting = groupSetting;
-            // return false;
             let url = '/internal/groupsetting/updateGroupSetting2';
             if (uuid_ === null ){
                 url = '/internal/operationcombine/updateOperationCombine2/' + operationCombineUuid_;
@@ -485,7 +468,7 @@
                 let operationCombineCount = parseInt($('#operationCombineCount').text());
                 if (allocPercent * operationCombineCount > totalPercent) {
                     $('#machineUsedPercent').addClass("layui-form-danger").focus();
-                    show_layer_msg("请输入正确的分组占比且不能大于剩余占比", 5);
+                    common.showFailMsg("请输入正确的分组占比且不能大于剩余占比");
                     return false;
                 }
             }
@@ -499,12 +482,12 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });

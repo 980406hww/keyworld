@@ -126,17 +126,16 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
 
-    var uuid_ = null;
-    var layui_ = null;
-    var websiteUuid_ = null;
-    var originalSortRank_ = null;
-    var customerUuid_ = null;
-    var friendlyLinkType_ = null;
-    var flag_ = false;
+    let uuid_ = null;
+    let layui_ = null;
+    let websiteUuid_ = null;
+    let originalSortRank_ = null;
+    let customerUuid_ = null;
+    let friendlyLinkType_ = null;
 
     function initForm(uuid, websiteUuid) {
         uuid_ = uuid;
-        websiteUuid_ = websiteUuid
+        websiteUuid_ = websiteUuid;
         if (layui_ != null) {
             setForm(layui_, uuid_);
         }
@@ -158,28 +157,28 @@
                 originalSortRank_ = res.data.friendlyLinkSortRank;
                 customerUuid_ = res.data.customerUuid;
                 friendlyLinkType_ = res.data.friendlyLinkType;
-                var expirationTime = new Date(res.data.expirationTime);
+                let expirationTime = new Date(res.data.expirationTime);
                 res.data.expirationTime = expirationTime.getFullYear() + '-' +
                     (expirationTime.getMonth()+1 < 10 ? '0'+(expirationTime.getMonth()+1) : expirationTime.getMonth()+1) + '-' + expirationTime.getDate();
-                var renewTime = new Date(res.data.renewTime);
+                let renewTime = new Date(res.data.renewTime);
                 res.data.renewTime = renewTime.getFullYear() + '-' +
                     (renewTime.getMonth()+1 < 10 ? '0'+(renewTime.getMonth()+1) : renewTime.getMonth()+1) + '-' + renewTime.getDate();
-                delete res.data['friendlyLinkLogo']
+                delete res.data['friendlyLinkLogo'];
                 init_Select();
                 if (res.code === 200) {
                     layui.form.val("friendlyLinkForm", res.data);
                 } else {
-                    l.layer.msg(res.msg);
+                    l.layer.msg(res.msg, {icon: 5, time: 3000});
                 }
             }
         });
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer", "laydate"], function () {
-        var form = layui.form;
-        var okLayer = layui.okLayer;
-        var $ = layui.jquery;
-        var laydate = layui.laydate
+    layui.use(["form", "jquery", "layer", "laydate", "common"], function () {
+        let form = layui.form;
+        let $ = layui.jquery;
+        let laydate = layui.laydate;
+        let common = layui.common;
 
         if (uuid_ != null) {
             setForm(layui, uuid_);
@@ -191,7 +190,7 @@
         window.init_Select = function(){
             init_customerInfo();
             init_friendlyLinkType();
-        }
+        };
 
         function init_Select2(){
             init_customerInfo();
@@ -212,13 +211,13 @@
                 type: "GET",
                 success: function (res_) {
                     $("#customerInfo").find('option').remove();
-                    var customerInfo = $("#customerInfo")
-                    var res = JSON.parse(res_)
+                    let customerInfo = $("#customerInfo");
+                    let res = JSON.parse(res_)
                     customerInfo.append('<option value="">请选择用户名称</option>')
                     if (res.data != null) {
-                        var customerList = res.data
+                        let customerList = res.data
                         $.each(customerList, function (idx, val) {
-                            if(customerUuid_ == val.uuid){
+                            if(customerUuid_ === val.uuid){
                                 customerInfo.append('<option value="' + val.contactPerson + '_' + val.uuid + '" selected>' + val.contactPerson + '_' + val.uuid + '</option>')
                             }else{
                                 customerInfo.append('<option value="' + val.contactPerson + '_' + val.uuid + '" >' + val.contactPerson + '_' + val.uuid + '</option>')
@@ -228,7 +227,7 @@
                     form.render('select')
                 },
                 error: function () {
-                    layer.msg("获取信息失败！");
+                    common.showFailMsg("获取信息失败！");
                 }
             });
         }
@@ -239,14 +238,14 @@
                 type: "GET",
                 success: function (res_) {
                     $("#friendlyLinkType").find('option').remove();
-                    var friendlyLinkType = $("#friendlyLinkType")
-                    var res = JSON.parse(res_)
+                    let friendlyLinkType = $("#friendlyLinkType");
+                    let res = JSON.parse(res_);
                     friendlyLinkType.append('<option value="默认分类_0">默认分类_0</option>');
                     if (res.data != null) {
-                        var friendlyLinkTypeList = res.data
+                        let friendlyLinkTypeList = res.data;
                         $.each(friendlyLinkTypeList, function (idx, val) {
-                            var tmp = val.typename + '_' + val.id
-                            if(friendlyLinkType_ == tmp){
+                            let tmp = val.typename + '_' + val.id;
+                            if(friendlyLinkType_ === tmp){
                                 friendlyLinkType.append('<option value="' + val.typename + '_' + val.id + '" selected>' + val.typename + '_' + val.id + '</option>')
                             }else{
                                 friendlyLinkType.append('<option value="' + val.typename + '_' + val.id + '" >' + val.typename + '_' + val.id + '</option>')
@@ -256,58 +255,58 @@
                     form.render('select')
                 },
                 error: function () {
-                    layer.msg("获取信息失败！");
+                    common.showFailMsg("获取信息失败！");
                 }
             });
         }
 
         form.on("submit(commit)", function (data) {
-            var customerInfo = data.field.customerInfo;
-            var customerUuid = customerInfo.split('_')[customerInfo.split('_').length - 1];
-            var friendlyLinkWebName = data.field.friendlyLinkWebName;
-            var friendlyLinkUrl = data.field.friendlyLinkUrl;
-            if(friendlyLinkUrl.indexOf('http://') == -1){
+            let customerInfo = data.field.customerInfo;
+            let customerUuid = customerInfo.split('_')[customerInfo.split('_').length - 1];
+            let friendlyLinkWebName = data.field.friendlyLinkWebName;
+            let friendlyLinkUrl = data.field.friendlyLinkUrl;
+            if(friendlyLinkUrl.indexOf('http://') === -1){
                 friendlyLinkUrl = 'http://' + friendlyLinkUrl
             }
-            var friendlyLinkSortRank = data.field.friendlyLinkSortRank;
-            if (friendlyLinkSortRank  ==  "") {
+            let friendlyLinkSortRank = data.field.friendlyLinkSortRank;
+            if (friendlyLinkSortRank  ===  "") {
                 friendlyLinkSortRank = -1;
             }
-            var friendlyLinkEmail = data.field.friendlyLinkEmail;
-            var friendlyLinkType = data.field.friendlyLinkType;
-            var friendlyLinkTypeId = friendlyLinkType.split('_')[friendlyLinkType.split('_').length - 1];
-            var friendlyLinkIsCheck = data.field.friendlyLinkIsCheck;
-            var expirationTime = data.field.expirationTime;
-            if (expirationTime == ""){
-                layer.msg("请选择到期时间");
+            let friendlyLinkEmail = data.field.friendlyLinkEmail;
+            let friendlyLinkType = data.field.friendlyLinkType;
+            let friendlyLinkTypeId = friendlyLinkType.split('_')[friendlyLinkType.split('_').length - 1];
+            let friendlyLinkIsCheck = data.field.friendlyLinkIsCheck;
+            let expirationTime = data.field.expirationTime;
+            if (expirationTime === ""){
+                common.showFailMsg("请选择到期时间");
                 return;
             }
-            var renewTime = data.field.renewTime;
-            if (renewTime == ""){
-                layer.msg("请选择续费时间");
+            let renewTime = data.field.renewTime;
+            if (renewTime === ""){
+                common.showFailMsg("请选择续费时间");
                 return;
             }
-            var friendlyLinkLogoFile = data.field.friendlyLinkLogo;
-            if (friendlyLinkLogoFile != "") {
-                var fileTypes = new Array("jpg", "png", "gif");
-                var fileTypeFlag = false;
-                var newFileName = friendlyLinkLogoFile.split('.');
+            let friendlyLinkLogoFile = data.field.friendlyLinkLogo;
+            if (friendlyLinkLogoFile !== "") {
+                let fileTypes = new Array("jpg", "png", "gif");
+                let fileTypeFlag = false;
+                let newFileName = friendlyLinkLogoFile.split('.');
                 newFileName = newFileName[newFileName.length - 1];
-                for (var i = 0; i < fileTypes.length; i++) {
-                    if (fileTypes[i] == newFileName) {
+                for (let i = 0; i < fileTypes.length; i++) {
+                    if (fileTypes[i] === newFileName) {
                         fileTypeFlag = true;
                         break;
                     }
                 }
                 if (!fileTypeFlag) {
-                    layer.msg("请提交正确格式图片 .jpg .png .gif");
+                    common.showFailMsg("请提交正确格式图片 .jpg .png .gif");
                     return false;
                 }
             }
-            var friendlyLinkMsg = data.field.friendlyLinkMsg;
-            var friendlyLinkLogo = $('#friendlyLinkLogo')[0].files[0];
+            let friendlyLinkMsg = data.field.friendlyLinkMsg;
+            let friendlyLinkLogo = $('#friendlyLinkLogo')[0].files[0];
 
-            var formData = new FormData();
+            let formData = new FormData();
             formData.append('file', $('#friendlyLinkLogo')[0].files[0]);
             formData.append('websiteUuid', websiteUuid_);
             formData.append('customerInfo', $.trim(customerInfo));
@@ -333,12 +332,12 @@
                     contentType: false,
                     success: function (res) {
                         if (res.code === 200) {
-                            okLayer.msg.greenTick("保存成功", function () {
+                            common.showSuccessMsg("保存成功", function () {
                                 parent.window.sign = true;
                                 parent.layer.close(parent.layer.getFrameIndex(window.name));
                             });
                         } else {
-                            layui.layer.msg(res.msg);
+                            common.showFailMsg(res.msg);
                         }
                     }
                 });
@@ -355,12 +354,12 @@
                     contentType: false,
                     success: function (res) {
                         if (res.code === 200) {
-                            okLayer.msg.greenTick("修改成功", function () {
+                            common.showSuccessMsg("修改成功", function () {
                                 parent.window.sign = true;
                                 parent.layer.close(parent.layer.getFrameIndex(window.name));
                             });
                         } else {
-                            layui.layer.msg(res.msg);
+                            common.showFailMsg(res.msg);
                         }
                     }
                 });
@@ -375,8 +374,8 @@
 
         form.verify({
             website: function(value, item){
-                if(value != ""){
-                    if(value.indexOf(".") == -1){
+                if(value !== ""){
+                    if(value.indexOf(".") === -1){
                         return "请输入正确网址"
                     }
                 }else{
@@ -384,15 +383,15 @@
                 }
             },
             number: function(value, item){
-                if(value != ""){
+                if(value !== ""){
                     if(!/^[1-9]\d*$/.test(value)){
                         return "请输入大于0的整数排名"
                     }
                 }
             },
             email: function(value, item){
-                if(value != ""){
-                    if(value.indexOf("@") == -1){
+                if(value !== ""){
+                    if(value.indexOf("@") === -1){
                         return "请输入正确的邮箱"
                     }
                 }
