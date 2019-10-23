@@ -9,6 +9,15 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-table-body .layui-table-cell {
+            text-align: left;
+        }
+        .layui-table-body .laytable-cell-checkbox {
+            text-align: center;
+        }
+        .layui-table tr .layui-table-col-special .layui-table-cell{
+            text-align: center;
+        }
         .layui-inline input {
             width: 150px;
             height: 30px;
@@ -332,15 +341,15 @@
 </script>
 
 <script type="text/html" id="toolbarTpl">
-    <div class="layui-btn-container">
+    <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/salesManage/saveSalesInfo">
         <button class="layui-btn layui-btn-sm" id="addMachine" lay-event="showSalesInfoDialog">添加</button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/salesManage/deleteSalesInfo">
-    <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="deleteSalesInfos">
-        <i class="layui-icon layui-icon-delete"></i>删除所选
-    </button>
-    </@shiro.hasPermission>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/salesManage/deleteSalesInfo">
+        <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="deleteSalesInfos">
+            <i class="layui-icon layui-icon-delete"></i>删除所选
+        </button>
+        </@shiro.hasPermission>
     </div>
 </script>
 

@@ -10,6 +10,15 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
 </head>
 <style>
+    .layui-table-body .layui-table-cell {
+        text-align: left;
+    }
+    .layui-table-body .laytable-cell-checkbox {
+        text-align: center;
+    }
+    .layui-table tr .layui-table-col-special .layui-table-cell{
+        text-align: center;
+    }
     .layui-table-cell{
         height: 40px !important;
         padding: 0 6px !important;
@@ -970,55 +979,49 @@
 
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
-    <div class="layui-btn-container">
+    <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/machineInfo/deleteMachineInfos">
             <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="batchDeleteMachines">
                 <i class="layui-icon layui-icon-delete"></i>删除所选
             </button>
         </@shiro.hasPermission>
-        <div class="layui-btn-group">
-            <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
-                <button class="layui-btn layui-btn layui-btn-normal layui-btn-sm" id="showReopenClientDialog" lay-event="showReopenClientDialog">
-                    <i class="layui-icon layui-icon-refresh"></i>重开机器
-                </button>
-                <button class="layui-btn layui-btn layui-btn-normal layui-btn-sm" id="finishStartUp" lay-event="finishStartUp">
-                    <i class="layui-icon layui-icon-chart-screen"></i>完成开机
-                </button>
-                <button class="layui-btn layui-btn layui-btn-normal layui-btn-sm" lay-event="BatchChangeStatus('true')">
-                    批量开始监控
-                </button>
-                <button class="layui-btn layui-btn layui-btn-normal layui-btn-sm" lay-event="BatchChangeStatus('false')">
-                    批量暂停监控
-                </button>
-            </@shiro.hasPermission>
-        </div>
-        <div class="layui-btn-group">
-            <@shiro.hasPermission name="/internal/machineInfo/uploadVPSFile">
-                <button class="layui-btn layui-btn layui-btn layui-btn-warm layui-btn-sm" id="common" lay-event="showUploadVPSDialog('common')">
-                    <i class="layui-icon layui-icon-upload-drag"></i>导入普通终端
-                </button>
-                <button class="layui-btn layui-btn layui-btn layui-btn-warm layui-btn-sm" id="startUp" lay-event="showUploadVPSDialog('startUp')">
-                    <i class="layui-icon layui-icon-upload-drag"></i>导入开机终端
-                </button>
-            </@shiro.hasPermission>
-        </div>
-        <div class="layui-btn-group">
-            <@shiro.hasPermission name="/internal/machineInfo/updateMachineGroup">
-                <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="batchUpdateMachine">
-                    <i class="layui-icon layui-icon-edit"></i>修改所选终端分组信息
-                </button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
-                <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toBatchUpdateFailedReason">
-                    <i class="layui-icon layui-icon-edit"></i>修改所选终端失败原因
-                </button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/machineInfo/changeTerminalType">
-                <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toBatchChangeTerminalType">
-                    <i class="layui-icon layui-icon-edit"></i>变更所选终端类型
-                </button>
-            </@shiro.hasPermission>
-        </div>
+        <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
+            <button class="layui-btn layui-btn layui-btn-normal layui-btn-sm" id="showReopenClientDialog" lay-event="showReopenClientDialog">
+                <i class="layui-icon layui-icon-refresh"></i>重开机器
+            </button>
+            <button class="layui-btn layui-btn layui-btn-normal layui-btn-sm" id="finishStartUp" lay-event="finishStartUp">
+                <i class="layui-icon layui-icon-chart-screen"></i>完成开机
+            </button>
+            <button class="layui-btn layui-btn layui-btn-normal layui-btn-sm" lay-event="BatchChangeStatus('true')">
+                批量开始监控
+            </button>
+            <button class="layui-btn layui-btn layui-btn-normal layui-btn-sm" lay-event="BatchChangeStatus('false')">
+                批量暂停监控
+            </button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/machineInfo/uploadVPSFile">
+            <button class="layui-btn layui-btn layui-btn layui-btn-warm layui-btn-sm" id="common" lay-event="showUploadVPSDialog('common')">
+                <i class="layui-icon layui-icon-upload-drag"></i>导入普通终端
+            </button>
+            <button class="layui-btn layui-btn layui-btn layui-btn-warm layui-btn-sm" id="startUp" lay-event="showUploadVPSDialog('startUp')">
+                <i class="layui-icon layui-icon-upload-drag"></i>导入开机终端
+            </button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/machineInfo/updateMachineGroup">
+            <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="batchUpdateMachine">
+                <i class="layui-icon layui-icon-edit"></i>修改所选终端分组信息
+            </button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
+            <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toBatchUpdateFailedReason">
+                <i class="layui-icon layui-icon-edit"></i>修改所选终端失败原因
+            </button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/machineInfo/changeTerminalType">
+            <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toBatchChangeTerminalType">
+                <i class="layui-icon layui-icon-edit"></i>变更所选终端类型
+            </button>
+        </@shiro.hasPermission>
     </div>
 </script>
 

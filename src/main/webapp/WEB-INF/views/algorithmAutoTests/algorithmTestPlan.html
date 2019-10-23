@@ -449,25 +449,26 @@
 </script>
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
-
-    <@shiro.hasPermission name="/internal/algorithmAutoTest/saveAlgorithmTestPlan">
-    <button class="layui-btn layui-btn-sm " id="add" lay-event="add">
-        添加
-    </button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/algorithmAutoTest/changeAlgorithmTestPlanStatus">
-    <button class="layui-btn layui-btn-sm " id="stop_selected" lay-event="stop_selected">
-        暂停所选
-    </button>
-    <button class="layui-btn layui-btn-sm " id="active_selected" lay-event="active_selected">
-        激活所选
-    </button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/algorithmAutoTest/deleteAlgorithmTestPlan">
-    <button class="layui-btn layui-btn-sm layui-btn-danger" id="delete_selected" lay-event="delete_selected">
-        删除所选
-    </button>
-    </@shiro.hasPermission>
+    <div class="layui-btn-group">
+        <@shiro.hasPermission name="/internal/algorithmAutoTest/saveAlgorithmTestPlan">
+        <button class="layui-btn layui-btn-sm " id="add" lay-event="add">
+            添加
+        </button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/algorithmAutoTest/changeAlgorithmTestPlanStatus">
+        <button class="layui-btn layui-btn-sm " id="stop_selected" lay-event="stop_selected">
+            暂停所选
+        </button>
+        <button class="layui-btn layui-btn-sm " id="active_selected" lay-event="active_selected">
+            激活所选
+        </button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/algorithmAutoTest/deleteAlgorithmTestPlan">
+        <button class="layui-btn layui-btn-sm layui-btn-danger" id="delete_selected" lay-event="delete_selected">
+            删除所选
+        </button>
+        </@shiro.hasPermission>
+    </div>
 </script>
 
 <script type="text/html" id="toOperationCombineTpl">

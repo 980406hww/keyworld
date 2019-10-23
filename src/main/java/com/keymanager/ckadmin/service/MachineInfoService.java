@@ -2,10 +2,7 @@ package com.keymanager.ckadmin.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
-import com.keymanager.ckadmin.criteria.MachineGroupWorkInfoCriteria;
-import com.keymanager.ckadmin.criteria.MachineInfoBatchUpdateCriteria;
-import com.keymanager.ckadmin.criteria.MachineInfoCriteria;
-import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
+import com.keymanager.ckadmin.criteria.*;
 import com.keymanager.ckadmin.entity.ClientUpgrade;
 import com.keymanager.ckadmin.entity.CustomerKeywordTerminalRefreshStatRecord;
 import com.keymanager.ckadmin.entity.MachineGroupWorkInfo;
@@ -124,7 +121,7 @@ public interface MachineInfoService extends IService<MachineInfo> {
 
     List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(String clientIDPrefix, String city, String switchGroupName);
 
-    List<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(String group, String terminalType);
+    Page<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(Page<MachineInfoGroupSummaryVO> page, MachineInfoGroupStatCriteria machineInfoGroupStatCriteria);
 
     MachineInfo getStoppedMachineInfo();
 

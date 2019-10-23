@@ -9,6 +9,16 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-table-body .layui-table-cell {
+            text-align: left;
+        }
+        .layui-table-body .laytable-cell-checkbox {
+            text-align: center;
+        }
+        .layui-table tr .layui-table-col-special .layui-table-cell{
+            text-align: center;
+        }
+
         .layui-table-page > div {
             height: 26px;
             position: fixed;
@@ -324,7 +334,7 @@
 
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
-    <div class="layui-btn-container">
+    <div class="layui-btn-group">
     <@shiro.hasRole name="AlgorithmGroup">
         <button class="layui-btn layui-btn-sm" id="addMachine" lay-event="toAddOperationType">添加</button>
         <button class="layui-btn layui-btn-danger layui-btn-sm" id="deleteBatchOperationType" lay-event="deleteBatchOperationType">

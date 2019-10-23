@@ -9,6 +9,15 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-table-body .layui-table-cell {
+            text-align: left;
+        }
+        .layui-table-body .laytable-cell-checkbox {
+            text-align: center;
+        }
+        .layui-table tr .layui-table-col-special .layui-table-cell{
+            text-align: center;
+        }
         .layui-table-page > div {
             height: 26px;
             position: fixed;
@@ -610,7 +619,7 @@
 
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
-    <div class="layui-btn-container">
+    <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/website/saveWebsite">
         <button class="layui-btn layui-btn-sm" lay-event="toAddWebsite">添加</button>
         </@shiro.hasPermission>
@@ -619,37 +628,33 @@
             <i class="layui-icon layui-icon-delete"></i>删除所选
         </button>
         </@shiro.hasPermission>
-        <div class="layui-btn-group">
-            <@shiro.hasPermission name="/internal/friendlyLink/synchronousFriendlyLink">
-            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="synchronousFriendlyLink">同步所选友链信息</button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/advertising/synchronousAdvertising">
-            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="synchronousAdvertising">同步所选广告信息</button>
-            </@shiro.hasPermission>
-        </div>
-        <div class="layui-btn-group">
-            <@shiro.hasPermission name="/internal/friendlyLink/saveFriendlyLinks">
-                <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="showBatchAddFriendlyLinkDialog">指定网站增加友链</button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/advertising/saveAdvertisings">
-                <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="showBatchAddAdvertisingDialog">指定网站增加广告</button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/friendlyLink/saveFriendlyLink">
-                <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchModifyFriendlyLink">指定网站修改友链</button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/advertising/saveAdvertising">
-                <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchModifyAdvertising">指定网站修改广告</button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/friendlyLink/deleteFriendlyLinks">
-                <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchDelFriendlyLink">指定网站删除友链</button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/advertising/deleteAdvertisings">
-                <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchDelAdvertising">指定网站删除广告</button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/website/putSalesInfoToWebsite">
-                <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="putSalesInfoToWebsite">推送销售信息至站点</button>
-            </@shiro.hasPermission>
-        </div>
+        <@shiro.hasPermission name="/internal/friendlyLink/synchronousFriendlyLink">
+        <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="synchronousFriendlyLink">同步所选友链信息</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/advertising/synchronousAdvertising">
+        <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="synchronousAdvertising">同步所选广告信息</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/friendlyLink/saveFriendlyLinks">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="showBatchAddFriendlyLinkDialog">指定网站增加友链</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/advertising/saveAdvertisings">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="showBatchAddAdvertisingDialog">指定网站增加广告</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/friendlyLink/saveFriendlyLink">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchModifyFriendlyLink">指定网站修改友链</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/advertising/saveAdvertising">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchModifyAdvertising">指定网站修改广告</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/friendlyLink/deleteFriendlyLinks">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchDelFriendlyLink">指定网站删除友链</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/advertising/deleteAdvertisings">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchDelAdvertising">指定网站删除广告</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/website/putSalesInfoToWebsite">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="putSalesInfoToWebsite">推送销售信息至站点</button>
+        </@shiro.hasPermission>
     </div>
 </script>
 

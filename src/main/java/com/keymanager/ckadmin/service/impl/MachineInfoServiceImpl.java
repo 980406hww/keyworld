@@ -2,10 +2,7 @@ package com.keymanager.ckadmin.service.impl;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.ckadmin.criteria.MachineGroupWorkInfoCriteria;
-import com.keymanager.ckadmin.criteria.MachineInfoBatchUpdateCriteria;
-import com.keymanager.ckadmin.criteria.MachineInfoCriteria;
-import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
+import com.keymanager.ckadmin.criteria.*;
 import com.keymanager.ckadmin.dao.MachineInfoDao;
 import com.keymanager.ckadmin.entity.ClientUpgrade;
 import com.keymanager.ckadmin.entity.CustomerKeywordTerminalRefreshStatRecord;
@@ -425,8 +422,10 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     @Override
-    public List<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(String group, String terminalType) {
-        return null;
+    public Page<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(Page<MachineInfoGroupSummaryVO> page, MachineInfoGroupStatCriteria machineInfoGroupStatCriteria) {
+        List<MachineInfoGroupSummaryVO> machineInfoGroupSummaryVOS = machineInfoDao.searchMachineInfoGroupSummaryVO(page, machineInfoGroupStatCriteria);
+        page.setRecords(machineInfoGroupSummaryVOS);
+        return page;
     }
 
     @Override

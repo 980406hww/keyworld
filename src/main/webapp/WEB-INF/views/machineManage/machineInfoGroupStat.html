@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>终端分组统计</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+    <style>
+        .layui-table-body .layui-table-cell {
+            text-align: left;
+        }
+        .layui-table-body .laytable-cell-checkbox {
+            text-align: center;
+        }
+        .layui-table tr .layui-table-col-special .layui-table-cell{
+            text-align: center;
+        }
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
+        .my-collapse {
+            position: relative;
+            box-shadow: none;
+
+        }
+
+        .my-collapse * {
+            box-shadow: none;
+        }
+
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 1px solid #e6e6e6;
+        }
+
+        .my-collapse > div {
+            padding: 7px 10px;
+        }
+        .my-collapse button {
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .my-collapse .my-btn {
+            height: 30px !important;
+            line-height: 30px !important;
+            padding: 0 18px;
+            background-color: #45a3c2;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 12px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .my-collapse .my-btn:hover {
+            opacity: .8;
+            transition: opacity 0.5s;
+        }
+        .layui-inline input {
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="ok-body">
+    <div class="layui-tab layui-tab-card" lay-filter="keywordTab">
+        <ul class="layui-tab-title" id="tabItem">
+            <li lay-id="PC" class="layui-this" data-terminal="PC">电脑</li>
+            <li lay-id="Phone" data-terminal="Phone">手机</li>
+        </ul>
+        <input type="hidden" id="terminalType" name="terminalType">
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <form class="layui-form layui-form-pane" id="searchForm">
+                    <div class="my-collapse">
+                        <div class="out-condition">
+                            <div class="layui-inline" style="width: 140px">
+                                <div class="layui-input-inline">
+                                    <input type="text" name="groupName" id="groupName" placeholder="请输入分组名称" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <button class="layui-btn" lay-submit="" lay-filter="search"id="searchBtn">搜索</button>
+                            </div>
+                            <div class="layui-inline">
+                                <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">
+                                    重置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <!--数据表格-->
+                <table class="layui-hide" id="machineInfoGroupStatTable" lay-filter="tableFilter"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+
+<script>
+    var sign = false;
+    // 进度条加载提示
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
+    // layui相关
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+        var okLayer = layui.okLayer;
+        var layer = layui.layer;
+
+        init_Search({'terminalType': 'PC'})
+
+        function init_Search(whereCondition){
+            table.render({
+                elem: '#machineInfoGroupStatTable',
+                method: 'post',
+                url: '${ctx.path}/internal/machineManage/machineInfoGroupStat',
+                limit: 50,
+                page: true,
+                autoSort: false,
+                size: 'sm',
+                id: 'machineInfoGroupStatTable',
+                even: true,
+                contentType: 'application/json',
+                where: whereCondition,
+                cols: [[
+                    {field: 'group', title:'分组名称',width: '34%', align: 'center', templet: 'group'},
+                    {field: 'terminalType', title: '终端类型', width: '33%', align: 'center'},
+                    {field: 'count', title: '数量', width: '33%', align: 'center'}
+                ]],
+                height: 'full-133',
+                done: function (res, curr, count) {
+                }
+            });
+        }
+
+        element.on('tab(keywordTab)', function (data) {
+            var d = data.elem.context.dataset
+            $('#terminalType').val(d.terminal);
+            active['reload'].call(this);
+        });
+
+        var active = {
+            reload: function () {
+                var terminalType = $("#terminalType").val()
+                if(terminalType == '' || terminalType == null){
+                    terminalType = 'PC'
+                }
+                var data = {'terminalType': terminalType}
+                table.reload('machineInfoGroupStatTable', {
+                    where: data,
+                    page: {
+                        curr: 1
+                    }
+                });
+            },
+        };
+
+        form.on('submit(search)', function (data) {
+            var postData = data.field
+            var terminalType = $("#terminalType").val()
+            if(terminalType == '' || terminalType == null){
+                terminalType = 'PC'
+            }
+            postData.terminalType = terminalType
+            init_Search(postData)
+            return false;
+        });
+
+    });
+
+</script>
+
+<script type="text/html" id="group">
+    {{d.group == null ? '' : d.group}}
+</script>
+
+</body>
+</html>

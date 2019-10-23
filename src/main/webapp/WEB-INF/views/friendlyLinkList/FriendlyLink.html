@@ -9,6 +9,15 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-table-body .layui-table-cell {
+            text-align: left;
+        }
+        .layui-table-body .laytable-cell-checkbox {
+            text-align: center;
+        }
+        .layui-table tr .layui-table-col-special .layui-table-cell{
+            text-align: center;
+        }
         .layui-inline input {
             width: 150px;
             height: 30px;
@@ -398,18 +407,18 @@
 </script>
 
 <script type="text/html" id="toolbarTpl">
-    <div class="layui-btn-container">
+    <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/friendlyLink/saveFriendlyLinks">
         <button class="layui-btn layui-btn-sm" lay-event="showFriendlyLinkDialog">添加</button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/friendlyLink/pushFriendlyLink">
-    <button class="layui-btn layui-btn-sm" lay-event="pushFriendlyLink">推送所选信息到远程服务</button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/friendlyLink/deleteFriendlyLinks">
-    <button class="layui-btn layui-btn-danger layui-btn-sm" lay-event="deleteBatchFriendlyLink">
-        <i class="layui-icon layui-icon-delete"></i>删除所选
-    </button>
-    </@shiro.hasPermission>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/friendlyLink/pushFriendlyLink">
+        <button class="layui-btn layui-btn-sm" lay-event="pushFriendlyLink">推送所选信息到远程服务</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/friendlyLink/deleteFriendlyLinks">
+        <button class="layui-btn layui-btn-danger layui-btn-sm" lay-event="deleteBatchFriendlyLink">
+            <i class="layui-icon layui-icon-delete"></i>删除所选
+        </button>
+        </@shiro.hasPermission>
     </div>
 </script>
 
