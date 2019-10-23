@@ -9,11 +9,11 @@
         FROM t_qz_charge_mon
         WHERE fOperationDate >= #{condition.operationDate}
         <if test="condition.searchEngine != null and condition.searchEngine != ''">
-            AND fSearchEngine = #{condition.searchEngine}
+            AND fSearchEngine LIKE CONCAT('%',#{condition.searchEngine},'%')
         </if>
         <if test="condition.terminal != null and condition.terminal != ''">
-            AND fSearchEngine = #{condition.terminal}
+            AND fTerminalType LIKE CONCAT('%',#{condition.terminal},'%')
         </if>
-        group by date_format(fOperationDate, #{condition.pattern}), fOperationType;
+        GROUP BY date_format(fOperationDate, #{condition.pattern}), fOperationType;
     </select>
 </mapper>

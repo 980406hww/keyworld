@@ -1,7 +1,5 @@
 package com.keymanager.ckadmin.service.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.dao.QzChargeMonDao;
 import com.keymanager.ckadmin.entity.QzChargeMon;

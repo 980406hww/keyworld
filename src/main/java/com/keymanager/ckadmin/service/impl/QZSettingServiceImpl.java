@@ -398,6 +398,18 @@ public class QZSettingServiceImpl extends
             qzChargeMon.setOperationType(2);
             qzChargeMon.setOperationObj(qzSetting.getUuid().toString());
             qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
+            String terminal = null;
+            if (null == qzSetting.getPcGroup() || "".equals(qzSetting.getPcGroup())) {
+                if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
+                    terminal = "Phone";
+                }
+            } else {
+                terminal = "PC";
+                if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
+                    terminal += ",Phone";
+                }
+            }
+            qzChargeMon.setTerminalType(terminal);
             qzChargeMonService.insert(qzChargeMon);
         }
         return qzSettingUuid;

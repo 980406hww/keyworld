@@ -25,6 +25,17 @@ public class QzChargeMon {
     @TableField("fSearchEngine")
     private String searchEngine;
 
+    @TableField("fTerminalType")
+    private String terminalType;
+
+    public String getTerminalType() {
+        return terminalType;
+    }
+
+    public void setTerminalType(String terminalType) {
+        this.terminalType = terminalType;
+    }
+
     public Long getUuid() {
         return uuid;
     }

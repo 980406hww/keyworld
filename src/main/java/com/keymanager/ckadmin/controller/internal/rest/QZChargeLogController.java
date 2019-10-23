@@ -117,6 +117,18 @@ public class QZChargeLogController {
             str.append(",");
         }
         qzChargeMon.setOperationAmount(str.substring(0, str.length() - 1));
+        String terminal = null;
+        if (null == qzSetting.getPcGroup() || "".equals(qzSetting.getPcGroup())) {
+            if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
+                terminal = "Phone";
+            }
+        } else {
+            terminal = "PC";
+            if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
+                terminal += ",Phone";
+            }
+        }
+        qzChargeMon.setTerminalType(terminal);
         qzChargeMonService.insert(qzChargeMon);
     }
 
@@ -129,6 +141,18 @@ public class QZChargeLogController {
         qzChargeMon.setOperationType(operationType);
         qzChargeMon.setOperationObj(uuid.toString());
         qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
+        String terminal = null;
+        if (null == qzSetting.getPcGroup() || "".equals(qzSetting.getPcGroup())) {
+            if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
+                terminal = "Phone";
+            }
+        } else {
+            terminal = "PC";
+            if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
+                terminal += ",Phone";
+            }
+        }
+        qzChargeMon.setTerminalType(terminal);
         qzChargeMonService.insert(qzChargeMon);
     }
 }

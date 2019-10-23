@@ -619,6 +619,18 @@ public class QZSettingController extends SpringMVCBaseController {
         qzChargeMon.setOperationType(operationType);
         qzChargeMon.setOperationObj(uuid.toString());
         qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
+        String terminal = null;
+        if (null == qzSetting.getPcGroup() || "".equals(qzSetting.getPcGroup())) {
+            if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
+                terminal = "Phone";
+            }
+        } else {
+            terminal = "PC";
+            if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
+                terminal += ",Phone";
+            }
+        }
+        qzChargeMon.setTerminalType(terminal);
         qzChargeMonService.insert(qzChargeMon);
     }
 
@@ -629,6 +641,7 @@ public class QZSettingController extends SpringMVCBaseController {
         List<QZSetting> qzSettings = qzSettingService.selectByUuids(uuids);
         StringBuilder objStr = new StringBuilder();
         Set<String> ses = new HashSet<>();
+        Set<String> terminals = new HashSet<>();
         for (QZSetting qzSetting : qzSettings) {
             if (qzSetting.getRenewalStatus() == 4) {
                 continue;
@@ -636,6 +649,12 @@ public class QZSettingController extends SpringMVCBaseController {
             objStr.append(qzSetting.getUuid());
             objStr.append(",");
             ses.add(qzSetting.getSearchEngine());
+            if (null != qzSetting.getPcGroup() && !"".equals(qzSetting.getPcGroup())) {
+                terminals.add("PC");
+            }
+            if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
+                terminals.add("Phone");
+            }
         }
         if (ses.isEmpty()) {
             return;

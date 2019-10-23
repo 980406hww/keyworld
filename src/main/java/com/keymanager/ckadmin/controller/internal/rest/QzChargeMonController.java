@@ -24,7 +24,7 @@ public class QzChargeMonController {
         try {
             String searchEngines = (String) condition.get("searchEngines");
             String time = (String) condition.get("time");
-            String terminal = (String) condition.get("terminal");
+            String terminal = (String) condition.get("qzTerminal");
             int num = 12, type = 1;
             if (null != time) {
                 switch (time) {
