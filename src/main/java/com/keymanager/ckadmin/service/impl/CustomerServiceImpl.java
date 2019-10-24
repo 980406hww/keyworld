@@ -160,6 +160,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
                 customer.setQq(null);
                 customer.setTelphone(null);
                 customer.setSaleRemark(null);
+                customer.setWechat(null);
             }
             /*
             customer.setKeywordCount(customerKeywordService
