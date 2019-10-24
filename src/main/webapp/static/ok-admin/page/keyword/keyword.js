@@ -190,7 +190,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 {field: 'remarks', title: '备注', width: '100', hide: true},
                 {field: 'failedCause', title: '失败原因', width: '80', hide: true},
             ]],
-            height: 'full-150',
+            height: 'full-110',
             done: function (res, curr, count) {
                 let tables = document.getElementsByTagName('table');
                 if ((tables[2].offsetHeight || tables[2].clientHeight || tables[2].scrollHeight) > (tables[2].parentElement.offsetHeight

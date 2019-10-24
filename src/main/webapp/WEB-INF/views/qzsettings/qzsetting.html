@@ -15,6 +15,23 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/layui/add-or-upd.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 0px;
+        }
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 0px;
+        }
+
         *, :after, :before {
             box-sizing: border-box
         }
@@ -481,11 +498,6 @@
         .my-collapse .layui-form-select dl,
         .my-collapse .layui-form-select .layui-anim {
             top: 33px !important;
-        }
-
-        .my-collapse > div:first-child {
-            background: #f2f2f2;
-            border: 1px solid #e6e6e6;
         }
 
         .my-collapse > div {
@@ -1006,7 +1018,7 @@
                         {filed: 'uuid', type: 'checkbox', fixed: "left", width: '2%'},
                         {filed: 'uuid', title: '记录', width: '98%', templet: '#item'}
                     ]],
-                    height: 'full-136',
+                    height: 'full-115',
                     loading: true,
                     done: function (res, curr, count) {
                         successTable(res, whereCondition);

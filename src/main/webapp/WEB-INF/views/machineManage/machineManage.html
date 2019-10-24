@@ -10,6 +10,22 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
 </head>
 <style>
+    .layui-tab-content {
+        padding: 0px;
+    }
+    .layui-card-body {
+        position: relative;
+        padding: 0px;
+        line-height: 24px;
+    }
+    .layui-table, .layui-table-view {
+        margin: 0px;
+        border-width: 0px;
+    }
+    .my-collapse > div:first-child {
+        background: #f2f2f2;
+        border: 0px;
+    }
     .layui-table-body .layui-table-cell {
         text-align: left;
     }
@@ -392,7 +408,7 @@
                     {field: 'vpsBackendSystemComputerIDs', align: 'center', title: '服务器ID', width: '82', templet: '#vpsBackendSystemComputerIDs'},
                     {title: '操作', templet: '#operationTpl', align: 'center',fixed: "right",width: '178'}
                 ]],
-                height: 'full-155',
+                height: 'full-115',
                 done: function (res, curr, count) {
                     handleStyle();
                 }

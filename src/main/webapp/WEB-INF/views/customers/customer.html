@@ -10,6 +10,24 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/style/template.css">
     <link rel="stylesheet" href="/static/ok-admin/page/customer/customer.css">
 </head>
+<style>
+    .layui-tab-content {
+        padding: 0px;
+    }
+    .layui-card-body {
+        position: relative;
+        padding: 0px;
+        line-height: 24px;
+    }
+    .layui-table, .layui-table-view {
+        margin: 0px;
+        border-width: 1px;
+    }
+    .my-collapse > div:first-child {
+        background: #f2f2f2;
+        border: 0px;
+    }
+</style>
 <body>
 
 <div class="layui-tab layui-tab-card" lay-filter="customerTab" id="customerTab">

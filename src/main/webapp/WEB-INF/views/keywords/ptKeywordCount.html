@@ -10,6 +10,22 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <link rel="stylesheet" href="/static/ok-admin/page/base/searchForm.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 0px;
+        }
         .layui-table-body tr td:nth-child(1) {
             text-align: left;
         }
@@ -178,7 +194,7 @@
                     {field: 'topThree', title: '前三数量', width: '13%', align: 'center', templet: '#tokeywordTop3Tpl' },
                     {field: 'topTen', title: '前十数量', width: '13%', align: 'center', templet: '#tokeywordTop10Tpl' },
                 ]],
-                height: 'full-150',
+                height: 'full-110',
                 done: function (res, curr, count) {
                 }
             });
