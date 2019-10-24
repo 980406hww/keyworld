@@ -37,6 +37,7 @@
 </head>
 <body class="childrenBody home">
 <div class="layui-row layui-col-space15">
+
     <div class="layui-col-md12">
         <div class="layui-card">
             <div class="yskj-card-body map-body">
@@ -150,7 +151,7 @@
 
                             ]
                         };
-                        let qzRateHistory = echarts.init($('#qzRateHistory')[0], "mytheme");
+                        let qzRateHistory = echarts.init($('#qzRateHistory')[0]);
                         qzRateHistory.setOption(qzRateHistoryOption);
                     }
                 },
