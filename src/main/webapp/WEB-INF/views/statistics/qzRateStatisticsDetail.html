@@ -281,8 +281,6 @@
         table.on('row(qzRateKeywordCountTable)', function(obj){
             var data = obj.data;
 
-            console.log(data);
-
             let url = '/internal/qzRateStatistics/toQZRateHistory/' + data.terminalType + '/' + data.qzUuid ;
 
             okLayer.open("首页 / 每日站点涨幅统计 / 站点涨幅历史", url, "60%", "45%", function (layero) {

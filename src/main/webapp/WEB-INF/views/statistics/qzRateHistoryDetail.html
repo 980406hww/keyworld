@@ -87,14 +87,13 @@
                 type: 'POST',
                 success: function (res) {
                     if (res.code === 200) {
-                        let rate=null;
-                        let date =null;
-                        if (res.data!==null && res.data.totalDate!==null) {
+                        let rate = [];
+                        let date = [];
+                        if (res.data !== null && res.data.totalDate !== null) {
                             rate = res.data.totalRate.split(',');
                             date = res.data.totalRateDate.split(',');
-                        }
-                        let qzRateHistoryOption = {
-                            noDataLoadingOption:{
+                            let qzRateHistoryOption = {
+                                noDataLoadingOption: {
                                     text: '暂无数据',
                                     effect: 'bubble',
                                     effectOption:
@@ -104,55 +103,59 @@
                                                     n: 0
                                                 }
                                         }
-                            },
-                            "tooltip": {
-                                "trigger": "axis",
-                                "axisPointer": {
-                                    "type": "cross",
-                                    "label": {
-                                        "backgroundColor": "#6a7985"
+                                },
+                                "tooltip": {
+                                    "trigger": "axis",
+                                    "axisPointer": {
+                                        "type": "cross",
+                                        "label": {
+                                            "backgroundColor": "#6a7985"
+                                        }
                                     }
-                                }
-                            },
-                            "legend": {
-                                "orient": 'vertical',
-                                "data": [
-                                    "涨幅"
+                                },
+                                "legend": {
+                                    "orient": 'vertical',
+                                    "data": [
+                                        "涨幅"
+
+                                    ]
+                                },
+                                "grid": {
+                                    "top": "12%",
+                                    "left": "3%",
+                                    "right": "3%",
+                                    "bottom": "5%",
+                                    "containLabel": true
+                                },
+                                "xAxis": [
+                                    {
+                                        "type": "category",
+                                        "boundaryGap": false,
+                                        "data": date
+                                    }
+                                ],
+                                "yAxis": [
+                                    {
+                                        "type": "value"
+                                    }
+                                ],
+                                "series": [
+                                    {
+                                        "name": "涨幅",
+                                        "type": "line",
+                                        "areaStyle": {normal: {color: 'rgba(255,255,255,0)'}},
+                                        "data": rate
+
+                                    }
 
                                 ]
-                            },
-                            "grid": {
-                                "top": "12%",
-                                "left": "3%",
-                                "right": "3%",
-                                "bottom": "5%",
-                                "containLabel": true
-                            },
-                            "xAxis": [
-                                {
-                                    "type": "category",
-                                    "boundaryGap": false,
-                                    "data": date
-                                }
-                            ],
-                            "yAxis": [
-                                {
-                                    "type": "value"
-                                }
-                            ],
-                            "series": [
-                                {
-                                    "name": "涨幅",
-                                    "type": "line",
-                                    "areaStyle": {normal: {color: 'rgba(255,255,255,0)'}},
-                                    "data": rate
+                            };
+                            let qzRateHistory = echarts.init($('#qzRateHistory')[0]);
+                            qzRateHistory.setOption(qzRateHistoryOption);
+                        }else {
+                            $('#qzRateHistory').css('text-align','center').append('<h3 class="my-card-title">暂无数据</h3>')
+                        }
 
-                                }
-
-                            ]
-                        };
-                        let qzRateHistory = echarts.init($('#qzRateHistory')[0]);
-                        qzRateHistory.setOption(qzRateHistoryOption);
                     }
                 },
                 error: function () {
