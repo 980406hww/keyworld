@@ -78,16 +78,6 @@ public class CustomerController extends SpringMVCBaseController {
             return resultBean;
         }
         try {
-            ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
-            Set<String> roles = shiroUser.getRoles();
-            List<String> roleTypes = new ArrayList<>();
-            if (roles.contains("SEOSales")) {
-                roleTypes.add("SEOSales");
-            }
-            if (roles.contains("NegativeSales")) {
-                roleTypes.add("NegativeSales");
-            }
-            customerCriteria.setRoleTypes(roleTypes);
             Page<Customer> page = new Page<>(customerCriteria.getPage(), customerCriteria.getLimit());
             String orderByField = ReflectUtils.getTableFieldValue(Customer.class, customerCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {

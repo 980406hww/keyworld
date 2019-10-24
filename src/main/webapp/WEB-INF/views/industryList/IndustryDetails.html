@@ -172,6 +172,7 @@
         });
 
         function searchDetailList(whereCondition){
+            whereCondition = common.jsonObjectTrim(whereCondition)
             table.render({
                 elem: '#industryDetailTable',
                 method: 'post',

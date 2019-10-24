@@ -374,6 +374,7 @@
         });
 
         function searchMachine(whereCondition){
+            whereCondition = common.jsonObjectTrim(whereCondition)
             table.render({
                 elem: '#machineManageTable',
                 method: 'post',
@@ -390,7 +391,7 @@
                 where: whereCondition,
                 cols: [[
                     {filed: 'uuid', align: 'center', type: 'checkbox', width: '42',fixed: "left"},
-                    {field: 'clientIDs', align: 'center', title: '客户端ID', width: '72', templet: '#clientIDs'},
+                    {field: 'clientIDs', align: 'center', title: '客户端ID', width: '80', templet: '#clientIDs'},
                     {field: 'machineGroups', align: 'center', title: '机器分组', width: '72', templet: '#machineGroups'},
                     {field: 'versionInfo', align: 'center', title: '现版本<br>目标版本', width: '72',templet: '#showVersionInfo'},
                     {field: 'restartCountAndFailCount', align: 'center', title: '重启数/重启状态<br>失败次数', width: '120', templet: '#restartCountAndFailCount'},
@@ -1058,19 +1059,19 @@
     {{# if(d.valid){ }}
     {{#     if(d.red){ }}
     {{#         if(d.remainingKeyword == 1){ }}
-                    <font color="#0099FF">{{d.machineGroup}}</font>
+                    <font color="#0099FF">{{d.machineGroup == null ? '' : d.machineGroup}}</font>
     {{#          }else{    }}
-                    <font color="#FF0000">{{d.machineGroup}}</font>
+                    <font color="#FF0000">{{d.machineGroup == null ? '' : d.machineGroup}}</font>
     {{#          } }}
     {{#     }else if(d.orange){ }}
-                <font color="#e86e33">{{d.machineGroup}}</font>
+                <font color="#e86e33">{{d.machineGroup == null ? '' : d.machineGroup}}</font>
     {{#     }else if(d.yellow){ }}
-                <font color="#ef00ff">{{d.machineGroup}}</font>
+                <font color="#ef00ff">{{d.machineGroup == null ? '' : d.machineGroup}}</font>
     {{#     }else{ }}
-                <font color="#2BD54D">{{d.machineGroup}}</font>
+                <font color="#2BD54D">{{d.machineGroup == null ? '' : d.machineGroup}}</font>
     {{#     } }}
     {{# }else{ }}
-        <font color="#2BD54D">{{d.machineGroup}}</font>
+        <font color="#2BD54D">{{d.machineGroup == null ? '' : d.machineGroup}}</font>
     {{# } }}
 </script>
 

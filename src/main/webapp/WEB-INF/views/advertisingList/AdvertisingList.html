@@ -157,6 +157,7 @@
         form.on("submit(search)", function (data) {
             let postData = data.field;
             postData.websiteUuid = websiteUuid;
+            postData = common.jsonObjectTrim(postData)
             searchAdvertisingList(postData);
             return false
         });

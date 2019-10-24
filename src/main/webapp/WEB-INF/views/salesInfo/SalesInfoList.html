@@ -127,7 +127,7 @@
         initManagePart();
 
         form.on("submit(search)", function (data) {
-            let postData = data.field;
+            let postData = common.jsonObjectTrim(data.field);
             searchSalesInfo(postData);
             return false;
         });

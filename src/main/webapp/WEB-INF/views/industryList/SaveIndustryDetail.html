@@ -116,6 +116,7 @@
                 data.field.uuid = uuid_
             }
             data.field.industryID = industryID
+            data.field = common.jsonObjectTrim(data.field)
             $.ajax({
                 url: '/internal/industryDetails/saveIndustryDetail',
                 type: 'POST',

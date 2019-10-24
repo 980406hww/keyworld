@@ -197,6 +197,7 @@
                 terminalType = 'PC'
             }
             postData.terminalType = terminalType;
+            postData = common.jsonObjectTrim(postData);
             init_Search(postData);
             return false
         });

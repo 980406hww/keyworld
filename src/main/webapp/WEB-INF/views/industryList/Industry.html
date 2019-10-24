@@ -220,6 +220,7 @@
         }
 
         function init_Search(whereCondition){
+            whereCondition = common.jsonObjectTrim(whereCondition)
             table.render({
                 elem: '#industryListTable',
                 method: 'post',
@@ -466,8 +467,12 @@
         }
 
         function modifyIndustryInfo(data){
+            var terminalType = $("#terminalType").val();
+            if(terminalType === '' || terminalType == null){
+                terminalType = 'PC'
+            }
             okLayer.open("首页 / 行业列表 / 修改行业", "/internal/industryList/toSaveIndustryInfo", "35%", "60%", function(layero){
-                window[layero.find("iframe")[0]["name"]].initForm(data);
+                window[layero.find("iframe")[0]["name"]].initForm(data, terminalType);
             },function(){
                 if(sign){
                     active['reload'].call(this);

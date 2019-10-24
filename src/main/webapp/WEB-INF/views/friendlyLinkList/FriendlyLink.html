@@ -172,6 +172,7 @@
         form.on("submit(search)", function (data) {
             var postData = data.field;
             postData.websiteUuid = websiteUuid;
+            postData = common.jsonObjectTrim(postData);
             searchFriendlyLinkList(postData);
             return false
         });

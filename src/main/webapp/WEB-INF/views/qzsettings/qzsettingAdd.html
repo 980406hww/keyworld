@@ -1185,6 +1185,8 @@
                 }
                 b.qzChargeRules = qzChargeRules;
                 qzOperationTypes.push(b);
+            }else {
+                p_d.pcGroup = null;
             }
             if (d.phone === 'on') {
                 if (d.phoneGroup === '' || d.phoneMaxKeywordCount === '' || d.phoneSubDomainName
@@ -1258,6 +1260,8 @@
                 }
                 b.qzChargeRules = qzChargeRules;
                 qzOperationTypes.push(b);
+            }else {
+                p_d.phoneGroup = null;
             }
             p_d.qzOperationTypes = qzOperationTypes;
             commit(p_d, function (init) {

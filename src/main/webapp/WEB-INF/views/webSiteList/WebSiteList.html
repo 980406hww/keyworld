@@ -439,6 +439,7 @@
 
         form.on("submit(search)", function (data) {
             let postData = data.field
+            postData = common.jsonObjectTrim(postData)
             if(postData.friendlyLinkUrl !== ""){
                 if(postData.friendlyLinkUrl.indexOf('http://') === -1){
                     postData.friendlyLinkUrl = 'http://' + postData.friendlyLinkUrl

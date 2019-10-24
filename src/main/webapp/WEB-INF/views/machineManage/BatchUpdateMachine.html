@@ -21,13 +21,13 @@
         <div class="layui-form-item">
             <label class="layui-form-label" id="lzfz">流转分组</label>
             <div class="layui-input-block">
-                <input type="text" name="switchGroupName" lay-verify="required" onclick="clickMe('lzfz',true)" placeholder="请输入流转分组" autocomplete="off" class="layui-input">
+                <input type="text" name="switchGroupName" onclick="clickMe('lzfz',true)" placeholder="请输入流转分组" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label" id="jjfz">机器分组</label>
             <div class="layui-input-block">
-                <input type="text" name="machineGroup" lay-verify="required" onclick="clickMe('jjfz',false)" placeholder="请输入机器分组" autocomplete="off" class="layui-input">
+                <input type="text" name="machineGroup" onclick="clickMe('jjfz',false)" placeholder="请输入机器分组" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
@@ -78,7 +78,6 @@
             }
             if(key===9){//IE浏览器
                 // document.getElementById(e.target.id).focus()
-                common.showFailMsg("请不要使用tab键切换输入框！");
                 e.target.focus();
                 if(isie){
                     ev.keyCode=0;

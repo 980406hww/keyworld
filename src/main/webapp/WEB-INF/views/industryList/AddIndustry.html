@@ -73,18 +73,19 @@
 
     let uuid_ = null;
     let layui_ = null;
-    let terminalTyle_ = null;
+    let terminalType_ = null;
     let searchEngine_ = null;
 
-    function initForm(data) {
+    function initForm(data, terminalType) {
+        terminalType_ = terminalType
         uuid_ = data;
         if (layui_ != null) {
             setForm(layui_, uuid_);
         }
     }
 
-    function init_terminalType(terminalTyle) {
-        terminalTyle_ = terminalTyle
+    function init_terminalType(terminalType) {
+        terminalType_ = terminalType
     }
 
     function setForm(l, u) {
@@ -121,7 +122,7 @@
 
         function init_SearchEngine(){
             let postData = {};
-            postData.terminalType = terminalTyle_;
+            postData.terminalType = terminalType_;
             $.ajax({
                 url: '/internal/industryList/returnSelectData',
                 type: 'POST',
@@ -153,7 +154,8 @@
         }
 
         form.on("submit(commit)", function (data) {
-            data.field.terminalType = terminalTyle_;
+            data.field.terminalType = terminalType_;
+            data.field = common.jsonObjectTrim(data.field)
             $.ajax({
                 url: '/internal/industryList/saveIndustryInfo',
                 type: 'POST',

@@ -22,10 +22,9 @@
             <form class="layui-form layui-form-pane" id="searchForm">
                 <input type="hidden" name="terminalType" id="terminalType" value=""/>
                 <div class="layui-inline">
-                    <label class="layui-form-label" style="width: 60px">来源</label>
-                    <div class="layui-input-block" style="margin-left: 60px">
-                        <input type="radio" name="optimizedGroupNameSearchSource" value="true" title="关键字" checked="">
-                        <input type="radio" name="optimizedGroupNameSearchSource" value="false" title="全站">
+                    <div class="layui-input-block" style="margin-left: 0px">
+                        <input type="radio" name="optimizedGroupNameSearchSource" value="true" title="所有关键字" checked="">
+                        <input type="radio" name="optimizedGroupNameSearchSource" value="false" title="全站信息">
                     </div>
 
                 </div>
@@ -46,14 +45,15 @@
     <!--数据表格-->
     <table class="layui-hide" id="groupTable" lay-filter="tableFilter"></table>
 
-    <div class="layui-form">
-        <div class="layui-input-inline" style="width: 200px; height: 30px">
-            <select id="update_qz_operation_combine" lay-search>
-                <option value="">修改所选站点操作组合</option>
-
-            </select>
+    <div class="layui-form layui-form-pane">
+        <div class="layui-inline">
+            <label class="layui-form-label">操作组合</label>
+            <div class="layui-input-inline" style="width: 200px; height: 30px">
+                <select id="update_qz_operation_combine" lay-search>
+                    <option value="">修改所选站点操作组合</option>
+                </select>
+            </div>
         </div>
-
     </div>
 
 
@@ -109,7 +109,7 @@
                     {type: 'checkbox', width: '5%', LAY_CHECKED: true},
                     {field: 'groupName', title: '分组名称', width: '95%'},
                 ]],
-                height: 'full-160',
+                height: 'full-170',
                 done: function (res, curr, count) {
 
                 }

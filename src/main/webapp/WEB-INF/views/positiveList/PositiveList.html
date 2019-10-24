@@ -94,7 +94,7 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
 <script>
-    let sign = false;
+    var sign = false;
     // 进度条加载提示
     NProgress.start();
     window.onload = function () {
@@ -125,6 +125,7 @@
 
         form.on("submit(search)", function (data) {
             let postData = data.field;
+            postData = common.jsonObjectTrim(postData)
             searchPositiveList(postData);
             return false
         });
@@ -163,7 +164,9 @@
 
         function showPositiveListDialog() {
             okLayer.open("首页/关键字列表/添加优质清单", "/internal/positivelists/toSavePositiveList", "60%", "70%", null, function(){
+                console.log(sign);
                 if(sign){
+                    console.log('sdasfsa')
                     active['reload'].call(this);
                     sign = false;
                 }
@@ -171,10 +174,13 @@
         }
 
         function modifyPositiveList(data){
+
             okLayer.open("首页/关键字列表/修改优质清单", "/internal/positivelists/toSavePositiveList", "60%", "70%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
             },function(){
+                console.log(sign);
                 if(sign){
+                    console.log(1);
                     active['reload'].call(this);
                     sign = false;
                 }
