@@ -74,14 +74,27 @@ public class QZRateStatisticsServierImpl extends ServiceImpl<QZRateStatisticsDao
 
     @Override
     public List<QZRateStatisticsCountVO> getQZRateStatisticCount(QZRateStatisticsCountCriteria qzRateStatisticsCountCriteria) {
-        List<Long> qzUuids = qzSettingService.getQZUuidsByUserID(qzRateStatisticsCountCriteria.getUserID(),qzRateStatisticsCountCriteria.getSearchEngine());
+        List<Long> qzUuids = qzSettingService.getQZUuidsByUserID(qzRateStatisticsCountCriteria.getUserID(),qzRateStatisticsCountCriteria.getSearchEngine(),qzRateStatisticsCountCriteria.getTerminalType());
         qzRateStatisticsCountCriteria.setQzUuids(qzUuids);
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
         String gtDate = f.format(new Date());
         qzRateStatisticsCountCriteria.setGtRateFullDate(gtDate);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.DATE, qzRateStatisticsCountCriteria.getQzRange());
+        switch (qzRateStatisticsCountCriteria.getQzRateRange()) {
+            case 1:
+                calendar.add(Calendar.DATE, -7);
+                break;
+            case 2:
+                calendar.add(Calendar.DATE, -30);
+                break;
+            case 3:
+                calendar.add(Calendar.DATE, -90);
+                break;
+            default:
+                calendar.add(Calendar.DATE, -7);
+                break;
+        }
         String ltDate = f.format(calendar.getTime());
         qzRateStatisticsCountCriteria.setLtRateFullDate(ltDate);
         return qzRateStatisticsDao.getQZRateStatisticCount(qzRateStatisticsCountCriteria);
@@ -108,5 +121,18 @@ public class QZRateStatisticsServierImpl extends ServiceImpl<QZRateStatisticsDao
         echartsDataMap.put("unchangeCount", unchangeCountList);
         echartsDataMap.put("fallCount", fallCountList);
         return echartsDataMap;
+    }
+
+    @Override
+    public Integer getRate(Long qzUuid, String terminalType, String rateFullDate) {
+        return qzRateStatisticsDao.getRate(qzUuid, terminalType, rateFullDate);
+    }
+
+    @Override
+    public Map getQzRateHsitory(String qzUuid, String terminalType) {
+        Map map =  qzRateStatisticsDao.getQzRateHsitory(Long.parseLong(qzUuid),terminalType);
+//        String totalRate = "["+(String) map.get("totalRate")+"]";
+//        String totalRateDate ="["+ (String) map.get("totalRateDate")+"]";
+        return map;
     }
 }

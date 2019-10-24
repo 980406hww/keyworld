@@ -8,6 +8,7 @@ import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
 import com.keymanager.ckadmin.criteria.PTKeywordCountCriteria;
+import com.keymanager.ckadmin.criteria.QZRateKewordCountCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
@@ -19,6 +20,7 @@ import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
+import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
 import java.io.InputStream;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import java.util.List;
@@ -119,4 +121,7 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void editOptimizePlanCountByCustomerUuid(String terminalType, String entryType, Long customerUuid, Integer optimizePlanCount, String settingType);
 
     void editCustomerOptimizePlanCount(Integer optimizePlanCount, String settingType, List<String> uuids);
+
+    Page<QZRateKeywordCountVO> getQZRateKewordCountList(Page<QZRateKeywordCountVO> page,
+        QZRateKewordCountCriteria qzRateKewordCountCriteria) throws CloneNotSupportedException;
 }

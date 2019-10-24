@@ -8,6 +8,7 @@ import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
 import com.keymanager.ckadmin.criteria.PTKeywordCountCriteria;
+import com.keymanager.ckadmin.criteria.QZRateKewordCountCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.dao.CustomerKeywordDao;
@@ -19,6 +20,8 @@ import com.keymanager.ckadmin.excel.operator.AbstractExcelReader;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerExcludeKeywordService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
+import com.keymanager.ckadmin.service.QZRateStatisticsService;
+import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.StringUtil;
@@ -29,17 +32,18 @@ import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
-import com.keymanager.ckadmin.vo.PTkeywordCountVO;
-import com.keymanager.monitoring.vo.keywordAmountCountVo;
-import java.io.InputStream;
-import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
+import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
+import com.keymanager.ckadmin.vo.PTkeywordCountVO;
+import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +77,12 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     @Resource(name = "configService2")
     private ConfigService configService;
+
+    @Resource(name = "qzSettingService2")
+    private QZSettingService qzSettingService;
+
+    @Resource(name = "qzRateStatisticsService2")
+    private QZRateStatisticsService qzRateStatisticsService;
 
     private final static Map<String, LinkedBlockingQueue> machineGroupQueueMap = new HashMap<>();
 
@@ -662,6 +672,45 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public void editCustomerOptimizePlanCount(Integer optimizePlanCount, String settingType, List<String> uuids) {
         customerKeywordDao.editCustomerOptimizePlanCount(optimizePlanCount, settingType, uuids);
+    }
+
+    @Override
+    public Page<QZRateKeywordCountVO> getQZRateKewordCountList(Page<QZRateKeywordCountVO> page,
+        QZRateKewordCountCriteria qzRateKewordCountCriteria) throws CloneNotSupportedException {
+        List<Long> qzUuids = qzSettingService.getQZUuidsByUserID(qzRateKewordCountCriteria.getUserID(),qzRateKewordCountCriteria.getSearchEngine(),qzRateKewordCountCriteria.getTerminalType());
+        qzRateKewordCountCriteria.setQzUuids(qzUuids);
+        List<QZRateKeywordCountVO> qzRateKeywordCountVOS = customerKeywordDao.getQZRateKeywordCount(page,qzRateKewordCountCriteria);
+        if (CollectionUtils.isNotEmpty(qzRateKeywordCountVOS)){
+            SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+            String todayDate = f.format(new Date());
+            // 当不传入终端类型时，需要判断当前站点是否包含pc、phone终端类型
+            if (("").equals(qzRateKewordCountCriteria.getTerminalType())){
+                List<QZRateKeywordCountVO> qzRateKeywordCountVONewList = new ArrayList<>();
+                for (QZRateKeywordCountVO qzRateKeywordCountVO:qzRateKeywordCountVOS){
+                    if (qzRateKeywordCountVO.getHasPC()==1){
+                        QZRateKeywordCountVO qzRateKeywordCountVOClone1 = (QZRateKeywordCountVO) qzRateKeywordCountVO.clone();
+                        qzRateKeywordCountVOClone1.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVO.getQzUuid(),"PC",todayDate));
+                        qzRateKeywordCountVOClone1.setTerminalType("PC");
+                        qzRateKeywordCountVONewList.add(qzRateKeywordCountVOClone1);
+                    }
+                    if (qzRateKeywordCountVO.getHasPhone()==1){
+                        QZRateKeywordCountVO qzRateKeywordCountVOClone2 = (QZRateKeywordCountVO) qzRateKeywordCountVO.clone();
+                        qzRateKeywordCountVOClone2.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVO.getQzUuid(),"Phone",todayDate));
+                        qzRateKeywordCountVOClone2.setTerminalType("Phone");
+                        qzRateKeywordCountVONewList.add(qzRateKeywordCountVOClone2);
+                    }
+
+                }
+                qzRateKeywordCountVOS = qzRateKeywordCountVONewList;
+            }else{
+                for (QZRateKeywordCountVO qzRateKeywordCountVO:qzRateKeywordCountVOS){
+                    qzRateKeywordCountVO.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVO.getQzUuid(),qzRateKewordCountCriteria.getTerminalType(),todayDate));
+                    qzRateKeywordCountVO.setTerminalType(qzRateKewordCountCriteria.getTerminalType());
+                }
+            }
+        }
+        page.setRecords(qzRateKeywordCountVOS);
+        return page;
     }
 }
 

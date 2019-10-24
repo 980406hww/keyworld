@@ -2,16 +2,9 @@ package com.keymanager.ckadmin.criteria;
 
 import java.util.List;
 
-/**
- * @ClassName QZRateStatisticsCountCriteria
- * @Description TODO
- * @Author lhc
- * @Date 2019/10/23 11:04
- * @Version 1.0
- */
 public class QZRateStatisticsCountCriteria {
 
-    private Integer qzRange = -7;
+    private Integer qzRateRange = -7;
     private String ltRateFullDate;
     private String gtRateFullDate;
     private String terminalType;
@@ -19,12 +12,12 @@ public class QZRateStatisticsCountCriteria {
     private String userID;
     private List<Long> qzUuids;
 
-    public Integer getQzRange() {
-        return qzRange;
+    public Integer getQzRateRange() {
+        return qzRateRange;
     }
 
-    public void setQzRange(Integer qzRange) {
-        this.qzRange = qzRange;
+    public void setQzRateRange(Integer qzRateRange) {
+        this.qzRateRange = qzRateRange;
     }
 
     public String getLtRateFullDate() {

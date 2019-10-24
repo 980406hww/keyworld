@@ -907,7 +907,7 @@ public class QZSettingServiceImpl extends
     }
 
     @Override
-    public List<Long> getQZUuidsByUserID(String userID, String searchEngine) {
-        return qzSettingDao.getQZUuidsByUserID(userID,searchEngine);
+    public List<Long> getQZUuidsByUserID(String userID, String searchEngine, String terminalType) {
+        return qzSettingDao.getQZUuidsByUserID(userID,searchEngine,terminalType);
     }
 }

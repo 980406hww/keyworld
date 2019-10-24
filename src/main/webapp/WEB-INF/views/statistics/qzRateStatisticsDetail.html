@@ -1,21 +1,17 @@
-<#import "/commons/global.html" as ctx>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
     <meta charset="utf-8">
-    <title>ok-admin v2.0 | 很赞的后台模版</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="keywords" content="ok-admin v2.0,ok-admin网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
-    <meta name="description" content="ok-admin v2.0，顾名思义，很赞的后台模版，它是一款基于Layui框架的轻量级扁平化且完全免费开源的网站后台管理系统模板，适合中小型CMS后台系统。">
+    <title>关键字管理系统</title>
+
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/home.css" media="all"/>
-    <script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
-    <script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.theme.js"></script>
-    <script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/world/js/china.js"></script>
+    <link rel="stylesheet" href="/static/ok-admin/css/home.css" media="all"/>
+    <script type="text/javascript" src="/static/ok-admin/lib/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="/static/ok-admin/lib/echarts/echarts.theme.js"></script>
     <style>
 
         input.layui-input.layui-unselect {
@@ -33,97 +29,37 @@
             cursor: pointer;
             font-size: 0;
         }
+        .map-body {
+            height: 300px;
+        }
 
     </style>
 </head>
 <body class="childrenBody home">
 <div class="layui-row layui-col-space15">
-    <div class="layui-col-xs6 layui-col-md3">
+    <div class="layui-col-md12">
         <div class="layui-card">
-            <div class="yskj-card-body clearfix cart-data">
-                <div class="img-box" ok-pc-in-show>
-                    <img src="${ctx.basePath}/static/ok-admin/images/home-01.png" alt="none"/>
-                </div>
-                <div class="cart-r">
-                    <div class="stat-text incomes-num">0</div>
-                    <div class="stat-heading">收入</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="layui-col-xs6 layui-col-md3">
-        <div class="layui-card">
-            <div class="yskj-card-body clearfix cart-data">
-                <div class="img-box" ok-pc-in-show>
-                    <img src="${ctx.basePath}/static/ok-admin/images/home-02.png" alt="none"/>
-                </div>
-                <div class="cart-r">
-                    <div class="stat-text goods-num">0</div>
-                    <div class="stat-heading">商品</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="layui-col-xs6 layui-col-md3">
-        <div class="layui-card">
-            <div class="yskj-card-body clearfix cart-data">
-                <div class="img-box" ok-pc-in-show>
-                    <img src="${ctx.basePath}/static/ok-admin/images/home-03.png" alt="none"/>
-                </div>
-                <div class="cart-r">
-                    <div class="stat-text blogs-num">0</div>
-                    <div class="stat-heading">博客</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="layui-col-xs6 layui-col-md3">
-        <div class="layui-card">
-            <div class="yskj-card-body clearfix cart-data">
-                <div class="img-box" ok-pc-in-show>
-                    <img src="${ctx.basePath}/static/ok-admin/images/home-04.png" alt="none"/>
-                </div>
-                <div class="cart-r">
-                    <div class="stat-text fans-num">0</div>
-                    <div class="stat-heading">用户</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="layui-row layui-col-space15">
-    <div class="layui-col-md6">
-        <div class="layui-card">
-
             <div class="yskj-card-body map-body">
                 <div class="layui-col-md12 layui-form" style="z-index: 999">
                     <div class="layui-col-md3"><h4 class="my-card-title">每日站点涨幅统计</h4></div>
-                    <div class="layui-col-md9">
-                        <form id="qzRateSearchForm">
-                            <div class="layui-col-md3" style="width: 150px">
+                    <div class="layui-col-md5 layui-col-md-offset4">
+                        <form id="qzRateSearchForm" name="qzRateSearchForm" lay-filter="qzRateSearchForm">
+                            <div class="layui-col-md3" >
                                 <select id="qzRateSearchEngine" name="searchEngine" lay-filter="qzRateSearchEngine">
 
                                 </select>
                             </div>
-                            <div class="layui-col-md2" style="width: 120px">
+                            <div class="layui-col-md3" >
                                 <select id="qzRateTerminalType" name="terminalType" lay-filter="qzRateTerminalType">
                                     <option value="">电脑+手机</option>
                                     <option value="PC">电脑</option>
                                     <option value="Phone">手机</option>
                                 </select>
                             </div>
-                            <div class="layui-col-md6" id="qzRangeDiv" style="width: 245px">
+                            <div class="layui-col-md6" id="qzRangeDiv">
                                 <input type="radio" name="qzRateRange" value="1" title="7天" lay-filter="qzRateRange" style="margin-left: 10px">
                                 <input type="radio" name="qzRateRange" value="2" title="30天" lay-filter="qzRateRange">
                                 <input type="radio" name="qzRateRange" value="3" title="3个月" lay-filter="qzRateRange" checked>
-                            </div>
-                            <div class="layui-col-md1">
-
-                                <span class="layui-btn layui-btn-sm" id="qzRateDetail">数据详情 </span>
                             </div>
 
                         </form>
@@ -136,103 +72,37 @@
         </div>
     </div>
 
-    <div class="layui-col-md6">
-        <div class="layui-card">
-            <div class="yskj-card-body map-body">
-                <h4 class="my-card-title">用户排行榜</h4>
-
-                <div class="progress-box clearfix">
-                    <div class="pro-head">
-                        <img src="${ctx.basePath}/static/ok-admin/images/face.jpg" alt="none"/>
-                    </div>
-                    <div class="pro-data">
-                        <h4 class="por-title">Visits</h4>
-                        <div class="por-txt pro-a">用户比例</div>
-                        <div class="layui-progress" lay-filter="pro-a">
-                            <div class="layui-progress-bar per-bg-a" lay-percent="35%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="progress-box clearfix">
-                    <div class="pro-head">
-                        <img src="${ctx.basePath}/static/ok-admin/images/face.jpg" alt="none"/>
-                    </div>
-                    <div class="pro-data">
-                        <h4 class="por-title">Visits</h4>
-                        <div class="por-txt pro-a">用户比例</div>
-                        <div class="layui-progress" lay-filter="pro-b">
-                            <div class="layui-progress-bar per-bg-b" lay-percent="15%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="progress-box clearfix">
-                    <div class="pro-head">
-                        <img src="${ctx.basePath}/static/ok-admin/images/face.jpg" alt="none"/>
-                    </div>
-                    <div class="pro-data">
-                        <h4 class="por-title">Visits</h4>
-                        <div class="por-txt pro-c">用户比例</div>
-                        <div class="layui-progress" lay-filter="pro-c">
-                            <div class="layui-progress-bar per-bg-c" lay-percent="20%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="progress-box clearfix">
-                    <div class="pro-head">
-                        <img src="${ctx.basePath}/static/ok-admin/images/face.jpg" alt="none"/>
-                    </div>
-                    <div class="pro-data">
-                        <h4 class="por-title">Visits</h4>
-                        <div class="por-txt pro-d">用户比例</div>
-                        <div class="layui-progress" lay-filter="pro-d">
-                            <div class="layui-progress-bar per-bg-d" lay-percent="30%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
-
 <div class="layui-row layui-col-space15">
-    <div class="layui-col-md6">
+    <div class="layui-col-md12">
         <div class="layui-card">
             <div class="yskj-card-body clearfix">
-                <table id="userData" lay-filter="userdata"></table>
+                <h4 class="my-card-title">站点今日详情(点击行可查看站点历史涨幅数据)</h4>
+                <table id="qzRateKeywordCountTable" lay-filter="qzRateKeywordCountTable"></table>
             </div>
         </div>
     </div>
-    <div class="layui-col-md6">
-        <div class="layui-card">
-            <div class="yskj-card-body clearfix">
-                <div class="map-china" id="mapChina"></div>
-            </div>
-        </div>
-    </div>
+
 </div>
 
-<!--日历-->
-<!--<div class="layui-row layui-col-space15">-->
-<!--<div class="clearfix">-->
-<!--<div id="calendar"></div>-->
-<!--</div>-->
-<!--</div>-->
 </body>
 </html>
-<script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
-<!--<script type="text/javascript" src="/static/ok-admin/js/home.js"></script>-->
+<script type="text/javascript" src="/static/ok-admin/lib/layui/layui.js"></script>
 <script>
-    layui.use(['jquery', 'form', 'common'], function () {
-        var $ = layui.jquery;
-        var form = layui.form;
-        var common = layui.common;
+    var formData_ = '<#if formData?exists>${formData}</#if>';
+    layui.use(['jquery', 'form', 'common','table','okLayer'], function () {
+        let $ = layui.jquery;
+        let form = layui.form;
+        let common = layui.common;
+        let table = layui.table;
+        let okLayer = layui.okLayer;
 
         init_searchEngine();
+
         let postData = common.formToJsonObject('qzRateSearchForm');
+
         init_qz_rate_statistics(postData);
+        init_table_data(postData);
 
         function init_searchEngine() {
             $.ajax({
@@ -252,7 +122,13 @@
                         $('#qzRateSearchEngine').append(
                             '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
                     });
-                    form.render("select");
+                    if (formData_!=null||formData_!==undefined){
+                        formData_ = $.parseJSON(formData_);
+                        $('#qzRateTerminalType').val(formData_.terminalType);
+                        $('#qzRateSearchEngine').val(formData_.searchEngine);
+                        $("input[name='qzRateRange'][value='"+formData_.qzRateRange+"']").attr("checked",true);
+                    }
+                    form.render();
                 }
             });
         }
@@ -356,12 +232,12 @@
         form.on('select(qzRateTerminalType)', function (data) {
             let postData = common.formToJsonObject('qzRateSearchForm');
             init_qz_rate_statistics(postData);
-
+            init_table_data(postData);
         });
         form.on('select(qzRateSearchEngine)', function (data) {
             let postData = common.formToJsonObject('qzRateSearchForm');
             init_qz_rate_statistics(postData);
-
+            init_table_data(postData);
         });
 
         form.on('radio(qzRateRange)', function (data) {
@@ -369,17 +245,66 @@
             init_qz_rate_statistics(postData);
         });
 
-        $('#qzRateDetail').click(function () {
-            let postData = common.formToJsonObject('qzRateSearchForm');
-            let searchEngine = postData.searchEngine === '' ? 'null' : postData.searchEngine;
-            let terminalType = postData.terminalType === '' ? 'null' : postData.terminalType;
-            let qzRateRange = postData.qzRateRange === '' ? '1' : postData.qzRateRange;
-            let url = '/internal/layer/toQZRateStatisticsDetail/' + terminalType + '/' + searchEngine +'/' + qzRateRange;
 
-            url = encodeURI(encodeURI(url));
-            common.updateOrNewTab(url, '每日站点涨幅统计详情', 'qzRateStatisticsDetail');
-        })
+        function init_table_data(whereCondition) {
+            table.render({
+                elem: '#qzRateKeywordCountTable',
+                method: 'post',
+                url: '/internal/qzRateStatistics/getQZRateKeywordCountList',
+                limit: 50,
+                page: true,
+                autoSort: false,
+                size: 'sm',
+                defaultToolbar: [],
+                id: 'qzRateKeywordCountTable',
+                even: true,//隔行背景
+                contentType: 'application/json',
+                where: whereCondition,
+                cols: [[
+                    {field: 'customerName', title: '客户名称', width: '20%',},
+                    {field: 'qzDomain', title: '站点域名', width: '20%', },
+                    {field: 'terminalType', title: '终端类型', width: '15%' },
+                    {field: 'totalKeywordCount', title: '总操作词数', width: '15%' },
+                    {field: 'topTenKeywordCount', title: '前十数', width: '15%' },
+                    {field: 'rate', title: '今日涨幅', width: '15%' ,templet:'#rateTpl'},
+                ]],
+                height: 'full-450',
+                done: function (res, curr, count) {
+                }
+            });
+        }
+
+        table.on('row(qzRateKeywordCountTable)', function(obj){
+            var data = obj.data;
+
+            console.log(data);
+
+            let url = '/internal/qzRateStatistics/toQZRateHistory/' + data.terminalType + '/' + data.qzUuid ;
+
+            okLayer.open("首页 / 每日站点涨幅统计 / 站点涨幅历史", url, "60%", "45%", function (layero) {
+            }, function () {
+
+            })
+            //标注选中样式
+
+        });
     });
+</script>
+
+<script type="text/html" id="rateTpl">
+    {{# if(!d.rate){    }}
+    <span style="color: burlywood;">今日暂无数据</span>
+    {{# }else{  }}
+    {{# if(d.rate>0){   }}
+    <span style="color: green;">上涨:{{d.rate}}</span>
+    {{# }else if (d.rate===0) { }}
+    <span style="color: grey;">与昨日持平</span>
+    {{# }else{  }}
+    <span style="color: red;">下跌:{{d.rate}}</span>
+    {{# }   }}
+    {{# }   }}
+
+
 </script>
 
 

@@ -36,4 +36,23 @@
         GROUP BY fRateDate
         ORDER BY fRateDate
         </select>
+
+    <select id="getRate" resultType="java.lang.Integer">
+        SELECT
+            fRate AS 'rate'
+        FROM t_qz_rate_statistics
+        WHERE fQZSettingUuid = #{qzUuid}
+          AND fTerminalType = #{terminalType}
+          AND fRateFullDate = #{rateFullDate}
+    </select>
+
+    <select id="getQzRateHsitory" resultType="java.util.HashMap">
+        SELECT
+            GROUP_CONCAT(fRate) AS totalRate,
+            GROUP_CONCAT(fRateDate) AS totalRateDate
+        FROM t_qz_rate_statistics
+        WHERE fQZSettingUuid = #{qzUuid}
+          AND fTerminalType = #{terminalType}
+        GROUP BY fQZSettingUuid
+    </select>
 </mapper>

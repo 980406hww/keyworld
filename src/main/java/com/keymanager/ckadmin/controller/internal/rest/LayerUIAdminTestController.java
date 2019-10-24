@@ -1,11 +1,14 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
+import com.alibaba.fastjson.JSON;
 import com.keymanager.ckadmin.common.result.Menu;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.QZRateStatisticsCountCriteria;
 import com.keymanager.ckadmin.service.QZRateStatisticsService;
 import com.keymanager.ckadmin.service.ResourceService;
 import com.keymanager.ckadmin.vo.QZRateStatisticsCountVO;
+import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -15,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,5 +84,30 @@ public class LayerUIAdminTestController {
             resultBean.setMsg("未知错误");
             return resultBean;
         }
+    }
+
+    @RequestMapping("/toQZRateStatisticsDetail/{terminalType}/{searchEngine}/{rateRange}")
+    public ModelAndView toQZRateStatisticsDetail(@PathVariable(name = "terminalType") String terminalType,@PathVariable(name = "searchEngine") String searchEngine,@PathVariable(name = "rateRange") String rateRange){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("statistics/qzRateStatisticsDetail");
+        try{
+            Map<String, String> map = new HashMap<>(3);
+            map.put("qzRateRange",rateRange);
+            if ("null".equals(searchEngine)){
+                map.put("searchEngine","");
+            }else {
+                searchEngine = URLDecoder.decode(searchEngine, "UTF-8");
+                map.put("searchEngine",searchEngine);
+            }
+            if ("null".equals(terminalType)){
+                map.put("terminalType","");
+            }else {
+                map.put("terminalType",terminalType);
+            }
+            mv.addObject("formData", JSON.toJSONString(map));
+        }catch (Exception e){
+            return mv;
+        }
+        return mv;
     }
 }

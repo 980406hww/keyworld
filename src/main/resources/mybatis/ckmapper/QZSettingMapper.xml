@@ -375,6 +375,14 @@
         <if test="searchEngine!=null and searchEngine!=''">
             AND fSearchEngine = #{searchEngine}
         </if>
+        <choose>
+            <when test="terminalType == 'PC'">
+                AND fPcGroup &gt; ''
+            </when>
+            <when test="terminalType == 'Phone'">
+                AND fPhoneGroup &gt; ''
+            </when>
+        </choose>
 
     </select>
 </mapper>
