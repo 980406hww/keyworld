@@ -71,4 +71,10 @@ public class QZRateStatisticsController {
             return resultBean;
         }
     }
+
+    //根据操作词曲线值生成涨幅表数据
+    @RequestMapping("/excuteTask")
+    public void excuteTask(){
+        qzRateStatisticsService.generateQZRateStatistics();
+    }
 }
