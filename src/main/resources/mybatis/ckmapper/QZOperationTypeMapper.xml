@@ -106,7 +106,7 @@
     </select>
 
     <select id="getQZSettngStandardSpecie" resultType="java.lang.String">
-        SELECT qcr.fStandardSpecies
+        select CONCAT(qcr.fStandardSpecies, '_', qot.fMaxKeywordCount)
         FROM t_qz_charge_rule qcr
         LEFT JOIN t_qz_operation_type qot
         ON qot.fUuid = qcr.fQZOperationTypeUuid
