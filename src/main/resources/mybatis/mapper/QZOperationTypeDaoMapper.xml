@@ -102,6 +102,18 @@
         LIMIT 1
     </select>
 
+    <!--<select id="getQZSettngStandardSpecies" resultType="String">-->
+        <!--SELECT-->
+            <!--CONCAT(qot.fOperationtype, "_", qcr.fStandardSpecies)-->
+        <!--FROM t_qz_charge_rule qcr-->
+        <!--LEFT JOIN t_qz_operation_type qot-->
+        <!--ON qot.fUuid = qcr.fQZOperationTypeUuid-->
+        <!--WHERE qot.fQZSettingUuid = #{qzSettingUuid}-->
+        <!--AND qcr.fStandardSpecies &lt;&gt; 'designationWord'-->
+        <!--AND qot.fIsDeleted = 0-->
+        <!--GROUP BY qot.fUuid-->
+    <!--</select>-->
+
     <select id="getQZSettngStandardSpecies" resultType="String">
         SELECT
             CONCAT(qot.fOperationtype, "_", qcr.fStandardSpecies)
@@ -109,7 +121,7 @@
         LEFT JOIN t_qz_operation_type qot
         ON qot.fUuid = qcr.fQZOperationTypeUuid
         WHERE qot.fQZSettingUuid = #{qzSettingUuid}
-        AND qcr.fStandardSpecies &lt;&gt; 'designationWord'
+        AND qcr.fStandardSpecies NOT IN ('designationWord', 'other')
         AND qot.fIsDeleted = 0
         GROUP BY qot.fUuid
     </select>
