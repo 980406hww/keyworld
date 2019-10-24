@@ -3,9 +3,11 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.QZChargeLog;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.entity.QzChargeMon;
+import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.QZChargeLogService;
 import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.service.QzChargeMonService;
@@ -14,6 +16,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/internal/qzchargelog")
 public class QZChargeLogController {
 
+    private static Logger logger = LoggerFactory.getLogger(QZChargeLogController.class);
+
     @Resource(name = "qzChargeLogService2")
     private QZChargeLogService qzChargeLogService;
 
@@ -33,6 +39,9 @@ public class QZChargeLogController {
     @Resource(name = "qzChargeMonService2")
     private QzChargeMonService qzChargeMonService;
 
+    @Resource(name = "customerService2")
+    private CustomerService customerService;
+
     //点击收费按钮触发的方法
     @RequestMapping(value = "/getQZChargeLogs/{uuid}", method = RequestMethod.GET)
     public ResultBean getQZChargeLogs(@PathVariable("uuid") Long uuid) {
@@ -41,6 +50,7 @@ public class QZChargeLogController {
         try {
             resultBean.setData(qzChargeLogService.getQZChargeLog(uuid));
         } catch (Exception e) {
+            logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
         }
@@ -64,13 +74,11 @@ public class QZChargeLogController {
             if (renewalStatus == 1) {
                 String loginName = (String) session.getAttribute("username");
                 qzChargeLogService.saveQZChargeLog(qzChargeLogs, loginName);
-                //日志监控
-                updQzStatusMonKeep(uuid, qzChargeLogs);
-            }else {
-                //日志监控
-                saveQzChargeMon(uuid, renewalStatus);
             }
+            //日志监控
+            saveQzChargeMon(uuid, renewalStatus);
         } catch (Exception e) {
+            logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
         }
@@ -87,6 +95,7 @@ public class QZChargeLogController {
         try {
             logs = qzChargeLogService.chargesList(uuid);
         } catch (Exception e) {
+            logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
             return resultBean;
@@ -99,60 +108,33 @@ public class QZChargeLogController {
         return resultBean;
     }
 
-    private void updQzStatusMonKeep(Long uuid, List<QZChargeLog> qzChargeLogs) {
-        if (null == qzChargeLogs || qzChargeLogs.isEmpty()) {
-            return;
-        }
-        QZSetting qzSetting = qzSettingService.selectById(uuid);
-        if (qzSetting.getRenewalStatus() == 4) {
-            return;
-        }
-        QzChargeMon qzChargeMon = new QzChargeMon();
-        qzChargeMon.setOperationType(1);
-        qzChargeMon.setOperationObj(uuid.toString());
-        qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
-        StringBuilder str = new StringBuilder();
-        for (QZChargeLog qzChargeLog : qzChargeLogs) {
-            str.append(qzChargeLog.getActualAmount());
-            str.append(",");
-        }
-        qzChargeMon.setOperationAmount(str.substring(0, str.length() - 1));
-        String terminal = null;
-        if (null == qzSetting.getPcGroup() || "".equals(qzSetting.getPcGroup())) {
-            if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
-                terminal = "Phone";
-            }
-        } else {
-            terminal = "PC";
-            if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
-                terminal += ",Phone";
-            }
-        }
-        qzChargeMon.setTerminalType(terminal);
-        qzChargeMonService.insert(qzChargeMon);
-    }
-
     private void saveQzChargeMon(Long uuid, Integer operationType) {
-        QZSetting qzSetting = qzSettingService.selectById(uuid);
-        if (qzSetting.getRenewalStatus() == 4) {
-            return;
-        }
-        QzChargeMon qzChargeMon = new QzChargeMon();
-        qzChargeMon.setOperationType(operationType);
-        qzChargeMon.setOperationObj(uuid.toString());
-        qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
-        String terminal = null;
-        if (null == qzSetting.getPcGroup() || "".equals(qzSetting.getPcGroup())) {
-            if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
-                terminal = "Phone";
+        try {
+            QZSetting qzSetting = qzSettingService.selectById(uuid);
+            if (qzSetting.getRenewalStatus() == 4) {
+                return;
             }
-        } else {
-            terminal = "PC";
-            if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
-                terminal += ",Phone";
+            Customer customer = customerService.selectById(qzSetting.getCustomerUuid());
+            String terminal = null;
+            if (null == qzSetting.getPcGroup() || "".equals(qzSetting.getPcGroup())) {
+                if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
+                    terminal = "Phone";
+                }
+            } else {
+                terminal = "PC";
+                if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
+                    terminal += ",Phone";
+                }
             }
+            QzChargeMon qzChargeMon = new QzChargeMon();
+            qzChargeMon.setOperationType(operationType);
+            qzChargeMon.setQzDomain(qzSetting.getDomain());
+            qzChargeMon.setQzCustomer(customer.getContactPerson());
+            qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
+            qzChargeMon.setTerminalType(terminal);
+            qzChargeMonService.insert(qzChargeMon);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
-        qzChargeMon.setTerminalType(terminal);
-        qzChargeMonService.insert(qzChargeMon);
     }
 }

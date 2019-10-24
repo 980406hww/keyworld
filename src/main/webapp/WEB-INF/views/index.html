@@ -276,22 +276,6 @@
                             </a>
                         </dd>
                         </@shiro.hasPermission>
-<!--                        <@shiro.hasPermission name="/internal/websites/toWebSiteList">-->
-<!--                        <dd data-name="other-item" >-->
-<!--                            <a data-url="/internal/websites/toWebSiteList" lay-id="webSiteList">-->
-<!--                                <i class="layui-icon layui-icon-align-right"></i>-->
-<!--                                <cite>网站管理</cite>-->
-<!--                            </a>-->
-<!--                        </dd>-->
-<!--                        </@shiro.hasPermission>-->
-<!--                        <@shiro.hasPermission name="/internal/salesManage/searchSalesManageLists">-->
-<!--                        <dd data-name="other-item" >-->
-<!--                            <a data-url="/internal/salesInfo/toSalesInfo" lay-id="salesInfoList">-->
-<!--                                <i class="layui-icon layui-icon-align-right"></i>-->
-<!--                                <cite>销售信息管理</cite>-->
-<!--                            </a>-->
-<!--                        </dd>-->
-<!--                        </@shiro.hasPermission>-->
                         <@shiro.hasPermission name="/internal/operationTypes/toSearchOperationTypeLists">
                         <dd data-name="other-item" >
                             <a data-url="/internal/operationTypes/toSearchOperationTypeLists" lay-id="operationTypeList">
@@ -342,8 +326,14 @@
                         <cite>日志监控</cite>
                     </a>
                     <dl class="layui-nav-child">
-
-
+                        <@shiro.hasPermission name="/internal/qzchargemon/toQzChargeMon">
+                        <dd data-name="other-item" >
+                            <a data-url="/internal/qzchargemon/toQzChargeMon" lay-id="qzChargeMon">
+                                <i class="layui-icon layui-icon-align-right"></i>
+                                <cite>整站收费操作记录</cite>
+                            </a>
+                        </dd>
+                        </@shiro.hasPermission>
                     </dl>
                 </li>
                 <li data-name="permission" class="layui-nav-item ">
@@ -405,8 +395,8 @@
                 </ul>
             </div>
             <ul class="layui-tab-title ok-tab-title not-scroll">
-                <li class="layui-this" lay-id="keywordCount" >
-                    <strong style="display: none;" is-close="true" lay-id="keywordCount" data-url="/internal/layer/home"></strong>
+                <li class="layui-this" lay-id="home" >
+                    <strong style="display: none;" is-close="true" lay-id="home" data-url="/internal/layer/home"></strong>
                     <i class="ok-icon ok-iconairplay"></i>
                     <cite>主页</cite>
                 </li>

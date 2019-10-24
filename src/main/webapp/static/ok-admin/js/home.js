@@ -123,6 +123,8 @@ layui.config({
                 }]
             };
 
+            var chargeLogShow = echarts.init(document.getElementById('chargeLogShow'));
+
             getChargeMonData({searchEngines: null});
 
             function getChargeMonData(condition) {
@@ -137,7 +139,6 @@ layui.config({
                     data: JSON.stringify(condition),
                     success: function (res) {
                         if (res.code === 200) {
-                            var chargeLogShow = echarts.init(document.getElementById('chargeLogShow'));
                             chargeOption.xAxis.data = res.data.date;
                             chargeOption.series[0].data = res.data.one;
                             chargeOption.series[1].data = res.data.two;
@@ -145,7 +146,11 @@ layui.config({
                             chargeOption.series[3].data = res.data.four;
                             chargeLogShow.setOption(chargeOption);//数据图
                         } else if (res.code === 300) {
-                            common.showFailMsg('暂无数据');
+                            chargeOption.series[0].data = [];
+                            chargeOption.series[1].data = [];
+                            chargeOption.series[2].data = [];
+                            chargeOption.series[3].data = [];
+                            chargeLogShow.setOption(chargeOption);
                         } else {
                             common.showFailMsg('获取数据失败');
                         }

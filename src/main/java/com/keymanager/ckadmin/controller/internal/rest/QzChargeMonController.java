@@ -4,6 +4,7 @@ import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.service.QzChargeMonService;
 import java.util.Map;
 import javax.annotation.Resource;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,6 +55,7 @@ public class QzChargeMonController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/qzchargemon/toQzChargeMon")
     @GetMapping(value = "/toQzChargeMon")
     public ModelAndView toQzChargeMon() {
         ModelAndView mv = new ModelAndView();

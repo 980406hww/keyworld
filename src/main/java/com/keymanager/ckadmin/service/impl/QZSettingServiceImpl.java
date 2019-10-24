@@ -388,29 +388,6 @@ public class QZSettingServiceImpl extends
                 qzCategoryTag.setQzSettingUuid(qzSettingUuid);
                 qzCategoryTagService.insert(qzCategoryTag);
             }
-
-            //日志监控块
-            //判断整站状态是否为其他
-            if (qzSetting.getRenewalStatus() == 4) {
-                return qzSettingUuid;
-            }
-            QzChargeMon qzChargeMon = new QzChargeMon();
-            qzChargeMon.setOperationType(2);
-            qzChargeMon.setOperationObj(qzSetting.getUuid().toString());
-            qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
-            String terminal = null;
-            if (null == qzSetting.getPcGroup() || "".equals(qzSetting.getPcGroup())) {
-                if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
-                    terminal = "Phone";
-                }
-            } else {
-                terminal = "PC";
-                if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
-                    terminal += ",Phone";
-                }
-            }
-            qzChargeMon.setTerminalType(terminal);
-            qzChargeMonService.insert(qzChargeMon);
         }
         return qzSettingUuid;
     }

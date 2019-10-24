@@ -16,11 +16,11 @@ public class QzChargeMon {
     @TableField("fOperationType")
     private Integer operationType;
 
-    @TableField("fOperationObj")
-    private String operationObj;
+    @TableField("fQzDomain")
+    private String qzDomain;
 
-    @TableField("fOperationAmount")
-    private String operationAmount;
+    @TableField("fQzCustomer")
+    private String qzCustomer;
 
     @TableField("fSearchEngine")
     private String searchEngine;
@@ -52,6 +52,22 @@ public class QzChargeMon {
         this.uuid = uuid;
     }
 
+    public String getQzDomain() {
+        return qzDomain;
+    }
+
+    public void setQzDomain(String qzDomain) {
+        this.qzDomain = qzDomain;
+    }
+
+    public String getQzCustomer() {
+        return qzCustomer;
+    }
+
+    public void setQzCustomer(String qzCustomer) {
+        this.qzCustomer = qzCustomer;
+    }
+
     public Date getOperationDate() {
         return operationDate;
     }
@@ -66,21 +82,5 @@ public class QzChargeMon {
 
     public void setOperationType(Integer operationType) {
         this.operationType = operationType;
-    }
-
-    public String getOperationObj() {
-        return operationObj;
-    }
-
-    public void setOperationObj(String operationObj) {
-        this.operationObj = operationObj;
-    }
-
-    public String getOperationAmount() {
-        return operationAmount;
-    }
-
-    public void setOperationAmount(String operationAmount) {
-        this.operationAmount = operationAmount;
     }
 }

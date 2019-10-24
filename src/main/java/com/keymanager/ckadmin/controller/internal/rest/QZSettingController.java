@@ -3,7 +3,6 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.keymanager.ckadmin.annotation.QzStatusMon;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
@@ -20,10 +19,8 @@ import com.keymanager.ckadmin.vo.QZSettingCountVO;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -324,7 +321,7 @@ public class QZSettingController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean();
         try {
             // 日志监控
-            saveQzChargeMon(uuid, 3);
+            saveQzChargeMon(uuid);
             qzSettingService.deleteOne(uuid);
             resultBean.setCode(200);
             resultBean.setMsg("删除站点成功");
@@ -406,6 +403,7 @@ public class QZSettingController extends SpringMVCBaseController {
             }
             String userName = (String) session.getAttribute("username");
             qzSettingService.saveQZSetting(qzSetting, userName);
+            saveQzChargeMon(qzSetting);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
@@ -609,70 +607,97 @@ public class QZSettingController extends SpringMVCBaseController {
         return resultBean;
     }
 
-    private void saveQzChargeMon(Long uuid, Integer operationType) {
-        QZSetting qzSetting = qzSettingService.selectById(uuid);
-        if (qzSetting.getRenewalStatus() == 4) {
-            return;
-        }
-        QzChargeMon qzChargeMon = new QzChargeMon();
-        qzChargeMon.setOperationType(operationType);
-        qzChargeMon.setOperationObj(uuid.toString());
-        qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
-        String terminal = null;
-        if (null == qzSetting.getPcGroup() || "".equals(qzSetting.getPcGroup())) {
-            if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
-                terminal = "Phone";
+    private void saveQzChargeMon(QZSetting qzSetting) {
+        try {
+            if (qzSetting.getRenewalStatus() == 4) {
+                return;
             }
-        } else {
-            terminal = "PC";
-            if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
-                terminal += ",Phone";
+            Customer customer = customerService.selectById(qzSetting.getCustomerUuid());
+            String terminal = "";
+            if (null == qzSetting.getPcGroup() || "".equals(qzSetting.getPcGroup())) {
+                if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
+                    terminal = "Phone";
+                }
+            } else {
+                terminal = "PC";
+                if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
+                    terminal += ",Phone";
+                }
             }
+            QzChargeMon qzChargeMon = new QzChargeMon();
+            qzChargeMon.setOperationType(2); // 2:新增状态
+            qzChargeMon.setQzDomain(qzSetting.getDomain());
+            qzChargeMon.setQzCustomer(customer.getContactPerson());
+            qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
+            qzChargeMon.setTerminalType(terminal);
+            qzChargeMonService.insert(qzChargeMon);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
-        qzChargeMon.setTerminalType(terminal);
-        qzChargeMonService.insert(qzChargeMon);
+    }
+
+    private void saveQzChargeMon(Long uuid) {
+        try {
+            QZSetting qzSetting = qzSettingService.selectById(uuid);
+            if (qzSetting.getRenewalStatus() == 4) {
+                return;
+            }
+
+            Customer customer = customerService.selectById(qzSetting.getCustomerUuid());
+            String terminal = "";
+            if (null == qzSetting.getPcGroup() || "".equals(qzSetting.getPcGroup())) {
+                if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
+                    terminal = "Phone";
+                }
+            } else {
+                terminal = "PC";
+                if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
+                    terminal += ",Phone";
+                }
+            }
+            QzChargeMon qzChargeMon = new QzChargeMon();
+            qzChargeMon.setOperationType(4); // 4:删除状态
+            qzChargeMon.setQzDomain(qzSetting.getDomain());
+            qzChargeMon.setQzCustomer(customer.getContactPerson());
+            qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
+            qzChargeMon.setTerminalType(terminal);
+            qzChargeMonService.insert(qzChargeMon);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
     }
 
     private void updQzStatusMonLows(List<Integer> uuids) {
-        if (null == uuids || uuids.isEmpty()) {
-            return;
-        }
-        List<QZSetting> qzSettings = qzSettingService.selectByUuids(uuids);
-        StringBuilder objStr = new StringBuilder();
-        Set<String> ses = new HashSet<>();
-        Set<String> terminals = new HashSet<>();
-        for (QZSetting qzSetting : qzSettings) {
-            if (qzSetting.getRenewalStatus() == 4) {
-                continue;
+        try {
+            if (null == uuids || uuids.isEmpty()) {
+                return;
             }
-            objStr.append(qzSetting.getUuid());
-            objStr.append(",");
-            ses.add(qzSetting.getSearchEngine());
-            if (null != qzSetting.getPcGroup() && !"".equals(qzSetting.getPcGroup())) {
-                terminals.add("PC");
+            List<QZSetting> qzSettings = qzSettingService.selectByUuids(uuids);
+            for (QZSetting qzSetting : qzSettings) {
+                if (qzSetting.getRenewalStatus() == 4) {
+                    continue;
+                }
+                String terminal = "";
+                if (null == qzSetting.getPcGroup() || "".equals(qzSetting.getPcGroup())) {
+                    if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
+                        terminal += "Phone";
+                    }
+                } else {
+                    terminal += "PC";
+                    if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
+                        terminal += ",Phone";
+                    }
+                }
+                QzChargeMon qzChargeMon = new QzChargeMon();
+                qzChargeMon.setOperationType(4); // 4:删除状态
+                qzChargeMon.setQzDomain(qzSetting.getDomain());
+                qzChargeMon.setQzCustomer(qzSetting.getContactPerson());
+                qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
+                qzChargeMon.setTerminalType(terminal);
+                qzChargeMonService.insert(qzChargeMon);
             }
-            if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
-                terminals.add("Phone");
-            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
-        if (ses.isEmpty()) {
-            return;
-        }
-        StringBuilder amountStr = new StringBuilder();
-        for (String se : ses) {
-            amountStr.append(se);
-            amountStr.append(",");
-        }
-        StringBuilder terminalStr = new StringBuilder();
-        for (String terminal : terminals) {
-            terminalStr.append(terminal);
-            terminalStr.append(",");
-        }
-        QzChargeMon qzChargeMon = new QzChargeMon();
-        qzChargeMon.setOperationType(3);
-        qzChargeMon.setOperationObj(objStr.substring(0, objStr.length() - 1));
-        qzChargeMon.setSearchEngine(amountStr.substring(0, amountStr.length() - 1));
-        qzChargeMon.setTerminalType(terminalStr.substring(0, terminalStr.length() - 1));
-        qzChargeMonService.insert(qzChargeMon);
     }
 }
