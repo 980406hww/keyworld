@@ -1,4 +1,4 @@
-let sign = false;
+var sign = false;
 // 进度条加载提示
 NProgress.start();
 window.onload = function () {

@@ -11,13 +11,13 @@ layui.define(['jquery', 'layer',], function (exports) {
             formData = "{\"" + formData + "\"}";
             formData = $.parseJSON(formData);
             $.each(formData, function (idx, item) {
-                formData[idx] = $.trim(item).replace(/\+/g, "")
+                formData[idx] = $.trim(item)
             });
             return formData;
         },
         jsonObjectTrim: function (jsonObject) {
             $.each(jsonObject, function (idx, item) {
-                jsonObject[idx] = $.trim(item).replace(/ /g, "")
+                jsonObject[idx] = $.trim(item)
             });
             return jsonObject;
         },
