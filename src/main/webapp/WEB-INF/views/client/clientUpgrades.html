@@ -128,7 +128,7 @@
         function toAddClientUpgrade() {
             let terminalType = $("#terminalType").val();
             if(terminalType === '' || terminalType == null){
-                terminalType = 'PC'
+                terminalType = 'PC';
             }
             okLayer.open("首页 / 机器升级列表 / 添加机器升级", "/internal/clientUpgrade/toClientUpgradeAdd", "40%", "60%",function(layero){
                 window[layero.find("iframe")[0]["name"]].setTerminalType(terminalType);
@@ -153,7 +153,7 @@
 
         function updateStatus(data){
             data.uuid = parseInt(data.uuid);
-            data.status = data.status == true ? false : true;
+            data.status = data.status !== true;
             $.ajax({
                 url: '/internal/clientUpgrade/updateClientUpgradeStatus2',
                 type: 'POST',
@@ -178,9 +178,9 @@
         }
 
         function deleteClient(uuid){
-            layer.confirm('确认删除该机器？', {
+            layer.confirm('确认删除该机器升级设置？', {
                 icon: 3,
-                title: '删除机器',
+                title: '机器升级设置',
                 btn: ['确认', '取消'],
                 yes: function () {
                     $.ajax({
@@ -218,10 +218,10 @@
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                common.showFailMsg('请选择要操作的机器');
+                common.showFailMsg('请选择要操作的机器升级设置');
                 return
             }
-            layer.confirm("确定要删除所选机器吗", {icon: 3, title: '删除所选'}, function (index) {
+            layer.confirm("确定要删除所选的机器升级设置吗", {icon: 3, title: '删除所选'}, function (index) {
                 let postData = {};
                 postData.uuids = uuidArr;
                 $.ajax({
@@ -317,7 +317,9 @@
 
 <script type="text/html" id="toResidualUpgradeCount">
     <span>
-        {{# if(d.residualUpgradeCount > 0) { }}
+        {{# if(d.residualUpgradeCount == 0) { }}
+            New
+        {{# }else if(d.residualUpgradeCount > 0) { }}
             Processing
         {{# }else{ }}
             Completed

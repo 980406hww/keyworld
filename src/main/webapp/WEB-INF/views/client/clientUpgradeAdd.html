@@ -114,7 +114,7 @@
         }
 
         form.on("submit(commitClientUpgrade)", function (data) {
-            data.field = common.jsonObjectTrim(data.field)
+            data.field = common.jsonObjectTrim(data.field);
             if(terminalType_ != null || terminalType_ !== ''){
                 data.field.terminalType = terminalType_;
             }

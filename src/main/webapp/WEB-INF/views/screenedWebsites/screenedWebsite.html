@@ -208,10 +208,10 @@
                 optimizeGroupNameList.push(item.optimizeGroupName);
             });
             if (uuidArr.length <= 0) {
-                showFailMsg('请选择要操作的优化组');
+                common.showFailMsg('请选择要操作的屏蔽网站设置');
                 return false;
             }
-            layer.confirm("确定删除选中优化组吗", {icon: 3, title: '删除选中优化组'}, function (index) {
+            layer.confirm("确定删除选中的屏蔽网站设置吗", {icon: 3, title: '删除选中的屏蔽网站设置'}, function (index) {
                 var postData = {};
                 postData.uuids = uuidArr;
                 postData.optimizeGroupNameList = optimizeGroupNameList;
@@ -244,7 +244,7 @@
         }
 
         function del_one(data) {
-            layer.confirm('真的删除该优化组设置吗', function (index) {
+            layer.confirm('真的删除该的屏蔽网站设置吗', function (index) {
                 var postData = {};
                 postData.uuid = data.uuid;
                 postData.optimizeGroupName = data.optimizeGroupName;

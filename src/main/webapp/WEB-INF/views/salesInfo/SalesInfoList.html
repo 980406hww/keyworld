@@ -67,9 +67,7 @@
                 <div class="my-collapse">
                     <div>
                         <div class="layui-inline">
-                            <div class="layui-input-inline">
-                                <select name="salesName" id="salesName" lay-search></select>
-                            </div>
+                            <input type="text" name="salesName" id="salesName" placeholder="请输入销售名称" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
                         </div>
                         <div class="layui-inline">
                             <div class="layui-input-inline">
@@ -123,7 +121,6 @@
         };
 
         searchSalesInfo();
-        initSalesName();
         initManagePart();
 
         form.on("submit(search)", function (data) {
@@ -147,33 +144,6 @@
                         managePart.append('<option value="" >负责部分</option>')
                         $.each(websiteTypeMap, function (index, item) {
                             managePart.append('<option value="' + index + '" >' + item + '</option>');
-                        });
-                        form.render("select")
-                    } else {
-                        common.showFailMsg(res.msg);
-                    }
-                },
-                error: function () {
-                    common.showFailMsg('未知错误，请稍后重试！！');
-                }
-            });
-        }
-
-        function initSalesName() {
-            $.ajax({
-                url: '/internal/salesInfo/returnSalesName',
-                type: 'GET',
-                headers: {
-                    "Accept": 'application/json',
-                    "Content-Type": 'application/json'
-                },
-                success: function (res) {
-                    if (res.code === 200) {
-                        let salesNameList = res.data;
-                        let salesName = $('#salesName');
-                        salesName.append('<option value="" >销售名称</option>');
-                        $.each(salesNameList, function (index, item) {
-                            salesName.append('<option value="' + item + '" >' + item + '</option>');
                         });
                         form.render("select")
                     } else {

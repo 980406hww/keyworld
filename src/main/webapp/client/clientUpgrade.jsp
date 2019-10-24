@@ -46,7 +46,7 @@
 				<td align="center" width=50>${info.version}</td>
 				<td align="center" width=50>${info.targetVersion}</td>
 				<td align="center" width=50>${info.maxUpgradeCount}</td>
-				<td align="center" width=50>${info.residualUpgradeCount > 0 ? "Processing" : "Completed"}</td>
+				<td align="center" width=50>${info.residualUpgradeCount === 0 ? "New" : (info.residualUpgradeCount > 0 ? "Processing" : "Completed")}</td>
 				<td align="center" width=40>${info.status == true ? "开始" : "暂停"}</td>
 				<td align="center" width=60><fmt:formatDate  value="${info.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				<td align="center" width=50>

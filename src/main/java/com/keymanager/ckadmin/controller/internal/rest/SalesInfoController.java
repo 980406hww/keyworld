@@ -147,20 +147,4 @@ public class SalesInfoController {
         }
         return resultBean;
     }
-
-    @GetMapping("/returnSalesName")
-    public ResultBean returnSalesName(){
-        ResultBean resultBean = new ResultBean();
-        try {
-            resultBean.setData(salesManageService.getAllSalesName());
-            resultBean.setCode(200);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
-            return resultBean;
-        }
-        return resultBean;
-    }
-
 }
