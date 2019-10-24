@@ -130,7 +130,7 @@
         </div>
     </div>
     <div class="layui-col-md6">
-        <div class="layui-card" style="cursor: pointer">
+        <div class="layui-card">
             <div class="yskj-card-body map-body" style="position:relative;">
                 <div style="position: absolute;top: 28px;left: 0;z-index: 9999;width: 100%;">
                     <form class="layui-form layui-form-pane" id="form">
@@ -139,14 +139,14 @@
                         </div>
                         <div style="float: right; width: 120px;margin: 0 0 0 6px">
                             <select name="qzTerminal" id="qzTerminal" lay-filter="qzTerminal">
-                                <option value="">终端选择</option>
-                                <option value="PC">电脑</option>
+                                <option value="">电脑+手机</option>
+                                <option value="PC" selected>电脑</option>
                                 <option value="Phone">手机</option>
                             </select>
                         </div>
                         <div style="float: right; width: 120px;margin: 0 0 0 6px">
                             <select name="searchEngines" id="searchEngines" lay-filter="searchEngines">
-                                <option value="">搜索引擎</option>
+                                <option value="">所有</option>
                             </select>
                         </div>
                         <div style="float: right;position: relative;top: 2px;">
@@ -186,25 +186,7 @@
 <!--</div>-->
 <!--</div>-->
 </body>
-</html>
 <script type="text/javascript" src="/static/ok-admin/lib/layui/layui.js"></script>
 <script type="text/javascript" src="/static/ok-admin/js/home.js"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<script type="text/javascript" src="/static/ok-admin/page/qzsetting/qzChargeMon.js"></script>
+</html>

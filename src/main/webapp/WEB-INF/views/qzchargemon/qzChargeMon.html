@@ -1,192 +1,351 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <title>单词统计</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="/static/ok-admin/css/scroll-bar.css">
-    <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
-    <link rel="stylesheet" href="/static/ok-admin/lib/nprogress/nprogress.css">
-    <link rel="stylesheet" href="/static/ok-admin/page/base/searchForm.css">
+    <meta charset="utf-8">
+    <title>每日站点操作监控</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="/static/ok-admin/css/home.css" media="all"/>
     <script type="text/javascript" src="/static/ok-admin/lib/echarts/echarts.min.js"></script>
-</head>
-<body>
-<div class="ok-body">
-    <div id="chargeLogShow" style="height: 500px;">
+    <script type="text/javascript" src="/static/ok-admin/lib/echarts/echarts.theme.js"></script>
+    <style>
+        .layui-linline {
+            width: 120px;
+        }
 
+        .layui-select-title input {
+            height: 30px !important;
+        }
+
+        .layui-form-select dl {
+            top: 31px !important;
+            padding: 2px 0 !important;
+        }
+
+        .layui-form-select dl dd {
+            line-height: 30px !important;
+        }
+
+        .layui-form-radio {
+            margin: 0 !important;
+            padding-right: 6px;
+        }
+
+        .layui-form-radio > i {
+            margin-right: 4px !important;
+        }
+
+        .yskj-card-body {
+            padding: 10px 20px;
+        }
+
+        .layui-inline {
+            height: 30px;
+        }
+
+        .layui-inline input {
+            width: 120px;
+            height: 30px;
+        }
+
+        .layui-inline .layui-form-label {
+            padding: 0;
+            width: 100px;
+            height: 30px;
+            line-height: 28px;
+        }
+
+        .layui-inline .layui-input-block {
+            margin-left: 100px;
+        }
+
+        .layui-btn {
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .layui-table-body .layui-table-cell {
+            text-align: left;
+        }
+
+        .layui-table-body .laytable-cell-checkbox {
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="childrenBody home">
+<div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="yskj-card-body" style="position:relative;">
+                <div style="position: absolute;top: 15px;left: 0;z-index: 9999;width: 100%;">
+                    <form class="layui-form layui-form-pane" id="form">
+                        <div style="float: right; width: 120px;margin: 0 6% 0 6px">
+                            <select name="qzTerminal" id="qzTerminal" lay-filter="qzTerminal">
+                                <option value="">电脑+手机</option>
+                                <option value="PC" selected>电脑</option>
+                                <option value="Phone">手机</option>
+                            </select>
+                        </div>
+                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
+                            <select name="searchEngines" id="searchEngines" lay-filter="searchEngines">
+                                <option value="">搜索引擎</option>
+                            </select>
+                        </div>
+                        <div style="float: right;position: relative;top: 2px;">
+                            <input type="radio" name="time" value="1" title="30天" lay-filter="time">
+                            <input type="radio" name="time" value="2" title="3个月" lay-filter="time">
+                            <input type="radio" name="time" value="3" title="1年" lay-filter="time" checked>
+                        </div>
+                    </form>
+                </div>
+                <div style="height: 300px;" id="chargeLogShow"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="yskj-card-body clearfix">
+                <table id="table" lay-filter="table"></table>
+            </div>
+        </div>
     </div>
 </div>
-<!--js逻辑-->
-<script src="/static/ok-admin/lib/layui/layui.js"></script>
-<script src="/static/ok-admin/lib/nprogress/nprogress.js"></script>
+
+</body>
+<script type="text/javascript" src="/static/ok-admin/lib/layui/layui.js"></script>
+<script type="text/javascript" src="/static/ok-admin/page/qzsetting/qzChargeMon.js"></script>
 <script>
-    var sign = false;
-    // 进度条加载提示
-    NProgress.start();
-    window.onload = function () {
-        NProgress.done();
-    };
-
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 'common'], function () {
-        var element = layui.element;
-        var table = layui.table;
-        var form = layui.form;
+    layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
         var $ = layui.jquery;
-        var layer = layui.layer;
+        var form = layui.form;
         var common = layui.common;
+        var table = layui.table;
+        var laydate = layui.laydate;
 
-        var chargeOption = {
-            title: {
-                text: '整站收费统计图',
-                subtext: '',
-                y: '10',
-                x: '10'
-            },
-            grid: {
-                x: 40,
-                y: 50,
-                x2: 90,
-                y2: 20,
-            },
-            legend: {
-                orient: 'vertical',
-                icon: "circle",
-                x: 'right',
-                y: 'center',
-                data: ['首次收费', '续费', '暂停', '下架']
-            },
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'cross',
-                    label: {
-                        backgroundColor: '#337ab7'
+        tableInit({searchEngine: '百度', terminal: 'PC'});
+
+        function tableInit(condition) {
+            table.render({
+                elem: '#table',
+                method: 'post',
+                url: '/internal/qzchargemon/getMonDataByCondition',
+                page: true,
+                limit: 25,
+                limits: [10, 25, 50, 100, 500],
+                size: 'sm',
+                id: 'table',
+                toolbar: "#toolbarTpl",
+                even: false,//隔行背景
+                where: condition,
+                defaultToolbar: [],
+                contentType: 'application/json',
+                cols: [[
+                    {
+                        field: 'qzDomain', title: '域名', width: '37%', align: 'center', templet: function (d) {
+                            return '<span lay-event="toQzSetting" style="color: #0c7df5;cursor: pointer;">' + d.qzDomain + '</span>';
+                        }
+                    },
+                    {field: 'qzCustomer', title: '客户名称', width: '37%', align: 'center'},
+                    {
+                        field: 'operationType', title: '操作', width: '11%', align: 'center', templet: function (d) {
+                            let msg = '';
+                            switch (d.operationType) {
+                                case 1:
+                                    msg = '<span style="color: green">续费</span>';
+                                    break;
+                                case 2:
+                                    msg = '<span style="color: orange">新增</span>';
+                                    break;
+                                case 0:
+                                    msg = '<span style="color: pink">暂停</span>';
+                                    break;
+                                case 3:
+                                    msg = '<span style="color: red">下架</span>';
+                                    break;
+                                case 4:
+                                    msg = '<span style="color: grey">删除</span>';
+                                    break;
+                                default:
+                                    msg = '<span style="color: yellow">未知操作</span>';
+                                    break;
+                            }
+                            return msg;
+                        }
+                    },
+                    {
+                        field: 'operationDate', title: '操作时间', width: '15%', align: 'center', templet: function (d) {
+                            return layui.util.toDateString(d.operationDate, 'yyyy-MM-dd HH:mm:ss')
+                        }
                     }
-                }
-            },
-            toolbox: {
-                show: true,
-                right: 20,
-                feature: {
-                    // mark: {show: true},
-                    // dataView: {show: true, readOnly: false},
-                    // magicType: {show: true, type: ['line', 'bar']},
-                    // restore: {show: true},
-                    // myTool1: {
-                    //     show: true,
-                    //     title: '自定义扩展方法',
-                    //     icon: 'image:///images/favicon.png',
-                    //     onclick: function () {
-                    //         alert('myToolHandler2')
-                    //     }
-                    // },
-                    // saveAsImage: {show: true}
-                }
-            },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                axisLabel: {
-                    interval: 0,
-                    // rotate: -50,
-                },
-                data: []
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [{
-                name: '首次收费',
-                type: 'line',
-                stack: '总量',
-                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
-                data: [],
-            }, {
-                name: '续费',
-                type: 'line',
-                stack: '总量',
-                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
-                data: [],
-            }, {
-                name: '暂停',
-                type: 'line',
-                stack: '总量',
-                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
-                data: [],
-            }, {
-                name: '下架',
-                type: 'line',
-                stack: '总量',
-                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
-                data: [],
-            }]
-        };
-
-        var chargeLogShow = echarts.init(document.getElementById('chargeLogShow'));
-
-        getChargeMonData({searchEngines: null});
-
-        function getChargeMonData(condition) {
-            $.ajax({
-                url: '/internal/qzchargemon/getMonDataBySe',
-                type: 'post',
-                dataType: 'json',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                data: JSON.stringify(condition),
-                success: function (res) {
-                    if (res.code === 200) {
-                        chargeOption.xAxis.data = res.data.date;
-                        chargeOption.series[0].data = res.data.one;
-                        chargeOption.series[1].data = res.data.two;
-                        chargeOption.series[2].data = res.data.three;
-                        chargeOption.series[3].data = res.data.four;
-                        chargeLogShow.setOption(chargeOption);//数据图
-                    } else if (res.code === 300) {
-                        chargeOption.series[0].data = [];
-                        chargeOption.series[1].data = [];
-                        chargeOption.series[2].data = [];
-                        chargeOption.series[3].data = [];
-                        chargeLogShow.setOption(chargeOption);
-                    } else {
-                        common.showFailMsg('获取数据失败');
-                    }
-                },
-                error: function () {
-                    common.showFailMsg('网络异常请稍后再试');
+                ]],
+                height: 'full-405',
+                loading: true,
+                done: function (res, curr, count) {
+                    console.log(res);
+                    laydate.render({elem: '#dateStart'});
+                    laydate.render({elem: '#dateEnd'});
+                    getSeData('searchEngine');
                 }
             });
         }
 
-        form.on('select(searchEngines)', function () {
-            getChargeMonData(common.formToJsonObject('form'));
-        });
+        function initFrom() {
+            if (condition.terminal) {
+                if (condition.terminal === 'PC') {
+                    document.getElementById('terminal').children[1].setAttribute('selected', '');
+                } else {
+                    document.getElementById('terminal').children[2].setAttribute('selected', '');
+                }
+            } else {
+                document.getElementById('terminal').children[1].removeAttribute('selected');
+            }
+            if (condition.operationType) {
+                switch (condition.operationType) {
+                    case '1':
+                        document.getElementById('operationType').children[2].setAttribute('selected', '');
+                        break;
+                    case '2':
+                        document.getElementById('operationType').children[1].setAttribute('selected', '');
+                        break;
+                    case '0':
+                        document.getElementById('operationType').children[3].setAttribute('selected', '');
+                        break;
+                    case '3':
+                        document.getElementById('operationType').children[4].setAttribute('selected', '');
+                        break;
+                    case '4':
+                        document.getElementById('operationType').children[5].setAttribute('selected', '');
+                        break;
+                    default:
+                        break;
+                }
+            }
+            handle('searchEngine', searchEngine, condition.searchEngine);
+            document.getElementById('dateStart').value = condition.dateStart;
+            document.getElementById('dateEnd').value = condition.dateEnd;
+            form.render('select');
+        }
 
-        form.on('select(qzTerminal)', function () {
-            getChargeMonData(common.formToJsonObject('form'));
-        });
+        window.resetForm = function () {
+            let terminals = document.getElementById('terminal').children;
+            for (let i = 0; i < terminals.length; i++) {
+                terminals[i].removeAttribute('selected');
+            }
+            terminals[1].setAttribute('selected', '');
+            let operationTypes = document.getElementById('operationType').children;
+            for (let i = 0; i < operationTypes.length; i++) {
+                operationTypes[i].removeAttribute('selected');
+            }
+            handle('searchEngine', searchEngine);
+        };
 
-        form.on('radio(time)', function () {
-            getChargeMonData(common.formToJsonObject('form'));
-        });
+        let condition = null;
 
-        var active = {
-            reload: function () {
-                let data = common.formToJsonObject('searchForm');
-                data.entryType = 'pt';
-                table.reload('keywordTable', {
-                    where: data,
-                    page: {
-                        curr: 1
+        window.getManyData = function () {
+            condition = common.formToJsonObject('searchForm');
+            console.log(condition);
+            table.reload('table', {
+                where: condition,
+                page: {
+                    curr: 1
+                },
+                done: function (res, curr, count) {
+                    laydate.render({elem: '#dateStart'});
+                    laydate.render({elem: '#dateEnd'});
+                    if (condition) {
+                        initFrom();
+                    }
+                }
+            });
+        };
+
+        table.on('tool(table)', function (obj) {
+            var data = obj.data, event = obj.event;
+            if (event === 'toQzSetting') {
+                $.ajax({
+                    url: '/internal/customer/getCustomerUuidByName',
+                    type: 'post',
+                    data: JSON.stringify({name: data.qzCustomer}),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    dataType: 'json'
+                    , success: function (res) {
+                        if (res.code === 200) {
+                            let url = '/internal/qzsetting/toQzSetting/' + data.qzDomain + '/' + data.terminalType.split(',')[0] + '/';
+                            url += res.data ? res.data : '';
+                            url = encodeURI(encodeURI(url));
+                            common.updateOrNewTab(url, data.qzCustomer + '整站信息', data.qzCustomer + '整站信息');
+                        }
                     }
                 });
-            },
-        };
+            }
+        });
     });
 </script>
-
-</body>
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+    <div>
+        <form class="layui-form layui-form-pane" lay-filter="searchForm" id="searchForm">
+            <div class="layui-inline">
+                <label class="layui-form-label">终端选择</label>
+                <div class="layui-input-block">
+                    <select name="terminal" id="terminal">
+                        <option value="">电脑+手机</option>
+                        <option value="PC" selected>电脑</option>
+                        <option value="Phone">手机</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">操作类型</label>
+                <div class="layui-input-block">
+                    <select name="operationType" id="operationType">
+                        <option value="">所有</option>
+                        <option value="2">新增</option>
+                        <option value="1">续费</option>
+                        <option value="0">暂停</option>
+                        <option value="3">下架</option>
+                        <option value="4">删除</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">搜索引擎</label>
+                <div class="layui-input-block">
+                    <select name="searchEngine" id="searchEngine">
+                        <option value="">所有</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">时间区间</label>
+                <div class="layui-input-block">
+                    <input type="text" autocomplete="off" name="dateStart" id="dateStart" class="layui-input" style="width: 100px;" placeholder=">=">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-block" style="margin-left: 0;">
+                    <input type="text" autocomplete="off" name="dateEnd" id="dateEnd" class="layui-input" style="width: 100px;" placeholder="<=">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-btn" id="search" style="position: relative;top: -2px;" onclick="getManyData()">搜索</div>
+            </div>
+            <div class="layui-inline">
+                <button style="background: #897c00;color: #ffffff;position: relative;top:-2px;" class="layui-btn" type="reset" onclick="resetForm()">
+                    重置
+                </button>
+            </div>
+        </form>
+    </div>
+</script>
 </html>

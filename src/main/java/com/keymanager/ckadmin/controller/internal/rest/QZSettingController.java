@@ -17,6 +17,8 @@ import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.vo.QZSettingCountVO;
 import com.keymanager.util.TerminalTypeMapping;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -111,6 +113,31 @@ public class QZSettingController extends SpringMVCBaseController {
     public ModelAndView toQZSetttings() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("qzsettings/qzsetting");
+        int isSEOSales = 0;
+        if (getCurrentUser().getRoles().contains("SEOSales")) {
+            isSEOSales = 1;
+        }
+        mv.addObject("isSEOSales", isSEOSales);
+        return mv;
+    }
+
+    /**
+     * 跳转整站
+     */
+    @RequiresPermissions("/internal/qzsetting/searchQZSettings")
+    @GetMapping(value = "/toQzSetting/{domain}/{terminal}/{customerUuidTmp}")
+    public ModelAndView toQzSetting(@PathVariable String domain, @PathVariable String terminal, @PathVariable String customerUuidTmp) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("qzsettings/qzsetting");
+        try {
+            domain = URLDecoder.decode(domain, "UTF-8");
+            mv.addObject("domain", domain);
+            mv.addObject("terminal", terminal);
+            mv.addObject("customerUuidTmp", customerUuidTmp);
+        } catch (UnsupportedEncodingException e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        }
         int isSEOSales = 0;
         if (getCurrentUser().getRoles().contains("SEOSales")) {
             isSEOSales = 1;
@@ -534,7 +561,6 @@ public class QZSettingController extends SpringMVCBaseController {
     @GetMapping(value = "/toQZSetttingsWithCustomerUuid/{customerUuid}")
     public ModelAndView toQZSetttingsWithCustomerUuid(@PathVariable(name = "customerUuid") Long customerUuid, HttpServletRequest request) {
         ModelAndView mv = new ModelAndView();
-//        request.setAttribute("customerUuidTmp",customerUuid);
         int isSEOSales = 0;
         if (getCurrentUser().getRoles().contains("SEOSales")) {
             isSEOSales = 1;

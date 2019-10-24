@@ -1,7 +1,15 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.criteria.QZChargeMonCriteria;
+import com.keymanager.ckadmin.entity.QzChargeMon;
 import com.keymanager.ckadmin.service.QzChargeMonService;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import javax.annotation.Resource;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -61,5 +69,42 @@ public class QzChargeMonController {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("qzchargemon/qzChargeMon");
         return mv;
+    }
+
+    @PostMapping(value = "/getMonDataByCondition")
+    public ResultBean getMonDataByCondition(@RequestBody QZChargeMonCriteria criteria) {
+        ResultBean resultBean = new ResultBean(0, "success");
+        try {
+            Page<QzChargeMon> page = new Page<>(criteria.getPage(), criteria.getLimit());
+            page.setOrderByField("fOperationDate");
+            page.setAsc(false);
+            Wrapper<QzChargeMon> wrapper = new EntityWrapper<>();
+            wrapper.like("fTerminalType", criteria.getTerminal());
+            if (null != criteria.getSearchEngine() && !"".equals(criteria.getSearchEngine())) {
+                wrapper.eq("fSearchEngine", criteria.getSearchEngine());
+            }
+            if (null != criteria.getOperationType()) {
+                wrapper.eq("fOperationType", criteria.getOperationType());
+            }
+            if (null != criteria.getDateStart() && !"".equals(criteria.getDateStart())) {
+                wrapper.where("fOperationDate >= {0}", criteria.getDateStart());
+            } else {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(new Date());
+                calendar.add(Calendar.DAY_OF_MONTH, -30);
+                wrapper.where("fOperationDate >= {0}", new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime()));
+            }
+            if (null != criteria.getDateEnd() && !"".equals(criteria.getDateEnd())) {
+                wrapper.where("fOperationDate <= {0}", criteria.getDateEnd());
+            }
+            page = qzChargeMonService.selectPage(page, wrapper);
+            resultBean.setData(page.getRecords());
+            resultBean.setCount(page.getTotal());
+        } catch (Exception e) {
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+            return resultBean;
+        }
+        return resultBean;
     }
 }

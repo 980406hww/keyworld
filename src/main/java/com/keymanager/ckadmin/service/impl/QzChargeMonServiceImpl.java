@@ -48,6 +48,7 @@ public class QzChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
         List<Long> twoData = new ArrayList<>(num);
         List<Long> threeData = new ArrayList<>(num);
         List<Long> fourData = new ArrayList<>(num);
+        List<Long> fiveData = new ArrayList<>(num);
         String lastMonth = "";
         for (Map<String, Object> map : maps) {
             String month = (String) map.get("monthDate");
@@ -57,6 +58,7 @@ public class QzChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
                 twoData.add(0L);
                 threeData.add(0L);
                 fourData.add(0L);
+                fiveData.add(0L);
             }
             Integer operationType = (Integer) map.get("operationType");
             Long number = (Long) map.get("number");
@@ -78,6 +80,10 @@ public class QzChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
                     fourData.remove(index);
                     fourData.add(index, number);
                     break;
+                case 4:
+                    fiveData.remove(index);
+                    fiveData.add(index, number);
+                    break;
                 default:
                     break;
             }
@@ -89,6 +95,7 @@ public class QzChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
         data.put("two", twoData);
         data.put("three", threeData);
         data.put("four", fourData);
+        data.put("five", fiveData);
         return data;
     }
 }

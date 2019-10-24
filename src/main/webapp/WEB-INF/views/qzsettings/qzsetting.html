@@ -620,8 +620,8 @@
 <div class="ok-body">
     <div class="layui-tab layui-tab-card" lay-filter="tabQzsetting">
         <ul class="layui-tab-title" id="tabItem">
-            <li data-terminal="PC" style="width: 100px" class="layui-this">电脑</li>
-            <li data-terminal="Phone" style="width: 100px">手机</li>
+            <li data-terminal="PC" style="width: 100px" lay-id="PC" class="layui-this">电脑</li>
+            <li data-terminal="Phone" style="width: 100px"lay-id="Phone" >手机</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
@@ -636,7 +636,7 @@
                                     <div class="layui-inline">
                                         <input type="text" name="domain" id="domain" placeholder="请输入域名"
                                                autocomplete="off" onblur="checkDomain()" style="width: 150px;height: 30px"
-                                               onmouseleave="checkDomain()" class="layui-input">
+                                               onmouseleave="checkDomain()" class="layui-input" value="<#if domain?exists>${domain}</#if>">
                                     </div>
 <!--                                    <div class="layui-inline">-->
 <!--                                        <label class="layui-form-label">创建时间</label>-->
@@ -687,11 +687,10 @@
                                 </div>
                                 <div class="my-hide" id="searchContent">
                                     <input type="hidden" name="searchEngine" id="searchEngine" value="百度"/>
-                                    <input type="hidden" name="terminalType" id="terminalType" value="PC"/>
+                                    <input type="hidden" name="terminalType" id="terminalType" value="<#if terminal?exists>${terminal}<#else>PC</#if>"/>
                                     <input type="hidden" name="userInfoID" id="userInfoID" value="">
                                     <input type="hidden" name="organizationID" id="organizationID" value="">
-                                    <input hidden value='<#if Request.customerUuidTmp?exists>${Request.customerUuidTmp}</#if>'
-                                           id="customerUuidTmp">
+                                    <input hidden value='<#if customerUuidTmp?exists>${customerUuidTmp}</#if>' id="customerUuidTmp">
                                     <div class="layui-form-item" style="margin-bottom: 0" lay-filter="loginNameFilter">
                                         <div class="layui-inline">
                                             <label class="layui-form-label">客户</label>
@@ -845,6 +844,15 @@
         if (customerUuid && customerUuid !== "") {
             whereCondition.customerUuid = customerUuid;
         }
+        let domain = $("#domain").val();
+        if (domain && domain !== "") {
+            whereCondition.domain = domain;
+        }
+        let terminalType = $("#terminalType").val();
+        if (terminalType && terminalType !== "") {
+            whereCondition.terminalType = terminalType;
+            element.tabChange('tabQzsetting', terminalType);
+        }
         get_qzsetting(whereCondition);
 
         getTerminalSearchEngineMap('PC');
@@ -982,7 +990,6 @@
             if (!data.field.dbtjSort){
                 data.field.dbtjSort = null;
             }
-            console.log(data.field);
             get_qzsetting(data.field);
             return false;
         });
