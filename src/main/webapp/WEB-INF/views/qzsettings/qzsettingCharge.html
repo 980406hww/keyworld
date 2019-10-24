@@ -415,9 +415,7 @@
                 d.qzOperationTypeUuid = data.field.pcQzOperationTypeUuid;
                 d.planChargeDate = data.field.pcPlanChargeDate;
                 d.actualChargeDate = data.field.pcActualChargeDate;
-                if (data.field.pcReceivableAmount !== '') {
-                    d.receivableAmount = data.field.pcReceivableAmount;
-                }
+                d.receivableAmount = data.field.pcReceivableAmount;
                 d.actualAmount = data.field.pcActualAmount;
                 d.nextChargeDate = data.field.pcNextChargeDate;
                 p_d.push(d);
@@ -427,9 +425,7 @@
                 d.qzOperationTypeUuid = data.field.phoneQzOperationTypeUuid;
                 d.planChargeDate = data.field.phonePlanChargeDate;
                 d.actualChargeDate = data.field.phoneActualChargeDate;
-                if (data.field.phoneReceivableAmount !== '') {
-                    d.receivableAmount = data.field.phoneReceivableAmount;
-                }
+                d.receivableAmount = data.field.phoneReceivableAmount;
                 d.actualAmount = data.field.phoneActualAmount;
                 d.nextChargeDate = data.field.phoneNextChargeDate;
                 p_d.push(d);
