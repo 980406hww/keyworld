@@ -450,6 +450,7 @@
 
         table.on('toolbar(tableFilter)',function (obj) {
             let data = obj.data, event = obj.event;
+            console.log(data);
             switch (event) {
                 case 'batchDeleteMachines':
                     batchDeleteMachines();
@@ -546,14 +547,26 @@
             }
             let postData = {};
             postData.clientIDs = uuidArr;
-            okLayer.open("首页 / 终端列表 / 修改终端分组信息", "/internal/machineManage/toBatchChangeTerminalType", "35%", "18%", function (layero) {
-                window[layero.find("iframe")[0]["name"]].initData(postData);
-            },function(){
-                if(sign){
-                    active['reload'].call(this);
-                    sign = false;
+            postData.terminalType = $("#terminalType").val() === "PC" ? "Phone" : "PC";
+            $.ajax({
+                url: '/internal/machineManage/batchChangeTerminalType',
+                type: 'post',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                success: function (res) {
+                    if (res.code === 200) {
+                        common.showSuccessMsg("修改成功", function () {
+                            active['reload'].call(this);
+                        });
+                    } else {
+                        common.showFailMsg(res.msg);
+                    }
                 }
-            }, '180px');
+            });
         }
 
         function batchUpdateMachine() {
@@ -1022,7 +1035,7 @@
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/machineInfo/changeTerminalType">
             <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toBatchChangeTerminalType">
-                <i class="layui-icon layui-icon-edit"></i>变更所选终端类型
+                <i class="layui-icon layui-icon-edit"></i>批量变更所选终端类型
             </button>
         </@shiro.hasPermission>
     </div>

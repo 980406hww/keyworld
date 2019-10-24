@@ -102,14 +102,6 @@ public class MachineInfoController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
-    @RequestMapping(value = "/toBatchChangeTerminalType", method = RequestMethod.GET)
-    public ModelAndView toBatchChangeTerminalType() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("machineManage/BatchChangeTerminalType");
-        return mv;
-    }
-
-    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
     @RequestMapping(value = "/toBatchChangeStatus", method = RequestMethod.GET)
     public ModelAndView toBatchChangeStatus() {
         ModelAndView mv = new ModelAndView();
