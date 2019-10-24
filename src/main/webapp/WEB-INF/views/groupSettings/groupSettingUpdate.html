@@ -61,8 +61,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">操作类型</label>
                     <div class="layui-input-block" onclick="checkItem(this)">
-                        <select name="operationType" id="operationType" lay-verify="required">
-                            <option value="">请选择操作类型</option>
+                        <select name="operationType" id="operationType" >
                         </select>
 
                     </div>
@@ -318,23 +317,25 @@
         }
 
     }
-
     function init_operationCombineCount(layui_, operationCombineUuid){
         let $ = layui_.jquery;
+        let form = layui_.form;
         $.ajax({
             url: '/internal/groupsetting/getGroupSettingCount2/' + operationCombineUuid,
             type: 'post',
+            async:false,
             dataType: 'json',
             success: function (res) {
                 if (res.code === 200) {
                     $('#operationCombineCount').text(res.data);
-                    $('#ocspan').css('display','inline-block');
+                    $('#ocspan').css('display','inline-block')
                 } else {
                     layui_.layer.msg(res.msg, {icon: 5, time: 3000});
                 }
             }
         });
     }
+
     function setForm(layui_, uuid){
         let $ = layui_.jquery;
         let form = layui_.form;
@@ -355,7 +356,6 @@
     function init_operationType(layui_, operationTypes) {
         let $ = layui_.jquery;
         let form = layui_.form;
-        $("#operationType").empty().append('<option value="">请选择操作类型</option>');
         $.each(operationTypes, function (index, item) {
             $('#operationType').append('<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
         });
@@ -380,7 +380,6 @@
             }
             if(key===9){//IE浏览器
                 // document.getElementById(e.target.id).focus()
-                common.showFailMsg("请不要使用tab键切换输入框！");
                 e.target.focus();
                 if(isie){
                     ev.keyCode=0;
@@ -399,6 +398,8 @@
         }
         if (uuid_ != null) {
             setForm(layui, uuid_);
+        }else{
+            init_operationCombineCount(layui, operationCombineUuid_)
         }
 
         window.recalculateUnusedPercent = function (_elem) {

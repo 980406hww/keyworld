@@ -10,6 +10,22 @@
     <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="/static/ok-admin/css/scroll-bar.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 0px;
+        }
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 0px solid #e6e6e6;
+        }
         .layui-table-body .layui-table-cell {
             text-align: left;
         }
@@ -32,11 +48,6 @@
         .my-collapse .layui-form-select dl,
         .my-collapse .layui-form-select .layui-anim {
             top: 33px !important;
-        }
-
-        .my-collapse > div:first-child {
-            background: #f2f2f2;
-            border: 1px solid #e6e6e6;
         }
 
         .my-collapse > div {
@@ -190,8 +201,7 @@
                                     </div>
                                     <div class="layui-inline">
                                         <select name="rankJobType" id="rankJobType">
-                                            <option value="">请选择任务类型</option>
-                                            <option value="Common">普通</option>
+                                            <option value="Common" selected>普通</option>
                                             <option value="Station">整站</option>
                                             <option value="DropDown">下拉词</option>
                                             <option value="Other">其他</option>
@@ -387,7 +397,7 @@
                     },
                     {title: '操作', width: '6%', align: 'center', templet: '#item'}
                 ]],
-                height: 'full-150',
+                height: 'full-110',
                 loading: true,
                 done: function (res, curr, count) {
                     jz();

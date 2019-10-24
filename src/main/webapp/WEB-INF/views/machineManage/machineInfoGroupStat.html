@@ -9,6 +9,22 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 0px;
+        }
         .layui-table-page > div {
             height: 26px;
             position: fixed;
@@ -22,11 +38,6 @@
 
         .my-collapse * {
             box-shadow: none;
-        }
-
-        .my-collapse > div:first-child {
-            background: #f2f2f2;
-            border: 1px solid #e6e6e6;
         }
 
         .my-collapse > div {
@@ -107,7 +118,7 @@
         NProgress.done();
     };
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 'common'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
@@ -115,10 +126,12 @@
         var laydate = layui.laydate;
         var okLayer = layui.okLayer;
         var layer = layui.layer;
+        var common = layui.common;
 
         init_Search({'terminalType': 'PC'})
 
         function init_Search(whereCondition){
+            whereCondition = common.jsonObjectTrim(whereCondition)
             table.render({
                 elem: '#machineInfoGroupStatTable',
                 method: 'post',
@@ -136,7 +149,7 @@
                     {field: 'terminalType', title: '终端类型', width: '33%', align: 'center'},
                     {field: 'count', title: '数量', width: '33%', align: 'center'}
                 ]],
-                height: 'full-133',
+                height: 'full-115',
                 done: function (res, curr, count) {
                 }
             });

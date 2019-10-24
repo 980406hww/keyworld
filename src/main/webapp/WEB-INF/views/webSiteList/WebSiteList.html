@@ -9,6 +9,22 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 0px;
+        }
         .layui-table-body .layui-table-cell {
             text-align: left;
         }
@@ -404,7 +420,7 @@
                     {field: 'indexFileStatus', title: 'index文件状态', width: '7%', align: 'center', templet: '#indexFileStatus'},
                     {field: 'sftpStatus', title: 'sftp服务状态', width: '7%', align: 'center', templet: '#sftpStatus'},
                 ]],
-                height: 'full-107',
+                height: 'full-75',
                 done: function (res, curr, count) {
                 }
             });
@@ -423,6 +439,7 @@
 
         form.on("submit(search)", function (data) {
             let postData = data.field
+            postData = common.jsonObjectTrim(postData)
             if(postData.friendlyLinkUrl !== ""){
                 if(postData.friendlyLinkUrl.indexOf('http://') === -1){
                     postData.friendlyLinkUrl = 'http://' + postData.friendlyLinkUrl

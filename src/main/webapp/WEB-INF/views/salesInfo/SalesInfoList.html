@@ -9,6 +9,23 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            margin-top: 10px;
+            background: #f2f2f2;
+            border: 0px;
+        }
         .layui-table-body .layui-table-cell {
             text-align: left;
         }
@@ -110,7 +127,7 @@
         initManagePart();
 
         form.on("submit(search)", function (data) {
-            let postData = data.field;
+            let postData = common.jsonObjectTrim(data.field);
             searchSalesInfo(postData);
             return false;
         });

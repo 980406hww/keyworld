@@ -149,6 +149,94 @@ public class MachineInfoController extends SpringMVCBaseController {
         return mv;
     }
 
+    @RequiresPermissions("/internal/machineInfo/resetRestartStatusForProcessing")
+    @RequestMapping(value = "/resetRestartStatusForProcessing", method = RequestMethod.POST)
+    public ResultBean resetRestartStatusForProcessing() {
+        ResultBean resultBean = new ResultBean();
+        try {
+            machineInfoService.resetRestartStatusForProcessing();
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/updateMachineInfoRenewalDate")
+    @RequestMapping(value = "/updateMachineInfoRenewalDate", method = RequestMethod.POST)
+    public ResultBean updateMachineInfoRenewalDate(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            String clientIDs = (String) requestMap.get("clientIDs");
+            String settingType = (String) requestMap.get("settingType");
+            String renewalDate = (String) requestMap.get("renewalDate");
+            machineInfoService.updateRenewalDate(clientIDs, settingType, renewalDate);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/updateMachineInfoTargetVPSPassword", method = RequestMethod.POST)
+    public ResultBean updateMachineInfoTargetVPSPassword(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
+            String targetVPSPassword = (String) requestMap.get("targetVPSPassword");
+            machineInfoService.updateMachineInfoTargetVPSPassword(clientIDs, targetVPSPassword);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/updateMachineInfoTargetVersion")
+    @RequestMapping(value = "/updateMachineInfoTargetVersion", method = RequestMethod.POST)
+    public ResultBean updateMachineInfoTargetVersion(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
+            String targetVersion = (String) requestMap.get("targetVersion");
+            machineInfoService.updateMachineInfoTargetVersion(clientIDs, targetVersion);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/uploadVNCFile")
+    @RequestMapping(value = "/uploadVNCFile", method = RequestMethod.POST)
+    public ResultBean uploadVNCFile(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean();
+        try {
+//            String terminalType = TerminalTypeMapping.getTerminalType(request);
+//            machineInfoService.uploadVNCFile(file.getInputStream(), terminalType);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
     @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
     @RequestMapping(value = "/batchUpdateSwitchGroupName", method = RequestMethod.POST)
     public ResultBean batchUpdateSwitchGroupName(@RequestBody Map<String, Object> requestMap) {

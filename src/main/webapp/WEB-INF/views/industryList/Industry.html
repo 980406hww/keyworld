@@ -9,6 +9,23 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 0px;
+        }
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 0px;
+        }
+
         .layui-table-body tr td:nth-child(2),td:nth-child(3),td:nth-child(5) {
             text-align: left;
         }
@@ -31,11 +48,6 @@
 
         .my-collapse * {
             box-shadow: none;
-        }
-
-        .my-collapse > div:first-child {
-            background: #f2f2f2;
-            border: 1px solid #e6e6e6;
         }
 
         .my-collapse > div {
@@ -208,6 +220,7 @@
         }
 
         function init_Search(whereCondition){
+            whereCondition = common.jsonObjectTrim(whereCondition)
             table.render({
                 elem: '#industryListTable',
                 method: 'post',
@@ -234,7 +247,7 @@
                     {field: 'createTime', title: '创建时间', width: '10%', align: 'center', templet: '#toDateTime'},
                     {title: '操作', width: '11%', align: 'center', templet: '#operationTpl', fixed: "right"},
                 ]],
-                height: 'full-150',
+                height: 'full-115',
                 done: function (res, curr, count) {
                 }
             });
@@ -454,8 +467,12 @@
         }
 
         function modifyIndustryInfo(data){
+            var terminalType = $("#terminalType").val();
+            if(terminalType === '' || terminalType == null){
+                terminalType = 'PC'
+            }
             okLayer.open("首页 / 行业列表 / 修改行业", "/internal/industryList/toSaveIndustryInfo", "35%", "60%", function(layero){
-                window[layero.find("iframe")[0]["name"]].initForm(data);
+                window[layero.find("iframe")[0]["name"]].initForm(data, terminalType);
             },function(){
                 if(sign){
                     active['reload'].call(this);

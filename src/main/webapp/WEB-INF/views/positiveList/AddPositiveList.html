@@ -113,6 +113,7 @@
         }
 
         form.on("submit(commit)", function (data) {
+            data.field = common.jsonObjectTrim(data.field)
             $.ajax({
                 url: '/internal/positivelists/savePositiveList',
                 type: 'POST',
@@ -125,6 +126,7 @@
                     if (res.code === 200) {
                         common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
+                            console.log(parent.window.sign);
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {

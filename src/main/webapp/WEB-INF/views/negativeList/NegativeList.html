@@ -9,6 +9,23 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            margin-top: 10px;
+            background: #f2f2f2;
+            border: 0px;
+        }
         .layui-table-body tr td:nth-child(1),td:nth-child(2),td:nth-child(3),td:nth-child(4),td:nth-child(5),td:nth-child(6) {
             text-align: left;
         }
@@ -109,6 +126,7 @@
 
         form.on("submit(search)", function (data) {
             let postData = data.field;
+            postData = common.jsonObjectTrim(postData)
             searchNegativeList(postData);
             return false
         });
@@ -139,7 +157,7 @@
                     {field: 'createTime', title: '采集日期', width: '12%', templet: '#toDateTime', align: 'center'},
                     {title: '操作', templet: '#operationTpl', align: 'center', width: '14%', align: 'center'}
                 ]],
-                height: 'full-80',
+                height: 'full-70',
                 done: function (res, curr, count) {
                 }
             });

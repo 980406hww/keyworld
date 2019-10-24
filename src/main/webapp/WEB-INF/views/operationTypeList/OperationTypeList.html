@@ -9,6 +9,23 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 0px;
+        }
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 0px;
+        }
+
         .layui-table-page > div {
             height: 26px;
             position: fixed;
@@ -28,11 +45,6 @@
 
         .my-collapse * {
             box-shadow: none;
-        }
-
-        .my-collapse > div:first-child {
-            background: #f2f2f2;
-            border: 1px solid #e6e6e6;
         }
 
         .my-collapse > div {
@@ -149,7 +161,7 @@
                     {field: 'status', title: '状态', align: 'center', width: '10%', align: 'center', templet: '#toStatus'},
                     {title: '操作', align: 'center', width: '11%', align: 'center', templet: '#operationTpl', fixed: "right"},
                 ]],
-                height: 'full-150',
+                height: 'full-115',
 
                 done: function (res, curr, count) {
                 }
@@ -185,6 +197,7 @@
                 terminalType = 'PC'
             }
             postData.terminalType = terminalType;
+            postData = common.jsonObjectTrim(postData);
             init_Search(postData);
             return false
         });

@@ -10,6 +10,23 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <link rel="stylesheet" href="/static/ok-admin/page/base/searchForm.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            margin-top: 10px;
+            background: #f2f2f2;
+            border: 0px;
+        }
         .layui-table-body .layui-table-cell {
             text-align: left;
         }
@@ -122,7 +139,7 @@
                     {field: 'createTime', title: '创建时间', width: '20%', align: 'center', templet: '#toDateTime'},
                     {title: '操作', width: '24%', align: 'center', templet: '#operationTpl'},
                 ]],
-                height: 'full-90',
+                height: 'full-75',
                 done: function (res, curr, count) {
                 }
             });

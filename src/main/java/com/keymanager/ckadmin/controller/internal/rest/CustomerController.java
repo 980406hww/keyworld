@@ -6,7 +6,6 @@ import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.ckadmin.criteria.CustomerTypeCriteria;
-import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.UserInfo;
 import com.keymanager.ckadmin.service.CustomerService;
@@ -15,11 +14,9 @@ import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.ReflectUtils;
 import com.keymanager.ckadmin.util.SQLFilterUtils;
 import com.keymanager.ckadmin.vo.CustomerTypeVO;
-import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,10 +28,14 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -77,15 +78,6 @@ public class CustomerController extends SpringMVCBaseController {
             return resultBean;
         }
         try {
-            ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
-            Set<String> roles = shiroUser.getRoles();
-            List<String> roleTypes = new ArrayList<>();
-            if (roles.contains("SEOSales")) {
-                roleTypes.add("SEOSales");
-            } else if (roles.contains("NegativeSales")) {
-                roleTypes.add("NegativeSales");
-            }
-            customerCriteria.setRoleTypes(roleTypes);
             Page<Customer> page = new Page<>(customerCriteria.getPage(), customerCriteria.getLimit());
             String orderByField = ReflectUtils.getTableFieldValue(Customer.class, customerCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {

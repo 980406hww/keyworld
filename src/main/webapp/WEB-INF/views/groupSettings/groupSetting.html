@@ -9,6 +9,24 @@
     <link rel="stylesheet" href="/static/ok-admin/lib/style/template.css">
     <link rel="stylesheet" href="/static/ok-admin/page/groupSetting/groupSetting.css">
 </head>
+<style>
+    .layui-tab-content {
+        padding: 0px;
+    }
+    .layui-card-body {
+        position: relative;
+        padding: 0px;
+        line-height: 24px;
+    }
+    .layui-table, .layui-table-view {
+        margin: 0px;
+        border-width: 1px;
+    }
+    .my-collapse > div:first-child {
+        background: #f2f2f2;
+        border: 0px;
+    }
+</style>
 <body>
 <div class="layui-tab layui-tab-card" lay-filter="groupSettingTab">
     <ul class="layui-tab-title">
@@ -236,7 +254,7 @@
             data.remainAccount = 100;
             data.currentAccount = 0;
             data.terminalType = $('#terminalType').val();
-            okLayer.open("终端管理 / 分组信息 / 添加操作组合", "/internal/groupsetting/toGroupSettingAdd", "40%", "90%", function(layero){
+            okLayer.open("终端管理 / 分组信息 / 添加操作组合", "/internal/groupsetting/toGroupSettingAdd", "60%", "90%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             }, function () {
                 if (sign) {

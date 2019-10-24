@@ -113,6 +113,7 @@
         }
 
         form.on("submit(commit)", function (data) {
+            data.field = common.jsonObjectTrim(data.field)
             $.ajax({
                 url: '/internal/warnlists/saveWarnList',
                 type: 'POST',

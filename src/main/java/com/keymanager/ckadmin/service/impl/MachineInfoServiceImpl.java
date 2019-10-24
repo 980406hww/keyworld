@@ -125,18 +125,31 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     @Override
-    public void updateMachineInfoTargetVersion(List<String> clientIDs, String targetVersion) {
-
+    public void updateMachineInfoTargetVersion(List<String> clientIDs, String targetVersion) throws Exception {
+        machineInfoDao.updateMachineInfoTargetVersion(clientIDs, targetVersion);
     }
 
     @Override
-    public void updateMachineInfoTargetVPSPassword(List<String> clientIDs, String targetVPSPassword) {
-
+    public void updateMachineInfoTargetVPSPassword(List<String> clientIDs, String targetVPSPassword) throws Exception {
+        machineInfoDao.updateMachineInfoTargetVPSPassword(clientIDs, targetVPSPassword);
     }
 
     @Override
-    public void updateRenewalDate(String clientIDs, String settingType, String renewalDate) {
-
+    public void updateRenewalDate(String clientIDs, String settingType, String renewalDate) throws Exception {
+        String[] clientIDArray = clientIDs.split(",");
+        for (String clientID : clientIDArray) {
+            MachineInfo machineInfo = machineInfoDao.selectById(clientID);
+            if("increaseOneMonth".equals(settingType)) {
+                if(machineInfo.getRenewalDate() != null) {
+                    machineInfo.setRenewalDate(Utils.addMonth(machineInfo.getRenewalDate(), 1));
+                } else {
+                    machineInfo.setRenewalDate(Utils.addMonth(Utils.getCurrentTimestamp(), 1));
+                }
+            } else {
+                machineInfo.setRenewalDate(Utils.string2Timestamp(renewalDate));
+            }
+            machineInfoDao.updateById(machineInfo);
+        }
     }
 
     @Override
@@ -187,7 +200,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public void resetRestartStatusForProcessing() {
-
+        machineInfoDao.resetRestartStatusForProcessing();
     }
 
     @Override

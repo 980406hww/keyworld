@@ -41,11 +41,11 @@ public interface MachineInfoService extends IService<MachineInfo> {
 
     void updateMachineInfoForCapturePosition(String clientID);
 
-    void updateMachineInfoTargetVersion(List<String> clientIDs, String targetVersion);
+    void updateMachineInfoTargetVersion(List<String> clientIDs, String targetVersion) throws Exception ;
 
-    void updateMachineInfoTargetVPSPassword(List<String> clientIDs, String targetVPSPassword);
+    void updateMachineInfoTargetVPSPassword(List<String> clientIDs, String targetVPSPassword) throws Exception ;
 
-    void updateRenewalDate(String clientIDs, String settingType, String renewalDate);
+    void updateRenewalDate(String clientIDs, String settingType, String renewalDate) throws Exception;
 
     MachineInfo getMachineInfo(String clientID, String terminalType);
 

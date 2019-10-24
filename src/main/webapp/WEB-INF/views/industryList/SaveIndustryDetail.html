@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <style>
         .layui-btn {
-            width: 150px;
+            width: 80px;
         }
     </style>
 </head>
@@ -116,6 +116,7 @@
                 data.field.uuid = uuid_
             }
             data.field.industryID = industryID
+            data.field = common.jsonObjectTrim(data.field)
             $.ajax({
                 url: '/internal/industryDetails/saveIndustryDetail',
                 type: 'POST',

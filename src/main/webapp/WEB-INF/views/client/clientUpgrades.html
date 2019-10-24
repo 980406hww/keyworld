@@ -9,6 +9,22 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 0px;
+        }
         .layui-table-page > div {
             height: 26px;
             position: fixed;
@@ -81,7 +97,7 @@
                     {field: 'createTime', title: '创建时间', width: '16%', templet: '#toDateTime', align: 'center'},
                     {title: '操作', templet: '#operationTpl', align: 'center', width: '14%', align: 'center'}
                 ]],
-                height: 'full-95',
+                height: 'full-75',
                 done: function (res, curr, count) {
                 }
             });
@@ -312,7 +328,7 @@
 <script type="text/html" id="toStatus">
     <span>
         {{# if(d.status === true) { }}
-            开始
+            激活
         {{# }else{ }}
             暂停
         {{# } }}
@@ -325,7 +341,7 @@
             {{# if(d.status === true) { }}
                 <button type="button" class="layui-btn layui-btn-xs" lay-event="updateStatus">暂停</button>
             {{# }else { }}
-                <button type="button" class="layui-btn layui-btn-xs" lay-event="updateStatus">开始</button>
+                <button type="button" class="layui-btn layui-btn-xs" lay-event="updateStatus">激活</button>
             {{# } }}
             <button type="button" class="layui-btn layui-btn-xs" lay-event="modifyMachine" id="modifyMachine">修改</button>
         </@shiro.hasPermission>
