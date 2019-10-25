@@ -233,14 +233,13 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
 <script>
     let qzBusiness = '<#if businessType?exists>${businessType}</#if>';
-    let search = '<#if search?exists>${search}</#if>';
+    let searchEngine = '<#if searchEngine?exists>${searchEngine}</#if>';
 
     function if_from_qz(l) {
         let status = '<#if status?exists>${status}</#if>';
         if (status === '1') {
             document.getElementById("showStatus").setAttribute('selected', '');
         }
-        document.getElementById("showSource").setAttribute('selected', '');
         l.form.render('select');
     }
 </script>

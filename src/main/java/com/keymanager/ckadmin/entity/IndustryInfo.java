@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldStrategy;
 
 /**
  * <p>
@@ -37,7 +38,7 @@ public class IndustryInfo extends BaseEntity {
     /**
      * 目标起始网址
      */
-    @TableField(value = "fTargetUrl")
+    @TableField(value = "fTargetUrl", strategy = FieldStrategy.IGNORED)
     private String targetUrl;
     /**
      * 页数

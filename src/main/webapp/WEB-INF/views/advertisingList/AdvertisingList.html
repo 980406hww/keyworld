@@ -422,11 +422,11 @@
 
 <script type="text/html" id="operationTpl">
     <div class="layui-btn-group">
-    <button type="button" class="layui-btn layui-btn-xs" lay-event="updateAdvertising">修改</button>
     <@shiro.hasPermission name="/internal/advertising/saveAdvertising">
+        <button type="button" class="layui-btn layui-btn-xs" lay-event="updateAdvertising">修改</button>
     </@shiro.hasPermission>
-    <button type="button" class="layui-btn layui-btn-xs" lay-event="deleteAdvertising">删除</button>
     <@shiro.hasPermission name="/internal/advertising/deleteAdvertising">
+    <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="deleteAdvertising">删除</button>
     </@shiro.hasPermission>
     </div>
 </script>

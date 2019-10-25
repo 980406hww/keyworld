@@ -1,6 +1,7 @@
 package com.keymanager.monitoring.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.enums.FieldStrategy;
 import com.baomidou.mybatisplus.enums.IdType;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -40,7 +41,7 @@ public class IndustryInfo extends BaseEntity {
     /**
      * 目标起始网址
      */
-    @TableField(value = "fTargetUrl")
+    @TableField(value = "fTargetUrl", strategy = FieldStrategy.IGNORED)
     private String targetUrl;
     /**
      * 页数

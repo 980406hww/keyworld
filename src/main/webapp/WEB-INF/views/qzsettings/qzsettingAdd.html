@@ -76,8 +76,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">客户</label>
                         <div class="layui-input-block">
-                            <select id="customerList" name="customerUuid" lay-verify="required"
-                                    lay-search>
+                            <select id="customerList" name="customerUuid" lay-verify="required" lay-search>
                                 <option value="">请选择</option>
                             </select>
                         </div>
@@ -96,9 +95,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">域名</label>
                         <div class="layui-input-block">
-                            <input type="text" name="domain"
-                                   placeholder="请输入顶级域名，不带www"
-                                   autocomplete="off"
+                            <input type="text" name="domain" placeholder="请输入顶级域名，不带www" autocomplete="off"
                                    class="layui-input" lay-verify="required|domain">
                         </div>
                     </div>
@@ -116,9 +113,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">熊掌号</label>
                         <div class="layui-input-block">
-                            <input type="text" name="bearPawNumber" placeholder="请输入熊掌号"
-                                   autocomplete="off"
-                                   class="layui-input">
+                            <input type="text" name="bearPawNumber" placeholder="请输入熊掌号" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                 </div>
@@ -126,25 +121,21 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">标签</label>
                         <div class="layui-input-block">
-                            <input type="text" name="tagNames"
-                                   placeholder="例如MBA,算法,每个词用逗号隔开"
-                                   autocomplete="off"
+                            <input type="text" name="tagNames" placeholder="例如MBA,算法,每个词用逗号隔开" autocomplete="off"
                                    class="layui-input" lay-verify="tagNames">
                         </div>
                     </div>
                 </div>
             </div>
             <fieldset class="layui-elem-field layui-field-title">
-                <legend>收费规则</legend>
+                <legend>站点基本信息</legend>
             </fieldset>
             <div class="layui-row">
                 <div class="layui-col-md6 padding-ten-right">
                     <div class="layui-form-item" pane>
                         <label class="layui-form-label">电脑</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" name="computer" lay-skin="switch"
-                                   lay-filter="computer"
-                                   lay-text="Select|Deselect">
+                            <input type="checkbox" name="computer" lay-skin="switch" lay-filter="computer" lay-text="选中|不选中">
                         </div>
                     </div>
                     <div id="comQzsettingBoxSelect" style="display: none" class="layui-form-item"
@@ -329,7 +320,7 @@
                         <div class="layui-input-block">
                             <input type="checkbox" name="phone" lay-skin="switch"
                                    lay-filter="phone"
-                                   lay-text="Select|Deselect">
+                                   lay-text="选中|不选中">
                         </div>
                     </div>
                     <div id="phoneQzsettingBoxSelect" style="display: none" class="layui-form-item"
@@ -511,7 +502,7 @@
             </div>
             <#if (organizationName == '运营部' || organizationName == '技术部')>
             <fieldset class="layui-elem-field layui-field-title">
-                <legend>爬取规则</legend>
+                <legend>采词规则</legend>
             </fieldset>
             <div class="layui-row four-row">
                 <div class="layui-col-md3 padding-ten-right">
@@ -525,7 +516,7 @@
                 </div>
                 <div class="layui-col-md3 padding-ten-left padding-ten-right">
                     <div class="layui-form-item" pane>
-                        <label class="layui-form-label">终端选择</label>
+                        <label class="layui-form-label">采词来源</label>
                         <div class="layui-input-block">
                             <input type="checkbox" name="terminalType[PC]" lay-skin="primary" title="电脑" value="PC">
                             <input type="checkbox" name="terminalType[Phone]" lay-skin="primary" title="手机" value="Phone">
@@ -1095,7 +1086,7 @@
                     captureTerminalType += d['terminalType[Phone]'];
                 }
             }
-            if (p_d.autoCrawlKeywordFlag && captureTerminalType === "") {
+            if (p_d.autoCrawlKeywordFlag === "true" && captureTerminalType === "") {
                 common.showFailMsg('请选择要自动采词的终端');
                 return false;
             }
@@ -1123,7 +1114,7 @@
             let qzOperationTypes = [];
             if (d.computer === 'on') {
                 if (d.pcGroup === '' || d.comMaxKeywordCount === '' || d.comSubDomainName === '') {
-                    common.showFailMsg('电脑收费规则中信息未填写完全');
+                    common.showFailMsg('电脑端基本信息中信息未填写完全');
                     return false;
                 }
                 let b = {};
@@ -1160,7 +1151,7 @@
                             for (let j = 1; j < 4; j++) {
                                 if (comTd[j].children[0].children[0].value === '') {
                                     if (!(i === comTr.length - 1 && j === 2)) {
-                                        common.showFailMsg('电脑收费规则表必须填写完整');
+                                        common.showFailMsg('电脑端基本信息表必须填写完整');
                                         return false;
                                     }
                                 }
@@ -1198,7 +1189,7 @@
             if (d.phone === 'on') {
                 if (d.phoneGroup === '' || d.phoneMaxKeywordCount === '' || d.phoneSubDomainName
                     === '') {
-                    common.showFailMsg('手机收费规则中信息未填写完全');
+                    common.showFailMsg('手机端基本信息中信息未填写完全');
                     return false;
                 }
                 let b = {};
@@ -1235,7 +1226,7 @@
                             for (let j = 1; j < 4; j++) {
                                 if (phoneTd[j].children[0].children[0].value === '') {
                                     if (!(i === phoneTr.length - 1 && j === 2)) {
-                                        common.showFailMsg('手机收费规则表必须填写完整');
+                                        common.showFailMsg('手机端基本信息表必须填写完整');
                                         return false;
                                     }
                                 }

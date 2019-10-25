@@ -642,7 +642,7 @@
         <button type="button" class="layui-btn layui-btn-xs" lay-event="modifyIndustryInfo" id="modifyIndustryInfo">修改</button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/industry/delIndustry">
-        <button type="button" class="layui-btn layui-btn-xs" lay-event="delIndustryInfo" id="delIndustryInfo">删除</button>
+        <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delIndustryInfo" id="delIndustryInfo">删除</button>
         </@shiro.hasPermission>
     </div>
 </script>

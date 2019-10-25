@@ -650,12 +650,6 @@
                                                autocomplete="off" onblur="checkDomain()" style="width: 150px;height: 30px"
                                                onmouseleave="checkDomain()" class="layui-input">
                                     </div>
-<!--                                    <div class="layui-inline">-->
-<!--                                        <label class="layui-form-label">创建时间</label>-->
-<!--                                        <div class="layui-input-inline">-->
-<!--                                            <input type="text" class="layui-input" id="createTimes" name="createTimes" placeholder="请选择日期">-->
-<!--                                        </div>-->
-<!--                                    </div>-->
                                     <div class="layui-inline">
                                         <button class="layui-btn" lay-submit lay-filter="search" id="searchBtn">搜索
                                         </button>
@@ -3038,7 +3032,7 @@
             } else if (renewalStatus === 3) {
                 msg = "确认要下架所选整站吗?";
             } else if (renewalStatus === 4) {
-                msg = "确定要将选中整站续费状态更为其他吗?";
+                msg = "确定要将选中整站续费状态改为其他状态吗?";
             }
             layer.confirm(msg, {icon: 3,  offset:'120px',title: '修改所选'}, function (index) {
                 let uuids = "";
@@ -3075,11 +3069,11 @@
         /**
          * 点击操作词数，跳转到关键字列表
          */
-        window.searchCustomerKeywords = function (customerUuid, pcGroup, phoneGroup, search) {
+        window.searchCustomerKeywords = function (customerUuid, pcGroup, phoneGroup, searchEngine) {
             let group = pcGroup === 'null' ? phoneGroup : pcGroup;
             let terminalType = document.getElementById('terminalType').value;
-            let url = '/internal/customerKeyword/toKeywordsWithQZ/qz/' + terminalType + '/' + customerUuid + '/' + pcGroup + '/' + search;
-            url = encodeURI(encodeURI(url))
+            let url = '/internal/customerKeyword/toKeywordsWithQZ/qz/' + terminalType + '/' + customerUuid + '/' + pcGroup + '/' + searchEngine;
+            url = encodeURI(encodeURI(url));
             let tit = group + '--关键字列表';
             updateOrNewTab(url, tit, customerUuid);
         };
@@ -3217,21 +3211,23 @@
     <button class="layui-btn layui-btn-sm" lay-event="batchUpdateQZSettingFrom">
         <i style="font-size: 15px !important;" class="layui-icon">&#xe642;</i>修改整站归属
     </button>
-    <#if isSEOSales==0>
-    <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToNormal">
-        <i class="layui-icon">&#x1005;</i>正常续费
-    </button>
-    <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToSuspend">
-        <i class="layui-icon">&#xe651;</i>暂停续费
-    </button>
-    <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchUpdateRenewalStatusToSoldOut">
-        <i class="layui-icon">&#xe601;</i>下架整站
-    </button>
-    <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToOther">
-        <i class="layui-icon">&#xe63f;</i>更为其他
-    </button>
-    </#if>
     </div>
+    <#if isSEOSales==0>
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToNormal">
+            <i class="layui-icon">&#x1005;</i>正常续费
+        </button>
+        <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToSuspend">
+            <i class="layui-icon">&#xe651;</i>暂停续费
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchUpdateRenewalStatusToSoldOut">
+            <i class="layui-icon">&#xe601;</i>下架整站
+        </button>
+        <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToOther">
+            <i class="layui-icon">&#xe63f;</i>改为其他
+        </button>
+    </div>
+    </#if>
 </script>
 
 <script type="text/html" id="item">

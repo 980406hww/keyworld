@@ -155,10 +155,6 @@
             height: 18px;
             line-height: 18px;
         }
-
-        .layui-table-cell .layui-btn-danger {
-            margin-left: 2px !important;
-        }
     </style>
 </head>
 <body>
@@ -395,7 +391,7 @@
                             return layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm');
                         }
                     },
-                    {title: '操作', width: '6%', align: 'center', templet: '#item'}
+                    {title: '操作', width: '8%', templet: '#item'}
                 ]],
                 height: 'full-110',
                 loading: true,
@@ -697,13 +693,13 @@
     </div>
 </script>
 <script type="text/html" id="item">
-    <@shiro.hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
-    {{# if(d.captureRankJobStatus){ }}
-    <button class="layui-btn layui-btn-xs" lay-event="stop">暂停</button>
-    {{# }else{ }}
-    <button class="layui-btn layui-btn-xs" lay-event="noStop">取消暂停</button>
-    {{# } }}
-    <br>
+    <div class="layui-btn-group">
+        <@shiro.hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
+        {{# if(d.captureRankJobStatus){ }}
+        <button class="layui-btn layui-btn-xs" lay-event="stop">暂停</button>
+        {{# }else{ }}
+        <button class="layui-btn layui-btn-xs" lay-event="noStop">激活</button>
+        {{# } }}
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/captureRank/saveCaptureRankJob">
     <button class="layui-btn layui-btn-xs" lay-event="upd">修改</button>
@@ -711,6 +707,7 @@
     <@shiro.hasPermission name="/internal/captureRank/deleteCaptureRankJob">
     <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>
     </@shiro.hasPermission>
+    </div>
 </script>
 </body>
 </html>

@@ -32,7 +32,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">起始网址</label>
             <div class="layui-input-block">
-                <input type="text" name="targetUrl" placeholder="请输入起始网址" autocomplete="off" class="layui-input" lay-verify="required">
+                <input type="text" name="targetUrl" placeholder="请输入起始网址" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -155,7 +155,10 @@
 
         form.on("submit(commit)", function (data) {
             data.field.terminalType = terminalType_;
-            data.field = common.jsonObjectTrim(data.field)
+            data.field = common.jsonObjectTrim(data.field);
+            if (data.field.targetUrl === "") {
+                data.field.targetUrl = null;
+            }
             $.ajax({
                 url: '/internal/industryList/saveIndustryInfo',
                 type: 'POST',
