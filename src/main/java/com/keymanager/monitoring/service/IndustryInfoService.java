@@ -99,19 +99,13 @@ public class IndustryInfoService extends ServiceImpl<IndustryInfoDao, IndustryIn
         return null;
     }
 
-    /**
-     * @Author: rwxian
-     * @Date 2019/10/14 10:40
-     * @return
-     */
-    public synchronized Map getValidIndustryInfo(String customer, List industryList) {
-        IndustryInfoVO industryInfoVo = industryInfoDao.getValidIndustryInfoByName(customer, industryList);
+    public synchronized Map getValidIndustryInfo(String customerName, String industry) {
+        IndustryInfoVO industryInfoVo = industryInfoDao.getValidIndustryInfoByName(customerName, industry);
         if (null != industryInfoVo) {
             IndustryInfo industryInfo = industryInfoDao.selectById(industryInfoVo.getUuid());
-            industryInfo.setStatus(1);                // todo 放开
+            industryInfo.setStatus(1);
             industryInfo.setUpdateTime(new Date());
             industryInfoDao.updateById(industryInfo);
-
             Config telConfig = configService.getConfig(Constants.CONFIG_TYPE_INDUSTRY_TEL_REG, Constants.CONFIG_KEY_INDUSTRY_TEL_REG);
             Config qqConfig = configService.getConfig(Constants.CONFIG_TYPE_INDUSTRY_QQ_REG, Constants.CONFIG_KEY_INDUSTRY_QQ_REG);
             industryInfoVo.setTelReg(telConfig.getValue());

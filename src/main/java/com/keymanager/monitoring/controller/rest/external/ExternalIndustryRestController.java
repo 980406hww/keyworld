@@ -48,22 +48,20 @@ public class ExternalIndustryRestController extends SpringMVCBaseController{
      * @return
      */
     @PostMapping("/getValidIndustryInfoByName")
-    public ResponseEntity<?> getValidIndustryInfoByName(@RequestBody Map<String, Object> requestMap) {
+    public ResponseEntity<?> getValidIndustryInfoByName(@RequestBody Map<String, String> requestMap) {
         try {
-            String userName = (String) requestMap.get("username");
-            String password = (String) requestMap.get("password");
-            String customer = (String) requestMap.get("customer_name");
-            String industry = (String) requestMap.get("industry");
-            List<String> industryList = Arrays.asList(industry.split(","));
-//            System.out.println(customer + "---" + industryList);
+            String userName = requestMap.get("username");
+            String password = requestMap.get("password");
             if (validUser(userName, password)) {
-                Map map = industryInfoService.getValidIndustryInfo(customer, industryList);
+                String customerName = requestMap.get("customer_name");
+                String industry = requestMap.get("industry");
+                Map map = industryInfoService.getValidIndustryInfo(customerName, industry);
                 return new ResponseEntity<>(map, HttpStatus.OK);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/updateIndustryInfoDetail")
