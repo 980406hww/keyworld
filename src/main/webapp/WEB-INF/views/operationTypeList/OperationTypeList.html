@@ -12,15 +12,18 @@
         .layui-tab-content {
             padding: 0px;
         }
+
         .layui-card-body {
             position: relative;
             padding: 0px;
             line-height: 24px;
         }
+
         .layui-table, .layui-table-view {
             margin: 0px;
             border-width: 0px;
         }
+
         .my-collapse > div:first-child {
             background: #f2f2f2;
             border: 0px;
@@ -32,9 +35,17 @@
             right: 25px;
         }
 
-        .layui-btn-xs{
+        .layui-btn-xs {
             height: 18px;
             line-height: 18px;
+        }
+
+        .layui-table-body .laytable-cell-1-0-1 {
+            text-align: left;
+        }
+
+        .layui-table-body .laytable-cell-1-0-3 {
+            text-align: left;
         }
 
         /* 下拉条件框 */
@@ -50,6 +61,7 @@
         .my-collapse > div {
             padding: 6px 5px;
         }
+
         .my-collapse .my-btn {
             height: 30px !important;
             line-height: 30px !important;
@@ -69,7 +81,7 @@
             transition: opacity 0.5s;
         }
 
-        #searchContent input{
+        #searchContent input {
             height: 38px;
             width: 185px;
             display: inline;
@@ -92,7 +104,8 @@
                                 <div>
                                     <input type="hidden" name="terminalType" id="terminalType">
                                     <div class="layui-inline">
-                                        <input type="text" name="operationTypeName" id="operationTypeName" placeholder="请输入操作类型名称" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
+                                        <input type="text" name="operationTypeName" id="operationTypeName" placeholder="请输入操作类型名称" autocomplete="off"
+                                               style="width: 180px;height: 30px" class="layui-input">
                                     </div>
                                     <div class="layui-inline">
                                         <button class="layui-collapse my-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
@@ -136,7 +149,7 @@
 
         init_Search({'terminalType': 'PC'});
 
-        function init_Search(whereCondition){
+        function init_Search(whereCondition) {
             table.render({
                 elem: '#operationTypeTable',
                 method: 'post',
@@ -152,18 +165,19 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '5%', align: 'center'},
-                    {field: 'operationTypeName', title: '操作类型名称', width: '15%', align: 'center'},
-                    {field: 'terminalType', title: '终端类型', width: '10%', align: 'center'},
-                    {field: 'remark', title: '备注', width: '23%', align: 'center'},
+                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '4%', align: 'center'},
+                    {field: 'operationTypeName', title: '操作类型名称', width: '10%', align: 'center'},
+                    {field: 'terminalType', title: '终端类型', width: '8%', align: 'center'},
+                    {field: 'remark', title: '备注', width: '18%', align: 'center'},
+                    {field: 'description', title: '操作类型描述', width: '13%', align: 'center'},
                     {field: 'createTime', title: '创建时间', width: '13%', templet: '#toDateTime', align: 'center'},
                     {field: 'updateTime', title: '更新时间', width: '13%', templet: '#toDateTime', align: 'center'},
-                    {field: 'status', title: '状态', align: 'center', width: '10%', align: 'center', templet: '#toStatus'},
-                    {title: '操作', align: 'center', width: '11%', align: 'center', templet: '#operationTpl', fixed: "right"},
+                    {field: 'status', title: '状态', width: '10%', align: 'center', templet: '#toStatus'},
+                    {title: '操作', width: '11%', align: 'center', templet: '#operationTpl', fixed: "right"},
                 ]],
                 height: 'full-115',
-
                 done: function (res, curr, count) {
+                    console.log(res);
                 }
             });
         }
@@ -177,7 +191,7 @@
         var active = {
             reload: function () {
                 var terminalType = $("#terminalType").val();
-                if(terminalType === '' || terminalType == null){
+                if (terminalType === '' || terminalType == null) {
                     terminalType = 'PC'
                 }
                 var data = {'terminalType': terminalType};
@@ -193,7 +207,7 @@
         form.on("submit(search)", function (data) {
             var postData = data.field;
             var terminalType = $("#terminalType").val();
-            if(terminalType === '' || terminalType == null){
+            if (terminalType === '' || terminalType == null) {
                 terminalType = 'PC'
             }
             postData.terminalType = terminalType;
@@ -202,8 +216,8 @@
             return false
         });
 
-        table.on('tool(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+        table.on('tool(tableFilter)', function (obj) {
+            var data = obj.data, event = obj.event;
             switch (event) {
                 case 'deleteOperationType':
                     deleteOperationType(data.uuid, data.operationTypeName);
@@ -216,8 +230,8 @@
             }
         });
 
-        table.on('toolbar(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+        table.on('toolbar(tableFilter)', function (obj) {
+            var data = obj.data, event = obj.event;
             switch (event) {
                 case 'toAddOperationType':
                     toAddOperationType();
@@ -230,27 +244,27 @@
             }
         });
 
-        function modifyOperationType(data){
-            okLayer.open("首页/其他/修改操作类型", "/internal/operationTypes/toSaveOperationType", "35%", "60%", function(layero){
+        function modifyOperationType(data) {
+            okLayer.open("首页/其他/修改操作类型", "/internal/operationTypes/toSaveOperationType", "35%", "60%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(data);
-            },function(){
-                if(sign){
+            }, function () {
+                if (sign) {
                     active['reload'].call(this);
                     sign = false;
                 }
-            },120);
+            }, 120);
         }
 
         function toAddOperationType() {
-            okLayer.open("首页/其他/添加操作类型", "/internal/operationTypes/toSaveOperationType", "35%", "60%", null, function(){
-                if(sign){
+            okLayer.open("首页/其他/添加操作类型", "/internal/operationTypes/toSaveOperationType", "35%", "60%", null, function () {
+                if (sign) {
                     active['reload'].call(this);
                     sign = false;
                 }
-            },120);
+            }, 120);
         }
 
-        function deleteOperationType(uuid, operationTypeName){
+        function deleteOperationType(uuid, operationTypeName) {
             let postData = {};
             postData.uuid = uuid;
             postData.operationTypeName = operationTypeName;
@@ -292,7 +306,7 @@
             });
         }
 
-        function deleteBatchOperationType(){
+        function deleteBatchOperationType() {
             var checkStatus = table.checkStatus('operationTypeTable');
             var data = checkStatus.data;
             var uuidArr = [];
@@ -339,7 +353,7 @@
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
     <div class="layui-btn-group">
-    <@shiro.hasRole name="AlgorithmGroup">
+        <@shiro.hasRole name="AlgorithmGroup">
         <button class="layui-btn layui-btn-sm" id="addMachine" lay-event="toAddOperationType">添加</button>
         <button class="layui-btn layui-btn-danger layui-btn-sm" id="deleteBatchOperationType" lay-event="deleteBatchOperationType">
             <i class="layui-icon layui-icon-delete"></i>删除所选
@@ -355,12 +369,12 @@
 <script type="text/html" id="toStatus">
     <span>
         {{# if(d.status == 1) { }}
-            有效
+        <span style="color: green">有效</span>
         {{# }else{ }}
         {{#     if(d.status == 0){ }}
-                    无效
+        <span style="color: red">无效</span>
         {{#     }else{ }}
-                    测试中
+        <span style="color: #FFB800">测试中</span>
         {{#     } }}
         {{# } }}
     </span>
@@ -368,7 +382,7 @@
 
 <script type="text/html" id="operationTpl">
     <div class="layui-btn-group">
-    <@shiro.hasRole name="AlgorithmGroup">
+        <@shiro.hasRole name="AlgorithmGroup">
         <button type="button" class="layui-btn layui-btn-xs" lay-event="modifyOperationType" id="modifyOperationType">修改</button>
         <button type="button" class="layui-btn layui-btn-xs" lay-event="deleteOperationType" id="deleteOperationType">删除</button>
     </@shiro.hasRole>
