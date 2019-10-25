@@ -1,5 +1,7 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -344,11 +346,11 @@ public class QZSettingController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/qzsetting/delete")
     @PostMapping(value = "/delete2/{uuid}")
-    public ResultBean deleteQZSetting(@PathVariable("uuid") Long uuid) {
+    public ResultBean deleteQZSetting(@PathVariable("uuid") Long uuid, HttpSession session) {
         ResultBean resultBean = new ResultBean();
         try {
             // 日志监控
-            saveQzChargeMon(uuid);
+            saveQzChargeMon(uuid, (String) session.getAttribute("name"));
             qzSettingService.deleteOne(uuid);
             resultBean.setCode(200);
             resultBean.setMsg("删除站点成功");
@@ -365,12 +367,12 @@ public class QZSettingController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/qzsetting/deleteQZSettings")
     @PostMapping(value = "/deleteQZSettings2")
-    public ResultBean deleteQZSettings(@RequestBody Map<String, Object> requestMap) {
+    public ResultBean deleteQZSettings(@RequestBody Map<String, Object> requestMap, HttpSession session) {
         ResultBean resultBean = new ResultBean();
         try {
             List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
             // 日志监控
-            updQzStatusMonLows(uuids);
+            updQzStatusMonLows(uuids, (String) session.getAttribute("name"));
             qzSettingService.deleteAll(uuids);
             resultBean.setCode(200);
             resultBean.setMsg("删除站点成功");
@@ -420,6 +422,7 @@ public class QZSettingController extends SpringMVCBaseController {
     public ResultBean saveQZSetting(@RequestBody QZSetting qzSetting, HttpSession session) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
+        String userName = (String) session.getAttribute("username");
         try {
             if (qzSetting.getUuid() == null) {
                 if (getCurrentUser().getRoles().contains("DepartmentManager")) {
@@ -428,9 +431,8 @@ public class QZSettingController extends SpringMVCBaseController {
                     qzSetting.setStatus(2);
                 }
             }
-            String userName = (String) session.getAttribute("username");
             qzSettingService.saveQZSetting(qzSetting, userName);
-            saveQzChargeMon(qzSetting);
+            saveQzChargeMon(qzSetting, (String) session.getAttribute("name"));
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
@@ -633,7 +635,7 @@ public class QZSettingController extends SpringMVCBaseController {
         return resultBean;
     }
 
-    private void saveQzChargeMon(QZSetting qzSetting) {
+    private void saveQzChargeMon(QZSetting qzSetting, String userName) {
         try {
             if (qzSetting.getRenewalStatus() == 4) {
                 return;
@@ -656,13 +658,15 @@ public class QZSettingController extends SpringMVCBaseController {
             qzChargeMon.setQzCustomer(customer.getContactPerson());
             qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
             qzChargeMon.setTerminalType(terminal);
+            qzChargeMon.setOperationUser(userName);
+            qzChargeMon.setQzzSettingUuid(qzSetting.getUuid());
             qzChargeMonService.insert(qzChargeMon);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void saveQzChargeMon(Long uuid) {
+    private void saveQzChargeMon(Long uuid, String userName) {
         try {
             QZSetting qzSetting = qzSettingService.selectById(uuid);
             if (qzSetting.getRenewalStatus() == 4) {
@@ -687,13 +691,20 @@ public class QZSettingController extends SpringMVCBaseController {
             qzChargeMon.setQzCustomer(customer.getContactPerson());
             qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
             qzChargeMon.setTerminalType(terminal);
+            qzChargeMon.setOperationUser(userName);
+            qzChargeMon.setQzzSettingUuid(uuid);
             qzChargeMonService.insert(qzChargeMon);
+            QzChargeMon qzStatus = new QzChargeMon();
+            qzStatus.setIsDel(0);
+            Wrapper<QzChargeMon> wrapper = new EntityWrapper<>();
+            wrapper.eq("fQzSettingUuid", qzChargeMon.getQzzSettingUuid());
+            qzChargeMonService.update(qzStatus, wrapper);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void updQzStatusMonLows(List<Integer> uuids) {
+    private void updQzStatusMonLows(List<Integer> uuids, String userName) {
         try {
             if (null == uuids || uuids.isEmpty()) {
                 return;
@@ -720,8 +731,15 @@ public class QZSettingController extends SpringMVCBaseController {
                 qzChargeMon.setQzCustomer(qzSetting.getContactPerson());
                 qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
                 qzChargeMon.setTerminalType(terminal);
+                qzChargeMon.setOperationUser(userName);
+                qzChargeMon.setQzzSettingUuid(qzSetting.getUuid());
                 qzChargeMonService.insert(qzChargeMon);
             }
+            QzChargeMon qzStatus = new QzChargeMon();
+            qzStatus.setIsDel(0);
+            Wrapper<QzChargeMon> wrapper = new EntityWrapper<>();
+            wrapper.in("fQzSettingUuid", uuids);
+            qzChargeMonService.update(qzStatus, wrapper);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

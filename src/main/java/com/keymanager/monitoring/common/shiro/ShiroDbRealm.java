@@ -67,6 +67,7 @@ public class ShiroDbRealm extends AuthorizingRealm {
             return null;
         }
         UserInfo user = list.get(0);
+        token.setName(user.getUserName());
         // 账号未启用
         if (user.getStatus() == 1) {
             return null;

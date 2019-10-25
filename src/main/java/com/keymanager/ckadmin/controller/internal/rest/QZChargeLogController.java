@@ -76,7 +76,7 @@ public class QZChargeLogController {
                 qzChargeLogService.saveQZChargeLog(qzChargeLogs, loginName);
             }
             //日志监控
-            saveQzChargeMon(uuid, renewalStatus);
+            saveQzChargeMon(uuid, renewalStatus, (String) session.getAttribute("name"));
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
@@ -108,7 +108,7 @@ public class QZChargeLogController {
         return resultBean;
     }
 
-    private void saveQzChargeMon(Long uuid, Integer operationType) {
+    private void saveQzChargeMon(Long uuid, Integer operationType, String userName) {
         try {
             QZSetting qzSetting = qzSettingService.selectById(uuid);
             if (qzSetting.getRenewalStatus() == 4) {
@@ -132,6 +132,8 @@ public class QZChargeLogController {
             qzChargeMon.setQzCustomer(customer.getContactPerson());
             qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
             qzChargeMon.setTerminalType(terminal);
+            qzChargeMon.setOperationUser(userName);
+            qzChargeMon.setQzzSettingUuid(uuid);
             qzChargeMonService.insert(qzChargeMon);
         } catch (Exception e) {
             logger.error(e.getMessage());

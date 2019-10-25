@@ -10,6 +10,9 @@ public class QzChargeMon {
     @TableField("fUuid ")
     private Long uuid;
 
+    @TableField("fQzSettingUuid ")
+    private Long qzzSettingUuid;
+
     @TableField("fOperationDate")
     private Date operationDate;
 
@@ -27,6 +30,36 @@ public class QzChargeMon {
 
     @TableField("fTerminalType")
     private String terminalType;
+
+    @TableField("fOperationUser")
+    private String operationUser;
+
+    @TableField("fIsDel")
+    private Integer isDel;
+
+    public Long getQzzSettingUuid() {
+        return qzzSettingUuid;
+    }
+
+    public void setQzzSettingUuid(Long qzzSettingUuid) {
+        this.qzzSettingUuid = qzzSettingUuid;
+    }
+
+    public Integer getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(Integer isDel) {
+        this.isDel = isDel;
+    }
+
+    public String getOperationUser() {
+        return operationUser;
+    }
+
+    public void setOperationUser(String operationUser) {
+        this.operationUser = operationUser;
+    }
 
     public String getTerminalType() {
         return terminalType;

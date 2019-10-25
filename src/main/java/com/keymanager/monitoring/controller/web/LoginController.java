@@ -123,6 +123,7 @@ public class LoginController extends BaseController {
             session.setAttribute("entryType", entryType);
             session.setAttribute("terminalType", terminalType);
             session.setAttribute("username", username);
+            session.setAttribute("name", token.getName());
             session.setAttribute("password", password);
             session.setAttribute("organizationName", organizationName);
             session.setAttribute("version", version);

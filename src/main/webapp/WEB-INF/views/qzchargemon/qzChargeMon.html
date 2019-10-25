@@ -153,13 +153,16 @@
                 contentType: 'application/json',
                 cols: [[
                     {
-                        field: 'qzDomain', title: '域名', width: '37%', align: 'center', templet: function (d) {
-                            return '<span lay-event="toQzSetting" style="color: #0c7df5;cursor: pointer;">' + d.qzDomain + '</span>';
+                        field: 'qzDomain', title: '域名', width: '31%', align: 'center', templet: function (d) {
+                            if (d.isDel === 1) {
+                                return '<span lay-event="toQzSetting" style="color: #0c7df5;cursor: pointer;">' + d.qzDomain + '</span>';
+                            }
+                            return d.qzDomain;
                         }
                     },
-                    {field: 'qzCustomer', title: '客户名称', width: '37%', align: 'center'},
+                    {field: 'qzCustomer', title: '客户名称', width: '30%', align: 'center'},
                     {
-                        field: 'operationType', title: '操作', width: '11%', align: 'center', templet: function (d) {
+                        field: 'operationType', title: '操作', width: '10%', align: 'center', templet: function (d) {
                             let msg = '';
                             switch (d.operationType) {
                                 case 1:
@@ -185,9 +188,12 @@
                         }
                     },
                     {
-                        field: 'operationDate', title: '操作时间', width: '15%', align: 'center', templet: function (d) {
+                        field: 'operationDate', title: '操作时间', width: '17%', align: 'center', templet: function (d) {
                             return layui.util.toDateString(d.operationDate, 'yyyy-MM-dd HH:mm:ss')
                         }
+                    },
+                    {
+                        field: 'operationUser', title: '操作人', width: '12%', align: 'center'
                     }
                 ]],
                 height: 'full-385',
