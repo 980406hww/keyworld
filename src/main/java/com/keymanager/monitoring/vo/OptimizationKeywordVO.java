@@ -9,11 +9,19 @@ public class OptimizationKeywordVO {
     private String optimizeGroup;
     private String entryType;
     private String bearPawNumber;
-
+    private int currentPosition;
 
     private String title;
     private int optimizedCount;
     private int queryInterval;
+
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public void setCurrentPosition(int currentPosition) {
+        this.currentPosition = currentPosition;
+    }
 
     public String getTerminalType() {
         return terminalType;

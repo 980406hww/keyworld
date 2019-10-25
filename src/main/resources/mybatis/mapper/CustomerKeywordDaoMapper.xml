@@ -592,7 +592,8 @@
             ck.fSearchEngine      AS 'searchEngine',
             ck.fOptimizeGroupName AS 'optimizeGroup',
             ck.fOptimizedCount	  AS 'optimizedCount',
-            ck.fQueryInterval	  AS 'queryInterval'
+            ck.fQueryInterval	  AS 'queryInterval',
+            ck.fCurrentPosition   AS 'currentPosition'
         FROM t_customer_keyword ck
         WHERE ck.fMachineGroup = #{machineGroup}
         AND ck.fStatus = 1
