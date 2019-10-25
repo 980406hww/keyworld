@@ -236,7 +236,7 @@
         }
 
         function showFriendlyLinkDialog() {
-            okLayer.open("首页/其他/添加友链信息", "/internal/friendlyLinks/toSaveFriendlyLink", "30%", "75%",  function(layero){
+            okLayer.open("首页/其他/添加友链信息", "/internal/friendlyLinks/toSaveFriendlyLink", "35%", "87%",  function(layero){
                 window[layero.find("iframe")[0]["name"]].initWebSiteID(websiteUuid);
             }, function(){
                 if(sign){
@@ -247,7 +247,7 @@
         }
 
         function updateFriendlyLink(data){
-            okLayer.open("首页/其他/修改友链信息", "/internal/friendlyLinks/toSaveFriendlyLink", "30%", "75%", function(layero){
+            okLayer.open("首页/其他/修改友链信息", "/internal/friendlyLinks/toSaveFriendlyLink", "35%", "87%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data.uuid, websiteUuid);
             },function(){
                 if(sign){

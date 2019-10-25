@@ -607,7 +607,7 @@
             }
             let postData = {};
             postData.clientIDs = uuidArr;
-            okLayer.open("首页 / 终端列表 / 设定密码", "/internal/machineManage/showRenewalSettingDialog", "35%", "55%", function (layero) {
+            okLayer.open("首页 / 终端列表 / 续费", "/internal/machineManage/showRenewalSettingDialog", "35%", "55%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initData(postData);
             },function(){
                 if(sign){
