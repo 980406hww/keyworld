@@ -57,10 +57,10 @@ public class QZOperationTypeServiceImpl extends ServiceImpl<QZOperationTypeDao, 
     }
 
     @Override
-    public List<String> getQZSettngStandardSpecie(long qzSettingUuid, String[] terminalTypes) {
+    public List<String> getQZSettingStandardSpecie(long qzSettingUuid, String[] terminalTypes) {
         List<String> standardSpecieList = new ArrayList<>(2);
         for (String terminalType : terminalTypes) {
-            String standardSpecie = qzOperationTypeDao.getQZSettngStandardSpecie(qzSettingUuid, terminalType);
+            String standardSpecie = qzOperationTypeDao.getQZSettingStandardSpecie(qzSettingUuid, terminalType);
             standardSpecieList.add(terminalType + "_" + standardSpecie);
         }
         return standardSpecieList;
@@ -78,6 +78,6 @@ public class QZOperationTypeServiceImpl extends ServiceImpl<QZOperationTypeDao, 
 
     @Override
     public String findQZChargeRuleStandardSpecies(long qzSettingUuid, String terminalType) {
-        return qzOperationTypeDao.getQZSettngStandardSpecie(qzSettingUuid, terminalType);
+        return qzOperationTypeDao.getQZSettingStandardSpecie(qzSettingUuid, terminalType);
     }
 }

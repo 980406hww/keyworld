@@ -17,7 +17,7 @@ public interface QZOperationTypeService extends IService<QZOperationType> {
 
     void deleteByQZSettingUuid(long uuid);
 
-    List<String> getQZSettngStandardSpecie(long qzSettingUuid, String[] terminalTypes);
+    List<String> getQZSettingStandardSpecie(long qzSettingUuid, String[] terminalTypes);
 
     QZOperationType searchQZOperationType(long qzSettingUuid, String terminalType);
 

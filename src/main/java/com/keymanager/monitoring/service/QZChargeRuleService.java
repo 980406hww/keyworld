@@ -30,10 +30,6 @@ public class QZChargeRuleService extends ServiceImpl<QZChargeRuleDao, QZChargeRu
         return qzChargeRuleDao.searchQZChargeRuleStandardInfoVos(qzSettingSearchChargeRuleCriteria.getQzSettingUuid(), qzSettingSearchChargeRuleCriteria.getTerminalType());
     }
 
-    public List<String> getAllStandardSpecies (Long qzSettingUuid) {
-		return qzChargeRuleDao.getAllStandardSpecies(qzSettingUuid);
-    }
-
 	public List<QZChargeRuleVO> findQZChargeRules (Long qzSettingUuid, String operationType, String websiteType) {
 		return qzChargeRuleDao.findQZChargeRules(qzSettingUuid, operationType, websiteType);
 	}

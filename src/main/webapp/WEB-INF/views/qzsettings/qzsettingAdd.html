@@ -515,13 +515,11 @@
             </fieldset>
             <div class="layui-row four-row">
                 <div class="layui-col-md3 padding-ten-right">
-                    <div class="layui-form-item">
+                    <div class="layui-form-item" pane>
                         <label class="layui-form-label">自动采词</label>
                         <div class="layui-input-block">
-                            <select name="autoCrawlKeywordFlag">
-                                <option value="true">是</option>
-                                <option value="false" selected>否</option>
-                            </select>
+                            <input type="radio" name="autoCrawlKeywordFlag" lay-filter="autoCrawlKeywordFlag" value="true" title="是" lay-skin="primary">
+                            <input type="radio" name="autoCrawlKeywordFlag" lay-filter="autoCrawlKeywordFlag" value="false" title="否" lay-skin="primary" checked>
                         </div>
                     </div>
                 </div>
@@ -529,11 +527,8 @@
                     <div class="layui-form-item" pane>
                         <label class="layui-form-label">终端选择</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" name="terminalType[PC]" lay-skin="primary"
-                                   title="电脑" value="PC">
-                            <input type="checkbox" name="terminalType[Phone]"
-                                   lay-skin="primary"
-                                   title="手机" value="Phone">
+                            <input type="checkbox" name="terminalType[PC]" lay-skin="primary" title="电脑" value="PC">
+                            <input type="checkbox" name="terminalType[Phone]" lay-skin="primary" title="手机" value="Phone">
                         </div>
                     </div>
                 </div>
@@ -1005,6 +1000,14 @@
             }
         });
 
+        form.on('radio(autoCrawlKeywordFlag)', function (data) {
+            if (data.value === "false") {
+                $("div.ok-body").find("input[name='terminalType[PC]']")[0].checked = false;
+                $("div.ok-body").find("input[name='terminalType[Phone]']")[0].checked = false;
+                form.render('checkbox');
+            }
+        });
+
         let name = '收费规则';
 
         //监听指定radio
@@ -1091,6 +1094,10 @@
                     captureTerminalType += ',';
                     captureTerminalType += d['terminalType[Phone]'];
                 }
+            }
+            if (p_d.autoCrawlKeywordFlag && captureTerminalType === "") {
+                common.showFailMsg('请选择要自动采词的终端');
+                return false;
             }
             if (captureTerminalType !== '') {
                 p_d.captureTerminalType = captureTerminalType;

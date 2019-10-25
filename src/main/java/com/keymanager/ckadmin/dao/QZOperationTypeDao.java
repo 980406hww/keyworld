@@ -38,5 +38,5 @@ public interface QZOperationTypeDao extends BaseMapper<QZOperationType> {
 
     Date getStandardTime(@Param("qzSettingUuid") long qzSettingUuid, @Param("terminalType") String terminalType);
 
-    String getQZSettngStandardSpecie(@Param("qzSettingUuid") long qzSettingUuid, @Param("terminalType") String terminalType);
+    String getQZSettingStandardSpecie(@Param("qzSettingUuid") long qzSettingUuid, @Param("terminalType") String terminalType);
 }

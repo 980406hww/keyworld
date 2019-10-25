@@ -60,7 +60,7 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
     }
 
 
-	public List<String> getQZSettngStandardSpecies(Long uuid) {
-		return qzOperationTypeDao.getQZSettngStandardSpecies(uuid);
+	public List<String> getQZSettingStandardSpecies(Long uuid) {
+		return qzOperationTypeDao.getQZSettingStandardSpecies(uuid);
 	}
 }

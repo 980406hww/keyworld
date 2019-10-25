@@ -101,7 +101,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	public ExternalQzSettingVO getAvailableQZSetting(){
 		ExternalQzSettingVO externalQzSettingVO = qzSettingDao.selectQZSettingForAutoOperate();
 		if(externalQzSettingVO != null){
-			List<String> typeList = qzOperationTypeService.getQZSettngStandardSpecies(externalQzSettingVO.getUuid());
+			List<String> typeList = qzOperationTypeService.getQZSettingStandardSpecies(externalQzSettingVO.getUuid());
 			if(CollectionUtils.isNotEmpty(typeList)){
 				externalQzSettingVO.setKeywordType(StringUtils.join(typeList,","));
 			}

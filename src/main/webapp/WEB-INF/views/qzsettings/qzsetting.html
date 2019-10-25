@@ -994,7 +994,6 @@
             if (!data.field.dbtjSort){
                 data.field.dbtjSort = null;
             }
-            console.log(data.field);
             get_qzsetting(data.field);
             return false;
         });
@@ -1037,20 +1036,15 @@
             let qz_setting_table = $("#qzSettingTable").parent().find(
                 ".layui-table-main").find("table");
             $.each(res.data, function (idx, val) {
-                let td = qz_setting_table.find(
-                    "tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
-                    "td[data-field='1']");
-                let optimizeGroupName = td.find(
-                    "input[name='" + terminalType + "Group']").val();
+                let td = qz_setting_table.find("tr[data-index='" + val.LAY_TABLE_INDEX + "']").find("td[data-field='1']");
+                let optimizeGroupName = td.find("input[name='" + terminalType + "Group']").val();
                 let postData = {};
                 postData.uuid = val.uuid;
                 postData.terminalType = terminalType;
                 postData.optimizeGroupName = optimizeGroupName;
                 getQZKeywordRankInfo(postData, function (result) {
-                    td.find(".other-rank_2").find("#optimizationGroup span").prop(
-                        "title", optimizeGroupName);
-                    td.find(".other-rank_2").find("#optimizationGroup span a").text(
-                        optimizeGroupName);
+                    td.find(".other-rank_2").find("#optimizationGroup span").prop("title", optimizeGroupName);
+                    td.find(".other-rank_2").find("#optimizationGroup span a").text(optimizeGroupName);
                     if (result.data != null) {
                         initQZKeywordRankInfo(result.data, td);
                     }
@@ -1115,15 +1109,11 @@
                 font.css("background-color", "mediumseagreen");
             }
 
-            initQZSettingKeywordCount(td.find(".other-rank_2"),
-                data["customerKeywordCount"],
-                data["categoryTagNames"],
-                data["operationCombineName"]);
+            initQZSettingKeywordCount(td.find(".other-rank_2"), data["customerKeywordCount"], data["categoryTagNames"], data["operationCombineName"]);
 
             if (data['aiZhan'] !== undefined) {
                 generateQZKeywordTrendCharts(
-                    td.find("#keywordTrendCharts")[0],
-                    data['aiZhan']);
+                    td.find("#keywordTrendCharts")[0], data['aiZhan']);
             }
 
             if (data['5118'] !== undefined) {

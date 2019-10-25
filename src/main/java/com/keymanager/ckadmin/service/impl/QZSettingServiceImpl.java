@@ -687,7 +687,7 @@ public class QZSettingServiceImpl extends
             String captureTerminalType = (String) map.get("captureTerminalType");
             map.remove("captureTerminalType");
             String[] terminalTypes = captureTerminalType.split(",");
-            List<String> standardSpecieList = qzOperationTypeService.getQZSettngStandardSpecie((long) qzSettingUuid, terminalTypes);
+            List<String> standardSpecieList = qzOperationTypeService.getQZSettingStandardSpecie((long) qzSettingUuid, terminalTypes);
             map.put("standardSpecieList", standardSpecieList);
         }
         return map;
