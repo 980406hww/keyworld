@@ -13,6 +13,7 @@ import com.keymanager.ckadmin.service.MachineInfoService;
 import com.keymanager.ckadmin.service.PerformanceService;
 import com.keymanager.ckadmin.service.UserPageSetupService;
 import com.keymanager.ckadmin.vo.MachineInfoGroupSummaryVO;
+import com.keymanager.ckadmin.vo.MachineInfoSummaryVO;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import java.io.File;
@@ -314,7 +315,7 @@ public class MachineInfoController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/getMachineInfo/{clientID}/{terminalType}", method = RequestMethod.POST)
-    public ResultBean getMachineInfo(@PathVariable("clientID") String clientID,@PathVariable("terminalType") String terminalType) {
+    public ResultBean getMachineInfo(@PathVariable("clientID") String clientID, @PathVariable("terminalType") String terminalType) {
         ResultBean resultBean = new ResultBean();
         try {
             MachineInfo machineInfo = machineInfoService.getMachineInfo(clientID, terminalType);
@@ -621,12 +622,13 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/searchMachineInfos")
     @RequestMapping(value = "/toMachineInfoFromATP/{terminalType}/{machineGroup}", method = RequestMethod.GET)
-    public ModelAndView toMachineInfoFromATP(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "machineGroup") String machineGroup) throws UnsupportedEncodingException {
+    public ModelAndView toMachineInfoFromATP(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "machineGroup") String machineGroup)
+        throws UnsupportedEncodingException {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/machineManage");
         machineGroup = URLDecoder.decode(machineGroup, "UTF-8");
-        mv.addObject("machineGroupFromATP",machineGroup);
-        mv.addObject("terminalTypeFromATP",terminalType);
+        mv.addObject("machineGroupFromATP", machineGroup);
+        mv.addObject("terminalTypeFromATP", terminalType);
         return mv;
     }
 
@@ -642,6 +644,24 @@ public class MachineInfoController extends SpringMVCBaseController {
             resultBean.setCount(page.getTotal());
             resultBean.setMsg("success");
             resultBean.setCode(0);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/machineInfoStat")
+    @RequestMapping(value = "/machineInfoStat", method = RequestMethod.POST)
+    public ResultBean machineInfoStat(@RequestBody Map<String, String> map) {
+        ResultBean resultBean = new ResultBean(0, "success");
+        try {
+            String clientIDPrefix = map.get("clientIDPrefix");
+            String city = map.get("city");
+            String switchGroupName = map.get("switchGroupName");
+            List<MachineInfoSummaryVO> machineInfoSummaryVOs = machineInfoService.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName);
+            resultBean.setData(machineInfoSummaryVOs);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

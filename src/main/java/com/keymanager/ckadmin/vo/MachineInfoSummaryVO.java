@@ -1,6 +1,7 @@
 package com.keymanager.ckadmin.vo;
 
-public class MachineInfoSummaryVO implements Comparable{
+public class MachineInfoSummaryVO implements Comparable {
+
     private String clientIDPrefix;
     private int clientIDPrefixCount;
     private int clientIDPrefixTotalCount;
@@ -87,13 +88,13 @@ public class MachineInfoSummaryVO implements Comparable{
 
     @Override
     public int compareTo(Object o) {
-        int result = this.getClientIDPrefix().compareTo(((com.keymanager.monitoring.vo.MachineInfoSummaryVO)o).getClientIDPrefix());
-        if(result == 0){
-            result = this.getType().compareTo(((com.keymanager.monitoring.vo.MachineInfoSummaryVO)o).getType());
-            if(result == 0){
-                if(this.getCity() != null && ((com.keymanager.monitoring.vo.MachineInfoSummaryVO) o).getCity() != null) {
-                    result = this.getCity().compareTo(((com.keymanager.monitoring.vo.MachineInfoSummaryVO) o).getCity());
-                }else{
+        int result = this.getClientIDPrefix().compareTo(((com.keymanager.ckadmin.vo.MachineInfoSummaryVO) o).getClientIDPrefix());
+        if (result == 0) {
+            result = this.getType().compareTo(((com.keymanager.ckadmin.vo.MachineInfoSummaryVO) o).getType());
+            if (result == 0) {
+                if (this.getCity() != null && ((com.keymanager.ckadmin.vo.MachineInfoSummaryVO) o).getCity() != null) {
+                    result = this.getCity().compareTo(((com.keymanager.ckadmin.vo.MachineInfoSummaryVO) o).getCity());
+                } else {
                     result = -1;
                 }
             }

@@ -6,10 +6,143 @@
     <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="/static/ok-admin/css/scroll-bar.css">
     <style>
+        .layui-tab-content {
+            padding: 0;
+        }
+
+        .layui-card-body {
+            position: relative;
+            padding: 0;
+            line-height: 24px;
+        }
+
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 0px;
+        }
+
+        .layui-table-body .layui-table-cell {
+            text-align: left;
+        }
+
+        .layui-table-body .laytable-cell-checkbox {
+            text-align: center;
+        }
+
+        /* 下拉条件框 */
+        .my-collapse {
+            position: relative;
+            box-shadow: none;
+        }
+
+        .my-collapse * {
+            box-shadow: none;
+        }
+
+        .my-collapse .layui-form-select dl,
+        .my-collapse .layui-form-select .layui-anim {
+            top: 33px !important;
+        }
+
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 1px solid #e6e6e6;
+        }
+
+        .my-collapse > div {
+            padding: 6px 5px;
+        }
+
+        .my-hide {
+            padding-bottom: 1px !important;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top: 43px;
+            left: 0;
+            z-index: 894;
+            background: #fff;
+            border-left: 1px solid #e6e6e6;
+            border-right: 1px solid #e6e6e6;
+            border-bottom: 1px solid #e6e6e6;
+            border-bottom-right-radius: 2px;
+            border-bottom-left-radius: 2px;
+        }
+
+        .my-collapse button {
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .my-collapse .my-btn {
+            height: 30px !important;
+            line-height: 30px !important;
+            padding: 0 18px;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .my-collapse .my-btn:hover {
+            opacity: .8;
+            transition: opacity 0.5s;
+        }
+
+        .layui-input-inline input {
+            height: 30px;
+        }
+
+        .layui-form-pane .layui-form-label {
+            width: 116px;
+            padding: 8px 15px;
+            height: 30px;
+            line-height: 13px;
+            border-width: 1px;
+            border-style: solid;
+            border-radius: 2px 0 0 2px;
+            text-align: center;
+            background-color: #FBFBFB;
+            overflow: hidden;
+            box-sizing: border-box
+        }
+
+        .layui-inline label {
+            border-right: none;
+        }
+
+        .layui-form-pane .layui-form-checkbox {
+            margin: 0;
+        }
+
+        .layui-inline input {
+            width: 160px;
+            height: 30px;
+        }
+
+        .show-msg {
+            color: blue;
+            cursor: pointer;
+        }
+
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
+
         .show {
             display: none;
             position: absolute;
-            top: 24px;
+            top: 65px;
             right: 24px;
             width: 35%;
             border-radius: 5px;
@@ -24,22 +157,71 @@
             /*overflow: visible;*/
             /*text-overflow: inherit;*/
             /*white-space: normal;*/
-            padding: 0 !important;
+            padding: 0 10px !important;
         }
 
-        .layui-table-main {
+        .show .layui-table-main {
             max-height: 415px;
+        }
+
+        .layui-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0);
         }
     </style>
 </head>
-<body style="height: 100%">
-<div style="height: 100%;width: 80%" id="container"></div>
-<div id="showData" class="show"></div>
+<body style="height: 97%;padding: 10px;">
+<div class="layui-tab layui-tab-card" lay-filter="tabItem" style="height: 100%;margin: 0">
+    <ul class="layui-tab-title">
+        <li lay-id="list" class="layui-this">列表展示</li>
+        <li lay-id="map">地图展示</li>
+    </ul>
+    <div class="layui-tab-content" style="height: 94%">
+        <div class="layui-tab-item layui-show">
+            <!--  条件搜索  -->
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <form class="layui-form layui-form-pane" id="searchForm">
+                        <div class="my-collapse">
+                            <div>
+                                <div class="layui-inline">
+                                    <input type="text" name="clientIDPrefix" placeholder="客户端ID前缀" class="layui-input" autocomplete="off">
+                                </div>
+                                <div class="layui-inline">
+                                    <input type="text" name="city" placeholder="城市" class="layui-input" autocomplete="off">
+                                </div>
+                                <div class="layui-inline">
+                                    <input type="text" name="switchGroupName" placeholder="流转分组" class="layui-input" autocomplete="off">
+                                </div>
+                                <div class="layui-inline">
+                                    <button class="layui-btn" lay-submit lay-filter="search">搜索
+                                    </button>
+                                </div>
+                                <div class="layui-inline">
+                                    <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">
+                                        重置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--数据表格-->
+            <table class="layui-hide" id="table" lay-filter="table"></table>
+        </div>
+        <div class="layui-tab-item" style="height: 100%">
+            <div style="height: 100%;width: 80%" id="container"></div>
+            <div id="showData" class="show"></div>
+        </div>
+    </div>
+</div>
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script type="text/javascript" src="/static/ok-admin/lib/echarts/echarts.min.js"></script>
 <script type="text/javascript" src="/static/ok-admin/lib/echarts/world/js/china.js"></script>
 <script src="/static/ok-admin/lib/nprogress/nprogress.js"></script>
 <script type="text/javascript">
+    let flag = true;
+
     // 进度条加载提示
     NProgress.start();
 
@@ -53,20 +235,132 @@
         'FBE0EC', 'FBE0EC', 'FBE0EC', 'FCE1D8', 'FCE1D8', 'FCE1D8'];
 
     // layui相关
-    layui.use(['table', 'jquery', 'layer', 'common'], function () {
+    layui.use(['element', 'table', 'jquery', 'layer', 'common', 'form'], function () {
         let table = layui.table;
+        let element = layui.element;
         let $ = layui.jquery;
         let common = layui.common;
+        let form = layui.form;
 
-        $.ajax({
-            url: '/internal/machineManage/getMachineInfos',
-            type: 'get',
-            dataType: 'json'
-            , success: function (res) {
-                if (res.code === 200) {
-                    init(res.data);
+        tableInit(common.formToJsonObject('searchForm'));
+
+        function tableInit(condition) {
+            table.render({
+                elem: '#table',
+                method: 'post',
+                url: '/internal/machineManage/machineInfoStat',
+                page: false,
+                size: 'sm',
+                id: 'table',
+                where: condition,
+                defaultToolbar: [],
+                contentType: 'application/json',
+                cols: [[
+                    {
+                        field: 'clientIDPrefix', title: '客户端ID前缀', width: '18%', align: 'center'
+                    },
+                    {field: 'clientIDPrefixTotalCount', title: '总数', width: '6%', align: 'center'},
+                    {field: 'type', title: '类型', width: '6%', align: 'center'},
+                    {field: 'typeTotalCount', title: '小计', width: '6%', align: 'center'},
+                    {
+                        field: 'city', title: '城市', width: '36%', align: 'center'
+                    },
+                    {field: 'switchGroupName', title: '流转分组', width: '22%', align: 'center'},
+                    {field: 'count', title: '数量', width: '6%', align: 'center'}
+                ]],
+                height: 'full-112',
+                loading: true,
+                done: function (res, curr, count) {
+                    tableRowSpanNoFixedCol("table", res.data);
+                }
+            });
+        }
+
+        function tableRowSpanNoFixedCol(tableId, data) {
+            let allTableNode = document.getElementsByClassName("layui-table-view");
+            // 获取lay-id属性为tableId的表格元素的
+            let targetTableNode = null;
+            if (allTableNode.length > 0) {
+                for (let index = 0, length = allTableNode.length; index < length; index++) {
+                    // 通过lay-id属性过滤表格元素
+                    let tableLayId = allTableNode[index].getAttribute("lay-id");
+                    if (tableLayId === tableId) {
+                        targetTableNode = allTableNode[index];
+                        break;
+                    }
                 }
             }
+            if (!targetTableNode) {
+                console.log('没有找到ID为：' + tableId + '的表格');
+                return false;
+            }
+            // 开始合并单元格操作
+            let tBodyNode = targetTableNode.getElementsByClassName("layui-table-body")[0];
+            let tdNodes = tBodyNode.getElementsByTagName("td");
+            let flag = true;
+            for (let i = 0, j = 0; i < tdNodes.length; i += 7, j++) {
+                if (data[j].clientIDPrefixCount && data[j].clientIDPrefixCount > 0) {
+                    tdNodes[i].setAttribute("rowspan", data[j].clientIDPrefixCount);
+                    tdNodes[i + 1].setAttribute("rowspan", data[j].clientIDPrefixCount);
+                    flag = !flag;
+                } else {
+                    tdNodes[i].style.display = "none";
+                    tdNodes[i + 1].style.display = "none";
+                }
+                if (data[j].typeCount && data[j].typeCount > 0) {
+                    tdNodes[i + 2].setAttribute("rowspan", data[j].typeCount);
+                    tdNodes[i + 3].setAttribute("rowspan", data[j].typeCount);
+                } else {
+                    tdNodes[i + 2].style.display = "none";
+                    tdNodes[i + 3].style.display = "none";
+                }
+                if (flag) {
+                    tdNodes[i].style.backgroundColor = '#f2f2f2';
+                    tdNodes[i + 1].style.backgroundColor = '#f2f2f2';
+                    tdNodes[i + 2].style.backgroundColor = '#f2f2f2';
+                    tdNodes[i + 3].style.backgroundColor = '#f2f2f2';
+                    tdNodes[i + 4].style.backgroundColor = '#f2f2f2';
+                    tdNodes[i + 5].style.backgroundColor = '#f2f2f2';
+                    tdNodes[i + 6].style.backgroundColor = '#f2f2f2';
+                } else {
+                    tdNodes[i].style.backgroundColor = '#fff';
+                    tdNodes[i + 1].style.backgroundColor = '#fff';
+                    tdNodes[i + 2].style.backgroundColor = '#fff';
+                    tdNodes[i + 3].style.backgroundColor = '#fff';
+                    tdNodes[i + 4].style.backgroundColor = '#fff';
+                    tdNodes[i + 5].style.backgroundColor = '#fff';
+                    tdNodes[i + 6].style.backgroundColor = '#fff';
+                }
+            }
+        }
+
+        element.on('tab(tabItem)', function (data) {
+            if (data.index === 1) {
+                if (flag) {
+                    $.ajax({
+                        url: '/internal/machineManage/getMachineInfos',
+                        type: 'get',
+                        dataType: 'json'
+                        , success: function (res) {
+                            if (res.code === 200) {
+                                init(res.data);
+                                flag = false;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        form.on("submit(search)", function (data) {
+            let condition = common.jsonObjectTrim(data.field);
+            table.reload('table', {
+                where: condition,
+                page: {
+                    curr: 1
+                }
+            });
+            return false;
         });
 
         function init(data) {
@@ -184,22 +478,22 @@
             html += '<div><table lay-filter="machineInfoTable">'
                 + '  <thead>'
                 + '    <tr>'
-                + '      <th lay-data="{field:\'a\', width:\'18%\', align: \'center\'}">客户端ID前缀</th>'
-                + '      <th lay-data="{field:\'b\', width:\'8%\', align: \'center\'}">总数</th>'
-                + '      <th lay-data="{field:\'c\', width:\'10%\', align: \'center\'}">类型</th>'
-                + '      <th lay-data="{field:\'d\', width:\'8%\', align: \'center\'}">小计</th>'
-                + '      <th lay-data="{field:\'e\', width:\'30%\', align: \'center\'}">城市</th>'
-                + '      <th lay-data="{field:\'f\', width:\'18%\', align: \'center\'}">流转分组</th>'
-                + '      <th lay-data="{field:\'g\', width:\'8%\', align: \'center\'}">数量</th>'
+                + '      <th lay-data="{field:\'a\', width:\'22%\', align: \'center\'}">客户端ID前缀</th>'
+                // + '      <th lay-data="{field:\'b\', width:\'8%\', align: \'center\'}">总数</th>'
+                + '      <th lay-data="{field:\'c\', width:\'12%\', align: \'center\'}">类型</th>'
+                // + '      <th lay-data="{field:\'d\', width:\'8%\', align: \'center\'}">小计</th>'
+                + '      <th lay-data="{field:\'e\', width:\'34%\', align: \'center\'}">城市</th>'
+                + '      <th lay-data="{field:\'f\', width:\'21%\', align: \'center\'}">流转分组</th>'
+                + '      <th lay-data="{field:\'g\', width:\'11%\', align: \'center\'}">数量</th>'
                 + '    </tr>'
                 + '  </thead>'
                 + '  <tbody>';
             for (let i = 0; i < data.data.length; i++) {
                 html += '  <tr>'
                     + '      <td>' + data.data[i].clientIDPrefix + '</td>'
-                    + '      <td>' + data.data[i].clientIDPrefixTotalCount + '</td>'
+                    // + '      <td>' + data.data[i].clientIDPrefixTotalCount + '</td>'
                     + '      <td>' + data.data[i].type + '</td>'
-                    + '      <td>' + data.data[i].typeTotalCount + '</td>'
+                    // + '      <td>' + data.data[i].typeTotalCount + '</td>'
                     + '      <td>' + data.data[i].city + '</td>'
                     + '      <td>' + data.data[i].switchGroupName + '</td>'
                     + '      <td>' + data.data[i].count + '</td>'

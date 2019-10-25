@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,8 +140,8 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
         String[] clientIDArray = clientIDs.split(",");
         for (String clientID : clientIDArray) {
             MachineInfo machineInfo = machineInfoDao.selectById(clientID);
-            if("increaseOneMonth".equals(settingType)) {
-                if(machineInfo.getRenewalDate() != null) {
+            if ("increaseOneMonth".equals(settingType)) {
+                if (machineInfo.getRenewalDate() != null) {
                     machineInfo.setRenewalDate(Utils.addMonth(machineInfo.getRenewalDate(), 1));
                 } else {
                     machineInfo.setRenewalDate(Utils.addMonth(Utils.getCurrentTimestamp(), 1));
@@ -431,11 +432,51 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(String clientIDPrefix, String city, String switchGroupName) {
-        return null;
+        List<MachineInfoSummaryVO> pcMachineInfoSummaryVOs = machineInfoDao.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName);
+        Collections.sort(pcMachineInfoSummaryVOs);
+        MachineInfoSummaryVO previousClientIDPrefix = null;
+        MachineInfoSummaryVO previousType = null;
+        for (MachineInfoSummaryVO machineInfoSummaryVO : pcMachineInfoSummaryVOs) {
+            if (previousClientIDPrefix == null) {
+                previousClientIDPrefix = machineInfoSummaryVO;
+                previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
+                previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
+                    machineInfoSummaryVO.getCount());
+            } else if (previousClientIDPrefix.getClientIDPrefix().equals(machineInfoSummaryVO.getClientIDPrefix())) {
+                previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
+                previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
+                    machineInfoSummaryVO.getCount());
+            } else {
+                previousClientIDPrefix = machineInfoSummaryVO;
+                previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
+                previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
+                    machineInfoSummaryVO.getCount());
+
+                previousType = null;
+            }
+
+            if (previousType == null) {
+                previousType = machineInfoSummaryVO;
+                previousType.setTypeCount(previousType.getTypeCount() + 1);
+                previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
+                    machineInfoSummaryVO.getCount());
+            } else if (previousType.getType().equals(machineInfoSummaryVO.getType())) {
+                previousType.setTypeCount(previousType.getTypeCount() + 1);
+                previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
+                    machineInfoSummaryVO.getCount());
+            } else {
+                previousType = machineInfoSummaryVO;
+                previousType.setTypeCount(previousType.getTypeCount() + 1);
+                previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
+                    machineInfoSummaryVO.getCount());
+            }
+        }
+        return pcMachineInfoSummaryVOs;
     }
 
     @Override
-    public Page<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(Page<MachineInfoGroupSummaryVO> page, MachineInfoGroupStatCriteria machineInfoGroupStatCriteria) {
+    public Page<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(Page<MachineInfoGroupSummaryVO> page,
+        MachineInfoGroupStatCriteria machineInfoGroupStatCriteria) {
         List<MachineInfoGroupSummaryVO> machineInfoGroupSummaryVOS = machineInfoDao.searchMachineInfoGroupSummaryVO(page, machineInfoGroupStatCriteria);
         page.setRecords(machineInfoGroupSummaryVOS);
         return page;
