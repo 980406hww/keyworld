@@ -18,6 +18,4 @@ target/
 .project
 *.idea*
 *.iml
-src/main/resources/rebel.xml
-
-src/main/resources/logback.xml
+rebel.xml
