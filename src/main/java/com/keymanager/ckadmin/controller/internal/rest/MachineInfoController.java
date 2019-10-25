@@ -94,6 +94,14 @@ public class MachineInfoController extends SpringMVCBaseController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/machineInfo/uploadVPSFile")
+    @RequestMapping(value = "/showUploadVNCDialog", method = RequestMethod.GET)
+    public ModelAndView showUploadVNCDialog() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/UploadVNCDialog");
+        return mv;
+    }
+
     @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
     @RequestMapping(value = "/toBatchUpdateFailedReason", method = RequestMethod.GET)
     public ModelAndView toBatchUpdateFailedReason() {
@@ -134,11 +142,35 @@ public class MachineInfoController extends SpringMVCBaseController {
         return mv;
     }
 
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/showTargetVersionSettingDialog", method = RequestMethod.GET)
+    public ModelAndView showTargetVersionSettingDialog() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/UpdateTargetVersion");
+        return mv;
+    }
+
     @RequiresPermissions("/internal/machineInfo/machineInfoGroupStat")
     @RequestMapping(value = "/toMachineInfoGroupStat", method = RequestMethod.GET)
     public ModelAndView toMachineInfoGroupStat() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/machineInfoGroupStat");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/showTargetVPSPasswordSettingDialog", method = RequestMethod.GET)
+    public ModelAndView showTargetVPSPasswordSettingDialog() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/UpdatePassword");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/showRenewalSettingDialog", method = RequestMethod.GET)
+    public ModelAndView showRenewalSettingDialog() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/UpdateRenewalSetting");
         return mv;
     }
 
@@ -163,7 +195,7 @@ public class MachineInfoController extends SpringMVCBaseController {
     public ResultBean updateMachineInfoRenewalDate(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
         try {
-            String clientIDs = (String) requestMap.get("clientIDs");
+            List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
             String settingType = (String) requestMap.get("settingType");
             String renewalDate = (String) requestMap.get("renewalDate");
             machineInfoService.updateRenewalDate(clientIDs, settingType, renewalDate);
@@ -215,11 +247,11 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/uploadVNCFile")
     @RequestMapping(value = "/uploadVNCFile", method = RequestMethod.POST)
-    public ResultBean uploadVNCFile(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
+    public ResultBean uploadVNCFile(@RequestParam(value = "file", required = false) MultipartFile file,
+                                    @RequestParam(name = "terminalType") String terminalType) {
         ResultBean resultBean = new ResultBean();
         try {
-//            String terminalType = TerminalTypeMapping.getTerminalType(request);
-//            machineInfoService.uploadVNCFile(file.getInputStream(), terminalType);
+            machineInfoService.uploadVNCFile(file.getInputStream(), terminalType);
             resultBean.setCode(200);
         } catch (Exception e) {
             logger.error(e.getMessage());

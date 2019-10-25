@@ -17,7 +17,11 @@ layui.define(['jquery', 'layer',], function (exports) {
         },
         jsonObjectTrim: function (jsonObject) {
             $.each(jsonObject, function (idx, item) {
-                jsonObject[idx] = $.trim(item)
+                if(typeof(item) == "string"){
+                    jsonObject[idx] = $.trim(item)
+                }else{
+                    return true;
+                }
             });
             return jsonObject;
         },

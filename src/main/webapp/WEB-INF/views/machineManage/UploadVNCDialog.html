@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <style>
+        #fileName{
+            height: 38px;
+            width: 300px;
+            text-align: left;
+            line-height: 38px;
+            display: inline;
+            box-sizing: border-box;
+            padding-left: 20px;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+<div class="ok-body">
+
+    <form class="layui-form layui-form-pane ok-form" lay-filter="UploadVPSFile" enctype="multipart/form-data" id="uploadForm">
+        <div class="layui-form-item">
+            <div style="position: relative;">
+                <div class="layui-btn layui-btn-radius layui-btn-normal" style="cursor: pointer; height: 38px; width: 142px;">
+                    <i class="layui-icon">&#xe67c;</i>上传VNC文件
+                </div>
+                <input id="upload" title="" name="file" type="file" onchange="showName(this)" style="cursor: pointer; opacity: 0; position: absolute; left: 0; height: 38px; width: 142px;">
+                <div id="fileName">允许上传.vnc文件</div>
+            </div>
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="commit">确定</button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script>
+    var terminalType = null;
+
+    function showName(e) {
+        document.getElementById("fileName").innerText = e.files.item(0).name;
+    }
+
+    function initData(data) {
+        terminalType = data;
+    }
+
+    layui.use(["form", "common", "jquery", "layer", "upload"], function () {
+        var form = layui.form;
+        var common = layui.common;
+        var $ = layui.jquery;
+        var upload = layui.upload;
+
+        $("#uploadBtn").click(function(){
+            upload.render({
+                elem: '#upload',
+                url: '/internal/machineManage/uploadVNCFile',
+                exts: 'txt',
+                accept: 'file',
+                auto: false,
+                done: function(res){
+                }
+            });
+        });
+
+        form.on("submit(commit)", function () {
+            let fileValue = $('#uploadForm').find("#upload").val();
+            if(fileValue === ""){
+                common.showFailMsg("请选择要上传的VNC文件!");
+                return false;
+            }
+            let posIndex = fileValue.indexOf(".vnc");
+            if (posIndex === -1) {
+                common.showFailMsg("只能上传.vnc文件!");
+                return false;
+            }
+            let postData = new FormData();
+            postData.append('file', $("#uploadForm").find("#upload")[0].files[0]);
+            postData.append('terminalType', terminalType);
+            $.ajax({
+                url: '/internal/machineManage/uploadVNCFile',
+                type: 'post',
+                cache: false,
+                data: postData,
+                async: false,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    let data = JSON.parse(res);
+                    if (data.code === 200) {
+                        common.showSuccessMsg("上传成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        common.showFailMsg(res.msg);
+                    }
+
+                }
+            });
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -104,6 +104,7 @@
             if (document.getElementById('jjfz').style.color === 'red') {
                 postData.targetMachineGroup = data.field.machineGroup;
             }
+            postData = common.jsonObjectTrim(postData);
             $.ajax({
                 url: '/internal/machineManage/batchUpdateMachine',
                 type: 'post',

@@ -136,9 +136,8 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     @Override
-    public void updateRenewalDate(String clientIDs, String settingType, String renewalDate) throws Exception {
-        String[] clientIDArray = clientIDs.split(",");
-        for (String clientID : clientIDArray) {
+    public void updateRenewalDate(List<String> clientIDs, String settingType, String renewalDate) throws Exception {
+        for (String clientID : clientIDs) {
             MachineInfo machineInfo = machineInfoDao.selectById(clientID);
             if ("increaseOneMonth".equals(settingType)) {
                 if (machineInfo.getRenewalDate() != null) {
