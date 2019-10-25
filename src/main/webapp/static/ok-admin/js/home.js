@@ -37,7 +37,16 @@ layui.config({
             mapChina.setOption(echartsData.mapChina);//地图
 
             window.toChargeMon = function () {
-                common.updateOrNewTab('/internal/qzchargemon/toQzChargeMon', '每日站点操作监控', 'qzChargeMon');
+                let condition = common.formToJsonObject('form');
+                if (!condition.qzTerminal) {
+                    condition.qzTerminal = 'null';
+                }
+                if (!condition.searchEngines) {
+                    condition.searchEngines = 'null';
+                }
+                let url = '/internal/qzchargemon/toQzChargeMonWithParam/' + condition.qzTerminal + '/' + condition.searchEngines + '/' + condition.time;
+                url = encodeURI(encodeURI(url));
+                common.updateOrNewTab(url, '每日站点操作监控', 'qzChargeMon');
             };
 
             okUtils.echartsResize([mapTree, mapChina, chargeLogShow]);

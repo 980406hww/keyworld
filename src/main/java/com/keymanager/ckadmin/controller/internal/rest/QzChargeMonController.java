@@ -7,6 +7,8 @@ import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.QZChargeMonCriteria;
 import com.keymanager.ckadmin.entity.QzChargeMon;
 import com.keymanager.ckadmin.service.QzChargeMonService;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,6 +16,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -106,5 +109,30 @@ public class QzChargeMonController {
             return resultBean;
         }
         return resultBean;
+    }
+
+    @RequiresPermissions("/internal/qzchargemon/toQzChargeMon")
+    @GetMapping(value = "/toQzChargeMonWithParam/{terminal}/{search}/{time}")
+    public ModelAndView toQzChargeMonWithParam(@PathVariable String terminal, @PathVariable String search, @PathVariable String time) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("qzchargemon/qzChargeMon");
+        if ("null".equals(terminal)) {
+            mv.addObject("terminal", "");
+        } else {
+            mv.addObject("terminal", terminal);
+        }
+        if ("null".equals(search)) {
+            mv.addObject("search", "");
+        } else {
+            try {
+                search = URLDecoder.decode(search, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            mv.addObject("search", search);
+        }
+
+        mv.addObject("time", time);
+        return mv;
     }
 }

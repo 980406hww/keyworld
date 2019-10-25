@@ -78,7 +78,8 @@
 </head>
 <body class="childrenBody home">
 <div class="layui-row layui-col-space15">
-    <div class="layui-col-md12">
+    <div class="layui-col-md1"></div>
+    <div class="layui-col-md10">
         <div class="layui-card">
             <div class="yskj-card-body" style="position:relative;">
                 <div style="position: absolute;top: 15px;left: 0;z-index: 9999;width: 100%;">
@@ -104,21 +105,25 @@
                 </div>
                 <div style="height: 300px;" id="chargeLogShow"></div>
             </div>
-        </div>
-    </div>
-
-</div>
-<div class="layui-row layui-col-space15">
-    <div class="layui-col-md12">
-        <div class="layui-card">
-            <div class="yskj-card-body clearfix">
+            <div class="yskj-card-body clearfix" style="padding: 0 20px 10px 20px;">
                 <table id="table" lay-filter="table"></table>
             </div>
         </div>
     </div>
+    <div class="layui-col-md1"></div>
 </div>
 
 </body>
+<script>
+    var terminal = '<#if terminal?exists>${terminal}</#if>';
+    var search = '<#if search?exists>${search}</#if>';
+    var time = '<#if time?exists>${time}</#if>';
+    var condition = {
+        searchEngines: search,
+        qzTerminal: terminal,
+        time: time
+    };
+</script>
 <script type="text/javascript" src="/static/ok-admin/lib/layui/layui.js"></script>
 <script type="text/javascript" src="/static/ok-admin/page/qzsetting/qzChargeMon.js"></script>
 <script>
@@ -185,10 +190,9 @@
                         }
                     }
                 ]],
-                height: 'full-405',
+                height: 'full-385',
                 loading: true,
                 done: function (res, curr, count) {
-                    console.log(res);
                     laydate.render({elem: '#dateStart'});
                     laydate.render({elem: '#dateEnd'});
                     getSeData('searchEngine');

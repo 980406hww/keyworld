@@ -111,7 +111,11 @@ layui.use(['jquery', 'form', 'common'], function () {
 
     var chargeLogShow = echarts.init(document.getElementById('chargeLogShow'));
 
-    getChargeMonData({searchEngines: '百度', qzTerminal: 'PC'});
+    if (condition) {
+        getChargeMonData(condition);
+    } else {
+        getChargeMonData({searchEngines: '百度', qzTerminal: 'PC'});
+    }
 
     function getChargeMonData(condition) {
         $.ajax({
@@ -192,5 +196,19 @@ layui.use(['jquery', 'form', 'common'], function () {
         });
     };
 
-    getSeData('searchEngines');
+    if (condition) {
+        let options = document.getElementById('qzTerminal').children;
+        let radios = document.getElementsByName('time');
+        for (let i = 0; i < 3; i++) {
+            options[i].removeAttribute('selected');
+            if (options[i].value === condition.qzTerminal) {
+                options[i].setAttribute('selected', '');
+            }
+            radios[i].checked = radios[i].value === condition.time;
+        }
+        form.render('radio');
+        getSeData('searchEngines', condition.searchEngines);
+    } else {
+        getSeData('searchEngines');
+    }
 });
