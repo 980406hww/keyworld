@@ -95,7 +95,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/customerKeyword/showMachineGroupAndSize")
+    @RequiresPermissions("/internal/customerKeyword/toMachineGroupAndSize")
     @RequestMapping(value = "/searchMachineGroupAndSize", method = RequestMethod.POST)
     public ResultBean searchMachineGroupAndSize(HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();

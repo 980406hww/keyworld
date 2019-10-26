@@ -163,7 +163,7 @@
         }
 
         function showPositiveListDialog() {
-            okLayer.open("首页/关键字列表/添加优质清单", "/internal/positivelists/toSavePositiveList", "60%", "70%", null, function(){
+            okLayer.open("首页/优质清单列表/添加优质清单", "/internal/positivelists/toSavePositiveList", "60%", "70%", null, function(){
                 console.log(sign);
                 if(sign){
                     console.log('sdasfsa')
@@ -175,7 +175,7 @@
 
         function modifyPositiveList(data){
 
-            okLayer.open("首页/关键字列表/修改优质清单", "/internal/positivelists/toSavePositiveList", "60%", "70%", function(layero){
+            okLayer.open("首页/优质清单列表/修改优质清单", "/internal/positivelists/toSavePositiveList", "60%", "70%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
             },function(){
                 console.log(sign);

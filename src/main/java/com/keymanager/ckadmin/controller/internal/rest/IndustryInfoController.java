@@ -50,7 +50,7 @@ public class IndustryInfoController {
     @Resource(name = "configService2")
     private ConfigService configService;
 
-    @RequiresPermissions("/internal/industry/searchIndustries")
+    @RequiresPermissions("/internal/industryList/toIndustryList")
     @GetMapping("/toIndustryList")
     public ModelAndView toIndustryList() {
         ModelAndView mv = new ModelAndView();

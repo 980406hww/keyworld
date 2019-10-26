@@ -113,7 +113,7 @@ public class QZSettingController extends SpringMVCBaseController {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("qzsettings/qzsetting");
         int isSEOSales = 0;
-        if (getCurrentUser().getRoles().contains("SEOSales")) {
+        if (getCurrentUser().getRoles().contains("SEOSales") || getCurrentUser().getRoles().contains("DepartmentManager")) {
             isSEOSales = 1;
         }
         mv.addObject("isSEOSales", isSEOSales);
@@ -534,9 +534,8 @@ public class QZSettingController extends SpringMVCBaseController {
     @GetMapping(value = "/toQZSetttingsWithCustomerUuid/{customerUuid}")
     public ModelAndView toQZSetttingsWithCustomerUuid(@PathVariable(name = "customerUuid") Long customerUuid, HttpServletRequest request) {
         ModelAndView mv = new ModelAndView();
-//        request.setAttribute("customerUuidTmp",customerUuid);
         int isSEOSales = 0;
-        if (getCurrentUser().getRoles().contains("SEOSales")) {
+        if (getCurrentUser().getRoles().contains("SEOSales") || getCurrentUser().getRoles().contains("DepartmentManager")) {
             isSEOSales = 1;
         }
         mv.addObject("isSEOSales", isSEOSales);

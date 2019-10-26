@@ -209,9 +209,7 @@ public class CaptureRankController {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
         try {
-            for (Long uuid : uuids) {
-                captureRankJobService.resetCaptureRankJobs(uuids);
-            }
+            captureRankJobService.resetCaptureRankJobs(uuids);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

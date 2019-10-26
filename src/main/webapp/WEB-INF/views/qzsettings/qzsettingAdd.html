@@ -52,13 +52,13 @@
 
         function resetHidden() {
             let c = document.getElementsByName('computer')[0];
-            if (c.nextElementSibling.getElementsByTagName('em')[0].innerText === 'Select') {
+            if (c.nextElementSibling.getElementsByTagName('em')[0].innerText === '选中') {
                 c.setAttribute('checked', '');
             } else {
                 c.removeAttribute('checked');
             }
             let p = document.getElementsByName('phone')[0];
-            if (p.nextElementSibling.getElementsByTagName('em')[0].innerText === 'Select') {
+            if (p.nextElementSibling.getElementsByTagName('em')[0].innerText === '选中') {
                 p.setAttribute('checked', '');
             } else {
                 p.removeAttribute('checked');
@@ -1302,8 +1302,8 @@
 
         form.verify({
             domain: [
-                /^([\u4e00-\u9fa50-9]+|[a-z0-9]+)\.([\u4e00-\u9fa5]+|[a-z]+|ac.cn|bj.cn|sh.cn|tj.cn|cq.cn|he.cn|sn.cn|sx.cn|nm.cn|ln.cn|jl.cn|hl.cn|js.cn|zj.cn|ah.cn|fj.cn|jx.cn|sd.cn|ha.cn|hb.cn|hn.cn|gd.cn|gx.cn|hi.cn|sc.cn|gz.cn|yn.cn|gs.cn|qh.cn|nx.cn|xj.cn|tw.cn|hk.cn|mo.cn|xz.cn|com.cn|net.cn|org.cn|gov.cn|.com.hk)$/,
-                "请正确输入域名,例如baidu.com,不能填写www.baidu.com,map.baidu.com等"
+                /^([a-z0-9]*)\.*([\u4e00-\u9fa50-9]+|[a-z0-9]+)\.([\u4e00-\u9fa5]+|[a-z]+|ac.cn|bj.cn|sh.cn|tj.cn|cq.cn|he.cn|sn.cn|sx.cn|nm.cn|ln.cn|jl.cn|hl.cn|js.cn|zj.cn|ah.cn|fj.cn|jx.cn|sd.cn|ha.cn|hb.cn|hn.cn|gd.cn|gx.cn|hi.cn|sc.cn|gz.cn|yn.cn|gs.cn|qh.cn|nx.cn|xj.cn|tw.cn|hk.cn|mo.cn|xz.cn|com.cn|net.cn|org.cn|gov.cn|.com.hk)$/,
+                "请正确输入域名"
             ],
             tagNames: [
                 /(^$)|(^[\u4e00-\u9fa50-9a-zA-Z,]+$)/,

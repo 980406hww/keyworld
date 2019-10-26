@@ -158,7 +158,7 @@
                         <label class="layui-form-label">第一报价</label>
                         <div class="layui-input-block">
                             <input type="number" name="positionFirstFee" id="positionFirstFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="positiveInteger" oninput="getFirstFee(this.value)"/>
+                                   lay-verify="integer" oninput="getFirstFee(this.value)"/>
                         </div>
                     </div>
                 </div>
@@ -168,7 +168,7 @@
                         <label class="layui-form-label">第五报价</label>
                         <div class="layui-input-block">
                             <input type="number" name="positionFifthFee" id="positionFifthFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="positiveInteger"/>
+                                   lay-verify="integer"/>
                         </div>
                     </div>
                 </div>
@@ -179,7 +179,7 @@
                         <label class="layui-form-label">第二报价</label>
                         <div class="layui-input-block">
                             <input type="number" name="positionSecondFee" id="positionSecondFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="positiveInteger"/>
+                                   lay-verify="integer"/>
                         </div>
                     </div>
                 </div>
@@ -189,7 +189,7 @@
                         <label class="layui-form-label">首页报价</label>
                         <div class="layui-input-block">
                             <input type="number" name="positionFirstPageFee" id="positionFirstPageFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="positiveInteger"/>
+                                   lay-verify="integer"/>
                         </div>
                     </div>
                 </div>
@@ -201,7 +201,7 @@
                         <label class="layui-form-label">第三报价</label>
                         <div class="layui-input-block">
                             <input type="number" name="positionThirdFee" id="positionThirdFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="positiveInteger"/>
+                                   lay-verify="integer"/>
                         </div>
                     </div>
                 </div>
@@ -227,7 +227,7 @@
                         <label class="layui-form-label">第四报价</label>
                         <div class="layui-input-block">
                             <input type="number" name="positionForthFee" id="positionForthFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="positiveInteger" oninput="getForthFee(this.value)"/>
+                                   lay-verify="integer" oninput="getForthFee(this.value)"/>
                         </div>
                     </div>
                 </div>
@@ -390,7 +390,10 @@
                 /(^$)|(^[0-9]*[1-9][0-9]*$)/,
                 "请输入合适的正整数、如：1、2、3"
             ],
-
+            integer: [
+                /(^$)|(^[\-][0-9]*[0-9][0-9]*$)|(^[0-9]*[0-9][0-9]*$)/,
+                "请输入合适的整数、如：-1、0、1"
+            ],
         });
 
     })

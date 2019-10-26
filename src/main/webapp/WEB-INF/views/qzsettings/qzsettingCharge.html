@@ -77,26 +77,22 @@
                         <div class="layui-form-item">
                             <label class="computer layui-form-label">当前词量</label>
                             <div class="layui-input-block">
-                                <input type="text" name="pcCurrentKeywordCount"
-                                       placeholder="请输入当前词量"
-                                       autocomplete="off" disabled
-                                       class="layui-input">
+                                <input type="text" name="pcCurrentKeywordCount" placeholder="请输入当前词量"
+                                       autocomplete="off" disabled class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="computer layui-form-label">应收金额</label>
                             <div class="layui-input-block">
                                 <input type="text" name="pcReceivableAmount" placeholder="请输入应收金额"
-                                       autocomplete="off" disabled
-                                       class="layui-input">
+                                       autocomplete="off" disabled class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="computer layui-form-label">计划收费日期</label>
                             <div class="layui-input-block">
                                 <input type="text" name="pcPlanChargeDate" placeholder="请选择计划收费日期"
-                                       autocomplete="off" id="layui-date-one" class="layui-input"
-                                       disabled>
+                                       autocomplete="off" id="layui-date-one" class="layui-input" disabled>
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -128,8 +124,7 @@
                         <label class="layui-form-label">手机</label>
                         <div class="layui-input-block">
                             <input type="checkbox" name="phone" lay-skin="switch"
-                                   lay-filter="phone"
-                                   lay-text="选中|不选中" id="phone">
+                                   lay-filter="phone" lay-text="选中|不选中" id="phone">
                         </div>
                     </div>
                     <div id="phoneQzsettingBox" class="qzsetting-box">
@@ -138,27 +133,21 @@
                             <label class="phone layui-form-label">当前词量</label>
                             <div class="layui-input-block">
                                 <input type="text" name="phoneCurrentKeywordCount"
-                                       placeholder="请输入当前词量"
-                                       autocomplete="off" disabled
-                                       class="layui-input">
+                                       placeholder="请输入当前词量" autocomplete="off" disabled class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="phone layui-form-label">应收金额</label>
                             <div class="layui-input-block">
                                 <input type="text" name="phoneReceivableAmount"
-                                       placeholder="请输入应收金额"
-                                       autocomplete="off" disabled
-                                       class="layui-input">
+                                       placeholder="请输入应收金额" autocomplete="off" disabled class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="phone layui-form-label">计划收费日期</label>
                             <div class="layui-input-block">
                                 <input type="text" name="phonePlanChargeDate"
-                                       placeholder="请选择计划收费日期"
-                                       autocomplete="off" id="layui-date-four" class="layui-input"
-                                       disabled>
+                                       placeholder="请选择计划收费日期" autocomplete="off" id="layui-date-four" class="layui-input" disabled>
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -481,14 +470,14 @@
                     return '';
                 }
                 if (item.dataset.belongTo === 'computer') {
-                    if (document.getElementById("computer").nextElementSibling.children[0].innerHTML === 'Deselect') {
+                    if (document.getElementById("computer").nextElementSibling.children[0].innerHTML === '不选中') {
                         return '';
                     }
                     if (value.trim() === '') {
                         return '必填数据不能为空！'
                     }
                 } else {
-                    if (document.getElementById("phone").nextElementSibling.children[0].innerHTML === 'Deselect') {
+                    if (document.getElementById("phone").nextElementSibling.children[0].innerHTML === '不选中') {
                         return '';
                     }
                     if (value.trim() === '') {

@@ -33,7 +33,6 @@ public class AdvertisingController {
     @Resource(name = "advertisingService2")
     private AdvertisingService advertisingService;
 
-//    @RequiresPermissions("/internal/advertising/saveAdvertisings")
     @GetMapping("/toSaveAdvertising")
     public ModelAndView toSaveAdvertising() {
         ModelAndView mv = new ModelAndView();
@@ -41,7 +40,6 @@ public class AdvertisingController {
         return mv;
     }
 
-//    @RequiresPermissions("/internal/advertising/saveAdvertisings")
     @PostMapping("/saveAdvertising")
     public ResultBean saveAdvertising(@RequestBody Advertising advertising){
         ResultBean resultBean = new ResultBean();
@@ -57,7 +55,6 @@ public class AdvertisingController {
         return resultBean;
     }
 
-//    @RequiresPermissions("/internal/advertising/saveAdvertising")
     @PostMapping("/updateAdvertising")
     public ResultBean updateAdvertising(@RequestBody Advertising advertising){
         ResultBean resultBean = new ResultBean();
@@ -73,7 +70,6 @@ public class AdvertisingController {
         return resultBean;
     }
 
-//    @RequiresPermissions("/internal/advertising/saveAdvertisings")
     @GetMapping(value = "/searchAdvertisingAllTypeAndCustomerList/{websiteUuid}")
     public ResultBean searchAdvertisingAllTypeAndCustomerList(@PathVariable Long websiteUuid, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
@@ -95,7 +91,6 @@ public class AdvertisingController {
         return resultBean;
     }
 
-//    @RequiresPermissions("/internal/advertising/pushAdvertising")
     @PostMapping(value = "/pushAdvertising")
     public ResultBean pushAdvertising(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
@@ -111,7 +106,6 @@ public class AdvertisingController {
         return resultBean;
     }
 
-//    @RequiresPermissions("/internal/advertising/searchAdvertisings")
     @PostMapping("/searchAdvertisingLists")
     public ResultBean searchAdvertisingLists(@RequestBody AdvertisingCriteria advertisingCriteria) {
         ResultBean resultBean = new ResultBean();
@@ -132,7 +126,6 @@ public class AdvertisingController {
         return resultBean;
     }
 
-//    @RequiresPermissions("/internal/advertising/deleteAdvertising")
     @GetMapping("/delAdvertising/{uuid}")
     public ResultBean delAdvertising(@PathVariable Long uuid){
         ResultBean resultBean = new ResultBean();
@@ -148,7 +141,6 @@ public class AdvertisingController {
         return resultBean;
     }
 
-//    @RequiresPermissions("/internal/advertising/deleteAdvertisings")
     @PostMapping("/delAdvertisings")
     public ResultBean delAdvertisings(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
@@ -164,7 +156,6 @@ public class AdvertisingController {
         return resultBean;
     }
 
-//    @RequiresPermissions("/internal/advertising/saveAdvertising")
     @RequestMapping(value = "/getAdvertising/{uuid}", method = RequestMethod.GET)
     public ResultBean getAdvertising(@PathVariable Long uuid){
         ResultBean resultBean = new ResultBean();

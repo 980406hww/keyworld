@@ -12,12 +12,12 @@
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customerKeyword/editOptimizePlanCount">
         <button class="layui-btn layui-btn-sm" id="change_select_optimizePlanCount" lay-event="change_select_optimizePlanCount">
-            修改所选刷量
+            修改刷量
         </button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
         <button class="layui-btn layui-btn-sm layui-btn-warm" id="update_belong_customer" lay-event="update_belong_customer">
-            更改所选词客户
+            更改客户
         </button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
@@ -231,12 +231,15 @@
 </script>
 
 <script type="text/html" id="operationTpl">
-    <@shiro.hasPermission name="/internal/customer/saveCustomer">
-    <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/customer/delCustomer">
-    <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
-    </@shiro.hasPermission>
+    <div class="layui-btn-group">
+        <@shiro.hasPermission name="/internal/customer/saveCustomer">
+            <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/customer/delCustomer">
+            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+        </@shiro.hasPermission>
+    </div>
+
 </script>
 
 

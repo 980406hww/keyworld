@@ -22,7 +22,7 @@ DROP PROCEDURE pro_resource_data_migration;
 #添加一级菜单“网站管理”
 INSERT INTO `db_keyword`.`t_resource_new`(`fResourceName`, `fUrl`, `fIconCls`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`,  `fCreateTime`, `fVersion`)VALUES ('网站管理', '#', 'fi-thumbnails', 50, 0, 1, 0, NOW(), '2.0');
 
-#将全站设置信息下的修改续费状态子权限赋给SEO人员, 技术人员
+#将网站管理权限赋给SEO人员, 技术人员
 insert into t_role_resource_new(fRoleID, fResourceId)
 select tem_role.fUuid, tem_resource.fUuid
 from ((SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('SEO', 'Technical')) tem_role,

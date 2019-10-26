@@ -583,7 +583,8 @@
     <div class="layui-btn-container">
         <div class="layui-btn-group">
             <@shiro.hasPermission name="/internal/industry/saveIndustry">
-            <button class="layui-btn layui-btn-sm" lay-event="toAddIndustry">添加</button>
+            <button class="layui-btn layui-btn-sm" lay-event="toAddIndustry">
+                <i class="layui-icon layui-icon-add-1"></i>添加</button>
             </@shiro.hasPermission>
             <@shiro.hasPermission name="/internal/industry/deleteIndustries">
             <button class="layui-btn layui-btn-danger layui-btn-sm" lay-event="deleteIndustries">
@@ -597,17 +598,20 @@
             </@shiro.hasPermission>
             <@shiro.hasPermission name="/internal/industry/saveIndustry">
             <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="updateStatus">
-                <i class="layui-icon layui-icon-download-circle"></i>马上爬取
+                <i class="layui-icon layui-icon-refresh"></i>重新爬取
             </button>
             </@shiro.hasPermission>
             <@shiro.hasPermission name="/internal/industry/saveIndustry">
-            <button class="layui-btn layui-btn-sm" lay-event="downloadIndustryInfos">导出网站联系信息</button>
+            <button class="layui-btn layui-btn-sm" lay-event="downloadIndustryInfos">
+                <i class="layui-icon layui-icon-download-circle"></i>导出网站联系信息</button>
             </@shiro.hasPermission>
             <@shiro.hasPermission name="/internal/industry/uploadIndustryInfos">
-            <button class="layui-btn layui-btn-sm" lay-event="uploadIndustryInfo">Excel上传</button>
+            <button class="layui-btn layui-btn-sm" lay-event="uploadIndustryInfo">
+                <i class="layui-icon layui-icon-upload-drag"></i>Excel上传</button>
             </@shiro.hasPermission>
             <@shiro.hasPermission name="/SuperIndustrySimpleList.xls">
-            <button class="layui-btn layui-btn-sm" lay-event="downLoadTemplate">模板下载</button>
+            <button class="layui-btn layui-btn-sm" lay-event="downLoadTemplate">
+                <i class="layui-icon layui-icon-download-circle"></i>模板下载</button>
             </@shiro.hasPermission>
         </div>
     </div>
