@@ -439,23 +439,19 @@
             return false
         });
 
-        <@shiro.hasPermission name="/internal/groupsetting/searchGroupSettings">
-            function toOperationCombine(data){
-                let url = '/internal/groupsetting/toGroupSettingFromATP/'+data.terminalType +'/'+data.operationCombineName;
-                url = encodeURI(encodeURI(url));
-                let title = '操作组合:' + data.operationCombineName + '详情';
-                common.updateOrNewTab(url, title, data.operationCombineName)
-            }
-        </@shiro.hasPermission>
+        function toOperationCombine(data){
+            let url = '/internal/groupsetting/toGroupSettingFromATP/'+data.terminalType +'/'+data.operationCombineName;
+            url = encodeURI(encodeURI(url));
+            let title = '操作组合:' + data.operationCombineName + '详情';
+            common.updateOrNewTab(url, title, data.operationCombineName)
+        }
 
-        <@shiro.hasPermission name="/internal/machineInfo/searchMachineInfos">
-            function toMachineManage(data){
-                let url = '/internal/machineManage/toMachineInfoFromATP/'+data.terminalType +'/'+data.machineGroup;
-                url = encodeURI(encodeURI(url));
-                let title = '机器分组:' + data.machineGroup + '详情';
-                common.updateOrNewTab(url, title, data.machineGroup)
-            }
-        </@shiro.hasPermission>
+        function toMachineManage(data){
+            let url = '/internal/machineManage/toMachineInfoFromATP/'+data.terminalType +'/'+data.machineGroup;
+            url = encodeURI(encodeURI(url));
+            let title = '机器分组:' + data.machineGroup + '详情';
+            common.updateOrNewTab(url, title, data.machineGroup)
+        }
 
     });
 

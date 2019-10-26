@@ -40,14 +40,6 @@
             line-height: 18px;
         }
 
-        .layui-table-body .laytable-cell-1-0-1 {
-            text-align: left;
-        }
-
-        .layui-table-body .laytable-cell-1-0-3 {
-            text-align: left;
-        }
-
         /* 下拉条件框 */
         .my-collapse {
             position: relative;
@@ -165,14 +157,14 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '4%', align: 'center'},
-                    {field: 'operationTypeName', title: '操作类型名称', width: '10%', align: 'center'},
+                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '35', align: 'center'},
+                    {field: 'operationTypeName', title: '操作类型名称', width: '10%', align: 'left'},
                     {field: 'terminalType', title: '终端类型', width: '8%', align: 'center'},
-                    {field: 'remark', title: '备注', width: '18%', align: 'center'},
-                    {field: 'description', title: '操作类型描述', width: '13%', align: 'center'},
+                    {field: 'remark', title: '备注', width: '17%', align: 'left'},
+                    {field: 'description', title: '操作类型描述', width: '17%', align: 'left'},
                     {field: 'createTime', title: '创建时间', width: '13%', templet: '#toDateTime', align: 'center'},
                     {field: 'updateTime', title: '更新时间', width: '13%', templet: '#toDateTime', align: 'center'},
-                    {field: 'status', title: '状态', width: '10%', align: 'center', templet: '#toStatus'},
+                    {field: 'status', title: '状态', width: '9%', align: 'center', templet: '#toStatus'},
                     {title: '操作', width: '11%', align: 'center', templet: '#operationTpl', fixed: "right"},
                 ]],
                 height: 'full-115',

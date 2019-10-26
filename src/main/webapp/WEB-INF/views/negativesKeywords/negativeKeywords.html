@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>负面词管理</title>
+    <title>负面信息抓取</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -27,15 +27,7 @@
             background: #f2f2f2;
             border: 0px;
         }
-        .layui-table-body .layui-table-cell {
-            text-align: left;
-        }
-        .layui-table-body .laytable-cell-checkbox {
-            text-align: center;
-        }
-        .layui-table tr .layui-table-col-special .layui-table-cell{
-            text-align: center;
-        }
+
         /* 下拉条件框 */
         .my-collapse {
             position: relative;
@@ -232,33 +224,32 @@
                 defaultToolbar: [],
                 contentType: 'application/json',
                 cols: [[
-                    // {field: 'uuid', title: '编号', width: '5.2%', align: 'center'},
                     {
-                        field: 'name', title: '名称', width: '15%', align: 'center', templet: function (d) {
+                        field: 'name', title: '名称', width: '15%', align: 'left', templet: function (d) {
                             return '<span class="show-msg" onclick="findPositionInfos(\'' + d.uuid + '\')">' + d.name + '</span>';
                         }
                     },
-                    {field: 'group', title: '分组', width: '7.5%', align: 'center'},
-                    {field: 'officialUrl', title: '官网网址', width: '13%', align: 'center'},
-                    {field: 'email', title: '邮箱', width: '16.5%', align: 'center'},
+                    {field: 'group', title: '分组', width: '8%', align: 'left'},
+                    {field: 'officialUrl', title: '官网网址', width: '12%', align: 'left'},
+                    {field: 'email', title: '邮箱', width: '11%', align: 'left'},
                     {
                         field: 'rankCaptured', title: '采集电脑', width: '5%', align: 'center', templet: function (d) {
                             return d.rankCaptured ? "是" : "否";
                         }
                     },
-                    {field: 'rankNegativeCount', title: '排名负面个数', width: '6.6%', align: 'center'},
-                    {field: 'selectNegativeKeyword', title: '下拉负面词', width: '6.3%', align: 'center'},
-                    {field: 'relevantNegativeKeyword', title: '相关负面词', width: '6.3%', align: 'center'},
+                    {field: 'rankNegativeCount', title: '负面总数', width: '5%', align: 'center'},
+                    {field: 'selectNegativeKeyword', title: '下拉负面词', width: '9%', align: 'left'},
+                    {field: 'relevantNegativeKeyword', title: '相关负面词', width: '8%', align: 'left'},
                     {
                         field: 'phoneCaptured', title: '采集手机', width: '5%', align: 'center', templet: function (d) {
                             return d.phoneCaptured ? "是" : "否";
                         }
                     },
-                    {field: 'phoneRankNegativeCount', title: '排名负面个数', width: '6.6%', align: 'center'},
-                    {field: 'phoneSelectNegativeKeyword', title: '下拉负面个数', width: '6.3%', align: 'center'},
-                    {field: 'phoneRelevantNegativeKeyword', title: '下拉负面词', width: '6.3%', align: 'center'},
+                    {field: 'phoneRankNegativeCount', title: '负面总数', width: '5%', align: 'center'},
+                    {field: 'phoneSelectNegativeKeyword', title: '下拉负面词', width: '9%', align: 'center'},
+                    {field: 'phoneRelevantNegativeKeyword', title: '相关负面词', width: '8%', align: 'left'},
                 ]],
-                height: 'full-75',
+                height: 'full-60',
                 loading: true,
                 done: function (res, curr, count) {
                 }
@@ -325,10 +316,7 @@
                             resize: false,
                             area: '860px',
                             offset: '80px',
-                            btn: ['确定'],
-                            yes: function (index) {
-                                layer.close(index);
-                            }
+                            btn: []
                         });
                     } else if (res.code === 300) {
                         common.showFailMsg('暂无数据');

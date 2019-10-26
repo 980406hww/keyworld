@@ -21,7 +21,7 @@ public class UserRoleService extends ServiceImpl<UserRoleDao, UserRole> {
 		Long roleUuid = roleService.selectUuidByRoleName("DepartmentManager");
 		List<UserRole> userRoles = userRoleDao.selectByUserId(userId);
 		for (UserRole userRole : userRoles) {
-			if(userRole.getRoleID() == roleUuid) {
+			if(roleUuid.equals(userRole.getRoleID())) {
 				return true;
 			}
 		}

@@ -129,6 +129,10 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     public ResultBean searchKeywords(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         try {
+            Set<String> roles = getCurrentUser().getRoles();
+            if(!roles.contains("DepartmentManager")) {
+                keywordCriteria.setUserName((String) request.getSession().getAttribute("username"));
+            }
             Page<CustomerKeyword> page = new Page(keywordCriteria.getPage(), keywordCriteria.getLimit());
             String orderByField = ReflectUtils.getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {
@@ -562,7 +566,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         }
     }
 
-    @RequiresPermissions("/internal/customerKeyword/deleteCustomerKeywords")
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
     @PostMapping(value = "/getKeywordInfoByUuid/{uuid}")
     public ResultBean getKeywordInfoByUuid(@PathVariable Long uuid) {
         ResultBean resultBean = new ResultBean(200, "success");

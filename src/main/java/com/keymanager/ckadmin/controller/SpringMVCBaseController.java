@@ -62,8 +62,7 @@ public abstract class SpringMVCBaseController {
     }
 
     public ShiroUser getCurrentUser() {
-        ShiroUser user = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
-        return user;
+        return (ShiroUser) SecurityUtils.getSubject().getPrincipal();
     }
 
     public void downFile(String fileName, String password) {

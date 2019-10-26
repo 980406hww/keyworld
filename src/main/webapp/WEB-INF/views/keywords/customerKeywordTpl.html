@@ -88,18 +88,19 @@
             </@shiro.hasPermission>
         </div>
 
+    <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
         <div class="layui-btn-group">
-            <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
             <button class="layui-btn layui-btn-sm" id="change_current_bearPawNumber" lay-event="change_current_bearPawNumber">
                 修改当前熊掌号
             </button>
             <button class="layui-btn layui-btn-sm" id="change_select_bearPawNumber" lay-event="change_select_bearPawNumber">
                 修改选中熊掌号
             </button>
-            </@shiro.hasPermission>
         </div>
-        <div class="layui-btn-group">
+    </@shiro.hasPermission>
 
+    <@shiro.hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
+        <div class="layui-btn-group">
             <button class="layui-btn layui-btn-sm" id="delete_keyword_by_nullTitle_and_nullUrl" lay-event="delete_keyword_by_nullTitle_and_nullUrl">
                 删除标题和网址为空的关键字
             </button>
@@ -107,38 +108,40 @@
                 删除标题为空的关键字
             </button>
         </div>
+    </@shiro.hasPermission>
 
+    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
         <div class="layui-btn-group">
-            <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
             <button class="layui-btn layui-btn-sm" id="change_current_optimizedGroup" lay-event="change_current_optimizedGroup">
                 修改当前优化组
             </button>
             <button class="layui-btn layui-btn-sm" id="change_select_optimizedGroup" lay-event="change_select_optimizedGroup">
                 修改选中优化组
             </button>
-            </@shiro.hasPermission>
         </div>
+    </@shiro.hasPermission>
 
+    <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
         <div class="layui-btn-group">
-            <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
             <button class="layui-btn layui-btn-sm" id="change_current_searchEngine" lay-event="change_current_searchEngine">
                 修改当前搜索引擎
             </button>
             <button class="layui-btn layui-btn-sm" id="change_select_searchEngine" lay-event="change_select_searchEngine">
                 修改选中搜索引擎
             </button>
-            </@shiro.hasPermission>
         </div>
+    </@shiro.hasPermission>
+
+    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordMachineGroup">
         <div class="layui-btn-group">
-            <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordMachineGroup">
             <button class="layui-btn layui-btn-sm" id="change_current_machineGroup" lay-event="change_current_machineGroup">
                 修改当前机器分组
             </button>
             <button class="layui-btn layui-btn-sm" id="change_select_machineGroup" lay-event="change_select_machineGroup">
                 修改选中机器分组
             </button>
-            </@shiro.hasPermission>
         </div>
+    </@shiro.hasPermission>
 
         <div class="layui-btn-group">
             <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
@@ -165,8 +168,8 @@
             </@shiro.hasPermission>
         </div>
 
+    <@shiro.hasPermission name="/internal/customerKeyword/cleanTitle">
         <div class="layui-btn-group">
-            <@shiro.hasPermission name="/internal/customerKeyword/cleanTitle">
             <button class="layui-btn layui-btn-sm" id="recollect_customer_keyword_title" lay-event="recollect_customer_keyword_title">
                 重采客户标题
             </button>
@@ -179,8 +182,8 @@
             <button class="layui-btn layui-btn-sm" id="clean_select_keyword_title" lay-event="clean_select_keyword_title">
                 清空所选标题
             </button>
-        </@shiro.hasPermission>
         </div>
+    </@shiro.hasPermission>
 
     </div>
 </script>

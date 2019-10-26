@@ -276,7 +276,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
             data.field.noReachStandardDays = '';
         }
         data.field = common.jsonObjectTrim(data.field);
-        // console.log(data.field)
         table.reload('keywordTable', {
             where: data.field,
             page: {

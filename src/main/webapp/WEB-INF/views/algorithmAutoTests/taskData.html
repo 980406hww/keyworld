@@ -22,14 +22,6 @@
     <!--数据表格-->
     <table class="layui-hide" id="groupTable" lay-filter="tableFilter"></table>
 </div>
-<div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
-    <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
-
-        <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px;width: 150px">
-            关闭
-        </button>
-    </div>
-</div>
 
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
@@ -67,7 +59,7 @@
                 {field: 'startDate', title: '开始测试日期', width: '20%',align:'center',templet: '#toDateTime'},
                 {field: 'createTime', title: '创建时间', width: '20%',align:'center',templet: '#toDateTime'},
             ]],
-            height: 'full-90',
+            height: 'full-30',
             done: function (res, curr, count) {
 
             }
@@ -77,11 +69,6 @@
             table.reload('groupTable', {
                 where: data.field,
             });
-            return false;
-        });
-
-        $('#close').click(function () {
-            parent.layer.close(parent.layer.getFrameIndex(window.name));
             return false;
         });
     })
