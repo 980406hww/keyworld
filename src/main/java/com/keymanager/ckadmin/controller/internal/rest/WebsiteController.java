@@ -3,20 +3,25 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.WebsiteCriteria;
+import com.keymanager.ckadmin.entity.FriendlyLink;
 import com.keymanager.ckadmin.entity.Website;
 import com.keymanager.ckadmin.enums.IndustryTypeEnum;
 import com.keymanager.ckadmin.enums.PutSalesInfoSignEnum;
 import com.keymanager.ckadmin.enums.WebsiteSynchronousSignEnum;
 import com.keymanager.ckadmin.enums.WebsiteTypeEnum;
+import com.keymanager.ckadmin.service.FriendlyLinkService;
 import com.keymanager.ckadmin.service.WebsiteService;
 import com.keymanager.ckadmin.vo.WebsiteVO;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +33,17 @@ public class WebsiteController {
 
     @Resource(name = "websiteService2")
     private WebsiteService websiteService;
+
+    @Resource(name = "friendlyLinkService2")
+    private FriendlyLinkService friendlyLinkService;
+
+    @RequiresPermissions("/internal/friendlyLink/synchronousFriendlyLink")
+    @GetMapping("/toSynchronousFriendlyLink")
+    public ModelAndView toSynchronousFriendlyLink(){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("webSiteList/SynchronousFriendlyLink");
+        return mv;
+    }
 
     @RequiresPermissions("/internal/website/saveWebsite")
     @GetMapping("/toAddWebsite")
@@ -59,6 +75,97 @@ public class WebsiteController {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("webSiteList/WebSiteList");
         return mv;
+    }
+
+    @RequiresPermissions("/internal/advertising/synchronousAdvertising")
+    @GetMapping("/toSynchronousAdvertising")
+    public ModelAndView toSynchronousAdvertising(){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("webSiteList/SynchronousAdvertising");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/friendlyLink/saveFriendlyLinks")
+    @GetMapping("/showBatchAddFriendlyLinkDialog")
+    public ModelAndView showBatchAddFriendlyLinkDialog(){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("webSiteList/BatchAddFriendlyLinkDialog");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/friendlyLink/saveAdvertisings")
+    @GetMapping("/showBatchAddAdvertisingDialog")
+    public ModelAndView showBatchAddAdvertisingDialog(){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("webSiteList/BatchAddAdvertisingDialog");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/friendlyLink/saveFriendlyLink")
+    @RequestMapping(value = "/getFriendlyLinkByUrl", method = RequestMethod.POST)
+    public ResultBean getFriendlyLinkByUrl(@RequestBody Map<String, Object> requestMap){
+        ResultBean resultBean = new ResultBean();
+        try{
+            FriendlyLink friendlyLink = friendlyLinkService.getFriendlyLinkByUrl(Integer.valueOf((String) requestMap.get("uuid")), (String) requestMap.get("friendlyLinkUrl"));
+            resultBean.setData(friendlyLink);
+            resultBean.setCode(200);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/friendlyLink/deleteFriendlyLinks")
+    @RequestMapping(value = "/batchDelFriendlyLink", method = RequestMethod.POST)
+    public ResultBean batchDelFriendlyLink(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            websiteService.batchDelFriendlyLink(requestMap);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/advertising/deleteAdvertisings")
+    @RequestMapping(value = "/batchDelAdvertising", method = RequestMethod.POST)
+    public ResultBean batchDelAdvertising(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            websiteService.batchDelAdvertising(requestMap);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/friendlyLink/saveFriendlyLinks")
+    @RequestMapping(value = "/batchSaveFriendlyLink", method = RequestMethod.POST)
+    public ResultBean batchSaveFriendlyLink(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            FriendlyLink friendlyLink = websiteService.initFriendlyLink(request);
+            List<String> uuids = Arrays.asList(request.getParameter("uuids").split(","));
+            websiteService.batchSaveFriendlyLink(file, friendlyLink, uuids);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
     }
 
     @RequiresPermissions("/internal/website/putSalesInfoToWebsite")

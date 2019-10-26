@@ -88,30 +88,30 @@
             <shiro:hasPermission name="/internal/website/saveWebsite">
                 <input type="button" value=" 添加 " onclick="showWebsiteDialog(null)">&nbsp;&nbsp;
             </shiro:hasPermission>
-<%--            <shiro:hasPermission name="/internal/friendlyLink/synchronousFriendlyLink">--%>
-<%--                <input type="button" value=" 同步所选友链信息 " onclick="synchronousFriendlyLink()">&nbsp;&nbsp;--%>
-<%--            </shiro:hasPermission>--%>
-<%--            <shiro:hasPermission name="/internal/advertising/synchronousAdvertising">--%>
-<%--                <input type="button" value=" 同步所选广告信息 " onclick="synchronousAdvertising()">&nbsp;&nbsp;--%>
-<%--            </shiro:hasPermission>--%>
-<%--            <shiro:hasPermission name="/internal/friendlyLink/saveFriendlyLinks">--%>
-<%--                <input type="button" value=" 指定网站增加友链 " onclick="showBatchAddFriendlyLinkDialog(null)">&nbsp;&nbsp;--%>
-<%--            </shiro:hasPermission>--%>
-<%--            <shiro:hasPermission name="/internal/advertising/saveAdvertisings">--%>
-<%--                <input type="button" value=" 指定网站增加广告 " onclick="showBatchAddAdvertisingDialog(null)">&nbsp;&nbsp;--%>
-<%--            </shiro:hasPermission>--%>
-<%--            <shiro:hasPermission name="/internal/friendlyLink/saveFriendlyLink">--%>
-<%--                <input type="button" value=" 指定网站修改友链 " onclick="batchModifyFriendlyLink('${websiteCriteria.friendlyLinkUrl}')">&nbsp;&nbsp;--%>
-<%--            </shiro:hasPermission>--%>
-<%--            <shiro:hasPermission name="/internal/advertising/saveAdvertising">--%>
-<%--                <input type="button" value=" 指定网站修改广告 " onclick="batchModifyAdvertising('${websiteCriteria.advertisingTagname}')">&nbsp;&nbsp;--%>
-<%--            </shiro:hasPermission>--%>
-<%--            <shiro:hasPermission name="/internal/friendlyLink/deleteFriendlyLinks">--%>
-<%--                <input type="button" value=" 指定网站删除友链 " onclick="batchDelFriendlyLink('${websiteCriteria.friendlyLinkUrl}')">&nbsp;&nbsp;--%>
-<%--            </shiro:hasPermission>--%>
-<%--            <shiro:hasPermission name="/internal/advertising/deleteAdvertisings">--%>
-<%--                <input type="button" value=" 指定网站删除广告 " onclick="batchDelAdvertising('${websiteCriteria.advertisingTagname}')">&nbsp;&nbsp;--%>
-<%--            </shiro:hasPermission>--%>
+            <shiro:hasPermission name="/internal/friendlyLink/synchronousFriendlyLink">
+                <input type="button" value=" 同步所选友链信息 " onclick="synchronousFriendlyLink()">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/advertising/synchronousAdvertising">
+                <input type="button" value=" 同步所选广告信息 " onclick="synchronousAdvertising()">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/friendlyLink/saveFriendlyLinks">
+                <input type="button" value=" 指定网站增加友链 " onclick="showBatchAddFriendlyLinkDialog(null)">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/advertising/saveAdvertisings">
+                <input type="button" value=" 指定网站增加广告 " onclick="showBatchAddAdvertisingDialog(null)">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/friendlyLink/saveFriendlyLink">
+                <input type="button" value=" 指定网站修改友链 " onclick="batchModifyFriendlyLink('${websiteCriteria.friendlyLinkUrl}')">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/advertising/saveAdvertising">
+                <input type="button" value=" 指定网站修改广告 " onclick="batchModifyAdvertising('${websiteCriteria.advertisingTagname}')">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/friendlyLink/deleteFriendlyLinks">
+                <input type="button" value=" 指定网站删除友链 " onclick="batchDelFriendlyLink('${websiteCriteria.friendlyLinkUrl}')">&nbsp;&nbsp;
+            </shiro:hasPermission>
+            <shiro:hasPermission name="/internal/advertising/deleteAdvertisings">
+                <input type="button" value=" 指定网站删除广告 " onclick="batchDelAdvertising('${websiteCriteria.advertisingTagname}')">&nbsp;&nbsp;
+            </shiro:hasPermission>
             <shiro:hasPermission name="/internal/website/putSalesInfoToWebsite">
                 <input type="button" onclick="putSalesInfoToWebsite()" value=" 推送销售信息至站点 ">&nbsp;&nbsp;
             </shiro:hasPermission>
