@@ -154,6 +154,24 @@
         position: fixed;
         right: 25px;
     }
+
+    .my-opration-hide {
+        padding: 10px 10px 5px 15px;
+        width: 100%;
+        display: none;
+        position: absolute;
+        top: 51px;
+        left: 0;
+        z-index: 894;
+        background: #fff;
+        border-top: 1px #e6e6e6 solid;
+        border-bottom: 1px #e6e6e6 solid;
+        transition: visibility .6s;
+    }
+
+    .my-opration-hide .layui-btn-group {
+        margin: 0 10px 5px 0;
+    }
 </style>
 <body>
 
@@ -305,6 +323,7 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
 <script>
     var sign = false;
+    let show = true;
 
     NProgress.start();
     window.onload = function () {
@@ -450,7 +469,6 @@
 
         table.on('toolbar(tableFilter)',function (obj) {
             let data = obj.data, event = obj.event;
-            console.log(data);
             switch (event) {
                 case 'batchDeleteMachines':
                     batchDeleteMachines();
@@ -494,10 +512,156 @@
                 case 'BatchChangeStatus(\'false\')':
                     BatchChangeStatus(false);
                     break;
+                case 'showTargetVersionSettingDialog':
+                    showTargetVersionSettingDialog();
+                    break;
+                case 'showTargetVPSPasswordSettingDialog':
+                    showTargetVPSPasswordSettingDialog();
+                    break;
+                case 'showRenewalSettingDialog':
+                    showRenewalSettingDialog();
+                    break;
+                case 'resetRestartStatus':
+                    resetRestartStatus();
+                    break;
+                case 'showUploadVNCDialog':
+                    showUploadVNCDialog();
+                    break;
+                case 'more_operation':
+                    more_operation();
+                    break;
                 default:
                     break;
             }
         });
+
+        function more_operation() {
+            let operationContent = document.getElementById('operationContent');
+            let rightDirection = document.getElementById('rightDirection');
+            let downDirection = document.getElementById('downDirection');
+            if (show) {
+                operationContent.style.display = 'block';
+                downDirection.style.display = 'inline-block';
+                rightDirection.style.display = 'none';
+            } else {
+                operationContent.style.display = 'none';
+                downDirection.style.display = 'none';
+                rightDirection.style.display = 'inline-block';
+            }
+            show = !show;
+        }
+
+        function showUploadVNCDialog(){
+            let terminalType = $("#terminalType").val();
+            if(terminalType === '' || terminalType == null){
+                terminalType = 'PC'
+            }
+            okLayer.open("首页 / 终端列表 / 上传VNC文件", "/internal/machineManage/showUploadVNCDialog", "35%", "18%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(terminalType);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, '180px');
+        }
+
+        function resetRestartStatus(){
+            layer.confirm('确实要重设状态为Processing或者Logging终端的重启状态吗?', {
+                icon: 3,
+                title: '修改终端重启状态',
+                btn: ['确认', '取消'],
+                yes: function () {
+                    $.ajax({
+                        url: '/internal/machineInfo/resetRestartStatusForProcessing' ,
+                        type: 'POST',
+                        success: function (result) {
+                            if(result){
+                                layer.msg("更新成功");
+                                active['reload'].call(this);
+                            }else{
+                                layer.msg("更新失败");
+                            }
+                        },
+                        error: function () {
+                            layer.msg("更新失败");
+                        }
+                    });
+                },
+                btn2: function (index) {
+                    layer.close(index);
+                }
+            });
+        }
+
+        function showRenewalSettingDialog(){
+            let checkStatus = table.checkStatus('machineManageTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.clientID);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要续费的机器');
+                return false;
+            }
+            let postData = {};
+            postData.clientIDs = uuidArr;
+            okLayer.open("首页 / 终端列表 / 续费", "/internal/machineManage/showRenewalSettingDialog", "35%", "55%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, '180px');
+        }
+
+        function showTargetVPSPasswordSettingDialog() {
+            let checkStatus = table.checkStatus('machineManageTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.clientID);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要重新设定密码的机器');
+                return false;
+            }
+            let postData = {};
+            postData.clientIDs = uuidArr;
+            okLayer.open("首页 / 终端列表 / 设定密码", "/internal/machineManage/showTargetVPSPasswordSettingDialog", "30%", "18%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, '180px');
+        }
+
+        function showTargetVersionSettingDialog(){
+            let checkStatus = table.checkStatus('machineManageTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.clientID);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要设定目标版本的机器');
+                return false;
+            }
+            let postData = {};
+            postData.clientIDs = uuidArr;
+            okLayer.open("首页 / 终端列表 / 设定目标版本", "/internal/machineManage/showTargetVersionSettingDialog", "30%", "18%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            },function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, '180px');
+        }
 
         function BatchChangeStatus(flag){
             let checkStatus = table.checkStatus('machineManageTable');
@@ -1009,10 +1173,10 @@
                 <i class="layui-icon layui-icon-chart-screen"></i>完成开机
             </button>
             <button class="layui-btn layui-btn layui-btn-normal layui-btn-sm" lay-event="BatchChangeStatus('true')">
-                批量开始监控
+                <i class="layui-icon layui-icon-ok"></i>批量开始监控
             </button>
             <button class="layui-btn layui-btn layui-btn-normal layui-btn-sm" lay-event="BatchChangeStatus('false')">
-                批量暂停监控
+                <i class="layui-icon layui-icon-close"></i>批量暂停监控
             </button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/machineInfo/uploadVPSFile">
@@ -1023,21 +1187,55 @@
                 <i class="layui-icon layui-icon-upload-drag"></i>导入开机终端
             </button>
         </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/machineInfo/updateMachineGroup">
-            <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="batchUpdateMachine">
-                <i class="layui-icon layui-icon-edit"></i>修改所选终端分组信息
-            </button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
-            <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toBatchUpdateFailedReason">
-                <i class="layui-icon layui-icon-edit"></i>修改所选终端失败原因
-            </button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/machineInfo/changeTerminalType">
-            <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toBatchChangeTerminalType">
-                <i class="layui-icon layui-icon-edit"></i>批量变更所选终端类型
-            </button>
-        </@shiro.hasPermission>
+        <button class="layui-btn layui-btn-sm" id="more_operation" lay-event="more_operation">
+            更多功能
+            <span id="rightDirection" style="display: inline-block;"><i class="layui-icon layui-icon-right"></i></span>
+            <span id="downDirection" style="display: none;"><i class="layui-icon layui-icon-down"></i></span>
+        </button>
+    </div>
+    <div class="my-opration-hide" id="operationContent">
+        <div class="layui-btn-group">
+            <@shiro.hasPermission name="/internal/machineInfo/updateMachineGroup">
+                <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="batchUpdateMachine">
+                    <i class="layui-icon layui-icon-edit"></i>修改所选终端分组信息
+                </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
+                <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toBatchUpdateFailedReason">
+                    <i class="layui-icon layui-icon-edit"></i>修改所选终端失败原因
+                </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/machineInfo/changeTerminalType">
+                <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toBatchChangeTerminalType">
+                    <i class="layui-icon layui-icon-edit"></i>批量变更所选终端类型
+                </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/machineInfo/updateMachineInfoTargetVersion">
+                <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="showTargetVersionSettingDialog">
+                    <i class="layui-icon layui-icon-edit"></i>设定目标版本
+                </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
+                <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="showTargetVPSPasswordSettingDialog">
+                    <i class="layui-icon layui-icon-edit"></i>设定目标密码
+                </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/machineInfo/updateMachineInfoRenewalDate">
+                <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="showRenewalSettingDialog">
+                    <i class="layui-icon layui-icon-edit"></i>续费
+                </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/machineInfo/resetRestartStatusForProcessing">
+                <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="resetRestartStatus">
+                    <i class="layui-icon layui-icon-edit"></i>重置重启状态
+                </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/machineInfo/uploadVNCFile">
+                <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="showUploadVNCDialog">
+                    <i class="layui-icon layui-icon-edit"></i>上传VNC文件
+                </button>
+            </@shiro.hasPermission>
+        </div>
     </div>
 </script>
 

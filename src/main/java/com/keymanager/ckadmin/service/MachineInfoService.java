@@ -45,7 +45,7 @@ public interface MachineInfoService extends IService<MachineInfo> {
 
     void updateMachineInfoTargetVPSPassword(List<String> clientIDs, String targetVPSPassword) throws Exception ;
 
-    void updateRenewalDate(String clientIDs, String settingType, String renewalDate) throws Exception;
+    void updateRenewalDate(List<String> clientIDs, String settingType, String renewalDate) throws Exception;
 
     MachineInfo getMachineInfo(String clientID, String terminalType);
 

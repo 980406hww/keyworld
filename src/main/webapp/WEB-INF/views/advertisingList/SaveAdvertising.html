@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <style>
         .layui-btn {
-            width: 150px;
+            width: 120px;
         }
 
         .layui-input-block input{
@@ -229,7 +229,7 @@
 
     function initWebSiteID(websiteUuid) {
         websiteUuid_ = websiteUuid;
-        init_Select();
+        init_SelectData();
     }
 
     function setForm(l, u) {
@@ -246,7 +246,7 @@
                     friendlyLinkType_ = res.data.friendlyLinkType;
                     advertisingArcType_ = res.data.advertisingArcType;
                     layui.form.val("advertisingForm", res.data);
-                    init_Select();
+                    init_SelectData();
                 } else {
                     l.layer.msg(res.msg, {icon:5, time: 3000});
                 }

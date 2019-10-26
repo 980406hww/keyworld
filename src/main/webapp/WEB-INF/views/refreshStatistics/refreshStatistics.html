@@ -348,11 +348,11 @@
                     {filed: 'uuid', type: 'checkbox', width: '2%', rowspan :2},
                     {filed: 'group', title: '类型', width: '10%', align: 'center', rowspan: 2 ,templet: '#group', sort: true},
                     {title: '关键字', width: '49%', align: 'center', colspan: 8},
-                    {title: '刷的次数', width: '39%', align: 'center', colspan: 6}
+                    {title: '刷的次数', width: '37%', align: 'center', colspan: 6}
                 ],[
                     {field: 'totalKeywordCount', title: '总数', width: '6%', align: 'center', sort:true},
                     {
-                        field: 'reachStandardKeywordCount', title: '达标数(金额)', width: '6%', align: 'center', sort: true, templet: function (d) {
+                        field: 'reachStandardKeywordCount', title: '达标数(金额)', width: '7%', align: 'center', sort: true, templet: function (d) {
                             if (d.reachStandardKeywordCount > 0) {
                                 if (d.group === '总计') {
                                     return '<a href="javascript:findKeyword(\'\', \'\')" style="color: blue">' + d.reachStandardKeywordCount + '('
@@ -421,7 +421,7 @@
                         }
                     },
                     {
-                        field: 'failedKeywordCount', title: '失败数', width: '6%', align: 'center', sort: true, templet: function (d) {
+                        field: 'failedKeywordCount', title: '失败数', width: '5%', align: 'center', sort: true, templet: function (d) {
                             if (d.failedKeywordCount > 0) {
                                 return d.failedKeywordCount;
                             } else {
