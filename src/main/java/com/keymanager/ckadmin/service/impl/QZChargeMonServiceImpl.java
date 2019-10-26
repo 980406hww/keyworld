@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 @Service("qzChargeMonService2")
-public class QzChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzChargeMon> implements QzChargeMonService {
+public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzChargeMon> implements QzChargeMonService {
 
     @Resource(name = "qzChargeMonDao2")
     private QzChargeMonDao qzChargeMonDao;
@@ -24,7 +24,7 @@ public class QzChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
     public Map<String, Object> selectBySe(String searchEngines, String terminal, Integer num, Integer type) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(type == 1 ? Calendar.MONTH : Calendar.DAY_OF_MONTH, -(--num));
+        calendar.add(type == 1 ? Calendar.MONTH : Calendar.DAY_OF_MONTH, type == 1 ? -(--num) : -num);
         String pattern = "yyyy-MM";
         if (type == 2) {
             pattern += "-dd";
@@ -43,12 +43,12 @@ public class QzChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
         if (null == maps || maps.isEmpty()) {
             return null;
         }
-        List<String> date = new ArrayList<>(num);
-        List<Long> oneData = new ArrayList<>(num);
-        List<Long> twoData = new ArrayList<>(num);
-        List<Long> threeData = new ArrayList<>(num);
-        List<Long> fourData = new ArrayList<>(num);
-        List<Long> fiveData = new ArrayList<>(num);
+        List<String> date = new ArrayList<>();
+        List<Long> oneData = new ArrayList<>();
+        List<Long> twoData = new ArrayList<>();
+        List<Long> threeData = new ArrayList<>();
+        List<Long> fourData = new ArrayList<>();
+        List<Long> fiveData = new ArrayList<>();
         String lastMonth = "";
         for (Map<String, Object> map : maps) {
             String month = (String) map.get("monthDate");

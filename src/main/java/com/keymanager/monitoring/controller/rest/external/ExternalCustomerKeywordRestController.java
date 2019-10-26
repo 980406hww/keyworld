@@ -1,5 +1,7 @@
 package com.keymanager.monitoring.controller.rest.external;
 
+import com.keymanager.ckadmin.entity.CustomerKeywordMon;
+import com.keymanager.ckadmin.service.CustomerKeywordMonService;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.BaseCriteria;
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONArray;
@@ -45,8 +48,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/external/customerkeyword")
 public class ExternalCustomerKeywordRestController extends SpringMVCBaseController {
 
-    private static Logger logger = LoggerFactory
-        .getLogger(ExternalCustomerKeywordRestController.class);
+    private static Logger logger = LoggerFactory.getLogger(ExternalCustomerKeywordRestController.class);
 
     @Autowired
     private CustomerKeywordService customerKeywordService;
@@ -59,6 +61,9 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
     @Autowired
     private ConfigService configService;
+
+    @Autowired
+    private CustomerKeywordMonService customerKeywordMonService;
 
     private String getIP(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
@@ -372,14 +377,14 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String password = request.getParameter("password");
         String version = request.getParameter("version");
         StringBuilder errorFlag = new StringBuilder("");
-        List<OptimizationMachineVO> machineVOList=null;
+        List<OptimizationMachineVO> machineVOList = null;
         try {
             if (validUser(userName, password)) {
                 MachineInfo machineInfo = machineInfoService.selectById(clientID);
                 if (machineInfo != null) {
                     String terminalType = machineInfo.getTerminalType();
                     errorFlag.append("1");
-                    machineVOList= customerKeywordService.fetchCustomerKeywordForOptimizationList(machineInfo);
+                    machineVOList = customerKeywordService.fetchCustomerKeywordForOptimizationList(machineInfo);
                     errorFlag.append("2");
                     if (!CollectionUtils.isEmpty(machineVOList)) {
                         machineInfoService.updateMachineInfoVersion(clientID, version, !CollectionUtils.isEmpty(machineVOList));
@@ -491,16 +496,14 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String ip = (String) requestMap.get("capturePositionIP");
         String clientID = (String) requestMap.get("clientID");
         String city = (String) requestMap.get("capturePositionCity");
-        Date startTime = new Date((Long) requestMap.get("startTime"));
+//        Date startTime = new Date((Long) requestMap.get("startTime"));
         try {
             if (validUser(userName, password)) {
                 if (position > -1) {
-                    customerKeywordService
-                        .updateCustomerKeywordPosition(customerKeywordUuid, position,
-                            Utils.getCurrentTimestamp(), ip, city);
+                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp(), ip, city);
+                    updCustomerKeywordMon(customerKeywordUuid, position);
                 } else {
-                    customerKeywordService
-                        .updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
+//                    customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
                 }
                 if (StringUtil.isNotNullNorEmpty(clientID)) {
                     machineInfoService.updateMachineInfoForCapturePosition(clientID);
@@ -804,4 +807,19 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
+    private void updCustomerKeywordMon(Long uuid, int position) {
+        try {
+            CustomerKeyword customerKeyword = customerKeywordService.selectById(uuid);
+            if (null != customerKeyword) {
+                CustomerKeywordMon customerKeywordMon = new CustomerKeywordMon();
+                customerKeywordMon.setCustomerUuid(customerKeyword.getCustomerUuid());
+                customerKeywordMon.setKeywordUuid(uuid);
+                customerKeywordMon.setKeyword(customerKeyword.getKeyword());
+                customerKeywordMon.setPosition(position);
+                customerKeywordMonService.insert(customerKeywordMon);
+            }
+        } catch (Exception e) {
+            logger.error("updCustomerKeywordMon:     " + e.getMessage());
+        }
+    }
 }

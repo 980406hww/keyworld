@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8">
-    <title>ok-admin v2.0 | 很赞的后台模版</title>
+    <title>主页</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="keywords" content="ok-admin v2.0,ok-admin网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
     <meta name="description" content="ok-admin v2.0，顾名思义，很赞的后台模版，它是一款基于Layui框架的轻量级扁平化且完全免费开源的网站后台管理系统模板，适合中小型CMS后台系统。">
@@ -165,8 +165,20 @@
 <div class="layui-row layui-col-space15">
     <div class="layui-col-md6">
         <div class="layui-card">
-            <div class="yskj-card-body clearfix">
-                <table id="userData" lay-filter="userdata"></table>
+            <div class="yskj-card-body clearfix" style="position:relative;height: 380px;">
+                <div style="position: absolute;top: 28px;left: 0;z-index: 9999;width: 100%;">
+                    <form class="layui-form layui-form-pane" id="keywordFrom">
+                        <div style="float: right; width: 100px;margin: 0 16px 0 6px">
+                            <div class="my-btn" onclick="toChargeMon()">详细信息</div>
+                        </div>
+                        <div style="float: right;position: relative;top: 2px;">
+                            <input type="radio" name="time" value="1" title="30天" lay-filter="keywordTime">
+                            <input type="radio" name="time" value="2" title="3个月" lay-filter="keywordTime">
+                            <input type="radio" name="time" value="3" title="1年" lay-filter="keywordTime" checked>
+                        </div>
+                    </form>
+                </div>
+                <div style="height: 100%;" id="keywordLogShow"></div>
             </div>
         </div>
     </div>
@@ -186,10 +198,9 @@
 <!--</div>-->
 <!--</div>-->
 </body>
-<script>
-    var condition;
-</script>
+<script>var condition;</script>
 <script type="text/javascript" src="/static/ok-admin/lib/layui/layui.js"></script>
 <script type="text/javascript" src="/static/ok-admin/js/home.js"></script>
 <script type="text/javascript" src="/static/ok-admin/page/qzsetting/qzChargeMon.js"></script>
+<script type="text/javascript" src="/static/ok-admin/page/keyword/customerKeywordMon.js"></script>
 </html>
