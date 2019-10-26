@@ -120,7 +120,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
                 $("#searchEngine").append(
                     '<option value="">请选择搜索引擎</option>');
                 $.each(data.data, function (index, item) {
-                    if (item === search){
+                    if (item === searchEngine){
                         $('#searchEngine').append('<option value="' + item + '" selected>' + item + '</option>');// 下拉菜单里添加元素
                     }else {
                         $('#searchEngine').append('<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素

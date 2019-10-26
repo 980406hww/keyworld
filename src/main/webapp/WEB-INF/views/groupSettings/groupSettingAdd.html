@@ -93,8 +93,7 @@
                         <div class="layui-input-block">
                             <input type="hidden" name="remainAccount" id="remainAccount" value="100">
                             <input type="hidden" name="currentAccount" id="currentAccount" value="0">
-                            <input type="number" name="machineUsedPercent" id="machineUsedPercent" placeholder="请输入分组占比" autocomplete="off" onchange="recalculateUnusedPercent(this)"
-                                   class="layui-input" lay-verify="required|number|numberLimit">
+                            <input type="number" name="machineUsedPercent" id="machineUsedPercent" placeholder="请输入分组占比" autocomplete="off" onchange="recalculateUnusedPercent(this)" class="layui-input" lay-verify="required|number|numberLimit">
                         </div>
                     </div>
                 </div>
@@ -349,7 +348,8 @@
 
         window.recalculateUnusedPercent = function (_elem) {
             let totalPercent = parseInt($('#remainAccount').val()) + parseInt($('#currentAccount').val());
-            let allocPercent = parseInt(_elem.value);
+
+            let allocPercent = _elem.value === "" ? 0 : parseInt(_elem.value);
             if (allocPercent < 0 || allocPercent > 100 || allocPercent > totalPercent) {
                 $(_elem).addClass("layui-form-danger").focus();
                 common.showFailMsg("请输入正确的分组占比且不能大于剩余占比");

@@ -163,11 +163,11 @@
 
         var active = {
             reload: function () {
-                var terminalType = $("#terminalType").val()
-                if(terminalType == '' || terminalType == null){
+                var terminalType = $("#terminalType").val();
+                if(terminalType === '' || terminalType == null){
                     terminalType = 'PC'
                 }
-                var data = {'terminalType': terminalType}
+                var data = {'terminalType': terminalType};
                 table.reload('machineInfoGroupStatTable', {
                     where: data,
                     page: {

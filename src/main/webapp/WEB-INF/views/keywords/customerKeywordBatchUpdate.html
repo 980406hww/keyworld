@@ -53,7 +53,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="layui-row">
                 <div class="layui-col-md6">
@@ -311,32 +310,32 @@
         }
 
         window.getFirstFee = function(val) {
-            $('#positionSecondFee').val(val)
-            $('#positionThirdFee').val(val)
-        }
+            $('#positionSecondFee').val(val);
+            $('#positionThirdFee').val(val);
+        };
 
         window.getForthFee = function (val) {
-            $('#positionFifthFee').val(val)
-        }
+            $('#positionFifthFee').val(val);
+        };
 
         window.checkItem = function (self) {
-            var id = $(self).children()[0].id
-            if(id == 'positionFirstFee'){
-                var secColor = $($($('#positionSecondFee').parent()).siblings()[0]).css("color")
+            var id = $(self).children()[0].id;
+            if(id === 'positionFirstFee'){
+                var secColor = $($($('#positionSecondFee').parent()).siblings()[0]).css("color");
                 if(secColor === "rgb(0, 0, 0)") {
                     $($($('#positionSecondFee').parent()).siblings()[0]).css("color", "red");
                 } else {
                     $($($('#positionSecondFee').parent()).siblings()[0]).css("color", "black");
                 }
-                var thdColor = $($($('#positionThirdFee').parent()).siblings()[0]).css("color")
+                var thdColor = $($($('#positionThirdFee').parent()).siblings()[0]).css("color");
                 if(thdColor === "rgb(0, 0, 0)") {
                     $($($('#positionThirdFee').parent()).siblings()[0]).css("color", "red");
                 } else {
                     $($($('#positionThirdFee').parent()).siblings()[0]).css("color", "black");
                 }
             }
-            if(id == 'positionForthFee'){
-                var fifColor = $($($('#positionFifthFee').parent()).siblings()[0]).css("color")
+            if(id === 'positionForthFee'){
+                var fifColor = $($($('#positionFifthFee').parent()).siblings()[0]).css("color");
                 if(fifColor === "rgb(0, 0, 0)") {
                     $($($('#positionFifthFee').parent()).siblings()[0]).css("color", "red");
                 } else {
@@ -365,9 +364,8 @@
             postData.uuids = baseData.uuids;
             postData.keywordValues = data.field;
             let keywordChecks = {};
-            for (var key in data.field) {
+            for (let key in data.field) {
                 keywordChecks[key] = isChecked(key)
-
             }
             postData.keywordChecks = keywordChecks;
             $.ajax({
@@ -399,7 +397,7 @@
 
         form.verify({
             domain: [
-                /^([\u4e00-\u9fa50-9]+|[a-z0-9]+)\.([\u4e00-\u9fa5]+|[a-z]+|ac.cn|bj.cn|sh.cn|tj.cn|cq.cn|he.cn|sn.cn|sx.cn|nm.cn|ln.cn|jl.cn|hl.cn|js.cn|zj.cn|ah.cn|fj.cn|jx.cn|sd.cn|ha.cn|hb.cn|hn.cn|gd.cn|gx.cn|hi.cn|sc.cn|gz.cn|yn.cn|gs.cn|qh.cn|nx.cn|xj.cn|tw.cn|hk.cn|mo.cn|xz.cn|com.cn|net.cn|org.cn|gov.cn|.com.hk)$/,
+                /(^$)|(^([\u4e00-\u9fa50-9]+|[a-z0-9]+)\.([\u4e00-\u9fa5]+|[a-z]+|ac.cn|bj.cn|sh.cn|tj.cn|cq.cn|he.cn|sn.cn|sx.cn|nm.cn|ln.cn|jl.cn|hl.cn|js.cn|zj.cn|ah.cn|fj.cn|jx.cn|sd.cn|ha.cn|hb.cn|hn.cn|gd.cn|gx.cn|hi.cn|sc.cn|gz.cn|yn.cn|gs.cn|qh.cn|nx.cn|xj.cn|tw.cn|hk.cn|mo.cn|xz.cn|com.cn|net.cn|org.cn|gov.cn|.com.hk)$)/,
                 "请正确输入域名,例如baidu.com,不能填写www.baidu.com,map.baidu.com等"
             ],
             tagNames: [
@@ -413,8 +411,7 @@
             positiveInteger: [
                 /(^$)|(^[0-9]*[1-9][0-9]*$)/,
                 "请正确输入数值、如：1、25、300等正整数"
-            ],
-
+            ]
         });
 
     })

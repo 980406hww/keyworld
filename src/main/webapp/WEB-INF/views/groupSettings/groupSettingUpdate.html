@@ -52,7 +52,7 @@
                     <label class="layui-form-label">操作组合</label>
                     <div class="layui-input-block" onclick="checkItem(this)">
                         <input type="text" name="settingOperationCombineName" id="settingOperationCombineName" placeholder="请输入操作组合" autocomplete="off"
-                               class="layui-input" lay-verify="required">
+                               class="layui-input" readonly>
                     </div>
                 </div>
             </div>
@@ -317,6 +317,7 @@
         }
 
     }
+
     function init_operationCombineCount(layui_, operationCombineUuid){
         let $ = layui_.jquery;
         let form = layui_.form;
@@ -404,7 +405,7 @@
 
         window.recalculateUnusedPercent = function (_elem) {
             let totalPercent = parseInt($('#remainAccount').val()) + parseInt($('#currentAccount').val());
-            let allocPercent = parseInt(_elem.value);
+            let allocPercent = _elem.value === "" ? 0 : parseInt(_elem.value);
             if (uuid_ != null){
                 if (allocPercent < 0 || allocPercent > 100 || allocPercent > totalPercent) {
                     $(_elem).addClass("layui-form-danger").focus();
@@ -515,7 +516,6 @@
             ]
         });
     })
-
 
 </script>
 </body>

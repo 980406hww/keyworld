@@ -119,10 +119,6 @@
             width: 140px;
         }
 
-        .layui-table-body .layui-table-cell {
-            text-align: left;
-        }
-
         .layui-table-body .laytable-cell-checkbox {
             text-align: center;
         }
@@ -147,19 +143,17 @@
                 <div class="my-collapse">
                     <div>
                         <div class="layui-inline">
-                            <input type="text" autocomplete="off" name="contactPerson" placeholder="请输入联系人" class="layui-input">
+                            <input type="text" autocomplete="off" id="contactPerson" name="contactPerson" placeholder="请输入联系人" class="layui-input">
                         </div>
                         <div class="layui-inline">
-                            <input type="text" autocomplete="off" name="qq" placeholder="请输入QQ" class="layui-input">
+                            <input type="text" autocomplete="off" id="qq" name="qq" placeholder="请输入QQ" class="layui-input">
                         </div>
                         <div class="layui-inline">
-                            <input type="text" autocomplete="off" name="phone" placeholder="请输入联系电话" class="layui-input">
+                            <input type="text" autocomplete="off" id="phone" name="phone" placeholder="请输入联系电话" class="layui-input">
                         </div>
                         <@shiro.hasPermission name="/internal/supplier/searchSuppliers">
                         <div class="layui-inline">
-                            <button class="layui-btn" lay-submit lay-filter="search"
-                                    id="searchBtn">搜索
-                            </button>
+                            <button class="layui-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
                         </div>
                         </@shiro.hasPermission>
                         <div class="layui-inline">
@@ -235,37 +229,37 @@
                         }
                     },
                     {
-                        title: '供应商名称', width: '7%', align: 'center', templet: function (d) {
+                        title: '供应商名称', width: '7%', align: 'left', templet: function (d) {
                             return d.supplierName === null ? '' : d.supplierName;
                         }
                     },
                     {
-                        title: '联系人', width: '6%', align: 'center', templet: function (d) {
+                        title: '联系人', width: '6%', align: 'left', templet: function (d) {
                             return d.contactPerson === null ? '' : d.contactPerson;
                         }
                     },
                     {
-                        title: '电话', width: '7%', align: 'center', templet: function (d) {
+                        title: '电话', width: '7%', align: 'left', templet: function (d) {
                             return d.phone === null ? '' : d.phone;
                         }
                     },
                     {
-                        title: 'QQ', width: '7%', align: 'center', templet: function (d) {
+                        title: 'QQ', width: '7%', align: 'left', templet: function (d) {
                             return d.qq === null ? '' : d.qq;
                         }
                     },
                     {
-                        title: '微信', width: '7%', align: 'center', templet: function (d) {
+                        title: '微信', width: '7%', align: 'left', templet: function (d) {
                             return d.weChat === null ? '' : d.weChat;
                         }
                     },
                     {
-                        title: '地址', width: '8%', align: 'center', templet: function (d) {
+                        title: '地址', width: '8%', align: 'left', templet: function (d) {
                             return d.address === null ? '' : d.address;
                         }
                     },
                     {
-                        title: '服务类型', width: '10%', align: 'center', templet: function (d) {
+                        title: '服务类型', width: '10%', align: 'left', templet: function (d) {
                             if (d.supplierServiceTypeMappings === null) {
                                 return '';
                             }
@@ -277,17 +271,17 @@
                         }
                     },
                     {
-                        title: 'URL', width: '7%', align: 'center', templet: function (d) {
+                        title: 'URL', width: '7%', align: 'left', templet: function (d) {
                             return d.url === null ? '' : d.url;
                         }
                     },
                     {
-                        title: '邮箱', width: '11%', align: 'center', templet: function (d) {
+                        title: '邮箱', width: '11%', align: 'left', templet: function (d) {
                             return d.email === null ? '' : d.email;
                         }
                     },
                     {
-                        title: '备注', width: '7%', align: 'center', templet: function (d) {
+                        title: '备注', width: '7%', align: 'left', templet: function (d) {
                             return d.remark === null ? '' : d.remark;
                         }
                     },
@@ -327,7 +321,7 @@
             });
         }
 
-        //监听工具条
+        // 监听工具条
         var active = {
             reload: function () {
                 let condition = common.formToJsonObject("searchForm");
@@ -437,6 +431,7 @@
         form.on("submit(search)", function (data) {
             let condition = data.field;
             condition = common.jsonObjectTrim(condition);
+            console.log(condition);
             table.reload('supplierTable', {
                 where: condition,
                 page: {

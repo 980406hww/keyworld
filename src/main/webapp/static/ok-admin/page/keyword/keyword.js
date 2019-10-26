@@ -203,6 +203,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
         });
 
     }
+
     table.on('sort(tableFilter)', function(obj){
         let postData = common.formToJsonObject('searchForm');
         postData.orderBy = obj.field;

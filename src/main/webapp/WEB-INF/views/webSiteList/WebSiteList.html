@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>网站管理</title>
+    <title>网站列表</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
@@ -382,12 +382,12 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', type: 'checkbox', width: '3%', align: 'center', rowspan: 2, fixed: "left"},
-                    {field: 'websiteName', title: '网站名称', width: '15%', align: 'center', rowspan: 2},
+                    {filed: 'uuid', type: 'checkbox', width: '35', align: 'center', rowspan: 2, fixed: "left"},
+                    {field: 'websiteName', title: '网站名称', width: '10%', align: 'center', rowspan: 2},
                     {field: 'industry', title: '所属行业类型', width: '8%', align: 'center', rowspan: 2, templet: '#industry'},
-                    {field: 'accessFailCount', title: '访问失败次数', width: '8%', align: 'center', rowspan: 2},
-                    {field: 'accessFailTime', title: '发现故障时间', width: '10%', align: 'center', templet: '#accessFailTime', rowspan: 2},
-                    {field: 'lastAccessTime', title: '最近访问时间', width: '10%', align: 'center', templet: '#lastAccessTime', rowspan: 2},
+                    {field: 'accessFailCount', title: '访问失败次数', width: '7%', align: 'center', rowspan: 2},
+                    {field: 'accessFailTime', title: '发现故障时间', width: '9%', align: 'center', templet: '#accessFailTime', rowspan: 2},
+                    {field: 'lastAccessTime', title: '最近访问时间', width: '9%', align: 'center', templet: '#lastAccessTime', rowspan: 2},
                     {field: 'updateTime', title: '更新时间', align: 'center', width: '10%', align: 'center', templet: '#updateTime', rowspan: 2},
                     {field: '', title: '域名信息', align: 'center', width: '28%', colspan: 7},
                     {field: '', title: '后台信息', align: 'center', width: '28%', colspan: 7},
@@ -397,25 +397,25 @@
                 ],[
                     {field: 'domain', title: '网站域名', width: '12%', align: 'center', templet: '#domain'},
                     {field: 'websiteType', title: '销售网站类型', width: '7%', align: 'center',templet: '#websiteType'},
-                    {field: 'friendlyLinkCount', title: '友情链接', width: '7%', align: 'center', templet: '#friendlyLinkCount'},
-                    {field: 'advertisingCount', title: '广告', width: '7%', align: 'center', templet: '#advertisingCount'},
-                    {field: 'registrar', title: '注册商', width: '7%', align: 'center'},
-                    {field: 'analysis', title: '解析商', width: '7%', align: 'center'},
-                    {field: 'expiryTime', title: '到期时间', width: '7%', align: 'center', templet: '#expiryTime'},
-                    {field: 'backendDomain', title: '后台链接', width: '12%', align: 'center'},
-                    {field: 'backendUserName', title: '后台用户', width: '10%', align: 'center'},
-                    {field: 'backendPassword', title: '后台密码', width: '10%', align: 'center'},
-                    {field: 'updateSalesInfoSign', title: '更新销售信息状态', width: '10%', align: 'center',templet: '#updateSalesInfoSign'},
-                    {field: 'synchronousFriendlyLinkSign', title: '更新友链信息状态', width: '10%', align: 'center', templet:'#synchronousFriendlyLinkSign'},
-                    {field: 'synchronousAdvertisingSign', title: '更新广告信息状态', width: '10%', align: 'center', templet: '#synchronousAdvertisingSign'},
-                    {field: 'backgroundLoginStatus', title: '后台登陆状态', width: '10%', align: 'center', templet: '#backgroundLoginStatus'},
+                    {field: 'friendlyLinkCount', title: '友情链接', width: '5%', align: 'center', templet: '#friendlyLinkCount'},
+                    {field: 'advertisingCount', title: '广告', width: '4%', align: 'center', templet: '#advertisingCount'},
+                    {field: 'registrar', title: '注册商', width: '5%', align: 'center'},
+                    {field: 'analysis', title: '解析商', width: '5%', align: 'center'},
+                    {field: 'expiryTime', title: '到期时间', width: '6%', align: 'center', templet: '#expiryTime'},
+                    {field: 'backendDomain', title: '后台链接', width: '10%', align: 'center'},
+                    {field: 'backendUserName', title: '后台用户', width: '8%', align: 'center'},
+                    {field: 'backendPassword', title: '后台密码', width: '8%', align: 'center'},
+                    {field: 'updateSalesInfoSign', title: '更新销售信息状态', width: '9%', align: 'center',templet: '#updateSalesInfoSign'},
+                    {field: 'synchronousFriendlyLinkSign', title: '更新友链信息状态', width: '9%', align: 'center', templet:'#synchronousFriendlyLinkSign'},
+                    {field: 'synchronousAdvertisingSign', title: '更新广告信息状态', width: '9%', align: 'center', templet: '#synchronousAdvertisingSign'},
+                    {field: 'backgroundLoginStatus', title: '后台登陆状态', width: '8%', align: 'center', templet: '#backgroundLoginStatus'},
                     {field: 'databaseName', title: '数据库名称', width: '7%', align: 'center'},
                     {field: 'databaseUserName', title: '用户名', width: '7%', align: 'center'},
-                    {field: 'databasePassword', title: '密码', width: '10%', align: 'center'},
+                    {field: 'databasePassword', title: '密码', width: '8%', align: 'center'},
                     {field: 'databaseStatus', title: '数据库登陆状态', width: '10%', align: 'center', templet: '#databaseStatus'},
                     {field: 'serverIP', title: 'IP', width: '10%', align: 'center'},
                     {field: 'serverUserName', title: '用户名', width: '7%', align: 'center'},
-                    {field: 'serverPassword', title: '密码', width: '10%', align: 'center'},
+                    {field: 'serverPassword', title: '密码', width: '8%', align: 'center'},
                     {field: 'serverPort', title: '端口', width: '4%', align: 'center'},
                     {field: 'indexFileStatus', title: 'index文件状态', width: '7%', align: 'center', templet: '#indexFileStatus'},
                     {field: 'sftpStatus', title: 'sftp服务状态', width: '7%', align: 'center', templet: '#sftpStatus'},

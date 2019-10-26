@@ -87,15 +87,15 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '5%', align: 'center'},
+                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '35', align: 'center'},
                     {field: 'programType', title: '程序类型', width: '10%', align: 'center'},
                     {field: 'version', title: '当前版本', width: '10%', align: 'center'},
                     {field: 'targetVersion', title: '目标版本', width: '10%', align: 'center'},
                     {field: 'maxUpgradeCount', title: '最大升级数', width: '10%', align: 'center'},
                     {field: 'residualUpgradeCount', title: '升级情况', width: '15%', templet: '#toResidualUpgradeCount', align: 'center'},
                     {field: 'status', title: '任务状态', width: '10%', templet: '#toStatus', align: 'center'},
-                    {field: 'createTime', title: '创建时间', width: '16%', templet: '#toDateTime', align: 'center'},
-                    {title: '操作', templet: '#operationTpl', align: 'center', width: '14%', align: 'center'}
+                    {field: 'createTime', title: '创建时间', width: '17%', templet: '#toDateTime', align: 'center'},
+                    {title: '操作', templet: '#operationTpl', width: '16%', align: 'center'}
                 ]],
                 height: 'full-75',
                 done: function (res, curr, count) {

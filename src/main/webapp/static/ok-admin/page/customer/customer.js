@@ -242,8 +242,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
         }
     });
 
-
-
     window.showCustomerByType = function (customerType){
         $('#type').val(customerType);
         // form.render()
@@ -298,7 +296,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
         });
         return uuidArr;
     }
-
 
     //删除单个客户
     window.delOneCustomer = function (uuid) {
@@ -498,7 +495,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 type: 'POST',
                 success: function (result) {
                     if (result.code === 200) {
-                        common.showSuccessMsg('操作成功!');
+                        common.showSuccessMsg('操作成功!', function () {
+                            let pageConf = common.formToJsonObject('searchForm');
+                            initLayPage(pageConf);
+                        });
                     } else {
                         common.showFailMsg('操作失败');
                     }
@@ -509,8 +509,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
             });
             layer.close(index);
         });
-    }
-
+    };
 
     window.batchUpdateBelongUser = function(){
         let uuidArr = get_select_uuids();
@@ -527,7 +526,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 sign = false;
             }
         });
-    }
+    };
 
     //改客户标签
     window.changeSaleRemark = function (uuid, saleRemark) {
@@ -605,11 +604,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                     }
                 });
                 layer.close(index2);
-                // });
-
             }
         });
-    }
+    };
 
     form.verify({
         qq: [

@@ -29,6 +29,7 @@
         .layui-table-body tr td:nth-child(2),td:nth-child(3),td:nth-child(5) {
             text-align: left;
         }
+
         .layui-table-page > div {
             height: 26px;
             position: fixed;
@@ -236,8 +237,8 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '5%', align: 'center'},
-                    {field: 'userID', title: '用户名称', width: '10%', align: 'center'},
+                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '35'},
+                    {field: 'userID', title: '用户名称', width: '10%'},
                     {field: 'industryName', title: '行业名称', width: '13%', align: 'left', templet: '#industryNames'},
                     {field: 'searchEngine', title: '搜索引擎', width: '10%', align: 'center'},
                     {field: 'targetUrl', title: '目标起始网址', width: '17%', align: 'left', templet: '#url'},
@@ -245,7 +246,7 @@
                     {field: 'pagePerNum', title: '每页条数', width: '7%', align: 'center'},
                     {field: 'status', title: '状态', width: '10%', align: 'center', templet: '#toStatus'},
                     {field: 'createTime', title: '创建时间', width: '10%', align: 'center', templet: '#toDateTime'},
-                    {title: '操作', width: '11%', align: 'center', templet: '#operationTpl', fixed: "right"},
+                    {title: '操作', width: '14%', align: 'center', templet: '#operationTpl', fixed: "right"},
                 ]],
                 height: 'full-115',
                 done: function (res, curr, count) {
