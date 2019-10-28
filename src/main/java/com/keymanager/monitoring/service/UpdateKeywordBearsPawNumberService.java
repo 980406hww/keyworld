@@ -7,6 +7,7 @@ import com.keymanager.util.common.StringUtil;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,38 +21,57 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UpdateKeywordBearsPawNumberService extends ServiceImpl<UpdateKeywordBearsPawNumberDao, CustomerKeyword> {
+
     @Autowired
     private UpdateKeywordBearsPawNumberDao updateKeywordBearsPawNumberDao;
+
+    private static final ConcurrentHashMap<String, String> CUSTOMER_KEYWORD_DOMAIN_MAP = new ConcurrentHashMap<>();
+
+    /**
+     * 缓存去重后的关键词域名，用于更新关键词的熊掌号
+     * @throws MalformedURLException
+     */
+    public void cacheCustomerKeywordDomainMap() throws MalformedURLException {
+        CUSTOMER_KEYWORD_DOMAIN_MAP.clear();
+        List<CustomerKeyword> distinctUrl = updateKeywordBearsPawNumberDao.getCustomerKeywordDistinctUrl();
+        for (CustomerKeyword ck : distinctUrl) {
+            String dUrl = ck.getUrl();
+            // url为空的不处理
+            if (StringUtil.isNotNullNorEmpty(dUrl)) {
+                // 判断是否为正常的url
+                if (stringIsUrl(dUrl)) {
+                    if (!dUrl.contains("http")) {
+                        dUrl = "http://" + dUrl;
+                    }
+                    URL url = new URL(dUrl);
+                    String hostName = url.getHost();
+                    // 获取二级域名
+                    if (hostName.contains("www.")) {
+                        int beginIndex = "www.".length();
+                        hostName = hostName.substring(beginIndex);
+                    }
+                    // 利用map集合二次去重
+                    CUSTOMER_KEYWORD_DOMAIN_MAP.put(hostName, ck.getKeyword());
+                }
+            }
+        }
+    }
 
     /**
      * 获取所有去重后的url和对应的关键字
      * @return
      */
-    public ConcurrentHashMap getDistinctUrl() {
-        List<CustomerKeyword> distinctUrl = updateKeywordBearsPawNumberDao.getCustomerKeywordDistinctUrl();
-        ConcurrentHashMap<String, String> urlMap = new ConcurrentHashMap<>();
-        for (CustomerKeyword ck : distinctUrl) {
-            try {
-                String dUrl = ck.getUrl();
-                if (StringUtil.isNotNullNorEmpty(dUrl)) {       // url为空，不处理
-                    if (stringIsUrl(dUrl)) {                    // 判断是否为正常的url
-                        if (!dUrl.contains("http")) {
-                            dUrl = "http://" + dUrl;            // 容错URL对象
-                        }
-                        URL url = new URL(dUrl);
-                        String hostName = url.getHost();
-                        if (hostName.contains("www.")) {        // 获取二级域名
-                            int beginIndex = "www.".length();
-                            hostName = hostName.substring(beginIndex);
-                        }
-                        urlMap.put(hostName, ck.getKeyword());         // 利用map集合二次去重
-                    }
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+    public ConcurrentHashMap getCustomerKeywordDomains() {
+        ConcurrentHashMap<String, String> customerKeywordMap = null;
+        if (!CUSTOMER_KEYWORD_DOMAIN_MAP.isEmpty()) {
+            customerKeywordMap = new ConcurrentHashMap<>(20);
+            do {
+                Entry<String, String> next = CUSTOMER_KEYWORD_DOMAIN_MAP.entrySet().iterator().next();
+                customerKeywordMap.put(next.getKey(), next.getValue());
+                CUSTOMER_KEYWORD_DOMAIN_MAP.remove(next.getKey());
+            } while (customerKeywordMap.size() < 20);
         }
-        return urlMap;
+        return customerKeywordMap;
     }
 
     /**
@@ -70,14 +90,13 @@ public class UpdateKeywordBearsPawNumberService extends ServiceImpl<UpdateKeywor
                 + "(:[0-9]{1,4})?" // 端口- :80
                 + "((/?)|" // a slash isn't required if there is no file name
                 + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
-
-        Pattern pat = Pattern.compile(regex.trim());//比对
+        // 比对
+        Pattern pat = Pattern.compile(regex.trim());
         Matcher mat = pat.matcher(str.trim());
         return mat.matches();
     }
 
-    public boolean updateBearPaw(String url, String bearPaw) {
-        int res = updateKeywordBearsPawNumberDao.updateBearPawByUrl(url, bearPaw);
-        return res > 0;
+    public void updateBearPaw(String url, String bearPaw) {
+        updateKeywordBearsPawNumberDao.updateBearPawByUrl(url, bearPaw);
     }
 }

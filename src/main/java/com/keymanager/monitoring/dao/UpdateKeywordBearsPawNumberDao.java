@@ -6,7 +6,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface UpdateKeywordBearsPawNumberDao extends BaseMapper<CustomerKeyword> {
+
     List<CustomerKeyword> getCustomerKeywordDistinctUrl();
 
-    int updateBearPawByUrl(@Param(value = "url") String url, @Param("xzNumber") String xzNumber);
+    void updateBearPawByUrl(@Param(value = "url") String url, @Param("xzNumber") String xzNumber);
 }

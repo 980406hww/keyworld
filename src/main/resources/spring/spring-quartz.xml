@@ -32,6 +32,7 @@
 				<ref bean="cronTriggerAutoSaveTestDataStatisticsSchedule"/>
 				<ref bean="cronTriggerSyncQZCustomerData" />
 				<ref bean="cronTriggerCleanSysCustomerKeywordCreateOverOneWeek" />
+				<ref bean="cronTriggerCacheCustomerKeywordDomain" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -359,7 +360,7 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
-	<!--缓存需同步到简化版seo后台的数据信息-->
+	<!--清除超过一周的同步数据-->
 	<bean id="cronTriggerCleanSysCustomerKeywordCreateOverOneWeek" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerCleanSysCustomerKeywordCreateOverOneWeekSchedule" />
 		<property name="cronExpression" value="0 10 0 * * ?" />
@@ -367,6 +368,18 @@
 
 	<bean id="cronTriggerCleanSysCustomerKeywordCreateOverOneWeekSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="cleanSysCustomerKeywordCreateOverOneWeekSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--缓存需要更新熊掌号的关键词域名-->
+	<bean id="cronTriggerCacheCustomerKeywordDomain" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerCacheCustomerKeywordDomainSchedule" />
+		<property name="cronExpression" value="0 0 21 * * ?" />
+	</bean>
+
+	<bean id="cronTriggerCacheCustomerKeywordDomainSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cacheCustomerKeywordDomainSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

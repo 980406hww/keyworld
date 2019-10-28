@@ -3,12 +3,10 @@ package com.keymanager.monitoring.controller.rest.external;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.UpdateBearPawNumCriteria;
 import com.keymanager.monitoring.service.UpdateKeywordBearsPawNumberService;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import javax.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,92 +21,54 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date 2019/9/27 15:08
  */
 @RestController
-@RequestMapping(value = "/external/ExternalUpdateKeywordBearPawNumber")
+@RequestMapping("/external/updateKeywordBearPawNumber")
 public class ExternalUpdateKeywordBearsPawNumController extends SpringMVCBaseController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ExternalUpdateKeywordBearsPawNumController.class);
 
     @Autowired
     private UpdateKeywordBearsPawNumberService updateKeywordBearsPawNumberService;
 
-    private ConcurrentHashMap all_domain = null;
-
-    private String g_sessionId = null;
-
     /**
      * 提供给Python的接口，返回需要处理的域名，每次请求返回20个
-     * @param request
+     * @param bearPawCriteria
      * @return
      */
-    @RequestMapping(value = "/get_need_handle_domain", method = RequestMethod.POST)
-    public ResponseEntity<?> getNeedHandleDomain(@RequestBody UpdateBearPawNumCriteria bearPawCriteria, HttpServletRequest request) {
-        ConcurrentHashMap<String, String> resultMap = null;
-        resultMap = new ConcurrentHashMap<>();
+    @RequestMapping(value = "/getNeedHandleDomain", method = RequestMethod.POST)
+    public ResponseEntity<?> getNeedHandleDomain(@RequestBody UpdateBearPawNumCriteria bearPawCriteria) {
         try {
-            String request_session_id = request.getSession().getId();
-            if (g_sessionId == null || !request_session_id.equals(g_sessionId)) {
-                if (validUser(bearPawCriteria.getUserName(), bearPawCriteria.getPassword())) {
-                    String sessionId = request.getSession().getId();
-                    g_sessionId = sessionId;
-                    all_domain = updateKeywordBearsPawNumberService.getDistinctUrl();
-                } else {
-                    return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-                }
-            }
-            Set set = all_domain.entrySet();
-            Iterator<Entry> iterator = set.iterator();
-            int count = 0;
-            while (iterator.hasNext()) {
-                Entry<String, String> next = iterator.next();
-                String key = next.getKey();
-                String value = next.getValue();
-                resultMap.put(key, value);
-                all_domain.remove(key);            // 已经返回的就移除
-                if (++count >= 20)
-                    break;
+            if (validUser(bearPawCriteria.getUserName(), bearPawCriteria.getPassword())) {
+                return new ResponseEntity<Object>(updateKeywordBearsPawNumberService.getCustomerKeywordDomains(), HttpStatus.OK);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
-        return new ResponseEntity<Object>(resultMap, HttpStatus.OK);
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
     /**
      * Python调用，更新熊掌号
+     * @param map
+     * @return
      */
-    @RequestMapping(value = "/update_bear_paw_num")
-    public ResponseEntity updateBearPawNumber(@RequestBody Map map) {
-        String userName = null, password = null;
-        Map data = null;
-        if (map.containsKey("userName")) {
-            userName = (String) map.get("userName");
-        }
-        if (map.containsKey("password")) {
-            password = (String) map.get("password");
-        }
-        if (map.containsKey("data")) {
-            data = (Map) map.get("data");
-        }
+    @RequestMapping(value = "/updateBearPawNumber")
+    public ResponseEntity updateBearPawNumber(@RequestBody Map<String, Object> map) {
+        String userName = (String) map.get("userName");
+        String password = (String) map.get("password");
         try {
             if (validUser(userName, password)) {
-                Set set = data.entrySet();
-                Iterator<Entry> iterator = set.iterator();
-                while (iterator.hasNext()) {
-                    Entry<String, String> next = iterator.next();
+                Map data = (Map) map.get("data");
+                for (Entry<String, String> next : (Iterable<Entry<String, String>>) data.entrySet()) {
                     String url = next.getKey();
                     String bearPaw = next.getValue();
-                    boolean update_res = updateKeywordBearsPawNumberService.updateBearPaw(url, bearPaw);
-                    if (update_res) {
-                        System.out.println(url + "更新熊掌号为：" + bearPaw);
-                    } else {
-                        System.out.println(url + "更新熊掌号失败！");
-                    }
+                    updateKeywordBearsPawNumberService.updateBearPaw(url, bearPaw);
                 }
-            } else {
-                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(HttpStatus.OK);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
 }
