@@ -41,6 +41,7 @@
         ON qk.fQZSettingUuid = qot.fQZSettingUuid
         WHERE qot.fQZSettingUuid = #{qzSettingUuid}
         AND qot.fOperationtype = #{terminalType}
+        AND qk.fDataProcessingStatus = 1
         GROUP BY qc.fUuid
     </select>
 

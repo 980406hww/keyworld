@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.criteria.CaptureRankJobSearchCriteria;
 import com.keymanager.monitoring.criteria.ExternalCaptureJobCriteria;
 import com.keymanager.monitoring.entity.CaptureRankJob;
+import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -25,8 +26,6 @@ public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
     void resetCaptureRankJobs(@Param("uuids") List uuids);
 
     Long hasUncompletedCaptureRankJob(@Param("groupNames")List<String> groupNames, @Param("rankJobArea")String rankJobArea);
-    
-    CaptureRankJob fetchCaptureRankJob();
 
     void deleteCaptureRankJob (@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType);
     
@@ -34,7 +33,7 @@ public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
     
     int searchThreeMiniStatusEqualsOne(@Param("captureRankJob") CaptureRankJob captureRankJob);
 
-    int searchCountByPosition(@Param("captureRankJob") CaptureRankJob captureRankJob, @Param("position") int position);
+    Map<String, Long> searchCountByPosition(@Param("captureRankJob") CaptureRankJob captureRankJob);
 
     CaptureRankJob findExistCaptureRankJob (@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType);
 
