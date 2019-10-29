@@ -8,16 +8,82 @@
         FROM t_customer_keyword_mon ckm
         LEFT JOIN t_customer_keyword ck
         ON ckm.fKeywordUuid = ck.fUuid
-        WHERE ckm.fRecordDate >= #{condition.recordDate}
+        WHERE ckm.fRecordDate >= #{condition.date}
         <if test="condition.searchEngine != null and condition.searchEngine != ''">
             AND ck.fSearchEngine = #{condition.searchEngine}
         </if>
         <if test="condition.terminal != null and condition.terminal != ''">
             AND ck.fTerminalType = #{condition.terminal}
         </if>
+        <if test="condition.customer != null and condition.customer != ''">
+            AND ckm.fCustomerUuid = #{condition.customer}
+        </if>
         <if test="condition.type != null and condition.type != ''">
             AND ck.fType = #{condition.type}
         </if>
         GROUP BY date_format(ckm.fRecordDate, #{condition.pattern}), ckm.fPosition;
+    </select>
+
+    <select id="selectCountByCondition" parameterType="java.util.HashMap" resultType="int">
+        SELECT COUNT(1)
+        FROM (SELECT ckm.fKeyword
+        FROM t_customer_keyword_mon ckm
+        LEFT JOIN t_customer_keyword ck
+        ON ckm.fKeywordUuid = ck.fUuid
+        WHERE ckm.fRecordDate >= #{condition.yesterday}
+        AND ckm.fRecordDate &lt; #{condition.day}
+        <if test="condition.searchEngine != null and condition.searchEngine != ''">
+            AND ck.fSearchEngine = #{condition.searchEngine}
+        </if>
+        <if test="condition.terminal != null and condition.terminal != ''">
+            AND ck.fTerminalType = #{condition.terminal}
+        </if>
+        <if test="condition.customer != null and condition.customer != ''">
+            AND ckm.fCustomerUuid = #{condition.customer}
+        </if>
+        <if test="condition.type != null and condition.type != ''">
+            AND ck.fType = #{condition.type}
+        </if>
+        GROUP BY ckm.fKeyword) T;
+    </select>
+
+    <select id="selectTableByCondition" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ckm.fKeyword AS 'keyword',
+        c.fContactPerson AS 'customer',
+        ckm.fPosition AS 'position',
+        ck.fSearchEngine AS 'searchEngine',
+        ck.fTerminalType AS 'terminal',
+        ck.fType AS 'type',
+        ckm.fRecordDate AS 'date',
+        (SELECT GROUP_CONCAT(ckm_s.fPosition)
+        FROM t_customer_keyword_mon ckm_s
+        WHERE ckm_s.fKeyword = ckm.fKeyword
+        AND ckm_s.fRecordDate >= #{condition.sevenDayAgo}
+        AND ckm_s.fRecordDate &lt; #{condition.day}
+        GROUP BY ckm_s.fKeyword) AS 'hData',
+        (SELECT GROUP_CONCAT(DATE_FORMAT(ckm_s.fRecordDate, '%Y-%m-%d'))
+        FROM t_customer_keyword_mon ckm_s
+        WHERE ckm_s.fKeyword = ckm.fKeyword
+        AND ckm_s.fRecordDate >= #{condition.sevenDayAgo}
+        AND ckm_s.fRecordDate &lt; #{condition.day}
+        GROUP BY ckm_s.fKeyword) AS 'hDate'
+        FROM t_customer_keyword_mon ckm
+        LEFT JOIN t_customer_keyword ck ON ckm.fKeywordUuid = ck.fUuid
+        LEFT JOIN t_customer c ON ckm.fCustomerUuid = c.fUuid
+        WHERE ckm.fRecordDate >= #{condition.yesterday}
+        <if test="condition.searchEngine != null and condition.searchEngine != ''">
+            AND ck.fSearchEngine = #{condition.searchEngine}
+        </if>
+        <if test="condition.terminal != null and condition.terminal != ''">
+            AND ck.fTerminalType = #{condition.terminal}
+        </if>
+        <if test="condition.customer != null and condition.customer != ''">
+            AND ckm.fCustomerUuid = #{condition.customer}
+        </if>
+        <if test="condition.type != null and condition.type != ''">
+            AND ck.fType = #{condition.type}
+        </if>
+        GROUP BY ckm.fKeyword
+        LIMIT #{condition.start},#{condition.limit};
     </select>
 </mapper>

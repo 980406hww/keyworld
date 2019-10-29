@@ -169,7 +169,19 @@
                 <div style="position: absolute;top: 28px;left: 0;z-index: 9999;width: 100%;">
                     <form class="layui-form layui-form-pane" id="keywordFrom">
                         <div style="float: right; width: 100px;margin: 0 16px 0 6px">
-                            <div class="my-btn" onclick="toChargeMon()">详细信息</div>
+                            <div class="my-btn" onclick="toCustomerKeywordMon()">详细信息</div>
+                        </div>
+                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
+                            <select name="terminal" id="terminal" lay-filter="terminal">
+                                <option value="">电脑+手机</option>
+                                <option value="PC" selected>电脑</option>
+                                <option value="Phone">手机</option>
+                            </select>
+                        </div>
+                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
+                            <select name="searchEngine" id="searchEngine" lay-filter="searchEngine">
+                                <option value="">所有</option>
+                            </select>
                         </div>
                         <div style="float: right;position: relative;top: 2px;">
                             <input type="radio" name="time" value="1" title="30天" lay-filter="keywordTime">

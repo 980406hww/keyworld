@@ -89,7 +89,7 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
             }
             lastMonth = month;
         }
-        Map<String, Object> data = new HashMap<>(5);
+        Map<String, Object> data = new HashMap<>(6);
         data.put("date", date);
         data.put("one", oneData);
         data.put("two", twoData);

@@ -25,7 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping("/internal/qzchargemon")
-public class QzChargeMonController {
+public class QZChargeMonController {
 
     @Resource(name = "qzChargeMonService2")
     private QzChargeMonService qzChargeMonService;
@@ -91,12 +91,12 @@ public class QzChargeMonController {
             }
             if (null != criteria.getDateStart() && !"".equals(criteria.getDateStart())) {
                 wrapper.where("fOperationDate >= {0}", criteria.getDateStart());
-            } else {
+            }/* else {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(new Date());
                 calendar.add(Calendar.DAY_OF_MONTH, -30);
                 wrapper.where("fOperationDate >= {0}", new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime()));
-            }
+            }*/
             if (null != criteria.getDateEnd() && !"".equals(criteria.getDateEnd())) {
                 wrapper.where("fOperationDate <= {0}", criteria.getDateEnd());
             }
@@ -131,7 +131,6 @@ public class QzChargeMonController {
             }
             mv.addObject("search", search);
         }
-
         mv.addObject("time", time);
         return mv;
     }

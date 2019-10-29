@@ -1,16 +1,18 @@
 package com.keymanager.ckadmin.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 import java.util.Date;
 
 @TableName("t_customer_keyword_mon")
 public class CustomerKeywordMon {
 
-    @TableField("fUuid ")
+    @TableId(value = "fUuid", type = IdType.AUTO)
     private Long uuid;
 
-    @TableField("fCustomerUuid ")
+    @TableField("fCustomerUuid")
     private Long customerUuid;
 
     @TableField("fKeywordUuid")

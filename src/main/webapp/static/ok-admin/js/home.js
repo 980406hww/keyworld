@@ -49,6 +49,19 @@ layui.config({
                 common.updateOrNewTab(url, '每日站点操作监控', 'qzChargeMon');
             };
 
+            window.toCustomerKeywordMon = function () {
+                let condition = common.formToJsonObject('keywordFrom');
+                if (!condition.terminal) {
+                    condition.terminal = 'null';
+                }
+                if (!condition.searchEngine) {
+                    condition.searchEngine = 'null';
+                }
+                let url = '/internal/customerkeywordmon/toCustomerKeywordMon/' + condition.terminal + '/' + condition.searchEngine + '/' + condition.time;
+                url = encodeURI(encodeURI(url));
+                common.updateOrNewTab(url, '关键字整体排名涨幅情况', 'customerKeywordsMon');
+            };
+
             okUtils.echartsResize([mapTree, mapChina, chargeLogShow]);
 
             /**日历**/
