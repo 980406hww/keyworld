@@ -8,7 +8,6 @@ public class CustomerKeywordSummaryInfoVO {
 
     private String keyword;
     private String terminalType;
-    private int status;
 
     public String getKeyword() {
         return keyword;
@@ -24,14 +23,6 @@ public class CustomerKeywordSummaryInfoVO {
 
     public void setTerminalType(String terminalType) {
         this.terminalType = terminalType;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
     }
 }
 

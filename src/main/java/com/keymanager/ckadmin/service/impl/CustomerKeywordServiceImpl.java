@@ -221,20 +221,19 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     @Override
     public void addCustomerKeyword(List<CustomerKeyword> customerKeywords, String userName) {
-        List<CustomerKeyword> addCustomerKeywords = new ArrayList<>();
         for (CustomerKeyword customerKeyword : customerKeywords) {
             CustomerKeyword tmpCustomerKeyword = checkCustomerKeyword(customerKeyword, userName);
-            if (tmpCustomerKeyword != null) {
-                addCustomerKeywords.add(customerKeyword);
+            if (null == tmpCustomerKeyword) {
+                customerKeywords.remove(customerKeyword);
             }
         }
-        if (CollectionUtils.isNotEmpty(addCustomerKeywords)) {
+        if (CollectionUtils.isNotEmpty(customerKeywords)) {
             int fromIndex = 0, toIndex = 1000;
             do {
-                customerKeywordDao.addCustomerKeywords(new ArrayList<>(addCustomerKeywords.subList(fromIndex, Math.min(toIndex, addCustomerKeywords.size()))));
+                customerKeywordDao.addCustomerKeywords(new ArrayList<>(customerKeywords.subList(fromIndex, Math.min(toIndex, customerKeywords.size()))));
                 fromIndex += 1000;
                 toIndex += 1000;
-            } while (addCustomerKeywords.size() > fromIndex);
+            } while (customerKeywords.size() > fromIndex);
         }
     }
 
@@ -255,9 +254,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         customerKeyword.setKeyword(customerKeyword.getKeyword().trim());
 
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
-            CustomerKeyword customerKeyword1 = customerKeywordDao
-                .getOneSameCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(),
-                    customerKeyword.getUrl(), customerKeyword.getTitle());
+            CustomerKeyword customerKeyword1 = customerKeywordDao.getOneSameCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid()
+                , customerKeyword.getKeyword(), customerKeyword.getUrl(), customerKeyword.getTitle());
             if (customerKeyword1 != null) {
                 detectCustomerKeywordEffect(customerKeyword, customerKeyword1);
                 return null;
@@ -265,9 +263,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         }
 
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
-            CustomerKeyword customerKeyword1 = customerKeywordDao
-                .getOneSimilarCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid(), customerKeyword.getKeyword(), originalUrl,
-                    customerKeyword.getTitle());
+            CustomerKeyword customerKeyword1 = customerKeywordDao.getOneSimilarCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid()
+                , customerKeyword.getKeyword(), originalUrl, customerKeyword.getTitle());
             if (customerKeyword1 != null) {
                 detectCustomerKeywordEffect(customerKeyword, customerKeyword1);
                 return null;
@@ -341,8 +338,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public List<CustomerKeywordSummaryInfoVO> searchCustomerKeywordSummaryInfo(String entryType,
-        long customerUuid) {
+    public List<CustomerKeywordSummaryInfoVO> searchCustomerKeywordSummaryInfo(String entryType, long customerUuid) {
         return customerKeywordDao.searchCustomerKeywordSummaryInfo(entryType, customerUuid);
     }
 

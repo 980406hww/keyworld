@@ -337,11 +337,11 @@
     <select id="searchCustomerKeywordSummaryInfo" resultType="com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO">
         SELECT
             fKeyword      AS 'keyword',
-            fTerminalType AS 'terminalType',
-            fStatus       AS 'status'
+            fTerminalType AS 'terminalType'
         FROM t_customer_keyword
         WHERE fCustomerUuid = #{customerUuid}
         AND fType = #{entryType}
+        AND fStatus = 1
         GROUP BY fKeyword, fTerminalType
     </select>
 

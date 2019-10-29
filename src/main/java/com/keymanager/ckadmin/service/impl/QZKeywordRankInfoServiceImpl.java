@@ -78,8 +78,7 @@ public class QZKeywordRankInfoServiceImpl extends
         double differenceValue = Double.parseDouble(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_DIFFERENCEVALUE_VALUE).getValue());
         int oneWeekDiff = Integer.parseInt(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_ONE_WEEK_DIFF).getValue());
 
-        QZSettingCountNumCriteria qzSettingCountNumCriteria = qzKeywordRankInfoDao.getCountNumOfRankInfo(-upperValue, upperValue, differenceValue, -oneWeekDiff,
-            oneWeekDiff, criteria);
+        QZSettingCountNumCriteria qzSettingCountNumCriteria = qzKeywordRankInfoDao.getCountNumOfRankInfo(-upperValue, upperValue, differenceValue, -oneWeekDiff, oneWeekDiff, criteria);
         qzSettingCountNumCriteria.setUpperValue(upperValue);
         qzSettingCountNumCriteria.setDifferenceValue(differenceValue);
         qzSettingCountNumCriteria.setUpOneWeekDiff(oneWeekDiff);
@@ -119,15 +118,15 @@ public class QZKeywordRankInfoServiceImpl extends
                     String[] dateArr = rankInfo.getDate().replace("[", "").replace("]", "").split(", ");
                     int index = ArrayUtils.indexOf(dateArr, qzKeywordRankInfo.getCreateMonthDay());
                     if (index > -1) {
-                        rankInfo.setCreateTopTenNum(Integer.parseInt(rankInfo.getTopTen().replace("[", "")
-                            .replace("]", "").split(", ")[index]));
-                        rankInfo.setCreateTopFiftyNum(Integer.parseInt(rankInfo.getTopFifty().replace("[", "")
-                            .replace("]", "").split(", ")[index]));
+                        rankInfo.setCreateTopTenNum(Integer.parseInt(rankInfo.getTopTen().replace("[", "").replace("]", "")
+                            .split(", ")[index]));
+                        rankInfo.setCreateTopFiftyNum(Integer.parseInt(rankInfo.getTopFifty().replace("[", "").replace("]", "")
+                            .split(", ")[index]));
                     } else {
-                        rankInfo.setCreateTopTenNum(Integer.parseInt(rankInfo.getTopTen().replace("[", "")
-                            .replace("]", "").split(", ")[dateArr.length - 1]));
-                        rankInfo.setCreateTopFiftyNum(Integer.parseInt(rankInfo.getTopFifty().replace("[", "")
-                                .replace("]", "").split(", ")[dateArr.length - 1]));
+                        rankInfo.setCreateTopTenNum(Integer.parseInt(rankInfo.getTopTen().replace("[", "").replace("]", "")
+                            .split(", ")[dateArr.length - 1]));
+                        rankInfo.setCreateTopFiftyNum(Integer.parseInt(rankInfo.getTopFifty().replace("[", "").replace("]", "")
+                            .split(", ")[dateArr.length - 1]));
                     }
                 }
                 rankInfo.setUuid(qzKeywordRankInfo.getUuid());
@@ -188,12 +187,8 @@ public class QZKeywordRankInfoServiceImpl extends
             }
         } else {
             List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoDao.searchExistingExtraQZKeywordRankInfo(qzKeywordRankInfo.getQzSettingUuid(), qzKeywordRankInfo.getTerminalType());
-            int index = 1;
-            if ("other".equals(standardSpecies)) {
-                index = 0;
-            }
-            if (qzKeywordRankInfos.size() > index) {
-                for (int i = index; i < qzKeywordRankInfos.size(); i++) {
+            if (qzKeywordRankInfos.size() > 1) {
+                for (int i = 1; i < qzKeywordRankInfos.size(); i++) {
                     qzKeywordRankInfoDao.deleteById(qzKeywordRankInfos.get(i).getUuid());
                 }
             }

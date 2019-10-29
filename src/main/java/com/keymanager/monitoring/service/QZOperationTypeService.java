@@ -63,4 +63,8 @@ public class QZOperationTypeService extends ServiceImpl<QZOperationTypeDao, QZOp
 	public List<String> getQZSettingStandardSpecies(Long uuid) {
 		return qzOperationTypeDao.getQZSettingStandardSpecies(uuid);
 	}
+
+	public String findQZChargeRuleStandardSpecies(long qzSettingUuid, String terminalType) {
+		return qzOperationTypeDao.getQZSettingStandardSpecie(qzSettingUuid, terminalType);
+	}
 }

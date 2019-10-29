@@ -30,16 +30,14 @@ public class QZChargeLogServiceImpl extends ServiceImpl<QZChargeLogDao, QZCharge
 
     @Override
     public List<QZChargeInfoVO> getQZChargeLog(Long uuid) {
-        List<QZOperationType> qzOperationTypes = qzOperationTypeService
-            .searchQZOperationTypesByQZSettingUuid(uuid);
+        List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(uuid);
         //通过operationTypeUuid主键去查询规则表（多条数据）
         List<QZChargeInfoVO> qzChargeInfoVOs = new ArrayList<QZChargeInfoVO>();
 
         for (QZOperationType qzOperationType : qzOperationTypes) {
             //判断是否达标
             QZChargeInfoVO qzChargeInfoVO = new QZChargeInfoVO();
-            if (null == qzOperationType.getReachTargetDate() && null == qzOperationType
-                .getNextChargeDate()) {
+            if (null == qzOperationType.getReachTargetDate() && null == qzOperationType.getNextChargeDate()) {
                 qzChargeInfoVO.setReceivableAmount("0");
             }
             qzChargeInfoVO.setOperationType(qzOperationType.getOperationType());
@@ -49,22 +47,16 @@ public class QZChargeLogServiceImpl extends ServiceImpl<QZChargeLogDao, QZCharge
                     qzOperationType.getInitialKeywordCount().toString());//初始词量
             }
             //计划缴费日期
-            qzChargeInfoVO.setPlanChargeDate(qzOperationType.getNextChargeDate() == null ? null
-                : sdf.format(qzOperationType.getNextChargeDate()));
+            qzChargeInfoVO.setPlanChargeDate(qzOperationType.getNextChargeDate() == null ? null : sdf.format(qzOperationType.getNextChargeDate()));
 
             List<QZChargeRule> qzChargeRules = qzChargeRuleService
                 .searchQZChargeRuleByqzOperationTypeUuids(qzOperationType.getUuid());
             if (qzOperationType.getCurrentKeywordCount() != null) {
-                qzChargeInfoVO
-                    .setCurrentKeywordCount(qzOperationType.getCurrentKeywordCount().toString());
+                qzChargeInfoVO.setCurrentKeywordCount(qzOperationType.getCurrentKeywordCount().toString());
                 for (QZChargeRule qzChargeRule : qzChargeRules) {
                     //如果当前值在规则中的起始值-----终止值  区间内 或者比最后一条规则的初始值还大
-                    if (qzOperationType.getCurrentKeywordCount() >= qzChargeRule
-                        .getStartKeywordCount()
-                        &&
-                        (null == qzChargeRule.getEndKeywordCount()
-                            || qzOperationType.getCurrentKeywordCount() <= qzChargeRule
-                            .getEndKeywordCount())) {
+                    if (qzOperationType.getCurrentKeywordCount() >= qzChargeRule.getStartKeywordCount() && (null == qzChargeRule.getEndKeywordCount()
+                        || qzOperationType.getCurrentKeywordCount() <= qzChargeRule.getEndKeywordCount())) {
                         qzChargeInfoVO.setReceivableAmount(qzChargeRule.getAmount().toString());
                         break;
                     }

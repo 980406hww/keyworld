@@ -64,8 +64,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     Integer getCustomerKeywordCountByOptimizeGroupName(@Param("groupName") String groupName);
 
-    List<CustomerKeywordSummaryInfoVO> searchCustomerKeywordSummaryInfo(
-        @Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
+    List<CustomerKeywordSummaryInfoVO> searchCustomerKeywordSummaryInfo(@Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
 
     KeywordCountVO getCustomerKeywordsCountByCustomerUuid(@Param("customerUuid") Long customerUuid, @Param("terminalType") String terminalType);
 

@@ -13,7 +13,6 @@ import com.keymanager.ckadmin.entity.CaptureRankJob;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
-import com.keymanager.ckadmin.entity.Group;
 import com.keymanager.ckadmin.entity.QZCategoryTag;
 import com.keymanager.ckadmin.entity.QZChargeRule;
 import com.keymanager.ckadmin.entity.QZKeywordRankInfo;
@@ -196,10 +195,8 @@ public class QZSettingServiceImpl extends
             rankInfoVo.setTopTenNum(0);
             rankInfoVo.setTopFiftyNum(0);
         }
-        rankInfoVo.setCreateTopTenNum(qzKeywordRankInfo.getCreateTopTenNum() == null ? 0
-            : qzKeywordRankInfo.getCreateTopTenNum());
-        rankInfoVo.setCreateTopFiftyNum(qzKeywordRankInfo.getCreateTopFiftyNum() == null ? 0
-            : qzKeywordRankInfo.getCreateTopFiftyNum());
+        rankInfoVo.setCreateTopTenNum(qzKeywordRankInfo.getCreateTopTenNum() == null ? 0 : qzKeywordRankInfo.getCreateTopTenNum());
+        rankInfoVo.setCreateTopFiftyNum(qzKeywordRankInfo.getCreateTopFiftyNum() == null ? 0 : qzKeywordRankInfo.getCreateTopFiftyNum());
         rankInfoVo.setTopTen(topTen);
         rankInfoVo.setTopTwenty(calculate(qzKeywordRankInfo.getTopTwenty()));
         rankInfoVo.setTopThirty(calculate(qzKeywordRankInfo.getTopThirty()));
@@ -257,39 +254,30 @@ public class QZSettingServiceImpl extends
         String userName) {
         for (String terminalType : qzSettingSaveCustomerKeywordsCriteria.getTerminalTypes()) {
             List<CustomerKeyword> customerKeywords = new ArrayList<>();
-            String customerExcludeKeywords = customerExcludeKeywordService
-                .getCustomerExcludeKeyword(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid(),
-                    qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid(), terminalType,
-                    qzSettingSaveCustomerKeywordsCriteria.getDomain());
+            String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid(),
+                    qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid(), terminalType, qzSettingSaveCustomerKeywordsCriteria.getDomain());
             Set<String> excludeKeyword = new HashSet<>();
             if (null != customerExcludeKeywords) {
                 excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
             }
             for (String keyword : qzSettingSaveCustomerKeywordsCriteria.getKeywords()) {
                 CustomerKeyword customerKeyword = new CustomerKeyword();
-                customerKeyword
-                    .setQzSettingUuid(qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid());
-                customerKeyword
-                    .setCustomerUuid(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid());
+                customerKeyword.setQzSettingUuid(qzSettingSaveCustomerKeywordsCriteria.getQzSettingUuid());
+                customerKeyword.setCustomerUuid(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid());
                 customerKeyword.setType(qzSettingSaveCustomerKeywordsCriteria.getType());
-                customerKeyword
-                    .setSearchEngine(qzSettingSaveCustomerKeywordsCriteria.getSearchEngine());
+                customerKeyword.setSearchEngine(qzSettingSaveCustomerKeywordsCriteria.getSearchEngine());
                 customerKeyword.setTerminalType(terminalType);
                 customerKeyword.setUrl(qzSettingSaveCustomerKeywordsCriteria.getDomain());
-                customerKeyword
-                    .setKeywordEffect(qzSettingSaveCustomerKeywordsCriteria.getKeywordEffect());
+                customerKeyword.setKeywordEffect(qzSettingSaveCustomerKeywordsCriteria.getKeywordEffect());
                 customerKeyword.setServiceProvider("baidutop123");
                 customerKeyword.setManualCleanTitle(true);
                 customerKeyword.setCollectMethod(CollectMethod.PerMonth.name());
                 customerKeyword.setCurrentIndexCount(-1);
                 customerKeyword.setPositionFirstFee(-1d);
-                customerKeyword
-                    .setBearPawNumber(qzSettingSaveCustomerKeywordsCriteria.getBearPawNumber());
+                customerKeyword.setBearPawNumber(qzSettingSaveCustomerKeywordsCriteria.getBearPawNumber());
                 customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Specify.name());
-                customerKeyword.setOptimizeGroupName(
-                    qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
-                customerKeyword
-                    .setMachineGroup(qzSettingSaveCustomerKeywordsCriteria.getMachineGroupName());
+                customerKeyword.setOptimizeGroupName(qzSettingSaveCustomerKeywordsCriteria.getOptimizeGroupName());
+                customerKeyword.setMachineGroup(qzSettingSaveCustomerKeywordsCriteria.getMachineGroupName());
                 if (!excludeKeyword.isEmpty()) {
                     if (excludeKeyword.contains(keyword)) {
                         customerKeyword.setStatus(0);
@@ -297,9 +285,7 @@ public class QZSettingServiceImpl extends
                 }
                 customerKeyword.setKeyword(keyword);
                 if ("Important".equals(qzSettingSaveCustomerKeywordsCriteria.getKeywordEffect())) {
-                    Integer optimizePlanCount = Integer.valueOf(configService
-                        .getConfig("KeywordEffectOptimizePlanCount", "ImportantKeyword")
-                        .getValue());
+                    Integer optimizePlanCount = Integer.valueOf(configService.getConfig("KeywordEffectOptimizePlanCount", "ImportantKeyword").getValue());
                     customerKeyword.setOptimizePlanCount(optimizePlanCount);
                 } else {
                     customerKeyword.setOptimizePlanCount(10);
@@ -700,59 +686,50 @@ public class QZSettingServiceImpl extends
         if (!qzSettingCriteria.isDownloadTimesUsed()) {
             if (CollectionUtils.isNotEmpty(qzSettingCriteria.getCustomerKeywordVos())) {
                 List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(qzSettingCriteria.getUuid());
-                //取用户全站类别下所有关键字
-                List<CustomerKeywordSummaryInfoVO> customerKeywordSummaryInfoVos = customerKeywordService
-                    .searchCustomerKeywordSummaryInfo("qz", qzSettingCriteria.getCustomerUuid());
-                Map<String, Set<String>> customerKeywordSummaryInfoMaps = new HashMap<>(500);
-                int pcKeywordCountNum = 0, phoneKeywordCountNum = 0;
-                //关键字分类
-                if (CollectionUtils.isNotEmpty(customerKeywordSummaryInfoVos)) {
-                    for (CustomerKeywordSummaryInfoVO customerKeywordSummaryInfoVO : customerKeywordSummaryInfoVos) {
-                        if (customerKeywordSummaryInfoVO.getStatus() > 0) {
-                            if (customerKeywordSummaryInfoVO.getTerminalType().equals(
-                                TerminalTypeEnum.PC.name())) {
+                if (CollectionUtils.isNotEmpty(qzOperationTypes)) {
+                    // 查全站类别下所有关键字
+                    List<CustomerKeywordSummaryInfoVO> customerKeywordSummaryInfoVos = customerKeywordService.searchCustomerKeywordSummaryInfo("qz", qzSettingCriteria.getCustomerUuid());
+                    Map<String, Set<String>> customerKeywordSummaryInfoMaps = new HashMap<>(500);
+                    int pcKeywordCountNum = 0, phoneKeywordCountNum = 0;
+                    //关键字分类
+                    if (CollectionUtils.isNotEmpty(customerKeywordSummaryInfoVos)) {
+                        for (CustomerKeywordSummaryInfoVO customerKeywordSummaryInfoVO : customerKeywordSummaryInfoVos) {
+                            if (customerKeywordSummaryInfoVO.getTerminalType().equals(TerminalTypeEnum.PC.name())) {
                                 pcKeywordCountNum++;
                             } else {
                                 phoneKeywordCountNum++;
                             }
+                            Set<String> terminalTypeSet = customerKeywordSummaryInfoMaps.get(customerKeywordSummaryInfoVO.getKeyword());
+                            if (terminalTypeSet == null) {
+                                terminalTypeSet = new HashSet<>(2);
+                                customerKeywordSummaryInfoMaps.put(customerKeywordSummaryInfoVO.getKeyword(), terminalTypeSet);
+                            }
+                            terminalTypeSet.add(customerKeywordSummaryInfoVO.getTerminalType());
                         }
-                        Set<String> terminalTypeSet = customerKeywordSummaryInfoMaps.get(customerKeywordSummaryInfoVO.getKeyword());
-                        if (terminalTypeSet == null) {
-                            terminalTypeSet = new HashSet<>(2);
-                            customerKeywordSummaryInfoMaps.put(customerKeywordSummaryInfoVO.getKeyword(), terminalTypeSet);
+                    }
+
+                    for (QZOperationType qzOperationType : qzOperationTypes) {
+                        if (qzOperationType.getOperationType().equals(TerminalTypeEnum.PC.name())) {
+                            pcKeywordCountNum = qzOperationType.getMaxKeywordCount() - pcKeywordCountNum;
+                        } else {
+                            phoneKeywordCountNum = qzOperationType.getMaxKeywordCount() - phoneKeywordCountNum;
                         }
-                        terminalTypeSet.add(customerKeywordSummaryInfoVO.getTerminalType());
                     }
-                }
-                for (QZOperationType qzOperationType : qzOperationTypes) {
-                    if (qzOperationType.getOperationType().equals(TerminalTypeEnum.PC.name())) {
-                        pcKeywordCountNum = qzOperationType.getMaxKeywordCount() - pcKeywordCountNum;
-                    } else {
-                        phoneKeywordCountNum = qzOperationType.getMaxKeywordCount() - phoneKeywordCountNum;
-                    }
-                }
-                QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
-                qzCaptureTitleLog.setStatus(QZCaptureTitleLogStatusEnum.New.getValue());
-                if (CollectionUtils.isNotEmpty(qzOperationTypes)) {
+
                     List<CustomerKeyword> insertingCustomerKeywords = new ArrayList<>();
                     for (CustomerKeywordVO customerKeywordVO : qzSettingCriteria.getCustomerKeywordVos()) {
                         for (QZOperationType qzOperationType : qzOperationTypes) {
                             if (!(customerKeywordSummaryInfoMaps.containsKey(customerKeywordVO.getKeyword()) && customerKeywordSummaryInfoMaps
                                 .get(customerKeywordVO.getKeyword()).contains(qzOperationType.getOperationType()))) {
-                                if (StringUtils.isBlank(customerKeywordVO.getTerminalType())
-                                    || qzOperationType.getOperationType()
-                                    .equals(customerKeywordVO.getTerminalType())) {
-                                    if (qzOperationType.getOperationType().equals(
-                                        TerminalTypeEnum.PC.name())) {
+                                if (StringUtils.isBlank(customerKeywordVO.getTerminalType()) || qzOperationType.getOperationType().equals(customerKeywordVO.getTerminalType())) {
+                                    if (qzOperationType.getOperationType().equals(TerminalTypeEnum.PC.name())) {
                                         if (pcKeywordCountNum > 0) {
-                                            CustomerKeyword customerKeyword = createCustomerKeyword(qzSettingCriteria, qzOperationType, customerKeywordVO);
-                                            insertingCustomerKeywords.add(customerKeyword);
+                                            insertingCustomerKeywords.add(createCustomerKeyword(qzSettingCriteria, qzOperationType, customerKeywordVO));
                                             pcKeywordCountNum--;
                                         }
                                     } else {
                                         if (phoneKeywordCountNum > 0) {
-                                            CustomerKeyword customerKeyword = createCustomerKeyword(qzSettingCriteria, qzOperationType, customerKeywordVO);
-                                            insertingCustomerKeywords.add(customerKeyword);
+                                            insertingCustomerKeywords.add(createCustomerKeyword(qzSettingCriteria, qzOperationType, customerKeywordVO));
                                             phoneKeywordCountNum--;
                                         }
                                     }
@@ -762,6 +739,8 @@ public class QZSettingServiceImpl extends
                     }
 
                     for (QZOperationType qzOperationType : qzOperationTypes) {
+                        QZCaptureTitleLog qzCaptureTitleLog = new QZCaptureTitleLog();
+                        qzCaptureTitleLog.setStatus(QZCaptureTitleLogStatusEnum.New.getValue());
                         qzCaptureTitleLog.setTerminalType(qzOperationType.getOperationType());
                         qzCaptureTitleLog.setQzOperationTypeUuid(qzOperationType.getUuid());
                         qzCaptureTitleLogService.addQZCaptureTitleLog(qzCaptureTitleLog);
@@ -780,14 +759,13 @@ public class QZSettingServiceImpl extends
 
                     Set<String> pcExcludeKeyword = new HashSet<>();
                     Set<String> phoneExcludeKeyword = new HashSet<>(500);
-                    if (null != pcCustomerExcludeKeywords) {
+                    if (com.keymanager.ckadmin.util.StringUtils.hasLength(pcCustomerExcludeKeywords)) {
                         pcExcludeKeyword.addAll(Arrays.asList(pcCustomerExcludeKeywords.split(",")));
                     }
-                    if (null != phoneCustomerExcludeKeywords) {
+                    if (com.keymanager.ckadmin.util.StringUtils.hasLength(phoneCustomerExcludeKeywords)) {
                         phoneExcludeKeyword.addAll(Arrays.asList(phoneCustomerExcludeKeywords.split(",")));
                     }
                     if (CollectionUtils.isNotEmpty(insertingCustomerKeywords)) {
-                        List<CustomerKeyword> customerKeywords = new ArrayList<>();
                         for (CustomerKeyword customerKeyword : insertingCustomerKeywords) {
                             if (TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())) {
                                 if (!pcExcludeKeyword.isEmpty()) {
@@ -803,16 +781,13 @@ public class QZSettingServiceImpl extends
                                 }
                             }
                             customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Capture.name());
-                            customerKeywords.add(customerKeyword);
                         }
-                        customerKeywordService.addCustomerKeyword(customerKeywords, qzSettingCriteria.getUserName());
+                        customerKeywordService.addCustomerKeyword(insertingCustomerKeywords, qzSettingCriteria.getUserName());
                     }
                 }
             }
         }
-        this.completeQZSetting(qzSettingCriteria.getUuid(),
-            qzSettingCriteria.isDownloadTimesUsed(), pcKeywordExceedMaxCount,
-            phoneKeywordExceedMaxCount);
+        this.completeQZSetting(qzSettingCriteria.getUuid(), qzSettingCriteria.isDownloadTimesUsed(), pcKeywordExceedMaxCount, phoneKeywordExceedMaxCount);
     }
 
     @Override
@@ -836,13 +811,11 @@ public class QZSettingServiceImpl extends
         customerKeyword.setQzSettingUuid(qzSettingCriteria.getUuid());
         customerKeyword.setKeyword(customerKeywordVO.getKeyword());
         customerKeyword.setUrl(customerKeywordVO.getUrl());
-        customerKeyword
-            .setBearPawNumber(qzSettingCriteria.getBearPawNumber());
+        customerKeyword.setBearPawNumber(qzSettingCriteria.getBearPawNumber());
         customerKeyword.setTitle(customerKeywordVO.getTitle());
         customerKeyword.setOrderNumber(customerKeywordVO.getOrderNumber());
         customerKeyword.setCurrentIndexCount(customerKeywordVO.getCurrentIndexCount());
-        customerKeyword
-            .setCustomerUuid(qzSettingCriteria.getCustomerUuid());
+        customerKeyword.setCustomerUuid(qzSettingCriteria.getCustomerUuid());
         customerKeyword.setOptimizePlanCount(customerKeywordVO.getCurrentIndexCount() + 8);
         customerKeyword.setOptimizeRemainingCount(customerKeywordVO.getCurrentIndexCount() + 8);
         customerKeyword.setServiceProvider("baidutop123");

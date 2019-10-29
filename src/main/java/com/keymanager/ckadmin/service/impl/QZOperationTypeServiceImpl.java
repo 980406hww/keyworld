@@ -58,9 +58,9 @@ public class QZOperationTypeServiceImpl extends ServiceImpl<QZOperationTypeDao, 
 
     @Override
     public List<String> getQZSettingStandardSpecie(long qzSettingUuid, String[] terminalTypes) {
-        List<String> standardSpecieList = new ArrayList<>(2);
+        List<String> standardSpecieList = new ArrayList<>(terminalTypes.length);
         for (String terminalType : terminalTypes) {
-            String standardSpecie = qzOperationTypeDao.getQZSettingStandardSpecie(qzSettingUuid, terminalType);
+            String standardSpecie = qzOperationTypeDao.getQZStandardSpecieAndMaxKeywordCount(qzSettingUuid, terminalType);
             standardSpecieList.add(terminalType + "_" + standardSpecie);
         }
         return standardSpecieList;

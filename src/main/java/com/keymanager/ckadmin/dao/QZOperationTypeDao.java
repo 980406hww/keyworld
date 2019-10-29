@@ -39,4 +39,12 @@ public interface QZOperationTypeDao extends BaseMapper<QZOperationType> {
     Date getStandardTime(@Param("qzSettingUuid") long qzSettingUuid, @Param("terminalType") String terminalType);
 
     String getQZSettingStandardSpecie(@Param("qzSettingUuid") long qzSettingUuid, @Param("terminalType") String terminalType);
+
+    /**
+     * 获取站点达标类别和限制词数
+     * @param qzSettingUuid
+     * @param terminalType
+     * @return
+     */
+    String getQZStandardSpecieAndMaxKeywordCount(@Param("qzSettingUuid") long qzSettingUuid, @Param("terminalType") String terminalType);
 }
