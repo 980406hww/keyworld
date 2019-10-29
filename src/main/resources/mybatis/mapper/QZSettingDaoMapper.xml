@@ -354,6 +354,7 @@
         FROM t_qz_setting qs
         WHERE qs.fCrawlerStatus = 'new'
         AND qs.fSearchEngine = '百度'
+        AND EXISTS (SELECT 1 FROM t_customer c WHERE qs.fCustomerUuid = c.fUuid)
         LIMIT #{taskNumber}
         UNION ALL
         SELECT
@@ -363,6 +364,7 @@
         WHERE qs.fCrawlerStatus = 'processing'
         AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL 10 MINUTE)
         AND qs.fSearchEngine = '百度'
+        AND EXISTS (SELECT 1 FROM t_customer c WHERE qs.fCustomerUuid = c.fUuid)
         LIMIT #{taskNumber}
         UNION ALL
         SELECT
@@ -372,6 +374,7 @@
         WHERE qs.fCrawlerStatus = 'finish'
         AND qs.fCrawlerTime &lt;= DATE_SUB(NOW(), INTERVAL #{crawlerHour} HOUR)
         AND qs.fSearchEngine = '百度'
+        AND EXISTS (SELECT 1 FROM t_customer c WHERE qs.fCustomerUuid = c.fUuid)
         LIMIT #{taskNumber}
     </select>
 
@@ -513,4 +516,51 @@
         ORDER BY qzs.fUuid
         LIMIT 1
     </select>
+
+    <select id="getQZSettingByCustomerUuid" resultType="com.keymanager.monitoring.vo.QZSettingForSync">
+        SELECT
+            qs.fUuid AS 'qsId',
+            qs.fCustomerUuid AS 'customerId',
+            qs.fDomain AS 'domain',
+            qs.fSearchEngine AS 'searchEngine',
+            qs.fBearPawNumber AS 'bearPawId',
+            qs.fRenewalStatus AS 'renewalStatus',
+            qs.fPcGroup AS 'pcGroup',
+            qs.fPhoneGroup AS 'phoneGroup'
+        FROM t_qz_setting qs
+        WHERE qs.fCustomerUuid = #{customerUuid}
+    </select>
+
+    <select id="getAvailableQZSettingsByTagName" resultType="com.keymanager.monitoring.vo.QZSettingForSync">
+        SELECT
+            qs.fUuid AS 'qsId',
+            qs.fCustomerUuid AS 'customerId',
+            qs.fDomain AS 'domain',
+            qs.fSearchEngine AS 'searchEngine',
+            qs.fBearPawNumber AS 'bearPawId',
+            qs.fRenewalStatus AS 'renewalStatus',
+            qs.fPcGroup AS 'pcGroup',
+            qs.fPhoneGroup AS 'phoneGroup'
+        FROM t_qz_setting qs
+        WHERE qs.fRenewalStatus = 1
+        AND EXISTS (SELECT 1 FROM t_customer c WHERE qs.fCustomerUuid = c.fUuid)
+        AND EXISTS (SELECT 1 FROM t_qz_category_tag qct WHERE qct.fQZSettingUuid = qs.fUuid AND qct.fTagName = #{qzCustomerTag})
+    </select>
+
+    <insert id="replaceQZSettings">
+        REPLACE INTO sys_qz_setting VALUES
+        <foreach collection="qzSettingForSyncs" item="qzSettingForSync" separator=",">
+            (
+            #{qzSettingForSync.qsId},
+            #{qzSettingForSync.customerId},
+            #{qzSettingForSync.domain},
+            #{qzSettingForSync.searchEngine},
+            #{qzSettingForSync.bearPawId},
+            #{qzSettingForSync.renewalStatus},
+            #{qzSettingForSync.pcGroup},
+            #{qzSettingForSync.phoneGroup},
+            #{qzCustomerTag}
+            )
+        </foreach>
+    </insert>
 </mapper>

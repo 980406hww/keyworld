@@ -194,4 +194,14 @@
         WHERE c.fStatus = 1
         AND c.fDailyReportIdentify = 1
     </select>
+
+    <select id="getCustomerUuidsByCustomerType" resultType="java.lang.Long">
+        SELECT c.fUuid
+        FROM t_customer c
+        LEFT JOIN t_userinfo u
+        ON c.fUserID = u.fLoginName
+        WHERE u.fStatus = 0
+        AND c.fStatus > 0
+        AND c.fType = #{customerType}
+    </select>
 </mapper>

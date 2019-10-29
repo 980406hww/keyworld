@@ -171,4 +171,38 @@
         AND qzkri.fTerminalType = #{terminalType}
         AND qzkri.fWebsiteType = 'aiZhan'
     </select>
+
+    <select id="getXTRankInfos" resultType="com.keymanager.ckadmin.entity.QZKeywordRankInfo">
+        SELECT
+        qzkri.fUuid AS 'uuid',
+        qzkri.fQZSettingUuid AS 'qzSettingUuid',
+        qzkri.fTerminalType AS 'terminalType',
+        qzkri.fWebSiteType AS 'websiteType',
+        qzkri.fDataProcessingStatus AS 'dataProcessingStatus',
+        qzkri.fTopTen AS 'topTen',
+        qzkri.fTopTwenty AS 'topTwenty',
+        qzkri.fTopThirty AS 'topThirty',
+        qzkri.fTopForty AS 'topForty',
+        qzkri.fTopFifty AS 'topFifty',
+        qzkri.fTopHundred AS 'topHundred',
+        qzkri.fCreateTopTenNum AS 'createTopTenNum',
+        qzkri.fCreateTopFiftyNum AS 'createTopFiftyNum',
+        qzkri.fDate AS 'date',
+        qzkri.fFullDate AS 'fullDate',
+        qzkri.fIncrease AS 'increase',
+        qzkri.fIpRoute AS 'ipRoute',
+        qzkri.fRecord AS 'baiduRecord',
+        qzkri.fAchieveLevel AS 'achieveLevel',
+        qzkri.fSumSeries AS 'sumSeries',
+        qzkri.fDifferenceValue AS 'differenceValue',
+        qzkri.fCurrentPrice AS 'currentPrice',
+        qzkri.fBaiduRecordFullDate AS 'baiduRecordFullDate',
+        qzkri.fAchieveTime AS 'achieveTime'
+        FROM t_qz_keyword_rank_info qzkri
+        WHERE qzkri.fWebSiteType ='xt'
+    </select>
+
+    <update id="updateRankDateWithYear">
+        UPDATE t_qz_keyword_rank_info SET fFullDate = #{yearRankDate} WHERE fUuid = #{uuid}
+    </update>
 </mapper>

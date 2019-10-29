@@ -21,16 +21,16 @@ layui.define(['jquery', 'layer',], function (exports) {
             });
             return jsonObject;
         },
-        showSuccessMsg: function (msg, callback = function () {
-
-        }) {
+        showSuccessMsg: function (msg, callback) {
             layer.msg(msg, {
                 icon: 6,
                 anim: 5,
                 time: 1000,
                 isOutAnim: false
             }, function () {
-                callback()
+                if (callback){
+                    callback()
+                }
             });
         },
         showFailMsg: function (msg) {

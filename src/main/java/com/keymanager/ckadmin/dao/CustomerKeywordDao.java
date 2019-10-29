@@ -7,6 +7,7 @@ import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
 import com.keymanager.ckadmin.criteria.PTKeywordCountCriteria;
+import com.keymanager.ckadmin.criteria.QZRateKewordCountCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
@@ -16,6 +17,7 @@ import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
+import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -135,4 +137,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void editCustomerOptimizePlanCount(@Param("optimizePlanCount") Integer optimizePlanCount, @Param("settingType") String settingType, @Param("uuids") List<String> uuids);
 
+    List<QZRateKeywordCountVO> getQZRateKeywordCount(Page<QZRateKeywordCountVO> page,
+        @Param("qzRateKewordCountCriteria") QZRateKewordCountCriteria qzRateKewordCountCriteria);
 }

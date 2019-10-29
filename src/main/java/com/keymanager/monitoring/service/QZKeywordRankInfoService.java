@@ -14,6 +14,7 @@ import com.keymanager.monitoring.vo.ExternalQZKeywordRankInfoResultVO;
 import com.keymanager.monitoring.vo.ExternalQzKeywordRankInfoVO;
 import com.keymanager.monitoring.vo.ExternalQzSettingVO;
 import com.keymanager.monitoring.vo.QZChargeRuleVO;
+import com.keymanager.monitoring.vo.QZKeywordRankForSync;
 import com.keymanager.util.Constants;
 import com.keymanager.util.PaginationRewriteQueryTotalInterceptor;
 import java.util.ArrayList;
@@ -60,20 +61,15 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     }
 
     public synchronized List<ExternalQzSettingVO> getQZSettingTask() {
-        Config taskNumber = configService
-            .getConfig(Constants.CONFIG_TYPE_QZSETTING, Constants.CONFIG_KEY_QZ_TASKNUMBER);
-        Config config = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK,
-            Constants.CONFIG_KEY_CRAWLER_HOUR);
+        Config taskNumber = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING, Constants.CONFIG_KEY_QZ_TASKNUMBER);
+        Config config = configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_CRAWLER_HOUR);
 
-        List<ExternalQzSettingVO> qzSettingTasks = qzSettingService
-            .getQZSettingTask(Integer.parseInt(config.getValue()),
-                Integer.parseInt(taskNumber.getValue()));
+        List<ExternalQzSettingVO> qzSettingTasks = qzSettingService.getQZSettingTask(Integer.parseInt(config.getValue()), Integer.parseInt(taskNumber.getValue()));
 
         if (CollectionUtils.isNotEmpty(qzSettingTasks)) {
             List<Long> uuids = new ArrayList<>();
             for (ExternalQzSettingVO qzSettingVo : qzSettingTasks) {
-                List<String> types = qzKeywordRankInfoDao
-                    .getQZKeywordRankInfoTypes(qzSettingVo.getUuid());
+                List<String> types = qzKeywordRankInfoDao.getQZKeywordRankInfoTypes(qzSettingVo.getUuid());
                 if (CollectionUtils.isNotEmpty(types)) {
                     qzSettingVo.setTypeList(types);
                     uuids.add(qzSettingVo.getUuid());
@@ -256,5 +252,13 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
             rankInfo.setUpdateTime(new Date());
             qzKeywordRankInfoDao.updateById(rankInfo);
         }
+    }
+
+    public List<QZKeywordRankForSync> getQZKeywordRankInfoByQZSettingUuid(Long qzSettingUuid, String searchEngine, int limitRow) {
+        return qzKeywordRankInfoDao.getQZKeywordRankInfoByQZSettingUuid(qzSettingUuid, searchEngine, limitRow);
+    }
+
+    public void replaceQZKeywordRanks(List<QZKeywordRankForSync> qzKeywordRanks) {
+        qzKeywordRankInfoDao.replaceQZKeywordRanks(qzKeywordRanks);
     }
 }

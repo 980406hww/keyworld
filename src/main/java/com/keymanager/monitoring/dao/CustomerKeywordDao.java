@@ -14,8 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public interface
-CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
+public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void cleanSelectedCustomerKeywordTitle(@Param("uuids") List<String> uuids);
 
     void cleanCustomerTitle(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("customerUuid") String customerUuid);
@@ -268,4 +267,23 @@ CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void batchUpdateIndexAndOptimizePlanCount(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
 
     void batchUpdateOptimizedCountFromCache(@Param("updateOptimizedCountVOs") Collection<UpdateOptimizedCountSimpleVO> updateOptimizedCountVOs);
+
+    /**
+     * 批量插入数据
+     * @param customerUuid
+     * @param qsId
+     */
+    void batchInsertCustomerKeywordByCustomerUuid(@Param("customerUuid") Long customerUuid, @Param("qsId") Long qsId);
+
+    /**
+     * 定时删除创建超过七天的同步关键词
+     */
+    void cleanSysCustomerKeywordCreateOverOneWeek();
+
+    /**
+     * 根据qsId判断站点关键词当天是否已同步
+     * @param qsId
+     * @return
+     */
+    Long searchExistingSysCustomerKeywordQsId(@Param("qsId") Long qsId);
 }
