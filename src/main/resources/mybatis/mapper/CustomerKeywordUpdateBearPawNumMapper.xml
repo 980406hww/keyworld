@@ -11,9 +11,23 @@
         from t_customer_keyword ck
         LEFT JOIN t_customer c
         ON c.fUuid = ck.fCustomerUuid
-        WHERE ck.fStatus = 1
-        AND ck.fType &lt;&gt; 'fm'
-        AND ck.fUrl IS NOT NULL
+        WHERE ck.fType = 'qz'
+        AND ck.fStatus = 1
+        AND ck.fSearchEngine = '百度'
+        AND ck.fUrl &gt; ''
+        GROUP BY ck.fUrl
+        UNION ALL
+        SELECT
+            ck.fUuid	AS	'uuid',
+            ck.fKeyword	AS	'keyword',
+            ck.fUrl	    AS 'url'
+        from t_customer_keyword ck
+        LEFT JOIN t_customer c
+        ON c.fUuid = ck.fCustomerUuid
+        WHERE ck.fType = 'pt'
+        AND ck.fStatus = 1
+        AND ck.fSearchEngine = '百度'
+        AND ck.fUrl &gt; ''
         GROUP BY ck.fUrl
     </select>
 

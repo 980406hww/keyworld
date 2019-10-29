@@ -28,7 +28,7 @@ public class UpdateKeywordBearsPawNumberService extends ServiceImpl<UpdateKeywor
     private static final ConcurrentHashMap<String, String> CUSTOMER_KEYWORD_DOMAIN_MAP = new ConcurrentHashMap<>();
 
     /**
-     * 缓存去重后的关键词域名，用于更新关键词的熊掌号
+     * 缓存去重后的关键词域名，用于更新百度关键词的熊掌号
      * @throws MalformedURLException
      */
     public void cacheCustomerKeywordDomainMap() throws MalformedURLException {
