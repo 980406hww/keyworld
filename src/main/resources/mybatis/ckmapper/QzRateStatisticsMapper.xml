@@ -29,10 +29,12 @@
             <if test="qzRateStatisticsCountCriteria.terminalType!=null and qzRateStatisticsCountCriteria.terminalType!=''">
                 AND fTerminalType = #{qzRateStatisticsCountCriteria.terminalType}
             </if>
-            AND fQZSettingUuid IN
-            <foreach item="item" index="index" collection="qzRateStatisticsCountCriteria.qzUuids" open="(" separator="," close=")">
-                #{item}
-            </foreach>
+            <if test="qzRateStatisticsCountCriteria.qzUuids != null">
+                AND fQZSettingUuid IN
+                <foreach item="item" index="index" collection="qzRateStatisticsCountCriteria.qzUuids" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
         GROUP BY fRateDate
         ORDER BY fRateDate
         </select>

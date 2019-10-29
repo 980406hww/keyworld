@@ -49,7 +49,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
             x: 40,
             y: 50,
             x2: 90,
-            y2: 20,
+            y2: 50,
         },
         legend: {
             orient: 'vertical',
@@ -102,7 +102,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
             boundaryGap: false,
             axisLabel: {
                 interval: 0,
-                // rotate: -50,
+                rotate: -30
             },
             data: []
         },
@@ -162,8 +162,22 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
         reload(condition);
     });
 
-    form.on('radio(keywordTime)', function () {
+    form.on('radio(keywordTime)', function (data) {
         var condition = common.formToJsonObject('keywordFrom');
+        switch (data.value) {
+            case '1':
+                keywordOption.xAxis.axisLabel.rotate = -30;
+                keywordOption.grid.y2 = 50;
+                break;
+            case '2':
+                keywordOption.xAxis.axisLabel.rotate = 0;
+                keywordOption.grid.y2 = 20;
+                break;
+            case '3':
+                keywordOption.xAxis.axisLabel.rotate = -30;
+                keywordOption.grid.y2 = 50;
+                break;
+        }
         getKeywordMonData(condition);
     });
 
@@ -302,7 +316,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
             method: 'post',
             url: '/internal/customerkeywordmon/getMonTableDataByCondition',
             page: true,
-            limit: 25,
+            limit: 100,
             limits: [10, 25, 50, 100, 500],
             size: 'md',
             id: 'table',
@@ -331,9 +345,9 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                         return msg;
                     }
                 },
-                {field: 'searchEngine', title: '搜索引擎', width: '9%', align: 'center'},
+                {field: 'searchEngine', title: '搜索引擎', width: '8%', align: 'center'},
                 {
-                    field: 'terminal', title: '终端', width: '8%', align: 'center', templet: function (d) {
+                    field: 'terminal', title: '终端', width: '7%', align: 'center', templet: function (d) {
                         if (d.terminal === 'PC') {
                             return '电脑';
                         } else if (d.terminal === 'Phone') {
@@ -344,7 +358,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                     }
                 },
                 {
-                    field: 'type', title: '类型', width: '9%', align: 'center', templet: function (d) {
+                    field: 'type', title: '类型', width: '8%', align: 'center', templet: function (d) {
                         switch (d.type) {
                             case 'pt':
                                 return '单词';
@@ -358,7 +372,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                     }
                 },
                 {
-                    field: 'date', title: '统计时间', width: '12%', align: 'center', templet: function (d) {
+                    field: 'date', title: '统计时间', width: '15%', align: 'center', templet: function (d) {
                         return layui.util.toDateString(d.date, 'yyyy-MM-dd HH:mm:ss');
                     }
                 }

@@ -1128,10 +1128,12 @@
         <if test="qzRateKewordCountCriteria.terminalType != null and qzRateKewordCountCriteria.terminalType != ''">
             AND ck.fTerminalType=#{qzRateKewordCountCriteria.terminalType}
         </if>
-        AND ck.fQZSettingUuid IN
-        <foreach item="qzUuid"  collection="qzRateKewordCountCriteria.qzUuids" open="(" separator="," close=")">
-            #{qzUuid}
-        </foreach>
+        <if test="qzRateKewordCountCriteria.qzUuids != null">
+            AND ck.fQZSettingUuid IN
+            <foreach item="qzUuid"  collection="qzRateKewordCountCriteria.qzUuids" open="(" separator="," close=")">
+                #{qzUuid}
+            </foreach>
+        </if>
     GROUP BY ck.fQZSettingUuid
 </select>
 

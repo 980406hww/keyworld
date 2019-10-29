@@ -19,7 +19,6 @@ import com.keymanager.ckadmin.entity.QZChargeRule;
 import com.keymanager.ckadmin.entity.QZKeywordRankInfo;
 import com.keymanager.ckadmin.entity.QZOperationType;
 import com.keymanager.ckadmin.entity.QZSetting;
-import com.keymanager.ckadmin.entity.QzChargeMon;
 import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.QZCaptureTitleLogStatusEnum;
 import com.keymanager.ckadmin.enums.QZSettingStatusEnum;
@@ -116,9 +115,6 @@ public class QZSettingServiceImpl extends
 
     @Resource(name = "qzCaptureTitleLogService2")
     private QZCaptureTitleLogService qzCaptureTitleLogService;
-
-    @Resource(name = "qzChargeMonService2")
-    QzChargeMonService qzChargeMonService;
 
     @Override
     public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingCriteria) {

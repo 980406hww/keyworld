@@ -677,34 +677,38 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public Page<QZRateKeywordCountVO> getQZRateKewordCountList(Page<QZRateKeywordCountVO> page,
         QZRateKewordCountCriteria qzRateKewordCountCriteria) throws CloneNotSupportedException {
-        List<Long> qzUuids = qzSettingService.getQZUuidsByUserID(qzRateKewordCountCriteria.getUserID(),qzRateKewordCountCriteria.getSearchEngine(),qzRateKewordCountCriteria.getTerminalType());
+        List<Long> qzUuids = qzSettingService.getQZUuidsByUserID(qzRateKewordCountCriteria.getUserID(), qzRateKewordCountCriteria.getSearchEngine(), qzRateKewordCountCriteria.getTerminalType());
+        if (null == qzUuids || qzUuids.isEmpty()) {
+            return page;
+        }
         qzRateKewordCountCriteria.setQzUuids(qzUuids);
-        List<QZRateKeywordCountVO> qzRateKeywordCountVOS = customerKeywordDao.getQZRateKeywordCount(page,qzRateKewordCountCriteria);
-        if (CollectionUtils.isNotEmpty(qzRateKeywordCountVOS)){
+        List<QZRateKeywordCountVO> qzRateKeywordCountVOS = customerKeywordDao.getQZRateKeywordCount(page, qzRateKewordCountCriteria);
+        if (CollectionUtils.isNotEmpty(qzRateKeywordCountVOS)) {
             SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
             String todayDate = f.format(new Date());
             // 当不传入终端类型时，需要判断当前站点是否包含pc、phone终端类型
-            if (("").equals(qzRateKewordCountCriteria.getTerminalType())){
+            if (("").equals(qzRateKewordCountCriteria.getTerminalType())) {
                 List<QZRateKeywordCountVO> qzRateKeywordCountVONewList = new ArrayList<>();
-                for (QZRateKeywordCountVO qzRateKeywordCountVO:qzRateKeywordCountVOS){
-                    if (qzRateKeywordCountVO.getHasPC()==1){
+                for (QZRateKeywordCountVO qzRateKeywordCountVO : qzRateKeywordCountVOS) {
+                    if (qzRateKeywordCountVO.getHasPC() == 1) {
                         QZRateKeywordCountVO qzRateKeywordCountVOClone1 = (QZRateKeywordCountVO) qzRateKeywordCountVO.clone();
-                        qzRateKeywordCountVOClone1.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVO.getQzUuid(),"PC",todayDate));
+                        qzRateKeywordCountVOClone1.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVO.getQzUuid(), "PC", todayDate));
                         qzRateKeywordCountVOClone1.setTerminalType("PC");
                         qzRateKeywordCountVONewList.add(qzRateKeywordCountVOClone1);
                     }
-                    if (qzRateKeywordCountVO.getHasPhone()==1){
+                    if (qzRateKeywordCountVO.getHasPhone() == 1) {
                         QZRateKeywordCountVO qzRateKeywordCountVOClone2 = (QZRateKeywordCountVO) qzRateKeywordCountVO.clone();
-                        qzRateKeywordCountVOClone2.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVO.getQzUuid(),"Phone",todayDate));
+                        qzRateKeywordCountVOClone2.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVO.getQzUuid(), "Phone", todayDate));
                         qzRateKeywordCountVOClone2.setTerminalType("Phone");
                         qzRateKeywordCountVONewList.add(qzRateKeywordCountVOClone2);
                     }
 
                 }
                 qzRateKeywordCountVOS = qzRateKeywordCountVONewList;
-            }else{
-                for (QZRateKeywordCountVO qzRateKeywordCountVO:qzRateKeywordCountVOS){
-                    qzRateKeywordCountVO.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVO.getQzUuid(),qzRateKewordCountCriteria.getTerminalType(),todayDate));
+            } else {
+                for (QZRateKeywordCountVO qzRateKeywordCountVO : qzRateKeywordCountVOS) {
+                    qzRateKeywordCountVO
+                        .setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVO.getQzUuid(), qzRateKewordCountCriteria.getTerminalType(), todayDate));
                     qzRateKeywordCountVO.setTerminalType(qzRateKewordCountCriteria.getTerminalType());
                 }
             }

@@ -60,22 +60,6 @@
             opacity: .8;
             transition: opacity 0.5s;
         }
-
-        input.layui-input.layui-unselect {
-            height: 30px !important;
-        }
-
-        .layui-unselect.layui-form-select {
-            margin-right: 10px;
-        }
-
-        .layui-form-radio {
-            line-height: 28px;
-            margin: 2px 10px 0 0;
-            padding-right: 10px;
-            cursor: pointer;
-            font-size: 0;
-        }
     </style>
 </head>
 <body class="childrenBody home">
@@ -140,38 +124,31 @@
 <div class="layui-row layui-col-space15">
     <div class="layui-col-md6">
         <div class="layui-card">
-            <div class="yskj-card-body map-body">
-                <div class="layui-col-md12 layui-form" style="z-index: 999">
-                    <div class="layui-col-md3"><h4 class="my-card-title">每日站点涨幅统计</h4></div>
-                    <div class="layui-col-md9">
-                        <form id="qzRateSearchForm">
-                            <div class="layui-col-md3" style="width: 150px">
-                                <select id="qzRateSearchEngine" name="searchEngine" lay-filter="qzRateSearchEngine">
-
-                                </select>
-                            </div>
-                            <div class="layui-col-md2" style="width: 120px">
-                                <select id="qzRateTerminalType" name="terminalType" lay-filter="qzRateTerminalType">
-                                    <option value="">电脑+手机</option>
-                                    <option value="PC">电脑</option>
-                                    <option value="Phone">手机</option>
-                                </select>
-                            </div>
-                            <div class="layui-col-md6" id="qzRangeDiv" style="width: 245px">
-                                <input type="radio" name="qzRateRange" value="1" title="7天" lay-filter="qzRateRange" style="margin-left: 10px">
-                                <input type="radio" name="qzRateRange" value="2" title="30天" lay-filter="qzRateRange">
-                                <input type="radio" name="qzRateRange" value="3" title="3个月" lay-filter="qzRateRange" checked>
-                            </div>
-                            <div class="layui-col-md1">
-
-                                <span class="layui-btn layui-btn-sm" id="qzRateDetail">数据详情 </span>
-                            </div>
-
-                        </form>
-
-                    </div>
+            <div class="yskj-card-body map-body" style="position:relative;">
+                <div style="position: absolute;top: 28px;left: 0;z-index: 9999;width: 100%;">
+                    <form class="layui-form layui-form-pane" id="qzRateSearchForm">
+                        <div style="float: right; width: 100px;margin: 0 16px 0 6px">
+                            <div class="my-btn" id="qzRateDetail">数据详情</div>
+                        </div>
+                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
+                            <select name="terminalType" id="qzRateTerminalType" lay-filter="qzRateTerminalType">
+                                <option value="">电脑+手机</option>
+                                <option value="PC" selected>电脑</option>
+                                <option value="Phone">手机</option>
+                            </select>
+                        </div>
+                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
+                            <select name="searchEngine" id="qzRateSearchEngine" lay-filter="qzRateSearchEngine">
+                                <option value="">所有</option>
+                            </select>
+                        </div>
+                        <div style="float: right;position: relative;top: 2px;" id="qzRangeDiv">
+                            <input type="radio" name="qzRateRange" value="1" title="7天" lay-filter="qzRateRange">
+                            <input type="radio" name="qzRateRange" value="2" title="30天" lay-filter="qzRateRange">
+                            <input type="radio" name="qzRateRange" value="3" title="3个月" lay-filter="qzRateRange" checked>
+                        </div>
+                    </form>
                 </div>
-
                 <div style="height: 100%;" id="qzDailyStatistics"></div>
             </div>
         </div>
@@ -212,7 +189,7 @@
 <div class="layui-row layui-col-space15">
     <div class="layui-col-md6">
         <div class="layui-card">
-            <div class="yskj-card-body clearfix" style="position:relative;height: 380px;">
+            <div class="yskj-card-body clearfix" style="position:relative;height: 370px;">
                 <div style="position: absolute;top: 28px;left: 0;z-index: 9999;width: 100%;">
                     <form class="layui-form layui-form-pane" id="keywordFrom">
                         <div style="float: right; width: 100px;margin: 0 16px 0 6px">
@@ -244,25 +221,16 @@
     <div class="layui-col-md6">
         <div class="layui-card">
             <div class="yskj-card-body clearfix">
-                <div class="map-china" id="mapChina"></div>
             </div>
         </div>
     </div>
 </div>
-
-<!--日历-->
-<!--<div class="layui-row layui-col-space15">-->
-<!--<div class="clearfix">-->
-<!--<div id="calendar"></div>-->
-<!--</div>-->
-<!--</div>-->
 </body>
 <script>var condition;</script>
 <script type="text/javascript" src="/static/ok-admin/lib/layui/layui.js"></script>
 <script type="text/javascript" src="/static/ok-admin/js/home.js"></script>
 <script type="text/javascript" src="/static/ok-admin/page/qzsetting/qzChargeMon.js"></script>
 <script type="text/javascript" src="/static/ok-admin/page/keyword/customerKeywordMon.js"></script>
-<script type="text/javascript" src="/static/ok-admin/js/home.js"></script>
 <script>
     layui.use(['jquery', 'form', 'common'], function () {
         var $ = layui.jquery;
@@ -286,15 +254,16 @@
                 data: JSON.stringify({'terminalType': 'All'}),
                 success: function (data) {
                     $("#qzRateSearchEngine").empty();
-                    $("#qzRateSearchEngine").append('<option value="">全部搜索引擎</option>');
+                    $("#qzRateSearchEngine").append('<option value="">所有</option>');
                     $.each(data.data, function (index, item) {
-                        $('#qzRateSearchEngine').append(
-                            '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
+                        $('#qzRateSearchEngine').append('<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
                     });
                     form.render("select");
                 }
             });
         }
+
+        var qzDailyStatistics = echarts.init($('#qzDailyStatistics')[0]);
 
         function init_qz_rate_statistics(condition) {
             $.ajax({
@@ -310,79 +279,101 @@
                     if (res.code === 200) {
                         var qzDailyStatisticsData = res.data;
                         var qzDailyStatisticsOption = {
-
-                            "tooltip": {
-                                "trigger": "axis",
-                                "axisPointer": {
-                                    "type": "cross",
-                                    "label": {
-                                        "backgroundColor": "#6a7985"
+                                title: {
+                                    text: '每日站点涨幅统计',
+                                    subtext: '',
+                                    y: '10',
+                                    x: '10'
+                                },
+                                "tooltip": {
+                                    "trigger": "axis",
+                                    "axisPointer": {
+                                        "type": "cross",
+                                        "label": {
+                                            "backgroundColor": "#6a7985"
+                                        }
                                     }
-                                }
-                            },
-                            "legend": {
-                                "orient": 'vertical',
-                                "icon": "circle",
-                                "x": 'right',
-                                "y": 'center',
-                                "data": [
-                                    "全部站点个数",
-                                    "上涨个数",
-                                    "不变个数",
-                                    "下降个数"
-                                ]
-                            },
-                            "grid": {
-                                "top": "3%",
-                                "left": "1%",
-                                "right": "14%",
-                                "bottom": "10%",
-                                "containLabel": true
-                            },
-                            "xAxis": [
-                                {
+                                },
+                                "legend": {
+                                    "orient": 'vertical',
+                                    "icon": "circle",
+                                    "x": 'right',
+                                    "y": 'center',
+                                    "data": [
+                                        "全部站点个数",
+                                        "上涨个数",
+                                        "不变个数",
+                                        "下降个数"
+                                    ]
+                                },
+                                "grid": {
+                                    x: 40,
+                                    y: 50,
+                                    x2: 90,
+                                    y2: 40,
+                                },
+                                "xAxis": {
                                     "type": "category",
                                     "boundaryGap": false,
-                                    "data": qzDailyStatisticsData.date
-                                }
-                            ],
-                            "yAxis": [
-                                {
+                                    "data": qzDailyStatisticsData.date,
+                                    axisLabel: {
+                                        interval: 0,
+                                        rotate: -30
+                                    }
+                                },
+                                "yAxis": {
                                     "type": "value"
-                                }
-                            ],
-                            "series": [
-                                {
-                                    "name": "全部站点个数",
-                                    "type": "line",
-                                    "areaStyle": {normal: {color: 'rgba(255,255,255,0)'}},
-                                    "data": qzDailyStatisticsData.totalCount,
+                                },
+                                "series":
+                                    [
+                                        {
+                                            "name": "全部站点个数",
+                                            "type": "line",
+                                            smooth: true,
+                                            "areaStyle": {normal: {color: 'rgba(255,255,255,0)'}},
+                                            "data": qzDailyStatisticsData.totalCount,
 
-                                },
-                                {
-                                    "name": "上涨个数",
-                                    "type": "line",
-                                    "areaStyle": {normal: {color: 'rgba(255,255,255,0)'}},
-                                    "data": qzDailyStatisticsData.riseCount
-                                },
-                                {
-                                    "name": "不变个数",
-                                    "type": "line",
-                                    "areaStyle": {normal: {color: 'rgba(255,255,255,0)'}},
-                                    "data": qzDailyStatisticsData.unchangeCount
-                                },
-                                {
-                                    "name": "下降个数",
-                                    "type": "line",
-                                    "areaStyle": {
-                                        normal: {color: 'rgba(255,255,255,0)'}
-                                    },
-                                    "data": qzDailyStatisticsData.fallCount
-                                }
+                                        },
+                                        {
+                                            "name": "上涨个数",
+                                            "type": "line",
+                                            smooth: true,
+                                            "areaStyle": {normal: {color: 'rgba(255,255,255,0)'}},
+                                            "data": qzDailyStatisticsData.riseCount
+                                        },
+                                        {
+                                            "name": "不变个数",
+                                            "type": "line",
+                                            smooth: true,
+                                            "areaStyle": {normal: {color: 'rgba(255,255,255,0)'}},
+                                            "data": qzDailyStatisticsData.unchangeCount
+                                        },
+                                        {
+                                            "name": "下降个数",
+                                            "type": "line",
+                                            smooth: true,
+                                            "areaStyle": {
+                                                normal: {color: 'rgba(255,255,255,0)'}
+                                            },
+                                            "data": qzDailyStatisticsData.fallCount
+                                        }
 
-                            ]
-                        };
-                        var qzDailyStatistics = echarts.init($('#qzDailyStatistics')[0]);
+                                    ]
+                            };
+                        switch (condition.qzRateRange) {
+                            case '1':
+                                qzDailyStatisticsOption.xAxis.axisLabel.rotate = 0;
+                                qzDailyStatisticsOption.grid.y2 = 20;
+                                break;
+                            case '2':
+                                qzDailyStatisticsOption.xAxis.axisLabel.rotate = -30;
+                                qzDailyStatisticsOption.grid.y2 = 40;
+                                break;
+                            case '3':
+                                qzDailyStatisticsOption.xAxis.axisLabel.rotate = -30;
+                                qzDailyStatisticsOption.grid.y2 = 40;
+                                break;
+                        }
                         qzDailyStatistics.setOption(qzDailyStatisticsOption);
                     }
                 },
@@ -400,7 +391,6 @@
         form.on('select(qzRateSearchEngine)', function (data) {
             let postData = common.formToJsonObject('qzRateSearchForm');
             init_qz_rate_statistics(postData);
-
         });
 
         form.on('radio(qzRateRange)', function (data) {
@@ -413,7 +403,7 @@
             let searchEngine = postData.searchEngine === '' ? 'null' : postData.searchEngine;
             let terminalType = postData.terminalType === '' ? 'null' : postData.terminalType;
             let qzRateRange = postData.qzRateRange === '' ? '1' : postData.qzRateRange;
-            let url = '/internal/layer/toQZRateStatisticsDetail/' + terminalType + '/' + searchEngine +'/' + qzRateRange;
+            let url = '/internal/layer/toQZRateStatisticsDetail/' + terminalType + '/' + searchEngine + '/' + qzRateRange;
 
             url = encodeURI(encodeURI(url));
             common.updateOrNewTab(url, '每日站点涨幅统计详情', 'qzRateStatisticsDetail');

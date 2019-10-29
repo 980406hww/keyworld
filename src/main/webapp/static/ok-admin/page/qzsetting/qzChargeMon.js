@@ -16,7 +16,7 @@ layui.use(['jquery', 'form', 'common'], function () {
             x: 40,
             y: 50,
             x2: 90,
-            y2: 20,
+            y2: 50,
         },
         legend: {
             orient: 'vertical',
@@ -69,7 +69,7 @@ layui.use(['jquery', 'form', 'common'], function () {
             boundaryGap: false,
             axisLabel: {
                 interval: 0,
-                // rotate: -50,
+                rotate: -30
             },
             data: []
         },
@@ -166,7 +166,21 @@ layui.use(['jquery', 'form', 'common'], function () {
         getChargeMonData(common.formToJsonObject('form'));
     });
 
-    form.on('radio(time)', function () {
+    form.on('radio(time)', function (data) {
+        switch (data.value) {
+            case '1':
+                chargeOption.xAxis.axisLabel.rotate = -30;
+                chargeOption.grid.y2 = 50;
+                break;
+            case '2':
+                chargeOption.xAxis.axisLabel.rotate = 0;
+                chargeOption.grid.y2 = 20;
+                break;
+            case '3':
+                chargeOption.xAxis.axisLabel.rotate = -30;
+                chargeOption.grid.y2 = 50;
+                break;
+        }
         getChargeMonData(common.formToJsonObject('form'));
     });
 
