@@ -145,6 +145,9 @@
                 common.showFailMsg("该优化组已存在对应的屏蔽网站列表，请返回前往修改！");
                 return false;
             }
+            if (!common.waitMoment()) {
+                return false;
+            }
             $.ajax({
                 url: '/internal/screenedWebsite/saveScreenedWebsite2',
                 type: 'post',

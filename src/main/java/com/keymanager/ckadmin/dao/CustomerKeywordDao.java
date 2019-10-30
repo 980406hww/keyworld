@@ -39,11 +39,9 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateOptimizationQueryTime(@Param("customerKeywordUuids") List<Long> customerKeywordUuids);
 
-    int getCustomerKeywordCount(@Param("terminalType") String terminalType,
-        @Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
+    int getCustomerKeywordCount(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
 
-    void excludeCustomerKeyword(
-        @Param("qzSettingExcludeCustomerKeywordsCriteria") QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
+    void excludeCustomerKeyword(@Param("qzSettingExcludeCustomerKeywordsCriteria") QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
 
     void addCustomerKeywords(@Param("customerKeywords") ArrayList<CustomerKeyword> customerKeywords);
 

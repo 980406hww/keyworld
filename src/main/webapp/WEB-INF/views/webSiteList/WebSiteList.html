@@ -25,12 +25,6 @@
             background: #f2f2f2;
             border: 0px;
         }
-        .layui-table-body .layui-table-cell {
-            text-align: left;
-        }
-        .layui-table-body .laytable-cell-checkbox {
-            text-align: center;
-        }
         .layui-table tr .layui-table-col-special .layui-table-cell{
             text-align: center;
         }
@@ -147,6 +141,15 @@
 
         input[type="number"] {
             -moz-appearance: textfield;
+        }
+
+        .layui-table-tool {
+            min-height: 30px;
+            padding: 6px 5px 6px 5px;
+        }
+
+        .layui-table-tool-self{
+            top: 0;
         }
     </style>
 </head>
@@ -385,44 +388,44 @@
                 where: whereCondition,
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', width: '35', align: 'center', rowspan: 2, fixed: "left"},
-                    {field: 'websiteName', title: '网站名称', width: '10%', align: 'center', rowspan: 2},
-                    {field: 'industry', title: '所属行业类型', width: '8%', align: 'center', rowspan: 2, templet: '#industry'},
-                    {field: 'accessFailCount', title: '访问失败次数', width: '7%', align: 'center', rowspan: 2},
+                    {field: 'websiteName', title: '网站名称', width: '10%', align: 'left', rowspan: 2},
+                    {field: 'industry', title: '所属行业类型', width: '8%', align: 'left', rowspan: 2, templet: '#industry'},
+                    {field: 'accessFailCount', title: '访问失败次数', width: '7%', align: 'left', rowspan: 2},
                     {field: 'accessFailTime', title: '发现故障时间', width: '9%', align: 'center', templet: '#accessFailTime', rowspan: 2},
                     {field: 'lastAccessTime', title: '最近访问时间', width: '9%', align: 'center', templet: '#lastAccessTime', rowspan: 2},
-                    {field: 'updateTime', title: '更新时间', align: 'center', width: '10%', align: 'center', templet: '#updateTime', rowspan: 2},
+                    {field: 'updateTime', title: '更新时间', width: '10%', align: 'center', templet: '#updateTime', rowspan: 2},
                     {field: '', title: '域名信息', align: 'center', width: '28%', colspan: 7},
                     {field: '', title: '后台信息', align: 'center', width: '28%', colspan: 7},
                     {field: '', title: '数据库信息', align: 'center', width: '16%', colspan: 4},
                     {field: '', title: '服务器信息', align: 'center', width: '14%', colspan: 6},
-                    {title: '操作', align: 'center', width: '7%', align: 'center', templet: '#operationTpl', fixed: "right", rowspan: 2}
+                    {title: '操作', width: '7%', align: 'center', templet: '#operationTpl', fixed: "right", rowspan: 2}
                 ],[
-                    {field: 'domain', title: '网站域名', width: '12%', align: 'center', templet: '#domain'},
-                    {field: 'websiteType', title: '销售网站类型', width: '7%', align: 'center',templet: '#websiteType'},
-                    {field: 'friendlyLinkCount', title: '友情链接', width: '5%', align: 'center', templet: '#friendlyLinkCount'},
-                    {field: 'advertisingCount', title: '广告', width: '4%', align: 'center', templet: '#advertisingCount'},
-                    {field: 'registrar', title: '注册商', width: '5%', align: 'center'},
-                    {field: 'analysis', title: '解析商', width: '5%', align: 'center'},
+                    {field: 'domain', title: '网站域名', width: '12%', align: 'left', templet: '#domain'},
+                    {field: 'websiteType', title: '销售网站类型', width: '7%', align: 'left',templet: '#websiteType'},
+                    {field: 'friendlyLinkCount', title: '友情链接', width: '5%', align: 'left', templet: '#friendlyLinkCount'},
+                    {field: 'advertisingCount', title: '广告', width: '4%', align: 'left', templet: '#advertisingCount'},
+                    {field: 'registrar', title: '注册商', width: '5%', align: 'left'},
+                    {field: 'analysis', title: '解析商', width: '5%', align: 'left'},
                     {field: 'expiryTime', title: '到期时间', width: '6%', align: 'center', templet: '#expiryTime'},
-                    {field: 'backendDomain', title: '后台链接', width: '10%', align: 'center'},
-                    {field: 'backendUserName', title: '后台用户', width: '8%', align: 'center'},
-                    {field: 'backendPassword', title: '后台密码', width: '8%', align: 'center'},
-                    {field: 'updateSalesInfoSign', title: '更新销售信息状态', width: '9%', align: 'center',templet: '#updateSalesInfoSign'},
-                    {field: 'synchronousFriendlyLinkSign', title: '更新友链信息状态', width: '9%', align: 'center', templet:'#synchronousFriendlyLinkSign'},
-                    {field: 'synchronousAdvertisingSign', title: '更新广告信息状态', width: '9%', align: 'center', templet: '#synchronousAdvertisingSign'},
-                    {field: 'backgroundLoginStatus', title: '后台登陆状态', width: '8%', align: 'center', templet: '#backgroundLoginStatus'},
-                    {field: 'databaseName', title: '数据库名称', width: '7%', align: 'center'},
-                    {field: 'databaseUserName', title: '用户名', width: '7%', align: 'center'},
-                    {field: 'databasePassword', title: '密码', width: '8%', align: 'center'},
-                    {field: 'databaseStatus', title: '数据库登陆状态', width: '10%', align: 'center', templet: '#databaseStatus'},
-                    {field: 'serverIP', title: 'IP', width: '10%', align: 'center'},
-                    {field: 'serverUserName', title: '用户名', width: '7%', align: 'center'},
-                    {field: 'serverPassword', title: '密码', width: '8%', align: 'center'},
-                    {field: 'serverPort', title: '端口', width: '4%', align: 'center'},
-                    {field: 'indexFileStatus', title: 'index文件状态', width: '7%', align: 'center', templet: '#indexFileStatus'},
-                    {field: 'sftpStatus', title: 'sftp服务状态', width: '7%', align: 'center', templet: '#sftpStatus'},
+                    {field: 'backendDomain', title: '后台链接', width: '10%', align: 'left'},
+                    {field: 'backendUserName', title: '后台用户', width: '8%', align: 'left'},
+                    {field: 'backendPassword', title: '后台密码', width: '8%', align: 'left'},
+                    {field: 'updateSalesInfoSign', title: '更新销售信息状态', width: '9%', align: 'left',templet: '#updateSalesInfoSign'},
+                    {field: 'synchronousFriendlyLinkSign', title: '更新友链信息状态', width: '9%', align: 'left', templet:'#synchronousFriendlyLinkSign'},
+                    {field: 'synchronousAdvertisingSign', title: '更新广告信息状态', width: '9%', align: 'left', templet: '#synchronousAdvertisingSign'},
+                    {field: 'backgroundLoginStatus', title: '后台登陆状态', width: '8%', align: 'left', templet: '#backgroundLoginStatus'},
+                    {field: 'databaseName', title: '数据库名称', width: '7%', align: 'left'},
+                    {field: 'databaseUserName', title: '用户名', width: '7%', align: 'left'},
+                    {field: 'databasePassword', title: '密码', width: '8%', align: 'left'},
+                    {field: 'databaseStatus', title: '数据库登陆状态', width: '10%', align: 'left', templet: '#databaseStatus'},
+                    {field: 'serverIP', title: 'IP', width: '10%', align: 'left'},
+                    {field: 'serverUserName', title: '用户名', width: '7%', align: 'left'},
+                    {field: 'serverPassword', title: '密码', width: '8%', align: 'left'},
+                    {field: 'serverPort', title: '端口', width: '4%', align: 'left'},
+                    {field: 'indexFileStatus', title: 'index文件状态', width: '7%', align: 'left', templet: '#indexFileStatus'},
+                    {field: 'sftpStatus', title: 'sftp服务状态', width: '7%', align: 'left', templet: '#sftpStatus'},
                 ]],
-                height: 'full-75',
+                height: 'full-65',
                 done: function (res, curr, count) {
                 }
             });
@@ -790,7 +793,7 @@
         }
 
         function modifyWebsiteInfo(data){
-            okLayer.open("首页/其他/修改网站信息", "/internal/websites/toAddWebsite", "35%", "95%", function(layero){
+            okLayer.open("首页 / 其他 / 修改网站信息", "/internal/websites/toAddWebsite", "35%", "95%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             },function(){
                 if(sign){
@@ -801,7 +804,7 @@
         }
 
         function toAddWebsite() {
-            okLayer.open("首页/其他/添加网站信息", "/internal/websites/toAddWebsite", "35%", "95%", null, function(){
+            okLayer.open("首页 / 其他 / 添加网站信息", "/internal/websites/toAddWebsite", "35%", "95%", null, function(){
                 if(sign){
                     active['reload'].call(this);
                     sign = false;

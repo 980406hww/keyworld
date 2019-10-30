@@ -58,16 +58,6 @@
                         </div>
                         <div class="layui-inline">
                             <div class="layui-input-inline">
-                                <input type="checkbox" name="hasOperation" id="hasOperation" title="有操作类型" lay-filter="oneChecked"/>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <div class="layui-input-inline">
-                                <input type="checkbox" name="noOperation" id="noOperation" title="无操作类型" lay-filter="oneChecked"/>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <div class="layui-input-inline">
                                 <input type="checkbox" name="hasRemainingAccount" id="hasRemainingAccount" title="剩分组设置占比" lay-filter="oneChecked"/>
                             </div>
                         </div>
@@ -102,7 +92,7 @@
             </form>
 
         </div>
-        <div id="groupSettingBody" style="height: 820px;overflow-y: scroll;padding-bottom: 5px;">
+        <div id="groupSettingBody" style="overflow-y: scroll;padding-bottom: 5px;">
             <div style="width: 99.2%" class="layui-fluid layadmin-maillist-fluid">
                 <div class="layui-form" id="data_list"></div>
             </div>
@@ -121,7 +111,7 @@
     function getHeight(){
         let b = document.getElementById('groupSettingBody');
         let h = window.innerHeight || document.body.offsetHeight;
-        b.style.height = (h - 155) + 'px';
+        b.style.height = (h - 145) + 'px';
     }
 
     layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'], function () {
@@ -141,12 +131,6 @@
             $('#terminalType').val(d.terminal);
             init_operationType();
             let pageConf = common.formToJsonObject('searchForm');
-            if (pageConf.hasOperation){
-                pageConf.hasOperation = true;
-            }
-            if (pageConf.noOperation){
-                pageConf.hasOperation = false;
-            }
             if (pageConf.hasRemainingAccount){
                 pageConf.hasRemainingAccount = true;
             }else{
@@ -189,50 +173,19 @@
 
         form.on('select(operationTypeFilter)', function(data){
             if(data.elem.value !== ''){
-                $('#hasOperation').prop("checked",true);
-                $('#noOperation').prop("checked",false);
                 $('#hasRemainingAccount').prop("checked",false);
             }else {
-                $('#hasOperation').prop("checked",false);
-                $('#noOperation').prop("checked",false);
                 $('#hasRemainingAccount').prop("checked",false);
             }
-
             form.render('checkbox');
         });
 
         form.on('checkbox(oneChecked)', function(data){
-            if (data.elem.checked){
-                switch(data.elem.id){
-                    case 'hasOperation':
-                        $('#noOperation').prop("checked",false);
-                        $('#hasRemainingAccount').prop("checked",false);
-                        break;
-                    case 'noOperation':
-                        $('#hasOperation').prop("checked",false);
-                        $('#hasRemainingAccount').prop("checked",false);
-                        break;
-                    case 'hasRemainingAccount':
-                        $('#noOperation').prop("checked",false);
-                        $('#hasOperation').prop("checked",false);
-                        break;
-                    default:
-                        return;
-                }
-                form.render('checkbox');
-                $('#searchBtn').click();
-            }
-
+            $('#searchBtn').click();
         });
 
         form.on('submit(search)', function (data) {
             var pageConf = data.field;
-            if (pageConf.hasOperation){
-                pageConf.hasOperation = true;
-            }
-            if (pageConf.noOperation){
-                pageConf.hasOperation = false;
-            }
             if (pageConf.hasRemainingAccount){
                 pageConf.hasRemainingAccount = true;
             }else{
@@ -259,12 +212,6 @@
             }, function () {
                 if (sign) {
                     let pageConf = common.formToJsonObject('searchForm');
-                    if (pageConf.hasOperation){
-                        pageConf.hasOperation = true;
-                    }
-                    if (pageConf.noOperation){
-                        pageConf.hasOperation = false;
-                    }
                     if (pageConf.hasRemainingAccount){
                         pageConf.hasRemainingAccount = true;
                     }else{
@@ -284,12 +231,6 @@
             }, function () {
                 if (sign) {
                     let pageConf = common.formToJsonObject('searchForm');
-                    if (pageConf.hasOperation){
-                        pageConf.hasOperation = true;
-                    }
-                    if (pageConf.noOperation){
-                        pageConf.hasOperation = false;
-                    }
                     if (pageConf.hasRemainingAccount){
                         pageConf.hasRemainingAccount = true;
                     }else{
@@ -317,12 +258,6 @@
             }, function () {
                 if (sign) {
                     let pageConf = common.formToJsonObject('searchForm');
-                    if (pageConf.hasOperation){
-                        pageConf.hasOperation = true;
-                    }
-                    if (pageConf.noOperation){
-                        pageConf.hasOperation = false;
-                    }
                     if (pageConf.hasRemainingAccount){
                         pageConf.hasRemainingAccount = true;
                     }else{
@@ -348,12 +283,6 @@
             }, function () {
                 if (sign) {
                     let pageConf = common.formToJsonObject('searchForm');
-                    if (pageConf.hasOperation){
-                        pageConf.hasOperation = true;
-                    }
-                    if (pageConf.noOperation){
-                        pageConf.hasOperation = false;
-                    }
                     if (pageConf.hasRemainingAccount){
                         pageConf.hasRemainingAccount = true;
                     }else{
@@ -379,12 +308,6 @@
             }, function () {
                 if (sign) {
                     let pageConf = common.formToJsonObject('searchForm');
-                    if (pageConf.hasOperation){
-                        pageConf.hasOperation = true;
-                    }
-                    if (pageConf.noOperation){
-                        pageConf.hasOperation = false;
-                    }
                     if (pageConf.hasRemainingAccount){
                         pageConf.hasRemainingAccount = true;
                     }else{
@@ -664,12 +587,6 @@
                             if (result.code === 200) {
                                 common.showSuccessMsg('操作成功', function () {
                                     let pageConf = common.formToJsonObject('searchForm');
-                                    if (pageConf.hasOperation){
-                                        pageConf.hasOperation = true;
-                                    }
-                                    if (pageConf.noOperation){
-                                        pageConf.hasOperation = false;
-                                    }
                                     if (pageConf.hasRemainingAccount){
                                         pageConf.hasRemainingAccount = true;
                                     }else{
@@ -761,17 +678,11 @@
         window.showGroupQueueDialog = function (uuid) {
             let data = {};
             data.uuid = uuid;
-            okLayer.open("终端管理 / 分组信息 / 分组详情<span style='color: red'>(需要删除的分组请取消选中)</span>", "/internal/groupsetting/toGroupDetail", "40%", "90%", function(layero){
+            okLayer.open("终端管理 / 分组信息 / 分组详情<span style='color: red'>(需要删除的分组请取消选中)</span>", "/internal/groupsetting/toGroupDetail", "30%", "60%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             }, function () {
                 if (sign) {
                     let pageConf = common.formToJsonObject('searchForm');
-                    if (pageConf.hasOperation){
-                        pageConf.hasOperation = true;
-                    }
-                    if (pageConf.noOperation){
-                        pageConf.hasOperation = false;
-                    }
                     if (pageConf.hasRemainingAccount){
                         pageConf.hasRemainingAccount = true;
                     }else{
@@ -780,7 +691,7 @@
                     initLayPage(pageConf);
                     sign = false;
                 }
-            });
+            },'40px');
         };
 
         window.delOperationCombine = function (operationCombineUuid) {
@@ -812,12 +723,6 @@
                                         if (result.code === 200) {
                                             common.showSuccessMsg('操作成功', function () {
                                                 let pageConf = common.formToJsonObject('searchForm');
-                                                if (pageConf.hasOperation){
-                                                    pageConf.hasOperation = true;
-                                                }
-                                                if (pageConf.noOperation){
-                                                    pageConf.hasOperation = false;
-                                                }
                                                 if (pageConf.hasRemainingAccount){
                                                     pageConf.hasRemainingAccount = true;
                                                 }else{
@@ -871,12 +776,6 @@
                         if (result.code === 200) {
                             common.showSuccessMsg('操作成功', function () {
                                 let pageConf = common.formToJsonObject('searchForm');
-                                if (pageConf.hasOperation){
-                                    pageConf.hasOperation = true;
-                                }
-                                if (pageConf.noOperation){
-                                    pageConf.hasOperation = false;
-                                }
                                 if (pageConf.hasRemainingAccount){
                                     pageConf.hasRemainingAccount = true;
                                 }else{

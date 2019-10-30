@@ -76,10 +76,10 @@
             even: true,//隔行背景
             contentType: 'application/json',
             cols: [[
-                {filed: 'groupUuid', type: 'checkbox', width: '5%',LAY_CHECKED:true},
-                {field: 'groupName', title: '分组名称', width: '95%',align:'center'},
+                {filed: 'groupUuid', type: 'checkbox', width: '10%',LAY_CHECKED:true},
+                {field: 'groupName', title: '分组名称', width: '90%',align:'left'},
             ]],
-            height: 'full-140',
+            height: 'full-130',
             done: function (res, curr, count) {
                 $.each(res.data,function (idx, item) {
                     unselectUuidArr.push(item.groupUuid)
@@ -108,8 +108,7 @@
 
         $('#save').click(function () {
 
-            let checkStatus = table.checkStatus('groupTable')
-                , data = checkStatus.data;
+            let checkStatus = table.checkStatus('groupTable'), data = checkStatus.data;
             $.each(data, function (index, item) {
                 unselectUuidArr.remove(item.groupUuid)
             });

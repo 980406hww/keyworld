@@ -393,7 +393,9 @@
                 operationCombine = field;
                 operationCombine.remainingAccount = parseInt($('#unusedPercent').text());
             }
-
+            if (!common.waitMoment()) {
+                return false;
+            }
             $.ajax({
                 url: url,
                 type: 'post',

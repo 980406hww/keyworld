@@ -117,14 +117,6 @@
         .layui-inline:nth-child(1) input {
             width: 140px;
         }
-
-        .layui-table-body .layui-table-cell {
-            text-align: left;
-        }
-
-        .layui-table-body .laytable-cell-checkbox {
-            text-align: center;
-        }
     </style>
 </head>
 <body>
@@ -345,14 +337,14 @@
                 defaultToolbar: ['filter'],
                 contentType: 'application/json',
                 cols: [[
-                    {filed: 'uuid', type: 'checkbox', width: '2%', rowspan :2},
-                    {filed: 'group', title: '类型', width: '10%', align: 'center', rowspan: 2 ,templet: '#group', sort: true},
+                    {filed: 'uuid', type: 'checkbox', width: '2%', rowspan :2, align: 'center'},
+                    {filed: 'group', title: '类型', width: '10%', align: 'left', rowspan: 2 ,templet: '#group', sort: true},
                     {title: '关键字', width: '49%', align: 'center', colspan: 8},
                     {title: '刷的次数', width: '37%', align: 'center', colspan: 6}
                 ],[
-                    {field: 'totalKeywordCount', title: '总数', width: '6%', align: 'center', sort:true},
+                    {field: 'totalKeywordCount', title: '总数', width: '6%', align: 'left', sort:true},
                     {
-                        field: 'reachStandardKeywordCount', title: '达标数(金额)', width: '7%', align: 'center', sort: true, templet: function (d) {
+                        field: 'reachStandardKeywordCount', title: '达标数(金额)', width: '7%', align: 'left', sort: true, templet: function (d) {
                             if (d.reachStandardKeywordCount > 0) {
                                 if (d.group === '总计') {
                                     return '<a href="javascript:findKeyword(\'\', \'\')" style="color: blue">' + d.reachStandardKeywordCount + '('
@@ -366,7 +358,7 @@
                         }
                     },
                     {
-                        field: 'reachStandardPercentage', title: '达标率', width: '6%', align: 'center', sort: true, templet: function (d) {
+                        field: 'reachStandardPercentage', title: '达标率', width: '6%', align: 'left', sort: true, templet: function (d) {
                             if (d.reachStandardPercentage > 0) {
                                 return d.reachStandardPercentage.toFixed(2) + '%';
                             } else {
@@ -375,7 +367,7 @@
                         }
                     },
                     {
-                        field: 'zeroOptimizedCount', title: '没有刷量', width: '6%', align: 'center', sort: true, templet: function (d) {
+                        field: 'zeroOptimizedCount', title: '没有刷量', width: '6%', align: 'left', sort: true, templet: function (d) {
                             if (d.zeroOptimizedCount > 0) {
                                 return d.zeroOptimizedCount;
                             } else {
@@ -384,7 +376,7 @@
                         }
                     },
                     {
-                        field: 'needOptimizeKeywordCount', title: '待刷数', width: '6%', align: 'center', sort: true, templet: function (d) {
+                        field: 'needOptimizeKeywordCount', title: '待刷数', width: '6%', align: 'left', sort: true, templet: function (d) {
                             if (d.needOptimizeKeywordCount > 0) {
                                 return d.needOptimizeKeywordCount;
                             } else {
@@ -393,7 +385,7 @@
                         }
                     },
                     {
-                        field: 'invalidKeywordCount', title: '无效刷量', width: '7%', align: 'center',sort:true, templet: function (d) {
+                        field: 'invalidKeywordCount', title: '无效刷量', width: '7%', align: 'left',sort:true, templet: function (d) {
                             if (d.invalidKeywordCount > 0) {
                                 let html = '';
                                 if (d.group === '总计') {
@@ -421,7 +413,7 @@
                         }
                     },
                     {
-                        field: 'failedKeywordCount', title: '失败数', width: '5%', align: 'center', sort: true, templet: function (d) {
+                        field: 'failedKeywordCount', title: '失败数', width: '5%', align: 'left', sort: true, templet: function (d) {
                             if (d.failedKeywordCount > 0) {
                                 return d.failedKeywordCount;
                             } else {
@@ -430,7 +422,7 @@
                         }
                     },
                     {
-                        field: 'invalidKeywordPercentage', title: '无效占比', width: '6%', align: 'center', sort: true, templet: function (d) {
+                        field: 'invalidKeywordPercentage', title: '无效占比', width: '6%', align: 'left', sort: true, templet: function (d) {
                             if (d.invalidKeywordPercentage > 0) {
                                 let color = d.invalidKeywordPercentage > 20 ? "red" : (d.invalidKeywordPercentage > 10 ? "purple" : "#000");
                                 return '<span style="color: ' + color + '">' + d.invalidKeywordPercentage.toFixed(2) + '%</span>';
@@ -440,7 +432,7 @@
                         }
                     },
                     {
-                        field: 'totalOptimizeCount', title: '总次数', width: '6%', align: 'center', sort: true, templet: function (d) {
+                        field: 'totalOptimizeCount', title: '总次数', width: '6%', align: 'left', sort: true, templet: function (d) {
                             if (d.totalOptimizeCount > 0) {
                                 return d.totalOptimizeCount;
                             } else {
@@ -449,7 +441,7 @@
                         }
                     },
                     {
-                        field: 'totalOptimizedCount', title: '已刷次数', width: '6%', align: 'center', sort: true, templet: function (d) {
+                        field: 'totalOptimizedCount', title: '已刷次数', width: '6%', align: 'left', sort: true, templet: function (d) {
                             if (d.totalOptimizedCount > 0) {
                                 return d.totalOptimizedCount;
                             } else {
@@ -458,7 +450,7 @@
                         }
                     },
                     {
-                        field: 'needOptimizeCount', title: '待刷次数', width: '6%', align: 'center', sort: true, templet: function (d) {
+                        field: 'needOptimizeCount', title: '待刷次数', width: '6%', align: 'left', sort: true, templet: function (d) {
                             if (d.needOptimizeCount > 0) {
                                 return d.needOptimizeCount;
                             } else {
@@ -467,7 +459,7 @@
                         }
                     },
                     {
-                        field: 'avgOptimizedCount', title: '平均有效刷量', width: '8%', align: 'center', sort: true, templet: function (d) {
+                        field: 'avgOptimizedCount', title: '平均有效刷量', width: '8%', align: 'left', sort: true, templet: function (d) {
                             if (d.avgOptimizedCount > 0) {
                                 let color = d.avgOptimizedCount <= 30 ? "red" : "black";
                                 return '<span style="color: ' + color + '">' + d.avgOptimizedCount.toFixed(2) + '</span>';
@@ -477,7 +469,7 @@
                         }
                     },
                     {
-                        field: 'queryCount', title: '取词次数', width: '7%', align: 'center', sort: true, templet: function (d) {
+                        field: 'queryCount', title: '取词次数', width: '7%', align: 'left', sort: true, templet: function (d) {
                             if (d.queryCount > 0) {
                                 return d.queryCount;
                             } else {
@@ -486,7 +478,7 @@
                         }
                     },
                     {
-                        field: 'invalidOptimizePercentage', title: '无效占比', width: '6%', align: 'center', sort: true, templet: function (d) {
+                        field: 'invalidOptimizePercentage', title: '无效占比', width: '6%', align: 'left', sort: true, templet: function (d) {
                             if (d.invalidOptimizePercentage > 0) {
                                 let color = d.invalidOptimizePercentage > 20 ? "red" : (d.invalidOptimizePercentage > 10 ? "purple" : "#000");
                                 return '<span style="color: ' + color + '">' + d.invalidOptimizePercentage.toFixed(2) + '%</span>';
@@ -496,7 +488,7 @@
                         }
                     }
                 ]],
-                height: 'full-118',
+                height: 'full-108',
                 done: function (res, curr, count) {
                 }
             });

@@ -49,6 +49,14 @@
             color: darkslateblue;
         }
 
+        .layui-table-tool {
+            min-height: 30px;
+            padding: 6px 5px 6px 5px;
+        }
+
+        .layui-table-tool-self{
+            top: 0;
+        }
     </style>
 </head>
 <body>
@@ -150,7 +158,7 @@
                     {field: 'createTime', title: '创建时间', width: '100', templet: '#toDateTime'},
                     {title: '操作', templet: '#operationTpl', align: 'center', width: '300',fixed: "right"}
                 ]],
-                height: 'full-75',
+                height: 'full-65',
                 done: function (res, curr, count) {
                 }
             });
@@ -209,26 +217,26 @@
 
         function add_algorithmTestPlan() {
             let url = '/internal/algorithmAutoTest/toAlgorithmTestPlanAdd';
-            okLayer.open("其他 / 测试计划管理 / 添加测试计划", url, "60%", "80%", function (layero) {
+            okLayer.open("其他 / 测试计划管理 / 添加测试计划", url, "50%", "63%", function (layero) {
             }, function () {
                 if (sign) {
                     active['reload'].call(this);
                     sign = false;
                 }
-            })
+            },'40px')
         }
 
         function update_algorithmTestPlan(uuid) {
 
             let url = '/internal/algorithmAutoTest/toAlgorithmTestPlanAdd';
-            okLayer.open("其他 / 测试计划管理 / 修改测试计划", url, "60%", "80%", function (layero) {
+            okLayer.open("其他 / 测试计划管理 / 修改测试计划", url, "50%", "63%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(uuid);
             }, function () {
                 if (sign) {
                     active['reload'].call(this);
                     sign = false;
                 }
-            })
+            },'40px')
         }
 
         function change_status_by_uuids(status) {

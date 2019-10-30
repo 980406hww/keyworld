@@ -114,12 +114,8 @@ html {
 
 /*数据体*/
 
-#data_list {
-    padding-top: 10px;
-}
-
 .layui-tab {
-    margin: 10px;
+    margin: 10px 10px 0 10px;
 }
 
 /*操作*/
@@ -219,7 +215,8 @@ html {
 }
 
 .importantText{
-    color: #0c7df5;
+    color: #000000;
+    width: 13%;
 }
 /*分页*/
 #page_nav {

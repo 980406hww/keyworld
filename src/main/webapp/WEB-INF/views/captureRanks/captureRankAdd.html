@@ -496,6 +496,9 @@
         });
 
         function commit(p_d, call) {
+            if (!common.waitMoment()) {
+                return false;
+            }
             $.ajax({
                 url: '/internal/captureRanks/saveCaptureRankJob',
                 type: 'post',

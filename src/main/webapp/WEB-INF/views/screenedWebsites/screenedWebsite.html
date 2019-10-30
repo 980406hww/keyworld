@@ -62,6 +62,14 @@
             color: darkslateblue;
         }
 
+        .layui-table-tool {
+            min-height: 30px;
+            padding: 6px 5px 6px 5px;
+        }
+
+        .layui-table-tool-self{
+            top: 0;
+        }
     </style>
 </head>
 <body>
@@ -143,7 +151,7 @@
                     {field: 'createTime', title: '创建时间', width: '20%', align: 'center', templet: '#toDateTime'},
                     {title: '操作', width: '24%', align: 'center', templet: '#operationTpl'},
                 ]],
-                height: 'full-75',
+                height: 'full-65',
                 done: function (res, curr, count) {
                 }
             });
@@ -192,7 +200,7 @@
 
         function update_screened_website(uuid) {
             let url = '/internal/screenedWebsite/toScreenedWebsitesAdd';
-            okLayer.open("其他 / 屏蔽网站设置 / 添加屏蔽网站", url, "60%", "60%", function (layero) {
+            okLayer.open("其他 / 屏蔽网站设置 / 修改屏蔽网站", url, "60%", "60%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(uuid);
             }, function () {
                 if (sign) {
