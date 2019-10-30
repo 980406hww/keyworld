@@ -246,69 +246,68 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
     }
 
     var option = {
-            title: {
-                text: '近日趋势',
-                subtext: '',
-                y: '10',
-                x: '10',
-                show: false
+        title: {
+            text: '近日趋势',
+            subtext: '',
+            y: '10',
+            x: '10',
+            show: false
+        },
+        grid: {
+            x: 10,
+            y: 5,
+            x2: 10,
+            y2: 5,
+        },
+        legend: {
+            orient: 'vertical',
+            icon: "circle",
+            x: 'right',
+            y: 'center',
+            data: ['排名'],
+            show: false
+        },
+        tooltip: {
+            trigger: 'axis',
+            show: true,
+            axisPointer: {
+                type: 'none'
             },
-            grid: {
-                x: 10,
-                y: 5,
-                x2: 10,
-                y2: 5,
+            confine: true,
+            formatter: function (p) {
+                return '<div style="font-size: 6px;line-height: 14px"><span>' + p[0].axisValue + '</span>'
+                    + '<br>' + p[0].marker + '<span>排名：' + p[0].value + '</span></div>'
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            axisLabel: {
+                interval: 0,
+                // rotate: -50,
             },
-            legend: {
-                orient: 'vertical',
-                icon: "circle",
-                x: 'right',
-                y: 'center',
-                data: ['排名'],
-                show: false
+            data: [],
+            show: false
+        },
+        yAxis: {
+            type: 'value',
+            show: false,
+            inverse: true
+        },
+        series: [{
+            name: '排名',
+            type: 'line',
+            stack: '总量',
+            smooth: true,
+            symbol: 'none',
+            color: '#6daded',
+            areaStyle: {
+                color: 'rgba(109,173,237,0.23)',
+                origin: 'end'
             },
-            tooltip: {
-                trigger: 'axis',
-                show: true,
-                axisPointer: {
-                    type: 'none'
-                },
-                confine: true,
-                formatter: function (p) {
-                    return '<div style="font-size: 6px;line-height: 14px"><span>' + p[0].axisValue + '</span>'
-                        + '<br>' + p[0].marker + '<span>排名：' + p[0].value + '</span></div>'
-                }
-            },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                axisLabel: {
-                    interval: 0,
-                    // rotate: -50,
-                },
-                data: [],
-                show: false
-            },
-            yAxis: {
-                type: 'value',
-                show: false,
-                inverse: true
-            },
-            series: [{
-                name: '排名',
-                type: 'line',
-                stack: '总量',
-                smooth: true,
-                symbol: 'none',
-                color: '#6daded',
-                areaStyle: {
-                    color: 'rgba(109,173,237,0.23)',
-                    origin: 'end'
-                },
-                data: []
-            }]
-        }
-    ;
+            data: []
+        }]
+    };
 
     function tableInit(condition) {
         table.render({
