@@ -29,7 +29,11 @@
     <script>
         function removeElement(e) {
             let m = e.parentElement.parentElement.parentElement;
-            m.parentElement.removeChild(m);
+            let p = m.parentElement;
+            if (p.children.length <= 3) {
+                return;
+            }
+            p.removeChild(m);
         }
 
         let v_com = 2;
@@ -95,8 +99,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">域名</label>
                         <div class="layui-input-block">
-                            <input type="text" name="domain" placeholder="请输入顶级域名，不带www" autocomplete="off"
-                                   class="layui-input" lay-verify="required|domain">
+                            <input type="text" name="domain" placeholder="请输入顶级域名，不带www" autocomplete="off" class="layui-input" lay-verify="required|domain">
                         </div>
                     </div>
                 </div>
@@ -104,8 +107,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">搜索引擎</label>
                         <div class="layui-input-block">
-                            <select id="searchList" name="searchEngine">
-                            </select>
+                            <select id="searchList" name="searchEngine"></select>
                         </div>
                     </div>
                 </div>
@@ -121,8 +123,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">标签</label>
                         <div class="layui-input-block">
-                            <input type="text" name="tagNames" placeholder="例如MBA,算法,每个词用逗号隔开" autocomplete="off"
-                                   class="layui-input" lay-verify="tagNames">
+                            <input type="text" name="tagNames" placeholder="例如MBA,算法,每个词用逗号隔开" autocomplete="off" class="layui-input" lay-verify="tagNames">
                         </div>
                     </div>
                 </div>
@@ -142,15 +143,9 @@
                          pane>
                         <label class="computer layui-form-label">达标优化类型</label>
                         <div class="layui-input-block">
-                            <input type="radio" name="optimizationComType"
-                                   lay-filter="optimizationComType"
-                                   value="1" title="主优化" class="computer-input" checked>
-                            <input type="radio" name="optimizationComType"
-                                   lay-filter="optimizationComType"
-                                   value="2" title="次优化" class="computer-input">
-                            <input type="radio" name="optimizationComType"
-                                   lay-filter="optimizationComType"
-                                   value="0" title="辅助优化" class="computer-input">
+                            <input type="radio" name="optimizationComType" lay-filter="optimizationComType" value="1" title="主优化" class="computer-input" checked>
+                            <input type="radio" name="optimizationComType" lay-filter="optimizationComType" value="2" title="次优化" class="computer-input">
+                            <input type="radio" name="optimizationComType" lay-filter="optimizationComType" value="0" title="辅助优化" class="computer-input">
                         </div>
                     </div>
                     <div id="comQzsettingBox" style="display: none" class="qzsetting-box">
@@ -159,19 +154,13 @@
                                 <div class="layui-form-item">
                                     <label class="computer layui-form-label">优化分组</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="pcGroup" placeholder="请输入分组"
-                                               autocomplete="off"
-                                               class="computer-input layui-input">
+                                        <input type="text" name="pcGroup" placeholder="请输入分组" autocomplete="off" class="computer-input layui-input">
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
                                     <label class="computer layui-form-label">初始首页词数</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="comCurrentKeywordCount"
-                                               placeholder="请输入初始首页词数"
-                                               autocomplete="off"
-                                               onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                                               class="computer-input layui-input">
+                                        <input type="text" name="comCurrentKeywordCount" placeholder="请输入初始首页词数" autocomplete="off" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" class="computer-input layui-input">
                                     </div>
                                 </div>
                             </div>
@@ -179,20 +168,13 @@
                                 <div class="layui-form-item">
                                     <label class="computer layui-form-label">电脑域名</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="comSubDomainName"
-                                               placeholder="请输入电脑域名"
-                                               autocomplete="off"
-                                               class="computer-input layui-input">
+                                        <input type="text" name="comSubDomainName" placeholder="请输入电脑域名" autocomplete="off" class="computer-input layui-input">
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
                                     <label class="computer layui-form-label">采词词数限制</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="comMaxKeywordCount"
-                                               placeholder="请输入采词词数限制"
-                                               autocomplete="off"
-                                               onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                                               class="computer-input layui-input" value="300">
+                                        <input type="text" name="comMaxKeywordCount" placeholder="请输入采词词数限制" autocomplete="off" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" class="computer-input layui-input" value="300">
                                     </div>
                                 </div>
                             </div>
@@ -200,28 +182,16 @@
                         <div class="layui-form-item layui-form-text">
                             <label class="computer layui-form-label">达标备注</label>
                             <div class="layui-input-block">
-                                <input type="text" name="comMonitorRemark"
-                                       placeholder="请填写电脑端达标备注, 如：首月30-50个词 客供词 3000"
-                                       autocomplete="off"
-                                       class="computer-input layui-input">
+                                <input type="text" name="comMonitorRemark" placeholder="请填写电脑端达标备注, 如：首月30-50个词 客供词 3000" autocomplete="off" class="computer-input layui-input">
                             </div>
                         </div>
                         <div id="comStandardSpecies" class="layui-form-item" pane>
                             <label class="computer layui-form-label">达标种类</label>
                             <div class="layui-input-block">
-                                <input type="radio" name="comStandardSpecies" value="aiZhan"
-                                       title="爱站" lay-filter="comStandardSpecies"
-                                       class="computer-input" checked>
-                                <input type="radio" name="comStandardSpecies" value="5118"
-                                       title="5118" lay-filter="comStandardSpecies"
-                                       class="computer-input">
-                                <input type="radio" name="comStandardSpecies"
-                                       value="designationWord" title="指定词"
-                                       lay-filter="comStandardSpecies"
-                                       class="computer-input">
-                                <input type="radio" name="comStandardSpecies" value="other"
-                                       title="其他" lay-filter="comStandardSpecies"
-                                       class="computer-input">
+                                <input type="radio" name="comStandardSpecies" value="aiZhan" title="爱站" lay-filter="comStandardSpecies" class="computer-input" checked>
+                                <input type="radio" name="comStandardSpecies" value="5118" title="5118" lay-filter="comStandardSpecies" class="computer-input">
+                                <input type="radio" name="comStandardSpecies" value="designationWord" title="指定词" lay-filter="comStandardSpecies" class="computer-input">
+                                <input type="radio" name="comStandardSpecies" value="other" title="其他" lay-filter="comStandardSpecies" class="computer-input">
                             </div>
                         </div>
                         <div>
@@ -230,15 +200,13 @@
                                     <tbody id="computerTbody">
                                     <tr class="my-bg">
                                         <td colspan="3">
-                                            <div id="computerTitle"
-                                                 class="my-header-title my-label my-padding">
+                                            <div id="computerTitle" class="my-header-title my-label my-padding">
                                                 爱站收费规则
                                             </div>
                                         </td>
                                         <td colspan="2">
                                             <div class="my-header-btn my-label">
-                                                <button onclick="appendTable(true)" type="button"
-                                                        class="layui-btn layui-btn-sm">
+                                                <button onclick="appendTable(true)" type="button" class="layui-btn layui-btn-sm">
                                                     增加收费规则
                                                 </button>
                                             </div>
@@ -280,29 +248,22 @@
                                         </td>
                                         <td>
                                             <div class="my-label my-left">
-                                                <input type="text"
-                                                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                                                       class="layui-input my-input">
+                                                <input type="text" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" class="layui-input my-input">
                                             </div>
                                         </td>
                                         <td>
                                             <div class="my-label my-left">
-                                                <input type="text"
-                                                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                                                       class="layui-input my-input">
+                                                <input type="text" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" class="layui-input my-input">
                                             </div>
                                         </td>
                                         <td>
                                             <div class="my-label my-left">
-                                                <input type="text"
-                                                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                                                       class="layui-input my-input">
+                                                <input type="text" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" class="layui-input my-input">
                                             </div>
                                         </td>
                                         <td>
                                             <div class="my-label my-btn my-left my-bottom">
-                                                <button type="button" onclick="removeElement(this)"
-                                                        class="layui-btn layui-btn-xs layui-btn-danger">
+                                                <button type="button" onclick="removeElement(this)" class="layui-btn layui-btn-xs layui-btn-danger">
                                                     删除
                                                 </button>
                                             </div>
@@ -318,24 +279,16 @@
                     <div class="layui-form-item" pane>
                         <label class="layui-form-label">手机</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" name="phone" lay-skin="switch"
-                                   lay-filter="phone"
-                                   lay-text="选中|不选中">
+                            <input type="checkbox" name="phone" lay-skin="switch" lay-filter="phone" lay-text="选中|不选中">
                         </div>
                     </div>
                     <div id="phoneQzsettingBoxSelect" style="display: none" class="layui-form-item"
                          pane>
                         <label class="phone layui-form-label">达标优化类型</label>
                         <div class="layui-input-block">
-                            <input type="radio" name="optimizationPhoneType"
-                                   lay-filter="optimizationPhoneType"
-                                   value="1" title="主优化" class="phone-input" checked>
-                            <input type="radio" name="optimizationPhoneType"
-                                   lay-filter="optimizationPhoneType"
-                                   value="2" title="次优化" class="phone-input">
-                            <input type="radio" name="optimizationPhoneType"
-                                   lay-filter="optimizationPhoneType"
-                                   value="0" title="辅助优化" class="phone-input">
+                            <input type="radio" name="optimizationPhoneType" lay-filter="optimizationPhoneType" value="1" title="主优化" class="phone-input" checked>
+                            <input type="radio" name="optimizationPhoneType" lay-filter="optimizationPhoneType" value="2" title="次优化" class="phone-input">
+                            <input type="radio" name="optimizationPhoneType" lay-filter="optimizationPhoneType" value="0" title="辅助优化" class="phone-input">
                         </div>
                     </div>
                     <div id="phoneQzsettingBox" style="display: none" class="qzsetting-box">
@@ -344,19 +297,13 @@
                                 <div class="layui-form-item">
                                     <label class="phone layui-form-label">优化分组</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="phoneGroup" placeholder="请输入分组"
-                                               autocomplete="off"
-                                               class="phone-input layui-input">
+                                        <input type="text" name="phoneGroup" placeholder="请输入分组" autocomplete="off" class="phone-input layui-input">
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
                                     <label class="phone layui-form-label">初始首页词数</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="phoneCurrentKeywordCount"
-                                               placeholder="请输入初始首页词数"
-                                               autocomplete="off"
-                                               onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                                               class="phone-input layui-input">
+                                        <input type="text" name="phoneCurrentKeywordCount" placeholder="请输入初始首页词数" autocomplete="off" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" class="phone-input layui-input">
                                     </div>
                                 </div>
                             </div>
@@ -364,20 +311,13 @@
                                 <div class="layui-form-item">
                                     <label class="phone layui-form-label">手机域名</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="phoneSubDomainName"
-                                               placeholder="请输入手机域名"
-                                               autocomplete="off"
-                                               class="phone-input layui-input">
+                                        <input type="text" name="phoneSubDomainName" placeholder="请输入手机域名" autocomplete="off" class="phone-input layui-input">
                                     </div>
                                 </div>
                                 <div class="phone layui-form-item">
                                     <label class="layui-form-label">采词词数限制</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="phoneMaxKeywordCount"
-                                               placeholder="请输入采词词数限制"
-                                               autocomplete="off"
-                                               onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                                               class="phone-input layui-input" value="300">
+                                        <input type="text" name="phoneMaxKeywordCount" placeholder="请输入采词词数限制" autocomplete="off" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" class="phone-input layui-input" value="300">
                                     </div>
                                 </div>
                             </div>
@@ -385,28 +325,16 @@
                         <div class="layui-form-item layui-form-text">
                             <label class="phone layui-form-label">达标备注</label>
                             <div class="layui-input-block">
-                                <input type="text" name="phoneMonitorRemark"
-                                       placeholder="请填写手机端达标备注, 如：首月30-50个词 客供词 3000"
-                                       autocomplete="off"
-                                       class="phone-input layui-input">
+                                <input type="text" name="phoneMonitorRemark" placeholder="请填写手机端达标备注, 如：首月30-50个词 客供词 3000" autocomplete="off" class="phone-input layui-input">
                             </div>
                         </div>
                         <div id="phoneStandardSpecies" class="layui-form-item" pane>
                             <label class="phone layui-form-label">达标种类</label>
                             <div class="layui-input-block">
-                                <input type="radio" name="phoneStandardSpecies" value="aiZhan"
-                                       title="爱站" lay-filter="phoneStandardSpecies"
-                                       class="phone-input" checked>
-                                <input type="radio" name="phoneStandardSpecies" value="5118"
-                                       title="5118" lay-filter="phoneStandardSpecies"
-                                       class="phone-input">
-                                <input type="radio" name="phoneStandardSpecies"
-                                       value="designationWord" title="指定词"
-                                       lay-filter="phoneStandardSpecies"
-                                       class="phone-input">
-                                <input type="radio" name="phoneStandardSpecies" value="other"
-                                       title="其他" lay-filter="phoneStandardSpecies"
-                                       class="phone-input">
+                                <input type="radio" name="phoneStandardSpecies" value="aiZhan" title="爱站" lay-filter="phoneStandardSpecies" class="phone-input" checked>
+                                <input type="radio" name="phoneStandardSpecies" value="5118" title="5118" lay-filter="phoneStandardSpecies" class="phone-input">
+                                <input type="radio" name="phoneStandardSpecies" value="designationWord" title="指定词" lay-filter="phoneStandardSpecies" class="phone-input">
+                                <input type="radio" name="phoneStandardSpecies" value="other" title="其他" lay-filter="phoneStandardSpecies" class="phone-input">
                             </div>
                         </div>
                         <div>
@@ -465,29 +393,22 @@
                                         </td>
                                         <td>
                                             <div class="my-label my-left">
-                                                <input type="text"
-                                                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                                                       class="layui-input my-input">
+                                                <input type="text" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" class="layui-input my-input">
                                             </div>
                                         </td>
                                         <td>
                                             <div class="my-label my-left">
-                                                <input type="text"
-                                                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                                                       class="layui-input my-input">
+                                                <input type="text" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" class="layui-input my-input">
                                             </div>
                                         </td>
                                         <td>
                                             <div class="my-label my-left">
-                                                <input type="text"
-                                                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                                                       class="layui-input my-input">
+                                                <input type="text" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" class="layui-input my-input">
                                             </div>
                                         </td>
                                         <td>
                                             <div class="my-label my-btn my-left my-bottom">
-                                                <button type="button" onclick="removeElement(this)"
-                                                        class="layui-btn layui-btn-xs layui-btn-danger">
+                                                <button type="button" onclick="removeElement(this)" class="layui-btn layui-btn-xs layui-btn-danger">
                                                     删除
                                                 </button>
                                             </div>
@@ -540,10 +461,8 @@
                     <div class="layui-form-item" pane>
                         <label class="layui-form-label" style="width: 110px">过滤规则</label>
                         <div class="layui-input-block" style="margin-left: 110px">
-                            <input type="checkbox" name="filterRule[ignoreNoIndex]"
-                                   lay-skin="primary" title="去掉没指数" checked>
-                            <input type="checkbox" name="filterRule[ignoreNoOrder]"
-                                   lay-skin="primary" title="去掉没排名" checked>
+                            <input type="checkbox" name="filterRule[ignoreNoIndex]" lay-skin="primary" title="去掉没指数" checked>
+                            <input type="checkbox" name="filterRule[ignoreNoOrder]" lay-skin="primary" title="去掉没排名" checked>
                         </div>
                     </div>
                 </div>

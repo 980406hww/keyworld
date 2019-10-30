@@ -485,6 +485,25 @@
             width: 76px;
         }
 
+        /* 客户满意度Tip */
+        .tool-tip{
+            display: inline-block;
+            background-color: #009688;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            border: none;
+            cursor: default;
+            outline: 0;
+            -webkit-appearance: none;
+            box-sizing: border-box;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            border-left: 1px solid rgba(255, 255, 255, .5);
+            border-radius: 2px 0 0 2px;
+            vertical-align: middle;
+        }
+
         /* 下拉条件框 */
         .my-collapse {
             position: relative;
@@ -2080,7 +2099,7 @@
                 return;
             }
 
-            let chargeMoney = '<div class="layui-form-item">\n                                <label style="width: 120px" class="layui-form-label">收费金额：</label>\n                                <div style="margin-left: 120px" class="layui-input-block">\n                                  <input type="text" id="money" autocomplete="off" placeholder="收费金额" class="layui-input">\n                                </div>\n                              </div>';
+            let chargeMoney = '<div class="layui-form-item">\n                                <label style="width: 120px" class="layui-form-label">收费金额：</label>\n                                <div style="margin-left: 120px" class="layui-input-block">\n                                  <input type="text" id="money"  onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,\'\')" autocomplete="off" placeholder="选填" class="layui-input">\n                                </div>\n                              </div>';
 
             let chargeStatus = '<div class="layui-form-item">\n                                <label style="width: 120px;line-height: 22px" class="layui-form-label">客户满意度：</label>\n                                <div style="margin-left: 120px;display: flex" class="layui-input-block">\n                                    <div style="flex: 1">\n                                        <ul class="clean-float">\n                                             <li style="padding-left: 0" onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>\n                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>\n                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>\n                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>\n                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>\n                                        </ul>\n                                    </div>\n                                    <div id="chargeStatus" style="flex: 2;font-size: 15px;line-height: 42px;height: 40px;letter-spacing: 1px"></div>\n                                </div>\n                              </div>\n                               <div class="layui-form-item layui-form-text">';
 
@@ -2104,7 +2123,7 @@
             }
             layer.open({
                 type: 1,
-                title: '收费满意度调查',
+                title: '客户满意度调查',
                 content: chargeStatus,
                 shadeClose: true,
                 resize: false,
@@ -2130,8 +2149,11 @@
                     } else {
                         p_d.satisfaction = 1;
                     }
-                    if (customerMsg) {
+                    if (customerMsg && customerMsg.value.trim()) {
                         p_d.customerMsg = customerMsg.value.trim();
+                    }else {
+                        common.showFailMsg("请输入评价或原因。");
+                        return;
                     }
                     $.ajax({
                         url: '/internal/qzchargestatus/saveQZChargeStatus',
@@ -2143,6 +2165,8 @@
                         }, success: function (res) {
                             if (res.code === 200) {
                                 layer.close(index);
+                                chargeStatusValue = 0;
+                                chargeStatusText = '';
                                 common.showSuccessMsg('修改成功', active['reload'].call(this));
                             } else {
                                 common.showFailMsg('修改失败');
@@ -2150,6 +2174,8 @@
                         }
                     });
                 }, btn2: function (index) {
+                    chargeStatusValue = 0;
+                    chargeStatusText = '';
                     layer.close(index);
                 }
             });
@@ -2489,27 +2515,37 @@
                     }
                     d.targetQZCategoryTags = tags;
                     d.uuids = ids;
-
-                    $.ajax({
-                        url: '/internal/qzsetting/updQzCategoryTags',
-                        type: 'post',
-                        data: JSON.stringify(d),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        success: function (res) {
-                            if (res.code === 200) {
-                                layer.close(index);
-                                common.showSuccessMsg('修改成功', active['reload'].call(this));
-                            } else {
-                                common.showFailMsg('修改失败');
-                            }
-                        }
-                    });
+                    if (v) {
+                        updFzTags(d, index);
+                    } else {
+                        layer.confirm('确认修改为空值吗？', {offset: '120px'}, function (__index) {
+                            updFzTags(d, index);
+                            layer.close(__index);
+                        });
+                    }
                 }, btn2: function (index) {
                     layer.close(index);
                 }, cancel: function () {
+                }
+            });
+        }
+
+        function updFzTags(d,index) {
+            $.ajax({
+                url: '/internal/qzsetting/updQzCategoryTags',
+                type: 'post',
+                data: JSON.stringify(d),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        layer.close(index);
+                        common.showSuccessMsg('修改成功', active['reload'].call(this));
+                    } else {
+                        common.showFailMsg('修改失败');
+                    }
                 }
             });
         }
@@ -2573,6 +2609,10 @@
                 d.content = this_[1].value.trim();
             } else {
                 d.content = this_.previousElementSibling.children[0].children[0].value.trim();
+            }
+            if (!d.content){
+                common.showFailMsg("请填写内容");
+                return;
             }
             d.customerUuid = document.getElementById('notBookCustomerUuid').value;
             d.terminalType = document.getElementById('terminalType').value;
@@ -2759,7 +2799,7 @@
                                 noteBookHtml += i + 1;
                                 noteBookHtml += '</div>\n                                    </td>\n                                    <td class="my-left">\n                                    <div class="my-label my-padding">';
                                 noteBookHtml += res.data[i].notesPerson;
-                                noteBookHtml += '</div>\n                                    </td>\n                                    <td class="my-left">\n                                    <div class="my-label my-padding">\n                                    <input type="hidden" value="';
+                                noteBookHtml += '</div>\n                                    </td>\n                                    <td class="my-left">\n                                    <div class="my-label my-padding" style="text-align:left;">\n                                    <input type="hidden" value="';
                                 noteBookHtml += res.data[i].uuid;
                                 noteBookHtml += '">';
                                 noteBookHtml += res.data[i].content;
@@ -3141,41 +3181,50 @@
                     let postData = {};
                     postData.qzSettingUuid = uuid;
                     postData.qzCategoryTags = qzCategoryTags;
-
-                    $.ajax({
-                        url: "/internal/qzcategory/saveCategoryLabel",
-                        type: "POST",
-                        data: JSON.stringify(postData),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        success: function (res) {
-                            if (res.code === 200) {
-                                let text = "";
-                                for (let item in categoryTags) {
-                                    text += "," + categoryTags[item];
-                                }
-                                text = text.substr(1);
-                                if (text === "") {
-                                    text = "暂无";
-                                }
-                                $("a#tagName_" + uuid).text(text);
-                                $("a#tagName_" + uuid).prop("title", text);
-                                layer.close(index_0);
-                                common.showSuccessMsg('修改成功', active['reload'].call(this));
-                            } else {
-                                common.showFailMsg('修改失败');
-                            }
-                        }
-                    });
+                    if (new_text){
+                        editTagNameOne(postData, categoryTags, uuid, index_0);
+                    }else {
+                        layer.confirm('确认修改为空值吗？', {offset: '120px'}, function (__index) {
+                            editTagNameOne(postData, categoryTags, uuid, index_0);
+                            layer.close(__index);
+                        });
+                    }
                 }, btn2: function (index_0) {
                     layer.close(index_0);
                 }, cancel: function () {
-
                 }
             })
         };
+
+        function editTagNameOne(postData, categoryTags, uuid, index_0) {
+            $.ajax({
+                url: "/internal/qzcategory/saveCategoryLabel",
+                type: "POST",
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        let text = "";
+                        for (let item in categoryTags) {
+                            text += "," + categoryTags[item];
+                        }
+                        text = text.substr(1);
+                        if (text === "") {
+                            text = "暂无";
+                        }
+                        $("a#tagName_" + uuid).text(text);
+                        $("a#tagName_" + uuid).prop("title", text);
+                        layer.close(index_0);
+                        common.showSuccessMsg('修改成功', active['reload'].call(this));
+                    } else {
+                        common.showFailMsg('修改失败');
+                    }
+                }
+            });
+        }
     });
 </script>
 
@@ -3213,6 +3262,7 @@
     </div>
     <#if isSEOSales==1>
     <div class="layui-btn-group">
+        <button class="tool-tip layui-btn-sm" style="cursor: default;">客户满意度调查</button>
         <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToNormal">
             <i class="layui-icon">&#x1005;</i>正常续费
         </button>

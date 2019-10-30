@@ -21,10 +21,6 @@ public class GroupSettingCriteria extends BaseCriteria {
      */
     private String terminalType;
     /**
-     * 有/无 操作类型。 默认值true
-     */
-    private Boolean hasOperation = true;
-    /**
      * 分组下机器是否分配完成
      */
     private Boolean hasRemainingAccount;
@@ -63,14 +59,6 @@ public class GroupSettingCriteria extends BaseCriteria {
 
     public void setTerminalType(String terminalType) {
         this.terminalType = terminalType;
-    }
-
-    public Boolean getHasOperation() {
-        return hasOperation;
-    }
-
-    public void setHasOperation(Boolean hasOperation) {
-        this.hasOperation = hasOperation;
     }
 
     public Boolean getHasRemainingAccount() {

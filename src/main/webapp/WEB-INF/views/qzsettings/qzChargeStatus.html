@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>添加</title>
+    <title>续费状态</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
     <style>
@@ -11,10 +11,18 @@
             position: fixed;
             right: 25px;
         }
+
+        .layui-table, .layui-table-view{
+            margin: 0;
+        }
+
+        .layui-table-body .laytable-cell-1-0-3{
+            text-align: left;
+        }
     </style>
 </head>
 <body>
-<div style="margin: 0 10px 40px 10px">
+<div style="margin: 10px 10px 0 10px;">
     <!--数据表格-->
     <table class="layui-hide" id="chargeStatus" lay-filter="chargeStatus"></table>
 </div>
@@ -56,7 +64,7 @@
                 {title: '创建时间', width: '16%', align: 'center', templet: '#item4'},
                 {field: 'loginName', title: '创建人', width: '15%', align: 'center'}
             ]],
-            height: 'full-30',
+            height: 'full-20',
             done: function (res, curr, count) {
             }
         });

@@ -28,24 +28,6 @@
             g.fGroupName LIKE '${groupSettingCriteria.optimizedGroupName}%')
         </if>
         AND toc.fTerminalType = #{groupSettingCriteria.terminalType}
-        <if test="groupSettingCriteria.hasOperation != null">
-            AND EXISTS (
-            SELECT 1
-            FROM t_group_setting gs
-            WHERE gs.fOperationCombineUuid = toc.fUuid
-            <choose>
-                <when test="groupSettingCriteria.hasOperation == 1">
-                    AND gs.fOperationType > ''
-                    <if test="groupSettingCriteria.operationType != null and groupSettingCriteria.operationType != ''">
-                        AND gs.fOperationType = #{groupSettingCriteria.operationType}
-                    </if>
-                </when>
-                <otherwise>
-                    AND gs.fOperationType IS NULL
-                </otherwise>
-            </choose>
-            )
-        </if>
         <if test="groupSettingCriteria.hasRemainingAccount == 1">
             AND toc.fRemainingAccount <![CDATA[>]]> 0
         </if>
