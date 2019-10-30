@@ -169,7 +169,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
                 {field: 'remarks', title: '备注', align: 'left', width: '80', hide: true},
                 {title: '操作', align: 'center', width: '120', templet: '#operationTpl'}
             ]],
-            height: 'full-150',
+            height: 'full-110',
             done: function (res, curr, count) {
                 jz();
             }

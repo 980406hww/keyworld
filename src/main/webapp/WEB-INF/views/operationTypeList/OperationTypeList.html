@@ -237,7 +237,7 @@
         });
 
         function modifyOperationType(data) {
-            okLayer.open("首页/其他/修改操作类型", "/internal/operationTypes/toSaveOperationType", "35%", "60%", function (layero) {
+            okLayer.open("首页 / 其他 / 修改操作类型", "/internal/operationTypes/toSaveOperationType", "35%", "60%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             }, function () {
                 if (sign) {
@@ -248,7 +248,7 @@
         }
 
         function toAddOperationType() {
-            okLayer.open("首页/其他/添加操作类型", "/internal/operationTypes/toSaveOperationType", "35%", "60%", null, function () {
+            okLayer.open("首页 / 其他 / 添加操作类型", "/internal/operationTypes/toSaveOperationType", "35%", "60%", null, function () {
                 if (sign) {
                     active['reload'].call(this);
                     sign = false;

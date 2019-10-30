@@ -176,6 +176,9 @@
             $.each(data.field,function(idx,item){
                 data.field[idx] = $.trim(item).replace(/\+/g," ")
             });
+            if (!common.waitMoment()) {
+                return false;
+            }
             $.ajax({
                 url: '/internal/algorithmAutoTest/postAlgorithmTestPlanAddData',
                 type: 'post',

@@ -182,7 +182,7 @@
         }
 
         function showSalesInfoDialog() {
-            okLayer.open("首页/其他/添加销售信息", "/internal/salesInfo/toAddSalesInfo", "35%", "50%", null, function(){
+            okLayer.open("首页 / 其他 / 添加销售信息", "/internal/salesInfo/toAddSalesInfo", "35%", "50%", null, function(){
                 if(sign){
                     active['reload'].call(this);
                     sign = false;
@@ -191,7 +191,7 @@
         }
 
         function modifySalesInfo(data){
-            okLayer.open("首页/其他/修改销售信息", "/internal/salesInfo/toAddSalesInfo", "35%", "50%", function(layero){
+            okLayer.open("首页 / 其他 / 修改销售信息", "/internal/salesInfo/toAddSalesInfo", "35%", "50%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
             },function(){
                 if(sign){

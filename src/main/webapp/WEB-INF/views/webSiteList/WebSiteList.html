@@ -784,7 +784,7 @@
         }
 
         function modifyWebsiteInfo(data){
-            okLayer.open("首页/其他/修改网站信息", "/internal/websites/toAddWebsite", "35%", "95%", function(layero){
+            okLayer.open("首页 / 其他 / 修改网站信息", "/internal/websites/toAddWebsite", "35%", "95%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             },function(){
                 if(sign){
@@ -795,7 +795,7 @@
         }
 
         function toAddWebsite() {
-            okLayer.open("首页/其他/添加网站信息", "/internal/websites/toAddWebsite", "35%", "95%", null, function(){
+            okLayer.open("首页 / 其他 / 添加网站信息", "/internal/websites/toAddWebsite", "35%", "95%", null, function(){
                 if(sign){
                     active['reload'].call(this);
                     sign = false;

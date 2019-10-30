@@ -1181,13 +1181,14 @@
                 p_d.phoneGroup = null;
             }
             p_d.qzOperationTypes = qzOperationTypes;
-            commit(p_d, function (init) {
-
-            });
+            commit(p_d, function (init) {});
             return false;
         });
 
         function commit(p_d, call) {
+            if (!common.waitMoment()) {
+                return false;
+            }
             $.ajax({
                 url: '/internal/qzsetting/saveQZSetting',
                 type: 'post',

@@ -192,7 +192,7 @@
 
         function update_screened_website(uuid) {
             let url = '/internal/screenedWebsite/toScreenedWebsitesAdd';
-            okLayer.open("其他 / 屏蔽网站设置 / 添加屏蔽网站", url, "60%", "60%", function (layero) {
+            okLayer.open("其他 / 屏蔽网站设置 / 修改屏蔽网站", url, "60%", "60%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(uuid);
             }, function () {
                 if (sign) {

@@ -5,7 +5,7 @@ getHeight();
 function getHeight(){
     let b = document.getElementById('customerBody');
     let h = window.innerHeight || document.body.offsetHeight;
-    b.style.height = (h - 155) + 'px';
+    b.style.height = (h - 145) + 'px';
 }
 
 // layui相关

@@ -1,7 +1,10 @@
-layui.define(['jquery', 'layer',], function (exports) {
+var milliseconds;
+
+layui.define(['jquery', 'layer', 'okTab'], function (exports) {
 
     var $ = layui.jquery;
     var layer = layui.layer;
+    var okTab = layui.okTab();
 
     var obj = {
         formToJsonObject: function (form_id) {
@@ -17,9 +20,9 @@ layui.define(['jquery', 'layer',], function (exports) {
         },
         jsonObjectTrim: function (jsonObject) {
             $.each(jsonObject, function (idx, item) {
-                if(typeof(item) == "string"){
+                if (typeof (item) == "string") {
                     jsonObject[idx] = $.trim(item)
-                }else{
+                } else {
                     return true;
                 }
             });
@@ -32,7 +35,7 @@ layui.define(['jquery', 'layer',], function (exports) {
                 time: 1000,
                 isOutAnim: false
             }, function () {
-                if (callback){
+                if (callback) {
                     callback()
                 }
             });
@@ -65,6 +68,21 @@ layui.define(['jquery', 'layer',], function (exports) {
                 );
             }
             parent.layui.element.tabChange('ok-tab', id)
+        },
+        waitMoment: function () {
+            let currentMilliseconds = new Date().getTime();
+            console.log(currentMilliseconds + '进来了一次');
+            if (milliseconds) {
+                if (currentMilliseconds - milliseconds >= 1500) {
+                    milliseconds = currentMilliseconds;
+                    return true;
+                } else {
+                    parent.location.reload();
+                    return false;
+                }
+            }
+            milliseconds = currentMilliseconds;
+            return true;
         }
     };
     exports('common', obj);

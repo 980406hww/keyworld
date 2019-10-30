@@ -167,7 +167,10 @@
         }
 
         form.on("submit(commit)", function (data) {
-            data.field = common.jsonObjectTrim(data.field)
+            data.field = common.jsonObjectTrim(data.field);
+            if (!common.waitMoment()) {
+                return false;
+            }
             $.ajax({
                 url: '/internal/salesInfo/saveSalesManage',
                 type: 'POST',

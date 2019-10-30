@@ -272,13 +272,14 @@
                     p_d.supplierServiceTypeMappings.push(sstm);
                 }
             }
-            commit(p_d, function (d) {
-
-            });
+            commit(p_d, function (d) {});
             return false;
         });
 
         function commit(p_d, call) {
+            if (!common.waitMoment()) {
+                return false;
+            }
             $.ajax({
                 url: '/internal/suppliers/saveSupplier',
                 type: 'post',
