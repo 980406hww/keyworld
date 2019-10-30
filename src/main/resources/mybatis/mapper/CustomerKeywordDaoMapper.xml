@@ -1550,6 +1550,7 @@
             fPositionFifthFee,
             fPositionFirstPageFee,
             fCapturePositionQueryTime,
+            fCaptureIndexQueryTime,
             fCollectMethod,
             fStartOptimizedTime,
             fOrderNumber,
@@ -1618,6 +1619,7 @@
                     <when test="customerKeyword.positionFirstPageFee == null">0.00,</when>
                 </choose>
                 #{customerKeyword.capturePositionQueryTime},
+                #{customerKeyword.captureIndexQueryTime},
                 #{customerKeyword.collectMethod},
                 #{customerKeyword.startOptimizedTime},
                 #{customerKeyword.orderNumber},
