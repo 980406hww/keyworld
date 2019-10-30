@@ -71,7 +71,6 @@ layui.define(['jquery', 'layer', 'okTab'], function (exports) {
         },
         waitMoment: function () {
             let currentMilliseconds = new Date().getTime();
-            console.log(currentMilliseconds + '进来了一次');
             if (milliseconds) {
                 if (currentMilliseconds - milliseconds >= 1500) {
                     milliseconds = currentMilliseconds;
