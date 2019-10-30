@@ -26,15 +26,7 @@
             background: #f2f2f2;
             border: 0px solid #e6e6e6;
         }
-        .layui-table-body .layui-table-cell {
-            text-align: left;
-        }
-        .layui-table-body .laytable-cell-checkbox {
-            text-align: center;
-        }
-        .layui-table tr .layui-table-col-special .layui-table-cell{
-            text-align: center;
-        }
+
         /* 下拉条件框 */
         .my-collapse {
             position: relative;
@@ -321,8 +313,8 @@
                 contentType: 'application/json',
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', width: '2%', align: 'center'},
-                    {field: 'groupNames', title: '组名', width: '5%', align: 'center'},
-                    {field: 'contactPerson', title: '客户', width: '5%', align: 'center'},
+                    {field: 'groupNames', title: '组名', width: '5%', align: 'left'},
+                    {field: 'contactPerson', title: '客户', width: '5%', align: 'left'},
                     {
                         field: 'exectionType', title: '执行类型', width: '4%', align: 'center', templet: function (d) {
                             if (d.exectionType === 'Everyday') {

@@ -26,15 +26,6 @@
             background: #f2f2f2;
             border: 0px;
         }
-        .layui-table-body .layui-table-cell {
-            text-align: left;
-        }
-        .layui-table-body .laytable-cell-checkbox {
-            text-align: center;
-        }
-        .layui-table tr .layui-table-col-special .layui-table-cell{
-            text-align: center;
-        }
         .layui-inline input {
             width: 150px;
             height: 30px;
@@ -173,18 +164,18 @@
                 where: whereCondition,
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', fixed: "left", width: '35', align: 'center'},
-                    {field: 'salesName', title: '销售名称', width: '7%', align: 'center'},
-                    {field: 'telephone', title: '电话号码', width: '9%', align: 'center'},
-                    {field: 'qq', title: 'QQ', width: '8%', align: 'center'},
-                    {field: 'weChat', title: '微信', width: '9%', align: 'center'},
-                    {field: 'quickResponseCode', title: '二维码链接', width: '19%', align: 'center'},
-                    {field: 'email', title: '邮箱', width: '12%', align: 'center'},
-                    {field: 'managePart', title: '负责部分', width: '13%', align: 'center'},
+                    {field: 'salesName', title: '销售名称', width: '7%', align: 'left'},
+                    {field: 'telephone', title: '电话号码', width: '9%', align: 'left'},
+                    {field: 'qq', title: 'QQ', width: '8%', align: 'left'},
+                    {field: 'weChat', title: '微信', width: '9%', align: 'left'},
+                    {field: 'quickResponseCode', title: '二维码链接', width: '19%', align: 'left'},
+                    {field: 'email', title: '邮箱', width: '12%', align: 'left'},
+                    {field: 'managePart', title: '负责部分', width: '13%', align: 'left'},
                     {field: 'createTime', title: '创建日期', width: '7%', templet: '#toDateTime', align: 'center'},
                     {field: 'updateTime', title: '修改日期', width: '7%', templet: '#toUpdateTime', align: 'center'},
                     {title: '操作', templet: '#operationTpl', width: '7%', align: 'center', fixed: "right"}
                 ]],
-                height: 'full-75',
+                height: 'full-65',
                 done: function (res, curr, count) {
                 }
             });

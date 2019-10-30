@@ -25,9 +25,6 @@
             background: #f2f2f2;
             border: 0px;
         }
-        .layui-table-body .layui-table-cell {
-            text-align: left;
-        }
         .layui-table-body .laytable-cell-checkbox {
             text-align: center;
         }
@@ -243,9 +240,9 @@
                 defaultToolbar: [],
                 contentType: 'application/json',
                 cols: [[
-                    {field: 'userName', title: '账户名称', width: '10%', align: 'center'},
-                    {field: 'searchEngine', title: '搜索引擎以及端口', width: '10%', align: 'center'},
-                    {field: 'operationType', title: '操作类型', width: '8%', align: 'center'},
+                    {field: 'userName', title: '账户名称', width: '10%', align: 'left'},
+                    {field: 'searchEngine', title: '搜索引擎以及端口', width: '10%', align: 'left'},
+                    {field: 'operationType', title: '操作类型', width: '8%', align: 'left'},
                     {field: 'keywordCount', title: '词数', width: '6%', align: 'center'},
                     {
                         field: 'keywordInfo', title: '关键词信息', width: '54%', align: 'left', templet: function (d) {

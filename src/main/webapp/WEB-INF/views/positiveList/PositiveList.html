@@ -26,9 +26,6 @@
             background: #f2f2f2;
             border: 0px;
         }
-        .layui-table-body tr td:nth-child(1),td:nth-child(2),td:nth-child(3),td:nth-child(4),td:nth-child(5),td:nth-child(6) {
-            text-align: left;
-        }
         .layui-inline input {
             width: 150px;
             height: 30px;
@@ -146,15 +143,15 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', type: 'checkbox', width: '35'},
-                    {field: 'keyword', title: '关键字', width: '10%', align: 'center'},
-                    {field: 'title', title: '标题', width: '14%', align: 'center'},
-                    {field: 'url', title: 'URL', width: '10%', align: 'center'},
-                    {field: 'bearPawNumber', title: '熊掌号', width: '10%', align: 'center'},
-                    {field: 'desc', title: '描述', width: '18%', align: 'center'},
+                    {filed: 'uuid', type: 'checkbox', width: '35', align: 'center'},
+                    {field: 'keyword', title: '关键字', width: '11%', align: 'left'},
+                    {field: 'title', title: '标题', width: '15%', align: 'left'},
+                    {field: 'url', title: 'URL', width: '12%', align: 'left'},
+                    {field: 'bearPawNumber', title: '熊掌号', width: '10%', align: 'left'},
+                    {field: 'desc', title: '描述', width: '21%', align: 'left'},
                     {field: 'position', title: '排名', width: '10%', align: 'center'},
                     {field: 'createTime', title: '采集日期', width: '12%', templet: '#toDateTime', align: 'center'},
-                    {title: '操作', templet: '#operationTpl', align: 'center', width: '14%', align: 'center'}
+                    {title: '操作', templet: '#operationTpl', width: '7%', align: 'center'}
                 ]],
                 height: 'full-70',
                 done: function (res, curr, count) {

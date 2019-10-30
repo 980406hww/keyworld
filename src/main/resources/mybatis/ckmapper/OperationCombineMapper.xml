@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.ckadmin.dao.OperationCombineDao">
 
     <select id="searchOperationCombines" resultType="com.keymanager.ckadmin.entity.OperationCombine">
@@ -16,7 +16,7 @@
         WHERE 1 = 1
         <choose>
             <when
-                test="groupSettingCriteria.operationCombineName != null and groupSettingCriteria.operationCombineName != ''">
+                    test="groupSettingCriteria.operationCombineName != null and groupSettingCriteria.operationCombineName != ''">
                 AND toc.fOperationCombineName LIKE '${groupSettingCriteria.operationCombineName}%'
             </when>
             <otherwise>
@@ -28,6 +28,15 @@
             g.fGroupName LIKE '${groupSettingCriteria.optimizedGroupName}%')
         </if>
         AND toc.fTerminalType = #{groupSettingCriteria.terminalType}
+        AND EXISTS (
+        SELECT 1
+        FROM t_group_setting gs
+        WHERE gs.fOperationCombineUuid = toc.fUuid
+        AND gs.fOperationType > ''
+        <if test="groupSettingCriteria.operationType != null and groupSettingCriteria.operationType != ''">
+            AND gs.fOperationType = #{groupSettingCriteria.operationType}
+        </if>
+        )
         <if test="groupSettingCriteria.hasRemainingAccount == 1">
             AND toc.fRemainingAccount <![CDATA[>]]> 0
         </if>
