@@ -21,6 +21,10 @@
         .padding-ten-right {
             padding-right: 4px;
         }
+
+        .layui-form-select {
+            margin-left: 220px !important;
+        }
     </style>
 </head>
 <body>
@@ -50,7 +54,8 @@
         <div class="layui-col-md4 padding-ten-right padding-ten-left">
             <form class="layui-form layui-form-pane ok-form">
                 <div class="layui-form-item">
-                    <label class="layui-form-label">搜索引擎</label>
+                    <label class="layui-form-label" style="width: 120px;">客户负面词</label>
+                    <label class="layui-form-label" style="width: 100px;">搜索引擎</label>
                     <div class="layui-input-block">
                         <select name="searchEngine" id="searchEngine" lay-filter="searchEngine">
                             <option value="Baidu">百度</option>
@@ -60,7 +65,6 @@
                     </div>
                 </div>
                 <div class="layui-form-item layui-form-text">
-                    <label class="layui-form-label">客户负面词</label>
                     <div class="layui-input-block">
                         <textarea name="customerNegativeKeywords" id="customerNegativeKeywords" placeholder="请输入客户负面词" class="layui-textarea"
                                   style="height: 692px;" lay-verify="regexp"></textarea>

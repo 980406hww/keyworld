@@ -312,9 +312,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             customerKeyword.setOptimizeTodayCount(optimizeTodayCount);
         } else {
             if ("Important".equals(customerKeyword.getKeywordEffect())) {
-                Integer optimizePlanCount = Integer.valueOf(configService
-                    .getConfig("KeywordEffectOptimizePlanCount", "ImportantKeyword")
-                    .getValue());
+                Integer optimizePlanCount = Integer.valueOf(configService.getConfig("KeywordEffectOptimizePlanCount", "ImportantKeyword").getValue());
                 customerKeyword.setOptimizePlanCount(optimizePlanCount);
             } else {
                 customerKeyword.setOptimizePlanCount(10);
@@ -323,6 +321,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         customerKeyword.setQueryInterval(queryInterval);
         customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
         customerKeyword.setCapturePositionQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));
+        customerKeyword.setCaptureIndexQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), 1));
         customerKeyword.setStartOptimizedTime(new Date());
         customerKeyword.setLastReachStandardDate(Utils.yesterday());
         customerKeyword.setQueryTime(new Date());

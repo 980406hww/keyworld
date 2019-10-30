@@ -249,9 +249,7 @@ public class QZSettingServiceImpl extends
     }
 
     @Override
-    public void saveQZSettingCustomerKeywords(
-        QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria,
-        String userName) {
+    public void saveQZSettingCustomerKeywords(QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria, String userName) {
         for (String terminalType : qzSettingSaveCustomerKeywordsCriteria.getTerminalTypes()) {
             List<CustomerKeyword> customerKeywords = new ArrayList<>();
             String customerExcludeKeywords = customerExcludeKeywordService.getCustomerExcludeKeyword(qzSettingSaveCustomerKeywordsCriteria.getCustomerUuid(),

@@ -300,8 +300,7 @@ public class QZSettingController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean();
         try {
             String userName = (String) request.getSession().getAttribute("username");
-            qzSettingService
-                .saveQZSettingCustomerKeywords(qzSettingSaveCustomerKeywordsCriteria, userName);
+            qzSettingService.saveQZSettingCustomerKeywords(qzSettingSaveCustomerKeywordsCriteria, userName);
             resultBean.setCode(200);
             resultBean.setMsg("添加关键字成功");
         } catch (Exception e) {

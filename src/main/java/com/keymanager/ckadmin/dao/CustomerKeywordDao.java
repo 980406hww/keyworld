@@ -45,8 +45,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void excludeCustomerKeyword(
         @Param("qzSettingExcludeCustomerKeywordsCriteria") QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
 
-    void addCustomerKeywords(
-        @Param("customerKeywords") ArrayList<CustomerKeyword> customerKeywords);
+    void addCustomerKeywords(@Param("customerKeywords") ArrayList<CustomerKeyword> customerKeywords);
 
     List<OptimizationKeywordVO> fetchCustomerKeywordsForCache(@Param("terminalType") String terminalType, @Param("machineGroup") String machineGroup, @Param("batchCount") int batchCount);
 
