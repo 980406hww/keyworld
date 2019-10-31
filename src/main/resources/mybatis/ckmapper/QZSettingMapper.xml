@@ -247,12 +247,9 @@
         AND qs.fCaptureTerminalType &gt; ''
         AND (qs.fUpdateStatus IS NULL
             OR qs.fUpdateEndTime IS NULL
-            OR (qs.fUpdateStatus = 'Completed'
-            AND qs.fUpdateEndTime &lt; DATE_SUB(CURRENT_DATE(), INTERVAL qs.fUpdateInterval DAY))
-            OR (qs.fUpdateStatus = 'Processing'
-            AND DATE_SUB(NOW(), INTERVAL 20 MINUTE) > qs.fUpdateStartTime)
-            OR (qs.fUpdateStatus = 'DownloadTimesUsed'
-            AND qs.fUpdateEndTime &lt; CURRENT_DATE())
+            OR (qs.fUpdateStatus = 'Completed' AND qs.fUpdateEndTime &lt; DATE_SUB(CURRENT_DATE(), INTERVAL qs.fUpdateInterval DAY))
+            OR (qs.fUpdateStatus = 'Processing' AND qs.fUpdateStartTime &lt; DATE_SUB(NOW(), INTERVAL 20 MINUTE))
+            OR (qs.fUpdateStatus = 'DownloadTimesUsed' AND qs.fUpdateEndTime &lt; CURRENT_DATE())
         )
         LIMIT 1
     </select>

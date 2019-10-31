@@ -668,13 +668,32 @@ public class QZSettingServiceImpl extends
         Map<String, Object> map = qzSettingDao.selectQZSettingForAutoOperate();
         if (null != map) {
             int qzSettingUuid = (int) map.get("uuid");
+            String updateStatus = "Processing";
             String captureTerminalType = (String) map.get("captureTerminalType");
             map.remove("captureTerminalType");
             String[] terminalTypes = captureTerminalType.split(",");
-            List<String> standardSpecieList = qzOperationTypeService.getQZSettingStandardSpecie((long) qzSettingUuid, terminalTypes);
-            map.put("standardSpecieList", standardSpecieList);
+            List<String> standardSpecieList = qzOperationTypeService.getQZSettingStandardSpecie((long)qzSettingUuid, terminalTypes);
+            if (CollectionUtils.isNotEmpty(standardSpecieList)) {
+                map.put("standardSpecieList", standardSpecieList);
+            } else {
+                updateStatus = "Completed";
+            }
+            this.startQZSettingForUpdateKeyword((long)qzSettingUuid, updateStatus);
         }
         return map;
+    }
+
+    private void startQZSettingForUpdateKeyword(Long uuid, String updateStatus) {
+        QZSetting qzSetting = qzSettingDao.selectById(uuid);
+        if(qzSetting != null){
+            if (QZSettingStatusEnum.Completed.getValue().equals(updateStatus)) {
+                qzSetting.setUpdateEndTime(new Date());
+            } else {
+                qzSetting.setUpdateStartTime(new Date());
+            }
+            qzSetting.setUpdateStatus(updateStatus);
+            qzSettingDao.updateById(qzSetting);
+        }
     }
 
     @Override

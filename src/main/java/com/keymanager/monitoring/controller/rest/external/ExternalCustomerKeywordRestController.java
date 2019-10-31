@@ -741,8 +741,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             String userName = (String) requestMap.get("userName");
             String password = (String) requestMap.get("password");
             if (validUser(userName, password)) {
-                return new ResponseEntity<Object>(
-                    customerKeywordService.getCheckingEnteredKeywords(), HttpStatus.OK);
+                return new ResponseEntity<Object>(customerKeywordService.getCheckingEnteredKeywords(), HttpStatus.OK);
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         } catch (Exception ex) {
@@ -759,10 +758,8 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             String userName = (String) requestMap.get("userName");
             String password = (String) requestMap.get("password");
             if (validUser(userName, password)) {
-                JSONArray jsonArray = JSONArray
-                    .fromObject(requestMap.get("customerKeywordEnteredVos"));
-                customerKeywordService.updateCheckingEnteredKeywords(
-                    JSONArray.toList(jsonArray, new CustomerKeywordEnteredVO(), new JsonConfig()));
+                JSONArray jsonArray = JSONArray.fromObject(requestMap.get("customerKeywordEnteredVos"));
+                customerKeywordService.updateCheckingEnteredKeywords(JSONArray.toList(jsonArray, new CustomerKeywordEnteredVO(), new JsonConfig()));
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);

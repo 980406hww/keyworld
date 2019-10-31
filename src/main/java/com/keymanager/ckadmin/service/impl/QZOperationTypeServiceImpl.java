@@ -6,6 +6,7 @@ import com.keymanager.ckadmin.entity.QZChargeRule;
 import com.keymanager.ckadmin.entity.QZOperationType;
 import com.keymanager.ckadmin.service.QZChargeRuleService;
 import com.keymanager.ckadmin.service.QZOperationTypeService;
+import com.keymanager.util.common.StringUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -61,7 +62,9 @@ public class QZOperationTypeServiceImpl extends ServiceImpl<QZOperationTypeDao, 
         List<String> standardSpecieList = new ArrayList<>(terminalTypes.length);
         for (String terminalType : terminalTypes) {
             String standardSpecie = qzOperationTypeDao.getQZStandardSpecieAndMaxKeywordCount(qzSettingUuid, terminalType);
-            standardSpecieList.add(terminalType + "_" + standardSpecie);
+            if (StringUtil.isNotNullNorEmpty(standardSpecie)) {
+                standardSpecieList.add(terminalType + "_" + standardSpecie);
+            }
         }
         return standardSpecieList;
     }
