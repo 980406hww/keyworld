@@ -35,8 +35,6 @@ public class MachineInfoCriteria extends BaseCriteria {
 
     private String terminalType;
     private Set<String> switchGroups;
-    private String groupNameFuzzyQuery;
-    private String machineGroupFuzzyQuery;
 
     private boolean haveHiddenColumns; //是否为设置隐藏弹窗提交的
     private String targetMachineGroup;
@@ -270,14 +268,6 @@ public class MachineInfoCriteria extends BaseCriteria {
         this.noChangePassword = noChangePassword;
     }
 
-    public String getGroupNameFuzzyQuery() {
-        return groupNameFuzzyQuery;
-    }
-
-    public void setGroupNameFuzzyQuery(String groupNameFuzzyQuery) {
-        this.groupNameFuzzyQuery = groupNameFuzzyQuery;
-    }
-
     public String getTargetMachineGroup() {
         return targetMachineGroup;
     }
@@ -300,14 +290,6 @@ public class MachineInfoCriteria extends BaseCriteria {
 
     public void setMachineGroup(String machineGroup) {
         this.machineGroup = machineGroup;
-    }
-
-    public String getMachineGroupFuzzyQuery() {
-        return machineGroupFuzzyQuery;
-    }
-
-    public void setMachineGroupFuzzyQuery(String machineGroupFuzzyQuery) {
-        this.machineGroupFuzzyQuery = machineGroupFuzzyQuery;
     }
 
     public String getNoMachineGroup() {

@@ -5,38 +5,44 @@
     <title>网站联系信息列表</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
-        .layui-table-body tr td:nth-child(2),td:nth-child(3),td:nth-child(4),td:nth-child(5) {
+        .layui-table-body tr td:nth-child(2), td:nth-child(3), td:nth-child(4), td:nth-child(5) {
             text-align: left;
         }
+
         .layui-tab-content {
             padding: 0px;
         }
+
         .layui-card-body {
             position: relative;
             padding: 0px;
             line-height: 24px;
         }
+
         .layui-table, .layui-table-view {
             margin: 0px;
             border-width: 1px;
         }
+
         .my-collapse > div:first-child {
             margin-top: 10px;
             background: #f2f2f2;
             border: 0px;
         }
+
         .layui-inline input {
             width: 150px;
             height: 30px;
         }
+
         .my-collapse button {
             height: 30px;
             line-height: 30px;
         }
+
         .my-collapse > div:first-child {
             background: #f2f2f2;
             border: 1px solid #e6e6e6;
@@ -52,12 +58,12 @@
             right: 25px;
         }
 
-        #weight-box{
+        #weight-box {
             height: 30px;
             width: 100px;
         }
 
-        #weight-box input{
+        #weight-box input {
             width: 100px;
         }
 
@@ -71,8 +77,12 @@
             word-break: break-all;
         }
 
-        .details-header{
-            padding-right: 9px;
+        .details-header {
+            padding-right: 16px;
+        }
+
+        .layui-layer-btn {
+            padding-top: 0 !important;
         }
     </style>
 </head>
@@ -165,7 +175,7 @@
             return false
         });
 
-        function searchDetailList(whereCondition){
+        function searchDetailList(whereCondition) {
             whereCondition = common.jsonObjectTrim(whereCondition);
             table.render({
                 elem: '#industryDetailTable',
@@ -183,26 +193,25 @@
                 where: whereCondition,
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', width: '3%', align: 'center'},
-                    {field: 'website', title: '网站URL', width: '11%', align: 'center'},
-                    {field: 'title', title: '标题', width: '12%', align: 'center'},
-                    {field: 'qq', title: 'QQ', width: '7%', align: 'center'},
-                    {field: 'telephone', title: '电话', width: '9%', align: 'center'},
+                    {field: 'website', title: '网站URL', width: '13%', align: 'center'},
+                    {field: 'title', title: '标题', width: '16%', align: 'center'},
+                    {field: 'qq', title: 'QQ', width: '8%', align: 'center'},
+                    {field: 'telephone', title: '电话', width: '10%', align: 'center'},
                     {field: 'weight', title: '权重', width: '3%', align: 'center'},
                     {field: 'identifyCustomer', title: '客户标注', width: '15%', align: 'center'},
                     {field: 'remark', title: '销售备注', width: '15%', align: 'center'},
                     {field: 'level', title: '层级', width: '3%', align: 'center'},
                     {field: 'updateTime', title: '修改时间', width: '7%', templet: '#toUpdateTime', align: 'center'},
                     {field: 'createTime', title: '创建时间', width: '7%', templet: '#toDateTime', align: 'center'},
-                    {title: '操作', templet: '#operationTpl', align: 'center', width: '8%', align: 'center'}
                 ]],
-                height: 'full-75',
+                height: 'full-65',
                 done: function (res, curr, count) {
                     jz();
                 }
             });
         }
 
-        $(document).on('onMouseUp', 'thead', function() {
+        $(document).on('onMouseUp', 'thead', function () {
             jz();
         });
 
@@ -224,28 +233,83 @@
         }
 
         function toSaveIndustryDetail() {
-            okLayer.open("首页/行业联系信息/添加信息", "/internal/industryDetails/toSaveIndustryDetail", "30%", "73%",  function(layero){
+            okLayer.open("首页 / 行业联系信息 / 添加信息", "/internal/industryDetails/toSaveIndustryDetail", "30%", "73%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initIndustryID(industryUuid);
-            }, function(){
-                if(sign){
+            }, function () {
+                if (sign) {
                     active['reload'].call(this);
                     sign = false;
                 }
             }, 100);
         }
 
-        function updateIndustryDetailRemark(data){
-            okLayer.open("首页/行业联系信息/修改销售备注", "/internal/industryDetails/toSaveIndustryDetail", "30%", "30%", function(layero){
-                window[layero.find("iframe")[0]["name"]].initForm(data.uuid, industryUuid);
-            },function(){
-                if(sign){
-                    active['reload'].call(this);
-                    sign = false;
+        function updateIndustryDetailRemark() {
+            let checkStatus = table.checkStatus('industryDetailTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要操作网站');
+                return;
+            }
+            layer.open({
+                type: 1,
+                title: '修改销售备注',
+                content: '<form class="layui-form layui-form-pane ok-form" style="margin: 10px 10px 0 10px">'
+                    + '        <div class="layui-form-item layui-form-text">'
+                    + '            <div class="layui-input-block">'
+                    + '                <textarea name="remark" id="remark" placeholder="请填写备注" class="layui-textarea"></textarea>'
+                    + '            </div>'
+                    + '        </div>'
+                    + '   </form>',
+                shadeClose: true,
+                resize: false,
+                area: '500px',
+                offset: '40px',
+                btn: ['确认', '取消'],
+                yes: function (index) {
+                    let v = document.getElementById('remark').value.trim();
+                    let d = {};
+                    d.uuids = uuidArr;
+                    d.remark = v;
+                    if (v) {
+                        updMsg(d, index);
+                    } else {
+                        layer.confirm('确认清空销售备注吗？', {offset: '100px'}, function (__index) {
+                            updMsg(d, index);
+                            layer.close(__index);
+                        });
+                    }
+                }, btn2: function (index) {
+                    layer.close(index);
+                }, cancel: function () {
                 }
-            }, 150);
+            });
         }
 
-        function deleteIndustryDetail(uuid){
+        function updMsg(d, index) {
+            $.ajax({
+                url: '/internal/industryDetails/updRemarkByUuids',
+                type: 'post',
+                data: JSON.stringify(d),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        layer.close(index);
+                        common.showSuccessMsg('修改成功', active['reload'].call(this));
+                    } else {
+                        common.showFailMsg('修改失败');
+                    }
+                }
+            });
+        }
+
+        function deleteIndustryDetail(uuid) {
             layer.confirm('确认删除该网站联系信息？', {
                 icon: 3,
                 title: '删除网站联系信息',
@@ -278,7 +342,7 @@
             });
         }
 
-        function deleteIndustryDetails(){
+        function deleteIndustryDetails() {
             let checkStatus = table.checkStatus('industryDetailTable');
             let data = checkStatus.data;
             let uuidArr = [];
@@ -318,7 +382,7 @@
             });
         }
 
-        function removeUselessIndustryDetail(){
+        function removeUselessIndustryDetail() {
             layer.confirm("确定要移除无qq/电话信息吗", {icon: 3, title: '删除所选'}, function (index) {
                 $.ajax({
                     url: '/internal/industryDetails/removeUselessIndustryDetail/' + industryUuid,
@@ -345,8 +409,8 @@
             });
         }
 
-        table.on('toolbar(tableFilter)',function(obj){
-            let data = obj.data,event = obj.event;
+        table.on('toolbar(tableFilter)', function (obj) {
+            let data = obj.data, event = obj.event;
             switch (event) {
                 case 'toSaveIndustryDetail':
                     toSaveIndustryDetail();
@@ -357,23 +421,11 @@
                 case 'removeUselessIndustryDetail':
                     removeUselessIndustryDetail();
                     break;
-            }
-        });
-
-        table.on('tool(tableFilter)',function(obj){
-            let data = obj.data,event = obj.event;
-            switch (event) {
                 case 'updateIndustryDetailRemark':
-                    updateIndustryDetailRemark(data);
-                    break;
-                case 'deleteIndustryDetail':
-                    deleteIndustryDetail(data.uuid);
-                    break;
-                default:
+                    updateIndustryDetailRemark();
                     break;
             }
         });
-
     });
 
 </script>
@@ -390,23 +442,13 @@
         <@shiro.hasPermission name="/internal/industryDetail/saveIndustryDetail">
         <button class="layui-btn layui-btn-sm" lay-event="toSaveIndustryDetail">添加</button>
         <button class="layui-btn layui-btn-sm" lay-event="removeUselessIndustryDetail">移除无用数据</button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/industryDetail/deleteIndustryDetails">
-    <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="deleteIndustryDetails">
-        <i class="layui-icon layui-icon-delete"></i>删除所选
-    </button>
-    </@shiro.hasPermission>
-    </div>
-</script>
-
-<script type="text/html" id="operationTpl">
-    <div class="layui-btn-group">
+        </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/industryDetail/saveIndustryDetail">
-        <button type="button" class="layui-btn layui-btn-xs" lay-event="updateIndustryDetailRemark">修改备注</button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/industryDetail/delIndustryDetail">
-    <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="deleteIndustryDetail">删除</button>
-    </@shiro.hasPermission>
+        <button type="button" class="layui-btn layui-btn-sm" lay-event="updateIndustryDetailRemark">修改备注</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/industryDetail/deleteIndustryDetails">
+        <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="deleteIndustryDetails">删除所选</button>
+        </@shiro.hasPermission>
     </div>
 </script>
 </body>

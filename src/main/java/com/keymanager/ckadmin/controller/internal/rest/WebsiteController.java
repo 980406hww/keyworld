@@ -93,7 +93,7 @@ public class WebsiteController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/friendlyLink/saveAdvertisings")
+//    @RequiresPermissions("/internal/friendlyLink/saveAdvertisings")
     @GetMapping("/showBatchAddAdvertisingDialog")
     public ModelAndView showBatchAddAdvertisingDialog(){
         ModelAndView mv = new ModelAndView();
@@ -103,13 +103,15 @@ public class WebsiteController {
 
     @RequiresPermissions("/internal/friendlyLink/saveFriendlyLink")
     @RequestMapping(value = "/getFriendlyLinkByUrl", method = RequestMethod.POST)
-    public ResultBean getFriendlyLinkByUrl(@RequestBody Map<String, Object> requestMap){
+    public ResultBean getFriendlyLinkByUrl(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
-        try{
-            FriendlyLink friendlyLink = friendlyLinkService.getFriendlyLinkByUrl(Integer.valueOf((String) requestMap.get("uuid")), (String) requestMap.get("friendlyLinkUrl"));
+        try {
+            Integer uuid = (Integer) requestMap.get("uuid");
+            String friendlyLinkUrl = (String) requestMap.get("friendlyLinkUrl");
+            FriendlyLink friendlyLink = friendlyLinkService.getFriendlyLinkByUrl(uuid, friendlyLinkUrl);
             resultBean.setData(friendlyLink);
             resultBean.setCode(200);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg("未知错误");

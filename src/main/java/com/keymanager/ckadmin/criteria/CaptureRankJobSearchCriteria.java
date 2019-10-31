@@ -17,7 +17,6 @@ public class CaptureRankJobSearchCriteria extends BaseCriteria {
     private String rankJobCity;
     private String createBy;
     private String updateBy;
-    private String groupNameFuzzyQuery;
 
     public String getGroupNames() {
         return groupNames;
@@ -89,14 +88,6 @@ public class CaptureRankJobSearchCriteria extends BaseCriteria {
 
     public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy;
-    }
-
-    public String getGroupNameFuzzyQuery() {
-        return groupNameFuzzyQuery;
-    }
-
-    public void setGroupNameFuzzyQuery(String groupNameFuzzyQuery) {
-        this.groupNameFuzzyQuery = groupNameFuzzyQuery;
     }
 
     public String getRankJobCity() {

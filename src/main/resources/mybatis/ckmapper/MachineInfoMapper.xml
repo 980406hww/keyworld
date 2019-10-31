@@ -73,9 +73,7 @@
         </foreach>
     </delete>
 
-    <select id="searchMachineInfos"
-            parameterType="com.keymanager.ckadmin.criteria.MachineInfoCriteria"
-            resultType="com.keymanager.ckadmin.entity.MachineInfo">
+    <select id="searchMachineInfos" parameterType="com.keymanager.ckadmin.criteria.MachineInfoCriteria" resultType="com.keymanager.ckadmin.entity.MachineInfo">
         SELECT
         <include refid="selectCol"/>
         FROM
@@ -84,27 +82,16 @@
         <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''">AND
             mi.fClientID like '%${machineInfoCriteria.clientID}%'
         </if>
-
         <if test="machineInfoCriteria.machineGroup != null and machineInfoCriteria.machineGroup != ''">
-            <choose>
-                <when
-                        test="machineInfoCriteria.machineGroupFuzzyQuery == null or machineInfoCriteria.machineGroupFuzzyQuery == ''">
-                    AND mi.fMachineGroup = #{machineInfoCriteria.machineGroup}
-                </when>
-                <otherwise>
-                    AND mi.fMachineGroup like '%${machineInfoCriteria.machineGroup}%'
-                </otherwise>
-            </choose>
+            AND mi.fMachineGroup like '%${machineInfoCriteria.machineGroup}%'
         </if>
-        <if
-                test="machineInfoCriteria.upgradeFailedReason != null and machineInfoCriteria.upgradeFailedReason != ''">
+        <if test="machineInfoCriteria.upgradeFailedReason != null and machineInfoCriteria.upgradeFailedReason != ''">
             AND mi.fUpgradeFailedReason like '%${machineInfoCriteria.upgradeFailedReason}%'
         </if>
         <if test="machineInfoCriteria.version != null and machineInfoCriteria.version != ''">AND
             mi.fVersion like concat(#{machineInfoCriteria.version},'%')
         </if>
-        <if
-                test="machineInfoCriteria.targetVersion != null and machineInfoCriteria.targetVersion != ''">
+        <if test="machineInfoCriteria.targetVersion != null and machineInfoCriteria.targetVersion != ''">
             AND mi.fTargetVersion like concat(#{machineInfoCriteria.targetVersion},'%')
         </if>
         <if test="machineInfoCriteria.city != null and machineInfoCriteria.city != ''">AND mi.fCity like
@@ -123,12 +110,10 @@
             mi.fMachineGroup = '')
         </if>
         <if test="machineInfoCriteria.hasMachineGroup != null">AND mi.fMachineGroup > ''</if>
-        <if
-                test="machineInfoCriteria.startUpStatus != null and machineInfoCriteria.startUpStatus != ''">
+        <if test="machineInfoCriteria.startUpStatus != null and machineInfoCriteria.startUpStatus != ''">
             AND mi.fStartUpStatus = #{machineInfoCriteria.startUpStatus}
         </if>
-        <if
-                test="machineInfoCriteria.runningProgramType != null and machineInfoCriteria.runningProgramType != ''">
+        <if test="machineInfoCriteria.runningProgramType != null and machineInfoCriteria.runningProgramType != ''">
             AND mi.fRunningProgramType = #{machineInfoCriteria.runningProgramType}
         </if>
         <if test="machineInfoCriteria.noVNC != null">AND (mi.fHost is null or mi.fHost = '')</if>
@@ -138,19 +123,16 @@
             mi.fTargetVPSPassword)
         </if>
         <if test="machineInfoCriteria.startUpClient != null">AND mi.fDownloadProgramType > ''</if>
-        <if
-                test="machineInfoCriteria.vpsBackendSystemComputerID != null and machineInfoCriteria.vpsBackendSystemComputerID != ''">
+        <if test="machineInfoCriteria.vpsBackendSystemComputerID != null and machineInfoCriteria.vpsBackendSystemComputerID != ''">
             AND (mi.fVPSBackendSystemComputerID like '${machineInfoCriteria.vpsBackendSystemComputerID}%')
         </if>
-        <if
-                test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''">
+        <if test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''">
             AND mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName}
         </if>
-        <if test="machineInfoCriteria.gtMemory != null and machineInfoCriteria.gtMemory != ''"> AND mi.fMemory &gt;= #{machineInfoCriteria.gtMemory}</if>
-        <if test="machineInfoCriteria.ltMemory != null and machineInfoCriteria.ltMemory != ''"> AND mi.fMemory &lt;= #{machineInfoCriteria.ltMemory}</if>
+        <if test="machineInfoCriteria.gtMemory != null and machineInfoCriteria.gtMemory != ''">AND mi.fMemory &gt;= #{machineInfoCriteria.gtMemory}</if>
+        <if test="machineInfoCriteria.ltMemory != null and machineInfoCriteria.ltMemory != ''">AND mi.fMemory &lt;= #{machineInfoCriteria.ltMemory}</if>
         <if test="machineInfoCriteria.switchGroups != null">AND mi.fSwitchGroupName IN
-            <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")"
-                     separator=",">
+            <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")" separator=",">
                 #{switchGroup}
             </foreach>
         </if>
@@ -196,7 +178,7 @@
         </if>
         <if test="machineInfoCriteria.switchGroups != null">AND mi.fSwitchGroupName IN
             <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")"
-                     separator=",">
+                    separator=",">
                 #{switchGroup}
             </foreach>
         </if>
@@ -511,8 +493,12 @@
         SELECT cs.fGroup as 'group', cs.fTerminalType as terminalType, COUNT(1) AS 'count' FROM
         t_machine_info cs
         <where>
-            <if test="machineInfoGroupStatCriteria.groupName!=null and machineInfoGroupStatCriteria.groupName!=''">and cs.fGroup LIKE '%${machineInfoGroupStatCriteria.groupName}%'</if>
-            <if test="machineInfoGroupStatCriteria.terminalType!=null and machineInfoGroupStatCriteria.terminalType!=''">and cs.fTerminalType = #{machineInfoGroupStatCriteria.terminalType}</if>
+            <if test="machineInfoGroupStatCriteria.groupName!=null and machineInfoGroupStatCriteria.groupName!=''">and cs.fGroup LIKE
+                '%${machineInfoGroupStatCriteria.groupName}%'
+            </if>
+            <if test="machineInfoGroupStatCriteria.terminalType!=null and machineInfoGroupStatCriteria.terminalType!=''">and cs.fTerminalType =
+                #{machineInfoGroupStatCriteria.terminalType}
+            </if>
         </where>
         GROUP BY cs.fGroup, cs.fTerminalType ORDER BY cs.fGroup
     </select>
@@ -602,7 +588,7 @@
         WHERE 1=1
         <if test="machineInfoCriteria.clientIDs != null">AND mi.fClientID IN
             <foreach item="item" collection="machineInfoCriteria.clientIDs" open="(" separator=","
-                     close=")">
+                    close=")">
                 #{item}
             </foreach>
         </if>
@@ -611,25 +597,15 @@
         </if>
 
         <if test="machineInfoCriteria.machineGroup != null and machineInfoCriteria.machineGroup != ''">
-            <choose>
-                <when
-                        test="machineInfoCriteria.machineGroupFuzzyQuery == null or machineInfoCriteria.machineGroupFuzzyQuery == ''">
-                    AND mi.fMachineGroup = #{machineInfoCriteria.machineGroup}
-                </when>
-                <otherwise>
-                    AND mi.fMachineGroup like '%${machineInfoCriteria.machineGroup}%'
-                </otherwise>
-            </choose>
+             AND mi.fMachineGroup like '%${machineInfoCriteria.machineGroup}%'
         </if>
-        <if
-                test="machineInfoCriteria.upgradeFailedReason != null and machineInfoCriteria.upgradeFailedReason != ''">
+        <if test="machineInfoCriteria.upgradeFailedReason != null and machineInfoCriteria.upgradeFailedReason != ''">
             AND mi.fUpgradeFailedReason like '%${machineInfoCriteria.upgradeFailedReason}%'
         </if>
         <if test="machineInfoCriteria.version != null and machineInfoCriteria.version != ''">AND
             mi.fVersion like concat(#{machineInfoCriteria.version},'%')
         </if>
-        <if
-                test="machineInfoCriteria.targetVersion != null and machineInfoCriteria.targetVersion != ''">
+        <if test="machineInfoCriteria.targetVersion != null and machineInfoCriteria.targetVersion != ''">
             AND mi.fTargetVersion like concat(#{machineInfoCriteria.targetVersion},'%')
         </if>
         <if test="machineInfoCriteria.city != null and machineInfoCriteria.city != ''">AND mi.fCity like
@@ -648,12 +624,10 @@
             mi.fMachineGroup = '')
         </if>
         <if test="machineInfoCriteria.hasMachineGroup != null">AND mi.fMachineGroup > ''</if>
-        <if
-                test="machineInfoCriteria.startUpStatus != null and machineInfoCriteria.startUpStatus != ''">
+        <if test="machineInfoCriteria.startUpStatus != null and machineInfoCriteria.startUpStatus != ''">
             AND mi.fStartUpStatus = #{machineInfoCriteria.startUpStatus}
         </if>
-        <if
-                test="machineInfoCriteria.runningProgramType != null and machineInfoCriteria.runningProgramType != ''">
+        <if test="machineInfoCriteria.runningProgramType != null and machineInfoCriteria.runningProgramType != ''">
             AND mi.fRunningProgramType = #{machineInfoCriteria.runningProgramType}
         </if>
         <if test="machineInfoCriteria.noVNC != null">AND (mi.fHost is null or mi.fHost = '')</if>
@@ -663,17 +637,14 @@
             mi.fTargetVPSPassword)
         </if>
         <if test="machineInfoCriteria.startUpClient != null">AND mi.fDownloadProgramType > ''</if>
-        <if
-                test="machineInfoCriteria.vpsBackendSystemComputerID != null and machineInfoCriteria.vpsBackendSystemComputerID != ''">
+        <if test="machineInfoCriteria.vpsBackendSystemComputerID != null and machineInfoCriteria.vpsBackendSystemComputerID != ''">
             AND (mi.fVPSBackendSystemComputerID = #{machineInfoCriteria.vpsBackendSystemComputerID})
         </if>
-        <if
-                test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''">
+        <if test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''">
             AND mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName}
         </if>
         <if test="machineInfoCriteria.switchGroups != null">AND mi.fSwitchGroupName IN
-            <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")"
-                     separator=",">
+            <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")" separator=",">
                 #{switchGroup}
             </foreach>
         </if>

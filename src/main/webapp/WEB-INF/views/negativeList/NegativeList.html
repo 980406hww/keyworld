@@ -5,7 +5,6 @@
     <title>负面清单</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
@@ -170,16 +169,16 @@
         }
 
         function showNegativeListDialog() {
-            okLayer.open("首页 / 负面清单列表 / 添加负面清单", "/internal/negativelists/toSaveNegativeList", "60%", "70%", null, function(){
+            okLayer.open("首页 / 负面清单列表 / 添加负面清单", "/internal/negativelists/toSaveNegativeList", "40%", "62%", null, function(){
                 if(sign){
                     active['reload'].call(this);
                     sign = false;
                 }
-            });
+            },'40px');
         }
 
         function modifyNegativeList(data){
-            okLayer.open("首页 / 负面清单列表 / 修改负面清单", "/internal/negativelists/toSaveNegativeList", "60%", "70%", function(layero){
+            okLayer.open("首页 / 负面清单列表 / 修改负面清单", "/internal/negativelists/toSaveNegativeList", "40%", "62%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
             },function(){
                 if(sign){

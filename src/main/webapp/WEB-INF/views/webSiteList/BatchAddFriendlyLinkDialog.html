@@ -10,28 +10,7 @@
         .layui-btn {
             width: 120px;
         }
-
-        .layui-input-block input{
-            height: 30px;
-        }
-
-        .layui-input-block p{
-            height: 30px;
-            line-height: 30px;
-        }
-
-        .layui-form-pane .layui-form-label{
-            height: 30px;
-            line-height: 30px;
-            padding: 0px 15px !important;
-        }
-        .layui-form-pane .layui-form-radio, .layui-form-pane .layui-form-switch{
-            margin-top: 1px;
-            margin-right: 0px;
-            margin-left: 20px;
-            padding-right: 2px !important;
-        }
-        .layui-input-block #friendlyLinkLogo{
+        .layui-input-block #friendlyLinkLogo {
             line-height: 30px;
             border-right: 0px;
             border-bottom: 0px;
@@ -52,14 +31,17 @@
         <div class="layui-form-item">
             <label class="layui-form-label">网址</label>
             <div class="layui-input-block">
-                <input type="text" name="friendlyLinkUrl" id="friendlyLinkUrl" placeholder="默认没有http://会加上" autocomplete="off" class="layui-input" lay-verify="website">
+                <input type="text" name="friendlyLinkUrl" id="friendlyLinkUrl" placeholder="默认没有http://会加上" autocomplete="off" class="layui-input"
+                       lay-verify="website">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">网站排序</label>
             <div class="layui-input-block">
                 <input type="hidden" name="originalSortRank" id="originalSortRank">
-                <input type="text" name="friendlyLinkSortRank" id="friendlyLinkSortRank" placeholder="不填写则排在最后面" autocomplete="off" class="layui-input"  lay-verify="number">
+                <input type="hidden" name="friendlyLinkType" id="friendlyLinkType" value="综合网站_0">
+                <input type="text" name="friendlyLinkSortRank" id="friendlyLinkSortRank" placeholder="不填写则排在最后面" autocomplete="off" class="layui-input"
+                       lay-verify="number">
             </div>
         </div>
         <div class="layui-form-item">
@@ -71,8 +53,8 @@
         <div class="layui-form-item" pane>
             <label class="layui-form-label">页面选择</label>
             <div class="layui-input-block">
-                <input name="friendlyLinkIsCheck" type="radio" value="2" checked/>首页
-                <input name="friendlyLinkIsCheck" type="radio" value="1"/>内容页
+                <input name="friendlyLinkIsCheck" type="radio" value="2" checked title="首页"/>
+                <input name="friendlyLinkIsCheck" type="radio" value="1" title="内容页"/>
             </div>
         </div>
         <div class="layui-form-item">
@@ -108,7 +90,7 @@
 
     let uuids_ = null;
     let layui_ = null;
-    let datas = {};
+    let datas = null;
     let websiteUuid_ = null;
     let originalSortRank_ = null;
     let customerUuid_ = null;
@@ -135,8 +117,8 @@
                 "Content-Type": 'application/json'
             },
             success: function (res) {
-                console.log(res.data)
                 if (res.code === 200) {
+                    res.data.expirationTime = l.util.toDateString(res.data.expirationTime,'yyyy-MM-dd');
                     layui.form.val("friendlyLinkForm", res.data);
                 } else {
                     l.layer.msg(res.msg, {icon: 5, time: 3000});
@@ -145,7 +127,7 @@
         });
     }
 
-    layui.use(["form", "jquery", "layer", "laydate", "common"], function () {
+    layui.use(["form", "jquery", "layer", "laydate", "common", "util"], function () {
         let form = layui.form;
         let $ = layui.jquery;
         let laydate = layui.laydate;
@@ -161,34 +143,18 @@
             elem: '#expirationTime',
         });
 
-
         form.on("submit(commit)", function (data) {
-            // let customerInfo = data.field.customerInfo;
-            // let customerUuid = customerInfo.split('_')[customerInfo.split('_').length - 1];
-            let friendlyLinkWebName = data.field.friendlyLinkWebName;
+            console.log(data);
             let friendlyLinkUrl = data.field.friendlyLinkUrl;
-            if(friendlyLinkUrl.indexOf('http://') === -1){
+            if (friendlyLinkUrl.indexOf('http://') === -1) {
                 friendlyLinkUrl = 'http://' + friendlyLinkUrl
             }
             let friendlyLinkSortRank = data.field.friendlyLinkSortRank;
-            if (friendlyLinkSortRank  ===  "") {
-                friendlyLinkSortRank = -1;
-            }
-            let friendlyLinkEmail = data.field.friendlyLinkEmail;
-            let friendlyLinkType = data.field.friendlyLinkType;
-            let friendlyLinkTypeId = friendlyLinkType.split('_')[friendlyLinkType.split('_').length - 1];
-            let friendlyLinkIsCheck = data.field.friendlyLinkIsCheck;
-            let expirationTime = data.field.expirationTime;
-            if (expirationTime === ""){
-                common.showFailMsg("请选择到期时间");
-                return;
-            }
-            let renewTime = data.field.renewTime;
-            if (renewTime === ""){
-                common.showFailMsg("请选择续费时间");
-                return;
+            if (!friendlyLinkSortRank) {
+                friendlyLinkSortRank = '-1';
             }
             let friendlyLinkLogoFile = data.field.friendlyLinkLogo;
+            let file = null;
             if (friendlyLinkLogoFile !== "") {
                 let fileTypes = new Array("jpg", "png", "gif");
                 let fileTypeFlag = false;
@@ -204,24 +170,23 @@
                     common.showFailMsg("请提交正确格式图片 .jpg .png .gif");
                     return false;
                 }
+                file = document.getElementById('friendlyLinkLogo').files[0];
             }
-            let friendlyLinkMsg = data.field.friendlyLinkMsg;
-            let friendlyLinkLogo = $('#friendlyLinkLogo')[0].files[0];
-
             let formData = new FormData();
-            formData.append('file', $('#friendlyLinkLogo')[0].files[0]);
+            formData.append('file', file);
+            formData.append('friendlyLinkWebName', data.field.friendlyLinkWebName.trim());
+            formData.append('friendlyLinkUrl', friendlyLinkUrl.trim());
+            formData.append('friendlyLinkIsCheck', data.field.friendlyLinkIsCheck.trim());
+            formData.append('friendlyLinkSortRank', friendlyLinkSortRank.trim());
+            formData.append('friendlyLinkType', data.field.friendlyLinkType.trim());
+            let friendlyLinkTypes = data.field.friendlyLinkType.split('_');
+            let friendlyLinkTypeId = friendlyLinkTypes[friendlyLinkTypes.length - 1];
+            formData.append('friendlyLinkTypeId', friendlyLinkTypeId);
+            formData.append('friendlyLinkMsg', data.field.friendlyLinkMsg.trim());
+            formData.append('expirationTime', data.field.expirationTime.trim());
+            formData.append('friendlyLinkEmail', data.field.friendlyLinkEmail.trim());
+            formData.append('friendlyLinkLogo', data.field.friendlyLinkLogo.trim());
             formData.append('uuids', uuids_);
-            formData.append('friendlyLinkWebName', $.trim(friendlyLinkWebName));
-            formData.append('friendlyLinkUrl', $.trim(friendlyLinkUrl));
-            formData.append('friendlyLinkIsCheck', $.trim(friendlyLinkIsCheck));
-            formData.append('friendlyLinkSortRank', $.trim(friendlyLinkSortRank));
-            formData.append('friendlyLinkType', $.trim(friendlyLinkType));
-            formData.append('friendlyLinkTypeId', $.trim(friendlyLinkTypeId));
-            formData.append('friendlyLinkMsg', $.trim(friendlyLinkMsg));
-            formData.append('expirationTime', $.trim(expirationTime));
-            formData.append('friendlyLinkEmail', $.trim(friendlyLinkEmail));
-            formData.append('friendlyLinkLogo', $.trim(friendlyLinkLogo));
-
             $.ajax({
                 url: '/internal/websites/batchSaveFriendlyLink',
                 type: 'POST',
@@ -249,25 +214,25 @@
         });
 
         form.verify({
-            website: function(value){
-                if(value !== ""){
-                    if(value.indexOf(".") === -1){
+            website: function (value) {
+                if (value !== "") {
+                    if (value.indexOf(".") === -1) {
                         return "请输入正确网址"
                     }
-                }else{
+                } else {
                     return "网址不能为空"
                 }
             },
-            number: function(value){
-                if(value !== ""){
-                    if(!/^[1-9]\d*$/.test(value)){
+            number: function (value) {
+                if (value !== "") {
+                    if (!/^[1-9]\d*$/.test(value)) {
                         return "请输入大于0的整数排名"
                     }
                 }
             },
-            email: function(value){
-                if(value !== ""){
-                    if(value.indexOf("@") === -1){
+            email: function (value) {
+                if (value !== "") {
+                    if (value.indexOf("@") === -1) {
                         return "请输入正确的邮箱"
                     }
                 }

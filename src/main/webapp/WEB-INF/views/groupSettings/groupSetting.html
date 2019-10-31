@@ -678,7 +678,7 @@
         window.showGroupQueueDialog = function (uuid) {
             let data = {};
             data.uuid = uuid;
-            okLayer.open("终端管理 / 分组信息 / 分组详情<span style='color: red'>(需要删除的分组请取消选中)</span>", "/internal/groupsetting/toGroupDetail", "30%", "60%", function(layero){
+            okLayer.open("终端管理 / 分组信息 / 分组详情<span style='color: red'>(需要删除的分组请取消选中)</span>", "/internal/groupsetting/toGroupDetail", "30%", "90%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             }, function () {
                 if (sign) {
