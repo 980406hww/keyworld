@@ -10,27 +10,6 @@
         .layui-btn {
             width: 120px;
         }
-
-        .layui-input-block input{
-            height: 30px;
-        }
-
-        .layui-input-block p{
-            height: 30px;
-            line-height: 30px;
-        }
-
-        .layui-form-pane .layui-form-label{
-            height: 30px;
-            line-height: 30px;
-            padding: 0px 15px !important;
-        }
-        .layui-form-pane .layui-form-radio, .layui-form-pane .layui-form-switch{
-            margin-top: 1px;
-            margin-right: 0px;
-            margin-left: 20px;
-            padding-right: 2px !important;
-        }
     </style>
 </head>
 <body>
@@ -81,7 +60,7 @@
                 <input type="text" class="layui-input" id="advertisingTime" name="advertisingTime" readonly>
             </div>
         </div>
-        <div class="layui-form-item">
+        <div class="layui-form-item" pane>
             <label class="layui-form-label">时间限制</label>
             <div class="layui-input-block">
                 <input name="advertisingTimeSet" type="radio" value="0" checked/>永不过期&nbsp;
@@ -89,7 +68,7 @@
             </div>
         </div>
         <div border="0" id="advertisingBodyCheckedTable" style="display: block;">
-            <div class="layui-form-item">
+            <div class="layui-form-item" pane>
                 <label class="layui-form-label">广告内容</label>
                 <div class="layui-input-block">
                     <input name="advertisingBodyChecked" type="radio" value="0" lay-filter="advertisingBodyChecked" checked/>代码

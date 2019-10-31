@@ -51,12 +51,8 @@
 
         form.on("submit(commit)", function (data) {
             let postData = {};
-
-            //TODO
-            //原系统代码有问题，后台需要customerId，这里暂未获取
-
             postData.uuids = uuids_;
-            postData.renewTime = data.field.renewTime
+            postData.renewTime = data.field.renewTime;
             postData = common.jsonObjectTrim(postData);
             $.ajax({
                 url: '/internal/websites/synchronousAdvertising',
