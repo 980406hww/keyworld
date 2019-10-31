@@ -5,7 +5,6 @@
     <title>机器管理</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
 </head>
@@ -127,12 +126,6 @@
         display: inline;
     }
 
-    #fuzzy-box div{
-        margin-top: auto;
-        margin-bottom: auto;
-        margin-left: 1px;
-    }
-
     #checkGroup input{
         display: none;
     }
@@ -148,21 +141,17 @@
     }
 
     .my-opration-hide {
-        padding: 10px 10px 5px 15px;
+        padding: 6px 5px;
         width: 100%;
         display: none;
         position: absolute;
-        top: 51px;
+        top: 43px;
         left: 0;
         z-index: 894;
         background: #fff;
         border-top: 1px #e6e6e6 solid;
         border-bottom: 1px #e6e6e6 solid;
         transition: visibility .6s;
-    }
-
-    .my-opration-hide .layui-btn-group {
-        margin: 0 10px 5px 0;
     }
 
     .layui-unselect{
@@ -200,9 +189,6 @@
                                     </div>
                                     <div class="layui-inline">
                                         <input type="text" name="machineGroup" id="machineGroup" value="<#if machineGroupFromATP?exists>${machineGroupFromATP}</#if>" placeholder="请输入机器分组" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
-                                    </div>
-                                    <div class="layui-inline" id="fuzzy-box">
-                                        <input type="checkbox" name="machineGroupFuzzyQuery" title="模糊搜索">
                                     </div>
                                     <div class="layui-inline" id="valid-box">
                                         <select name="valid">
@@ -1077,7 +1063,7 @@
         }
 
         function toUpdateMachineInfo(data) {
-            okLayer.open("首页 / 终端列表 / 修改终端信息", "/internal/machineManage/toUpdateMachineInfo", "35%", "62%", function (layero) {
+            okLayer.open("首页 / 终端列表 / 修改终端信息", "/internal/machineManage/toUpdateMachineInfo", "35%", "66%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initMachineInfo(data);
             },function(){
                 if(sign){

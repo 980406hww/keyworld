@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
     <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
-    <link rel="stylesheet" href="/static/ok-admin/css/scroll-bar.css">
     <style>
         .layui-tab-content {
             padding: 0px;
@@ -177,9 +176,6 @@
                                     <input name="operationType" id="terminalType" type="hidden" value="PC">
                                     <div class="layui-inline">
                                         <input type="text" name="groupNames" placeholder="请输入组名" autocomplete="off" class="layui-input">
-                                    </div>
-                                    <div class="layui-inline">
-                                        <input type="checkbox" name="groupNameFuzzyQuery" title="模糊搜索">
                                     </div>
                                     <div class="layui-inline">
                                         <select name="exectionType" id="exectionType">
@@ -405,8 +401,8 @@
 
         function jz() {
             let tables = document.getElementsByTagName('table');
-            let t_h = tables[1].offsetHeight || tables[1].clientHeight || tables[1].scrollHeight;
-            let t_p_h = tables[1].parentElement.offsetHeight || tables[1].parentElement.clientHeight || tables[1].scrollHeight;
+            let t_h = tables[2].offsetHeight || tables[2].clientHeight || tables[2].scrollHeight;
+            let t_p_h = tables[2].parentElement.offsetHeight || tables[2].parentElement.clientHeight || tables[2].scrollHeight;
             let t_w = tables[1].offsetWidth || tables[1].clientWidth || tables[1].scrollWidth;
             let t_p_w = tables[1].parentElement.offsetWidth || tables[1].parentElement.clientWidth || tables[1].scrollWidth;
             if (t_h > t_p_h) {
@@ -506,7 +502,7 @@
         };
 
         window.toSaveCaptureRanks = function () {
-            okLayer.open("关键字管理 / 抓排名任务管理 / 添加任务", "/internal/captureRanks/toSaveCaptureRanks", "60%", "70%", null, function () {
+            okLayer.open("关键字管理 / 抓排名任务管理 / 添加任务", "/internal/captureRanks/toSaveCaptureRanks", "60%", "63%", null, function () {
                 if (sign) {
                     active['reload'].call(this);
                     sign = false;
@@ -515,7 +511,7 @@
         };
 
         function toSaveCaptureRanksEdit(uuid) {
-            okLayer.open("关键字管理 / 抓排名任务管理 / 修改任务", "/internal/captureRanks/toSaveCaptureRanks", "60%", "70%", function (layero) {
+            okLayer.open("关键字管理 / 抓排名任务管理 / 修改任务", "/internal/captureRanks/toSaveCaptureRanks", "60%", "63%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(uuid);
             }, function () {
                 if (sign) {
@@ -664,9 +660,6 @@
         form.on("submit(search)", function (data) {
             let condition = data.field;
             condition = common.jsonObjectTrim(condition);
-            if (!condition.groupNameFuzzyQuery) {
-                condition.groupNameFuzzyQuery = null;
-            }
             table.reload('captureRankTable', {
                 where: condition,
                 page: {

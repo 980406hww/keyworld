@@ -3,7 +3,7 @@
 <mapper namespace="com.keymanager.ckadmin.dao.CustomerKeywordRefreshStatInfoDao">
 
     <select id="selectTotalCount" parameterType="com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria"
-        resultType="int">
+            resultType="int">
         SELECT COUNT(1)
         FROM (
         SELECT
@@ -35,17 +35,8 @@
             #{criteria.terminalType}
         </if>
         <if test="criteria.groupName!=null and criteria.groupName!=''">
-            <choose>
-                <when
-                    test="criteria.groupNameFuzzyQuery == null or criteria.groupNameFuzzyQuery == ''">
-                    AND ck.fOptimizeGroupName = #{criteria.groupName}
-                    AND g.fGroupName = #{criteria.groupName}
-                </when>
-                <otherwise>
-                    AND ck.fOptimizeGroupName like concat(#{criteria.groupName}, "%")
-                    AND g.fGroupName like concat(#{criteria.groupName}, "%")
-                </otherwise>
-            </choose>
+            AND ck.fOptimizeGroupName like concat(#{criteria.groupName}, "%")
+            AND g.fGroupName like concat(#{criteria.groupName}, "%")
         </if>
         <if test="criteria.machineGroup!=null and criteria.machineGroup!=''">AND ck.fMachineGroup =
             #{criteria.machineGroup}
@@ -64,7 +55,7 @@
     </select>
 
     <select id="searchCustomerKeywordStatInfos" parameterType="com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria"
-        resultType="com.keymanager.ckadmin.entity.RefreshStatRecord">
+            resultType="com.keymanager.ckadmin.entity.RefreshStatRecord">
         SELECT
         ck.fOptimizeGroupName AS "group",
         ck.fType AS "type",
@@ -108,17 +99,8 @@
             #{criteria.terminalType}
         </if>
         <if test="criteria.groupName!=null and criteria.groupName!=''">
-            <choose>
-                <when
-                    test="criteria.groupNameFuzzyQuery == null or criteria.groupNameFuzzyQuery == ''">
-                    AND ck.fOptimizeGroupName = #{criteria.groupName}
-                    AND g.fGroupName = #{criteria.groupName}
-                </when>
-                <otherwise>
-                    AND ck.fOptimizeGroupName like concat(#{criteria.groupName}, "%")
-                    AND g.fGroupName like concat(#{criteria.groupName}, "%")
-                </otherwise>
-            </choose>
+            AND ck.fOptimizeGroupName like concat(#{criteria.groupName}, "%")
+            AND g.fGroupName like concat(#{criteria.groupName}, "%")
         </if>
         <if test="criteria.machineGroup!=null and criteria.machineGroup!=''">AND ck.fMachineGroup =
             #{criteria.machineGroup}

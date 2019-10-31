@@ -179,12 +179,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
 
     function jz() {
         let tables = document.getElementsByTagName('table');
-        let t_h = tables[1].offsetHeight || tables[1].clientHeight || tables[1].scrollHeight;
-        let t_p_h = tables[1].parentElement.offsetHeight || tables[1].parentElement.clientHeight || tables[1].scrollHeight;
+        let t_h = tables[2].offsetHeight || tables[2].clientHeight || tables[2].scrollHeight;
+        let t_p_h = tables[2].parentElement.offsetHeight || tables[2].parentElement.clientHeight || tables[2].scrollHeight;
         let t_w = tables[1].offsetWidth || tables[1].clientWidth || tables[1].scrollWidth;
         let t_p_w = tables[1].parentElement.offsetWidth || tables[1].parentElement.clientWidth || tables[1].scrollWidth;
         if (t_h > t_p_h) {
-            document.getElementsByClassName('layui-table-header')[0].classList.add('details-header');
+             document.getElementsByClassName('layui-table-header')[0].classList.add('details-header');
         } else {
             if (t_w === t_p_w) {
                 let ths = document.getElementsByClassName('layui-table-header')[0].getElementsByTagName('th');

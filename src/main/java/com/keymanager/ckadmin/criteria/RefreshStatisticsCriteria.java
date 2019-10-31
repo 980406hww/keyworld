@@ -20,10 +20,6 @@ public class RefreshStatisticsCriteria {
 
     private String categoryTag;
 
-    private String groupNameFuzzyQuery;
-
-    private String machineGroupFuzzyQuery;
-
     private String userName;
 
     private String password;
@@ -108,27 +104,11 @@ public class RefreshStatisticsCriteria {
         this.categoryTag = categoryTag;
     }
 
-    public String getGroupNameFuzzyQuery() {
-        return groupNameFuzzyQuery;
-    }
-
-    public void setGroupNameFuzzyQuery(String groupNameFuzzyQuery) {
-        this.groupNameFuzzyQuery = groupNameFuzzyQuery;
-    }
-
     public String getMachineGroup() {
         return machineGroup;
     }
 
     public void setMachineGroup(String machineGroup) {
         this.machineGroup = machineGroup;
-    }
-
-    public String getMachineGroupFuzzyQuery() {
-        return machineGroupFuzzyQuery;
-    }
-
-    public void setMachineGroupFuzzyQuery(String machineGroupFuzzyQuery) {
-        this.machineGroupFuzzyQuery = machineGroupFuzzyQuery;
     }
 }

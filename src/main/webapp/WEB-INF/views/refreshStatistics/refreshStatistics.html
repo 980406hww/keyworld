@@ -131,33 +131,18 @@
                         <form class="layui-form layui-form-pane" id="searchForm">
                             <div class="my-collapse">
                                 <div>
-<!--                                    <div class="layui-inline">-->
-<!--                                        <select name="entryType" lay-filter="entryType">-->
-<!--                                            <option value="qz">全站链接</option>-->
-<!--                                            <option value="pt" selected>普通链接</option>-->
-<!--                                            <option value="fm">负面链接</option>-->
-<!--                                            <option value="bc">BC链接</option>-->
-<!--                                        </select>-->
-<!--                                    </div>-->
                                     <input type="hidden" id="entryType" name="entryType" value="pt">
                                     <input type="hidden" id="terminalType" name="terminalType" value="PC">
                                     <div class="layui-inline">
                                         <input type="text" name="groupName" id="groupName" autocomplete="off" placeholder="请输入分组查询" class="layui-input">
                                     </div>
-                                    <div class="layui-inline">
-                                        <input type="checkbox" name="groupNameFuzzyQuery" title="模糊搜索">
-                                    </div>
+
                                     <div class="layui-inline">
                                         <input type="text" name="machineGroup" autocomplete="off" placeholder="请输入机器分组" class="layui-input">
                                     </div>
                                     <div class="layui-inline">
                                         <input type="text" name="customerName" id="customerName" autocomplete="off" placeholder="请输入客户名称" class="layui-input">
                                     </div>
-                                    <!--                        <div class="layui-inline">-->
-                                    <!--                            <select name="categoryTag">-->
-                                    <!--                                <option value="">请选择分类标签</option>-->
-                                    <!--                            </select>-->
-                                    <!--                        </div>-->
                                     <div class="layui-inline">
                                         <select name="dayNum">
                                             <option value="">请选择历史记录</option>
@@ -509,9 +494,6 @@
                 if (condition.dayNum === '') {
                     condition.dayNum = 0;
                 }
-                if (!condition.groupNameFuzzyQuery) {
-                    condition.groupNameFuzzyQuery = '';
-                }
                 table.reload('refreshTable', {
                     where: condition
                 });
@@ -523,9 +505,6 @@
             condition = common.jsonObjectTrim(condition);
             if (condition.dayNum === '') {
                 condition.dayNum = 0;
-            }
-            if (!condition.groupNameFuzzyQuery) {
-                condition.groupNameFuzzyQuery = '';
             }
             table.reload('refreshTable', {
                 where: condition

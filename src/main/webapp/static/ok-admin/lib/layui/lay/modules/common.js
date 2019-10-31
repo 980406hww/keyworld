@@ -72,7 +72,7 @@ layui.define(['jquery', 'layer', 'okTab'], function (exports) {
         waitMoment: function () {
             let currentMilliseconds = new Date().getTime();
             if (milliseconds) {
-                if (currentMilliseconds - milliseconds >= 1500) {
+                if (currentMilliseconds - milliseconds >= 3000) {
                     milliseconds = currentMilliseconds;
                     return true;
                 } else {

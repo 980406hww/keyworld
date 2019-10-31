@@ -27,15 +27,6 @@
         }
     </style>
     <script>
-        function removeElement(e) {
-            let m = e.parentElement.parentElement.parentElement;
-            let p = m.parentElement;
-            if (p.children.length <= 3) {
-                return;
-            }
-            p.removeChild(m);
-        }
-
         let v_com = 2;
         let v_phone = 2;
 
@@ -1214,6 +1205,16 @@
                     common.showFailMsg('网络异常请稍后再试');
                 }
             });
+        }
+
+        window.removeElement = function (e) {
+            let m = e.parentElement.parentElement.parentElement;
+            let p = m.parentElement;
+            if (p.children.length <= 3) {
+                common.showFailMsg("收费规则必须拥有一条记录");
+                return;
+            }
+            p.removeChild(m);
         }
 
         $('#close').click(function () {
