@@ -113,7 +113,7 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
 
     @Override
     public void saveOrUpdateConnectionCMS(FriendlyLink friendlyLink, MultipartFile file, String type){
-        Website website = websiteService.getWebsite(Long.valueOf(friendlyLink.getWebsiteUuid()));
+        Website website = websiteService.getWebsite((long) friendlyLink.getWebsiteUuid());
         Map requestMap = new HashedMap();
         requestMap.put("username", website.getBackendUserName());
         requestMap.put("password", website.getBackendPassword());

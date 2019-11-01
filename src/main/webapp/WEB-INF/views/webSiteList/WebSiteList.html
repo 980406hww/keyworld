@@ -130,7 +130,7 @@
 
         #websiteTypes-box input{
             height: 30px;
-            width: 170px;
+            width: 150px;
         }
 
         input::-webkit-outer-spin-button,
@@ -163,13 +163,19 @@
                             <div class="my-collapse">
                                 <div>
                                     <div class="layui-inline">
-                                        <input type="text" name="domain" placeholder="域名" autocomplete="off" style="width: 200px;height: 30px" class="layui-input">
+                                        <input type="text" name="domain" placeholder="域名" autocomplete="off" style="width: 150px;height: 30px" class="layui-input">
                                     </div>
                                     <div class="layui-inline" id="industryTypes-box">
                                         <select name="industryType" id="industryTypes"></select>
                                     </div>
                                     <div class="layui-inline" id="websiteTypes-box">
                                         <select name="websiteType" id="websiteTypes"></select>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input type="text" name="friendlyLinkUrl" placeholder="请输入指定友链" style="width: 150px;height: 30px"  autocomplete="off" class="layui-input">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input type="text" name="advertisingTagname" placeholder="输入准确广告标识" style="width: 150px;height: 30px"  autocomplete="off" class="layui-input">
                                     </div>
                                     <div class="layui-inline">
                                         <button class="layui-collapse my-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
@@ -197,18 +203,6 @@
                                             <label class="layui-form-label">失败次数</label>
                                             <div class="layui-input-inline">
                                                 <input type="number" name="accessFailCount" placeholder="请输入失败次数" autocomplete="off" class="layui-input">
-                                            </div>
-                                        </div>
-                                        <div class="layui-inline">
-                                            <label class="layui-form-label">含有指定友链</label>
-                                            <div class="layui-input-inline">
-                                                <input type="text" name="friendlyLinkUrl" placeholder="请输入指定友链" autocomplete="off" class="layui-input">
-                                            </div>
-                                        </div>
-                                        <div class="layui-inline">
-                                            <label class="layui-form-label">含指定广告</label>
-                                            <div class="layui-input-inline">
-                                                <input type="text" name="advertisingTagname" placeholder="输入准确广告标识" autocomplete="off" class="layui-input">
                                             </div>
                                         </div>
                                         <div class="layui-inline">
@@ -432,8 +426,15 @@
 
         var active = {
             reload: function () {
+                let condition = common.formToJsonObject('searchForm');
+                if (condition.friendlyLinkUrl !== "") {
+                    if (condition.friendlyLinkUrl.indexOf('http://') === -1) {
+                        condition.friendlyLinkUrl = 'http://' + condition.friendlyLinkUrl
+                    }
+                }
+                condition.accessFailCount = parseInt(condition.accessFailCount);
                 table.reload('websiteListTable', {
-                    where: common.formToJsonObject('searchForm'),
+                    where: condition,
                     page: {
                         curr: 1
                     }
@@ -443,13 +444,6 @@
 
         form.on("submit(search)", function (data) {
             let postData = data.field;
-            postData = common.jsonObjectTrim(postData);
-            if (postData.friendlyLinkUrl !== "") {
-                if (postData.friendlyLinkUrl.indexOf('http://') === -1) {
-                    postData.friendlyLinkUrl = 'http://' + postData.friendlyLinkUrl
-                }
-            }
-            postData.accessFailCount = parseInt(postData.accessFailCount);
             active['reload'].call(this);
             search = postData;
             return false;

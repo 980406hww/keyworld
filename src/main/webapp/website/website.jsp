@@ -97,7 +97,7 @@
             <shiro:hasPermission name="/internal/friendlyLink/saveFriendlyLinks">
                 <input type="button" value=" 指定网站增加友链 " onclick="showBatchAddFriendlyLinkDialog(null)">&nbsp;&nbsp;
             </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/advertising/saveAdvertisings">
+            <shiro:hasPermission name="/internal/advertising/saveAdvertising">
                 <input type="button" value=" 指定网站增加广告 " onclick="showBatchAddAdvertisingDialog(null)">&nbsp;&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="/internal/friendlyLink/saveFriendlyLink">

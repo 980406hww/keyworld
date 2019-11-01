@@ -10,27 +10,6 @@
         .layui-btn {
             width: 120px;
         }
-
-        .layui-input-block input{
-            height: 30px;
-        }
-
-        .layui-input-block p{
-            height: 30px;
-            line-height: 30px;
-        }
-
-        .layui-form-pane .layui-form-label{
-            height: 30px;
-            line-height: 30px;
-            padding: 0px 15px !important;
-        }
-        .layui-form-pane .layui-form-radio, .layui-form-pane .layui-form-switch{
-            margin-top: 1px;
-            margin-right: 0px;
-            margin-left: 20px;
-            padding-right: 2px !important;
-        }
     </style>
 </head>
 <body>
@@ -48,13 +27,14 @@
         <div class="layui-form-item">
             <label class="layui-form-label">广告标识</label>
             <div class="layui-input-block">
-                <input type="text" name="advertisingTagname" id="advertisingTagname" autocomplete="off" class="layui-input" lay-verify="required" onkeyup="changeAdpositionIdValue(this.value)">
+                <input type="text" name="advertisingTagname" id="advertisingTagname" autocomplete="off" class="layui-input" lay-verify="required"
+                       onkeyup="changeAdpositionIdValue(this.value)">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">用户名称</label>
             <div class="layui-input-block">
-                <select name="customerInfo" id="customerInfo" lay-search autocomplete="off" class="layui-input"lay-verify="required"></select>
+                <select name="customerInfo" id="customerInfo" lay-search autocomplete="off" class="layui-input" lay-verify="required"></select>
             </div>
         </div>
         <div class="layui-form-item">
@@ -81,21 +61,21 @@
                 <input type="text" class="layui-input" id="advertisingTime" name="advertisingTime" readonly>
             </div>
         </div>
-        <div class="layui-form-item">
+        <div class="layui-form-item" pane>
             <label class="layui-form-label">时间限制</label>
             <div class="layui-input-block">
-                <input name="advertisingTimeSet" type="radio" value="0" checked/>永不过期&nbsp;
-                <input name="advertisingTimeSet" type="radio" value="1"/>在设定时间内有效
+                <input name="advertisingTimeSet" type="radio" value="0" title="永不过期" checked/>
+                <input name="advertisingTimeSet" type="radio" value="1" title="在设定时间内有效"/>
             </div>
         </div>
         <div border="0" id="advertisingBodyCheckedTable" style="display: block;">
-            <div class="layui-form-item">
+            <div class="layui-form-item" pane="">
                 <label class="layui-form-label">广告内容</label>
                 <div class="layui-input-block">
-                    <input name="advertisingBodyChecked" type="radio" value="0" lay-filter="advertisingBodyChecked" checked/>代码
-                    <input name="advertisingBodyChecked" type="radio" value="1" lay-filter="advertisingBodyChecked"/>文字
-                    <input name="advertisingBodyChecked" type="radio" value="2" lay-filter="advertisingBodyChecked"/>图片
-                    <input name="advertisingBodyChecked" type="radio" value="3" lay-filter="advertisingBodyChecked"/>Flash
+                    <input name="advertisingBodyChecked" type="radio" value="0" lay-filter="advertisingBodyChecked" title="代码" checked/>
+                    <input name="advertisingBodyChecked" type="radio" value="1" lay-filter="advertisingBodyChecked" title="文字"/>
+                    <input name="advertisingBodyChecked" type="radio" value="2" lay-filter="advertisingBodyChecked" title="图片"/>
+                    <input name="advertisingBodyChecked" type="radio" value="3" lay-filter="advertisingBodyChecked" title="Flash"/>
                 </div>
             </div>
         </div>
@@ -199,6 +179,7 @@
                 <textarea name="advertisingExpbody" autocomplete="off" class="layui-textarea"></textarea>
             </div>
         </div>
+        <div style="height: 58px;"></div>
         <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
             <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
                 <button class="layui-btn" lay-submit lay-filter="commit">确定</button>
@@ -215,6 +196,7 @@
     let uuid_ = null;
     let layui_ = null;
     let websiteUuid_ = null;
+    let websiteUuid__ = null;
     let customerUuid_ = null;
     let friendlyLinkType_ = null;
     let advertisingArcType_ = null;
@@ -228,8 +210,70 @@
     }
 
     function initWebSiteID(websiteUuid) {
-        websiteUuid_ = websiteUuid;
-        init_SelectData();
+        websiteUuid__ = websiteUuid;
+        if (layui_ != null) {
+            init_SelectData(websiteUuid__, layui_);
+        }
+    }
+
+    function init_SelectData(websiteUuid, l) {
+        let form = l.form;
+        let common = l.common;
+        let $ = l.jquery;
+        $.ajax({
+            url: "/internal/advertisingList/searchAdvertisingAllTypeAndCustomerList/" + websiteUuid,
+            type: "GET",
+            success: function (res) {
+                if (res.code === 200) {
+                    $("#customerInfo").find('option').remove();
+                    $("#advertisingType").find('option').remove();
+                    $("#advertisingArcType").find('option').remove();
+                    if (res.customerList != null) {
+                        $.each(res.customerList, function (idx, val) {
+                            if (customerUuid_ === val.uuid) {
+                                $("#customerInfo").append(
+                                    '<option value="' + val.contactPerson + '_' + val.uuid + '" selected>' + val.contactPerson + '_' + val.uuid + '</option>')
+                            } else {
+                                $("#customerInfo").append(
+                                    '<option value="' + val.contactPerson + '_' + val.uuid + '" >' + val.contactPerson + '_' + val.uuid + '</option>')
+                            }
+                        });
+                    }
+                    $("#advertisingType").append("<option value='默认分类_0'></option>");
+                    if (res.advertisingType[0] != null) {
+                        $.each(res.advertisingType, function (idx, val) {
+                            let tmp = val.typename + '_' + val.id;
+                            if (friendlyLinkType_ === tmp) {
+                                $("#advertisingType").append(
+                                    '<option value="' + val.typename + '_' + val.id + '" selected>' + val.typename + '_' + val.id + '</option>')
+                            } else {
+                                $("#advertisingType").append(
+                                    '<option value="' + val.typename + '_' + val.id + '" >' + val.typename + '_' + val.id + '</option>')
+                            }
+                        });
+                    }
+                    $("#advertisingArcType").append("<option value='没有同名标识所有栏目_0'></option>");
+                    if (res.advertisingArcType[0] != null) {
+                        $.each(res.advertisingArcType, function (idx, val) {
+                            let str = val.typename + '_' + val.id;
+                            if (advertisingArcType_ === str) {
+                                $("#advertisingArcType").append(
+                                    '<option value="' + val.typename + '_' + val.id + '" selected>' + val.typename + '_' + val.id + '</option>')
+                            } else {
+                                $("#advertisingArcType").append(
+                                    '<option value="' + val.typename + '_' + val.id + '" >' + val.typename + '_' + val.id + '</option>')
+                            }
+                        });
+                    }
+                    form.render('select')
+                } else {
+                    common.showFailMsg("获取信息失败！");
+                }
+            },
+            error: function () {
+                common.showFailMsg("获取信息失败！");
+            }
+        });
     }
 
     function setForm(l, u) {
@@ -248,7 +292,7 @@
                     layui.form.val("advertisingForm", res.data);
                     init_SelectData();
                 } else {
-                    l.layer.msg(res.msg, {icon:5, time: 3000});
+                    l.layer.msg(res.msg, {icon: 5, time: 3000});
                 }
             }
         });
@@ -261,10 +305,10 @@
     function changeAdpositionIdValue(value) {
         let api = layui_.jquery("#adPositionId");
         let htm = '';
-        if(value === "" || value==null){
-            htm ='{dede:myad name=\'广告位标识\'/}'
-        }else{
-            htm =' {dede:myad name=\''+value+'\'/}';
+        if (value === "" || value == null) {
+            htm = '{dede:myad name=\'广告位标识\'/}'
+        } else {
+            htm = ' {dede:myad name=\'' + value + '\'/}';
         }
         api.text(htm);
     }
@@ -281,9 +325,15 @@
             layui_ = layui;
         }
 
-        if(uuid_ == null){
+        if (websiteUuid__ != null) {
+            init_SelectData(websiteUuid__, layui_);
+        } else {
+            layui_ = layui;
+        }
+
+        if (uuid_ == null) {
             changeAdvertisingBody("0")
-        }else{
+        } else {
             changeAdvertisingBody("all")
         }
 
@@ -291,57 +341,6 @@
             elem: '#advertisingTime',
             range: true,
         });
-
-        window.init_SelectData = function(){
-            $.ajax({
-                url: "/internal/advertisingList/searchAdvertisingAllTypeAndCustomerList/" + websiteUuid_,
-                type: "GET",
-                success: function (result) {
-                    if (result.code === 200) {
-                        $("#customerInfo").find('option').remove();
-                        $("#advertisingType").find('option').remove();
-                        $("#advertisingArcType").find('option').remove();
-                        if (result.customerList != null) {
-                            $.each(result.customerList, function (idx, val) {
-                                if(customerUuid_ === val.uuid){
-                                    $("#customerInfo").append('<option value="' + val.contactPerson + '_' + val.uuid + '" selected>' + val.contactPerson + '_' + val.uuid + '</option>')
-                                }else{
-                                    $("#customerInfo").append('<option value="' + val.contactPerson + '_' + val.uuid + '" >' + val.contactPerson + '_' + val.uuid + '</option>')
-                                }
-                            });
-                        }
-                        $("#advertisingType").append("<option value='默认分类_0'></option>");
-                        if (result.advertisingType[0] != null) {
-                            $.each(result.advertisingType, function (idx, val) {
-                                let tmp = val.typename + '_' + val.id;
-                                if(friendlyLinkType_ === tmp){
-                                    $("#advertisingType").append('<option value="' + val.typename + '_' + val.id + '" selected>' + val.typename + '_' + val.id + '</option>')
-                                }else{
-                                    $("#advertisingType").append('<option value="' + val.typename + '_' + val.id + '" >' + val.typename + '_' + val.id + '</option>')
-                                }
-                            });
-                        }
-                        $("#advertisingArcType").append("<option value='没有同名标识所有栏目_0'></option>");
-                        if (result.advertisingArcType[0] != null) {
-                            $.each(result.advertisingArcType, function (idx, val) {
-                                let str = val.typename + '_' + val.id;
-                                if(advertisingArcType_ === str){
-                                    $("#advertisingArcType").append('<option value="' + val.typename + '_' + val.id + '" selected>' + val.typename + '_' + val.id + '</option>')
-                                }else{
-                                    $("#advertisingArcType").append('<option value="' + val.typename + '_' + val.id + '" >' + val.typename + '_' + val.id + '</option>')
-                                }
-                            });
-                        }
-                        form.render('select')
-                    } else {
-                        common.showFailMsg("获取信息失败！");
-                    }
-                },
-                error: function () {
-                    common.showFailMsg("获取信息失败！");
-                }
-            });
-        };
 
         function changeAdvertisingBody(type) {
             let advertisingForm = $("#advertisingForm");
@@ -352,38 +351,38 @@
             let advertisingBodyCheckedTable = advertisingForm.find("#advertisingBodyCheckedTable");
             let advertisingNormbodyTable = advertisingForm.find("#advertisingNormbodyTable");
             let advertisingTagname = advertisingForm.find('#advertisingTagname');
-            code.css("display","none");
-            txt.css("display","none");
-            img.css("display","none");
-            flash.css("display","none");
-            advertisingBodyCheckedTable.css("display","none");
-            advertisingNormbodyTable.css("display","none");
+            code.css("display", "none");
+            txt.css("display", "none");
+            img.css("display", "none");
+            flash.css("display", "none");
+            advertisingBodyCheckedTable.css("display", "none");
+            advertisingNormbodyTable.css("display", "none");
             advertisingTagname.removeAttr("readonly");
-            if ("0" === type){
-                advertisingBodyCheckedTable.css("display","block");
-                code.css("display","block");
-            } else if ("1" === type){
-                advertisingBodyCheckedTable.css("display","block");
-                txt.css("display","block");
-            } else if ("2" === type){
-                advertisingBodyCheckedTable.css("display","block");
-                img.css("display","block");
+            if ("0" === type) {
+                advertisingBodyCheckedTable.css("display", "block");
+                code.css("display", "block");
+            } else if ("1" === type) {
+                advertisingBodyCheckedTable.css("display", "block");
+                txt.css("display", "block");
+            } else if ("2" === type) {
+                advertisingBodyCheckedTable.css("display", "block");
+                img.css("display", "block");
             } else if ("3" === type) {
-                advertisingBodyCheckedTable.css("display","block");
-                flash.css("display","block");
-            }else {
-                advertisingNormbodyTable.css("display","block");
-                advertisingTagname.attr("readonly","readonly");
+                advertisingBodyCheckedTable.css("display", "block");
+                flash.css("display", "block");
+            } else {
+                advertisingNormbodyTable.css("display", "block");
+                advertisingTagname.attr("readonly", "readonly");
             }
         }
 
-        form.on("radio(advertisingBodyChecked)", function(data){
+        form.on("radio(advertisingBodyChecked)", function (data) {
             let type = data.value;
             changeAdvertisingBody(type)
         });
 
         form.on("submit(commit)", function (data) {
-            if(data.field.advertisingTime != null || data.field.advertisingTime !== ''){
+            if (data.field.advertisingTime != null || data.field.advertisingTime !== '') {
                 let str = data.field.advertisingTime.split(" - ");
                 data.field.advertisingStarttime = str[0];
                 data.field.advertisingEndtime = str[1];
@@ -413,24 +412,24 @@
             advertising.advertisingStarttime = $.trim(data.field.advertisingStarttime);
             advertising.advertisingEndtime = $.trim(data.field.advertisingEndtime);
             advertising.advertisingExpbody = $.trim(advertisingExpbody);
-            if(uuid_ == null){
+            if (uuid_ == null) {
                 let normbody = {};
-                if (advertisingBodyChecked === 0){
+                if (advertisingBodyChecked === 0) {
                     normbody.style = "code";
                     normbody.htmlcode = data.field.htmlcode;
-                }else if (advertisingBodyChecked === 1){
+                } else if (advertisingBodyChecked === 1) {
                     normbody.style = "txt";
                     normbody.title = data.field.txtTitle;
                     normbody.link = data.field.txtLink;
                     normbody.color = data.field.txtColor;
                     normbody.size = data.field.txtSize;
-                }else if (advertisingBodyChecked === 2){
+                } else if (advertisingBodyChecked === 2) {
                     normbody.style = "img";
                     normbody.url = data.field.imgUrl;
                     normbody.link = data.field.imgLink;
                     normbody.width = data.field.imgWidth;
                     normbody.height = data.field.imgHeight;
-                }else {
+                } else {
                     normbody.style = "flash";
                     normbody.link = data.field.flashLink;
                     normbody.width = data.field.flashWidth;
@@ -456,7 +455,7 @@
                         }
                     }
                 });
-            }else{
+            } else {
                 let advertisingNormbody = data.field.advertisingNormbody;
                 advertising.uuid = uuid_;
                 advertising.advertisingId = data.field.advertisingId;

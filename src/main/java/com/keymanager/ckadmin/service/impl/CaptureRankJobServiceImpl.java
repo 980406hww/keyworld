@@ -71,7 +71,9 @@ public class CaptureRankJobServiceImpl extends ServiceImpl<CaptureRankJobDao, Ca
     public Page<CaptureRankJob> selectPageByCriteria(CaptureRankJobSearchCriteria criteria) {
         Page<CaptureRankJob> page = new Page<>(criteria.getPage(), criteria.getLimit());
         Wrapper<CaptureRankJob> wrapper = new EntityWrapper<>();
-        wrapper.like("fGroupNames", criteria.getGroupNames());
+        if (null != criteria.getGroupNames() && !"".equals(criteria.getGroupNames())) {
+            wrapper.where("fGroupNames LIKE CONCAT({0},'%')", criteria.getGroupNames());
+        }
         if (null != criteria.getCustomerUuid() && !"".equals(criteria.getCustomerUuid())) {
             wrapper.where("fcustomerUuid = {0}", criteria.getCustomerUuid());
         }

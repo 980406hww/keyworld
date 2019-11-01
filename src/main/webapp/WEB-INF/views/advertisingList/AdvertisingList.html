@@ -221,14 +221,14 @@
         }
 
         function showAdvertisingDialog() {
-            okLayer.open("首页/其他/添加广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "82%",  function(layero){
+            okLayer.open("首页 / 其他 / 添加广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "98%",  function(layero){
                 window[layero.find("iframe")[0]["name"]].initWebSiteID(websiteUuid);
             }, function(){
                 if(sign){
                     active['reload'].call(this);
                     sign = false;
                 }
-            }, 50);
+            });
         }
 
         function updateAdvertising(data){
@@ -408,7 +408,7 @@
 
 <script type="text/html" id="toolbarTpl">
     <div class="layui-btn-group">
-        <@shiro.hasPermission name="/internal/advertising/saveAdvertisings">
+        <@shiro.hasPermission name="/internal/advertising/saveAdvertising">
         <button class="layui-btn layui-btn-sm" lay-event="showAdvertisingDialog">添加</button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/advertising/pushAdvertising">
