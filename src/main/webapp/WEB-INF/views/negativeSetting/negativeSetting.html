@@ -222,7 +222,6 @@
                     if (res.code === 200) {
                         document.getElementById('customerNegativeKeywords').value = res.data.replace(/,/g, '\n');
                     } else {
-                        console.log(res);
                         common.showFailMsg('数据获取失败');
                     }
                 },
@@ -324,7 +323,6 @@
                             };
                         } catch (e) {
                             common.showFailMsg('读取失败');
-                            console.error(e);
                         }
                         ele.value = '';
                     } else {

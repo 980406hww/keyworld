@@ -223,13 +223,15 @@
         $.ajax({
             url: "/internal/advertisingList/searchAdvertisingAllTypeAndCustomerList/" + websiteUuid,
             type: "GET",
+            dataType: 'json',
             success: function (res) {
                 if (res.code === 200) {
+                    let advertisingAllTypeAndCustomerList = res.data;
                     $("#customerInfo").find('option').remove();
                     $("#advertisingType").find('option').remove();
                     $("#advertisingArcType").find('option').remove();
-                    if (res.customerList != null) {
-                        $.each(res.customerList, function (idx, val) {
+                    if (advertisingAllTypeAndCustomerList.customerList != null) {
+                        $.each(advertisingAllTypeAndCustomerList.customerList, function (idx, val) {
                             if (customerUuid_ === val.uuid) {
                                 $("#customerInfo").append(
                                     '<option value="' + val.contactPerson + '_' + val.uuid + '" selected>' + val.contactPerson + '_' + val.uuid + '</option>')
@@ -240,8 +242,8 @@
                         });
                     }
                     $("#advertisingType").append("<option value='默认分类_0'></option>");
-                    if (res.advertisingType[0] != null) {
-                        $.each(res.advertisingType, function (idx, val) {
+                    if (advertisingAllTypeAndCustomerList.advertisingType[0] != null) {
+                        $.each(advertisingAllTypeAndCustomerList.advertisingType, function (idx, val) {
                             let tmp = val.typename + '_' + val.id;
                             if (friendlyLinkType_ === tmp) {
                                 $("#advertisingType").append(
@@ -253,8 +255,8 @@
                         });
                     }
                     $("#advertisingArcType").append("<option value='没有同名标识所有栏目_0'></option>");
-                    if (res.advertisingArcType[0] != null) {
-                        $.each(res.advertisingArcType, function (idx, val) {
+                    if (advertisingAllTypeAndCustomerList.advertisingArcType[0] != null) {
+                        $.each(advertisingAllTypeAndCustomerList.advertisingArcType, function (idx, val) {
                             let str = val.typename + '_' + val.id;
                             if (advertisingArcType_ === str) {
                                 $("#advertisingArcType").append(

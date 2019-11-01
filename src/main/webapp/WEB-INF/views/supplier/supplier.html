@@ -431,7 +431,6 @@
         form.on("submit(search)", function (data) {
             let condition = data.field;
             condition = common.jsonObjectTrim(condition);
-            console.log(condition);
             table.reload('supplierTable', {
                 where: condition,
                 page: {
