@@ -722,17 +722,17 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toKeywordsWithQZ/{businessType}/{terminalType}/{customerUuid}/{group}/{searchEngine}")
+    @GetMapping(value = "/toKeywordsWithQZ/{businessType}/{terminalType}/{customerUuid}/{group}/{searchEngine}/{status}")
     public ModelAndView toKeywordsWithQZ(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "group") String group, @PathVariable(name = "searchEngine") String searchEngine)
-        throws UnsupportedEncodingException {
+        @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "group") String group, @PathVariable(name = "searchEngine") String searchEngine,
+        @PathVariable(name = "status") int status) throws UnsupportedEncodingException {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/customerKeyword");
         mv.addObject("businessType", businessType);
         mv.addObject("terminalType2", terminalType);
         mv.addObject("customerUuid", customerUuid);
         mv.addObject("group", group);
-        mv.addObject("status", 1);
+        mv.addObject("status", status);
         searchEngine = URLDecoder.decode(searchEngine, "UTF-8");
         mv.addObject("searchEngine", searchEngine);
         return mv;

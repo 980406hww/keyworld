@@ -19,14 +19,11 @@ import org.springframework.stereotype.Repository;
 @Repository("qzSettingDao2")
 public interface QZSettingDao extends BaseMapper<QZSetting> {
 
-    List<QZSetting> searchQZSettings(Page<QZSetting> page,
-        @Param("qzSettingSearchCriteria") QZSettingSearchCriteria qzSettingSearchCriteria);
+    List<QZSetting> searchQZSettings(Page<QZSetting> page, @Param("qzSettingSearchCriteria") QZSettingSearchCriteria qzSettingSearchCriteria);
 
-    List<QZSettingVO> searchQZSettingSearchEngines(@Param("customerUuid") String customerUuid,
-        @Param("domain") String domain);
+    List<QZSettingVO> searchQZSettingSearchEngines(@Param("customerUuid") String customerUuid, @Param("domain") String domain);
 
-    int getQZSettingGroupInfo(@Param("terminalType") String terminalType,
-        @Param("optimizeGroupName") String optimizeGroupName);
+    Map getQZSettingGroupInfo(@Param("terminalType") String terminalType, @Param("optimizeGroupName") String optimizeGroupName, @Param("customerUuid") Long customerUuid);
 
     int selectLastId();
 

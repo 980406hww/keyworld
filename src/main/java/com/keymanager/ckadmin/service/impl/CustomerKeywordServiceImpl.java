@@ -449,7 +449,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             Set<String> excludeKeyword = new HashSet<>(Arrays.asList(customerExcludeKeywords.split(",")));
             if (!excludeKeyword.isEmpty()) {
                 if (excludeKeyword.contains(customerKeyword.getKeyword())) {
-                    customerKeyword.setStatus(0);
+                    customerKeyword.setStatus(3);
                 }
             }
         }

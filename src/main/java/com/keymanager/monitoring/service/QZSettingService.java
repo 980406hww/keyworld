@@ -460,7 +460,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public Map<String, Object> searchQZKeywordRankInfo(long uuid, String terminalType, String optimizeGroupName) {
 		List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(uuid, terminalType, null);
-		Map<String, Object> rankInfoVoMap = new HashMap<>();
+		Map<String, Object> rankInfoVoMap = new HashMap<>(8);
 		if (CollectionUtils.isNotEmpty(qzKeywordRankInfos)) {
 			int price = 0;
 			for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
@@ -641,13 +641,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                             if (TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())){
                                 if (!pcExcludeKeyword.isEmpty()){
                                     if (pcExcludeKeyword.contains(customerKeyword.getKeyword())){
-										customerKeyword.setStatus(0);
+										customerKeyword.setStatus(3);
                                     }
                                 }
                             } else {
                                 if (!phoneExcludeKeyword.isEmpty()){
                                     if (phoneExcludeKeyword.contains(customerKeyword.getKeyword())){
-										customerKeyword.setStatus(0);
+										customerKeyword.setStatus(3);
                                     }
                                 }
                             }
@@ -790,7 +790,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				customerKeyword.setMachineGroup(qzSettingSaveCustomerKeywordsCriteria.getMachineGroupName());
 				if (!excludeKeyword.isEmpty()){
 					if (excludeKeyword.contains(keyword)){
-						customerKeyword.setStatus(0);
+						customerKeyword.setStatus(3);
 					}
 				}
 				customerKeyword.setKeyword(keyword);

@@ -216,8 +216,8 @@
         .layui-table-col-special .body .other-rank .line1,
         .layui-table-col-special .body .other-rank_2 .line1 {
             text-align: center;
-            height: 55px !important;
-            margin-top: 20px;
+            height: 65px !important;
+            margin-top: 10px;
             overflow: hidden;
             text-overflow: ellipsis;
             color: #000;
@@ -1054,6 +1054,7 @@
                 postData.uuid = val.uuid;
                 postData.terminalType = terminalType;
                 postData.optimizeGroupName = optimizeGroupName;
+                postData.customerUuid = td.find("#cus_uuid").val();
                 getQZKeywordRankInfo(postData, function (result) {
                     td.find(".other-rank_2").find("#optimizationGroup span").prop("title", optimizeGroupName);
                     td.find(".other-rank_2").find("#optimizationGroup span a").text(optimizeGroupName);
@@ -1112,9 +1113,7 @@
         }
         
         function initQZKeywordRankInfo(data, td) {
-            td.find("#fmtStandardDate a").text(
-                data["standardTime"] === null ? "无" : toDateFormat(
-                    new Date(data["standardTime"])));
+            td.find("#fmtStandardDate a").text(data["standardTime"] === null ? "无" : toDateFormat(new Date(data["standardTime"])));
             let font = td.find(".standard-info").find("div.line1 a font");
             font.text(data["price"] ? "￥ " + data["price"] : "￥ " + 0);
             if (data["price"] > 0) {
@@ -2021,7 +2020,8 @@
 
         function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames,
             operationCombineName) {
-            div.parent().find(".other-rank .line1").find("#customerKeywordCount").text(customerKeywordCount);
+            div.parent().find(".other-rank .line1").find("div[name='activeCount'] a").text(customerKeywordCount["activeCount"]);
+            div.parent().find(".other-rank .line1").find("div[name='stopCount'] a").text(customerKeywordCount["stopCount"]);
             if (categoryTagNames) {
                 if (categoryTagNames.length > 0) {
                     var tagNameStr = "";
@@ -3118,13 +3118,14 @@
         /**
          * 点击操作词数，跳转到关键字列表
          */
-        window.searchCustomerKeywords = function (customerUuid, pcGroup, phoneGroup, searchEngine) {
+        window.searchCustomerKeywords = function (customerUuid, pcGroup, phoneGroup, searchEngine, status) {
             let group = pcGroup === 'null' ? phoneGroup : pcGroup;
             let terminalType = document.getElementById('terminalType').value;
-            let url = '/internal/customerKeyword/toKeywordsWithQZ/qz/' + terminalType + '/' + customerUuid + '/' + pcGroup + '/' + searchEngine;
+            let url = '/internal/customerKeyword/toKeywordsWithQZ/qz/' + terminalType + '/' + customerUuid + '/' + pcGroup + '/' + searchEngine + '/' + status;
             url = encodeURI(encodeURI(url));
             let tit = group + '--关键字列表';
-            updateOrNewTab(url, tit, customerUuid);
+            let id = customerUuid + "-" + (status === 0 ? "暂停" : "激活");
+            updateOrNewTab(url, tit, id);
         };
 
         function updateOrNewTab(url, tit, id) {
@@ -3428,7 +3429,15 @@
             <div class="layui-col-md12 line1">
                 <div class="layui-col-md12">
                     <span>
-                          <a id="customerKeywordCount" href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}');">0</a>
+                        <input type="hidden" id="cus_uuid" value="{{d.customerUuid}}">
+                        <div name="activeCount">
+                            <label>激活: </label>
+                            <a href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 1);">0</a>
+                        </div>
+                        <div name="stopCount">
+                            <label>暂停: </label>
+                            <a href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 0);">0</a>
+                        </div>
                      </span>
                 </div>
                 <div class="layui-col-md12">

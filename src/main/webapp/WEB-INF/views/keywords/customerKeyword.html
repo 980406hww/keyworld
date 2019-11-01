@@ -90,9 +90,9 @@
                                         <div class="layui-input-inline">
                                             <select name="status" id="status">
                                                 <option value=''>关键字状态</option>
-                                                <option value='1' id="showStatus">激活</option>
+                                                <option value='1' id="activeStatus">激活</option>
                                                 <option value='2'>新增</option>
-                                                <option value='0'>暂不操作</option>
+                                                <option value='0' id="stopStatus">暂不操作</option>
                                                 <option value='3'>下架</option>
                                             </select>
                                         </div>
@@ -254,7 +254,9 @@
     function if_from_qz(l) {
         let status = '<#if status?exists>${status}</#if>';
         if (status === '1') {
-            document.getElementById("showStatus").setAttribute('selected', '');
+            document.getElementById("activeStatus").setAttribute('selected', '');
+        } else if (status === '0') {
+            document.getElementById("stopStatus").setAttribute('selected', '');
         }
         l.form.render('select');
     }

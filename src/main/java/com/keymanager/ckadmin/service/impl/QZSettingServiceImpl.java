@@ -162,9 +162,9 @@ public class QZSettingServiceImpl extends
     }
 
     @Override
-    public Map<String, Object> getQZKeywordRankInfo(long uuid, String terminalType, String optimizeGroupName) {
+    public Map<String, Object> getQZKeywordRankInfo(long uuid, String terminalType, String optimizeGroupName, Long customerUuid) {
         List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(uuid, terminalType, null);
-        Map<String, Object> rankInfoVoMap = new HashMap<>(4);
+        Map<String, Object> rankInfoVoMap = new HashMap<>(8);
         if (CollectionUtils.isNotEmpty(qzKeywordRankInfos)) {
             int price = 0;
             for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
@@ -174,13 +174,12 @@ public class QZSettingServiceImpl extends
                 rankInfoVoMap.put(qzKeywordRankInfo.getWebsiteType(), qzKeywordRankInfoVo);
             }
             rankInfoVoMap.put("price", price);
-            getQZSettingGroupInfo(rankInfoVoMap, uuid, terminalType, optimizeGroupName);
+            this.getQZSettingGroupInfo(rankInfoVoMap, uuid, terminalType, optimizeGroupName, customerUuid);
         }
         return rankInfoVoMap;
     }
 
-    private void initQZKeywordRankInfoVo(QZKeywordRankInfo qzKeywordRankInfo,
-        QZKeywordRankInfoVO rankInfoVo) {
+    private void initQZKeywordRankInfoVo(QZKeywordRankInfo qzKeywordRankInfo, QZKeywordRankInfoVO rankInfoVo) {
         rankInfoVo.setUuid(qzKeywordRankInfo.getUuid());
         rankInfoVo.setQzSettingUuid(qzKeywordRankInfo.getQzSettingUuid());
         rankInfoVo.setTerminalType(qzKeywordRankInfo.getTerminalType());
@@ -223,8 +222,8 @@ public class QZSettingServiceImpl extends
         return qzSettingDao.findQZCustomer(domain);
     }
 
-    private void getQZSettingGroupInfo(Map<String, Object> rankInfoVoMap, long uuid, String terminalType, String optimizeGroupName) {
-        rankInfoVoMap.put("customerKeywordCount", qzSettingDao.getQZSettingGroupInfo(terminalType, optimizeGroupName));
+    private void getQZSettingGroupInfo(Map<String, Object> rankInfoVoMap, long uuid, String terminalType, String optimizeGroupName, Long customerUuid) {
+        rankInfoVoMap.put("customerKeywordCount", qzSettingDao.getQZSettingGroupInfo(terminalType, optimizeGroupName, customerUuid));
         rankInfoVoMap.put("operationCombineName", operationCombineService.getOperationCombineName(optimizeGroupName));
         rankInfoVoMap.put("categoryTagNames", qzCategoryTagService.findTagNameByQZSettingUuid(uuid));
         rankInfoVoMap.put("standardTime", qzOperationTypeService.getStandardTime(uuid, terminalType));
@@ -278,7 +277,7 @@ public class QZSettingServiceImpl extends
                 customerKeyword.setMachineGroup(qzSettingSaveCustomerKeywordsCriteria.getMachineGroupName());
                 if (!excludeKeyword.isEmpty()) {
                     if (excludeKeyword.contains(keyword)) {
-                        customerKeyword.setStatus(0);
+                        customerKeyword.setStatus(3);
                     }
                 }
                 customerKeyword.setKeyword(keyword);
@@ -787,13 +786,13 @@ public class QZSettingServiceImpl extends
                             if (TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())) {
                                 if (!pcExcludeKeyword.isEmpty()) {
                                     if (pcExcludeKeyword.contains(customerKeyword.getKeyword())) {
-                                        customerKeyword.setStatus(0);
+                                        customerKeyword.setStatus(3);
                                     }
                                 }
                             } else {
                                 if (!phoneExcludeKeyword.isEmpty()) {
                                     if (phoneExcludeKeyword.contains(customerKeyword.getKeyword())) {
-                                        customerKeyword.setStatus(0);
+                                        customerKeyword.setStatus(3);
                                     }
                                 }
                             }

@@ -176,13 +176,14 @@
         <if test="domain != null and domain != ''">AND qs.fDomain = #{domain}</if>
     </select>
 
-    <select id="getQZSettingGroupInfo" resultType="java.lang.Integer">
-        SELECT COUNT(1)
+    <select id="getQZSettingGroupInfo" resultType="java.util.Map">
+        SELECT
+        COUNT(ck.fStatus = 1 OR NULL) AS 'activeCount',
+        COUNT(ck.fStatus = 0 OR NULL) AS 'stopCount'
         FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName = #{optimizeGroupName}
         AND ck.fType = 'qz'
         AND ck.fTerminalType = #{terminalType}
-        AND ck.fStatus = 1
     </select>
 
     <select id="findQZCustomer" resultType="java.lang.String">

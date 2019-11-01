@@ -33,7 +33,7 @@ public interface QZSettingService extends IService<QZSetting> {
 
     List<QZSearchEngineVO> searchQZSettingSearchEngineMap(QZSettingCriteria criteria, Integer record);
 
-    Map<String, Object> getQZKeywordRankInfo(long uuid, String terminalType, String optimizeGroupName);
+    Map<String, Object> getQZKeywordRankInfo(long uuid, String terminalType, String optimizeGroupName, Long customerUuid);
 
     CustomerExcludeKeyword echoExcludeKeyword(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
 

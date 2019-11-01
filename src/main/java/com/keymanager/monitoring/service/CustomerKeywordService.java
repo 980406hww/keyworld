@@ -2148,7 +2148,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             excludeKeyword.addAll(Arrays.asList(customerExcludeKeywords.split(",")));
             if (!excludeKeyword.isEmpty()) {
                 if (excludeKeyword.contains(customerKeyword.getKeyword())) {
-                    customerKeyword.setStatus(0);
+                    customerKeyword.setStatus(3);
                 }
             }
         }
