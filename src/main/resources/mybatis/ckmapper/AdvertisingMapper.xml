@@ -77,7 +77,7 @@
         JOIN t_customer c
         ON a.fCustomerUuid = c.fUuid
         WHERE a.fWebsiteUuid = #{websiteUuid}
-        AND fAdvertisingTagname = #{advertisingTagname}
+        AND a.fAdvertisingTagname = #{advertisingTagname}
         limit 1
     </select>
 

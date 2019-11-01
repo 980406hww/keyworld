@@ -10,6 +10,7 @@
         .layui-btn {
             width: 120px;
         }
+
         .layui-input-block #friendlyLinkLogo {
             line-height: 30px;
             border-right: 0px;
@@ -25,6 +26,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">网站名称</label>
             <div class="layui-input-block">
+                <input type="hidden" name="message">
                 <input type="text" name="friendlyLinkWebName" id="friendlyLinkWebName" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
@@ -91,17 +93,14 @@
     let uuids_ = null;
     let layui_ = null;
     let datas = null;
-    let websiteUuid_ = null;
-    let originalSortRank_ = null;
-    let customerUuid_ = null;
-    let friendlyLinkType_ = null;
 
     function initData(data) {
         uuids_ = data.uuids
     }
 
-    function init_link(data) {
+    function init_link(data, uuids) {
         datas = data;
+        uuids_ = uuids;
         if (layui_ != null) {
             setForm(layui_, datas);
         }
@@ -118,7 +117,8 @@
             },
             success: function (res) {
                 if (res.code === 200) {
-                    res.data.expirationTime = l.util.toDateString(res.data.expirationTime,'yyyy-MM-dd');
+                    res.data.expirationTime = l.util.toDateString(res.data.expirationTime, 'yyyy-MM-dd');
+                    res.data.message = d.friendlyLinkUrl;
                     layui.form.val("friendlyLinkForm", res.data);
                 } else {
                     l.layer.msg(res.msg, {icon: 5, time: 3000});
@@ -156,7 +156,7 @@
             let friendlyLinkLogoFile = data.field.friendlyLinkLogo;
             let file = null;
             if (friendlyLinkLogoFile !== "") {
-                let fileTypes = new Array("jpg", "png", "gif");
+                let fileTypes = ["jpg", "png", "gif"];
                 let fileTypeFlag = false;
                 let newFileName = friendlyLinkLogoFile.split('.');
                 newFileName = newFileName[newFileName.length - 1];
@@ -174,37 +174,61 @@
             }
             let formData = new FormData();
             formData.append('file', file);
-            formData.append('friendlyLinkWebName', data.field.friendlyLinkWebName.trim());
-            formData.append('friendlyLinkUrl', friendlyLinkUrl.trim());
-            formData.append('friendlyLinkIsCheck', data.field.friendlyLinkIsCheck.trim());
-            formData.append('friendlyLinkSortRank', friendlyLinkSortRank.trim());
-            formData.append('friendlyLinkType', data.field.friendlyLinkType.trim());
+            formData.append('friendlyLinkWebName', data.field.friendlyLinkWebName);
+            formData.append('friendlyLinkUrl', friendlyLinkUrl);
+            formData.append('friendlyLinkIsCheck', data.field.friendlyLinkIsCheck);
+            formData.append('friendlyLinkSortRank', friendlyLinkSortRank);
+            formData.append('friendlyLinkType', data.field.friendlyLinkType);
             let friendlyLinkTypes = data.field.friendlyLinkType.split('_');
             let friendlyLinkTypeId = friendlyLinkTypes[friendlyLinkTypes.length - 1];
             formData.append('friendlyLinkTypeId', friendlyLinkTypeId);
-            formData.append('friendlyLinkMsg', data.field.friendlyLinkMsg.trim());
-            formData.append('expirationTime', data.field.expirationTime.trim());
-            formData.append('friendlyLinkEmail', data.field.friendlyLinkEmail.trim());
-            formData.append('friendlyLinkLogo', data.field.friendlyLinkLogo.trim());
-            formData.append('uuids', uuids_);
-            $.ajax({
-                url: '/internal/websites/batchSaveFriendlyLink',
-                type: 'POST',
-                cache: false,
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (res) {
-                    if (res.code === 200) {
-                        common.showSuccessMsg("保存成功", function () {
-                            parent.window.sign = true;
-                            parent.layer.close(parent.layer.getFrameIndex(window.name));
-                        });
-                    } else {
-                        common.showFailMsg(res.msg);
+            formData.append('friendlyLinkMsg', data.field.friendlyLinkMsg);
+            formData.append('expirationTime', data.field.expirationTime);
+            formData.append('friendlyLinkEmail', data.field.friendlyLinkEmail);
+            formData.append('friendlyLinkLogo', data.field.friendlyLinkLogo);
+            formData.append('uuids', uuids_.join(','));
+            if (data.field.message) {
+                formData.append('originalFriendlyLinkUrl', data.field.message);
+                $.ajax({
+                    url: '/internal/websites/batchUpdateFriendlyLink',
+                    type: 'POST',
+                    cache: false,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.code === 200) {
+                            common.showSuccessMsg("保存成功", function () {
+                                parent.window.sign = true;
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            });
+                        } else {
+                            common.showFailMsg(res.msg);
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                $.ajax({
+                    url: '/internal/websites/batchSaveFriendlyLink',
+                    type: 'POST',
+                    cache: false,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.code === 200) {
+                            common.showSuccessMsg("保存成功", function () {
+                                parent.window.sign = true;
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            });
+                        } else {
+                            common.showFailMsg(res.msg);
+                        }
+                    }
+                });
+            }
             return false;
         });
 

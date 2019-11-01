@@ -202,7 +202,7 @@
                                         <div class="layui-inline">
                                             <label class="layui-form-label">含有指定友链</label>
                                             <div class="layui-input-inline">
-                                                <input type="text" name="friendlyLinkUrl" id="friendlyLinkUrl" placeholder="请输入指定友链" autocomplete="off" class="layui-input">
+                                                <input type="text" name="friendlyLinkUrl" placeholder="请输入指定友链" autocomplete="off" class="layui-input">
                                             </div>
                                         </div>
                                         <div class="layui-inline">
@@ -317,12 +317,12 @@
         let okLayer = layui.okLayer;
         let layer = layui.layer;
         let common = layui.common;
-        var currentCriteria = {};
+        let search = null;
 
         init_Search();
         init_SelectData();
 
-        function init_SelectData(){
+        function init_SelectData() {
             $.ajax({
                 url: '/internal/websites/returnSelectData',
                 type: 'POST',
@@ -433,7 +433,7 @@
         var active = {
             reload: function () {
                 table.reload('websiteListTable', {
-                    where: {},
+                    where: common.formToJsonObject('searchForm'),
                     page: {
                         curr: 1
                     }
@@ -444,14 +444,14 @@
         form.on("submit(search)", function (data) {
             let postData = data.field;
             postData = common.jsonObjectTrim(postData);
-            if(postData.friendlyLinkUrl !== ""){
-                if(postData.friendlyLinkUrl.indexOf('http://') === -1){
+            if (postData.friendlyLinkUrl !== "") {
+                if (postData.friendlyLinkUrl.indexOf('http://') === -1) {
                     postData.friendlyLinkUrl = 'http://' + postData.friendlyLinkUrl
                 }
             }
             postData.accessFailCount = parseInt(postData.accessFailCount);
-            currentCriteria = postData;
-            init_Search(postData);
+            active['reload'].call(this);
+            search = postData;
             return false;
         });
 
@@ -476,7 +476,7 @@
         });
 
         table.on('toolbar(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            var event = obj.event;
             switch (event) {
                 case 'toAddWebsite':
                     toAddWebsite();
@@ -487,23 +487,17 @@
                 case 'synchronousFriendlyLink':
                     synchronousFriendlyLink();
                     break;
-                case 'putSalesInfoToWebsite':
-                    putSalesInfoToWebsite();
-                    break;
                 case 'synchronousAdvertising':
                     synchronousAdvertising();
                     break;
                 case 'showBatchAddFriendlyLinkDialog':
                     showBatchAddFriendlyLinkDialog();
                     break;
-                case 'batchDelAdvertising':
-                    batchDelAdvertising();
+                case 'batchModifyFriendlyLink':
+                    batchModifyFriendlyLink();
                     break;
                 case 'batchDelFriendlyLink':
                     batchDelFriendlyLink();
-                    break;
-                case 'batchModifyFriendlyLink':
-                    batchModifyFriendlyLink();
                     break;
                 case 'showBatchAddAdvertisingDialog':
                     showBatchAddAdvertisingDialog();
@@ -511,20 +505,27 @@
                 case 'batchModifyAdvertising':
                     batchModifyAdvertising();
                     break;
+                case 'batchDelAdvertising':
+                    batchDelAdvertising();
+                    break;
+                case 'putSalesInfoToWebsite':
+                    putSalesInfoToWebsite();
+                    break;
                 default:
                     break;
             }
         });
 
-        function toAdvertising(uuid) {
-            updateOrNewTab("/internal/websites/toAdvertising/" + uuid, "广告信息", uuid + "gg");
+        function toAddWebsite() {
+            okLayer.open("首页 / 其他 / 添加网站信息", "/internal/websites/toAddWebsite", "35%", "95%", null, function(){
+                if(sign){
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            },20);
         }
 
-        function toFriendlyLink(uuid) {
-            updateOrNewTab("/internal/websites/toFriendlyLink/" + uuid, "友情链接信息", uuid + "yq");
-        }
-
-        function showBatchAddAdvertisingDialog() {
+        function deleteWebsites(){
             let checkStatus = table.checkStatus('websiteListTable');
             let data = checkStatus.data;
             let uuidArr = [];
@@ -532,27 +533,112 @@
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                common.showFailMsg('请选择要增加广告的网站');
+                common.showFailMsg('请选择要操作的网站');
+                return false;
+            }
+            layer.confirm("确定要删除所选网站吗", {icon: 3, title: '删除所选'}, function (index) {
+                let postData = {};
+                postData.uuids = uuidArr;
+                $.ajax({
+                    url: '/internal/websites/deleteWebsites',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            common.showSuccessMsg('操作成功', function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            common.showFailMsg('操作失败');
+                        }
+                    },
+                    error: function () {
+                        common.showFailMsg('操作失败');
+                    }
+                });
+                layer.close(index);
+            })
+        }
+
+        function synchronousFriendlyLink() {
+            let checkStatus = table.checkStatus('websiteListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要同步的友链信息');
                 return false;
             }
             let postData = {};
             postData.uuids = uuidArr;
-            okLayer.open("增加广告", "/internal/websites/showBatchAddAdvertisingDialog", "35%", "65%", function(layero){
+            okLayer.open("同步友链信息", "/internal/websites/toSynchronousFriendlyLink", "35%", "55%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initData(postData);
-            },function(){
-                if(sign){
+            }, function () {
+                if (sign) {
                     active['reload'].call(this);
                     sign = false;
                 }
-            },60);
+            }, 60);
         }
 
-        function batchModifyAdvertising(){
-
+        function synchronousAdvertising() {
+            let checkStatus = table.checkStatus('websiteListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要同步的广告');
+                return false;
+            }
+            let postData = {};
+            postData.uuids = uuidArr;
+            okLayer.open("同步广告信息", "/internal/websites/toSynchronousAdvertising", "35%", "55%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, 60);
         }
 
-        function batchModifyFriendlyLink(){
-            let friendlyLinkUrl = document.getElementById('friendlyLinkUrl').value.trim();
+        function showBatchAddFriendlyLinkDialog() {
+            let checkStatus = table.checkStatus('websiteListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要增加友链的网站');
+                return false;
+            }
+            let postData = {};
+            postData.uuids = uuidArr;
+            okLayer.open("增加友链", "/internal/websites/showBatchAddFriendlyLinkDialog", "35%", "80%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, 60);
+        }
+
+        function batchModifyFriendlyLink() {
+            let friendlyLinkUrl = '';
+            if (search && search.friendlyLinkUrl) {
+                friendlyLinkUrl = search.friendlyLinkUrl;
+            }
             if (!friendlyLinkUrl) {
                 common.showFailMsg('请选择先查询含有指定友链网站');
                 return;
@@ -570,19 +656,22 @@
             let postData = {};
             postData.uuid = uuidArr[0];
             postData.friendlyLinkUrl = friendlyLinkUrl;
-            okLayer.open("指定网站修改友链", "/internal/websites/showBatchAddFriendlyLinkDialog", "35%", "65%", function(layero){
-                window[layero.find("iframe")[0]["name"]].init_link(postData);
-            },function(){
-                if(sign){
+            okLayer.open("指定网站修改友链", "/internal/websites/showBatchAddFriendlyLinkDialog", "35%", "65%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].init_link(postData, uuidArr);
+            }, function () {
+                if (sign) {
                     active['reload'].call(this);
                     sign = false;
                 }
-            },60);
+            }, 60);
         }
 
-        function batchDelFriendlyLink(){
-            var friendlyLinkUrl = currentCriteria.friendlyLinkUrl;
-            if (friendlyLinkUrl == null || friendlyLinkUrl === "") {
+        function batchDelFriendlyLink() {
+            let friendlyLinkUrl = '';
+            if (search && search.friendlyLinkUrl) {
+                friendlyLinkUrl = search.friendlyLinkUrl;
+            }
+            if (!friendlyLinkUrl) {
                 common.showFailMsg('请选择先查询含有指定友链网站');
                 return;
             }
@@ -598,33 +687,94 @@
             }
             let postData = {};
             postData.uuids = uuidArr;
-            $.ajax({
-                url: '/internal/websites/batchDelFriendlyLink',
-                type: 'POST',
-                headers: {
-                    "Accept": 'application/json',
-                    "Content-Type": 'application/json'
-                },
-                data: JSON.stringify(postData),
-                success: function (res) {
-                    if (res.code === 200) {
-                        common.showSuccessMsg("删除成功", function () {
-
-                        });
-                    } else {
-                        common.showFailMsg(res.msg)
+            layer.confirm('确认删除？', {offset: '120px'}, function (index) {
+                $.ajax({
+                    url: '/internal/websites/batchDelFriendlyLink',
+                    type: 'POST',
+                    headers: {
+                        "Accept": 'application/json',
+                        "Content-Type": 'application/json'
+                    },
+                    data: JSON.stringify(postData),
+                    success: function (res) {
+                        if (res.code === 200) {
+                            layer.close(index);
+                            common.showSuccessMsg("删除成功", active['reload'].call(this));
+                        } else {
+                            common.showFailMsg("删除失败");
+                        }
+                    },
+                    error: function () {
+                        common.showFailMsg('网络错误请稍后再试')
                     }
-                },
-                error: function () {
-                    common.showFailMsg('未知错误，请稍后重试！！')
-                }
+                });
             });
         }
 
-        function batchDelAdvertising(){
-            var advertisingTagname = currentCriteria.advertisingTagname;
-            if (advertisingTagname == null || advertisingTagname === "") {
-                common.showFailMsg('请选择先查询含有指定广告标识的网站');
+        function showBatchAddAdvertisingDialog() {
+            let checkStatus = table.checkStatus('websiteListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要增加广告的网站');
+                return false;
+            }
+            let postData = {};
+            postData.uuids = uuidArr;
+            okLayer.open("增加广告", "/internal/websites/showBatchAddAdvertisingDialog", "35%", "73%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, 60);
+        }
+
+        function batchModifyAdvertising() {
+            let advertisingTagname = '';
+            if (search && search.advertisingTagname) {
+                advertisingTagname = search.advertisingTagname;
+            }
+            if (!advertisingTagname) {
+                common.showFailMsg('请选择先查询含有指广告网站');
+                return;
+            }
+            let checkStatus = table.checkStatus('websiteListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要修改广告信息的网站');
+                return false;
+            }
+            let postData = {};
+            postData.uuid = uuidArr[0];
+            postData.advertisingTagname = advertisingTagname;
+            let p = {};
+            p.uuids = uuidArr;
+            okLayer.open("修改广告信息", "/internal/websites/showBatchAddAdvertisingDialog", "35%", "73%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initForm(postData, p);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, 60);
+        }
+
+        function batchDelAdvertising() {
+            let advertisingTagname = '';
+            if (search && search.advertisingTagname) {
+                advertisingTagname = search.advertisingTagname;
+            }
+            if (!advertisingTagname) {
+                common.showFailMsg('请选择先查询含有指广告网站');
                 return;
             }
             let checkStatus = table.checkStatus('websiteListTable');
@@ -639,96 +789,28 @@
             }
             let postData = {};
             postData.uuids = uuidArr;
-            $.ajax({
-                url: '/internal/websites/batchDelAdvertising',
-                type: 'POST',
-                headers: {
-                    "Accept": 'application/json',
-                    "Content-Type": 'application/json'
-                },
-                data: JSON.stringify(postData),
-                success: function (res) {
-                    if (res.code === 200) {
-                        common.showSuccessMsg("删除成功", function () {
-
-                        });
-                    } else {
-                        common.showFailMsg(res.msg)
+            layer.confirm('确认删除？', {offset: '120px'}, function (index) {
+                $.ajax({
+                    url: '/internal/websites/batchDelAdvertising',
+                    type: 'POST',
+                    headers: {
+                        "Accept": 'application/json',
+                        "Content-Type": 'application/json'
+                    },
+                    data: JSON.stringify(postData),
+                    success: function (res) {
+                        if (res.code === 200) {
+                            layer.close(index);
+                            common.showSuccessMsg("删除成功", active['reload'].call(this));
+                        } else {
+                            common.showFailMsg("删除失败");
+                        }
+                    },
+                    error: function () {
+                        common.showFailMsg('网络错误请稍后再试')
                     }
-                },
-                error: function () {
-                    common.showFailMsg('未知错误，请稍后重试！！')
-                }
+                });
             });
-        }
-
-        function showBatchAddFriendlyLinkDialog() {
-            let checkStatus = table.checkStatus('websiteListTable');
-            let data = checkStatus.data;
-            let uuidArr = [];
-            $.each(data, function (index, item) {
-                uuidArr.push(item.uuid);
-            });
-            if (uuidArr.length <= 0) {
-                common.showFailMsg('请选择要增加友链的网站');
-                return false;
-            }
-            let postData = {};
-            postData.uuids = uuidArr;
-            okLayer.open("增加友链", "/internal/websites/showBatchAddFriendlyLinkDialog", "35%", "80%", function(layero){
-                window[layero.find("iframe")[0]["name"]].initData(postData);
-            },function(){
-                if(sign){
-                    active['reload'].call(this);
-                    sign = false;
-                }
-            },60);
-        }
-
-        function synchronousAdvertising() {
-            let checkStatus = table.checkStatus('websiteListTable');
-            let data = checkStatus.data;
-            let uuidArr = [];
-            $.each(data, function (index, item) {
-                uuidArr.push(item.uuid);
-            });
-            if (uuidArr.length <= 0) {
-                common.showFailMsg('请选择要同步的广告');
-                return false;
-            }
-            let postData = {};
-            postData.uuids = uuidArr;
-            okLayer.open("同步广告信息", "/internal/websites/toSynchronousAdvertising", "35%", "55%", function(layero){
-                window[layero.find("iframe")[0]["name"]].initData(postData);
-            },function(){
-                if(sign){
-                    active['reload'].call(this);
-                    sign = false;
-                }
-            },60);
-        }
-
-        function synchronousFriendlyLink(){
-            let checkStatus = table.checkStatus('websiteListTable');
-            let data = checkStatus.data;
-            let uuidArr = [];
-            $.each(data, function (index, item) {
-                uuidArr.push(item.uuid);
-            });
-            if (uuidArr.length <= 0) {
-                common.showFailMsg('请选择要同步的友链信息');
-                return false;
-            }
-            let postData = {};
-            postData.uuids = uuidArr;
-            okLayer.open("同步友链信息", "/internal/websites/toSynchronousFriendlyLink", "35%", "55%", function(layero){
-                window[layero.find("iframe")[0]["name"]].initData(postData);
-            },function(){
-                if(sign){
-                    active['reload'].call(this);
-                    sign = false;
-                }
-            },60);
         }
 
         function putSalesInfoToWebsite(){
@@ -767,40 +849,10 @@
             });
         }
 
-        function updateOrNewTab(url, tit, id) {
-            let update = false;
-            let contentIframe = ("<iframe src='" + url + "' lay-id='" + id
-                + "'frameborder='0' scrolling='yes' width='100%' height='100%'></iframe>");
-            parent.layui.$('.layui-tab-title li').each(function () {
-                if (id === this.getAttribute('lay-id')) {
-                    update = true;
-                }
-            });
-            if (!update) {
-                parent.layui.element.tabAdd('ok-tab', {
-                        title: '<strong style="display: none;" is-close="true" lay-id="'+id+'" data-url="'+url+'"></strong>' +
-                            '<i class="layui-icon">&#xe648;</i> ' + tit,
-                        content: contentIframe,
-                        id: id
-                    }
-                );
-            }
-            parent.layui.element.tabChange('ok-tab', id)
-        }
-
         function modifyWebsiteInfo(data){
             okLayer.open("首页 / 其他 / 修改网站信息", "/internal/websites/toAddWebsite", "35%", "95%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             },function(){
-                if(sign){
-                    active['reload'].call(this);
-                    sign = false;
-                }
-            },20);
-        }
-
-        function toAddWebsite() {
-            okLayer.open("首页 / 其他 / 添加网站信息", "/internal/websites/toAddWebsite", "35%", "95%", null, function(){
                 if(sign){
                     active['reload'].call(this);
                     sign = false;
@@ -845,46 +897,13 @@
             });
         }
 
-        function deleteWebsites(){
-            let checkStatus = table.checkStatus('websiteListTable');
-            let data = checkStatus.data;
-            let uuidArr = [];
-            $.each(data, function (index, item) {
-                uuidArr.push(item.uuid);
-            });
-            if (uuidArr.length <= 0) {
-                common.showFailMsg('请选择要操作的网站');
-                return false;
-            }
-            layer.confirm("确定要删除所选网站吗", {icon: 3, title: '删除所选'}, function (index) {
-                let postData = {};
-                postData.uuids = uuidArr;
-                $.ajax({
-                    url: '/internal/websites/deleteWebsites',
-                    data: JSON.stringify(postData),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (result) {
-                        if (result.code === 200) {
-                            common.showSuccessMsg('操作成功', function () {
-                                active['reload'].call(this);
-                            });
-                        } else {
-                            common.showFailMsg('操作失败');
-                        }
-                    },
-                    error: function () {
-                        common.showFailMsg('操作失败');
-                    }
-                });
-                layer.close(index);
-            })
+        function toAdvertising(uuid) {
+            common.updateOrNewTab("/internal/websites/toAdvertising/" + uuid, "广告信息", uuid + "gg");
         }
 
+        function toFriendlyLink(uuid) {
+            common.updateOrNewTab("/internal/websites/toFriendlyLink/" + uuid, "友情链接信息", uuid + "yq");
+        }
     });
 
 </script>
@@ -909,15 +928,17 @@
         <@shiro.hasPermission name="/internal/friendlyLink/saveFriendlyLinks">
             <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="showBatchAddFriendlyLinkDialog">指定网站增加友链</button>
         </@shiro.hasPermission>
-            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="showBatchAddAdvertisingDialog">指定网站增加广告</button>
         <@shiro.hasPermission name="/internal/friendlyLink/saveFriendlyLink">
-            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchModifyFriendlyLink">指定网站修改友链</button>
+        <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchModifyFriendlyLink">指定网站修改友链</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/friendlyLink/deleteFriendlyLinks">
+        <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchDelFriendlyLink">指定网站删除友链</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/advertising/saveAdvertising">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="showBatchAddAdvertisingDialog">指定网站增加广告</button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/advertising/saveAdvertising">
             <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchModifyAdvertising">指定网站修改广告</button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/friendlyLink/deleteFriendlyLinks">
-            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchDelFriendlyLink">指定网站删除友链</button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/advertising/deleteAdvertisings">
             <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchDelAdvertising">指定网站删除广告</button>
