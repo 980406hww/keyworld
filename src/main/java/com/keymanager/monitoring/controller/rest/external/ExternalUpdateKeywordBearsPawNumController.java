@@ -3,6 +3,7 @@ package com.keymanager.monitoring.controller.rest.external;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.UpdateBearPawNumCriteria;
 import com.keymanager.monitoring.service.UpdateKeywordBearsPawNumberService;
+import java.net.MalformedURLException;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.slf4j.Logger;
@@ -28,6 +29,26 @@ public class ExternalUpdateKeywordBearsPawNumController extends SpringMVCBaseCon
 
     @Autowired
     private UpdateKeywordBearsPawNumberService updateKeywordBearsPawNumberService;
+
+    /**
+     * 提供给python程序初始化CUSTOMER_KEYWORD_DOMAIN_MAP的接口
+     * @param bearPawCriteria
+     * @return
+     */
+    @RequestMapping(value = "/cacheCustomerKeywordDomainMap", method = RequestMethod.POST)
+    public ResponseEntity<?> cacheCustomerKeywordDomainMap(@RequestBody UpdateBearPawNumCriteria bearPawCriteria) {
+        try {
+            if (validUser(bearPawCriteria.getUserName(), bearPawCriteria.getPassword())) {
+                updateKeywordBearsPawNumberService.cacheCustomerKeywordDomainMap();
+                return new ResponseEntity<Object>(HttpStatus.OK);
+            }
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
 
     /**
      * 提供给Python的接口，返回需要处理的域名，每次请求返回20个

@@ -31,7 +31,7 @@ public class UpdateKeywordBearsPawNumberService extends ServiceImpl<UpdateKeywor
      * 缓存去重后的关键词域名，用于更新百度关键词的熊掌号
      * @throws MalformedURLException
      */
-    public void cacheCustomerKeywordDomainMap() throws MalformedURLException {
+    public void cacheCustomerKeywordDomainMap() throws Exception {
         CUSTOMER_KEYWORD_DOMAIN_MAP.clear();
         List<CustomerKeyword> distinctUrl = updateKeywordBearsPawNumberDao.getCustomerKeywordDistinctUrl();
         for (CustomerKeyword ck : distinctUrl) {
