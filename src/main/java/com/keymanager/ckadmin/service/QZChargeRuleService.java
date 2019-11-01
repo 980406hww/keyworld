@@ -9,10 +9,13 @@ import java.util.List;
 
 public interface QZChargeRuleService extends IService<QZChargeRule> {
 
-    List<QZChargeRule> searchQZChargeRuleByqzOperationTypeUuids(Long qzOperationTypeUuid);
+    List<QZChargeRule> searchQZChargeRuleByQZOperationTypeUuids(Long qzOperationTypeUuid);
 
-    //通过QZOperationTypeUuid删除
-    void deleteByQZOperationTypeUuid(Long QZOperationTypeUuid);
+    /**
+     * 通过QZOperationTypeUuid删除
+     * @param qzOperationTypeUuid
+     */
+    void deleteByQZOperationTypeUuid(Long qzOperationTypeUuid);
 
     List<QZChargeRuleVO> findQZChargeRules(long qzSettingUuid, String operationType, String websiteType);
 

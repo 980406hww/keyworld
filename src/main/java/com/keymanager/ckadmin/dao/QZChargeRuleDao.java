@@ -11,14 +11,16 @@ import org.springframework.stereotype.Repository;
 @Repository("qzChargeRuleDao2")
 public interface QZChargeRuleDao extends BaseMapper<QZChargeRule> {
 
-    //通过qzOperationTypeUuid查询规则表
-    List<QZChargeRule> searchQZChargeRuleByqzOperationTypeUuids(
-        @Param("qzOperationTypeUuid") Long qzOperationTypeUuid);
+    /**
+     * 通过qzOperationTypeUuid查询规则表
+     * @param qzOperationTypeUuid
+     * @return
+     */
+    List<QZChargeRule> searchQZChargeRuleByQZOperationTypeUuids(@Param("qzOperationTypeUuid") Long qzOperationTypeUuid);
 
-    void deleteByQZOperationTypeUuid(@Param("qzOperationTypeUuid") Long QZOperationTypeUuid);
+    void deleteByQZOperationTypeUuid(@Param("qzOperationTypeUuid") Long qzOperationTypeUuid);
 
-    List<QZChargeRuleVO> findQZChargeRules(@Param("qzSettingUuid") Long qzSettingUuid,
-        @Param("operationType") String operationType, @Param("websiteType") String websiteType);
+    List<QZChargeRuleVO> findQZChargeRules(@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType, @Param("websiteType") String websiteType);
 
     List<QZChargeRuleStandardInfoVO> searchQZChargeRuleStandardInfoVos(@Param("qzSettingUuid") Long uuid, @Param("terminalType") String terminalType);
 }

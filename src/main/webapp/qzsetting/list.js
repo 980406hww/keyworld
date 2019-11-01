@@ -382,7 +382,7 @@ function generateQZKeywordTrendCharts(domElement, data) {
     $(parentElement).find("#TopCreate10").text(data.createTopTenNum);
     $(parentElement).find("#TopCreate50").text(data.createTopFiftyNum);
     if (data.dataProcessingStatus) {
-        $(parentElement).find("#IsStandard").text(data.achieveLevel === 0 ? "否" : "是");
+        $(parentElement).find("#IsStandard").text((data.achieveLevel == null || data.achieveLevel === 0) ? "否" : "是");
         $(parentElement).find("#StandardTime").text(data.achieveTime === null ? "无" : toDateFormat(new Date(data.achieveTime)));
     } else {
         $(parentElement).find("#IsStandard").parent().parent().css("display", "none");
@@ -663,7 +663,7 @@ function generateQZDesignationWordTrendCharts(domElement, data) {
     $(parentElement).find("#Top50").text(data.topFifty[data.topFifty.length-1]);
     $(parentElement).find("#TopCreate10").text(data.createTopTenNum);
     $(parentElement).find("#TopCreate50").text(data.createTopFiftyNum);
-    $(parentElement).find("#IsStandard").text(data.achieveLevel === 0 ? "否" : "是");
+    $(parentElement).find("#IsStandard").text((data.achieveLevel == null || data.achieveLevel === 0) ? "否" : "是");
     $(parentElement).find("#StandardTime").text(data.achieveTime === null ? "无" : toDateFormat(new Date(data.achieveTime)));
     option = {
         color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],

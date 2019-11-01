@@ -35,11 +35,9 @@ public class QZOperationTypeServiceImpl extends ServiceImpl<QZOperationTypeDao, 
 
     @Override
     public List<QZOperationType> searchQZOperationTypesIsDelete(long uuid) {
-        List<QZOperationType> qzOperationTypes = qzOperationTypeDao
-            .searchQZOperationTypesIsDelete(uuid);
+        List<QZOperationType> qzOperationTypes = qzOperationTypeDao.searchQZOperationTypesIsDelete(uuid);
         for (QZOperationType qzOperationType : qzOperationTypes) {
-            List<QZChargeRule> qzChargeRules = qzChargeRuleService
-                .searchQZChargeRuleByqzOperationTypeUuids(qzOperationType.getUuid());
+            List<QZChargeRule> qzChargeRules = qzChargeRuleService.searchQZChargeRuleByQZOperationTypeUuids(qzOperationType.getUuid());
             if (CollectionUtils.isNotEmpty(qzChargeRules)) {
                 qzOperationType.setQzChargeRules(qzChargeRules);
             }

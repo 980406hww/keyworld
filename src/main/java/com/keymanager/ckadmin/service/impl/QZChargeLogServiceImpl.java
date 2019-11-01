@@ -49,8 +49,7 @@ public class QZChargeLogServiceImpl extends ServiceImpl<QZChargeLogDao, QZCharge
             //计划缴费日期
             qzChargeInfoVO.setPlanChargeDate(qzOperationType.getNextChargeDate() == null ? null : sdf.format(qzOperationType.getNextChargeDate()));
 
-            List<QZChargeRule> qzChargeRules = qzChargeRuleService
-                .searchQZChargeRuleByqzOperationTypeUuids(qzOperationType.getUuid());
+            List<QZChargeRule> qzChargeRules = qzChargeRuleService.searchQZChargeRuleByQZOperationTypeUuids(qzOperationType.getUuid());
             if (qzOperationType.getCurrentKeywordCount() != null) {
                 qzChargeInfoVO.setCurrentKeywordCount(qzOperationType.getCurrentKeywordCount().toString());
                 for (QZChargeRule qzChargeRule : qzChargeRules) {
