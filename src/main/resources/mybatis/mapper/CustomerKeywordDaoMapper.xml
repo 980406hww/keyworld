@@ -592,7 +592,8 @@
             ck.fSearchEngine      AS 'searchEngine',
             ck.fOptimizeGroupName AS 'optimizeGroup',
             ck.fOptimizedCount	  AS 'optimizedCount',
-            ck.fQueryInterval	  AS 'queryInterval'
+            ck.fQueryInterval	  AS 'queryInterval',
+            ck.fCurrentPosition   AS 'currentPosition'
         FROM t_customer_keyword ck
         WHERE ck.fMachineGroup = #{machineGroup}
         AND ck.fStatus = 1
@@ -1549,6 +1550,7 @@
             fPositionFifthFee,
             fPositionFirstPageFee,
             fCapturePositionQueryTime,
+            fCaptureIndexQueryTime,
             fCollectMethod,
             fStartOptimizedTime,
             fOrderNumber,
@@ -1617,6 +1619,7 @@
                     <when test="customerKeyword.positionFirstPageFee == null">0.00,</when>
                 </choose>
                 #{customerKeyword.capturePositionQueryTime},
+                #{customerKeyword.captureIndexQueryTime},
                 #{customerKeyword.collectMethod},
                 #{customerKeyword.startOptimizedTime},
                 #{customerKeyword.orderNumber},

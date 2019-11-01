@@ -140,7 +140,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         }
         captureRankJob.setExectionStatus(CaptureRankExectionStatus.Complete.name());
         captureRankJob.setEndTime(new Date());
-        captureRankJob.setLastExecutionDate(new java.sql.Date(new Date().getTime()));
+        captureRankJob.setLastExecutionDate(new java.sql.Date(System.currentTimeMillis()));
         captureRankJobDao.updateById(captureRankJob);
     }
 
@@ -176,11 +176,12 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
             captureRankJobDao.deleteById(captureRankJob.getUuid());
             return;
         }
-        int topTenNum = captureRankJobDao.searchCountByPosition(captureRankJob, 10);
-        int topTwentyNum = captureRankJobDao.searchCountByPosition(captureRankJob, 20);
-        int topThirtyNum = captureRankJobDao.searchCountByPosition(captureRankJob, 30);
-        int topFortyNum = captureRankJobDao.searchCountByPosition(captureRankJob, 40);
-        int topFiftyNum = captureRankJobDao.searchCountByPosition(captureRankJob, 50);
+        Map<String, Long> map = captureRankJobDao.searchCountByPosition(captureRankJob);
+        int topTenNum = Integer.parseInt(map.get("topTenNum").toString());
+        int topTwentyNum = Integer.parseInt(map.get("topTwentyNum").toString());
+        int topThirtyNum = Integer.parseInt(map.get("topThirtyNum").toString());
+        int topFortyNum = Integer.parseInt(map.get("topFortyNum").toString());
+        int topFiftyNum = Integer.parseInt(map.get("topFiftyNum").toString());
 
         String dateString = qzKeywordRankInfo.getDate();
         Date date = new Date();
@@ -260,7 +261,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         qzKeywordRankInfo.setTodayDifference(weekData.length > 1 ? topTenNum - Integer.parseInt(weekData[1]) : 0);
 
         // 判断是否达标，返回达标等级，近下一达标比率
-        qzKeywordRankInfo = calculateData(qzKeywordRankInfo, topTenNum);
+        this.calculateData(qzKeywordRankInfo, topTenNum);
 
         qzKeywordRankInfo.setUpdateTime(new Date());
         qzKeywordRankInfoDao.updateById(qzKeywordRankInfo);
@@ -288,12 +289,13 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         return sb.toString();
     }
 
-    public QZKeywordRankInfo calculateData(QZKeywordRankInfo qzKeywordRankInfo, int topTenNum) {
+    public void calculateData(QZKeywordRankInfo qzKeywordRankInfo, int topTenNum) {
         List<QZChargeRuleVO> qzChargeRules = qzChargeRuleService.findQZChargeRules(qzKeywordRankInfo.getQzSettingUuid(), qzKeywordRankInfo.getTerminalType(), qzKeywordRankInfo.getWebsiteType());
         // 初始化达标等级，总等级
         qzKeywordRankInfo.setAchieveLevel(0);
         qzKeywordRankInfo.setSumSeries(qzChargeRules.size());
         qzKeywordRankInfo.setDifferenceValue(1.0);
+        qzKeywordRankInfo.setCurrentPrice(0);
         for (int i = 0; i < qzChargeRules.size(); i++) {
             if (topTenNum >= Integer.parseInt(qzChargeRules.get(i).getStartKeywordCount())) {
                 qzKeywordRankInfo.setAchieveLevel(i + 1);
@@ -308,8 +310,10 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         }
 
         QZOperationType qzOperationType = qzOperationTypeService.searchQZOperationTypeByQZSettingAndTerminalType(qzKeywordRankInfo.getQzSettingUuid(), qzKeywordRankInfo.getTerminalType());
-        int lastAchieve = qzOperationType.getStandardTime() == null ? 0 : 1; // 1代表上次达标过，0为未达标或者掉过
-        int updateFlag = 0; // 1为要更新成最新达标时间，0为本次未达标时间置空
+        // 1代表上次达标过，0为未达标或者掉过
+        int lastAchieve = qzOperationType.getStandardTime() == null ? 0 : 1;
+        // 1为要更新成最新达标时间，0为本次未达标时间置空
+        int updateFlag = 0;
         if (qzKeywordRankInfo.getAchieveLevel() != null && qzKeywordRankInfo.getAchieveLevel() > 0) {
             qzKeywordRankInfo.setAchieveTime(new Date());
             updateFlag = 1;
@@ -317,7 +321,6 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
             qzKeywordRankInfo.setAchieveTime(null);
         }
         qzOperationTypeService.updateStandardTimeByUuid(qzOperationType.getUuid(), updateFlag, lastAchieve);
-        return qzKeywordRankInfo;
     }
 
     public Boolean getCaptureRankJobStatus(Long captureRankJobUuid) {
@@ -338,10 +341,6 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         return captureRankJobDao.hasUncompletedCaptureRankJob(groupNames, rankJobArea) != null;
     }
 
-    public Boolean hasCaptureRankJob() {
-        return captureRankJobDao.fetchCaptureRankJob() != null;
-    }
-
     public void deleteCaptureRankJob(Long qzSettingUuid, String operationType) {
         captureRankJobDao.deleteCaptureRankJob(qzSettingUuid, operationType);
     }
@@ -360,7 +359,8 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         captureRankJob.setExectionStatus(CaptureRankExectionStatus.New.name());
         captureRankJob.setCreateBy(userName);
         captureRankJob.setUpdateBy(userName);
-        captureRankJob.setRankJobType("Common");// 配上QZSettingUuid确定为整站任务
+        // 配上QZSettingUuid确定为整站任务
+        captureRankJob.setRankJobType("Common");
         captureRankJob.setRankJobArea("China");
         captureRankJob.setUpdateTime(new Date());
         captureRankJobDao.insert(captureRankJob);

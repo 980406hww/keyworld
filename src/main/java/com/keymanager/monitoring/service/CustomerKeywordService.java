@@ -2176,16 +2176,16 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 Integer index = externalCustomerKeywordVO.getAllIndex();
                 customerKeyword.setCurrentIndexCount(index);
                 if (index == null || index <= 0) {
-                    customerKeyword.setOptimizePlanCount(8);
+                    customerKeyword.setOptimizePlanCount(6);
                 } else if (index <= 30) {
-                    customerKeyword.setOptimizePlanCount(10);
+                    customerKeyword.setOptimizePlanCount(8);
                 } else if (index <= 200) {
-                    customerKeyword.setOptimizePlanCount(12 + (int) Math.ceil(index * 0.03));
+                    customerKeyword.setOptimizePlanCount(8 + (int) Math.ceil(index * 0.02));
                 } else {
                     if (index >= 1000) {
-                        customerKeyword.setOptimizePlanCount(35);
+                        customerKeyword.setOptimizePlanCount(25);
                     } else {
-                        customerKeyword.setOptimizePlanCount(12 + (int) Math.ceil(index * 0.02));
+                        customerKeyword.setOptimizePlanCount(10 + (int) Math.ceil(index * 0.015));
                     }
                 }
                 customerKeywords.add(customerKeyword);

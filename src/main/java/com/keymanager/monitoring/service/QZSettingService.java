@@ -458,7 +458,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		return split;
     }
 
-	public Map<String, Object> searchQZKeywordRankInfo(long uuid, String terminalType, String optimizeGroupName) {
+	public Map<String, Object> searchQZKeywordRankInfo(long uuid, String terminalType, String optimizeGroupName, Long customerUuid) {
 		List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(uuid, terminalType, null);
 		Map<String, Object> rankInfoVoMap = new HashMap<>(8);
 		if (CollectionUtils.isNotEmpty(qzKeywordRankInfos)) {
@@ -470,7 +470,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				rankInfoVoMap.put(qzKeywordRankInfo.getWebsiteType(), qzKeywordRankInfoVo);
 			}
 			rankInfoVoMap.put("price", price);
-			this.getQZSettingGroupInfo(rankInfoVoMap, uuid, terminalType, optimizeGroupName);
+			this.getQZSettingGroupInfo(rankInfoVoMap, uuid, terminalType, optimizeGroupName, customerUuid);
 		}
 		return rankInfoVoMap;
 	}
@@ -755,8 +755,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-	private void getQZSettingGroupInfo(Map<String, Object> rankInfoVoMap, long uuid, String terminalType, String optimizeGroupName) {
-		rankInfoVoMap.put("customerKeywordCount", qzSettingDao.getQZSettingGroupInfo(terminalType, optimizeGroupName));
+	private void getQZSettingGroupInfo(Map<String, Object> rankInfoVoMap, long uuid, String terminalType, String optimizeGroupName, Long customerUuid) {
+		rankInfoVoMap.put("customerKeywordCount", qzSettingDao.getQZSettingGroupInfo(terminalType, optimizeGroupName, customerUuid));
 		rankInfoVoMap.put("operationCombineName", operationCombineService.getOperationCombineName(optimizeGroupName));
 		rankInfoVoMap.put("categoryTagNames", qzCategoryTagService.findTagNames(uuid));
 		rankInfoVoMap.put("standardTime", qzOperationTypeService.getStandardTime(uuid, terminalType));

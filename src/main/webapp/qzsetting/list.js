@@ -167,6 +167,7 @@ function initQZKeywordRankInfo() {
         var optimizeGroupName = terminalType === 'PC' ? li.find("input[name='pcGroup']").val() : li.find("input[name='phoneGroup']").val();
         postData.terminalType = terminalType;
         postData.optimizeGroupName = optimizeGroupName;
+        postData.customerUuid = li.find("#custUuid").val();
         searchQZKeywordRankInfo(postData, function (data) {
             li.find(".other-rank_2").find("span.line1 a").text(optimizeGroupName);
             if (data != null) {
@@ -997,7 +998,8 @@ function generateQZXTKeywordTrendCharts(domElement, data) {
     keywordRecordCharts.setOption(option);
 }
 function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames, operationCombineName) {
-    div.parent().find(".other-rank .row:first-child").find("div[name='operationKeywordNum']").find("span.line1 a").text(customerKeywordCount);
+    div.parent().find(".other-rank .row:first-child").find("div[name='activeCount'] a").text(customerKeywordCount["activeCount"]);
+    div.parent().find(".other-rank .row:first-child").find("div[name='stopCount'] a").text(customerKeywordCount["stopCount"]);
     if (categoryTagNames.length > 0) {
         var tagNameStr = "";
         var span = $(div).parent().parent().parent().find(".header span.tagNames");
@@ -1210,11 +1212,11 @@ function getGroupNameByTerminalType(statusIndex) {
     return optimizeGroupName;
 }
 
-function searchCustomerKeywords(customerUuid, statusIndex) {
+function searchCustomerKeywords(customerUuid, statusIndex, stauts) {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
     searchCustomerKeywordForm.find("#customerUuid").val(customerUuid);
     searchCustomerKeywordForm.find("#optimizeGroupName").val(getGroupNameByTerminalType(statusIndex));
-    searchCustomerKeywordForm.find("#status").val(1);
+    searchCustomerKeywordForm.find("#status").val(stauts);
     searchCustomerKeywordForm.submit();
 }
 var TimeFn = null;
