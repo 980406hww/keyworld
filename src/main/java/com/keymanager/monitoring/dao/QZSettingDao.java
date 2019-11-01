@@ -9,6 +9,7 @@ import com.keymanager.monitoring.vo.DateRangeTypeVO;
 import com.keymanager.monitoring.vo.ExternalQzSettingVO;
 import com.keymanager.monitoring.vo.QZSettingForSync;
 import com.keymanager.monitoring.vo.QZSettingVO;
+import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -43,7 +44,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     void updateCrawlerStatus(@Param("uuids") List<Long> uuids);
 
-    int getQZSettingGroupInfo (@Param("terminalType") String terminalType, @Param("optimizeGroupName") String optimizeGroupName, @Param("customerUuid") Long customerUuid);
+    Map getQZSettingGroupInfo (@Param("terminalType") String terminalType, @Param("optimizeGroupName") String optimizeGroupName, @Param("customerUuid") Long customerUuid);
 
     List<String> getAvailableOptimizationGroups (@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
