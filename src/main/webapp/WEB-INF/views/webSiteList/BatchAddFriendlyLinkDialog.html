@@ -144,7 +144,6 @@
         });
 
         form.on("submit(commit)", function (data) {
-            console.log(data);
             let friendlyLinkUrl = data.field.friendlyLinkUrl;
             if (friendlyLinkUrl.indexOf('http://') === -1) {
                 friendlyLinkUrl = 'http://' + friendlyLinkUrl

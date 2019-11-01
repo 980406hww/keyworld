@@ -99,7 +99,7 @@ public class WebsiteController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/friendlyLink/saveAdvertising")
+    @RequiresPermissions("/internal/advertising/saveAdvertising")
     @GetMapping("/showBatchAddAdvertisingDialog")
     public ModelAndView showBatchAddAdvertisingDialog() {
         ModelAndView mv = new ModelAndView();

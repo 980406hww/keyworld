@@ -187,7 +187,7 @@
                     {field: 'advertisingStarttime', title: '开始时间', width: '7%', align: 'center', templet: '#toAdvertisingStarttime'},
                     {field: 'advertisingEndtime', title: '结束时间', width: '7%', align: 'center', templet: '#toAdvertisingEndtime'},
                     {field: 'renewTime', title: '续费时间', width: '7%', templet: '#toRenewTime', align: 'center'},
-                    {title: '操作', templet: '#operationTpl', align: 'center', width: '10%', align: 'center'}
+                    {title: '操作', templet: '#operationTpl', width: '10%', align: 'center'}
                 ]],
                 height: 'full-75',
                 done: function (res, curr, count) {
@@ -218,18 +218,18 @@
         }
 
         function showAdvertisingDialog() {
-            okLayer.open("首页/其他/添加广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "90%",  function(layero){
+            okLayer.open("首页 / 其他 / 添加广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "98%",  function(layero){
                 window[layero.find("iframe")[0]["name"]].initWebSiteID(websiteUuid);
             }, function(){
                 if(sign){
                     active['reload'].call(this);
                     sign = false;
                 }
-            }, 50);
+            });
         }
 
         function updateAdvertising(data){
-            okLayer.open("首页/其他/修改广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "90%", function(layero){
+            okLayer.open("首页 / 其他 / 修改广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "90%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data.uuid, websiteUuid);
             },function(){
                 if(sign){
@@ -405,7 +405,7 @@
 
 <script type="text/html" id="toolbarTpl">
     <div class="layui-btn-group">
-        <@shiro.hasPermission name="/internal/advertising/saveAdvertisings">
+        <@shiro.hasPermission name="/internal/advertising/saveAdvertising">
         <button class="layui-btn layui-btn-sm" lay-event="showAdvertisingDialog">添加</button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/advertising/pushAdvertising">

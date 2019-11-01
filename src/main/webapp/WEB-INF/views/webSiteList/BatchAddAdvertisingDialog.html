@@ -197,7 +197,6 @@
             type: 'POST',
             dataType: 'json',
             success: function (res) {
-                console.log(res);
                 if (res.code === 200) {
                     changeAdvertisingBody('show');
                     if (res.data.advertisingStarttime && res.data.advertisingEndtime) {
@@ -269,7 +268,6 @@
         });
 
         form.on("submit(commit)", function (data) {
-            console.log(data);
             data.field = common.jsonObjectTrim(data.field);
             let p_d = {};
             p_d.uuids = websiteUuid_.uuids.join(',');
@@ -344,7 +342,6 @@
                         break;
                 }
                 p_d.normbody = normBody;
-                console.log(p_d);
                 $.ajax({
                     url: '/internal/websites/batchSaveAdvertising',
                     data: JSON.stringify(p_d),

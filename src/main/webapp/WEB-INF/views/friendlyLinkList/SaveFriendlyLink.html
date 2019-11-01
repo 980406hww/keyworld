@@ -11,26 +11,6 @@
             width: 120px;
         }
 
-        .layui-input-block input{
-            height: 30px;
-        }
-
-        .layui-input-block p{
-            height: 30px;
-            line-height: 30px;
-        }
-
-        .layui-form-pane .layui-form-label{
-            height: 30px;
-            line-height: 30px;
-            padding: 0px 15px !important;
-        }
-        .layui-form-pane .layui-form-radio, .layui-form-pane .layui-form-switch{
-            margin-top: 1px;
-            margin-right: 0px;
-            margin-left: 20px;
-            padding-right: 2px !important;
-        }
         .layui-input-block #friendlyLinkLogo{
             line-height: 30px;
             border-right: 0px;
@@ -82,11 +62,11 @@
                 <select name="friendlyLinkType" id="friendlyLinkType" lay-search></select>
             </div>
         </div>
-        <div class="layui-form-item">
+        <div class="layui-form-item" pane>
             <label class="layui-form-label">页面选择</label>
             <div class="layui-input-block">
-                <input name="friendlyLinkIsCheck" type="radio" value="2" checked/>首页
-                <input name="friendlyLinkIsCheck" type="radio" value="1"/>内容页
+                <input name="friendlyLinkIsCheck" type="radio" value="2" title="首页" checked/>
+                <input name="friendlyLinkIsCheck" type="radio" value="1" title="内容页"/>
             </div>
         </div>
         <div class="layui-form-item">

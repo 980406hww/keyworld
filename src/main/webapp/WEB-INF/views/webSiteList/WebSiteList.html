@@ -724,7 +724,7 @@
             }
             let postData = {};
             postData.uuids = uuidArr;
-            okLayer.open("增加广告", "/internal/websites/showBatchAddAdvertisingDialog", "35%", "73%", function (layero) {
+            okLayer.open("增加广告", "/internal/websites/showBatchAddAdvertisingDialog", "35%", "80%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initData(postData);
             }, function () {
                 if (sign) {
