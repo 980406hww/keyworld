@@ -165,8 +165,10 @@ function initQZKeywordRankInfo() {
         var postData = {};
         postData.uuid = li.find("input[name='uuid']").val();
         var optimizeGroupName = terminalType === 'PC' ? li.find("input[name='pcGroup']").val() : li.find("input[name='phoneGroup']").val();
+        var customerUuid = li.find("#custUuid").val();
         postData.terminalType = terminalType;
         postData.optimizeGroupName = optimizeGroupName;
+        postData.customerUuid = customerUuid;
         searchQZKeywordRankInfo(postData, function (data) {
             li.find(".other-rank_2").find("span.line1 a").text(optimizeGroupName);
             if (data != null) {

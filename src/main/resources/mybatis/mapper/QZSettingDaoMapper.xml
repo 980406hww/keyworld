@@ -393,6 +393,7 @@
         WHERE ck.fOptimizeGroupName = #{optimizeGroupName}
         AND ck.fType = 'qz'
         AND ck.fTerminalType = #{terminalType}
+        AND ck.fCustomerUuid = #{customerUuid}
         AND ck.fStatus = 1
     </select>
 

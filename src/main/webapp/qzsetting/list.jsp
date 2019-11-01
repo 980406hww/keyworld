@@ -410,6 +410,7 @@
 									<div class="row">
 										<div name="operationKeywordNum" title="点击链接跳转到关键字列表">
                                             <span class="line1">
+												<input type="hidden" value="${qzSetting.customerUuid}" id="custUuid">
                                                 <a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${status.index + 1}');">0</a>
                                             </span>
                                             <span>

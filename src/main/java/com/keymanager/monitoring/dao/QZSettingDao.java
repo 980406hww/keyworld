@@ -43,7 +43,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     void updateCrawlerStatus(@Param("uuids") List<Long> uuids);
 
-    int getQZSettingGroupInfo (@Param("terminalType") String terminalType, @Param("optimizeGroupName") String optimizeGroupName);
+    int getQZSettingGroupInfo (@Param("terminalType") String terminalType, @Param("optimizeGroupName") String optimizeGroupName, @Param("customerUuid") Long customerUuid);
 
     List<String> getAvailableOptimizationGroups (@Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
