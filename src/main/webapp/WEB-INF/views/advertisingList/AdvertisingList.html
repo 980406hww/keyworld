@@ -221,7 +221,7 @@
         }
 
         function showAdvertisingDialog() {
-            okLayer.open("首页 / 其他 / 添加广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "98%",  function(layero){
+            okLayer.open("首页 / 其他 / 添加广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "92%",  function(layero){
                 window[layero.find("iframe")[0]["name"]].initWebSiteID(websiteUuid);
             }, function(){
                 if(sign){
@@ -232,7 +232,7 @@
         }
 
         function updateAdvertising(data){
-            okLayer.open("首页/其他/修改广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "82%", function(layero){
+            okLayer.open("首页/其他/修改广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "87%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data.uuid, websiteUuid);
             },function(){
                 if(sign){
