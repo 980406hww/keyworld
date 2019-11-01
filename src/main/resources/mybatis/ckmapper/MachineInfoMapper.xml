@@ -80,13 +80,13 @@
         t_machine_info mi
         WHERE mi.fTerminalType = #{machineInfoCriteria.terminalType}
         <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''">AND
-            mi.fClientID like '%${machineInfoCriteria.clientID}%'
+            mi.fClientID like '${machineInfoCriteria.clientID}%'
         </if>
         <if test="machineInfoCriteria.machineGroup != null and machineInfoCriteria.machineGroup != ''">
-            AND mi.fMachineGroup like '%${machineInfoCriteria.machineGroup}%'
+            AND mi.fMachineGroup like '${machineInfoCriteria.machineGroup}%'
         </if>
         <if test="machineInfoCriteria.upgradeFailedReason != null and machineInfoCriteria.upgradeFailedReason != ''">
-            AND mi.fUpgradeFailedReason like '%${machineInfoCriteria.upgradeFailedReason}%'
+            AND mi.fUpgradeFailedReason like '${machineInfoCriteria.upgradeFailedReason}%'
         </if>
         <if test="machineInfoCriteria.version != null and machineInfoCriteria.version != ''">AND
             mi.fVersion like concat(#{machineInfoCriteria.version},'%')
