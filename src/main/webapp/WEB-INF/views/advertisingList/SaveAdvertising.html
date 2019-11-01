@@ -296,42 +296,46 @@
             $.ajax({
                 url: "/internal/advertisingList/searchAdvertisingAllTypeAndCustomerList/" + websiteUuid_,
                 type: "GET",
-                success: function (advertisingAllTypeAndCustomerList) {
-                    $("#customerInfo").find('option').remove();
-                    $("#advertisingType").find('option').remove();
-                    $("#advertisingArcType").find('option').remove();
-                    if (advertisingAllTypeAndCustomerList.customerList != null) {
-                        $.each(advertisingAllTypeAndCustomerList.customerList, function (idx, val) {
-                            if(customerUuid_ === val.uuid){
-                                $("#customerInfo").append('<option value="' + val.contactPerson + '_' + val.uuid + '" selected>' + val.contactPerson + '_' + val.uuid + '</option>')
-                            }else{
-                                $("#customerInfo").append('<option value="' + val.contactPerson + '_' + val.uuid + '" >' + val.contactPerson + '_' + val.uuid + '</option>')
-                            }
-                        });
+                success: function (result) {
+                    if (result.code === 200) {
+                        $("#customerInfo").find('option').remove();
+                        $("#advertisingType").find('option').remove();
+                        $("#advertisingArcType").find('option').remove();
+                        if (result.customerList != null) {
+                            $.each(result.customerList, function (idx, val) {
+                                if(customerUuid_ === val.uuid){
+                                    $("#customerInfo").append('<option value="' + val.contactPerson + '_' + val.uuid + '" selected>' + val.contactPerson + '_' + val.uuid + '</option>')
+                                }else{
+                                    $("#customerInfo").append('<option value="' + val.contactPerson + '_' + val.uuid + '" >' + val.contactPerson + '_' + val.uuid + '</option>')
+                                }
+                            });
+                        }
+                        $("#advertisingType").append("<option value='默认分类_0'></option>");
+                        if (result.advertisingType[0] != null) {
+                            $.each(result.advertisingType, function (idx, val) {
+                                let tmp = val.typename + '_' + val.id;
+                                if(friendlyLinkType_ === tmp){
+                                    $("#advertisingType").append('<option value="' + val.typename + '_' + val.id + '" selected>' + val.typename + '_' + val.id + '</option>')
+                                }else{
+                                    $("#advertisingType").append('<option value="' + val.typename + '_' + val.id + '" >' + val.typename + '_' + val.id + '</option>')
+                                }
+                            });
+                        }
+                        $("#advertisingArcType").append("<option value='没有同名标识所有栏目_0'></option>");
+                        if (result.advertisingArcType[0] != null) {
+                            $.each(result.advertisingArcType, function (idx, val) {
+                                let str = val.typename + '_' + val.id;
+                                if(advertisingArcType_ === str){
+                                    $("#advertisingArcType").append('<option value="' + val.typename + '_' + val.id + '" selected>' + val.typename + '_' + val.id + '</option>')
+                                }else{
+                                    $("#advertisingArcType").append('<option value="' + val.typename + '_' + val.id + '" >' + val.typename + '_' + val.id + '</option>')
+                                }
+                            });
+                        }
+                        form.render('select')
+                    } else {
+                        common.showFailMsg("获取信息失败！");
                     }
-                    $("#advertisingType").append("<option value='默认分类_0'></option>");
-                    if (advertisingAllTypeAndCustomerList.advertisingType[0] != null) {
-                        $.each(advertisingAllTypeAndCustomerList.advertisingType, function (idx, val) {
-                            let tmp = val.typename + '_' + val.id;
-                            if(friendlyLinkType_ === tmp){
-                                $("#advertisingType").append('<option value="' + val.typename + '_' + val.id + '" selected>' + val.typename + '_' + val.id + '</option>')
-                            }else{
-                                $("#advertisingType").append('<option value="' + val.typename + '_' + val.id + '" >' + val.typename + '_' + val.id + '</option>')
-                            }
-                        });
-                    }
-                    $("#advertisingArcType").append("<option value='没有同名标识所有栏目_0'></option>");
-                    if (advertisingAllTypeAndCustomerList.advertisingArcType[0] != null) {
-                        $.each(advertisingAllTypeAndCustomerList.advertisingArcType, function (idx, val) {
-                            let str = val.typename + '_' + val.id;
-                            if(advertisingArcType_ === str){
-                                $("#advertisingArcType").append('<option value="' + val.typename + '_' + val.id + '" selected>' + val.typename + '_' + val.id + '</option>')
-                            }else{
-                                $("#advertisingArcType").append('<option value="' + val.typename + '_' + val.id + '" >' + val.typename + '_' + val.id + '</option>')
-                            }
-                        });
-                    }
-                    form.render('select')
                 },
                 error: function () {
                     common.showFailMsg("获取信息失败！");

@@ -578,7 +578,7 @@
             }
             let postData = {};
             postData.uuids = uuidArr;
-            okLayer.open("同步友链信息", "/internal/websites/toSynchronousFriendlyLink", "35%", "55%", function (layero) {
+            okLayer.open("同步友链信息", "/internal/websites/toSynchronousFriendlyLink", "30%", "60%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initData(postData);
             }, function () {
                 if (sign) {
@@ -656,7 +656,7 @@
             let postData = {};
             postData.uuid = uuidArr[0];
             postData.friendlyLinkUrl = friendlyLinkUrl;
-            okLayer.open("指定网站修改友链", "/internal/websites/showBatchAddFriendlyLinkDialog", "35%", "65%", function (layero) {
+            okLayer.open("指定网站修改友链", "/internal/websites/showBatchAddFriendlyLinkDialog", "35%", "80%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].init_link(postData, uuidArr);
             }, function () {
                 if (sign) {
@@ -724,7 +724,7 @@
             }
             let postData = {};
             postData.uuids = uuidArr;
-            okLayer.open("增加广告", "/internal/websites/showBatchAddAdvertisingDialog", "35%", "73%", function (layero) {
+            okLayer.open("增加广告", "/internal/websites/showBatchAddAdvertisingDialog", "35%", "68%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initData(postData);
             }, function () {
                 if (sign) {
@@ -850,7 +850,7 @@
         }
 
         function modifyWebsiteInfo(data){
-            okLayer.open("首页 / 其他 / 修改网站信息", "/internal/websites/toAddWebsite", "35%", "95%", function(layero){
+            okLayer.open("首页 / 其他 / 修改网站信息", "/internal/websites/toAddWebsite", "35%", "100%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             },function(){
                 if(sign){

@@ -154,19 +154,23 @@
                 "Content-Type": 'application/json'
             },
             success: function (res) {
-                originalSortRank_ = res.data.friendlyLinkSortRank;
-                customerUuid_ = res.data.customerUuid;
-                friendlyLinkType_ = res.data.friendlyLinkType;
-                let expirationTime = new Date(res.data.expirationTime);
-                res.data.expirationTime = expirationTime.getFullYear() + '-' +
-                    (expirationTime.getMonth()+1 < 10 ? '0'+(expirationTime.getMonth()+1) : expirationTime.getMonth()+1) + '-' + expirationTime.getDate();
-                let renewTime = new Date(res.data.renewTime);
-                res.data.renewTime = renewTime.getFullYear() + '-' +
-                    (renewTime.getMonth()+1 < 10 ? '0'+(renewTime.getMonth()+1) : renewTime.getMonth()+1) + '-' + renewTime.getDate();
-                delete res.data['friendlyLinkLogo'];
-                init_Select();
                 if (res.code === 200) {
-                    layui.form.val("friendlyLinkForm", res.data);
+                    originalSortRank_ = res.data.friendlyLinkSortRank;
+                    customerUuid_ = res.data.customerUuid;
+                    friendlyLinkType_ = res.data.friendlyLinkType;
+                    let expirationTime = new Date(res.data.expirationTime);
+                    res.data.expirationTime = expirationTime.getFullYear() + '-' +
+                        (expirationTime.getMonth()+1 < 10 ? '0'+(expirationTime.getMonth()+1) : expirationTime.getMonth()+1) + '-' + expirationTime.getDate();
+                    let renewTime = new Date(res.data.renewTime);
+                    res.data.renewTime = renewTime.getFullYear() + '-' +
+                        (renewTime.getMonth()+1 < 10 ? '0'+(renewTime.getMonth()+1) : renewTime.getMonth()+1) + '-' + renewTime.getDate();
+                    delete res.data['friendlyLinkLogo'];
+                    init_Select();
+                    if (res.code === 200) {
+                        layui.form.val("friendlyLinkForm", res.data);
+                    } else {
+                        l.layer.msg(res.msg, {icon: 5, time: 3000});
+                    }
                 } else {
                     l.layer.msg(res.msg, {icon: 5, time: 3000});
                 }
@@ -210,21 +214,25 @@
                 url: "/internal/customer/getActiveCustomers2",
                 type: "GET",
                 success: function (res_) {
-                    $("#customerInfo").find('option').remove();
-                    let customerInfo = $("#customerInfo");
-                    let res = JSON.parse(res_)
-                    customerInfo.append('<option value="">请选择用户名称</option>')
-                    if (res.data != null) {
-                        let customerList = res.data
-                        $.each(customerList, function (idx, val) {
-                            if(customerUuid_ === val.uuid){
-                                customerInfo.append('<option value="' + val.contactPerson + '_' + val.uuid + '" selected>' + val.contactPerson + '_' + val.uuid + '</option>')
-                            }else{
-                                customerInfo.append('<option value="' + val.contactPerson + '_' + val.uuid + '" >' + val.contactPerson + '_' + val.uuid + '</option>')
-                            }
-                        });
+                    if (res_.code === 200) {
+                        $("#customerInfo").find('option').remove();
+                        let customerInfo = $("#customerInfo");
+                        let res = JSON.parse(res_);
+                        customerInfo.append('<option value="">请选择用户名称</option>');
+                        if (res.data != null) {
+                            let customerList = res.data
+                            $.each(customerList, function (idx, val) {
+                                if(customerUuid_ === val.uuid){
+                                    customerInfo.append('<option value="' + val.contactPerson + '_' + val.uuid + '" selected>' + val.contactPerson + '_' + val.uuid + '</option>')
+                                }else{
+                                    customerInfo.append('<option value="' + val.contactPerson + '_' + val.uuid + '" >' + val.contactPerson + '_' + val.uuid + '</option>')
+                                }
+                            });
+                        }
+                        form.render('select')
+                    } else {
+                        common.showFailMsg("获取信息失败！");
                     }
-                    form.render('select')
                 },
                 error: function () {
                     common.showFailMsg("获取信息失败！");
@@ -237,22 +245,26 @@
                 url: "/internal/friendlyLinks/searchFriendlyLinkTypeList/" + websiteUuid_,
                 type: "GET",
                 success: function (res_) {
-                    $("#friendlyLinkType").find('option').remove();
-                    let friendlyLinkType = $("#friendlyLinkType");
-                    let res = JSON.parse(res_);
-                    friendlyLinkType.append('<option value="默认分类_0">默认分类_0</option>');
-                    if (res.data != null) {
-                        let friendlyLinkTypeList = res.data;
-                        $.each(friendlyLinkTypeList, function (idx, val) {
-                            let tmp = val.typename + '_' + val.id;
-                            if(friendlyLinkType_ === tmp){
-                                friendlyLinkType.append('<option value="' + val.typename + '_' + val.id + '" selected>' + val.typename + '_' + val.id + '</option>')
-                            }else{
-                                friendlyLinkType.append('<option value="' + val.typename + '_' + val.id + '" >' + val.typename + '_' + val.id + '</option>')
-                            }
-                        });
+                    if (res_.code === 200) {
+                        $("#friendlyLinkType").find('option').remove();
+                        let friendlyLinkType = $("#friendlyLinkType");
+                        let res = JSON.parse(res_);
+                        friendlyLinkType.append('<option value="默认分类_0">默认分类_0</option>');
+                        if (res.data != null) {
+                            let friendlyLinkTypeList = res.data;
+                            $.each(friendlyLinkTypeList, function (idx, val) {
+                                let tmp = val.typename + '_' + val.id;
+                                if(friendlyLinkType_ === tmp){
+                                    friendlyLinkType.append('<option value="' + val.typename + '_' + val.id + '" selected>' + val.typename + '_' + val.id + '</option>')
+                                }else{
+                                    friendlyLinkType.append('<option value="' + val.typename + '_' + val.id + '" >' + val.typename + '_' + val.id + '</option>')
+                                }
+                            });
+                        }
+                        form.render('select')
+                    }  else {
+                        common.showFailMsg("获取信息失败！");
                     }
-                    form.render('select')
                 },
                 error: function () {
                     common.showFailMsg("获取信息失败！");

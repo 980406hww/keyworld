@@ -99,7 +99,7 @@ public class WebsiteController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/friendlyLink/saveAdvertising")
+    @RequiresPermissions("/internal/advertising/saveAdvertising")
     @GetMapping("/showBatchAddAdvertisingDialog")
     public ModelAndView showBatchAddAdvertisingDialog() {
         ModelAndView mv = new ModelAndView();
@@ -281,11 +281,11 @@ public class WebsiteController {
         try {
             Page<WebsiteVO> page = new Page<>(websiteCriteria.getPage(), websiteCriteria.getLimit());
             page = websiteService.searchWebsites(page, websiteCriteria);
-            List<WebsiteVO> websiteVOList = page.getRecords();
+            List<WebsiteVO> websiteVos = page.getRecords();
             resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
             resultBean.setMsg("success");
-            resultBean.setData(websiteVOList);
+            resultBean.setData(websiteVos);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
@@ -332,7 +332,7 @@ public class WebsiteController {
     public ResultBean returnSelectData() {
         ResultBean resultBean = new ResultBean();
         try {
-            Map<String, Object> data = new HashMap<>();
+            Map<String, Object> data = new HashMap<>(4);
             data.put("websiteTypeMap", WebsiteTypeEnum.changeToMap());
             data.put("industryTypeMap", IndustryTypeEnum.changeToMap());
             data.put("putSalesInfoSignMap", PutSalesInfoSignEnum.changeToMap());

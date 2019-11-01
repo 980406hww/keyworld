@@ -39,6 +39,7 @@ public class AdvertisingServiceImpl extends ServiceImpl<AdvertisingDao, Advertis
     @Resource(name="advertisingDao2")
     private AdvertisingDao advertisingDao;
 
+    @Override
     public ModelAndView constructSearchAdvertisingListsModelAndView(int currentPageNumber, int pageSize, AdvertisingCriteria advertisingCriteria) {
         ModelAndView modelAndView = new ModelAndView("/advertising/advertising");
         Page<Advertising> page = new Page<>();
@@ -48,6 +49,7 @@ public class AdvertisingServiceImpl extends ServiceImpl<AdvertisingDao, Advertis
         return modelAndView;
     }
 
+    @Override
     public Boolean saveAdvertising(Advertising advertising){
         if (saveOrUpdateConnectionCMS(advertising, WebsiteRemoteConnectionEnum.add.name())){
             advertisingDao.insert(advertising);
@@ -57,10 +59,12 @@ public class AdvertisingServiceImpl extends ServiceImpl<AdvertisingDao, Advertis
         }
     }
 
+    @Override
     public Advertising getAdvertising(Long uuid) {
         return advertisingDao.getAdvertising(uuid);
     }
 
+    @Override
     public void delAdvertisings(Map map){
         Long websiteUuid = Long.valueOf((String) map.get("websiteUuid"));
         List<String> uuids = (List<String>) map.get("uuids");
@@ -71,6 +75,7 @@ public class AdvertisingServiceImpl extends ServiceImpl<AdvertisingDao, Advertis
         advertisingDao.deleteBatchIds(uuids);
     }
 
+    @Override
     public void delAdvertising(Long uuid){
         Advertising advertising = advertisingDao.selectById(uuid);
         String[] uuidArrays = {String.valueOf(advertising.getAdvertisingId())};
@@ -78,17 +83,20 @@ public class AdvertisingServiceImpl extends ServiceImpl<AdvertisingDao, Advertis
         advertisingDao.deleteById(uuid);
     }
 
+    @Override
     public Page<Advertising> searchAdvertisingList(Page<Advertising> page, AdvertisingCriteria advertisingCriteria){
         page.setRecords(advertisingDao.searchAdvertisingListsPage(page, advertisingCriteria));
         return page;
     }
 
+    @Override
     public void updateAdvertising(Advertising advertising){
         advertising.setUpdateTime(new Date());
         saveOrUpdateConnectionCMS(advertising, WebsiteRemoteConnectionEnum.saveedit.name());
         advertisingDao.updateById(advertising);
     }
 
+    @Override
     public Boolean saveOrUpdateConnectionCMS(Advertising advertising, String type){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Website website = websiteService.getWebsite(Long.valueOf(advertising.getWebsiteUuid()));
@@ -139,6 +147,7 @@ public class AdvertisingServiceImpl extends ServiceImpl<AdvertisingDao, Advertis
         return true;
     }
 
+    @Override
     public void deleteConnectionCMS(Long websiteUuid, String[] uuids){
         Website website = websiteService.getWebsite(websiteUuid);
         Map requestMap = new HashMap();
@@ -155,6 +164,7 @@ public class AdvertisingServiceImpl extends ServiceImpl<AdvertisingDao, Advertis
         }
     }
 
+    @Override
     public List<AdvertisingVO> selectConnectionCMS(Long websiteUuid){
         Website website = websiteService.getWebsite(websiteUuid);
         Map requestMap = new HashMap();
@@ -177,6 +187,7 @@ public class AdvertisingServiceImpl extends ServiceImpl<AdvertisingDao, Advertis
         return advertisingVOS;
     }
 
+    @Override
     public String connectionAdvertisingCMS(Map map, String type, String backendDomain){
         MultiValueMap requestMap = new LinkedMultiValueMap();
         requestMap.add("data",  AESUtils.encrypt(JSONObject.fromObject(map)));
@@ -198,6 +209,7 @@ public class AdvertisingServiceImpl extends ServiceImpl<AdvertisingDao, Advertis
         return resultJsonString;
     }
 
+    @Override
     public String connectionAdvertisingTypeCMS(Map map, String type, String backendDomain){
         MultiValueMap requestMap = new LinkedMultiValueMap();
         requestMap.add("data", AESUtils.encrypt(JSONObject.fromObject(map)));
@@ -219,6 +231,7 @@ public class AdvertisingServiceImpl extends ServiceImpl<AdvertisingDao, Advertis
         return resultJsonString;
     }
 
+    @Override
     public String connectionAdvertisingArcTypeCMS(Map map, String backendDomain){
         MultiValueMap requestMap = new LinkedMultiValueMap();
         requestMap.add("data", AESUtils.encrypt(JSONObject.fromObject(map)));
@@ -234,6 +247,7 @@ public class AdvertisingServiceImpl extends ServiceImpl<AdvertisingDao, Advertis
         return resultJsonString;
     }
 
+    @Override
     public AdvertisingAllTypeAndCustomerListCriteria searchAdvertisingAllTypeList(Long websiteUuid){
         Website website = websiteService.getWebsite(websiteUuid);
         Map requestMap = new HashMap();
@@ -259,34 +273,42 @@ public class AdvertisingServiceImpl extends ServiceImpl<AdvertisingDao, Advertis
         return advertisingAllTypeAndCustomerListCriteria;
     }
 
+    @Override
     public void insertAdvertising(Advertising advertising){
         advertisingDao.insert(advertising);
     }
 
+    @Override
     public List<Map> searchIdByOriginalAdvertisingTagname(int websiteUuid, String originalAdvertisingTagname){
         return advertisingDao.searchIdByOriginalAdvertisingTagname(websiteUuid, originalAdvertisingTagname);
     }
 
+    @Override
     public Advertising getAdvertisingByAdvertisingTagname(int websiteUuid, String advertisingTagname ){
         return advertisingDao.getAdvertisingByAdvertisingTagname(websiteUuid, advertisingTagname);
     }
 
+    @Override
     public List<String> searchAdvertisingidsByAdvertisingTagname(Long websiteUuid, String advertisingTagname){
         return advertisingDao.searchAdvertisingidsByAdvertisingTagname(websiteUuid, advertisingTagname);
     }
 
+    @Override
     public void batchDeleteAdvertisingByAdvertisingTagname(String advertisingTagname, List<String> websiteUuids){
         advertisingDao.batchDeleteAdvertisingByAdvertisingTagname(advertisingTagname, websiteUuids);
     }
 
+    @Override
     public List<Integer> selectByWebsiteId(Long websiteUuid){
         return advertisingDao.selectByWebsiteId(websiteUuid);
     }
 
+    @Override
     public Long selectIdByAdvertisingId(Long websiteUuid, int advertisingId){
         return advertisingDao.selectIdByAdvertisingId(websiteUuid, advertisingId);
     }
 
+    @Override
     public void initSynchronousAdvertising(Advertising advertising, AdvertisingVO advertisingVO){
         advertising.setAdvertisingTagname(advertisingVO.getTagname());
         if (0 == advertisingVO.getClsid()){
@@ -307,10 +329,12 @@ public class AdvertisingServiceImpl extends ServiceImpl<AdvertisingDao, Advertis
         advertising.setAdvertisingExpbody(advertisingVO.getExpbody());
     }
 
+    @Override
     public int searchAdvertisingCount(Long websiteUuid){
         return advertisingDao.searchAdvertisingCount(websiteUuid);
     }
 
+    @Override
     public void pushAdvertising(Map map){
         List<Integer> uuids = (List<Integer>) map.get("uuids");
         for (Integer uuid: uuids ) {

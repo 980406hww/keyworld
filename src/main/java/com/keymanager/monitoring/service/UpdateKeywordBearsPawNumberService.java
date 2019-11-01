@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.UpdateKeywordBearsPawNumberDao;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.util.common.StringUtil;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map.Entry;
@@ -29,7 +28,7 @@ public class UpdateKeywordBearsPawNumberService extends ServiceImpl<UpdateKeywor
 
     /**
      * 缓存去重后的关键词域名，用于更新百度关键词的熊掌号
-     * @throws MalformedURLException
+     * @throws Exception
      */
     public void cacheCustomerKeywordDomainMap() throws Exception {
         CUSTOMER_KEYWORD_DOMAIN_MAP.clear();

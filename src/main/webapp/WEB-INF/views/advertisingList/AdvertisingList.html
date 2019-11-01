@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-unselect {
+            margin: 0 !important;
+        }
         .layui-tab-content {
             padding: 0px;
         }
@@ -100,8 +103,8 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <div class="layui-input-inline" style="width: 150px;">
-                                <input type="checkbox" name="expire" title="过期广告" lay-skin="primary">
+                            <div class="layui-input-inline">
+                                <input type="checkbox" name="expire" title="过期广告">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -187,7 +190,7 @@
                     {field: 'advertisingStarttime', title: '开始时间', width: '7%', align: 'center', templet: '#toAdvertisingStarttime'},
                     {field: 'advertisingEndtime', title: '结束时间', width: '7%', align: 'center', templet: '#toAdvertisingEndtime'},
                     {field: 'renewTime', title: '续费时间', width: '7%', templet: '#toRenewTime', align: 'center'},
-                    {title: '操作', templet: '#operationTpl', align: 'center', width: '10%', align: 'center'}
+                    {title: '操作', templet: '#operationTpl', width: '10%', align: 'center'}
                 ]],
                 height: 'full-75',
                 done: function (res, curr, count) {
@@ -218,7 +221,7 @@
         }
 
         function showAdvertisingDialog() {
-            okLayer.open("首页/其他/添加广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "90%",  function(layero){
+            okLayer.open("首页/其他/添加广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "82%",  function(layero){
                 window[layero.find("iframe")[0]["name"]].initWebSiteID(websiteUuid);
             }, function(){
                 if(sign){
@@ -229,7 +232,7 @@
         }
 
         function updateAdvertising(data){
-            okLayer.open("首页/其他/修改广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "90%", function(layero){
+            okLayer.open("首页/其他/修改广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "82%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data.uuid, websiteUuid);
             },function(){
                 if(sign){
@@ -409,7 +412,7 @@
         <button class="layui-btn layui-btn-sm" lay-event="showAdvertisingDialog">添加</button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/advertising/pushAdvertising">
-        <button class="layui-btn layui-btn-sm" lay-event="pushAdvertising">推送所选信息到远程服务</button>
+        <button class="layui-btn layui-btn-sm" lay-event="pushAdvertising">推送远程</button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/advertising/deleteAdvertisings">
         <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="deleteBatchAdvertising">

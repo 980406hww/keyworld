@@ -22,7 +22,7 @@
         fl.fUpdateTime AS 'updateTime'
     </sql>
 
-    <select id="searchFriendlyLinkListsPage" parameterType="com.keymanager.ckadmin.entity.FriendlyLink" resultType="com.keymanager.ckadmin.entity.FriendlyLink">
+    <select id="searchFriendlyLinkListsPage" resultType="com.keymanager.ckadmin.entity.FriendlyLink">
         SELECT
         c.fContactPerson AS 'customerInfo',
         <include refid="friendlyLinkColID"/>

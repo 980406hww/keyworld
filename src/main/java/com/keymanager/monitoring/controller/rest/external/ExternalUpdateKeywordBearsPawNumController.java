@@ -3,7 +3,6 @@ package com.keymanager.monitoring.controller.rest.external;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.UpdateBearPawNumCriteria;
 import com.keymanager.monitoring.service.UpdateKeywordBearsPawNumberService;
-import java.net.MalformedURLException;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.slf4j.Logger;
