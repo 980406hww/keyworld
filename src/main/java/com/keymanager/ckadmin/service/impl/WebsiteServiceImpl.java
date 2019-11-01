@@ -246,11 +246,11 @@ public class WebsiteServiceImpl extends ServiceImpl<WebsiteDao, Website> impleme
         }
     }
 
-    public void batchUpdateFriendlyLink(MultipartFile file, FriendlyLink friendlyLink, List<String> uuids, String originalFriendlyLinkUrl) {
+    public void batchUpdateFriendlyLink(MultipartFile file, FriendlyLink friendlyLink, String[] uuids, String originalFriendlyLinkUrl) {
         for (String uuidstr : uuids) {
-            List<Map> friendlyLinkInfos = friendlyLinkService.searchOriginalSortRank(Integer.valueOf(uuidstr), originalFriendlyLinkUrl);
+            List<Map> friendlyLinkInfos = friendlyLinkService.searchOriginalSortRank(Integer.parseInt(uuidstr), originalFriendlyLinkUrl);
             for (Map friendlyLinkInfo : friendlyLinkInfos) {
-                friendlyLink.setWebsiteUuid(Integer.valueOf(uuidstr));
+                friendlyLink.setWebsiteUuid(Integer.parseInt(uuidstr));
                 friendlyLink.setUuid(Long.valueOf((Integer) friendlyLinkInfo.get("uuid")));
                 friendlyLink.setFriendlyLinkId((Integer) friendlyLinkInfo.get("friendlyLinkId"));
                 friendlyLink.setUpdateTime(new Date());
@@ -280,9 +280,9 @@ public class WebsiteServiceImpl extends ServiceImpl<WebsiteDao, Website> impleme
     }
 
     public void batchSaveAdvertising(Advertising advertising) {
-        List<String> uuids = Arrays.asList(advertising.getUuids().split(","));
+        String[] uuids = advertising.getUuids().split(",");
         for (String uuidstr : uuids) {
-            advertising.setWebsiteUuid(Integer.valueOf(uuidstr));
+            advertising.setWebsiteUuid(Integer.parseInt(uuidstr));
             if (advertisingService.saveOrUpdateConnectionCMS(advertising, WebsiteRemoteConnectionEnum.add.name())) {
                 advertisingService.insertAdvertising(advertising);
             }
@@ -290,11 +290,10 @@ public class WebsiteServiceImpl extends ServiceImpl<WebsiteDao, Website> impleme
     }
 
     public void batchUpdateAdvertising(Advertising advertising) {
-        List<String> uuids = Arrays.asList(advertising.getUuids().split(","));
+        String[] uuids = advertising.getUuids().split(",");
         for (String uuidStr : uuids) {
-            advertising.setWebsiteUuid(Integer.valueOf(uuidStr));
-            List<Map> advertisingIds = advertisingService
-                .searchIdByOriginalAdvertisingTagname(Integer.valueOf(uuidStr), advertising.getOriginalAdvertisingTagname());
+            advertising.setWebsiteUuid(Integer.parseInt(uuidStr));
+            List<Map> advertisingIds = advertisingService.searchIdByOriginalAdvertisingTagname(Integer.parseInt(uuidStr), advertising.getOriginalAdvertisingTagname());
             for (Map advertisingIdMap : advertisingIds) {
                 advertising.setAdvertisingId((Integer) advertisingIdMap.get("advertisingId"));
                 advertising.setUuid(Long.valueOf((Integer) advertisingIdMap.get("uuid")));

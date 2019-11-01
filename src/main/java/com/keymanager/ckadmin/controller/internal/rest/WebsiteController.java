@@ -3,12 +3,14 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.WebsiteCriteria;
+import com.keymanager.ckadmin.entity.Advertising;
 import com.keymanager.ckadmin.entity.FriendlyLink;
 import com.keymanager.ckadmin.entity.Website;
 import com.keymanager.ckadmin.enums.IndustryTypeEnum;
 import com.keymanager.ckadmin.enums.PutSalesInfoSignEnum;
 import com.keymanager.ckadmin.enums.WebsiteSynchronousSignEnum;
 import com.keymanager.ckadmin.enums.WebsiteTypeEnum;
+import com.keymanager.ckadmin.service.AdvertisingService;
 import com.keymanager.ckadmin.service.FriendlyLinkService;
 import com.keymanager.ckadmin.service.WebsiteService;
 import com.keymanager.ckadmin.vo.WebsiteVO;
@@ -29,6 +31,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/internal/websites")
 public class WebsiteController {
+
     private static final Logger logger = LoggerFactory.getLogger(WebsiteController.class);
 
     @Resource(name = "websiteService2")
@@ -37,9 +40,12 @@ public class WebsiteController {
     @Resource(name = "friendlyLinkService2")
     private FriendlyLinkService friendlyLinkService;
 
+    @Resource(name = "advertisingService2")
+    private AdvertisingService advertisingService;
+
     @RequiresPermissions("/internal/friendlyLink/synchronousFriendlyLink")
     @GetMapping("/toSynchronousFriendlyLink")
-    public ModelAndView toSynchronousFriendlyLink(){
+    public ModelAndView toSynchronousFriendlyLink() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("webSiteList/SynchronousFriendlyLink");
         return mv;
@@ -47,14 +53,14 @@ public class WebsiteController {
 
     @RequiresPermissions("/internal/website/saveWebsite")
     @GetMapping("/toAddWebsite")
-    public ModelAndView toAddWebsite(){
+    public ModelAndView toAddWebsite() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("webSiteList/AddWebsite");
         return mv;
     }
 
     @GetMapping("/toAdvertising/{webSiteUuid}")
-    public ModelAndView toAdvertising(@PathVariable("webSiteUuid") long webSiteUuid){
+    public ModelAndView toAdvertising(@PathVariable("webSiteUuid") long webSiteUuid) {
         ModelAndView mv = new ModelAndView();
         mv.addObject("webSiteUuid", webSiteUuid);
         mv.setViewName("advertisingList/AdvertisingList");
@@ -62,7 +68,7 @@ public class WebsiteController {
     }
 
     @GetMapping("/toFriendlyLink/{webSiteUuid}")
-    public ModelAndView toFriendlyLink(@PathVariable("webSiteUuid") long webSiteUuid){
+    public ModelAndView toFriendlyLink(@PathVariable("webSiteUuid") long webSiteUuid) {
         ModelAndView mv = new ModelAndView();
         mv.addObject("webSiteUuid", webSiteUuid);
         mv.setViewName("friendlyLinkList/FriendlyLink");
@@ -71,7 +77,7 @@ public class WebsiteController {
 
     @RequiresPermissions("/internal/website/searchWebsites")
     @GetMapping("/toWebSiteList")
-    public ModelAndView toWebSiteList(){
+    public ModelAndView toWebSiteList() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("webSiteList/WebSiteList");
         return mv;
@@ -79,7 +85,7 @@ public class WebsiteController {
 
     @RequiresPermissions("/internal/advertising/synchronousAdvertising")
     @GetMapping("/toSynchronousAdvertising")
-    public ModelAndView toSynchronousAdvertising(){
+    public ModelAndView toSynchronousAdvertising() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("webSiteList/SynchronousAdvertising");
         return mv;
@@ -87,15 +93,15 @@ public class WebsiteController {
 
     @RequiresPermissions("/internal/friendlyLink/saveFriendlyLinks")
     @GetMapping("/showBatchAddFriendlyLinkDialog")
-    public ModelAndView showBatchAddFriendlyLinkDialog(){
+    public ModelAndView showBatchAddFriendlyLinkDialog() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("webSiteList/BatchAddFriendlyLinkDialog");
         return mv;
     }
 
-//    @RequiresPermissions("/internal/friendlyLink/saveAdvertisings")
+    @RequiresPermissions("/internal/friendlyLink/saveAdvertising")
     @GetMapping("/showBatchAddAdvertisingDialog")
-    public ModelAndView showBatchAddAdvertisingDialog(){
+    public ModelAndView showBatchAddAdvertisingDialog() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("webSiteList/BatchAddAdvertisingDialog");
         return mv;
@@ -166,6 +172,23 @@ public class WebsiteController {
             resultBean.setCode(400);
             resultBean.setMsg("未知错误");
             return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/friendlyLink/saveFriendlyLink")
+    @RequestMapping(value = "/batchUpdateFriendlyLink", method = RequestMethod.POST)
+    public ResultBean batchUpdateFriendlyLink(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            FriendlyLink friendlyLink = websiteService.initFriendlyLink(request);
+            String[] uuids = request.getParameter("uuids").split(",");
+            String originalFriendlyLinkUrl = request.getParameter("originalFriendlyLinkUrl");
+            websiteService.batchUpdateFriendlyLink(file, friendlyLink, uuids, originalFriendlyLinkUrl);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
         }
         return resultBean;
     }
@@ -306,7 +329,7 @@ public class WebsiteController {
     }
 
     @PostMapping("/returnSelectData")
-    public ResultBean returnSelectData(){
+    public ResultBean returnSelectData() {
         ResultBean resultBean = new ResultBean();
         try {
             Map<String, Object> data = new HashMap<>();
@@ -326,4 +349,48 @@ public class WebsiteController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/advertising/saveAdvertising")
+    @RequestMapping(value = "/batchSaveAdvertising", method = RequestMethod.POST)
+    public ResultBean batchSaveAdvertising(@RequestBody Advertising advertising) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            websiteService.batchSaveAdvertising(advertising);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/advertising/saveAdvertising")
+    @RequestMapping(value = "/getAdvertisingByAdvertisingTagname", method = RequestMethod.POST)
+    public ResultBean getAdvertisingByAdvertisingTagname(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            Integer uuid = (Integer) requestMap.get("uuid");
+            String advertisingTagname = (String) requestMap.get("advertisingTagname");
+            Advertising advertising = advertisingService.getAdvertisingByAdvertisingTagname(uuid, advertisingTagname);
+            resultBean.setData(advertising);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/advertising/saveAdvertising")
+    @RequestMapping(value = "/batchUpdateAdvertising", method = RequestMethod.POST)
+    public ResultBean batchUpdateAdvertising(@RequestBody Advertising advertising) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            websiteService.batchUpdateAdvertising(advertising);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+        }
+        return resultBean;
+    }
 }
