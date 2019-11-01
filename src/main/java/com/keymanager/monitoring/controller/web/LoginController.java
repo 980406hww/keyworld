@@ -108,7 +108,10 @@ public class LoginController extends BaseController {
             return renderError("验证码错误");
         }
         Subject user = SecurityUtils.getSubject();
-        List<Tree> menus = resourceService.selectAuthorizationMenu(username, version);
+        List<Tree> menus = null;
+        if (Constants.OLD_PERMISSION_VERSION.equals(version)) {
+            menus = resourceService.selectAuthorizationMenu(username, version);
+        }
         ExtendedUsernamePasswordToken token = new ExtendedUsernamePasswordToken(username, password);
         token.setEntryType(entryType);
         String terminalType = TerminalTypeMapping.getTerminalType(request);

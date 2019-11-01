@@ -70,6 +70,6 @@
         LEFT JOIN t_role_resource_new e ON r.fUuid = e.fRoleID
         LEFT JOIN t_resource_new rs ON e.fResourceID = rs.fUuid
         WHERE r.fUuid = #{condition.id}
-        AND (rs.fVersion = #{condition.version} OR rs.fVersion = '')
+        AND rs.fVersion = #{condition.version}
     </select>
 </mapper>

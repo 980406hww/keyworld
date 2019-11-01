@@ -33,6 +33,7 @@
         AND ur.fRoleID = rr.fRoleID)
         AND s.fResourceType = 0
         AND s.fVersion = #{version}
+        AND S.fStatus = 0
         ORDER BY s.fSequence
     </select>
 

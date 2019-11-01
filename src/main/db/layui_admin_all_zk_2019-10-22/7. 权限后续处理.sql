@@ -9,7 +9,7 @@ BEGIN
 			SET @uuid = (
 					SELECT fUuid FROM t_resource_new WHERE fVersion = '1.0' AND fResourceName = resource_name
 			);
-			UPDATE t_resource_new SET fStatus = 0 WHERE fUuid = @uuid OR fParentID = @uuid;
+			UPDATE t_resource_new SET fStatus = 1 WHERE fUuid = @uuid OR fParentID = @uuid;
 			END;
 	COMMIT;
 END;
