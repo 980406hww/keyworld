@@ -576,7 +576,7 @@
         cs.fPageNo AS "pageNo",
         cs.fRestartStatus AS "restartStatus"
         FROM t_machine_info cs
-        WHERE (fContinuousFailCount > 5 OR fTenMinsLastVisitTime &lt; NOW())
+        WHERE (fContinuousFailCount &gt; 5 OR fTenMinsLastVisitTime &lt; NOW())
         AND fTenMinsRestartTime &lt; NOW() and fRemainingKeyword = 1
         AND fStartUpStatus = 'Completed'
         AND fMachineGroup &gt; ''
