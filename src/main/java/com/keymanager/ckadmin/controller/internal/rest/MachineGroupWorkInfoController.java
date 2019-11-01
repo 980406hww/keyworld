@@ -36,7 +36,7 @@ public class MachineGroupWorkInfoController {
     private MachineGroupWorkInfoService machineGroupWorkInfoService;
 
 
-    @RequiresPermissions("/internal/machinegroupworkinfo/searchMachineGroupWorkInfos")
+    @RequiresPermissions("/internal/machinegroupstatistics/toMachineGroupStatistics")
     @RequestMapping(value = "/toMachineGroupStatistics", method = RequestMethod.GET)
     public ModelAndView toMachineGroupStatistics() {
         ModelAndView mv = new ModelAndView();
