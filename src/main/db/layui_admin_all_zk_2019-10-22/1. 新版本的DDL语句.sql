@@ -28,6 +28,15 @@ CREATE TABLE `t_qz_charge_status` (
 # 全站关联收费状态表
 alter table t_qz_setting add fChargeStatusUuid int null comment '最新一次收费状态Uuid';
 
+CREATE TABLE `t_customer_business` (
+  `fUuid` int(11) NOT NULL AUTO_INCREMENT COMMENT '客户业务主键',
+  `fCustomerUuid` int(11) NOT NULL COMMENT '客户ID',
+  `fType` varchar(50) DEFAULT NULL COMMENT '业务类型： keyword-关键字、qzsetting-全站、fm-负面',
+  `fCreateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `fUpdateTime` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`fUuid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客户业务关联表';
+
 #往config表插入数据
 # 所有搜索引擎
 INSERT INTO `db_keyword`.`t_config`(`fConfigType`, `fKey`, `fValue`) VALUES ('SearchEngine', 'All', '谷歌,百度,搜狗,必应中国,百度下拉,360,必应日本');
