@@ -10,6 +10,7 @@ import com.keymanager.monitoring.service.IUserInfoService;
 import com.keymanager.monitoring.vo.ExtendedUsernamePasswordToken;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
+import java.util.Enumeration;
 import javax.servlet.http.HttpSession;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
@@ -162,13 +163,31 @@ public class LoginController extends BaseController {
      */
     @PostMapping("/logout")
     @ResponseBody
-    public Object logout(HttpServletRequest request) {
+    public Object logout(HttpSession session) {
         logger.info("登出");
         Subject subject = SecurityUtils.getSubject();
-        request.getSession().removeAttribute("username");
-        request.getSession().removeAttribute("password");
-        request.getSession().removeAttribute("menus");
+        session.invalidate();
         subject.logout();
         return renderSuccess();
+    }
+
+    /**
+     * 旧版本登录
+     * @return
+     */
+    @GetMapping("/loginOldVersion")
+    @ResponseBody
+    public ModelAndView loginOldVersion(HttpSession session) {
+        Enumeration<String> e = session.getAttributeNames();
+        if (e.hasMoreElements()){
+            Subject subject = SecurityUtils.getSubject();
+            session.invalidate();
+            subject.logout();
+        }
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("/views/login");
+        mv.addObject("version","1.0");
+        mv.addObject("msg","旧 版 本 登 录");
+        return mv;
     }
 }
