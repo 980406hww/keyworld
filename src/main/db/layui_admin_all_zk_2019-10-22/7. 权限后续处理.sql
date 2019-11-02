@@ -1,23 +1,4 @@
 
-# 把旧版本的全站信息设置，客户列表及子权限进行停用操作
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `pro_resource_data_migration`;
-CREATE PROCEDURE pro_resource_data_migration ( IN resource_name varchar(100))
-BEGIN
-	START TRANSACTION;
-			BEGIN
-			SET @uuid = (
-					SELECT fUuid FROM t_resource_new WHERE fVersion = '1.0' AND fResourceName = resource_name
-			);
-			UPDATE t_resource_new SET fStatus = 1 WHERE fUuid = @uuid OR fParentID = @uuid;
-			END;
-	COMMIT;
-END;
-
-CALL pro_resource_data_migration("客户列表");
-CALL pro_resource_data_migration("全站信息设置");
-DROP PROCEDURE pro_resource_data_migration;
-
 # 新增网站管理的顶级菜单，子权限为网站列表（原网站管理），销售信息列表（原销售信息管理）
 #添加一级菜单“网站管理”
 INSERT INTO `db_keyword`.`t_resource_new`(`fResourceName`, `fUrl`, `fIconCls`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`,  `fCreateTime`, `fVersion`)VALUES ('网站管理', '#', 'fi-thumbnails', 50, 0, 1, 0, NOW(), '2.0');
