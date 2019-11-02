@@ -57,6 +57,10 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
             if (captureJobCriteria.getRankJobType() != null && captureJobCriteria.getRankJobType().equals("Common")) {
                 // 先取普通
                 captureRankJob = captureRankJobDao.provideCaptureRankJob(0, captureJobCriteria);
+                //  若取到有指定任务城市的任务
+                if (captureRankJob != null && StringUtil.isNotNullNorEmpty(captureRankJob.getRankJobCity()) && !captureRankJob.getRankJobCity().equals(captureJobCriteria.getRankJobCity())) {
+                    captureRankJob = captureRankJobDao.provideOtherCaptureRankJob(captureJobCriteria, captureRankJob.getRankJobCity());
+                }
                 if (captureRankJob == null) {
                     // 再取全站
                     captureRankJob = captureRankJobDao.provideCaptureRankJob(1, captureJobCriteria);
@@ -68,6 +72,11 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
                 captureRankJob.setStartTime(new Date());
                 captureRankJob.setExectionStatus(CaptureRankExectionStatus.Processing.name());
                 captureRankJobDao.updateById(captureRankJob);
+            }
+        } else {
+            //  若取到有指定任务城市的任务
+            if (StringUtil.isNotNullNorEmpty(captureRankJob.getRankJobCity()) && !captureRankJob.getRankJobCity().equals(captureJobCriteria.getRankJobCity())) {
+                captureRankJob = captureRankJobDao.getOtherProcessingJob(captureJobCriteria, captureRankJob.getRankJobCity());
             }
         }
         return captureRankJob;
@@ -128,7 +137,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
         captureRankJob = captureRankJobDao.selectById(captureRankJob.getUuid());
         captureRankJob.setExectionStatus(CaptureRankExectionStatus.Complete.name());
         captureRankJob.setEndTime(new Date());
-        captureRankJob.setLastExecutionDate(new java.sql.Date(new Date().getTime()));
+        captureRankJob.setLastExecutionDate(new java.sql.Date(System.currentTimeMillis()));
         captureRankJobDao.updateById(captureRankJob);
     }
 

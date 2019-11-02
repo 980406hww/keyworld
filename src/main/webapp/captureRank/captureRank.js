@@ -176,7 +176,7 @@ function updateCaptureRankJobsStatus(status) {
         return;
     }
     let msg = status === "true" ? "启动": "暂停";
-    $.messager.confirm('提示', '确定要'+ msg +'暂停这些任务吗?', function (b) {
+    $.messager.confirm('提示', '确定要'+ msg +'这些任务吗?', function (b) {
        if (b) {
            var postData = {};
            postData.uuids = uuids.split(",");
