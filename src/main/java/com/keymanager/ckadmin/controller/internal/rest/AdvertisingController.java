@@ -9,8 +9,6 @@ import com.keymanager.ckadmin.entity.Advertising;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.service.AdvertisingService;
 import com.keymanager.ckadmin.service.CustomerService;
-import com.keymanager.monitoring.common.result.Result;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
