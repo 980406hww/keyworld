@@ -15,7 +15,7 @@
 
 	<bean class="com.keymanager.util.SpringContextHolder" lazy-init="false" />
 
-	<context:component-scan base-package="com.keymanager.monitoring" />
+	<context:component-scan base-package="com.keymanager.monitoring,com.keymanager.ckadmin" />
 
 	<context:property-placeholder location="classpath:application.properties" />
 	

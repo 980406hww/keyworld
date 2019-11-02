@@ -2,6 +2,8 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.ckadmin.dao.CustomerBusinessDao;
+import com.keymanager.ckadmin.entity.CustomerBusiness;
 import com.keymanager.enums.CustomerKeywordStatus;
 import com.keymanager.monitoring.criteria.CustomerCriteria;
 import com.keymanager.monitoring.dao.CustomerDao;
@@ -9,6 +11,7 @@ import com.keymanager.monitoring.entity.Customer;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.vo.customerSourceVO;
 import com.keymanager.util.Utils;
+import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +32,9 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
 
     @Autowired
     private CustomerKeywordService customerKeywordService;
+
+    @Resource(name = "customerBusinessDao2")
+    private CustomerBusinessDao customerBusinessDao;
 
     public void updateStatus(long uuid, int status) {
         Customer customer = customerDao.selectById(uuid);
@@ -120,6 +126,17 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
         } else {//添加
             customer.setUpdateTime(new Date());
             customerDao.insert(customer);
+            // 补丁
+            CustomerBusiness customerBusiness = new CustomerBusiness();
+            customerBusiness.setCustomerUuid(customer.getUuid());
+            if ("qz".equals(customer.getEntryType())) {
+                customerBusiness.setType("qzsetting");
+            } else if ("pt".equals(customer.getEntryType())) {
+                customerBusiness.setType("keyword");
+            } else if ("fm".equals(customer.getEntryType())) {
+                customerBusiness.setType("fm");
+            }
+            customerBusinessDao.insertCustomerBusiness(customerBusiness);
         }
     }
 

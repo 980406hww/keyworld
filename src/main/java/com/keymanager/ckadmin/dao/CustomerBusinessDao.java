@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author lhc
@@ -27,4 +27,6 @@ public interface CustomerBusinessDao extends BaseMapper<CustomerBusiness> {
     List<Map> getCustomerBusinessMap(@Param("customerUuids") List<Long> customerUuids);
 
     List<String> getCustomerBusinessStrByCustomerUuid(@Param("customerUuid") Long customerUuid);
+
+    void insertCustomerBusiness(@Param("customerBusiness") CustomerBusiness customerBusiness);
 }
