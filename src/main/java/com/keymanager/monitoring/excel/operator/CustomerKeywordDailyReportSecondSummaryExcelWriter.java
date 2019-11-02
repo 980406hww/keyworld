@@ -73,8 +73,12 @@ public class CustomerKeywordDailyReportSecondSummaryExcelWriter {
 			total = total + Double.parseDouble(summaryMap.get("搜狗_Phone"));
 		}
 		if(summaryMap.get("360_PC") != null) {
-			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.So.getColumnIndex(), rowIndex, summaryMap.get("360_PC"));
+			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.SoPC.getColumnIndex(), rowIndex, summaryMap.get("360_PC"));
 			total = total + Double.parseDouble(summaryMap.get("360_PC"));
+		}
+		if(summaryMap.get("360_Phone") != null) {
+			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.SoPhone.getColumnIndex(), rowIndex, summaryMap.get("360_Phone"));
+			total = total + Double.parseDouble(summaryMap.get("360_Phone"));
 		}
 		if(summaryMap.get("神马_Phone") != null) {
 			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.UC.getColumnIndex(), rowIndex, summaryMap.get("神马_Phone"));
@@ -88,7 +92,7 @@ public class CustomerKeywordDailyReportSecondSummaryExcelWriter {
 		writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.TodayFee.getColumnIndex(), rowIndex, total);
 
 		if(day == endOfMonth){
-			writer.addFormulanCell(CustomerKeywordDailyReportSummaryDefinition.TodayFee.getColumnIndex() + 1, day, "SUM(H2:H" + (day + 1) + ")*" + percentage);
+			writer.addFormulanCell(CustomerKeywordDailyReportSummaryDefinition.TodayFee.getColumnIndex() + 1, day, "SUM(J2:J" + (day + 1) + ")*" + percentage);
 		}
 	}
 
