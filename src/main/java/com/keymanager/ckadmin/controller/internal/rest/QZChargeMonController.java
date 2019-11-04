@@ -30,8 +30,8 @@ public class QZChargeMonController {
     @Resource(name = "qzChargeMonService2")
     private QzChargeMonService qzChargeMonService;
 
-    @PostMapping(value = "/getMonDataBySe")
-    public ResultBean getMonDataBySe(@RequestBody Map<String, Object> condition) {
+    @PostMapping(value = "/getQZChargeMonData")
+    public ResultBean getQZChargeMonData(@RequestBody Map<String, Object> condition) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
             String searchEngines = (String) condition.get("searchEngines");
@@ -48,11 +48,10 @@ public class QZChargeMonController {
                         num = 30;
                         break;
                     default:
-                        num = 12;
                         break;
                 }
             }
-            Map<String, Object> data = qzChargeMonService.selectBySe(searchEngines, terminal, num, type);
+            Map<String, Object> data = qzChargeMonService.getQZChargeMonData(searchEngines, terminal, num, type);
             if (null == data || data.isEmpty()) {
                 resultBean.setCode(300);
             } else {

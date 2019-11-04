@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository("customerKeywordMonDao2")
 public interface CustomerKeywordMonDao extends BaseMapper<CustomerKeywordMon> {
 
-    List<Map<String, Object>> selectByCondition(@Param("condition") Map<String, Object> condition);
+    List<Map<String, Object>> getCustomerKeywordMonData(@Param("condition") Map<String, Object> condition);
 
     Integer selectCountByCondition(@Param("condition") Map<String, Object> condition);
 

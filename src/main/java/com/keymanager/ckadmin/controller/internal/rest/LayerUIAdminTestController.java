@@ -71,14 +71,14 @@ public class LayerUIAdminTestController {
 
     @RequestMapping("/generateQZRateStatisticsDataMap")
     public ResultBean generateQZRateStatisticsDataMap(@RequestBody QZRateStatisticsCountCriteria qzRateStatisticsCountCriteria, HttpSession session) {
-        ResultBean resultBean = new ResultBean(200,"success");
+        ResultBean resultBean = new ResultBean(200, "success");
         try {
             qzRateStatisticsCountCriteria.setUserID((String) session.getAttribute("username"));
-            List<QZRateStatisticsCountVO> qzRateStatisticsCountVOS = qzRateStatisticsService.getQZRateStatisticCount(qzRateStatisticsCountCriteria);
-            Map map = qzRateStatisticsService.generateEchartsData(qzRateStatisticsCountVOS);
+            List<QZRateStatisticsCountVO> qzRateStatisticsCountVos = qzRateStatisticsService.getQZRateStatisticCount(qzRateStatisticsCountCriteria);
+            Map map = qzRateStatisticsService.generateEchartsData(qzRateStatisticsCountVos);
             resultBean.setData(map);
             return resultBean;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             resultBean.setCode(400);
             resultBean.setMsg("未知错误");
@@ -87,26 +87,28 @@ public class LayerUIAdminTestController {
     }
 
     @RequestMapping("/toQZRateStatisticsDetail/{terminalType}/{searchEngine}/{rateRange}")
-    public ModelAndView toQZRateStatisticsDetail(@PathVariable(name = "terminalType") String terminalType,@PathVariable(name = "searchEngine") String searchEngine,@PathVariable(name = "rateRange") String rateRange){
+    public ModelAndView toQZRateStatisticsDetail(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "searchEngine") String searchEngine,
+        @PathVariable(name = "rateRange") String rateRange) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("statistics/qzRateStatisticsDetail");
-        try{
+        try {
             Map<String, String> map = new HashMap<>(3);
-            map.put("qzRateRange",rateRange);
-            if ("null".equals(searchEngine)){
-                map.put("searchEngine","");
-            }else {
+            map.put("qzRateRange", rateRange);
+            if ("null".equals(searchEngine)) {
+                map.put("searchEngine", "");
+            } else {
                 searchEngine = URLDecoder.decode(searchEngine, "UTF-8");
-                map.put("searchEngine",searchEngine);
+                map.put("searchEngine", searchEngine);
             }
-            if ("null".equals(terminalType)){
-                map.put("terminalType","");
-            }else {
-                map.put("terminalType",terminalType);
+            if ("null".equals(terminalType)) {
+                map.put("terminalType", "");
+            } else {
+                map.put("terminalType", terminalType);
             }
             mv.addObject("formData", JSON.toJSONString(map));
-        }catch (Exception e){
             return mv;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
         return mv;
     }

@@ -125,7 +125,7 @@
     <div class="layui-col-md6">
         <div class="layui-card">
             <div class="yskj-card-body map-body" style="position:relative;">
-                <div style="position: absolute;top: 28px;left: 0;z-index: 9999;width: 100%;">
+                <div style="position: absolute;top: 18px;left: 0;z-index: 9999;width: 100%;">
                     <form class="layui-form layui-form-pane" id="qzRateSearchForm">
                         <div style="float: right; width: 100px;margin: 0 16px 0 6px">
                             <div class="my-btn" id="qzRateDetail">数据详情</div>
@@ -156,10 +156,10 @@
     <div class="layui-col-md6">
         <div class="layui-card">
             <div class="yskj-card-body map-body" style="position:relative;">
-                <div style="position: absolute;top: 28px;left: 0;z-index: 9999;width: 100%;">
+                <div style="position: absolute;top: 18px;left: 0;z-index: 9999;width: 100%;">
                     <form class="layui-form layui-form-pane" id="form">
                         <div style="float: right; width: 100px;margin: 0 16px 0 6px">
-                            <div class="my-btn" onclick="toChargeMon()">详细信息</div>
+                            <div class="my-btn" onclick="toChargeMon()">数据详情</div>
                         </div>
                         <div style="float: right; width: 120px;margin: 0 0 0 6px">
                             <select name="qzTerminal" id="qzTerminal" lay-filter="qzTerminal">
@@ -189,11 +189,11 @@
 <div class="layui-row layui-col-space15">
     <div class="layui-col-md6">
         <div class="layui-card">
-            <div class="yskj-card-body clearfix" style="position:relative;height: 370px;">
-                <div style="position: absolute;top: 28px;left: 0;z-index: 9999;width: 100%;">
+            <div class="yskj-card-body clearfix" style="position:relative;height: 360px;">
+                <div style="position: absolute;top: 18px;left: 0;z-index: 9999;width: 100%;">
                     <form class="layui-form layui-form-pane" id="keywordFrom">
                         <div style="float: right; width: 100px;margin: 0 16px 0 6px">
-                            <div class="my-btn" onclick="toCustomerKeywordMon()">详细信息</div>
+                            <div class="my-btn" onclick="toCustomerKeywordMon()">数据详情</div>
                         </div>
                         <div style="float: right; width: 120px;margin: 0 0 0 6px">
                             <select name="terminal" id="terminal" lay-filter="terminal">
@@ -276,11 +276,12 @@
                 timeout: 10000,
                 type: 'POST',
                 success: function (res) {
+                    console.log(res);
                     if (res.code === 200) {
                         var qzDailyStatisticsData = res.data;
                         var qzDailyStatisticsOption = {
                                 title: {
-                                    text: '每日站点涨幅统计',
+                                    text: '每日站点涨幅',
                                     subtext: '',
                                     y: '10',
                                     x: '10'
@@ -300,7 +301,7 @@
                                     "x": 'right',
                                     "y": 'center',
                                     "data": [
-                                        "全部站点个数",
+                                        "站点总数",
                                         "上涨个数",
                                         "不变个数",
                                         "下降个数"
@@ -327,7 +328,7 @@
                                 "series":
                                     [
                                         {
-                                            "name": "全部站点个数",
+                                            "name": "站点总数",
                                             "type": "line",
                                             smooth: true,
                                             "areaStyle": {normal: {color: 'rgba(255,255,255,0)'}},
@@ -375,10 +376,12 @@
                                 break;
                         }
                         qzDailyStatistics.setOption(qzDailyStatisticsOption);
+                    } else {
+                        common.showFailMsg("每日站点涨幅数据获取失败")
                     }
                 },
                 error: function () {
-                    layer.msg('操作失败', {icon: 5});
+                    common.showFailMsg("网络异常请稍后再试")
                 }
             });
         }
@@ -406,7 +409,7 @@
             let url = '/internal/layer/toQZRateStatisticsDetail/' + terminalType + '/' + searchEngine + '/' + qzRateRange;
 
             url = encodeURI(encodeURI(url));
-            common.updateOrNewTab(url, '每日站点涨幅统计详情', 'qzRateStatisticsDetail');
+            common.updateOrNewTab(url, '每日站点涨幅详情', 'qzRateStatisticsDetail');
         })
     });
 </script>

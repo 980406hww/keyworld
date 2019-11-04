@@ -22,59 +22,59 @@ public class CustomerKeywordMonServiceImpl extends ServiceImpl<CustomerKeywordMo
     private CustomerKeywordMonDao customerKeywordMonDao;
 
     @Override
-    public Map<String, Object> selectByCondition(Map<String, Object> condition, int num, int type) {
+    public Map<String, Object> getCustomerKeywordMonData(Map<String, Object> condition, int num, int type) {
         handleCondition(condition, num, type);
-        List<Map<String, Object>> maps = customerKeywordMonDao.selectByCondition(condition);
+        List<Map<String, Object>> maps = customerKeywordMonDao.getCustomerKeywordMonData(condition);
         if (null == maps || maps.isEmpty()) {
             return null;
         }
         List<String> dates = new ArrayList<>();
-        List<Long> oneData = new ArrayList<>();
-        List<Long> twoData = new ArrayList<>();
-        List<Long> threeData = new ArrayList<>();
-        List<Long> fourData = new ArrayList<>();
+        List<Long> topThreeData = new ArrayList<>();
+        List<Long> topFiveData = new ArrayList<>();
+        List<Long> topTenData = new ArrayList<>();
+        List<Long> topFifthData = new ArrayList<>();
         String lastDate = "";
         for (Map<String, Object> map : maps) {
             String date = (String) map.get("date");
             if (!lastDate.equals(date)) {
                 dates.add(date);
-                oneData.add(0L);
-                twoData.add(0L);
-                threeData.add(0L);
-                fourData.add(0L);
+                topThreeData.add(0L);
+                topFiveData.add(0L);
+                topTenData.add(0L);
+                topFifthData.add(0L);
             }
             Integer position = (Integer) map.get("position");
             Long number = (Long) map.get("number");
             int index = dates.size() - 1;
             long count;
             if (position <= 3) {
-                count = oneData.get(index);
-                oneData.remove(index);
-                oneData.add(index, number + count);
+                count = topThreeData.get(index);
+                topThreeData.remove(index);
+                topThreeData.add(index, number + count);
             }
             if (position <= 5) {
-                count = twoData.get(index);
-                twoData.remove(index);
-                twoData.add(index, number + count);
+                count = topFiveData.get(index);
+                topFiveData.remove(index);
+                topFiveData.add(index, number + count);
             }
             if (position <= 10) {
-                count = threeData.get(index);
-                threeData.remove(index);
-                threeData.add(index, number + count);
+                count = topTenData.get(index);
+                topTenData.remove(index);
+                topTenData.add(index, number + count);
             }
             if (position <= 50) {
-                count = fourData.get(index);
-                fourData.remove(index);
-                fourData.add(index, number + count);
+                count = topFifthData.get(index);
+                topFifthData.remove(index);
+                topFifthData.add(index, number + count);
             }
             lastDate = date;
         }
         Map<String, Object> data = new HashMap<>(5);
         data.put("date", dates);
-        data.put("one", oneData);
-        data.put("two", twoData);
-        data.put("three", threeData);
-        data.put("four", fourData);
+        data.put("topThreeData", topThreeData);
+        data.put("topFiveData", topFiveData);
+        data.put("topTenData", topTenData);
+        data.put("topFifthData", topFifthData);
         return data;
     }
 
@@ -96,7 +96,7 @@ public class CustomerKeywordMonServiceImpl extends ServiceImpl<CustomerKeywordMo
         condition.put("day", day);
         Page<Map<String, Object>> page = new Page<>();
         Integer total = customerKeywordMonDao.selectCountByCondition(condition);
-        if (null == total || !(total > 0)) {
+        if (null == total || total == 0) {
             return null;
         }
         calendar.add(Calendar.DATE, -6);
@@ -105,15 +105,6 @@ public class CustomerKeywordMonServiceImpl extends ServiceImpl<CustomerKeywordMo
         condition.put("start", (cur - 1) * limit);
         page.setTotal(total);
         List<Map<String, Object>> data = customerKeywordMonDao.selectTableByCondition(condition);
-//        for (Map<String, Object> map : data) {
-//            if (null == map.get("hData") || null == map.get("hDate")) {
-//                continue;
-//            }
-//            String[] positions = ((String) map.get("hData")).split(",");
-//            String[] dates = ((String) map.get("hDate")).split(",");
-//            map.put("positions", positions);
-//            map.put("dates", dates);
-//        }
         page.setRecords(data);
         return page;
     }
@@ -122,16 +113,9 @@ public class CustomerKeywordMonServiceImpl extends ServiceImpl<CustomerKeywordMo
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.add(type == 1 ? Calendar.MONTH : Calendar.DAY_OF_MONTH, type == 1 ? -(--num) : -num);
-        String pattern = "yyyy-MM";
-        if (type == 2) {
-            pattern += "-dd";
-        }
+        String pattern = type == 2 ? "yyyy-MM-dd" : "yyyy-MM";
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         condition.put("date", sdf.format(calendar.getTime()));
-        if (type == 2) {
-            condition.put("pattern", "%Y-%m-%d");
-        } else {
-            condition.put("pattern", "%Y-%m");
-        }
+        condition.put("pattern", (type == 2 ? "%Y-%m-%d" : "%Y-%m"));
     }
 }

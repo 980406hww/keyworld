@@ -61,7 +61,7 @@ public class QZRateStatisticsServierImpl extends ServiceImpl<QZRateStatisticsDao
                 QZRateStatistics qzRateStatistics = new QZRateStatistics();
                 qzRateStatistics.setQzSettingUuid(qzKeywordRankInfo.getQzSettingUuid());
                 qzRateStatistics.setTerminalType(qzKeywordRankInfo.getTerminalType());
-//                只有一条记录的时候该设什么值？ 目前先设0
+                // 只有一条记录的时候该设什么值？ 目前先设0
                 qzRateStatistics.setRate(0);
                 qzRateStatistics.setRateDate(dateList[0]);
                 qzRateStatistics.setRateFullDate(fullDateList[0]);
@@ -85,10 +85,8 @@ public class QZRateStatisticsServierImpl extends ServiceImpl<QZRateStatisticsDao
         qzRateStatisticsCountCriteria.setGtRateFullDate(gtDate);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
+        calendar.add(Calendar.DATE, -7);
         switch (qzRateStatisticsCountCriteria.getQzRateRange()) {
-            case 1:
-                calendar.add(Calendar.DATE, -7);
-                break;
             case 2:
                 calendar.add(Calendar.DATE, -30);
                 break;
@@ -96,7 +94,6 @@ public class QZRateStatisticsServierImpl extends ServiceImpl<QZRateStatisticsDao
                 calendar.add(Calendar.DATE, -90);
                 break;
             default:
-                calendar.add(Calendar.DATE, -7);
                 break;
         }
         String ltDate = f.format(calendar.getTime());
@@ -105,21 +102,21 @@ public class QZRateStatisticsServierImpl extends ServiceImpl<QZRateStatisticsDao
     }
 
     @Override
-    public Map generateEchartsData(List<QZRateStatisticsCountVO> qzRateStatisticsCountVOS) {
-        Map echartsDataMap = new HashMap();
-        List<String> dateList = new ArrayList<>();
+    public Map generateEchartsData(List<QZRateStatisticsCountVO> qzRateStatisticsCountVos) {
+        Map<String, Object> echartsDataMap = new HashMap(5);
+        List<String> date = new ArrayList<>();
         List<Integer> totalCountList = new ArrayList<>();
         List<Integer> riseCountList = new ArrayList<>();
         List<Integer> unchangeCountList = new ArrayList<>();
         List<Integer> fallCountList = new ArrayList<>();
-        for (QZRateStatisticsCountVO qzRateStatisticsCountVO : qzRateStatisticsCountVOS) {
-            dateList.add(qzRateStatisticsCountVO.getRateDate());
-            totalCountList.add(qzRateStatisticsCountVO.getTotalCount());
-            riseCountList.add(qzRateStatisticsCountVO.getRiseCount());
-            unchangeCountList.add(qzRateStatisticsCountVO.getUnchangedCount());
-            fallCountList.add(qzRateStatisticsCountVO.getFallCount());
+        for (QZRateStatisticsCountVO qzRateStatisticsCountVo : qzRateStatisticsCountVos) {
+            date.add(qzRateStatisticsCountVo.getRateDate());
+            totalCountList.add(qzRateStatisticsCountVo.getTotalCount());
+            riseCountList.add(qzRateStatisticsCountVo.getRiseCount());
+            unchangeCountList.add(qzRateStatisticsCountVo.getUnchangedCount());
+            fallCountList.add(qzRateStatisticsCountVo.getFallCount());
         }
-        echartsDataMap.put("date", dateList);
+        echartsDataMap.put("date", date);
         echartsDataMap.put("totalCount", totalCountList);
         echartsDataMap.put("riseCount", riseCountList);
         echartsDataMap.put("unchangeCount", unchangeCountList);

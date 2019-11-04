@@ -21,7 +21,7 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
     private QzChargeMonDao qzChargeMonDao;
 
     @Override
-    public Map<String, Object> selectBySe(String searchEngines, String terminal, Integer num, Integer type) {
+    public Map<String, Object> getQZChargeMonData(String searchEngines, String terminal, Integer num, Integer type) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.add(type == 1 ? Calendar.MONTH : Calendar.DAY_OF_MONTH, type == 1 ? -(--num) : -num);
@@ -39,7 +39,7 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
         } else {
             condition.put("pattern", "%Y-%m");
         }
-        List<Map<String, Object>> maps = qzChargeMonDao.selectBySe(condition);
+        List<Map<String, Object>> maps = qzChargeMonDao.getQZChargeMonData(condition);
         if (null == maps || maps.isEmpty()) {
             return null;
         }

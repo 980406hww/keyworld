@@ -11,7 +11,7 @@ public interface QZRateStatisticsService {
 
     List<QZRateStatisticsCountVO> getQZRateStatisticCount(QZRateStatisticsCountCriteria qzRateStatisticsCountCriteria);
 
-    Map generateEchartsData(List<QZRateStatisticsCountVO> qzRateStatisticsCountVOS);
+    Map generateEchartsData(List<QZRateStatisticsCountVO> qzRateStatisticsCountVos);
 
     Integer getRate(Long qzUuid, String terminalType, String rateFullDate);
 

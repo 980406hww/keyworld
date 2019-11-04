@@ -5,8 +5,9 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
     var table = layui.table;
 
     window.getKeywordMonData = function (condition) {
+        console.log('condition', condition);
         $.ajax({
-            url: '/internal/customerkeywordmon/getMonDataByCondition',
+            url: '/internal/customerkeywordmon/getCustomerKeywordMonData',
             type: 'post',
             dataType: 'json',
             headers: {
@@ -15,21 +16,22 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
             },
             data: JSON.stringify(condition),
             success: function (res) {
+                console.log(res);
                 if (res.code === 200) {
                     keywordOption.xAxis.data = res.data.date;
-                    keywordOption.series[3].data = res.data.one;
-                    keywordOption.series[2].data = res.data.two;
-                    keywordOption.series[1].data = res.data.three;
-                    keywordOption.series[0].data = res.data.four;
-                    keywordLogShow.setOption(keywordOption);//数据图
+                    keywordOption.series[0].data = res.data.topThreeData;
+                    keywordOption.series[1].data = res.data.topFiveData;
+                    keywordOption.series[2].data = res.data.topTenData;
+                    keywordOption.series[3].data = res.data.topFifthData;
+                    keywordLogShow.setOption(keywordOption);
                 } else if (res.code === 300) {
-                    keywordOption.series[3].data = [];
-                    keywordOption.series[2].data = [];
-                    keywordOption.series[1].data = [];
                     keywordOption.series[0].data = [];
+                    keywordOption.series[1].data = [];
+                    keywordOption.series[2].data = [];
+                    keywordOption.series[3].data = [];
                     keywordLogShow.setOption(keywordOption);
                 } else {
-                    common.showFailMsg('获取数据失败');
+                    common.showFailMsg('关键字整体排名涨幅数据获取失败');
                 }
             },
             error: function () {
@@ -65,37 +67,11 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                 label: {
                     backgroundColor: '#337ab7'
                 }
-            },
-            formatter: function (params) {
-                let msg = params[0].name + '<br>';
-                for (let i = 3; i >= 0; i--) {
-                    msg += params[i].marker;
-                    msg += params[i].seriesName;
-                    msg += '：';
-                    msg += params[i].value;
-                    msg += '<br>';
-                }
-                return msg;
             }
         },
         toolbox: {
             show: true,
-            right: 20,
-            feature: {
-                // mark: {show: true},
-                // dataView: {show: true, readOnly: false},
-                // magicType: {show: true, type: ['line', 'bar']},
-                // restore: {show: true},
-                // myTool1: {
-                //     show: true,
-                //     title: '自定义扩展方法',
-                //     icon: 'image:///images/favicon.png',
-                //     onclick: function () {
-                //         alert('myToolHandler2')
-                //     }
-                // },
-                // saveAsImage: {show: true}
-            }
+            right: 20
         },
         xAxis: {
             type: 'category',
@@ -109,35 +85,40 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
         yAxis: {
             type: 'value'
         },
-        series: [{
-            name: '前50名',
-            type: 'line',
-            stack: '总量',
-            smooth: true,
-            areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
-            data: [],
-        }, {
-            name: '前10名',
-            type: 'line',
-            stack: '总量',
-            smooth: true,
-            areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
-            data: [],
-        }, {
-            name: '前5名',
-            type: 'line',
-            stack: '总量',
-            smooth: true,
-            areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
-            data: [],
-        }, {
-            name: '前3名',
-            type: 'line',
-            stack: '总量',
-            smooth: true,
-            areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
-            data: [],
-        }]
+        series: [
+            {
+                name: '前3名',
+                type: 'line',
+                stack: '总量',
+                smooth: true,
+                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
+                data: [],
+            },
+            {
+                name: '前5名',
+                type: 'line',
+                stack: '总量',
+                smooth: true,
+                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
+                data: []
+            },
+            {
+                name: '前10名',
+                type: 'line',
+                stack: '总量',
+                smooth: true,
+                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
+                data: []
+            },
+            {
+                name: '前50名',
+                type: 'line',
+                stack: '总量',
+                smooth: true,
+                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
+                data: []
+            }
+        ]
     };
 
     var keywordLogShow = echarts.init(document.getElementById('keywordLogShow'));
@@ -273,18 +254,13 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
             axisPointer: {
                 type: 'none'
             },
-            confine: true,
-            formatter: function (p) {
-                return '<div style="font-size: 6px;line-height: 14px"><span>' + p[0].axisValue + '</span>'
-                    + '<br>' + p[0].marker + '<span>排名：' + p[0].value + '</span></div>'
-            }
+            confine: true
         },
         xAxis: {
             type: 'category',
             boundaryGap: false,
             axisLabel: {
-                interval: 0,
-                // rotate: -50,
+                interval: 0
             },
             data: [],
             show: false

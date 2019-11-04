@@ -32,37 +32,11 @@ layui.use(['jquery', 'form', 'common'], function () {
                 label: {
                     backgroundColor: '#337ab7'
                 }
-            },
-            formatter: function (params) {
-                let msg = params[0].name + '<br>';
-                for (let i = 4; i >= 0; i--) {
-                    msg += params[i].marker;
-                    msg += params[i].seriesName;
-                    msg += '：';
-                    msg += params[i].value;
-                    msg += '<br>';
-                }
-                return msg;
             }
         },
         toolbox: {
             show: true,
-            right: 20,
-            feature: {
-                // mark: {show: true},
-                // dataView: {show: true, readOnly: false},
-                // magicType: {show: true, type: ['line', 'bar']},
-                // restore: {show: true},
-                // myTool1: {
-                //     show: true,
-                //     title: '自定义扩展方法',
-                //     icon: 'image:///images/favicon.png',
-                //     onclick: function () {
-                //         alert('myToolHandler2')
-                //     }
-                // },
-                // saveAsImage: {show: true}
-            }
+            right: 20
         },
         xAxis: {
             type: 'category',
@@ -76,42 +50,48 @@ layui.use(['jquery', 'form', 'common'], function () {
         yAxis: {
             type: 'value'
         },
-        series: [{
-            name: '删除',
-            type: 'line',
-            stack: '总量',
-            smooth: true,
-            areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
-            data: [],
-        }, {
-            name: '下架',
-            type: 'line',
-            stack: '总量',
-            smooth: true,
-            areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
-            data: [],
-        }, {
-            name: '暂停',
-            type: 'line',
-            stack: '总量',
-            smooth: true,
-            areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
-            data: [],
-        }, {
-            name: '续费',
-            type: 'line',
-            stack: '总量',
-            smooth: true,
-            areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
-            data: [],
-        }, {
-            name: '新增',
-            type: 'line',
-            stack: '总量',
-            smooth: true,
-            areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
-            data: [],
-        }]
+        series: [
+            {
+                name: '新增',
+                type: 'line',
+                stack: '总量',
+                smooth: true,
+                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
+                data: [],
+            },
+            {
+                name: '续费',
+                type: 'line',
+                stack: '总量',
+                smooth: true,
+                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
+                data: [],
+            },
+            {
+                name: '暂停',
+                type: 'line',
+                stack: '总量',
+                smooth: true,
+                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
+                data: [],
+            },
+            {
+                name: '下架',
+                type: 'line',
+                stack: '总量',
+                smooth: true,
+                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
+                data: [],
+            },
+            {
+                name: '删除',
+                type: 'line',
+                stack: '总量',
+                smooth: true,
+                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
+                data: [],
+            }
+        ]
     };
 
     var chargeLogShow = echarts.init(document.getElementById('chargeLogShow'));
@@ -124,7 +104,7 @@ layui.use(['jquery', 'form', 'common'], function () {
 
     function getChargeMonData(condition) {
         $.ajax({
-            url: '/internal/qzchargemon/getMonDataBySe',
+            url: '/internal/qzchargemon/getQZChargeMonData',
             type: 'post',
             dataType: 'json',
             headers: {
@@ -133,23 +113,24 @@ layui.use(['jquery', 'form', 'common'], function () {
             },
             data: JSON.stringify(condition),
             success: function (res) {
+                console.log(res);
                 if (res.code === 200) {
                     chargeOption.xAxis.data = res.data.date;
-                    chargeOption.series[4].data = res.data.one;
-                    chargeOption.series[3].data = res.data.two;
+                    chargeOption.series[0].data = res.data.one;
+                    chargeOption.series[1].data = res.data.two;
                     chargeOption.series[2].data = res.data.three;
-                    chargeOption.series[1].data = res.data.four;
-                    chargeOption.series[0].data = res.data.five;
-                    chargeLogShow.setOption(chargeOption);//数据图
+                    chargeOption.series[3].data = res.data.four;
+                    chargeOption.series[4].data = res.data.five;
+                    chargeLogShow.setOption(chargeOption); //数据图
                 } else if (res.code === 300) {
+                    chargeOption.series[0].data = [];
                     chargeOption.series[1].data = [];
                     chargeOption.series[2].data = [];
                     chargeOption.series[3].data = [];
                     chargeOption.series[4].data = [];
-                    chargeOption.series[0].data = [];
                     chargeLogShow.setOption(chargeOption);
                 } else {
-                    common.showFailMsg('获取数据失败');
+                    common.showFailMsg('每月站点操作监控数据获取失败');
                 }
             },
             error: function () {

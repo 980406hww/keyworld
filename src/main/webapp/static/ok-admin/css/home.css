@@ -2,13 +2,13 @@
 @import "../lib/layui/css/layui.css";
 
 .yskj-card-body{
-    padding: 20px;
+    padding: 10px;
     position: relative;
     width: 100%;
     box-sizing: border-box;
 }
 .yskj-card-body-tb{
-    padding: 20px 0;
+    padding: 15px 0;
     position: relative;
     width: 100%;
     box-sizing: border-box;

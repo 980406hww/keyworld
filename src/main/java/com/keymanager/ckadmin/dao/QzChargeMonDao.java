@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository("qzChargeMonDao2")
 public interface QzChargeMonDao extends BaseMapper<QzChargeMon> {
 
-    List<Map<String, Object>> selectBySe(@Param("condition") Map<String, Object> condition);
+    List<Map<String, Object>> getQZChargeMonData(@Param("condition") Map<String, Object> condition);
 }

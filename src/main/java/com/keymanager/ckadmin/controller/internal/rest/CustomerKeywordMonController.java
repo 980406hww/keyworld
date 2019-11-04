@@ -23,8 +23,8 @@ public class CustomerKeywordMonController {
     @Resource(name = "customerKeywordMonService2")
     private CustomerKeywordMonService customerKeywordMonService;
 
-    @PostMapping(value = "/getMonDataByCondition")
-    public ResultBean getMonDataByCondition(@RequestBody Map<String, Object> condition) {
+    @PostMapping(value = "/getCustomerKeywordMonData")
+    public ResultBean getCustomerKeywordMonData(@RequestBody Map<String, Object> condition) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
             String time = (String) condition.get("time");
@@ -35,15 +35,14 @@ public class CustomerKeywordMonController {
                         num = 3;
                         break;
                     case "1":
-                        type = 2;
                         num = 30;
+                        type = 2;
                         break;
                     default:
-                        num = 12;
                         break;
                 }
             }
-            Map<String, Object> data = customerKeywordMonService.selectByCondition(condition, num, type);
+            Map<String, Object> data = customerKeywordMonService.getCustomerKeywordMonData(condition, num, type);
             if (null == data || data.isEmpty()) {
                 resultBean.setCode(300);
             } else {

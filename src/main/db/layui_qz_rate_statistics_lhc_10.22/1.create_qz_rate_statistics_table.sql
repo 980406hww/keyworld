@@ -11,4 +11,4 @@ CREATE TABLE `t_qz_rate_statistics`  (
      `fUpdateTime` datetime NULL DEFAULT NULL,
      PRIMARY KEY (`fUuid`) USING BTREE,
      UNIQUE INDEX `uniqueRecord`(`fQZSettingUuid`, `fTerminalType`, `fRateFullDate`) USING BTREE COMMENT '根据全站id，终端，记录日期确保每天只有一条记录'
-) ENGINE = InnoDB DEFAULT CHARSET=utf8 COMMENT = '站点每日涨幅统计表';
+) ENGINE = InnoDB DEFAULT CHARSET=utf8 COMMENT = '站点每日涨幅表';

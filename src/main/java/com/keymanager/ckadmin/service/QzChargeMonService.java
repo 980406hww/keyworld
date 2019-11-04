@@ -6,5 +6,5 @@ import java.util.Map;
 
 public interface QzChargeMonService extends IService<QzChargeMon> {
 
-    Map<String, Object> selectBySe(String searchEngines, String terminal, Integer num, Integer type);
+    Map<String, Object> getQZChargeMonData(String searchEngines, String terminal, Integer num, Integer type);
 }
