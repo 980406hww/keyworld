@@ -38,8 +38,4 @@ public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
     CaptureRankJob findExistCaptureRankJob (@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType);
 
     void updateCaptureRankJobsStatus(@Param("uuids") List<Long> uuids, @Param("updateBy") String updateBy, @Param("captureRankJobStatus") boolean captureRankJobStatus);
-
-    CaptureRankJob provideOtherCaptureRankJob(@Param("captureJobCriteria") ExternalCaptureJobCriteria captureJobCriteria, @Param("rankJobCity") String rankJobCity);
-
-    CaptureRankJob getOtherProcessingJob(@Param("captureJobCriteria") ExternalCaptureJobCriteria captureJobCriteria, @Param("rankJobCity") String rankJobCity);
 }
