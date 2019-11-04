@@ -290,12 +290,12 @@
     </update>
 
     <update id="updateImmediately" parameterType="java.lang.String">
-        UPDATE t_qz_setting  qs
-        SET qs.fUpdateStatus = NULL,
-            qs.fUpdateTime = NOW(),
-            qs.fUpdateEndTime = NULL
-        WHERE qs.fAutoCrawlKeywordFlag IS TRUE
-        AND qs.fUuid IN (${uuids})
+        UPDATE t_qz_setting
+        SET fUpdateStatus = NULL,
+            fUpdateTime = NOW(),
+            fUpdateEndTime = NULL,
+            fAutoCrawlKeywordFlag = 1
+        WHERE fUuid IN (${uuids})
     </update>
 
     <update id="updateExceedMaxCountFlag">

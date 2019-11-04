@@ -213,9 +213,8 @@
 
     <update id="batchUpdateQZSettingUpdateStatus">
         UPDATE t_qz_setting
-        SET fUpdateStatus = NULL, fUpdateTime = NOW(), fUpdateEndTime = NULL
-        WHERE fAutoCrawlKeywordFlag IS TRUE
-        AND fUuid IN (${uuids})
+        SET fUpdateStatus = NULL, fUpdateTime = NOW(), fUpdateEndTime = NULL, fAutoCrawlKeywordFlag = 1
+        WHERE fUuid IN (${uuids})
     </update>
 
     <update id="batchUpdateRenewalStatus">
