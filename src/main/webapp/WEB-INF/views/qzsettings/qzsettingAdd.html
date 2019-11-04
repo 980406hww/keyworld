@@ -69,8 +69,8 @@
             <div class="layui-row">
                 <div class="layui-col-md9 padding-ten-right">
                     <div class="layui-form-item">
-                        <label class="layui-form-label">客户</label>
-                        <div class="layui-input-block">
+                        <label class="layui-form-label" style="width: 120px;">客户</label>
+                        <div class="layui-input-block" style="margin-left: 120px;">
                             <select id="customerList" name="customerUuid" lay-verify="required" lay-search>
                                 <option value="">请选择</option>
                             </select>
@@ -421,7 +421,8 @@
                     <div class="layui-form-item" pane>
                         <label class="layui-form-label">自动采词</label>
                         <div class="layui-input-block">
-                            <input type="radio" name="autoCrawlKeywordFlag" lay-filter="autoCrawlKeywordFlag" value="true" title="是" lay-skin="primary">
+                            <!--<input type="radio" name="autoCrawlKeywordFlag" lay-filter="autoCrawlKeywordFlag" value="true" title="是" lay-skin="primary">
+                            <input type="radio" name="autoCrawlKeywordFlag" lay-filter="autoCrawlKeywordFlag" value="false" title="否" lay-skin="primary" checked>-->
                             <input type="radio" name="autoCrawlKeywordFlag" lay-filter="autoCrawlKeywordFlag" value="false" title="否" lay-skin="primary" checked>
                         </div>
                     </div>
@@ -440,7 +441,6 @@
                         <label class="layui-form-label">更新间隔</label>
                         <div class="layui-input-block">
                             <select name="updateInterval">
-                                <option value="3">3天</option>
                                 <option value="7">7天</option>
                                 <option value="15" selected>15天</option>
                                 <option value="30">30天</option>

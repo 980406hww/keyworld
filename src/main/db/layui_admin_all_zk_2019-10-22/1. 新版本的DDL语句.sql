@@ -46,8 +46,14 @@ INSERT INTO `db_keyword`.`t_config`(`fConfigType`, `fKey`, `fValue`) VALUES ('Ke
 
 # 复制一份t_resource, t_role_resource命名为t_resource_new, t_role_resource_new 来进行权限操作
 # 项目里用的是新的表t_resource_new, t_role_resource_new
-CREATE TABLE t_resource_new SELECT * FROM t_resource;
-CREATE TABLE t_role_resource_new SELECT * FROM t_role_resource;
+DROP TABLE IF EXISTS `db_keyword`.`t_resource_new`;
+CREATE TABLE `db_keyword`.`t_resource_new` SELECT * FROM t_resource;
+alter table `db_keyword`.`t_resource_new` add primary key(fUuid);
+ALTER TABLE `db_keyword`.`t_resource_new` MODIFY `fUuid` bigint(19) NOT NULL AUTO_INCREMENT;
+DROP TABLE IF EXISTS `db_keyword`.`t_role_resource_new`;
+CREATE TABLE `db_keyword`.`t_role_resource_new` SELECT * FROM t_role_resource;
+alter table `db_keyword`.`t_role_resource_new` add primary key(fUuid);
+ALTER TABLE `db_keyword`.`t_role_resource_new` MODIFY `fUuid` bigint(19) NOT NULL AUTO_INCREMENT;
 
 # 新建相应的索引
 CREATE INDEX idx_role_resource_ids ON `db_keyword`.`t_role_resource_new`(fRoleID, fResourceID);
