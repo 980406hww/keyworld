@@ -91,7 +91,7 @@ BEGIN
 	DECLARE g_openMode VARCHAR(32) DEFAULT NULL;
 	DECLARE done INT DEFAULT 0;
 	DECLARE resource_data_migration_cursor CURSOR FOR(
-	SELECT fParentID, fResourceName, fUrl, fIconCls, fSequence, fStatus, fOpened, fResourceType, fOpenMode FROM t_resource_new WHERE fParentID IN (SELECT fUuid FROM t_resource_new WHERE fParentID IN (SELECT fUuid FROM t_resource_new WHERE fUrl = '#' AND fParentID IS NULL AND fResourceName = '其他' AND fVersion = '1.0') AND fResourceName NOT IN ('投诉专用', 'Cookie设置', '清除Config缓存', '清除负面清单缓存'))
+	SELECT fParentID, fResourceName, fUrl, fIconCls, fSequence, fStatus, fOpened, fResourceType, fOpenMode FROM t_resource_new WHERE fParentID IN (SELECT fUuid FROM t_resource_new WHERE fParentID IN (SELECT fUuid FROM t_resource_new WHERE fUrl = '#' AND fParentID IS NULL AND fResourceName = '其他' AND fVersion = '1.0') AND fResourceName NOT IN ('投诉专用', 'Cookie设置'))
 	);
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 	START TRANSACTION;
