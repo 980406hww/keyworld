@@ -256,9 +256,6 @@
                     <input type="button" onclick="deleteDuplicateCustomerKeyword(${customerKeywordCriteria.customerUuid})" value="删除重复关键字">
                 </c:if>
             </shiro:hasPermission>
-            <shiro:hasPermission name="/internal/qzsetting/save">
-                <input type="button" id="customerKeywordBtnInput" onclick="openMessageBox('关键字列表', '${customerKeywordCriteria.customerUuid}', '${customer.contactPerson}')" value=" 用户留言 ">
-            </shiro:hasPermission>
             <shiro:hasPermission name="/internal/usernotebook/searchUserNoteBooks">
                 <input type="button" id="customerKeywordNoteBookBtnInput" onclick="openNoteBookDialog('${customerKeywordCriteria.customerUuid}', '${customerKeywordCriteria.terminalType}')" value=" 记事本 ">
             </shiro:hasPermission>
