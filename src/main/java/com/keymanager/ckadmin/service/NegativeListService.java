@@ -23,4 +23,8 @@ public interface NegativeListService extends IService<NegativeList> {
     void deleteAll(List<Integer> uuids);
 
     List<NegativeList> negativeListsSynchronizeOfDelete(NegativeList negativeList);
+
+    void negativeListCacheEvict(String keyword);
+
+    void evictAllNegativeListCache();
 }

@@ -100,7 +100,13 @@
                             <@shiro.principal property="name"/>
                         </div>
                         <dl class="okadmin-nav-child layui-anim-upbit layui-anim" style="right: -10px">
-                            <dd><a id="logout" href="javascript:;" style="width: 80px">退出登录</a></dd>
+                            <dd><a id="logout" href="javascript:;" style="width: 100px">退出登录</a></dd>
+                            <@shiro.hasPermission name="/internal/config/evictAllConfigCache">
+                            <dd><a onclick="clearConfigCache()" href="javascript:;" style="width: 100px">清理Config</a></dd>
+                            </@shiro.hasPermission>
+                            <@shiro.hasPermission name="/internal/negativelist/evictAllNegativeListCache">
+                            <dd><a onclick="clearNegativeListCache()" href="javascript:;" href="/internal/negativelists/evictAllNegativeListCache" style="width: 100px">清理负面清单</a></dd>
+                            </@shiro.hasPermission>
                         </dl>
                     </li>
                 </ul>
@@ -124,5 +130,48 @@
 <!--js逻辑-->
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script src="/static/ok-admin/js/okadmin.js"></script>
+<script>
+    layui.use(['jquery', 'common'], function () {
+        let $ = layui.jquery;
+        let common = layui.common;
+        window.clearConfigCache = function () {
+            $.ajax({
+                url: '/internal/configs/evictAllConfigCache',
+                type: 'GET',
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        common.showSuccessMsg("清理成功", function () {
+                        });
+                    } else {
+                        common.showFailMsg("清理失败");
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络错误请稍后再试");
+                }
+            });
+        };
+
+        window.clearNegativeListCache = function () {
+            $.ajax({
+                url: '/internal/negativelists/evictAllNegativeListCache',
+                type: 'GET',
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        common.showSuccessMsg("清理成功", function () {
+                        });
+                    } else {
+                        common.showFailMsg("清理失败");
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络错误请稍后再试");
+                }
+            });
+        };
+    });
+</script>
 </body>
 </html>

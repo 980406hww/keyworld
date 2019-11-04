@@ -26,4 +26,6 @@ public interface ConfigService {
     void refreshCustomerNegativeKeywords(String searchEngine, String negativeKeywords);
 
     void refreshWebsiteWhiteList(String websiteWhiteList);
+
+    void evictAllConfigCache();
 }

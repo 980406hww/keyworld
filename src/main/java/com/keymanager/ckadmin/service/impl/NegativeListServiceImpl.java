@@ -14,11 +14,13 @@ import java.util.List;
 import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service("negativeListService2")
 public class NegativeListServiceImpl extends ServiceImpl<NegativeListDao, NegativeList> implements NegativeListService {
+
     private static Logger logger = LoggerFactory.getLogger(NegativeListServiceImpl.class);
 
     @Resource(name = "negativeListDao2")
@@ -29,9 +31,6 @@ public class NegativeListServiceImpl extends ServiceImpl<NegativeListDao, Negati
 
     @Resource(name = "negativeListUpdateInfoService2")
     private NegativeListUpdateInfoService negativeListUpdateInfoService;
-
-    @Resource(name = "negativeListCacheService2")
-    private NegativeListCacheService negativeListCacheService;
 
     @Override
     public Page<NegativeList> searchNegativeLists(Page<NegativeList> page, NegativeListCriteria negativeListCriteria) {
@@ -54,22 +53,22 @@ public class NegativeListServiceImpl extends ServiceImpl<NegativeListDao, Negati
             negativeListDao.insert(negativeList);
             //negativeListsSynchronizeService.negativeListsSynchronize(keywordNegativeCriteria);
         }
-        negativeListCacheService.negativeListCacheEvict(negativeList.getKeyword());
+        this.negativeListCacheEvict(negativeList.getKeyword());
     }
 
     @Override
-    public void saveNegativeLists(List<NegativeList> negativeLists , String operationType) {
+    public void saveNegativeLists(List<NegativeList> negativeLists, String operationType) {
         if (CollectionUtils.isNotEmpty(negativeLists)) {
             for (NegativeList negativeList : negativeLists) {
                 NegativeListCriteria negativeListCriteria = new NegativeListCriteria();
                 negativeListCriteria.setKeyword(negativeList.getKeyword());
                 negativeListCriteria.setTitle(negativeList.getTitle());
                 List<NegativeList> existingNegativeLists = negativeListDao.searchNegativeListsFullMatching(negativeListCriteria);
-                if(operationType.equals("update")){
+                if (operationType.equals("update")) {
                     for (NegativeList existingNegativeList : existingNegativeLists) {
                         deleteNegativeList(existingNegativeList.getUuid(), existingNegativeList);
                     }
-                }else {
+                } else {
                     if (CollectionUtils.isNotEmpty(existingNegativeLists)) {
                         NegativeList existingNegativeList = existingNegativeLists.get(0);
                         negativeList.setUuid(existingNegativeList.getUuid());
@@ -89,12 +88,11 @@ public class NegativeListServiceImpl extends ServiceImpl<NegativeListDao, Negati
 
     @Override
     public NegativeList getNegativeList(long uuid) {
-        NegativeList negativeList = negativeListDao.selectById(uuid);
-        return negativeList;
+        return negativeListDao.selectById(uuid);
     }
 
     @Override
-    public void deleteNegativeList(long uuid , NegativeList negativeList) {
+    public void deleteNegativeList(long uuid, NegativeList negativeList) {
         //在opinion设置该值为负面
         KeywordNegativeCriteria keywordNegativeCriteria = new KeywordNegativeCriteria();
         keywordNegativeCriteria.setNegativeList(negativeList);
@@ -104,23 +102,33 @@ public class NegativeListServiceImpl extends ServiceImpl<NegativeListDao, Negati
         //设置关键词负面清单更新时间
         negativeListUpdateInfoService.saveNegativeListUpdateInfo(negativeList.getKeyword());
         // 删除关键词缓存
-        negativeListCacheService.negativeListCacheEvict(negativeList.getKeyword());
+        this.negativeListCacheEvict(negativeList.getKeyword());
     }
 
     @Override
     public void deleteAll(List<Integer> uuids) {
         for (Integer uuid : uuids) {
             NegativeList negativeList = negativeListDao.selectById(uuid);
-            deleteNegativeList(Long.valueOf(uuid) ,negativeList);
+            deleteNegativeList(Long.valueOf(uuid), negativeList);
         }
     }
 
     @Override
-    public List<NegativeList> negativeListsSynchronizeOfDelete(NegativeList negativeList){
+    public List<NegativeList> negativeListsSynchronizeOfDelete(NegativeList negativeList) {
         List<NegativeList> negativeLists = negativeListDao.negativeListsSynchronizeOfDelete(negativeList);
         if (negativeLists == null || negativeLists.isEmpty()) {
             return null;
         }
         return negativeLists;
+    }
+
+    @Override
+    @CacheEvict(value = "negativeList", key = "#keyword")
+    public void negativeListCacheEvict(String keyword) {
+    }
+
+    @Override
+    @CacheEvict(value = "negativeList", allEntries = true)
+    public void evictAllNegativeListCache() {
     }
 }
