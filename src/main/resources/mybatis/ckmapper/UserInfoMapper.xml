@@ -55,4 +55,10 @@
         AND u.fStatus = 0
     </select>
 
+    <select id="selectUserNames" resultType="java.lang.String">
+        SELECT
+        fLoginName
+        FROM t_userinfo
+        WHERE fStatus = 0
+    </select>
 </mapper>
