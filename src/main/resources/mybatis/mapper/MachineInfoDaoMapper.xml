@@ -769,6 +769,8 @@
         fMemory=#{memory},
       </if>
       fLastVisitTime = NOW(),
+      fRestartCount = 0,
+      fRestartStatus = null,
       fTenMinsLastVisitTime = DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
       fContinuousFailCount = 0,
       fLastSendNotificationTime = NULL
