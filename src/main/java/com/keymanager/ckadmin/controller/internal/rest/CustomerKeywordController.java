@@ -130,10 +130,10 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean();
         try {
             Set<String> roles = getCurrentUser().getRoles();
-            if(!roles.contains("DepartmentManager")) {
+            if (!roles.contains("DepartmentManager")) {
                 keywordCriteria.setUserName((String) request.getSession().getAttribute("username"));
             }
-            Page<CustomerKeyword> page = new Page(keywordCriteria.getPage(), keywordCriteria.getLimit());
+            Page<CustomerKeyword> page = new Page<>(keywordCriteria.getPage(), keywordCriteria.getLimit());
             String orderByField = ReflectUtils.getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {
                 page.setOrderByField(orderByField);
@@ -701,6 +701,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             mv.addObject("belongUser", belongUser);
         }
         mv.addObject("kw123", keyword);
+        mv.addObject("notLike", "1");
         return mv;
     }
 
@@ -718,13 +719,15 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         keyword = URLDecoder.decode(keyword, "UTF-8");
         mv.addObject("kw123", keyword);
         mv.addObject("pst123", position);
+        mv.addObject("pstf123", "1");
         return mv;
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
     @GetMapping(value = "/toKeywordsWithQZ/{businessType}/{terminalType}/{customerUuid}/{group}/{searchEngine}/{status}")
     public ModelAndView toKeywordsWithQZ(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "group") String group, @PathVariable(name = "searchEngine") String searchEngine,
+        @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "group") String group,
+        @PathVariable(name = "searchEngine") String searchEngine,
         @PathVariable(name = "status") int status) throws UnsupportedEncodingException {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/customerKeyword");
@@ -783,7 +786,9 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             if (customerUuid != null) {
                 String terminalType = (String) requestMap.get("terminalType");
                 String entryType = (String) requestMap.get("entryType");
-                customerKeywordService.editOptimizePlanCountByCustomerUuid(terminalType, entryType, Long.parseLong(customerUuid), Integer.parseInt(optimizePlanCount), settingType);
+                customerKeywordService
+                    .editOptimizePlanCountByCustomerUuid(terminalType, entryType, Long.parseLong(customerUuid), Integer.parseInt(optimizePlanCount),
+                        settingType);
             } else {
                 customerKeywordService.editCustomerOptimizePlanCount(Integer.parseInt(optimizePlanCount), settingType, uuids);
             }

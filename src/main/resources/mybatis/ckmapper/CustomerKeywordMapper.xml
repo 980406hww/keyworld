@@ -399,7 +399,14 @@
             AND ck.fCustomerUuid = #{keywordCriteria.customerUuid}
         </if>
         <if test="keywordCriteria.keyword != null and keywordCriteria.keyword != ''">
-            AND ck.fKeyword LIKE CONCAT(#{keywordCriteria.keyword},'%')
+            <choose>
+                <when test="keywordCriteria.notLike != null and keywordCriteria.notLike == 1">
+                    AND ck.fKeyword = #{keywordCriteria.keyword}
+                </when>
+                <otherwise>
+                    AND ck.fKeyword LIKE CONCAT(#{keywordCriteria.keyword},'%')
+                </otherwise>
+            </choose>
         </if>
         <if test="keywordCriteria.userName != null and keywordCriteria.userName != ''">
             AND c.fUserID = #{keywordCriteria.userName}
@@ -425,7 +432,6 @@
         <if test="keywordCriteria.failedCause != null and keywordCriteria.failedCause != ''">
             AND ck.fFailedCause = #{keywordCriteria.failedCause}
         </if>
-
         <if test="keywordCriteria.terminalType != null || keywordCriteria.terminalType != ''">
             AND ck.fTerminalType = #{keywordCriteria.terminalType}
         </if>
@@ -1103,7 +1109,7 @@
         , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
         , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
         WHERE fUuid IN
-        <foreach item="uuid"  collection="uuids" open="(" separator="," close=")">
+        <foreach item="uuid" collection="uuids" open="(" separator="," close=")">
             #{uuid}
         </foreach>
     </update>

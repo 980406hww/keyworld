@@ -53,6 +53,7 @@
                                 <div class="out-condition">
                                     <input type="hidden" name="type" id="type" value="<#if businessType?exists>${businessType}<#else>pt</#if>" />
                                     <input type="hidden" name="terminalType" id="terminalType" value="<#if terminalType2?exists>${terminalType2}<#else>PC</#if>" />
+                                    <input type="hidden" name="notLike" value="<#if notLike?exists>${notLike}<#else>0</#if>" />
                                     <input type="hidden" id="sevenDaysNoReachStandard" name="sevenDaysNoReachStandard" value=""/>
                                     <input type="hidden" id="fifteenDaysNoReachStandard" name="fifteenDaysNoReachStandard" value=""/>
                                     <input type="hidden" id="thirtyDaysNoReachStandard" name="thirtyDaysNoReachStandard" value=""/>
@@ -85,7 +86,7 @@
                                     <div class="layui-inline" style="width: 135px">
                                         排名
                                         <div class="layui-input-inline" style="width: 50px;">
-                                            <input type="number" name="gtPosition" placeholder=">=" value="" autocomplete="off" class="layui-input"
+                                            <input type="number" name="gtPosition" placeholder=">=" value="<#if pstf123?exists>${pstf123}<#else></#if>" autocomplete="off" class="layui-input"
                                                    onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" lay-verify="positiveInteger"/>
                                         </div>
                                         <div class="layui-input-inline" style="width: 50px;">
