@@ -34,7 +34,7 @@
             <label for="password">密码</label>
             <input type="password" lay-verify="required|password" name="password" placeholder="请输入密码" autocomplete="off" id="password" class="layui-input">
         </div>
-        <div class="layui-form-item input-item captcha-box layui-input-active">
+        <div class="layui-form-item input-item captcha-box">
             <label for="captcha">验证码</label>
             <input type="text" lay-verify="required|captcha" name="captcha" placeholder="请输入验证码" autocomplete="off" id="captcha" maxlength="4"
                    class="layui-input">
@@ -143,36 +143,20 @@
             if (event.keyCode === 13) {
                 commit();
             }
-        }
-        // let u = document.getElementById('username');
-        // let p = document.getElementById('password');
-        //
-        // if ((u && u.value) || (p && p.value)) {
-        //     myFocus(u);
-        // }
-        //
-        // /**
-        //  * 表单input组件获取焦点时
-        //  */
-        // $("#login .layui-form-item .layui-input").focus(function () {
-        //     myFocus(this);
-        // });
-        //
-        // function myFocus(e) {
-        //     $(e).parent().addClass("layui-input-focus");
-        // }
-        //
-        // /**
-        //  * 表单input组件失去焦点时
-        //  */
-        // $("#login .layui-form-item .layui-input").blur(function () {
-        //     $(this).parent().removeClass("layui-input-focus");
-        //     if ($(this).val() != "") {
-        //         $(this).parent().addClass("layui-input-active");
-        //     } else {
-        //         $(this).parent().removeClass("layui-input-active");
-        //     }
-        // })
+        };
+
+        $("#login .layui-form-item .layui-input").focus(function () {
+            $(this).parent().addClass("layui-input-focus");
+        });
+
+        $("#login .layui-form-item .layui-input").blur(function () {
+            $(this).parent().removeClass("layui-input-focus");
+            if ($(this).val() != "") {
+                $(this).parent().addClass("layui-input-active");
+            } else {
+                $(this).parent().removeClass("layui-input-active");
+            }
+        });
     });
 </script>
 </body>
