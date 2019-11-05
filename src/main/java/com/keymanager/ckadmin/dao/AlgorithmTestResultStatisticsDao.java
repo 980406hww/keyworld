@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.entity.AlgorithmTestDataStatistics;
+import com.keymanager.ckadmin.vo.AlgorithmTestDataStatisticsVo;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -22,4 +23,7 @@ public interface AlgorithmTestResultStatisticsDao extends BaseMapper<AlgorithmTe
 
     List<AlgorithmTestDataStatistics> selectAlgorithmTestResultStatisticsByAlgorithmTestPlanUuid(
         Page<AlgorithmTestDataStatistics> algorithmTestResultStatisticsPage, @Param("algorithmTestPlanUuid") Long algorithmTestPlanUuid);
+
+    List<AlgorithmTestDataStatistics> selectAlgorithmTestHistoryByAlgorithmTestPlanUuid(
+            Page<AlgorithmTestDataStatisticsVo> algorithmTestResultStatisticsPage, @Param("algorithmTestPlanUuid") Long algorithmTestPlanUuid);
 }

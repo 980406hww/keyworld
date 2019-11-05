@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.entity.AlgorithmTestDataStatistics;
+import com.keymanager.ckadmin.vo.AlgorithmTestDataStatisticsVo;
 
 /**
  * <p>
@@ -17,4 +18,8 @@ public interface AlgorithmTestResultStatisticsService {
 
     Page<AlgorithmTestDataStatistics> selectAlgorithmTestResultStatisticsByAlgorithmTestPlanUuid(
         Page<AlgorithmTestDataStatistics> algorithmTestResultStatisticsPage, Long algorithmTestPlanUuid);
+
+    Page<AlgorithmTestDataStatisticsVo> selectAlgorithmTestHistoryByAlgorithmTestPlanUuid(
+            Page<AlgorithmTestDataStatisticsVo> algorithmTestResultStatisticsPage,
+            Long algorithmTestPlanUuid);
 }

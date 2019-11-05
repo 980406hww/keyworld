@@ -12,6 +12,7 @@ import com.keymanager.ckadmin.service.AlgorithmTestPlanService;
 import com.keymanager.ckadmin.service.AlgorithmTestResultStatisticsService;
 import com.keymanager.ckadmin.service.AlgorithmTestTaskService;
 import com.keymanager.ckadmin.service.ConfigService;
+import com.keymanager.ckadmin.vo.AlgorithmTestDataStatisticsVo;
 import com.keymanager.util.TerminalTypeMapping;
 
 import java.util.HashMap;
@@ -254,9 +255,10 @@ public class AlgorithmAutoTestController {
     public ResultBean getTestDataByPlanUuid(@RequestBody AlgorithmTestTaskCriteria algorithmTestTaskCriteria) {
         ResultBean resultBean = new ResultBean(200,"success");
         try {
-            Page<AlgorithmTestDataStatistics> page = new Page<>(algorithmTestTaskCriteria.getPage(), algorithmTestTaskCriteria.getLimit());
-            page = algorithmTestResultStatisticsService.selectAlgorithmTestResultStatisticsByAlgorithmTestPlanUuid(page, algorithmTestTaskCriteria.getAlgorithmTestPlanUuid());
-            List<AlgorithmTestDataStatistics> algorithmTestDataStatistics = page.getRecords();
+            Page<AlgorithmTestDataStatisticsVo> page = new Page<>(algorithmTestTaskCriteria.getPage(), algorithmTestTaskCriteria.getLimit());
+            page = algorithmTestResultStatisticsService.selectAlgorithmTestHistoryByAlgorithmTestPlanUuid(page, algorithmTestTaskCriteria.getAlgorithmTestPlanUuid());
+            List<AlgorithmTestDataStatisticsVo> algorithmTestDataStatistics = page.getRecords();
+
             resultBean.setCode(0);
             resultBean.setCount(algorithmTestDataStatistics.size());
             resultBean.setMsg("success");
