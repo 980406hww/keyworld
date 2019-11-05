@@ -41,22 +41,8 @@
         ON qk.fQZSettingUuid = qot.fQZSettingUuid
         WHERE qot.fQZSettingUuid = #{qzSettingUuid}
         AND qot.fOperationtype = #{terminalType}
+        AND qk.fDataProcessingStatus = 1
         GROUP BY qc.fUuid
-    </select>
-
-    <select id="getAllStandardSpecies" resultType="java.lang.String">
-        SELECT
-            CONCAT(qot.fOperationtype, '_', qcr.fStandardSpecies)
-        FROM t_qz_charge_rule qcr
-        LEFT JOIN t_qz_operation_type qot
-        ON qot.fUuid = qcr.fQZOperationTypeUuid
-        WHERE qcr.fStandardSpecies <![CDATA[<>]]]> 'designationWord'
-        AND EXISTS(
-            SELECT 1 FROM t_qz_setting qs
-            WHERE qs.fUuid = qot.fQZSettingUuid
-            AND qs.fUuid = #{qzSettingUuid}
-        )
-        GROUP BY qot.fOperationtype, qcr.fStandardSpecies
     </select>
 
     <select id="findQZChargeRules" resultType="com.keymanager.monitoring.vo.QZChargeRuleVO">

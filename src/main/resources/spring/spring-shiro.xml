@@ -104,6 +104,7 @@
 				/webhooks = anon
 				/external/** = anon
 				/login = anon
+				/loginOldVersion = anon
 				/internal/useronline/** = anon
 				/internal/terminalSetting/** = anon
 				/internal/user/** = anon

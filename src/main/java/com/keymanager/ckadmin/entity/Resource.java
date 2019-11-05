@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.NotBlank;
 /**
  * 资源
  */
-@TableName(value = "t_resource")
+@TableName(value = "t_resource_new")
 public class Resource implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -6,7 +6,7 @@ window.onload = function () {
 };
 // layui相关
 
-var show = true;
+let show = true;
 
 let open = true;
 
@@ -30,16 +30,14 @@ function show_more_operation() {
     show = !show;
 }
 
-layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
-    'layer','common'], function () {
-    var element = layui.element;
-    var table = layui.table;
-    var form = layui.form;
-    var $ = layui.jquery;
-    var laydate = layui.laydate;
-    var okLayer = layui.okLayer;
-    var upload = layui.upload;
-    var common = layui.common;
+layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 'common'], function () {
+    let element = layui.element;
+    let table = layui.table;
+    let form = layui.form;
+    let $ = layui.jquery;
+    let laydate = layui.laydate;
+    let okLayer = layui.okLayer;
+    let common = layui.common;
     //日期范围
     laydate.render({
         elem: '#gtCreateTime',
@@ -51,7 +49,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
 
     function init_search() {
         init_keyword_type();
-        // init_belong_user();
         init_searchEngine();
         if (qzBusiness === 'qz') {
             if_from_qz(layui);
@@ -123,7 +120,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 $("#searchEngine").append(
                     '<option value="">请选择搜索引擎</option>');
                 $.each(data.data, function (index, item) {
-                    if (item === search){
+                    if (item === searchEngine){
                         $('#searchEngine').append('<option value="' + item + '" selected>' + item + '</option>');// 下拉菜单里添加元素
                     }else {
                         $('#searchEngine').append('<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
@@ -135,7 +132,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
     }
 
     function get_keywords(whereCondition) {
-        var keywordTable = table.render({
+        let keywordTable = table.render({
             elem: '#keywordTable',
             method: 'post',
             url: '/internal/customerKeyword/getCustomerKeywords',
@@ -153,26 +150,26 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             contentType: 'application/json',
             cols: [[
                 {filed: 'uuid', type: 'checkbox', width: '35'},
-                {field: 'keyword', title: '关键字', width: '150'},
-                {field: 'url', title: '链接', width: '140'},
-                {field: 'bearPawNumber', title: '熊掌号', align: 'center', width: '100'},
-                {field: 'title', title: '标题', width: '220'},
-                {field: 'currentIndexCount', title: '指数', align: 'center', width: '80', templet: '#indexCountTpl'},
-                {field: 'initialPosition', title: '初始排名', align: 'center', width: '80'},
-                {field: 'currentPosition', title: '现排名', align: 'center', width: '80', templet: '#currentPositionTpl'},
-                {field: 'searchEngine', title: '搜索引擎', align: 'center', width: '80'},
+                {field: 'keyword', title: '关键字', width: '150', align: 'left'},
+                {field: 'url', title: '链接', width: '140', align: 'left'},
+                {field: 'bearPawNumber', title: '熊掌号', align: 'left', width: '100'},
+                {field: 'title', title: '标题', width: '220', align: 'left'},
+                {field: 'currentIndexCount', title: '指数', align: 'left', width: '80', templet: '#indexCountTpl'},
+                {field: 'initialPosition', title: '初始排名', align: 'left', width: '80'},
+                {field: 'currentPosition', title: '现排名', align: 'left', width: '80', templet: '#currentPositionTpl'},
+                {field: 'searchEngine', title: '搜索引擎', align: 'left', width: '80'},
                 {field: 'collectMethod', title: '收费方式', align: 'center', width: '80', templet: '#collectMethodTpl'},
-                {field: 'optimizePlanCount', title: '要刷', align: 'center', width: '80'},
-                {field: 'optimizedCount', title: '已刷', align: 'center', width: '80'},
-                {field: 'invalidRefreshCount', title: '无效', align: 'center', width: '60', hide: 'true'},
+                {field: 'optimizePlanCount', title: '要刷', align: 'left', width: '80'},
+                {field: 'optimizedCount', title: '已刷', align: 'left', width: '80'},
+                {field: 'invalidRefreshCount', title: '无效', align: 'left', width: '60', hide: 'true'},
                 {field: 'status', title: '状态', align: 'center', width: '80', templet: '#statusTpl'},
-                {field: 'failedCause', title: '失败原因', align: 'center', width: '100',},
-                {field: 'optimizeGroupName', title: '优化分组', align: 'center', width: '80'},
-                {field: 'machineGroup', title: '机器分组', align: 'center', width: '80'},
-                {field: 'remarks', title: '备注', align: 'center', width: '80', hide: true},
+                {field: 'failedCause', title: '失败原因', align: 'left', width: '100',},
+                {field: 'optimizeGroupName', title: '优化分组', align: 'left', width: '80'},
+                {field: 'machineGroup', title: '机器分组', align: 'left', width: '80'},
+                {field: 'remarks', title: '备注', align: 'left', width: '80', hide: true},
                 {title: '操作', align: 'center', width: '120', templet: '#operationTpl'}
             ]],
-            height: 'full-150',
+            height: 'full-110',
             done: function (res, curr, count) {
                 jz();
             }
@@ -182,12 +179,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
 
     function jz() {
         let tables = document.getElementsByTagName('table');
-        let t_h = tables[1].offsetHeight || tables[1].clientHeight || tables[1].scrollHeight;
-        let t_p_h = tables[1].parentElement.offsetHeight || tables[1].parentElement.clientHeight || tables[1].scrollHeight;
+        let t_h = tables[2].offsetHeight || tables[2].clientHeight || tables[2].scrollHeight;
+        let t_p_h = tables[2].parentElement.offsetHeight || tables[2].parentElement.clientHeight || tables[2].scrollHeight;
         let t_w = tables[1].offsetWidth || tables[1].clientWidth || tables[1].scrollWidth;
         let t_p_w = tables[1].parentElement.offsetWidth || tables[1].parentElement.clientWidth || tables[1].scrollWidth;
         if (t_h > t_p_h) {
-            document.getElementsByClassName('layui-table-header')[0].classList.add('details-header');
+             document.getElementsByClassName('layui-table-header')[0].classList.add('details-header');
         } else {
             if (t_w === t_p_w) {
                 let ths = document.getElementsByClassName('layui-table-header')[0].getElementsByTagName('th');
@@ -210,7 +207,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         }
     );
     //监听工具条
-    var active = {
+    let active = {
         reload: function () {
             show = true;
             table.reload('keywordTable', {
@@ -224,9 +221,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
 
 
     function get_selected_uuid_arr() {
-        var checkStatus = table.checkStatus('keywordTable')
+        let checkStatus = table.checkStatus('keywordTable')
             , data = checkStatus.data;
-        var uuidArr = [];
+        let uuidArr = [];
         $.each(data, function (index, item) {
             uuidArr.push(item.uuid);
         });
@@ -251,7 +248,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
     });
 
     table.on('toolbar(tableFilter)', function (obj) {
-        var data = obj.data, event = obj.event;
+        let data = obj.data, event = obj.event;
         switch (event) {
             case 'add_customer_keyword':
                 add_customer_keyword();
@@ -360,7 +357,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
     function batchUpdateBelongUser (){
         let uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
-            layer.msg('请选择要操作的关键字', {icon: 5});
+            common.showFailMsg('请选择要操作的关键字');
             return false;
         }
 
@@ -445,14 +442,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             title: '新熊掌号',
             area: ['220px', '60px'], //自定义文本域宽高
             yes: function (index, layero) {
-                var index2 = index;
-                var value = layero.find(".layui-layer-input").val();
+                let index2 = index;
+                let value = layero.find(".layui-layer-input").val();
                 if (value === '') {
                     common.showFailMsg('请输入新熊掌号！');
                     return;
                 }
-                // layer.confirm("确定修改当前词的熊掌号吗", {icon: 3, title: '修改熊掌号'}, function (index) {
-                var postData = common.formToJsonObject('searchForm');
+                let postData = common.formToJsonObject('searchForm');
                 postData.targetBearPawNumber = value;
                 $.ajax({
                     url: '/internal/customerKeyword/updateBearPawNumber2',
@@ -465,7 +461,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.showSuccessMsg('操作成功', active['reload'].call(this));
+                            common.showSuccessMsg('操作成功', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -478,14 +476,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     }
                 });
                 layer.close(index2);
-                // });
             }
         });
     }
 
     function change_select_bearPawNumber() {
         //获取选中数据
-        var uuidArr = get_selected_uuid_arr();
+        let uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
             common.showFailMsg('请选择要操作的词');
             return
@@ -497,14 +494,14 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             title: '新熊掌号',
             area: ['220px', '60px'], //自定义文本域宽高
             yes: function (index, layero) {
-                var index2 = index;
-                var value = layero.find(".layui-layer-input").val();
+                let index2 = index;
+                let value = layero.find(".layui-layer-input").val();
                 if (value === '') {
                     common.showFailMsg('请输入新熊掌号！');
                     return;
                 }
 
-                var postData = {};
+                let postData = {};
                 postData.uuids = uuidArr;
                 postData.terminalType = $('#terminalType').val();
                 postData.targetBearPawNumber = value;
@@ -519,7 +516,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.showSuccessMsg('操作成功',active['reload'].call(this));
+                            common.showSuccessMsg('操作成功', active['reload'].call(this));
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -541,14 +538,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             title: '新优化组',
             // area: ['220px', '60px'], //自定义文本域宽高
             yes: function (index, layero) {
-                var index2 = index;
-                var value = layero.find(".layui-layer-input").val();
+                let index2 = index;
+                let value = layero.find(".layui-layer-input").val();
                 if (value === '') {
                     common.showFailMsg('请输入新优化组！');
                     return;
                 }
-                // layer.confirm("确定修改当前词的优化组吗", {icon: 3, title: '修改优化组'}, function (index) {
-                var postData = common.formToJsonObject('searchForm');
+                let postData = common.formToJsonObject('searchForm');
                 postData.targetOptimizeGroupName = value;
                 $.ajax({
                     url: '/internal/customerKeyword/updateOptimizeGroupName2',
@@ -574,14 +570,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     }
                 });
                 layer.close(index2);
-                // });
             }
         });
     }
 
     function change_select_optimizedGroup() {
         //获取选中数据
-        var uuidArr = get_selected_uuid_arr();
+        let uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
             common.showFailMsg('请选择要操作的词');
             return
@@ -592,14 +587,14 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             title: '新优化组',
             area: ['220px', '60px'], //自定义文本域宽高
             yes: function (index, layero) {
-                var index2 = index;
-                var value = layero.find(".layui-layer-input").val();
+                let index2 = index;
+                let value = layero.find(".layui-layer-input").val();
                 if (value === '') {
                     common.showFailMsg('请输入新优化组！');
                     return;
                 }
 
-                var postData = {};
+                let postData = {};
                 postData.uuids = uuidArr;
                 postData.terminalType = $('#terminalType').val();
                 postData.targetOptimizeGroupName = value;
@@ -622,7 +617,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     error: function () {
                         common.showFailMsg('未知错误，请稍后重试');
                     }
-
                 });
                 layer.close(index2);
 
@@ -713,7 +707,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
 
     function change_select_keyowrd_status(status) {
         let postData = {};
-        var uuidArr = get_selected_uuid_arr();
+        let uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
             common.showFailMsg('请选择要操作的词');
             return
@@ -778,7 +772,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 uuidArr = get_selected_uuid_arr();
                 if (uuidArr.length <= 0) {
                     common.showFailMsg('请选择要操作的词');
-                    return
+                    return;
                 }
                 postData.uuids = uuidArr;
                 msg = '确认要重新采集所选关键词的标题吗';
@@ -793,7 +787,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 uuidArr = get_selected_uuid_arr();
                 if (uuidArr.length <= 0) {
                     common.showFailMsg('请选择要操作的词');
-                    return
+                    return;
                 }
                 postData.uuids = uuidArr;
                 msg = '确认要清空所选关键词的标题吗';
@@ -834,7 +828,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
         let terminalType = $("#terminalType").val();
         let msg = deleteType === 'byEmptyTitleAndUrl' ? '确定要删除标题和网址为空的词吗' : '确定要删除标题为空的词吗';
         layer.confirm(msg, {icon: 3, title: '删除词'}, function (index) {
-            var postData = {};
+            let postData = {};
             postData.customerUuid = customerUuid;
             postData.terminalType = terminalType;
             postData.deleteType = deleteType;
@@ -871,8 +865,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             title: '新刷量',
             // area: ['220px', '60px'], //自定义文本域宽高
             yes: function (index, layero) {
-                var index2 = index;
-                var value = layero.find(".layui-layer-input").val();
+                let index2 = index;
+                let value = layero.find(".layui-layer-input").val();
                 if (value === '') {
                     common.showFailMsg('请输入新刷量！');
                     return;
@@ -880,9 +874,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     common.showFailMsg('请输入正确数字！');
                     return;
                 }
-                // layer.confirm("确定修改当前词的刷量吗", {icon: 3, title: '修改刷量'},
-                //     function (index) {
-                var postData = common.formToJsonObject('searchForm');
+                let postData = common.formToJsonObject('searchForm');
                 postData.targetOptimizePlanCount = value;
                 $.ajax({
                     url: '/internal/customerKeyword/updateOptimizePlanCount2',
@@ -908,14 +900,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     }
                 });
                 layer.close(index2);
-                    // });
             }
         });
     }
 
     function change_select_optimizePlanCount() {
         //获取选中数据
-        var uuidArr = get_selected_uuid_arr();
+        let uuidArr = get_selected_uuid_arr();
 
         let data = {};
         data.uuids = uuidArr;
@@ -941,14 +932,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             title: '新机器分组',
             area: ['220px', '60px'], //自定义文本域宽高
             yes: function (index, layero) {
-                var index2 = index;
-                var value = layero.find(".layui-layer-input").val();
+                let index2 = index;
+                let value = layero.find(".layui-layer-input").val();
                 if (value === '') {
                     common.showFailMsg('请输入新机器分组！');
                     return;
                 }
-                // layer.confirm("确定修改当前词的机器分组吗", {icon: 3, title: '修改机器分组'}, function (index) {
-                    var postData = common.formToJsonObject('searchForm');
+                    let postData = common.formToJsonObject('searchForm');
                     postData.targetMachineGroup = value;
                     $.ajax({
                         url: '/internal/customerKeyword/updateMachineGroup2',
@@ -961,7 +951,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                         type: 'POST',
                         success: function (result) {
                             if (result.code === 200) {
-                                common.showSuccessMsg('操作成功',active['reload'].call(this));
+                                common.showSuccessMsg('操作成功', active['reload'].call(this));
                             } else {
                                 common.showFailMsg('操作失败');
                             }
@@ -974,15 +964,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                         }
                     });
                     layer.close(index2);
-
-                // });
             }
         });
     }
 
     function change_select_machineGroup() {
         //获取选中数据
-        var uuidArr = get_selected_uuid_arr();
+        let uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
             common.showFailMsg('请选择要操作的词');
             return
@@ -993,14 +981,14 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
             title: '新机器分组',
             area: ['220px', '60px'], //自定义文本域宽高
             yes: function (index, layero) {
-                var index2 = index;
-                var value = layero.find(".layui-layer-input").val();
+                let index2 = index;
+                let value = layero.find(".layui-layer-input").val();
                 if (value === '') {
                     common.showFailMsg('请输入新机器分组！');
                     return;
                 }
 
-                var postData = {};
+                let postData = {};
                 postData.uuids = uuidArr;
                 postData.terminalType = $('#terminalType').val();
                 postData.targetMachineGroup = value;
@@ -1025,8 +1013,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                     }
                 });
                 layer.close(index2);
-
-
             }
         });
     }
@@ -1038,7 +1024,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 postData = common.formToJsonObject('searchForm');
                 break;
             case 'select':
-                var uuidArr = get_selected_uuid_arr();
+                let uuidArr = get_selected_uuid_arr();
                 if (uuidArr.length <= 0) {
                     common.showFailMsg('请选择要操作的词');
                     return
@@ -1061,12 +1047,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
     }
 
     function change_select_customer() {
-        var uuidArr = get_selected_uuid_arr();
+        let uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
             common.showFailMsg('请选择要操作的词');
             return false;
         }
-        var postData = {};
+        let postData = {};
         // postData.uuids = uuidArr;
         postData.terminalType = $('#terminalType').val();
         postData.type = $('#type').val();
@@ -1099,11 +1085,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                         btn: ['确定', '取消'],
                         btn1: function (index, layero) {
                             active['reload'].call(this);
-                            layer.close(index)
+                            layer.close(index);
                         },
                         btn2: function (index, layero) {
-                            // active['reload'].call(this);
-                            layer.close(index)
+                            layer.close(index);
                         }
                     });
                 } else {
@@ -1117,13 +1102,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
     }
 
     function batch_delete_byUuids() {
-        var uuidArr = get_selected_uuid_arr();
+        let uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
             common.showFailMsg('请选择要操作的词');
             return false;
         }
         layer.confirm("确定删除选中词吗", {icon: 3, title: '删除选中词'}, function (index) {
-            var postData = {};
+            let postData = {};
             postData.uuids = uuidArr;
             postData.deleteType = 'byUuids';
             $.ajax({
@@ -1160,7 +1145,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
 
     //监听工具条
     table.on('tool(tableFilter)', function (obj) {
-        var data = obj.data;
+        let data = obj.data;
         switch (obj.event) {
             case 'edit':
                 editKeyword(data);
@@ -1185,18 +1170,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
                 type: 'POST',
                 success: function (result) {
                     if (result.code === 200) {
-                        layer.msg('操作成功', {
-                            icon: 6,
-                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                        }, function () {
-                            active['reload'].call(this);
-                        });
+                        common.showSuccessMsg('操作成功', active['reload'].call(this));
                     } else {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 },
                 error: function () {
-                    layer.msg('操作失败', {icon: 5});
+                    common.showFailMsg('操作失败');
 
                 }
             });
@@ -1224,7 +1204,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'upload',
 
     // 编辑表格获得表格数据
     function batch_update_ByUuids() {
-        var uuidArr = get_selected_uuid_arr();
+        let uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
             common.showFailMsg('请选择要操作的词');
             return false;

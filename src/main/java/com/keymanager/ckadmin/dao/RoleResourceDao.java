@@ -16,10 +16,10 @@ import org.springframework.stereotype.Repository;
 @Repository("roleResourceDao2")
 public interface RoleResourceDao extends BaseMapper<RoleResource> {
 
-    @Select("SELECT rr.fUuid AS id FROM t_role r LEFT JOIN t_role_resource rr ON r.fUuid = rr.fRoleID WHERE r.id = #{id}")
+    @Select("SELECT rr.fUuid AS id FROM t_role r LEFT JOIN t_role_resource_new rr ON r.fUuid = rr.fRoleID WHERE r.id = #{id}")
     Long selectIdListByRoleId(@Param("id") Long id);
 
-    @Delete("DELETE FROM t_role_resource WHERE fResourceID  = #{resourceId}")
+    @Delete("DELETE FROM t_role_resource_new WHERE fResourceID  IN (SELECT fUuid FROM t_resource_new WHERE fUuid = #{resourceId} OR fParentID = #{resourceId})")
     int deleteByResourceId(@Param("resourceId") Serializable resourceId);
 
 }

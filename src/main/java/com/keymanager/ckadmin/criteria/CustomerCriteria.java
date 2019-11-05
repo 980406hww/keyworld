@@ -22,7 +22,6 @@ public class CustomerCriteria extends BaseCriteria {
     private String entryType;
     private Integer status;
     private String terminalType;
-    private List<String> roleTypes;
 
     public String getContactPerson() {
         return contactPerson;
@@ -110,13 +109,5 @@ public class CustomerCriteria extends BaseCriteria {
 
     public void setSaleRemark(String saleRemark) {
         this.saleRemark = saleRemark;
-    }
-
-    public List<String> getRoleTypes() {
-        return roleTypes;
-    }
-
-    public void setRoleTypes(List<String> roleTypes) {
-        this.roleTypes = roleTypes;
     }
 }

@@ -5,10 +5,38 @@
     <title>广告管理列表</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-unselect {
+            margin: 0 !important;
+        }
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            margin-top: 10px;
+            background: #f2f2f2;
+            border: 0px;
+        }
+        .layui-table-body .layui-table-cell {
+            text-align: left;
+        }
+        .layui-table-body .laytable-cell-checkbox {
+            text-align: center;
+        }
+        .layui-table tr .layui-table-col-special .layui-table-cell{
+            text-align: center;
+        }
         .layui-inline input {
             width: 150px;
             height: 30px;
@@ -52,7 +80,7 @@
         }
 
         .details-header{
-            padding-right: 9px;
+            padding-right: 16px;
         }
     </style>
 </head>
@@ -75,8 +103,8 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <div class="layui-input-inline" style="width: 150px;">
-                                <input type="checkbox" name="expire" title="过期广告" lay-skin="primary">
+                            <div class="layui-input-inline">
+                                <input type="checkbox" name="expire" title="过期广告">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -104,20 +132,19 @@
         NProgress.done();
     };
 
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
-        var element = layui.element;
-        var table = layui.table;
-        var form = layui.form;
-        var $ = layui.jquery;
-        var laydate = layui.laydate;
-        var okLayer = layui.okLayer;
-        var layer = layui.layer;
+    layui.use(['table', 'form', 'jquery', 'okLayer', 'layer', "common"], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let $ = layui.jquery;
+        let okLayer = layui.okLayer;
+        let layer = layui.layer;
+        let common = layui.common;
 
-        var websiteUuid = $("#websiteUuid").val()
+        let websiteUuid = $("#websiteUuid").val();
 
-        var active = {
+        let active = {
             reload: function () {
-                var data = {'websiteUuid': websiteUuid}
+                let data = {'websiteUuid': websiteUuid};
                 table.reload('advertisingListTable', {
                     where: data,
                     page: {
@@ -127,12 +154,13 @@
             },
         };
 
-        searchAdvertisingList({'websiteUuid': websiteUuid})
+        searchAdvertisingList({'websiteUuid': websiteUuid});
 
         form.on("submit(search)", function (data) {
-            var postData = data.field
-            postData.websiteUuid = websiteUuid
-            searchAdvertisingList(postData)
+            let postData = data.field;
+            postData.websiteUuid = websiteUuid;
+            postData = common.jsonObjectTrim(postData)
+            searchAdvertisingList(postData);
             return false
         });
 
@@ -162,7 +190,7 @@
                     {field: 'advertisingStarttime', title: '开始时间', width: '7%', align: 'center', templet: '#toAdvertisingStarttime'},
                     {field: 'advertisingEndtime', title: '结束时间', width: '7%', align: 'center', templet: '#toAdvertisingEndtime'},
                     {field: 'renewTime', title: '续费时间', width: '7%', templet: '#toRenewTime', align: 'center'},
-                    {title: '操作', templet: '#operationTpl', align: 'center', width: '10%', align: 'center'}
+                    {title: '操作', templet: '#operationTpl', width: '10%', align: 'center'}
                 ]],
                 height: 'full-75',
                 done: function (res, curr, count) {
@@ -193,18 +221,18 @@
         }
 
         function showAdvertisingDialog() {
-            okLayer.open("首页/其他/添加广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "90%",  function(layero){
+            okLayer.open("首页 / 其他 / 添加广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "92%",  function(layero){
                 window[layero.find("iframe")[0]["name"]].initWebSiteID(websiteUuid);
             }, function(){
                 if(sign){
                     active['reload'].call(this);
                     sign = false;
                 }
-            }, 50);
+            });
         }
 
         function updateAdvertising(data){
-            okLayer.open("首页/其他/修改广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "90%", function(layero){
+            okLayer.open("首页/其他/修改广告信息", "/internal/advertisingList/toSaveAdvertising", "35%", "87%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data.uuid, websiteUuid);
             },function(){
                 if(sign){
@@ -229,14 +257,15 @@
                         },
                         success: function (res) {
                             if (res.code === 200) {
-                                active['reload'].call(this);
-                                layer.msg("删除成功")
+                                common.showSuccessMsg("删除成功", function () {
+                                    active['reload'].call(this);
+                                });
                             } else {
-                                layer.msg(res.msg)
+                                common.showFailMsg(res.msg);
                             }
                         },
                         error: function () {
-                            layer.msg('未知错误，请稍后重试！！')
+                            common.showFailMsg('未知错误，请稍后重试！！');
                         }
                     });
                 },
@@ -247,18 +276,18 @@
         }
 
         function deleteBatchAdvertising(){
-            var checkStatus = table.checkStatus('advertisingListTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
+            let checkStatus = table.checkStatus('advertisingListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的广告', {icon: 5});
+                common.showFailMsg('请选择要操作的广告');
                 return
             }
             layer.confirm("确定要删除所选广告信息吗", {icon: 3, title: '删除所选'}, function (index) {
-                var postData = {};
+                let postData = {};
                 postData.uuids = uuidArr;
                 postData.websiteUuid = websiteUuid;
                 $.ajax({
@@ -272,18 +301,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);
@@ -291,18 +317,18 @@
         }
 
         function pushAdvertising(){
-            var checkStatus = table.checkStatus('advertisingListTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
+            let checkStatus = table.checkStatus('advertisingListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的广告', {icon: 5});
-                return
+                common.showFailMsg('请选择要操作的广告');
+                return false;
             }
             layer.confirm("确定要推送这些链接到远程吗", {icon: 3, title: '推送'}, function (index) {
-                var postData = {};
+                let postData = {};
                 postData.uuids = uuidArr;
                 $.ajax({
                     url: '/internal/advertisingList/pushAdvertising',
@@ -315,18 +341,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);
@@ -334,7 +357,7 @@
         }
 
         table.on('toolbar(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            let data = obj.data,event = obj.event;
             switch (event) {
                 case 'showAdvertisingDialog':
                     showAdvertisingDialog();
@@ -345,11 +368,13 @@
                 case 'pushAdvertising':
                     pushAdvertising();
                     break;
+                default:
+                    break;
             }
         });
 
         table.on('tool(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            let data = obj.data,event = obj.event;
             switch (event) {
                 case 'updateAdvertising':
                     updateAdvertising(data);
@@ -357,9 +382,10 @@
                 case 'deleteAdvertising':
                     deleteAdvertising(data.uuid);
                     break;
+                default:
+                    break;
             }
         });
-
     });
 
 </script>
@@ -381,28 +407,28 @@
 </script>
 
 <script type="text/html" id="toolbarTpl">
-    <div class="layui-btn-container">
-    <button class="layui-btn layui-btn-sm" lay-event="showAdvertisingDialog">添加</button>
-    <@shiro.hasPermission name="/internal/advertising/saveAdvertisings">
-    </@shiro.hasPermission>
-    <button class="layui-btn layui-btn-sm" lay-event="pushAdvertising">推送所选信息到远程服务</button>
-    <@shiro.hasPermission name="/internal/advertising/pushAdvertising">
-    </@shiro.hasPermission>
-    <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="deleteBatchAdvertising">
-        <i class="layui-icon layui-icon-delete"></i>删除所选
-    </button>
-    <@shiro.hasPermission name="/internal/advertising/deleteAdvertisings">
-    </@shiro.hasPermission>
+    <div class="layui-btn-group">
+        <@shiro.hasPermission name="/internal/advertising/saveAdvertising">
+        <button class="layui-btn layui-btn-sm" lay-event="showAdvertisingDialog">添加</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/advertising/pushAdvertising">
+        <button class="layui-btn layui-btn-sm" lay-event="pushAdvertising">推送远程</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/advertising/deleteAdvertisings">
+        <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="deleteBatchAdvertising">
+            <i class="layui-icon layui-icon-delete"></i>删除所选
+        </button>
+        </@shiro.hasPermission>
     </div>
 </script>
 
 <script type="text/html" id="operationTpl">
     <div class="layui-btn-group">
-    <button type="button" class="layui-btn layui-btn-xs" lay-event="updateAdvertising">修改</button>
     <@shiro.hasPermission name="/internal/advertising/saveAdvertising">
+        <button type="button" class="layui-btn layui-btn-xs" lay-event="updateAdvertising">修改</button>
     </@shiro.hasPermission>
-    <button type="button" class="layui-btn layui-btn-xs" lay-event="deleteAdvertising">删除</button>
     <@shiro.hasPermission name="/internal/advertising/deleteAdvertising">
+    <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="deleteAdvertising">删除</button>
     </@shiro.hasPermission>
     </div>
 </script>

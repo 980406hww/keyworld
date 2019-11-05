@@ -30,7 +30,7 @@
                         <label class="layui-form-label" style="width: 100%"><h3>基本信息</h3></label>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">关键字</label>
                         <div class="layui-input-block">
@@ -38,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">标题</label>
                         <div class="layui-input-block">
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">域名</label>
                         <div class="layui-input-block">
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">原始域名</label>
                         <div class="layui-input-block">
@@ -68,7 +68,7 @@
 
             </div>
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">熊掌号</label>
                         <div class="layui-input-block">
@@ -76,7 +76,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">目标城市</label>
                         <div class="layui-input-block">
@@ -88,7 +88,7 @@
             </div>
 
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">优化组</label>
                         <div class="layui-input-block">
@@ -96,7 +96,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">机器分组</label>
                         <div class="layui-input-block">
@@ -107,7 +107,7 @@
             </div>
 
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">指数</label>
                         <div class="layui-input-block">
@@ -116,7 +116,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">排名</label>
                         <div class="layui-input-block">
@@ -128,7 +128,7 @@
             </div>
             <div class="layui-row">
 
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">搜索引擎</label>
                         <div class="layui-input-block">
@@ -138,7 +138,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">排序</label>
                         <div class="layui-input-block">
@@ -153,59 +153,59 @@
                 </div>
             </div>
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">第一报价</label>
                         <div class="layui-input-block">
                             <input type="number" name="positionFirstFee" id="positionFirstFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="positiveInteger"/>
+                                   lay-verify="integer" oninput="getFirstFee(this.value)"/>
                         </div>
                     </div>
                 </div>
 
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">第五报价</label>
                         <div class="layui-input-block">
                             <input type="number" name="positionFifthFee" id="positionFifthFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="positiveInteger"/>
+                                   lay-verify="integer"/>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">第二报价</label>
                         <div class="layui-input-block">
                             <input type="number" name="positionSecondFee" id="positionSecondFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="positiveInteger"/>
+                                   lay-verify="integer"/>
                         </div>
                     </div>
                 </div>
 
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">首页报价</label>
                         <div class="layui-input-block">
                             <input type="number" name="positionFirstPageFee" id="positionFirstPageFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="positiveInteger"/>
+                                   lay-verify="integer"/>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">第三报价</label>
                         <div class="layui-input-block">
                             <input type="number" name="positionThirdFee" id="positionThirdFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="positiveInteger"/>
+                                   lay-verify="integer"/>
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">收费状态</label>
                         <div class="layui-input-block">
@@ -222,16 +222,16 @@
             </div>
 
             <div class="layui-row">
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">第四报价</label>
                         <div class="layui-input-block">
                             <input type="number" name="positionForthFee" id="positionForthFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="positiveInteger"/>
+                                   lay-verify="integer" oninput="getForthFee(this.value)"/>
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">收费方式</label>
                         <div class="layui-input-block">
@@ -270,7 +270,7 @@
 <script>
 
     let layui_ = null;
-    var uuid_ = null;
+    let uuid_ = null;
 
     function initForm(data) {
         uuid_ = data.uuid;
@@ -282,9 +282,18 @@
         }
     }
 
-    function setForm(layui, uuid) {
-        var $ = layui.jquery;
-        var form = layui.form;
+    function getFirstFee(val) {
+        document.getElementById('positionSecondFee').value = val;
+        document.getElementById('positionThirdFee').value = val
+    }
+
+    function getForthFee(val) {
+        document.getElementById('positionFifthFee').value = val
+    }
+
+    function setForm(layui_, uuid) {
+        let $ = layui_.jquery;
+        let form = layui_.form;
         $.ajax({
             url: '/internal/customerKeyword/getKeywordInfoByUuid/' + uuid,
             type: 'post',
@@ -294,17 +303,15 @@
                     init_searchEngine();
                     form.val("saveKeyword", res.data);
                 } else {
-                    layui.layer.msg(res.msg);
+                    layui_.layer.msg(res.msg, {icon:5, time: 3000});
                 }
             }
         });
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer",'common'], function () {
+    layui.use(["form", "jquery", "layer",'common'], function () {
         let form = layui.form;
-        let okLayer = layui.okLayer;
         let $ = layui.jquery;
-        let layer = layui.layer;
         let common = layui.common;
 
         window.init_searchEngine = function () {
@@ -338,8 +345,11 @@
         }
 
         form.on("submit(save)", function (data) {
-            var postData = data.field;
+            let postData = data.field;
             postData = common.jsonObjectTrim(postData);
+            if (!common.waitMoment()) {
+                return false;
+            }
             $.ajax({
                 url: '/internal/customerKeyword/saveCustomerKeyword2',
                 type: 'post',
@@ -368,22 +378,25 @@
         });
         form.verify({
             domain: [
-                /^([\u4e00-\u9fa50-9]+|[a-z0-9]+)\.([\u4e00-\u9fa5]+|[a-z]+|ac.cn|bj.cn|sh.cn|tj.cn|cq.cn|he.cn|sn.cn|sx.cn|nm.cn|ln.cn|jl.cn|hl.cn|js.cn|zj.cn|ah.cn|fj.cn|jx.cn|sd.cn|ha.cn|hb.cn|hn.cn|gd.cn|gx.cn|hi.cn|sc.cn|gz.cn|yn.cn|gs.cn|qh.cn|nx.cn|xj.cn|tw.cn|hk.cn|mo.cn|xz.cn|com.cn|net.cn|org.cn|gov.cn|.com.hk)$/,
-                "请正确输入域名,例如baidu.com,不能填写www.baidu.com,map.baidu.com等"
+                /^([a-z0-9]*)\.*([\u4e00-\u9fa50-9]+|[a-z0-9]+)\.([\u4e00-\u9fa5]+|[a-z]+|ac.cn|bj.cn|sh.cn|tj.cn|cq.cn|he.cn|sn.cn|sx.cn|nm.cn|ln.cn|jl.cn|hl.cn|js.cn|zj.cn|ah.cn|fj.cn|jx.cn|sd.cn|ha.cn|hb.cn|hn.cn|gd.cn|gx.cn|hi.cn|sc.cn|gz.cn|yn.cn|gs.cn|qh.cn|nx.cn|xj.cn|tw.cn|hk.cn|mo.cn|xz.cn|com.cn|net.cn|org.cn|gov.cn|.com.hk)$/,
+                "请正确输入域名"
             ],
             tagNames: [
                 /(^$)|(^[\u4e00-\u9fa50-9a-zA-Z,]+$)/,
                 "请正确输入标签,例如：阿卡索,MBA,算法"
             ],
             index: [
-                /(^$)|(^[\-][0-3]$)|(^[0-9]*[1-9][0-9]*$)/,
+                /(^$)|(^0$)|(^[\-][0-3]$)|(^[0-9]*[1-9][0-9]*$)/,
                 "请正确输入指数,最小为-3，不能为小数"
             ],
             positiveInteger: [
-                /(^$)|(^[0-9]*[1-9][0-9]*$)/,
+                /(^$)|(^0$)|(^[0-9]*[1-9][0-9]*$)/,
                 "请输入合适的正整数、如：1、2、3"
             ],
-
+            integer: [
+                /(^$)|(^[\-][0-9]*[0-9][0-9]*$)|(^[0-9]*[0-9][0-9]*$)/,
+                "请输入合适的整数、如：-1、0、1"
+            ],
         });
 
     })

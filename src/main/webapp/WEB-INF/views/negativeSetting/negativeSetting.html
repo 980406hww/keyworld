@@ -21,6 +21,10 @@
         .padding-ten-right {
             padding-right: 4px;
         }
+
+        .layui-form-select {
+            margin-left: 40px !important;
+        }
     </style>
 </head>
 <body>
@@ -32,7 +36,7 @@
                     <label class="layui-form-label">负面词</label>
                     <div class="layui-input-block">
                         <textarea id="negativeKeywords" name="negativeKeywords" placeholder="请输入负面词内容，每个词使用英文逗号分隔" class="layui-textarea"
-                                  style="height: 795px;" lay-verify="regexp"></textarea>
+                                  style="height: 735px;" lay-verify="regexp"></textarea>
                     </div>
                 </div>
                 <div class="layui-row">
@@ -50,7 +54,8 @@
         <div class="layui-col-md4 padding-ten-right padding-ten-left">
             <form class="layui-form layui-form-pane ok-form">
                 <div class="layui-form-item">
-                    <label class="layui-form-label">搜索引擎</label>
+                    <label class="layui-form-label" style="width: 120px;">客户负面词</label>
+                    <label class="layui-form-label" style="width: 100px;">搜索引擎</label>
                     <div class="layui-input-block">
                         <select name="searchEngine" id="searchEngine" lay-filter="searchEngine">
                             <option value="Baidu">百度</option>
@@ -60,10 +65,9 @@
                     </div>
                 </div>
                 <div class="layui-form-item layui-form-text">
-                    <label class="layui-form-label">客户负面词</label>
                     <div class="layui-input-block">
                         <textarea name="customerNegativeKeywords" id="customerNegativeKeywords" placeholder="请输入客户负面词" class="layui-textarea"
-                                  style="height: 752px;" lay-verify="regexp"></textarea>
+                                  style="height: 730px;" lay-verify="regexp"></textarea>
                     </div>
                 </div>
                 <div class="layui-row">
@@ -90,7 +94,7 @@
                     <label class="layui-form-label">网站白名单</label>
                     <div class="layui-input-block">
                         <textarea name="websiteWhiteList" id="websiteWhiteList" placeholder="请输入网站白名单" class="layui-textarea"
-                                  style="height: 795px;" lay-verift="regexp"></textarea>
+                                  style="height: 735px;" lay-verift="regexp"></textarea>
                     </div>
                 </div>
                 <div class="layui-row">
@@ -132,14 +136,9 @@
     }
 
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 'common'], function () {
-        var element = layui.element;
-        var table = layui.table;
+    layui.use(['form', 'jquery',  'layer', 'common'], function () {
         var form = layui.form;
         var $ = layui.jquery;
-        var laydate = layui.laydate;
-        var layer = layui.layer;
-        var okLayer = layui.okLayer;
         var common = layui.common;
 
         init();
@@ -153,7 +152,6 @@
                 url: '/internal/configs/getNegativeSetting',
                 type: 'get',
                 asyns: false,
-                // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
                 dataType: 'json',
                 success: function (res) {
                     if (res.code === 200) {
@@ -224,7 +222,6 @@
                     if (res.code === 200) {
                         document.getElementById('customerNegativeKeywords').value = res.data.replace(/,/g, '\n');
                     } else {
-                        console.log(res);
                         common.showFailMsg('数据获取失败');
                     }
                 },
@@ -326,7 +323,6 @@
                             };
                         } catch (e) {
                             common.showFailMsg('读取失败');
-                            console.error(e);
                         }
                         ele.value = '';
                     } else {

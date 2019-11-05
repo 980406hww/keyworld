@@ -89,13 +89,13 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
                     String[] dateArr = rankInfo.getDate().replace("[", "").replace("]", "").split(", ");
                     int index = ArrayUtils.indexOf(dateArr, qzKeywordRankInfo.getCreateMonthDay());
                     if (index > -1) {
-                        rankInfo.setCreateTopTenNum(Integer.parseInt(rankInfo.getTopTen().replace("[", "").
-                                replace("]", "").split(", ")[index]));
+                        rankInfo.setCreateTopTenNum(Integer.parseInt(rankInfo.getTopTen().replace("[", "")
+                                .replace("]", "").split(", ")[index]));
                         rankInfo.setCreateTopFiftyNum(Integer.parseInt(rankInfo.getTopFifty().replace("[", "")
                                 .replace("]", "").split(", ")[index]));
                     } else {
-                        rankInfo.setCreateTopTenNum(Integer.parseInt(rankInfo.getTopTen().replace("[", "").
-                                replace("]", "").split(", ")[dateArr.length - 1]));
+                        rankInfo.setCreateTopTenNum(Integer.parseInt(rankInfo.getTopTen().replace("[", "")
+                                .replace("]", "").split(", ")[dateArr.length - 1]));
                         rankInfo.setCreateTopFiftyNum(Integer.parseInt(rankInfo.getTopFifty().replace("[", "")
                                 .replace("]", "").split(", ")[dateArr.length - 1]));
                     }
@@ -130,7 +130,9 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         qzKeywordRankInfo.setBaiduRecord(externalQzKeywordRankInfoVo.getBaiduRecord());
         qzKeywordRankInfo.setBaiduRecordFullDate(externalQzKeywordRankInfoVo.getBaiduRecordFullDate());
 
-        if (qzKeywordRankInfo.getDataProcessingStatus()) {
+        // 查询达标规则是否是other
+        String standardSpecies = qzOperationTypeService.findQZChargeRuleStandardSpecies(qzSettingUuid, qzKeywordRankInfo.getTerminalType());
+        if (qzKeywordRankInfo.getDataProcessingStatus() && !"other".equals(standardSpecies)) {
             if (StringUtils.isNotBlank(externalQzKeywordRankInfoVo.getTopTen())) {
                 this.setIncreaseAndTodayDifference(qzKeywordRankInfo);
             }

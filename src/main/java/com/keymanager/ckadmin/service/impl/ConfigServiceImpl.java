@@ -10,7 +10,7 @@ import com.keymanager.ckadmin.util.Constants;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -123,5 +123,10 @@ public class ConfigServiceImpl implements ConfigService {
         config.setKey(Constants.CONFIG_KEY_URL);
         config.setValue(websiteWhiteList);
         updateConfig(config);
+    }
+
+    @Override
+    @CacheEvict(value = "configList", allEntries = true)
+    public void evictAllConfigCache() {
     }
 }

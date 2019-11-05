@@ -18,14 +18,13 @@ public class QZChargeRuleServiceImpl extends ServiceImpl<QZChargeRuleDao, QZChar
     private QZChargeRuleDao qzChargeRuleDao;
 
     @Override
-    public List<QZChargeRule> searchQZChargeRuleByqzOperationTypeUuids(Long qzOperationTypeUuid) {
-        return qzChargeRuleDao.searchQZChargeRuleByqzOperationTypeUuids(qzOperationTypeUuid);
+    public List<QZChargeRule> searchQZChargeRuleByQZOperationTypeUuids(Long qzOperationTypeUuid) {
+        return qzChargeRuleDao.searchQZChargeRuleByQZOperationTypeUuids(qzOperationTypeUuid);
     }
 
     @Override
-    //通过QZOperationTypeUuid删除
-    public void deleteByQZOperationTypeUuid(Long QZOperationTypeUuid) {
-        qzChargeRuleDao.deleteByQZOperationTypeUuid(QZOperationTypeUuid);
+    public void deleteByQZOperationTypeUuid(Long qzOperationTypeUuid) {
+        qzChargeRuleDao.deleteByQZOperationTypeUuid(qzOperationTypeUuid);
     }
 
     @Override

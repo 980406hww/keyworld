@@ -43,43 +43,51 @@
         uuids_ = data.uuids;
         entryType_ = data.entryType;
         terminalType_ = data.terminalType;
-        init_targetCustomers();
+        if (layui_ != null) {
+            init_targetCustomers(layui_);
+        }
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer",'common'], function () {
+    function init_targetCustomers(l) {
+        let $ = l.jquery;
+        $.ajax({
+            url: '/internal/customer/getTargetCustomers/' + entryType_,
+            type: 'POST',
+            headers: {
+                "Accept": 'application/json',
+                "Content-Type": 'application/json'
+            },
+            success: function (res) {
+                if (res.code === 200) {
+                    let targetCustomer = $('#targetCustomer');
+                    targetCustomer.append('<option value="" selected>请选择所属客户名称</option>');
+                    $.each(res.data, function (index, item) {
+                        targetCustomer.append('<option value="' + item.uuid + '">' + item.contactPerson + '</option>');
+                    });
+                    l.form.render("select")
+                } else {
+                    l.common.showFailMsg(res.msg)
+                }
+            },
+            error: function () {
+                l.common.showFailMsg('未知错误，请稍后重试！！')
+            }
+        });
+    };
+
+    layui.use(["form", "jquery", "layer",'common'], function () {
         var form = layui.form;
-        var okLayer = layui.okLayer;
         var $ = layui.jquery;
         var common = layui.common;
 
-        window.init_targetCustomers = function(){
-            $.ajax({
-                url: '/internal/customer/getTargetCustomers/'+entryType_,
-                type: 'POST',
-                headers: {
-                    "Accept": 'application/json',
-                    "Content-Type": 'application/json'
-                },
-                success: function (res) {
-                    if (res.code === 200) {
-                        var targetCustomer = $('#targetCustomer');
-                        targetCustomer.append('<option value="" selected>请选择所属客户名称</option>');
-                        $.each(res.data, function (index, item) {
-                            targetCustomer.append('<option value="' + item.uuid + '">' + item.contactPerson + '</option>');
-                        });
-                        form.render("select")
-                    } else {
-                       common.showFailMsg(res.msg)
-                    }
-                },
-                error: function () {
-                    common.showFailMsg('未知错误，请稍后重试！！')
-                }
-            });
-        };
+        if (uuids_ != null) {
+            init_targetCustomers(layui);
+        } else {
+            layui_ = layui;
+        }
 
         form.on("submit(commit)", function (data) {
-            var postData = {};
+            let postData = {};
             postData.uuids = uuids_;
             postData.terminalType = terminalType_;
             postData.customerUuid = data.field.targetCustomer;

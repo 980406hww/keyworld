@@ -10,6 +10,24 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/style/template.css">
     <link rel="stylesheet" href="/static/ok-admin/page/customer/customer.css">
 </head>
+<style>
+    .layui-tab-content {
+        padding: 0px;
+    }
+    .layui-card-body {
+        position: relative;
+        padding: 0px;
+        line-height: 24px;
+    }
+    .layui-table, .layui-table-view {
+        margin: 0px;
+        border-width: 1px;
+    }
+    .my-collapse > div:first-child {
+        background: #f2f2f2;
+        border: 0px;
+    }
+</style>
 <body>
 
 <div class="layui-tab layui-tab-card" lay-filter="customerTab" id="customerTab">
@@ -140,11 +158,9 @@
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
-<!--<script src="/static/ok-admin/page/base/searchForm.js"></script>-->
 <script src="/static/ok-admin/page/customer/customer.js"></script>
 <script>
     layui.define(['layer', 'jquery'], function (exports) {
-        var table = layui.table;
         var $ = layui.jquery;
         exports('searchCurrentDateCompletedReports', function () {//函数参数
             var htm = '';
@@ -165,7 +181,7 @@
                             htm +='  <a class="layui-btn layui-btn-sm" href="' + val.reportPath + '">下载日报表(' + ((date.getHours() < 10) ? '0'
                                 + date.getHours() : date.getHours()) + ':' + ((date.getMinutes() < 10) ? '0' + date.getMinutes()
                                 : date.getMinutes()) + ')</a><br>';
-                        })
+                        });
                         $('#showDailyReportsDiv').empty().append(htm);
 
                     } else {

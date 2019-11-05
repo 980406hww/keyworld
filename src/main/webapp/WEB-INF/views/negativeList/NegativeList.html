@@ -5,10 +5,26 @@
     <title>负面清单</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            margin-top: 10px;
+            background: #f2f2f2;
+            border: 0px;
+        }
         .layui-inline input {
             width: 150px;
             height: 30px;
@@ -30,6 +46,15 @@
             height: 26px;
             position: fixed;
             right: 25px;
+        }
+
+        .layui-table-tool {
+            min-height: 40px;
+            padding: 6px 5px;
+        }
+
+        .layui-table-tool-self{
+            top: 0;
         }
     </style>
 </head>
@@ -81,19 +106,18 @@
         NProgress.done();
     };
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
-        var element = layui.element;
-        var table = layui.table;
-        var form = layui.form;
-        var $ = layui.jquery;
-        var laydate = layui.laydate;
-        var okLayer = layui.okLayer;
-        var layer = layui.layer;
+    layui.use(['table', 'form', 'jquery', 'okLayer', 'layer', "common"], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let $ = layui.jquery;
+        let okLayer = layui.okLayer;
+        let layer = layui.layer;
+        let common = layui.common;
 
-        var active = {
+        let active = {
             reload: function () {
-                var terminalType = $("#terminalType").val()
-                var data = {'terminalType': terminalType}
+                let terminalType = $("#terminalType").val();
+                let data = {'terminalType': terminalType};
                 table.reload('negativeListTable', {
                     where: data,
                     page: {
@@ -106,8 +130,9 @@
         searchNegativeList()
 
         form.on("submit(search)", function (data) {
-            var postData = data.field
-            searchNegativeList(postData)
+            let postData = data.field;
+            postData = common.jsonObjectTrim(postData)
+            searchNegativeList(postData);
             return false
         });
 
@@ -128,32 +153,32 @@
                 where: whereCondition,
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', width: '35'},
-                    {field: 'keyword', title: '关键字', width: '10%', align: 'center'},
-                    {field: 'title', title: '标题', width: '14%'},
-                    {field: 'url', title: 'URL', width: '10%'},
-                    {field: 'bearPawNumber', title: '熊掌号', width: '10%', align: 'center'},
-                    {field: 'desc', title: '描述', width: '15%'},
-                    {field: 'position', title: '排名', width: '10%', align: 'center'},
-                    {field: 'createTime', title: '采集日期', width: '12%', templet: '#toDateTime', align: 'center'},
-                    {title: '操作', templet: '#operationTpl', align: 'center', width: '14%', align: 'center'}
+                    {field: 'keyword', title: '关键字', width: '11%', align: 'left'},
+                    {field: 'title', title: '标题', width: '17%', align: 'left'},
+                    {field: 'url', title: 'URL', width: '12%', align: 'left'},
+                    {field: 'bearPawNumber', title: '熊掌号', width: '11%', align: 'left'},
+                    {field: 'desc', title: '描述', width: '24%', align: 'left'},
+                    {field: 'position', title: '排名', width: '6%', align: 'center'},
+                    {field: 'createTime', title: '采集日期', width: '10%', templet: '#toDateTime', align: 'center'},
+                    {title: '操作', templet: '#operationTpl', width: '7%', align: 'center'}
                 ]],
-                height: 'full-80',
+                height: 'full-70',
                 done: function (res, curr, count) {
                 }
             });
         }
 
         function showNegativeListDialog() {
-            okLayer.open("首页/关键字列表/添加负面清单", "/internal/negativelists/toSaveNegativeList", "60%", "70%", null, function(){
+            okLayer.open("首页 / 负面清单列表 / 添加负面清单", "/internal/negativelists/toSaveNegativeList", "40%", "62%", null, function(){
                 if(sign){
                     active['reload'].call(this);
                     sign = false;
                 }
-            });
+            },'40px');
         }
 
         function modifyNegativeList(data){
-            okLayer.open("首页/关键字列表/修改负面清单", "/internal/negativelists/toSaveNegativeList", "60%", "70%", function(layero){
+            okLayer.open("首页 / 负面清单列表 / 修改负面清单", "/internal/negativelists/toSaveNegativeList", "40%", "62%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
             },function(){
                 if(sign){
@@ -178,20 +203,20 @@
                         },
                         success: function (res) {
                             if (res.code === 200) {
-                                var data = {}
-                                table.reload('negativeListTable', {
-                                    where: data,
-                                    page: {
-                                        curr: 1
-                                    }
+                                common.showSuccessMsg("删除成功", function() {
+                                    table.reload('negativeListTable', {
+                                        where: {},
+                                        page: {
+                                            curr: 1
+                                        }
+                                    });
                                 });
-                                layer.msg("删除成功")
                             } else {
-                                layer.msg(res.msg)
+                                common.showFailMsg(res.msg);
                             }
                         },
                         error: function () {
-                            layer.msg('未知错误，请稍后重试！！')
+                            common.showFailMsg('未知错误，请稍后重试！！')
                         }
                     });
                 },
@@ -202,18 +227,18 @@
         }
 
         function deleteNegatives(){
-            var checkStatus = table.checkStatus('negativeListTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
+            let checkStatus = table.checkStatus('negativeListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的清单', {icon: 5});
+                common.showFailMsg('请选择要操作的清单');
                 return
             }
             layer.confirm("确定要删除所选清单吗", {icon: 3, title: '删除所选'}, function (index) {
-                var postData = {};
+                let postData = {};
                 postData.uuids = uuidArr;
                 $.ajax({
                     url: '/internal/negativelists/deleteNegativeLists',
@@ -226,18 +251,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
+                            common.showSuccessMsg("操作成功", function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);
@@ -245,7 +267,7 @@
         }
 
         table.on('toolbar(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            let data = obj.data,event = obj.event;
             switch (event) {
                 case 'showNegativeListDialog':
                     showNegativeListDialog();
@@ -253,17 +275,21 @@
                 case 'deleteNegatives':
                     deleteNegatives();
                     break;
+                default:
+                    break;
             }
         });
 
         table.on('tool(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            let data = obj.data,event = obj.event;
             switch (event) {
                 case 'modifyNegativeList':
                     modifyNegativeList(data);
                     break;
                 case 'deleteNegativeList':
                     deleteNegativeList(data.uuid);
+                    break;
+                default:
                     break;
             }
         });
@@ -276,7 +302,7 @@
 </script>
 
 <script type="text/html" id="toolbarTpl">
-    <div class="layui-btn-container">
+    <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/negativelist/saveNegativeList">
         <button class="layui-btn layui-btn-sm" id="addMachine" lay-event="showNegativeListDialog">添加</button>
     </@shiro.hasPermission>
@@ -294,7 +320,7 @@
         <button type="button" class="layui-btn layui-btn-xs" lay-event="modifyNegativeList">修改</button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/negativelist/deleteNegativeList">
-    <button type="button" class="layui-btn layui-btn-xs" lay-event="deleteNegativeList">删除</button>
+    <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="deleteNegativeList">删除</button>
     </@shiro.hasPermission>
     </div>
 </script>

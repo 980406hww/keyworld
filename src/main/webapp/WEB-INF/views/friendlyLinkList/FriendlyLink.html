@@ -5,10 +5,38 @@
     <title>友情链接</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-unselect {
+            margin: 0 !important;
+        }
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            margin-top: 10px;
+            background: #f2f2f2;
+            border: 0px;
+        }
+        .layui-table-body .layui-table-cell {
+            text-align: left;
+        }
+        .layui-table-body .laytable-cell-checkbox {
+            text-align: center;
+        }
+        .layui-table tr .layui-table-col-special .layui-table-cell{
+            text-align: center;
+        }
         .layui-inline input {
             width: 150px;
             height: 30px;
@@ -52,7 +80,7 @@
         }
 
         .details-header{
-            padding-right: 9px;
+            padding-right: 16px;
         }
     </style>
 </head>
@@ -90,9 +118,7 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <div class="layui-input-inline" style="width: 150px;">
-                                <input type="checkbox" name="expire" title="过期友链" lay-skin="primary">
-                            </div>
+                            <input type="checkbox" name="expire" title="过期友链">
                         </div>
                         <div class="layui-inline">
                             <div class="layui-input-inline">
@@ -119,20 +145,19 @@
         NProgress.done();
     };
 
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
-        var element = layui.element;
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 'common'], function () {
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
-        var laydate = layui.laydate;
         var okLayer = layui.okLayer;
         var layer = layui.layer;
+        var common = layui.common;
 
-        var websiteUuid = $("#websiteUuid").val()
+        var websiteUuid = $("#websiteUuid").val();
 
         var active = {
             reload: function () {
-                var data = {'websiteUuid': websiteUuid}
+                var data = {'websiteUuid': websiteUuid};
                 table.reload('friendlyLinksTable', {
                     where: data,
                     page: {
@@ -142,12 +167,13 @@
             },
         };
 
-        searchFriendlyLinkList({'websiteUuid': websiteUuid})
+        searchFriendlyLinkList({'websiteUuid': websiteUuid});
 
         form.on("submit(search)", function (data) {
-            var postData = data.field
-            postData.websiteUuid = websiteUuid
-            searchFriendlyLinkList(postData)
+            var postData = data.field;
+            postData.websiteUuid = websiteUuid;
+            postData = common.jsonObjectTrim(postData);
+            searchFriendlyLinkList(postData);
             return false
         });
 
@@ -179,7 +205,7 @@
                     {field: 'friendlyLinkDtime', title: '申请时间', width: '7%', templet: '#friendlyLinkDtime', align: 'center'},
                     {field: 'expirationTime', title: '到期时间', width: '7%', templet: '#expirationTime', align: 'center'},
                     {field: 'renewTime', title: '续费时间', width: '7%', templet: '#toRenewTime', align: 'center'},
-                    {title: '操作', templet: '#operationTpl', align: 'center', width: '10%', align: 'center'}
+                    {title: '操作', templet: '#operationTpl', width: '10%', align: 'center'}
                 ]],
                 height: 'full-75',
                 done: function (res, curr, count) {
@@ -210,7 +236,7 @@
         }
 
         function showFriendlyLinkDialog() {
-            okLayer.open("首页/其他/添加友链信息", "/internal/friendlyLinks/toSaveFriendlyLink", "30%", "75%",  function(layero){
+            okLayer.open("首页/其他/添加友链信息", "/internal/friendlyLinks/toSaveFriendlyLink", "35%", "87%",  function(layero){
                 window[layero.find("iframe")[0]["name"]].initWebSiteID(websiteUuid);
             }, function(){
                 if(sign){
@@ -221,7 +247,7 @@
         }
 
         function updateFriendlyLink(data){
-            okLayer.open("首页/其他/修改友链信息", "/internal/friendlyLinks/toSaveFriendlyLink", "30%", "75%", function(layero){
+            okLayer.open("首页/其他/修改友链信息", "/internal/friendlyLinks/toSaveFriendlyLink", "35%", "87%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data.uuid, websiteUuid);
             },function(){
                 if(sign){
@@ -246,14 +272,15 @@
                         },
                         success: function (res) {
                             if (res.code === 200) {
-                                active['reload'].call(this);
-                                layer.msg("删除成功")
+                                common.showSuccessMsg("删除成功", function () {
+                                    active['reload'].call(this);
+                                });
                             } else {
-                                layer.msg(res.msg)
+                                common.showFailMsg(res.msg);
                             }
                         },
                         error: function () {
-                            layer.msg('未知错误，请稍后重试！！')
+                            common.showFailMsg('未知错误，请稍后重试！！');
                         }
                     });
                 },
@@ -271,7 +298,7 @@
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的友链', {icon: 5});
+                common.showFailMsg('请选择要操作的友链');
                 return
             }
             layer.confirm("确定要删除所选友链信息吗", {icon: 3, title: '删除所选'}, function (index) {
@@ -289,18 +316,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);
@@ -315,7 +339,7 @@
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的友链', {icon: 5});
+                common.showFailMsg('请选择要操作的友链');
                 return
             }
             layer.confirm("确定要推送这些链接到远程吗", {icon: 3, title: '推送'}, function (index) {
@@ -332,18 +356,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);
@@ -362,6 +383,8 @@
                 case 'pushFriendlyLink':
                     pushFriendlyLink();
                     break;
+                default:
+                    break;
             }
         });
 
@@ -373,6 +396,8 @@
                     break;
                 case 'deleteFriendlyLink':
                     deleteFriendlyLink(data.uuid);
+                    break;
+                default:
                     break;
             }
         });
@@ -398,18 +423,18 @@
 </script>
 
 <script type="text/html" id="toolbarTpl">
-    <div class="layui-btn-container">
+    <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/friendlyLink/saveFriendlyLinks">
         <button class="layui-btn layui-btn-sm" lay-event="showFriendlyLinkDialog">添加</button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/friendlyLink/pushFriendlyLink">
-    <button class="layui-btn layui-btn-sm" lay-event="pushFriendlyLink">推送所选信息到远程服务</button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/friendlyLink/deleteFriendlyLinks">
-    <button class="layui-btn layui-btn-danger layui-btn-sm" lay-event="deleteBatchFriendlyLink">
-        <i class="layui-icon layui-icon-delete"></i>删除所选
-    </button>
-    </@shiro.hasPermission>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/friendlyLink/pushFriendlyLink">
+        <button class="layui-btn layui-btn-sm" lay-event="pushFriendlyLink">推送远程</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/friendlyLink/deleteFriendlyLinks">
+        <button class="layui-btn layui-btn-danger layui-btn-sm" lay-event="deleteBatchFriendlyLink">
+            <i class="layui-icon layui-icon-delete"></i>删除所选
+        </button>
+        </@shiro.hasPermission>
     </div>
 </script>
 
@@ -419,7 +444,7 @@
         <button type="button" class="layui-btn layui-btn-xs" lay-event="updateFriendlyLink">修改</button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/friendlyLink/deleteFriendlyLink">
-    <button type="button" class="layui-btn layui-btn-xs" lay-event="deleteFriendlyLink">删除</button>
+    <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="deleteFriendlyLink">删除</button>
     </@shiro.hasPermission>
     </div>
 </script>

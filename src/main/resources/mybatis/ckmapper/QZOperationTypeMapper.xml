@@ -105,14 +105,27 @@
         LIMIT 1
     </select>
 
-    <select id="getQZSettngStandardSpecie" resultType="java.lang.String">
-        SELECT qcr.fStandardSpecies
+    <select id="getQZSettingStandardSpecie" resultType="java.lang.String">
+        select qcr.fStandardSpecies
         FROM t_qz_charge_rule qcr
         LEFT JOIN t_qz_operation_type qot
         ON qot.fUuid = qcr.fQZOperationTypeUuid
         WHERE qot.fQZSettingUuid = #{qzSettingUuid}
         AND qot.fOperationtype = #{terminalType}
         AND qcr.fStandardSpecies &lt;&gt; 'designationWord'
+        AND qot.fIsDeleted = 0
+        GROUP BY qot.fUuid
+        LIMIT 1
+    </select>
+
+    <select id="getQZStandardSpecieAndMaxKeywordCount" resultType="java.lang.String">
+        select CONCAT(qcr.fStandardSpecies, '_', qot.fMaxKeywordCount)
+        FROM t_qz_charge_rule qcr
+        LEFT JOIN t_qz_operation_type qot
+        ON qot.fUuid = qcr.fQZOperationTypeUuid
+        WHERE qot.fQZSettingUuid = #{qzSettingUuid}
+        AND qot.fOperationtype = #{terminalType}
+        AND qcr.fStandardSpecies NOT IN ('designationWord', 'other')
         AND qot.fIsDeleted = 0
         GROUP BY qot.fUuid
         LIMIT 1

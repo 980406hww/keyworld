@@ -95,7 +95,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/customerKeyword/showMachineGroupAndSize")
+    @RequiresPermissions("/internal/customerKeyword/toMachineGroupAndSize")
     @RequestMapping(value = "/searchMachineGroupAndSize", method = RequestMethod.POST)
     public ResultBean searchMachineGroupAndSize(HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
@@ -129,6 +129,10 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     public ResultBean searchKeywords(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         try {
+            Set<String> roles = getCurrentUser().getRoles();
+            if(!roles.contains("DepartmentManager")) {
+                keywordCriteria.setUserName((String) request.getSession().getAttribute("username"));
+            }
             Page<CustomerKeyword> page = new Page(keywordCriteria.getPage(), keywordCriteria.getLimit());
             String orderByField = ReflectUtils.getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {
@@ -562,7 +566,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         }
     }
 
-    @RequiresPermissions("/internal/customerKeyword/deleteCustomerKeywords")
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
     @PostMapping(value = "/getKeywordInfoByUuid/{uuid}")
     public ResultBean getKeywordInfoByUuid(@PathVariable Long uuid) {
         ResultBean resultBean = new ResultBean(200, "success");
@@ -651,8 +655,6 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         return resultBean;
     }
 
-
-    @RequiresPermissions("/internal/customerKeyword/searchKeywordAmountCountLists")
     @PostMapping(value = "/getPTKeywords")
     public ResultBean getPTKeywords(@RequestBody PTKeywordCountCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
@@ -720,19 +722,19 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toKeywordsWithQZ/{businessType}/{terminalType}/{customerUuid}/{group}/{search}")
+    @GetMapping(value = "/toKeywordsWithQZ/{businessType}/{terminalType}/{customerUuid}/{group}/{searchEngine}/{status}")
     public ModelAndView toKeywordsWithQZ(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "group") String group, @PathVariable(name = "search") String search)
-        throws UnsupportedEncodingException {
+        @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "group") String group, @PathVariable(name = "searchEngine") String searchEngine,
+        @PathVariable(name = "status") int status) throws UnsupportedEncodingException {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/customerKeyword");
         mv.addObject("businessType", businessType);
         mv.addObject("terminalType2", terminalType);
         mv.addObject("customerUuid", customerUuid);
         mv.addObject("group", group);
-        mv.addObject("status", 1);
-        search = URLDecoder.decode(search, "UTF-8");
-        mv.addObject("search", search);
+        mv.addObject("status", status);
+        searchEngine = URLDecoder.decode(searchEngine, "UTF-8");
+        mv.addObject("searchEngine", searchEngine);
         return mv;
     }
 

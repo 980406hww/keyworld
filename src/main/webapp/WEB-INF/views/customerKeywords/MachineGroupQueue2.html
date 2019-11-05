@@ -4,23 +4,21 @@
     <meta charset="UTF-8">
     <title>机器分组工作统计</title>
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+    <style>
+        .layui-table-tool {
+            min-height: 40px;
+            padding: 6px 5px;
+        }
+
+        .layui-table-tool-self{
+            top: 0;
+        }
+    </style>
 </head>
 <body>
 <div class="ok-body">
-    <div class="ok-body-breadcrumb">
-            <span class="layui-breadcrumb">
-                <a><cite>关键字管理</cite></a>
-                <a><cite>机器分组工作统计</cite></a>
-            </span>
-<!--        <input hidden value='${Session["entryType"]}' id="entryType">-->
-<!--        <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">-->
-<!--            <i class="layui-icon layui-icon-refresh"></i>-->
-<!--        </a>-->
-    </div>
-
     <table class="layui-hide" id="machineGroupAndSizeTable" lay-filter="tableFilter"></table>
 </div>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
@@ -33,13 +31,10 @@
         NProgress.done();
     };
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
-        var element = layui.element;
+    layui.use(['table', 'form', 'jquery', 'layer'], function () {
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
-        var laydate = layui.laydate;
-        var okLayer = layui.okLayer;
         var layer = layui.layer;
 
         var active = {
@@ -80,7 +75,7 @@
                     {field: 'machineGroupName', title: '机器分组', width: '50%', align: 'center'},
                     {field: 'size', title: '数量', width: '50%', align: 'center'},
                 ]],
-                height: 'full-115',
+                height: 'full-25',
                 done: function (res, curr, count) {
                 }
             });
@@ -91,6 +86,8 @@
             switch (event) {
                 case 'searchMachineGroupAndSize':
                     searchMachineGroupAndSize();
+                    break;
+                default:
                     break;
             }
         });

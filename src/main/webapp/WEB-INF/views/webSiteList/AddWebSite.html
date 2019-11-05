@@ -20,7 +20,7 @@
             <input type="hidden" name="uuid">
             <label class="layui-form-label">网站名称</label>
             <div class="layui-input-block">
-                <input type="text" name="websiteName" placeholder="请输入网站" autocompvare="off" class="layui-input" lay-verify="required">
+                <input type="text" name="websiteName" placeholder="请输入网站" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item">
@@ -32,79 +32,79 @@
         <div class="layui-form-item">
             <label class="layui-form-label">网站域名</label>
             <div class="layui-input-block">
-                <input type="text" name="domain" placeholder="请输入网站域名" autocompvare="off" class="layui-input" lay-verify="required">
+                <input type="text" name="domain" placeholder="请输入网站域名" autocomplete="off" class="layui-input" lay-verify="required|website">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">域名注册商</label>
             <div class="layui-input-block">
-                <input type="text" name="registrar" placeholder="请输入域名注册商" autocompvare="off" class="layui-input" lay-verify="required">
+                <input type="text" name="registrar" placeholder="请输入域名注册商" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">域名解析商</label>
             <div class="layui-input-block">
-                <input name="analysis" placeholder="请输入域名解析商" autocompvare="off" class="layui-input" lay-verify="required">
+                <input type="text" name="analysis" placeholder="请输入域名解析商" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">域名到期时间</label>
             <div class="layui-input-block">
-                <input type="text" class="layui-input" name="expiryTime" id="expiryTime" placeholder="域名到期时间" readonly>
+                <input type="text" class="layui-input" autocomplete="off" name="expiryTime" id="expiryTime" placeholder="域名到期时间" readonly>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">后台链接路径</label>
             <div class="layui-input-block">
-                <input type="text" class="layui-input" name="backendDomain" placeholder="请输入后台链接路径">
+                <input type="text" class="layui-input" autocomplete="off" name="backendDomain" placeholder="请输入后台链接路径">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">后台用户名</label>
             <div class="layui-input-block">
-                <input type="text" class="layui-input" name="backendUserName" placeholder="请输入后台用户名">
+                <input type="text" class="layui-input" autocomplete="off" name="backendUserName" placeholder="请输入后台用户名">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">后台密码</label>
             <div class="layui-input-block">
-                <input type="text" class="layui-input" name="backendPassword" placeholder="请输入后台密码">
+                <input type="text" class="layui-input" autocomplete="off" name="backendPassword" placeholder="请输入后台密码">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">数据库名称</label>
             <div class="layui-input-block">
-                <input type="text" class="layui-input" name="databaseName" placeholder="请输入数据库名称">
+                <input type="text" class="layui-input" autocomplete="off" name="databaseName" placeholder="请输入数据库名称">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">数据库用户名</label>
             <div class="layui-input-block">
-                <input type="text" class="layui-input" name="databaseUserName" placeholder="请输入数据库用户名">
+                <input type="text" class="layui-input" autocomplete="off" name="databaseUserName" placeholder="请输入数据库用户名">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">数据库密码</label>
             <div class="layui-input-block">
-                <input type="text" class="layui-input" name="databasePassword" placeholder="请输入数据库密码">
+                <input type="text" class="layui-input" autocomplete="off" name="databasePassword" placeholder="请输入数据库密码">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">服务器IP</label>
             <div class="layui-input-block">
-                <input type="text" class="layui-input" name="serverIP" placeholder="请输入服务器IP">
+                <input type="text" class="layui-input" autocomplete="off" name="serverIP" lay-verify="ip" placeholder="请输入服务器IP">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">服务器用户名</label>
             <div class="layui-input-block">
-                <input type="text" class="layui-input" name="serverUserName" placeholder="请输入服务器用户名">
+                <input type="text" class="layui-input" autocomplete="off" name="serverUserName" placeholder="请输入服务器用户名">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">服务器密码</label>
             <div class="layui-input-block">
-                <input type="text" class="layui-input" name="serverPassword" placeholder="请输入服务器密码">
+                <input type="text" class="layui-input" autocomplete="off" name="serverPassword" placeholder="请输入服务器密码">
             </div>
         </div>
         <div class="layui-form-item">
@@ -136,8 +136,8 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
 
-    var uuid_ = null;
-    var layui_ = null;
+    let uuid_ = null;
+    let layui_ = null;
 
     function initForm(data) {
         uuid_ = data;
@@ -156,7 +156,8 @@
             },
             success: function (res) {
                 if (res.code === 200) {
-                    layui.form.val("addWebsite", res.data);
+                    res.data.expiryTime = l.util.toDateString(res.data.expiryTime, 'yyyy-MM-dd');
+                    l.form.val("addWebsite", res.data);
                 } else {
                     l.layer.msg(res.msg);
                 }
@@ -164,11 +165,11 @@
         });
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer", "laydate"], function () {
-        var form = layui.form;
-        var okLayer = layui.okLayer;
-        var $ = layui.jquery;
-        var laydate = layui.laydate;
+    layui.use(["form", "common", "jquery", "layer", "laydate", "util"], function () {
+        let form = layui.form;
+        let common = layui.common;
+        let $ = layui.jquery;
+        let laydate = layui.laydate;
 
         if (uuid_ != null) {
             setForm(layui, uuid_);
@@ -182,7 +183,7 @@
 
         init_SelectData();
 
-        function init_SelectData(){
+        function init_SelectData() {
             $.ajax({
                 url: '/internal/websites/returnSelectData',
                 type: 'POST',
@@ -192,10 +193,10 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        var industryTypeMap = res.data.industryTypeMap
-                        var websiteTypeMap = res.data.websiteTypeMap
-                        var industry = $('#industry');
-                        var websiteType = $('#websiteType');
+                        let industryTypeMap = res.data.industryTypeMap;
+                        let websiteTypeMap = res.data.websiteTypeMap;
+                        let industry = $('#industry');
+                        let websiteType = $('#websiteType');
                         $.each(industryTypeMap, function (index, item) {
                             industry.append('<option value="' + index + '" >' + item + '</option>');
                         });
@@ -204,16 +205,20 @@
                         });
                         form.render("select")
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg)
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！')
                 }
             });
         }
 
         form.on("submit(commit)", function (data) {
+            data.field = common.jsonObjectTrim(data.field);
+            if (!common.waitMoment()) {
+                return false;
+            }
             $.ajax({
                 url: '/internal/websites/saveWebsite',
                 type: 'POST',
@@ -224,12 +229,12 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });
@@ -241,7 +246,19 @@
             return false;
         });
 
-    })
+        form.verify({
+            website: function (value, item) {
+                if (value.indexOf(".") === -1) {
+                    return "请输入正确网址"
+                }
+            },
+            ip: [
+                /(^$)|(((25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d))))/,
+                '请输入正确IP'
+            ]
+        });
+
+    });
 
 </script>
 

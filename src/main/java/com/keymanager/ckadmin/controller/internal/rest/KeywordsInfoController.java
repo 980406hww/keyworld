@@ -26,7 +26,6 @@ public class KeywordsInfoController {
 
     private static Logger logger = LoggerFactory.getLogger(KeywordsInfoController.class);
 
-    @RequiresPermissions("/internal/keywordInfo/searchKeywordInfos")
     @RequestMapping(value = "/toKeywordsInfo", method = RequestMethod.GET)
     public ModelAndView toKeywordsInfo() {
         ModelAndView mv = new ModelAndView();
@@ -34,7 +33,6 @@ public class KeywordsInfoController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/keywordInfo/searchKeywordInfos")
     @RequestMapping(value = "/getKeywordsInfoData", method = RequestMethod.POST)
     public ResultBean getKeywordsInfoData(@RequestBody KeywordInfoCriteria criteria) {
         ResultBean resultBean = new ResultBean();

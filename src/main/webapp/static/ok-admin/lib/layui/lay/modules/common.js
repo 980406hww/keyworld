@@ -1,7 +1,10 @@
-layui.define(['jquery', 'layer',], function (exports) {
+var milliseconds;
+
+layui.define(['jquery', 'layer', 'okTab'], function (exports) {
 
     var $ = layui.jquery;
     var layer = layui.layer;
+    var okTab = layui.okTab();
 
     var obj = {
         formToJsonObject: function (form_id) {
@@ -11,13 +14,17 @@ layui.define(['jquery', 'layer',], function (exports) {
             formData = "{\"" + formData + "\"}";
             formData = $.parseJSON(formData);
             $.each(formData, function (idx, item) {
-                formData[idx] = $.trim(item).replace(/\+/g, "")
+                formData[idx] = $.trim(item.replace(/\+/g, " "));
             });
             return formData;
         },
         jsonObjectTrim: function (jsonObject) {
             $.each(jsonObject, function (idx, item) {
-                jsonObject[idx] = $.trim(item).replace(/ /g, "")
+                if (typeof (item) == "string") {
+                    jsonObject[idx] = $.trim(item)
+                } else {
+                    return true;
+                }
             });
             return jsonObject;
         },
@@ -28,7 +35,7 @@ layui.define(['jquery', 'layer',], function (exports) {
                 time: 1000,
                 isOutAnim: false
             }, function () {
-                if (callback){
+                if (callback) {
                     callback()
                 }
             });
@@ -61,6 +68,20 @@ layui.define(['jquery', 'layer',], function (exports) {
                 );
             }
             parent.layui.element.tabChange('ok-tab', id)
+        },
+        waitMoment: function () {
+            let currentMilliseconds = new Date().getTime();
+            if (milliseconds) {
+                if (currentMilliseconds - milliseconds >= 3000) {
+                    milliseconds = currentMilliseconds;
+                    return true;
+                } else {
+                    parent.location.reload();
+                    return false;
+                }
+            }
+            milliseconds = currentMilliseconds;
+            return true;
         }
     };
     exports('common', obj);

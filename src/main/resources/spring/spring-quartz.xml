@@ -359,7 +359,7 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
-	<!--缓存需同步到简化版seo后台的数据信息-->
+	<!--清除超过一周的同步数据-->
 	<bean id="cronTriggerCleanSysCustomerKeywordCreateOverOneWeek" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerCleanSysCustomerKeywordCreateOverOneWeekSchedule" />
 		<property name="cronExpression" value="0 10 0 * * ?" />

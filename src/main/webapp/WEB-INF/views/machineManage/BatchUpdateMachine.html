@@ -12,22 +12,22 @@
 
     <form class="layui-form layui-form-pane ok-form" lay-filter="UpdateAllowSwtichGroup">
         <div class="layui-form-item" pane>
-            <label class="layui-form-label" id="hz">是否允许换组</label>
+            <label class="layui-form-label" id="hz">允许换组</label>
             <div class="layui-input-block">
-                <input type="radio" name="allowSwitchGroup" lay-filter="allowSwitchGroup" value="1" title="是" checked>
-                <input type="radio" name="allowSwitchGroup" lay-filter="allowSwitchGroup" value="0" title="否">
+                <input type="radio" name="allowSwitchGroup" lay-filter="allowSwitchGroup" value="1" title="允许" checked>
+                <input type="radio" name="allowSwitchGroup" lay-filter="allowSwitchGroup" value="0" title="不允许">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label" id="lzfz">流转分组</label>
             <div class="layui-input-block">
-                <input type="text" name="switchGroupName" lay-verify="required" onclick="clickMe('lzfz',true)" placeholder="请输入流转分组" autocomplete="off" class="layui-input">
+                <input type="text" name="switchGroupName" onclick="clickMe('lzfz',true)" placeholder="请输入流转分组" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label" id="jjfz">机器分组</label>
             <div class="layui-input-block">
-                <input type="text" name="machineGroup" lay-verify="required" onclick="clickMe('jjfz',false)" placeholder="请输入机器分组" autocomplete="off" class="layui-input">
+                <input type="text" name="machineGroup" onclick="clickMe('jjfz',false)" placeholder="请输入机器分组" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
@@ -41,11 +41,11 @@
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
-    var uuid_ = null;
-    var layui_ = null;
-    var clientIDs = null;
-    var count_l = 0;
-    var count_j = 0;
+    let uuid_ = null;
+    let layui_ = null;
+    let clientIDs = null;
+    let count_l = 0;
+    let count_j = 0;
 
     function initData(data) {
         clientIDs = data.clientIDs
@@ -60,15 +60,15 @@
         }
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
-        var form = layui.form;
-        var okLayer = layui.okLayer;
-        var $ = layui.jquery;
+    layui.use(["form", "common", "jquery", "layer"], function () {
+        let form = layui.form;
+        let common = layui.common;
+        let $ = layui.jquery;
 
         document.onkeydown=function(e){
-            var isie = !!(document.all);
-            var key;
-            var ev;
+            let isie = !!(document.all);
+            let key;
+            let ev;
             if(isie){//IE浏览器
                 key = window.event.keyCode;
                 ev = window.event;
@@ -78,7 +78,6 @@
             }
             if(key===9){//IE浏览器
                 // document.getElementById(e.target.id).focus()
-                okLayer.msg.yellowSigh("请不要使用tab键切换输入框！",null);
                 e.target.focus();
                 if(isie){
                     ev.keyCode=0;
@@ -96,7 +95,7 @@
         });
 
         form.on("submit(commit)", function (data) {
-            var postData = {};
+            let postData = {};
             postData.clientIDs = clientIDs;
             postData.allowSwitchGroup = data.field.allowSwitchGroup;
             if (document.getElementById('lzfz').style.color === 'red') {
@@ -105,6 +104,7 @@
             if (document.getElementById('jjfz').style.color === 'red') {
                 postData.targetMachineGroup = data.field.machineGroup;
             }
+            postData = common.jsonObjectTrim(postData);
             $.ajax({
                 url: '/internal/machineManage/batchUpdateMachine',
                 type: 'post',
@@ -116,12 +116,12 @@
                 timeout: 5000,
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("修改成功", function () {
+                        common.showSuccessMsg("修改成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });

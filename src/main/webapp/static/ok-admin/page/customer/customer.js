@@ -5,7 +5,7 @@ getHeight();
 function getHeight(){
     let b = document.getElementById('customerBody');
     let h = window.innerHeight || document.body.offsetHeight;
-    b.style.height = (h - 155) + 'px';
+    b.style.height = (h - 145) + 'px';
 }
 
 // layui相关
@@ -68,12 +68,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                     }
                 });
                 init_data(result.data);
-                // let entryType = $('#entryType').val();
-                // let postData = {};
-                // postData.entryType = entryType;
-                // init_customerTypeCount(postData);
                 form.render();
-                // layer.msg('加载完成', {icon: 6});
             },
             error: function () {
                 common.showFailMsg('获取用户失败，请稍后再试');
@@ -109,8 +104,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 '               </div>';
             item += '           <div class="layadmin-address ">' +
                 '                   <strong>备注</strong>' +
-                '                   <p class="skip" title="'+obj.saleRemark+'" onclick=changeSaleRemark("'+obj.uuid+'","'+obj.saleRemark+'") >客户标签:<span id="saleRemark'+obj.uuid+'">' + obj.saleRemark + '</span></p>' +
-                '                   <p class="skip" title="'+obj.remark+'" onclick=changeRemark("'+obj.uuid+'","'+obj.remark+'") >销售详细备注:<span id="remark'+obj.uuid+'">' + obj.remark + '</span></p>' +
+                '                   <p class="skip" title="'+obj.saleRemark+'" onclick=changeSaleRemark("'+obj.uuid+'","'+obj.saleRemark+'") >客户标签:<span style="color: #00a65a" id="saleRemark'+obj.uuid+'">' + obj.saleRemark + '</span></p>' +
+                '                   <p class="skip" title="'+obj.remark+'" onclick=changeRemark("'+obj.uuid+'","'+obj.remark+'") >销售详细备注:<span style="color: #00a65a" id="remark'+obj.uuid+'">' + obj.remark + '</span></p>' +
                 '               </div>' +
                 '      </div>';
             item += '   <div class="layui-col-md5  layui-col-sm6" style="margin-top: 37px">';
@@ -247,8 +242,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
         }
     });
 
-
-
     window.showCustomerByType = function (customerType){
         $('#type').val(customerType);
         // form.render()
@@ -303,7 +296,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
         });
         return uuidArr;
     }
-
 
     //删除单个客户
     window.delOneCustomer = function (uuid) {
@@ -503,7 +495,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 type: 'POST',
                 success: function (result) {
                     if (result.code === 200) {
-                        common.showSuccessMsg('操作成功!')
+                        common.showSuccessMsg('操作成功!', function () {
+                            let pageConf = common.formToJsonObject('searchForm');
+                            initLayPage(pageConf);
+                        });
                     } else {
                         common.showFailMsg('操作失败');
                     }
@@ -514,8 +509,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
             });
             layer.close(index);
         });
-    }
-
+    };
 
     window.batchUpdateBelongUser = function(){
         let uuidArr = get_select_uuids();
@@ -532,7 +526,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 sign = false;
             }
         });
-    }
+    };
 
     //改客户标签
     window.changeSaleRemark = function (uuid, saleRemark) {
@@ -601,7 +595,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             common.showSuccessMsg('操作成功');
                             $('#remark'+uuid).text(value);
                             $('#remark'+uuid).parent().attr("title",value);
-
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -611,11 +604,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                     }
                 });
                 layer.close(index2);
-                // });
-
             }
         });
-    }
+    };
 
     form.verify({
         qq: [

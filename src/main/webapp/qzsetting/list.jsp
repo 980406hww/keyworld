@@ -410,7 +410,15 @@
 									<div class="row">
 										<div name="operationKeywordNum" title="点击链接跳转到关键字列表">
                                             <span class="line1">
-                                                <a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${status.index + 1}');">0</a>
+												<input type="hidden" value="${qzSetting.customerUuid}" id="custUuid">
+												<div name="activeCount">
+													<label>激活: </label>
+													<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${status.index + 1}', 1);">0</a><br>
+												</div>
+												<div name="stopCount">
+													<label>暂停: </label>
+													<a target="_blank" href="javascript:searchCustomerKeywords('${qzSetting.customerUuid}', '${status.index + 1}', 0);">0</a>
+												</div>
                                             </span>
                                             <span>
                                                 <a href="javascript:;">操作词数</a>

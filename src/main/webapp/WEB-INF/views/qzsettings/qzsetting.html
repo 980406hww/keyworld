@@ -15,6 +15,23 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/layui/add-or-upd.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 0px;
+        }
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 0px;
+        }
+
         *, :after, :before {
             box-sizing: border-box
         }
@@ -199,8 +216,8 @@
         .layui-table-col-special .body .other-rank .line1,
         .layui-table-col-special .body .other-rank_2 .line1 {
             text-align: center;
-            height: 55px !important;
-            margin-top: 20px;
+            height: 65px !important;
+            margin-top: 10px;
             overflow: hidden;
             text-overflow: ellipsis;
             color: #000;
@@ -380,7 +397,7 @@
             width: 100%;
             min-height: 30px;
             line-height: 30px;
-            padding: 10px 5px;
+            padding: 0 5px 10px 5px;
             border-width: 0 0 1px
         }
 
@@ -468,6 +485,25 @@
             width: 76px;
         }
 
+        /* 客户满意度Tip */
+        .tool-tip{
+            display: inline-block;
+            background-color: #009688;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            border: none;
+            cursor: default;
+            outline: 0;
+            -webkit-appearance: none;
+            box-sizing: border-box;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            border-left: 1px solid rgba(255, 255, 255, .5);
+            border-radius: 2px 0 0 2px;
+            vertical-align: middle;
+        }
+
         /* 下拉条件框 */
         .my-collapse {
             position: relative;
@@ -481,11 +517,6 @@
         .my-collapse .layui-form-select dl,
         .my-collapse .layui-form-select .layui-anim {
             top: 33px !important;
-        }
-
-        .my-collapse > div:first-child {
-            background: #f2f2f2;
-            border: 1px solid #e6e6e6;
         }
 
         .my-collapse > div {
@@ -638,15 +669,8 @@
                                                autocomplete="off" onblur="checkDomain()" style="width: 150px;height: 30px"
                                                onmouseleave="checkDomain()" class="layui-input" value="<#if domain?exists>${domain}</#if>">
                                     </div>
-<!--                                    <div class="layui-inline">-->
-<!--                                        <label class="layui-form-label">创建时间</label>-->
-<!--                                        <div class="layui-input-inline">-->
-<!--                                            <input type="text" class="layui-input" id="createTimes" name="createTimes" placeholder="请选择日期">-->
-<!--                                        </div>-->
-<!--                                    </div>-->
                                     <div class="layui-inline">
-                                        <button class="layui-btn" lay-submit lay-filter="search" id="searchBtn">搜索
-                                        </button>
+                                        <button class="layui-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
                                     </div>
                                     <div class="layui-inline">
                                         <div class="layui-collapse my-btn" onclick="showCondition()">
@@ -660,7 +684,7 @@
                                     </div>
                                     <div class="layui-inline status-box">
                                             <div class="layui-inline" style="margin-left: 4px">
-                                                <label class="layui-form-label">暴涨暴跌</label>
+                                                <label class="layui-form-label" style="background-color: #45a3c2;">暴涨暴跌</label>
                                                 <div class="sort-box" style="min-width: 338px">
                                                     <input type="checkbox" name="bzbtSort" value="1" title="骤降(0)" lay-filter="bzbtSort" lay-skin="primary">
                                                     <input type="checkbox" name="bzbtSort" value="2" title="无变化(0)" lay-filter="bzbtSort" lay-skin="primary">
@@ -668,7 +692,7 @@
                                                 </div>
                                             </div>
                                             <div class="layui-inline">
-                                                <label class="layui-form-label">今日趋势</label>
+                                                <label class="layui-form-label" style="background-color: #45a3c2;">今日趋势</label>
                                                 <div class="sort-box"style="min-width: 322px">
                                                     <input type="checkbox" name="jrqsSort" value="7" title="下降(0)" lay-filter="jrqsSort" lay-skin="primary">
                                                     <input type="checkbox" name="jrqsSort" value="8" title="不变(0)" lay-filter="jrqsSort" lay-skin="primary">
@@ -676,7 +700,7 @@
                                                 </div>
                                             </div>
                                             <div class="layui-inline">
-                                                <label class="layui-form-label">达标统计</label>
+                                                <label class="layui-form-label" style="background-color: #45a3c2;">达标统计</label>
                                                 <div class="sort-box" style="min-width: 364px">
                                                     <input type="checkbox" name="dbtjSort" value="4" title="达标(0)" lay-filter="dbtjSort" lay-skin="primary">
                                                     <input type="checkbox" name="dbtjSort" value="5" title="未达标(0)" lay-filter="dbtjSort" lay-skin="primary">
@@ -1013,7 +1037,7 @@
                         {filed: 'uuid', type: 'checkbox', fixed: "left", width: '2%'},
                         {filed: 'uuid', title: '记录', width: '98%', templet: '#item'}
                     ]],
-                    height: 'full-136',
+                    height: 'full-105',
                     loading: true,
                     done: function (res, curr, count) {
                         successTable(res, whereCondition);
@@ -1032,20 +1056,16 @@
             let qz_setting_table = $("#qzSettingTable").parent().find(
                 ".layui-table-main").find("table");
             $.each(res.data, function (idx, val) {
-                let td = qz_setting_table.find(
-                    "tr[data-index='" + val.LAY_TABLE_INDEX + "']").find(
-                    "td[data-field='1']");
-                let optimizeGroupName = td.find(
-                    "input[name='" + terminalType + "Group']").val();
+                let td = qz_setting_table.find("tr[data-index='" + val.LAY_TABLE_INDEX + "']").find("td[data-field='1']");
+                let optimizeGroupName = td.find("input[name='" + terminalType + "Group']").val();
                 let postData = {};
                 postData.uuid = val.uuid;
                 postData.terminalType = terminalType;
                 postData.optimizeGroupName = optimizeGroupName;
+                postData.customerUuid = td.find("#cus_uuid").val();
                 getQZKeywordRankInfo(postData, function (result) {
-                    td.find(".other-rank_2").find("#optimizationGroup span").prop(
-                        "title", optimizeGroupName);
-                    td.find(".other-rank_2").find("#optimizationGroup span a").text(
-                        optimizeGroupName);
+                    td.find(".other-rank_2").find("#optimizationGroup span").prop("title", optimizeGroupName);
+                    td.find(".other-rank_2").find("#optimizationGroup span a").text(optimizeGroupName);
                     if (result.data != null) {
                         initQZKeywordRankInfo(result.data, td);
                     }
@@ -1099,26 +1119,20 @@
                 }
             });
         }
-
+        
         function initQZKeywordRankInfo(data, td) {
-            td.find("#fmtStandardDate a").text(
-                data["standardTime"] === null ? "无" : toDateFormat(
-                    new Date(data["standardTime"])));
+            td.find("#fmtStandardDate a").text(data["standardTime"] === null ? "无" : toDateFormat(new Date(data["standardTime"])));
             let font = td.find(".standard-info").find("div.line1 a font");
             font.text(data["price"] ? "￥ " + data["price"] : "￥ " + 0);
             if (data["price"] > 0) {
                 font.css("background-color", "mediumseagreen");
             }
 
-            initQZSettingKeywordCount(td.find(".other-rank_2"),
-                data["customerKeywordCount"],
-                data["categoryTagNames"],
-                data["operationCombineName"]);
+            initQZSettingKeywordCount(td.find(".other-rank_2"), data["customerKeywordCount"], data["categoryTagNames"], data["operationCombineName"]);
 
             if (data['aiZhan'] !== undefined) {
                 generateQZKeywordTrendCharts(
-                    td.find("#keywordTrendCharts")[0],
-                    data['aiZhan']);
+                    td.find("#keywordTrendCharts")[0], data['aiZhan']);
             }
 
             if (data['5118'] !== undefined) {
@@ -1274,7 +1288,7 @@
             $(parentElement).find("#TopCreate10").text(data.createTopTenNum);
             $(parentElement).find("#TopCreate50").text(data.createTopFiftyNum);
             if (data.dataProcessingStatus) {
-                $(parentElement).find("#IsStandard").text(data.achieveLevel === 0 ? "否" : "是");
+                $(parentElement).find("#IsStandard").text((data.achieveLevel == null || data.achieveLevel === 0) ? "否" : "是");
                 $(parentElement).find("#StandardTime").text(
                     data.achieveTime === null ? "无" : toDateFormat(new Date(data.achieveTime)));
             } else {
@@ -1407,7 +1421,7 @@
                             }
                         },
                         {
-                            name: '前10名',
+                            name: '前10',
                             smooth: true,
                             type: 'line',
                             yAxisIndex: 0,
@@ -1420,7 +1434,7 @@
                             }
                         },
                         {
-                            name: '前20名',
+                            name: '前20',
                             smooth: true,
                             type: 'line',
                             yAxisIndex: 0,
@@ -1433,7 +1447,7 @@
                             }
                         },
                         {
-                            name: '前30名',
+                            name: '前30',
                             smooth: true,
                             type: 'line',
                             yAxisIndex: 0,
@@ -1446,7 +1460,7 @@
                             }
                         },
                         {
-                            name: '前40名',
+                            name: '前40',
                             smooth: true,
                             type: 'line',
                             yAxisIndex: 0,
@@ -1459,7 +1473,7 @@
                             }
                         },
                         {
-                            name: '前50名',
+                            name: '前50',
                             smooth: true,
                             type: 'line',
                             yAxisIndex: 0,
@@ -1599,7 +1613,7 @@
                             }
                         },
                         {
-                            name: '前10名',
+                            name: '前10',
                             smooth: true,
                             type: 'line',
                             yAxisIndex: 0,
@@ -1612,7 +1626,7 @@
                             }
                         },
                         {
-                            name: '前20名',
+                            name: '前20',
                             smooth: true,
                             type: 'line',
                             yAxisIndex: 0,
@@ -1625,7 +1639,7 @@
                             }
                         },
                         {
-                            name: '前50名',
+                            name: '前50',
                             smooth: true,
                             type: 'line',
                             yAxisIndex: 0,
@@ -1638,7 +1652,7 @@
                             }
                         },
                         {
-                            name: '前100名',
+                            name: '前100',
                             smooth: true,
                             type: 'line',
                             yAxisIndex: 0,
@@ -1671,7 +1685,7 @@
             $(parentElement).find("#Top50").text(data.topFifty[data.topFifty.length - 1]);
             $(parentElement).find("#TopCreate10").text(data.createTopTenNum);
             $(parentElement).find("#TopCreate50").text(data.createTopFiftyNum);
-            $(parentElement).find("#IsStandard").text(data.achieveLevel === 0 ? "否" : "是");
+            $(parentElement).find("#IsStandard").text((data.achieveLevel == null || data.achieveLevel === 0) === 0 ? "否" : "是");
             $(parentElement).find("#StandardTime").text(
                 data.achieveTime === null ? "无" : toDateFormat(new Date(data.achieveTime)));
             option = {
@@ -1750,7 +1764,7 @@
                 },
                 series: [
                     {
-                        name: '前10名',
+                        name: '前10',
                         smooth: true,
                         type: 'line',
                         symbolSize: 1,
@@ -1762,7 +1776,7 @@
                         }
                     },
                     {
-                        name: '前20名',
+                        name: '前20',
                         smooth: true,
                         type: 'line',
                         symbolSize: 1,
@@ -1774,7 +1788,7 @@
                         }
                     },
                     {
-                        name: '前30名',
+                        name: '前30',
                         smooth: true,
                         type: 'line',
                         symbolSize: 1,
@@ -1786,7 +1800,7 @@
                         }
                     },
                     {
-                        name: '前40名',
+                        name: '前40',
                         smooth: true,
                         type: 'line',
                         symbolSize: 1,
@@ -1798,7 +1812,7 @@
                         }
                     },
                     {
-                        name: '前50名',
+                        name: '前50',
                         smooth: true,
                         type: 'line',
                         symbolSize: 1,
@@ -1943,7 +1957,7 @@
                         data: data.baiduRecord
                     },
                     {
-                        name: '排名前10',
+                        name: '前10',
                         type: 'line',
                         yAxisIndex: 1,
                         data: data.topTen,
@@ -1956,7 +1970,7 @@
                         }
                     },
                     {
-                        name: '排名前20',
+                        name: '前20',
                         type: 'line',
                         yAxisIndex: 1,
                         data: data.topTwenty,
@@ -1969,7 +1983,7 @@
                         }
                     },
                     {
-                        name: '排名前30',
+                        name: '前30',
                         type: 'line',
                         yAxisIndex: 1,
                         data: data.topThirty,
@@ -1982,7 +1996,7 @@
                         }
                     },
                     {
-                        name: '排名前40',
+                        name: '前40',
                         type: 'line',
                         yAxisIndex: 1,
                         data: data.topForty,
@@ -1995,7 +2009,7 @@
                         }
                     },
                     {
-                        name: '排名前50',
+                        name: '前50',
                         type: 'line',
                         yAxisIndex: 1,
                         data: data.topFifty,
@@ -2014,7 +2028,8 @@
 
         function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames,
             operationCombineName) {
-            div.parent().find(".other-rank .line1").find("#customerKeywordCount").text(customerKeywordCount);
+            div.parent().find(".other-rank .line1").find("div[name='activeCount'] a").text(customerKeywordCount["activeCount"]);
+            div.parent().find(".other-rank .line1").find("div[name='stopCount'] a").text(customerKeywordCount["stopCount"]);
             if (categoryTagNames) {
                 if (categoryTagNames.length > 0) {
                     var tagNameStr = "";
@@ -2092,7 +2107,7 @@
                 return;
             }
 
-            let chargeMoney = '<div class="layui-form-item">\n                                <label style="width: 120px" class="layui-form-label">收费金额：</label>\n                                <div style="margin-left: 120px" class="layui-input-block">\n                                  <input type="text" id="money" autocomplete="off" placeholder="收费金额" class="layui-input">\n                                </div>\n                              </div>';
+            let chargeMoney = '<div class="layui-form-item">\n                                <label style="width: 120px" class="layui-form-label">收费金额：</label>\n                                <div style="margin-left: 120px" class="layui-input-block">\n                                  <input type="text" id="money"  onkeyup="value=value.replace(/^(00+)|^(0\\d+)|[^\\d]+/g,\'\')" autocomplete="off" placeholder="选填" class="layui-input">\n                                </div>\n                              </div>';
 
             let chargeStatus = '<div class="layui-form-item">\n                                <label style="width: 120px;line-height: 22px" class="layui-form-label">客户满意度：</label>\n                                <div style="margin-left: 120px;display: flex" class="layui-input-block">\n                                    <div style="flex: 1">\n                                        <ul class="clean-float">\n                                             <li style="padding-left: 0" onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>\n                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>\n                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>\n                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>\n                                             <li onmouseover="over(this)" onmouseout="out(this)" onclick="clickXx(this)">&#9733;</li>\n                                        </ul>\n                                    </div>\n                                    <div id="chargeStatus" style="flex: 2;font-size: 15px;line-height: 42px;height: 40px;letter-spacing: 1px"></div>\n                                </div>\n                              </div>\n                               <div class="layui-form-item layui-form-text">';
 
@@ -2116,7 +2131,7 @@
             }
             layer.open({
                 type: 1,
-                title: '收费满意度调查',
+                title: '客户满意度调查',
                 content: chargeStatus,
                 shadeClose: true,
                 resize: false,
@@ -2142,8 +2157,11 @@
                     } else {
                         p_d.satisfaction = 1;
                     }
-                    if (customerMsg) {
+                    if (customerMsg && customerMsg.value.trim()) {
                         p_d.customerMsg = customerMsg.value.trim();
+                    }else {
+                        common.showFailMsg("请输入评价或原因。");
+                        return;
                     }
                     $.ajax({
                         url: '/internal/qzchargestatus/saveQZChargeStatus',
@@ -2155,13 +2173,17 @@
                         }, success: function (res) {
                             if (res.code === 200) {
                                 layer.close(index);
-                                common.showSuccessMsg('修改成功',active['reload'].call(this));
+                                chargeStatusValue = 0;
+                                chargeStatusText = '';
+                                common.showSuccessMsg('修改成功', active['reload'].call(this));
                             } else {
                                 common.showFailMsg('修改失败');
                             }
                         }
                     });
                 }, btn2: function (index) {
+                    chargeStatusValue = 0;
+                    chargeStatusText = '';
                     layer.close(index);
                 }
             });
@@ -2462,6 +2484,16 @@
             });
         };
 
+        window.showOperation = function (e) {
+            let this_ = $(e);
+            this_.find('#operation').css("display","block");
+        };
+
+        window.hideOperation = function (e) {
+            let this_ = $(e);
+            this_.find('#operation').css("display","none");
+        };
+
         function openUpdFZTags() {
             let checkStatus = table.checkStatus('qzSettingTable').data;
             if (checkStatus.length === 0) {
@@ -2501,27 +2533,37 @@
                     }
                     d.targetQZCategoryTags = tags;
                     d.uuids = ids;
-
-                    $.ajax({
-                        url: '/internal/qzsetting/updQzCategoryTags',
-                        type: 'post',
-                        data: JSON.stringify(d),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        success: function (res) {
-                            if (res.code === 200) {
-                                layer.close(index);
-                                common.showSuccessMsg('修改成功',active['reload'].call(this));
-                            } else {
-                                common.showFailMsg('修改失败');
-                            }
-                        }
-                    });
+                    if (v) {
+                        updFzTags(d, index);
+                    } else {
+                        layer.confirm('确认修改为空值吗？', {offset: '120px'}, function (__index) {
+                            updFzTags(d, index);
+                            layer.close(__index);
+                        });
+                    }
                 }, btn2: function (index) {
                     layer.close(index);
                 }, cancel: function () {
+                }
+            });
+        }
+
+        function updFzTags(d,index) {
+            $.ajax({
+                url: '/internal/qzsetting/updQzCategoryTags',
+                type: 'post',
+                data: JSON.stringify(d),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        layer.close(index);
+                        common.showSuccessMsg('修改成功', active['reload'].call(this));
+                    } else {
+                        common.showFailMsg('修改失败');
+                    }
                 }
             });
         }
@@ -2585,6 +2627,10 @@
                 d.content = this_[1].value.trim();
             } else {
                 d.content = this_.previousElementSibling.children[0].children[0].value.trim();
+            }
+            if (!d.content){
+                common.showFailMsg("请填写内容");
+                return;
             }
             d.customerUuid = document.getElementById('notBookCustomerUuid').value;
             d.terminalType = document.getElementById('terminalType').value;
@@ -2771,7 +2817,7 @@
                                 noteBookHtml += i + 1;
                                 noteBookHtml += '</div>\n                                    </td>\n                                    <td class="my-left">\n                                    <div class="my-label my-padding">';
                                 noteBookHtml += res.data[i].notesPerson;
-                                noteBookHtml += '</div>\n                                    </td>\n                                    <td class="my-left">\n                                    <div class="my-label my-padding">\n                                    <input type="hidden" value="';
+                                noteBookHtml += '</div>\n                                    </td>\n                                    <td class="my-left">\n                                    <div class="my-label my-padding" style="text-align:left;">\n                                    <input type="hidden" value="';
                                 noteBookHtml += res.data[i].uuid;
                                 noteBookHtml += '">';
                                 noteBookHtml += res.data[i].content;
@@ -2846,7 +2892,7 @@
                     },
                     success: function (result) {
                         if (result.code === 200) {
-                            common.showSuccessMsg('操作成功',active['reload'].call(this));
+                            common.showSuccessMsg('操作成功', active['reload'].call(this));
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -2903,7 +2949,7 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.showSuccessMsg('操作成功',active['reload'].call(this));
+                            common.showSuccessMsg('操作成功', active['reload'].call(this));
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -2945,7 +2991,7 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.showSuccessMsg('操作成功',active['reload'].call(this));
+                            common.showSuccessMsg('操作成功', active['reload'].call(this));
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -2987,7 +3033,7 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.showSuccessMsg('操作成功',active['reload'].call(this));
+                            common.showSuccessMsg('操作成功', active['reload'].call(this));
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -3043,7 +3089,7 @@
             } else if (renewalStatus === 3) {
                 msg = "确认要下架所选整站吗?";
             } else if (renewalStatus === 4) {
-                msg = "确定要将选中整站续费状态更为其他吗?";
+                msg = "确定要将选中整站续费状态改为其他状态吗?";
             }
             layer.confirm(msg, {icon: 3,  offset:'120px',title: '修改所选'}, function (index) {
                 let uuids = "";
@@ -3064,7 +3110,7 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.showSuccessMsg('操作成功',active['reload'].call(this));
+                            common.showSuccessMsg('操作成功', active['reload'].call(this));
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -3080,13 +3126,14 @@
         /**
          * 点击操作词数，跳转到关键字列表
          */
-        window.searchCustomerKeywords = function (customerUuid, pcGroup, phoneGroup, search) {
+        window.searchCustomerKeywords = function (customerUuid, pcGroup, phoneGroup, searchEngine, status) {
             let group = pcGroup === 'null' ? phoneGroup : pcGroup;
             let terminalType = document.getElementById('terminalType').value;
-            let url = '/internal/customerKeyword/toKeywordsWithQZ/qz/' + terminalType + '/' + customerUuid + '/' + pcGroup + '/' + search;
-            url = encodeURI(encodeURI(url))
+            let url = '/internal/customerKeyword/toKeywordsWithQZ/qz/' + terminalType + '/' + customerUuid + '/' + pcGroup + '/' + searchEngine + '/' + status;
+            url = encodeURI(encodeURI(url));
             let tit = group + '--关键字列表';
-            updateOrNewTab(url, tit, customerUuid);
+            let id = customerUuid + "-" + (status === 0 ? "暂停" : "激活");
+            updateOrNewTab(url, tit, id);
         };
 
         function updateOrNewTab(url, tit, id) {
@@ -3153,41 +3200,50 @@
                     let postData = {};
                     postData.qzSettingUuid = uuid;
                     postData.qzCategoryTags = qzCategoryTags;
-
-                    $.ajax({
-                        url: "/internal/qzcategory/saveCategoryLabel",
-                        type: "POST",
-                        data: JSON.stringify(postData),
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        success: function (res) {
-                            if (res.code === 200) {
-                                let text = "";
-                                for (let item in categoryTags) {
-                                    text += "," + categoryTags[item];
-                                }
-                                text = text.substr(1);
-                                if (text === "") {
-                                    text = "暂无";
-                                }
-                                $("a#tagName_" + uuid).text(text);
-                                $("a#tagName_" + uuid).prop("title", text);
-                                layer.close(index_0);
-                                common.showSuccessMsg('修改成功',active['reload'].call(this));
-                            } else {
-                                common.showFailMsg('修改失败');
-                            }
-                        }
-                    });
+                    if (new_text){
+                        editTagNameOne(postData, categoryTags, uuid, index_0);
+                    }else {
+                        layer.confirm('确认修改为空值吗？', {offset: '120px'}, function (__index) {
+                            editTagNameOne(postData, categoryTags, uuid, index_0);
+                            layer.close(__index);
+                        });
+                    }
                 }, btn2: function (index_0) {
                     layer.close(index_0);
                 }, cancel: function () {
-
                 }
             })
         };
+
+        function editTagNameOne(postData, categoryTags, uuid, index_0) {
+            $.ajax({
+                url: "/internal/qzcategory/saveCategoryLabel",
+                type: "POST",
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                success: function (res) {
+                    if (res.code === 200) {
+                        let text = "";
+                        for (let item in categoryTags) {
+                            text += "," + categoryTags[item];
+                        }
+                        text = text.substr(1);
+                        if (text === "") {
+                            text = "暂无";
+                        }
+                        $("a#tagName_" + uuid).text(text);
+                        $("a#tagName_" + uuid).prop("title", text);
+                        layer.close(index_0);
+                        common.showSuccessMsg('修改成功', active['reload'].call(this));
+                    } else {
+                        common.showFailMsg('修改失败');
+                    }
+                }
+            });
+        }
     });
 </script>
 
@@ -3222,24 +3278,27 @@
     <button class="layui-btn layui-btn-sm" lay-event="batchUpdateQZSettingFrom">
         <i style="font-size: 15px !important;" class="layui-icon">&#xe642;</i>修改整站归属
     </button>
-    <#if isSEOSales==0>
-    <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToNormal">
-        <i class="layui-icon">&#x1005;</i>正常续费
-    </button>
-    <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToSuspend">
-        <i class="layui-icon">&#xe651;</i>暂停续费
-    </button>
-    <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchUpdateRenewalStatusToSoldOut">
-        <i class="layui-icon">&#xe601;</i>下架整站
-    </button>
-    <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToOther">
-        <i class="layui-icon">&#xe63f;</i>更为其他
-    </button>
-    </#if>
     </div>
+    <#if isSEOSales==1>
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToNormal">
+            <i class="layui-icon">&#x1005;</i>正常续费
+        </button>
+        <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToSuspend">
+            <i class="layui-icon">&#xe651;</i>暂停续费
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchUpdateRenewalStatusToSoldOut">
+            <i class="layui-icon">&#xe601;</i>下架整站
+        </button>
+        <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToOther">
+            <i class="layui-icon">&#xe63f;</i>改为其他
+        </button>
+    </div>
+    </#if>
 </script>
 
 <script type="text/html" id="item">
+    <div onmouseover="showOperation(this)" onmouseout="hideOperation(this)">
     <div class="layui-row header">
         <!--    头部信息栏    -->
         <div class="layui-col-md7">
@@ -3291,7 +3350,7 @@
         </div>
         <!--     操作栏   -->
         <div class="layui-col-md4">
-            <div class="handle">
+            <div class="handle" id="operation" style="display: none">
                 <span>
                     <a class="blue"
                        href="javascript:showExcludeCustomerKeywordDialog(
@@ -3378,7 +3437,15 @@
             <div class="layui-col-md12 line1">
                 <div class="layui-col-md12">
                     <span>
-                          <a id="customerKeywordCount" href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}');">0</a>
+                        <input type="hidden" id="cus_uuid" value="{{d.customerUuid}}">
+                        <div name="activeCount">
+                            <label>激活: </label>
+                            <a href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 1);">0</a>
+                        </div>
+                        <div name="stopCount">
+                            <label>暂停: </label>
+                            <a href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 0);">0</a>
+                        </div>
                      </span>
                 </div>
                 <div class="layui-col-md12">
@@ -3519,6 +3586,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </script>
 </body>

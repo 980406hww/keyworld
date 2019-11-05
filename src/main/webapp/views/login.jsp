@@ -11,6 +11,8 @@
 <div style="background: rgb(255, 255, 255); margin: -100px auto auto; border: 1px solid rgb(231, 231, 231);border-image:none;width:400px;text-align: center;">
     <form method="post" id="loginform">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        <c:if test="${version == null}"><input type="hidden" name="version" value="2.0"/></c:if>
+        <c:if test="${version != null}"><input type="hidden" name="version" value="${version}"/></c:if>
         <div style="width: 165px; height: 96px; position: absolute;">
             <div class="tou"></div>
             <div class="initial_left_hand" id="left_hand"></div>
@@ -26,24 +28,23 @@
             <input class="captcha" style="width: 192px;" autocomplete="off" type="text" name="captcha" placeholder="请输入验证码"/>
             <img id="captcha" alt="验证码" src="${path }/captcha" data-src="${path }/captcha?t=" style="vertical-align:middle;border-radius:4px;width:94.5px;height:35px;cursor:pointer;">
         </P>
-        <span style="position: relative;float: left;margin-left: 54px;">
-            <select id="entryType" name="entryType" style="width: 92px;height:20px;padding:0px;" class="ipt">
-                <option value="qz">全站链接</option>
-                <option value="pt">普通链接</option>
-                <option value="fm">负面链接</option>
-                <option value="bc">其他</option>
-            </select>
-        </span>
-        <span style="position: relative;float: left;margin-left: 4px;">
-            <select name="version" style="width: 53px;height:20px;padding:0px;" class="ipt">
-                <option value="1.0">旧版</option>
-                <option value="2.0" selected>新版</option>
-            </select>
-        </span>
-        <span style="position: relative;text-align: left;margin-right:120px; margin-top: 2px">
-            <input class="rememberMe" type="checkbox" name="rememberMe" id="rememberMe" value="1" checked style="vertical-align:middle;height:20px;display: none"/>
-            <label for="rememberMe"></label><span style="font-size: 14px;position: relative;top:-4px;left:5px">记住密码</span>
-        </span>
+        <div style="height: 22px">
+            <span style="position: relative;float: left;margin-left: 54px;">
+                <c:if test="${version != null}">
+                <select id="entryType" name="entryType" style="width: 92px;height:20px;padding:0px;" class="ipt">
+                    <option value="qz">全站链接</option>
+                    <option value="pt">普通链接</option>
+                    <option value="fm">负面链接</option>
+                    <option value="bc">其他</option>
+                </select>
+                </c:if>
+            </span>
+                <span style="position: relative;float: right;margin-right:60px; margin-top: 2px">
+                <input class="rememberMe" type="checkbox" name="rememberMe" id="rememberMe" value="1" checked
+                       style="vertical-align:middle;height:20px;display: none"/>
+                <label for="rememberMe"></label><span style="font-size: 14px;position: relative;top:-4px;left:5px">记住密码</span>
+            </span>
+        </div>
         <div style="height: 50px; line-height: 50px; margin-top: 10px;border-top-color: rgb(231, 231, 231); border-top-width: 1px; border-top-style: solid;">
             <P style="margin: 0px 35px 20px 45px;">
                 <span style="float: left;">
@@ -61,6 +62,7 @@
 </div>
 <div style="text-align:center;">
 </div>
+<div style="position: absolute;top: 10%;width: 100%;text-align: center;font-size: 70px;">${msg}</div>
 <script>
     document.write("<scr"+"ipt src=\"${staticPath }/static/easyui/jquery.min.js\"></sc"+"ript>");
     document.write("<scr"+"ipt src=\"${staticPath }/static/easyui/jquery.easyui.min.js\"></sc"+"ript>");

@@ -47,13 +47,12 @@
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
-    var excelType = null;
-    var terminalType = null;
+    let excelType = null;
+    let terminalType = null;
 
     function showName(e) {
-        var files = e.files;
-        var fileName = files.item(0).name;
-        document.getElementById("fileName").innerText = fileName
+        let files = e.files;
+        document.getElementById("fileName").innerText = files.item(0).name;
     }
 
     function initData(data1, data2) {
@@ -61,11 +60,11 @@
         terminalType = data2
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer", "upload"], function () {
-        var form = layui.form;
-        var okLayer = layui.okLayer;
-        var $ = layui.jquery;
-        var upload = layui.upload;
+    layui.use(["form", "common", "jquery", "layer", "upload"], function () {
+        let form = layui.form;
+        let common = layui.common;
+        let $ = layui.jquery;
+        let upload = layui.upload;
 
         $("#uploadBtn").click(function(){
             upload.render({
@@ -79,21 +78,21 @@
         });
 
         form.on("submit(commit)", function () {
-            var fileValue = $('#uploadForm').find("#upload").val()
-            if(fileValue == ""){
-                layer.msg("请选择要上传的Excel文件!")
+            let fileValue = $('#uploadForm').find("#upload").val();
+            if(fileValue === ""){
+                common.showFailMsg("请选择要上传的Excel文件!");
                 return false;
             }
-            var posIndex = fileValue.indexOf(".xls");
-            var posIndex2 = fileValue.indexOf(".xlsx");
-            if (posIndex == -1 && posIndex2 == -1) {
-                layer.msg("只能上传excel文件!")
+            let posIndex = fileValue.indexOf(".xls");
+            let posIndex2 = fileValue.indexOf(".xlsx");
+            if (posIndex === -1 && posIndex2 === -1) {
+                common.showFailMsg("只能上传excel文件!");
                 return false;
             }
-            var postData = new FormData();
-            postData.append('file', $("#uploadForm").find("#upload")[0].files[0])
-            postData.append('excelType', excelType)
-            postData.append('terminalType', terminalType)
+            let postData = new FormData();
+            postData.append('file', $("#uploadForm").find("#upload")[0].files[0]);
+            postData.append('excelType', excelType);
+            postData.append('terminalType', terminalType);
             $.ajax({
                 url: '/internal/industryList/uploadIndustryInfos',
                 type: 'post',
@@ -103,16 +102,15 @@
                 processData: false,
                 contentType: false,
                 success: function (res) {
-                    var data = JSON.parse(res)
-                    if (data.code == 200) {
-                        okLayer.msg.greenTick("上传成功", function () {
+                    let data = JSON.parse(res);
+                    if (data.code === 200) {
+                        common.showSuccessMsg("上传成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
-
                 }
             });
             return false;

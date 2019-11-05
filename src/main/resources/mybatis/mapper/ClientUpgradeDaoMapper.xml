@@ -31,7 +31,7 @@
             fCreateTime AS 'createTime'
         FROM t_client_upgrade
         WHERE fStatus = 1
-        AND fResidualUpgradeCount &gt; 0
+        AND fResidualUpgradeCount &gt;= 0
     </select>
 
     <update id="updateClientUpgradeStatus">

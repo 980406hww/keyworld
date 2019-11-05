@@ -116,7 +116,7 @@ public class QZSettingController extends SpringMVCBaseController {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("qzsettings/qzsetting");
         int isSEOSales = 0;
-        if (getCurrentUser().getRoles().contains("SEOSales")) {
+        if (getCurrentUser().getRoles().contains("SEOSales") || getCurrentUser().getRoles().contains("DepartmentManager")) {
             isSEOSales = 1;
         }
         mv.addObject("isSEOSales", isSEOSales);
@@ -236,7 +236,8 @@ public class QZSettingController extends SpringMVCBaseController {
             long uuid = Long.parseLong(requestMap.get("uuid").toString());
             String terminalType = (String) requestMap.get("terminalType");
             String optimizeGroupName = (String) requestMap.get("optimizeGroupName");
-            Map<String, Object> rankMap = qzSettingService.getQZKeywordRankInfo(uuid, terminalType, optimizeGroupName);
+            Long customerUuid = Long.parseLong(requestMap.get("customerUuid").toString());
+            Map<String, Object> rankMap = qzSettingService.getQZKeywordRankInfo(uuid, terminalType, optimizeGroupName, customerUuid);
             resultBean.setCode(200);
             resultBean.setMsg("获取曲线信息成功");
             resultBean.setData(rankMap);
@@ -328,8 +329,7 @@ public class QZSettingController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean();
         try {
             String userName = (String) request.getSession().getAttribute("username");
-            qzSettingService
-                .saveQZSettingCustomerKeywords(qzSettingSaveCustomerKeywordsCriteria, userName);
+            qzSettingService.saveQZSettingCustomerKeywords(qzSettingSaveCustomerKeywordsCriteria, userName);
             resultBean.setCode(200);
             resultBean.setMsg("添加关键字成功");
         } catch (Exception e) {
@@ -564,7 +564,7 @@ public class QZSettingController extends SpringMVCBaseController {
     public ModelAndView toQZSetttingsWithCustomerUuid(@PathVariable(name = "customerUuid") Long customerUuid, HttpServletRequest request) {
         ModelAndView mv = new ModelAndView();
         int isSEOSales = 0;
-        if (getCurrentUser().getRoles().contains("SEOSales")) {
+        if (getCurrentUser().getRoles().contains("SEOSales") || getCurrentUser().getRoles().contains("DepartmentManager")) {
             isSEOSales = 1;
         }
         mv.addObject("isSEOSales", isSEOSales);

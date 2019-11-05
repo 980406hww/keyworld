@@ -2,14 +2,43 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>单词统计</title>
+    <title>网站屏蔽设置</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <link rel="stylesheet" href="/static/ok-admin/page/base/searchForm.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            margin-top: 10px;
+            background: #f2f2f2;
+            border: 0px;
+        }
+
+        .layui-table-body tr td:nth-child(2),td:nth-child(3) {
+            text-align: left;
+        }
+
+        .layui-table-body .laytable-cell-checkbox {
+            text-align: center;
+        }
+
+        .layui-table tr .layui-table-col-special .layui-table-cell {
+            text-align: center;
+        }
+
         .layui-table-page > div {
             height: 26px;
             position: fixed;
@@ -32,6 +61,14 @@
             color: darkslateblue;
         }
 
+        .layui-table-tool {
+            min-height: 30px;
+            padding: 6px 5px 6px 5px;
+        }
+
+        .layui-table-tool-self{
+            top: 0;
+        }
     </style>
 </head>
 <body>
@@ -80,8 +117,7 @@
         NProgress.done();
     };
 
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','common'], function () {
-        var element = layui.element;
+    layui.use(['table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','common'], function () {
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
@@ -109,12 +145,12 @@
                 where: whereCondition,
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', width: '4%'},
-                    {field: 'optimizeGroupName', title: '优化组名', width: '24%', align: 'center'},
-                    {field: 'screenedWebsite', title: '屏蔽网站', width: '28%', align: 'center'},
+                    {field: 'optimizeGroupName', title: '优化组名', width: '24%'},
+                    {field: 'screenedWebsite', title: '屏蔽网站', width: '28%'},
                     {field: 'createTime', title: '创建时间', width: '20%', align: 'center', templet: '#toDateTime'},
                     {title: '操作', width: '24%', align: 'center', templet: '#operationTpl'},
                 ]],
-                height: 'full-90',
+                height: 'full-65',
                 done: function (res, curr, count) {
                 }
             });
@@ -145,6 +181,8 @@
                 case 'del':
                     del_one(data);
                     break;
+                default:
+                    break;
             }
         });
 
@@ -161,7 +199,7 @@
 
         function update_screened_website(uuid) {
             let url = '/internal/screenedWebsite/toScreenedWebsitesAdd';
-            okLayer.open("其他 / 屏蔽网站设置 / 添加屏蔽网站", url, "60%", "60%", function (layero) {
+            okLayer.open("其他 / 屏蔽网站设置 / 修改屏蔽网站", url, "60%", "60%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(uuid);
             }, function () {
                 if (sign) {
@@ -181,10 +219,10 @@
                 optimizeGroupNameList.push(item.optimizeGroupName);
             });
             if (uuidArr.length <= 0) {
-                showFailMsg('请选择要操作的优化组');
+                common.showFailMsg('请选择要操作的屏蔽网站设置');
                 return false;
             }
-            layer.confirm("确定删除选中优化组吗", {icon: 3, title: '删除选中优化组'}, function (index) {
+            layer.confirm("确定删除选中的屏蔽网站设置吗", {icon: 3, title: '删除选中的屏蔽网站设置'}, function (index) {
                 var postData = {};
                 postData.uuids = uuidArr;
                 postData.optimizeGroupNameList = optimizeGroupNameList;
@@ -199,8 +237,9 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.showSuccessMsg('操作成功!', active['reload'].call(this));
-
+                            common.showSuccessMsg('操作成功!', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -216,7 +255,7 @@
         }
 
         function del_one(data) {
-            layer.confirm('真的删除该优化组设置吗', function (index) {
+            layer.confirm('真的删除该的屏蔽网站设置吗', function (index) {
                 var postData = {};
                 postData.uuid = data.uuid;
                 postData.optimizeGroupName = data.optimizeGroupName;
@@ -232,8 +271,9 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.showSuccessMsg('操作成功',active['reload'].call(this));
-
+                            common.showSuccessMsg('操作成功', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -280,17 +320,21 @@
 </script>
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
-    <button class="layui-btn layui-btn-sm " id="add" lay-event="add">
-        添加
-    </button>
-    <button class="layui-btn layui-btn-sm layui-btn-danger" id="delete_selected" lay-event="delete_selected">
-        删除所选
-    </button>
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-sm " id="add" lay-event="add">
+            添加
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" id="delete_selected" lay-event="delete_selected">
+            删除所选
+        </button>
+    </div>
 </script>
 
 <script type="text/html" id="operationTpl">
-    <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
-    <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+    <div class="layui-btn-group">
+        <button type="button" class="layui-btn layui-btn-xs" lay-event="edit">修改</button>
+        <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+    </div>
 </script>
 </body>
 

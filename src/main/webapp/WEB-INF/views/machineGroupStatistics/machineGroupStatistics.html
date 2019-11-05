@@ -128,14 +128,6 @@
                         <form class="layui-form layui-form-pane" id="searchForm">
                             <div class="my-collapse">
                                 <div>
-<!--                                    <div class="layui-inline">-->
-<!--                                        <select name="entryType" lay-filter="entryType">-->
-<!--                                            <option value="qz">全站链接</option>-->
-<!--                                            <option value="pt" selected>普通链接</option>-->
-<!--                                            <option value="fm">负面链接</option>-->
-<!--                                            <option value="bc">BC链接</option>-->
-<!--                                        </select>-->
-<!--                                    </div>-->
                                     <input type="hidden" id="entryType" name="entryType" value="pt">
                                     <input type="hidden" id="terminalType" name="terminalType" value="PC">
                                     <div class="layui-inline">
@@ -144,11 +136,6 @@
                                     <div class="layui-inline">
                                         <input type="text" autocomplete="off" name="customerName" id="customerName" placeholder="请输入客户名称" class="layui-input">
                                     </div>
-                                    <!--                        <div class="layui-inline">-->
-                                    <!--                            <select name="categoryTag">-->
-                                    <!--                                <option value="">请选择分类标签</option>-->
-                                    <!--                            </select>-->
-                                    <!--                        </div>-->
                                     <div class="layui-inline">
                                         <select name="dayNum">
                                             <option value="">请选择历史记录</option>
@@ -265,7 +252,9 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        common.showSuccessMsg('重置成功',active['reload'].call(this));
+                        common.showSuccessMsg('重置成功', function () {
+                            active['reload'].call(this);
+                        });
                     } else {
                         common.showFailMsg('重置失败');
                     }
@@ -288,7 +277,6 @@
         }
 
         function init_keyword_type(data) {
-
             $.ajax({
                 url: '/internal/common/getBusinessTypeByUserRole',
                 dataType: 'json',
@@ -296,7 +284,6 @@
                 type: 'get',
                 success: function (res) {
                     if (res.code === 200) {
-                        // $("#tabItem").empty();
                         let i = 0, one = 'pt', flag = true;
                         $.each(res.data, function (index, item) {
                             let businessItem = item.split("#");
@@ -342,7 +329,7 @@
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', width: '2%', align: 'center', rowspan: 2},
                     {
-                        field: 'machineGroup', title: '类型', width: '10%', align: 'center', rowspan: 2, sort: true, templet: function (d) {
+                        field: 'machineGroup', title: '类型', width: '7.1%', align: 'center', rowspan: 2, sort: true, templet: function (d) {
                             if (d.machineGroup === '总计') {
                                 return d.machineGroup;
                             }
@@ -355,7 +342,7 @@
                 ], [
                     {field: 'totalKeywordCount', title: '总数', width: '5%', align: 'center', sort: true},
                     {
-                        field: 'reachStandardKeywordCount', title: '达标数(金额)', width: '6%', align: 'center', sort: true, templet: function (d) {
+                        field: 'reachStandardKeywordCount', title: '达标数(金额)', width: '7%', align: 'center', sort: true, templet: function (d) {
                             if (d.reachStandardKeywordCount > 0) {
                                 if (d.machineGroup === '总计') {
                                     return '<a href="javascript:findKeyword(\'\', \'\')" style="color: blue">' + d.reachStandardKeywordCount + '('
@@ -378,7 +365,7 @@
                         }
                     },
                     {
-                        field: 'zeroOptimizedCount', title: '没有刷量', width: '5%', align: 'center', sort: true, templet: function (d) {
+                        field: 'zeroOptimizedCount', title: '没有刷量', width: '6%', align: 'center', sort: true, templet: function (d) {
                             if (d.zeroOptimizedCount > 0) {
                                 return d.zeroOptimizedCount;
                             } else {
@@ -424,7 +411,7 @@
                         }
                     },
                     {
-                        field: 'invalidKeywordPercentage', title: '无效占比', width: '5%', align: 'center', sort: true, templet: function (d) {
+                        field: 'invalidKeywordPercentage', title: '无效占比', width: '6%', align: 'center', sort: true, templet: function (d) {
                             if (d.invalidKeywordPercentage > 0) {
                                 let color = d.invalidKeywordPercentage > 20 ? "red" : (d.invalidKeywordPercentage > 10 ? "purple" : "#000");
                                 return '<span style="color: ' + color + '">' + d.invalidKeywordPercentage.toFixed(2) + '%</span>';
@@ -461,7 +448,7 @@
                         }
                     },
                     {
-                        field: 'avgOptimizedCount', title: '平均有效刷量', width: '7%', align: 'center', sort: true, templet: function (d) {
+                        field: 'avgOptimizedCount', title: '平均有效刷量', width: '7.5%', align: 'center', sort: true, templet: function (d) {
                             if (d.avgOptimizedCount > 0) {
                                 let color = d.avgOptimizedCount <= 30 ? "red" : "black";
                                 return '<span style="color: ' + color + '">' + d.avgOptimizedCount.toFixed(2) + '</span>';

@@ -39,7 +39,7 @@ public interface WebsiteService extends IService<Website> {
 
     void batchSaveFriendlyLink(MultipartFile file, FriendlyLink friendlyLink, List<String> uuids);
 
-    void batchUpdateFriendlyLink(MultipartFile file, FriendlyLink friendlyLink, List<String> uuids, String originalFriendlyLinkUrl);
+    void batchUpdateFriendlyLink(MultipartFile file, FriendlyLink friendlyLink, String[] uuids, String originalFriendlyLinkUrl);
 
     void batchDelFriendlyLink(Map map);
 

@@ -101,7 +101,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	public ExternalQzSettingVO getAvailableQZSetting(){
 		ExternalQzSettingVO externalQzSettingVO = qzSettingDao.selectQZSettingForAutoOperate();
 		if(externalQzSettingVO != null){
-			List<String> typeList = qzOperationTypeService.getQZSettngStandardSpecies(externalQzSettingVO.getUuid());
+			List<String> typeList = qzOperationTypeService.getQZSettingStandardSpecies(externalQzSettingVO.getUuid());
 			if(CollectionUtils.isNotEmpty(typeList)){
 				externalQzSettingVO.setKeywordType(StringUtils.join(typeList,","));
 			}
@@ -458,9 +458,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		return split;
     }
 
-	public Map<String, Object> searchQZKeywordRankInfo(long uuid, String terminalType, String optimizeGroupName) {
+	public Map<String, Object> searchQZKeywordRankInfo(long uuid, String terminalType, String optimizeGroupName, Long customerUuid) {
 		List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(uuid, terminalType, null);
-		Map<String, Object> rankInfoVoMap = new HashMap<>();
+		Map<String, Object> rankInfoVoMap = new HashMap<>(8);
 		if (CollectionUtils.isNotEmpty(qzKeywordRankInfos)) {
 			int price = 0;
 			for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
@@ -470,7 +470,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				rankInfoVoMap.put(qzKeywordRankInfo.getWebsiteType(), qzKeywordRankInfoVo);
 			}
 			rankInfoVoMap.put("price", price);
-			this.getQZSettingGroupInfo(rankInfoVoMap, uuid, terminalType, optimizeGroupName);
+			this.getQZSettingGroupInfo(rankInfoVoMap, uuid, terminalType, optimizeGroupName, customerUuid);
 		}
 		return rankInfoVoMap;
 	}
@@ -641,13 +641,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
                             if (TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())){
                                 if (!pcExcludeKeyword.isEmpty()){
                                     if (pcExcludeKeyword.contains(customerKeyword.getKeyword())){
-										customerKeyword.setStatus(0);
+										customerKeyword.setStatus(3);
                                     }
                                 }
                             } else {
                                 if (!phoneExcludeKeyword.isEmpty()){
                                     if (phoneExcludeKeyword.contains(customerKeyword.getKeyword())){
-										customerKeyword.setStatus(0);
+										customerKeyword.setStatus(3);
                                     }
                                 }
                             }
@@ -755,8 +755,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-	private void getQZSettingGroupInfo(Map<String, Object> rankInfoVoMap, long uuid, String terminalType, String optimizeGroupName) {
-		rankInfoVoMap.put("customerKeywordCount", qzSettingDao.getQZSettingGroupInfo(terminalType, optimizeGroupName));
+	private void getQZSettingGroupInfo(Map<String, Object> rankInfoVoMap, long uuid, String terminalType, String optimizeGroupName, Long customerUuid) {
+		rankInfoVoMap.put("customerKeywordCount", qzSettingDao.getQZSettingGroupInfo(terminalType, optimizeGroupName, customerUuid));
 		rankInfoVoMap.put("operationCombineName", operationCombineService.getOperationCombineName(optimizeGroupName));
 		rankInfoVoMap.put("categoryTagNames", qzCategoryTagService.findTagNames(uuid));
 		rankInfoVoMap.put("standardTime", qzOperationTypeService.getStandardTime(uuid, terminalType));
@@ -790,7 +790,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				customerKeyword.setMachineGroup(qzSettingSaveCustomerKeywordsCriteria.getMachineGroupName());
 				if (!excludeKeyword.isEmpty()){
 					if (excludeKeyword.contains(keyword)){
-						customerKeyword.setStatus(0);
+						customerKeyword.setStatus(3);
 					}
 				}
 				customerKeyword.setKeyword(keyword);

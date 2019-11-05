@@ -167,6 +167,7 @@ function initQZKeywordRankInfo() {
         var optimizeGroupName = terminalType === 'PC' ? li.find("input[name='pcGroup']").val() : li.find("input[name='phoneGroup']").val();
         postData.terminalType = terminalType;
         postData.optimizeGroupName = optimizeGroupName;
+        postData.customerUuid = li.find("#custUuid").val();
         searchQZKeywordRankInfo(postData, function (data) {
             li.find(".other-rank_2").find("span.line1 a").text(optimizeGroupName);
             if (data != null) {
@@ -382,7 +383,7 @@ function generateQZKeywordTrendCharts(domElement, data) {
     $(parentElement).find("#TopCreate10").text(data.createTopTenNum);
     $(parentElement).find("#TopCreate50").text(data.createTopFiftyNum);
     if (data.dataProcessingStatus) {
-        $(parentElement).find("#IsStandard").text(data.achieveLevel === 0 ? "否" : "是");
+        $(parentElement).find("#IsStandard").text((data.achieveLevel == null || data.achieveLevel === 0) ? "否" : "是");
         $(parentElement).find("#StandardTime").text(data.achieveTime === null ? "无" : toDateFormat(new Date(data.achieveTime)));
     } else {
         $(parentElement).find("#IsStandard").parent().parent().css("display", "none");
@@ -663,7 +664,7 @@ function generateQZDesignationWordTrendCharts(domElement, data) {
     $(parentElement).find("#Top50").text(data.topFifty[data.topFifty.length-1]);
     $(parentElement).find("#TopCreate10").text(data.createTopTenNum);
     $(parentElement).find("#TopCreate50").text(data.createTopFiftyNum);
-    $(parentElement).find("#IsStandard").text(data.achieveLevel === 0 ? "否" : "是");
+    $(parentElement).find("#IsStandard").text((data.achieveLevel == null || data.achieveLevel === 0) ? "否" : "是");
     $(parentElement).find("#StandardTime").text(data.achieveTime === null ? "无" : toDateFormat(new Date(data.achieveTime)));
     option = {
         color: ['#228B22', '#0000FF', '#FF6100', '#000000', '#FF0000'],
@@ -997,7 +998,8 @@ function generateQZXTKeywordTrendCharts(domElement, data) {
     keywordRecordCharts.setOption(option);
 }
 function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames, operationCombineName) {
-    div.parent().find(".other-rank .row:first-child").find("div[name='operationKeywordNum']").find("span.line1 a").text(customerKeywordCount);
+    div.parent().find(".other-rank .row:first-child").find("div[name='activeCount'] a").text(customerKeywordCount["activeCount"]);
+    div.parent().find(".other-rank .row:first-child").find("div[name='stopCount'] a").text(customerKeywordCount["stopCount"]);
     if (categoryTagNames.length > 0) {
         var tagNameStr = "";
         var span = $(div).parent().parent().parent().find(".header span.tagNames");
@@ -1210,11 +1212,11 @@ function getGroupNameByTerminalType(statusIndex) {
     return optimizeGroupName;
 }
 
-function searchCustomerKeywords(customerUuid, statusIndex) {
+function searchCustomerKeywords(customerUuid, statusIndex, stauts) {
     var searchCustomerKeywordForm = $("#searchCustomerKeywordForm");
     searchCustomerKeywordForm.find("#customerUuid").val(customerUuid);
     searchCustomerKeywordForm.find("#optimizeGroupName").val(getGroupNameByTerminalType(statusIndex));
-    searchCustomerKeywordForm.find("#status").val(1);
+    searchCustomerKeywordForm.find("#status").val(stauts);
     searchCustomerKeywordForm.submit();
 }
 var TimeFn = null;

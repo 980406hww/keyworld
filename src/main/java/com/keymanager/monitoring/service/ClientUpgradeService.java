@@ -27,7 +27,7 @@ public class ClientUpgradeService extends ServiceImpl<ClientUpgradeDao, ClientUp
     public void saveClientUpgrade(String terminalType, ClientUpgrade clientUpgrade) throws Exception {
         if(clientUpgrade.getUuid() == null) {
             clientUpgrade.setTerminalType(terminalType);
-            clientUpgrade.setResidualUpgradeCount(1);
+            clientUpgrade.setResidualUpgradeCount(0);
             clientUpgrade.setCreateTime(new Date());
             clientUpgradeDao.insert(clientUpgrade);
         } else {

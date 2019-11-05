@@ -175,7 +175,8 @@ function updateCaptureRankJobsStatus(status) {
         $.messager.alert("提示", "至少选择一条数据!", 'info');
         return;
     }
-    $.messager.confirm('提示', '确定要暂停这些任务吗?', function (b) {
+    let msg = status === "true" ? "启动": "暂停";
+    $.messager.confirm('提示', '确定要'+ msg +'这些任务吗?', function (b) {
        if (b) {
            var postData = {};
            postData.uuids = uuids.split(",");
@@ -191,14 +192,14 @@ function updateCaptureRankJobsStatus(status) {
                type: 'POST',
                success: function (data) {
                    if (data) {
-                       $().toastmessage('showSuccessToast', "任务暂停成功", true);
+                       $().toastmessage('showSuccessToast', "任务"+ msg +"成功", true);
                    }
                    else {
-                       $().toastmessage('showErrorToast', "任务暂停失败");
+                       $().toastmessage('showErrorToast', "任务"+ msg +"失败");
                    }
                },
                error: function () {
-                   $().toastmessage('showErrorToast', "任务暂停失败");
+                   $().toastmessage('showErrorToast', "任务"+ msg +"失败");
                }
            });
        }

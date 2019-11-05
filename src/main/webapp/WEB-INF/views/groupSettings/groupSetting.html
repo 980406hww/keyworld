@@ -9,11 +9,27 @@
     <link rel="stylesheet" href="/static/ok-admin/lib/style/template.css">
     <link rel="stylesheet" href="/static/ok-admin/page/groupSetting/groupSetting.css">
 </head>
+<style>
+    .layui-tab-content {
+        padding: 0px;
+    }
+    .layui-card-body {
+        position: relative;
+        padding: 0px;
+        line-height: 24px;
+    }
+    .layui-table, .layui-table-view {
+        margin: 0px;
+        border-width: 1px;
+    }
+    .my-collapse > div:first-child {
+        background: #f2f2f2;
+        border: 0px;
+    }
+</style>
 <body>
 <div class="layui-tab layui-tab-card" lay-filter="groupSettingTab">
     <ul class="layui-tab-title">
-       <!-- <li class="layui-this">PC</li>
-        <li>Phone</li>-->
         <li lay-id="PC" class="layui-this" data-terminal="PC">电脑</li>
         <li lay-id="Phone" data-terminal="Phone">手机</li>
     </ul>
@@ -38,16 +54,6 @@
                                 <select name="operationType" id="operationType" lay-filter="operationTypeFilter">
                                     <option value="">请选择操作类型</option>
                                 </select>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <div class="layui-input-inline">
-                                <input type="checkbox" name="hasOperation" id="hasOperation" title="有操作类型" lay-filter="oneChecked"/>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <div class="layui-input-inline">
-                                <input type="checkbox" name="noOperation" id="noOperation" title="无操作类型" lay-filter="oneChecked"/>
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -86,7 +92,7 @@
             </form>
 
         </div>
-        <div id="groupSettingBody" style="height: 820px;overflow-y: scroll;padding-bottom: 5px;">
+        <div id="groupSettingBody" style="overflow-y: scroll;padding-bottom: 5px;">
             <div style="width: 99.2%" class="layui-fluid layadmin-maillist-fluid">
                 <div class="layui-form" id="data_list"></div>
             </div>
@@ -96,11 +102,8 @@
 </div>
 <div id="page_nav"></div>
 
-
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
-<!--<script src="/static/ok-admin/page/base/searchForm.js"></script>-->
 
-<!--<script src="/static/ok-admin/page/groupSetting/groupSetting.js"></script>-->
 <script>
 
     getHeight();
@@ -108,7 +111,7 @@
     function getHeight(){
         let b = document.getElementById('groupSettingBody');
         let h = window.innerHeight || document.body.offsetHeight;
-        b.style.height = (h - 155) + 'px';
+        b.style.height = (h - 145) + 'px';
     }
 
     layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'], function () {
@@ -128,12 +131,6 @@
             $('#terminalType').val(d.terminal);
             init_operationType();
             let pageConf = common.formToJsonObject('searchForm');
-            if (pageConf.hasOperation){
-                pageConf.hasOperation = true;
-            }
-            if (pageConf.noOperation){
-                pageConf.hasOperation = false;
-            }
             if (pageConf.hasRemainingAccount){
                 pageConf.hasRemainingAccount = true;
             }else{
@@ -159,7 +156,6 @@
                 dataType: 'json',
                 type: 'post',
                 async: false,
-                dataType:'json',
                 success: function (res) {
                     if (res.code === 200){
                         let data =res.data;
@@ -177,48 +173,19 @@
 
         form.on('select(operationTypeFilter)', function(data){
             if(data.elem.value !== ''){
-                $('#hasOperation').prop("checked",true);
-                $('#noOperation').prop("checked",false);
                 $('#hasRemainingAccount').prop("checked",false);
             }else {
-                $('#hasOperation').prop("checked",false);
-                $('#noOperation').prop("checked",false);
                 $('#hasRemainingAccount').prop("checked",false);
             }
-
             form.render('checkbox');
         });
 
         form.on('checkbox(oneChecked)', function(data){
-            if (data.elem.checked){
-                switch(data.elem.id){
-                    case 'hasOperation':
-                        $('#noOperation').prop("checked",false);
-                        $('#hasRemainingAccount').prop("checked",false);
-                        break;
-                    case 'noOperation':
-                        $('#hasOperation').prop("checked",false);
-                        $('#hasRemainingAccount').prop("checked",false);
-                        break;
-                    case 'hasRemainingAccount':
-                        $('#noOperation').prop("checked",false);
-                        $('#hasOperation').prop("checked",false);
-                        break;
-                }
-                form.render('checkbox');
-                $('#searchBtn').click();
-            }
-
+            $('#searchBtn').click();
         });
 
         form.on('submit(search)', function (data) {
             var pageConf = data.field;
-            if (pageConf.hasOperation){
-                pageConf.hasOperation = true;
-            }
-            if (pageConf.noOperation){
-                pageConf.hasOperation = false;
-            }
             if (pageConf.hasRemainingAccount){
                 pageConf.hasRemainingAccount = true;
             }else{
@@ -240,17 +207,11 @@
             data.remainAccount = 100;
             data.currentAccount = 0;
             data.terminalType = $('#terminalType').val();
-            okLayer.open("终端管理 / 分组信息 / 添加操作组合", "/internal/groupsetting/toGroupSettingAdd", "40%", "90%", function(layero){
+            okLayer.open("终端管理 / 分组信息 / 添加操作组合", "/internal/groupsetting/toGroupSettingAdd", "60%", "90%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             }, function () {
                 if (sign) {
                     let pageConf = common.formToJsonObject('searchForm');
-                    if (pageConf.hasOperation){
-                        pageConf.hasOperation = true;
-                    }
-                    if (pageConf.noOperation){
-                        pageConf.hasOperation = false;
-                    }
                     if (pageConf.hasRemainingAccount){
                         pageConf.hasRemainingAccount = true;
                     }else{
@@ -270,12 +231,6 @@
             }, function () {
                 if (sign) {
                     let pageConf = common.formToJsonObject('searchForm');
-                    if (pageConf.hasOperation){
-                        pageConf.hasOperation = true;
-                    }
-                    if (pageConf.noOperation){
-                        pageConf.hasOperation = false;
-                    }
                     if (pageConf.hasRemainingAccount){
                         pageConf.hasRemainingAccount = true;
                     }else{
@@ -285,7 +240,7 @@
                     sign = false;
                 }
             });
-        }
+        };
 
         window.toGroupSettingAdd = function(operationCombineUuid,operationCombineName,maxInvalidCount,remainAccount){
             let data = {};
@@ -303,12 +258,6 @@
             }, function () {
                 if (sign) {
                     let pageConf = common.formToJsonObject('searchForm');
-                    if (pageConf.hasOperation){
-                        pageConf.hasOperation = true;
-                    }
-                    if (pageConf.noOperation){
-                        pageConf.hasOperation = false;
-                    }
                     if (pageConf.hasRemainingAccount){
                         pageConf.hasRemainingAccount = true;
                     }else{
@@ -334,12 +283,6 @@
             }, function () {
                 if (sign) {
                     let pageConf = common.formToJsonObject('searchForm');
-                    if (pageConf.hasOperation){
-                        pageConf.hasOperation = true;
-                    }
-                    if (pageConf.noOperation){
-                        pageConf.hasOperation = false;
-                    }
                     if (pageConf.hasRemainingAccount){
                         pageConf.hasRemainingAccount = true;
                     }else{
@@ -365,12 +308,6 @@
             }, function () {
                 if (sign) {
                     let pageConf = common.formToJsonObject('searchForm');
-                    if (pageConf.hasOperation){
-                        pageConf.hasOperation = true;
-                    }
-                    if (pageConf.noOperation){
-                        pageConf.hasOperation = false;
-                    }
                     if (pageConf.hasRemainingAccount){
                         pageConf.hasRemainingAccount = true;
                     }else{
@@ -422,7 +359,6 @@
                         }
                     });
                     init_data(result.data);
-
                 },
                 error: function () {
                     common.showFailMsg('获取分组信息失败，请稍后再试');
@@ -440,8 +376,8 @@
                     + '                            <div class="layui-col-md12">\n'
                     + '                                <div class="data-head">\n'
                     + '                                     <div class="layui-col-md2 skip importantText" title="'+item.operationCombineName+'---'+item.remainingAccount+'%">'+ item.creator + '&nbsp;&nbsp;&nbsp;&nbsp;' + item.operationCombineName+'</div>\n'
-                    + '                                     <div class="layui-col-md1" onclick=changeMaxInvalidCount("'+item.uuid+'")>最大无效点击数:<span id="maxInvalidCount'+item.uuid+'">'+item.maxInvalidCount+'</span></div>\n'
-                    + '                                     <div class="layui-col-md6 skip" onclick=changeGroupNames("'+item.uuid+'")>分组:<span id="groupNameStr'+item.uuid+'">'+getGroupNameStrByUuid(item.uuid)+'</span></div>\n'
+                    + '                                     <div class="layui-col-md1" onclick=changeMaxInvalidCount("'+item.uuid+'")>最大无效点击数:<span style="color: #00a65a" id="maxInvalidCount'+item.uuid+'">'+item.maxInvalidCount+'</span></div>\n'
+                    + '                                     <div class="layui-col-md6 skip" onclick=changeGroupNames("'+item.uuid+'")>分组:<span style="color: #00a65a" id="groupNameStr'+item.uuid+'">'+getGroupNameStrByUuid(item.uuid)+'</span></div>\n'
                     + '                                     <div class="layui-col-md3 head-operation" title="操作">\n'
                     + '                                         <div class="layui-col-md2">'
                     + '                                              <a href="javascript:void(0)" onclick=showGroupQueueDialog("' + item.uuid + '")>分组详情 </a>'
@@ -608,7 +544,7 @@
         };
 
         window.uniqueGroupName = function unique(a) {
-            var seen = {};
+            let seen = {};
             return a.filter(function(item) {
                 return seen.hasOwnProperty(item) ? false : (seen[item] = true);
             });
@@ -651,12 +587,6 @@
                             if (result.code === 200) {
                                 common.showSuccessMsg('操作成功', function () {
                                     let pageConf = common.formToJsonObject('searchForm');
-                                    if (pageConf.hasOperation){
-                                        pageConf.hasOperation = true;
-                                    }
-                                    if (pageConf.noOperation){
-                                        pageConf.hasOperation = false;
-                                    }
                                     if (pageConf.hasRemainingAccount){
                                         pageConf.hasRemainingAccount = true;
                                     }else{
@@ -681,25 +611,20 @@
 
         window.getStatisticText  = function(disableStatistics){
             let htm = '';
-            switch (disableStatistics) {
-                case 0:
-                    htm = '开放';
-                    break;
-                default:
-                    htm = '关闭';
-
+            if (disableStatistics === 0) {
+                htm = '开放';
+            } else {
+                htm = '关闭';
             }
             return htm;
         };
 
         window.getVisitWebsiteText  = function(disableVisitWebsite){
             let htm = '';
-            switch (disableVisitWebsite) {
-                case 0:
-                    htm = '访问';
-                    break;
-                default:
-                    htm = '不访问';
+            if (disableVisitWebsite === 0) {
+                htm = '访问';
+            } else {
+                htm = '不访问';
             }
             return htm;
         };
@@ -715,6 +640,7 @@
                     break;
                 default:
                     htm = '50';
+                    break;
             }
             return htm;
         };
@@ -733,18 +659,17 @@
                     break;
                 default:
                     htm = 'N次操作清理Cookie';
+                    break;
             }
             return htm;
         };
 
         window.getRandomlyClickNoResultText  = function(randomlyClickNoResult){
             let htm = '';
-            switch (randomlyClickNoResult) {
-                case 1:
-                    htm = '是';
-                    break;
-                default:
-                    htm = '否';
+            if (randomlyClickNoResult === 1) {
+                htm = '是';
+            } else {
+                htm = '否';
             }
             return htm;
         };
@@ -753,17 +678,11 @@
         window.showGroupQueueDialog = function (uuid) {
             let data = {};
             data.uuid = uuid;
-            okLayer.open("终端管理 / 分组信息 / 分组详情<span style='color: red'>(需要删除的分组请取消选中)</span>", "/internal/groupsetting/toGroupDetail", "40%", "90%", function(layero){
+            okLayer.open("终端管理 / 分组信息 / 分组详情<span style='color: red'>(需要删除的分组请取消选中)</span>", "/internal/groupsetting/toGroupDetail", "30%", "90%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             }, function () {
                 if (sign) {
                     let pageConf = common.formToJsonObject('searchForm');
-                    if (pageConf.hasOperation){
-                        pageConf.hasOperation = true;
-                    }
-                    if (pageConf.noOperation){
-                        pageConf.hasOperation = false;
-                    }
                     if (pageConf.hasRemainingAccount){
                         pageConf.hasRemainingAccount = true;
                     }else{
@@ -772,7 +691,7 @@
                     initLayPage(pageConf);
                     sign = false;
                 }
-            });
+            },'40px');
         };
 
         window.delOperationCombine = function (operationCombineUuid) {
@@ -802,14 +721,8 @@
                                     type: 'POST',
                                     success: function (result) {
                                         if (result.code === 200) {
-                                            connom.showSuccessMsg('操作成功', function () {
+                                            common.showSuccessMsg('操作成功', function () {
                                                 let pageConf = common.formToJsonObject('searchForm');
-                                                if (pageConf.hasOperation){
-                                                    pageConf.hasOperation = true;
-                                                }
-                                                if (pageConf.noOperation){
-                                                    pageConf.hasOperation = false;
-                                                }
                                                 if (pageConf.hasRemainingAccount){
                                                     pageConf.hasRemainingAccount = true;
                                                 }else{
@@ -818,7 +731,7 @@
                                                 initLayPage(pageConf)
                                             });
                                         } else {
-                                            connom.showFailMsg('操作失败');
+                                            common.showFailMsg('操作失败');
                                         }
                                     },
                                     error: function () {
@@ -863,12 +776,6 @@
                         if (result.code === 200) {
                             common.showSuccessMsg('操作成功', function () {
                                 let pageConf = common.formToJsonObject('searchForm');
-                                if (pageConf.hasOperation){
-                                    pageConf.hasOperation = true;
-                                }
-                                if (pageConf.noOperation){
-                                    pageConf.hasOperation = false;
-                                }
                                 if (pageConf.hasRemainingAccount){
                                     pageConf.hasRemainingAccount = true;
                                 }else{

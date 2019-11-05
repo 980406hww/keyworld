@@ -9,6 +9,25 @@
     <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
     <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 0px;
+        }
+        .layui-table-body .laytable-cell-checkbox {
+            text-align: center;
+        }
         /* 下拉条件框 */
         .my-collapse {
             position: relative;
@@ -103,18 +122,6 @@
             height: 30px;
         }
 
-        /*.layui-table-body .layui-table-cell {
-                    text-align: left;
-                }
-
-                .layui-table-body .laytable-cell-checkbox {
-                    text-align: center;
-                }
-
-                .layui-table-body .laytable-cell-1-0-13 {
-                    text-align: center;
-                }*/
-
         .show-msg {
             color: blue;
             cursor: pointer;
@@ -164,12 +171,10 @@
                                     <div class="layui-inline">
                                         <input type="text" name="createTime" id="createTime" placeholder="请选择日期" class="layui-input" autocomplete="off">
                                     </div>
-                                    <@shiro.hasPermission name="/internal/keywordInfo/searchKeywordInfos">
                                     <div class="layui-inline">
                                         <button class="layui-btn" lay-submit lay-filter="search" id="searchBtn">搜索
                                         </button>
                                     </div>
-                                    </@shiro.hasPermission>
                                     <div class="layui-inline">
                                         <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">
                                             重置
@@ -203,14 +208,13 @@
     var sign = false;
 
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 'common'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'layer', 'common'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
         var laydate = layui.laydate;
         var layer = layui.layer;
-        var okLayer = layui.okLayer;
         var common = layui.common;
 
         init();
@@ -236,13 +240,12 @@
                 defaultToolbar: [],
                 contentType: 'application/json',
                 cols: [[
-                    {filed: 'id', type: 'checkbox', width: '3%', align: 'center'},
-                    {field: 'userName', title: '账户名称', width: '10%', align: 'center'},
-                    {field: 'searchEngine', title: '搜索引擎以及端口', width: '10%', align: 'center'},
-                    {field: 'operationType', title: '操作类型', width: '8%', align: 'center'},
+                    {field: 'userName', title: '账户名称', width: '10%', align: 'left'},
+                    {field: 'searchEngine', title: '搜索引擎以及端口', width: '10%', align: 'left'},
+                    {field: 'operationType', title: '操作类型', width: '8%', align: 'left'},
                     {field: 'keywordCount', title: '词数', width: '6%', align: 'center'},
                     {
-                        field: 'keywordInfo', title: '关键词信息', width: '51%', align: 'left', templet: function (d) {
+                        field: 'keywordInfo', title: '关键词信息', width: '54%', align: 'left', templet: function (d) {
                             let msg = d.keywordInfo.replace(new RegExp('\n', 'g'), '<br>');
                             return '<span class="show-msg" onclick="showMsg(\'' + msg + '\')">' + d.keywordInfo.replace(new RegExp('\n', 'g'), ' ') + '</span>';
                         }
@@ -253,7 +256,7 @@
                         }
                     }
                 ]],
-                height: 'full-150',
+                height: 'full-110',
                 loading: true,
                 done: function (res, curr, count) {
                 }
@@ -270,7 +273,7 @@
                 content: html,
                 shadeClose: true,
                 resize: false,
-                area: '500px',
+                area: '300px',
                 offset: '100px',
                 btn: ['确认'],
                 yes: function (index) {

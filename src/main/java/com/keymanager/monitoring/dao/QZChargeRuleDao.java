@@ -20,7 +20,5 @@ public interface QZChargeRuleDao extends BaseMapper<QZChargeRule> {
 
     List<QZChargeRuleStandardInfoVO> searchQZChargeRuleStandardInfoVos (@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType);
 
-    List<String> getAllStandardSpecies (@Param("qzSettingUuid") Long qzSettingUuid);
-
     List<QZChargeRuleVO> findQZChargeRules (@Param("qzSettingUuid")Long qzSettingUuid, @Param("operationType")String operationType, @Param("websiteType")String websiteType);
 }

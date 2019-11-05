@@ -150,4 +150,19 @@ public class ConfigController {
         }
         return resultBean;
     }
+
+    @RequiresPermissions("/internal/config/evictAllConfigCache")
+    @RequestMapping(value = "/evictAllConfigCache", method = RequestMethod.GET)
+    public ResultBean evictAllConfigCache() {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            configService.evictAllConfigCache();
+            logger.info("清理Config缓存");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setMsg(e.getMessage());
+            resultBean.setCode(400);
+        }
+        return resultBean;
+    }
 }

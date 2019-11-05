@@ -5,11 +5,28 @@
     <title>负面排名</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <link rel="stylesheet" href="/static/ok-admin/page/base/searchForm.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            margin-top: 10px;
+            background: #f2f2f2;
+            border: 1px;
+        }
+
         .layui-table-page > div {
             height: 26px;
             position: fixed;
@@ -32,6 +49,9 @@
             color: darkslateblue;
         }
 
+        .layui-form-selected dl{
+            max-width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -45,7 +65,9 @@
                     <div class="my-collapse">
                         <div>
                             <div class="layui-inline">
-                                <input type="text" name="keyword" list="keyword_list" id="keyword" placeholder="请输入关键字" class="layui-input">
+                                <select name="keyword" id="keyword" lay-search>
+                                </select>
+
                             </div>
                             <div class="layui-inline">
                                 <select name="searchEngine" id="searchEngine">
@@ -88,9 +110,6 @@
 </div>
 <!--js逻辑-->
 
-<datalist id="keyword_list">
-
-</datalist>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
 
@@ -102,14 +121,13 @@
         NProgress.done();
     };
 
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','common'], function () {
-        var element = layui.element;
-        var table = layui.table;
-        var form = layui.form;
-        var $ = layui.jquery;
-        var layer = layui.layer;
-        var laydate = layui.laydate;
-        var common = layui.common;
+    layui.use(['table', 'form', 'jquery', 'laydate', 'layer', 'common'], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let $ = layui.jquery;
+        let layer = layui.layer;
+        let laydate = layui.laydate;
+        let common = layui.common;
 
         laydate.render({
             elem: '#createTime',
@@ -128,19 +146,20 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        var keywordData = res.data;
-                        var keyword_list = $('#keyword_list');
+                        let keywordData = res.data;
+                        let keyword_list = $('#keyword');
                         keyword_list.empty();
+                        keyword_list.append('<option value="">请选择关键字</option>');
                         $.each(keywordData, function (index, item) {
                             keyword_list.append('<option value="' + item + '">' + item + '</option>');
                         });
-                        form.render("select")
+                        form.render("select");
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg);
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！');
                 }
             });
         }
@@ -171,7 +190,7 @@
                     {field: 'otherPageRanks', title: '其他负面排名', width: '11%', event: 'updateOtherPageRanks'},
                     {field: 'createTime', title: '创建时间', width: '6%', templet: '#toDateTime'},
                 ]],
-                height: 'full-90',
+                height: 'full-65',
                 done: function (res, curr, count) {
                 }
             });
@@ -179,7 +198,7 @@
 
     <@shiro.hasPermission name="/internal/negativeRank/updateNegativeRankKeyword">
         table.on('tool(tableFilter)', function (obj) {
-            var data = obj.data, event = obj.event;
+            let data = obj.data, event = obj.event;
             switch (event) {
                 case 'updateFirstPageRanks':
                     updateNegativeRank(data.uuid, "firstPageRanks");
@@ -234,13 +253,12 @@
                 value: oldValue,
                 title: tit,
                 yes: function (index, layero) {
-                    var index2 = index;
-                    var value = layero.find(".layui-layer-input").val();
-                    var postData = {};
+                    let index2 = index;
+                    let value = layero.find(".layui-layer-input").val();
+                    let postData = {};
                     postData.uuid = uuid;
                     postData[rankType] = value;
-                    let negativeCount = value.replace(/( )+/g,"").replace(/(，)+|(,)+/g, ",").split(",").length;
-                    postData.negativeCount = negativeCount;
+                    postData.negativeCount = value.replace(/( )+/g,"").replace(/(，)+|(,)+/g, ",").split(",").length;
                     $.ajax({
                         url: '/internal/negativeRank/updateNegativeRankKeyword2',
                         data: JSON.stringify(postData),
@@ -252,8 +270,9 @@
                         type: 'POST',
                         success: function (result) {
                             if (result.code === 200) {
-                                common.showSuccessMsg('操作成功', active['reload'].call(this));
-
+                                common.showSuccessMsg('操作成功', function () {
+                                    active['reload'].call(this);
+                                });
                             } else {
                                 common.showFailMsg('操作失败',);
                             }
@@ -263,14 +282,12 @@
                         }
                     });
                     layer.close(index2);
-                    // });
-
                 }
             });
         }
     </@shiro.hasPermission>
 
-        var active = {
+        let active = {
             reload: function () {
                 let data = common.formToJsonObject('searchForm');
                 data.entryType = 'pt';
@@ -284,7 +301,7 @@
         };
 
         form.on("submit(search)", function (data) {
-            var postData = data.field;
+            let postData = data.field;
             postData = common.jsonObjectTrim(postData)
             table.reload('negativeRankTable', {
                 where: postData,

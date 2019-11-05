@@ -48,6 +48,7 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
     @Resource(name = "websiteService2")
     private WebsiteService websiteService;
 
+    @Override
     public ModelAndView constructSearchFriendlyLinkListsModelAndView(int currentPageNumber, int pageSize, FriendlyLinkCriteria friendlyLinkCriteria) {
         ModelAndView modelAndView = new ModelAndView("/friendlyLink/friendlyLink");
         Page<FriendlyLink> page = new Page<>();
@@ -63,6 +64,7 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
         return page;
     }
 
+    @Override
     public void saveFriendlyLink(MultipartFile file, FriendlyLink friendlyLink){
         saveOrUpdateConnectionCMS(friendlyLink, file, WebsiteRemoteConnectionEnum.add.name());
         if (friendlyLink.getFriendlyLinkSortRank() != -1){
@@ -73,10 +75,12 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
         insertFriendlyLink(friendlyLink);
     }
 
+    @Override
     public FriendlyLink getFriendlyLink(Long uuid) {
         return friendlyLinkDao.getFriendlyLink(uuid);
     }
 
+    @Override
     public void delFriendlyLinks(Map map){
         Long websiteUuid = Long.valueOf((String)map.get("websiteUuid"));
         List<String> uuids = (List<String>) map.get("uuids");
@@ -87,6 +91,7 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
         friendlyLinkDao.deleteBatchIds(uuids);
     }
 
+    @Override
     public void delFriendlyLink(Long uuid){
         FriendlyLink friendlyLink = friendlyLinkDao.selectById(uuid);
         String[] uuidArrays = {String.valueOf(friendlyLink.getFriendlyLinkId())};
@@ -94,7 +99,7 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
         friendlyLinkDao.deleteById(uuid);
     }
 
-
+    @Override
     public void updateFriendlyLink(MultipartFile file, FriendlyLink friendlyLink, int originalSortRank){
         friendlyLink.setUpdateTime(new Date());
         saveOrUpdateConnectionCMS(friendlyLink, file, WebsiteRemoteConnectionEnum.saveedit.name());
@@ -106,8 +111,9 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
         friendlyLinkDao.updateById(friendlyLink);
     }
 
+    @Override
     public void saveOrUpdateConnectionCMS(FriendlyLink friendlyLink, MultipartFile file, String type){
-        Website website = websiteService.getWebsite(Long.valueOf(friendlyLink.getWebsiteUuid()));
+        Website website = websiteService.getWebsite((long) friendlyLink.getWebsiteUuid());
         Map requestMap = new HashedMap();
         requestMap.put("username", website.getBackendUserName());
         requestMap.put("password", website.getBackendPassword());
@@ -173,6 +179,7 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
         }
     }
 
+    @Override
     public void deleteConnectionCMS(Long websiteUuid, String[] uuids){
         Website website = websiteService.getWebsite(websiteUuid);
         Map requestMap = new HashedMap();
@@ -189,6 +196,7 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
         }
     }
 
+    @Override
     public List<FriendlyLinkVO> selectConnectionCMS(Long websiteUuid){
         Website website = websiteService.getWebsite(websiteUuid);
         Map requestMap = new HashedMap();
@@ -211,6 +219,7 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
         return friendlyLinkVOS;
     }
 
+    @Override
     public String connectionCMS(Map map, String type, String backendDomain){
         MultiValueMap requestMap = new LinkedMultiValueMap();
         if (!StringUtils.isEmpty(map.get("logoimg")) && !"(binary)".equals(map.get("logoimg"))){
@@ -236,6 +245,7 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
         return resultJsonString;
     }
 
+    @Override
     public FriendlyLink initFriendlyLink(HttpServletRequest request) throws Exception{
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         FriendlyLink friendlyLink = new FriendlyLink();
@@ -259,6 +269,7 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
         return friendlyLink;
     }
 
+    @Override
     public List<Map> searchFriendlyLinkTypeList(Long websiteUuid){
         Website website = websiteService.selectById(websiteUuid);
         RestTemplate restTemplate = new RestTemplate();
@@ -288,42 +299,52 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
         return friendlyLinkTypeList;
     }
 
+    @Override
     public void insertFriendlyLink(FriendlyLink friendlyLink){
         friendlyLinkDao.insert(friendlyLink);
     }
 
+    @Override
     public void retreatSortRank(int websiteUuid, int friendlyLinkSortRank){
         friendlyLinkDao.retreatSortRank(websiteUuid, friendlyLinkSortRank);
     }
 
+    @Override
     public void updateFriendlyLinkById(FriendlyLink friendlyLink){
         friendlyLinkDao.updateById(friendlyLink);
     }
 
+    @Override
     public void updateCentreSortRank(int beginSortRank, int endSortRank, int websiteUuid){
         friendlyLinkDao.updateCentreSortRank(beginSortRank, endSortRank, websiteUuid);
     }
 
+    @Override
     public List<Map> searchOriginalSortRank(int websiteUuid, String originalFriendlyLinkUrl){
         return friendlyLinkDao.searchOriginalSortRank(websiteUuid, originalFriendlyLinkUrl);
     }
 
+    @Override
     public List<String> searchFriendlyLinkidsByUrl(Long websiteUuid, String originalFriendlyLinkUrl){
         return friendlyLinkDao.searchFriendlyLinkidsByUrl(websiteUuid, originalFriendlyLinkUrl);
     }
 
+    @Override
     public void batchDeleteFriendlyLinkByUrl(String friendlyLinkUrl, List<String> websiteUuids){
         friendlyLinkDao.batchDeleteFriendlyLinkByUrl(friendlyLinkUrl, websiteUuids);
     }
 
+    @Override
     public FriendlyLink getFriendlyLinkByUrl(int websiteUuid, String friendlyLinkUrl){
         return friendlyLinkDao.getFriendlyLinkByUrl(websiteUuid, friendlyLinkUrl);
     }
 
+    @Override
     public List<Integer> selectByWebsiteId(Long websiteUuid){
         return friendlyLinkDao.selectByWebsiteId(websiteUuid);
     }
 
+    @Override
     public void initSynchronousFriendlyLink(FriendlyLink friendlyLink, FriendlyLinkVO friendlyLinkVO){
         friendlyLink.setFriendlyLinkSortRank(friendlyLinkVO.getSortrank());
         friendlyLink.setFriendlyLinkUrl(friendlyLinkVO.getUrl());
@@ -341,14 +362,17 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
         friendlyLink.setFriendlyLinkIsCheck(friendlyLinkVO.getIscheck());
     }
 
+    @Override
     public Long selectIdByFriendlyLinkId(Long websiteUuid, int friendlyLinkId){
         return friendlyLinkDao.selectIdByFriendlyLinkId(websiteUuid, friendlyLinkId);
     }
 
+    @Override
     public int searchFriendlyLinkCount(Long websiteUuid){
         return friendlyLinkDao.searchFriendlyLinkCount(websiteUuid);
     }
 
+    @Override
     public void pushFriendlyLink(Map map){
         List<Integer> uuids = (List<Integer>) map.get("uuids");
         for (Integer uuid: uuids) {
@@ -362,6 +386,7 @@ public class FriendlyLinkServiceImpl extends ServiceImpl<FriendlyLinkDao, Friend
         }
     }
 
+    @Override
     public int selectMaxSortRank(int websiteUuid){
         return friendlyLinkDao.selectMaxSortRank(websiteUuid);
     }

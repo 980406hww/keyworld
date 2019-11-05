@@ -22,17 +22,18 @@
     <select id="selectAuthorizationMenu" resultType="com.keymanager.monitoring.entity.Resource">
         SELECT
         <include refid="colID"/>
-        FROM t_resource s
+        FROM t_resource_new s
         WHERE s.fUuid IN (SELECT
         rr.fResourceID
         FROM t_userinfo u,
         t_user_role ur,
-        t_role_resource rr
+        t_role_resource_new rr
         WHERE u.fLoginName = #{loginName}
         AND u.fUuid = ur.fUserID
         AND ur.fRoleID = rr.fRoleID)
         AND s.fResourceType = 0
-        AND (s.fVersion = #{version} OR s.fVersion = '')
+        AND s.fVersion = #{version}
+        AND S.fStatus = 0
         ORDER BY s.fSequence
     </select>
 
@@ -43,21 +44,21 @@
                  SELECT @ids AS _ids,
                         (
                             SELECT @ids := GROUP_CONCAT(fUuid)
-                            FROM t_resource
+                            FROM t_resource_new
                             WHERE FIND_IN_SET(fParentID, @ids)
                         )            AS cids,
                         @l := @l + 1 AS LEVEL
-                 FROM t_resource,
+                 FROM t_resource_new,
                       (SELECT @ids := #{pid}, @l := 0) b
                  WHERE @ids IS NOT NULL
              ) A,
-             t_resource B
+             t_resource_new B
         WHERE A.LEVEL != 1
           AND FIND_IN_SET(B.fUuid, A._ids)
     </select>
 
     <select id="updChildVersion">
-        UPDATE t_resource SET fVersion = #{version}
+        UPDATE t_resource_new SET fVersion = #{version}
         WHERE fUuid IN
         <foreach item="item" collection="items" open="(" separator="," close=")">
             #{item.fUuid}

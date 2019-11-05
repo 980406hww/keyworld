@@ -6,6 +6,7 @@ import com.keymanager.ckadmin.entity.QZChargeRule;
 import com.keymanager.ckadmin.entity.QZOperationType;
 import com.keymanager.ckadmin.service.QZChargeRuleService;
 import com.keymanager.ckadmin.service.QZOperationTypeService;
+import com.keymanager.util.common.StringUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,11 +35,9 @@ public class QZOperationTypeServiceImpl extends ServiceImpl<QZOperationTypeDao, 
 
     @Override
     public List<QZOperationType> searchQZOperationTypesIsDelete(long uuid) {
-        List<QZOperationType> qzOperationTypes = qzOperationTypeDao
-            .searchQZOperationTypesIsDelete(uuid);
+        List<QZOperationType> qzOperationTypes = qzOperationTypeDao.searchQZOperationTypesIsDelete(uuid);
         for (QZOperationType qzOperationType : qzOperationTypes) {
-            List<QZChargeRule> qzChargeRules = qzChargeRuleService
-                .searchQZChargeRuleByqzOperationTypeUuids(qzOperationType.getUuid());
+            List<QZChargeRule> qzChargeRules = qzChargeRuleService.searchQZChargeRuleByQZOperationTypeUuids(qzOperationType.getUuid());
             if (CollectionUtils.isNotEmpty(qzChargeRules)) {
                 qzOperationType.setQzChargeRules(qzChargeRules);
             }
@@ -57,11 +56,13 @@ public class QZOperationTypeServiceImpl extends ServiceImpl<QZOperationTypeDao, 
     }
 
     @Override
-    public List<String> getQZSettngStandardSpecie(long qzSettingUuid, String[] terminalTypes) {
-        List<String> standardSpecieList = new ArrayList<>(2);
+    public List<String> getQZSettingStandardSpecie(long qzSettingUuid, String[] terminalTypes) {
+        List<String> standardSpecieList = new ArrayList<>(terminalTypes.length);
         for (String terminalType : terminalTypes) {
-            String standardSpecie = qzOperationTypeDao.getQZSettngStandardSpecie(qzSettingUuid, terminalType);
-            standardSpecieList.add(terminalType + "_" + standardSpecie);
+            String standardSpecie = qzOperationTypeDao.getQZStandardSpecieAndMaxKeywordCount(qzSettingUuid, terminalType);
+            if (StringUtil.isNotNullNorEmpty(standardSpecie)) {
+                standardSpecieList.add(terminalType + "_" + standardSpecie);
+            }
         }
         return standardSpecieList;
     }
@@ -78,6 +79,6 @@ public class QZOperationTypeServiceImpl extends ServiceImpl<QZOperationTypeDao, 
 
     @Override
     public String findQZChargeRuleStandardSpecies(long qzSettingUuid, String terminalType) {
-        return qzOperationTypeDao.getQZSettngStandardSpecie(qzSettingUuid, terminalType);
+        return qzOperationTypeDao.getQZSettingStandardSpecie(qzSettingUuid, terminalType);
     }
 }

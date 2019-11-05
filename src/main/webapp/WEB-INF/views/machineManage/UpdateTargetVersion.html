@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+</head>
+<body>
+<div class="ok-body">
+
+    <form class="layui-form layui-form-pane ok-form" lay-filter="UpdateTargetVersion">
+        <div class="layui-form-item">
+            <label class="layui-form-label" id="jjfz">目标版本</label>
+            <div class="layui-input-block">
+                <input type="text" name="targetVersion" placeholder="请输入目标版本" lay-verify="required|version" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="commit">确定</button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script>
+    let uuid_ = null;
+    let layui_ = null;
+    let clientIDs = null;
+
+    function initData(data) {
+        clientIDs = data.clientIDs
+    }
+
+    layui.use(["form", "common", "jquery", "layer"], function () {
+        let form = layui.form;
+        let common = layui.common;
+        let $ = layui.jquery;
+
+        form.on("submit(commit)", function (data) {
+            let postData = {};
+            postData.targetVersion = data.field.targetVersion;
+            postData = common.jsonObjectTrim(postData);
+            postData.clientIDs = clientIDs;
+            $.ajax({
+                url: '/internal/machineManage/updateMachineInfoTargetVersion',
+                type: 'post',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                success: function (res) {
+                    if (res.code === 200) {
+                        common.showSuccessMsg("修改成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        common.showFailMsg(res.msg);
+                    }
+                }
+            });
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+        form.verify({
+            version: [
+                /^\d+(.\d+)*$/,
+                "请输入符合规范的版本号"
+            ]
+        });
+
+    });
+</script>
+
+</body>
+</html>

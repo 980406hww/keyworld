@@ -45,7 +45,7 @@ public class ScreenedWebsiteController2 {
     @Resource(name = "configService2")
     private ConfigService configService;
 
-    @RequiresPermissions("/internal/screenedWebsite/searchScreenedWebsiteLists")
+    @RequiresPermissions("/internal/screenedWebsite/toScreenedWebsites")
     @GetMapping(value = "/toScreenedWebsites")
     public ModelAndView toScreenedWebsites() {
         ModelAndView mv = new ModelAndView();
@@ -53,7 +53,6 @@ public class ScreenedWebsiteController2 {
         return mv;
     }
 
-    @RequiresPermissions("/internal/screenedWebsite/searchScreenedWebsiteLists")
     @PostMapping(value = "/getScreenedWebsites")
     public ResultBean getScreenedWebsites(@RequestBody ScreenedWebsiteCriteria screenedWebsiteCriteria) {
         ResultBean resultBean = new ResultBean();
@@ -79,7 +78,6 @@ public class ScreenedWebsiteController2 {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/screenedWebsite/searchScreenedWebsiteLists")
     @GetMapping(value = "/toScreenedWebsitesAdd")
     public ModelAndView toScreenedWebsitesAdd() {
         ModelAndView mv = new ModelAndView();
@@ -87,7 +85,6 @@ public class ScreenedWebsiteController2 {
         return mv;
     }
 
-    @RequiresPermissions("/internal/screenedWebsite/searchScreenedWebsiteLists")
     @PostMapping(value = "/getScreenedWebsite/{uuid}")
     public ResultBean getScreenedWebsite(@PathVariable(name = "uuid") Long uuid) {
         ResultBean resultBean = new ResultBean();
@@ -105,7 +102,6 @@ public class ScreenedWebsiteController2 {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/screenedWebsite/searchScreenedWebsiteLists")
     @PostMapping(value = "/checkGroupExist")
     public ResultBean checkGroupExist(@RequestBody ScreenedWebsiteCriteria screenedWebsiteCriteria) {
         ResultBean resultBean = new ResultBean();
@@ -161,19 +157,5 @@ public class ScreenedWebsiteController2 {
         }
         return resultBean;
     }
-//    @RequiresPermissions("/internal/screenedWebsite/searchScreenedWebsiteLists")
-//    @RequestMapping(value = "updateNegativeRankKeyword2",method = RequestMethod.POST)
-//    public ResultBean updateNegativeRankKeyword(@RequestBody NegativeRank negativeRank){
-//        ResultBean resultBean = new ResultBean(200,"success");
-//        try {
-//            negativeRankService.updateNegativeRankKeyword(negativeRank);
-//            return resultBean;
-//        } catch (Exception e) {
-//            logger.error(e.getMessage());
-//            resultBean.setCode(400);
-//            resultBean.setMsg("未知错误");
-//            return resultBean;
-//        }
-//    }
 
 }

@@ -73,8 +73,12 @@ public class CustomerKeywordDailyReportSummaryExcelWriter {
 			total = total + Double.parseDouble(summaryMap.get("搜狗_Phone"));
 		}
 		if(summaryMap.get("360_PC") != null) {
-			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.So.getColumnIndex(), rowIndex, summaryMap.get("360_PC"));
+			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.SoPC.getColumnIndex(), rowIndex, summaryMap.get("360_PC"));
 			total = total + Double.parseDouble(summaryMap.get("360_PC"));
+		}
+		if(summaryMap.get("360_Phone") != null) {
+			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.SoPhone.getColumnIndex(), rowIndex, summaryMap.get("360_Phone"));
+			total = total + Double.parseDouble(summaryMap.get("360_Phone"));
 		}
 		if(summaryMap.get("神马_Phone") != null) {
 			writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.UC.getColumnIndex(), rowIndex, summaryMap.get("神马_Phone"));
@@ -87,11 +91,11 @@ public class CustomerKeywordDailyReportSummaryExcelWriter {
 		writer.addLabelCell(CustomerKeywordDailyReportSummaryDefinition.TodayFee.getColumnIndex(), rowIndex, total);
 
 		if(day == 10){
-			writer.addFormulanCell(CustomerKeywordDailyReportSummaryDefinition.TodayFee.getColumnIndex() + 1, day, "SUM(I2:I11)*" + percentage);
+			writer.addFormulanCell(CustomerKeywordDailyReportSummaryDefinition.TodayFee.getColumnIndex() + 1, day, "SUM(J2:J11)*" + percentage);
 		}else if(day == 20){
-			writer.addFormulanCell(CustomerKeywordDailyReportSummaryDefinition.TodayFee.getColumnIndex() + 1, day, "SUM(I12:I21)*" + percentage);
+			writer.addFormulanCell(CustomerKeywordDailyReportSummaryDefinition.TodayFee.getColumnIndex() + 1, day, "SUM(J12:J21)*" + percentage);
 		}else if(day == endOfMonth){
-			writer.addFormulanCell(CustomerKeywordDailyReportSummaryDefinition.TodayFee.getColumnIndex() + 1, day, "SUM(I22:I" + (day + 1) + ")*" + percentage);
+			writer.addFormulanCell(CustomerKeywordDailyReportSummaryDefinition.TodayFee.getColumnIndex() + 1, day, "SUM(J22:J" + (day + 1) + ")*" + percentage);
 		}
 	}
 

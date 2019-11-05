@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>添加</title>
+    <title>添加关键词</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
     <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
@@ -105,7 +105,7 @@
                 <label class="layui-form-label">关键字</label>
                 <div class="layui-input-block">
                     <textarea name="customerKeywordDialogContent" id="customerKeywordDialogContent"
-                              placeholder="" class="layui-textarea"
+                              placeholder="请输入要添加的关键词，多个请换行" class="layui-textarea"
                               lay-verify="required" style="height: 150px"></textarea>
                 </div>
             </div>
@@ -137,24 +137,20 @@
     }
 
     function setForm(layui_, data) {
-        var $ = layui_.$;
-        var form = layui_.form;
+        let $ = layui_.$;
         $("#qzSettingUuid").val(data.qzSettingUuid);
         $("#customerUuid").val(data.customerUuid);
         $("#domain").val(data.domain);
         $("#searchEngine").val(data.searchEngine);
         $("#terminalType").val(data.terminalType);
-        $("#bearPawNumber").val((data.bearPawNumber === null || data.bearPawNumber === 'null') ? ''
-            : data.bearPawNumber);
+        $("#bearPawNumber").val((data.bearPawNumber === null || data.bearPawNumber === 'null') ? '' : data.bearPawNumber);
         $("#type").val(data.type);
         $("#optimizeGroupName").val(data.optimizeGroupName);
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer", "common"], function () {
+    layui.use(["form", "jquery", "layer", "common"], function () {
         let form = layui.form;
-        let okLayer = layui.okLayer;
         let $ = layui.jquery;
-        let layer = layui.layer;
         let common = layui.common;
 
         if (data_ != null) {
@@ -186,14 +182,14 @@
         });
 
         form.on("submit(save)", function (data) {
-            var postData = common.jsonObjectTrim(data.field);
-            var terminalTypes = [];
+            let postData = common.jsonObjectTrim(data.field);
+            let terminalTypes = [];
             let keywordStr = postData.customerKeywordDialogContent;
             keywordStr = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "");
             if (keywordStr.substring(keywordStr.length - 1) === ',') {
                 keywordStr = keywordStr.substring(0, keywordStr.length - 1);
             }
-            var keywords = keywordStr.split(',');
+            let keywords = keywordStr.split(',');
             keywords = keywords.filter(function (keyword, index) {
                 return keywords.indexOf(keyword) === index && keyword !== '';
             });
@@ -218,7 +214,7 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });

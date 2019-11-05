@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>添加</title>
+    <title>续费状态</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
     <style>
@@ -11,20 +11,22 @@
             position: fixed;
             right: 25px;
         }
+
+        .layui-table, .layui-table-view{
+            margin: 0;
+        }
+
+        .layui-table-body .laytable-cell-1-0-3{
+            text-align: left;
+        }
     </style>
 </head>
 <body>
-<div style="margin: 0 10px 40px 10px">
+<div style="margin: 10px 10px 0 10px;">
     <!--数据表格-->
     <table class="layui-hide" id="chargeStatus" lay-filter="chargeStatus"></table>
 </div>
-<div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
-    <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
-        <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px;width: 150px">
-            关闭
-        </button>
-    </div>
-</div>
+
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script>
     let uuid_ = null;
@@ -55,7 +57,6 @@
             defaultToolbar: ['filter'],
             contentType: 'application/json',
             cols: [[
-                // {filed: 'uuid', type: 'checkbox', width: '5%'},
                 {title: '续费状态', width: '11%', align: 'center', templet: '#item'},
                 {title: '收费金额', width: '11%', align: 'center', templet: '#item2'},
                 {title: '客户满意度', width: '11%', align: 'center', templet: '#item3'},
@@ -63,28 +64,19 @@
                 {title: '创建时间', width: '16%', align: 'center', templet: '#item4'},
                 {field: 'loginName', title: '创建人', width: '15%', align: 'center'}
             ]],
-            height: 'full-72',
+            height: 'full-20',
             done: function (res, curr, count) {
             }
         });
     }
 
-    layui.use(["form", 'table', "okLayer", "jquery", "layer", 'laydate'], function () {
-        let form = layui.form;
-        let okLayer = layui.okLayer;
+    layui.use(["jquery", "layer", "table"], function () {
         let $ = layui.jquery;
-        let layer = layui.layer;
-        let laydate = layui.laydate;
-
         if (uuid_ != null) {
             setForm(layui, uuid_);
         } else {
             layui_ = layui;
         }
-
-        $('#close').click(function () {
-            parent.layer.close(parent.layer.getFrameIndex(window.name));
-        });
 
     })
 </script>
@@ -103,12 +95,12 @@
     {{#  } }}
 </script>
 <script type="text/html" id="item3">
-    {{#  if(d.customerSatisfaction == 4){ }}
+    {{#  if(d.customerSatisfaction == 5){ }}
+    <span style="color: green">非常满意</span>
+    {{#  } else if(d.customerSatisfaction == 4){ }}
     <span style="color: #006529">满意</span>
     {{#  } else if(d.customerSatisfaction == 3){ }}
-    <span style="color: #628000">合适</span>
-    {{#  } else if(d.customerSatisfaction == 5){ }}
-    <span style="color: green">非常满意</span>
+    <span style="color: #628000">一般</span>
     {{#  } else if(d.customerSatisfaction == 2){ }}
     <span style="color: #e95500">较差</span>
     {{#  } else{ }}

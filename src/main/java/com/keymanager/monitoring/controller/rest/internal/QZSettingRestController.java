@@ -235,8 +235,9 @@ public class QZSettingRestController extends SpringMVCBaseController {
 		long uuid = Long.parseLong((String) requestMap.get("uuid"));
 		String terminalType = (String) requestMap.get("terminalType");
 		String optimizeGroupName = (String) requestMap.get("optimizeGroupName");
+		Long customerUuid = Long.parseLong((String) requestMap.get("customerUuid"));
 		try {
-			return new ResponseEntity<Object>(qzSettingService.searchQZKeywordRankInfo(uuid, terminalType, optimizeGroupName), HttpStatus.OK);
+			return new ResponseEntity<Object>(qzSettingService.searchQZKeywordRankInfo(uuid, terminalType, optimizeGroupName, customerUuid), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

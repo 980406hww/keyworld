@@ -5,10 +5,30 @@
     <title>行业列表</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 0px;
+        }
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 0px;
+        }
+
+        .layui-table-body tr td:nth-child(2),td:nth-child(3),td:nth-child(5) {
+            text-align: left;
+        }
+
         .layui-table-page > div {
             height: 26px;
             position: fixed;
@@ -20,6 +40,15 @@
             line-height: 18px;
         }
 
+        .layui-table-tool {
+            min-height: 30px;
+            padding: 0 5px 6px 5px;
+        }
+
+        .layui-table-tool-self{
+            top: 0;
+        }
+
         /* 下拉条件框 */
         .my-collapse {
             position: relative;
@@ -28,11 +57,6 @@
 
         .my-collapse * {
             box-shadow: none;
-        }
-
-        .my-collapse > div:first-child {
-            background: #f2f2f2;
-            border: 1px solid #e6e6e6;
         }
 
         .my-collapse > div {
@@ -146,25 +170,25 @@
         NProgress.done();
     };
 
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 'common'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
-        var laydate = layui.laydate;
         var okLayer = layui.okLayer;
         var layer = layui.layer;
+        var common = layui.common;
 
-        init_Search({'terminalType': 'PC'})
-        init_SelectData()
+        init_Search({'terminalType': 'PC'});
+        init_SelectData();
 
         function init_SelectData(){
             var postData = {}
-            var terminalType = $("#terminalType").val()
-            if(terminalType == '' || terminalType == null){
+            var terminalType = $("#terminalType").val();
+            if(terminalType === '' || terminalType == null){
                 terminalType = 'PC'
             }
-            postData.terminalType = terminalType
+            postData.terminalType = terminalType;
             $.ajax({
                 url: '/internal/industryList/returnSelectData',
                 type: 'POST',
@@ -175,9 +199,9 @@
                 data: JSON.stringify(postData),
                 success: function (res) {
                     if (res.code === 200) {
-                        var searchEngineList = res.data.searchEngineMap
-                        var activeUsersList = res.data.activeUsers
-                        var user = res.data.user
+                        var searchEngineList = res.data.searchEngineMap;
+                        var activeUsersList = res.data.activeUsers;
+                        var user = res.data.user;
                         var searchEngine = $('#engine');
                         var activeUsers = $('#activeUsers');
                         searchEngine.empty();
@@ -195,16 +219,17 @@
                         });
                         form.render("select")
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg);
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！');
                 }
             });
         }
 
         function init_Search(whereCondition){
+            whereCondition = common.jsonObjectTrim(whereCondition)
             table.render({
                 elem: '#industryListTable',
                 method: 'post',
@@ -214,43 +239,42 @@
                 autoSort: false,
                 size: 'sm',
                 id: 'industryListTable',
-                even: true,//隔行背景
+                even: true,
                 toolbar: "#toolbarTpl",
                 defaultToolbar: [],
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '5%', align: 'center'},
-                    {field: 'userID', title: '用户名称', width: '10%', align: 'center'},
-                    {field: 'industryName', title: '行业名称', width: '13%', align: 'center', templet: '#industryNames'},
+                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '35'},
+                    {field: 'userID', title: '用户名称', width: '10%'},
+                    {field: 'industryName', title: '行业名称', width: '13%', align: 'left', templet: '#industryNames'},
                     {field: 'searchEngine', title: '搜索引擎', width: '10%', align: 'center'},
-                    {field: 'targetUrl', title: '目标起始网址', width: '17%', align: 'center', templet: '#url'},
+                    {field: 'targetUrl', title: '目标起始网址', width: '17%', align: 'left', templet: '#url'},
                     {field: 'pageNum', title: '爬取页数', width: '7%', align: 'center'},
                     {field: 'pagePerNum', title: '每页条数', width: '7%', align: 'center'},
                     {field: 'status', title: '状态', width: '10%', align: 'center', templet: '#toStatus'},
                     {field: 'createTime', title: '创建时间', width: '10%', align: 'center', templet: '#toDateTime'},
-                    {title: '操作', width: '11%', align: 'center', templet: '#operationTpl', fixed: "right"},
+                    {title: '操作', width: '14%', align: 'center', templet: '#operationTpl', fixed: "right"},
                 ]],
-                height: 'full-150',
-
+                height: 'full-105',
                 done: function (res, curr, count) {
                 }
             });
         }
 
         element.on('tab(keywordTab)', function (data) {
-            var d = data.elem.context.dataset
+            var d = data.elem.context.dataset;
             $('#terminalType').val(d.terminal);
             active['reload'].call(this);
         });
 
         var active = {
             reload: function () {
-                var terminalType = $("#terminalType").val()
-                if(terminalType == '' || terminalType == null){
+                var terminalType = $("#terminalType").val();
+                if(terminalType === '' || terminalType == null){
                     terminalType = 'PC'
                 }
-                var data = {'terminalType': terminalType}
+                var data = {'terminalType': terminalType};
                 table.reload('industryListTable', {
                     where: data,
                     page: {
@@ -261,13 +285,13 @@
         };
 
         form.on("submit(search)", function (data) {
-            var postData = data.field
-            var terminalType = $("#terminalType").val()
-            if(terminalType == '' || terminalType == null){
+            var postData = data.field;
+            var terminalType = $("#terminalType").val();
+            if(terminalType === '' || terminalType == null){
                 terminalType = 'PC'
             }
-            postData.terminalType = terminalType
-            init_Search(postData)
+            postData.terminalType = terminalType;
+            init_Search(postData);
             return false
         });
 
@@ -282,6 +306,8 @@
                     break;
                 case 'searchIndustryDetail':
                     searchIndustryDetail(data.uuid,data.industryName);
+                    break;
+                default:
                     break;
             }
         });
@@ -309,6 +335,8 @@
                     break;
                 case 'uploadIndustryInfo':
                     uploadIndustryInfo('SuperIndustrySimple');
+                    break;
+                default:
                     break;
             }
         });
@@ -339,8 +367,8 @@
         }
 
         function uploadIndustryInfo(excelType){
-            var terminalType = $("#terminalType").val()
-            if(terminalType == '' || terminalType == null){
+            var terminalType = $("#terminalType").val();
+            if(terminalType === '' || terminalType == null){
                 terminalType = 'PC'
             }
             okLayer.open("首页 / 行业列表 / 上传Excel", "/internal/industryList/toUploadIndustryInfo", "25%", "20%", function(layero){
@@ -358,7 +386,7 @@
             var checkStatus = table.checkStatus('industryListTable');
             var data = checkStatus.data;
             var uuidArr = [];
-            var count = 0
+            var count = 0;
             $.each(data, function (index, item) {
                 if(item.detailCount > 0){
                     count = count + 1
@@ -367,12 +395,12 @@
             });
 
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要要导出网站联系信息的行业', {icon: 5});
+                common.showFailMsg('请选择要要导出网站联系信息的行业');
                 return
             }
 
             if(count <= 0){
-                layer.msg('所选行业暂无相关网站信息', {icon: 5});
+                common.showFailMsg('所选行业暂无相关网站信息');
                 return
             }
 
@@ -395,7 +423,7 @@
                 }
             });
             if (uuidArr.length <= 0) {
-                layer.msg(data.length > 0 ? '请选择可操作的行业喔' : '请选择要操作的行业', {icon: 5});
+                common.showFailMsg(data.length > 0 ? '请选择可操作的行业' : '请选择要操作的行业');
                 return
             }
             var postData = {};
@@ -410,14 +438,15 @@
                 data: JSON.stringify(postData),
                 success: function (res) {
                     if (res.code === 200) {
-                        active['reload'].call(this);
-                        layer.msg("操作成功")
+                        common.showSuccessMsg("操作成功", function () {
+                            active['reload'].call(this);
+                        });
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg);
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！');
                 }
             });
         }
@@ -430,7 +459,7 @@
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的行业', {icon: 5});
+                common.showFailMsg('请选择要操作的行业');
                 return
             }
             var postData = {};
@@ -447,8 +476,12 @@
         }
 
         function modifyIndustryInfo(data){
+            var terminalType = $("#terminalType").val();
+            if(terminalType === '' || terminalType == null){
+                terminalType = 'PC'
+            }
             okLayer.open("首页 / 行业列表 / 修改行业", "/internal/industryList/toSaveIndustryInfo", "35%", "60%", function(layero){
-                window[layero.find("iframe")[0]["name"]].initForm(data);
+                window[layero.find("iframe")[0]["name"]].initForm(data, terminalType);
             },function(){
                 if(sign){
                     active['reload'].call(this);
@@ -458,8 +491,8 @@
         }
 
         function toAddIndustry() {
-            var terminalType = $("#terminalType").val()
-            if(terminalType == '' || terminalType == null){
+            var terminalType = $("#terminalType").val();
+            if(terminalType === '' || terminalType == null){
                 terminalType = 'PC'
             }
             okLayer.open("首页 / 行业列表 / 添加行业", "/internal/industryList/toSaveIndustryInfo", "35%", "60%", function(layero){
@@ -487,20 +520,20 @@
                         },
                         success: function (res) {
                             if (res.code === 200) {
-                                var data = {}
+                                var data = {};
                                 table.reload('industryListTable', {
                                     where: data,
                                     page: {
                                         curr: 1
                                     }
                                 });
-                                layer.msg("删除成功")
+                                common.showSuccessMsg("删除成功");
                             } else {
-                                layer.msg(res.msg)
+                                common.showFailMsg(res.msg)
                             }
                         },
                         error: function () {
-                            layer.msg('未知错误，请稍后重试！！')
+                            common.showFailMsg('未知错误，请稍后重试！！')
                         }
                     });
                 }, btn2: function (index) {
@@ -517,7 +550,7 @@
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的行业', {icon: 5});
+                common.showFailMsg('请选择要操作的行业');
                 return
             }
             layer.confirm("确定要删除所选行业吗", {icon: 3, title: '删除所选'}, function (index) {
@@ -534,18 +567,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);
@@ -559,33 +589,37 @@
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
     <div class="layui-btn-container">
-        <@shiro.hasPermission name="/internal/industry/saveIndustry">
-        <button class="layui-btn layui-btn-sm" lay-event="toAddIndustry">添加</button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/industry/deleteIndustries">
-        <button class="layui-btn layui-btn-danger layui-btn-sm" lay-event="deleteIndustries">
-            <i class="layui-icon layui-icon-delete"></i>删除所选
-        </button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/industry/updateIndustryUserID">
-        <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="updateOwner">
-            <i class="layui-icon layui-icon-edit"></i>修改客户归属
-        </button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/industry/saveIndustry">
-        <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="updateStatus">
-            <i class="layui-icon layui-icon-download-circle"></i>马上爬取
-        </button>
-        </@shiro.hasPermission>
         <div class="layui-btn-group">
             <@shiro.hasPermission name="/internal/industry/saveIndustry">
-            <button class="layui-btn layui-btn-sm" lay-event="downloadIndustryInfos">导出网站联系信息</button>
+            <button class="layui-btn layui-btn-sm" lay-event="toAddIndustry">
+                <i class="layui-icon layui-icon-add-1"></i>添加</button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/industry/deleteIndustries">
+            <button class="layui-btn layui-btn-danger layui-btn-sm" lay-event="deleteIndustries">
+                <i class="layui-icon layui-icon-delete"></i>删除所选
+            </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/industry/updateIndustryUserID">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="updateOwner">
+                <i class="layui-icon layui-icon-edit"></i>修改客户归属
+            </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/industry/saveIndustry">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="updateStatus">
+                <i class="layui-icon layui-icon-refresh"></i>重新爬取
+            </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/industry/saveIndustry">
+            <button class="layui-btn layui-btn-sm" lay-event="downloadIndustryInfos">
+                <i class="layui-icon layui-icon-download-circle"></i>导出网站联系信息</button>
             </@shiro.hasPermission>
             <@shiro.hasPermission name="/internal/industry/uploadIndustryInfos">
-            <button class="layui-btn layui-btn-sm" lay-event="uploadIndustryInfo">Excel上传</button>
+            <button class="layui-btn layui-btn-sm" lay-event="uploadIndustryInfo">
+                <i class="layui-icon layui-icon-upload-drag"></i>Excel上传</button>
             </@shiro.hasPermission>
             <@shiro.hasPermission name="/SuperIndustrySimpleList.xls">
-            <button class="layui-btn layui-btn-sm" lay-event="downLoadTemplate">模板下载</button>
+            <button class="layui-btn layui-btn-sm" lay-event="downLoadTemplate">
+                <i class="layui-icon layui-icon-download-circle"></i>模板下载</button>
             </@shiro.hasPermission>
         </div>
     </div>
@@ -621,7 +655,7 @@
         <button type="button" class="layui-btn layui-btn-xs" lay-event="modifyIndustryInfo" id="modifyIndustryInfo">修改</button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/industry/delIndustry">
-        <button type="button" class="layui-btn layui-btn-xs" lay-event="delIndustryInfo" id="delIndustryInfo">删除</button>
+        <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delIndustryInfo" id="delIndustryInfo">删除</button>
         </@shiro.hasPermission>
     </div>
 </script>

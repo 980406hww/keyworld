@@ -5,10 +5,25 @@
     <title>机器升级</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 0px;
+        }
         .layui-table-page > div {
             height: 26px;
             position: fixed;
@@ -45,16 +60,15 @@
         NProgress.done();
     };
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
-        var element = layui.element;
-        var table = layui.table;
-        var form = layui.form;
-        var $ = layui.jquery;
-        var laydate = layui.laydate;
-        var okLayer = layui.okLayer;
-        var layer = layui.layer;
+    layui.use(['element', 'table', 'jquery', 'okLayer', 'layer', "common"], function () {
+        let element = layui.element;
+        let table = layui.table;
+        let $ = layui.jquery;
+        let okLayer = layui.okLayer;
+        let layer = layui.layer;
+        let common = layui.common;
 
-        init_Search({'terminalType': 'PC'})
+        init_Search({'terminalType': 'PC'});
 
         function init_Search(whereCondition){
             table.render({
@@ -72,35 +86,35 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '5%', align: 'center'},
+                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '35', align: 'center'},
                     {field: 'programType', title: '程序类型', width: '10%', align: 'center'},
                     {field: 'version', title: '当前版本', width: '10%', align: 'center'},
                     {field: 'targetVersion', title: '目标版本', width: '10%', align: 'center'},
                     {field: 'maxUpgradeCount', title: '最大升级数', width: '10%', align: 'center'},
                     {field: 'residualUpgradeCount', title: '升级情况', width: '15%', templet: '#toResidualUpgradeCount', align: 'center'},
                     {field: 'status', title: '任务状态', width: '10%', templet: '#toStatus', align: 'center'},
-                    {field: 'createTime', title: '创建时间', width: '16%', templet: '#toDateTime', align: 'center'},
-                    {title: '操作', templet: '#operationTpl', align: 'center', width: '14%', align: 'center'}
+                    {field: 'createTime', title: '创建时间', width: '17%', templet: '#toDateTime', align: 'center'},
+                    {title: '操作', templet: '#operationTpl', width: '16%', align: 'center'}
                 ]],
-                height: 'full-95',
+                height: 'full-75',
                 done: function (res, curr, count) {
                 }
             });
         }
 
         element.on('tab(keywordTab)', function (data) {
-            var d = data.elem.context.dataset
+            let d = data.elem.context.dataset;
             $('#terminalType').val(d.terminal);
             active['reload'].call(this);
         });
 
-        var active = {
+        let active = {
             reload: function () {
-                var terminalType = $("#terminalType").val()
-                if(terminalType == '' || terminalType == null){
+                let terminalType = $("#terminalType").val();
+                if(terminalType === '' || terminalType == null){
                     terminalType = 'PC'
                 }
-                var data = {'terminalType': terminalType}
+                let data = {'terminalType': terminalType};
                 table.reload('clientUpgradeTable', {
                     where: data,
                     page: {
@@ -111,9 +125,9 @@
         };
 
         function toAddClientUpgrade() {
-            var terminalType = $("#terminalType").val()
-            if(terminalType == '' || terminalType == null){
-                terminalType = 'PC'
+            let terminalType = $("#terminalType").val();
+            if(terminalType === '' || terminalType == null){
+                terminalType = 'PC';
             }
             okLayer.open("首页 / 机器升级列表 / 添加机器升级", "/internal/clientUpgrade/toClientUpgradeAdd", "40%", "60%",function(layero){
                 window[layero.find("iframe")[0]["name"]].setTerminalType(terminalType);
@@ -138,7 +152,7 @@
 
         function updateStatus(data){
             data.uuid = parseInt(data.uuid);
-            data.status = data.status == true ? false : true;
+            data.status = data.status !== true;
             $.ajax({
                 url: '/internal/clientUpgrade/updateClientUpgradeStatus2',
                 type: 'POST',
@@ -149,22 +163,23 @@
                 data: JSON.stringify(data),
                 success: function (res) {
                     if (res.code === 200) {
-                        active['reload'].call(this);
-                        layer.msg("修改成功")
+                        common.showSuccessMsg("修改成功", function () {
+                            active['reload'].call(this);
+                        });
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg);
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！');
                 }
             });
         }
 
         function deleteClient(uuid){
-            layer.confirm('确认删除该机器？', {
+            layer.confirm('确认删除该机器升级设置？', {
                 icon: 3,
-                title: '删除机器',
+                title: '机器升级设置',
                 btn: ['确认', '取消'],
                 yes: function () {
                     $.ajax({
@@ -176,14 +191,15 @@
                         },
                         success: function (res) {
                             if (res.code === 200) {
-                                active['reload'].call(this);
-                                layer.msg("删除成功")
+                                common.showSuccessMsg("删除成功", function () {
+                                    active['reload'].call(this);
+                                });
                             } else {
-                                layer.msg(res.msg)
+                                common.showFailMsg(res.msg);
                             }
                         },
                         error: function () {
-                            layer.msg('未知错误，请稍后重试！！')
+                            common.showFailMsg('未知错误，请稍后重试！！');
                         }
                     });
                 },
@@ -194,18 +210,18 @@
         }
 
         function batchDeleteClientUpgrade(){
-            var checkStatus = table.checkStatus('clientUpgradeTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
+            let checkStatus = table.checkStatus('clientUpgradeTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的机器', {icon: 5});
+                common.showFailMsg('请选择要操作的机器升级设置');
                 return
             }
-            layer.confirm("确定要删除所选机器吗", {icon: 3, title: '删除所选'}, function (index) {
-                var postData = {};
+            layer.confirm("确定要删除所选的机器升级设置吗", {icon: 3, title: '删除所选'}, function (index) {
+                let postData = {};
                 postData.uuids = uuidArr;
                 $.ajax({
                     url: '/internal/clientUpgrade/batchDeleteClientUpgrade',
@@ -218,18 +234,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);
@@ -237,7 +250,7 @@
         }
 
         table.on('toolbar(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            let data = obj.data,event = obj.event;
             switch (event) {
                 case 'addMachine':
                     toAddClientUpgrade();
@@ -245,11 +258,13 @@
                 case 'batchDeleteClientUpgrade':
                     batchDeleteClientUpgrade();
                     break;
+                default:
+                    break;
             }
         });
 
         table.on('tool(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            let data = obj.data,event = obj.event;
             switch (event) {
                 case 'modifyMachine':
                     toUpdateClientUpgrade(data);
@@ -259,6 +274,8 @@
                     break;
                 case 'deleteClient':
                     deleteClient(data.uuid);
+                    break;
+                default:
                     break;
             }
         });
@@ -281,7 +298,7 @@
 
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
-    <div class="layui-btn-container">
+    <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/clientUpgrade/saveClientUpgrade">
             <button class="layui-btn layui-btn-sm" id="addMachine" lay-event="addMachine">添加</button>
         </@shiro.hasPermission>
@@ -299,7 +316,9 @@
 
 <script type="text/html" id="toResidualUpgradeCount">
     <span>
-        {{# if(d.residualUpgradeCount > 0) { }}
+        {{# if(d.residualUpgradeCount == 0) { }}
+            New
+        {{# }else if(d.residualUpgradeCount > 0) { }}
             Processing
         {{# }else{ }}
             Completed
@@ -310,7 +329,7 @@
 <script type="text/html" id="toStatus">
     <span>
         {{# if(d.status === true) { }}
-            开始
+            激活
         {{# }else{ }}
             暂停
         {{# } }}
@@ -323,7 +342,7 @@
             {{# if(d.status === true) { }}
                 <button type="button" class="layui-btn layui-btn-xs" lay-event="updateStatus">暂停</button>
             {{# }else { }}
-                <button type="button" class="layui-btn layui-btn-xs" lay-event="updateStatus">开始</button>
+                <button type="button" class="layui-btn layui-btn-xs" lay-event="updateStatus">激活</button>
             {{# } }}
             <button type="button" class="layui-btn layui-btn-xs" lay-event="modifyMachine" id="modifyMachine">修改</button>
         </@shiro.hasPermission>

@@ -35,7 +35,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">供应商名称</label>
                 <div class="layui-input-block">
-                    <input type="text" name="supplierName" placeholder="请输入供应商名称" autocomplete="off" class="layui-input">
+                    <input type="text" name="supplierName" lay-verify="required" placeholder="请输入供应商名称" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -178,11 +178,9 @@
         });
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer", 'common'], function () {
+    layui.use(["form", "jquery", "layer", 'common'], function () {
         let form = layui.form;
-        let okLayer = layui.okLayer;
         let $ = layui.jquery;
-        let layer = layui.layer;
         let common = layui.common;
 
         if (uuid_ != null) {
@@ -274,13 +272,14 @@
                     p_d.supplierServiceTypeMappings.push(sstm);
                 }
             }
-            commit(p_d, function (d) {
-
-            });
+            commit(p_d, function (d) {});
             return false;
         });
 
         function commit(p_d, call) {
+            if (!common.waitMoment()) {
+                return false;
+            }
             $.ajax({
                 url: '/internal/suppliers/saveSupplier',
                 type: 'post',
@@ -294,7 +293,7 @@
                         if (res.data) {
                             call(res.data);
                         }
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });

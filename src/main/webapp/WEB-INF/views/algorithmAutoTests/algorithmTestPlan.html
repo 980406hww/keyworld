@@ -2,14 +2,30 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>测试计划列表</title>
+    <title>测试计划管理</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <link rel="stylesheet" href="/static/ok-admin/page/base/searchForm.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            margin-top: 10px;
+            background: #f2f2f2;
+            border: 0px;
+        }
         .layui-table-page > div {
             height: 26px;
             position: fixed;
@@ -32,6 +48,14 @@
             color: darkslateblue;
         }
 
+        .layui-table-tool {
+            min-height: 30px;
+            padding: 6px 5px 6px 5px;
+        }
+
+        .layui-table-tool-self{
+            top: 0;
+        }
     </style>
 </head>
 <body>
@@ -88,8 +112,7 @@
         NProgress.done();
     };
 
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','common'], function () {
-        var element = layui.element;
+    layui.use(['table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','common'], function () {
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
@@ -117,16 +140,16 @@
                 where: whereCondition,
                 cols: [[
                     {type: 'checkbox', fixed: "left", width: '35'},
-                    {field: 'algorithmTestPlanName', title: '测试计划名称', width: '160'},
-                    {field: 'operationCombineName', title: '操作组合名称', width: '140',templet:'#toOperationCombineTpl',event: 'toOperationCombine'},
-                    {field: 'terminalType', title: '终端类型', width: '80'},
-                    {field: 'searchEngine', title: '搜索引擎', width: '80'},
-                    {field: 'machineGroup', title: '机器分组', width: '100', templet:'#toMachineManageTpl',event: 'toMachineManage'},
+                    {field: 'algorithmTestPlanName', title: '测试计划名称', width: '105'},
+                    {field: 'operationCombineName', title: '操作组合名称', width: '103',templet:'#toOperationCombineTpl',event: 'toOperationCombine'},
+                    {field: 'terminalType', title: '终端类型', width: '79'},
+                    {field: 'searchEngine', title: '搜索引擎', width: '79'},
+                    {field: 'machineGroup', title: '机器分组', width: '85', templet:'#toMachineManageTpl',event: 'toMachineManage'},
                     {field: 'excuteType', title: '执行类型', width: '80'},
                     {field: 'excuteCount', title: '已执行次数', width: '90'},
-                    {field: 'testIntervalDay', title: '执行间隔(天)', width: '110'},
+                    {field: 'testIntervalDay', title: '执行间隔(天)', width: '102'},
                     {field: 'testKeywordCount', title: '测试词数', width: '80'},
-                    {field: 'testIntervalDay', title: '测试排名区间', width: '110'},
+                    {field: 'testIntervalDay', title: '测试排名区间', width: '103'},
                     {field: 'optimizePlanCount', title: '刷量', width: '60'},
                     {field: 'status', title: '状态', width: '60', templet:'#statusTpl'},
                     {field: 'executeQueryTime', title: '上次执行时间', width: '110', templet: '#toDateTime'},
@@ -134,7 +157,7 @@
                     {field: 'createTime', title: '创建时间', width: '100', templet: '#toDateTime'},
                     {title: '操作', templet: '#operationTpl', align: 'center', width: '300',fixed: "right"}
                 ]],
-                height: 'full-90',
+                height: 'full-65',
                 done: function (res, curr, count) {
                 }
             });
@@ -165,12 +188,10 @@
         table.on('tool(tableFilter)', function (obj) {
             var data = obj.data;
             switch (obj.event) {
-
                 case 'toOperationCombine':
                     toOperationCombine(data);
                     break;
                 case 'toMachineManage':
-
                     toMachineManage(data);
                     break;
                 case 'edit':
@@ -188,31 +209,33 @@
                 case 'del':
                     del_one(data);
                     break;
+                default:
+                    break;
             }
         });
 
         function add_algorithmTestPlan() {
             let url = '/internal/algorithmAutoTest/toAlgorithmTestPlanAdd';
-            okLayer.open("其他 / 测试计划管理 / 添加测试计划", url, "60%", "80%", function (layero) {
+            okLayer.open("其他 / 测试计划管理 / 添加测试计划", url, "50%", "63%", function (layero) {
             }, function () {
                 if (sign) {
                     active['reload'].call(this);
                     sign = false;
                 }
-            })
+            },'40px')
         }
 
         function update_algorithmTestPlan(uuid) {
 
             let url = '/internal/algorithmAutoTest/toAlgorithmTestPlanAdd';
-            okLayer.open("其他 / 测试计划管理 / 修改测试计划", url, "60%", "80%", function (layero) {
+            okLayer.open("其他 / 测试计划管理 / 修改测试计划", url, "50%", "63%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(uuid);
             }, function () {
                 if (sign) {
                     active['reload'].call(this);
                     sign = false;
                 }
-            })
+            },'40px')
         }
 
         function change_status_by_uuids(status) {
@@ -357,7 +380,9 @@
                 type: 'POST',
                 success: function (result) {
                     if (result.code === 200) {
-                        common.showSuccessMsg('操作成功',active['reload'].call(this));
+                        common.showSuccessMsg('操作成功', function () {
+                            active['reload'].call(this);
+                        });
                     } else {
                         common.showFailMsg('操作失败');
                     }
@@ -421,23 +446,19 @@
             return false
         });
 
-        <@shiro.hasPermission name="/internal/groupsetting/searchGroupSettings">
-            function toOperationCombine(data){
-                let url = '/internal/groupsetting/toGroupSettingFromATP/'+data.terminalType +'/'+data.operationCombineName;
-                url = encodeURI(encodeURI(url));
-                let title = '操作组合:' + data.operationCombineName + '详情';
-                common.updateOrNewTab(url, title, data.operationCombineName)
-            }
-        </@shiro.hasPermission>
+        function toOperationCombine(data){
+            let url = '/internal/groupsetting/toGroupSettingFromATP/'+data.terminalType +'/'+data.operationCombineName;
+            url = encodeURI(encodeURI(url));
+            let title = '操作组合:' + data.operationCombineName + '详情';
+            common.updateOrNewTab(url, title, data.operationCombineName)
+        }
 
-        <@shiro.hasPermission name="/internal/machineInfo/searchMachineInfos">
-            function toMachineManage(data){
-                let url = '/internal/machineManage/toMachineInfoFromATP/'+data.terminalType +'/'+data.machineGroup;
-                url = encodeURI(encodeURI(url));
-                let title = '机器分组:' + data.machineGroup + '详情';
-                common.updateOrNewTab(url, title, data.machineGroup)
-            }
-        </@shiro.hasPermission>
+        function toMachineManage(data){
+            let url = '/internal/machineManage/toMachineInfoFromATP/'+data.terminalType +'/'+data.machineGroup;
+            url = encodeURI(encodeURI(url));
+            let title = '机器分组:' + data.machineGroup + '详情';
+            common.updateOrNewTab(url, title, data.machineGroup)
+        }
 
     });
 
@@ -449,25 +470,26 @@
 </script>
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
-
-    <@shiro.hasPermission name="/internal/algorithmAutoTest/saveAlgorithmTestPlan">
-    <button class="layui-btn layui-btn-sm " id="add" lay-event="add">
-        添加
-    </button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/algorithmAutoTest/changeAlgorithmTestPlanStatus">
-    <button class="layui-btn layui-btn-sm " id="stop_selected" lay-event="stop_selected">
-        暂停所选
-    </button>
-    <button class="layui-btn layui-btn-sm " id="active_selected" lay-event="active_selected">
-        激活所选
-    </button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/algorithmAutoTest/deleteAlgorithmTestPlan">
-    <button class="layui-btn layui-btn-sm layui-btn-danger" id="delete_selected" lay-event="delete_selected">
-        删除所选
-    </button>
-    </@shiro.hasPermission>
+    <div class="layui-btn-group">
+        <@shiro.hasPermission name="/internal/algorithmAutoTest/saveAlgorithmTestPlan">
+        <button class="layui-btn layui-btn-sm " id="add" lay-event="add">
+            添加
+        </button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/algorithmAutoTest/changeAlgorithmTestPlanStatus">
+        <button class="layui-btn layui-btn-sm " id="stop_selected" lay-event="stop_selected">
+            暂停所选
+        </button>
+        <button class="layui-btn layui-btn-sm " id="active_selected" lay-event="active_selected">
+            激活所选
+        </button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/algorithmAutoTest/deleteAlgorithmTestPlan">
+        <button class="layui-btn layui-btn-sm layui-btn-danger" id="delete_selected" lay-event="delete_selected">
+            删除所选
+        </button>
+        </@shiro.hasPermission>
+    </div>
 </script>
 
 <script type="text/html" id="toOperationCombineTpl">

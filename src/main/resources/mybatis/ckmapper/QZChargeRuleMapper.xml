@@ -3,8 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.ckadmin.dao.QZChargeRuleDao">
   <!--查询一条操作类型信息-->
-  <select id="searchQZChargeRuleByqzOperationTypeUuids"
-    resultType="com.keymanager.ckadmin.entity.QZChargeRule">
+  <select id="searchQZChargeRuleByQZOperationTypeUuids" resultType="com.keymanager.ckadmin.entity.QZChargeRule">
         SELECT
         qchru.fUuid            AS 'uuid',
         qchru.fQZOperationTypeUuid    AS 'qzOperationTypeUuid',
@@ -53,6 +52,7 @@
         ON qk.fQZSettingUuid = qot.fQZSettingUuid
         WHERE qot.fQZSettingUuid = #{qzSettingUuid}
         AND qot.fOperationtype = #{terminalType}
+        AND qk.fDataProcessingStatus = 1
         GROUP BY qc.fUuid
     </select>
 </mapper>

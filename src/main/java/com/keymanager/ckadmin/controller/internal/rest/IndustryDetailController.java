@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping("/internal/industryDetails")
 public class IndustryDetailController {
+
     private static final Logger logger = LoggerFactory.getLogger(IndustryDetailController.class);
 
     @Resource(name = "industryDetailService2")
@@ -75,6 +76,23 @@ public class IndustryDetailController {
             resultBean.setCode(400);
             resultBean.setMsg("未知错误");
             return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/industryDetail/saveIndustryDetail")
+    @PostMapping("/updRemarkByUuids")
+    public ResultBean updRemarkByUuids(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
+            String remark = (String) requestMap.get("remark");
+            industryDetailService.updRemarkByUuids(uuids, remark);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
         }
         return resultBean;
     }

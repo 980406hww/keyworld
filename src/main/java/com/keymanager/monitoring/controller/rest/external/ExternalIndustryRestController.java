@@ -3,6 +3,8 @@ package com.keymanager.monitoring.controller.rest.external;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.IndustryDetailCriteria;
 import com.keymanager.monitoring.service.IndustryInfoService;
+import java.util.Arrays;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,29 @@ public class ExternalIndustryRestController extends SpringMVCBaseController{
             logger.error(e.getMessage());
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * @Author: rwxian
+     * @Date 2019/10/14 10:08
+     * @param requestMap
+     * @return
+     */
+    @PostMapping("/getValidIndustryInfoByName")
+    public ResponseEntity<?> getValidIndustryInfoByName(@RequestBody Map<String, String> requestMap) {
+        try {
+            String userName = requestMap.get("username");
+            String password = requestMap.get("password");
+            if (validUser(userName, password)) {
+                String customerName = requestMap.get("customer_name");
+                String industry = requestMap.get("industry");
+                Map map = industryInfoService.getValidIndustryInfo(customerName, industry);
+                return new ResponseEntity<>(map, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/updateIndustryInfoDetail")

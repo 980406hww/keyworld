@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <style>
         .layui-btn {
-            width: 150px;
+            width: 80px;
         }
     </style>
 </head>
@@ -80,15 +80,15 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script>
 
-    var uuid_ = null;
-    var layui_ = null;
-    var industryID = null
+    let uuid_ = null;
+    let layui_ = null;
+    let industryID = null;
 
     function initForm(data, industryUuid) {
         uuid_ = data;
-        industryID = industryUuid
-        var childs = document.getElementById('addData').childNodes;
-        for (var i = childs.length - 1; i >= 0; i--) {
+        industryID = industryUuid;
+        let childs = document.getElementById('addData').childNodes;
+        for (let i = childs.length - 1; i >= 0; i--) {
             document.getElementById('addData').removeChild(childs[i]);
         }
     }
@@ -97,25 +97,26 @@
         industryID = industryUuid
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer"], function () {
-        var form = layui.form;
-        var okLayer = layui.okLayer;
-        var $ = layui.jquery;
+    layui.use(["form", "jquery", "layer", "common"], function () {
+        let form = layui.form;
+        let $ = layui.jquery;
+        let common = layui.common;
 
         form.on("submit(commit)", function (data) {
             if(uuid_ == null){
-                var qq = data.field.qq
-                if (qq != '') {
+                let qq = data.field.qq;
+                if (qq !== '') {
                     data.field.qq = qq.replace(/[\r\n]/g, ",").replace(/[\s+]/g, "");
                 }
-                var telephone = data.field.telephone
-                if (telephone != '') {
+                let telephone = data.field.telephone;
+                if (telephone !== '') {
                     data.field.telephone = telephone.replace(/[\r\n]/g, ",").replace(/[\s+]/g, "");
                 }
             }else{
                 data.field.uuid = uuid_
             }
             data.field.industryID = industryID
+            data.field = common.jsonObjectTrim(data.field)
             $.ajax({
                 url: '/internal/industryDetails/saveIndustryDetail',
                 type: 'POST',
@@ -126,12 +127,12 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        okLayer.msg.greenTick("保存成功", function () {
+                        common.showSuccessMsg("保存成功", function () {
                             parent.window.sign = true;
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     } else {
-                        layui.layer.msg(res.msg);
+                        common.showFailMsg(res.msg);
                     }
                 }
             });

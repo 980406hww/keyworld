@@ -1,5 +1,7 @@
 package com.keymanager.ckadmin.service.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.IndustryDetailCriteria;
@@ -25,7 +27,7 @@ public class IndustryDetailServiceImpl extends ServiceImpl<IndustryDetailDao, In
     private QZSettingService qzSettingService;
 
     @Override
-    public void delIndustryDetailsByIndustryID (long industryID) {
+    public void delIndustryDetailsByIndustryID(long industryID) {
         industryDetailDao.delIndustryDetailsByIndustryID(industryID);
     }
 
@@ -62,8 +64,7 @@ public class IndustryDetailServiceImpl extends ServiceImpl<IndustryDetailDao, In
     @Override
     public void saveIndustryDetail(IndustryDetail industryDetail) {
         if (null == industryDetail.getUuid()) {
-            IndustryDetail existingIndustryDetail = industryDetailDao.findExistingIndustryDetail(industryDetail.getIndustryID(),
-                    industryDetail.getWebsite());
+            IndustryDetail existingIndustryDetail = industryDetailDao.findExistingIndustryDetail(industryDetail.getIndustryID(), industryDetail.getWebsite());
             if (null == existingIndustryDetail) {
                 industryDetailDao.insert(industryDetail);
             }
@@ -71,6 +72,15 @@ public class IndustryDetailServiceImpl extends ServiceImpl<IndustryDetailDao, In
             industryDetail.setUpdateTime(new Date());
             industryDetailDao.updateById(industryDetail);
         }
+    }
+
+    @Override
+    public void updRemarkByUuids(List<Integer> uuids, String remark) {
+        Wrapper<IndustryDetail> wrapper = new EntityWrapper<>();
+        wrapper.in("fUuid", uuids);
+        IndustryDetail industryDetail = new IndustryDetail();
+        industryDetail.setRemark(remark);
+        industryDetailDao.update(industryDetail, wrapper);
     }
 
     @Override
@@ -100,15 +110,12 @@ public class IndustryDetailServiceImpl extends ServiceImpl<IndustryDetailDao, In
             updateFlag = true;
             existingIndustryDetail.setUpdateTime(new Date());
         }
-        existingIndustryDetail.setTelephone(criteria.getPhones().replace("[", "").replace("]", "")
-                .replaceAll("'", ""));
-        existingIndustryDetail.setQq(criteria.getQqs().replace("[", "").replace("]", "")
-                .replaceAll("'", ""));
+        existingIndustryDetail.setTelephone(criteria.getPhones().replace("[", "").replace("]", "").replaceAll("'", ""));
+        existingIndustryDetail.setQq(criteria.getQqs().replace("[", "").replace("]", "").replaceAll("'", ""));
         existingIndustryDetail.setTitle(criteria.getTitle());
         existingIndustryDetail.setWeight(criteria.getWeight());
         existingIndustryDetail.setLevel(criteria.getLevel());
-        String domain = criteria.getWebsite().replace("http://","").replace("https://","")
-                .replace("www.","").split("/")[0];
+        String domain = criteria.getWebsite().replace("http://", "").replace("https://", "").replace("www.", "").split("/")[0];
         String qzCustomerStr = qzSettingService.findQZCustomer(domain);
         if (null != qzCustomerStr) {
             String[] customerStr = qzCustomerStr.split("##");

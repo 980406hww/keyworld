@@ -53,7 +53,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="layui-row">
                 <div class="layui-col-md6">
@@ -107,7 +106,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">排名</label>
                         <div class="layui-input-block" onclick="checkItem(this)">
-                            <input type="number" name="initialPosition" id="initialPosition" placeholder="" autocomplete="off" class="layui-input" lay-verify="positiveInteger"/>
+                            <input type="number" name="initialPosition" id="initialPosition" placeholder="" autocomplete="off" class="layui-input" lay-verify="paiming"/>
                         </div>
                     </div>
                 </div>
@@ -143,7 +142,8 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">第一报价</label>
                         <div class="layui-input-block" onclick="checkItem(this)" >
-                            <input type="number" name="positionFirstFee" id="positionFirstFee" placeholder="" autocomplete="off" class="layui-input" lay-verify="positiveInteger"/>
+                            <input type="number" name="positionFirstFee" id="positionFirstFee" placeholder="" autocomplete="off" class="layui-input"
+                                   lay-verify="positiveInteger" oninput="getFirstFee(this.value)"/>
                         </div>
                     </div>
                 </div>
@@ -151,7 +151,7 @@
                 <div class="layui-col-md6" >
                     <div class="layui-form-item">
                         <label class="layui-form-label">第五报价</label>
-                        <div class="layui-input-block" onclick="checkItem(this)" >
+                        <div class="layui-input-block" >
                             <input type="number" name="positionFifthFee" id="positionFifthFee" placeholder="" autocomplete="off" class="layui-input" lay-verify="positiveInteger"/>
                         </div>
                     </div>
@@ -161,7 +161,7 @@
                 <div class="layui-col-md6" >
                     <div class="layui-form-item">
                         <label class="layui-form-label">第二报价</label>
-                        <div class="layui-input-block" onclick="checkItem(this)" >
+                        <div class="layui-input-block" >
                             <input type="number" name="positionSecondFee" id="positionSecondFee" placeholder="" autocomplete="off" class="layui-input" lay-verify="positiveInteger"/>
                         </div>
                     </div>
@@ -181,7 +181,7 @@
                 <div class="layui-col-md6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">第三报价</label>
-                        <div class="layui-input-block" onclick="checkItem(this)" >
+                        <div class="layui-input-block" >
                             <input type="number" name="positionThirdFee" id="positionThirdFee" placeholder="" autocomplete="off" class="layui-input" lay-verify="positiveInteger"/>
                         </div>
                     </div>
@@ -207,7 +207,8 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">第四报价</label>
                         <div class="layui-input-block" onclick="checkItem(this)" >
-                            <input type="number" name="positionForthFee" id="positionForthFee" placeholder="" autocomplete="off" class="layui-input" lay-verify="positiveInteger"/>
+                            <input type="number" name="positionForthFee" id="positionForthFee" placeholder="" autocomplete="off" class="layui-input"
+                                   lay-verify="positiveInteger" oninput="getForthFee(this.value)"/>
                         </div>
                     </div>
                 </div>
@@ -256,11 +257,9 @@
         baseData = data;
     }
 
-    layui.use(["form", "okLayer", "jquery", "layer",'common'], function () {
+    layui.use(["form", "jquery", "layer", 'common'], function () {
         let form = layui.form;
-        let okLayer = layui.okLayer;
         let $ = layui.jquery;
-        let layer = layui.layer;
         let common = layui.common;
 
         document.onkeydown=function(e){
@@ -275,8 +274,6 @@
                 ev = e;
             }
             if(key===9){//IE浏览器
-                // document.getElementById(e.target.id).focus()
-                okLayer.msg.yellowSigh("请不要使用tab键切换输入框！",null);
                 e.target.focus();
                 if(isie){
                     ev.keyCode=0;
@@ -312,10 +309,41 @@
             });
         }
 
+        window.getFirstFee = function(val) {
+            $('#positionSecondFee').val(val);
+            $('#positionThirdFee').val(val);
+        };
+
+        window.getForthFee = function (val) {
+            $('#positionFifthFee').val(val);
+        };
+
         window.checkItem = function (self) {
+            var id = $(self).children()[0].id;
+            if(id === 'positionFirstFee'){
+                var secColor = $($($('#positionSecondFee').parent()).siblings()[0]).css("color");
+                if(secColor === "rgb(0, 0, 0)") {
+                    $($($('#positionSecondFee').parent()).siblings()[0]).css("color", "red");
+                } else {
+                    $($($('#positionSecondFee').parent()).siblings()[0]).css("color", "black");
+                }
+                var thdColor = $($($('#positionThirdFee').parent()).siblings()[0]).css("color");
+                if(thdColor === "rgb(0, 0, 0)") {
+                    $($($('#positionThirdFee').parent()).siblings()[0]).css("color", "red");
+                } else {
+                    $($($('#positionThirdFee').parent()).siblings()[0]).css("color", "black");
+                }
+            }
+            if(id === 'positionForthFee'){
+                var fifColor = $($($('#positionFifthFee').parent()).siblings()[0]).css("color");
+                if(fifColor === "rgb(0, 0, 0)") {
+                    $($($('#positionFifthFee').parent()).siblings()[0]).css("color", "red");
+                } else {
+                    $($($('#positionFifthFee').parent()).siblings()[0]).css("color", "black");
+                }
+            }
             var color = $($(self).siblings()[0]).css("color");
             if(color === "rgb(0, 0, 0)") {
-
                 $($(self).siblings()[0]).css("color", "red");
             } else {
                 $($(self).siblings()[0]).css("color", "black");
@@ -336,10 +364,8 @@
             postData.uuids = baseData.uuids;
             postData.keywordValues = data.field;
             let keywordChecks = {};
-            for (var key in data.field)
-            {
+            for (let key in data.field) {
                 keywordChecks[key] = isChecked(key)
-
             }
             postData.keywordChecks = keywordChecks;
             $.ajax({
@@ -371,22 +397,25 @@
 
         form.verify({
             domain: [
-                /^([\u4e00-\u9fa50-9]+|[a-z0-9]+)\.([\u4e00-\u9fa5]+|[a-z]+|ac.cn|bj.cn|sh.cn|tj.cn|cq.cn|he.cn|sn.cn|sx.cn|nm.cn|ln.cn|jl.cn|hl.cn|js.cn|zj.cn|ah.cn|fj.cn|jx.cn|sd.cn|ha.cn|hb.cn|hn.cn|gd.cn|gx.cn|hi.cn|sc.cn|gz.cn|yn.cn|gs.cn|qh.cn|nx.cn|xj.cn|tw.cn|hk.cn|mo.cn|xz.cn|com.cn|net.cn|org.cn|gov.cn|.com.hk)$/,
-                "请正确输入域名,例如baidu.com,不能填写www.baidu.com,map.baidu.com等"
+                /(^$)|(^([a-z0-9]*)\.*([\u4e00-\u9fa50-9]+|[a-z0-9]+)\.([\u4e00-\u9fa5]+|[a-z]+|ac.cn|bj.cn|sh.cn|tj.cn|cq.cn|he.cn|sn.cn|sx.cn|nm.cn|ln.cn|jl.cn|hl.cn|js.cn|zj.cn|ah.cn|fj.cn|jx.cn|sd.cn|ha.cn|hb.cn|hn.cn|gd.cn|gx.cn|hi.cn|sc.cn|gz.cn|yn.cn|gs.cn|qh.cn|nx.cn|xj.cn|tw.cn|hk.cn|mo.cn|xz.cn|com.cn|net.cn|org.cn|gov.cn|.com.hk)$)/,
+                "请正确输入域名"
             ],
             tagNames: [
                 /(^$)|(^[\u4e00-\u9fa50-9a-zA-Z,]+$)/,
                 "请正确输入标签,例如：阿卡索,MBA,算法"
             ],
             index:[
-                /(^$)|(^[\-][0-3]$)|(^[0-9]*[1-9][0-9]*$)/,
+                /(^$)|(^0$)|(^[\-][0-3]$)|(^[0-9]*[1-9][0-9]*$)/,
                 "请正确输入指数,最小为-3，不能为小数"
             ],
             positiveInteger: [
                 /(^$)|(^[0-9]*[1-9][0-9]*$)/,
                 "请正确输入数值、如：1、25、300等正整数"
             ],
-
+            paiming: [
+                /(^$)|(^0$)|(^[0-9]*[1-9][0-9]*$)/,
+                "请正确输入数值、如：0、1、25、300等整数"
+            ]
         });
 
     })

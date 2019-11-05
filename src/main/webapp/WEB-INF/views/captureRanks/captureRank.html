@@ -8,8 +8,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
     <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
-    <link rel="stylesheet" href="/static/ok-admin/css/scroll-bar.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 0px;
+        }
+
+        .layui-table-tool {
+            min-height: 40px;
+            padding: 0 5px 6px 5px;
+        }
+
+        .layui-table-tool-self {
+            top: 0;
+        }
+
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 0px solid #e6e6e6;
+        }
+
         /* 下拉条件框 */
         .my-collapse {
             position: relative;
@@ -23,11 +51,6 @@
         .my-collapse .layui-form-select dl,
         .my-collapse .layui-form-select .layui-anim {
             top: 33px !important;
-        }
-
-        .my-collapse > div:first-child {
-            background: #f2f2f2;
-            border: 1px solid #e6e6e6;
         }
 
         .my-collapse > div {
@@ -135,10 +158,6 @@
             height: 18px;
             line-height: 18px;
         }
-
-        .layui-table-cell .layui-btn-danger {
-            margin-left: 2px !important;
-        }
     </style>
 </head>
 <body>
@@ -161,17 +180,14 @@
                                         <input type="text" name="groupNames" placeholder="请输入组名" autocomplete="off" class="layui-input">
                                     </div>
                                     <div class="layui-inline">
-                                        <input type="checkbox" name="groupNameFuzzyQuery" title="模糊搜索">
-                                    </div>
-                                    <div class="layui-inline">
-                                        <select name="exectionType" id="exectionType">
+                                        <select name="exectionType">
                                             <option value="">请选择执行类型</option>
                                             <option value="Once">一次</option>
                                             <option value="EveryDay">每天</option>
                                         </select>
                                     </div>
                                     <div class="layui-inline">
-                                        <select name="exectionStatus" id="exectionStatus">
+                                        <select name="exectionStatus">
                                             <option value="">请选择执行状态</option>
                                             <option value="New">New</option>
                                             <option value="Processing">Processing</option>
@@ -180,9 +196,8 @@
                                         </select>
                                     </div>
                                     <div class="layui-inline">
-                                        <select name="rankJobType" id="rankJobType">
-                                            <option value="">请选择任务类型</option>
-                                            <option value="Common">普通</option>
+                                        <select name="rankJobType" lay-filter="rankJobType">
+                                            <option value="Common" selected>普通</option>
                                             <option value="Station">整站</option>
                                             <option value="DropDown">下拉词</option>
                                             <option value="Other">其他</option>
@@ -193,7 +208,7 @@
                                             <option value="">请选择任务区域</option>
                                         </select>
                                     </div>
-                                    <div class="layui-inline">
+                                    <div class="layui-inline" id="showRankJobCity">
                                         <select name="rankJobCity" id="rankJobCity">
                                             <option value="">请选择任务城市</option>
                                         </select>
@@ -202,22 +217,22 @@
                                     <div class="layui-inline">
                                         <button class="layui-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
                                     </div>
-                                    </@shiro.hasPermission>
-                                    <div class="layui-inline">
-                                        <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">
-                                            重置
-                                        </button>
-                                    </div>
+                                </@shiro.hasPermission>
+                                <div class="layui-inline">
+                                    <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">
+                                        重置
+                                    </button>
                                 </div>
                             </div>
-                        </form>
                     </div>
+                    </form>
                 </div>
-                <!--数据表格-->
-                <table class="layui-hide" id="captureRankTable" lay-filter="captureRankTable"></table>
             </div>
+            <!--数据表格-->
+            <table class="layui-hide" id="captureRankTable" lay-filter="captureRankTable"></table>
         </div>
     </div>
+</div>
 </div>
 <!--js逻辑-->
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
@@ -233,14 +248,14 @@
     };
 
     var sign = false;
+    var flag = false;
 
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 'common'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', 'common'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
-        var laydate = layui.laydate;
         var layer = layui.layer;
         var okLayer = layui.okLayer;
         var common = layui.common;
@@ -307,8 +322,8 @@
                 contentType: 'application/json',
                 cols: [[
                     {filed: 'uuid', type: 'checkbox', width: '2%', align: 'center'},
-                    {field: 'groupNames', title: '组名', width: '5%', align: 'center'},
-                    {field: 'contactPerson', title: '客户', width: '5%', align: 'center'},
+                    {field: 'groupNames', title: '组名', width: '5%', align: 'left'},
+                    {field: 'contactPerson', title: '客户', width: '5%', align: 'left'},
                     {
                         field: 'exectionType', title: '执行类型', width: '4%', align: 'center', templet: function (d) {
                             if (d.exectionType === 'Everyday') {
@@ -377,20 +392,21 @@
                             return layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm');
                         }
                     },
-                    {title: '操作', width: '6%', align: 'center', templet: '#item'}
+                    {title: '操作', width: '8%', templet: '#item', align: 'center'}
                 ]],
-                height: 'full-150',
+                height: 'full-110',
                 loading: true,
                 done: function (res, curr, count) {
                     jz();
+                    updStatus();
                 }
             });
         }
 
         function jz() {
             let tables = document.getElementsByTagName('table');
-            let t_h = tables[1].offsetHeight || tables[1].clientHeight || tables[1].scrollHeight;
-            let t_p_h = tables[1].parentElement.offsetHeight || tables[1].parentElement.clientHeight || tables[1].scrollHeight;
+            let t_h = tables[2].offsetHeight || tables[2].clientHeight || tables[2].scrollHeight;
+            let t_p_h = tables[2].parentElement.offsetHeight || tables[2].parentElement.clientHeight || tables[2].scrollHeight;
             let t_w = tables[1].offsetWidth || tables[1].clientWidth || tables[1].scrollWidth;
             let t_p_w = tables[1].parentElement.offsetWidth || tables[1].parentElement.clientWidth || tables[1].scrollWidth;
             if (t_h > t_p_h) {
@@ -437,10 +453,11 @@
                     type: 'get',
                     success: function (result) {
                         if (result.code === 200) {
-                            common.showSuccessMsg('删除成功',active['reload'].call(this));
-                            layer.close(index);
+                            common.showSuccessMsg('删除成功', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
-                            common.showFailMsg(res.msg ? res.msg : '删除失败');
+                            common.showFailMsg(result.msg ? result.msg : '删除失败');
                         }
                     },
                     error: function () {
@@ -474,8 +491,9 @@
                     data: JSON.stringify(uuidArr),
                     success: function (res) {
                         if (res.code === 200) {
-                            common.showSuccessMsg('删除成功',active['reload'].call(this));
-                            layer.close(index);
+                            common.showSuccessMsg('删除成功', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
                             common.showFailMsg(res.msg ? res.msg : '删除失败');
                         }
@@ -488,7 +506,7 @@
         };
 
         window.toSaveCaptureRanks = function () {
-            okLayer.open("关键字管理 / 抓排名任务管理 / 添加任务", "/internal/captureRanks/toSaveCaptureRanks", "60%", "70%", null, function () {
+            okLayer.open("关键字管理 / 抓排名任务管理 / 添加任务", "/internal/captureRanks/toSaveCaptureRanks", "60%", "63%", null, function () {
                 if (sign) {
                     active['reload'].call(this);
                     sign = false;
@@ -497,7 +515,7 @@
         };
 
         function toSaveCaptureRanksEdit(uuid) {
-            okLayer.open("关键字管理 / 抓排名任务管理 / 修改任务", "/internal/captureRanks/toSaveCaptureRanks", "60%", "70%", function (layero) {
+            okLayer.open("关键字管理 / 抓排名任务管理 / 修改任务", "/internal/captureRanks/toSaveCaptureRanks", "60%", "63%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(uuid);
             }, function () {
                 if (sign) {
@@ -524,8 +542,9 @@
                     data: JSON.stringify(p_d),
                     success: function (res) {
                         if (res.code === 200) {
-                            common.showSuccessMsg('操作成功',active['reload'].call(this));
-                            layer.close(index);
+                            common.showSuccessMsg('操作成功', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
                             common.showFailMsg(res.msg ? res.msg : '操作失败');
                         }
@@ -548,8 +567,8 @@
             let msg_one = '请选择需要暂停的任务';
             let msg_two = '确定暂停所选任务？';
             if (status) {
-                msg_one = '请选择需要激活的任务';
-                msg_two = '确定激活所选任务？';
+                msg_one = '请选择需要启动的任务';
+                msg_two = '确定启动所选任务？';
             }
             if (uuidArr.length <= 0) {
                 common.showFailMsg(msg_one);
@@ -570,8 +589,9 @@
                     data: JSON.stringify(p_d),
                     success: function (res) {
                         if (res.code === 200) {
-                            common.showSuccessMsg('操作成功',active['reload'].call(this));
-                            layer.close(index);
+                            common.showSuccessMsg('操作成功', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
                             common.showFailMsg(res.msg ? res.msg : '操作失败');
                         }
@@ -607,8 +627,9 @@
                     data: JSON.stringify(uuidArr),
                     success: function (res) {
                         if (res.code === 200) {
-                            common.showSuccessMsg('操作成功',active['reload'].call(this));
-                            layer.close(index);
+                            common.showSuccessMsg('操作成功', function () {
+                                active['reload'].call(this);
+                            });
                         } else {
                             common.showFailMsg(res.msg ? res.msg : '操作失败');
                         }
@@ -619,6 +640,43 @@
                 });
             });
         };
+
+        form.on("select(rankJobType)", function (data) {
+            let showRankJobCity = document.getElementById('showRankJobCity');
+            let rankJobCity = document.getElementById('rankJobCity');
+
+            if (data.value === 'Common') {
+                showRankJobCity.style.display = 'inline-block';
+            } else {
+                showRankJobCity.style.display = 'none';
+                rankJobCity.value = '';
+                form.render('select');
+            }
+            flag = data.value === 'Station';
+            active['reload'].call(this);
+        });
+
+        function updStatus() {
+            let addTask = document.getElementById('addTask');
+            let delTask = document.getElementById('delTask');
+            let updTaskOne = document.getElementsByClassName('updTaskOne');
+            let delTaskOne = document.getElementsByClassName('delTaskOne');
+            if (flag) {
+                addTask.style.display = 'none';
+                delTask.style.display = 'none';
+                for (let i = 0; i < updTaskOne.length; i++) {
+                    updTaskOne[i].style.display = 'none';
+                    delTaskOne[i].style.display = 'none';
+                }
+            } else {
+                addTask.style.display = 'inline-block';
+                delTask.style.display = 'inline-block';
+                for (let i = 0; i < updTaskOne.length; i++) {
+                    updTaskOne[i].style.display = 'inline-block';
+                    delTaskOne[i].style.display = 'inline-block';
+                }
+            }
+        }
 
         table.on('tool(captureRankTable)', function (obj) {
             var data = obj.data, event = obj.event;
@@ -635,15 +693,14 @@
                 case 'noStop':
                     changeCaptureRankJobStatus(data.uuid, true);
                     break;
+                default:
+                    break;
             }
         });
 
         form.on("submit(search)", function (data) {
             let condition = data.field;
             condition = common.jsonObjectTrim(condition);
-            if (!condition.groupNameFuzzyQuery) {
-                condition.groupNameFuzzyQuery = null;
-            }
             table.reload('captureRankTable', {
                 where: condition,
                 page: {
@@ -657,35 +714,36 @@
     });
 </script>
 <script type="text/html" id="toolbarTpl">
-    <div class="my-collapse">
+    <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/captureRank/saveCaptureRankJob">
-        <button class="layui-btn" onclick="toSaveCaptureRanks()">添加任务</button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/captureRank/deleteCaptureRankJobs">
-        <button class="layui-btn layui-btn-danger" onclick="deleteCaptureRanksByUuids()">删除所选</button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
-        <button class="layui-btn" onclick="changeCaptureRankJobStatuses(true)">激活所选</button>
-        <button class="layui-btn" onclick="changeCaptureRankJobStatuses(false)">暂停所选</button>
-        </@shiro.hasPermission>
-        <button class="layui-btn" onclick="resetCaptureRankJobs()">重置任务</button>
+        <button class="layui-btn layui-btn-sm" id="addTask" onclick="toSaveCaptureRanks()">添加任务</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/captureRank/deleteCaptureRankJobs">
+    <button class="layui-btn layui-btn-sm layui-btn-danger" id="delTask" onclick="deleteCaptureRanksByUuids()">删除所选</button>
+    </@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
+    <button class="layui-btn layui-btn-sm" onclick="changeCaptureRankJobStatuses(true)">启动所选</button>
+    <button class="layui-btn layui-btn-sm" onclick="changeCaptureRankJobStatuses(false)">暂停所选</button>
+    </@shiro.hasPermission>
+    <button class="layui-btn layui-btn-sm" onclick="resetCaptureRankJobs()">重置任务</button>
     </div>
 </script>
 <script type="text/html" id="item">
-    <@shiro.hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
-    {{# if(d.captureRankJobStatus){ }}
-    <button class="layui-btn layui-btn-xs" lay-event="stop">暂停</button>
-    {{# }else{ }}
-    <button class="layui-btn layui-btn-xs" lay-event="noStop">取消暂停</button>
-    {{# } }}
-    <br>
+    <div class="layui-btn-group">
+        <@shiro.hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
+        {{# if(d.captureRankJobStatus){ }}
+        <button class="layui-btn layui-btn-xs" style="background-color: red" lay-event="stop">暂停</button>
+        {{# }else{ }}
+        <button class="layui-btn layui-btn-xs" style="background-color: #FFB800" lay-event="noStop">激活</button>
+        {{# } }}
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/captureRank/saveCaptureRankJob">
-    <button class="layui-btn layui-btn-xs" lay-event="upd">修改</button>
+    <button class="layui-btn layui-btn-xs updTaskOne" lay-event="upd">修改</button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/captureRank/deleteCaptureRankJob">
-    <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</button>
+    <button class="layui-btn layui-btn-xs layui-btn-danger delTaskOne" lay-event="del">删除</button>
     </@shiro.hasPermission>
+    </div>
 </script>
 </body>
 </html>

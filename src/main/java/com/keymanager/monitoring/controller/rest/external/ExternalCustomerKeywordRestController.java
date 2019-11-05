@@ -489,8 +489,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     }
 
     @RequestMapping(value = "/updateCustomerKeywordPosition", method = RequestMethod.POST)
-    public ResponseEntity<?> updateCustomerKeywordPosition(
-        @RequestBody Map<String, Object> requestMap) throws Exception {
+    public ResponseEntity<?> updateCustomerKeywordPosition(@RequestBody Map<String, Object> requestMap) throws Exception {
         String userName = (String) requestMap.get("userName");
         String password = (String) requestMap.get("password");
 
@@ -499,14 +498,14 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String ip = (String) requestMap.get("capturePositionIP");
         String clientID = (String) requestMap.get("clientID");
         String city = (String) requestMap.get("capturePositionCity");
-//        Date startTime = new Date((Long) requestMap.get("startTime"));
+        Date startTime = new Date((Long) requestMap.get("startTime"));
         try {
             if (validUser(userName, password)) {
                 if (position > -1) {
                     customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp(), ip, city);
                     updCustomerKeywordMon(customerKeywordUuid, position);
                 } else {
-//                    customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
+                    customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
                 }
                 if (StringUtil.isNotNullNorEmpty(clientID)) {
                     machineInfoService.updateMachineInfoForCapturePosition(clientID);
@@ -526,19 +525,15 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String userName = (String) requestMap.get("userName");
         String password = (String) requestMap.get("password");
         String terminalType = (String) requestMap.get("terminalType");
-
         List<String> groupNames = (List<String>) requestMap.get("groupNames");
-
         Date startTime = new Date((Long) requestMap.get("startTime"));
         Integer customerUuid = (requestMap.get("customerUuid") == null) ? null
             : (Integer) requestMap.get("customerUuid");
         Integer captureRankJobUuid = (Integer) requestMap.get("captureRankJobUuid");
         try {
             if (validUser(userName, password)) {
-                CustomerKeywordForCapturePosition capturePosition = customerKeywordService
-                    .getCustomerKeywordForCapturePosition(terminalType,
-                        groupNames, customerUuid != null ? customerUuid.longValue() : null,
-                        startTime, captureRankJobUuid.longValue());
+                CustomerKeywordForCapturePosition capturePosition = customerKeywordService.getCustomerKeywordForCapturePosition(terminalType,
+                    groupNames, customerUuid != null ? customerUuid.longValue() : null, startTime, captureRankJobUuid.longValue());
                 if (capturePosition == null) {
                     capturePosition = new CustomerKeywordForCapturePosition();
                     capturePosition.setKeyword("end");
@@ -553,33 +548,27 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     }
 
     @RequestMapping(value = "/getCustomerKeywordForCapturePositionTemp", method = RequestMethod.POST)
-    public ResponseEntity<?> getCustomerKeywordForCapturePositionTemp(
-        @RequestBody Map<String, Object> requestMap) {
+    public ResponseEntity<?> getCustomerKeywordForCapturePositionTemp(@RequestBody Map<String, Object> requestMap) {
         String userName = (String) requestMap.get("userName");
         String password = (String) requestMap.get("password");
         String terminalType = (String) requestMap.get("terminalType");
         String groupName = (String) requestMap.get("groupName");
         Date startTime = new Date((Long) requestMap.get("startTime"));
-        Integer customerUuid = (requestMap.get("customerUuid") == null) ? null
-            : (Integer) requestMap.get("customerUuid");
+        Integer customerUuid = (requestMap.get("customerUuid") == null) ? null : (Integer) requestMap.get("customerUuid");
         Integer captureRankJobUuid = (Integer) requestMap.get("captureRankJobUuid");
         Integer qzSettingUuid = (Integer) requestMap.get("qzSettingUuid");
-        Boolean saveTopThree = requestMap.get("saveTopThree") == null ? true
-            : (Boolean) requestMap.get("saveTopThree");
+        Boolean saveTopThree = requestMap.get("saveTopThree") == null ? true : (Boolean) requestMap.get("saveTopThree");
         try {
             if (validUser(userName, password)) {
-                List<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = customerKeywordService
-                    .getCustomerKeywordForCapturePositionTemp(
-                        qzSettingUuid != null ? qzSettingUuid.longValue() : null, terminalType,
-                        groupName, customerUuid != null ? customerUuid.longValue() : null,
-                        startTime, captureRankJobUuid.longValue(), saveTopThree);
+                List<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = customerKeywordService.getCustomerKeywordForCapturePositionTemp(
+                    qzSettingUuid != null ? qzSettingUuid.longValue() : null, terminalType, groupName, customerUuid != null ? customerUuid.longValue() : null,
+                    startTime, captureRankJobUuid.longValue(), saveTopThree);
                 if (customerKeywordForCapturePositions.size() == 0) {
                     CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
                     customerKeywordForCapturePosition.setKeyword("end");
                     customerKeywordForCapturePositions.add(customerKeywordForCapturePosition);
                 }
-                return new ResponseEntity<Object>(customerKeywordForCapturePositions,
-                    HttpStatus.OK);
+                return new ResponseEntity<Object>(customerKeywordForCapturePositions, HttpStatus.OK);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -747,8 +736,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             String userName = (String) requestMap.get("userName");
             String password = (String) requestMap.get("password");
             if (validUser(userName, password)) {
-                return new ResponseEntity<Object>(
-                    customerKeywordService.getCheckingEnteredKeywords(), HttpStatus.OK);
+                return new ResponseEntity<Object>(customerKeywordService.getCheckingEnteredKeywords(), HttpStatus.OK);
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         } catch (Exception ex) {
@@ -765,10 +753,8 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             String userName = (String) requestMap.get("userName");
             String password = (String) requestMap.get("password");
             if (validUser(userName, password)) {
-                JSONArray jsonArray = JSONArray
-                    .fromObject(requestMap.get("customerKeywordEnteredVos"));
-                customerKeywordService.updateCheckingEnteredKeywords(
-                    JSONArray.toList(jsonArray, new CustomerKeywordEnteredVO(), new JsonConfig()));
+                JSONArray jsonArray = JSONArray.fromObject(requestMap.get("customerKeywordEnteredVos"));
+                customerKeywordService.updateCheckingEnteredKeywords(JSONArray.toList(jsonArray, new CustomerKeywordEnteredVO(), new JsonConfig()));
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);

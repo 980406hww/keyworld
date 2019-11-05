@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <style>
+        .layui-btn {
+            width: 120px;
+        }
+
+        .layui-input-block #friendlyLinkLogo {
+            line-height: 30px;
+            border-right: 0px;
+            border-bottom: 0px;
+            border-top: 0px;
+        }
+    </style>
+</head>
+<body>
+<div class="ok-body">
+
+    <form class="layui-form layui-form-pane ok-form" lay-filter="friendlyLinkForm" id="friendlyLinkForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">网站名称</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="message">
+                <input type="text" name="friendlyLinkWebName" id="friendlyLinkWebName" autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">网址</label>
+            <div class="layui-input-block">
+                <input type="text" name="friendlyLinkUrl" id="friendlyLinkUrl" placeholder="默认没有http://会加上" autocomplete="off" class="layui-input"
+                       lay-verify="website">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">网站排序</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="originalSortRank" id="originalSortRank">
+                <input type="hidden" name="friendlyLinkType" id="friendlyLinkType" value="综合网站_0">
+                <input type="text" name="friendlyLinkSortRank" id="friendlyLinkSortRank" placeholder="不填写则排在最后面" autocomplete="off" class="layui-input"
+                       lay-verify="number">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">站长Email</label>
+            <div class="layui-input-block">
+                <input type="text" name="friendlyLinkEmail" autocomplete="off" class="layui-input" placeholder="不填写默认为空" lay-verify="email">
+            </div>
+        </div>
+        <div class="layui-form-item" pane>
+            <label class="layui-form-label">页面选择</label>
+            <div class="layui-input-block">
+                <input name="friendlyLinkIsCheck" type="radio" value="2" checked title="首页"/>
+                <input name="friendlyLinkIsCheck" type="radio" value="1" title="内容页"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">到期时间</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" id="expirationTime" name="expirationTime" readonly lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">网站Logo</label>
+            <div class="layui-input-block">
+                <input type="file" class="layui-input" id="friendlyLinkLogo" name="friendlyLinkLogo">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">网站简况</label>
+            <div class="layui-input-block">
+                <textarea name="friendlyLinkMsg" autocomplete="off" style="height: 150px;" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="commit">确定</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script>
+
+    let uuids_ = null;
+    let layui_ = null;
+    let datas = null;
+
+    function initData(data) {
+        uuids_ = data.uuids
+    }
+
+    function init_link(data, uuids) {
+        datas = data;
+        uuids_ = uuids;
+        if (layui_ != null) {
+            setForm(layui_, datas);
+        }
+    }
+
+    function setForm(l, d) {
+        l.jquery.ajax({
+            url: '/internal/websites/getFriendlyLinkByUrl',
+            type: 'POST',
+            data: JSON.stringify(d),
+            headers: {
+                "Accept": 'application/json',
+                "Content-Type": 'application/json'
+            },
+            success: function (res) {
+                if (res.code === 200) {
+                    res.data.expirationTime = l.util.toDateString(res.data.expirationTime, 'yyyy-MM-dd');
+                    res.data.message = d.friendlyLinkUrl;
+                    layui.form.val("friendlyLinkForm", res.data);
+                } else {
+                    l.layer.msg(res.msg, {icon: 5, time: 3000});
+                }
+            }
+        });
+    }
+
+    layui.use(["form", "jquery", "layer", "laydate", "common", "util"], function () {
+        let form = layui.form;
+        let $ = layui.jquery;
+        let laydate = layui.laydate;
+        let common = layui.common;
+
+        if (datas != null) {
+            setForm(layui, datas);
+        } else {
+            layui_ = layui;
+        }
+
+        laydate.render({
+            elem: '#expirationTime',
+        });
+
+        form.on("submit(commit)", function (data) {
+            let friendlyLinkUrl = data.field.friendlyLinkUrl;
+            if (friendlyLinkUrl.indexOf('http://') === -1) {
+                friendlyLinkUrl = 'http://' + friendlyLinkUrl
+            }
+            let friendlyLinkSortRank = data.field.friendlyLinkSortRank;
+            if (!friendlyLinkSortRank) {
+                friendlyLinkSortRank = '-1';
+            }
+            let friendlyLinkLogoFile = data.field.friendlyLinkLogo;
+            let file = null;
+            if (friendlyLinkLogoFile !== "") {
+                let fileTypes = ["jpg", "png", "gif"];
+                let fileTypeFlag = false;
+                let newFileName = friendlyLinkLogoFile.split('.');
+                newFileName = newFileName[newFileName.length - 1];
+                for (let i = 0; i < fileTypes.length; i++) {
+                    if (fileTypes[i] === newFileName) {
+                        fileTypeFlag = true;
+                        break;
+                    }
+                }
+                if (!fileTypeFlag) {
+                    common.showFailMsg("请提交正确格式图片 .jpg .png .gif");
+                    return false;
+                }
+                file = document.getElementById('friendlyLinkLogo').files[0];
+            }
+            let formData = new FormData();
+            formData.append('file', file);
+            formData.append('friendlyLinkWebName', data.field.friendlyLinkWebName);
+            formData.append('friendlyLinkUrl', friendlyLinkUrl);
+            formData.append('friendlyLinkIsCheck', data.field.friendlyLinkIsCheck);
+            formData.append('friendlyLinkSortRank', friendlyLinkSortRank);
+            formData.append('friendlyLinkType', data.field.friendlyLinkType);
+            let friendlyLinkTypes = data.field.friendlyLinkType.split('_');
+            let friendlyLinkTypeId = friendlyLinkTypes[friendlyLinkTypes.length - 1];
+            formData.append('friendlyLinkTypeId', friendlyLinkTypeId);
+            formData.append('friendlyLinkMsg', data.field.friendlyLinkMsg);
+            formData.append('expirationTime', data.field.expirationTime);
+            formData.append('friendlyLinkEmail', data.field.friendlyLinkEmail);
+            formData.append('friendlyLinkLogo', data.field.friendlyLinkLogo);
+            formData.append('uuids', uuids_.join(','));
+            if (data.field.message) {
+                formData.append('originalFriendlyLinkUrl', data.field.message);
+                $.ajax({
+                    url: '/internal/websites/batchUpdateFriendlyLink',
+                    type: 'POST',
+                    cache: false,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.code === 200) {
+                            common.showSuccessMsg("保存成功", function () {
+                                parent.window.sign = true;
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            });
+                        } else {
+                            common.showFailMsg(res.msg);
+                        }
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: '/internal/websites/batchSaveFriendlyLink',
+                    type: 'POST',
+                    cache: false,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.code === 200) {
+                            common.showSuccessMsg("保存成功", function () {
+                                parent.window.sign = true;
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            });
+                        } else {
+                            common.showFailMsg(res.msg);
+                        }
+                    }
+                });
+            }
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+        form.verify({
+            website: function (value) {
+                if (value !== "") {
+                    if (value.indexOf(".") === -1) {
+                        return "请输入正确网址"
+                    }
+                } else {
+                    return "网址不能为空"
+                }
+            },
+            number: function (value) {
+                if (value !== "") {
+                    if (!/^[1-9]\d*$/.test(value)) {
+                        return "请输入大于0的整数排名"
+                    }
+                }
+            },
+            email: function (value) {
+                if (value !== "") {
+                    if (value.indexOf("@") === -1) {
+                        return "请输入正确的邮箱"
+                    }
+                }
+            }
+        });
+
+    })
+
+</script>
+
+</body>
+</html>

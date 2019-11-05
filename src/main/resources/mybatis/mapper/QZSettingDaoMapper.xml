@@ -290,12 +290,12 @@
     </update>
 
     <update id="updateImmediately" parameterType="java.lang.String">
-        UPDATE t_qz_setting  qs
-        SET qs.fUpdateStatus = NULL,
-            qs.fUpdateTime = NOW(),
-            qs.fUpdateEndTime = NULL
-        WHERE qs.fAutoCrawlKeywordFlag IS TRUE
-        AND qs.fUuid IN (${uuids})
+        UPDATE t_qz_setting
+        SET fUpdateStatus = NULL,
+            fUpdateTime = NOW(),
+            fUpdateEndTime = NULL,
+            fAutoCrawlKeywordFlag = 1
+        WHERE fUuid IN (${uuids})
     </update>
 
     <update id="updateExceedMaxCountFlag">
@@ -387,13 +387,15 @@
         </foreach>
     </update>
 
-    <select id="getQZSettingGroupInfo" resultType="java.lang.Integer">
-        SELECT COUNT(1)
+    <select id="getQZSettingGroupInfo" resultType="java.util.Map">
+        SELECT
+        COUNT(ck.fStatus = 1 OR NULL) AS 'activeCount',
+        COUNT(ck.fStatus = 0 OR NULL) AS 'stopCount'
         FROM t_customer_keyword ck
-        WHERE ck.fOptimizeGroupName = #{optimizeGroupName}
+        WHERE ck.fCustomerUuid = #{customerUuid}
+        AND ck.fOptimizeGroupName = #{optimizeGroupName}
         AND ck.fType = 'qz'
         AND ck.fTerminalType = #{terminalType}
-        AND ck.fStatus = 1
     </select>
 
     <select id="getAvailableOptimizationGroups" resultType="java.lang.String">

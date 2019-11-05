@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
  */
 @Service("resourceService2")
 public class ResourceServiceImpl extends ServiceImpl<ResourceDao, Resource> implements ResourceService {
-    private static final int RESOURCE_MENU = 0; // 菜单
 
     @javax.annotation.Resource(name = "resourceDao2")
     private ResourceDao resourceDao;

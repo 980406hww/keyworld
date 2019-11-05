@@ -146,6 +146,7 @@
         fPositionFifthFee,
         fPositionFirstPageFee,
         fCapturePositionQueryTime,
+        fCaptureIndexQueryTime,
         fCollectMethod,
         fStartOptimizedTime,
         fOrderNumber,
@@ -214,6 +215,7 @@
                 <when test="customerKeyword.positionFirstPageFee == null">0.00,</when>
             </choose>
             #{customerKeyword.capturePositionQueryTime},
+            #{customerKeyword.captureIndexQueryTime},
             #{customerKeyword.collectMethod},
             #{customerKeyword.startOptimizedTime},
             #{customerKeyword.orderNumber},
@@ -337,11 +339,11 @@
     <select id="searchCustomerKeywordSummaryInfo" resultType="com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO">
         SELECT
             fKeyword      AS 'keyword',
-            fTerminalType AS 'terminalType',
-            fStatus       AS 'status'
+            fTerminalType AS 'terminalType'
         FROM t_customer_keyword
         WHERE fCustomerUuid = #{customerUuid}
         AND fType = #{entryType}
+        AND fStatus = 1
         GROUP BY fKeyword, fTerminalType
     </select>
 

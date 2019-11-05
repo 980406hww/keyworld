@@ -539,7 +539,7 @@ ul {
 }
 
 .datalist-list .body .other-rank .row span.line1, .datalist-list .body .other-rank_2 .row span.line1 {
-    font-size: 18px;
+    font-size: 12px;
     margin-top: 10px;
     height: 60%;
 }
@@ -548,7 +548,7 @@ ul {
     height: 30%;
 }
 
-.datalist-list .body .other-rank .row span.line1:hover, .datalist-list .body .other-rank_2 .row span.line1:hover {
+.datalist-list .body .other-rank_2 .row span.line1:hover {
     color: #0c7df5;
 }
 

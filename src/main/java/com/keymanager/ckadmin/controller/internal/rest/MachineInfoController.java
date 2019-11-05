@@ -5,12 +5,15 @@ import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.MachineInfoBatchUpdateCriteria;
 import com.keymanager.ckadmin.criteria.MachineInfoCriteria;
+import com.keymanager.ckadmin.criteria.MachineInfoGroupStatCriteria;
 import com.keymanager.ckadmin.entity.MachineInfo;
 import com.keymanager.ckadmin.entity.UserPageSetup;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.MachineInfoService;
 import com.keymanager.ckadmin.service.PerformanceService;
 import com.keymanager.ckadmin.service.UserPageSetupService;
+import com.keymanager.ckadmin.vo.MachineInfoGroupSummaryVO;
+import com.keymanager.ckadmin.vo.MachineInfoSummaryVO;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import java.io.File;
@@ -24,12 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -96,19 +94,19 @@ public class MachineInfoController extends SpringMVCBaseController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/machineInfo/uploadVPSFile")
+    @RequestMapping(value = "/showUploadVNCDialog", method = RequestMethod.GET)
+    public ModelAndView showUploadVNCDialog() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/UploadVNCDialog");
+        return mv;
+    }
+
     @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
     @RequestMapping(value = "/toBatchUpdateFailedReason", method = RequestMethod.GET)
     public ModelAndView toBatchUpdateFailedReason() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/BatchUpdateFailedReason");
-        return mv;
-    }
-
-    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
-    @RequestMapping(value = "/toBatchChangeTerminalType", method = RequestMethod.GET)
-    public ModelAndView toBatchChangeTerminalType() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("machineManage/BatchChangeTerminalType");
         return mv;
     }
 
@@ -142,6 +140,126 @@ public class MachineInfoController extends SpringMVCBaseController {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/SwitchGroup");
         return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/showTargetVersionSettingDialog", method = RequestMethod.GET)
+    public ModelAndView showTargetVersionSettingDialog() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/UpdateTargetVersion");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/machineInfoGroupStat")
+    @RequestMapping(value = "/toMachineInfoGroupStat", method = RequestMethod.GET)
+    public ModelAndView toMachineInfoGroupStat() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/machineInfoGroupStat");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/showTargetVPSPasswordSettingDialog", method = RequestMethod.GET)
+    public ModelAndView showTargetVPSPasswordSettingDialog() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/UpdatePassword");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/showRenewalSettingDialog", method = RequestMethod.GET)
+    public ModelAndView showRenewalSettingDialog() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/UpdateRenewalSetting");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/resetRestartStatusForProcessing")
+    @RequestMapping(value = "/resetRestartStatusForProcessing", method = RequestMethod.POST)
+    public ResultBean resetRestartStatusForProcessing() {
+        ResultBean resultBean = new ResultBean();
+        try {
+            machineInfoService.resetRestartStatusForProcessing();
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/updateMachineInfoRenewalDate")
+    @RequestMapping(value = "/updateMachineInfoRenewalDate", method = RequestMethod.POST)
+    public ResultBean updateMachineInfoRenewalDate(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
+            String settingType = (String) requestMap.get("settingType");
+            String renewalDate = (String) requestMap.get("renewalDate");
+            machineInfoService.updateRenewalDate(clientIDs, settingType, renewalDate);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
+    @RequestMapping(value = "/updateMachineInfoTargetVPSPassword", method = RequestMethod.POST)
+    public ResultBean updateMachineInfoTargetVPSPassword(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
+            String targetVPSPassword = (String) requestMap.get("targetVPSPassword");
+            machineInfoService.updateMachineInfoTargetVPSPassword(clientIDs, targetVPSPassword);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/updateMachineInfoTargetVersion")
+    @RequestMapping(value = "/updateMachineInfoTargetVersion", method = RequestMethod.POST)
+    public ResultBean updateMachineInfoTargetVersion(@RequestBody Map<String, Object> requestMap) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            List<String> clientIDs = (List<String>) requestMap.get("clientIDs");
+            String targetVersion = (String) requestMap.get("targetVersion");
+            machineInfoService.updateMachineInfoTargetVersion(clientIDs, targetVersion);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/uploadVNCFile")
+    @RequestMapping(value = "/uploadVNCFile", method = RequestMethod.POST)
+    public ResultBean uploadVNCFile(@RequestParam(value = "file", required = false) MultipartFile file,
+                                    @RequestParam(name = "terminalType") String terminalType) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            machineInfoService.uploadVNCFile(file.getInputStream(), terminalType);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
     }
 
     @RequiresPermissions("/internal/machineInfo/saveMachineInfo")
@@ -229,7 +347,7 @@ public class MachineInfoController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/getMachineInfo/{clientID}/{terminalType}", method = RequestMethod.POST)
-    public ResultBean getMachineInfo(@PathVariable("clientID") String clientID,@PathVariable("terminalType") String terminalType) {
+    public ResultBean getMachineInfo(@PathVariable("clientID") String clientID, @PathVariable("terminalType") String terminalType) {
         ResultBean resultBean = new ResultBean();
         try {
             MachineInfo machineInfo = machineInfoService.getMachineInfo(clientID, terminalType);
@@ -536,12 +654,51 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/searchMachineInfos")
     @RequestMapping(value = "/toMachineInfoFromATP/{terminalType}/{machineGroup}", method = RequestMethod.GET)
-    public ModelAndView toMachineInfoFromATP(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "machineGroup") String machineGroup) throws UnsupportedEncodingException {
+    public ModelAndView toMachineInfoFromATP(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "machineGroup") String machineGroup)
+        throws UnsupportedEncodingException {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/machineManage");
         machineGroup = URLDecoder.decode(machineGroup, "UTF-8");
-        mv.addObject("machineGroupFromATP",machineGroup);
-        mv.addObject("terminalTypeFromATP",terminalType);
+        mv.addObject("machineGroupFromATP", machineGroup);
+        mv.addObject("terminalTypeFromATP", terminalType);
         return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/machineInfoGroupStat")
+    @PostMapping(value = "/machineInfoGroupStat")
+    public ResultBean machineInfoGroupStat(@RequestBody MachineInfoGroupStatCriteria machineInfoGroupStatCriteria) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            Page<MachineInfoGroupSummaryVO> page = new Page<>(machineInfoGroupStatCriteria.getPage(), machineInfoGroupStatCriteria.getLimit());
+            page = machineInfoService.searchMachineInfoGroupSummaryVO(page, machineInfoGroupStatCriteria);
+            List<MachineInfoGroupSummaryVO> machineInfoGroupSummaryVOs = page.getRecords();
+            resultBean.setData(machineInfoGroupSummaryVOs);
+            resultBean.setCount(page.getTotal());
+            resultBean.setMsg("success");
+            resultBean.setCode(0);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/machineInfoStat")
+    @RequestMapping(value = "/machineInfoStat", method = RequestMethod.POST)
+    public ResultBean machineInfoStat(@RequestBody Map<String, String> map) {
+        ResultBean resultBean = new ResultBean(0, "success");
+        try {
+            String clientIDPrefix = map.get("clientIDPrefix");
+            String city = map.get("city");
+            String switchGroupName = map.get("switchGroupName");
+            List<MachineInfoSummaryVO> machineInfoSummaryVOs = machineInfoService.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName);
+            resultBean.setData(machineInfoSummaryVOs);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
     }
 }

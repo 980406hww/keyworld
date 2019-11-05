@@ -22,6 +22,6 @@
     WHERE qt.fQZSettingUuid = #{fQZSettingUuid}
 	AND qt.fUuid = ql.fQZOperationTypeUuid
     )
-    ORDER BY ql.fCreateTime
+    ORDER BY ql.fCreateTime DESC
 </select>
 </mapper>

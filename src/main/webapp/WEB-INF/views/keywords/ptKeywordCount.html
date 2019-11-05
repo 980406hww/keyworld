@@ -5,11 +5,27 @@
     <title>单词统计</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <link rel="stylesheet" href="/static/ok-admin/page/base/searchForm.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 0px;
+        }
+
         .layui-table-page > div {
             height: 26px;
             position: fixed;
@@ -103,7 +119,6 @@
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
-        var layer = layui.layer;
         var common = layui.common;
 
         init_search_data();
@@ -168,7 +183,7 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {field: 'keyword', title: '关键字', width: '22%',templet: '#tokeywordTpl' },
+                    {field: 'keyword', title: '关键字', width: '22%',templet: '#tokeywordTpl', align: 'left'},
                     {field: 'searchEngine', title: '搜索引擎', width: '13%', align: 'center'},
                     {field: 'keywordCount', title: '单词总数', width: '13%', align: 'center'},
                     {field: 'userCount', title: '用户总数', width: '13%', align: 'center'},
@@ -176,7 +191,7 @@
                     {field: 'topThree', title: '前三数量', width: '13%', align: 'center', templet: '#tokeywordTop3Tpl' },
                     {field: 'topTen', title: '前十数量', width: '13%', align: 'center', templet: '#tokeywordTop10Tpl' },
                 ]],
-                height: 'full-150',
+                height: 'full-110',
                 done: function (res, curr, count) {
                 }
             });

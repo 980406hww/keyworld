@@ -2,13 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>网站管理</title>
+    <title>网站列表</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            background: #f2f2f2;
+            border: 0px;
+        }
+        .layui-table tr .layui-table-col-special .layui-table-cell{
+            text-align: center;
+        }
         .layui-table-page > div {
             height: 26px;
             position: fixed;
@@ -107,12 +125,30 @@
 
         #industryTypes-box input{
             height: 30px;
-            width: 170px;
+            width: 180px;
         }
 
         #websiteTypes-box input{
             height: 30px;
-            width: 170px;
+            width: 150px;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .layui-table-tool {
+            min-height: 30px;
+            padding: 6px 5px 6px 5px;
+        }
+
+        .layui-table-tool-self{
+            top: 0;
         }
     </style>
 </head>
@@ -127,13 +163,19 @@
                             <div class="my-collapse">
                                 <div>
                                     <div class="layui-inline">
-                                        <input type="text" name="domain" placeholder="域名" autocomplete="off" style="width: 200px;height: 30px" class="layui-input">
+                                        <input type="text" name="domain" placeholder="域名" autocomplete="off" style="width: 150px;height: 30px" class="layui-input">
+                                    </div>
+                                    <div class="layui-inline" id="websiteTypes-box">
+                                        <select name="websiteType" id="websiteTypes"></select>
                                     </div>
                                     <div class="layui-inline" id="industryTypes-box">
                                         <select name="industryType" id="industryTypes"></select>
                                     </div>
-                                    <div class="layui-inline" id="websiteTypes-box">
-                                        <select name="websiteType" id="websiteTypes"></select>
+                                    <div class="layui-inline">
+                                        <input type="text" name="friendlyLinkUrl" placeholder="请输入指定友链" style="width: 150px;height: 30px"  autocomplete="off" class="layui-input">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input type="text" name="advertisingTagname" placeholder="输入准确广告标识" style="width: 150px;height: 30px"  autocomplete="off" class="layui-input">
                                     </div>
                                     <div class="layui-inline">
                                         <button class="layui-collapse my-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
@@ -160,19 +202,7 @@
                                         <div class="layui-inline">
                                             <label class="layui-form-label">失败次数</label>
                                             <div class="layui-input-inline">
-                                                <input type="text" name="accessFailCount" placeholder="请输入失败次数" autocomplete="off" class="layui-input">
-                                            </div>
-                                        </div>
-                                        <div class="layui-inline">
-                                            <label class="layui-form-label">含有指定友链</label>
-                                            <div class="layui-input-inline">
-                                                <input type="text" name="friendlyLinkUrl" placeholder="请输入指定友链" autocomplete="off" class="layui-input">
-                                            </div>
-                                        </div>
-                                        <div class="layui-inline">
-                                            <label class="layui-form-label">含指定广告</label>
-                                            <div class="layui-input-inline">
-                                                <input type="text" name="advertisingTagname" placeholder="输入准确广告标识" autocomplete="off" class="layui-input">
+                                                <input type="number" name="accessFailCount" placeholder="请输入失败次数" autocomplete="off" class="layui-input">
                                             </div>
                                         </div>
                                         <div class="layui-inline">
@@ -256,6 +286,7 @@
 
 <script>
     var sign = false;
+
     // 进度条加载提示
     NProgress.start();
     window.onload = function () {
@@ -265,7 +296,7 @@
     var s_c = 0;
 
     function showCondition() {
-        var searchContent = document.getElementById('searchContent');
+        let searchContent = document.getElementById('searchContent');
         if (s_c++ % 2 === 0) {
             searchContent.style.display = 'block';
         } else {
@@ -273,19 +304,19 @@
         }
     }
 
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
-        var element = layui.element;
-        var table = layui.table;
-        var form = layui.form;
-        var $ = layui.jquery;
-        var laydate = layui.laydate;
-        var okLayer = layui.okLayer;
-        var layer = layui.layer;
+    layui.use(['table', 'form', 'jquery', 'okLayer', 'layer', "common"], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let $ = layui.jquery;
+        let okLayer = layui.okLayer;
+        let layer = layui.layer;
+        let common = layui.common;
+        let search = null;
 
-        init_Search()
-        init_SelectData()
+        init_Search();
+        init_SelectData();
 
-        function init_SelectData(){
+        function init_SelectData() {
             $.ajax({
                 url: '/internal/websites/returnSelectData',
                 type: 'POST',
@@ -295,15 +326,15 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        var industryTypeMap = res.data.industryTypeMap
-                        var websiteTypeMap = res.data.websiteTypeMap
-                        var putSalesInfoSignMap = res.data.putSalesInfoSignMap
-                        var websiteSynchronousSignMap = res.data.websiteSynchronousSignMap
-                        var industry = $('#industryTypes');
-                        var websiteType = $('#websiteTypes');
-                        var updateSalesInfoSign = $('#updateSalesInfoSigns');
-                        var synchronousFriendlyLinkSigns = $('#synchronousFriendlyLinkSigns');
-                        var synchronousAdvertisingSigns = $('#synchronousAdvertisingSigns');
+                        let industryTypeMap = res.data.industryTypeMap;
+                        let websiteTypeMap = res.data.websiteTypeMap;
+                        let putSalesInfoSignMap = res.data.putSalesInfoSignMap;
+                        let websiteSynchronousSignMap = res.data.websiteSynchronousSignMap;
+                        let industry = $('#industryTypes');
+                        let websiteType = $('#websiteTypes');
+                        let updateSalesInfoSign = $('#updateSalesInfoSigns');
+                        let synchronousFriendlyLinkSigns = $('#synchronousFriendlyLinkSigns');
+                        let synchronousAdvertisingSigns = $('#synchronousAdvertisingSigns');
                         industry.append('<option value="" selected>请选择所属行业类型</option>');
                         websiteType.append('<option value="" selected>请选择销售网站类型</option>');
                         updateSalesInfoSign.append('<option value="" selected>请选择销售更新状态</option>');
@@ -324,11 +355,11 @@
                         });
                         form.render("select")
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg)
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！')
                 }
             });
         }
@@ -349,45 +380,45 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', type: 'checkbox', width: '3%', align: 'center', rowspan: 2, fixed: "left"},
-                    {field: 'websiteName', title: '网站名称', width: '15%', align: 'center', rowspan: 2},
-                    {field: 'industry', title: '所属行业类型', width: '8%', align: 'center', rowspan: 2, templet: '#industry'},
-                    {field: 'accessFailCount', title: '访问失败次数', width: '8%', align: 'center', rowspan: 2},
-                    {field: 'accessFailTime', title: '发现故障时间', width: '10%', align: 'center', templet: '#accessFailTime', rowspan: 2},
-                    {field: 'lastAccessTime', title: '最近访问时间', width: '10%', align: 'center', templet: '#lastAccessTime', rowspan: 2},
-                    {field: 'updateTime', title: '更新时间', align: 'center', width: '10%', align: 'center', templet: '#updateTime', rowspan: 2},
+                    {filed: 'uuid', type: 'checkbox', width: '35', align: 'center', rowspan: 2, fixed: "left"},
+                    {field: 'websiteName', title: '网站名称', width: '10%', align: 'left', rowspan: 2},
+                    {field: 'industry', title: '所属行业类型', width: '8%', align: 'left', rowspan: 2, templet: '#industry'},
+                    {field: 'accessFailCount', title: '访问失败次数', width: '7%', align: 'left', rowspan: 2},
+                    {field: 'accessFailTime', title: '发现故障时间', width: '9%', align: 'center', templet: '#accessFailTime', rowspan: 2},
+                    {field: 'lastAccessTime', title: '最近访问时间', width: '9%', align: 'center', templet: '#lastAccessTime', rowspan: 2},
+                    {field: 'updateTime', title: '更新时间', width: '10%', align: 'center', templet: '#updateTime', rowspan: 2},
                     {field: '', title: '域名信息', align: 'center', width: '28%', colspan: 7},
                     {field: '', title: '后台信息', align: 'center', width: '28%', colspan: 7},
                     {field: '', title: '数据库信息', align: 'center', width: '16%', colspan: 4},
                     {field: '', title: '服务器信息', align: 'center', width: '14%', colspan: 6},
-                    {title: '操作', align: 'center', width: '7%', align: 'center', templet: '#operationTpl', fixed: "right", rowspan: 2}
+                    {title: '操作', width: '7%', align: 'center', templet: '#operationTpl', fixed: "right", rowspan: 2}
                 ],[
-                    {field: 'domain', title: '网站域名', width: '12%', align: 'center', templet: '#domain'},
-                    {field: 'websiteType', title: '销售网站类型', width: '7%', align: 'center',templet: '#websiteType'},
-                    {field: 'friendlyLinkCount', title: '友情链接', width: '7%', align: 'center', templet: '#friendlyLinkCount'},
-                    {field: 'advertisingCount', title: '广告', width: '7%', align: 'center', templet: '#advertisingCount'},
-                    {field: 'registrar', title: '注册商', width: '7%', align: 'center'},
-                    {field: 'analysis', title: '解析商', width: '7%', align: 'center'},
-                    {field: 'expiryTime', title: '到期时间', width: '7%', align: 'center', templet: '#expiryTime'},
-                    {field: 'backendDomain', title: '后台链接', width: '12%', align: 'center'},
-                    {field: 'backendUserName', title: '后台用户', width: '10%', align: 'center'},
-                    {field: 'backendPassword', title: '后台密码', width: '10%', align: 'center'},
-                    {field: 'updateSalesInfoSign', title: '更新销售信息状态', width: '10%', align: 'center',templet: '#updateSalesInfoSign'},
-                    {field: 'synchronousFriendlyLinkSign', title: '更新友链信息状态', width: '10%', align: 'center', templet:'#synchronousFriendlyLinkSign'},
-                    {field: 'synchronousAdvertisingSign', title: '更新广告信息状态', width: '10%', align: 'center', templet: '#synchronousAdvertisingSign'},
-                    {field: 'backgroundLoginStatus', title: '后台登陆状态', width: '10%', align: 'center', templet: '#backgroundLoginStatus'},
-                    {field: 'databaseName', title: '数据库名称', width: '7%', align: 'center'},
-                    {field: 'databaseUserName', title: '用户名', width: '7%', align: 'center'},
-                    {field: 'databasePassword', title: '密码', width: '10%', align: 'center'},
-                    {field: 'databaseStatus', title: '数据库登陆状态', width: '10%', align: 'center', templet: '#databaseStatus'},
-                    {field: 'serverIP', title: 'IP', width: '10%', align: 'center'},
-                    {field: 'serverUserName', title: '用户名', width: '7%', align: 'center'},
-                    {field: 'serverPassword', title: '密码', width: '10%', align: 'center'},
-                    {field: 'serverPort', title: '端口', width: '4%', align: 'center'},
-                    {field: 'indexFileStatus', title: 'index文件状态', width: '7%', align: 'center', templet: '#indexFileStatus'},
-                    {field: 'sftpStatus', title: 'sftp服务状态', width: '7%', align: 'center', templet: '#sftpStatus'},
+                    {field: 'domain', title: '网站域名', width: '12%', align: 'left', templet: '#domain'},
+                    {field: 'websiteType', title: '销售网站类型', width: '7%', align: 'left',templet: '#websiteType'},
+                    {field: 'friendlyLinkCount', title: '友情链接', width: '5%', align: 'left', templet: '#friendlyLinkCount'},
+                    {field: 'advertisingCount', title: '广告', width: '4%', align: 'left', templet: '#advertisingCount'},
+                    {field: 'registrar', title: '注册商', width: '5%', align: 'left'},
+                    {field: 'analysis', title: '解析商', width: '5%', align: 'left'},
+                    {field: 'expiryTime', title: '到期时间', width: '6%', align: 'center', templet: '#expiryTime'},
+                    {field: 'backendDomain', title: '后台链接', width: '10%', align: 'left'},
+                    {field: 'backendUserName', title: '后台用户', width: '8%', align: 'left'},
+                    {field: 'backendPassword', title: '后台密码', width: '8%', align: 'left'},
+                    {field: 'updateSalesInfoSign', title: '更新销售信息状态', width: '9%', align: 'left',templet: '#updateSalesInfoSign'},
+                    {field: 'synchronousFriendlyLinkSign', title: '更新友链信息状态', width: '9%', align: 'left', templet:'#synchronousFriendlyLinkSign'},
+                    {field: 'synchronousAdvertisingSign', title: '更新广告信息状态', width: '9%', align: 'left', templet: '#synchronousAdvertisingSign'},
+                    {field: 'backgroundLoginStatus', title: '后台登陆状态', width: '8%', align: 'left', templet: '#backgroundLoginStatus'},
+                    {field: 'databaseName', title: '数据库名称', width: '7%', align: 'left'},
+                    {field: 'databaseUserName', title: '用户名', width: '7%', align: 'left'},
+                    {field: 'databasePassword', title: '密码', width: '8%', align: 'left'},
+                    {field: 'databaseStatus', title: '数据库登陆状态', width: '10%', align: 'left', templet: '#databaseStatus'},
+                    {field: 'serverIP', title: 'IP', width: '10%', align: 'left'},
+                    {field: 'serverUserName', title: '用户名', width: '7%', align: 'left'},
+                    {field: 'serverPassword', title: '密码', width: '8%', align: 'left'},
+                    {field: 'serverPort', title: '端口', width: '4%', align: 'left'},
+                    {field: 'indexFileStatus', title: 'index文件状态', width: '7%', align: 'left', templet: '#indexFileStatus'},
+                    {field: 'sftpStatus', title: 'sftp服务状态', width: '7%', align: 'left', templet: '#sftpStatus'},
                 ]],
-                height: 'full-107',
+                height: 'full-70',
                 done: function (res, curr, count) {
                 }
             });
@@ -395,9 +426,15 @@
 
         var active = {
             reload: function () {
-                var data = {}
+                let condition = common.formToJsonObject('searchForm');
+                if (condition.friendlyLinkUrl !== "") {
+                    if (condition.friendlyLinkUrl.indexOf('http://') === -1) {
+                        condition.friendlyLinkUrl = 'http://' + condition.friendlyLinkUrl
+                    }
+                }
+                condition.accessFailCount = parseInt(condition.accessFailCount);
                 table.reload('websiteListTable', {
-                    where: data,
+                    where: condition,
                     page: {
                         curr: 1
                     }
@@ -406,18 +443,14 @@
         };
 
         form.on("submit(search)", function (data) {
-            var postData = data.field
-            if(postData.friendlyLinkUrl != ""){
-                if(postData.friendlyLinkUrl.indexOf('http://') == -1){
-                    postData.friendlyLinkUrl = 'http://' + postData.friendlyLinkUrl
-                }
-            }
-            init_Search(postData)
-            return false
+            let postData = data.field;
+            active['reload'].call(this);
+            search = postData;
+            return false;
         });
 
         table.on('tool(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            let data = obj.data,event = obj.event;
             switch (event) {
                 case 'delWebsite':
                     delWebsite(data.uuid);
@@ -431,11 +464,13 @@
                 case 'toAdvertising':
                     toAdvertising(data.uuid);
                     break;
+                default:
+                    break;
             }
         });
 
         table.on('toolbar(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            var event = obj.event;
             switch (event) {
                 case 'toAddWebsite':
                     toAddWebsite();
@@ -446,25 +481,37 @@
                 case 'synchronousFriendlyLink':
                     synchronousFriendlyLink();
                     break;
+                case 'synchronousAdvertising':
+                    synchronousAdvertising();
+                    break;
+                case 'showBatchAddFriendlyLinkDialog':
+                    showBatchAddFriendlyLinkDialog();
+                    break;
+                case 'batchModifyFriendlyLink':
+                    batchModifyFriendlyLink();
+                    break;
+                case 'batchDelFriendlyLink':
+                    batchDelFriendlyLink();
+                    break;
+                case 'showBatchAddAdvertisingDialog':
+                    showBatchAddAdvertisingDialog();
+                    break;
+                case 'batchModifyAdvertising':
+                    batchModifyAdvertising();
+                    break;
+                case 'batchDelAdvertising':
+                    batchDelAdvertising();
+                    break;
+                case 'putSalesInfoToWebsite':
+                    putSalesInfoToWebsite();
+                    break;
+                default:
+                    break;
             }
         });
 
-        function toAdvertising(uuid) {
-            window.open("/internal/websites/toAdvertising/" + uuid)
-        }
-
-        function toFriendlyLink(uuid) {
-            window.open("/internal/websites/toFriendlyLink/" + uuid)
-        }
-
-        function synchronousFriendlyLink(){
-
-        }
-
-        function modifyWebsiteInfo(data){
-            okLayer.open("首页/其他/修改网站信息", "/internal/websites/toAddWebsite", "35%", "95%", function(layero){
-                window[layero.find("iframe")[0]["name"]].initForm(data);
-            },function(){
+        function toAddWebsite() {
+            okLayer.open("首页 / 其他 / 添加网站信息", "/internal/websites/toAddWebsite", "35%", "95%", null, function(){
                 if(sign){
                     active['reload'].call(this);
                     sign = false;
@@ -472,8 +519,334 @@
             },20);
         }
 
-        function toAddWebsite() {
-            okLayer.open("首页/其他/添加网站信息", "/internal/websites/toAddWebsite", "35%", "95%", null, function(){
+        function deleteWebsites(){
+            let checkStatus = table.checkStatus('websiteListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要操作的网站');
+                return false;
+            }
+            layer.confirm("确定要删除所选网站吗", {icon: 3, title: '删除所选'}, function (index) {
+                let postData = {};
+                postData.uuids = uuidArr;
+                $.ajax({
+                    url: '/internal/websites/deleteWebsites',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            common.showSuccessMsg('操作成功', function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            common.showFailMsg('操作失败');
+                        }
+                    },
+                    error: function () {
+                        common.showFailMsg('操作失败');
+                    }
+                });
+                layer.close(index);
+            })
+        }
+
+        function synchronousFriendlyLink() {
+            let checkStatus = table.checkStatus('websiteListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要同步的友链信息');
+                return false;
+            }
+            let postData = {};
+            postData.uuids = uuidArr;
+            okLayer.open("同步友链信息", "/internal/websites/toSynchronousFriendlyLink", "30%", "60%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, 60);
+        }
+
+        function synchronousAdvertising() {
+            let checkStatus = table.checkStatus('websiteListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要同步的广告');
+                return false;
+            }
+            let postData = {};
+            postData.uuids = uuidArr;
+            okLayer.open("同步广告信息", "/internal/websites/toSynchronousAdvertising", "35%", "55%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, 60);
+        }
+
+        function showBatchAddFriendlyLinkDialog() {
+            let checkStatus = table.checkStatus('websiteListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要增加友链的网站');
+                return false;
+            }
+            let postData = {};
+            postData.uuids = uuidArr;
+            okLayer.open("增加友链", "/internal/websites/showBatchAddFriendlyLinkDialog", "35%", "80%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, 60);
+        }
+
+        function batchModifyFriendlyLink() {
+            let friendlyLinkUrl = '';
+            if (search && search.friendlyLinkUrl) {
+                friendlyLinkUrl = search.friendlyLinkUrl;
+            }
+            if (!friendlyLinkUrl) {
+                common.showFailMsg('请选择先查询含有指定友链网站');
+                return;
+            }
+            let checkStatus = table.checkStatus('websiteListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要修改友链的网站');
+                return false;
+            }
+            let postData = {};
+            postData.uuid = uuidArr[0];
+            postData.friendlyLinkUrl = friendlyLinkUrl;
+            okLayer.open("指定网站修改友链", "/internal/websites/showBatchAddFriendlyLinkDialog", "35%", "80%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].init_link(postData, uuidArr);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, 60);
+        }
+
+        function batchDelFriendlyLink() {
+            let friendlyLinkUrl = '';
+            if (search && search.friendlyLinkUrl) {
+                friendlyLinkUrl = search.friendlyLinkUrl;
+            }
+            if (!friendlyLinkUrl) {
+                common.showFailMsg('请选择先查询含有指定友链网站');
+                return;
+            }
+            let checkStatus = table.checkStatus('websiteListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要删除的友情链接');
+                return false;
+            }
+            let postData = {};
+            postData.uuids = uuidArr;
+            layer.confirm('确认删除？', {offset: '120px'}, function (index) {
+                $.ajax({
+                    url: '/internal/websites/batchDelFriendlyLink',
+                    type: 'POST',
+                    headers: {
+                        "Accept": 'application/json',
+                        "Content-Type": 'application/json'
+                    },
+                    data: JSON.stringify(postData),
+                    success: function (res) {
+                        if (res.code === 200) {
+                            layer.close(index);
+                            common.showSuccessMsg("删除成功", active['reload'].call(this));
+                        } else {
+                            common.showFailMsg("删除失败");
+                        }
+                    },
+                    error: function () {
+                        common.showFailMsg('网络错误请稍后再试')
+                    }
+                });
+            });
+        }
+
+        function showBatchAddAdvertisingDialog() {
+            let checkStatus = table.checkStatus('websiteListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要增加广告的网站');
+                return false;
+            }
+            let postData = {};
+            postData.uuids = uuidArr;
+            okLayer.open("增加广告", "/internal/websites/showBatchAddAdvertisingDialog", "35%", "68%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initData(postData);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, 60);
+        }
+
+        function batchModifyAdvertising() {
+            let advertisingTagname = '';
+            if (search && search.advertisingTagname) {
+                advertisingTagname = search.advertisingTagname;
+            }
+            if (!advertisingTagname) {
+                common.showFailMsg('请选择先查询含有指广告网站');
+                return;
+            }
+            let checkStatus = table.checkStatus('websiteListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要修改广告信息的网站');
+                return false;
+            }
+            let postData = {};
+            postData.uuid = uuidArr[0];
+            postData.advertisingTagname = advertisingTagname;
+            let p = {};
+            p.uuids = uuidArr;
+            okLayer.open("修改广告信息", "/internal/websites/showBatchAddAdvertisingDialog", "35%", "73%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].initForm(postData, p);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, 60);
+        }
+
+        function batchDelAdvertising() {
+            let advertisingTagname = '';
+            if (search && search.advertisingTagname) {
+                advertisingTagname = search.advertisingTagname;
+            }
+            if (!advertisingTagname) {
+                common.showFailMsg('请选择先查询含有指广告网站');
+                return;
+            }
+            let checkStatus = table.checkStatus('websiteListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要删除的广告');
+                return false;
+            }
+            let postData = {};
+            postData.uuids = uuidArr;
+            layer.confirm('确认删除？', {offset: '120px'}, function (index) {
+                $.ajax({
+                    url: '/internal/websites/batchDelAdvertising',
+                    type: 'POST',
+                    headers: {
+                        "Accept": 'application/json',
+                        "Content-Type": 'application/json'
+                    },
+                    data: JSON.stringify(postData),
+                    success: function (res) {
+                        if (res.code === 200) {
+                            layer.close(index);
+                            common.showSuccessMsg("删除成功", active['reload'].call(this));
+                        } else {
+                            common.showFailMsg("删除失败");
+                        }
+                    },
+                    error: function () {
+                        common.showFailMsg('网络错误请稍后再试')
+                    }
+                });
+            });
+        }
+
+        function putSalesInfoToWebsite(){
+            let checkStatus = table.checkStatus('websiteListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要推送销售信息的网站');
+                return false;
+            }
+            let postData = {};
+            postData.uuids = uuidArr;
+            $.ajax({
+                url: '/internal/websites/putSalesInfoToWebsite',
+                type: 'POST',
+                headers: {
+                    "Accept": 'application/json',
+                    "Content-Type": 'application/json'
+                },
+                data: JSON.stringify(postData),
+                success: function (res) {
+                    if (res.code === 200) {
+                        common.showSuccessMsg("推送成功", function () {
+
+                        });
+                    } else {
+                        common.showFailMsg(res.msg)
+                    }
+                },
+                error: function () {
+                    common.showFailMsg('未知错误，请稍后重试！！')
+                }
+            });
+        }
+
+        function modifyWebsiteInfo(data){
+            okLayer.open("首页 / 其他 / 修改网站信息", "/internal/websites/toAddWebsite", "35%", "100%", function(layero){
+                window[layero.find("iframe")[0]["name"]].initForm(data);
+            },function(){
                 if(sign){
                     active['reload'].call(this);
                     sign = false;
@@ -496,20 +869,20 @@
                         },
                         success: function (res) {
                             if (res.code === 200) {
-                                var data = {}
-                                table.reload('websiteListTable', {
-                                    where: data,
-                                    page: {
-                                        curr: 1
-                                    }
+                                common.showSuccessMsg("删除成功", function () {
+                                    table.reload('websiteListTable', {
+                                        where: {},
+                                        page: {
+                                            curr: 1
+                                        }
+                                    });
                                 });
-                                layer.msg("删除成功")
                             } else {
-                                layer.msg(res.msg)
+                                common.showFailMsg(res.msg)
                             }
                         },
                         error: function () {
-                            layer.msg('未知错误，请稍后重试！！')
+                            common.showFailMsg('未知错误，请稍后重试！！')
                         }
                     });
                 }, btn2: function (index) {
@@ -518,56 +891,20 @@
             });
         }
 
-        function deleteWebsites(){
-            var checkStatus = table.checkStatus('websiteListTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
-            $.each(data, function (index, item) {
-                uuidArr.push(item.uuid);
-            });
-            if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的网站', {icon: 5});
-                return
-            }
-            layer.confirm("确定要删除所选网站吗", {icon: 3, title: '删除所选'}, function (index) {
-                var postData = {};
-                postData.uuids = uuidArr;
-                $.ajax({
-                    url: '/internal/websites/deleteWebsites',
-                    data: JSON.stringify(postData),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (result) {
-                        if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
-                                active['reload'].call(this);
-                            });
-                        } else {
-                            layer.msg('操作失败', {icon: 5});
-                        }
-                    },
-                    error: function () {
-                        layer.msg('操作失败', {icon: 5});
-                    }
-                });
-                layer.close(index);
-            });
+        function toAdvertising(uuid) {
+            common.updateOrNewTab("/internal/websites/toAdvertising/" + uuid, "广告信息", uuid + "gg");
         }
 
+        function toFriendlyLink(uuid) {
+            common.updateOrNewTab("/internal/websites/toFriendlyLink/" + uuid, "友情链接信息", uuid + "yq");
+        }
     });
 
 </script>
 
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
-    <div class="layui-btn-container">
+    <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/website/saveWebsite">
         <button class="layui-btn layui-btn-sm" lay-event="toAddWebsite">添加</button>
         </@shiro.hasPermission>
@@ -576,37 +913,33 @@
             <i class="layui-icon layui-icon-delete"></i>删除所选
         </button>
         </@shiro.hasPermission>
-        <div class="layui-btn-group">
-            <@shiro.hasPermission name="/internal/friendlyLink/synchronousFriendlyLink">
-            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="synchronousFriendlyLink">同步所选友链信息</button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/advertising/synchronousAdvertising">
-            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="synchronousAdvertising">同步所选广告信息</button>
-            </@shiro.hasPermission>
-        </div>
-        <div class="layui-btn-group">
-            <@shiro.hasPermission name="/internal/friendlyLink/saveFriendlyLinks">
-                <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="showBatchAddFriendlyLinkDialog">指定网站增加友链</button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/advertising/saveAdvertisings">
-                <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="showBatchAddAdvertisingDialog">指定网站增加广告</button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/friendlyLink/saveFriendlyLink">
-                <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchModifyFriendlyLink">指定网站修改友链</button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/advertising/saveAdvertising">
-                <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchModifyAdvertising">指定网站修改广告</button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/friendlyLink/deleteFriendlyLinks">
-                <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchDelFriendlyLink">指定网站删除友链</button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/advertising/deleteAdvertisings">
-                <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchDelAdvertising">指定网站删除广告</button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/website/putSalesInfoToWebsite">
-                <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="putSalesInfoToWebsite">推送销售信息至站点</button>
-            </@shiro.hasPermission>
-        </div>
+        <@shiro.hasPermission name="/internal/friendlyLink/synchronousFriendlyLink">
+        <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="synchronousFriendlyLink">同步所选友链信息</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/advertising/synchronousAdvertising">
+        <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="synchronousAdvertising">同步所选广告信息</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/friendlyLink/saveFriendlyLinks">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="showBatchAddFriendlyLinkDialog">指定网站增加友链</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/friendlyLink/saveFriendlyLink">
+        <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchModifyFriendlyLink">指定网站修改友链</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/friendlyLink/deleteFriendlyLinks">
+        <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchDelFriendlyLink">指定网站删除友链</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/advertising/saveAdvertising">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="showBatchAddAdvertisingDialog">指定网站增加广告</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/advertising/saveAdvertising">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchModifyAdvertising">指定网站修改广告</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/advertising/deleteAdvertisings">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="batchDelAdvertising">指定网站删除广告</button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/website/putSalesInfoToWebsite">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="putSalesInfoToWebsite">推送销售信息至站点</button>
+        </@shiro.hasPermission>
     </div>
 </script>
 
@@ -764,7 +1097,7 @@
         <button type="button" class="layui-btn layui-btn-xs" lay-event="modifyWebsiteInfo">修改</button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/website/deleteWebsite">
-    <button type="button" class="layui-btn layui-btn-xs" lay-event="delWebsite">删除</button>
+    <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delWebsite">删除</button>
     </@shiro.hasPermission>
     </div>
 </script>

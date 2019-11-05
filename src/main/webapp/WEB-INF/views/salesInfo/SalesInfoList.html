@@ -2,13 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>销售信息管理</title>
+    <title>销售信息列表</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/scroll-bar.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            margin-top: 10px;
+            background: #f2f2f2;
+            border: 0px;
+        }
         .layui-inline input {
             width: 150px;
             height: 30px;
@@ -31,6 +47,15 @@
             position: fixed;
             right: 25px;
         }
+
+        .layui-table-tool {
+            min-height: 30px;
+            padding: 6px 5px 6px 5px;
+        }
+
+        .layui-table-tool-self{
+            top: 0;
+        }
     </style>
 </head>
 <body>
@@ -41,9 +66,7 @@
                 <div class="my-collapse">
                     <div>
                         <div class="layui-inline">
-                            <div class="layui-input-inline">
-                                <select name="salesName" id="salesName" lay-search></select>
-                            </div>
+                            <input type="text" name="salesName" id="salesName" placeholder="请输入销售名称" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
                         </div>
                         <div class="layui-inline">
                             <div class="layui-input-inline">
@@ -75,19 +98,18 @@
         NProgress.done();
     };
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer'], function () {
-        var element = layui.element;
-        var table = layui.table;
-        var form = layui.form;
-        var $ = layui.jquery;
-        var laydate = layui.laydate;
-        var okLayer = layui.okLayer;
-        var layer = layui.layer;
+    layui.use(['table', 'form', 'jquery', 'okLayer', 'layer', 'common'], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let $ = layui.jquery;
+        let okLayer = layui.okLayer;
+        let layer = layui.layer;
+        let common = layui.common;
 
-        var active = {
+        let active = {
             reload: function () {
-                var terminalType = $("#terminalType").val()
-                var data = {'terminalType': terminalType}
+                let terminalType = $("#terminalType").val();
+                let data = {'terminalType': terminalType};
                 table.reload('salesListTable', {
                     where: data,
                     page: {
@@ -97,14 +119,13 @@
             },
         };
 
-        searchSalesInfo()
-        initSalesName()
-        initManagePart()
+        searchSalesInfo();
+        initManagePart();
 
         form.on("submit(search)", function (data) {
-            var postData = data.field
-            searchSalesInfo(postData)
-            return false
+            let postData = common.jsonObjectTrim(data.field);
+            searchSalesInfo(postData);
+            return false;
         });
 
         function initManagePart(){
@@ -117,46 +138,19 @@
                 },
                 success: function (res) {
                     if (res.code === 200) {
-                        var websiteTypeMap = res.data
-                        var managePart = $('#managePart');
+                        let websiteTypeMap = res.data;
+                        let managePart = $('#managePart');
                         managePart.append('<option value="" >负责部分</option>')
                         $.each(websiteTypeMap, function (index, item) {
                             managePart.append('<option value="' + index + '" >' + item + '</option>');
                         });
                         form.render("select")
                     } else {
-                        layer.msg(res.msg)
+                        common.showFailMsg(res.msg);
                     }
                 },
                 error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
-                }
-            });
-        }
-
-        function initSalesName() {
-            $.ajax({
-                url: '/internal/salesInfo/returnSalesName',
-                type: 'GET',
-                headers: {
-                    "Accept": 'application/json',
-                    "Content-Type": 'application/json'
-                },
-                success: function (res) {
-                    if (res.code === 200) {
-                        var salesNameList = res.data
-                        var salesName = $('#salesName');
-                        salesName.append('<option value="" >销售名称</option>')
-                        $.each(salesNameList, function (index, item) {
-                            salesName.append('<option value="' + item + '" >' + item + '</option>');
-                        });
-                        form.render("select")
-                    } else {
-                        layer.msg(res.msg)
-                    }
-                },
-                error: function () {
-                    layer.msg('未知错误，请稍后重试！！')
+                    common.showFailMsg('未知错误，请稍后重试！！');
                 }
             });
         }
@@ -177,26 +171,26 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '3%', align: 'center'},
-                    {field: 'salesName', title: '销售名称', width: '7%', align: 'center'},
-                    {field: 'telephone', title: '电话号码', width: '10%', align: 'center'},
-                    {field: 'qq', title: 'QQ', width: '10%', align: 'center'},
-                    {field: 'weChat', title: '微信', width: '10%', align: 'center'},
-                    {field: 'quickResponseCode', title: '二维码链接', width: '19%', align: 'center'},
-                    {field: 'email', title: '邮箱', width: '12%', align: 'center'},
-                    {field: 'managePart', title: '负责部分', width: '8%', align: 'center'},
+                    {filed: 'uuid', type: 'checkbox', fixed: "left", width: '35', align: 'center'},
+                    {field: 'salesName', title: '销售名称', width: '7%', align: 'left'},
+                    {field: 'telephone', title: '电话号码', width: '9%', align: 'left'},
+                    {field: 'qq', title: 'QQ', width: '8%', align: 'left'},
+                    {field: 'weChat', title: '微信', width: '9%', align: 'left'},
+                    {field: 'quickResponseCode', title: '二维码链接', width: '19%', align: 'left'},
+                    {field: 'email', title: '邮箱', width: '12%', align: 'left'},
+                    {field: 'managePart', title: '负责部分', width: '13%', align: 'left'},
                     {field: 'createTime', title: '创建日期', width: '7%', templet: '#toDateTime', align: 'center'},
                     {field: 'updateTime', title: '修改日期', width: '7%', templet: '#toUpdateTime', align: 'center'},
-                    {title: '操作', templet: '#operationTpl', align: 'center', width: '7%', align: 'center', fixed: "right"}
+                    {title: '操作', templet: '#operationTpl', width: '7%', align: 'center', fixed: "right"}
                 ]],
-                height: 'full-75',
+                height: 'full-65',
                 done: function (res, curr, count) {
                 }
             });
         }
 
         function showSalesInfoDialog() {
-            okLayer.open("首页/其他/添加销售信息", "/internal/salesInfo/toAddSalesInfo", "35%", "50%", null, function(){
+            okLayer.open("首页 / 其他 / 添加销售信息", "/internal/salesInfo/toAddSalesInfo", "35%", "50%", null, function(){
                 if(sign){
                     active['reload'].call(this);
                     sign = false;
@@ -205,7 +199,7 @@
         }
 
         function modifySalesInfo(data){
-            okLayer.open("首页/其他/修改销售信息", "/internal/salesInfo/toAddSalesInfo", "35%", "50%", function(layero){
+            okLayer.open("首页 / 其他 / 修改销售信息", "/internal/salesInfo/toAddSalesInfo", "35%", "50%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data.uuid);
             },function(){
                 if(sign){
@@ -230,20 +224,20 @@
                         },
                         success: function (res) {
                             if (res.code === 200) {
-                                var data = {}
-                                table.reload('salesListTable', {
-                                    where: data,
-                                    page: {
-                                        curr: 1
-                                    }
+                                common.showSuccessMsg("删除成功", function() {
+                                    table.reload('salesListTable', {
+                                        where: {},
+                                        page: {
+                                            curr: 1
+                                        }
+                                    });
                                 });
-                                layer.msg("删除成功")
                             } else {
-                                layer.msg(res.msg)
+                                common.showFailMsg(res.msg);
                             }
                         },
                         error: function () {
-                            layer.msg('未知错误，请稍后重试！！')
+                            common.showFailMsg('未知错误，请稍后重试！！');
                         }
                     });
                 },
@@ -254,18 +248,18 @@
         }
 
         function deleteSalesInfos(){
-            var checkStatus = table.checkStatus('salesListTable');
-            var data = checkStatus.data;
-            var uuidArr = [];
+            let checkStatus = table.checkStatus('salesListTable');
+            let data = checkStatus.data;
+            let uuidArr = [];
             $.each(data, function (index, item) {
                 uuidArr.push(item.uuid);
             });
             if (uuidArr.length <= 0) {
-                layer.msg('请选择要操作的销售信息', {icon: 5});
+                common.showFailMsg('请选择要操作的销售信息');
                 return
             }
             layer.confirm("确定要删除所选销售信息吗", {icon: 3, title: '删除所选'}, function (index) {
-                var postData = {};
+                let postData = {};
                 postData.uuids = uuidArr;
                 $.ajax({
                     url: '/internal/salesInfo/deleteBatchSalesManage',
@@ -278,18 +272,15 @@
                     type: 'POST',
                     success: function (result) {
                         if (result.code === 200) {
-                            layer.msg('操作成功', {
-                                icon: 6,
-                                time: 2000
-                            }, function () {
+                            common.showSuccessMsg('操作成功', function () {
                                 active['reload'].call(this);
                             });
                         } else {
-                            layer.msg('操作失败', {icon: 5});
+                            common.showFailMsg('操作失败');
                         }
                     },
                     error: function () {
-                        layer.msg('操作失败', {icon: 5});
+                        common.showFailMsg('操作失败');
                     }
                 });
                 layer.close(index);
@@ -297,7 +288,7 @@
         }
 
         table.on('toolbar(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            let data = obj.data,event = obj.event;
             switch (event) {
                 case 'showSalesInfoDialog':
                     showSalesInfoDialog();
@@ -305,17 +296,21 @@
                 case 'deleteSalesInfos':
                     deleteSalesInfos();
                     break;
+                default:
+                    break;
             }
         });
 
         table.on('tool(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
+            let data = obj.data,event = obj.event;
             switch (event) {
                 case 'modifySalesInfo':
                     modifySalesInfo(data);
                     break;
                 case 'deleteSalesInfo':
                     deleteSalesInfo(data.uuid);
+                    break;
+                default:
                     break;
             }
         });
@@ -332,15 +327,15 @@
 </script>
 
 <script type="text/html" id="toolbarTpl">
-    <div class="layui-btn-container">
+    <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/salesManage/saveSalesInfo">
         <button class="layui-btn layui-btn-sm" id="addMachine" lay-event="showSalesInfoDialog">添加</button>
-    </@shiro.hasPermission>
-    <@shiro.hasPermission name="/internal/salesManage/deleteSalesInfo">
-    <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="deleteSalesInfos">
-        <i class="layui-icon layui-icon-delete"></i>删除所选
-    </button>
-    </@shiro.hasPermission>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/salesManage/deleteSalesInfo">
+        <button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDel" lay-event="deleteSalesInfos">
+            <i class="layui-icon layui-icon-delete"></i>删除所选
+        </button>
+        </@shiro.hasPermission>
     </div>
 </script>
 
@@ -350,7 +345,7 @@
         <button type="button" class="layui-btn layui-btn-xs" lay-event="modifySalesInfo">修改</button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/salesManage/deleteSalesInfo">
-    <button type="button" class="layui-btn layui-btn-xs" lay-event="deleteSalesInfo">删除</button>
+    <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="deleteSalesInfo">删除</button>
     </@shiro.hasPermission>
     </div>
 </script>

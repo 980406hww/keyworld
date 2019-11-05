@@ -4,11 +4,11 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.keymanager.ckadmin.entity.CustomerBusiness">
-        <id column="fUuid" property="uuid" />
-        <result column="fCustomerUuid" property="customerUuid" />
-        <result column="fType" property="type" />
-        <result column="fCreateTime" property="createTime" />
-        <result column="fUpdateTime" property="updateTime" />
+        <id column="fUuid" property="uuid"/>
+        <result column="fCustomerUuid" property="customerUuid"/>
+        <result column="fType" property="type"/>
+        <result column="fCreateTime" property="createTime"/>
+        <result column="fUpdateTime" property="updateTime"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -24,7 +24,7 @@
         INSERT INTO t_customer_business (fCustomerUuid, fType) VALUES
 
         <foreach collection="customer.customerBusinessList" item="item" separator=",">
-        (#{customer.uuid}, #{item})
+            (#{customer.uuid}, #{item})
         </foreach>
 
     </insert>
@@ -35,7 +35,7 @@
 
 
     <select id="getCustomerBusinessMap" resultType="java.util.Map">
-        SELECT cb.fCustomerUuid as 'customerUuid', GROUP_CONCAT(cb.`fType`  ORDER BY cb.fUuid) AS `customerBusinessStr`
+        SELECT cb.fCustomerUuid as 'customerUuid', GROUP_CONCAT(cb.`fType` ORDER BY cb.fUuid) AS `customerBusinessStr`
         FROM t_customer_business cb
         WHERE cb.fCustomerUuid IN
         <foreach item="item" index="index" collection="customerUuids" open="(" separator="," close=")">
@@ -50,4 +50,9 @@
         WHERE cb.fCustomerUuid = #{customerUuid}
 
     </select>
+
+    <insert id="insertCustomerBusiness" parameterType="com.keymanager.ckadmin.entity.CustomerBusiness">
+        INSERT INTO t_customer_business(fCustomerUuid,fType)
+        VALUE(#{customerBusiness.customerUuid},#{customerBusiness.type})
+    </insert>
 </mapper>

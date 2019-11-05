@@ -5,7 +5,6 @@ import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.NegativeListCriteria;
 import com.keymanager.ckadmin.entity.NegativeList;
 import com.keymanager.ckadmin.service.NegativeListService;
-import com.keymanager.ckadmin.service.impl.NegativeListCacheService;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -22,13 +21,11 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping(value = "/internal/negativelists")
 public class NegativeListController {
+
     private static Logger logger = LoggerFactory.getLogger(NegativeListController.class);
 
     @Resource(name = "negativeListService2")
     private NegativeListService negativeListService;
-
-    @Resource(name = "negativeListCacheService2")
-    private NegativeListCacheService negativeListCacheService;
 
     @RequiresPermissions("/internal/negativelist/searchNegativeLists")
     @RequestMapping(value = "/toSearchNegativeLists", method = RequestMethod.GET)
@@ -138,13 +135,12 @@ public class NegativeListController {
     public ResultBean evictAllNegativeListCache() {
         ResultBean resultBean = new ResultBean();
         try {
-            negativeListCacheService.evictAllNegativeListCache();
+            negativeListService.evictAllNegativeListCache();
             resultBean.setCode(200);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg("未知错误");
-            return resultBean;
         }
         return resultBean;
     }
