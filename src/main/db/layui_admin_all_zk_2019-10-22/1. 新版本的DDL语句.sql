@@ -14,6 +14,7 @@ UPDATE t_qz_setting SET fRenewalStatus = 3 WHERE fRenewalStatus = 0;
 
 alter table t_qz_setting add fCaptureTerminalType varchar(40) null comment '抓取终端类型';
 
+DROP TABLE IF EXISTS `db_keyword`.`t_qz_charge_status`;
 CREATE TABLE `t_qz_charge_status` (
   `fUuid` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `fQZSettingUuid` int(11) NOT NULL COMMENT '全站对应表',
@@ -28,6 +29,7 @@ CREATE TABLE `t_qz_charge_status` (
 # 全站关联收费状态表
 alter table t_qz_setting add fChargeStatusUuid int null comment '最新一次收费状态Uuid';
 
+DROP TABLE IF EXISTS `db_keyword`.`t_customer_business`;
 CREATE TABLE `t_customer_business` (
   `fUuid` int(11) NOT NULL AUTO_INCREMENT COMMENT '客户业务主键',
   `fCustomerUuid` int(11) NOT NULL COMMENT '客户ID',
