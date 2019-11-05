@@ -365,9 +365,6 @@
 								<shiro:hasPermission name="/internal/qzsetting/save">
 									<a class="blue" href="javascript:showKeywordDialog('${qzSetting.uuid}','${qzSetting.customerUuid}','${qzSetting.domain.trim()}','${qzSetting.bearPawNumber}','${status.index + 1}')">指定关键字</a>
 								</shiro:hasPermission>
-								<shiro:hasPermission name="/internal/qzsetting/save">
-									<a class="blue" href="javascript:openMessageBox('全站设置', '${qzSetting.customerUuid}', '${qzSetting.contactPerson}')">用户留言</a>
-								</shiro:hasPermission>
 								<shiro:hasPermission name="/internal/usernotebook/searchUserNoteBooks">
 									<a class="blue" href="javascript:openNoteBookDialog('${qzSetting.customerUuid}', '${qzSettingSearchCriteria.terminalType}')">记事本</a>
 								</shiro:hasPermission>
@@ -1298,7 +1295,6 @@
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath}/js/echarts.min.js"></script>
 <script src="${staticPath }/qzsetting/list.js"></script>
-<script src="${staticPath }/static/UserMessageCommon.js"></script>
 <script language="javascript">
     var dateStr = new Date(); // 当天日期
     var m = dateStr.getMonth() + 1 < 10 ? "0" + (dateStr.getMonth() + 1) : (dateStr.getMonth() + 1);
