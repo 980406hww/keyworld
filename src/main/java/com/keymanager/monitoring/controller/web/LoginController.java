@@ -78,7 +78,7 @@ public class LoginController extends BaseController {
                 return "/index";
             }
         }
-        return "/views/login";
+        return "/newLogin";
     }
 
     /**
@@ -186,8 +186,6 @@ public class LoginController extends BaseController {
         }
         ModelAndView mv = new ModelAndView();
         mv.setViewName("/views/login");
-        mv.addObject("version","1.0");
-        mv.addObject("msg","旧 版 本 登 录");
         return mv;
     }
 }
