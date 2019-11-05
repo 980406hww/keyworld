@@ -84,7 +84,7 @@ BEGIN
 	DECLARE g_resource_type TINYINT(2) DEFAULT NULL;
 	DECLARE done INT DEFAULT 0;
 	DECLARE resource_data_migration_cursor CURSOR FOR(
-	SELECT fResourceName, fUrl, fSequence, fStatus, fOpened, fResourceType FROM t_resource_new WHERE fUrl = '#' AND fParentID IS NULL AND fResourceName NOT IN("应用程序管理", "日志监控","权限管理")
+	SELECT fResourceName, fUrl, fSequence, fStatus, fOpened, fResourceType FROM t_resource_new WHERE fUrl = '#' AND fParentID IS NULL AND fResourceName NOT IN("应用程序管理", "权限管理")
 	);
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 	START TRANSACTION;
