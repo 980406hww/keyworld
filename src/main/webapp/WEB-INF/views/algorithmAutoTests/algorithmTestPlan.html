@@ -149,7 +149,13 @@
                     {field: 'excuteCount', title: '已执行次数', width: '90'},
                     {field: 'testIntervalDay', title: '执行间隔(天)', width: '102'},
                     {field: 'testKeywordCount', title: '测试词数', width: '80'},
-                    {field: 'testIntervalDay', title: '测试排名区间', width: '103'},
+                    // {field: 'testkeywordRankBegin', title: '排名区间', width: '80'},
+
+                    {title: '排名区间', width: '80', templet: function(d){
+                            return d.testkeywordRankBegin + "-" + d.testkeywordRankEnd
+                        }
+                    },
+
                     {field: 'optimizePlanCount', title: '刷量', width: '60'},
                     {field: 'status', title: '状态', width: '60', templet:'#statusTpl'},
                     {field: 'executeQueryTime', title: '上次执行时间', width: '110', templet: '#toDateTime'},

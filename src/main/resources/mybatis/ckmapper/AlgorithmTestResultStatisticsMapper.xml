@@ -55,10 +55,28 @@
         GROUP BY ck.fCustomerUuid
     </select>
 
-    <select id="selectAlgorithmTestResultStatisticsByAlgorithmTestPlanUuid" resultType="com.keymanager.ckadmin.entity.AlgorithmTestDataStatistics">
+    <!--<select id="selectAlgorithmTestResultStatisticsByAlgorithmTestPlanUuid" resultType="com.keymanager.ckadmin.entity.AlgorithmTestDataStatistics">
         SELECT
         <include refid="Base_Column_List"></include>
         FROM t_algorithm_test_data_statistics atds
         WHERE atds.fAlgorithmTestPlanUuid = #{algorithmTestPlanUuid}
+    </select>-->
+
+    <select id="selectAlgorithmTestResultStatisticsByAlgorithmTestPlanUuid" resultType="com.keymanager.ckadmin.vo.AlgorithmTestDataStatisticsVo">
+        SELECT
+        atds.fUuid AS uuid,
+        att.fKeywordGroup AS keywordGroup,
+        att.fCustomerName AS customerName,
+        att.fActualKeywordCount as actualKeywordCount
+        atds.fContactPerson AS contactPerson,
+        atds.fTopTenCount AS topTenCount,
+        atds.fZeroOptimizedCount AS zeroOptimizedCount,
+        atds.fRankChangeRate AS rankChangeRate,
+        atds.fRecordDate AS recordDate,
+        atds.fCreateTime AS createTime,
+        atds.fUpdateTime AS updateTime
+        FROM t_algorithm_test_data_statistics atds, t_algorithm_test_task att
+        WHERE atds.fAlgorithmTestPlanUuid = #{algorithmTestPlanUuid}
+          AND atds.algorithmTestPlanUuid = att.algorithmTestPlanUuid
     </select>
 </mapper>
