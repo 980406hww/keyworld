@@ -31,9 +31,6 @@ public class Customer extends BaseEntity {
     @TableField(value = "fQQ")
     private String qq;
 
-    @TableField(value = "fWechat")
-    private String wechat;
-
     @TableField(value = "fEmail")
     private String email;
 
@@ -126,14 +123,6 @@ public class Customer extends BaseEntity {
 
     public void setQq(String qq) {
         this.qq = qq;
-    }
-
-    public String getWechat() {
-        return wechat;
-    }
-
-    public void setWechat(String wechat) {
-        this.wechat = wechat;
     }
 
     public String getEmail() {

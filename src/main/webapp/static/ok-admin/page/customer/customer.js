@@ -98,8 +98,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 '                   <br>' +
                 '                   电话:' + obj.telphone +
                 '                   <br>' +
-                '                   微信:' + obj.wechat +
-                '                   <br>' +
                 '                   QQ:' + obj.qq +
                 '               </div>';
             item += '           <div class="layadmin-address ">' +
