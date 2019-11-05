@@ -50,7 +50,6 @@
 			</span>|
 				<span class="fi-web icon-black" style="font-size: 12px;color: red;"></span><span style="color: black">&nbsp;${sessionScope.get("terminalType")}端&nbsp;|</span>&nbsp;
 				<span class="fi-comments" style="font-size: 12px;color: green;"></span>
-<%--				<a href="javascript:void(0)" onclick="OpenMessageList(1)" id="userMessageText" style="text-decoration: none;font-size: 12px; color: black">-->留言列表</a>|--%>
 				<shiro:hasPermission name="/user/editPwdPage">
 					<span class="fi-unlock icon-green" style="font-size: 12px;color: green"></span>
 					<a href="javascript:void(0)" onclick="editUserPwd()"  style="text-decoration: none;font-size: 12px;color: black">修改密码</a>|

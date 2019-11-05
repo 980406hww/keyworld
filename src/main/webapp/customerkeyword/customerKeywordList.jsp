@@ -572,7 +572,6 @@
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath }/customerkeyword/customerKeywordList.js"></script>
 <script src="${staticPath }/customerkeyword/customerKeywordCommon.js"></script>
-<script src="${staticPath }/static/UserMessageCommon.js"></script>
 <script language="javascript">
     $(function () {
         initPaging();

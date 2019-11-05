@@ -1295,7 +1295,6 @@
 <%@ include file="/commons/loadjs.jsp" %>
 <script src="${staticPath}/js/echarts.min.js"></script>
 <script src="${staticPath }/qzsetting/list.js"></script>
-<script src="${staticPath }/static/UserMessageCommon.js"></script>
 <script language="javascript">
     var dateStr = new Date(); // 当天日期
     var m = dateStr.getMonth() + 1 < 10 ? "0" + (dateStr.getMonth() + 1) : (dateStr.getMonth() + 1);
