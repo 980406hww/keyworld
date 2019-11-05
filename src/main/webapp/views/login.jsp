@@ -11,8 +11,7 @@
 <div style="background: rgb(255, 255, 255); margin: -100px auto auto; border: 1px solid rgb(231, 231, 231);border-image:none;width:400px;text-align: center;">
     <form method="post" id="loginform">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        <c:if test="${version == null}"><input type="hidden" name="version" value="2.0"/></c:if>
-        <c:if test="${version != null}"><input type="hidden" name="version" value="${version}"/></c:if>
+        <input type="hidden" name="version" value="1.0"/>
         <div style="width: 165px; height: 96px; position: absolute;">
             <div class="tou"></div>
             <div class="initial_left_hand" id="left_hand"></div>
@@ -30,14 +29,12 @@
         </P>
         <div style="height: 22px">
             <span style="position: relative;float: left;margin-left: 54px;">
-                <c:if test="${version != null}">
                 <select id="entryType" name="entryType" style="width: 92px;height:20px;padding:0px;" class="ipt">
                     <option value="qz">全站链接</option>
                     <option value="pt">普通链接</option>
                     <option value="fm">负面链接</option>
                     <option value="bc">其他</option>
                 </select>
-                </c:if>
             </span>
                 <span style="position: relative;float: right;margin-right:60px; margin-top: 2px">
                 <input class="rememberMe" type="checkbox" name="rememberMe" id="rememberMe" value="1" checked
@@ -60,9 +57,6 @@
         </div>
     </form>
 </div>
-<div style="text-align:center;">
-</div>
-<div style="position: absolute;top: 10%;width: 100%;text-align: center;font-size: 70px;">${msg}</div>
 <script>
     document.write("<scr"+"ipt src=\"${staticPath }/static/easyui/jquery.min.js\"></sc"+"ript>");
     document.write("<scr"+"ipt src=\"${staticPath }/static/easyui/jquery.easyui.min.js\"></sc"+"ript>");
