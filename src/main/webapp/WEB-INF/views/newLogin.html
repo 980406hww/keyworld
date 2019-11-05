@@ -24,7 +24,7 @@
 </head>
 <body class="page-fill">
 <div class="page-fill" id="login">
-    <div class="layui-form">
+    <div class="layui-form" onkeydown="clickEnter()">
         <div class="login_face"><img src="/static/ok-admin/lib/layui/images/logo.png" alt="log"></div>
         <div class="layui-form-item input-item layui-input-active">
             <label for="username">用户名</label>
@@ -139,6 +139,11 @@
             });
         };
 
+        window.clickEnter = function () {
+            if (event.keyCode === 13) {
+                commit();
+            }
+        }
         // let u = document.getElementById('username');
         // let p = document.getElementById('password');
         //
