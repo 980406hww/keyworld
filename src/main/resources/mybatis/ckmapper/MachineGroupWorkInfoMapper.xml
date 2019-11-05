@@ -48,8 +48,7 @@
     </select>
 
 
-    <select id="getHistoryMachineGroupWorkInfo" parameterType="com.keymanager.ckadmin.criteria.MachineGroupWorkInfoCriteria"
-        resultType="com.keymanager.ckadmin.entity.MachineGroupWorkInfo">
+    <select id="getHistoryMachineGroupWorkInfo" resultType="com.keymanager.ckadmin.entity.MachineGroupWorkInfo">
         SELECT
             mgwi.fMachineGroup AS 'machineGroup',
             mgwi.fTotalKeywordCount AS 'totalKeywordCount',

@@ -148,15 +148,10 @@
                                         </select>
                                     </div>
                                     <div class="layui-inline">
-                                        <button class="layui-btn" lay-submit lay-filter="search"
-                                                id="searchBtn">搜索
-                                        </button>
+                                        <button class="layui-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
                                     </div>
                                     <div class="layui-inline">
-                                        <button style="background: #897c00;color: #ffffff" class="layui-btn"
-                                                type="reset">
-                                            重置
-                                        </button>
+                                        <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">重置</button>
                                     </div>
                                 </div>
                             </div>
@@ -273,7 +268,6 @@
                 condition.dayNum = 0;
             }
             init_keyword_type();
-            tableInit(condition);
         }
 
         function init_keyword_type(data) {
@@ -514,10 +508,6 @@
         }
         </@shiro.hasPermission>
 
-        // form.on('select(entryType)', function (data) {
-        //     active['reload'].call(this);
-        // });
-
         element.on('tab(machineGroupTab)', function (data) {
             let d = data.elem.context.dataset;
             $('#entryType').val(d.type);
@@ -532,9 +522,6 @@
                 if (condition.dayNum === '') {
                     condition.dayNum = 0;
                 }
-                if (!condition.groupNameFuzzyQuery) {
-                    condition.groupNameFuzzyQuery = '';
-                }
                 table.reload('machineTable', {
                     where: condition
                 });
@@ -547,12 +534,7 @@
             if (condition.dayNum === '') {
                 condition.dayNum = 0;
             }
-            if (!condition.groupNameFuzzyQuery) {
-                condition.groupNameFuzzyQuery = '';
-            }
-            table.reload('machineTable', {
-                where: condition
-            });
+            tableInit(condition);
             return false;
         });
 
