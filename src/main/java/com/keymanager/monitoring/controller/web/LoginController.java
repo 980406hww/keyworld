@@ -78,7 +78,7 @@ public class LoginController extends BaseController {
                 return "/index";
             }
         }
-        return "/views/login";
+        return "/newLogin";
     }
 
     /**
