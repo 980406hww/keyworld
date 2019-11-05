@@ -384,7 +384,7 @@
         });
 
         function searchMachine(whereCondition){
-            whereCondition = common.jsonObjectTrim(whereCondition)
+            whereCondition = common.jsonObjectTrim(whereCondition);
             table.render({
                 elem: '#machineManageTable',
                 method: 'post',
@@ -403,16 +403,17 @@
                     {filed: 'uuid', align: 'center', type: 'checkbox', width: '35',fixed: "left"},
                     {field: 'clientIDs', align: 'left', title: '客户端ID', width: '94', templet: '#clientIDs'},
                     {field: 'machineGroups', align: 'left', title: '机器分组', width: '72', templet: '#machineGroups'},
+                    {field: 'renewalDate', align: 'left', title: '续费<br>日期', width: '72',templet: '#showRenewalDate'},
                     {field: 'versionInfo', align: 'left', title: '现版本<br>目标版本', width: '72',templet: '#showVersionInfo'},
                     {field: 'restartCountAndFailCount', align: 'left', title: '重启数/重启状态<br>失败次数', width: '120', templet: '#restartCountAndFailCount'},
-                    {field: 'cityAndStatus', align: 'left', title: '所在城市<br>终端状态', width: '128', templet: '#cityAndStatus'},
+                    {field: 'cityAndStatus', align: 'left', title: '所在城市<br>终端状态', width: '100', templet: '#cityAndStatus'},
                     {field: 'cpuCounts', align: 'left', title: 'CPU核数<br>内存', width: '70', templet: '#cpuCounts'},
                     {field: 'freeSpaces', align: 'left', title: '剩余空间', width: '72', templet: '#freeSpaces'},
-                    {field: 'lastVisitTimeAndRestartTime', align: 'left', title: '最新工作时间<br>重启时间', width: '136', templet: '#lastVisitTimeAndRestartTime'},
+                    {field: 'lastVisitTimeAndRestartTime', align: 'left', title: '最新工作时间<br>重启时间', width: '100', templet: '#lastVisitTimeAndRestartTime'},
                     {field: 'restartOrderingTimeAndLastSendNotificationTime', align: 'left', title: '重启排序时间<br>发送通知时间', width: '120', templet: '#restartOrderingTimeAndLastSendNotificationTime'},
                     {field: 'optimizationSucceedCountAndOptimizationTotalCount', align: 'left', title: '成功次数<br>操作次数', width: '72', templet: '#optimizationSucceedCountAndOptimizationTotalCount'},
                     {field: 'broadbandAccountAndBroadbandPassword', align: 'left', title: '宽带账号<br>宽带密码', width: '72', templet: '#broadbandAccountAndBroadbandPassword'},
-                    {field: 'runningProgramTypes', align: 'left', title: '程序类型', width: '85', templet: '#runningProgramTypes'},
+                    {field: 'runningProgramTypes', align: 'left', title: '程序类型', width: '73', templet: '#runningProgramTypes'},
                     {field: 'startUpStatusAndDownloadProgramType', align: 'left', title: '开机状态<br>下载程序类型', width: '92', templet: '#startUpStatusAndDownloadProgramType'},
                     {field: 'valids', align: 'left', title: '状态', width: '72', templet: '#valid'},
                     {field: 'upgradeFailedReasons', align: 'left', title: '失败原因', width: '72', templet: '#upgradeFailedReasons'},
@@ -1297,6 +1298,26 @@
     {{# } }}
 </script>
 
+<script type="text/html" id="showRenewalDate">
+    {{# if(d.valid){ }}
+    {{#     if(d.red){ }}
+    {{#         if(d.remainingKeyword == 1){ }}
+    <font color="#0099FF">{{d.showRenewalDate == null ? "" : d.showRenewalDate}}</font>
+    {{#          }else{    }}
+    <font color="#FF0000">{{d.showRenewalDate == null ? "" : d.showRenewalDate}}</font>
+    {{#          } }}
+    {{#     }else if(d.orange){ }}
+    <font color="#e86e33">{{d.showRenewalDate == null ? "" : d.showRenewalDate}}</font>
+    {{#     }else if(d.yellow){ }}
+    <font color="#ef00ff">{{d.showRenewalDate == null ? "" : d.showRenewalDate}}</font>
+    {{#     }else{ }}
+    <font color="#2BD54D">{{d.showRenewalDate == null ? "" : d.showRenewalDate}}</font>
+    {{#     } }}
+    {{# }else{ }}
+    <font color="#2BD54D">{{d.showRenewalDate == null ? "" : d.showRenewalDate}}</font>
+    {{# } }}
+</script>
+
 <script type="text/html" id="showVersionInfo">
     {{# if(d.valid){ }}
     {{#     if(d.red){ }}
@@ -1382,24 +1403,24 @@
     {{#     if(d.red){ }}
     {{#         if(d.remainingKeyword == 1){ }}
     <font color="#0099FF">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
-        {{d.continuousFailCount == null ? "" : d.continuousFailCount}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+        {{d.continuousFailCount == null ? "" : d.continuousFailCount}}</font>
     {{#          }else{    }}
     <font color="#FF0000">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
-        {{d.continuousFailCount == null ? "" : d.continuousFailCount}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+        {{d.continuousFailCount == null ? "" : d.continuousFailCount}}</font>
     {{#          } }}
     {{#     }else if(d.orange){ }}
     <font color="#e86e33">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
-    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}</font>
     {{#     }else if(d.yellow){ }}
     <font color="#ef00ff">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
-    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}</font>
     {{#     }else{ }}
     <font color="#2BD54D">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
-    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}</font>
     {{#     } }}
     {{# }else{ }}
     <font color="#2BD54D">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
-    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
+    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}</font>
     {{# } }}
 </script>
 

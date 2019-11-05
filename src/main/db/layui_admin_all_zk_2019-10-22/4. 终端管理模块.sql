@@ -80,7 +80,7 @@ BEGIN
 	DECLARE g_openMode VARCHAR(32) DEFAULT NULL;
 	DECLARE done INT DEFAULT 0;
 	DECLARE resource_data_migration_cursor CURSOR FOR(
-	SELECT fParentID, fResourceName, fUrl, fIconCls, fSequence, fStatus, fOpened, fResourceType, fOpenMode FROM t_resource_new WHERE fParentID IN (SELECT fUuid FROM t_resource_new WHERE fParentID IN (SELECT fUuid FROM t_resource_new WHERE fUrl = '#' AND fParentID IS NULL AND fResourceName = '终端管理' AND fVersion = '1.0'))
+	SELECT fParentID, fResourceName, fUrl, fIconCls, fSequence, fStatus, fOpened, fResourceType, fOpenMode FROM t_resource_new WHERE fParentID IN (SELECT fUuid FROM t_resource_new WHERE fParentID IN (SELECT fUuid FROM t_resource_new WHERE fUrl = '#' AND fParentID IS NULL AND fResourceName = '终端管理' AND fVersion = '1.0') AND fResourceName != '终端监控')
 	);
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 	START TRANSACTION;

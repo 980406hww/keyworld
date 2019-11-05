@@ -44,6 +44,10 @@ INSERT INTO `db_keyword`.`t_config`(`fConfigType`, `fKey`, `fValue`) VALUES ('Se
 # 重点词的预设刷量
 INSERT INTO `db_keyword`.`t_config`(`fConfigType`, `fKey`, `fValue`) VALUES ('KeywordEffectOptimizePlanCount', 'ImportantKeyword', '100');
 
+# 算法测试任务表执行类型和执行次数
+alter table t_algorithm_test_plan add fExcuteType TINYINT(4) DEFAULT '0' COMMENT '执行类型 0:一次、1:多次' AFTER `fExcuteStatus`;
+alter table t_algorithm_test_plan add fExcuteCount TINYINT(4) DEFAULT '0' COMMENT '执行次数' AFTER `fExcuteType`;
+
 # 复制一份t_resource, t_role_resource命名为t_resource_new, t_role_resource_new 来进行权限操作
 # 项目里用的是新的表t_resource_new, t_role_resource_new
 DROP TABLE IF EXISTS `db_keyword`.`t_resource_new`;
