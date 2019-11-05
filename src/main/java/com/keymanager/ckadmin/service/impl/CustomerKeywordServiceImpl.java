@@ -633,9 +633,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     @Override
     public Page<PTkeywordCountVO> searchPTKeywordCount(Page<PTkeywordCountVO> page, PTKeywordCountCriteria keywordCriteria) {
-        long startMilleSeconds = System.currentTimeMillis();
-        List<PTkeywordCountVO> ptkeywordCountVOS = customerKeywordDao.searchPTKeywordCount(page, keywordCriteria);
-        page.setRecords(ptkeywordCountVOS);
+        page.setRecords(customerKeywordDao.searchPTKeywordCount(page, keywordCriteria));
         return page;
     }
 
