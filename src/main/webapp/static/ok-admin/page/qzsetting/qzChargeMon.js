@@ -7,7 +7,7 @@ layui.use(['jquery', 'form', 'common'], function () {
 
     var chargeOption = {
         title: {
-            text: '每月站点操作监控',
+            text: '每月站点监控',
             subtext: '',
             y: '10',
             x: '10'
@@ -130,7 +130,7 @@ layui.use(['jquery', 'form', 'common'], function () {
                     chargeOption.series[4].data = [];
                     chargeLogShow.setOption(chargeOption);
                 } else {
-                    common.showFailMsg('每月站点操作监控数据获取失败');
+                    common.showFailMsg('每月站点监控数据获取失败');
                 }
             },
             error: function () {

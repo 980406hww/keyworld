@@ -76,7 +76,7 @@ public class CustomerKeywordMonController {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/customerkeywordmon/toCustomerKeywordMon")
+//    @RequiresPermissions("/internal/customerkeywordmon/toCustomerKeywordMon")
     @GetMapping(value = "/toCustomerKeywordMon")
     public ModelAndView toCustomerKeywordMon() {
         ModelAndView mv = new ModelAndView();
@@ -84,7 +84,7 @@ public class CustomerKeywordMonController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/customerkeywordmon/toCustomerKeywordMon")
+//    @RequiresPermissions("/internal/customerkeywordmon/toCustomerKeywordMon")
     @GetMapping(value = "/toCustomerKeywordMon/{terminal}/{search}/{time}")
     public ModelAndView toCustomerKeywordMon(@PathVariable String terminal, @PathVariable String search, @PathVariable String time) {
         ModelAndView mv = new ModelAndView();
