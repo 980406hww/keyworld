@@ -29,14 +29,12 @@
         </P>
         <div style="height: 22px">
             <span style="position: relative;float: left;margin-left: 54px;">
-                <c:if test="${version != null}">
                 <select id="entryType" name="entryType" style="width: 92px;height:20px;padding:0px;" class="ipt">
                     <option value="qz">全站链接</option>
                     <option value="pt">普通链接</option>
                     <option value="fm">负面链接</option>
                     <option value="bc">其他</option>
                 </select>
-                </c:if>
             </span>
                 <span style="position: relative;float: right;margin-right:60px; margin-top: 2px">
                 <input class="rememberMe" type="checkbox" name="rememberMe" id="rememberMe" value="1" checked
