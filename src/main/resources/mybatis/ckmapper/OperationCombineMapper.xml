@@ -55,6 +55,7 @@
             WHERE g.fOperationCombineUuid = toc.fUuid
         )
         AND toc.fTerminalType = #{terminalType}
+        AND toc.fOperationCombineName > ''
         ORDER BY toc.fOperationCombineName
     </select>
 
