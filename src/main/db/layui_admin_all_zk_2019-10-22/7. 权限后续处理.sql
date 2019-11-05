@@ -31,6 +31,7 @@ DROP PROCEDURE pro_resource_data_migration;
 # 菜单修改成按钮
 UPDATE t_resource_new SET fResourceType = 1 WHERE fResourceName = '修改机器分组';
 UPDATE t_resource_new SET fResourceType = 1 WHERE fResourceName = '客户关键字管理' AND fVersion = '2.0';
+UPDATE t_resource_new SET fResourceType = 1 WHERE fResourceName = '修改优化组';
 
 # 处理历史数据，所有的自动采集都设置为0，时间间隔设置为15天
 UPDATE t_qz_setting SET fAutoCrawlKeywordFlag = 0, fUpdateInterval = 15 WHERE fAutoCrawlKeywordFlag IS TRUE OR fUpdateInterval != 15 OR fUpdateStatus > '';
