@@ -89,7 +89,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 '                   <strong>描述信息</strong>' +
                 '                   <p class="skip" >客户类型:' + obj.type +'</p>' +
                 '                   <p class="skip" >所属用户:' + obj.loginName +'</p>' +
-                '                   <p class="skip" >客户状态:' + generate_customer_status(obj.status) +'</p>' +
+                '                   <p class="skip" >客户状态:<span id="status'+obj.uuid+'" style="color: ' + generate_customer_status(obj.uuid, obj.status, 1) + '</span></p>' +
                 '                   <p class="skip" >是否产生日报表:<span id="dr'+obj.uuid+'">' + generate_customer_daily_report(obj.uuid, obj.status, obj.dailyReportIdentify) + '</span></p>' +
                 '               </div>';
             item += '           <div class="layadmin-address">' +
@@ -445,6 +445,35 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
         });
     };
 
+    // 改变客户状态
+    window.changeCustomerStatus = function (uuid, oldStatus) {
+        let newStatus = oldStatus === '1' ? 2 : 1;
+        var postData = {};
+        postData.customerUuid = uuid;
+        postData.status = newStatus;
+        $.ajax({
+            url: '/internal/customer/changeCustomerStatus',
+            type: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(postData),
+            success: function (result) {
+                if (result.code === 200) {
+                    common.showSuccessMsg('操作成功');
+                    $('#status' + uuid).html(generate_customer_status(uuid, newStatus, 2));
+                    $('#status' + uuid).css("color", newStatus === 1 ? "green" : "red");
+                }
+            },
+            error: function () {
+                common.showFailMsg('操作失败');
+                $('#status' + uuid).html(generate_customer_status(uuid, oldStatus, 2));
+                $('#status' + uuid).css("color", oldStatus === 1 ? "green" : "red");
+            }
+        });
+    };
+
     //改变日报表值
     window.changeCustomerDailyReportIdentify = function (uuid, status, oldIdentify, newIdentify) {
         if (status !== '1') {
@@ -637,11 +666,19 @@ function showCondition() {
     open2 = !open2;
 }
 
-function generate_customer_status(status){
-    let stat ='<span style="color: red;">暂停</span>';
-    if(status===1){
-        stat = '<span style="color: green;">激活</span>';
+function generate_customer_status(uuid, status, times){
+    let stat = '暂停';
+    if (status === 1) {
+        stat = '激活';
     }
+    if (times === 1) {
+        if (status === 1) {
+            stat = "green\">" + stat;
+        } else {
+            stat = "red\">" + stat;
+        }
+    }
+    stat += ' | <a href="javascript:void(0)" onclick=changeCustomerStatus(\'' + uuid + '\',\'' + status + '\')>修改状态</a>';
     return stat;
 }
 

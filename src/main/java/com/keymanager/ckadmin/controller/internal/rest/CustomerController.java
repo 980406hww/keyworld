@@ -227,6 +227,24 @@ public class CustomerController extends SpringMVCBaseController {
     }
 
     /**
+     * 改变客户状态
+     * @param requestMap
+     * @return
+     */
+    @PostMapping(value = "/changeCustomerStatus")
+    public ResultBean changeCustomerStatus(@RequestBody Map requestMap) {
+        try {
+            long uuid = Long.valueOf((String) requestMap.get("customerUuid"));
+            int status = (int) requestMap.get("status");
+            customerService.changeCustomerStatus(uuid, status);
+            return new ResultBean(200, "更新成功");
+        } catch (NumberFormatException e) {
+            logger.error(e.getMessage());
+            return new ResultBean(400, "更新失败");
+        }
+    }
+
+    /**
      * 改变客户是否产生日报表标志位值
      *
      * @param requestMap
