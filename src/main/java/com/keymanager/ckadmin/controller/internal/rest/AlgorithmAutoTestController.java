@@ -255,6 +255,27 @@ public class AlgorithmAutoTestController {
     public ResultBean getTestDataByPlanUuid(@RequestBody AlgorithmTestTaskCriteria algorithmTestTaskCriteria) {
         ResultBean resultBean = new ResultBean(200,"success");
         try {
+            Page<AlgorithmTestDataStatistics> page = new Page<>(algorithmTestTaskCriteria.getPage(), algorithmTestTaskCriteria.getLimit());
+            page = algorithmTestResultStatisticsService.selectAlgorithmTestResultStatisticsByAlgorithmTestPlanUuid(page, algorithmTestTaskCriteria.getAlgorithmTestPlanUuid());
+            List<AlgorithmTestDataStatistics> algorithmTestDataStatistics = page.getRecords();
+            resultBean.setCode(0);
+            resultBean.setCount(algorithmTestDataStatistics.size());
+            resultBean.setMsg("success");
+            resultBean.setData(algorithmTestDataStatistics);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/algorithmAutoTest/showTestDataStatistics")
+    @RequestMapping(value = "/getTestDataHistoryByPlanUuid", method = RequestMethod.POST)
+    public ResultBean getTestHistoryByPlanUuid(@RequestBody AlgorithmTestTaskCriteria algorithmTestTaskCriteria) {
+        ResultBean resultBean = new ResultBean(200,"success");
+        try {
             Page<AlgorithmTestDataStatisticsVo> page = new Page<>(algorithmTestTaskCriteria.getPage(), algorithmTestTaskCriteria.getLimit());
             page = algorithmTestResultStatisticsService.selectAlgorithmTestHistoryByAlgorithmTestPlanUuid(page, algorithmTestTaskCriteria.getAlgorithmTestPlanUuid());
             List<AlgorithmTestDataStatisticsVo> algorithmTestDataStatistics = page.getRecords();
