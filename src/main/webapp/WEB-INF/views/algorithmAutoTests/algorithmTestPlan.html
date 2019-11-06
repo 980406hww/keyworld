@@ -145,7 +145,15 @@
                     {field: 'terminalType', title: '终端类型', width: '79'},
                     {field: 'searchEngine', title: '搜索引擎', width: '79'},
                     {field: 'machineGroup', title: '机器分组', width: '85', templet:'#toMachineManageTpl',event: 'toMachineManage'},
-                    {field: 'excuteType', title: '执行类型', width: '80'},
+                    // {field: 'excuteType', title: '执行类型', width: '80'},
+                    {title: '执行类型', width: '80', templet: function(d) {
+                            if (d.excuteType === 1) {
+                                return "执行多次";
+                            } else if (d.excuteType === 0) {
+                                return "执行一次";
+                            }
+                        }
+                    },
                     {field: 'excuteCount', title: '已执行次数', width: '90'},
                     {field: 'testIntervalDay', title: '执行间隔(天)', width: '102'},
                     {field: 'testKeywordCount', title: '测试词数', width: '80'},

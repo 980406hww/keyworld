@@ -95,8 +95,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label">测试词排名起始</label>
             <div class="layui-input-inline" style="width: 130px;">
-                <input type="number" name="testkeywordRankEnd" value="50" autocomplete="off" class="layui-input"
-                       lay-verify="positiveInteger">
+                <input type="number" name="testkeywordRankBegin" value="50" autocomplete="off" class="layui-input"
+                       lay-verify="positiveInteger|testkeywordRankBeginEnd">
             </div>
             <div class="layui-form-mid">-</div>
             <label class="layui-form-label">结束</label>
@@ -201,6 +201,10 @@
                 data.field[idx] = $.trim(item).replace(/\+/g," ")
             });
             if (!common.waitMoment()) {
+                return false;
+            }
+            if ($(":input[name='testkeywordRankBegin']").val() >= $(":input[name='testkeywordRankEnd']").val()) {
+                common.showFailMsg("测试词排名起始不能大于或等于结束！");
                 return false;
             }
             $.ajax({
