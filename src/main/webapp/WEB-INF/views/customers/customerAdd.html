@@ -71,13 +71,14 @@
                 </div>
             </div>
         </div>
-
+        <@shiro.hasRole name="SEOSales">
         <div class="layui-form-item ">
             <label class="layui-form-label">客户标签</label>
             <div class="layui-input-block">
                 <input name="saleRemark" placeholder="销售人员自己的备注" class="layui-input" />
             </div>
         </div>
+        </@shiro.hasRole>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">备注</label>
             <div class="layui-input-block">

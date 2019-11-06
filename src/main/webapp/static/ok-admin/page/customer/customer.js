@@ -100,16 +100,14 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 '                   QQ:' + obj.qq +
                 '               </div>';
             item += '           <div class="layadmin-address ">' +
-                '                   <strong>备注</strong>' +
-                '                   <p class="skip" title="'+obj.saleRemark+'" onclick=changeSaleRemark("'+obj.uuid+'","'+obj.saleRemark+'") >客户标签:<span style="color: #00a65a" id="saleRemark'+obj.uuid+'">' + obj.saleRemark + '</span></p>' +
-                '                   <p class="skip" title="'+obj.remark+'" onclick=changeRemark("'+obj.uuid+'","'+obj.remark+'") >备注:<span style="color: #00a65a" id="remark'+obj.uuid+'">' + obj.remark + '</span></p>' +
+                '                   <strong>备注</strong>';
+            if (isSEOSales){
+                item += '       <p class="skip can-click" title="'+obj.saleRemark+'" onclick=changeSaleRemark("'+obj.uuid+'","'+obj.saleRemark+'") >客户标签:<span style="color: #00a65a" id="saleRemark'+obj.uuid+'">' + obj.saleRemark + '</span></p>';
+            }
+            item += '           <p class="skip can-click" title="'+obj.remark+'" onclick=changeRemark("'+obj.uuid+'","'+obj.remark+'") >销售详细备注:<span style="color: #00a65a" id="remark'+obj.uuid+'">' + obj.remark + '</span></p>' +
                 '               </div>' +
                 '      </div>';
             item += '   <div class="layui-col-md5  layui-col-sm6" style="margin-top: 37px">';
-                /*+
-                '       <h3 class="layadmin-title">' +
-                '           <strong>拥有业务</strong>' +
-                '       </h3>';*/
             let customerBusinessList = obj.customerBusinessList;
             if (customerBusinessList !== null && customerBusinessList.length > 0) {
                 var contactPerson = obj.contactPerson.replace(/\s+/g, "");
@@ -123,7 +121,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             '</strong>' +
                             '<br>';
                         $.ajax({
-                            url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid,
+                            url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid + '/pt',
                             dataType: 'json',
                             type: 'get',
                             async: false,
@@ -156,15 +154,24 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             }
                         });
                     } else if (tmp === 'fm') {
-                        url = '/internal/qzsetting/toFMWithCustomerUuid/' + obj.uuid;
-                        title = contactPerson + '-负面信息';
-                        id = contactPerson + '-负面信息';
                         item += '<div class="layadmin-address"><strong>' +
-                            '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>负面业务</a>' +
+                            '负面业务' +
                             '</strong>' +
-                            '<br>' +
-                            '待做---占位符' +
-                            '</div>';
+                            '<br>';
+                        $.ajax({
+                            url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid + '/fm',
+                            dataType: 'json',
+                            type: 'get',
+                            async: false,
+                            success: function (res) {
+                                if (res.code === 200) {
+                                    item += generate_negative_info(obj, res.data)
+                                } else {
+                                    item += '暂无数据';
+                                }
+                                item += '</div>';
+                            }
+                        });
                     }
                 });
             } else {
@@ -559,8 +566,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                     }
                 });
                 layer.close(index2);
-                // });
-
             }
         });
     }
@@ -708,6 +713,33 @@ function generate_qzsetting_info(obj, data) {
             htm += '<span style="color: lightgrey;">'+data.otherCount+'个其他|</span>'
         }
         htm = htm.substring(0, htm.lastIndexOf("|"));
+    } else {
+        htm += '<span>暂无数据</span>'
+    }
+    return htm;
+}
+
+function generate_negative_info(obj,data) {
+    let htm = '';
+
+    if (data.totalCount > 0) {
+        let url = '/internal/customerKeyword/toCustomerKeywords/fm/PC/'+obj.uuid;
+        let contactPerson = obj.contactPerson.replace(/\s+/g, "");
+        let title = contactPerson + '-负面信息';
+        let id = contactPerson + '-负面信息';
+        htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>总数:' + data.totalCount + '</span></a>&nbsp;&nbsp;&nbsp;&nbsp;(';
+        if (data.totalCount === data.activeCount) {
+            htm += '<span style="color: green;">激活</span>' +
+                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","0")>暂停关键字</a>'
+        } else if (data.totalCount > 0 && data.activeCount > 0) {
+            htm += '<span style="color: yellowgreen;">部分暂停</span>' +
+                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","0")>暂停关键字</a>' +
+                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","1")>激活关键字</a>'
+        } else {
+            htm += '<span style="color: red;">暂停</span>' +
+                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","1")>激活关键字</a>'
+        }
+        htm += ')';
     } else {
         htm += '<span>暂无数据</span>'
     }

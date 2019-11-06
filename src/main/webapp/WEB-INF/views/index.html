@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="shortcut icon" href="/static/style/images/favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="/static/ok-admin/css/okadmin-v2.css"/>
+    <style>
+        .layui-inline {
+            margin-top: 6px;
+        }
+    </style>
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin okadmin">
@@ -100,13 +105,14 @@
                             <@shiro.principal property="name"/>
                         </div>
                         <dl class="okadmin-nav-child layui-anim-upbit layui-anim" style="right: -10px">
-                            <dd><a id="logout" href="javascript:;" style="width: 100px">退出登录</a></dd>
                             <@shiro.hasPermission name="/internal/config/evictAllConfigCache">
                             <dd><a onclick="clearConfigCache()" href="javascript:;" style="width: 100px">清理Config</a></dd>
                             </@shiro.hasPermission>
                             <@shiro.hasPermission name="/internal/negativelist/evictAllNegativeListCache">
                             <dd><a onclick="clearNegativeListCache()" href="javascript:;" href="/internal/negativelists/evictAllNegativeListCache" style="width: 100px">清理负面清单</a></dd>
                             </@shiro.hasPermission>
+                            <dd><a href="javascript:openUpdPasswordWindow();" style="width: 100px">修改密码</a></dd>
+                            <dd><a id="logout" href="javascript:;" style="width: 100px">退出登录</a></dd>
                         </dl>
                     </li>
                 </ul>
@@ -131,9 +137,11 @@
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script src="/static/ok-admin/js/okadmin.js"></script>
 <script>
-    layui.use(['jquery', 'common'], function () {
+    layui.use(['jquery', 'common', 'layer'], function () {
         let $ = layui.jquery;
         let common = layui.common;
+        let layer = layui.layer;
+
         window.clearConfigCache = function () {
             $.ajax({
                 url: '/internal/configs/evictAllConfigCache',
@@ -168,6 +176,107 @@
                 },
                 error: function () {
                     common.showFailMsg("网络错误请稍后再试");
+                }
+            });
+        };
+
+        let html = '<div style="width: 100%;margin-top: 10px;text-align: center">'
+            + '                <div class="layui-inline" style="width: 100px;line-height: 34px;text-align: right">登录名：</div>'
+            + '                <div class="layui-inline">'
+            + '                    <div class="layui-input-inline" style="width: 260px">'
+            + '                        <input style="height: 34px" type="text" disabled autocomplete="off" class="layui-input" value="<@shiro.principal property="loginName"/>">'
+            + '                    </div>'
+            + '                </div>'
+            + '                <div class="layui-inline" style="width: 100px;line-height: 34px;text-align: right">原密码：</div>'
+            + '                <div class="layui-inline">'
+            + '                    <div class="layui-input-inline" style="width: 260px">'
+            + '                        <input style="height: 34px" type="password" id="oldPassword" placeholder="请输入原密码" autocomplete="off" class="layui-input">'
+            + '                    </div>'
+            + '                </div>'
+            + '                <div class="layui-inline" style="width: 100px;line-height: 34px;text-align: right">新密码：</div>'
+            + '                <div class="layui-inline">'
+            + '                    <div class="layui-input-inline" style="width: 260px">'
+            + '                        <input style="height: 34px" type="password" id="newPassword" placeholder="请输入新密码" autocomplete="off" class="layui-input">'
+            + '                    </div>'
+            + '                </div>'
+            + '                <div class="layui-inline" style="width: 100px;line-height: 34px;text-align: right">确认密码：</div>'
+            + '                <div class="layui-inline">'
+            + '                    <div class="layui-input-inline" style="width: 260px">'
+            + '                        <input style="height: 34px" type="password" id="againPassword" placeholder="请输入确认密码" autocomplete="off" class="layui-input">'
+            + '                    </div>'
+            + '                </div>'
+            + '            </div>';
+
+        window.openUpdPasswordWindow = function () {
+            layer.open({
+                type: 1,
+                title: '修改密码',
+                content: html,
+                shadeClose: true,
+                resize: false,
+                area: '400px',
+                offset: '80px',
+                btn: ['确定', ['取消']],
+                yes: function (index) {
+                    let oldPwd = document.getElementById('oldPassword').value;
+                    let newPwd = document.getElementById('newPassword').value;
+                    let againPwd = document.getElementById('againPassword').value;
+                    let msg = new FormData();
+                    if (oldPwd) {
+                        msg.append('oldPwd', oldPwd);
+                    } else {
+                        common.showFailMsg('原密码不能为空');
+                        return false;
+                    }
+                    if (!newPwd) {
+                        common.showFailMsg('新密码不能为空');
+                        return false;
+                    }
+                    if (!againPwd) {
+                        common.showFailMsg('确认密码不能为空');
+                        return false;
+                    }
+                    if (oldPwd === newPwd) {
+                        common.showFailMsg('新旧密码必须不一致');
+                        return false;
+                    }
+                    if (newPwd === againPwd) {
+                        msg.append('pwd', newPwd);
+                    } else {
+                        common.showFailMsg('两次密码不一致');
+                        return false;
+                    }
+                    layer.confirm('确认修改密码吗？', {offset: '120px'}, function (_index) {
+                        $.ajax({
+                            url: '/user/editUserPwd',
+                            type: 'post',
+                            data: msg,
+                            cache: false,
+                            async: false,
+                            processData: false,
+                            contentType: false,
+                            dataType: 'json',
+                            success: function (res) {
+                                if (res.success) {
+                                    layer.close(index);
+                                    layer.close(_index);
+                                    $.post('/logout', function (result) {
+                                        if (result.success) {
+                                            window.location.href = '/login';
+                                        }
+                                    }, 'json');
+                                } else {
+                                    common.showFailMsg(res.msg);
+                                }
+                            },
+                            error: function () {
+                                common.showFailMsg('网络错误请稍后再试');
+                            }
+                        });
+                    });
+                },
+                btn2: function (index) {
+                    layer.close(index);
                 }
             });
         };

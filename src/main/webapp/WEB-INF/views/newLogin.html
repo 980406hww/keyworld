@@ -2,7 +2,7 @@
 <html lang="en" class="page-fill">
 <head>
     <meta charset="UTF-8">
-    <title>登录</title>
+    <title>系统登录</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -28,7 +28,7 @@
         <div class="login_face"><img src="/static/ok-admin/lib/layui/images/logo.png" alt="log"></div>
         <div class="layui-form-item input-item layui-input-active">
             <label for="username">用户名</label>
-            <input type="text" lay-verify="required" name="username" autocomplete="off" id="username" class="layui-input">
+            <input type="text" lay-verify="required" name="username" autocomplete="off" id="username" autofocus class="layui-input">
         </div>
         <div class="layui-form-item input-item layui-input-active">
             <label for="password">密码</label>
@@ -75,7 +75,7 @@
         if (loginName == null || loginName === "") {
             loginName = "Enter a login name";
         }
-        window.location.href = "/internal/user/checkEmail/" + loginName;
+        window.location.href = "/internal/user/checkEmail2/" + loginName;
     }
 
     function refreshCaptcha(e) {

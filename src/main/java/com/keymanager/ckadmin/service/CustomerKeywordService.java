@@ -56,7 +56,7 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     List<CustomerKeywordSummaryInfoVO> searchCustomerKeywordSummaryInfo(String entryType, long customerUuid);
 
-    KeywordCountVO getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String terminalType);
+    KeywordCountVO getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String terminalType, String type);
 
     void resetInvalidRefreshCount(RefreshStatisticsCriteria criteria);
 

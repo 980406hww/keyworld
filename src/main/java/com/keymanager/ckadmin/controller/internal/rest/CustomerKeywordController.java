@@ -175,12 +175,12 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     /**
      * 根据用户id获取关键字统计信息
      */
-    @GetMapping("/getCustomerKeywordsCount/{customerUuid}")
-    public ResultBean getCustomerKeywordsCount(@PathVariable Long customerUuid, HttpServletRequest request) {
+    @GetMapping("/getCustomerKeywordsCount/{customerUuid}/{type}")
+    public ResultBean getCustomerKeywordsCount(@PathVariable Long customerUuid, @PathVariable String type, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         try {
             String terminalType = TerminalTypeMapping.getTerminalType(request);
-            KeywordCountVO keywordCountVO = customerKeywordService.getCustomerKeywordsCountByCustomerUuid(customerUuid, terminalType);
+            KeywordCountVO keywordCountVO = customerKeywordService.getCustomerKeywordsCountByCustomerUuid(customerUuid, terminalType, type);
             resultBean.setCode(200);
             resultBean.setMsg("success");
             resultBean.setData(keywordCountVO);
