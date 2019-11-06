@@ -760,7 +760,7 @@
     <update id="adjustOptimizePlanCount">
         UPDATE t_customer_keyword
         SET fOptimizePlanCount = #{optimizationPlanCount}
-        , fOptimizeRemainingCount = #{optimizationPlanCount}
+        , fOptimizeRemainingCount = #{optimizeTodayCount}
         , fQueryInterval = #{queryInterval}
         , fOptimizeTodayCount = #{optimizeTodayCount}
         , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
