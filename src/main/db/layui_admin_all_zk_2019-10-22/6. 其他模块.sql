@@ -74,6 +74,23 @@ INSERT INTO t_role_resource_new(fRoleID, fResourceID) SELECT tem_role.fUuid, tem
       (SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN (select fRoleName from t_role where fUuid in (select fRoleID from t_role_resource_new where fResourceID in (select fUuid from t_resource_new where fResourceName = '网站屏蔽设置' and fVersion = '1.0')))) tem_role,
       (SELECT tr.fUuid FROM t_resource_new tr WHERE tr.fResourceName = '网站屏蔽设置' AND fVersion = '2.0') tem_resource);
 
+#添加其他一级菜单下子项“清除Config缓存”权限
+INSERT INTO `db_keyword`.`t_resource_new`(`fResourceName`, `fUrl`, `fIconCls`,`fParentID`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`,  `fCreateTime`, `fVersion`)
+VALUES ('清除Config缓存', '/internal/config/evictAllConfigCache', (SELECT fIconCls FROM t_resource_new r WHERE r.fResourceName = "清除Config缓存" AND fVersion = '1.0'),
+	(SELECT r.fUuid FROM t_resource_new r WHERE r.fUrl = '#' AND r.fResourceName = "其他" AND fVersion = '2.0'), 6, 0, 1, 1, NOW(), '2.0');
+# 新二级菜单赋予给原角色
+INSERT INTO t_role_resource_new(fRoleID, fResourceID) SELECT tem_role.fUuid, tem_resource.fUuid FROM (
+      (SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN (select fRoleName from t_role where fUuid in (select fRoleID from t_role_resource_new where fResourceID in (select fUuid from t_resource_new where fResourceName = '清除Config缓存' and fVersion = '1.0')))) tem_role,
+      (SELECT tr.fUuid FROM t_resource_new tr WHERE tr.fResourceName = '清除Config缓存' AND fVersion = '2.0') tem_resource);
+
+#添加其他一级菜单下子项“清除负面清单缓存”权限
+INSERT INTO `db_keyword`.`t_resource_new`(`fResourceName`, `fUrl`, `fIconCls`,`fParentID`, `fSequence`, `fStatus`, `fOpened`, `fResourceType`,  `fCreateTime`, `fVersion`)
+VALUES ('清除负面清单缓存', '/internal/negativelist/evictAllNegativeListCache', (SELECT fIconCls FROM t_resource_new r WHERE r.fResourceName = "清除负面清单缓存" AND fVersion = '1.0'),
+	(SELECT r.fUuid FROM t_resource_new r WHERE r.fUrl = '#' AND r.fResourceName = "其他" AND fVersion = '2.0'), 7, 0, 1, 1, NOW(), '2.0');
+# 新二级菜单赋予给原角色
+INSERT INTO t_role_resource_new(fRoleID, fResourceID) SELECT tem_role.fUuid, tem_resource.fUuid FROM (
+      (SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN (select fRoleName from t_role where fUuid in (select fRoleID from t_role_resource_new where fResourceID in (select fUuid from t_resource_new where fResourceName = '清除负面清单缓存' and fVersion = '1.0')))) tem_role,
+      (SELECT tr.fUuid FROM t_resource_new tr WHERE tr.fResourceName = '清除负面清单缓存' AND fVersion = '2.0') tem_resource);
 
 # 新增客户管理下权限为2.0的叶子节点权限，并赋予给原角色
 DELIMITER $$
