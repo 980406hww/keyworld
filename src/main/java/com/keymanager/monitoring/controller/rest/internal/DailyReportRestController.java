@@ -1,7 +1,6 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.criteria.CustomerKeywordCriteria;
-import com.keymanager.monitoring.entity.Config;
 import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportExcelWriter;
@@ -12,7 +11,6 @@ import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.CustomerService;
 import com.keymanager.monitoring.service.DailyReportService;
-import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.util.Utils;
 import org.slf4j.Logger;
@@ -26,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -70,7 +67,7 @@ public class DailyReportRestController extends SpringMVCBaseController {
 		try {
 			String userName = (String) request.getSession().getAttribute("username");
 			String entryType = (String) request.getSession().getAttribute("entryType");
-			List<DailyReport> dailyReports = dailyReportService.searchCurrentDateCompletedReports(EntryTypeEnum.bc.name().equalsIgnoreCase(entryType) ? null : userName);
+			List<DailyReport> dailyReports = dailyReportService.searchCurrentDateCompletedReports(EntryTypeEnum.qt.name().equalsIgnoreCase(entryType) ? null : userName);
 			return new ResponseEntity<Object>(dailyReports, HttpStatus.OK);
 		}catch (Exception ex) {
 			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);

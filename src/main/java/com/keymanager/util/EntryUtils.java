@@ -10,7 +10,7 @@ public class EntryUtils {
 	static Set<String> entries = new HashSet<String>();
 	static {
 		entries.add(EntryTypeEnum.fm.name());
-		entries.add(EntryTypeEnum.bc.name());
+		entries.add(EntryTypeEnum.qt.name());
 		entries.add(EntryTypeEnum.qz.name());
 		entries.add(EntryTypeEnum.pt.name());
 	}

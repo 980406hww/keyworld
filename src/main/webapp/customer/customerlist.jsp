@@ -71,7 +71,7 @@
                                 &nbsp;&nbsp;<input type="button" class="ui-button ui-widget ui-corner-all" value=" 设置关键字启停天数 " onclick="setCustomerUpdateInterval(null)"/>
                             </shiro:hasPermission>
                         </c:if>
-                        <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
+                        <c:if test="${'qt'.equalsIgnoreCase(entryType)}">
                             <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
                                 <input type="button" value=" 重新触发日报表 " onclick="triggerDailyReportGeneration('triggerDailyReportGeneration')"/>
                             </shiro:hasPermission>
@@ -101,7 +101,7 @@
             <td align="center" width=80>联系人</td>
             <td align="center" width=80>分组</td>
             <td align="center" width=150>关键字信息</td>
-            <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
+            <c:if test="${'qt'.equalsIgnoreCase(entryType)}">
                 <td align="center" width=80>关键词账号</td>
                 <td align="center" width=60>搜索引擎</td>
             </c:if>
@@ -158,7 +158,7 @@
                         </c:choose>)
                     </c:if>
                 </td>
-                <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
+                <c:if test="${'qt'.equalsIgnoreCase(entryType)}">
                     <td width=80><input type="text" value="${customer.externalAccount}" onchange="updateAccountInfo('${customer.uuid}', this)" style="width: 100%"></td>
                     <td width=60>
                         <select style="width: 100%" onchange="updateCustomerSearchEngine('${customer.uuid}', this)">
@@ -206,7 +206,7 @@
                     <shiro:hasPermission name="/internal/customer/delCustomer">
                         | <a href="javascript:delCustomer('${customer.uuid}')">删除</a>
                     </shiro:hasPermission>
-                    <c:if test="${'bc'.equalsIgnoreCase(entryType)}">
+                    <c:if test="${'qt'.equalsIgnoreCase(entryType)}">
                         <shiro:hasPermission name="/internal/customerChargeType/saveCustomerChargeType">
                             | <a href="javascript:changeCustomerChargeType('${customer.uuid}')">客户规则</a>
                         </shiro:hasPermission>
@@ -638,7 +638,7 @@
     }
     </shiro:hasPermission>
 
-    <c:if test="${'bc'.equalsIgnoreCase(entryType) || 'pt'.equalsIgnoreCase(entryType)}">
+    <c:if test="${'qt'.equalsIgnoreCase(entryType) || 'pt'.equalsIgnoreCase(entryType)}">
     <shiro:hasPermission name="/internal/dailyReport/triggerReportGeneration">
     function searchCurrentDateCompletedReports() {
         var span = $("#dailyReportSpan");

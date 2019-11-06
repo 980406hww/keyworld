@@ -632,7 +632,7 @@
 					<option value="qz" selected>全站</option>
 					<option value="pt">普通</option>
 					<option value="fm">负面</option>
-					<option value="bc">其他</option>
+					<option value="qt">其他</option>
 				</select>
 			</td>
 		</tr>
@@ -1086,7 +1086,7 @@
 						<option value="qz" selected>全站</option>
 						<option value="pt">普通</option>
 						<option value="fm">负面</option>
-						<option value="bc">其他</option>
+						<option value="qt">其他</option>
 					</select>
 				</td>
 			</tr>

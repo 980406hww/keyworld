@@ -1115,7 +1115,7 @@
         WHERE c.fUuid = ck.fCustomerUuid
         AND ck.fStatus = 1
         AND ck.fCurrentPosition &gt; 0
-        AND ck.fType IN ('fm', 'pt', 'bc')
+        AND ck.fType IN ('fm', 'pt', 'qt')
         AND c.fUserID = #{userID}
         AND (ck.fOptimizedCount = 0 OR ck.fInvalidRefreshCount &gt;= 8)
     </select>

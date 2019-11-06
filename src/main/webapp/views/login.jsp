@@ -33,7 +33,7 @@
                     <option value="qz">全站链接</option>
                     <option value="pt">普通链接</option>
                     <option value="fm">负面链接</option>
-                    <option value="bc">其他</option>
+                    <option value="qt">其他</option>
                 </select>
             </span>
                 <span style="position: relative;float: right;margin-right:60px; margin-top: 2px">
