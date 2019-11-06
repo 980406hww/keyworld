@@ -58,8 +58,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label">执行类型</label>
             <div class="layui-input-block">
-                <input type="text" name="excuteType" placeholder="请输入执行类型" value="qz" autocomplete="off" class="layui-input"
-                       lay-verify="required">
+                <input type="radio" name="excuteType" value="0" title="执行一次" checked>
+                <input type="radio" name="excuteType" value="1" title="执行多次">
             </div>
         </div>
 
@@ -77,21 +77,6 @@
                        lay-verify="positiveInteger">
             </div>
         </div>
-
-        <!--<div class="layui-form-item">
-            <label class="layui-form-label">测试词排名起始</label>
-            <div class="layui-input-block">
-                <input type="number" name="testkeywordRankBegin" value="40" autocomplete="off" class="layui-input"
-                       lay-verify="positiveInteger">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">测试词排名结束</label>
-            <div class="layui-input-block">
-                <input type="number" name="testkeywordRankEnd" value="50" autocomplete="off" class="layui-input"
-                       lay-verify="positiveInteger">
-            </div>
-        </div>-->
 
         <div class="layui-form-item">
             <label class="layui-form-label">测试词排名起始</label>
