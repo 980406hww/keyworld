@@ -22,7 +22,7 @@ function setForm(l, u) {
                     res.data['customerBusinessList[' + customerBusinessList[index] + ']'] = customerBusinessList[index];
                 }
                 l.form.val("addCustomer", res.data);
-
+                l.form.render("select");
             } else {
                 l.layer.msg(res.msg, {icon: 5, time: 3000});
             }
@@ -57,6 +57,11 @@ layui.use(["form", "common", "jquery", "layer"], function () {
         if (data.field['customerBusinessList[fm]']) {
             customerBusinessList.push(data.field['customerBusinessList[fm]']);
             delete data.field['customerBusinessList[fm]'];
+        }
+
+        if (data.field['customerBusinessList[qt]']) {
+            customerBusinessList.push(data.field['customerBusinessList[qt]']);
+            delete data.field['customerBusinessList[qt]'];
         }
 
         data.field.customerBusinessList = customerBusinessList;

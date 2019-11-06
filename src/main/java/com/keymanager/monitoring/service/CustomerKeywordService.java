@@ -829,27 +829,28 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         List<CustomerKeyword> customerKeywords = customerKeywordDao.searchCustomerKeywordsForUpdateIndex(baiduIndexCriteria.getKeyword());
         if (CollectionUtils.isNotEmpty(customerKeywords)) {
             for (CustomerKeyword customerKeyword : customerKeywords) {
+                int optimizePlanCount;
                 if (TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())) {
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPcIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPcIndex());
                     if (EntryTypeEnum.qz.name().equals(customerKeyword.getType())) {
-                        customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPcIndex() == 0 ? 5 : baiduIndexCriteria.getPcIndex());
-                        customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPcIndex() == 0 ? 5 : baiduIndexCriteria.getPcIndex());
+                        optimizePlanCount = baiduIndexCriteria.getPcIndex() == 0 ? 5 : baiduIndexCriteria.getPcIndex();
                     } else {
-                        customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
-                        customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
+                        optimizePlanCount = (int) Math.floor(Utils.getRoundValue(baiduIndexCriteria.getPcIndex() * 1.0 / 100, 1));
+                        optimizePlanCount = (optimizePlanCount < 101 ? optimizePlanCount : 100) * 4 + 50;
                     }
                 } else {
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPhoneIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPhoneIndex());
                     if (EntryTypeEnum.qz.name().equals(customerKeyword.getType())) {
-                        customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPhoneIndex() == 0 ? 5 : baiduIndexCriteria.getPhoneIndex());
-                        customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPhoneIndex() == 0 ? 5 : baiduIndexCriteria.getPhoneIndex());
+                        optimizePlanCount = baiduIndexCriteria.getPhoneIndex() == 0 ? 5 : baiduIndexCriteria.getPhoneIndex();
                     } else {
-                        customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
-                        customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
+                        optimizePlanCount = (int) Math.floor(Utils.getRoundValue(baiduIndexCriteria.getPcIndex() * 1.0 / 100, 1));
+                        optimizePlanCount = (optimizePlanCount < 101 ? optimizePlanCount : 100) * 4 + 50;
                     }
                 }
+                customerKeyword.setOptimizePlanCount(optimizePlanCount);
+                customerKeyword.setOptimizeRemainingCount(optimizePlanCount);
                 calculatePrice(customerKeyword);
                 customerKeyword.setUpdateTime(new Date());
                 customerKeywordDao.updateCustomerKeywordIndex(customerKeyword);

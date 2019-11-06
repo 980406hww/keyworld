@@ -115,6 +115,8 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
             oldCustomer.setType(customer.getType());
             oldCustomer.setDailyReportIdentify(customer.getDailyReportIdentify());
             oldCustomer.setLoginName(customer.getLoginName());
+            oldCustomer.setExternalAccount(customer.getExternalAccount());
+            oldCustomer.setSearchEngine(customer.getSearchEngine());
             oldCustomer.setUpdateTime(new Date());
             customerDao.updateById(oldCustomer);
         }
