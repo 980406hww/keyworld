@@ -868,8 +868,8 @@
         let whereCondition = {searchEngine: '百度', terminalType: 'PC'};
         if (customerUuid && customerUuid !== "") {
             whereCondition.customerUuid = customerUuid;
+            get_qzsetting(whereCondition);
         }
-        get_qzsetting(whereCondition);
 
         getTerminalSearchEngineMap('PC');
 
@@ -1224,25 +1224,27 @@
 
         var active = {
             reload: function () {
-                let condition = common.formToJsonObject("searchForm");
-                if (!condition.bzbtSort) {
-                    condition.bzbtSort = null;
-                }
-                if (!condition.jrqsSort) {
-                    condition.jrqsSort = null;
-                }
-                if (!condition.dbtjSort) {
-                    condition.dbtjSort = null;
-                }
-                table.reload('qzSettingTable', {
-                    where: condition,
-                    page: {
-                        curr: 1 //从第一页开始
-                    }, done: function (res, curr, c) {
-                        successTable(res, condition);
-                        initSortRadio(condition);
+                if (table.index === 1) {
+                    let condition = common.formToJsonObject("searchForm");
+                    if (!condition.bzbtSort) {
+                        condition.bzbtSort = null;
                     }
-                });
+                    if (!condition.jrqsSort) {
+                        condition.jrqsSort = null;
+                    }
+                    if (!condition.dbtjSort) {
+                        condition.dbtjSort = null;
+                    }
+                    table.reload('qzSettingTable', {
+                        where: condition,
+                        page: {
+                            curr: 1 //从第一页开始
+                        }, done: function (res, curr, c) {
+                            successTable(res, condition);
+                            initSortRadio(condition);
+                        }
+                    });
+                }
             }
         };
 

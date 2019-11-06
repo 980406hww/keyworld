@@ -695,12 +695,12 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         searchEngine = URLDecoder.decode(searchEngine, "UTF-8");
         keyword = URLDecoder.decode(keyword, "UTF-8");
         if (!("null").equals(searchEngine)) {
-            mv.addObject("se123", searchEngine);
+            mv.addObject("SearchEngine", searchEngine);
         }
         if (!("null").equals(belongUser)) {
             mv.addObject("belongUser", belongUser);
         }
-        mv.addObject("kw123", keyword);
+        mv.addObject("Keyword", keyword);
         mv.addObject("notLike", "1");
         return mv;
     }
@@ -717,9 +717,9 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         //取名叫terminalType会与session中存在的terminalType同名，值会被覆盖成session中的值
         mv.addObject("terminalType2", terminalType);
         keyword = URLDecoder.decode(keyword, "UTF-8");
-        mv.addObject("kw123", keyword);
-        mv.addObject("pst123", position);
-        mv.addObject("pstf123", "1");
+        mv.addObject("Keyword", keyword);
+        mv.addObject("ltPosition", position);
+        mv.addObject("gtPosition", "1");
         return mv;
     }
 

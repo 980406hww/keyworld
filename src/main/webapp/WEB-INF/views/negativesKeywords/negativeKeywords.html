@@ -198,16 +198,7 @@
         var layer = layui.layer;
         var common = layui.common;
 
-        init();
-
-        function init() {
-            init_group();
-            let condition = common.formToJsonObject("searchForm");
-            if (!condition.hasEmail) {
-                condition.hasEmail = null;
-            }
-            tableInit(condition);
-        }
+        init_group();
 
         function tableInit(condition) {
             table.render({
@@ -259,19 +250,21 @@
         //监听工具条
         var active = {
             reload: function () {
-                let condition = common.formToJsonObject("searchForm");
-                if (!condition.hasEmail) {
-                    condition.hasEmail = null;
-                }
-                table.reload('table', {
-                    where: condition,
-                    page: {
-                        curr: 1
-                    },
-                    done: function (res, curr, count) {
-                        init_group();
+                if (table.index === 1) {
+                    let condition = common.formToJsonObject("searchForm");
+                    if (!condition.hasEmail) {
+                        condition.hasEmail = null;
                     }
-                });
+                    table.reload('table', {
+                        where: condition,
+                        page: {
+                            curr: 1
+                        },
+                        done: function (res, curr, count) {
+                            init_group();
+                        }
+                    });
+                }
             }
         };
 
@@ -379,7 +372,6 @@
                         contentType: false,
                         dataType: 'json',
                         success: function (res) {
-                            // console.log(res);
                             if (res.code === 200) {
                                 layer.close(index);
                                 common.showSuccessMsg('上传成功', function () {
@@ -423,12 +415,7 @@
             if (!condition.hasEmail) {
                 condition.hasEmail = null;
             }
-            table.reload('table', {
-                where: condition,
-                page: {
-                    curr: 1
-                }
-            });
+            tableInit(condition);
             return false;
         });
 

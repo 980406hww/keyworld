@@ -62,8 +62,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
         if (d.irc) {
             document.getElementById('invalidRefreshCount').value = d.irc;
         }
-        let type = $('#type').val();
-        get_keywords(common.formToJsonObject('searchForm'));
     }
 
     function init_keyword_type(data) {
@@ -239,16 +237,18 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
     //监听工具条
     var active = {
         reload: function () {
-            let postData = common.formToJsonObject('searchForm');
-            if (!postData.noReachStandardDays) {
-                postData.noReachStandardDays = '';
-            }
-            table.reload('keywordTable', {
-                where: postData,
-                page: {
-                    curr: 1 //从第一页开始
+            if (table.index === 1) {
+                let postData = common.formToJsonObject('searchForm');
+                if (!postData.noReachStandardDays) {
+                    postData.noReachStandardDays = '';
                 }
-            });
+                table.reload('keywordTable', {
+                    where: postData,
+                    page: {
+                        curr: 1 //从第一页开始
+                    }
+                });
+            }
         },
     };
 
@@ -276,12 +276,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
             data.field.noReachStandardDays = '';
         }
         data.field = common.jsonObjectTrim(data.field);
-        table.reload('keywordTable', {
-            where: data.field,
-            page: {
-                curr: 1 //从第一页开始
-            }
-        });
+        get_keywords(common.formToJsonObject('searchForm'));
         if (!open) {
             showCondition();
         }
@@ -321,7 +316,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
         let d = data.elem.context.dataset;
         $('#type').val(d.type);
         $('#terminalType').val(d.terminal);
-
         active['reload'].call(this);
     });
 

@@ -201,13 +201,6 @@
         var okLayer = layui.okLayer;
         var common = layui.common;
 
-        init();
-
-        function init() {
-            let condition = common.formToJsonObject("searchForm");
-            tableInit(condition);
-        }
-
         function tableInit(condition) {
             table.render({
                 elem: '#supplierTable',
@@ -324,13 +317,15 @@
         // 监听工具条
         var active = {
             reload: function () {
-                let condition = common.formToJsonObject("searchForm");
-                table.reload('supplierTable', {
-                    where: condition,
-                    page: {
-                        curr: 1
-                    }
-                });
+                if (table.index === 1) {
+                    let condition = common.formToJsonObject("searchForm");
+                    table.reload('supplierTable', {
+                        where: condition,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
             }
         };
 
@@ -431,12 +426,7 @@
         form.on("submit(search)", function (data) {
             let condition = data.field;
             condition = common.jsonObjectTrim(condition);
-            table.reload('supplierTable', {
-                where: condition,
-                page: {
-                    curr: 1
-                }
-            });
+            tableInit(condition);
             return false;
         });
     });

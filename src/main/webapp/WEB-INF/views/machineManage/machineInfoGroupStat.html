@@ -89,7 +89,7 @@
                                 </div>
                             </div>
                             <div class="layui-inline">
-                                <button class="layui-btn" lay-submit="" lay-filter="search"id="searchBtn">搜索</button>
+                                <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索</button>
                             </div>
                             <div class="layui-inline">
                                 <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">
@@ -117,20 +117,15 @@
         NProgress.done();
     };
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 'common'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'common'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
-        var laydate = layui.laydate;
-        var okLayer = layui.okLayer;
-        var layer = layui.layer;
         var common = layui.common;
 
-        init_Search({'terminalType': 'PC'})
-
         function init_Search(whereCondition){
-            whereCondition = common.jsonObjectTrim(whereCondition)
+            whereCondition = common.jsonObjectTrim(whereCondition);
             table.render({
                 elem: '#machineInfoGroupStatTable',
                 method: 'post',
@@ -155,35 +150,37 @@
         }
 
         element.on('tab(keywordTab)', function (data) {
-            var d = data.elem.context.dataset
+            var d = data.elem.context.dataset;
             $('#terminalType').val(d.terminal);
             active['reload'].call(this);
         });
 
         var active = {
             reload: function () {
-                var terminalType = $("#terminalType").val();
-                if(terminalType === '' || terminalType == null){
-                    terminalType = 'PC'
-                }
-                var data = {'terminalType': terminalType};
-                table.reload('machineInfoGroupStatTable', {
-                    where: data,
-                    page: {
-                        curr: 1
+                if (table.index === 1) {
+                    var terminalType = $("#terminalType").val();
+                    if (terminalType === '' || terminalType == null) {
+                        terminalType = 'PC'
                     }
-                });
+                    var data = {'terminalType': terminalType};
+                    table.reload('machineInfoGroupStatTable', {
+                        where: data,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
             },
         };
 
         form.on('submit(search)', function (data) {
-            var postData = data.field
-            var terminalType = $("#terminalType").val()
-            if(terminalType == '' || terminalType == null){
+            var postData = data.field;
+            var terminalType = $("#terminalType").val();
+            if(terminalType === '' || terminalType == null){
                 terminalType = 'PC'
             }
-            postData.terminalType = terminalType
-            init_Search(postData)
+            postData.terminalType = terminalType;
+            init_Search(postData);
             return false;
         });
 

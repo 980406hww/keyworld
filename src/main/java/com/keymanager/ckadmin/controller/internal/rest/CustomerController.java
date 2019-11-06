@@ -286,7 +286,7 @@ public class CustomerController extends SpringMVCBaseController {
     }
 
     /**
-     * 改变销售详细备注
+     * 改变备注
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @PostMapping(value = "/changeRemark2")

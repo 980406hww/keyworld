@@ -127,9 +127,9 @@
                             </div>
 
                             <div class="layui-inline">
-                                <label class="layui-form-label">销售详细备注</label>
+                                <label class="layui-form-label">备注</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="remark" id="remark" placeholder="请输入销售详细备注" autocomplete="off" class="layui-input" lay-verify="noSpace"
+                                    <input type="text" name="remark" id="remark" placeholder="备注给运营" autocomplete="off" class="layui-input"
                                            onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                 </div>
                             </div>
@@ -167,9 +167,7 @@
                 type: 'GET',
                 success: function (result) {
                     if (result.code === 200) {
-
                         $.each(result.data,function(idx,val){
-
                             var date = new Date(val.completeTime);
                             htm +='  <a class="layui-btn layui-btn-sm" href="' + val.reportPath + '">下载日报表(' + ((date.getHours() < 10) ? '0'
                                 + date.getHours() : date.getHours()) + ':' + ((date.getMinutes() < 10) ? '0' + date.getMinutes()

@@ -120,8 +120,6 @@
         var okLayer = layui.okLayer;
         var common = layui.common;
 
-        init_table_data(common.formToJsonObject('searchForm'));
-
         function init_table_data(whereCondition) {
             whereCondition.entryType = 'pt';
             table.render({
@@ -395,7 +393,6 @@
 
         }
 
-
         function show_task_data(uuid){
             let url = '/internal/algorithmAutoTest/toShowTaskData';
             okLayer.open("其他 / 测试计划管理 / 查看任务计划", url, "60%", "70%", function (layero) {
@@ -422,27 +419,24 @@
 
         var active = {
             reload: function () {
-                let data = common.formToJsonObject('searchForm');
-                data = common.jsonObjectTrim(data);
-                data.entryType = 'pt';
-                table.reload('algorithmTestPlanTable', {
-                    where: data,
-                    page: {
-                        curr: 1
-                    }
-                });
+                if (table.index === 1) {
+                    let data = common.formToJsonObject('searchForm');
+                    data = common.jsonObjectTrim(data);
+                    data.entryType = 'pt';
+                    table.reload('algorithmTestPlanTable', {
+                        where: data,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
             },
         };
 
         form.on("submit(search)", function (data) {
             var postData = data.field;
             postData = common.jsonObjectTrim(postData);
-            table.reload('algorithmTestPlanTable', {
-                where: postData,
-                page: {
-                    curr: 1
-                }
-            });
+            init_table_data(postData);
             return false
         });
 

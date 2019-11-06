@@ -260,15 +260,7 @@
             });
         };
 
-        init();
-
-        function init() {
-            let condition = common.formToJsonObject("searchForm");
-            if (condition.dayNum === '') {
-                condition.dayNum = 0;
-            }
-            init_keyword_type();
-        }
+        init_keyword_type();
 
         function init_keyword_type(data) {
             $.ajax({
@@ -492,9 +484,9 @@
                         field: 'unworkMachineCount', title: '已停数', width: '5%', align: 'center', sort: true, templet: function (d) {
                             if (d.unworkMachineCount > 0) {
                                 if (d.machineGroup === '总计') {
-                                    return '<a target="_blank" href="javascript:findMachineInfo(\'\')">d.unworkMachineCount</a>';
+                                    return '<a target="_blank" href="javascript:findMachineInfo(\'\')">' + d.unworkMachineCount + '</a>';
                                 }
-                                return '<a target="_blank" href="javascript:findMachineInfo(\'' + d.machineGroup + '\')">d.unworkMachineCount</a>';
+                                return '<a target="_blank" href="javascript:findMachineInfo(\'' + d.machineGroup + '\')">' + d.unworkMachineCount + '</a>';
                             } else {
                                 return '';
                             }

@@ -270,7 +270,6 @@
                         rankJobArea(res.data.rankJobArea);
                         rankJobCity(res.data.rankJobCityList);
                         form.render('select');
-                        init();
                     } else {
                         common.showFailMsg(res.msg ? res.msg : '未知错误');
                     }
@@ -298,11 +297,6 @@
                 html += '<option value="' + city[i] + '">' + city[i] + '</option>';
             }
             rankJobCity.innerHTML = html;
-        }
-
-        function init() {
-            let condition = common.formToJsonObject("searchForm");
-            tableInit(condition);
         }
 
         function tableInit(condition) {
@@ -435,13 +429,15 @@
         //监听工具条
         var active = {
             reload: function () {
-                let condition = common.formToJsonObject("searchForm");
-                table.reload('captureRankTable', {
-                    where: condition,
-                    page: {
-                        curr: 1
-                    }
-                });
+                if (table.index === 1) {
+                    let condition = common.formToJsonObject("searchForm");
+                    table.reload('captureRankTable', {
+                        where: condition,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
             }
         };
 
@@ -701,12 +697,7 @@
         form.on("submit(search)", function (data) {
             let condition = data.field;
             condition = common.jsonObjectTrim(condition);
-            table.reload('captureRankTable', {
-                where: condition,
-                page: {
-                    curr: 1
-                }
-            });
+            tableInit(condition);
             return false;
         });
 

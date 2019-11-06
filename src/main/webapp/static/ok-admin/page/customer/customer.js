@@ -25,7 +25,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
     });
 
     init_keyword_type();
-    initLayPage(common.formToJsonObject('searchForm'));
 
     function initLayPage(pageConf) {
         if (!pageConf) {
@@ -103,7 +102,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
             item += '           <div class="layadmin-address ">' +
                 '                   <strong>备注</strong>' +
                 '                   <p class="skip" title="'+obj.saleRemark+'" onclick=changeSaleRemark("'+obj.uuid+'","'+obj.saleRemark+'") >客户标签:<span style="color: #00a65a" id="saleRemark'+obj.uuid+'">' + obj.saleRemark + '</span></p>' +
-                '                   <p class="skip" title="'+obj.remark+'" onclick=changeRemark("'+obj.uuid+'","'+obj.remark+'") >销售详细备注:<span style="color: #00a65a" id="remark'+obj.uuid+'">' + obj.remark + '</span></p>' +
+                '                   <p class="skip" title="'+obj.remark+'" onclick=changeRemark("'+obj.uuid+'","'+obj.remark+'") >备注:<span style="color: #00a65a" id="remark'+obj.uuid+'">' + obj.remark + '</span></p>' +
                 '               </div>' +
                 '      </div>';
             item += '   <div class="layui-col-md5  layui-col-sm6" style="margin-top: 37px">';
@@ -228,21 +227,20 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
         let d = data.elem.context.dataset;
         $('#entryType').val(d.entrytype);
         initLayPage(common.formToJsonObject('searchForm'));
-        if (d.entrytype ==='pt'){
-            if (window.hasPer){
+        if (d.entrytype === 'pt') {
+            if (window.hasPer) {
                 var intervalId = setInterval(function () {
                     layui.searchCurrentDateCompletedReports();
                 }, 1000 * 30);
                 window.searchCurrentDateCompletedReportsIntervalId = intervalId;
             }
-        }else {
+        } else {
             window.clearInterval(searchCurrentDateCompletedReportsIntervalId);
         }
     });
 
     window.showCustomerByType = function (customerType){
         $('#type').val(customerType);
-        // form.render()
         $('#searchBtn').click();
 
     };
@@ -567,12 +565,12 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
         });
     }
 
-    //改客户标签
+    //改备注 => 运营查看
     window.changeRemark = function (uuid, remark) {
         layer.prompt({
             formType: 2,
             value: remark,
-            title: '销售详细备注',
+            title: '备注',
             yes: function (index, layero) {
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
@@ -691,7 +689,7 @@ function generate_qzsetting_info(obj, data) {
 
     if (data.totalCount > 0) {
         let entryType = document.getElementById('entryType').value;
-        let url = '/internal/qzsetting/toQZSetttingsWithCustomerUuid/'+obj.uuid;
+        let url = '/internal/qzsetting/toQZSettingsWithCustomerUuid/'+obj.uuid;
         let contactPerson = obj.contactPerson.replace(/\s+/g, "");
         let title = contactPerson + '-全站信息';
         let id = contactPerson + '-全站信息';

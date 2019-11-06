@@ -256,15 +256,7 @@
             });
         };
 
-        init();
-
-        function init() {
-            let condition = common.formToJsonObject("searchForm");
-            if (condition.dayNum === '') {
-                condition.dayNum = 0;
-            }
-            init_keyword_type();
-        }
+        init_keyword_type();
 
         function init_keyword_type(data) {
             $.ajax({

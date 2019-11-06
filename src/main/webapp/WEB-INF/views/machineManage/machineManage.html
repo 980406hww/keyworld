@@ -331,6 +331,7 @@
             searchContent.style.display = 'none';
         }
     }
+
     layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', "common"], function () {
         var element = layui.element;
         var table = layui.table;
@@ -342,8 +343,6 @@
 
         let ternimalType225 = $('#terminalType').val();
         element.tabChange('keywordTab', ternimalType225);
-
-        searchMachine(common.formToJsonObject('searchForm'));
 
         form.on('select(terminalTypeFilter)', function (data) {
             let val = data.value;
@@ -445,17 +444,19 @@
 
         var active = {
             reload: function () {
-                let terminalType = $("#terminalType").val();
-                if(terminalType === '' || terminalType == null){
-                    terminalType = 'PC'
-                }
-                let data = {'terminalType': terminalType};
-                table.reload('machineManageTable', {
-                    where: data,
-                    page: {
-                        curr: 1
+                if (table.index === 1) {
+                    let terminalType = $("#terminalType").val();
+                    if(terminalType === '' || terminalType == null){
+                        terminalType = 'PC'
                     }
-                });
+                    let data = {'terminalType': terminalType};
+                    table.reload('machineManageTable', {
+                        where: data,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
             },
         };
 

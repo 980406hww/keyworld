@@ -43,7 +43,7 @@
         <if test="criteria.customerName!=null and criteria.customerName!=''">
             AND c.fContactPerson like concat('%', #{criteria.customerName}, "%")
         </if>
-        GROUP BY ck.fMachineGroup, ck.fType, ck.fTerminalType
+        GROUP BY ck.fMachineGroup, ck.fType, ck.fTerminalType, toc.fMaxInvalidCount
         ORDER BY ck.fMachineGroup;
     </select>
 

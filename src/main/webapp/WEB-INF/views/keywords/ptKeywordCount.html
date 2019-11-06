@@ -121,7 +121,6 @@
         var common = layui.common;
 
         init_search_data();
-        init_table_data(common.formToJsonObject('searchForm'));
 
         function init_search_data() {
             var postData = {};
@@ -147,8 +146,8 @@
                         var activeUsers = $('#userName');
                         searchEngine.empty();
                         activeUsers.empty();
-                        searchEngine.append('<option value="" selected>全部</option>');
-                        activeUsers.append('<option value="" selected>所有</option>');
+                        searchEngine.append('<option value="" selected>搜索引擎</option>');
+                        activeUsers.append('<option value="" selected>用户名称</option>');
                         activeUsers.append('<option value="' + user.loginName + '">' + '只显示自己' + '</option>');
                         $.each(searchEngineList, function (index, item) {
                             searchEngine.append('<option value="' + item + '">' + item + '</option>');
@@ -204,14 +203,16 @@
 
         var active = {
             reload: function () {
-                let data = common.formToJsonObject('searchForm');
-                data.entryType = 'pt';
-                table.reload('keywordTable', {
-                    where: data,
-                    page: {
-                        curr: 1
-                    }
-                });
+                if (table.index === 1) {
+                    let data = common.formToJsonObject('searchForm');
+                    data.entryType = 'pt';
+                    table.reload('keywordTable', {
+                        where: data,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
             },
         };
 
@@ -219,12 +220,7 @@
             var postData = data.field;
             postData.entryType = 'pt';
             postData = common.jsonObjectTrim(postData);
-            table.reload('keywordTable', {
-                where: postData,
-                page: {
-                    curr: 1
-                }
-            });
+            init_table_data(postData);
             return false
         });
 
