@@ -354,7 +354,7 @@
         FROM t_customer_keyword ck
         WHERE ck.fTerminalType = #{terminalType}
         AND ck.fCustomerUuid = #{customerUuid}
-        AND ck.fType = 'pt'
+        AND ck.fType = #{type}
     </select>
 
     <update id="resetInvalidRefreshCount" parameterType="com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria">

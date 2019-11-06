@@ -732,9 +732,9 @@
     <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
         {{# if(d.captureRankJobStatus){ }}
-        <button class="layui-btn layui-btn-xs" style="background-color: red" lay-event="stop">暂停</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="stop">暂停</button>
         {{# }else{ }}
-        <button class="layui-btn layui-btn-xs" style="background-color: #FFB800" lay-event="noStop">激活</button>
+        <button class="layui-btn layui-btn-xs" style="background-color: #d5a033" lay-event="noStop">激活</button>
         {{# } }}
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/captureRank/saveCaptureRankJob">
