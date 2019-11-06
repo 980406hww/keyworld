@@ -362,8 +362,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public KeywordCountVO getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String terminalType) {
-        return customerKeywordDao.getCustomerKeywordsCountByCustomerUuid(customerUuid, terminalType);
+    public KeywordCountVO getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String terminalType, String type) {
+        return customerKeywordDao.getCustomerKeywordsCountByCustomerUuid(customerUuid, terminalType, type);
     }
 
     @Override
