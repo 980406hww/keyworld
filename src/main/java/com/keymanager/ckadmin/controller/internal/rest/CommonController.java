@@ -79,6 +79,9 @@ public class CommonController {
             if (roles.contains("FMSpecial")){
                 businessType.add("fm#负面");
             }
+            if (roles.contains("QTSpecial")){
+                businessType.add("qt#其他");
+            }
             resultBean.setData(businessType);
         } catch (Exception e) {
             logger.error(e.getMessage());

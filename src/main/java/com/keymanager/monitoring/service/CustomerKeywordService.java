@@ -712,6 +712,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(customerKeyword.getOptimizePlanCount() * (Math.random() * 0.7 + 0.5), 1));
             queryInterval = queryInterval / optimizeTodayCount;
             customerKeyword.setOptimizeTodayCount(optimizeTodayCount);
+            customerKeyword.setOptimizeRemainingCount(optimizeTodayCount);
         }
         customerKeyword.setQueryInterval(queryInterval);
         customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
@@ -738,6 +739,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(customerKeyword.getOptimizePlanCount() * (Math.random() * 0.7 + 0.5), 1));
             queryInterval = queryInterval / optimizeTodayCount;
             customerKeyword.setOptimizeTodayCount(optimizeTodayCount);
+            customerKeyword.setOptimizeRemainingCount(optimizeTodayCount);
         }
         customerKeyword.setQueryInterval(queryInterval);
         customerKeyword.setUpdateTime(new Date());
@@ -1585,7 +1587,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void adjustOptimizationCount() {
-        List<Map> bcCustomerKeywordSummaries = customerKeywordDao.searchKeywordsForAdjustingOptimizationCount("bc");
+        List<Map> bcCustomerKeywordSummaries = customerKeywordDao.searchKeywordsForAdjustingOptimizationCount("qt");
 //        List<Map> ptCustomerKeywordSummaries = customerKeywordDao.searchKeywordsForAdjustingOptimizationCount("pt");
 //        bcCustomerKeywordSummaries.addAll(ptCustomerKeywordSummaries);
         if (CollectionUtils.isNotEmpty(bcCustomerKeywordSummaries)) {
@@ -1882,7 +1884,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
 
         Config otherMaxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, "all");
-        groupNames = customerKeywordDao.fetchOptimizationCompletedGroupNames("'pt','qz', 'bc'", Integer.parseInt(otherMaxInvalidCountConfig.getValue()));
+        groupNames = customerKeywordDao.fetchOptimizationCompletedGroupNames("'pt','qz', 'qt'", Integer.parseInt(otherMaxInvalidCountConfig.getValue()));
         if (CollectionUtils.isNotEmpty(groupNames)) {
             updateRemainingKeywordIndicator(groupNames);
         }

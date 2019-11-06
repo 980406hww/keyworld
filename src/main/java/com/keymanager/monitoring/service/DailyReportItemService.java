@@ -71,7 +71,7 @@ public class DailyReportItemService extends ServiceImpl<DailyReportItemDao, Dail
 			Config dailyReportType = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_TYPE);
 			if(dailyReportType != null) {
 				double todayFee = 0;
-				if (EntryTypeEnum.bc.name().equalsIgnoreCase(dailyReportType.getValue())) {
+				if (EntryTypeEnum.qt.name().equalsIgnoreCase(dailyReportType.getValue())) {
 					CustomerKeywordDailyReportExcelWriter excelWriter = new CustomerKeywordDailyReportExcelWriter(dailyReportItem.getTerminalType(), dailyReportItem
 							.getCustomerUuid() + "", dailyReportUuid);
 					todayFee = excelWriter.writeDataToExcel(customerKeywords, customer.getExternalAccount(), customer.getContactPerson(), dailyReportItem.getTerminalType());

@@ -117,7 +117,7 @@
             <input type="text" name="orderNumber" id="orderNumber" value="${customerKeywordCriteria.orderNumber}" style="width:100px;">
             无效点击数:
             <input type="text" name="invalidRefreshCount" id="invalidRefreshCount" value="${customerKeywordCriteria.invalidRefreshCount}" style="width:40px;">
-            <c:if test="${customerKeywordCriteria.entryType eq 'pt' or customerKeywordCriteria.entryType eq 'bc'}">
+            <c:if test="${customerKeywordCriteria.entryType eq 'pt' or customerKeywordCriteria.entryType eq 'qt'}">
             未达标天数:
             <input type="text" name="noReachStandardDays" id="noReachStandardDays" value="${customerKeywordCriteria.noReachStandardDays}" style="width:40px;">
             </c:if>
@@ -168,7 +168,7 @@
             </shiro:hasPermission>
             <br/>
             <shiro:hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
-                <c:if test="${customerKeywordCriteria.entryType eq 'pt' or customerKeywordCriteria.entryType eq 'bc'}">
+                <c:if test="${customerKeywordCriteria.entryType eq 'pt' or customerKeywordCriteria.entryType eq 'qt'}">
                 <div id="noReachStandardDiv" align="right">
                     未达标统计:
                     <a target="_blank" href="javascript:resetPageNumber(30)">超过30天(${customerKeywordCriteria.thirtyDaysNoReachStandard})</a>
@@ -322,7 +322,7 @@
             $("#showCustomerTableDiv").css("margin-top",$("#customerKeywordTopDiv").height());
             alignTableHeader();
         }
-        if(${customerKeywordCriteria.entryType eq 'bc' or customerKeywordCriteria.entryType eq 'pt'}) {
+        if(${customerKeywordCriteria.entryType eq 'qt' or customerKeywordCriteria.entryType eq 'pt'}) {
             if(${customerKeywordCriteria.sevenDaysNoReachStandard == null}) {
                 searchCustomerKeywordForNoReachStandard('${customerKeywordCriteria.entryType}','${customerKeywordCriteria.terminalType}');
             }
