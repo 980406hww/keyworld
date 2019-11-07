@@ -157,7 +157,6 @@ public class ConfigController {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
             configService.evictAllConfigCache();
-            logger.info("清理Config缓存");
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setMsg(e.getMessage());

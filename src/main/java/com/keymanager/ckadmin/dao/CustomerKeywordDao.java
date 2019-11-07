@@ -65,7 +65,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<CustomerKeywordSummaryInfoVO> searchCustomerKeywordSummaryInfo(@Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
 
-    KeywordCountVO getCustomerKeywordsCountByCustomerUuid(@Param("customerUuid") Long customerUuid, @Param("terminalType") String terminalType);
+    KeywordCountVO getCustomerKeywordsCountByCustomerUuid(@Param("customerUuid") Long customerUuid, @Param("terminalType") String terminalType, @Param("type") String type);
 
     void resetInvalidRefreshCount(@Param("criteria") RefreshStatisticsCriteria criteria);
 

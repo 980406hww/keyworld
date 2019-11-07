@@ -7,9 +7,7 @@ import com.keymanager.monitoring.common.result.Tree;
 import java.util.List;
 
 /**
- *
  * User 表数据服务层接口
- *
  */
 public interface UserInfoService extends IService<UserInfo> {
 
@@ -19,7 +17,9 @@ public interface UserInfoService extends IService<UserInfo> {
 
     Long getUuidByLoginName(String userName);
 
-    List<Tree> selectUserInfoTrees ();
+    List<Tree> selectUserInfoTrees();
 
     Object selectUserInfoTrees2();
+
+    List<String> selectUserNames();
 }

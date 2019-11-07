@@ -311,9 +311,8 @@
         let okLayer = layui.okLayer;
         let layer = layui.layer;
         let common = layui.common;
-        let search = null;
+        var search = null;
 
-        init_Search();
         init_SelectData();
 
         function init_SelectData() {
@@ -426,25 +425,28 @@
 
         var active = {
             reload: function () {
-                let condition = common.formToJsonObject('searchForm');
-                if (condition.friendlyLinkUrl !== "") {
-                    if (condition.friendlyLinkUrl.indexOf('http://') === -1) {
-                        condition.friendlyLinkUrl = 'http://' + condition.friendlyLinkUrl
+                if (table.index === 1) {
+                    let condition = common.formToJsonObject('searchForm');
+                    if (condition.friendlyLinkUrl !== "") {
+                        if (condition.friendlyLinkUrl.indexOf('http://') === -1) {
+                            condition.friendlyLinkUrl = 'http://' + condition.friendlyLinkUrl
+                        }
                     }
+                    condition.accessFailCount = parseInt(condition.accessFailCount);
+                    table.reload('websiteListTable', {
+                        where: condition,
+                        page: {
+                            curr: 1
+                        }
+                    });
                 }
-                condition.accessFailCount = parseInt(condition.accessFailCount);
-                table.reload('websiteListTable', {
-                    where: condition,
-                    page: {
-                        curr: 1
-                    }
-                });
             },
         };
 
         form.on("submit(search)", function (data) {
             let postData = data.field;
-            active['reload'].call(this);
+            postData = common.jsonObjectTrim(postData);
+           init_Search(postData);
             search = postData;
             return false;
         });

@@ -148,15 +148,10 @@
                                         </select>
                                     </div>
                                     <div class="layui-inline">
-                                        <button class="layui-btn" lay-submit lay-filter="search"
-                                                id="searchBtn">搜索
-                                        </button>
+                                        <button class="layui-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
                                     </div>
                                     <div class="layui-inline">
-                                        <button style="background: #897c00;color: #ffffff" class="layui-btn"
-                                                type="reset">
-                                            重置
-                                        </button>
+                                        <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">重置</button>
                                     </div>
                                 </div>
                             </div>
@@ -265,16 +260,7 @@
             });
         };
 
-        init();
-
-        function init() {
-            let condition = common.formToJsonObject("searchForm");
-            if (condition.dayNum === '') {
-                condition.dayNum = 0;
-            }
-            init_keyword_type();
-            tableInit(condition);
-        }
+        init_keyword_type();
 
         function init_keyword_type(data) {
             $.ajax({
@@ -498,9 +484,9 @@
                         field: 'unworkMachineCount', title: '已停数', width: '5%', align: 'center', sort: true, templet: function (d) {
                             if (d.unworkMachineCount > 0) {
                                 if (d.machineGroup === '总计') {
-                                    return '<a target="_blank" href="javascript:findMachineInfo(\'\')">d.unworkMachineCount</a>';
+                                    return '<a target="_blank" href="javascript:findMachineInfo(\'\')">' + d.unworkMachineCount + '</a>';
                                 }
-                                return '<a target="_blank" href="javascript:findMachineInfo(\'' + d.machineGroup + '\')">d.unworkMachineCount</a>';
+                                return '<a target="_blank" href="javascript:findMachineInfo(\'' + d.machineGroup + '\')">' + d.unworkMachineCount + '</a>';
                             } else {
                                 return '';
                             }
@@ -513,10 +499,6 @@
             });
         }
         </@shiro.hasPermission>
-
-        // form.on('select(entryType)', function (data) {
-        //     active['reload'].call(this);
-        // });
 
         element.on('tab(machineGroupTab)', function (data) {
             let d = data.elem.context.dataset;
@@ -532,9 +514,6 @@
                 if (condition.dayNum === '') {
                     condition.dayNum = 0;
                 }
-                if (!condition.groupNameFuzzyQuery) {
-                    condition.groupNameFuzzyQuery = '';
-                }
                 table.reload('machineTable', {
                     where: condition
                 });
@@ -547,12 +526,7 @@
             if (condition.dayNum === '') {
                 condition.dayNum = 0;
             }
-            if (!condition.groupNameFuzzyQuery) {
-                condition.groupNameFuzzyQuery = '';
-            }
-            table.reload('machineTable', {
-                where: condition
-            });
+            tableInit(condition);
             return false;
         });
 

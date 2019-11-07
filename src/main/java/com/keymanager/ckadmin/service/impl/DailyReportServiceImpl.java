@@ -68,7 +68,7 @@ public class DailyReportServiceImpl extends ServiceImpl<DailyReportDao, DailyRep
 	private boolean autoTriggerDailyReportCondition(){
 		Config dailyReportType = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_TYPE);
 		if(dailyReportType != null){
-			if(EntryTypeEnum.bc.name().equalsIgnoreCase(dailyReportType.getValue())){
+			if(EntryTypeEnum.qt.name().equalsIgnoreCase(dailyReportType.getValue())){
 				return !captureRankJobService.hasUncompletedCaptureRankJob(null, "China");
 			}else{
 				List<Long> customerUuids = customerService.getActiveDailyReportIdentifyCustomerUuids(null);
@@ -85,15 +85,15 @@ public class DailyReportServiceImpl extends ServiceImpl<DailyReportDao, DailyRep
 	public void autoTriggerDailyReport(){
 		Config dailyReportType = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_TYPE);
 		if(dailyReportType != null) {
-			if (EntryTypeEnum.bc.name().equalsIgnoreCase(dailyReportType.getValue())) {
+			if (EntryTypeEnum.qt.name().equalsIgnoreCase(dailyReportType.getValue())) {
 				if(autoTriggerDailyReportCondition() && CollectionUtils.isEmpty(dailyReportDao.fetchDailyReportTriggeredInToday(null, DailyReportTriggerModeEnum.Auto.name()))) {
 					long dailyReportUuid = createDailyReport(null, DailyReportTriggerModeEnum.Auto.name(), null);
-					List<Long> pcCustomerUuids = customerKeywordService.getCustomerUuids(EntryTypeEnum.bc.name(), TerminalTypeEnum.PC.name());
+					List<Long> pcCustomerUuids = customerKeywordService.getCustomerUuids(EntryTypeEnum.qt.name(), TerminalTypeEnum.PC.name());
 					for (Long customerUuid : pcCustomerUuids) {
 						dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.PC.name(), customerUuid.intValue());
 					}
 
-					List<Long> phoneCustomerUuids = customerKeywordService.getCustomerUuids(EntryTypeEnum.bc.name(), TerminalTypeEnum.Phone.name());
+					List<Long> phoneCustomerUuids = customerKeywordService.getCustomerUuids(EntryTypeEnum.qt.name(), TerminalTypeEnum.Phone.name());
 					for (Long customerUuid : phoneCustomerUuids) {
 						dailyReportItemService.createDailyReportItem(dailyReportUuid, TerminalTypeEnum.Phone.name(), customerUuid.intValue());
 					}
@@ -153,7 +153,7 @@ public class DailyReportServiceImpl extends ServiceImpl<DailyReportDao, DailyRep
 			dailyReportItemService.generateDailyReport(dailyReport.getUuid(), dailyReportItem.getUuid());
 		}else{
 			Config dailyReportType = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_TYPE);
-			if(EntryTypeEnum.bc.name().equalsIgnoreCase(dailyReportType.getValue())) {
+			if(EntryTypeEnum.qt.name().equalsIgnoreCase(dailyReportType.getValue())) {
 				generateReportForBC(dailyReport);
 			}else{
 				generateReportForOther(dailyReport);

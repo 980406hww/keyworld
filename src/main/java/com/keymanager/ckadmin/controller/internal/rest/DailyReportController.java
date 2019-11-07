@@ -100,7 +100,7 @@ public class DailyReportController {
         try {
             String userName = (String) request.getSession().getAttribute("username");
             String entryType = "pt";
-            List<DailyReport> dailyReports = dailyReportService.searchCurrentDateCompletedReports(EntryTypeEnum.bc.name().equalsIgnoreCase(entryType) ? null : userName);
+            List<DailyReport> dailyReports = dailyReportService.searchCurrentDateCompletedReports(EntryTypeEnum.qt.name().equalsIgnoreCase(entryType) ? null : userName);
             resultBean.setData(dailyReports);
         } catch (Exception e) {
             logger.error(e.getMessage());

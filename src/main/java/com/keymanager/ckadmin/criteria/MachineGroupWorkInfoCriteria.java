@@ -14,8 +14,6 @@ public class MachineGroupWorkInfoCriteria extends BaseCriteria {
 
     private int dayNum;
 
-    private String machineGroupFuzzyQuery;
-
     private String userName;
 
     private String password;
@@ -74,13 +72,5 @@ public class MachineGroupWorkInfoCriteria extends BaseCriteria {
 
     public void setDayNum(int dayNum) {
         this.dayNum = dayNum;
-    }
-
-    public String getMachineGroupFuzzyQuery() {
-        return machineGroupFuzzyQuery;
-    }
-
-    public void setMachineGroupFuzzyQuery(String machineGroupFuzzyQuery) {
-        this.machineGroupFuzzyQuery = machineGroupFuzzyQuery;
     }
 }

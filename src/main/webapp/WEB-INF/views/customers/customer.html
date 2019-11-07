@@ -104,24 +104,13 @@
                                 批量删除
                             </div>
                         </div>
-
-
                     </div>
                     <div class="my-hide" id="searchContent">
                         <div class="layui-form-item" lay-filter="loginNameFilter">
-
-
                             <div class="layui-inline">
                                 <label class="layui-form-label">QQ</label>
                                 <div class="layui-input-inline">
                                     <input type="text" name="qq" id="qq" placeholder="请输入QQ" autocomplete="off" class="layui-input" lay-verify="qq"
-                                           onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">微信</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="wechat" id="wechat" placeholder="请输入微信" autocomplete="off" class="layui-input" lay-verify="noSpace"
                                            onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                 </div>
                             </div>
@@ -132,15 +121,13 @@
                                            onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                 </div>
                             </div>
-
                             <div class="layui-inline">
-                                <label class="layui-form-label">销售详细备注</label>
+                                <label class="layui-form-label">备注</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="remark" id="remark" placeholder="请输入销售详细备注" autocomplete="off" class="layui-input" lay-verify="noSpace"
+                                    <input type="text" name="remark" id="remark" placeholder="备注给运营" autocomplete="off" class="layui-input"
                                            onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -155,7 +142,12 @@
     </div>
 </div>
 <div id="page_nav"></div>
-
+<script>
+    var isSEOSales = false;
+    <@shiro.hasRole name="SEOSales">
+        isSEOSales = true;
+    </@shiro.hasRole>
+</script>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
 <script src="/static/ok-admin/page/customer/customer.js"></script>
@@ -174,9 +166,7 @@
                 type: 'GET',
                 success: function (result) {
                     if (result.code === 200) {
-
                         $.each(result.data,function(idx,val){
-
                             var date = new Date(val.completeTime);
                             htm +='  <a class="layui-btn layui-btn-sm" href="' + val.reportPath + '">下载日报表(' + ((date.getHours() < 10) ? '0'
                                 + date.getHours() : date.getHours()) + ':' + ((date.getMinutes() < 10) ? '0' + date.getMinutes()

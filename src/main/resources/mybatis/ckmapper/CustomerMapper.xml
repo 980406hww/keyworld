@@ -8,7 +8,6 @@
         c.fExternalAccount AS `externalAccount`,
         c.fContactPerson AS `contactPerson`,
         IFNULL(c.fQQ,'暂无') AS `qq`,
-        IFNULL(c.fWechat,'暂无') AS `wechat`,
         c.fType AS `type`,
         c.fEmail  AS `email`,
         IFNULL(c.fTelphone,'暂无') AS `telphone`,
@@ -37,9 +36,6 @@
         <if test="customerCriteria.qq != null and customerCriteria.qq != ''">
             AND c.fQQ LIKE CONCAT(#{customerCriteria.qq},'%')
         </if>
-        <if test="customerCriteria.wechat != null and customerCriteria.wechat != ''">
-            AND c.fWechat LIKE CONCAT(#{customerCriteria.wechat},'%')
-        </if>
         <if test="customerCriteria.telphone != null and customerCriteria.telphone != ''">
             AND c.fTelphone LIKE CONCAT(#{customerCriteria.telphone},'%')
         </if>
@@ -58,6 +54,7 @@
         <if test="customerCriteria.saleRemark != null and customerCriteria.saleRemark != ''">
             AND c.fSaleRemark LIKE CONCAT(#{customerCriteria.saleRemark},'%')
         </if>
+        ORDER BY c.fUpdateTime DESC
     </select>
 
     <select id="getActiveCustomerSimpleInfo" resultType="com.keymanager.ckadmin.entity.Customer">

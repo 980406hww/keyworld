@@ -454,18 +454,18 @@
             right: 25px;
         }
 
-        .status-box .layui-form-pane .layui-form-checkbox{
-            margin: 4px 0 !important;
+        .layui-form-pane .layui-form-checkbox{
+            margin: 2px 0 !important;
         }
 
         .status-box .layui-form-checkbox[lay-skin=primary]{
-            padding-left: 22px !important;
+            padding-left: 18px !important;
         }
 
         .status-box .layui-form-checkbox[lay-skin=primary] span{
             position: relative;
             top: -0.8px;
-            padding-right: 6px;
+            padding-right: 3px;
         }
 
         .sort-box {
@@ -651,8 +651,8 @@
 <div class="ok-body">
     <div class="layui-tab layui-tab-card" lay-filter="tabQzsetting">
         <ul class="layui-tab-title" id="tabItem">
-            <li data-terminal="PC" style="width: 100px" lay-id="PC" class="layui-this">电脑</li>
-            <li data-terminal="Phone" style="width: 100px"lay-id="Phone" >手机</li>
+            <li data-terminal="PC" style="width: 100px" class="layui-this">电脑</li>
+            <li data-terminal="Phone" style="width: 100px">手机</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
@@ -867,17 +867,8 @@
         let whereCondition = {searchEngine: '百度', terminalType: 'PC'};
         if (customerUuid && customerUuid !== "") {
             whereCondition.customerUuid = customerUuid;
+            get_qzsetting(whereCondition);
         }
-        let domain = $("#domain").val();
-        if (domain && domain !== "") {
-            whereCondition.domain = domain;
-        }
-        let terminalType = $("#terminalType").val();
-        if (terminalType && terminalType !== "") {
-            whereCondition.terminalType = terminalType;
-            element.tabChange('tabQzsetting', terminalType);
-        }
-        get_qzsetting(whereCondition);
 
         getTerminalSearchEngineMap('PC');
 
@@ -1232,25 +1223,27 @@
 
         var active = {
             reload: function () {
-                let condition = common.formToJsonObject("searchForm");
-                if (!condition.bzbtSort) {
-                    condition.bzbtSort = null;
-                }
-                if (!condition.jrqsSort) {
-                    condition.jrqsSort = null;
-                }
-                if (!condition.dbtjSort) {
-                    condition.dbtjSort = null;
-                }
-                table.reload('qzSettingTable', {
-                    where: condition,
-                    page: {
-                        curr: 1 //从第一页开始
-                    }, done: function (res, curr, c) {
-                        successTable(res, condition);
-                        initSortRadio(condition);
+                if (table.index === 1) {
+                    let condition = common.formToJsonObject("searchForm");
+                    if (!condition.bzbtSort) {
+                        condition.bzbtSort = null;
                     }
-                });
+                    if (!condition.jrqsSort) {
+                        condition.jrqsSort = null;
+                    }
+                    if (!condition.dbtjSort) {
+                        condition.dbtjSort = null;
+                    }
+                    table.reload('qzSettingTable', {
+                        where: condition,
+                        page: {
+                            curr: 1 //从第一页开始
+                        }, done: function (res, curr, c) {
+                            successTable(res, condition);
+                            initSortRadio(condition);
+                        }
+                    });
+                }
             }
         };
 

@@ -171,7 +171,7 @@ layui.define(["element", "jquery"], function (exports) {
   okTab.prototype.navBar = function (strData) {
     var data;
     if (typeof (strData) == "string") {
-      var data = JSON.parse(strData); //有可能是字符串，转换一下
+      data = JSON.parse(strData); //有可能是字符串，转换一下
     } else {
       data = strData;
     }

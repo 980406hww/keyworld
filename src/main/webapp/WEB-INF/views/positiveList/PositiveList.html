@@ -126,11 +126,9 @@
             },
         };
 
-        searchPositiveList();
-
         form.on("submit(search)", function (data) {
             let postData = data.field;
-            postData = common.jsonObjectTrim(postData)
+            postData = common.jsonObjectTrim(postData);
             searchPositiveList(postData);
             return false
         });

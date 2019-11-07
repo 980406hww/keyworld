@@ -125,10 +125,7 @@
         var okLayer = layui.okLayer;
         var common = layui.common;
 
-        init_table_data(common.formToJsonObject('searchForm'));
-
         function init_table_data(whereCondition) {
-            whereCondition.entryType = 'pt';
             table.render({
                 elem: '#screenedWebsiteTable',
                 method: 'post',
@@ -288,26 +285,22 @@
 
         var active = {
             reload: function () {
-                let data = common.formToJsonObject('searchForm');
-                data.entryType = 'pt';
-                table.reload('screenedWebsiteTable', {
-                    where: data,
-                    page: {
-                        curr: 1
-                    }
-                });
+                if (table.index === 1) {
+                    let data = common.formToJsonObject('searchForm');
+                    table.reload('screenedWebsiteTable', {
+                        where: data,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
             },
         };
 
         form.on("submit(search)", function (data) {
             var postData = data.field;
             postData = common.jsonObjectTrim(postData);
-            table.reload('screenedWebsiteTable', {
-                where: postData,
-                page: {
-                    curr: 1
-                }
-            });
+            init_table_data(postData);
             return false
         });
 

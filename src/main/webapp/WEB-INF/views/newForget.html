@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" class="page-fill">
+<head>
+    <meta charset="UTF-8">
+    <title>忘记密码</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/oksub.css">
+</head>
+<body class="page-fill">
+<div class="page-fill" id="login">
+    <div class="layui-form" onkeydown="clickEnter()">
+        <div class="login_face"><img src="/static/ok-admin/lib/layui/images/logo.png" alt="log"></div>
+        <div class="layui-form-item input-item layui-input-active">
+            <label for="loginName">用户名</label>
+            <input type="text" name="loginName" autocomplete="off" id="loginName" value="<#if loginName?exists>${loginName}<#else></#if>" autofocus
+                   class="layui-input">
+        </div>
+        <div class="layui-form-item input-item">
+            <label for="email">邮箱号</label>
+            <input type="text" name="email" autocomplete="off" id="email" class="layui-input">
+        </div>
+        <div class="layui-form-item">
+            <button class="layui-btn layui-block" onclick="commit()">确定</button>
+        </div>
+        <div class="login-link">
+            <a href="/login">返回登录?</a>
+        </div>
+    </div>
+</div>
+<script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script>
+    // layui相关
+    layui.use(['form', 'jquery', 'common'], function () {
+        var $ = layui.jquery;
+        var common = layui.common;
+
+        window.commit = function () {
+            let msg = {};
+            let loginName = document.getElementById('loginName').value;
+            if (loginName && loginName.trim()) {
+                msg.loginName = loginName.trim();
+            } else {
+                common.showFailMsg("用户名不能为空");
+                return;
+            }
+            let email = document.getElementById('email').value;
+            if (email && email.trim()) {
+                if (/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(email.trim())) {
+                    msg.email = email.trim();
+                } else {
+                    common.showFailMsg("邮箱格式不正确");
+                    return;
+                }
+            } else {
+                common.showFailMsg("邮箱不能为空");
+                return;
+            }
+            $.ajax({
+                url: '/internal/user/forgetPassword',
+                data: JSON.stringify(msg),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: 'POST',
+                success: function (res) {
+                    if (res) {
+                        common.showSuccessMsg("请注意查收邮件信息", function () {
+                            window.location.href = '/login';
+                        });
+                    } else {
+                        common.showFailMsg("身份验证失败");
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络错误请稍后再试");
+                }
+            });
+        };
+
+        window.clickEnter = function () {
+            if (event.keyCode === 13) {
+                commit();
+            }
+        };
+
+        $("#login .layui-form-item .layui-input").focus(function () {
+            $(this).parent().addClass("layui-input-focus");
+        });
+
+        $("#login .layui-form-item .layui-input").blur(function () {
+            $(this).parent().removeClass("layui-input-focus");
+            if ($(this).val() != "") {
+                $(this).parent().addClass("layui-input-active");
+            } else {
+                $(this).parent().removeClass("layui-input-active");
+            }
+        });
+    });
+</script>
+</body>
+</html>

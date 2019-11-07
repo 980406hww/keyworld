@@ -184,13 +184,10 @@
                                     <input type="text" name="switchGroupName" placeholder="流转分组" class="layui-input" autocomplete="off">
                                 </div>
                                 <div class="layui-inline">
-                                    <button class="layui-btn" lay-submit lay-filter="search">搜索
-                                    </button>
+                                    <button class="layui-btn" lay-submit lay-filter="search">搜索</button>
                                 </div>
                                 <div class="layui-inline">
-                                    <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">
-                                        重置
-                                    </button>
+                                    <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">重置</button>
                                 </div>
                             </div>
                         </div>
@@ -232,8 +229,6 @@
         let $ = layui.jquery;
         let common = layui.common;
         let form = layui.form;
-
-        tableInit(common.formToJsonObject('searchForm'));
 
         function tableInit(condition) {
             table.render({
@@ -332,13 +327,7 @@
         });
 
         form.on("submit(search)", function (data) {
-            let condition = common.jsonObjectTrim(data.field);
-            table.reload('table', {
-                where: condition,
-                page: {
-                    curr: 1
-                }
-            });
+            tableInit(common.formToJsonObject('searchForm'));
             return false;
         });
 

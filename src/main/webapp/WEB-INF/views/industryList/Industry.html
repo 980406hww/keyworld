@@ -179,11 +179,10 @@
         var layer = layui.layer;
         var common = layui.common;
 
-        init_Search({'terminalType': 'PC'});
         init_SelectData();
 
         function init_SelectData(){
-            var postData = {}
+            var postData = {};
             var terminalType = $("#terminalType").val();
             if(terminalType === '' || terminalType == null){
                 terminalType = 'PC'
@@ -270,17 +269,19 @@
 
         var active = {
             reload: function () {
-                var terminalType = $("#terminalType").val();
-                if(terminalType === '' || terminalType == null){
-                    terminalType = 'PC'
-                }
-                var data = {'terminalType': terminalType};
-                table.reload('industryListTable', {
-                    where: data,
-                    page: {
-                        curr: 1
+                if (table.index === 1) {
+                    var terminalType = $("#terminalType").val();
+                    if(terminalType === '' || terminalType == null){
+                        terminalType = 'PC'
                     }
-                });
+                    var data = {'terminalType': terminalType};
+                    table.reload('industryListTable', {
+                        where: data,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
             },
         };
 
@@ -581,7 +582,6 @@
                 layer.close(index);
             });
         }
-
     });
 
 </script>

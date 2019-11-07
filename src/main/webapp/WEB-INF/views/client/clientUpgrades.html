@@ -110,17 +110,19 @@
 
         let active = {
             reload: function () {
-                let terminalType = $("#terminalType").val();
-                if(terminalType === '' || terminalType == null){
-                    terminalType = 'PC'
-                }
-                let data = {'terminalType': terminalType};
-                table.reload('clientUpgradeTable', {
-                    where: data,
-                    page: {
-                        curr: 1
+                if (table.index === 1) {
+                    let terminalType = $("#terminalType").val();
+                    if(terminalType === '' || terminalType == null){
+                        terminalType = 'PC'
                     }
-                });
+                    let data = {'terminalType': terminalType};
+                    table.reload('clientUpgradeTable', {
+                        where: data,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
             },
         };
 
@@ -291,7 +293,6 @@
                 }
             });
         });
-
     });
 
 </script>

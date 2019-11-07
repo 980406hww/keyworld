@@ -320,6 +320,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(customerKeyword.getOptimizePlanCount() * (Math.random() * 0.7 + 0.5), 1));
             queryInterval = queryInterval / optimizeTodayCount;
             customerKeyword.setOptimizeTodayCount(optimizeTodayCount);
+            customerKeyword.setOptimizeRemainingCount(optimizeTodayCount);
         } else {
             if ("Important".equals(customerKeyword.getKeywordEffect())) {
                 Integer optimizePlanCount = Integer.valueOf(configService.getConfig("KeywordEffectOptimizePlanCount", "ImportantKeyword").getValue());
@@ -372,8 +373,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public KeywordCountVO getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String terminalType) {
-        return customerKeywordDao.getCustomerKeywordsCountByCustomerUuid(customerUuid, terminalType);
+    public KeywordCountVO getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String terminalType, String type) {
+        return customerKeywordDao.getCustomerKeywordsCountByCustomerUuid(customerUuid, terminalType, type);
     }
 
     @Override
@@ -487,6 +488,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(customerKeyword.getOptimizePlanCount() * (Math.random() * 0.7 + 0.5), 1));
             queryInterval = queryInterval / optimizeTodayCount;
             customerKeyword.setOptimizeTodayCount(optimizeTodayCount);
+            customerKeyword.setOptimizeRemainingCount(optimizeTodayCount);
         }
         customerKeyword.setQueryInterval(queryInterval);
         customerKeyword.setUpdateTime(new Date());
@@ -643,9 +645,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     @Override
     public Page<PTkeywordCountVO> searchPTKeywordCount(Page<PTkeywordCountVO> page, PTKeywordCountCriteria keywordCriteria) {
-        long startMilleSeconds = System.currentTimeMillis();
-        List<PTkeywordCountVO> ptkeywordCountVOS = customerKeywordDao.searchPTKeywordCount(page, keywordCriteria);
-        page.setRecords(ptkeywordCountVOS);
+        page.setRecords(customerKeywordDao.searchPTKeywordCount(page, keywordCriteria));
         return page;
     }
 

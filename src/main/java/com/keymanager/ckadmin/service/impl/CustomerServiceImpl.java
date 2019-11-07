@@ -51,7 +51,6 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
                     customer.setTelphone("");
                     customer.setQq("");
                     customer.setEmail("");
-                    customer.setWechat("");
                 }
                 customerUuids.add(customer.getUuid());
             }
@@ -105,7 +104,6 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
         if (oldCustomer != null) {
             if (oldCustomer.getLoginName().equals(loginName)) {
                 oldCustomer.setQq(customer.getQq());
-                oldCustomer.setWechat(customer.getWechat());
                 oldCustomer.setEmail(customer.getEmail());
                 oldCustomer.setTelphone(customer.getTelphone());
                 oldCustomer.setSaleRemark(customer.getSaleRemark());
@@ -115,10 +113,10 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
             oldCustomer.setPaidFee(customer.getPaidFee());
             oldCustomer.setRemark(customer.getRemark());
             oldCustomer.setType(customer.getType());
-//            oldCustomer.setStatus(customer.getStatus());
             oldCustomer.setDailyReportIdentify(customer.getDailyReportIdentify());
             oldCustomer.setLoginName(customer.getLoginName());
-//            oldCustomer.setEntryType(customer.getEntryType());
+            oldCustomer.setExternalAccount(customer.getExternalAccount());
+            oldCustomer.setSearchEngine(customer.getSearchEngine());
             oldCustomer.setUpdateTime(new Date());
             customerDao.updateById(oldCustomer);
         }
@@ -134,6 +132,14 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     @Override
     public void updateCustomerDailyReportIdentify(List<Integer> uuids) {
         customerDao.updateCustomerDailyReportIdentify(uuids);
+    }
+
+    @Override
+    public void changeCustomerStatus(long uuid, int status) {
+        Customer customer = customerDao.selectById(uuid);
+        customer.setStatus(status);
+        customer.setUpdateTime(new Date());
+        customerDao.updateById(customer);
     }
 
     @Override
@@ -160,7 +166,6 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
                 customer.setQq(null);
                 customer.setTelphone(null);
                 customer.setSaleRemark(null);
-                customer.setWechat(null);
             }
             /*
             customer.setKeywordCount(customerKeywordService

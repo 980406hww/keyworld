@@ -155,21 +155,12 @@
                                         </select>
                                     </div>
                                     <div class="layui-inline">
-                                        <button class="layui-btn" lay-submit lay-filter="search"
-                                                id="searchBtn">搜索
+                                        <button class="layui-btn" lay-submit lay-filter="search" id="searchBtn">搜索
                                         </button>
                                     </div>
                                     <div class="layui-inline">
-                                        <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">
-                                            重置
-                                        </button>
+                                        <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">重置</button>
                                     </div>
-<!--                                    <div class="layui-inline">-->
-<!--                                        <div class="layui-btn my-btn" onclick="">导入从爱站抓取排名</div>-->
-<!--                                    </div>-->
-<!--                                    <div class="layui-inline">-->
-<!--                                        <div class="layui-btn my-btn" onclick="">导出关键字信息到爱站</div>-->
-<!--                                    </div>-->
                                 </div>
                             </div>
                         </form>
@@ -265,16 +256,7 @@
             });
         };
 
-        init();
-
-        function init() {
-            let condition = common.formToJsonObject("searchForm");
-            if (condition.dayNum === '') {
-                condition.dayNum = 0;
-            }
-            init_keyword_type();
-            tableInit(condition);
-        }
+        init_keyword_type();
 
         function init_keyword_type(data) {
             $.ajax({
@@ -284,7 +266,6 @@
                 type: 'get',
                 success: function (res) {
                     if (res.code === 200) {
-                        // $("#tabItem").empty();
                         let i = 0, one = 'pt', flag = true;
                         $.each(res.data, function (index, item) {
                             let businessItem = item.split("#");
@@ -512,9 +493,7 @@
             if (condition.dayNum === '') {
                 condition.dayNum = 0;
             }
-            table.reload('refreshTable', {
-                where: condition
-            });
+            tableInit(condition);
             return false;
         });
 

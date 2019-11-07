@@ -167,8 +167,6 @@ public class CustomerController extends SpringMVCBaseController {
             return resultBean;
         }
         String loginName = (String) session.getAttribute("username");
-//        String entryType = (String) session.getAttribute("entryType");
-//        customer.setEntryType(entryType);
         try {
             customerService.saveCustomer(customer, loginName);
         } catch (Exception e) {
@@ -208,6 +206,24 @@ public class CustomerController extends SpringMVCBaseController {
             customerService.updateCustomerDailyReportIdentify(uuids);
             return new ResultBean(200, "更新成功");
         } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResultBean(400, "更新失败");
+        }
+    }
+
+    /**
+     * 改变客户状态
+     * @param requestMap
+     * @return
+     */
+    @PostMapping(value = "/changeCustomerStatus")
+    public ResultBean changeCustomerStatus(@RequestBody Map requestMap) {
+        try {
+            long uuid = Long.valueOf((String) requestMap.get("customerUuid"));
+            int status = (int) requestMap.get("status");
+            customerService.changeCustomerStatus(uuid, status);
+            return new ResultBean(200, "更新成功");
+        } catch (NumberFormatException e) {
             logger.error(e.getMessage());
             return new ResultBean(400, "更新失败");
         }
@@ -270,7 +286,7 @@ public class CustomerController extends SpringMVCBaseController {
     }
 
     /**
-     * 改变销售详细备注
+     * 改变备注
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @PostMapping(value = "/changeRemark2")

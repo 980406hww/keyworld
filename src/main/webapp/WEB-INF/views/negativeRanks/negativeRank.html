@@ -134,7 +134,6 @@
         });
 
         init_search_data();
-        init_table_data(common.formToJsonObject('searchForm'));
 
         function init_search_data() {
             $.ajax({
@@ -223,8 +222,7 @@
             }
         });
 
-
-            function updateNegativeRank(uuid, rankType, oldValue) {
+        function updateNegativeRank(uuid, rankType, oldValue) {
             let tit = '';
             switch (rankType) {
                 case 'firstPageRanks':
@@ -289,32 +287,25 @@
 
         let active = {
             reload: function () {
-                let data = common.formToJsonObject('searchForm');
-                data.entryType = 'pt';
-                table.reload('keywordTable', {
-                    where: data,
-                    page: {
-                        curr: 1
-                    }
-                });
-            },
+                if (table.index === 1)  {
+                    let data = common.formToJsonObject('searchForm');
+                    data.entryType = 'pt';
+                    table.reload('keywordTable', {
+                        where: data,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
+            }
         };
 
         form.on("submit(search)", function (data) {
             let postData = data.field;
-            postData = common.jsonObjectTrim(postData)
-            table.reload('negativeRankTable', {
-                where: postData,
-                page: {
-                    curr: 1
-                }
-            });
+            postData = common.jsonObjectTrim(postData);
+            init_table_data(postData);
             return false
         });
-
-
-
-
     });
 
 </script>

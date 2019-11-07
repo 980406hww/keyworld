@@ -108,18 +108,19 @@
 
         let active = {
             reload: function () {
-                let terminalType = $("#terminalType").val();
-                let data = {'terminalType': terminalType};
-                table.reload('salesListTable', {
-                    where: data,
-                    page: {
-                        curr: 1
-                    }
-                });
+                if (table.index === 1) {
+                    let terminalType = $("#terminalType").val();
+                    let data = {'terminalType': terminalType};
+                    table.reload('salesListTable', {
+                        where: data,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
             },
         };
 
-        searchSalesInfo();
         initManagePart();
 
         form.on("submit(search)", function (data) {
@@ -140,7 +141,7 @@
                     if (res.code === 200) {
                         let websiteTypeMap = res.data;
                         let managePart = $('#managePart');
-                        managePart.append('<option value="" >负责部分</option>')
+                        managePart.append('<option value="" >负责部分</option>');
                         $.each(websiteTypeMap, function (index, item) {
                             managePart.append('<option value="' + index + '" >' + item + '</option>');
                         });

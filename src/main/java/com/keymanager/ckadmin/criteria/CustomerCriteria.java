@@ -14,7 +14,6 @@ public class CustomerCriteria extends BaseCriteria {
     private String contactPerson;
     private String type;
     private String qq;
-    private String wechat;
     private String telphone;
     private String loginName;
     private String saleRemark;
@@ -93,14 +92,6 @@ public class CustomerCriteria extends BaseCriteria {
 
     public void setTerminalType(String terminalType) {
         this.terminalType = terminalType;
-    }
-
-    public String getWechat() {
-        return wechat;
-    }
-
-    public void setWechat(String wechat) {
-        this.wechat = wechat;
     }
 
     public String getSaleRemark() {

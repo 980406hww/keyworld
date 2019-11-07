@@ -25,7 +25,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
     });
 
     init_keyword_type();
-    initLayPage(common.formToJsonObject('searchForm'));
 
     function initLayPage(pageConf) {
         if (!pageConf) {
@@ -90,7 +89,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 '                   <strong>描述信息</strong>' +
                 '                   <p class="skip" >客户类型:' + obj.type +'</p>' +
                 '                   <p class="skip" >所属用户:' + obj.loginName +'</p>' +
-                '                   <p class="skip" >客户状态:' + generate_customer_status(obj.status) +'</p>' +
+                '                   <p class="skip" >客户状态:<span id="status'+obj.uuid+'" style="color: ' + generate_customer_status(obj.uuid, obj.status, 1) + '</span></p>' +
                 '                   <p class="skip" >是否产生日报表:<span id="dr'+obj.uuid+'">' + generate_customer_daily_report(obj.uuid, obj.status, obj.dailyReportIdentify) + '</span></p>' +
                 '               </div>';
             item += '           <div class="layadmin-address">' +
@@ -98,21 +97,17 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 '                   <br>' +
                 '                   电话:' + obj.telphone +
                 '                   <br>' +
-                '                   微信:' + obj.wechat +
-                '                   <br>' +
                 '                   QQ:' + obj.qq +
                 '               </div>';
             item += '           <div class="layadmin-address ">' +
-                '                   <strong>备注</strong>' +
-                '                   <p class="skip" title="'+obj.saleRemark+'" onclick=changeSaleRemark("'+obj.uuid+'","'+obj.saleRemark+'") >客户标签:<span style="color: #00a65a" id="saleRemark'+obj.uuid+'">' + obj.saleRemark + '</span></p>' +
-                '                   <p class="skip" title="'+obj.remark+'" onclick=changeRemark("'+obj.uuid+'","'+obj.remark+'") >销售详细备注:<span style="color: #00a65a" id="remark'+obj.uuid+'">' + obj.remark + '</span></p>' +
+                '                   <strong>备注</strong>';
+            if (isSEOSales){
+                item += '       <p class="skip can-click" title="'+obj.saleRemark+'" onclick=changeSaleRemark("'+obj.uuid+'","'+obj.saleRemark+'") >客户标签:<span style="color: #00a65a" id="saleRemark'+obj.uuid+'">' + obj.saleRemark + '</span></p>';
+            }
+            item += '           <p class="skip can-click" title="'+obj.remark+'" onclick=changeRemark("'+obj.uuid+'","'+obj.remark+'") >销售详细备注:<span style="color: #00a65a" id="remark'+obj.uuid+'">' + obj.remark + '</span></p>' +
                 '               </div>' +
                 '      </div>';
             item += '   <div class="layui-col-md5  layui-col-sm6" style="margin-top: 37px">';
-                /*+
-                '       <h3 class="layadmin-title">' +
-                '           <strong>拥有业务</strong>' +
-                '       </h3>';*/
             let customerBusinessList = obj.customerBusinessList;
             if (customerBusinessList !== null && customerBusinessList.length > 0) {
                 var contactPerson = obj.contactPerson.replace(/\s+/g, "");
@@ -126,7 +121,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             '</strong>' +
                             '<br>';
                         $.ajax({
-                            url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid,
+                            url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid + '/pt',
                             dataType: 'json',
                             type: 'get',
                             async: false,
@@ -159,15 +154,24 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             }
                         });
                     } else if (tmp === 'fm') {
-                        url = '/internal/qzsetting/toFMWithCustomerUuid/' + obj.uuid;
-                        title = contactPerson + '-负面信息';
-                        id = contactPerson + '-负面信息';
                         item += '<div class="layadmin-address"><strong>' +
-                            '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>负面业务</a>' +
+                            '负面业务' +
                             '</strong>' +
-                            '<br>' +
-                            '待做---占位符' +
-                            '</div>';
+                            '<br>';
+                        $.ajax({
+                            url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid + '/fm',
+                            dataType: 'json',
+                            type: 'get',
+                            async: false,
+                            success: function (res) {
+                                if (res.code === 200) {
+                                    item += generate_negative_info(obj, res.data)
+                                } else {
+                                    item += '暂无数据';
+                                }
+                                item += '</div>';
+                            }
+                        });
                     }
                 });
             } else {
@@ -230,21 +234,20 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
         let d = data.elem.context.dataset;
         $('#entryType').val(d.entrytype);
         initLayPage(common.formToJsonObject('searchForm'));
-        if (d.entrytype ==='pt'){
-            if (window.hasPer){
+        if (d.entrytype === 'pt') {
+            if (window.hasPer) {
                 var intervalId = setInterval(function () {
                     layui.searchCurrentDateCompletedReports();
                 }, 1000 * 30);
                 window.searchCurrentDateCompletedReportsIntervalId = intervalId;
             }
-        }else {
+        } else {
             window.clearInterval(searchCurrentDateCompletedReportsIntervalId);
         }
     });
 
     window.showCustomerByType = function (customerType){
         $('#type').val(customerType);
-        // form.render()
         $('#searchBtn').click();
 
     };
@@ -442,6 +445,35 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
         });
     };
 
+    // 改变客户状态
+    window.changeCustomerStatus = function (uuid, oldStatus) {
+        let newStatus = oldStatus === '1' ? 2 : 1;
+        var postData = {};
+        postData.customerUuid = uuid;
+        postData.status = newStatus;
+        $.ajax({
+            url: '/internal/customer/changeCustomerStatus',
+            type: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(postData),
+            success: function (result) {
+                if (result.code === 200) {
+                    common.showSuccessMsg('操作成功');
+                    $('#status' + uuid).html(generate_customer_status(uuid, newStatus, 2));
+                    $('#status' + uuid).css("color", newStatus === 1 ? "green" : "red");
+                }
+            },
+            error: function () {
+                common.showFailMsg('操作失败');
+                $('#status' + uuid).html(generate_customer_status(uuid, oldStatus, 2));
+                $('#status' + uuid).css("color", oldStatus === 1 ? "green" : "red");
+            }
+        });
+    };
+
     //改变日报表值
     window.changeCustomerDailyReportIdentify = function (uuid, status, oldIdentify, newIdentify) {
         if (status !== '1') {
@@ -563,18 +595,16 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                     }
                 });
                 layer.close(index2);
-                // });
-
             }
         });
     }
 
-    //改客户标签
+    //改备注 => 运营查看
     window.changeRemark = function (uuid, remark) {
         layer.prompt({
             formType: 2,
             value: remark,
-            title: '销售详细备注',
+            title: '备注',
             yes: function (index, layero) {
                 var index2 = index;
                 var value = layero.find(".layui-layer-input").val();
@@ -636,11 +666,19 @@ function showCondition() {
     open2 = !open2;
 }
 
-function generate_customer_status(status){
-    let stat ='<span style="color: red;">暂停</span>';
-    if(status===1){
-        stat = '<span style="color: green;">激活</span>';
+function generate_customer_status(uuid, status, times){
+    let stat = '暂停';
+    if (status === 1) {
+        stat = '激活';
     }
+    if (times === 1) {
+        if (status === 1) {
+            stat = "green\">" + stat;
+        } else {
+            stat = "red\">" + stat;
+        }
+    }
+    stat += ' | <a href="javascript:void(0)" onclick=changeCustomerStatus(\'' + uuid + '\',\'' + status + '\')>修改状态</a>';
     return stat;
 }
 
@@ -693,7 +731,7 @@ function generate_qzsetting_info(obj, data) {
 
     if (data.totalCount > 0) {
         let entryType = document.getElementById('entryType').value;
-        let url = '/internal/qzsetting/toQZSetttingsWithCustomerUuid/'+obj.uuid;
+        let url = '/internal/qzsetting/toQZSettingsWithCustomerUuid/'+obj.uuid;
         let contactPerson = obj.contactPerson.replace(/\s+/g, "");
         let title = contactPerson + '-全站信息';
         let id = contactPerson + '-全站信息';
@@ -712,6 +750,33 @@ function generate_qzsetting_info(obj, data) {
             htm += '<span style="color: lightgrey;">'+data.otherCount+'个其他|</span>'
         }
         htm = htm.substring(0, htm.lastIndexOf("|"));
+    } else {
+        htm += '<span>暂无数据</span>'
+    }
+    return htm;
+}
+
+function generate_negative_info(obj,data) {
+    let htm = '';
+
+    if (data.totalCount > 0) {
+        let url = '/internal/customerKeyword/toCustomerKeywords/fm/PC/'+obj.uuid;
+        let contactPerson = obj.contactPerson.replace(/\s+/g, "");
+        let title = contactPerson + '-负面信息';
+        let id = contactPerson + '-负面信息';
+        htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>总数:' + data.totalCount + '</span></a>&nbsp;&nbsp;&nbsp;&nbsp;(';
+        if (data.totalCount === data.activeCount) {
+            htm += '<span style="color: green;">激活</span>' +
+                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","0")>暂停关键字</a>'
+        } else if (data.totalCount > 0 && data.activeCount > 0) {
+            htm += '<span style="color: yellowgreen;">部分暂停</span>' +
+                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","0")>暂停关键字</a>' +
+                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","1")>激活关键字</a>'
+        } else {
+            htm += '<span style="color: red;">暂停</span>' +
+                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","1")>激活关键字</a>'
+        }
+        htm += ')';
     } else {
         htm += '<span>暂无数据</span>'
     }

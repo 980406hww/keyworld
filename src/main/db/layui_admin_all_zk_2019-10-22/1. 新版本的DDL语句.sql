@@ -14,6 +14,7 @@ UPDATE t_qz_setting SET fRenewalStatus = 3 WHERE fRenewalStatus = 0;
 
 alter table t_qz_setting add fCaptureTerminalType varchar(40) null comment '抓取终端类型';
 
+DROP TABLE IF EXISTS `db_keyword`.`t_qz_charge_status`;
 CREATE TABLE `t_qz_charge_status` (
   `fUuid` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `fQZSettingUuid` int(11) NOT NULL COMMENT '全站对应表',
@@ -28,6 +29,7 @@ CREATE TABLE `t_qz_charge_status` (
 # 全站关联收费状态表
 alter table t_qz_setting add fChargeStatusUuid int null comment '最新一次收费状态Uuid';
 
+DROP TABLE IF EXISTS `db_keyword`.`t_customer_business`;
 CREATE TABLE `t_customer_business` (
   `fUuid` int(11) NOT NULL AUTO_INCREMENT COMMENT '客户业务主键',
   `fCustomerUuid` int(11) NOT NULL COMMENT '客户ID',
@@ -43,6 +45,10 @@ INSERT INTO `db_keyword`.`t_config`(`fConfigType`, `fKey`, `fValue`) VALUES ('Se
 
 # 重点词的预设刷量
 INSERT INTO `db_keyword`.`t_config`(`fConfigType`, `fKey`, `fValue`) VALUES ('KeywordEffectOptimizePlanCount', 'ImportantKeyword', '100');
+
+# 算法测试任务表执行类型和执行次数
+alter table t_algorithm_test_plan add fExcuteType TINYINT(4) DEFAULT '0' COMMENT '执行类型 0:一次、1:多次' AFTER `fExcuteStatus`;
+alter table t_algorithm_test_plan add fExcuteCount TINYINT(4) DEFAULT '0' COMMENT '执行次数' AFTER `fExcuteType`;
 
 # 复制一份t_resource, t_role_resource命名为t_resource_new, t_role_resource_new 来进行权限操作
 # 项目里用的是新的表t_resource_new, t_role_resource_new
@@ -78,7 +84,7 @@ BEGIN
 	DECLARE g_resource_type TINYINT(2) DEFAULT NULL;
 	DECLARE done INT DEFAULT 0;
 	DECLARE resource_data_migration_cursor CURSOR FOR(
-	SELECT fResourceName, fUrl, fSequence, fStatus, fOpened, fResourceType FROM t_resource_new WHERE fUrl = '#' AND fParentID IS NULL AND fResourceName NOT IN("应用程序管理", "日志监控","权限管理")
+	SELECT fResourceName, fUrl, fSequence, fStatus, fOpened, fResourceType FROM t_resource_new WHERE fUrl = '#' AND fParentID IS NULL AND fResourceName NOT IN("应用程序管理", "权限管理")
 	);
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 	START TRANSACTION;

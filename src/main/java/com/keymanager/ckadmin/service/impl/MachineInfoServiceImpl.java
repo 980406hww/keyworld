@@ -431,46 +431,40 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(String clientIDPrefix, String city, String switchGroupName) {
-        List<MachineInfoSummaryVO> pcMachineInfoSummaryVOs = machineInfoDao.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName);
-        Collections.sort(pcMachineInfoSummaryVOs);
+        List<MachineInfoSummaryVO> pcMachineInfoSummaryVos = machineInfoDao.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName);
+        Collections.sort(pcMachineInfoSummaryVos);
+
         MachineInfoSummaryVO previousClientIDPrefix = null;
         MachineInfoSummaryVO previousType = null;
-        for (MachineInfoSummaryVO machineInfoSummaryVO : pcMachineInfoSummaryVOs) {
+        for (MachineInfoSummaryVO machineInfoSummaryVo : pcMachineInfoSummaryVos) {
             if (previousClientIDPrefix == null) {
-                previousClientIDPrefix = machineInfoSummaryVO;
+                previousClientIDPrefix = machineInfoSummaryVo;
                 previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
-                previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
-                    machineInfoSummaryVO.getCount());
-            } else if (previousClientIDPrefix.getClientIDPrefix().equals(machineInfoSummaryVO.getClientIDPrefix())) {
+                previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() + machineInfoSummaryVo.getCount());
+            } else if (previousClientIDPrefix.getClientIDPrefix().equals(machineInfoSummaryVo.getClientIDPrefix())) {
                 previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
-                previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
-                    machineInfoSummaryVO.getCount());
+                previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() + machineInfoSummaryVo.getCount());
             } else {
-                previousClientIDPrefix = machineInfoSummaryVO;
+                previousClientIDPrefix = machineInfoSummaryVo;
                 previousClientIDPrefix.setClientIDPrefixCount(previousClientIDPrefix.getClientIDPrefixCount() + 1);
-                previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() +
-                    machineInfoSummaryVO.getCount());
-
+                previousClientIDPrefix.setClientIDPrefixTotalCount(previousClientIDPrefix.getClientIDPrefixTotalCount() + machineInfoSummaryVo.getCount());
                 previousType = null;
             }
 
             if (previousType == null) {
-                previousType = machineInfoSummaryVO;
+                previousType = machineInfoSummaryVo;
                 previousType.setTypeCount(previousType.getTypeCount() + 1);
-                previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
-                    machineInfoSummaryVO.getCount());
-            } else if (previousType.getType().equals(machineInfoSummaryVO.getType())) {
+                previousType.setTypeTotalCount(previousType.getTypeTotalCount() + machineInfoSummaryVo.getCount());
+            } else if (previousType.getType().equals(machineInfoSummaryVo.getType())) {
                 previousType.setTypeCount(previousType.getTypeCount() + 1);
-                previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
-                    machineInfoSummaryVO.getCount());
+                previousType.setTypeTotalCount(previousType.getTypeTotalCount() + machineInfoSummaryVo.getCount());
             } else {
-                previousType = machineInfoSummaryVO;
+                previousType = machineInfoSummaryVo;
                 previousType.setTypeCount(previousType.getTypeCount() + 1);
-                previousType.setTypeTotalCount(previousType.getTypeTotalCount() +
-                    machineInfoSummaryVO.getCount());
+                previousType.setTypeTotalCount(previousType.getTypeTotalCount() + machineInfoSummaryVo.getCount());
             }
         }
-        return pcMachineInfoSummaryVOs;
+        return pcMachineInfoSummaryVos;
     }
 
     @Override

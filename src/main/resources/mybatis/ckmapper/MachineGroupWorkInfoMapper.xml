@@ -43,13 +43,12 @@
         <if test="criteria.customerName!=null and criteria.customerName!=''">
             AND c.fContactPerson like concat('%', #{criteria.customerName}, "%")
         </if>
-        GROUP BY ck.fMachineGroup, ck.fType, ck.fTerminalType
+        GROUP BY ck.fMachineGroup, ck.fType, ck.fTerminalType, toc.fMaxInvalidCount
         ORDER BY ck.fMachineGroup;
     </select>
 
 
-    <select id="getHistoryMachineGroupWorkInfo" parameterType="com.keymanager.ckadmin.criteria.MachineGroupWorkInfoCriteria"
-        resultType="com.keymanager.ckadmin.entity.MachineGroupWorkInfo">
+    <select id="getHistoryMachineGroupWorkInfo" resultType="com.keymanager.ckadmin.entity.MachineGroupWorkInfo">
         SELECT
             mgwi.fMachineGroup AS 'machineGroup',
             mgwi.fTotalKeywordCount AS 'totalKeywordCount',

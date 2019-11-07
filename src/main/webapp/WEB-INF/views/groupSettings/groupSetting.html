@@ -51,7 +51,7 @@
                         </div>
                         <div class="layui-inline" style="width: 160px">
                             <div class="layui-input-inline">
-                                <select name="operationType" id="operationType" lay-filter="operationTypeFilter">
+                                <select name="operationType" lay-search id="operationType" lay-filter="operationTypeFilter">
                                     <option value="">请选择操作类型</option>
                                 </select>
                             </div>
@@ -125,7 +125,9 @@
         var operationTypes ;
 
         let ternimalType225 = $('#terminalType').val();
+
         element.tabChange('groupSettingTab', ternimalType225);
+
         element.on('tab(groupSettingTab)', function (data) {
             var d = data.elem.context.dataset;
             $('#terminalType').val(d.terminal);
@@ -142,12 +144,8 @@
         $(window).resize(function(){
             getHeight();
         });
-        init();
 
-        function init(){
-            init_operationType();
-            initLayPage(common.formToJsonObject('searchForm'));
-        }
+        init_operationType();
 
         function init_operationType(){
             let terminalType = $('#terminalType').val();
@@ -172,10 +170,10 @@
         }
 
         form.on('select(operationTypeFilter)', function(data){
-            if(data.elem.value !== ''){
-                $('#hasRemainingAccount').prop("checked",false);
-            }else {
-                $('#hasRemainingAccount').prop("checked",false);
+            if (data.elem.value !== '') {
+                $('#hasRemainingAccount').prop("checked", false);
+            } else {
+                $('#hasRemainingAccount').prop("checked", false);
             }
             form.render('checkbox');
         });
@@ -186,9 +184,9 @@
 
         form.on('submit(search)', function (data) {
             var pageConf = data.field;
-            if (pageConf.hasRemainingAccount){
+            if (pageConf.hasRemainingAccount) {
                 pageConf.hasRemainingAccount = true;
-            }else{
+            } else {
                 pageConf.hasRemainingAccount = false;
             }
             pageConf.limit = 50;
@@ -674,7 +672,6 @@
             return htm;
         };
 
-
         window.showGroupQueueDialog = function (uuid) {
             let data = {};
             data.uuid = uuid;
@@ -755,9 +752,7 @@
 
         };
 
-
         window.delGroupSetting2 = function (operationCombineUuid, groupSettingUuid) {
-
             let groupSettingCount = parseInt($('#groupSettingCount'+operationCombineUuid).val());
             if (groupSettingCount === 1){
                 common.showFailMsg("这是最后一个优化组设置，请直接删除操作组合！！！");
@@ -796,7 +791,6 @@
             });
 
         };
-
     });
 </script>
 </body>

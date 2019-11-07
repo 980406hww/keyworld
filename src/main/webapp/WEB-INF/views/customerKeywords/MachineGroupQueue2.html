@@ -37,23 +37,11 @@
         var $ = layui.jquery;
         var layer = layui.layer;
 
-        var active = {
-            reload: function () {
-                var data = {}
-                table.reload('machineGroupAndSizeTable', {
-                    where: data,
-                    page: {
-                        curr: 1
-                    }
-                });
-            },
-        };
-
-        searchMachineGroupAndSize()
+        searchMachineGroupAndSize();
 
         form.on("submit(search)", function (data) {
-            var postData = data.field
-            searchMachineGroupAndSize(postData)
+            var postData = data.field;
+            searchMachineGroupAndSize(postData);
             return false
         });
 
@@ -83,12 +71,9 @@
 
         table.on('toolbar(tableFilter)',function(obj){
             var data = obj.data,event = obj.event;
-            switch (event) {
-                case 'searchMachineGroupAndSize':
-                    searchMachineGroupAndSize();
-                    break;
-                default:
-                    break;
+            if (event === 'searchMachineGroupAndSize') {
+                searchMachineGroupAndSize();
+            } else {
             }
         });
 

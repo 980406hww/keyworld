@@ -116,20 +116,20 @@
 
         let active = {
             reload: function () {
-                table.reload('warnListTable', {
-                    where: {},
-                    page: {
-                        curr: 1
-                    }
-                });
+                if (table.index === 1) {
+                    table.reload('warnListTable', {
+                        where: {},
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
             },
         };
 
-        searchWarnList();
-
         form.on("submit(search)", function (data) {
             let postData = data.field;
-            postData = common.jsonObjectTrim(postData)
+            postData = common.jsonObjectTrim(postData);
             searchWarnList(postData);
             return false
         });

@@ -17,8 +17,8 @@ public class Customer extends BaseEntity {
     @TableField(value = "fExternalAccount")
     private String externalAccount;
 
-//    @TableField(value = "fSearchEngine")
-//    private String searchEngine;
+    @TableField(value = "fSearchEngine")
+    private String searchEngine;
 
     @TableField(value = "fEntryType")
     private String entryType;
@@ -30,9 +30,6 @@ public class Customer extends BaseEntity {
     @Pattern(regexp = "()|(^[1-9]\\d{4,14}$)", message = "QQ号格式不符")
     @TableField(value = "fQQ")
     private String qq;
-
-    @TableField(value = "fWechat")
-    private String wechat;
 
     @TableField(value = "fEmail")
     private String email;
@@ -96,13 +93,13 @@ public class Customer extends BaseEntity {
         this.externalAccount = externalAccount;
     }
 
-//    public String getSearchEngine() {
-//        return searchEngine;
-//    }
-//
-//    public void setSearchEngine(String searchEngine) {
-//        this.searchEngine = searchEngine;
-//    }
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
+    }
 
     public String getEntryType() {
         return entryType;
@@ -126,14 +123,6 @@ public class Customer extends BaseEntity {
 
     public void setQq(String qq) {
         this.qq = qq;
-    }
-
-    public String getWechat() {
-        return wechat;
-    }
-
-    public void setWechat(String wechat) {
-        this.wechat = wechat;
     }
 
     public String getEmail() {

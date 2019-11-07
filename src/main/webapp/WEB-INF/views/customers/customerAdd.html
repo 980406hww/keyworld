@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/page/customer/customerAdd.css">
 </head>
 <body>
-
 <div class="ok-body">
     <!--form表单-->
     <form class="layui-form layui-form-pane ok-form" lay-filter="addCustomer">
@@ -27,13 +26,6 @@
             <div class="layui-input-block">
                 <input type="text" name="qq" placeholder="请输入QQ" autocomplete="off"
                        class="layui-input" lay-verify="qq">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">微信</label>
-            <div class="layui-input-block">
-                <input type="text" name="wechat" placeholder="请输入微信号" autocomplete="off"
-                       class="layui-input" >
             </div>
         </div>
         <div class="layui-form-item">
@@ -75,20 +67,48 @@
                     <@shiro.hasRole name="FMSpecial">
                     <input type="checkbox" name="customerBusinessList[fm]" value="fm" title="负面" />
                     </@shiro.hasRole>
+                    <@shiro.hasRole name="QTSpecial">
+                        <input type="checkbox" name="customerBusinessList[qt]" value="qt" title="其他" />
+                    </@shiro.hasRole>
                 </div>
             </div>
         </div>
-
+        <@shiro.hasRole name="QTSpecial">
+        <div class="layui-form-item ">
+            <label class="layui-form-label">搜索引擎</label>
+            <div class="layui-input-block">
+                <select name="searchEngine" id="searchEngine">
+                    <option value="">搜索引擎</option>
+                    <option value="百度">百度</option>
+                    <option value="搜狗">搜狗</option>
+                    <option value="360">360</option>
+                    <option value="百度下拉">百度下拉</option>
+                    <option value="谷歌">谷歌</option>
+                    <option value="神马">神马</option>
+                    <option value="必应中国">必应中国</option>
+                    <option value="必应日本">必应日本</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item ">
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-block">
+                <input type="text" name="externalAccount" id="externalAccount" placeholder="请填写账号" class="layui-input"  onmouseleave="">
+            </div>
+        </div>
+        </@shiro.hasRole>
+        <@shiro.hasRole name="SEOSales">
         <div class="layui-form-item ">
             <label class="layui-form-label">客户标签</label>
             <div class="layui-input-block">
-                <input name="saleRemark" placeholder="请输入客户标签" class="layui-input" />
+                <input name="saleRemark" placeholder="销售人员自己的备注" class="layui-input" />
             </div>
         </div>
+        </@shiro.hasRole>
         <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">销售详细备注</label>
+            <label class="layui-form-label">备注</label>
             <div class="layui-input-block">
-                <textarea name="remark" placeholder="请输入销售详细备注" class="layui-textarea"></textarea>
+                <textarea name="remark" placeholder="备注给运营" class="layui-textarea" style="height: 200px"></textarea>
             </div>
         </div>
         <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">

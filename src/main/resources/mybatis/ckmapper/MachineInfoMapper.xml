@@ -473,10 +473,14 @@
     </update>
 
     <select id="searchMachineInfoSummaryVO" resultType="com.keymanager.ckadmin.vo.MachineInfoSummaryVO">
-        SELECT cs.fClientIDPrefix as clientIDPrefix, cs.fTerminalType as type, cs.fCity as city,
-        COUNT(1) as 'count', fSwitchGroupName as 'switchGroupName'
+        SELECT
+            cs.fClientIDPrefix as clientIDPrefix,
+            cs.fTerminalType as type,
+            cs.fCity as city,
+            COUNT(1) as 'count',
+            cs.fSwitchGroupName as 'switchGroupName'
         FROM t_machine_info cs
-        <where>cs.fValid = 1
+        <where> cs.fValid = 1
             <if test="clientIDPrefix!=null and clientIDPrefix!=''">and cs.fClientIDPrefix LIKE
                 '%${clientIDPrefix}%'
             </if>
@@ -485,7 +489,8 @@
                 '%${switchGroupName}%'
             </if>
         </where>
-        GROUP BY cs.fClientIDPrefix, cs.fTerminalType, cs.fCity ORDER BY cs.fClientIDPrefix
+        GROUP BY cs.fClientIDPrefix, cs.fTerminalType, cs.fCity, cs.fSwitchGroupName
+        ORDER BY cs.fClientIDPrefix
     </select>
 
     <select id="searchMachineInfoGroupSummaryVO"
@@ -725,24 +730,24 @@
         cs.fTerminalType as type,
         cs.fCity as city,
         COUNT(1) as 'count',
-        fSwitchGroupName as 'switchGroupName'
+        cs.fSwitchGroupName as 'switchGroupName'
         FROM t_machine_info cs
         WHERE cs.fValid = 1
-        GROUP BY cs.fClientIDPrefix, cs.fTerminalType, cs.fCity
+        GROUP BY cs.fClientIDPrefix, cs.fTerminalType, cs.fCity, cs.fSwitchGroupName
         ORDER BY cs.fClientIDPrefix
     </select>
 
 
     <select id="getMachineInfoBody" parameterType="java.lang.String" resultType="com.keymanager.ckadmin.vo.MachineInfoSummaryVO">
         SELECT cs.fClientIDPrefix as clientIDPrefix,
-        cs.fTerminalType as type,
-        cs.fCity as city,
-        COUNT(1) as 'count',
-        fSwitchGroupName as 'switchGroupName'
+            cs.fTerminalType as type,
+            cs.fCity as city,
+            COUNT(1) as 'count',
+            cs.fSwitchGroupName as 'switchGroupName'
         FROM t_machine_info cs
         WHERE cs.fValid = 1
         <if test="city!=null and city!=''">AND cs.fCity LIKE '%${city}%'</if>
-        GROUP BY cs.fClientIDPrefix, cs.fTerminalType, cs.fCity
+        GROUP BY cs.fClientIDPrefix, cs.fTerminalType, cs.fCity, cs.fSwitchGroupName
         ORDER BY cs.fClientIDPrefix
     </select>
 </mapper>
