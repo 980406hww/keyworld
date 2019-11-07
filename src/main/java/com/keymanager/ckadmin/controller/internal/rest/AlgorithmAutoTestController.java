@@ -58,7 +58,7 @@ public class AlgorithmAutoTestController {
     @Resource(name = "algorithmTestTaskService2")
     private AlgorithmTestTaskService algorithmTestTaskService;
 
-    @RequiresPermissions("/internal/algorithmAutoTest/searchAlgorithmTestPlans")
+    @RequiresPermissions("/internal/algorithmAutoTest/toAlgorithmTestPlans")
     @RequestMapping(value = "/toAlgorithmTestPlans", method = RequestMethod.GET)
     public ModelAndView toAlgorithmTestPlans() {
         ModelAndView mv = new ModelAndView();
@@ -133,7 +133,7 @@ public class AlgorithmAutoTestController {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/algorithmAutoTest/searchAlgorithmTestPlans")
+    @RequiresPermissions("/internal/algorithmAutoTest/toAlgorithmTestPlans")
     @RequestMapping(value = "getAlgorithmTestPlans")
     public ResultBean getAlgorithmTestPlans(@RequestBody AlgorithmTestCriteria algorithmTestCriteria) {
         ResultBean resultBean = new ResultBean();

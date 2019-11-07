@@ -60,7 +60,7 @@ public class CustomerController extends SpringMVCBaseController {
     @Resource(name = "userRoleService2")
     private UserRoleService userRoleService;
 
-    @RequiresPermissions("/internal/customer/searchCustomers")
+    @RequiresPermissions("/internal/customer/toCustomers")
     @GetMapping(value = "/toCustomers")
     public ModelAndView toCustomers() {
         ModelAndView mv = new ModelAndView();
@@ -68,7 +68,7 @@ public class CustomerController extends SpringMVCBaseController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/customer/searchCustomers")
+    @RequiresPermissions("/internal/customer/toCustomers")
     @PostMapping(value = "/getCustomers")
     public ResultBean getCustomers(@RequestBody CustomerCriteria customerCriteria, HttpSession session) {
         ResultBean resultBean = new ResultBean();

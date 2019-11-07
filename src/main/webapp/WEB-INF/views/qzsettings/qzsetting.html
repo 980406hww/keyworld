@@ -684,7 +684,7 @@
                                     </div>
                                     <div class="layui-inline status-box">
                                             <div class="layui-inline" style="margin-left: 4px">
-                                                <label class="layui-form-label" style="background-color: #45a3c2;">暴涨暴跌</label>
+                                                <label class="layui-form-label layui-bg-green">暴涨暴跌</label>
                                                 <div class="sort-box" style="min-width: 338px">
                                                     <input type="checkbox" name="bzbtSort" value="1" title="骤降(0)" lay-filter="bzbtSort" lay-skin="primary">
                                                     <input type="checkbox" name="bzbtSort" value="2" title="无变化(0)" lay-filter="bzbtSort" lay-skin="primary">
@@ -692,7 +692,7 @@
                                                 </div>
                                             </div>
                                             <div class="layui-inline">
-                                                <label class="layui-form-label" style="background-color: #45a3c2;">今日趋势</label>
+                                                <label class="layui-form-label layui-bg-green">今日趋势</label>
                                                 <div class="sort-box"style="min-width: 322px">
                                                     <input type="checkbox" name="jrqsSort" value="7" title="下降(0)" lay-filter="jrqsSort" lay-skin="primary">
                                                     <input type="checkbox" name="jrqsSort" value="8" title="不变(0)" lay-filter="jrqsSort" lay-skin="primary">
@@ -700,7 +700,7 @@
                                                 </div>
                                             </div>
                                             <div class="layui-inline">
-                                                <label class="layui-form-label" style="background-color: #45a3c2;">达标统计</label>
+                                                <label class="layui-form-label layui-bg-green">达标统计</label>
                                                 <div class="sort-box" style="min-width: 364px">
                                                     <input type="checkbox" name="dbtjSort" value="4" title="达标(0)" lay-filter="dbtjSort" lay-skin="primary">
                                                     <input type="checkbox" name="dbtjSort" value="5" title="未达标(0)" lay-filter="dbtjSort" lay-skin="primary">
@@ -873,8 +873,8 @@
 
         getTerminalSearchEngineMap('PC');
 
+        /*动态加载tab栏*/
         function getTerminalSearchEngineMap(terminal) {
-            /*动态加载tab栏*/
             $.ajax({
                 url: '/internal/qzsetting/getQZSettingSearchEngineMap/' + terminal,
                 type: 'get',
@@ -904,7 +904,7 @@
             });
         }
 
-        <@shiro.hasPermission name = "/internal/group/updateGroupOperationCombineUuid">
+        <@shiro.hasPermission name = "/internal/qzsetting/updateImmediately">
         treeSelect.render({
             elem: '#tree',
             data: '/internal/user/trees2',
@@ -933,8 +933,8 @@
             }
         };
 
+        /*动态加载网站分类标签列表*/
         function get_qzcategory_label_list(categoryTag) {
-            /*动态加载网站分类标签列表*/
             $.ajax({
                 url: '${ctx.path}/internal/qzsetting/getCategoryTag',
                 dataType: 'json',
@@ -954,8 +954,8 @@
             });
         }
 
+        /*动态加载客户列表*/
         function get_active_customer_list(customerUuid) {
-            /*动态加载客户列表*/
             $.ajax({
                 url: '${ctx.path}/internal/qzsetting/getActiveCustomer',
                 dataType: 'json',
@@ -1150,8 +1150,8 @@
             }
         }
 
+        /*动态加载操作组合列表*/
         function get_operation_combine_list(terminalType) {
-            /*动态加载操作组合列表*/
             $.ajax({
                 url: '/internal/operationcombine/getOperationCombines/' + terminalType,
                 type: 'get',

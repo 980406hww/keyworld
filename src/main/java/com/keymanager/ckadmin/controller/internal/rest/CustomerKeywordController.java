@@ -116,7 +116,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @RequiresPermissions("/internal/customerKeyword/toKeywords")
     @GetMapping(value = "/toKeywords")
     public ModelAndView toCustomers() {
         ModelAndView mv = new ModelAndView();
@@ -322,7 +322,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @RequiresPermissions("/internal/customerKeyword/toCustomerKeywords")
     @GetMapping(value = "/toCustomerKeywords/{businessType}/{terminalType}/{customerUuid}")
     public ModelAndView toCustomerKeywords(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
         @PathVariable(name = "customerUuid") Long customerUuid) {
@@ -337,7 +337,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @RequiresPermissions("/internal/customerKeyword/toKeywords")
     @PostMapping(value = "/getCustomerKeywords")
     public ResultBean searchCustomerKeywords(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();

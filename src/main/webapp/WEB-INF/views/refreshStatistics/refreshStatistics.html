@@ -477,13 +477,15 @@
         //监听工具条
         var active = {
             reload: function () {
-                let condition = common.formToJsonObject("searchForm");
-                if (condition.dayNum === '') {
-                    condition.dayNum = 0;
+                if (table.index >= 1) {
+                    let condition = common.formToJsonObject("searchForm");
+                    if (condition.dayNum === '') {
+                        condition.dayNum = 0;
+                    }
+                    table.reload('refreshTable', {
+                        where: condition
+                    });
                 }
-                table.reload('refreshTable', {
-                    where: condition
-                });
             }
         };
 

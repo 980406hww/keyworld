@@ -96,8 +96,8 @@ public class NegativeRankController2 {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/negativeRank/updateNegativeRankKeyword")
-    @RequestMapping(value = "updateNegativeRankKeyword2",method = RequestMethod.POST)
+    @RequiresPermissions("/internal/negativeRank/toNegativeRanks")
+    @RequestMapping(value = "/updateNegativeRankKeyword2",method = RequestMethod.POST)
     public ResultBean updateNegativeRankKeyword(@RequestBody NegativeRank negativeRank){
         ResultBean resultBean = new ResultBean(200,"success");
         try {

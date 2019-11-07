@@ -32,7 +32,7 @@ public class ConfigController {
     @Resource(name = "configService2")
     private ConfigService configService;
 
-    @RequiresPermissions("/internal/config/searchNegativeKeywords")
+    @RequiresPermissions("/internal/configs/toNegativeSetting")
     @GetMapping(value = "/toNegativeSetting")
     public ModelAndView toCustomers() {
         ModelAndView mv = new ModelAndView();
@@ -40,7 +40,7 @@ public class ConfigController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/config/searchNegativeKeywords")
+    @RequiresPermissions("/internal/configs/toNegativeSetting")
     @RequestMapping(value = "/getNegativeSetting", method = RequestMethod.GET)
     public ResultBean searchNegativeKeywords() {
         ResultBean resultBean = new ResultBean(200, "success");
