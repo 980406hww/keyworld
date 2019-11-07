@@ -285,7 +285,7 @@
 
         var active = {
             reload: function () {
-                if (table.index === 1) {
+                if (table.index >= 1) {
                     let data = common.formToJsonObject('searchForm');
                     table.reload('screenedWebsiteTable', {
                         where: data,

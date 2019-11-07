@@ -237,7 +237,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
     //监听工具条
     var active = {
         reload: function () {
-            if (table.index === 1) {
+            if (table.index >= 1) {
                 let postData = common.formToJsonObject('searchForm');
                 if (!postData.noReachStandardDays) {
                     postData.noReachStandardDays = '';

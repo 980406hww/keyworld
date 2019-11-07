@@ -108,7 +108,7 @@
 
         let active = {
             reload: function () {
-                if (table.index === 1) {
+                if (table.index >= 1) {
                     let terminalType = $("#terminalType").val();
                     let data = {'terminalType': terminalType};
                     table.reload('salesListTable', {
