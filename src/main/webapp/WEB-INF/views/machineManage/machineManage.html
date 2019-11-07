@@ -29,6 +29,22 @@
     .layui-table-cell{
         height: 40px !important;
         padding: 0 6px !important;
+        margin: 5px 0 !important;
+    }
+
+    .layui-table-body .laytable-cell-1-0-1{
+        padding: 0 !important;
+        margin: 0 !important;
+        height: 50px !important;
+        line-height: 50px !important;
+    }
+
+    .layui-table-body .laytable-cell-1-0-1 > div{
+        padding: 0 6px !important;
+    }
+
+    .layui-table-view .layui-table td, .layui-table-view .layui-table th {
+        padding: 0 !important;
     }
 
     .layui-btn-xs{
@@ -1237,22 +1253,22 @@
     {{# if(d.valid){ }}
     {{#     if(d.red){ }}
     {{#         if(d.remainingKeyword == 1){ }}
-                    <font color="#0099FF">{{d.clientID}}</font>
+                    <div style="background-color: #1E9FFF;color: #fff">{{d.clientID}}</div>
     {{#          }else{    }}
-                    <font color="#FF0000">{{d.clientID}}</font>
+                    <div style="background-color: #FF5722;color: #fff">{{d.clientID}}</div>
     {{#          } }}
     {{#          isValidClient = false }}
     {{#     }else if(d.orange){ }}
-                <font color="#e86e33">{{d.clientID}}</font>
+                <div style="background-color: #FFB800;color: #fff">{{d.clientID}}</div>
     {{#          isValidClient = false }}
     {{#     }else if(d.yellow){ }}
-                <font color="#ef00ff">{{d.clientID}}</font>
+                <div style="background-color: #ef00ff;color: #fff">{{d.clientID}}</div>
     {{#          isValidClient = false }}
     {{#     }else{ }}
-                <font color="#2BD54D">{{d.clientID}}</font>
+                <div style="background-color: #5FB878;color: #fff">{{d.clientID}}</div>
     {{#     } }}
     {{# }else{ }}
-        <font color="#2BD54D">{{d.clientID}}</font>
+        <div style="background-color: #5FB878;color: #fff">{{d.clientID}}</div>
     {{# } }}
     {{# if(!isValidClient){ }}
         <span name="invalidClient" id="span_{{d.clientID}}"></span>
@@ -1260,367 +1276,75 @@
 </script>
 
 <script type="text/html" id="machineGroups">
-    {{# if(d.valid){ }}
-    {{#     if(d.red){ }}
-    {{#         if(d.remainingKeyword == 1){ }}
-                    <font color="#0099FF">{{d.machineGroup == null ? '' : d.machineGroup}}</font>
-    {{#          }else{    }}
-                    <font color="#FF0000">{{d.machineGroup == null ? '' : d.machineGroup}}</font>
-    {{#          } }}
-    {{#     }else if(d.orange){ }}
-                <font color="#e86e33">{{d.machineGroup == null ? '' : d.machineGroup}}</font>
-    {{#     }else if(d.yellow){ }}
-                <font color="#ef00ff">{{d.machineGroup == null ? '' : d.machineGroup}}</font>
-    {{#     }else{ }}
-                <font color="#2BD54D">{{d.machineGroup == null ? '' : d.machineGroup}}</font>
-    {{#     } }}
-    {{# }else{ }}
-        <font color="#2BD54D">{{d.machineGroup == null ? '' : d.machineGroup}}</font>
-    {{# } }}
+    {{d.machineGroup == null ? '' : d.machineGroup}}
 </script>
 
 <script type="text/html" id="toRenewalDate">
-    {{# if(d.valid){ }}
-    {{#     if(d.red){ }}
-    {{#         if(d.remainingKeyword == 1){ }}
-    <font color="#0099FF">{{layui.util.toDateString(d.renewalDate,'MM-dd')}}</font>
-    {{#          }else{    }}
-    <font color="#FF0000">{{layui.util.toDateString(d.renewalDate,'MM-dd')}}</font>
-    {{#          } }}
-    {{#     }else if(d.orange){ }}
-    <font color="#e86e33">{{layui.util.toDateString(d.renewalDate,'MM-dd')}}</font>
-    {{#     }else if(d.yellow){ }}
-    <font color="#ef00ff">{{layui.util.toDateString(d.renewalDate,'MM-dd')}}</font>
-    {{#     }else{ }}
-    <font color="#2BD54D">{{layui.util.toDateString(d.renewalDate,'MM-dd')}}</font>
-    {{#     } }}
-    {{# }else{ }}
-    <font color="#2BD54D">{{layui.util.toDateString(d.renewalDate,'MM-dd')}}</font>
-    {{# } }}
+    {{layui.util.toDateString(d.renewalDate,'MM-dd')}}
 </script>
 
 <script type="text/html" id="showRenewalDate">
-    {{# if(d.valid){ }}
-    {{#     if(d.red){ }}
-    {{#         if(d.remainingKeyword == 1){ }}
-    <font color="#0099FF">{{d.showRenewalDate == null ? "" : d.showRenewalDate}}</font>
-    {{#          }else{    }}
-    <font color="#FF0000">{{d.showRenewalDate == null ? "" : d.showRenewalDate}}</font>
-    {{#          } }}
-    {{#     }else if(d.orange){ }}
-    <font color="#e86e33">{{d.showRenewalDate == null ? "" : d.showRenewalDate}}</font>
-    {{#     }else if(d.yellow){ }}
-    <font color="#ef00ff">{{d.showRenewalDate == null ? "" : d.showRenewalDate}}</font>
-    {{#     }else{ }}
-    <font color="#2BD54D">{{d.showRenewalDate == null ? "" : d.showRenewalDate}}</font>
-    {{#     } }}
-    {{# }else{ }}
-    <font color="#2BD54D">{{d.showRenewalDate == null ? "" : d.showRenewalDate}}</font>
-    {{# } }}
+    {{d.showRenewalDate == null ? "" : d.showRenewalDate}}
 </script>
 
 <script type="text/html" id="showVersionInfo">
-    {{# if(d.valid){ }}
-    {{#     if(d.red){ }}
-    {{#         if(d.remainingKeyword == 1){ }}
-    <font color="#0099FF">{{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
-    {{#          }else{    }}
-    <font color="#FF0000">{{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
-    {{#          } }}
-    {{#     }else if(d.orange){ }}
-    <font color="#e86e33">{{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
-    {{#     }else if(d.yellow){ }}
-    <font color="#ef00ff">{{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
-    {{#     }else{ }}
-    <font color="#2BD54D">{{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
-    {{#     } }}
-    {{# }else{ }}
-    <font color="#2BD54D">{{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}</font>
-    {{# } }}
+    {{d.version == null ? "" : d.version}}<br>{{d.targetVersion == null ? "" : d.targetVersion}}
 </script>
 
 <script type="text/html" id="cityAndStatus">
-    {{# if(d.valid){ }}
-    {{#     if(d.red){ }}
-    {{#         if(d.remainingKeyword == 1){ }}
-    <font color="#0099FF">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}</font>
-    {{#          }else{    }}
-    <font color="#FF0000">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}</font>
-    {{#          } }}
-    {{#     }else if(d.orange){ }}
-    <font color="#e86e33">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}</font>
-    {{#     }else if(d.yellow){ }}
-    <font color="#ef00ff">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}</font>
-    {{#     }else{ }}
-    <font color="#2BD54D">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}</font>
-    {{#     } }}
-    {{# }else{ }}
-    <font color="#2BD54D">{{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}</font>
-    {{# } }}
+    {{d.city == null ? "" : d.city}}<br>{{d.status == null ? "" : d.status}}
 </script>
 
 <script type="text/html" id="cpuCounts">
-    {{# if(d.valid){ }}
-    {{#     if(d.red){ }}
-    {{#         if(d.remainingKeyword == 1){ }}
-    <font color="#0099FF">{{d.cpuCount}}<br>{{d.memory}}</font>
-    {{#          }else{    }}
-    <font color="#FF0000">{{d.cpuCount}}<br>{{d.memory}}</font>
-    {{#          } }}
-    {{#     }else if(d.orange){ }}
-    <font color="#e86e33">{{d.cpuCount}}<br>{{d.memory}}</font>
-    {{#     }else if(d.yellow){ }}
-    <font color="#ef00ff">{{d.cpuCount}}<br>{{d.memory}}</font>
-    {{#     }else{ }}
-    <font color="#2BD54D">{{d.cpuCount}}<br>{{d.memory}}</font>
-    {{#     } }}
-    {{# }else{ }}
-    <font color="#2BD54D">{{d.cpuCount}}<br>{{d.memory}}</font>
-    {{# } }}
+    {{d.cpuCount}}<br>{{d.memory}}
 </script>
 
 <script type="text/html" id="freeSpaces">
-    {{# if(d.valid){ }}
-    {{#     if(d.red){ }}
-    {{#         if(d.remainingKeyword == 1){ }}
-    <font color="#0099FF">{{d.freeSpace}}</font>
-    {{#          }else{    }}
-    <font color="#FF0000">{{d.freeSpace}}</font>
-    {{#          } }}
-    {{#     }else if(d.orange){ }}
-    <font color="#e86e33">{{d.freeSpace}}</font>
-    {{#     }else if(d.yellow){ }}
-    <font color="#ef00ff">{{d.freeSpace}}</font>
-    {{#     }else{ }}
-    <font color="#2BD54D">{{d.freeSpace}}</font>
-    {{#     } }}
-    {{# }else{ }}
-    <font color="#2BD54D">{{d.freeSpace}}</font>
-    {{# } }}
+    {{d.freeSpace}}
 </script>
 
 <script type="text/html" id="restartCountAndFailCount">
-    {{# if(d.valid){ }}
-    {{#     if(d.red){ }}
-    {{#         if(d.remainingKeyword == 1){ }}
-    <font color="#0099FF">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
-        {{d.continuousFailCount == null ? "" : d.continuousFailCount}}</font>
-    {{#          }else{    }}
-    <font color="#FF0000">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
-        {{d.continuousFailCount == null ? "" : d.continuousFailCount}}</font>
-    {{#          } }}
-    {{#     }else if(d.orange){ }}
-    <font color="#e86e33">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
-    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}</font>
-    {{#     }else if(d.yellow){ }}
-    <font color="#ef00ff">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
-    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}</font>
-    {{#     }else{ }}
-    <font color="#2BD54D">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
-    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}</font>
-    {{#     } }}
-    {{# }else{ }}
-    <font color="#2BD54D">{{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
-    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}</font>
-    {{# } }}
+    {{d.restartCount == null ? "" : d.restartCount}} / {{d.restartStatus == null ? "" : d.restartStatus}}<br>
+    {{d.continuousFailCount == null ? "" : d.continuousFailCount}}
 </script>
 
 <script type="text/html" id="lastVisitTimeAndRestartTime">
-    {{# if(d.valid){ }}
-    {{#     if(d.red){ }}
-    {{#         if(d.remainingKeyword == 1){ }}
-    <font color="#0099FF">{{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}<br>
-        {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}</font>
-    {{#          }else{    }}
-    <font color="#FF0000">{{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}<br>
-        {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}</font>
-    {{#          } }}
-    {{#     }else if(d.orange){ }}
-    <font color="#e86e33">{{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}<br>
-    {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}</font>
-    {{#     }else if(d.yellow){ }}
-    <font color="#ef00ff">{{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}<br>
-    {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}</font>
-    {{#     }else{ }}
-    <font color="#2BD54D">{{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}<br>
-    {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}</font>
-    {{#     } }}
-    {{# }else{ }}
-    <font color="#2BD54D">{{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}<br>
-    {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}</font>
-    {{# } }}
+    {{d.lastVisitTime == null ? "" : layui.util.toDateString(d.lastVisitTime,'MM-dd HH:mm')}}<br>
+    {{d.restartTime == null ? "" : layui.util.toDateString(d.restartTime,'MM-dd HH:mm')}}
 </script>
 
 <script type="text/html" id="restartOrderingTimeAndLastSendNotificationTime">
-    {{# if(d.valid){ }}
-    {{#     if(d.red){ }}
-    {{#         if(d.remainingKeyword == 1){ }}
-    <font color="#0099FF">{{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}<br>
-        {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}</font>
-    {{#          }else{    }}
-    <font color="#FF0000">{{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}<br>
-        {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}</font>
-    {{#          } }}
-    {{#     }else if(d.orange){ }}
-    <font color="#e86e33">{{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}<br>
-    {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}</font>
-    {{#     }else if(d.yellow){ }}
-    <font color="#ef00ff">{{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}<br>
-    {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}</font>
-    {{#     }else{ }}
-    <font color="#2BD54D">{{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}<br>
-    {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}</font>
-    {{#     } }}
-    {{# }else{ }}
-    <font color="#2BD54D">{{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}<br>
-    {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}</font>
-    {{# } }}
+    {{d.restartOrderingTime == null ? "" : layui.util.toDateString(d.restartOrderingTime,'MM-dd HH:mm')}}<br>
+    {{d.lastSendNotificationTime == null ? "" : layui.util.toDateString(d.lastSendNotificationTime,'MM-dd HH:mm')}}
 </script>
 
 <script type="text/html" id="optimizationSucceedCountAndOptimizationTotalCount">
-    {{# if(d.valid){ }}
-    {{#     if(d.red){ }}
-    {{#         if(d.remainingKeyword == 1){ }}
-    <font color="#0099FF">{{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>
-        {{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}</font>
-    {{#          }else{    }}
-    <font color="#FF0000">{{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>
-        {{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}</font>
-    {{#          } }}
-    {{#     }else if(d.orange){ }}
-    <font color="#e86e33">{{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>
-        {{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}</font>
-    {{#     }else if(d.yellow){ }}
-    <font color="#ef00ff">{{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>
-        {{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}</font>
-    {{#     }else{ }}
-    <font color="#2BD54D">{{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>
-        {{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}</font>
-    {{#     } }}
-    {{# }else{ }}
-    <font color="#2BD54D">{{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>
-        {{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}</font>
-    {{# } }}
+    {{d.optimizationSucceedCount == null ? "" : d.optimizationSucceedCount}}<br>
+    {{d.optimizationTotalCount == null ? "" : d.optimizationTotalCount}}
 </script>
 
 <script type="text/html" id="broadbandAccountAndBroadbandPassword">
-    {{# if(d.valid){ }}
-    {{#     if(d.red){ }}
-    {{#         if(d.remainingKeyword == 1){ }}
-    <font color="#0099FF">{{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}</font>
-    {{#          }else{    }}
-    <font color="#FF0000">{{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}</font>
-    {{#          } }}
-    {{#     }else if(d.orange){ }}
-    <font color="#e86e33">{{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}</font>
-    {{#     }else if(d.yellow){ }}
-    <font color="#ef00ff">{{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}</font>
-    {{#     }else{ }}
-    <font color="#2BD54D">{{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}</font>
-    {{#     } }}
-    {{# }else{ }}
-    <font color="#2BD54D">{{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}</font>
-    {{# } }}
+    {{d.broadbandAccount == null ? "" : d.broadbandAccount}}<br>{{d.broadbandPassword == null ? "" : d.broadbandPassword}}
 </script>
 
 <script type="text/html" id="startUpStatusAndDownloadProgramType">
-    {{# if(d.valid){ }}
-    {{#     if(d.red){ }}
-    {{#         if(d.remainingKeyword == 1){ }}
-    <font color="#0099FF">{{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}</font>
-    {{#          }else{    }}
-    <font color="#FF0000">{{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}</font>
-    {{#          } }}
-    {{#     }else if(d.orange){ }}
-    <font color="#e86e33">{{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}</font>
-    {{#     }else if(d.yellow){ }}
-    <font color="#ef00ff">{{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}</font>
-    {{#     }else{ }}
-    <font color="#2BD54D">{{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}</font>
-    {{#     } }}
-    {{# }else{ }}
-    <font color="#2BD54D">{{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}</font>
-    {{# } }}
+    {{d.startUpStatus == null ? "" : d.startUpStatus}}<br>{{d.downloadProgramType == null ? "" : d.downloadProgramType}}
 </script>
 
 <script type="text/html" id="runningProgramTypes">
-    {{# if(d.valid){ }}
-    {{#     if(d.red){ }}
-    {{#         if(d.remainingKeyword == 1){ }}
-    <font color="#0099FF">{{d.runningProgramType == null ? "" : d.runningProgramType}}</font>
-    {{#          }else{    }}
-    <font color="#FF0000">{{d.runningProgramType == null ? "" : d.runningProgramType}}</font>
-    {{#          } }}
-    {{#     }else if(d.orange){ }}
-    <font color="#e86e33">{{d.runningProgramType == null ? "" : d.runningProgramType}}</font>
-    {{#     }else if(d.yellow){ }}
-    <font color="#ef00ff">{{d.runningProgramType == null ? "" : d.runningProgramType}}</font>
-    {{#     }else{ }}
-    <font color="#2BD54D">{{d.runningProgramType == null ? "" : d.runningProgramType}}</font>
-    {{#     } }}
-    {{# }else{ }}
-    <font color="#2BD54D">{{d.runningProgramType == null ? "" : d.runningProgramType}}</font>
-    {{# } }}
+    {{d.runningProgramType == null ? "" : d.runningProgramType}}
 </script>
 
 <script type="text/html" id="upgradeFailedReasons">
-    {{# if(d.valid){ }}
-    {{#     if(d.red){ }}
-    {{#         if(d.remainingKeyword == 1){ }}
-    <font color="#0099FF">{{d.upgradeFailedReason == null ? "" : d.upgradeFailedReason}}</font>
-    {{#          }else{    }}
-    <font color="#FF0000">{{d.upgradeFailedReason == null ? "" : d.upgradeFailedReason}}</font>
-    {{#          } }}
-    {{#     }else if(d.orange){ }}
-    <font color="#e86e33">{{d.upgradeFailedReason == null ? "" : d.upgradeFailedReason}}</font>
-    {{#     }else if(d.yellow){ }}
-    <font color="#ef00ff">{{d.upgradeFailedReason == null ? "" : d.upgradeFailedReason}}</font>
-    {{#     }else{ }}
-    <font color="#2BD54D">{{d.upgradeFailedReason == null ? "" : d.upgradeFailedReason}}</font>
-    {{#     } }}
-    {{# }else{ }}
-    <font color="#2BD54D">{{d.upgradeFailedReason == null ? "" : d.upgradeFailedReason}}</font>
-    {{# } }}
+    {{d.upgradeFailedReason == null ? "" : d.upgradeFailedReason}}
 </script>
 
 <script type="text/html" id="vpsBackendSystemComputerIDs">
-    {{# if(d.valid){ }}
-    {{#     if(d.red){ }}
-    {{#         if(d.remainingKeyword == 1){ }}
-    <font color="#0099FF">{{d.vpsBackendSystemComputerID == null ? "" : d.vpsBackendSystemComputerID}}</font>
-    {{#          }else{    }}
-    <font color="#FF0000">{{d.vpsBackendSystemComputerID == null ? "" : d.vpsBackendSystemComputerID}}</font>
-    {{#          } }}
-    {{#     }else if(d.orange){ }}
-    <font color="#e86e33">{{d.vpsBackendSystemComputerID == null ? "" : d.vpsBackendSystemComputerID}}</font>
-    {{#     }else if(d.yellow){ }}
-    <font color="#ef00ff">{{d.vpsBackendSystemComputerID == null ? "" : d.vpsBackendSystemComputerID}}</font>
-    {{#     }else{ }}
-    <font color="#2BD54D">{{d.vpsBackendSystemComputerID == null ? "" : d.vpsBackendSystemComputerID}}</font>
-    {{#     } }}
-    {{# }else{ }}
-    <font color="#2BD54D">{{d.vpsBackendSystemComputerID == null ? "" : d.vpsBackendSystemComputerID}}</font>
-    {{# } }}
+    {{d.vpsBackendSystemComputerID == null ? "" : d.vpsBackendSystemComputerID}}
 </script>
 
 <script type="text/html" id="valid">
-    {{# if(d.valid){ }}
-    {{#     if(d.red){ }}
-    {{#         if(d.remainingKeyword == 1){ }}
-    <font color="#0099FF">{{d.valid ? "监控中" : "暂停监控"}}</font>
-    {{#          }else{    }}
-    <font color="#FF0000">{{d.valid ? "监控中" : "暂停监控"}}</font>
-    {{#          } }}
-    {{#     }else if(d.orange){ }}
-    <font color="#e86e33">{{d.valid ? "监控中" : "暂停监控"}}</font>
-    {{#     }else if(d.yellow){ }}
-    <font color="#ef00ff">{{d.valid ? "监控中" : "暂停监控"}}</font>
-    {{#     }else{ }}
-    <font color="#2BD54D">{{d.valid ? "监控中" : "暂停监控"}}</font>
-    {{#     } }}
-    {{# }else{ }}
-    <font color="#2BD54D">{{d.valid ? "监控中" : "暂停监控"}}</font>
-    {{# } }}
+    {{d.valid ? "监控中" : "暂停监控"}}
 </script>
 
 <script type="text/html" id="operationTpl">

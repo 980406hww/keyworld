@@ -242,7 +242,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 window.searchCurrentDateCompletedReportsIntervalId = intervalId;
             }
         } else {
-            window.clearInterval(searchCurrentDateCompletedReportsIntervalId);
+            if (window.searchCurrentDateCompletedReportsIntervalId){
+                window.clearInterval(window.searchCurrentDateCompletedReportsIntervalId);
+            }
         }
     });
 
