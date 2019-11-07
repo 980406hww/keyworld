@@ -1224,7 +1224,7 @@
 
         var active = {
             reload: function () {
-                if (table.index === 1) {
+                if (table.index >= 1) {
                     let condition = common.formToJsonObject("searchForm");
                     if (!condition.bzbtSort) {
                         condition.bzbtSort = null;
@@ -2020,10 +2020,11 @@
             keywordRecordCharts.setOption(option);
         }
 
-        function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames,
-            operationCombineName) {
-            div.parent().find(".other-rank .line1").find("div[name='activeCount'] a").text(customerKeywordCount["activeCount"]);
-            div.parent().find(".other-rank .line1").find("div[name='stopCount'] a").text(customerKeywordCount["stopCount"]);
+        function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames, operationCombineName) {
+            if (customerKeywordCount) {
+                div.parent().find(".other-rank .line1").find("div[name='activeCount'] a").text(customerKeywordCount["activeCount"]);
+                div.parent().find(".other-rank .line1").find("div[name='stopCount'] a").text(customerKeywordCount["stopCount"]);
+            }
             if (categoryTagNames) {
                 if (categoryTagNames.length > 0) {
                     var tagNameStr = "";
@@ -2035,7 +2036,7 @@
                     $(span).find("a.tagNameStr").attr('title', tagNameStr.substring(0, tagNameStr.length - 1))
                 }
             }
-            if (operationCombineName !== null) {
+            if (operationCombineName) {
                 div.find("#operationCombine span").prop("title", operationCombineName);
                 div.find("#operationCombine span a").text(operationCombineName);
             }
@@ -3123,7 +3124,7 @@
         window.searchCustomerKeywords = function (customerUuid, pcGroup, phoneGroup, searchEngine, status) {
             let group = pcGroup === 'null' ? phoneGroup : pcGroup;
             let terminalType = document.getElementById('terminalType').value;
-            let url = '/internal/customerKeyword/toKeywordsWithQZ/qz/' + terminalType + '/' + customerUuid + '/' + pcGroup + '/' + searchEngine + '/' + status;
+            let url = '/internal/customerKeyword/toKeywordsWithQZ/qz/' + terminalType + '/' + customerUuid + '/' + group + '/' + searchEngine + '/' + status;
             url = encodeURI(encodeURI(url));
             let tit = group + '--关键字列表';
             let id = customerUuid + "-" + (status === 0 ? "暂停" : "激活");

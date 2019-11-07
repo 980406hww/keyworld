@@ -317,7 +317,7 @@
         // 监听工具条
         var active = {
             reload: function () {
-                if (table.index === 1) {
+                if (table.index >= 1) {
                     let condition = common.formToJsonObject("searchForm");
                     table.reload('supplierTable', {
                         where: condition,

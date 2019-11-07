@@ -425,7 +425,7 @@
 
         var active = {
             reload: function () {
-                if (table.index === 1) {
+                if (table.index >= 1) {
                     let condition = common.formToJsonObject('searchForm');
                     if (condition.friendlyLinkUrl !== "") {
                         if (condition.friendlyLinkUrl.indexOf('http://') === -1) {

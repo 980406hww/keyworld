@@ -110,7 +110,7 @@
 
         let active = {
             reload: function () {
-                if (table.index === 1) {
+                if (table.index >= 1) {
                     let terminalType = $("#terminalType").val();
                     if(terminalType === '' || terminalType == null){
                         terminalType = 'PC'

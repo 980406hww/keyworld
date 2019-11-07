@@ -116,7 +116,7 @@
 
         let active = {
             reload: function () {
-                if (table.index === 1) {
+                if (table.index >= 1) {
                     table.reload('warnListTable', {
                         where: {},
                         page: {
