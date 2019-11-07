@@ -3329,11 +3329,15 @@
             </span>
             <span>
                 达标时间:
-                <a href="javascript:;">{{layui.util.toDateString(d.standardTime,'yyyy-MM-dd')}}</a>
+                <a href="javascript:;">
+                    {{d.standardTime == null ? "暂无" :layui.util.toDateString(d.standardTime, 'yyyy-MM-dd')}}
+                </a>
             </span>
             <span>
                 创建时间:
-                <a href="javascript:;">{{layui.util.toDateString(d.createTime,'yyyy-MM-dd')}}</a>
+                <a href="javascript:;">
+                    {{d.createTime == null ? "暂无" :layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+                </a>
             </span>
         </div>
         <!--    标签    -->

@@ -146,10 +146,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             async: false,
                             success: function (res) {
                                 if (res.code === 200) {
-                                    item += generate_qzsetting_info(obj, res.data)
-                                } else {
-                                    item += '暂无数据';
+                                    item += generate_qzsetting_info(obj, res.data);
                                 }
+                                item += generate_qzsetting_info2(obj, res.data);
                                 item += '</div>';
                             }
                         });
@@ -224,7 +223,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                         i++;
                     });
                     form.render("select");
-
                 }
             }
         });
@@ -752,10 +750,17 @@ function generate_qzsetting_info(obj, data) {
             htm += '<span style="color: lightgrey;">'+data.otherCount+'个其他|</span>'
         }
         htm = htm.substring(0, htm.lastIndexOf("|"));
-    } else {
-        htm += '<span>暂无数据</span>'
+        htm += '<br>';
     }
     return htm;
+}
+
+function generate_qzsetting_info2(obj) {
+    let url = '/internal/customerKeyword/toCustomerKeywords/qz/PC/'+obj.uuid;
+    let contactPerson = obj.contactPerson.replace(/\s+/g, "");
+    let title = contactPerson + '-关键字列表';
+    let id = contactPerson + '-关键字列表';
+    return '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><strong style="font-weight: 400">查看关键字</strong></a>';
 }
 
 function generate_negative_info(obj,data) {
@@ -764,8 +769,8 @@ function generate_negative_info(obj,data) {
     if (data.totalCount > 0) {
         let url = '/internal/customerKeyword/toCustomerKeywords/fm/PC/'+obj.uuid;
         let contactPerson = obj.contactPerson.replace(/\s+/g, "");
-        let title = contactPerson + '-负面信息';
-        let id = contactPerson + '-负面信息';
+        let title = contactPerson + '-关键字列表';
+        let id = contactPerson + '-关键字列表';
         htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>总数:' + data.totalCount + '</span></a>&nbsp;&nbsp;&nbsp;&nbsp;(';
         if (data.totalCount === data.activeCount) {
             htm += '<span style="color: green;">激活</span>' +

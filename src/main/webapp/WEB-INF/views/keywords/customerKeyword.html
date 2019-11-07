@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>关键字统计</title>
+    <title>关键字列表</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
@@ -71,8 +71,7 @@
                                                onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                     </div>
                                     <div class="layui-inline" style="width: 140px">
-                                        <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off"
-                                               class="layui-input layui-input-text "
+                                        <input type="text" name="url" id="url" placeholder="请输入域名" autocomplete="off" class="layui-input"
                                                onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                     </div>
                                     <div class="layui-inline" style="width: 135px">
@@ -130,9 +129,10 @@
 
                                     <div class="layui-form-item" lay-filter="loginNameFilter">
                                         <div class="layui-inline">
-                                            <label class="layui-form-label">链接</label>
+                                            <label class="layui-form-label">机器分组</label>
                                             <div class="layui-input-inline">
-                                                <input type="text" name="url" id="url" placeholder="请输入链接" autocomplete="off" class="layui-input"
+                                                <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off"
+                                                       class="layui-input layui-input-text "
                                                        onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                             </div>
                                         </div>

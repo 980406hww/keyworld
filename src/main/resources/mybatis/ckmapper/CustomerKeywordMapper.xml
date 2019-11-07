@@ -421,7 +421,14 @@
             AND ck.fStatus = #{keywordCriteria.status}
         </if>
         <if test="keywordCriteria.optimizeGroupName != null and keywordCriteria.optimizeGroupName != ''">
-            AND ck.fOptimizeGroupName LIKE CONCAT(#{keywordCriteria.optimizeGroupName},'%')
+            <choose>
+                <when test="keywordCriteria.optimizeGroupNameLike != null and keywordCriteria.optimizeGroupNameLike == 'on'">
+                    AND ck.fOptimizeGroupName LIKE CONCAT(#{keywordCriteria.optimizeGroupName},'%')
+                </when>
+                <otherwise>
+                    AND ck.fOptimizeGroupName = #{keywordCriteria.optimizeGroupName}
+                </otherwise>
+            </choose>
         </if>
         <if test="keywordCriteria.machineGroup != null and keywordCriteria.machineGroup != ''">
             AND ck.fMachineGroup LIKE CONCAT(#{keywordCriteria.machineGroup},'%')

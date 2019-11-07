@@ -32,7 +32,7 @@
     </style>
 </head>
 <body>
-<div class="ok-body">
+<div class="ok-body" style="padding-top: 10px">
     <div class="layui-tab-item layui-show">
         <div class="layui-card ">
             <div class="layui-card-body ">
@@ -122,7 +122,10 @@
                     {field: 'optContent', title: '详情', width: '51%', align: 'left'},
                     {
                         field: 'createTime', title: '登录时间', width: '15%', align: 'center', templet: function (d) {
-                            return layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss');
+                            if (d.createTime){
+                                return layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss');
+                            }
+                            return '';
                         }
                     }
                 ]],

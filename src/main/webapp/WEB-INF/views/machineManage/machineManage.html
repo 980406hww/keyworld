@@ -32,14 +32,22 @@
         margin: 5px 0 !important;
     }
 
-    .layui-table-body .laytable-cell-1-0-1{
+    .layui-table-body .laytable-cell-1-0-1, .layui-table-body .laytable-cell-6-0-1, .layui-table-body .laytable-cell-11-0-1,
+    .layui-table-body .laytable-cell-2-0-1, .layui-table-body .laytable-cell-7-0-1, .layui-table-body .laytable-cell-12-0-1,
+    .layui-table-body .laytable-cell-3-0-1, .layui-table-body .laytable-cell-8-0-1, .layui-table-body .laytable-cell-13-0-1,
+    .layui-table-body .laytable-cell-4-0-1, .layui-table-body .laytable-cell-9-0-1, .layui-table-body .laytable-cell-14-0-1,
+    .layui-table-body .laytable-cell-5-0-1, .layui-table-body .laytable-cell-10-0-1, .layui-table-body .laytable-cell-15-0-1 {
         padding: 0 !important;
         margin: 0 !important;
         height: 50px !important;
         line-height: 50px !important;
     }
 
-    .layui-table-body .laytable-cell-1-0-1 > div{
+    .layui-table-body .laytable-cell-1-0-1 > div, .layui-table-body .laytable-cell-6-0-1 > div, .layui-table-body .laytable-cell-11-0-1 > div,
+    .layui-table-body .laytable-cell-2-0-1 > div, .layui-table-body .laytable-cell-7-0-1 > div, .layui-table-body .laytable-cell-12-0-1 > div,
+    .layui-table-body .laytable-cell-3-0-1 > div, .layui-table-body .laytable-cell-8-0-1 > div, .layui-table-body .laytable-cell-13-0-1 > div,
+    .layui-table-body .laytable-cell-4-0-1 > div, .layui-table-body .laytable-cell-9-0-1 > div, .layui-table-body .laytable-cell-14-0-1 > div,
+    .layui-table-body .laytable-cell-5-0-1 > div, .layui-table-body .laytable-cell-10-0-1 > div, .layui-table-body .laytable-cell-15-0-1 > div {
         padding: 0 6px !important;
     }
 
@@ -119,9 +127,9 @@
         width: 120px;
     }
 
-    #runningProgramType-box input{
+    .runningProgramType-box input{
         height: 30px;
-        width: 170px;
+        width: 150px;
     }
 
     #searchContent input{
@@ -201,10 +209,10 @@
                                 <div>
                                     <input type="hidden" name="terminalType" id="terminalType" value="<#if terminalTypeFromATP?exists>${terminalTypeFromATP}<#else>PC</#if>">
                                     <div class="layui-inline">
-                                        <input type="text" name="clientID" id="clientID" placeholder="请输入客户端ID" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
+                                        <input type="text" name="clientID" id="clientID" placeholder="请输入客户端ID" autocomplete="off" style="width: 150px;height: 30px" class="layui-input">
                                     </div>
                                     <div class="layui-inline">
-                                        <input type="text" name="machineGroup" id="machineGroup" value="<#if machineGroupFromATP?exists>${machineGroupFromATP}</#if>" placeholder="请输入机器分组" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
+                                        <input type="text" name="machineGroup" id="machineGroup" value="<#if machineGroupFromATP?exists>${machineGroupFromATP}</#if>" placeholder="请输入机器分组" autocomplete="off" style="width: 150px;height: 30px" class="layui-input">
                                     </div>
                                     <div class="layui-inline" id="valid-box">
                                         <select name="valid">
@@ -214,12 +222,12 @@
                                         </select>
                                     </div>
                                     <div class="layui-inline">
-                                        <input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID" placeholder="请输入服务器ID" autocomplete="off" style="width: 180px;height: 30px" class="layui-input">
+                                        <input type="text" name="vpsBackendSystemComputerID" id="vpsBackendSystemComputerID" placeholder="请输入服务器ID" autocomplete="off" style="width: 150px;height: 30px" class="layui-input">
                                     </div>
                                     <@shiro.hasRole name="Operation">
-                                    <div class="layui-inline" id="runningProgramType-box">
+                                    <div class="layui-inline runningProgramType-box">
                                         <select name="runningProgramType">
-                                            <option value='' selected>请选择运行程序类型</option>
+                                            <option value='' selected>运行程序类型</option>
                                             <option value='New'>New</option>
                                             <option value='Old'>Old</option>
                                             <option value='Super'>Super</option>
@@ -233,6 +241,17 @@
                                     <div class="layui-inline">
                                         <input type="checkbox" name="hasProblem" value="hasProblem" title="停了">
                                         <input type="checkbox" name="noUpgrade" value="noUpgrade" title="没升级">
+                                    </div>
+                                    <div class="layui-inline runningProgramType-box">
+                                        <select name="orderBy" id="orderBy" lay-filter="orderBy">
+                                            <option value=''>选择排序项</option>
+                                            <option value='fClientID'>客户端ID</option>
+                                            <option value='fLastVisitTime'>最后工作时间</option>
+                                            <option value='fLastSendNotificationTime'>发通知时间</option>
+                                            <option value='fRestartTime'>重启时间</option>
+                                            <option value='fRestartOrderingTime'>重启排序时间</option>
+                                            <option value='fRestartCount DESC'>重启次数</option>
+                                        </select>
                                     </div>
                                     <div class="layui-inline">
                                         <button class="layui-collapse my-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
@@ -367,6 +386,10 @@
             searchMachine(whereCondition)
         });
 
+        form.on('select(orderBy)', function (data) {
+            active['reload'].call(this);
+        });
+
         form.on("submit(search)", function (data) {
             if(data.field.gtMemory !== ""){
                 if(!/^[0-9]+$/.test(data.field.gtMemory)){
@@ -405,7 +428,7 @@
                 method: 'post',
                 url: '/internal/machineManage/getMachineInfos',
                 limit: 50,
-                limits: [10, 25, 50, 75, 100],
+                limits: [10, 25, 50, 75, 100, 500, 1000],
                 page: true,
                 size: 'sm',
                 id: 'machineManageTable',
@@ -416,23 +439,23 @@
                 where: whereCondition,
                 cols: [[
                     {filed: 'uuid', align: 'center', type: 'checkbox', width: '35',fixed: "left"},
-                    {field: 'clientIDs', align: 'left', title: '客户端ID', width: '94', templet: '#clientIDs'},
-                    {field: 'machineGroups', align: 'left', title: '机器分组', width: '72', templet: '#machineGroups'},
-                    {field: 'renewalDate', align: 'left', title: '续费<br>日期', width: '72',templet: '#showRenewalDate'},
-                    {field: 'versionInfo', align: 'left', title: '现版本<br>目标版本', width: '72',templet: '#showVersionInfo'},
+                    {field: 'clientIDs', align: 'left', title: '客户端ID', width: '98', templet: '#clientIDs'},
+                    {field: 'machineGroups', align: 'left', title: '机器分组', width: '80', templet: '#machineGroups'},
+                    {field: 'renewalDate', align: 'left', title: '续费<br>日期', width: '76',templet: '#showRenewalDate',hide:true},
+                    {field: 'versionInfo', align: 'left', title: '现版本<br>目标版本', width: '78',templet: '#showVersionInfo'},
                     {field: 'restartCountAndFailCount', align: 'left', title: '重启数/重启状态<br>失败次数', width: '120', templet: '#restartCountAndFailCount'},
-                    {field: 'cityAndStatus', align: 'left', title: '所在城市<br>终端状态', width: '100', templet: '#cityAndStatus'},
-                    {field: 'cpuCounts', align: 'left', title: 'CPU核数<br>内存', width: '70', templet: '#cpuCounts'},
-                    {field: 'freeSpaces', align: 'left', title: '剩余空间', width: '72', templet: '#freeSpaces'},
-                    {field: 'lastVisitTimeAndRestartTime', align: 'left', title: '最新工作时间<br>重启时间', width: '100', templet: '#lastVisitTimeAndRestartTime'},
-                    {field: 'restartOrderingTimeAndLastSendNotificationTime', align: 'left', title: '重启排序时间<br>发送通知时间', width: '120', templet: '#restartOrderingTimeAndLastSendNotificationTime'},
-                    {field: 'optimizationSucceedCountAndOptimizationTotalCount', align: 'left', title: '成功次数<br>操作次数', width: '72', templet: '#optimizationSucceedCountAndOptimizationTotalCount'},
-                    {field: 'broadbandAccountAndBroadbandPassword', align: 'left', title: '宽带账号<br>宽带密码', width: '72', templet: '#broadbandAccountAndBroadbandPassword'},
-                    {field: 'runningProgramTypes', align: 'left', title: '程序类型', width: '73', templet: '#runningProgramTypes'},
-                    {field: 'startUpStatusAndDownloadProgramType', align: 'left', title: '开机状态<br>下载程序类型', width: '92', templet: '#startUpStatusAndDownloadProgramType'},
-                    {field: 'valids', align: 'left', title: '状态', width: '72', templet: '#valid'},
-                    {field: 'upgradeFailedReasons', align: 'left', title: '失败原因', width: '72', templet: '#upgradeFailedReasons'},
-                    {field: 'vpsBackendSystemComputerIDs', align: 'left', title: '服务器ID', width: '82', templet: '#vpsBackendSystemComputerIDs'},
+                    {field: 'cityAndStatus', align: 'left', title: '所在城市<br>终端状态', width: '104', templet: '#cityAndStatus'},
+                    {field: 'cpuCounts', align: 'left', title: 'CPU核数<br>内存', width: '76', templet: '#cpuCounts'},
+                    {field: 'freeSpaces', align: 'left', title: '剩余空间', width: '76', templet: '#freeSpaces'},
+                    {field: 'lastVisitTimeAndRestartTime', align: 'left', title: '最新工作时间<br>重启时间', width: '104', templet: '#lastVisitTimeAndRestartTime'},
+                    {field: 'restartOrderingTimeAndLastSendNotificationTime', align: 'left', title: '重启排序时间<br>发送通知时间', width: '128', templet: '#restartOrderingTimeAndLastSendNotificationTime'},
+                    {field: 'optimizationSucceedCountAndOptimizationTotalCount', align: 'left', title: '成功次数<br>操作次数', width: '76', templet: '#optimizationSucceedCountAndOptimizationTotalCount'},
+                    {field: 'broadbandAccountAndBroadbandPassword', align: 'left', title: '宽带账号<br>宽带密码', width: '76', templet: '#broadbandAccountAndBroadbandPassword'},
+                    {field: 'runningProgramTypes', align: 'left', title: '程序类型', width: '77', templet: '#runningProgramTypes'},
+                    {field: 'startUpStatusAndDownloadProgramType', align: 'left', title: '开机状态<br>下载程序类型', width: '100', templet: '#startUpStatusAndDownloadProgramType'},
+                    {field: 'valids', align: 'left', title: '状态', width: '76', templet: '#valid'},
+                    {field: 'upgradeFailedReasons', align: 'left', title: '失败原因', width: '76', templet: '#upgradeFailedReasons'},
+                    {field: 'vpsBackendSystemComputerIDs', align: 'left', title: '服务器ID', width: '86', templet: '#vpsBackendSystemComputerIDs'},
                     {title: '操作', templet: '#operationTpl', align: 'center',fixed: "right",width: '178'}
                 ]],
                 height: 'full-115',
@@ -465,7 +488,8 @@
                     if(terminalType === '' || terminalType == null){
                         terminalType = 'PC'
                     }
-                    let data = {'terminalType': terminalType};
+                    let data = common.formToJsonObject('searchForm');
+                    data.terminalType = terminalType;
                     table.reload('machineManageTable', {
                         where: data,
                         page: {
@@ -1280,7 +1304,9 @@
 </script>
 
 <script type="text/html" id="toRenewalDate">
+    {{#  if(d.renewalDate){ }}
     {{layui.util.toDateString(d.renewalDate,'MM-dd')}}
+    {{#  } }}
 </script>
 
 <script type="text/html" id="showRenewalDate">

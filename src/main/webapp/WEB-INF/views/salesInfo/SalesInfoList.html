@@ -320,11 +320,15 @@
 
 </script>
 <script type="text/html" id="toDateTime">
+    {{#  if(d.createTime){ }}
     {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+    {{#  } }}
 </script>
 
 <script type="text/html" id="toUpdateTime">
+    {{#  if(d.updateTime){ }}
     {{layui.util.toDateString(d.updateTime, 'yyyy-MM-dd')}}
+    {{#  } }}
 </script>
 
 <script type="text/html" id="toolbarTpl">

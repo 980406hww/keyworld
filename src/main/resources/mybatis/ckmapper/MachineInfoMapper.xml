@@ -136,8 +136,8 @@
                 #{switchGroup}
             </foreach>
         </if>
-        <if test="machineInfoCriteria.orderBy != null and machineInfoCriteria.orderBy != ''">ORDER BY
-            ${machineInfoCriteria.orderBy}
+        <if test="machineInfoCriteria.orderBy != null and machineInfoCriteria.orderBy != ''">
+            ORDER BY ${machineInfoCriteria.orderBy}
         </if>
     </select>
 
