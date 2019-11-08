@@ -185,7 +185,6 @@
 
     layui.use(['jquery'], function () {
     <@shiro.hasPermission name="/internal/dailyReport/triggerReportGeneration">
-
         var intervalId = setInterval(function () {
             layui.searchCurrentDateCompletedReports();
         }, 1000 * 30);

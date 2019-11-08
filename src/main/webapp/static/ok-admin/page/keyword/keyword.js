@@ -149,6 +149,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
     }
 
     function get_keywords(whereCondition) {
+        if (!whereCondition.optimizeGroupNameLike) {
+            whereCondition.optimizeGroupNameLike = '';
+        }
         var keywordTable = table.render({
             elem: '#keywordTable',
             method: 'post',
@@ -206,6 +209,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
         let postData = common.formToJsonObject('searchForm');
         postData.orderBy = obj.field;
         postData.orderMode = obj.type === 'desc' ? '0' : '1';
+        if (!postData.optimizeGroupNameLike) {
+            postData.optimizeGroupNameLike = '';
+        }
         table.reload('keywordTable', {
             initSort: obj,
             where: postData
@@ -241,6 +247,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 let postData = common.formToJsonObject('searchForm');
                 if (!postData.noReachStandardDays) {
                     postData.noReachStandardDays = '';
+                }
+                if (!postData.optimizeGroupNameLike) {
+                    postData.optimizeGroupNameLike = '';
                 }
                 table.reload('keywordTable', {
                     where: postData,

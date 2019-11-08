@@ -134,7 +134,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                                 if (res.code === 200) {
                                     item += generate_keyword_info(obj, res.data)
                                 } else {
-                                    item += '暂无数据'
+                                    item += generate_keyword_info2(obj)
                                 }
                                 item += '</div>';
                             }
@@ -171,7 +171,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                                 if (res.code === 200) {
                                     item += generate_negative_info(obj, res.data)
                                 } else {
-                                    item += '暂无数据';
+                                    item += generate_negative_info2(obj)
                                 }
                                 item += '</div>';
                             }
@@ -196,7 +196,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 '       </div>' +
                 '       <div class="layadmin-address">\n' +
                 '           <a href="javascript:void(0)" class="caller-fr" onclick=delOneCustomer("' + obj.uuid + '")>' +
-                '                   删除\n' +
+                '               删除\n' +
                 '               <i class="layui-icon layui-icon-close"></i>\n' +
                 '           </a>\n' +
                 '       </div>';
@@ -711,7 +711,7 @@ function generate_keyword_info(obj, data) {
         let url = '/internal/customerKeyword/toCustomerKeywords/pt/PC/'+obj.uuid;
         let contactPerson = obj.contactPerson.replace(/\s+/g, "");
         let title = contactPerson + '-关键字列表';
-        let id = contactPerson + '-关键字列表';
+        let id = contactPerson + '-pt';
         htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>总数:' + data.totalCount + '</span></a>&nbsp;&nbsp;&nbsp;&nbsp;(';
         if (data.totalCount === data.activeCount) {
             htm += '<span style="color: green;">激活</span>' +
@@ -726,9 +726,17 @@ function generate_keyword_info(obj, data) {
         }
         htm += ')';
     } else {
-        htm += '<span>暂无数据</span>'
+        htm += generate_keyword_info2(obj);
     }
     return htm;
+}
+
+function generate_keyword_info2(obj) {
+    let url = '/internal/customerKeyword/toCustomerKeywords/pt/PC/'+obj.uuid;
+    let contactPerson = obj.contactPerson.replace(/\s+/g, "");
+    let title = contactPerson + '-关键字列表';
+    let id = contactPerson + '-pt';
+    return '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>查看关键字</span></a>';
 }
 
 function generate_qzsetting_info(obj, data) {
@@ -738,8 +746,8 @@ function generate_qzsetting_info(obj, data) {
         let entryType = document.getElementById('entryType').value;
         let url = '/internal/qzsetting/toQZSettingsWithCustomerUuid/'+obj.uuid;
         let contactPerson = obj.contactPerson.replace(/\s+/g, "");
-        let title = contactPerson + '-全站信息';
-        let id = contactPerson + '-全站信息';
+        let title = contactPerson + '-全站';
+        let id = contactPerson + '-toQz';
         htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>总数:' + data.totalCount + '</span></a>&nbsp;&nbsp;状态:';
         if (data.activeCount > 0) {
             htm += '<span style="color: green;">'+data.activeCount+'个续费|</span>'
@@ -764,8 +772,8 @@ function generate_qzsetting_info2(obj) {
     let url = '/internal/customerKeyword/toCustomerKeywords/qz/PC/'+obj.uuid;
     let contactPerson = obj.contactPerson.replace(/\s+/g, "");
     let title = contactPerson + '-关键字列表';
-    let id = contactPerson + '-关键字列表';
-    return '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><strong style="font-weight: 400">查看关键字</strong></a>';
+    let id = contactPerson + '-qz';
+    return '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>查看关键字</span></a>';
 }
 
 function generate_negative_info(obj,data) {
@@ -775,7 +783,7 @@ function generate_negative_info(obj,data) {
         let url = '/internal/customerKeyword/toCustomerKeywords/fm/PC/'+obj.uuid;
         let contactPerson = obj.contactPerson.replace(/\s+/g, "");
         let title = contactPerson + '-关键字列表';
-        let id = contactPerson + '-关键字列表';
+        let id = contactPerson + '-fm';
         htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>总数:' + data.totalCount + '</span></a>&nbsp;&nbsp;&nbsp;&nbsp;(';
         if (data.totalCount === data.activeCount) {
             htm += '<span style="color: green;">激活</span>' +
@@ -790,9 +798,17 @@ function generate_negative_info(obj,data) {
         }
         htm += ')';
     } else {
-        htm += '<span>暂无数据</span>'
+        htm += generate_negative_info2(obj)
     }
     return htm;
+}
+
+function generate_negative_info2(obj) {
+    let url = '/internal/customerKeyword/toCustomerKeywords/fm/PC/'+obj.uuid;
+    let contactPerson = obj.contactPerson.replace(/\s+/g, "");
+    let title = contactPerson + '-关键字列表';
+    let id = contactPerson + '-fm';
+    return '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>查看关键字</span></a>';
 }
 
 function updateOrNewTab(url, tit, id) {

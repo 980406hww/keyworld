@@ -132,6 +132,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     }
 
     function get_keywords(whereCondition) {
+        if (!whereCondition.optimizeGroupNameLike) {
+            whereCondition.optimizeGroupNameLike = '';
+        }
         let keywordTable = table.render({
             elem: '#keywordTable',
             method: 'post',
@@ -153,7 +156,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
                 {field: 'keyword', title: '关键字', width: '150', align: 'left'},
                 {field: 'url', title: '链接', width: '140', align: 'left'},
                 {field: 'bearPawNumber', title: '熊掌号', align: 'left', width: '100'},
-                {field: 'title', title: '标题', width: '220', align: 'left'},
+                {field: 'title', title: '标题', width: '240', align: 'left'},
                 {field: 'currentIndexCount', title: '指数', align: 'left', width: '80', templet: '#indexCountTpl'},
                 {field: 'initialPosition', title: '初始排名', align: 'left', width: '80'},
                 {field: 'currentPosition', title: '现排名', align: 'left', width: '80', templet: '#currentPositionTpl'},
@@ -161,9 +164,18 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
                 {field: 'collectMethod', title: '收费方式', align: 'center', width: '80', templet: '#collectMethodTpl'},
                 {field: 'optimizePlanCount', title: '要刷', align: 'left', width: '80'},
                 {field: 'optimizedCount', title: '已刷', align: 'left', width: '80'},
-                {field: 'invalidRefreshCount', title: '无效', align: 'left', width: '60', hide: 'true'},
+                {field: 'invalidRefreshCount', title: '无效', align: 'left', width: '60', hide: true},
+                {field: 'startOptimizedTime', title: '开始优化日期', align: 'center', width: '100', hide: true},
+                {
+                    field: 'lastOptimizeDateTime', title: '最后优化时间', align: 'center', width: '100', hide: true, templet: function (d) {
+                        if (d.lastOptimizeDateTime) {
+                            return layui.util.toDateString(d.lastOptimizeDateTime, 'yyyy-MM-dd HH:mm:ss')
+                        }
+                        return '';
+                    }
+                },
                 {field: 'status', title: '状态', align: 'center', width: '80', templet: '#statusTpl'},
-                {field: 'failedCause', title: '失败原因', align: 'left', width: '100',},
+                {field: 'failedCause', title: '失败原因', align: 'left', width: '80',},
                 {field: 'optimizeGroupName', title: '优化分组', align: 'left', width: '80'},
                 {field: 'machineGroup', title: '机器分组', align: 'left', width: '80'},
                 {field: 'remarks', title: '备注', align: 'left', width: '80', hide: true},
@@ -210,8 +222,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     let active = {
         reload: function () {
             show = true;
+            let condition = common.formToJsonObject('searchForm');
+            if (!condition.optimizeGroupNameLike) {
+                condition.optimizeGroupNameLike = '';
+            }
             table.reload('keywordTable', {
-                where: common.formToJsonObject('searchForm'),
+                where: condition,
                 page: {
                     curr: 1 //从第一页开始
                 }
@@ -233,6 +249,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     form.on("submit(search)", function (data) {
         if (!data.field.noPosition){
             data.field.noPosition = '';
+        }
+        if (!data.field.optimizeGroupNameLike) {
+            data.field.optimizeGroupNameLike = '';
         }
         data.field = common.jsonObjectTrim(data.field);
         table.reload('keywordTable', {
