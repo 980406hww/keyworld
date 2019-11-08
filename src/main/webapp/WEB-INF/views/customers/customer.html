@@ -146,15 +146,13 @@
         isSEOSales = true;
     </@shiro.hasRole>
 
-    <@shiro.hasAnyRoles name="Operation, Technical, SEO, AlgorithmGroup">
+    <@shiro.hasAnyRoles name="Operation,Technical,SEO,AlgorithmGroup">
         isSEOSales = false;
     </@shiro.hasAnyRoles>
 </script>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
-<script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
 <script src="/static/ok-admin/page/customer/customer.js"></script>
 <script>
-
     layui.define(['layer', 'jquery'], function (exports) {
         var $ = layui.jquery;
         exports('searchCurrentDateCompletedReports', function () {//函数参数

@@ -1,7 +1,3 @@
-NProgress.start();
-window.onload = function () {
-    NProgress.done();
-};
 
 var sign = false;
 
@@ -34,6 +30,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
     init_belong_user();
 
     function initLayPage(pageConf) {
+        var load_index = layer.load(2, {shade: false}); //添加laoding 0-2
         if (!pageConf) {
             pageConf = {};
             pageConf.limit = 30;
@@ -74,6 +71,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                     }
                 });
                 init_data(result.data);
+                layer.close(load_index);
                 form.render();
             },
             error: function () {
