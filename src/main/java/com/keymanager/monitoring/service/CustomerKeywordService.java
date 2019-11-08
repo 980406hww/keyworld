@@ -170,8 +170,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     break;
                 }
             }
-            customerKeywordDao.batchUpdateOptimizedCountFromCache(updateOptimizedCountSimpleVOMap.values());
-            machineInfoService.updateOptimizationResultFromCache(updateOptimizedCountVOMap.values());
+            if(updateOptimizedCountSimpleVOMap.size() > 0) {
+                customerKeywordDao.batchUpdateOptimizedCountFromCache(updateOptimizedCountSimpleVOMap.values());
+            }
+            if(updateOptimizedCountVOMap.size() > 0) {
+                machineInfoService.updateOptimizationResultFromCache(updateOptimizedCountVOMap.values());
+            }
             times++;
         } while (times < 20 && updateOptimizedResultQueue.size() > 100 && !queueEmptied);
     }
