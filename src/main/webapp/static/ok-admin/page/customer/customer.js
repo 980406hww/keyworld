@@ -1,3 +1,8 @@
+NProgress.start();
+window.onload = function () {
+    NProgress.done();
+};
+
 var sign = false;
 
 getHeight();

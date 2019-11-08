@@ -93,17 +93,13 @@
                             </div>
                         </div>
 
-                        <@shiro.hasPermission name="/internal/dailyReport/triggerReportGeneration">
-                        <div class="layui-inline" id="showDailyReportsDiv">
-
-                        </div>
-                        </@shiro.hasPermission>
-
                         <div class="layui-inline">
                             <div class="layui-btn layui-btn-sm layui-btn-danger" onclick="batchDelete()">
                                 批量删除
                             </div>
                         </div>
+
+                        &nbsp;<span id="dailyReportSpan"></span>
                     </div>
                     <div class="my-hide" id="searchContent">
                         <div class="layui-form-item" lay-filter="loginNameFilter">
@@ -152,10 +148,11 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
 <script src="/static/ok-admin/page/customer/customer.js"></script>
 <script>
+
     layui.define(['layer', 'jquery'], function (exports) {
         var $ = layui.jquery;
         exports('searchCurrentDateCompletedReports', function () {//函数参数
-            var htm = '';
+            var span = $("#dailyReportSpan");
             $.ajax({
                 url: '/internal/dailyReport/searchCurrentDateCompletedReports2',
                 headers: {
@@ -165,21 +162,21 @@
                 timeout: 5000,
                 type: 'GET',
                 success: function (result) {
+                    var htmlContent = "";
                     if (result.code === 200) {
                         $.each(result.data,function(idx,val){
                             var date = new Date(val.completeTime);
-                            htm +='  <a class="layui-btn layui-btn-sm" href="' + val.reportPath + '">下载日报表(' + ((date.getHours() < 10) ? '0'
+                            htmlContent +=' <a class="layui-btn layui-btn-sm" href="' + val.reportPath + '">下载日报表(' + ((date.getHours() < 10) ? '0'
                                 + date.getHours() : date.getHours()) + ':' + ((date.getMinutes() < 10) ? '0' + date.getMinutes()
-                                : date.getMinutes()) + ')</a><br>';
+                                : date.getMinutes()) + ')</a>';
                         });
-                        $('#showDailyReportsDiv').empty().append(htm);
-
                     } else {
-                        $('#showDailyReportsDiv').empty().append($('<span class="layui-btn layui-btn-sm" disabled>今天没报表</span>'));
+                        htmlContent = $('<span class="layui-btn layui-btn-sm" disabled>今天没报表</span>');
                     }
+                    span.html(htmlContent);
                 },
                 error: function () {
-                    $('#showDailyReportsDiv').empty().append($('<span class="layui-btn layui-btn-sm" disabled>获取报表清单异常</span>'));
+                    span.html($('<span class="layui-btn layui-btn-sm" disabled>获取报表清单异常</span>'));
                 }
             });
         });
