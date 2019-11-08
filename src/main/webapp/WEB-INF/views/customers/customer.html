@@ -41,19 +41,21 @@
                         <input type="hidden" id="entryType" name="entryType" value=""/>
                         <input type="checkbox" name="checkAll" lay-skin="primary" lay-filter="checkAll">
                         <div class="layui-inline" style="width: 140px">
-                            <div class="layui-input-inline">
-                                <select name="type" id="type">
-                                    <option value="">请选择客户类型</option>
-                                    <option value="普通客户">普通客户</option>
-                                    <option value="测试客户">测试客户</option>
-                                </select>
-                            </div>
+                            <select name="type" id="type">
+                                <option value="">请选择客户类型</option>
+                                <option value="普通客户">普通客户</option>
+                                <option value="测试客户">测试客户</option>
+                            </select>
+                        </div>
+                        <div class="layui-inline">
+                            <select name="loginName" id="loginName">
+                                <option value="">所属用户</option>
+                            </select>
                         </div>
                         <div class="layui-inline" style="width: 140px">
                             <input type="text" name="contactPerson" id="contactPerson" placeholder="请输入客户名称" class="layui-input"
                                    onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                         </div>
-
                         <div class="layui-inline" style="width: 140px">
                             <div class="layui-input-inline">
                                 <input type="text" name="saleRemark" id="saleRemark" placeholder="请输入客户标签" autocomplete="off" class="layui-input"
@@ -143,12 +145,15 @@
     <@shiro.hasRole name="SEOSales">
         isSEOSales = true;
     </@shiro.hasRole>
+
+    <@shiro.hasAnyRoles name="Operation,Technical,SEO,AlgorithmGroup">
+        isSEOSales = false;
+    </@shiro.hasAnyRoles>
 </script>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
-<script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script src="/static/ok-admin/page/customer/customer.js"></script>
 <script>
-
     layui.define(['layer', 'jquery'], function (exports) {
         var $ = layui.jquery;
         exports('searchCurrentDateCompletedReports', function () {//函数参数

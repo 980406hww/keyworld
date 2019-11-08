@@ -714,14 +714,12 @@
                                     <input type="hidden" name="terminalType" id="terminalType" value="PC"/>
                                     <input type="hidden" name="userInfoID" id="userInfoID" value="">
                                     <input type="hidden" name="organizationID" id="organizationID" value="">
-                                    <input hidden value='<#if Request.customerUuidTmp?exists>${Request.customerUuidTmp}</#if>'
-                                           id="customerUuidTmp">
+                                    <input hidden value='<#if Request.customerUuidTmp?exists>${Request.customerUuidTmp}</#if>' id="customerUuidTmp">
                                     <div class="layui-form-item" style="margin-bottom: 0" lay-filter="loginNameFilter">
                                         <div class="layui-inline">
                                             <label class="layui-form-label">客户</label>
                                             <div class="layui-input-inline">
-                                                <select name="customerUuid" id="customerUuid"
-                                                        lay-filter="customerUuidFilter" lay-search>
+                                                <select name="customerUuid" id="customerUuid" lay-filter="customerUuidFilter" lay-search>
                                                 </select>
                                             </div>
                                         </div>
@@ -732,7 +730,7 @@
                                                 <input type="text" id="tree" lay-filter="tree" class="layui-input">
                                             </div>
                                         </div>
-                                    </@shiro.hasPermission>
+                                        </@shiro.hasPermission>
                                     <div class="layui-inline">
                                         <label class="layui-form-label">分类标签</label>
                                         <div class="layui-input-inline">
@@ -752,10 +750,11 @@
                                         <label class="layui-form-label">续费状态</label>
                                         <div class="layui-input-inline">
                                             <select name="renewalStatus" id="renewalStatus">
-                                                <option value selected>全部</option>
+                                                <option value="">全部</option>
+                                                <option value="11">首次+续费中</option>
+                                                <option value="2">首次续费</option>
                                                 <option value="1">续费中</option>
                                                 <option value="0">暂停续费</option>
-                                                <option value="2">首次续费</option>
                                                 <option value="3">下架</option>
                                                 <option value="4">其他</option>
                                             </select>
@@ -813,7 +812,7 @@
                                     </div>
                                 </div>
                             </div>
-                    </div>
+                        </div>
                     </form>
                 </div>
                 </div>
@@ -825,6 +824,7 @@
 </div>
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
 <script>
     let s_c = 0;
@@ -872,6 +872,9 @@
         }
 
         getTerminalSearchEngineMap('PC');
+        get_operation_combine_list('PC');
+        get_qzcategory_label_list();
+        get_active_customer_list();
 
         /*动态加载tab栏*/
         function getTerminalSearchEngineMap(terminal) {
@@ -904,7 +907,7 @@
             });
         }
 
-        <@shiro.hasPermission name = "/internal/qzsetting/updateImmediately">
+        <@shiro.hasPermission name = "/internal/qzsetting/deleteQZSettings">
         treeSelect.render({
             elem: '#tree',
             data: '/internal/user/trees2',
@@ -934,7 +937,7 @@
         };
 
         /*动态加载网站分类标签列表*/
-        function get_qzcategory_label_list(categoryTag) {
+        function get_qzcategory_label_list() {
             $.ajax({
                 url: '${ctx.path}/internal/qzsetting/getCategoryTag',
                 dataType: 'json',
@@ -947,7 +950,6 @@
                             $('#categoryTag').append(
                                 '<option value="' + item + '">' + item.trim() + '</option>');
                         });
-                        $("#categoryTag").val(categoryTag);
                         form.render("select");
                     }
                 }
@@ -955,7 +957,7 @@
         }
 
         /*动态加载客户列表*/
-        function get_active_customer_list(customerUuid) {
+        function get_active_customer_list() {
             $.ajax({
                 url: '${ctx.path}/internal/qzsetting/getActiveCustomer',
                 dataType: 'json',
@@ -970,7 +972,6 @@
                                 '<option value="' + item.uuid + '">' + item.contactPerson.trim()
                                 + '</option>');
                         });
-                        $("#customerUuid").val(customerUuid);
                         form.render("select");
                     }
                 }
@@ -1042,9 +1043,6 @@
         function successTable(res, whereCondition) {
             let terminalType = $('#terminalType').val();
             terminalType = terminalType === '' ? 'PC' : terminalType;
-            get_operation_combine_list(terminalType);
-            get_qzcategory_label_list(whereCondition.categoryTag);
-            get_active_customer_list(whereCondition.customerUuid);
             let qz_setting_table = $("#qzSettingTable").parent().find(
                 ".layui-table-main").find("table");
             $.each(res.data, function (idx, val) {
@@ -1219,6 +1217,7 @@
             let terminalType = data.elem.context.dataset.terminal;
             $('#terminalType').val(terminalType);
             getTerminalSearchEngineMap(terminalType);
+            get_operation_combine_list(terminalType);
             active['reload'].call(this);
         });
 

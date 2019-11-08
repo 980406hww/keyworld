@@ -512,6 +512,10 @@ function showSettingDialog(clientID, self){
     $.ajax({
         url: '/internal/machineInfo/getMachineInfo/' + clientID,
         type: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
         success: function (machineInfo) {
             if(machineInfo == null) {
                 $().toastmessage('showErrorToast', "获取信息失败");
@@ -565,7 +569,7 @@ function initSettingDialog(machineInfo, self){
 }
 function isChecked(id) {
     var color = $("#changeSettingDialog").find("#" + id).parent().css("color");
-    if(color == "rgb(255, 0, 0)") {
+    if(color === "rgb(255, 0, 0)") {
         return "1";
     } else {
         return "0";

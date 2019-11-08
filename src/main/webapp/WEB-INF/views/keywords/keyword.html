@@ -78,7 +78,7 @@
                                     </div>
                                     <div class="layui-inline">
                                         <select name="userName" id="userName">
-                                            <option value="">请选择用户</option>
+                                            <option value="">所属用户</option>
                                         </select>
                                     </div>
                                     <div class="layui-inline" style="width: 140px">
@@ -257,6 +257,7 @@
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
     var searchEngine = '<#if SearchEngine?exists>${SearchEngine}</#if>';
     var belongUser = '<#if belongUser?exists>${belongUser}</#if>';

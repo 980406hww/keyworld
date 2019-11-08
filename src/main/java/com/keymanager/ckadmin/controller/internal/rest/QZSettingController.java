@@ -266,8 +266,7 @@ public class QZSettingController extends SpringMVCBaseController {
         try {
             String entryType = (String) request.getSession().getAttribute("entryType");
             qzSettingExcludeCustomerKeywordsCriteria.setType(entryType);
-            qzSettingService
-                .excludeQZSettingCustomerKeywords(qzSettingExcludeCustomerKeywordsCriteria);
+            qzSettingService.excludeQZSettingCustomerKeywords(qzSettingExcludeCustomerKeywordsCriteria);
             resultBean.setCode(200);
             resultBean.setMsg("更新排除词成功");
         } catch (Exception e) {

@@ -14,26 +14,40 @@
     <!--模糊搜索区域-->
     <div class="layui-card ">
         <div class="layui-card-body ">
-            <form class="layui-form layui-form-pane" id="searchForm">
                 <div class="my-collapse">
-                    <div class="out-condition">
-                        <div class="layui-inline" >
-                            <input type="text" name="groupName" id="groupName" placeholder="请输入优化组名" autocomplete="off"
-                                   class="layui-input layui-input-text">
+                    <div class="out-condition layui-row">
+                        <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
+                            <form class="layui-form layui-form-pane" id="searchForm">
+                                <div class="layui-row">
+                                    <div class="layui-col-md9 layui-col-sm9 layui-col-xs9" >
+                                        <input style="height: 30px" type="text" name="groupName" id="groupName" placeholder="搜索优化组名" autocomplete="off" class="layui-input layui-input-text">
+                                    </div>
+                                    <div class="layui-col-md3 layui-col-sm3 layui-col-xs3" style="text-align: center">
+                                        <button style="padding: 0 12px;" class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                        <div class="layui-inline">
-                            <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索
-                            </button>
+                        <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
+                            <form class="layui-form layui-form-pane" id="add">
+                                <div class="layui-row">
+                                    <div class="layui-col-md9 layui-col-sm9 layui-col-xs9">
+                                        <input style="height: 30px" type="text" name="groupName" id="addGroupName" placeholder="添加优化组名"
+                                               autocomplete="off" class="layui-input layui-input-text" lay-verify="required|oneGroupName">
+                                    </div>
+                                    <div class="layui-col-md3 layui-col-sm3 layui-col-xs3" style="text-align: center">
+                                        <button style="padding: 0 12px;" class="layui-btn" lay-submit="" lay-filter="add" id="addBtn">添加</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-            </form>
-
         </div>
     </div>
-
     <!--数据表格-->
     <table class="layui-hide" id="groupTable" lay-filter="tableFilter"></table>
+    <div style="height: 52px"></div>
 </div>
 <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
     <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
@@ -49,12 +63,14 @@
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
 
     let layui_ = null;
     let uuid_ = null;
     let groupTable ;
     let unselectUuidArr = [];
+    let groups_ = [];
     function initForm(data) {
         uuid_ = data.uuid;
     }
@@ -81,7 +97,8 @@
             height: 'full-130',
             done: function (res, curr, count) {
                 $.each(res.data,function (idx, item) {
-                    unselectUuidArr.push(item.groupUuid)
+                    unselectUuidArr.push(item.groupUuid);
+                    groups_.push(item.groupName);
                 })
             }
         });
@@ -90,7 +107,36 @@
             unselectUuidArr = [];
             table.reload('groupTable', {
                 where: data.field,
+            });
+            return false;
+        });
 
+        form.on("submit(add)", function (data) {
+            data.field = common.jsonObjectTrim(data.field);
+            groups_.push(data.field.groupName);
+            let postData = {};
+            postData.operationCombineUuid = uuid_;
+            postData.groupNames = groups_;
+            $.ajax({
+                url: '/internal/group/saveGroupsBelowOperationCombine2',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 10000,
+                type: 'POST',
+                success: function (result) {
+                    if (result.code === 200) {
+                        document.getElementById('addGroupName').value = '';
+                        $('#searchBtn').click();
+                    } else {
+                        common.showFailMsg('操作失败');
+                    }
+                },
+                error: function () {
+                    common.showFailMsg('未知错误，请稍后重试');
+                }
             });
             return false;
         });
@@ -106,11 +152,16 @@
         };
 
         $('#save').click(function () {
-
             let checkStatus = table.checkStatus('groupTable'), data = checkStatus.data;
             $.each(data, function (index, item) {
                 unselectUuidArr.remove(item.groupUuid)
             });
+            if (unselectUuidArr.length < 1) {
+                common.showSuccessMsg('操作成功', function () {
+                    parent.window.sign = true;
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                });
+            }
             let postData = {};
             postData.groupUuids = unselectUuidArr;
             $.ajax({
@@ -144,9 +195,15 @@
             parent.layer.close(parent.layer.getFrameIndex(window.name));
             return false;
         });
+
+        form.verify({
+            oneGroupName: function (value, item) {
+                if (value.indexOf(",") !== -1 || value.indexOf("，") !== -1) {
+                    return "每次只允许添加一个"
+                }
+            }
+        });
     })
-
-
 </script>
 </body>
 </html>

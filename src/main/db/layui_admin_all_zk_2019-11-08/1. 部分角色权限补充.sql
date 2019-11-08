@@ -5,4 +5,4 @@ from ((SELECT r.fUuid FROM t_role r WHERE r.fRoleName = 'Maintenance') tem_role,
       (select t.fUuid
        from t_resource_new tr
                 JOIN t_resource_new t on tr.fUUid = t.fParentID
-       where tr.fResourceName = '机器管理' AND t.fResourceName = '修改机器分组' AND tr.fVersion = '2.0') tem_resource);
+       where tr.fResourceName = '机器管理' AND t.fUrl = '/internal/machineInfo/updateMachineGroup' AND tr.fVersion = '2.0') tem_resource);

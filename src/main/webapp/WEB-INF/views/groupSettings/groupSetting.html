@@ -63,7 +63,7 @@
                         </div>
 
                         <div class="layui-inline">
-                            <button class="layui-btn" lay-submit="" lay-filter="search"id="searchBtn">搜索</button>
+                            <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索</button>
                         </div>
 
                         <div class="layui-inline">
@@ -103,6 +103,7 @@
 <div id="page_nav"></div>
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 
 <script>
 
@@ -686,6 +687,7 @@
                         pageConf.hasRemainingAccount = false;
                     }
                     initLayPage(pageConf);
+
                     sign = false;
                 }
             },'40px');

@@ -283,6 +283,7 @@
 
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <!--<script src="/static/ok-admin/page/customer/customerAdd.js"></script>-->
 <script>
 
@@ -421,8 +422,7 @@
                     $('#unusedPercent').text(totalPercent - allocPercent * operationCombineCount)
                 }
             }
-
-        }
+        };
 
         window.checkItem = function (self) {
             let color = $($(self).siblings()[0]).css("color");
@@ -501,10 +501,14 @@
         });
 
         form.verify({
-            numberLimit: [
-                /^([1-9]\d?|100)$/,
-                "请1-100范围内的数字"
-            ],
+            numberLimit: function (value, item) {
+                if (isChecked('machineUsedPercent') === '1') {
+                    if (/^([1-9]\d?|100)$/.test(value)) {
+                        return '';
+                    }
+                    return '请1-100范围内的数字';
+                }
+            },
             positiveInteger: [
                 /(^$)|(^[0-9]*[1-9][0-9]*$)/,
                 "请输入合适的正整数、如：1、2、3"

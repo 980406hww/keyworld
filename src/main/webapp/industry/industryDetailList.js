@@ -198,7 +198,6 @@ function showIndustryDetailDialog(uuid) {
 function modifyIndustryDetail(uuid) {
     getIndustryDetail(uuid, function (industryDetail) {
         if (industryDetail != null) {
-            console.log(industryDetail);
             initIndustryDetailDialog(industryDetail);
             showIndustryDetailDialog(industryDetail.uuid);
         } else {
@@ -211,6 +210,10 @@ function getIndustryDetail(uuid, callback) {
     $.ajax({
         url: '/internal/industryDetail/getIndustryDetail/' + uuid,
         type: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
         success: function (industryDetail) {
             callback(industryDetail);
         },
