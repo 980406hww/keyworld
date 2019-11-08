@@ -35,6 +35,18 @@
         .layui-table-tool-self{
             top: 0;
         }
+
+        .one-special .layui-form-checkbox{
+            margin: 0 !important;
+        }
+
+        .layui-table-body .laytable-cell-1-0-14, .layui-table-body .laytable-cell-6-0-14, .layui-table-body .laytable-cell-11-0-14,
+        .layui-table-body .laytable-cell-2-0-14, .layui-table-body .laytable-cell-7-0-14, .layui-table-body .laytable-cell-12-0-14,
+        .layui-table-body .laytable-cell-3-0-14, .layui-table-body .laytable-cell-8-0-14, .layui-table-body .laytable-cell-13-0-14,
+        .layui-table-body .laytable-cell-4-0-14, .layui-table-body .laytable-cell-9-0-14, .layui-table-body .laytable-cell-14-0-14,
+        .layui-table-body .laytable-cell-5-0-14, .layui-table-body .laytable-cell-10-0-14, .layui-table-body .laytable-cell-15-0-14 {
+            padding: 0 9px !important;
+        }
     </style>
 </head>
 <body>
@@ -69,6 +81,9 @@
                                         <input type="text" name="optimizeGroupName" id="optimizeGroupName" placeholder="请输入优化组名" autocomplete="off"
                                                value="<#if group?exists>${group}</#if>" class="layui-input layui-input-text"
                                                onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
+                                    </div>
+                                    <div class="layui-inline one-special">
+                                        <input type="checkbox" name="optimizeGroupNameLike" value="on" title="模糊搜索">
                                     </div>
                                     <div class="layui-inline" style="width: 140px">
                                         <input type="text" name="url" id="url" placeholder="请输入域名" autocomplete="off" class="layui-input"
