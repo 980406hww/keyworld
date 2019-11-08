@@ -31,6 +31,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
 
     init_keyword_type();
 
+    init_belong_user();
+
     function initLayPage(pageConf) {
         if (!pageConf) {
             pageConf = {};
@@ -229,6 +231,25 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                     });
                     form.render("select");
                 }
+            }
+        });
+    }
+
+    function init_belong_user() {
+        $.ajax({
+            url: '/internal/customer/getActiveUsers',
+            dataType: 'json',
+            type: 'get',
+            success: function (data) {
+                $("#loginName").empty();
+                $("#loginName").append('<option value="">所属用户</option>');
+                $.each(data, function (index, item) {
+                    $('#loginName').append(
+                        '<option value="' + item.loginName + '">'
+                        + item.userName
+                        + '</option>');// 下拉菜单里添加元素
+                });
+                form.render("select");
             }
         });
     }

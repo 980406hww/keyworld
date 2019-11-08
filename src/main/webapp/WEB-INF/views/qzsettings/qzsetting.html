@@ -714,14 +714,12 @@
                                     <input type="hidden" name="terminalType" id="terminalType" value="PC"/>
                                     <input type="hidden" name="userInfoID" id="userInfoID" value="">
                                     <input type="hidden" name="organizationID" id="organizationID" value="">
-                                    <input hidden value='<#if Request.customerUuidTmp?exists>${Request.customerUuidTmp}</#if>'
-                                           id="customerUuidTmp">
+                                    <input hidden value='<#if Request.customerUuidTmp?exists>${Request.customerUuidTmp}</#if>' id="customerUuidTmp">
                                     <div class="layui-form-item" style="margin-bottom: 0" lay-filter="loginNameFilter">
                                         <div class="layui-inline">
                                             <label class="layui-form-label">客户</label>
                                             <div class="layui-input-inline">
-                                                <select name="customerUuid" id="customerUuid"
-                                                        lay-filter="customerUuidFilter" lay-search>
+                                                <select name="customerUuid" id="customerUuid" lay-filter="customerUuidFilter" lay-search>
                                                 </select>
                                             </div>
                                         </div>
@@ -732,7 +730,7 @@
                                                 <input type="text" id="tree" lay-filter="tree" class="layui-input">
                                             </div>
                                         </div>
-                                    </@shiro.hasPermission>
+                                        </@shiro.hasPermission>
                                     <div class="layui-inline">
                                         <label class="layui-form-label">分类标签</label>
                                         <div class="layui-input-inline">
@@ -752,10 +750,11 @@
                                         <label class="layui-form-label">续费状态</label>
                                         <div class="layui-input-inline">
                                             <select name="renewalStatus" id="renewalStatus">
-                                                <option value selected>全部</option>
+                                                <option value="">全部</option>
+                                                <option value="11">首次+续费中</option>
+                                                <option value="2">首次续费</option>
                                                 <option value="1">续费中</option>
                                                 <option value="0">暂停续费</option>
-                                                <option value="2">首次续费</option>
                                                 <option value="3">下架</option>
                                                 <option value="4">其他</option>
                                             </select>
@@ -813,7 +812,7 @@
                                     </div>
                                 </div>
                             </div>
-                    </div>
+                        </div>
                     </form>
                 </div>
                 </div>

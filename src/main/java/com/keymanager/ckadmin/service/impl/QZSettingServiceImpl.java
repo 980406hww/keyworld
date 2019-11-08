@@ -230,21 +230,18 @@ public class QZSettingServiceImpl extends
     }
 
     @Override
-    public CustomerExcludeKeyword echoExcludeKeyword(
-        QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
-        return customerExcludeKeywordService
-            .echoExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria);
+    public CustomerExcludeKeyword echoExcludeKeyword(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+        return customerExcludeKeywordService.echoExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria);
     }
 
     @Override
-    public void excludeQZSettingCustomerKeywords(
-        QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
-        qzSettingExcludeCustomerKeywordsCriteria.setDomain(
-            qzSettingExcludeCustomerKeywordsCriteria.getDomain().replace("http://", "")
-                .replace("https://", "").replace("www.", "").split("/")[0]);
-        customerKeywordService.excludeCustomerKeyword(qzSettingExcludeCustomerKeywordsCriteria);
-        customerExcludeKeywordService
-            .excludeCustomerKeywords(qzSettingExcludeCustomerKeywordsCriteria);
+    public void excludeQZSettingCustomerKeywords(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+        qzSettingExcludeCustomerKeywordsCriteria.setDomain(qzSettingExcludeCustomerKeywordsCriteria.getDomain().replace("http://", "")
+            .replace("https://", "").replace("www.", "").split("/")[0]);
+        if (CollectionUtils.isNotEmpty(qzSettingExcludeCustomerKeywordsCriteria.getKeywords())) {
+            customerKeywordService.excludeCustomerKeyword(qzSettingExcludeCustomerKeywordsCriteria);
+        }
+        customerExcludeKeywordService.excludeCustomerKeywords(qzSettingExcludeCustomerKeywordsCriteria);
     }
 
     @Override

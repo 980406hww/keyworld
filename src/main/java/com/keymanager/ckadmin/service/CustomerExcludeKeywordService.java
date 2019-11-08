@@ -5,12 +5,9 @@ import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
 
 public interface CustomerExcludeKeywordService {
 
-    void excludeCustomerKeywords(
-        QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
+    void excludeCustomerKeywords(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
 
-    String getCustomerExcludeKeyword(Long customerUuid, Long qzSettingUuid, String terminalType,
-        String url);
+    String getCustomerExcludeKeyword(Long customerUuid, Long qzSettingUuid, String terminalType, String url);
 
-    CustomerExcludeKeyword echoExcludeKeyword(
-        QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
+    CustomerExcludeKeyword echoExcludeKeyword(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria);
 }
