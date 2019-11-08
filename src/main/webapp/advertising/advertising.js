@@ -90,6 +90,7 @@ function showAdvertisingDialog(websiteUuid, uuid) {
     $.ajax({
         url: "/internal/advertising/searchAdvertisingAllTypeAndCustomerList/" + websiteUuid,
         type: "GET",
+        dataType: 'json',
         success: function (advertisingAllTypeAndCustomerList) {
             $("#customer_list").find('option').remove();
             $("#advertisingType_list").find('option').remove();
@@ -277,7 +278,6 @@ function saveAdvertising(websiteUuid, uuid) {
 function modifyAdvertising(uuid) {
     getAdvertising(uuid, function (advertising) {
         if (advertising != null) {
-
             initAdvertisingDialog(advertising);
             showAdvertisingDialog(advertising.websiteUuid, uuid);
         } else {
@@ -289,6 +289,7 @@ function getAdvertising(uuid, callback) {
     $.ajax({
         url: '/internal/advertising/getAdvertising/' + uuid,
         type: 'Get',
+        dataType: 'json',
         success: function (advertising) {
             callback(advertising);
         },

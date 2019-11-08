@@ -143,6 +143,10 @@
     <@shiro.hasRole name="SEOSales">
         isSEOSales = true;
     </@shiro.hasRole>
+
+    <@shiro.hasAnyRoles name="Operation, Technical, SEO, AlgorithmGroup">
+        isSEOSales = false;
+    </@shiro.hasAnyRoles>
 </script>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>

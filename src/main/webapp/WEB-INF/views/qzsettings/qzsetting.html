@@ -872,6 +872,9 @@
         }
 
         getTerminalSearchEngineMap('PC');
+        get_operation_combine_list('PC');
+        get_qzcategory_label_list();
+        get_active_customer_list();
 
         /*动态加载tab栏*/
         function getTerminalSearchEngineMap(terminal) {
@@ -934,7 +937,7 @@
         };
 
         /*动态加载网站分类标签列表*/
-        function get_qzcategory_label_list(categoryTag) {
+        function get_qzcategory_label_list() {
             $.ajax({
                 url: '${ctx.path}/internal/qzsetting/getCategoryTag',
                 dataType: 'json',
@@ -947,7 +950,6 @@
                             $('#categoryTag').append(
                                 '<option value="' + item + '">' + item.trim() + '</option>');
                         });
-                        $("#categoryTag").val(categoryTag);
                         form.render("select");
                     }
                 }
@@ -955,7 +957,7 @@
         }
 
         /*动态加载客户列表*/
-        function get_active_customer_list(customerUuid) {
+        function get_active_customer_list() {
             $.ajax({
                 url: '${ctx.path}/internal/qzsetting/getActiveCustomer',
                 dataType: 'json',
@@ -970,7 +972,6 @@
                                 '<option value="' + item.uuid + '">' + item.contactPerson.trim()
                                 + '</option>');
                         });
-                        $("#customerUuid").val(customerUuid);
                         form.render("select");
                     }
                 }
@@ -1042,9 +1043,6 @@
         function successTable(res, whereCondition) {
             let terminalType = $('#terminalType').val();
             terminalType = terminalType === '' ? 'PC' : terminalType;
-            get_operation_combine_list(terminalType);
-            get_qzcategory_label_list(whereCondition.categoryTag);
-            get_active_customer_list(whereCondition.customerUuid);
             let qz_setting_table = $("#qzSettingTable").parent().find(
                 ".layui-table-main").find("table");
             $.each(res.data, function (idx, val) {
@@ -1219,6 +1217,7 @@
             let terminalType = data.elem.context.dataset.terminal;
             $('#terminalType').val(terminalType);
             getTerminalSearchEngineMap(terminalType);
+            get_operation_combine_list(terminalType);
             active['reload'].call(this);
         });
 
