@@ -28,7 +28,7 @@
         FROM t_customer c
         WHERE 1 = 1
         <if test="customerCriteria.contactPerson != null and customerCriteria.contactPerson != ''">
-            AND c.fContactPerson LIKE CONCAT(#{customerCriteria.contactPerson},'%')
+            AND c.fContactPerson LIKE CONCAT('%',#{customerCriteria.contactPerson},'%')
         </if>
         <if test="customerCriteria.type != null and customerCriteria.type != ''">
             AND c.fType = #{customerCriteria.type}

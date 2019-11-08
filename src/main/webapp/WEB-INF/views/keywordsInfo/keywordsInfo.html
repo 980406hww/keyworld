@@ -246,7 +246,10 @@
                     },
                     {
                         field: 'createTime', title: '创建时间', width: '12%', align: 'center', templet: function (d) {
-                            return layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss');
+                            if (d.createTime){
+                                return layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss');
+                            }
+                            return '';
                         }
                     }
                 ]],

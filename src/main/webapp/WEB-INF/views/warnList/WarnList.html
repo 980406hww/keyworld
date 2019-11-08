@@ -296,7 +296,9 @@
 
 </script>
 <script type="text/html" id="toDateTime">
-    {{layui.util.toDateString(d.createTime)}}
+    {{#  if(d.createTime){ }}
+        {{layui.util.toDateString(d.createTime)}}
+    {{#  } }}
 </script>
 
 <script type="text/html" id="toolbarTpl">

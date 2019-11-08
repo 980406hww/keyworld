@@ -309,7 +309,9 @@
 </script>
 <!--模板-->
 <script type="text/html" id="toDateTime">
+    {{#  if(d.createTime){ }}
     {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+    {{#  } }}
 </script>
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
