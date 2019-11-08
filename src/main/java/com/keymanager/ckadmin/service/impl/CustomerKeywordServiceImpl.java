@@ -221,19 +221,20 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     @Override
     public void addCustomerKeyword(List<CustomerKeyword> customerKeywords, String userName) {
+        List<CustomerKeyword> addCustomerKeywords = new ArrayList<>();
         for (CustomerKeyword customerKeyword : customerKeywords) {
             CustomerKeyword tmpCustomerKeyword = checkCustomerKeyword(customerKeyword, userName);
-            if (null == tmpCustomerKeyword) {
-                customerKeywords.remove(customerKeyword);
+            if (null != tmpCustomerKeyword) {
+                addCustomerKeywords.add(tmpCustomerKeyword);
             }
         }
-        if (CollectionUtils.isNotEmpty(customerKeywords)) {
+        if (CollectionUtils.isNotEmpty(addCustomerKeywords)) {
             int fromIndex = 0, toIndex = 1000;
             do {
-                customerKeywordDao.addCustomerKeywords(new ArrayList<>(customerKeywords.subList(fromIndex, Math.min(toIndex, customerKeywords.size()))));
+                customerKeywordDao.addCustomerKeywords(new ArrayList<>(addCustomerKeywords.subList(fromIndex, Math.min(toIndex, addCustomerKeywords.size()))));
                 fromIndex += 1000;
                 toIndex += 1000;
-            } while (customerKeywords.size() > fromIndex);
+            } while (addCustomerKeywords.size() > fromIndex);
         }
     }
 
