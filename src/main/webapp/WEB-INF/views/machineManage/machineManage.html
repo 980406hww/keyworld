@@ -238,13 +238,9 @@
                                     <!--<@shiro.lacksRole name="Operation">
                                     <input type="hidden" name="runningProgramType" value="Rank">
                                     </@shiro.lacksRole>-->
-                                    <div class="layui-inline">
-                                        <input type="checkbox" name="hasProblem" value="hasProblem" title="停了">
-                                        <input type="checkbox" name="noUpgrade" value="noUpgrade" title="没升级">
-                                    </div>
                                     <div class="layui-inline runningProgramType-box">
                                         <select name="orderBy" id="orderBy" lay-filter="orderBy">
-                                            <option value=''>选择排序项</option>
+                                            <option value=''>排序</option>
                                             <option value='fClientID'>客户端ID</option>
                                             <option value='fLastVisitTime'>最后工作时间</option>
                                             <option value='fLastSendNotificationTime'>发通知时间</option>
@@ -252,6 +248,10 @@
                                             <option value='fRestartOrderingTime'>重启排序时间</option>
                                             <option value='fRestartCount DESC'>重启次数</option>
                                         </select>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input type="checkbox" name="hasProblem" value="hasProblem" title="停了">
+                                        <input type="checkbox" name="noUpgrade" value="noUpgrade" title="没升级">
                                     </div>
                                     <div class="layui-inline">
                                         <button class="layui-collapse my-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
