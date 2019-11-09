@@ -124,7 +124,7 @@
         </if>
         <if test="machineInfoCriteria.startUpClient != null">AND mi.fDownloadProgramType > ''</if>
         <if test="machineInfoCriteria.vpsBackendSystemComputerID != null and machineInfoCriteria.vpsBackendSystemComputerID != ''">
-            AND (mi.fVPSBackendSystemComputerID like '${machineInfoCriteria.vpsBackendSystemComputerID}%')
+            AND mi.fVPSBackendSystemComputerID = #{machineInfoCriteria.vpsBackendSystemComputerID}
         </if>
         <if test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''">
             AND mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName}

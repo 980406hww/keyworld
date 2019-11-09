@@ -547,8 +547,7 @@ public class MachineInfoController extends SpringMVCBaseController {
             if (!switchGroups.contains("DepartmentManager")) {
                 machineInfoCriteria.setSwitchGroups(switchGroups);
             }
-            performanceService
-                .addPerformanceLog(machineInfoCriteria.getTerminalType() + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
+            performanceService.addPerformanceLog(machineInfoCriteria.getTerminalType() + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
             page = machineInfoService.searchMachineInfos(page, machineInfoCriteria, true);
             List<MachineInfo> machineInfos = page.getRecords();
             resultBean.setCode(0);
