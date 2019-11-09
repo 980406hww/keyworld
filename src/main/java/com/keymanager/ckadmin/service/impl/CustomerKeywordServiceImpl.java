@@ -346,10 +346,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         if (!CustomerKeywordSourceEnum.Capture.name().equals(customerKeyword.getCustomerKeywordSource())) {
             String oldKeywordEffect = customerKeyword1.getKeywordEffect();
             String keywordEffect = customerKeyword.getKeywordEffect();
-            if (null != oldKeywordEffect) {
+            if (StringUtil.isNotNullNorEmpty(oldKeywordEffect)) {
                 if (!oldKeywordEffect.equals(keywordEffect)) {
                     Map<String, Integer> levelMap = KeywordEffectEnum.toLevelMap();
-                    String newKeywordEffect = levelMap.get(oldKeywordEffect) < levelMap.get(keywordEffect) ? oldKeywordEffect : keywordEffect;
+                    Integer levelValue = levelMap.get(keywordEffect);
+                    String newKeywordEffect = levelMap.get(oldKeywordEffect) < (levelValue == null ? 4 : levelValue) ? oldKeywordEffect : keywordEffect;
                     customerKeyword.setKeywordEffect(newKeywordEffect);
                     customerKeyword.setUpdateTime(new Date());
                     customerKeywordDao.updateSameCustomerKeyword(customerKeyword);
@@ -520,7 +521,24 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     private void addCustomerKeywords(List<CustomerKeyword> customerKeywords, String loginName) throws Exception {
         for (CustomerKeyword customerKeyword : customerKeywords) {
-            customerKeyword.setKeywordEffect("");
+            if (StringUtil.isNullOrEmpty(customerKeyword.getKeywordEffect())) {
+                customerKeyword.setKeywordEffect("Common");
+            } else {
+                switch (customerKeyword.getKeywordEffect().trim()) {
+                    case "曲线词":
+                        customerKeyword.setKeywordEffect(KeywordEffectEnum.Curve.name());
+                        break;
+                    case "指定词":
+                        customerKeyword.setKeywordEffect(KeywordEffectEnum.Appointment.name());
+                        break;
+                    case "赠送词":
+                        customerKeyword.setKeywordEffect("Present");
+                        break;
+                    default:
+                        customerKeyword.setKeywordEffect("Common");
+                        break;
+                }
+            }
             addCustomerKeyword(customerKeyword, loginName);
         }
     }
