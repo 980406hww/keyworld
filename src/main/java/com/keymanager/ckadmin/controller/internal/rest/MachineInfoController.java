@@ -547,8 +547,7 @@ public class MachineInfoController extends SpringMVCBaseController {
             if (!switchGroups.contains("DepartmentManager")) {
                 machineInfoCriteria.setSwitchGroups(switchGroups);
             }
-            performanceService
-                .addPerformanceLog(machineInfoCriteria.getTerminalType() + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
+            performanceService.addPerformanceLog(machineInfoCriteria.getTerminalType() + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
             page = machineInfoService.searchMachineInfos(page, machineInfoCriteria, true);
             List<MachineInfo> machineInfos = page.getRecords();
             resultBean.setCode(0);
@@ -692,7 +691,8 @@ public class MachineInfoController extends SpringMVCBaseController {
             String clientIDPrefix = map.get("clientIDPrefix");
             String city = map.get("city");
             String switchGroupName = map.get("switchGroupName");
-            resultBean.setData(machineInfoService.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName));
+            String init = map.get("init");
+            resultBean.setData(machineInfoService.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName, init));
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

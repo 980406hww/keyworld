@@ -34,6 +34,7 @@
         LEFT JOIN t_organization o
         ON o.fUuid = u.fOrganizationID
         WHERE 1 = 1
+        <if test="qzSettingSearchCriteria.init != null and qzSettingSearchCriteria.init == 'init'">AND 1 != 1</if>
         <if test="qzSettingSearchCriteria.loginName != null and qzSettingSearchCriteria.loginName != ''">AND c.fUserID = #{qzSettingSearchCriteria.loginName}
         </if>
         <if test="qzSettingSearchCriteria.organizationID != null and qzSettingSearchCriteria.organizationID != ''">AND o.fUuid =

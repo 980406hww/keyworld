@@ -441,6 +441,8 @@
             return false
         });
 
+        init_table_data({init: 'init'});
+
         function toOperationCombine(data){
             let url = '/internal/groupsetting/toGroupSettingFromATP/'+data.terminalType +'/'+data.operationCombineName;
             url = encodeURI(encodeURI(url));

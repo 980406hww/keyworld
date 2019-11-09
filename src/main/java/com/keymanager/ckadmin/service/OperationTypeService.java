@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface OperationTypeService extends IService<OperationType> {
 
-    List<OperationType> getOperationTypes(OperationType operationType, Page<OperationType> page);
+    List<OperationType> getOperationTypes(OperationType operationType, Page<OperationType> page, String init);
 
     OperationType getOperationType(Long uuid);
 

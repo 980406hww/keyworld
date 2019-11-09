@@ -194,6 +194,10 @@
     .layui-table-tool-panel li{
         padding: 2px 10px !important;
     }
+
+    .vnc-visited{
+        background-color: #1e9fff;
+    }
 </style>
 <body>
 
@@ -426,6 +430,8 @@
             return false
         });
 
+        searchMachine({init: 'init'});
+
         function searchMachine(whereCondition){
             whereCondition = common.jsonObjectTrim(whereCondition);
             table.render({
@@ -448,19 +454,19 @@
                     {field: 'machineGroups', align: 'left', title: '机器分组', width: '140', templet: '#machineGroups'},
                     {field: 'renewalDate', align: 'left', title: '续费<br>日期', width: '116', templet: '#showRenewalDate', hide: true},
                     {field: 'versionInfo', align: 'left', title: '现版本<br>目标版本', width: '118', templet: '#showVersionInfo'},
-                    {field: 'restartCountAndFailCount', align: 'left', title: '重启数/重启状态<br>失败次数', width: '150', templet: '#restartCountAndFailCount'},
+                    {field: 'restartCountAndFailCount', align: 'left', title: '重启数/重启状态<br>失败次数', width: '130', templet: '#restartCountAndFailCount'},
                     {field: 'cityAndStatus', align: 'left', title: '所在城市<br>终端状态', width: '144', templet: '#cityAndStatus'},
                     {field: 'cpuCounts', align: 'left', title: 'CPU核数<br>内存', width: '96', templet: '#cpuCounts', hide: true},
                     {field: 'freeSpaces', align: 'left', title: '剩余空间', width: '96', templet: '#freeSpaces', hide: true},
                     {field: 'lastVisitTimeAndRestartTime', align: 'left', title: '最新工作时间<br>重启时间', width: '124', templet: '#lastVisitTimeAndRestartTime', hide: true},
                     {field: 'restartOrderingTimeAndLastSendNotificationTime', align: 'left', title: '重启排序时间<br>发送通知时间', width: '148', templet: '#restartOrderingTimeAndLastSendNotificationTime', hide: true},
                     {field: 'optimizationSucceedCountAndOptimizationTotalCount', align: 'left', title: '成功次数<br>操作次数', width: '116', templet: '#optimizationSucceedCountAndOptimizationTotalCount'},
-                    {field: 'broadbandAccountAndBroadbandPassword', align: 'left', title: '宽带账号<br>宽带密码', width: '126', templet: '#broadbandAccountAndBroadbandPassword'},
-                    {field: 'runningProgramTypes', align: 'left', title: '程序类型', width: '97', templet: '#runningProgramTypes'},
+                    {field: 'broadbandAccountAndBroadbandPassword', align: 'left', title: '宽带账号<br>宽带密码', width: '156', templet: '#broadbandAccountAndBroadbandPassword'},
+                    {field: 'runningProgramTypes', align: 'left', title: '程序类型', width: '100', templet: '#runningProgramTypes'},
                     {field: 'startUpStatusAndDownloadProgramType', align: 'left', title: '开机状态<br>下载程序类型', width: '120', templet: '#startUpStatusAndDownloadProgramType', hide: true},
                     {field: 'valids', align: 'left', title: '状态', width: '110', templet: '#valid'},
-                    {field: 'upgradeFailedReasons', align: 'left', title: '失败原因', width: '136', templet: '#upgradeFailedReasons'},
-                    {field: 'vpsBackendSystemComputerIDs', align: 'left', title: '服务器ID', width: '126', templet: '#vpsBackendSystemComputerIDs'},
+                    {field: 'upgradeFailedReasons', align: 'left', title: '失败原因', width: '116', templet: '#upgradeFailedReasons'},
+                    {field: 'vpsBackendSystemComputerIDs', align: 'left', title: '服务器ID', width: '136', templet: '#vpsBackendSystemComputerIDs'},
                     {title: '操作', templet: '#operationTpl', align: 'center',fixed: "right",width: '198'}
                 ]],
                 height: 'full-115',
@@ -1002,18 +1008,18 @@
                     changeTerminalType(data.clientID, data.terminalType);
                     break;
                 case 'connectVNC':
-                    connectVNC(data.host, data.port, data.userName, data.password);
+                    connectVNC(data.host, data.port, data.userName, data.password, obj.tr[0]);
                     break;
                 default:
                     break;
             }
         });
 
-        function connectVNC(host, port, vncUser, vncPwd){
+        function connectVNC(host, port, vncUser, vncPwd, ele) {
             try {
                 let fso = new ActiveXObject("Scripting.FileSystemObject");
                 if (!fso.FolderExists("C:\\vnc")) {
-                    fso.CreateFolder ("C:\\vnc");
+                    fso.CreateFolder("C:\\vnc");
                 }
 
                 let fileName = "C:\\vnc\\temp_openVNC_file.vnc";
@@ -1057,6 +1063,7 @@
                     common.showFailMsg('未找到对应的.vnc文件或其他的错误');
                 }
             }
+            ele.children[ele.children.length - 1].children[0].children[0].children[0].classList.add('vnc-visited');
         }
 
         function changeTerminalType(clientID, terminalType) {

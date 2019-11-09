@@ -447,10 +447,12 @@
         form.on("submit(search)", function (data) {
             let postData = data.field;
             postData = common.jsonObjectTrim(postData);
-           init_Search(postData);
+            init_Search(postData);
             search = postData;
             return false;
         });
+
+        init_Search({init: 'init'});
 
         table.on('tool(tableFilter)',function(obj){
             let data = obj.data,event = obj.event;

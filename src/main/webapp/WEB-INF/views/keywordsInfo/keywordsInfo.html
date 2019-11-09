@@ -309,6 +309,8 @@
             return false;
         });
 
+        tableInit({init: 'init'});
+
         function init_searchEngine(terminalType) {
             $.ajax({
                 url: '/internal/qzsetting/getQZSettingSearchEngineMap/' + terminalType,
