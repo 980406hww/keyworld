@@ -132,6 +132,7 @@ public class CaptureRankJobServiceImpl extends ServiceImpl<CaptureRankJobDao, Ca
             captureRankJob.setExectionTime(new Time(date != null ? date.getTime() : 0));
             captureRankJobDao.updateById(captureRankJob);
         } else {
+            Utils.handleObject(captureRankJob);
             for (Object strTime : list) {
                 Date date = Utils.parseDate((String) strTime, "HH:mm:ss");
                 captureRankJob.setExectionTime(new Time(date != null ? date.getTime() : 0));

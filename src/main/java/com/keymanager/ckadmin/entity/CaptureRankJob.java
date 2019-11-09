@@ -255,4 +255,32 @@ public class CaptureRankJob extends BaseEntity {
     public void setRankJobCity(String rankJobCity) {
         this.rankJobCity = rankJobCity;
     }
+
+    @Override
+    public String toString() {
+        return "CaptureRankJob{" +
+            "groupNames='" + groupNames + '\'' +
+            ", customerUuid=" + customerUuid +
+            ", qzSettingUuid=" + qzSettingUuid +
+            ", contactPerson='" + contactPerson + '\'' +
+            ", operationType='" + operationType + '\'' +
+            ", captureDaysInterval=" + captureDaysInterval +
+            ", exectionType='" + exectionType + '\'' +
+            ", rankJobType='" + rankJobType + '\'' +
+            ", rankJobArea='" + rankJobArea + '\'' +
+            ", rankJobCity='" + rankJobCity + '\'' +
+            ", exectionTime=" + exectionTime +
+            ", exectionStatus='" + exectionStatus + '\'' +
+            ", captureRankJobStatus=" + captureRankJobStatus +
+            ", startTime=" + startTime +
+            ", endTime=" + endTime +
+            ", createBy='" + createBy + '\'' +
+            ", updateBy='" + updateBy + '\'' +
+            ", lastExecutionDate=" + lastExecutionDate +
+            ", rowNumber=" + rowNumber +
+            ", executionCycle=" + executionCycle +
+            ", captureInterval=" + captureInterval +
+            ", pageSize=" + pageSize +
+            '}';
+    }
 }
