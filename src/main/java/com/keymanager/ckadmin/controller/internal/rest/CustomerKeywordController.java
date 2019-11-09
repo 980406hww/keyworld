@@ -422,15 +422,16 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         return mv;
     }
 
-    //关键字Excel上传(简化版)
+    /**
+     * 关键字Excel上传(简化版)
+     */
     @RequiresPermissions("/internal/customerKeyword/uploadCustomerKeywords")
     @PostMapping(value = "/uploadCustomerKeywords2")
     public ResultBean uploadCustomerKeywords(KeywordCountDO keywordCountDO, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");
         String userName = (String) request.getSession().getAttribute("username");
         try {
-            boolean uploaded = customerKeywordService
-                .handleExcel(keywordCountDO.getFile().getInputStream(), keywordCountDO.getExcelType(), keywordCountDO.getCustomerUuid(),
+            boolean uploaded = customerKeywordService.handleExcel(keywordCountDO.getFile().getInputStream(), keywordCountDO.getExcelType(), keywordCountDO.getCustomerUuid(),
                     keywordCountDO.getEntryType(), keywordCountDO.getTerminalType(), userName);
             if (uploaded) {
                 resultBean.setMsg("文件上传成功");
@@ -441,7 +442,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }

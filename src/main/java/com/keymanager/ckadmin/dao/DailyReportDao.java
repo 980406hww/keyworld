@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository("dailyReportDao2")
 public interface DailyReportDao extends BaseMapper<DailyReport> {
+
     DailyReport findByStatus(@Param("status") String status);
 
     List<DailyReport> searchCurrentDateCompletedReports(@Param("userName") String userName);

@@ -491,7 +491,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
 
-    //简化版Excel文件导入
+    /**
+     * 简化版Excel文件导入
+     */
     @Override
     public boolean handleExcel(InputStream inputStream, String excelType, int customerUuid, String type, String terminalType, String userName)
         throws Exception {

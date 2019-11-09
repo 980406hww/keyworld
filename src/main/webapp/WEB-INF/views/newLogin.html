@@ -61,15 +61,6 @@
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
-    // function remember(e) {
-    //     if (e.previousElementSibling.checked) {
-    //         e.previousElementSibling.checked = !e.previousElementSibling.checked;
-    //         e.classList.remove('layui-form-checked');
-    //     } else {
-    //         e.previousElementSibling.checked = !e.previousElementSibling.checked;
-    //         e.classList.add('layui-form-checked');
-    //     }
-    // }
 
     function checkEmail() {
         var loginName = document.getElementById('username').value;
@@ -84,9 +75,8 @@
     }
 
     // layui相关
-    layui.use(['form', 'jquery', 'common'], function () {
+    layui.use(['form', 'jquery'], function () {
         var $ = layui.jquery;
-        var common = layui.common;
 
         window.commit = function () {
             let msg = new FormData();
@@ -94,21 +84,21 @@
             if (username && username.trim()) {
                 msg.append('username', username.trim());
             } else {
-                common.showFailMsg("用户名不能为空");
+                layui.layer.msg("用户名不能为空", {icon: 5, anim: 5, time: 1000, isOutAnim: false});
                 return;
             }
             let password = document.getElementById('password').value;
             if (password && password.trim()) {
                 msg.append('password', password.trim());
             } else {
-                common.showFailMsg("密码不能为空");
+                layui.layer.msg("密码不能为空", {icon: 5, anim: 5, time: 1000, isOutAnim: false});
                 return;
             }
             let captcha = document.getElementById('captcha').value;
             if (captcha && captcha.trim()) {
                 msg.append('captcha', captcha.trim());
             } else {
-                common.showFailMsg("验证码不能为空");
+                layui.layer.msg("密码不能为空", {icon: 5, anim: 5, time: 1000, isOutAnim: false});
                 return;
             }
             let rememberMe = document.getElementById('rememberMe').checked;
@@ -130,12 +120,12 @@
                     if (res.success === true) {
                         window.location.href = '/login';
                     } else {
-                        common.showFailMsg(res.msg);
+                        layui.layer.msg(res.msg, {icon: 5, anim: 5, time: 1000, isOutAnim: false});
                         refreshCaptcha(document.getElementById('img'));
                     }
                 },
                 error: function () {
-                    common.showFailMsg('网络错误请稍后再试');
+                    layui.layer.msg('网络错误请稍后再试', {icon: 5, anim: 5, time: 1000, isOutAnim: false});
                 }
             });
         };

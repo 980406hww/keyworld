@@ -100,8 +100,7 @@
                                 批量删除
                             </div>
                         </div>
-
-                        &nbsp;<span id="dailyReportSpan"></span>
+                        <div class="layui-inline" id="dailyReportDiv"></div>
                     </div>
                     <div class="my-hide" id="searchContent">
                         <div class="layui-form-item" lay-filter="loginNameFilter">
@@ -157,7 +156,7 @@
     layui.define(['layer', 'jquery'], function (exports) {
         var $ = layui.jquery;
         exports('searchCurrentDateCompletedReports', function () {//函数参数
-            var span = $("#dailyReportSpan");
+            let div = $("#dailyReportDiv");
             $.ajax({
                 url: '/internal/dailyReport/searchCurrentDateCompletedReports2',
                 headers: {
@@ -169,23 +168,26 @@
                 success: function (result) {
                     var htmlContent = "";
                     if (result.code === 200) {
-                        $.each(result.data,function(idx,val){
-                            var date = new Date(val.completeTime);
-                            htmlContent +=' <a class="layui-btn layui-btn-sm" href="' + val.reportPath + '">下载日报表(' + ((date.getHours() < 10) ? '0'
-                                + date.getHours() : date.getHours()) + ':' + ((date.getMinutes() < 10) ? '0' + date.getMinutes()
-                                : date.getMinutes()) + ')</a>';
-                        });
+                        if (result.data != null) {
+                            $.each(result.data,function(idx,val){
+                                var date = new Date(val.completeTime);
+                                htmlContent +=' <a class="layui-btn layui-btn-sm" href="' + val.reportPath + '">下载日报表(' + ((date.getHours() < 10) ? '0'
+                                    + date.getHours() : date.getHours()) + ':' + ((date.getMinutes() < 10) ? '0' + date.getMinutes()
+                                    : date.getMinutes()) + ')</a>';
+                            });
+                        } else {
+                            htmlContent = $('<span class="layui-btn layui-btn-sm" disabled>今天没报表</span>');
+                        }
+                        div.html(htmlContent);
                     } else {
-                        htmlContent = $('<span class="layui-btn layui-btn-sm" disabled>今天没报表</span>');
+                        div.html($('<span class="layui-btn layui-btn-sm" disabled>获取报表清单异常</span>'));
                     }
-                    span.html(htmlContent);
                 },
                 error: function () {
-                    span.html($('<span class="layui-btn layui-btn-sm" disabled>获取报表清单异常</span>'));
+                    div.html($('<span class="layui-btn layui-btn-sm" disabled>获取报表清单异常</span>'));
                 }
             });
         });
-
     });
 
     layui.use(['jquery'], function () {

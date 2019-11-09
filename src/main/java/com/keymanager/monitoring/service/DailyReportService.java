@@ -197,7 +197,7 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 			Config config = configService.getConfig(Constants.DAILY_REPORT_PERCENTAGE, externalAccount);
 			CustomerKeywordDailyReportSecondSummaryExcelWriter excelWriter = new CustomerKeywordDailyReportSecondSummaryExcelWriter(dailyReport.getUuid(), externalAccount);
 			excelWriter.writeDailySummaryRow(externalAccountAndSummaryFeeMap.get(externalAccount), config == null ? 1d : Double.parseDouble(config.getValue()));
-			excelWriter.writeDataToExcel(externalAccount);
+			excelWriter.writeDataToExcel(externalAccount.replaceAll(" ", ""));
 			String dailyReportFolder = String.format("%sdailyreport/%d/", path, dailyReport.getUuid());
 			String loginUserReportFolder = dailyReportFolder + externalAccount + "/";
 			String reportPassword = "";
