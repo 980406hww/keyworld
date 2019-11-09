@@ -62,6 +62,14 @@
 <script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
 
+    let p = window.parent, count = 0;
+    while (count++ < 4 && p) {
+        if (p.isLoginIframe && p.isLoginIframe === 'yes') {
+            p.location.href = '/login';
+        }
+        p = p.parent;
+    }
+
     function checkEmail() {
         var loginName = document.getElementById('username').value;
         if (loginName == null || loginName === "") {

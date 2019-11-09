@@ -70,6 +70,9 @@
         WHERE DATE_SUB(CURDATE(), INTERVAL #{criteria.dayNum} DAY) = mgwi.fCreateDate
         AND mgwi.fType = #{criteria.entryType}
         AND mgwi.fTerminalType = #{criteria.terminalType}
+        <if test="criteria.machineGroup!=null and criteria.machineGroup!=''">
+            AND mgwi.fMachineGroup LIKE CONCAT(#{criteria.machineGroup}, "%")
+        </if>
         GROUP BY mgwi.fUuid
         ORDER BY mgwi.fMachineGroup
     </select>

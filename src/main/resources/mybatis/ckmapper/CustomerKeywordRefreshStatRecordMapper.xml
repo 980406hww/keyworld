@@ -36,6 +36,9 @@
         WHERE DATE_SUB(CURDATE(), INTERVAL #{criteria.dayNum} DAY) = ckrsr.fCreateDate
         AND ckrsr.fType = #{criteria.entryType}
         AND ckrsr.fTerminalType = #{criteria.terminalType}
+        <if test="criteria.groupName!=null and criteria.groupName!=''">
+            AND ckrsr.fGroup LIKE CONCAT(#{criteria.groupName}, "%")
+        </if>
         GROUP BY ckrsr.fUuid
         ORDER BY ckrsr.fGroup
     </select>
