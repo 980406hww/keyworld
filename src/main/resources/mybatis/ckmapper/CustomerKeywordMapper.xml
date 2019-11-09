@@ -348,13 +348,14 @@
     </select>
 
     <select id="getCustomerKeywordsCountByCustomerUuid" resultType="com.keymanager.ckadmin.vo.KeywordCountVO">
-        SELECT ck.fCustomerUuid              as 'customerUuid',
-        COUNT(1)                      as 'totalCount',
-        SUM(IF(ck.fStatus = 1, 1, 0)) AS 'activeCount'
+        SELECT
+            ck.fTerminalType AS 'terminalType',
+            COUNT(1)      		AS 'totalCount',
+            SUM(IF(ck.fStatus = 1, 1, 0)) AS 'activeCount'
         FROM t_customer_keyword ck
-        WHERE ck.fTerminalType = #{terminalType}
-        AND ck.fCustomerUuid = #{customerUuid}
+        WHERE ck.fCustomerUuid = #{customerUuid}
         AND ck.fType = #{type}
+        GROUP BY ck.fTerminalType
     </select>
 
     <update id="resetInvalidRefreshCount" parameterType="com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria">

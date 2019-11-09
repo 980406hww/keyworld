@@ -715,6 +715,7 @@
                                     <input type="hidden" name="userInfoID" id="userInfoID" value="">
                                     <input type="hidden" name="organizationID" id="organizationID" value="">
                                     <input hidden value='<#if Request.customerUuidTmp?exists>${Request.customerUuidTmp}</#if>' id="customerUuidTmp">
+                                    <input hidden value='<#if Request.terminalTypeTmp?exists>${Request.terminalTypeTmp}</#if>' id="terminalTypeTmp">
                                     <div class="layui-form-item" style="margin-bottom: 0" lay-filter="loginNameFilter">
                                         <div class="layui-inline">
                                             <label class="layui-form-label">客户</label>
@@ -723,7 +724,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <@shiro.hasPermission name = "/internal/group/updateGroupOperationCombineUuid">
+                                        <@shiro.hasPermission name = "/internal/qzsetting/deleteQZSettings">
                                         <div class="layui-inline">
                                             <label class="layui-form-label">用户</label>
                                             <div class="layui-input-inline">
@@ -864,19 +865,16 @@
             range: true,
         });
 
-        let customerUuid = $("#customerUuidTmp").val();
+        let customerUuidTmp = $("#customerUuidTmp").val();
+        let terminalTypeTmp = $("#terminalTypeTmp").val();
         let whereCondition = {searchEngine: '百度', terminalType: 'PC'};
         if (customerUuid && customerUuid !== "") {
-            whereCondition.customerUuid = customerUuid;
+            whereCondition.customerUuid = customerUuidTmp;
+            whereCondition.terminalType = terminalTypeTmp;
             get_qzsetting(whereCondition);
         } else {
             get_qzsetting({init: 'init'});
         }
-
-        getTerminalSearchEngineMap('PC');
-        get_operation_combine_list('PC');
-        get_qzcategory_label_list();
-        get_active_customer_list();
 
         /*动态加载tab栏*/
         function getTerminalSearchEngineMap(terminal) {
@@ -939,7 +937,7 @@
         };
 
         /*动态加载网站分类标签列表*/
-        function get_qzcategory_label_list() {
+        function get_qzcategory_label_list(categoryTag) {
             $.ajax({
                 url: '${ctx.path}/internal/qzsetting/getCategoryTag',
                 dataType: 'json',
@@ -952,6 +950,7 @@
                             $('#categoryTag').append(
                                 '<option value="' + item + '">' + item.trim() + '</option>');
                         });
+                        $("#categoryTag").val(categoryTag);
                         form.render("select");
                     }
                 }
@@ -959,7 +958,7 @@
         }
 
         /*动态加载客户列表*/
-        function get_active_customer_list() {
+        function get_active_customer_list(customerUuid) {
             $.ajax({
                 url: '${ctx.path}/internal/qzsetting/getActiveCustomer',
                 dataType: 'json',
@@ -974,6 +973,7 @@
                                 '<option value="' + item.uuid + '">' + item.contactPerson.trim()
                                 + '</option>');
                         });
+                        $("#customerUuid").val(customerUuid);
                         form.render("select");
                     }
                 }
@@ -1045,6 +1045,9 @@
         function successTable(res, whereCondition) {
             let terminalType = $('#terminalType').val();
             terminalType = terminalType === '' ? 'PC' : terminalType;
+            get_operation_combine_list(terminalType);
+            get_qzcategory_label_list(whereCondition.categoryTag);
+            get_active_customer_list(whereCondition.customerUuid);
             let qz_setting_table = $("#qzSettingTable").parent().find(
                 ".layui-table-main").find("table");
             $.each(res.data, function (idx, val) {
@@ -1219,7 +1222,6 @@
             let terminalType = data.elem.context.dataset.terminal;
             $('#terminalType').val(terminalType);
             getTerminalSearchEngineMap(terminalType);
-            get_operation_combine_list(terminalType);
             active['reload'].call(this);
         });
 
@@ -3275,7 +3277,7 @@
         <i style="font-size: 15px !important;" class="layui-icon">&#xe642;</i>修改整站归属
     </button>
     </div>
-    <#if isSEOSales==1>
+    <@shiro.hasRole name="SEOSales">
     <div class="layui-btn-group">
         <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToNormal">
             <i class="layui-icon">&#x1005;</i>正常续费
@@ -3290,7 +3292,7 @@
             <i class="layui-icon">&#xe63f;</i>改为其他
         </button>
     </div>
-    </#if>
+    </@shiro.hasRole>
 </script>
 
 <script type="text/html" id="item">

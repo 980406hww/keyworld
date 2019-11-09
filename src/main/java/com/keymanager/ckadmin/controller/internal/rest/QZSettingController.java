@@ -527,8 +527,8 @@ public class QZSettingController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/qzsetting/searchQZSettings")
-    @GetMapping(value = "/toQZSettingsWithCustomerUuid/{customerUuid}")
-    public ModelAndView toQZSettingsWithCustomerUuid(@PathVariable(name = "customerUuid") Long customerUuid, HttpServletRequest request) {
+    @GetMapping(value = "/toQZSettingsWithCustomerUuid/{customerUuid}/{terminalType}")
+    public ModelAndView toQZSettingsWithCustomerUuid(@PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "terminalType") Long terminalType) {
         ModelAndView mv = new ModelAndView();
         int isSEOSales = 0;
         if (getCurrentUser().getRoles().contains("SEOSales") || getCurrentUser().getRoles().contains("DepartmentManager")) {
@@ -536,6 +536,7 @@ public class QZSettingController extends SpringMVCBaseController {
         }
         mv.addObject("isSEOSales", isSEOSales);
         mv.addObject("customerUuidTmp", customerUuid);
+        mv.addObject("terminalTypeTmp", terminalType);
         mv.setViewName("qzsettings/qzsetting");
         return mv;
     }
@@ -545,12 +546,9 @@ public class QZSettingController extends SpringMVCBaseController {
      */
     @GetMapping("/getQZSettingsCount/{customerUuid}")
     public ResultBean getOperationCombines(@PathVariable(name = "customerUuid") Long customerUuid) {
-        ResultBean resultBean = new ResultBean();
+        ResultBean resultBean = new ResultBean(200, "success");
         try {
-            QZSettingCountVO qzSettingCountVO = qzSettingService.getQZSettingsCountByCustomerUuid(customerUuid);
-            resultBean.setCode(200);
-            resultBean.setMsg("success");
-            resultBean.setData(qzSettingCountVO);
+            resultBean.setData(qzSettingService.getQZSettingsCountByCustomerUuid(customerUuid));
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

@@ -364,8 +364,19 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public KeywordCountVO getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String terminalType, String type) {
-        return customerKeywordDao.getCustomerKeywordsCountByCustomerUuid(customerUuid, terminalType, type);
+    public Map<String, Object> getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String type) {
+        Map<String, Object> map = null;
+        List<KeywordCountVO> keywordCountVos = customerKeywordDao.getCustomerKeywordsCountByCustomerUuid(customerUuid, type);
+        if (CollectionUtils.isNotEmpty(keywordCountVos)) {
+            map = new HashMap<>(3);
+            int totalCount = 0;
+            for (KeywordCountVO keywordCountVo : keywordCountVos) {
+                totalCount += keywordCountVo.getTotalCount();
+                map.put(keywordCountVo.getTerminalType(), keywordCountVo);
+            }
+            map.put("totalCount", totalCount);
+        }
+        return map;
     }
 
     @Override

@@ -177,13 +177,9 @@ public class CustomerKeywordController extends SpringMVCBaseController {
      */
     @GetMapping("/getCustomerKeywordsCount/{customerUuid}/{type}")
     public ResultBean getCustomerKeywordsCount(@PathVariable Long customerUuid, @PathVariable String type, HttpServletRequest request) {
-        ResultBean resultBean = new ResultBean();
+        ResultBean resultBean = new ResultBean(200, "success");
         try {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
-            KeywordCountVO keywordCountVO = customerKeywordService.getCustomerKeywordsCountByCustomerUuid(customerUuid, terminalType, type);
-            resultBean.setCode(200);
-            resultBean.setMsg("success");
-            resultBean.setData(keywordCountVO);
+            resultBean.setData(customerKeywordService.getCustomerKeywordsCountByCustomerUuid(customerUuid, type));
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

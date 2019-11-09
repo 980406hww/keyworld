@@ -867,8 +867,48 @@ public class QZSettingServiceImpl extends
     }
 
     @Override
-    public QZSettingCountVO getQZSettingsCountByCustomerUuid(Long customerUuid) {
-        return qzSettingDao.getQZSettingsCountByCustomerUuid(customerUuid);
+    public Map<String, Object> getQZSettingsCountByCustomerUuid(Long customerUuid) {
+        Map<String, Object> map = null;
+        List<QZSettingCountVO> qzSettingCountVos = qzSettingDao.getQZSettingsCountByCustomerUuid(customerUuid);
+        if (CollectionUtils.isNotEmpty(qzSettingCountVos)) {
+            map = new HashMap<>(3);
+            int totalCount = 0;
+            for (QZSettingCountVO qzSettingCountVo : qzSettingCountVos) {
+                totalCount += 1;
+                Map<String, Integer> countMap = (Map<String, Integer>) map.get(qzSettingCountVo.getTerminalType());
+                if (null == countMap) {
+                    countMap = new HashMap<>(5);
+                    map.put(qzSettingCountVo.getTerminalType(), countMap);
+                }
+                Integer count = countMap.get("count");
+                count = (count == null ? 0 : count) + 1;
+                countMap.put("count", count);
+                switch (qzSettingCountVo.getRenewalStatus()) {
+                    case 0:
+                        Integer stop = countMap.get("stop");
+                        stop = (stop == null ? 0 : stop) + 1;
+                        countMap.put("stop", stop);
+                        break;
+                    case 3:
+                        Integer down = countMap.get("down");
+                        down = (down == null ? 0 : down) + 1;
+                        countMap.put("down", down);
+                        break;
+                    case 4:
+                        Integer other = countMap.get("other");
+                        other = (other == null ? 0 : other) + 1;
+                        countMap.put("other", other);
+                        break;
+                    default:
+                        Integer active = countMap.get("active");
+                        active = (active == null ? 0 : active) + 1;
+                        countMap.put("active", active);
+                        break;
+                }
+            }
+            map.put("totalCount", totalCount);
+        }
+        return map;
     }
 
     @Override

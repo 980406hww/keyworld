@@ -115,11 +115,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
             item += '   <div class="layui-col-md5  layui-col-sm6" style="margin-top: 37px">';
             let customerBusinessList = obj.customerBusinessList;
             if (customerBusinessList !== null && customerBusinessList.length > 0) {
-                var contactPerson = obj.contactPerson.replace(/\s+/g, "");
                 $.each(obj.customerBusinessList, function (index, tmp) {
-                    let url = '', title = '', id = '';
                     if (tmp === 'keyword') {
-
                         item += '<div class="layadmin-address">' +
                             '<strong>' +
                             '单词业务' +
@@ -132,9 +129,19 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             async: false,
                             success: function (res) {
                                 if (res.code === 200) {
-                                    item += generate_keyword_info(obj, res.data)
+                                    if (res.data != null) {
+                                        item += '<span>操作词数:' + res.data.totalCount + '</span><br>';
+                                        if (res.data["PC"] != null) {
+                                            item += generate_customer_info(obj.contactPerson, res.data["PC"], 'PC', 'pt', obj.uuid);
+                                        }
+                                        if (res.data["Phone"] != null) {
+                                            item += generate_customer_info(obj.contactPerson, res.data["Phone"], 'Phone', 'pt', obj.uuid);
+                                        }
+                                    } else {
+                                        item += generate_customer_info(obj.contactPerson, null, 'PC', 'pt', obj.uuid);
+                                    }
                                 } else {
-                                    item += generate_keyword_info2(obj)
+                                    item += generate_customer_info(obj.contactPerson, null, 'PC', 'pt', obj.uuid);
                                 }
                                 item += '</div>';
                             }
@@ -151,9 +158,20 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             async: false,
                             success: function (res) {
                                 if (res.code === 200) {
-                                    item += generate_qzsetting_info(obj, res.data);
+                                    if (res.data != null) {
+                                        item += '<span>站点数:' + res.data.totalCount + '</span><br>';
+                                        if (res.data["PC"] != null) {
+                                            item += generate_qzsetting_info(obj.contactPerson, res.data["PC"], 'PC',  obj.uuid);
+                                        }
+                                        if (res.data["Phone"] != null) {
+                                            item += generate_qzsetting_info(obj.contactPerson, res.data["Phone"], 'Phone', obj.uuid);
+                                        }
+                                    } else {
+                                        item += generate_qzsetting_info(obj.contactPerson, null, 'PC',  obj.uuid);
+                                    }
+                                } else {
+                                    item += generate_qzsetting_info(obj.contactPerson, null, 'PC', obj.uuid);
                                 }
-                                item += generate_qzsetting_info2(obj, res.data);
                                 item += '</div>';
                             }
                         });
@@ -169,9 +187,19 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             async: false,
                             success: function (res) {
                                 if (res.code === 200) {
-                                    item += generate_negative_info(obj, res.data)
+                                    if (res.data != null) {
+                                        item += '<span>操作词数:' + res.data.totalCount + '</span><br>';
+                                        if (res.data["PC"] != null) {
+                                            item += generate_customer_info(obj.contactPerson, res.data["PC"], 'PC', 'fm', obj.uuid);
+                                        }
+                                        if (res.data["Phone"] != null) {
+                                            item += generate_customer_info(obj.contactPerson, res.data["Phone"], 'Phone', 'fm', obj.uuid);
+                                        }
+                                    } else {
+                                        item += generate_customer_info(obj.contactPerson, null, 'PC', 'fm', obj.uuid);
+                                    }
                                 } else {
-                                    item += generate_negative_info2(obj)
+                                    item += generate_customer_info(obj.contactPerson, null, 'PC', 'fm', obj.uuid);
                                 }
                                 item += '</div>';
                             }
@@ -723,111 +751,74 @@ function generate_customer_daily_report(uuid, status, oldIdentify){
     return stat;
 }
 
-function generate_keyword_info(obj, data) {
+function generate_qzsetting_info(contactPerson, data, terminalType, customerUuid) {
     let htm = '';
-
-    if (data.totalCount > 0) {
-        let url = '/internal/customerKeyword/toCustomerKeywords/pt/PC/'+obj.uuid;
-        let contactPerson = obj.contactPerson.replace(/\s+/g, "");
-        let title = contactPerson + '-关键字列表';
-        let id = contactPerson + '-pt';
-        htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>总数:' + data.totalCount + '</span></a>&nbsp;&nbsp;&nbsp;&nbsp;(';
-        if (data.totalCount === data.activeCount) {
-            htm += '<span style="color: green;">激活</span>' +
-                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","0")>暂停关键字</a>'
-        } else if (data.totalCount > 0 && data.activeCount > 0) {
-            htm += '<span style="color: yellowgreen;">部分暂停</span>' +
-                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","0")>暂停关键字</a>' +
-                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","1")>激活关键字</a>'
-        } else {
-            htm += '<span style="color: red;">暂停</span>' +
-                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","1")>激活关键字</a>'
+    let terminalTypeName = terminalType === "PC" ? "电脑端" : "移动端";
+    if (data != null) {
+        if (data["count"] > 0) {
+            let url = '/internal/qzsetting/toQZSettingsWithCustomerUuid/' + customerUuid + '/' + terminalType;
+            contactPerson = contactPerson.replace(/\s+/g, "");
+            let title = contactPerson + '-全站';
+            let id = contactPerson + '-toQz-' + terminalType;
+            htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>'+ terminalTypeName +':' + data["count"] + '</span></a>&nbsp;&nbsp;状态:';
+            if (data["active"] > 0) {
+                htm += '<span style="color: green;">'+data["active"]+'个续费|</span>'
+            }
+            if (data["stop"] > 0) {
+                htm += '<span style="color: darkred;">'+data["stop"]+'个暂停|</span>'
+            }
+            if (data["down"] > 0) {
+                htm += '<span style="color: grey;">'+data["down"]+'个下架|</span>'
+            }
+            if(data["other"] > 0) {
+                htm += '<span style="color: lightgrey;">'+data["other"]+'个其他|</span>'
+            }
+            htm = htm.substring(0, htm.lastIndexOf("|"));
+            htm += '<br>';
         }
-        htm += ')';
     } else {
-        htm += generate_keyword_info2(obj);
-    }
-    return htm;
-}
-
-function generate_keyword_info2(obj) {
-    let url = '/internal/customerKeyword/toCustomerKeywords/pt/PC/'+obj.uuid;
-    let contactPerson = obj.contactPerson.replace(/\s+/g, "");
-    let title = contactPerson + '-关键字列表';
-    let id = contactPerson + '-pt';
-    return '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>查看关键字</span></a>';
-}
-
-function generate_qzsetting_info(obj, data) {
-    let htm = '';
-
-    if (data.totalCount > 0) {
-        let entryType = document.getElementById('entryType').value;
-        let url = '/internal/qzsetting/toQZSettingsWithCustomerUuid/'+obj.uuid;
-        let contactPerson = obj.contactPerson.replace(/\s+/g, "");
-        let title = contactPerson + '-全站';
-        let id = contactPerson + '-toQz';
-        htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>总数:' + data.totalCount + '</span></a>&nbsp;&nbsp;状态:';
-        if (data.activeCount > 0) {
-            htm += '<span style="color: green;">'+data.activeCount+'个续费|</span>'
-        }
-        if (data.pauseCount > 0) {
-            htm += '<span style="color: darkred;">'+data.pauseCount+'个暂停|</span>'
-
-        }
-        if (data.downCount > 0) {
-            htm += '<span style="color: grey;">'+data.downCount+'个下架|</span>'
-        }
-        if(data.otherCount > 0) {
-            htm += '<span style="color: lightgrey;">'+data.otherCount+'个其他|</span>'
-        }
-        htm = htm.substring(0, htm.lastIndexOf("|"));
-        htm += '<br>';
-    }
-    return htm;
-}
-
-function generate_qzsetting_info2(obj) {
-    let url = '/internal/customerKeyword/toCustomerKeywords/qz/PC/'+obj.uuid;
-    let contactPerson = obj.contactPerson.replace(/\s+/g, "");
-    let title = contactPerson + '-关键字列表';
-    let id = contactPerson + '-qz';
-    return '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>查看关键字</span></a>';
-}
-
-function generate_negative_info(obj,data) {
-    let htm = '';
-
-    if (data.totalCount > 0) {
-        let url = '/internal/customerKeyword/toCustomerKeywords/fm/PC/'+obj.uuid;
-        let contactPerson = obj.contactPerson.replace(/\s+/g, "");
+        let url = '/internal/customerKeyword/toCustomerKeywords/qz/' + terminalType + '/' + customerUuid;
+        contactPerson = contactPerson.replace(/\s+/g, "");
         let title = contactPerson + '-关键字列表';
-        let id = contactPerson + '-fm';
-        htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>总数:' + data.totalCount + '</span></a>&nbsp;&nbsp;&nbsp;&nbsp;(';
-        if (data.totalCount === data.activeCount) {
-            htm += '<span style="color: green;">激活</span>' +
-                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","0")>暂停关键字</a>'
-        } else if (data.totalCount > 0 && data.activeCount > 0) {
-            htm += '<span style="color: yellowgreen;">部分暂停</span>' +
-                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","0")>暂停关键字</a>' +
-                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","1")>激活关键字</a>'
-        } else {
-            htm += '<span style="color: red;">暂停</span>' +
-                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","1")>激活关键字</a>'
-        }
-        htm += ')';
-    } else {
-        htm += generate_negative_info2(obj)
+        let id = contactPerson + '-qz-' + terminalType;
+        htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>查看关键字</span></a>';
     }
     return htm;
 }
 
-function generate_negative_info2(obj) {
-    let url = '/internal/customerKeyword/toCustomerKeywords/fm/PC/'+obj.uuid;
-    let contactPerson = obj.contactPerson.replace(/\s+/g, "");
+/**
+ * type: pt, fm, qt
+ */
+function generate_customer_info(contactPerson, data, terminalType, type, customerUuid) {
+    let htm = '';
+    let url = '/internal/customerKeyword/toCustomerKeywords/' + type + '/' + terminalType + '/' + customerUuid;
+    contactPerson = contactPerson.replace(/\s+/g, "");
     let title = contactPerson + '-关键字列表';
-    let id = contactPerson + '-fm';
-    return '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>查看关键字</span></a>';
+    let id = contactPerson + '-' + type + '-' + terminalType;
+    let terminalTypeName = terminalType === 'PC' ? "电脑端" : "移动端";
+    if (data !== null) {
+        if (data.totalCount > 0) {
+            htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>' + terminalTypeName + ':' + data.totalCount + '</span></a>(';
+            if (data.totalCount === data.activeCount) {
+                htm += '<span style="color: green;">激活</span>' +
+                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","0")>暂停关键字</a>'
+            } else if (data.totalCount > 0 && data.activeCount > 0) {
+                htm += '<span style="color: yellowgreen;">部分暂停</span>' +
+                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","0")>暂停关键字</a>' +
+                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","1")>激活关键字</a>'
+            } else {
+                htm += '<span style="color: red;">暂停</span>' +
+                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","1")>激活关键字</a>'
+            }
+            htm += ')';
+        } else {
+            htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>查看' + terminalTypeName + '关键字</span></a>';
+        }
+    } else {
+        htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>查看关键字</span></a>';
+    }
+    htm += '<br>';
+    return htm;
 }
 
 function updateOrNewTab(url, tit, id) {
