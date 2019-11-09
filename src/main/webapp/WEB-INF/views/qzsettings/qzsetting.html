@@ -751,7 +751,7 @@
                                         <div class="layui-input-inline">
                                             <select name="renewalStatus" id="renewalStatus">
                                                 <option value="">全部</option>
-                                                <option value="11">首次+续费中</option>
+                                                <option value="11" selected>首次+续费中+其他</option>
                                                 <option value="2">首次续费</option>
                                                 <option value="1">续费中</option>
                                                 <option value="0">暂停续费</option>
@@ -869,6 +869,8 @@
         if (customerUuid && customerUuid !== "") {
             whereCondition.customerUuid = customerUuid;
             get_qzsetting(whereCondition);
+        } else {
+            get_qzsetting({init: 'init'});
         }
 
         getTerminalSearchEngineMap('PC');
@@ -1010,8 +1012,6 @@
             get_qzsetting(data.field);
             return false;
         });
-
-        get_qzsetting({init: 'init'});
 
         <@shiro.hasPermission name = "/internal/qzsetting/searchQZSettings" >
             function get_qzsetting(whereCondition) {
@@ -1367,7 +1367,7 @@
                                     color: '#000'
                                 }
                             }
-                        },
+                        }/*,
                         {
                             show: true,
                             type: 'value',
@@ -1396,10 +1396,10 @@
                                     color: '#000'
                                 }
                             }
-                        }
+                        }*/
                     ],
                     series: [
-                        {
+/*                        {
                             name: '收录',
                             smooth: true,
                             type: 'line',
@@ -1414,7 +1414,7 @@
                                     width: 3
                                 }
                             }
-                        },
+                        },*/
                         {
                             name: '前10',
                             smooth: true,
@@ -1559,7 +1559,7 @@
                                     color: '#000'
                                 }
                             }
-                        },
+                        }/*,
                         {
                             show: true,
                             type: 'value',
@@ -1588,10 +1588,10 @@
                                     color: '#000'
                                 }
                             }
-                        }
+                        }*/
                     ],
                     series: [
-                        {
+/*                        {
                             name: '收录',
                             smooth: true,
                             type: 'line',
@@ -1606,7 +1606,7 @@
                                     width: 3
                                 }
                             }
-                        },
+                        },*/
                         {
                             name: '前10',
                             smooth: true,

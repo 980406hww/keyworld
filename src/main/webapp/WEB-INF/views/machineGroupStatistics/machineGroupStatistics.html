@@ -305,7 +305,6 @@
                             $('#terminalType').val("PC");
                             element.tabChange('machineGroupTab', one+"PC");
                         }
-
                         form.render("select");
                     }
                 }
@@ -314,6 +313,9 @@
 
         <@shiro.hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
         function tableInit(condition) {
+            if (condition.machineGroup){
+                condition.groupName = condition.machineGroup;
+            }
             table.render({
                 elem: '#machineTable',
                 method: 'post',
@@ -527,6 +529,9 @@
                 let condition = common.formToJsonObject("searchForm");
                 if (condition.dayNum === '') {
                     condition.dayNum = 0;
+                }
+                if (condition.machineGroup){
+                    condition.groupName = condition.machineGroup;
                 }
                 table.reload('machineTable', {
                     where: condition

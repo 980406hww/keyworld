@@ -138,6 +138,9 @@
 <script src="/static/ok-admin/js/okadmin.js"></script>
 <script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
+    // 别删 这是给子页面使用的 本页面找不到使用方法
+    var isLoginIframe = 'yes';
+
     layui.use(['jquery', 'common', 'layer'], function () {
         let $ = layui.jquery;
         let common = layui.common;

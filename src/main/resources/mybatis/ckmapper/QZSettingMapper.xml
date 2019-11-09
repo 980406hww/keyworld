@@ -64,7 +64,7 @@
         <if test="qzSettingSearchCriteria.renewalStatus != null">
             <choose>
                 <when test="qzSettingSearchCriteria.renewalStatus == 11">
-                    AND (qs.fRenewalStatus = 2 OR qs.fRenewalStatus = 1)
+                    AND (qs.fRenewalStatus = 2 OR qs.fRenewalStatus = 1 OR qs.fRenewalStatus = 4)
                 </when>
                 <otherwise>
                     AND qs.fRenewalStatus = #{qzSettingSearchCriteria.renewalStatus}
