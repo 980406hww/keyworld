@@ -130,6 +130,8 @@
             return false;
         });
 
+        searchSalesInfo({init: 'init'});
+
         function initManagePart(){
             $.ajax({
                 url: '/internal/salesInfo/returnWebsiteTypeMap',

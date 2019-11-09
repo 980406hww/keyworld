@@ -1011,6 +1011,8 @@
             return false;
         });
 
+        get_qzsetting({init: 'init'});
+
         <@shiro.hasPermission name = "/internal/qzsetting/searchQZSettings" >
             function get_qzsetting(whereCondition) {
                 table.render({

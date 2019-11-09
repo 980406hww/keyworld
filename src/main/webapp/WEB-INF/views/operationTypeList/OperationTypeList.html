@@ -217,6 +217,8 @@
             return false
         });
 
+        init_Search({init: 'init'});
+
         table.on('tool(tableFilter)', function (obj) {
             var data = obj.data, event = obj.event;
             switch (event) {

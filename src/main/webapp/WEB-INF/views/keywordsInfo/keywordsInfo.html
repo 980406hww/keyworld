@@ -271,7 +271,7 @@
                 content: html,
                 shadeClose: true,
                 resize: false,
-                area: '300px',
+                area: ['500px', '800px'],
                 offset: '100px',
                 btn: ['确认'],
                 yes: function (index) {
@@ -308,6 +308,8 @@
             tableInit(condition);
             return false;
         });
+
+        tableInit({init: 'init'});
 
         function init_searchEngine(terminalType) {
             $.ajax({

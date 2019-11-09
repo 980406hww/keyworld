@@ -1,6 +1,8 @@
 package com.keymanager.ckadmin.criteria;
 
-public class RefreshStatisticsCriteria {
+import com.keymanager.ckadmin.criteria.base.BaseCriteria;
+
+public class RefreshStatisticsCriteria extends BaseCriteria {
 
     private String entryType;
 

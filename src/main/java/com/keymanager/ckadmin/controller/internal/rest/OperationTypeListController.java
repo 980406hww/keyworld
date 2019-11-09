@@ -87,7 +87,7 @@ public class OperationTypeListController {
             OperationType operationType = new OperationType();
             operationType.setTerminalType(operationTypeCriteria.getTerminalType());
             operationType.setOperationTypeName(operationTypeCriteria.getOperationTypeName());
-            List<OperationType> operationTypeList = operationTypeService.getOperationTypes(operationType, page);
+            List<OperationType> operationTypeList = operationTypeService.getOperationTypes(operationType, page, operationTypeCriteria.getInit());
             resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
             resultBean.setMsg("success");

@@ -229,7 +229,7 @@
         }
 
         function init_Search(whereCondition){
-            whereCondition = common.jsonObjectTrim(whereCondition)
+            whereCondition = common.jsonObjectTrim(whereCondition);
             table.render({
                 elem: '#industryListTable',
                 method: 'post',
@@ -296,6 +296,8 @@
             init_Search(postData);
             return false
         });
+
+        init_Search({init: 'init'});
 
         table.on('tool(tableFilter)',function(obj){
             var data = obj.data,event = obj.event;

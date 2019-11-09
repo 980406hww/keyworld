@@ -614,6 +614,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
         });
     }
 
+    get_keywords({init: 'init'});
+
     window.toCustomerKeyword = function (customerUuid, contactPerson) {
         let businessType = $('#type').val();
         let terminalType = $('#terminalType').val();

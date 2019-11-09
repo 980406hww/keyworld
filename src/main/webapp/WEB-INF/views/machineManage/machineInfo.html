@@ -332,6 +332,8 @@
             return false;
         });
 
+        tableInit({init: 'init'});
+
         function init(data) {
             let myChart = echarts.init(document.getElementById("container"));
             handle(data);

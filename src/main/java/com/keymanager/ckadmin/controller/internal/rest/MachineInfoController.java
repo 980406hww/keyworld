@@ -691,7 +691,8 @@ public class MachineInfoController extends SpringMVCBaseController {
             String clientIDPrefix = map.get("clientIDPrefix");
             String city = map.get("city");
             String switchGroupName = map.get("switchGroupName");
-            resultBean.setData(machineInfoService.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName));
+            String init = map.get("init");
+            resultBean.setData(machineInfoService.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName, init));
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

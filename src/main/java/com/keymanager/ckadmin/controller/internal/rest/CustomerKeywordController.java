@@ -660,7 +660,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     public ResultBean getPTKeywords(@RequestBody PTKeywordCountCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         try {
-            Page<PTkeywordCountVO> page = new Page(keywordCriteria.getPage(), keywordCriteria.getLimit());
+            Page<PTkeywordCountVO> page = new Page<>(keywordCriteria.getPage(), keywordCriteria.getLimit());
             String orderByField = ReflectUtils.getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {
                 page.setOrderByField(orderByField);

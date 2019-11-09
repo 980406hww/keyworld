@@ -395,6 +395,9 @@
     </update>
 
     <sql id="searchCustomerKeywordsCriteria">
+        <if test="keywordCriteria.init != null and keywordCriteria.init == 'init'">
+            AND 1 != 1
+        </if>
         <if test="keywordCriteria.customerUuid != null and keywordCriteria.customerUuid != ''">
             AND ck.fCustomerUuid = #{keywordCriteria.customerUuid}
         </if>
@@ -439,7 +442,7 @@
         <if test="keywordCriteria.failedCause != null and keywordCriteria.failedCause != ''">
             AND ck.fFailedCause = #{keywordCriteria.failedCause}
         </if>
-        <if test="keywordCriteria.terminalType != null || keywordCriteria.terminalType != ''">
+        <if test="keywordCriteria.terminalType != null and keywordCriteria.terminalType != ''">
             AND ck.fTerminalType = #{keywordCriteria.terminalType}
         </if>
         <if test="keywordCriteria.searchEngine != null and keywordCriteria.searchEngine != ''">
@@ -1053,6 +1056,9 @@
         WHERE c.fUuid = ck.fCustomerUuid
         AND ck.fType = 'pt'
         AND ck.fTerminalType = #{keywordCriteria.terminalType}
+        <if test="keywordCriteria.init != null and keywordCriteria.init == 'init'">
+            AND 1 != 1
+        </if>
         <if test="keywordCriteria.keyword != null and keywordCriteria.keyword != ''">
             AND ck.fKeyword like concat(#{keywordCriteria.keyword}, '%')
         </if>
