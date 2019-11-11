@@ -784,12 +784,17 @@
                                             </select>
                                         </div>
                                     </div>
+
                                     <div class="layui-inline">
                                         <label class="layui-form-label">创建时间</label>
-                                        <div class="layui-input-inline">
-                                            <input type="text" class="layui-input" id="createTimes" name="createTimes" placeholder="请选择日期">
+                                        <div class="layui-input-inline" style="width: 90.5px;">
+                                            <input type="text" name="createTime" id="createTime" placeholder="起始日期" autocomplete="off" class="layui-input">
+                                        </div>
+                                        <div class="layui-input-inline" style="width: 90.5px;">
+                                            <input type="text" name="createTimePrefix" id="createTimePrefix" placeholder="结束日期" autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
+
                                     <div class="layui-inline">
                                         <label class="layui-form-label">达标优化类型</label>
                                         <div class="layui-input-inline">
@@ -861,15 +866,13 @@
         var laydate = layui.laydate;
         var common = layui.common;
 
-        laydate.render({
-            elem: '#createTimes',
-            range: true,
-        });
+        laydate.render({elem: '#createTime'});
+        laydate.render({elem: '#createTimePrefix'});
 
         let customerUuidTmp = $("#customerUuidTmp").val();
         let terminalTypeTmp = $("#terminalTypeTmp").val();
         let whereCondition = {searchEngine: '百度', terminalType: 'PC'};
-        if (terminalTypeTmp) {
+        if (customerUuidTmp) {
             whereCondition.customerUuid = customerUuidTmp;
             whereCondition.terminalType = terminalTypeTmp;
             get_qzsetting(whereCondition);
@@ -987,11 +990,6 @@
             data.field.customerUuid.replace(/\s*/g, "");
             data.field.categoryTag.replace(/\s*/g, "");
 
-            if (data.field.createTimes != null || data.field.createTimes !== '') {
-                var str = data.field.createTimes.split(" - ");
-                data.field.createTime = str[0];
-                data.field.createTimePrefix = str[1]
-            }
             if (!data.field.createTimePrefix) {
                 data.field.createTimePrefix = '';
             }

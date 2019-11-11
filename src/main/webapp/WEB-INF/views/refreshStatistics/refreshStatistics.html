@@ -195,21 +195,23 @@
         <@shiro.hasPermission name = "/internal/customerKeyword/searchCustomerKeywordLists" >
         window.searchCustomerKeywords = function (group) {
             let url = '/internal/customerKeyword/toKeywords';
-            let id = group + '-关键字';
+            let title = group + '-关键字';
+            let id = group + '-关键字-sl';
             let data = {
                 group: group,
                 status: '1',
                 type: document.getElementById('entryType').value,
                 terminal: document.getElementById('terminalType').value
             };
-            updateOrNewTab(url, id, id ,data);
+            updateOrNewTab(url, title, id ,data);
         };
         </@shiro.hasPermission>
 
         <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
         window.findKeyword = function (optimizeGroupName, invalidRefreshCount) {
             let url = '/internal/customerKeyword/toKeywords';
-            let id = optimizeGroupName + '-无效关键字';
+            let title = optimizeGroupName + '-关键字';
+            let id = optimizeGroupName + '-关键字-wx';
             let data = {
                 status: '1',
                 type: document.getElementById('entryType').value,
@@ -224,7 +226,7 @@
             } else {
                 data.nrsd = '-1';
             }
-            updateOrNewTab(url, id, id ,data);
+            updateOrNewTab(url, title, id ,data);
         };
         </@shiro.hasPermission>
 

@@ -106,7 +106,6 @@
 <script src="/static/ok-admin/js/somePublic.js"></script>
 
 <script>
-
     getHeight();
     var sign = false;
     function getHeight(){
@@ -198,6 +197,10 @@
             initLayPage(pageConf);
             return false;
         });
+
+        if (document.getElementById('operationCombineName').value){
+            $('#searchBtn').click();
+        }
 
         window.toOperationCombineAdd = function(){
             let data = {};
@@ -536,8 +539,6 @@
 
                     });
                     layer.close(index2);
-
-
                 }
             });
         };
