@@ -385,7 +385,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception ex) {
             logger.error(ex.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("fail");
+            resultBean.setMsg(ex.getMessage());
             return resultBean;
         }
     }
@@ -611,7 +611,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("fail");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }
