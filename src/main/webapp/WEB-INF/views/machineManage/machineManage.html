@@ -430,7 +430,11 @@
             return false
         });
 
-        searchMachine({init: 'init'});
+        if (document.getElementById('machineGroup').value){
+            $('#searchBtn').click();
+        }else {
+            searchMachine({init: 'init'});
+        }
 
         function searchMachine(whereCondition){
             whereCondition = common.jsonObjectTrim(whereCondition);
@@ -1232,6 +1236,16 @@
                 <i class="layui-icon layui-icon-upload-drag"></i>导入开机终端
             </button>
         </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/machineInfo/updateMachineGroup">
+            <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="batchUpdateMachine">
+                <i class="layui-icon layui-icon-edit"></i>修改所选终端分组信息
+            </button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/machineInfo/updateMachineInfoTargetVersion">
+            <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="showTargetVersionSettingDialog">
+                <i class="layui-icon layui-icon-edit"></i>设定目标版本
+            </button>
+        </@shiro.hasPermission>
         <button class="layui-btn layui-btn-sm" id="more_operation" lay-event="more_operation">
             更多功能
             <span id="rightDirection" style="display: inline-block;"><i class="layui-icon layui-icon-right"></i></span>
@@ -1240,11 +1254,6 @@
     </div>
     <div class="my-opration-hide" id="operationContent">
         <div class="layui-btn-group">
-            <@shiro.hasPermission name="/internal/machineInfo/updateMachineGroup">
-                <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="batchUpdateMachine">
-                    <i class="layui-icon layui-icon-edit"></i>修改所选终端分组信息
-                </button>
-            </@shiro.hasPermission>
             <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
                 <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toBatchUpdateFailedReason">
                     <i class="layui-icon layui-icon-edit"></i>修改所选终端失败原因
@@ -1253,11 +1262,6 @@
             <@shiro.hasPermission name="/internal/machineInfo/changeTerminalType">
                 <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toBatchChangeTerminalType">
                     <i class="layui-icon layui-icon-edit"></i>批量变更所选终端类型
-                </button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/machineInfo/updateMachineInfoTargetVersion">
-                <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="showTargetVersionSettingDialog">
-                    <i class="layui-icon layui-icon-edit"></i>设定目标版本
                 </button>
             </@shiro.hasPermission>
             <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">

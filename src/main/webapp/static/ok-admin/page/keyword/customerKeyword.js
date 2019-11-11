@@ -178,7 +178,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
                 {field: 'failedCause', title: '失败原因', align: 'left', width: '80',},
                 {field: 'optimizeGroupName', title: '优化分组', align: 'left', width: '80'},
                 {field: 'machineGroup', title: '机器分组', align: 'left', width: '80'},
-                {field: 'remarks', title: '备注', align: 'left', width: '80', hide: true},
+                {field: 'remarks', title: '备注', align: 'left', width: '80', hide: true, templet: '#remarksTpl'},
                 {title: '操作', align: 'center', width: '120', templet: '#operationTpl'}
             ]],
             height: 'full-110',

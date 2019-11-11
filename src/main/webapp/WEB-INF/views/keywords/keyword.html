@@ -70,7 +70,6 @@
                                     <input type="hidden" id="sevenDaysNoReachStandard" name="sevenDaysNoReachStandard" value=""/>
                                     <input type="hidden" id="fifteenDaysNoReachStandard" name="fifteenDaysNoReachStandard" value=""/>
                                     <input type="hidden" id="thirtyDaysNoReachStandard" name="thirtyDaysNoReachStandard" value=""/>
-
                                     <div class="layui-inline">
                                         <select name="searchEngine" id="searchEngine">
                                             <option value=''>搜索引擎</option>
@@ -116,19 +115,13 @@
                                                 <option value='2'>新增</option>
                                                 <option value='0'>暂不操作</option>
                                                 <option value='3'>下架</option>
-                                            </select>&nbsp;
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="layui-inline some-special">
-                                        <div class="layui-input-inline" style="width: 50px;">
-                                            <input type="checkbox" name="pushPay" title="催缴" lay-skin="primary">
-                                        </div>
-                                        <div class="layui-input-inline" style="width: 80px;">
-                                            <input type="checkbox" name="requireDelete" title="要求删除" lay-skin="primary">
-                                        </div>
-                                        <div class="layui-input-inline" style="width: 105px;">
-                                            <input type="checkbox" name="noPosition" title="显示排名为0" lay-skin="primary">
-                                        </div>
+                                    <div class="layui-inline" style="width: 140px">
+                                        <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off"
+                                               onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');"
+                                               class="layui-input layui-input-text " />
                                     </div>
                                     <div class="layui-inline">
                                         <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索
@@ -149,14 +142,6 @@
                                 <div class="my-hide" id="searchContent">
 
                                     <div class="layui-form-item" lay-filter="loginNameFilter">
-                                        <div class="layui-inline">
-                                            <label class="layui-form-label">机器分组</label>
-                                            <div class="layui-input-inline">
-                                                <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off"
-                                                       onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');"
-                                                       class="layui-input layui-input-text " />
-                                            </div>
-                                        </div>
 
                                         <div class="layui-inline">
                                             <label class="layui-form-label">熊掌号</label>
@@ -239,6 +224,18 @@
                                             </div>
                                             <div class="layui-input-inline" style="width: 90.5px;">
                                                 <input type="text" name="ltCreateTime" id="ltCreateTime" placeholder="结束日期" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-inline some-special">
+                                            <div class="layui-input-inline" style="width: 50px;">
+                                                <input type="checkbox" name="pushPay" title="催缴" lay-skin="primary">
+                                            </div>
+                                            <div class="layui-input-inline" style="width: 80px;">
+                                                <input type="checkbox" name="requireDelete" title="要求删除" lay-skin="primary">
+                                            </div>
+                                            <div class="layui-input-inline" style="width: 105px;">
+                                                <input type="checkbox" name="noPosition" title="显示排名为0" lay-skin="primary">
                                             </div>
                                         </div>
                                     </div>

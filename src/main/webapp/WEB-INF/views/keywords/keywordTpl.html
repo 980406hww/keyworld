@@ -61,6 +61,12 @@
     {{# } }}
 </script>
 
+<script type="text/html" id="remarksTpl">
+    {{#  if(d.remarks && d.remarks !== 'null') { }}
+    {{ d.remarks }}
+    {{# } }}
+</script>
+
 <script type="text/html" id="indexCountTpl">
     {{#  if(d.currentIndexCount === -1) { }}
     未采集

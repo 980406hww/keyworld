@@ -188,7 +188,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 {field: 'invalidRefreshCount', title: '无效', width: '60', hide: true },
                 {field: 'status', title: '状态', width: '60', templet: '#statusTpl' },
                 {field: 'paymentStatus', title: '付费状态', width: '80', hide: true },
-                {field: 'remarks', title: '备注', width: '100', hide: true},
+                {field: 'remarks', title: '备注', width: '100', hide: true, templet: '#remarksTpl'},
                 {field: 'failedCause', title: '失败原因', width: '80', hide: true},
             ]],
             height: 'full-110',
@@ -614,7 +614,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
         });
     }
 
-    get_keywords({init: 'init'});
+    if (document.getElementById('keyword').value || document.getElementById('optimizeGroupName').value ||
+        document.getElementById('machineGroup').value) {
+        $('#searchBtn').click();
+    } else {
+        get_keywords({init: 'init'});
+    }
 
     window.toCustomerKeyword = function (customerUuid, contactPerson) {
         let businessType = $('#type').val();

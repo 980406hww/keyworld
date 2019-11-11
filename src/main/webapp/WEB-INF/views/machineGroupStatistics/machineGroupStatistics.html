@@ -205,20 +205,22 @@
         <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
         window.searchCustomerKeywords = function (machineGroup) {
             let url = '/internal/customerKeyword/toKeywords';
-            let id = machineGroup + '-关键字统计-O-FMG';
+            let title = machineGroup + '-关键字';
+            let id = machineGroup + '-关键字-O-FMG';
             let data = {
                 machineGroup: machineGroup,
                 status: '1',
                 type: document.getElementById('entryType').value,
                 terminal: document.getElementById('terminalType').value
             };
-            updateOrNewTab(url, id, id ,data);
+            updateOrNewTab(url, title, id ,data);
         };
         </@shiro.hasPermission>
 
         <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
         window.findKeyword = function (machineGroup, invalidRefreshCount) {
             let url = '/internal/customerKeyword/toKeywords';
+            let title = machineGroup + '-关键字';
             let id = machineGroup + '-关键字-N-FMG';
             let data = {
                 status: '1',
@@ -234,7 +236,7 @@
             } else {
                 data.nrsd = '-1';
             }
-            updateOrNewTab(url, id, id ,data);
+            updateOrNewTab(url, title, id ,data);
         };
         </@shiro.hasPermission>
 
