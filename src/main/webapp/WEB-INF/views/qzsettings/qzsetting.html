@@ -650,9 +650,9 @@
 <body>
 <div class="ok-body">
     <div class="layui-tab layui-tab-card" lay-filter="tabQzsetting">
-        <ul class="layui-tab-title" id="tabItem">
-            <li data-terminal="PC" style="width: 100px" class="layui-this">电脑</li>
-            <li data-terminal="Phone" style="width: 100px">手机</li>
+        <ul class="layui-tab-title">
+            <li data-terminal="PC" lay-id="PC" style="width: 100px" class="layui-this">电脑</li>
+            <li data-terminal="Phone" lay-id="Phone" style="width: 100px">手机</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
@@ -710,12 +710,11 @@
                                     </div>
                                 </div>
                                 <div class="my-hide" id="searchContent">
-                                    <input type="hidden" name="searchEngine" id="searchEngine" value="百度"/>
-                                    <input type="hidden" name="terminalType" id="terminalType" value="PC"/>
+                                    <input type="hidden" name="searchEngine" id="searchEngine" value="<#if searchEngineTmp?exists>${searchEngineTmp}<#else>百度</#if>"/>
+                                    <input type="hidden" name="terminalType" id="terminalType" value="<#if terminalTypeTmp?exists>${terminalTypeTmp}<#else>PC</#if>"/>
                                     <input type="hidden" name="userInfoID" id="userInfoID" value="">
                                     <input type="hidden" name="organizationID" id="organizationID" value="">
                                     <input hidden value='<#if Request.customerUuidTmp?exists>${Request.customerUuidTmp}</#if>' id="customerUuidTmp">
-                                    <input hidden value='<#if Request.terminalTypeTmp?exists>${Request.terminalTypeTmp}</#if>' id="terminalTypeTmp">
                                     <div class="layui-form-item" style="margin-bottom: 0" lay-filter="loginNameFilter">
                                         <div class="layui-inline">
                                             <label class="layui-form-label">客户</label>
@@ -846,7 +845,7 @@
     }
 
     function resetHidden() {
-        document.getElementById('searchEngine').value = '百度';
+        document.getElementById('searchEngine').value = '<#if searchEngineTmp?exists>${searchEngineTmp}<#else>百度</#if>';
         document.getElementById('userInfoID').value = '';
         document.getElementById('organizationID').value = '';
     }
@@ -870,18 +869,20 @@
         laydate.render({elem: '#createTimePrefix'});
 
         let customerUuidTmp = $("#customerUuidTmp").val();
-        let terminalTypeTmp = $("#terminalTypeTmp").val();
-        let whereCondition = {searchEngine: '百度', terminalType: 'PC'};
         if (customerUuidTmp) {
+            let whereCondition = {searchEngine: 'All'};
             whereCondition.customerUuid = customerUuidTmp;
-            whereCondition.terminalType = terminalTypeTmp;
+            whereCondition.terminalType = $("#terminalType").val();
             get_qzsetting(whereCondition);
+            getTerminalSearchEngineMap(whereCondition.terminalType, whereCondition.searchEngine);
+            element.tabChange('tabQzsetting', whereCondition.terminalType);
         } else {
             get_qzsetting({init: 'init'});
+            getTerminalSearchEngineMap('PC');
         }
 
         /*动态加载tab栏*/
-        function getTerminalSearchEngineMap(terminal) {
+        function getTerminalSearchEngineMap(terminal, key = '百度') {
             $.ajax({
                 url: '/internal/qzsetting/getQZSettingSearchEngineMap/' + terminal,
                 type: 'get',
@@ -895,7 +896,7 @@
                         terminalSearchEngine.empty();
                         $.each(data, function (index, item) {
                             let ttse = item.searchEngineName.replace(terminal,'');
-                            if (ttse === '百度') {
+                            if (ttse === key) {
                                 terminalSearchEngine.append(
                                     '<option value="' + ttse + '" selected>' + ttse + '</option>');
                             } else {
@@ -1044,7 +1045,6 @@
         function successTable(res, whereCondition) {
             let terminalType = $('#terminalType').val();
             terminalType = terminalType === '' ? 'PC' : terminalType;
-            getTerminalSearchEngineMap(terminalType);
             get_operation_combine_list(terminalType);
             get_qzcategory_label_list(whereCondition.categoryTag);
             get_active_customer_list(whereCondition.customerUuid);
@@ -1221,6 +1221,7 @@
         element.on('tab(tabQzsetting)', function (data) {
             let terminalType = data.elem.context.dataset.terminal;
             $('#terminalType').val(terminalType);
+            getTerminalSearchEngineMap(terminalType);
             active['reload'].call(this);
         });
 
