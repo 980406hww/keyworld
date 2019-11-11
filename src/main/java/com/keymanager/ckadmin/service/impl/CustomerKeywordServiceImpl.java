@@ -348,10 +348,14 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             String keywordEffect = customerKeyword.getKeywordEffect();
             if (StringUtil.isNotNullNorEmpty(oldKeywordEffect)) {
                 if (!oldKeywordEffect.equals(keywordEffect)) {
-                    Map<String, Integer> levelMap = KeywordEffectEnum.toLevelMap();
-                    Integer levelValue = levelMap.get(keywordEffect);
-                    String newKeywordEffect = levelMap.get(oldKeywordEffect) < (levelValue == null ? 4 : levelValue) ? oldKeywordEffect : keywordEffect;
-                    customerKeyword.setKeywordEffect(newKeywordEffect);
+                    if ("Common".equals(oldKeywordEffect)) {
+                        customerKeyword.setKeywordEffect(keywordEffect);
+                    } else {
+                        Map<String, Integer> levelMap = KeywordEffectEnum.toLevelMap();
+                        Integer levelValue = levelMap.get(keywordEffect);
+                        String newKeywordEffect = levelMap.get(oldKeywordEffect) < (levelValue == null ? 4 : levelValue) ? oldKeywordEffect : keywordEffect;
+                        customerKeyword.setKeywordEffect(newKeywordEffect);
+                    }
                     customerKeyword.setUpdateTime(new Date());
                     customerKeywordDao.updateSameCustomerKeyword(customerKeyword);
                 }
