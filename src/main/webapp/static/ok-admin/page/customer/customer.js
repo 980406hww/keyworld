@@ -93,9 +93,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
             item += '           <div class="layadmin-address other_info">' +
                 '                   <strong>描述信息</strong>' +
                 '                   <p class="skip" >客户类型 : ' + obj.type +'</p>' +
-                '                   <p class="skip" >所属用户 : ' + obj.loginName +'</p>' +
-                '                   <div class="skip" style="height: 24px;line-height: 24px">客户状态 : '+ generate_customer_status(obj.uuid, obj.status) +'</div>' +
-                '                   <div class="skip" style="height: 24px;line-height: 24px">产生日报表 : ' + generate_customer_daily_report(obj.uuid, obj.dailyReportIdentify) + '</div>' +
+                '                   <p class="skip" >所属用户 : ' + obj.userName +'</p>' +
+                '                   <div class="skip" style="height: 26px;line-height: 26px">客户状态 : '+ generate_customer_status(obj.uuid, obj.status) +'</div>' +
+                '                   <div class="skip" style="height: 26px;line-height: 26px">产生日报表 : ' + generate_customer_daily_report(obj.uuid, obj.dailyReportIdentify) + '</div>' +
                 '               </div>';
             item += '           <div class="layadmin-address">' +
                 '                   <strong>联系方式</strong>' +
