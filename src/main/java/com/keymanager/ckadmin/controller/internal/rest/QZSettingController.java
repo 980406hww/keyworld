@@ -528,7 +528,7 @@ public class QZSettingController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/qzsetting/searchQZSettings")
     @GetMapping(value = "/toQZSettingsWithCustomerUuid/{customerUuid}/{terminalType}")
-    public ModelAndView toQZSettingsWithCustomerUuid(@PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "terminalType") Long terminalType) {
+    public ModelAndView toQZSettingsWithCustomerUuid(@PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "terminalType") String terminalType) {
         ModelAndView mv = new ModelAndView();
         int isSEOSales = 0;
         if (getCurrentUser().getRoles().contains("SEOSales") || getCurrentUser().getRoles().contains("DepartmentManager")) {
