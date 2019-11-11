@@ -46,6 +46,10 @@ public interface CustomerService extends IService<Customer> {
 
     void changeRemark(Long uuid, String remark);
 
+    void changeExternalAccount(Long uuid, String externalAccount);
+
+    void changeSearchEngine(Long uuid, String searchEngine);
+
     List<CustomerTypeVO> searchCustomerTypeCount(CustomerTypeCriteria customerTypeCriteria);
 
     List<Customer> searchCustomersWithKeyword(List<String> groupNames, String terminalType);

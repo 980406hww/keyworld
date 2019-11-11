@@ -212,6 +212,16 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     }
 
     @Override
+    public void changeExternalAccount(Long uuid, String externalAccount) {
+        customerDao.changeExternalAccount(uuid, externalAccount);
+    }
+
+    @Override
+    public void changeSearchEngine(Long uuid, String searchEngine) {
+        customerDao.changeSearchEngine(uuid, searchEngine);
+    }
+
+    @Override
     public List<CustomerTypeVO> searchCustomerTypeCount(CustomerTypeCriteria customerTypeCriteria) {
         return customerDao.searchCustomerTypes(customerTypeCriteria);
     }

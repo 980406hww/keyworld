@@ -92,24 +92,25 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 '           </h3>';
             item += '           <div class="layadmin-address other_info">' +
                 '                   <strong>描述信息</strong>' +
-                '                   <p class="skip" >客户类型:' + obj.type +'</p>' +
-                '                   <p class="skip" >所属用户:' + obj.loginName +'</p>' +
-                '                   <p class="skip" >客户状态:<span id="status'+obj.uuid+'" style="color: ' + generate_customer_status(obj.uuid, obj.status, 1) + '</span></p>' +
-                '                   <p class="skip" >是否产生日报表:<span id="dr'+obj.uuid+'">' + generate_customer_daily_report(obj.uuid, obj.status, obj.dailyReportIdentify) + '</span></p>' +
+                '                   <p class="skip" >客户类型 : ' + obj.type +'</p>' +
+                '                   <p class="skip" >所属用户 : ' + obj.loginName +'</p>' +
+                '                   <div class="skip" style="height: 24px;line-height: 24px">客户状态 : '+ generate_customer_status(obj.uuid, obj.status) +'</div>' +
+                '                   <div class="skip" style="height: 24px;line-height: 24px">产生日报表 : ' + generate_customer_daily_report(obj.uuid, obj.dailyReportIdentify) + '</div>' +
                 '               </div>';
             item += '           <div class="layadmin-address">' +
                 '                   <strong>联系方式</strong>' +
                 '                   <br>' +
-                '                   电话:' + obj.telphone +
+                '                   电话 : ' + obj.telphone +
                 '                   <br>' +
-                '                   QQ:' + obj.qq +
+                '                   QQ : ' + obj.qq +
                 '               </div>';
             item += '           <div class="layadmin-address ">' +
                 '                   <strong>备注</strong>';
             if (isSEOSales){
-                item += '       <p class="skip can-click" title="'+obj.saleRemark+'" onclick=changeSaleRemark("'+obj.uuid+'","'+obj.saleRemark+'") >客户标签:<span style="color: #00a65a" id="saleRemark'+obj.uuid+'">' + obj.saleRemark + '</span></p>';
+                item += '       <p class="skip">客户标签 : <span title="'+obj.saleRemark+'" class="can-click" onclick=changeSaleRemark("'+obj.uuid+'",this)>' + obj.saleRemark + '</span></p>';
             }
-            item += '           <p class="skip can-click" title="'+obj.remark+'" onclick=changeRemark("'+obj.uuid+'","'+obj.remark+'") >销售详细备注:<span style="color: #00a65a" id="remark'+obj.uuid+'">' + obj.remark + '</span></p>' +
+            let msg = obj.remark ? obj.remark : '暂无';
+            item += '           <p class="skip">销售详细备注 : <span title="'+obj.remark+'" class="can-click" onclick=changeRemark("'+obj.uuid+'",this)>' + msg + '</span></p>' +
                 '               </div>' +
                 '      </div>';
             item += '   <div class="layui-col-md5  layui-col-sm6" style="margin-top: 37px">';
@@ -130,7 +131,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             success: function (res) {
                                 if (res.code === 200) {
                                     if (res.data != null) {
-                                        item += '<span>操作词数:' + res.data.totalCount + '</span><br>';
+                                        item += '<span>操作词数 : ' + res.data.totalCount + '</span><br>';
                                         if (res.data["PC"] != null) {
                                             item += generate_customer_info(obj.contactPerson, res.data["PC"], 'PC', 'pt', obj.uuid);
                                         }
@@ -159,7 +160,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             success: function (res) {
                                 if (res.code === 200) {
                                     if (res.data != null) {
-                                        item += '<span>站点数:' + res.data.totalCount + '</span><br>';
+                                        item += '<span>站点数 : ' + res.data.totalCount + '</span><br>';
                                         if (res.data["PC"] != null) {
                                             item += generate_qzsetting_info(obj.contactPerson, res.data["PC"], 'PC',  obj.uuid);
                                         }
@@ -188,7 +189,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             success: function (res) {
                                 if (res.code === 200) {
                                     if (res.data != null) {
-                                        item += '<span>操作词数:' + res.data.totalCount + '</span><br>';
+                                        item += '<span>操作词数 : ' + res.data.totalCount + '</span><br>';
                                         if (res.data["PC"] != null) {
                                             item += generate_customer_info(obj.contactPerson, res.data["PC"], 'PC', 'fm', obj.uuid);
                                         }
@@ -201,6 +202,39 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                                 } else {
                                     item += generate_customer_info(obj.contactPerson, null, 'PC', 'fm', obj.uuid);
                                 }
+                                item += '</div>';
+                            }
+                        });
+                    } else if (tmp === 'qt') {
+                        item += '<div class="layadmin-address"><strong>' +
+                            '其他业务' +
+                            '</strong>' +
+                            '<br>';
+                        $.ajax({
+                            url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid + '/qt',
+                            dataType: 'json',
+                            type: 'get',
+                            async: false,
+                            success: function (res) {
+                                if (res.code === 200) {
+                                    if (res.data != null) {
+                                        item += '<span>操作词数 : ' + res.data.totalCount + '</span><br>';
+                                        if (res.data["PC"] != null) {
+                                            item += generate_customer_info(obj.contactPerson, res.data["PC"], 'PC', 'qt', obj.uuid);
+                                        }
+                                        if (res.data["Phone"] != null) {
+                                            item += generate_customer_info(obj.contactPerson, res.data["Phone"], 'Phone', 'qt', obj.uuid);
+                                        }
+                                    } else {
+                                        item += generate_customer_info(obj.contactPerson, null, 'PC', 'qt', obj.uuid);
+                                    }
+                                } else {
+                                    item += generate_customer_info(obj.contactPerson, null, 'PC', 'qt', obj.uuid);
+                                }
+                                let se = obj.searchEngine ? obj.searchEngine : '无';
+                                item += '<span>搜索引擎 : <a href="javascript:void(0)" title="'+obj.searchEngine+'" onclick="changeSearchEngine(\''+obj.uuid+'\',this)">'+ se +'</a></span>';
+                                let ea = obj.externalAccount ? obj.externalAccount : '无';
+                                item += '<br><span>账号 : <a href="javascript:void(0)" title="'+obj.externalAccount+'" onclick="changeExternalAccount(\''+obj.uuid+'\',this)">'+ ea +'</a></span>';
                                 item += '</div>';
                             }
                         });
@@ -458,7 +492,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
     };
 
     //更新关键字状态
-    window.changeCustomerKeywordStatus = function (customerUuid, status) {
+    window.changeCustomerKeywordStatus = function (customerUuid, status, entryType, terminalType) {
         if (status === '0') {
             msg = "确定暂停所有关键字吗?"
         } else if (status === '1') {
@@ -468,7 +502,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
             var data = {};
             data.customerUuid = customerUuid;
             data.status = status;
-            data.entryType = $('#entryType').val();
+            data.entryType = entryType;
+            data.terminalType = terminalType;
             $.ajax({
                 url: '/internal/customerKeyword/changeCustomerKeywordStatus2',
                 data: JSON.stringify(data),
@@ -497,8 +532,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
     };
 
     // 改变客户状态
-    window.changeCustomerStatus = function (uuid, oldStatus) {
-        let newStatus = oldStatus === '1' ? 2 : 1;
+    window.changeCustomerStatus = function (uuid, ele) {
+        let newStatus = ele.children[0].innerHTML === '激活' ? 2 : 1;
         var postData = {};
         postData.customerUuid = uuid;
         postData.status = newStatus;
@@ -513,28 +548,33 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
             success: function (result) {
                 if (result.code === 200) {
                     common.showSuccessMsg('操作成功');
-                    $('#status' + uuid).html(generate_customer_status(uuid, newStatus, 2));
-                    $('#status' + uuid).css("color", newStatus === 1 ? "green" : "red");
+                    if (newStatus === 2) {
+                        ele.classList.remove('layui-form-onswitch');
+                        ele.children[0].innerHTML = '暂停';
+                    } else {
+                        ele.classList.add('layui-form-onswitch');
+                        ele.children[0].innerHTML = '激活';
+                    }
+                } else {
+                    common.showFailMsg('操作失败');
                 }
             },
             error: function () {
                 common.showFailMsg('操作失败');
-                $('#status' + uuid).html(generate_customer_status(uuid, oldStatus, 2));
-                $('#status' + uuid).css("color", oldStatus === 1 ? "green" : "red");
             }
         });
     };
 
     //改变日报表值
-    window.changeCustomerDailyReportIdentify = function (uuid, status, oldIdentify, newIdentify) {
-        if (status !== '1') {
-            common.showFailMsg('请激活客户');
+    window.changeCustomerDailyReportIdentify = function (uuid, ele) {
+        if (ele.parentElement.previousElementSibling.children[0].children[0].innerHTML !== '激活') {
+            common.showFailMsg('请先激活客户');
             return;
         }
-
+        let identify = ele.children[0].innerHTML === '是' ? '0' : '1';
         var postData = {};
         postData.customerUuid = uuid;
-        postData.identify = newIdentify;
+        postData.identify = identify;
         $.ajax({
             url: '/internal/customer/changeCustomerDailyReportIdentify2',
             type: 'POST',
@@ -546,15 +586,21 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
             success: function (result) {
                 if (result.code === 200) {
                     common.showSuccessMsg('操作成功');
-                    $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, newIdentify))
+                    if (identify === '0') {
+                        ele.classList.remove('layui-form-onswitch');
+                        ele.children[0].innerHTML = '否';
+                    } else {
+                        ele.classList.add('layui-form-onswitch');
+                        ele.children[0].innerHTML = '是';
+                    }
+                } else {
+                    common.showFailMsg('操作失败');
                 }
             },
             error: function () {
                 common.showFailMsg('操作失败');
-                $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, oldIdentify))
             }
         });
-
     };
 
     //触发所选客户日报表
@@ -612,10 +658,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
     };
 
     //改客户标签
-    window.changeSaleRemark = function (uuid, saleRemark) {
+    window.changeSaleRemark = function (uuid, ele) {
         layer.prompt({
             formType: 3,
-            value: saleRemark,
+            value: ele.title,
             title: '客户标签',
             yes: function (index, layero) {
                 var index2 = index;
@@ -635,8 +681,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                     success: function (result) {
                         if (result.code === 200) {
                             common.showSuccessMsg('操作成功');
-                            $('#saleRemark'+uuid).text(value);
-                            $('#saleRemark'+uuid).parent().attr("title",value);
+                            ele.innerHTML = value;
+                            ele.title = value;
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -648,13 +694,13 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 layer.close(index2);
             }
         });
-    }
+    };
 
     //改备注 => 运营查看
-    window.changeRemark = function (uuid, remark) {
+    window.changeRemark = function (uuid, ele) {
         layer.prompt({
             formType: 2,
-            value: remark,
+            value: ele.title,
             title: '备注',
             yes: function (index, layero) {
                 var index2 = index;
@@ -674,8 +720,108 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                     success: function (result) {
                         if (result.code === 200) {
                             common.showSuccessMsg('操作成功');
-                            $('#remark'+uuid).text(value);
-                            $('#remark'+uuid).parent().attr("title",value);
+                            ele.innerHTML = value;
+                            ele.title = value;
+                        } else {
+                            common.showFailMsg('操作失败');
+                        }
+                    },
+                    error: function () {
+                        common.showFailMsg('未知错误，请稍后重试');
+                    }
+                });
+                layer.close(index2);
+            }
+        });
+    };
+
+    window.changeSearchEngine = function (uuid, ele) {
+        layer.open({
+            type: 1,
+            title: '搜索引擎',
+            content: '<form class="layui-form layui-form-pane ok-form" style="margin: 10px 10px 0 10px">'
+                + '        <div class="layui-form-item layui-form-text">'
+                + '               <select name="searchEngine" id="searchEngine">'
+                + '                    <option value="百度">百度</option>'
+                + '                    <option value="搜狗">搜狗</option>'
+                + '                    <option value="360">360</option>'
+                + '                    <option value="百度下拉">百度下拉</option>'
+                + '                    <option value="谷歌">谷歌</option>'
+                + '                    <option value="神马">神马</option>'
+                + '                    <option value="必应中国">必应中国</option>'
+                + '                    <option value="必应日本">必应日本</option>'
+                + '                </select>'
+                + '        </div>'
+                + '   </form>',
+            shadeClose: true,
+            resize: false,
+            area: ['300px','500px'],
+            offset: '40px',
+            btn: ['确认', '取消'],
+            yes: function (index) {
+                var value = document.getElementById('searchEngine').value;
+                var postData = {};
+                postData.uuid = uuid;
+                postData.searchEngine = value;
+                $.ajax({
+                    url: '/internal/customer/changeSearchEngine',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            common.showSuccessMsg('操作成功');
+                            ele.innerHTML = value;
+                            ele.title = value;
+                            layer.close(index);
+                        } else {
+                            common.showFailMsg('操作失败');
+                        }
+                    },
+                    error: function () {
+                        common.showFailMsg('未知错误，请稍后重试');
+                    }
+                });
+            }, btn2: function (index) {
+                layer.close(index);
+            }, success: function () {
+                $('#searchEngine').val(ele.title);
+                form.render('select');
+            }
+        });
+    };
+
+    window.changeExternalAccount = function (uuid, ele) {
+        layer.prompt({
+            formType: 2,
+            value: ele.title,
+            title: '账号',
+            area: ['300px','20px'],
+            offset: '40px',
+            yes: function (index, layero) {
+                var index2 = index;
+                var value = layero.find(".layui-layer-input").val();
+                var postData = {};
+                postData.uuid = uuid;
+                postData.externalAccount = value;
+                $.ajax({
+                    url: '/internal/customer/changeExternalAccount',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            common.showSuccessMsg('操作成功');
+                            ele.innerHTML = value;
+                            ele.title = value;
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -717,36 +863,35 @@ function showCondition() {
     open2 = !open2;
 }
 
-function generate_customer_status(uuid, status, times){
-    let stat = '暂停';
+function generate_customer_status(uuid, status) {
+    let stat = '<div onclick=changeCustomerStatus(\'' + uuid + '\',this) class="layui-unselect layui-form-switch ';
     if (status === 1) {
-        stat = '激活';
+        stat += 'layui-form-onswitch';
     }
-    if (times === 1) {
-        if (status === 1) {
-            stat = "green\">" + stat;
-        } else {
-            stat = "red\">" + stat;
-        }
+    stat += '" lay-skin="_switch"><em>';
+    if (status === 1) {
+        stat += '激活';
+    }else {
+        stat += '暂停';
     }
-    stat += ' | <a href="javascript:void(0)" onclick=changeCustomerStatus(\'' + uuid + '\',\'' + status + '\')>修改状态</a>';
+    stat += '</em><i></i></div>';
     return stat;
 }
 
-function generate_customer_daily_report(uuid, status, oldIdentify){
-    uuid = uuid +'';
-    status = status+'';
-    oldIdentify = oldIdentify+'';
-    let newIdentify = '1';
-    let stat ='否';
-    if(oldIdentify === '1'){
-        stat = '是';
-        newIdentify = '0'
+function generate_customer_daily_report(uuid, identify) {
+    uuid = uuid + '';
+    identify = identify + '';
+    let stat = '<div onclick=changeCustomerDailyReportIdentify(\'' + uuid + '\',this) class="layui-unselect layui-form-switch ';
+    if (identify === '1') {
+        stat += 'layui-form-onswitch';
     }
-
-    if (status === '1') {
-        stat += ' | <a href="javascript:void(0)" onclick=changeCustomerDailyReportIdentify(\'' + uuid + '\',\'' + status + '\',\'' + oldIdentify + '\',\'' + newIdentify + '\')>修改状态</a>';
+    stat += '" lay-skin="_switch"><em>';
+    if (identify === '1') {
+        stat += '是';
+    } else {
+        stat += '否';
     }
+    stat += '</em><i></i></div>';
     return stat;
 }
 
@@ -759,7 +904,7 @@ function generate_qzsetting_info(contactPerson, data, terminalType, customerUuid
             contactPerson = contactPerson.replace(/\s+/g, "");
             let title = contactPerson + '-全站';
             let id = contactPerson + '-toQz-' + terminalType;
-            htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>'+ terminalTypeName +':' + data["count"] + '</span></a>&nbsp;&nbsp;状态:';
+            htm += '<span>'+ terminalTypeName +' : <a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>' + data["count"] + '</a></span>&nbsp;&nbsp;状态:';
             if (data["active"] > 0) {
                 htm += '<span style="color: green;">'+data["active"]+'个续费|</span>'
             }
@@ -797,17 +942,17 @@ function generate_customer_info(contactPerson, data, terminalType, type, custome
     let terminalTypeName = terminalType === 'PC' ? "电脑端" : "移动端";
     if (data !== null) {
         if (data.totalCount > 0) {
-            htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>' + terminalTypeName + ':' + data.totalCount + '</span></a>(';
+            htm += '<span>' + terminalTypeName + ' : <a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>' + data.totalCount + '</a></span>(';
             if (data.totalCount === data.activeCount) {
                 htm += '<span style="color: green;">激活</span>' +
-                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","0")>暂停关键字</a>'
+                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","0","' + type + '","' + terminalType + '")>暂停关键字</a>'
             } else if (data.totalCount > 0 && data.activeCount > 0) {
                 htm += '<span style="color: yellowgreen;">部分暂停</span>' +
-                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","0")>暂停关键字</a>' +
-                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","1")>激活关键字</a>'
+                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","0","' + type + '","' + terminalType + '")>暂停关键字</a>' +
+                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","1","' + type + '","' + terminalType + '")>激活关键字</a>'
             } else {
                 htm += '<span style="color: red;">暂停</span>' +
-                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","1")>激活关键字</a>'
+                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","1","' + type + '","' + terminalType + '")>激活关键字</a>'
             }
             htm += ')';
         } else {

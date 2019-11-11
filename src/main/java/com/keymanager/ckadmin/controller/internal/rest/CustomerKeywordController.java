@@ -158,12 +158,12 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordStatus")
     @PostMapping(value = "/changeCustomerKeywordStatus2")
-    public ResultBean changeCustomerKeywordStatus(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+    public ResultBean changeCustomerKeywordStatus(@RequestBody Map<String, Object> requestMap) {
         try {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
             String customerUuid = (String) requestMap.get("customerUuid");
             String entryType = (String) requestMap.get("entryType");
             String status = (String) requestMap.get("status");
+            String terminalType = (String) requestMap.get("terminalType");
             customerKeywordService.changeCustomerKeywordStatus(terminalType, entryType, Long.parseLong(customerUuid), Integer.parseInt(status));
             return new ResultBean(200, "success");
         } catch (Exception e) {

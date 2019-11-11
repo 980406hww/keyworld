@@ -63,8 +63,12 @@ html {
     transition: opacity 0.5s;
 }
 
-.layui-form-select input {
+#searchForm .layui-form-select input {
     height: 30px;
+}
+
+#data_list .layui-form-switch{
+    margin-top: 0 !important;
 }
 
 .layui-inline input {

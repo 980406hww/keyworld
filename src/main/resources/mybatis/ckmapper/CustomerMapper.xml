@@ -6,6 +6,7 @@
         c.fUuid AS `uuid`,
         c.fUserID AS `loginName`,
         c.fExternalAccount AS `externalAccount`,
+        c.fSearchEngine AS `searchEngine`,
         c.fContactPerson AS `contactPerson`,
         IFNULL(c.fQQ,'暂无') AS `qq`,
         c.fType AS `type`,
@@ -139,6 +140,18 @@
     <update id="changeRemark">
         UPDATE t_customer
         SET fUpdateTime = NOW(), fRemark = #{remark}
+        WHERE fUuid = #{uuid}
+    </update>
+
+    <update id="changeSearchEngine">
+        UPDATE t_customer
+        SET fUpdateTime = NOW(), fSearchEngine = #{searchEngine}
+        WHERE fUuid = #{uuid}
+    </update>
+
+    <update id="changeExternalAccount">
+        UPDATE t_customer
+        SET fUpdateTime = NOW(), fExternalAccount = #{externalAccount}
         WHERE fUuid = #{uuid}
     </update>
 
