@@ -73,8 +73,6 @@ public class MachineGroupWorkInfoService {
         return historyMachineGroupWorkInfos;
     }
 
-
-
     public void updateCustomerKeywordStatInfo (){
         List<Long> uuids = machineGroupWorkInfoDao.findMostDistantMachineGroupWorkInfo();
         if (CollectionUtils.isNotEmpty(uuids)) {
