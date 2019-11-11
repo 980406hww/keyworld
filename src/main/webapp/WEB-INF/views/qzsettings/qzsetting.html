@@ -868,7 +868,7 @@
         let customerUuidTmp = $("#customerUuidTmp").val();
         let terminalTypeTmp = $("#terminalTypeTmp").val();
         let whereCondition = {searchEngine: '百度', terminalType: 'PC'};
-        if (customerUuid && customerUuid !== "") {
+        if (terminalTypeTmp) {
             whereCondition.customerUuid = customerUuidTmp;
             whereCondition.terminalType = terminalTypeTmp;
             get_qzsetting(whereCondition);
