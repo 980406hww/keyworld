@@ -45,7 +45,7 @@
         c.fCreateTime AS `createTime`,
         u.fUserName AS `userName`
         FROM t_customer c,t_userinfo u
-        WHERE 1 = 1
+        WHERE c.fUserID = u.fLoginName
         <if test="customerCriteria.contactPerson != null and customerCriteria.contactPerson != ''">
             AND c.fContactPerson LIKE CONCAT('%',#{customerCriteria.contactPerson},'%')
         </if>
