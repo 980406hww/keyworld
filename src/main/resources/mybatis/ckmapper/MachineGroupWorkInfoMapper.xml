@@ -28,7 +28,7 @@
         AND ck.fOptimizeGroupName = g.fGroupName
         AND ck.fTerminalType = toc.fTerminalType
         <if test="criteria.machineGroup!=null and criteria.machineGroup!=''">
-            AND ck.fMachineGroup like concat(#{criteria.machineGroup}, "%")
+            AND ck.fMachineGroup like concat(#{criteria.machineGroup}, '%')
         </if>
         <if test="criteria.entryType!=null and criteria.entryType!=''">
             AND ck.fType = #{criteria.entryType}
@@ -37,7 +37,7 @@
             AND ck.fTerminalType = #{criteria.terminalType}
         </if>
         <if test="criteria.customerName!=null and criteria.customerName!=''">
-            AND c.fContactPerson like concat('%', #{criteria.customerName}, "%")
+            AND c.fContactPerson like concat('%', #{criteria.customerName}, '%')
         </if>
         GROUP BY ck.fMachineGroup, ck.fType, ck.fTerminalType, toc.fMaxInvalidCount
         ORDER BY ck.fMachineGroup;
