@@ -537,6 +537,7 @@ public class QZSettingController extends SpringMVCBaseController {
         mv.addObject("isSEOSales", isSEOSales);
         mv.addObject("customerUuidTmp", customerUuid);
         mv.addObject("terminalTypeTmp", terminalType);
+        mv.addObject("searchEngineTmp", "All");
         mv.setViewName("qzsettings/qzsetting");
         return mv;
     }

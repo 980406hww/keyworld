@@ -301,7 +301,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
     window.showCustomerByType = function (customerType){
         $('#type').val(customerType);
         $('#searchBtn').click();
-
     };
 
     form.on('checkbox(checkAll)', function (data) {
