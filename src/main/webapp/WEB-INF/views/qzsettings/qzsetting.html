@@ -753,6 +753,7 @@
                                             <select name="renewalStatus" id="renewalStatus">
                                                 <option value="">全部</option>
                                                 <option value="11" selected>首次+续费中+其他</option>
+                                                <option value="12">首次+续费中</option>
                                                 <option value="2">首次续费</option>
                                                 <option value="1">续费中</option>
                                                 <option value="0">暂停续费</option>
@@ -1045,6 +1046,7 @@
         function successTable(res, whereCondition) {
             let terminalType = $('#terminalType').val();
             terminalType = terminalType === '' ? 'PC' : terminalType;
+            getTerminalSearchEngineMap(terminalType);
             get_operation_combine_list(terminalType);
             get_qzcategory_label_list(whereCondition.categoryTag);
             get_active_customer_list(whereCondition.customerUuid);
@@ -1221,7 +1223,6 @@
         element.on('tab(tabQzsetting)', function (data) {
             let terminalType = data.elem.context.dataset.terminal;
             $('#terminalType').val(terminalType);
-            getTerminalSearchEngineMap(terminalType);
             active['reload'].call(this);
         });
 

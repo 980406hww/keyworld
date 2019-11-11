@@ -66,6 +66,9 @@
                 <when test="qzSettingSearchCriteria.renewalStatus == 11">
                     AND (qs.fRenewalStatus = 2 OR qs.fRenewalStatus = 1 OR qs.fRenewalStatus = 4)
                 </when>
+                <when test="qzSettingSearchCriteria.renewalStatus == 12">
+                    AND (qs.fRenewalStatus = 2 OR qs.fRenewalStatus = 1)
+                </when>
                 <otherwise>
                     AND qs.fRenewalStatus = #{qzSettingSearchCriteria.renewalStatus}
                 </otherwise>

@@ -416,7 +416,7 @@
             AND c.fUserID = #{keywordCriteria.userName}
         </if>
         <if test="keywordCriteria.url != null and keywordCriteria.url != ''">
-            AND ck.fUrl LIKE CONCAT(#{keywordCriteria.url},'%')
+            AND ck.fUrl LIKE CONCAT('%', #{keywordCriteria.url},'%')
         </if>
         <if test="keywordCriteria.bearPawNumber != null and keywordCriteria.bearPawNumber != ''">
             AND ck.fBearPawNumber LIKE CONCAT(#{keywordCriteria.bearPawNumber},'%')
