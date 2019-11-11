@@ -172,4 +172,14 @@ public class CaptureRankJobServiceImpl extends ServiceImpl<CaptureRankJobDao, Ca
     public void resetCaptureRankJobs(List<Long> uuids) {
         captureRankJobDao.resetCaptureRankJobs(uuids);
     }
+
+    @Override
+    public List<Long> getCaptureRankJobUuids(List<Long> uuids) {
+        return captureRankJobDao.getCaptureRankJobUuids(uuids);
+    }
+
+    @Override
+    public void updateCaptureRankJobCustomerUuids(List<Long> jobUuids, Long customerUuid) {
+        captureRankJobDao.updateCaptureRankJobCustomerUuids(jobUuids, customerUuid);
+    }
 }

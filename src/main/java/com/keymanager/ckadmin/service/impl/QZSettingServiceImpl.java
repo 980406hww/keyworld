@@ -908,5 +908,10 @@ public class QZSettingServiceImpl extends
     public void updateQZSettingFrom(Long customerUuid, List<Long> uuids) {
         customerKeywordService.updateCustomerUuidByQzUuids(customerUuid, uuids);
         qzSettingDao.updateCustomerUuidByQzUuids(customerUuid, uuids);
+        // 修改整站任务关联的客户id
+        List<Long> jobUuids = captureRankJobService.getCaptureRankJobUuids(uuids);
+        if (CollectionUtils.isNotEmpty(jobUuids)) {
+            captureRankJobService.updateCaptureRankJobCustomerUuids(jobUuids, customerUuid);
+        }
     }
 }
