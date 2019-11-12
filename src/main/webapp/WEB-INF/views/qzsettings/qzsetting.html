@@ -878,11 +878,11 @@
             element.tabChange('tabQzsetting', whereCondition.terminalType);
         } else {
             get_qzsetting({init: 'init'});
-            getTerminalSearchEngineMap('PC');
+            getTerminalSearchEngineMap('PC', "百度");
         }
 
         /*动态加载tab栏*/
-        function getTerminalSearchEngineMap(terminal, key = '百度') {
+        function getTerminalSearchEngineMap(terminal, searchEngine) {
             $.ajax({
                 url: '/internal/qzsetting/getQZSettingSearchEngineMap/' + terminal,
                 type: 'get',
@@ -895,8 +895,8 @@
                         let terminalSearchEngine = $('#terminalSearchEngine');
                         terminalSearchEngine.empty();
                         $.each(data, function (index, item) {
-                            let ttse = item.searchEngineName.replace(terminal,'');
-                            if (ttse === key) {
+                            let ttse = item.searchEngineName.replace(terminal, '');
+                            if (ttse === searchEngine) {
                                 terminalSearchEngine.append(
                                     '<option value="' + ttse + '" selected>' + ttse + '</option>');
                             } else {
@@ -906,7 +906,7 @@
                         });
                         form.render("select");
                     } else {
-                        common.showFailMsg('数据获取失败');
+                        common.showFailMsg('搜索引擎列表获取失败');
                     }
                 }
             });
@@ -1221,8 +1221,8 @@
         element.on('tab(tabQzsetting)', function (data) {
             let terminalType = data.elem.context.dataset.terminal;
             $('#terminalType').val(terminalType);
-            getTerminalSearchEngineMap(terminalType);
             active['reload'].call(this);
+            getTerminalSearchEngineMap(terminalType, "百度");
         });
 
         var active = {
