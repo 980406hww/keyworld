@@ -693,6 +693,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     public void editCustomerOptimizePlanCount(Integer optimizePlanCount, String settingType, List<String> uuids) {
         customerKeywordDao.editCustomerOptimizePlanCount(optimizePlanCount, settingType, uuids);
     }
+
+    @Override
+    public void updateSelectFailReason(KeywordCriteria keywordCriteria) {
+        customerKeywordDao.updateSelectFailReason(keywordCriteria);
+    }
 }
 
 
