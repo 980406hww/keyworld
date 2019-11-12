@@ -38,6 +38,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     let laydate = layui.laydate;
     let okLayer = layui.okLayer;
     let common = layui.common;
+    let layer = layui.layer;
     //日期范围
     laydate.render({
         elem: '#gtCreateTime',
@@ -373,10 +374,65 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
             case 'clean_select_keyword_title':
                 change_title('cleanSelect');
                 break;
+            case 'clear_all_by_condition_fail_reason':
+                clear_current_fail_reason('cleanSelect');
+                break;
+            case 'clear_select_fail_reason':
+                clear_select_fail_reason();
+                break;
             default:
                 break;
         }
     });
+
+    function clear_current_fail_reason() {
+        layer.confirm('确定清空当前词的失败原因吗？', function (index) {
+            commit_csfr(common.formToJsonObject('searchForm'), index);
+        });
+    }
+
+    function clear_select_fail_reason() {
+        //获取选中数据
+        let uuidArr = get_selected_uuid_arr();
+        if (uuidArr.length <= 0) {
+            common.showFailMsg('请选择要操作的词');
+            return;
+        }
+        layer.confirm('确定清空选中词的失败原因吗？', function (index) {
+            let postData = {};
+            postData.uuids = uuidArr;
+            postData.terminalType = $('#terminalType').val();
+            commit_csfr(postData, index);
+        });
+    }
+
+    function commit_csfr(p, index) {
+        $.ajax({
+            url: '/internal/customerKeyword/clearFailReason',
+            data: JSON.stringify(p),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if (result.code === 200) {
+                    common.showSuccessMsg('操作成功', function () {
+                        active['reload'].call(this);
+                    });
+                } else {
+                    common.showFailMsg('操作失败');
+                }
+            },
+            error: function () {
+                common.showFailMsg('网络异常请稍后再试');
+            },
+            complete: function () {
+                layer.close(index);
+            }
+        });
+    }
 
     function batchUpdateBelongUser (){
         let uuidArr = get_selected_uuid_arr();

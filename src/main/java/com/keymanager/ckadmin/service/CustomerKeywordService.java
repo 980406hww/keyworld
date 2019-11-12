@@ -119,4 +119,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void editOptimizePlanCountByCustomerUuid(String terminalType, String entryType, Long customerUuid, Integer optimizePlanCount, String settingType);
 
     void editCustomerOptimizePlanCount(Integer optimizePlanCount, String settingType, List<String> uuids);
+
+    void updateSelectFailReason(KeywordCriteria keywordCriteria);
 }

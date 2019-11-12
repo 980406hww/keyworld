@@ -135,6 +135,8 @@ public class CustomerService extends ServiceImpl<CustomerDao, Customer> {
                 customerBusiness.setType("keyword");
             } else if ("fm".equals(customer.getEntryType())) {
                 customerBusiness.setType("fm");
+            }else if ("qt".equals(customer.getEntryType())) {
+                customerBusiness.setType("qt");
             }
             customerBusinessDao.insertCustomerBusiness(customerBusiness);
         }

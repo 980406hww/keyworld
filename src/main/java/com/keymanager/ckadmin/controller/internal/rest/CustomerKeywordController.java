@@ -45,6 +45,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -158,12 +159,12 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordStatus")
     @PostMapping(value = "/changeCustomerKeywordStatus2")
-    public ResultBean changeCustomerKeywordStatus(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+    public ResultBean changeCustomerKeywordStatus(@RequestBody Map<String, Object> requestMap) {
         try {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
             String customerUuid = (String) requestMap.get("customerUuid");
             String entryType = (String) requestMap.get("entryType");
             String status = (String) requestMap.get("status");
+            String terminalType = (String) requestMap.get("terminalType");
             customerKeywordService.changeCustomerKeywordStatus(terminalType, entryType, Long.parseLong(customerUuid), Integer.parseInt(status));
             return new ResultBean(200, "success");
         } catch (Exception e) {
@@ -793,6 +794,28 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             logger.error(e.getMessage());
             resultBean.setMsg(e.getMessage());
             resultBean.setCode(400);
+        }
+        return resultBean;
+    }
+
+    @RequiresRoles("Operation")
+    @PostMapping(value = "/clearFailReason")
+    public ResultBean clearFailReason(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            String userName = (String) request.getSession().getAttribute("username");
+            boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+            if (!isDepartmentManager) {
+                keywordCriteria.setUserName(userName);
+            }
+            if ((keywordCriteria.getUuids() == null || keywordCriteria.getUuids().isEmpty()) && (keywordCriteria.getCustomerUuid() == null)) {
+                return resultBean;
+            }
+            customerKeywordService.updateSelectFailReason(keywordCriteria);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
         }
         return resultBean;
     }

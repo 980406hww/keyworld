@@ -1127,4 +1127,14 @@
             #{uuid}
         </foreach>
     </update>
+
+    <update id="updateSelectFailReason" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria">
+        UPDATE
+        t_customer_keyword ck,t_customer c
+        SET
+        ck.fFailedCause = null,
+        ck.fUpdateTime = NOW()
+        WHERE c.fUuid = ck.fCustomerUuid
+        <include refid="updateCustomerKeywordsCriteria"/>
+    </update>
 </mapper>

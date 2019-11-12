@@ -63,6 +63,9 @@ public class Customer extends BaseEntity {
     private String type;
 
     @TableField(exist = false)
+    private String userName;
+
+    @TableField(exist = false)
     private int keywordCount;
 
     @TableField(exist = false)
@@ -76,6 +79,14 @@ public class Customer extends BaseEntity {
 
     @TableField(exist = false)
     private List<String> customerBusinessList;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public String getLoginName() {
         return loginName;

@@ -131,4 +131,5 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void editCustomerOptimizePlanCount(@Param("optimizePlanCount") Integer optimizePlanCount, @Param("settingType") String settingType, @Param("uuids") List<String> uuids);
 
+    void updateSelectFailReason(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
 }

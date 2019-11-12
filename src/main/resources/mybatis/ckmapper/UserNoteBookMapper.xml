@@ -16,7 +16,7 @@
     <if test="terminalType != null">AND un.fTerminalType = #{terminalType}</if>
     ORDER BY un.fCreateTime DESC
     <if test="searchAll == 0">
-      LIMIT 5
+      LIMIT 10
     </if>
   </select>
 </mapper>
