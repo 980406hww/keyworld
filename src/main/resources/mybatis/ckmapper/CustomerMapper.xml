@@ -44,7 +44,7 @@
         c.fUpdateTime AS `updateTime`,
         c.fCreateTime AS `createTime`,
         u.fUserName AS `userName`
-        FROM t_customer c,t_userinfo u
+        FROM t_customer c, t_userinfo u
         WHERE c.fUserID = u.fLoginName
         <if test="customerCriteria.contactPerson != null and customerCriteria.contactPerson != ''">
             AND c.fContactPerson LIKE CONCAT('%',#{customerCriteria.contactPerson},'%')
@@ -62,7 +62,23 @@
             AND c.fUserID  = #{customerCriteria.loginName}
         </if>
         <if test="customerCriteria.entryType != null and customerCriteria.entryType != ''">
-            AND c.fEntryType  = #{customerCriteria.entryType}
+            AND EXISTS (
+                SELECT 1
+                FROM t_customer_business tcb
+                WHERE tcb.fCustomerUuid = c.fUuid
+                <choose>
+                    <when test="customerCriteria.entryType == 'qz'">
+                        AND tcb.fType = 'qzsetting'
+                    </when>
+                    <when test="customerCriteria.entryType == 'pt'">
+                        AND tcb.fType = 'keyword'
+                    </when>
+                    <otherwise>
+                        AND tcb.fType = #{customerCriteria.entryType}
+                    </otherwise>
+                </choose>
+                LIMIT 1
+            )
         </if>
         <if test="customerCriteria.status != null and customerCriteria.status != ''">
             AND c.fStatus = #{customerCriteria.status}
