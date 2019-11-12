@@ -41,7 +41,7 @@
                         <div>
                             <div class="layui-inline">
                                 <select name="loginName" id="loginName">
-                                    <option value="">请选择用户</option>
+                                    <option value="">用户</option>
                                 </select>
                             </div>
                             <div class="layui-inline">
@@ -87,7 +87,7 @@
                         let data = res.data;
                         let loginName = $('#loginName');
                         loginName.empty();
-                        loginName.append('<option value="">请选择用户</option>');
+                        loginName.append('<option value="">用户</option>');
                         $.each(data, function (index, item) {
                             loginName.append('<option value="' + item + '">' + item + '</option>');
                         });

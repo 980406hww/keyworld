@@ -107,9 +107,15 @@ public class CustomerController extends SpringMVCBaseController {
     }
 
     @RequestMapping("/getActiveUsers")
-    public List<UserInfo> getActiveUsers() {
-        List<UserInfo> activeUsers = userInfoService.findActiveUsers();
-        return activeUsers;
+    public ResultBean getActiveUsers() {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            resultBean.setData(userInfoService.findActiveUsers());
+        } catch (Exception e) {
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
     }
 
     /**

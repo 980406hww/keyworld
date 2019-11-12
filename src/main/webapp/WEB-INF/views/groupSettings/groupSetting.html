@@ -52,7 +52,7 @@
                         <div class="layui-inline" style="width: 160px">
                             <div class="layui-input-inline">
                                 <select name="operationType" lay-search id="operationType" lay-filter="operationTypeFilter">
-                                    <option value="">请选择操作类型</option>
+                                    <option value="">操作类型</option>
                                 </select>
                             </div>
                         </div>
@@ -158,7 +158,7 @@
                     if (res.code === 200){
                         let data =res.data;
                         operationTypes = data;
-                        $("#operationType").empty().append('<option value="">请选择操作类型</option>');
+                        $("#operationType").empty().append('<option value="">操作类型</option>');
                         $.each(data, function (index, item) {
                             $('#operationType').append(
                                 '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素

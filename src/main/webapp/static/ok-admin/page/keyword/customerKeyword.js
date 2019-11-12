@@ -84,16 +84,21 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
             url: '/internal/customer/getActiveUsers',
             dataType: 'json',
             type: 'get',
-            success: function (data) {
-                $("#userName").empty();
-                $("#userName").append('<option value="">请选择所属用户</option>');
-                $.each(data, function (index, item) {
-                    $('#userName').append(
-                        '<option value="' + item.loginName + '">'
-                        + item.userName
-                        + '</option>');// 下拉菜单里添加元素
-                });
-                form.render("select");
+            success: function (res) {
+                if (res.code === 200) {
+                    let data = res.data;
+                    $("#userName").empty();
+                    $("#userName").append('<option value="">请选择所属用户</option>');
+                    $.each(data, function (index, item) {
+                        $('#userName').append(
+                            '<option value="' + item.loginName + '">'
+                            + item.userName
+                            + '</option>');// 下拉菜单里添加元素
+                    });
+                    form.render("select");
+                } else {
+                    common.showFailMsg('获取用户列表失败');
+                }
             }
         });
     }
@@ -118,7 +123,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
             success: function (data) {
                 $("#searchEngine").empty();
                 $("#searchEngine").append(
-                    '<option value="">请选择搜索引擎</option>');
+                    '<option value="">搜索引擎</option>');
                 $.each(data.data, function (index, item) {
                     if (item === searchEngine){
                         $('#searchEngine').append('<option value="' + item + '" selected>' + item + '</option>');// 下拉菜单里添加元素
@@ -407,7 +412,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         data.terminalType = terminalType;
         data.uuid = null;
         let url = '/internal/customerKeyword/toCustomerKeywordAdd';
-        okLayer.open("关键字管理 / 客户客户关键字 / 添加关键字", url, "60%", "90%", function (layero) {
+        okLayer.open("关键字管理 / 客户关键字 / 添加关键字", url, "60%", "90%", function (layero) {
             window[layero.find("iframe")[0]["name"]].initForm(data);
         }, function () {
             if (sign) {

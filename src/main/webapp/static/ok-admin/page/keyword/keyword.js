@@ -106,19 +106,24 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
             url: '/internal/customer/getActiveUsers',
             dataType: 'json',
             type: 'get',
-            success: function (data) {
-                $("#userName").empty();
-                $("#userName").append('<option value="">所属用户</option>');
-                $.each(data, function (index, item) {
-                    $('#userName').append(
-                        '<option value="' + item.loginName + '">'
-                        + item.userName
-                        + '</option>');// 下拉菜单里添加元素
-                });
-                if (belongUser !== '' || belongUser != null) {
-                    $("#userName").val(belongUser)
+            success: function (res) {
+                if (res.code === 200) {
+                    let data = res.data;
+                    $("#userName").empty();
+                    $("#userName").append('<option value="">所属用户</option>');
+                    $.each(data, function (index, item) {
+                        $('#userName').append(
+                            '<option value="' + item.loginName + '">'
+                            + item.userName
+                            + '</option>');// 下拉菜单里添加元素
+                    });
+                    if (belongUser !== '' || belongUser != null) {
+                        $("#userName").val(belongUser)
+                    }
+                    form.render("select");
+                } else {
+                    common.showFailMsg('获取用户列表失败');
                 }
-                form.render("select");
             }
         });
     }

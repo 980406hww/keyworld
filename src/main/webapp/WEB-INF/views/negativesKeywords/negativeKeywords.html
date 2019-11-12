@@ -147,7 +147,7 @@
                         <!--<input name="terminalType" id="terminalType" type="hidden" value="PC">-->
                         <div class="layui-inline">
                             <select name="group" id="group" lay-search>
-                                <option value="">请选择分组名称</option>
+                                <option value="">分组名称</option>
                             </select>
                         </div>
                         <div class="layui-inline" id="fuzzy-box">
@@ -431,7 +431,7 @@
                 dataType: 'json',
                 success: function (data) {
                     $("#group").empty();
-                    $("#group").append('<option value="">请选择分组名称</option>');
+                    $("#group").append('<option value="">分组名称</option>');
                     $.each(data.data, function (index, item) {
                         $('#group').append(
                             '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
