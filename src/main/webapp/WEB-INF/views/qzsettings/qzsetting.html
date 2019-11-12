@@ -896,11 +896,9 @@
                         $.each(data, function (index, item) {
                             let ttse = item.searchEngineName.replace(terminal, '');
                             if (ttse === searchEngine) {
-                                terminalSearchEngine.append(
-                                    '<option value="' + ttse + '" selected>' + ttse + '</option>');
+                                terminalSearchEngine.append('<option value="' + ttse + '" selected>' + ttse + '</option>');
                             } else {
-                                terminalSearchEngine.append(
-                                    '<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
+                                terminalSearchEngine.append('<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
                             }
                         });
                         form.render("select");
@@ -1047,8 +1045,7 @@
             get_operation_combine_list(terminalType);
             get_qzcategory_label_list(whereCondition.categoryTag);
             get_active_customer_list(whereCondition.customerUuid);
-            let qz_setting_table = $("#qzSettingTable").parent().find(
-                ".layui-table-main").find("table");
+            let qz_setting_table = $("#qzSettingTable").parent().find(".layui-table-main").find("table");
             $.each(res.data, function (idx, val) {
                 let td = qz_setting_table.find("tr[data-index='" + val.LAY_TABLE_INDEX + "']").find("td[data-field='1']");
                 let optimizeGroupName = td.find("input[name='" + terminalType + "Group']").val();
@@ -1215,8 +1212,9 @@
         element.on('tab(tabQzsetting)', function (data) {
             let terminalType = data.elem.context.dataset.terminal;
             $('#terminalType').val(terminalType);
+            let searchEngine = $('#searchEngine').val();
+            getTerminalSearchEngineMap(terminalType, searchEngine);
             active['reload'].call(this);
-            getTerminalSearchEngineMap(terminalType, "百度");
         });
 
         var active = {
