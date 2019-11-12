@@ -818,9 +818,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
+                        </form>
+                    </div>
                 </div>
                 <!--数据表格-->
                 <table class="layui-hide" id="qzSettingTable" lay-filter="tableFilter"></table>
@@ -897,11 +896,9 @@
                         $.each(data, function (index, item) {
                             let ttse = item.searchEngineName.replace(terminal, '');
                             if (ttse === searchEngine) {
-                                terminalSearchEngine.append(
-                                    '<option value="' + ttse + '" selected>' + ttse + '</option>');
+                                terminalSearchEngine.append('<option value="' + ttse + '" selected>' + ttse + '</option>');
                             } else {
-                                terminalSearchEngine.append(
-                                    '<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
+                                terminalSearchEngine.append('<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
                             }
                         });
                         form.render("select");
@@ -1048,8 +1045,7 @@
             get_operation_combine_list(terminalType);
             get_qzcategory_label_list(whereCondition.categoryTag);
             get_active_customer_list(whereCondition.customerUuid);
-            let qz_setting_table = $("#qzSettingTable").parent().find(
-                ".layui-table-main").find("table");
+            let qz_setting_table = $("#qzSettingTable").parent().find(".layui-table-main").find("table");
             $.each(res.data, function (idx, val) {
                 let td = qz_setting_table.find("tr[data-index='" + val.LAY_TABLE_INDEX + "']").find("td[data-field='1']");
                 let optimizeGroupName = td.find("input[name='" + terminalType + "Group']").val();
@@ -1126,30 +1122,25 @@
             initQZSettingKeywordCount(td.find(".other-rank_2"), data["customerKeywordCount"], data["categoryTagNames"], data["operationCombineName"]);
 
             if (data['aiZhan'] !== undefined) {
-                generateQZKeywordTrendCharts(
-                    td.find("#keywordTrendCharts")[0], data['aiZhan']);
+                generateQZKeywordTrendCharts(td.find("#keywordTrendCharts")[0], data['aiZhan']);
             }
 
             if (data['5118'] !== undefined) {
-                generateQZKeywordTrendCharts(
-                    td.find("#keywordTrendCharts")[0], data['5118']);
+                generateQZKeywordTrendCharts(td.find("#keywordTrendCharts")[0], data['5118']);
             }
 
             if (data['designationWord'] === undefined) {
                 td.find("div.rank-wrap1").css("display", "none");
             } else {
                 // 指定词曲线
-                generateQZDesignationWordTrendCharts(
-                    td.find("#designationWordCharts")[0],
-                    data['designationWord']);
+                generateQZDesignationWordTrendCharts(td.find("#designationWordCharts")[0], data['designationWord']);
             }
 
             if (data['xt'] === undefined) {
                 td.find("div.rank-wrap2").css("display", "none");
             } else {
                 // 排名-操作词数图表
-                generateQZXTKeywordTrendCharts(td.find("#xtCharts")[0],
-                    data['xt']);
+                generateQZXTKeywordTrendCharts(td.find("#xtCharts")[0], data['xt']);
             }
         }
 
@@ -1221,8 +1212,9 @@
         element.on('tab(tabQzsetting)', function (data) {
             let terminalType = data.elem.context.dataset.terminal;
             $('#terminalType').val(terminalType);
+            let searchEngine = $('#searchEngine').val();
+            getTerminalSearchEngineMap(terminalType, searchEngine);
             active['reload'].call(this);
-            getTerminalSearchEngineMap(terminalType, "百度");
         });
 
         var active = {
@@ -1308,6 +1300,7 @@
                     },
                     tooltip: {
                         trigger: 'axis',
+                        confine: true,
                         position: function (point, params, dom, rect, size) {
                             return [point[0] + 20, '-15%'];
                         }
@@ -1500,6 +1493,7 @@
                     },
                     tooltip: {
                         trigger: 'axis',
+                        confine: true,
                         position: function (point, params, dom, rect, size) {
                             return [point[0] + 20, '-15%'];
                         }
@@ -1700,6 +1694,7 @@
                 },
                 tooltip: {
                     trigger: 'axis',
+                    confine: true,
                     position: function (point, params, dom, rect, size) {
                         return [point[0] + 20, '-15%'];
                     }
@@ -1850,6 +1845,7 @@
                 },
                 tooltip: {
                     trigger: 'axis',
+                    confine: true,
                     position: function (point, params, dom, rect, size) {
                         return [point[0] + 20, '-15%'];
                     }
@@ -2045,13 +2041,6 @@
             }
         }
 
-        function toTimeFormat(time) {
-            var date = toDateFormat(time);
-            var hours = time.getHours() < 10 ? ("0" + time.getHours()) : time.getHours();
-            var minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
-            var seconds = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds();
-            return date + " " + hours + ":" + minutes + ":" + seconds;
-        }
 
         function toDateFormat(time) {
             return time.getFullYear() + "-" +
@@ -2584,7 +2573,9 @@
 
         let oneRowI = '<tr>\n                            <td class="my-left" colspan="4">\n                                <div class="my-label" style="max-width: none">\n                                     <input type="text" class="layui-input my-input"\n                                     placeholder="请在此输入你想要记录的内容"\n                                     style="height: 36px;padding-right: 10px">\n                                </div>\n                            </td>\n                            <td class="my-left my-bottom">\n                                <div class="my-label my-btn">\n                                <button type="button" onclick="commitNoteBook(this)"\n                                    class="layui-btn layui-btn-xs">\n                                保存\n                                </button>\n                                </div>\n                             </td>\n                             </tr>';
 
-        // 修改
+        /**
+         * 修改
+         */
         window.showSettingDialog = function (uuid) {
             okLayer.open("其他 / 前往全站设置信息 / 修改", "/internal/qzsetting/toQZSettingAdd", "90%",
                 "90%", function (layero) {
@@ -2596,7 +2587,9 @@
                 },'40px')
         };
 
-        // 收费
+        /**
+         * 收费
+         */
         window.showChargeDialog = function (uuid, contactPearson, domain, renewalStatus) {
             okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toQZSettingCharge", "60%",
                 "70%", function (layero) {
@@ -2716,7 +2709,9 @@
             });
         };
 
-        // 运营记录 原记事本
+        /**
+         * 运营记录 原记事本
+         */
         window.openNoteBookDialog = function (uuid) {
             noteAddRow = true;
             showData(uuid, function (noteBookHtml) {
@@ -2837,6 +2832,9 @@
             });
         }
 
+        /**
+         *  全站设置排除词
+         */
         window.showExcludeCustomerKeywordDialog = function (uuid, customerUuid, domain, pcGroup,
             phoneGroup) {
             let terminalType = $("#terminalType").val();
@@ -2858,7 +2856,9 @@
                 },'40px')
         };
 
-        // 修改选中站点优化组关联的操作组合
+        /**
+         * 修改选中站点优化组关联的操作组合
+         */
         form.on('select(operationCombineFilter)', function (data) {
             let checkStatus = table.checkStatus('qzSettingTable');
             if (checkStatus.data.length === 0) {
@@ -2903,6 +2903,9 @@
             });
         });
 
+        /**
+         * 全站添加关键字
+         */
         window.showAddKeywordDialog = function (uuid, customerUuid, domain, bearPawNumber,
             searchEngine, type, pcGroup, phoneGroup) {
             let terminalType = $("#terminalType").val();

@@ -83,8 +83,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
     function init_data(data) {
         $("#data_list").html('');
         $.each(data, function (index, obj) {
-            let item = '<div class="layui-col-md6 layui-col-sm6">' +
-                '   <div class="layadmin-contact-box">' +
+            let item = '<div class="layadmin-contact-box">' +
+                '   <div class="layui-row">' +
                 '       <div class="layui-col-md6 layui-col-sm6">';
             item += '           <h3 class="layadmin-title skip" title="'+obj.contactPerson+'">' +
                 '               <input type="checkbox" name="checkItem" value="' + obj.uuid + '" status="'+obj.status+'"lay-skin="primary" >' +
@@ -94,8 +94,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 '                   <strong>描述信息</strong>' +
                 '                   <p class="skip" >客户类型 : ' + obj.type +'</p>' +
                 '                   <p class="skip" >所属用户 : ' + obj.userName +'</p>' +
-                '                   <div class="skip" style="height: 26px;line-height: 26px">客户状态 : '+ generate_customer_status(obj.uuid, obj.status) +'</div>' +
-                '                   <div class="skip" style="height: 26px;line-height: 26px">产生日报表 : ' + generate_customer_daily_report(obj.uuid, obj.dailyReportIdentify) + '</div>' +
+                '                   <div class="skip" style="height: 24px;margin: 1px 0"><span style="position: relative;top: 1px">客户状态 : </span>'+ generate_customer_status(obj.uuid, obj.status) +'</div>' +
+                '                   <div class="skip" style="height: 24px;margin: 1px 0"><span style="position: relative;top: 1px">产生报表 : </span>' + generate_customer_daily_report(obj.uuid, obj.dailyReportIdentify) + '</div>' +
                 '               </div>';
             item += '           <div class="layadmin-address">' +
                 '                   <strong>联系方式</strong>' +
@@ -232,9 +232,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                                     item += generate_customer_info(obj.contactPerson, null, 'PC', 'qt', obj.uuid);
                                 }
                                 let se = obj.searchEngine ? obj.searchEngine : '无';
-                                item += '<span>搜索引擎 : <a href="javascript:void(0)" title="'+obj.searchEngine+'" onclick="changeSearchEngine(\''+obj.uuid+'\',this)">'+ se +'</a></span>';
+                                item += '<div><span style="position: relative;top:1px">搜索引擎 : </span>' + get_se_method(obj.searchEngine, obj.uuid) + '</div>';
                                 let ea = obj.externalAccount ? obj.externalAccount : '无';
-                                item += '<br><span>账号 : <a href="javascript:void(0)" title="'+obj.externalAccount+'" onclick="changeExternalAccount(\''+obj.uuid+'\',this)">'+ ea +'</a></span>';
+                                item += '<div style="height: 24px;margin-top: 1px;line-height: 24px"><span data-uuid="' + obj.uuid + '">账号 : </span><a href="javascript:void(0)" title="'+obj.externalAccount+'" onclick="changeMe(this)">'+ ea +'</a></div>';
                                 item += '</div>';
                             }
                         });
@@ -311,9 +311,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             + item.userName
                             + '</option>');// 下拉菜单里添加元素
                     });
-                    if (belongUser !== '' || belongUser != null) {
-                        $("#userName").val(belongUser)
-                    }
                     form.render("select");
                 } else {
                     common.showFailMsg('获取用户列表失败');
@@ -743,102 +740,67 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
         });
     };
 
-    window.changeSearchEngine = function (uuid, ele) {
-        layer.open({
-            type: 1,
-            title: '搜索引擎',
-            content: '<form class="layui-form layui-form-pane ok-form" style="margin: 10px 10px 0 10px">'
-                + '        <div class="layui-form-item layui-form-text">'
-                + '               <select name="searchEngine" id="searchEngine">'
-                + '                    <option value="百度">百度</option>'
-                + '                    <option value="搜狗">搜狗</option>'
-                + '                    <option value="360">360</option>'
-                + '                    <option value="百度下拉">百度下拉</option>'
-                + '                    <option value="谷歌">谷歌</option>'
-                + '                    <option value="神马">神马</option>'
-                + '                    <option value="必应中国">必应中国</option>'
-                + '                    <option value="必应日本">必应日本</option>'
-                + '                </select>'
-                + '        </div>'
-                + '   </form>',
-            shadeClose: true,
-            resize: false,
-            area: ['300px','500px'],
-            offset: '40px',
-            btn: ['确认', '取消'],
-            yes: function (index) {
-                var value = document.getElementById('searchEngine').value;
-                var postData = {};
-                postData.uuid = uuid;
-                postData.searchEngine = value;
-                $.ajax({
-                    url: '/internal/customer/changeSearchEngine',
-                    data: JSON.stringify(postData),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (result) {
-                        if (result.code === 200) {
-                            common.showSuccessMsg('操作成功');
-                            ele.innerHTML = value;
-                            ele.title = value;
-                            layer.close(index);
-                        } else {
-                            common.showFailMsg('操作失败');
-                        }
-                    },
-                    error: function () {
-                        common.showFailMsg('未知错误，请稍后重试');
-                    }
-                });
-            }, btn2: function (index) {
-                layer.close(index);
-            }, success: function () {
-                $('#searchEngine').val(ele.title);
-                form.render('select');
+    window.selectOne = function (ele) {
+        let input = ele.parentElement.previousElementSibling.children[0];
+        let value = ele.getAttribute('lay-value');
+        if (value === input.value) {
+            common.showSuccessMsg('操作成功');
+            return;
+        }
+        let postData = {};
+        postData.uuid = input.dataset.uuid;
+        postData.searchEngine = value;
+        $.ajax({
+            url: '/internal/customer/changeSearchEngine',
+            data: JSON.stringify(postData),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if (result.code === 200) {
+                    common.showSuccessMsg('操作成功');
+                    input.value = value;
+                    clearThis(ele);
+                    ele.classList.add('layui-this');
+                } else {
+                    common.showFailMsg('操作失败');
+                }
+            },
+            error: function () {
+                common.showFailMsg('未知错误，请稍后重试');
             }
         });
     };
 
-    window.changeExternalAccount = function (uuid, ele) {
-        layer.prompt({
-            formType: 2,
-            value: ele.title,
-            title: '账号',
-            area: ['300px','20px'],
-            offset: '40px',
-            yes: function (index, layero) {
-                var index2 = index;
-                var value = layero.find(".layui-layer-input").val();
-                var postData = {};
-                postData.uuid = uuid;
-                postData.externalAccount = value;
-                $.ajax({
-                    url: '/internal/customer/changeExternalAccount',
-                    data: JSON.stringify(postData),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 5000,
-                    type: 'POST',
-                    success: function (result) {
-                        if (result.code === 200) {
-                            common.showSuccessMsg('操作成功');
-                            ele.innerHTML = value;
-                            ele.title = value;
-                        } else {
-                            common.showFailMsg('操作失败');
-                        }
-                    },
-                    error: function () {
-                        common.showFailMsg('未知错误，请稍后重试');
-                    }
-                });
-                layer.close(index2);
+    window.changeExternalAccount = function (ele) {
+        let postData = {};
+        postData.uuid = ele.previousElementSibling.dataset.uuid;
+        postData.externalAccount = ele.value;
+        $.ajax({
+            url: '/internal/customer/changeExternalAccount',
+            data: JSON.stringify(postData),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if (result.code === 200) {
+                    common.showSuccessMsg('操作成功');
+                    let html = '<a href="javascript:void(0)" title="' + ele.value + '" onclick="changeMe(this)">' + ele.value + '</a>';
+                    let p = ele.parentElement;
+                    p.removeChild(ele);
+                    p.innerHTML += html;
+                } else {
+                    common.showFailMsg('操作失败');
+                }
+            },
+            error: function () {
+                common.showFailMsg('未知错误，请稍后重试');
             }
         });
     };
@@ -903,6 +865,61 @@ function generate_customer_daily_report(uuid, identify) {
     return stat;
 }
 
+let seAll = ['百度', '搜狗', '360', '百度下拉', '谷歌', '神马', '必应中国', '必应日本'];
+
+function get_se_method(se, uuid) {
+    let html = '<div style="width: 140px;display: inline-block;vertical-align: middle" class="layui-unselect layui-form-select">'
+        + '<div class="layui-select-title">'
+        + '<input type="text" data-uuid="' + uuid + '" style="height: 24px" onclick="showSelect(this)" placeholder="请选择" value="';
+    html += se;
+    html += '" readonly="" class="layui-input layui-unselect">'
+        + '<i class="layui-edge"></i>'
+        + '</div>'
+        + '<dl class="layui-anim layui-anim-upbit">';
+    for (let i = 0; i < seAll.length; i++) {
+        html += '<dd onclick="selectOne(this)" lay-value="';
+        html += seAll[i];
+        html += '" class="';
+        if (seAll[i] === se) {
+            html += 'layui-this';
+        }
+        html += '">';
+        html += seAll[i];
+        html += '</dd>';
+    }
+    html += '</dl>'
+        + '</div>';
+    return html;
+}
+
+window.showSelect = function (ele) {
+    ele.parentElement.parentElement.classList.add('layui-form-selected');
+};
+
+function clearThis(ele) {
+    let all = ele.parentElement.children;
+    for (let i = 0; i < all.length; i++) {
+        all[i].classList.remove('layui-this');
+    }
+}
+
+window.changeMe = function (ele) {
+    let html = '<input type="text" onkeydown="downEnter(this)" onblur="changeExternalAccount(this)" class="layui-input" style="height: 24px;width: 140px;display: inline-block;vertical-align: middle;" value="';
+    if (ele.title) {
+        html += ele.title;
+    }
+    html += '">';
+    let p = ele.parentElement;
+    p.removeChild(ele);
+    p.innerHTML += html;
+};
+
+function downEnter(ele) {
+    if (event.keyCode === 13) {
+        changeExternalAccount(ele);
+    }
+}
+
 function generate_qzsetting_info(contactPerson, data, terminalType, customerUuid) {
     let htm = '';
     let terminalTypeName = terminalType === "PC" ? "电脑端" : "移动端";
@@ -914,16 +931,16 @@ function generate_qzsetting_info(contactPerson, data, terminalType, customerUuid
             let id = contactPerson + '-toQz-' + terminalType;
             htm += '<span>'+ terminalTypeName +' : <a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>' + data["count"] + '</a></span>&nbsp;&nbsp;状态:';
             if (data["active"] > 0) {
-                htm += '<span style="color: green;">'+data["active"]+'个续费|</span>'
+                htm += '<span style="color: green;">'+data["active"]+'个续费</span>|'
             }
             if (data["stop"] > 0) {
-                htm += '<span style="color: darkred;">'+data["stop"]+'个暂停|</span>'
+                htm += '<span style="color: darkred;">'+data["stop"]+'个暂停</span>|'
             }
             if (data["down"] > 0) {
-                htm += '<span style="color: grey;">'+data["down"]+'个下架|</span>'
+                htm += '<span style="color: grey;">'+data["down"]+'个下架</span>|'
             }
             if(data["other"] > 0) {
-                htm += '<span style="color: lightgrey;">'+data["other"]+'个其他|</span>'
+                htm += '<span style="color: lightgrey;">'+data["other"]+'个其他</span>|'
             }
             htm = htm.substring(0, htm.lastIndexOf("|"));
             htm += '<br>';

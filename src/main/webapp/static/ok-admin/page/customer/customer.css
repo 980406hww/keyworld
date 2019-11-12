@@ -71,6 +71,17 @@ html {
     margin-top: 0 !important;
 }
 
+#data_list .layui-form-select dl{
+    top: 26px;
+    padding: 0;
+    z-index: 999;
+}
+
+#data_list .layui-form-select dl dd{
+    height: 24px;
+    line-height: 24px;
+}
+
 .layui-inline input {
     height: 30px;
 }
@@ -130,6 +141,9 @@ html {
 
 #data_list {
     padding-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .layui-tab {
@@ -188,11 +202,12 @@ html {
 }
 
 .layadmin-maillist-fluid .layadmin-contact-box {
-    padding: 10px;
-    padding-bottom: 0;
+    padding: 5px 10px 0 10px;
+    margin: 5px;
     background-color: #fff;
     border: 1px solid #e7eaec;
-    overflow: hidden;
+    overflow: visible;
+    width: 48%;
 }
 
 

@@ -854,7 +854,7 @@
         AND fTerminalType = #{terminalType}
     </select>
 
-    <update id="updateSearchEngine" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria">
+    <update id="updateSearchEngine">
         UPDATE
         t_customer_keyword ck,t_customer c
         SET
