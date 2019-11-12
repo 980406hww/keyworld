@@ -885,9 +885,13 @@ layui.define(['laytpl', 'laypage', 'layer', 'form', 'util'], function(exports){
             return render();
         }
 
-        if(data.length === 0){
+        if (data.length === 0) {
             that.renderForm();
-            return that.errorView(options.text.none);
+            if (options.where.init === 'init') {
+                return that.errorView('   ');
+            } else {
+                return that.errorView(options.text.none);
+            }
         } else {
             that.layFixed.removeClass(HIDE);
         }
