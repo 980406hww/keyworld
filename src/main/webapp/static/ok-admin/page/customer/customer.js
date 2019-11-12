@@ -83,13 +83,23 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
     function init_data(data) {
         $("#data_list").html('');
         $.each(data, function (index, obj) {
-            let item = '<div class="layadmin-contact-box">' +
-                '   <div class="layui-row">' +
-                '       <div class="layui-col-md6 layui-col-sm6">';
-            item += '           <h3 class="layadmin-title skip" title="'+obj.contactPerson+'">' +
-                '               <input type="checkbox" name="checkItem" value="' + obj.uuid + '" status="'+obj.status+'"lay-skin="primary" >' +
+            let item = '<div class="layadmin-contact-box">';
+            item += '      <div class="layui-row"><div class="layui-col-md9">'
+                + '        <h3 class="layadmin-title skip" title="' + obj.contactPerson + '">' +
+                '               <input type="checkbox" name="checkItem" value="' + obj.uuid + '" status="' + obj.status + '"lay-skin="primary" >' +
                 '               <strong >' + obj.contactPerson + '</strong>' +
-                '           </h3>';
+                '           </h3>'
+                + '         </div><div class="layui-col-md3">';
+            item += '       <div class="operation" style="text-align: center;line-height: 27px"><a href="javascript:void(0)" class="caller-fr can-click" onclick=editCustomer("' + obj.uuid + '")>' +
+                '               修改\n' +
+                '               <i class="layui-icon layui-icon-edit"></i>\n' +
+                '           </a><a style="margin-left: 10px" href="javascript:void(0)" class="caller-fr can-click" onclick=delOneCustomer("' + obj.uuid + '")>' +
+                '               删除\n' +
+                '               <i class="layui-icon layui-icon-close"></i>\n' +
+                '           </a></div>';
+            item += '</div></div>';
+            item += '   <div class="layui-row">' +
+                '       <div class="layui-col-md5">';
             item += '           <div class="layadmin-address other_info">' +
                 '                   <strong>描述信息</strong>' +
                 '                   <p class="skip" >客户类型 : ' + obj.type +'</p>' +
@@ -103,17 +113,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 '                   电话 : ' + obj.telphone +
                 '                   <br>' +
                 '                   QQ : ' + obj.qq +
-                '               </div>';
-            item += '           <div class="layadmin-address ">' +
-                '                   <strong>备注</strong>';
-            if (isSEOSales){
-                item += '       <p class="skip">客户标签 : <span title="'+obj.saleRemark+'" class="can-click" onclick=changeSaleRemark("'+obj.uuid+'",this)>' + obj.saleRemark + '</span></p>';
-            }
-            let msg = obj.remark ? obj.remark : '暂无';
-            item += '           <p class="skip">销售详细备注 : <span title="'+obj.remark+'" class="can-click" onclick=changeRemark("'+obj.uuid+'",this)>' + msg + '</span></p>' +
                 '               </div>' +
                 '      </div>';
-            item += '   <div class="layui-col-md5  layui-col-sm6" style="margin-top: 37px">';
+            item += '   <div class="layui-col-md7">';
             let customerBusinessList = obj.customerBusinessList;
             if (customerBusinessList !== null && customerBusinessList.length > 0) {
                 $.each(obj.customerBusinessList, function (index, tmp) {
@@ -246,24 +248,16 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                     '    </div>';
             }
             item += '</div>';
-            item += '<div class="layui-col-md1 layui-col-sm6 operation">\n' +
-                '       <h3 class="layadmin-title">\n' +
-                '           <strong>操作</strong>\n' +
-                '       </h3>' +
-                '       <div class="layadmin-address">\n' +
-                '           <a href="javascript:void(0)" class="caller-fr" onclick=editCustomer("' + obj.uuid + '")>' +
-                '               修改\n' +
-                '               <i class="layui-icon layui-icon-edit"></i>\n' +
-                '           </a>\n' +
-                '       </div>' +
-                '       <div class="layadmin-address">\n' +
-                '           <a href="javascript:void(0)" class="caller-fr" onclick=delOneCustomer("' + obj.uuid + '")>' +
-                '               删除\n' +
-                '               <i class="layui-icon layui-icon-close"></i>\n' +
-                '           </a>\n' +
-                '       </div>';
             item += '</div>';
-            item += '</div>';
+            item += '           <div class="layadmin-address ">' +
+                '                   <strong>备注</strong>';
+            if (isSEOSales){
+                item += '       <p class="skip">客户标签 : <span title="'+obj.saleRemark+'" class="can-click" onclick=changeSaleRemark("'+obj.uuid+'",this)>' + obj.saleRemark + '</span></p>';
+            }
+            let msg = obj.remark ? obj.remark : '暂无';
+            item += '           <p class="skip">销售详细备注 : <span title="'+obj.remark+'" class="can-click" onclick=changeRemark("'+obj.uuid+'",this)>' + msg + '</span></p>' +
+                '               </div>'
+                + '</div>';
             $("#data_list").append(item)
         })
     }
@@ -303,10 +297,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
             success: function (res) {
                 if (res.code === 200) {
                     let data = res.data;
-                    $("#userName").empty();
-                    $("#userName").append('<option value="">所属用户</option>');
+                    $("#loginName").empty();
+                    $("#loginName").append('<option value="">所属用户</option>');
                     $.each(data, function (index, item) {
-                        $('#userName').append(
+                        $('#loginName').append(
                             '<option value="' + item.loginName + '">'
                             + item.userName
                             + '</option>');// 下拉菜单里添加元素
@@ -572,7 +566,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
 
     //改变日报表值
     window.changeCustomerDailyReportIdentify = function (uuid, ele) {
-        if (ele.parentElement.previousElementSibling.children[0].children[0].innerHTML !== '激活') {
+        if (ele.parentElement.previousElementSibling.children[1].children[0].innerHTML !== '激活') {
             common.showFailMsg('请先激活客户');
             return;
         }
@@ -791,7 +785,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
             success: function (result) {
                 if (result.code === 200) {
                     common.showSuccessMsg('操作成功');
-                    let html = '<a href="javascript:void(0)" title="' + ele.value + '" onclick="changeMe(this)">' + ele.value + '</a>';
+                    let msg = ele.value ? ele.value : '无';
+                    let html = '<a href="javascript:void(0)" title="' + ele.value + '" onclick="changeMe(this)">' + msg + '</a>';
                     let p = ele.parentElement;
                     p.removeChild(ele);
                     p.innerHTML += html;
@@ -868,9 +863,9 @@ function generate_customer_daily_report(uuid, identify) {
 let seAll = ['百度', '搜狗', '360', '百度下拉', '谷歌', '神马', '必应中国', '必应日本'];
 
 function get_se_method(se, uuid) {
-    let html = '<div style="width: 140px;display: inline-block;vertical-align: middle" class="layui-unselect layui-form-select">'
+    let html = '<div onclick="showSelect(this)" style="width: 100px;display: inline-block;vertical-align: middle" class="layui-unselect layui-form-select">'
         + '<div class="layui-select-title">'
-        + '<input type="text" data-uuid="' + uuid + '" style="height: 24px" onclick="showSelect(this)" placeholder="请选择" value="';
+        + '<input type="text" data-uuid="' + uuid + '" style="height: 24px;" placeholder="请选择" value="';
     html += se;
     html += '" readonly="" class="layui-input layui-unselect">'
         + '<i class="layui-edge"></i>'
@@ -893,7 +888,19 @@ function get_se_method(se, uuid) {
 }
 
 window.showSelect = function (ele) {
-    ele.parentElement.parentElement.classList.add('layui-form-selected');
+    let flag = true;
+    let classList = ele.classList;
+    for (let i = 0; i < classList.length; i++) {
+        if (classList[i] === 'layui-form-selected') {
+            flag = false;
+            break;
+        }
+    }
+    if (flag) {
+        ele.classList.add('layui-form-selected');
+    } else {
+        ele.classList.remove('layui-form-selected');
+    }
 };
 
 function clearThis(ele) {
@@ -904,7 +911,7 @@ function clearThis(ele) {
 }
 
 window.changeMe = function (ele) {
-    let html = '<input type="text" onkeydown="downEnter(this)" onblur="changeExternalAccount(this)" class="layui-input" style="height: 24px;width: 140px;display: inline-block;vertical-align: middle;" value="';
+    let html = '<input type="text" autofocus onkeydown="downEnter(this)" onblur="changeExternalAccount(this)" class="layui-input" style="height: 24px;width: 128px;display: inline-block;vertical-align: middle;" value="';
     if (ele.title) {
         html += ele.title;
     }
@@ -912,6 +919,7 @@ window.changeMe = function (ele) {
     let p = ele.parentElement;
     p.removeChild(ele);
     p.innerHTML += html;
+    p.getElementsByTagName('input')[0].focus();
 };
 
 function downEnter(ele) {

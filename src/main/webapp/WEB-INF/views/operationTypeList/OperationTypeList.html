@@ -154,6 +154,7 @@
                 method: 'post',
                 url: '${ctx.path}/internal/operationTypes/searchOperationTypeLists',
                 limit: 50,
+                limits: [25, 50, 100, 500, 1000],
                 page: true,
                 autoSort: false,
                 size: 'sm',

@@ -165,6 +165,7 @@
                 method: 'post',
                 url: '${ctx.path}/internal/salesInfo/searchSalesInfos',
                 limit: 50,
+                limits: [25, 50, 100, 500, 1000],
                 page: true,
                 autoSort: false,
                 size: 'sm',

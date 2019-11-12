@@ -235,6 +235,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
     );
 
     form.verify({
+        num: [
+            /(^$)|(^[0-9]?$)|(^[1-9][0-9]+$)/,
+            "请输入合适的正整数、如：1、2、3"
+        ],
         positiveInteger: [
             /(^$)|(^[0-9]*[1-9][0-9]*$)/,
             "请输入合适的正整数、如：1、2、3"

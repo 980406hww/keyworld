@@ -140,10 +140,9 @@ html {
 }*/
 
 #data_list {
-    padding-top: 10px;
+    padding: 10px 0 5px 5px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
 }
 
 .layui-tab {
@@ -153,13 +152,7 @@ html {
 /*操作*/
 .operation {
     display: none;
-    font-size: 14px;
 }
-
-.operation a {
-    color: #1a81ea;
-}
-
 
 .layadmin-maillist-fluid .layadmin-contact-box:hover .operation {
     display: block;
@@ -207,12 +200,7 @@ html {
     background-color: #fff;
     border: 1px solid #e7eaec;
     overflow: visible;
-    width: 48%;
-}
-
-
-.operation a {
-    color: #1a81ea;
+    width: 31.3%;
 }
 
 .other_info a {
