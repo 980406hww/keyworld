@@ -80,30 +80,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         });
     }
 
-    function init_belong_user() {
-        $.ajax({
-            url: '/internal/customer/getActiveUsers',
-            dataType: 'json',
-            type: 'get',
-            success: function (res) {
-                if (res.code === 200) {
-                    let data = res.data;
-                    $("#userName").empty();
-                    $("#userName").append('<option value="">请选择所属用户</option>');
-                    $.each(data, function (index, item) {
-                        $('#userName').append(
-                            '<option value="' + item.loginName + '">'
-                            + item.userName
-                            + '</option>');// 下拉菜单里添加元素
-                    });
-                    form.render("select");
-                } else {
-                    common.showFailMsg('获取用户列表失败');
-                }
-            }
-        });
-    }
-
     element.on('tab(keywordTab)', function (data) {
         let d = data.elem.context.dataset;
         $('#type').val(d.type);

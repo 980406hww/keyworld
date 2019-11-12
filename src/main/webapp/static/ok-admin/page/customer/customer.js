@@ -311,9 +311,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             + item.userName
                             + '</option>');// 下拉菜单里添加元素
                     });
-                    if (belongUser !== '' || belongUser != null) {
-                        $("#userName").val(belongUser)
-                    }
                     form.render("select");
                 } else {
                     common.showFailMsg('获取用户列表失败');
