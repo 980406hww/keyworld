@@ -194,14 +194,14 @@
                                     </div>
                                     <div class="layui-inline">
                                         <select name="exectionType">
-                                            <option value="">请选择执行类型</option>
+                                            <option value="">执行类型</option>
                                             <option value="Once">一次</option>
                                             <option value="EveryDay">每天</option>
                                         </select>
                                     </div>
                                     <div class="layui-inline">
                                         <select name="exectionStatus">
-                                            <option value="">请选择执行状态</option>
+                                            <option value="">执行状态</option>
                                             <option value="New">New</option>
                                             <option value="Processing">Processing</option>
                                             <option value="Checking">Checking</option>
@@ -218,12 +218,12 @@
                                     </div>
                                     <div class="layui-inline">
                                         <select name="rankJobArea" id="rankJobArea">
-                                            <option value="">请选择任务区域</option>
+                                            <option value="">任务区域</option>
                                         </select>
                                     </div>
                                     <div class="layui-inline" id="showRankJobCity">
                                         <select name="rankJobCity" id="rankJobCity">
-                                            <option value="">请选择任务城市</option>
+                                            <option value="">任务城市</option>
                                         </select>
                                     </div>
                                     <@shiro.hasPermission name="/internal/captureRank/searchCaptureRankJobs">
@@ -297,7 +297,7 @@
         function rankJobArea(area) {
             rankJobAreaMap = area;
             let rankJobArea = document.getElementById('rankJobArea');
-            let html = '<option value="">请选择任务区域</option>';
+            let html = '<option value="">任务区域</option>';
             for (let k in area) {
                 html += '<option value="' + k + '">' + area[k] + '</option>';
             }
@@ -306,7 +306,7 @@
 
         function rankJobCity(city) {
             let rankJobCity = document.getElementById('rankJobCity');
-            let html = '<option value="">请选择任务城市</option>';
+            let html = '<option value="">任务城市</option>';
             for (let i = 0; i < city.length; i++) {
                 html += '<option value="' + city[i] + '">' + city[i] + '</option>';
             }

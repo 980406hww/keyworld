@@ -155,12 +155,12 @@
                                     </div>
                                     <div class="layui-inline">
                                         <select name="searchEngine" id="searchEngine">
-                                            <option value="">请选择搜索引擎</option>
+                                            <option value="">搜索引擎</option>
                                         </select>
                                     </div>
                                     <div class="layui-inline">
                                         <select name="operationType">
-                                            <option value="">请选择操作类型</option>
+                                            <option value="">操作类型</option>
                                             <option value="add">add</option>
                                             <option value="delete">delete</option>
                                         </select>
@@ -319,7 +319,7 @@
                 dataType: 'json',
                 success: function (data) {
                     $("#searchEngine").empty();
-                    $("#searchEngine").append('<option value="">请选择搜索引擎</option>');
+                    $("#searchEngine").append('<option value="">搜索引擎</option>');
                     $.each(data.data, function (index, item) {
                         let ttse = item.searchEngineName.replace(terminalType, '');
                         if (ttse !== 'All') {

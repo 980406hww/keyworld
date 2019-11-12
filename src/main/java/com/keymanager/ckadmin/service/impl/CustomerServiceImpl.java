@@ -55,7 +55,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
                 customerUuids.add(customer.getUuid());
             }
             List<Map> customerCustomerBusinessMapList = customerBusinessService.getCustomerBusinessMapList(customerUuids);
-            Map<Integer, Map> customerCustomerBusinessMap = new HashMap<>();
+            Map<Integer, Map> customerCustomerBusinessMap = new HashMap<>(customerUuids.size());
             for (Map map : customerCustomerBusinessMapList) {
                 customerCustomerBusinessMap.put((Integer) map.get("customerUuid"), map);
             }

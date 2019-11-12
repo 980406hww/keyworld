@@ -750,8 +750,8 @@
                                         <label class="layui-form-label">续费状态</label>
                                         <div class="layui-input-inline">
                                             <select name="renewalStatus" id="renewalStatus">
-                                                <option value="">全部</option>
-                                                <option value="11" selected>首次+续费中+其他</option>
+                                                <option value="" selected>全部</option>
+                                                <option value="11">首次+续费中+其他</option>
                                                 <option value="12">首次+续费中</option>
                                                 <option value="2">首次续费</option>
                                                 <option value="1">续费中</option>
@@ -878,11 +878,11 @@
             element.tabChange('tabQzsetting', whereCondition.terminalType);
         } else {
             get_qzsetting({init: 'init'});
-            getTerminalSearchEngineMap('PC');
+            getTerminalSearchEngineMap('PC', "百度");
         }
 
         /*动态加载tab栏*/
-        function getTerminalSearchEngineMap(terminal, key = '百度') {
+        function getTerminalSearchEngineMap(terminal, searchEngine) {
             $.ajax({
                 url: '/internal/qzsetting/getQZSettingSearchEngineMap/' + terminal,
                 type: 'get',
@@ -895,8 +895,8 @@
                         let terminalSearchEngine = $('#terminalSearchEngine');
                         terminalSearchEngine.empty();
                         $.each(data, function (index, item) {
-                            let ttse = item.searchEngineName.replace(terminal,'');
-                            if (ttse === key) {
+                            let ttse = item.searchEngineName.replace(terminal, '');
+                            if (ttse === searchEngine) {
                                 terminalSearchEngine.append(
                                     '<option value="' + ttse + '" selected>' + ttse + '</option>');
                             } else {
@@ -906,7 +906,7 @@
                         });
                         form.render("select");
                     } else {
-                        common.showFailMsg('数据获取失败');
+                        common.showFailMsg('搜索引擎列表获取失败');
                     }
                 }
             });
@@ -950,7 +950,7 @@
                 success: function (res) {
                     if (res.code === 200) {
                         $("#categoryTag").empty();
-                        $("#categoryTag").append('<option value="">请选择分类标签</option>');
+                        $("#categoryTag").append('<option value="">分类标签</option>');
                         $.each(res.data, function (index, item) {
                             $('#categoryTag').append(
                                 '<option value="' + item + '">' + item.trim() + '</option>');
@@ -972,7 +972,7 @@
                     if (res.code === 200) {
                         toUpdateQZSettingFromData = res.data;
                         $("#customerUuid").empty();
-                        $("#customerUuid").append('<option value="">请选择客户</option>');
+                        $("#customerUuid").append('<option value="">客户</option>');
                         $.each(res.data, function (index, item) {
                             $('#customerUuid').append(
                                 '<option value="' + item.uuid + '">' + item.contactPerson.trim()
@@ -1221,8 +1221,8 @@
         element.on('tab(tabQzsetting)', function (data) {
             let terminalType = data.elem.context.dataset.terminal;
             $('#terminalType').val(terminalType);
-            getTerminalSearchEngineMap(terminalType);
             active['reload'].call(this);
+            getTerminalSearchEngineMap(terminalType, "百度");
         });
 
         var active = {

@@ -149,7 +149,7 @@
                         let keywordData = res.data;
                         let keyword_list = $('#keyword');
                         keyword_list.empty();
-                        keyword_list.append('<option value="">请选择关键字</option>');
+                        keyword_list.append('<option value="">关键字</option>');
                         $.each(keywordData, function (index, item) {
                             keyword_list.append('<option value="' + item + '">' + item + '</option>');
                         });

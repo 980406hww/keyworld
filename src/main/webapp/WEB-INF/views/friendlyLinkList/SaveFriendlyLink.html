@@ -199,7 +199,7 @@
                         $("#customerInfo").find('option').remove();
                         let customerInfo = $("#customerInfo");
                         let res = JSON.parse(res_);
-                        customerInfo.append('<option value="">请选择用户名称</option>');
+                        customerInfo.append('<option value="">用户名称</option>');
                         if (res.data != null) {
                             let customerList = res.data
                             $.each(customerList, function (idx, val) {

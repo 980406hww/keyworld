@@ -471,6 +471,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             }
         }
         customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.UI.name());
+        customerKeyword.setKeywordEffect(KeywordEffectEnum.Important.name());
+        customerKeyword.setManualCleanTitle(true);
+        customerKeyword.setServiceProvider("baidutop123");
         addCustomerKeyword(customerKeyword, userName);
     }
 
