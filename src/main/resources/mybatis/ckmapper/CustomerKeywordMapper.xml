@@ -1055,7 +1055,7 @@
         t_customer_keyword ck,
         t_customer c
         WHERE c.fUuid = ck.fCustomerUuid
-        AND ck.fType = 'pt'
+        AND ck.fType IN ('pt', 'qt')
         AND ck.fTerminalType = #{keywordCriteria.terminalType}
         <if test="keywordCriteria.init != null and keywordCriteria.init == 'init'">
             AND 1 != 1
