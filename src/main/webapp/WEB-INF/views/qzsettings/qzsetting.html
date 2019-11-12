@@ -1212,7 +1212,9 @@
         element.on('tab(tabQzsetting)', function (data) {
             let terminalType = data.elem.context.dataset.terminal;
             $('#terminalType').val(terminalType);
-            getTerminalSearchEngineMap(terminalType, '<#if searchEngineTmp?exists>${searchEngineTmp}<#else>百度</#if>');
+            let searchEngineTmp = '<#if searchEngineTmp?exists>${searchEngineTmp}<#else>百度</#if>';
+            getTerminalSearchEngineMap(terminalType, searchEngineTmp);
+            $('#searchEngine').val(searchEngineTmp);
             active['reload'].call(this);
         });
 
