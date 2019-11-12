@@ -990,6 +990,8 @@
 
             if (!data.field.createTimePrefix) {
                 data.field.createTimePrefix = '';
+            } else {
+                data.field.createTimePrefix += ' 23:59:59';
             }
             if (data.field.domain != null && data.field.domain !== '') {
                 if (data.field.domain.indexOf(".") === -1) {

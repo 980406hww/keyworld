@@ -151,10 +151,10 @@
             AND EXISTS (SELECT 1 FROM t_qz_category_tag qc WHERE qc.fQZSettingUuid = qs.fUuid AND qc.fTagName = #{qzSettingSearchCriteria.categoryTag})
         </if>
         <if test="qzSettingSearchCriteria.createTime != null and qzSettingSearchCriteria.createTime != ''">
-            AND DATE_FORMAT(qs.fCreateTime,'%Y-%m-%d') &gt;= #{qzSettingSearchCriteria.createTime}
+            AND qs.fCreateTime &gt;= #{qzSettingSearchCriteria.createTime}
         </if>
         <if test="qzSettingSearchCriteria.createTimePrefix != null and qzSettingSearchCriteria.createTimePrefix != ''">
-            AND DATE_FORMAT(qs.fCreateTime,'%Y-%m-%d') &lt;= #{qzSettingSearchCriteria.createTimePrefix}
+            AND qs.fCreateTime &lt;= #{qzSettingSearchCriteria.createTimePrefix}
         </if>
         <choose>
             <when test="qzSettingSearchCriteria.dateRangeType == 0">
