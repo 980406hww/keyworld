@@ -22,10 +22,16 @@ function showCondition() {
 
 function show_more_operation() {
     let operationContent = document.getElementById('operationContent');
+    let rightDirection = document.getElementById('rightDirection');
+    let downDirection = document.getElementById('downDirection');
     if (show) {
         operationContent.style.display = 'block';
+        downDirection.style.display = 'inline-block';
+        rightDirection.style.display = 'none';
     } else {
         operationContent.style.display = 'none';
+        downDirection.style.display = 'none';
+        rightDirection.style.display = 'inline-block';
     }
     show = !show;
 }

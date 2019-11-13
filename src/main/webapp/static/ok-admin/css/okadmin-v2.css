@@ -490,7 +490,7 @@
 /*主体内容样式*/
 .okadmin .content-body {
     position: absolute;
-    top: 10px;
+    top: 0;
     right: 0;
     bottom: 0;
     left: 220px;
@@ -498,7 +498,7 @@
     overflow: hidden
 }
 
-.okadmin .content-body:after {
+.okadmin .single-body:after {
     content: "";
     max-height: 1px;
     min-height: 1px;
@@ -533,7 +533,7 @@
 
 .okadmin .content-body .layui-tab-content {
     position: absolute;
-    top: 40px;
+    top: 0;
     bottom: 0;
     width: 100%;
     padding: 0;

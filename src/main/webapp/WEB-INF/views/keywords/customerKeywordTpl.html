@@ -16,12 +16,12 @@
         </button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
-        <button class="layui-btn layui-btn-sm layui-btn-warm" id="update_belong_customer" lay-event="update_belong_customer">
+        <button class="layui-btn layui-btn-sm" id="update_belong_customer" lay-event="update_belong_customer">
             更改客户
         </button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
-        <button class="layui-btn layui-btn-sm layui-btn-warm" id="batch_update" lay-event="batch_update">
+        <button class="layui-btn layui-btn-sm" id="batch_update" lay-event="batch_update">
             批量设置
         </button>
     </@shiro.hasPermission>
@@ -39,51 +39,52 @@
             批量删除
         </button>
     </@shiro.hasPermission>
-        <button class="layui-btn layui-btn-sm layui-btn-warm" id="more_operation" lay-event="more_operation">
+        <@shiro.hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
+        <button class="layui-btn layui-btn-sm" id="upload_keyword_simple" lay-event="upload_keyword_simple">
+            Excel上传(简化版)
+        </button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
+        <button class="layui-btn layui-btn-sm" id="upload_keyword_full" lay-event="upload_keyword_full">
+            Excel上传(完整版)
+        </button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/customerKeyword/downloadSingleCustomerReport">
+        <button class="layui-btn layui-btn-sm" id="download_daily_report" lay-event="download_daily_report">
+            导出日报表
+        </button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/customerKeyword/downloadCustomerKeywordInfo">
+        <button class="layui-btn layui-btn-sm" id="download_keyword_info" lay-event="download_keyword_info">
+            导出结果
+        </button>
+        </@shiro.hasPermission>
+        <button class="layui-btn layui-btn-sm" id="more_operation" lay-event="more_operation">
             更多功能
+            <span id="rightDirection" style="display: inline-block;"><i class="layui-icon layui-icon-right"></i></span>
+            <span id="downDirection" style="display: none;"><i class="layui-icon layui-icon-down"></i></span>
         </button>
     </div>
 
-
     <div class="my-opration-hide" id="operationContent">
+        <@shiro.hasPermission name="/internal/customerKeyword/cleanTitle">
+            <div class="layui-btn-group">
+                <button class="layui-btn layui-btn-sm" id="download_keyword_url" lay-event="download_keyword_url">
+                    关键字url导出
+                </button>
+            </div>
+        </@shiro.hasPermission>
         <div class="layui-btn-group">
-            <@shiro.hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
-            <button class="layui-btn layui-btn-sm" id="upload_keyword_simple" lay-event="upload_keyword_simple">
-                Excel上传(简化版)
-            </button>
-            </@shiro.hasPermission>
             <@shiro.hasPermission name="/SuperUserSimpleKeywordList.xls">
             <a class="layui-btn layui-btn-sm" href="/SuperUserSimpleKeywordList.xls">
                 Excel简化版下载
             </a>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
-            <button class="layui-btn layui-btn-sm" id="upload_keyword_full" lay-event="upload_keyword_full">
-                Excel上传(完整版)
-            </button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/SuperUserFullKeywordList.xls">
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/SuperUserFullKeywordList.xls">
             <a class="layui-btn layui-btn-sm" href="/SuperUserFullKeywordList.xls">
                 Excel完整版下载
             </a>
-            </@shiro.hasPermission>
-        </div>
-        <div class="layui-btn-group">
-            <@shiro.hasPermission name="/internal/customerKeyword/downloadSingleCustomerReport">
-            <button class="layui-btn layui-btn-sm" id="download_daily_report" lay-event="download_daily_report">
-                导出日报表
-            </button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/customerKeyword/downloadCustomerKeywordInfo">
-            <button class="layui-btn layui-btn-sm" id="download_keyword_info" lay-event="download_keyword_info">
-                导出结果
-            </button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/customerKeyword/cleanTitle">
-            <button class="layui-btn layui-btn-sm" id="download_keyword_url" lay-event="download_keyword_url">
-                关键字url导出
-            </button>
-            </@shiro.hasPermission>
+        </@shiro.hasPermission>
         </div>
         <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
             <div class="layui-btn-group">

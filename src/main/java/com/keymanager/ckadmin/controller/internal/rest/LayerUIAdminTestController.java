@@ -49,6 +49,7 @@ public class LayerUIAdminTestController {
         try {
             String loginName = (String) request.getSession().getAttribute("username");
             List<Menu> menus = resourceService.selectAuthorizationResource(loginName, null);
+            request.getSession().setAttribute("menus", menus);
             return new ResponseEntity<Object>(menus, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
