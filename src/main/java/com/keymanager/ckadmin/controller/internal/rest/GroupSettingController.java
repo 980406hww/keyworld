@@ -73,7 +73,7 @@ public class GroupSettingController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -89,7 +89,7 @@ public class GroupSettingController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("服务端错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }
@@ -112,7 +112,7 @@ public class GroupSettingController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("服务端错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }
@@ -136,7 +136,7 @@ public class GroupSettingController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -152,7 +152,7 @@ public class GroupSettingController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("服务端错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }
@@ -168,7 +168,7 @@ public class GroupSettingController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("服务端错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }
@@ -183,7 +183,7 @@ public class GroupSettingController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("服务端错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }

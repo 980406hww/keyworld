@@ -151,7 +151,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -169,7 +169,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             return new ResultBean(200, "success");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "error");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -184,7 +184,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -218,7 +218,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -238,7 +238,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -258,7 +258,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -273,7 +273,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -288,7 +288,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -313,7 +313,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -357,7 +357,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -405,7 +405,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -454,7 +454,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }
@@ -478,7 +478,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -497,7 +497,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }
@@ -519,7 +519,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -535,7 +535,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             return new ResultBean(200, "success");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "error");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -548,7 +548,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             return new ResultBean(200, "success");
         } catch (Exception ex) {
             logger.error(ex.getMessage());
-            return new ResultBean(400, "error");
+            return new ResultBean(400, ex.getMessage());
         }
     }
 
@@ -560,7 +560,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             return new ResultBean(200, "success");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "error");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -575,7 +575,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }
@@ -596,7 +596,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             return new ResultBean(200, "success");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "error");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -647,7 +647,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -674,7 +674,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -815,7 +815,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
         }
         return resultBean;
     }

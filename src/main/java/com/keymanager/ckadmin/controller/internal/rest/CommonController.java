@@ -45,7 +45,7 @@ public class CommonController {
             return new ResultBean(200, "获取搜索引擎列表成功", searchEngines);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResultBean(400,"未知错误!");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -86,7 +86,7 @@ public class CommonController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;

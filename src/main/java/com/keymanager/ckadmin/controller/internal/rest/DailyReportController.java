@@ -90,7 +90,7 @@ public class DailyReportController extends SpringMVCBaseController {
                 logger.error(e.getMessage());
                 e.printStackTrace();
                 resultBean.setCode(400);
-                resultBean.setMsg("error");
+                resultBean.setMsg(e.getMessage());
                 return resultBean;
             }
         }
@@ -112,7 +112,7 @@ public class DailyReportController extends SpringMVCBaseController {
             logger.error(e.getMessage());
             e.printStackTrace();
             resultBean.setCode(400);
-            resultBean.setMsg("error");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;

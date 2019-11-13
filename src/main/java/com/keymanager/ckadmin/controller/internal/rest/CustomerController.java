@@ -100,7 +100,7 @@ public class CustomerController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -152,7 +152,7 @@ public class CustomerController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -178,7 +178,7 @@ public class CustomerController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         resultBean.setMsg("添加成功");
@@ -197,7 +197,7 @@ public class CustomerController extends SpringMVCBaseController {
             return new ResultBean(200, "删除成功");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "删除失败");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -213,7 +213,7 @@ public class CustomerController extends SpringMVCBaseController {
             return new ResultBean(200, "更新成功");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "更新失败");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -231,7 +231,7 @@ public class CustomerController extends SpringMVCBaseController {
             return new ResultBean(200, "更新成功");
         } catch (NumberFormatException e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "更新失败");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -248,7 +248,7 @@ public class CustomerController extends SpringMVCBaseController {
             return new ResultBean(200, "更新成功");
         } catch (NumberFormatException e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "更新失败");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -268,7 +268,7 @@ public class CustomerController extends SpringMVCBaseController {
         } catch (Exception e) {
             e.printStackTrace();
             resultBean.setCode(400);
-            resultBean.setMsg("error");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }
@@ -287,7 +287,7 @@ public class CustomerController extends SpringMVCBaseController {
             return new ResultBean(200, "更新成功");
         } catch (NumberFormatException e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "更新失败");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -304,7 +304,7 @@ public class CustomerController extends SpringMVCBaseController {
             return new ResultBean(200, "更新成功");
         } catch (NumberFormatException e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "更新失败");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -318,7 +318,7 @@ public class CustomerController extends SpringMVCBaseController {
             return new ResultBean(200, "更新成功");
         } catch (NumberFormatException e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "更新失败");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -332,7 +332,7 @@ public class CustomerController extends SpringMVCBaseController {
             return new ResultBean(200, "更新成功");
         } catch (NumberFormatException e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "更新失败");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -407,7 +407,7 @@ public class CustomerController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -430,7 +430,7 @@ public class CustomerController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
         }
         return resultBean;
     }
@@ -446,7 +446,7 @@ public class CustomerController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
         }
         return resultBean;
     }
