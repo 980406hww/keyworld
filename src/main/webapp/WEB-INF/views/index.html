@@ -83,8 +83,12 @@
             <@shiro.principal property="name"/>
         </div>
         <dl class="layui-anim layui-anim-upbit" style="background: #000">
+            <@shiro.hasPermission name="/internal/config/evictAllConfigCache">
             <dd onclick="clearConfigCache()">清理Config</dd>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/negativelist/evictAllNegativeListCache">
             <dd onclick="clearNegativeListCache()">清理负面清单</dd>
+            </@shiro.hasPermission>
             <dd onclick="switchSingleOrMulti()">切换单多页</dd>
             <dd onclick="openUpdPasswordWindow()">修改密码</dd>
         </dl>

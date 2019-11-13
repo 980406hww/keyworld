@@ -48,8 +48,11 @@ public class LayerUIAdminTestController {
     public ResponseEntity<?> selectMenus(HttpServletRequest request) {
         try {
             String loginName = (String) request.getSession().getAttribute("username");
-            List<Menu> menus = resourceService.selectAuthorizationResource(loginName, null);
-            request.getSession().setAttribute("menus", menus);
+            List menus = (List) request.getSession().getAttribute("menus");
+            if (null == menus || menus.isEmpty()) {
+                menus = resourceService.selectAuthorizationResource(loginName, null);
+                request.getSession().setAttribute("menus", menus);
+            }
             return new ResponseEntity<Object>(menus, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
