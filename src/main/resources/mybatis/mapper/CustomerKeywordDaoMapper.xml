@@ -749,7 +749,7 @@
     </select>
 
     <select id="searchKeywordsForAdjustingOptimizationCount" resultType="java.util.Map">
-        SELECT ck.fUuid AS 'uuid', ck.fKeyword as 'keyword', ck.fUrl as 'url', ck.fCurrentIndexCount as 'currentIndexCount',
+        SELECT ck.fUuid AS 'uuid', ck.fKeyword as 'keyword', ck.fOptimizeTodayCount AS 'optimizeTodayCount',,
         GROUP_CONCAT(CAST(ps.fPosition AS CHAR) ORDER BY ps.fCreateDate) AS 'positions'
         FROM t_customer_keyword ck JOIN t_ck_position_summary ps ON ck.fUuid = ps.fCustomerKeywordUuid
         WHERE ps.fCreateDate >= DATE_SUB(CURRENT_DATE(), INTERVAL 3 DAY) and ck.fCurrentIndexCount is not NULL
@@ -759,8 +759,7 @@
 
     <update id="adjustOptimizePlanCount">
         UPDATE t_customer_keyword
-        SET fOptimizePlanCount = #{optimizationPlanCount}
-        , fOptimizeRemainingCount = #{optimizeTodayCount}
+        SET fOptimizeRemainingCount = #{optimizeTodayCount}
         , fQueryInterval = #{queryInterval}
         , fOptimizeTodayCount = #{optimizeTodayCount}
         , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
