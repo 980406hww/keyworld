@@ -124,5 +124,5 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     void updateSelectFailReason(KeywordCriteria keywordCriteria);
     
-    Page<QZRateKeywordCountVO> getQZRateKewordCountList(Page<QZRateKeywordCountVO> page, QZRateKewordCountCriteria qzRateKewordCountCriteria) throws CloneNotSupportedException;
+    Page<QZRateKeywordCountVO> getQZRateKeywordCountList(Page<QZRateKeywordCountVO> page, QZRateKewordCountCriteria qzRateKewordCountCriteria) throws CloneNotSupportedException;
 }

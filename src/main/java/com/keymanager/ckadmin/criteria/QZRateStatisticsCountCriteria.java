@@ -1,16 +1,13 @@
 package com.keymanager.ckadmin.criteria;
 
-import java.util.List;
-
 public class QZRateStatisticsCountCriteria {
 
-    private Integer qzRateRange = -7;
+    private Integer qzRateRange;
     private String ltRateFullDate;
     private String gtRateFullDate;
     private String terminalType;
     private String searchEngine;
     private String userID;
-    private List<Long> qzUuids;
 
     public Integer getQzRateRange() {
         return qzRateRange;
@@ -42,14 +39,6 @@ public class QZRateStatisticsCountCriteria {
 
     public void setTerminalType(String terminalType) {
         this.terminalType = terminalType;
-    }
-
-    public List<Long> getQzUuids() {
-        return qzUuids;
-    }
-
-    public void setQzUuids(List<Long> qzUuids) {
-        this.qzUuids = qzUuids;
     }
 
     public String getUserID() {

@@ -41,11 +41,7 @@
     <div class="layui-col-md12">
         <div class="layui-card">
             <div class="yskj-card-body map-body">
-                <div class="layui-col-md12 layui-form" style="z-index: 999">
-<!--                    <div class="layui-col-md3"><h4 class="my-card-title">站点涨幅历史</h4></div>-->
-
-                </div>
-
+                <div class="layui-col-md12 layui-form" style="z-index: 999"></div>
                 <div style="height: 100%;" id="qzRateHistory"></div>
             </div>
         </div>
@@ -53,29 +49,23 @@
 
 </div>
 
-
 </body>
 </html>
 <script type="text/javascript" src="/static/ok-admin/lib/layui/layui.js"></script>
 <script>
     var qzUuid_ = '<#if qzUuid?exists>${qzUuid}</#if>';
     var terminalType_ = '<#if qzRateTerminalType?exists>${qzRateTerminalType}</#if>';
-    layui.use(['jquery', 'form', 'common','table'], function () {
+    layui.use(['jquery', 'common'], function () {
         let $ = layui.jquery;
-        let form = layui.form;
         let common = layui.common;
-        let table = layui.table;
-
 
         let postData= {};
         postData.qzUuid = qzUuid_;
         postData.terminalType = terminalType_;
 
-        init_qz_rate_hsitory(postData);
+        init_qz_rate_history(postData);
 
-
-
-        function init_qz_rate_hsitory(condition) {
+        function init_qz_rate_history(condition) {
             $.ajax({
                 url: '/internal/qzRateStatistics/getQZRateHistory',
                 headers: {
@@ -104,47 +94,47 @@
                                                 }
                                         }
                                 },
-                                "tooltip": {
-                                    "trigger": "axis",
-                                    "axisPointer": {
-                                        "type": "cross",
-                                        "label": {
-                                            "backgroundColor": "#6a7985"
+                                tooltip: {
+                                    trigger: "axis",
+                                    axisPointer: {
+                                        type: "cross",
+                                        label: {
+                                            backgroundColor: "#6a7985"
                                         }
                                     }
                                 },
-                                "legend": {
-                                    "orient": 'vertical',
-                                    "data": [
+                                legend: {
+                                    orient: 'vertical',
+                                    data: [
                                         "涨幅"
 
                                     ]
                                 },
-                                "grid": {
-                                    "top": "12%",
-                                    "left": "3%",
-                                    "right": "3%",
-                                    "bottom": "5%",
-                                    "containLabel": true
+                                grid: {
+                                    top: "12%",
+                                    left: "3%",
+                                    right: "3%",
+                                    bottom: "5%",
+                                    containLabel: true
                                 },
-                                "xAxis": [
+                                xAxis: [
                                     {
-                                        "type": "category",
-                                        "boundaryGap": false,
-                                        "data": date
+                                        type: "category",
+                                        boundaryGap: false,
+                                        data: date
                                     }
                                 ],
-                                "yAxis": [
+                                yAxis: [
                                     {
-                                        "type": "value"
+                                        type: "value"
                                     }
                                 ],
-                                "series": [
+                                series: [
                                     {
-                                        "name": "涨幅",
-                                        "type": "line",
-                                        "areaStyle": {normal: {color: 'rgba(255,255,255,0)'}},
-                                        "data": rate
+                                        name: "涨幅",
+                                        type: "line",
+                                        areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
+                                        data: rate
 
                                     }
 
@@ -152,18 +142,16 @@
                             };
                             let qzRateHistory = echarts.init($('#qzRateHistory')[0]);
                             qzRateHistory.setOption(qzRateHistoryOption);
-                        }else {
-                            $('#qzRateHistory').css('text-align','center').append('<h3 class="my-card-title">暂无数据</h3>')
+                        } else {
+                            $('#qzRateHistory').css('text-align', 'center').append('<h3 class="my-card-title">暂无数据</h3>')
                         }
-
                     }
                 },
                 error: function () {
-                    layer.msg('操作失败', {icon: 5});
+                    common.showFailMsg('操作失败');
                 }
             });
         }
-
     });
 </script>
 

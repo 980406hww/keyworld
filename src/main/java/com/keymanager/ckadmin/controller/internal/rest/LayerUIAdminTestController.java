@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,32 +76,33 @@ public class LayerUIAdminTestController {
         try {
             qzRateStatisticsCountCriteria.setUserID((String) session.getAttribute("username"));
             List<QZRateStatisticsCountVO> qzRateStatisticsCountVos = qzRateStatisticsService.getQZRateStatisticCount(qzRateStatisticsCountCriteria);
-            Map map = qzRateStatisticsService.generateEchartsData(qzRateStatisticsCountVos);
-            resultBean.setData(map);
+            resultBean.setData(qzRateStatisticsService.generateEchartsData(qzRateStatisticsCountVos));
             return resultBean;
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }
 
-    @RequestMapping("/toQZRateStatisticsDetail/{terminalType}/{searchEngine}/{rateRange}")
-    public ModelAndView toQZRateStatisticsDetail(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "searchEngine") String searchEngine,
-        @PathVariable(name = "rateRange") String rateRange) {
+    @GetMapping(value = {"/toQZRateStatisticsDetail/{rateRange}/{terminalType}/{searchEngine}", "/toQZRateStatisticsDetail/{rateRange}/{terminalType}",
+        "/toQZRateStatisticsDetail/{rateRange}/{searchEngine}", "/toQZRateStatisticsDetail/{rateRange}"})
+    public ModelAndView toQZRateStatisticsDetail(@PathVariable(name = "rateRange") String rateRange, @PathVariable(name = "terminalType", required = false) String terminalType,
+        @PathVariable(name = "searchEngine", required = false) String searchEngine) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("statistics/qzRateStatisticsDetail");
         try {
             Map<String, String> map = new HashMap<>(3);
             map.put("qzRateRange", rateRange);
-            if ("null".equals(searchEngine)) {
+            if (null == searchEngine) {
                 map.put("searchEngine", "");
             } else {
                 searchEngine = URLDecoder.decode(searchEngine, "UTF-8");
                 map.put("searchEngine", searchEngine);
             }
-            if ("null".equals(terminalType)) {
+            if (null == terminalType) {
                 map.put("terminalType", "");
             } else {
                 map.put("terminalType", terminalType);

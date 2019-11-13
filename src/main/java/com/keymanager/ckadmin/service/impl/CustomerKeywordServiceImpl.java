@@ -708,7 +708,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public Page<QZRateKeywordCountVO> getQZRateKewordCountList(Page<QZRateKeywordCountVO> page,
+    public Page<QZRateKeywordCountVO> getQZRateKeywordCountList(Page<QZRateKeywordCountVO> page,
         QZRateKewordCountCriteria qzRateKewordCountCriteria) throws CloneNotSupportedException {
         List<Long> qzUuids = qzSettingService.getQZUuidsByUserID(qzRateKewordCountCriteria.getUserID(), qzRateKewordCountCriteria.getSearchEngine(), qzRateKewordCountCriteria.getTerminalType());
         if (null == qzUuids || qzUuids.isEmpty()) {

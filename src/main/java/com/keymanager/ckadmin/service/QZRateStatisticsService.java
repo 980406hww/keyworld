@@ -15,5 +15,5 @@ public interface QZRateStatisticsService {
 
     Integer getRate(Long qzUuid, String terminalType, String rateFullDate);
 
-    Map getQzRateHsitory(String qzUuid, String terminalType);
+    Map getQzRateHistory(String qzUuid, String terminalType);
 }

@@ -61,9 +61,9 @@
                             </select>
                         </div>
                         <div style="float: right;position: relative;top: 2px;" id="qzRangeDiv">
-                            <input type="radio" name="qzRateRange" value="1" title="7天" lay-filter="qzRateRange">
-                            <input type="radio" name="qzRateRange" value="2" title="30天" lay-filter="qzRateRange">
-                            <input type="radio" name="qzRateRange" value="3" title="3个月" lay-filter="qzRateRange" checked>
+                            <input type="radio" name="qzRateRange" value="-7" title="7天" lay-filter="qzRateRange">
+                            <input type="radio" name="qzRateRange" value="-30" title="30天" lay-filter="qzRateRange">
+                            <input type="radio" name="qzRateRange" value="-90" title="3个月" lay-filter="qzRateRange" checked>
                         </div>
                     </form>
                 </div>
@@ -140,96 +140,110 @@
                         var qzDailyStatisticsData = res.data;
                         var qzDailyStatisticsOption = {
                             title: {
-                                text: '每日站点涨幅统计',
+                                text: '每日站点趋势',
                                 subtext: '',
                                 y: '10',
                                 x: '10'
                             },
-                            "tooltip": {
-                                "trigger": "axis",
-                                "axisPointer": {
-                                    "type": "cross",
-                                    "label": {
-                                        "backgroundColor": "#6a7985"
+                            tooltip: {
+                                trigger: "axis",
+                                axisPointer: {
+                                    type: "cross",
+                                    label: {
+                                        backgroundColor: "#6a7985"
                                     }
                                 }
                             },
-                            "legend": {
-                                "orient": 'vertical',
-                                "icon": "circle",
-                                "x": 'right',
-                                "y": 'center',
-                                "data": [
+                            legend: {
+                                orient: 'vertical',
+                                icon: "circle",
+                                x: 'right',
+                                y: 'center',
+                                data: [
                                     "站点总数",
                                     "上涨个数",
                                     "不变个数",
                                     "下降个数"
                                 ]
                             },
-                            "grid": {
+                            grid: {
                                 x: 40,
                                 y: 50,
                                 x2: 90,
                                 y2: 40,
                             },
-                            "xAxis": {
-                                "type": "category",
-                                "boundaryGap": false,
-                                "data": qzDailyStatisticsData.date,
+                            xAxis: {
+                                type: "category",
+                                boundaryGap: false,
+                                data: qzDailyStatisticsData.date,
                                 axisLabel: {
                                     interval: 0,
                                     rotate: -30
                                 }
                             },
-                            "yAxis": {
-                                "type": "value"
+                            yAxis: {
+                                type: "value"
                             },
-                            "series":
+                            series:
                                 [
                                     {
-                                        "name": "站点总数",
-                                        "type": "line",
+                                        name: "站点总数",
+                                        type: "line",
                                         smooth: true,
-                                        "areaStyle": {normal: {color: 'rgba(255,255,255,0)'}},
-                                        "data": qzDailyStatisticsData.totalCount,
+                                        areaStyle: {
+                                            normal: {
+                                                color: 'rgba(255,255,255,0)'
+                                            }
+                                        },
+                                        data: qzDailyStatisticsData.totalCount,
 
                                     },
                                     {
-                                        "name": "上涨个数",
-                                        "type": "line",
+                                        name: "上涨个数",
+                                        type: "line",
                                         smooth: true,
-                                        "areaStyle": {normal: {color: 'rgba(255,255,255,0)'}},
-                                        "data": qzDailyStatisticsData.riseCount
-                                    },
-                                    {
-                                        "name": "不变个数",
-                                        "type": "line",
-                                        smooth: true,
-                                        "areaStyle": {normal: {color: 'rgba(255,255,255,0)'}},
-                                        "data": qzDailyStatisticsData.unchangeCount
-                                    },
-                                    {
-                                        "name": "下降个数",
-                                        "type": "line",
-                                        smooth: true,
-                                        "areaStyle": {
-                                            normal: {color: 'rgba(255,255,255,0)'}
+                                        areaStyle: {
+                                            normal: {
+                                                color: 'rgba(255,255,255,0)'
+                                            }
                                         },
-                                        "data": qzDailyStatisticsData.fallCount
+                                        data: qzDailyStatisticsData.riseCount
+                                    },
+                                    {
+                                        name: "不变个数",
+                                        type: "line",
+                                        smooth: true,
+                                        areaStyle: {
+                                            normal: {
+                                                color: 'rgba(255,255,255,0)'
+                                            }
+                                        },
+                                        data: qzDailyStatisticsData.unchangedCount
+                                    },
+                                    {
+                                        name: "下降个数",
+                                        type: "line",
+                                        smooth: true,
+                                        areaStyle: {
+                                            normal: {
+                                                color: 'rgba(255,255,255,0)'
+                                            }
+                                        },
+                                        data: qzDailyStatisticsData.fallCount
                                     }
 
                                 ]
                         };
                         switch (condition.qzRateRange) {
-                            case '1':
+                            case '-7':
                                 qzDailyStatisticsOption.xAxis.axisLabel.rotate = 0;
                                 qzDailyStatisticsOption.grid.y2 = 20;
                                 break;
-                            case '2':
+                            case '-30':
                                 qzDailyStatisticsOption.xAxis.axisLabel.rotate = -30;
                                 qzDailyStatisticsOption.grid.y2 = 40;
                                 break;
-                            case '3':
+                            case '-90':
                                 qzDailyStatisticsOption.xAxis.axisLabel.rotate = -30;
                                 qzDailyStatisticsOption.grid.y2 = 40;
                                 break;
@@ -238,7 +252,7 @@
                     }
                 },
                 error: function () {
-                    layer.msg('操作失败', {icon: 5});
+                    common.showFailMsg('操作失败');
                 }
             });
         }
@@ -249,6 +263,7 @@
             init_qz_rate_statistics(postData);
             init_table_data(postData);
         });
+
         form.on('select(qzRateSearchEngine)', function (data) {
             let postData = common.formToJsonObject('qzRateSearchForm');
             console.log(postData);
@@ -296,12 +311,10 @@
 
             let url = '/internal/qzRateStatistics/toQZRateHistory/' + data.terminalType + '/' + data.qzUuid;
 
-            okLayer.open("首页 / 每日站点涨幅统计 / 站点涨幅历史", url, "60%", "45%", function (layero) {
+            okLayer.open("首页 / 每日站点趋势 / 站点趋势历史", url, "60%", "45%", function (layero) {
             }, function () {
 
             })
-            //标注选中样式
-
         });
     });
 </script>
@@ -309,7 +322,7 @@
 </html>
 <script type="text/html" id="rateTpl">
     {{# if(!d.rate){    }}
-    <span style="color: burlywood;">今日暂无数据</span>
+    <span style="color: burlywood;">暂无数据</span>
     {{# }else{  }}
     {{# if(d.rate>0){   }}
     <span style="color: green;">上涨:{{d.rate}}</span>

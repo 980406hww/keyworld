@@ -394,19 +394,25 @@
 
 
     <select id="getQZUuidsByUserID" resultType="java.lang.Long">
-        SELECT fUuid FROM t_qz_setting WHERE fCustomerUuid IN(
-            SELECT fCustomerUuid FROM t_customer WHERE fUserID = #{userID})
+        SELECT fUuid
+        FROM t_qz_setting qs
+        WHERE EXISTS (
+            SELECT 1
+            FROM t_customer
+            WHERE fUuid = qs.fCustomerUuid
+            AND fUserID = #{userID}
+        )
         <if test="searchEngine!=null and searchEngine!=''">
-            AND fSearchEngine = #{searchEngine}
+            AND qs.fSearchEngine = #{searchEngine}
         </if>
         <choose>
             <when test="terminalType == 'PC'">
-                AND fPcGroup &gt; ''
+                AND qs.fPcGroup &gt; ''
             </when>
             <when test="terminalType == 'Phone'">
-                AND fPhoneGroup &gt; ''
+                AND qs.fPhoneGroup &gt; ''
             </when>
+            <otherwise></otherwise>
         </choose>
-
     </select>
 </mapper>

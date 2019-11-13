@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.Map;
 import javax.annotation.Resource;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,9 +25,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * @author yaoqing
+ */
 @RestController
 @RequestMapping("/internal/qzchargemon")
 public class QZChargeMonController {
+
+    private static final Logger logger = LoggerFactory.getLogger(QZChargeMonController.class);
 
     @Resource(name = "qzChargeMonService2")
     private QzChargeMonService qzChargeMonService;
@@ -58,6 +65,7 @@ public class QZChargeMonController {
                 resultBean.setData(data);
             }
         } catch (Exception e) {
+            logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
             return resultBean;
@@ -65,7 +73,7 @@ public class QZChargeMonController {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/qzchargemon/toQzChargeMon")
+    //@RequiresPermissions("/internal/qzchargemon/toQzChargeMon")
     @GetMapping(value = "/toQzChargeMon")
     public ModelAndView toQzChargeMon() {
         ModelAndView mv = new ModelAndView();
@@ -90,12 +98,7 @@ public class QZChargeMonController {
             }
             if (null != criteria.getDateStart() && !"".equals(criteria.getDateStart())) {
                 wrapper.where("fOperationDate >= {0}", criteria.getDateStart());
-            }/* else {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(new Date());
-                calendar.add(Calendar.DAY_OF_MONTH, -30);
-                wrapper.where("fOperationDate >= {0}", new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime()));
-            }*/
+            }
             if (null != criteria.getDateEnd() && !"".equals(criteria.getDateEnd())) {
                 wrapper.where("fOperationDate <= {0}", criteria.getDateEnd());
             }
@@ -104,33 +107,37 @@ public class QZChargeMonController {
             resultBean.setCount(page.getTotal());
         } catch (Exception e) {
             resultBean.setCode(400);
+            logger.error(e.getMessage());
             resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/qzchargemon/toQzChargeMon")
-    @GetMapping(value = "/toQzChargeMonWithParam/{terminal}/{search}/{time}")
-    public ModelAndView toQzChargeMonWithParam(@PathVariable String terminal, @PathVariable String search, @PathVariable String time) {
+    //@RequiresPermissions("/internal/qzchargemon/toQzChargeMon")
+    @GetMapping(value = {"/toQzChargeMonWithParam/{time}/{terminal}/{search}", "/toQzChargeMonWithParam/{time}/{search}", "/toQzChargeMonWithParam/{time}/{terminal}",
+        "/toQzChargeMonWithParam/{time}"})
+    public ModelAndView toQzChargeMonWithParam(@PathVariable(name = "time") String time, @PathVariable(name = "terminal", required = false) String terminal,
+        @PathVariable(name = "search", required = false) String search) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("qzchargemon/qzChargeMon");
-        if ("null".equals(terminal)) {
+        mv.addObject("time", time);
+        if (null == terminal) {
             mv.addObject("terminal", "");
         } else {
             mv.addObject("terminal", terminal);
         }
-        if ("null".equals(search)) {
+        if (null == search) {
             mv.addObject("search", "");
         } else {
             try {
                 search = URLDecoder.decode(search, "UTF-8");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
+                logger.error(e.getMessage());
             }
             mv.addObject("search", search);
         }
-        mv.addObject("time", time);
         return mv;
     }
 }

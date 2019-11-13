@@ -31,7 +31,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                     keywordOption.series[3].data = [];
                     keywordLogShow.setOption(keywordOption);
                 } else {
-                    common.showFailMsg('关键字整体排名涨幅数据获取失败');
+                    common.showFailMsg('每日排名涨幅数据获取失败');
                 }
             },
             error: function () {
@@ -42,7 +42,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
 
     var keywordOption = {
         title: {
-            text: '关键字整体排名涨幅',
+            text: '每日排名涨幅',
             subtext: '',
             y: '10',
             x: '10'
@@ -409,5 +409,4 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
             });
         }
     });
-})
-;
+});
