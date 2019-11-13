@@ -15,9 +15,9 @@
 	<select id="searchNegativeLists" parameterType="com.keymanager.ckadmin.criteria.NegativeListCriteria" resultType="com.keymanager.ckadmin.entity.NegativeList">
 		SELECT
 		<include refid="selectCol" />
-		FROM
-			t_negative_list n
+		FROM t_negative_list n
 		WHERE 1 = 1
+		<if test="negativeListCriteria.init != null and negativeListCriteria.init == 'init'">AND 1 != 1</if>
 		<if test="negativeListCriteria.keyword != null and negativeListCriteria.keyword != ''">AND n.fKeyword like '%${negativeListCriteria.keyword}%'</if>
 		<if test="negativeListCriteria.title != null and negativeListCriteria.title != ''">AND n.fTitle like '%${negativeListCriteria.title}%'</if>
 		<if test="negativeListCriteria.url != null and negativeListCriteria.url != ''">AND n.fUrl like '%${negativeListCriteria.url}%'</if>

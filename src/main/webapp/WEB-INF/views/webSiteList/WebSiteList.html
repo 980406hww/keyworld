@@ -283,6 +283,7 @@
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 
 <script>
     var sign = false;
@@ -334,11 +335,11 @@
                         let updateSalesInfoSign = $('#updateSalesInfoSigns');
                         let synchronousFriendlyLinkSigns = $('#synchronousFriendlyLinkSigns');
                         let synchronousAdvertisingSigns = $('#synchronousAdvertisingSigns');
-                        industry.append('<option value="" selected>请选择所属行业类型</option>');
-                        websiteType.append('<option value="" selected>请选择销售网站类型</option>');
-                        updateSalesInfoSign.append('<option value="" selected>请选择销售更新状态</option>');
-                        synchronousFriendlyLinkSigns.append('<option value="" selected>请选择友链更新状态</option>');
-                        synchronousAdvertisingSigns.append('<option value="" selected>请选择广告更新状态</option>');
+                        industry.append('<option value="" selected>所属行业类型</option>');
+                        websiteType.append('<option value="" selected>销售网站类型</option>');
+                        updateSalesInfoSign.append('<option value="" selected>销售更新状态</option>');
+                        synchronousFriendlyLinkSigns.append('<option value="" selected>友链更新状态</option>');
+                        synchronousAdvertisingSigns.append('<option value="" selected>广告更新状态</option>');
                         $.each(industryTypeMap, function (index, item) {
                             industry.append('<option value="' + index + '" >' + item + '</option>');
                         });
@@ -369,6 +370,7 @@
                 method: 'post',
                 url: '${ctx.path}/internal/websites/searchWebsites',
                 limit: 50,
+                limits: [25, 50, 100, 500, 1000],
                 page: true,
                 autoSort: false,
                 size: 'sm',
@@ -446,10 +448,12 @@
         form.on("submit(search)", function (data) {
             let postData = data.field;
             postData = common.jsonObjectTrim(postData);
-           init_Search(postData);
+            init_Search(postData);
             search = postData;
             return false;
         });
+
+        init_Search({init: 'init'});
 
         table.on('tool(tableFilter)',function(obj){
             let data = obj.data,event = obj.event;

@@ -650,9 +650,9 @@
 <body>
 <div class="ok-body">
     <div class="layui-tab layui-tab-card" lay-filter="tabQzsetting">
-        <ul class="layui-tab-title" id="tabItem">
-            <li data-terminal="PC" style="width: 100px" class="layui-this">电脑</li>
-            <li data-terminal="Phone" style="width: 100px">手机</li>
+        <ul class="layui-tab-title">
+            <li data-terminal="PC" lay-id="PC" style="width: 100px" class="layui-this">电脑</li>
+            <li data-terminal="Phone" lay-id="Phone" style="width: 100px">手机</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
@@ -684,7 +684,7 @@
                                     </div>
                                     <div class="layui-inline status-box">
                                             <div class="layui-inline" style="margin-left: 4px">
-                                                <label class="layui-form-label" style="background-color: #45a3c2;">暴涨暴跌</label>
+                                                <label class="layui-form-label layui-bg-green">暴涨暴跌</label>
                                                 <div class="sort-box" style="min-width: 338px">
                                                     <input type="checkbox" name="bzbtSort" value="1" title="骤降(0)" lay-filter="bzbtSort" lay-skin="primary">
                                                     <input type="checkbox" name="bzbtSort" value="2" title="无变化(0)" lay-filter="bzbtSort" lay-skin="primary">
@@ -692,7 +692,7 @@
                                                 </div>
                                             </div>
                                             <div class="layui-inline">
-                                                <label class="layui-form-label" style="background-color: #45a3c2;">今日趋势</label>
+                                                <label class="layui-form-label layui-bg-green">今日趋势</label>
                                                 <div class="sort-box"style="min-width: 322px">
                                                     <input type="checkbox" name="jrqsSort" value="7" title="下降(0)" lay-filter="jrqsSort" lay-skin="primary">
                                                     <input type="checkbox" name="jrqsSort" value="8" title="不变(0)" lay-filter="jrqsSort" lay-skin="primary">
@@ -700,7 +700,7 @@
                                                 </div>
                                             </div>
                                             <div class="layui-inline">
-                                                <label class="layui-form-label" style="background-color: #45a3c2;">达标统计</label>
+                                                <label class="layui-form-label layui-bg-green">达标统计</label>
                                                 <div class="sort-box" style="min-width: 364px">
                                                     <input type="checkbox" name="dbtjSort" value="4" title="达标(0)" lay-filter="dbtjSort" lay-skin="primary">
                                                     <input type="checkbox" name="dbtjSort" value="5" title="未达标(0)" lay-filter="dbtjSort" lay-skin="primary">
@@ -710,28 +710,27 @@
                                     </div>
                                 </div>
                                 <div class="my-hide" id="searchContent">
-                                    <input type="hidden" name="searchEngine" id="searchEngine" value="百度"/>
-                                    <input type="hidden" name="terminalType" id="terminalType" value="<#if terminal?exists>${terminal}<#else>PC</#if>"/>
+                                    <input type="hidden" name="searchEngine" id="searchEngine" value="<#if searchEngineTmp?exists>${searchEngineTmp}<#else>百度</#if>"/>
+                                    <input type="hidden" name="terminalType" id="terminalType" value="<#if terminalTypeTmp?exists>${terminalTypeTmp}<#else>PC</#if>"/>
                                     <input type="hidden" name="userInfoID" id="userInfoID" value="">
                                     <input type="hidden" name="organizationID" id="organizationID" value="">
-                                    <input hidden value='<#if customerUuidTmp?exists>${customerUuidTmp}</#if>' id="customerUuidTmp">
+                                    <input hidden value='<#if Request.customerUuidTmp?exists>${Request.customerUuidTmp}</#if>' id="customerUuidTmp">
                                     <div class="layui-form-item" style="margin-bottom: 0" lay-filter="loginNameFilter">
                                         <div class="layui-inline">
                                             <label class="layui-form-label">客户</label>
                                             <div class="layui-input-inline">
-                                                <select name="customerUuid" id="customerUuid"
-                                                        lay-filter="customerUuidFilter" lay-search>
+                                                <select name="customerUuid" id="customerUuid" lay-filter="customerUuidFilter" lay-search>
                                                 </select>
                                             </div>
                                         </div>
-                                        <@shiro.hasPermission name = "/internal/group/updateGroupOperationCombineUuid">
+                                        <@shiro.hasPermission name = "/internal/qzsetting/deleteQZSettings">
                                         <div class="layui-inline">
                                             <label class="layui-form-label">用户</label>
                                             <div class="layui-input-inline">
                                                 <input type="text" id="tree" lay-filter="tree" class="layui-input">
                                             </div>
                                         </div>
-                                    </@shiro.hasPermission>
+                                        </@shiro.hasPermission>
                                     <div class="layui-inline">
                                         <label class="layui-form-label">分类标签</label>
                                         <div class="layui-input-inline">
@@ -751,10 +750,12 @@
                                         <label class="layui-form-label">续费状态</label>
                                         <div class="layui-input-inline">
                                             <select name="renewalStatus" id="renewalStatus">
-                                                <option value selected>全部</option>
+                                                <option value="" selected>全部</option>
+                                                <option value="11">首次+续费中+其他</option>
+                                                <option value="12">首次+续费中</option>
+                                                <option value="2">首次续费</option>
                                                 <option value="1">续费中</option>
                                                 <option value="0">暂停续费</option>
-                                                <option value="2">首次续费</option>
                                                 <option value="3">下架</option>
                                                 <option value="4">其他</option>
                                             </select>
@@ -782,12 +783,17 @@
                                             </select>
                                         </div>
                                     </div>
+
                                     <div class="layui-inline">
                                         <label class="layui-form-label">创建时间</label>
-                                        <div class="layui-input-inline">
-                                            <input type="text" class="layui-input" id="createTimes" name="createTimes" placeholder="请选择日期">
+                                        <div class="layui-input-inline" style="width: 90.5px;">
+                                            <input type="text" name="createTime" id="createTime" placeholder="起始日期" autocomplete="off" class="layui-input">
+                                        </div>
+                                        <div class="layui-input-inline" style="width: 90.5px;">
+                                            <input type="text" name="createTimePrefix" id="createTimePrefix" placeholder="结束日期" autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
+
                                     <div class="layui-inline">
                                         <label class="layui-form-label">达标优化类型</label>
                                         <div class="layui-input-inline">
@@ -812,9 +818,8 @@
                                     </div>
                                 </div>
                             </div>
+                        </form>
                     </div>
-                    </form>
-                </div>
                 </div>
                 <!--数据表格-->
                 <table class="layui-hide" id="qzSettingTable" lay-filter="tableFilter"></table>
@@ -824,6 +829,7 @@
 </div>
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
 <script>
     let s_c = 0;
@@ -838,7 +844,7 @@
     }
 
     function resetHidden() {
-        document.getElementById('searchEngine').value = '百度';
+        document.getElementById('searchEngine').value = '<#if searchEngineTmp?exists>${searchEngineTmp}<#else>百度</#if>';
         document.getElementById('userInfoID').value = '';
         document.getElementById('organizationID').value = '';
     }
@@ -858,22 +864,24 @@
         var laydate = layui.laydate;
         var common = layui.common;
 
-        laydate.render({
-            elem: '#createTimes',
-            range: true,
-        });
+        laydate.render({elem: '#createTime'});
+        laydate.render({elem: '#createTimePrefix'});
 
-        let customerUuid = $("#customerUuidTmp").val();
-        let whereCondition = {searchEngine: '百度', terminalType: 'PC'};
-        if (customerUuid && customerUuid !== "") {
-            whereCondition.customerUuid = customerUuid;
+        let customerUuidTmp = $("#customerUuidTmp").val();
+        if (customerUuidTmp) {
+            let whereCondition = {searchEngine: 'All'};
+            whereCondition.customerUuid = customerUuidTmp;
+            whereCondition.terminalType = $("#terminalType").val();
             get_qzsetting(whereCondition);
+            getTerminalSearchEngineMap(whereCondition.terminalType, whereCondition.searchEngine);
+            element.tabChange('tabQzsetting', whereCondition.terminalType);
+        } else {
+            get_qzsetting({init: 'init'});
+            getTerminalSearchEngineMap('PC', "百度");
         }
 
-        getTerminalSearchEngineMap('PC');
-
-        function getTerminalSearchEngineMap(terminal) {
-            /*动态加载tab栏*/
+        /*动态加载tab栏*/
+        function getTerminalSearchEngineMap(terminal, searchEngine) {
             $.ajax({
                 url: '/internal/qzsetting/getQZSettingSearchEngineMap/' + terminal,
                 type: 'get',
@@ -886,24 +894,22 @@
                         let terminalSearchEngine = $('#terminalSearchEngine');
                         terminalSearchEngine.empty();
                         $.each(data, function (index, item) {
-                            let ttse = item.searchEngineName.replace(terminal,'');
-                            if (ttse === '百度') {
-                                terminalSearchEngine.append(
-                                    '<option value="' + ttse + '" selected>' + ttse + '</option>');
+                            let ttse = item.searchEngineName.replace(terminal, '');
+                            if (ttse === searchEngine) {
+                                terminalSearchEngine.append('<option value="' + ttse + '" selected>' + ttse + '</option>');
                             } else {
-                                terminalSearchEngine.append(
-                                    '<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
+                                terminalSearchEngine.append('<option value="' + ttse + '">' + ttse + '</option>');// 下拉菜单里添加元素
                             }
                         });
                         form.render("select");
                     } else {
-                        common.showFailMsg('数据获取失败');
+                        common.showFailMsg('搜索引擎列表获取失败');
                     }
                 }
             });
         }
 
-        <@shiro.hasPermission name = "/internal/group/updateGroupOperationCombineUuid">
+        <@shiro.hasPermission name = "/internal/qzsetting/deleteQZSettings">
         treeSelect.render({
             elem: '#tree',
             data: '/internal/user/trees2',
@@ -932,8 +938,8 @@
             }
         };
 
+        /*动态加载网站分类标签列表*/
         function get_qzcategory_label_list(categoryTag) {
-            /*动态加载网站分类标签列表*/
             $.ajax({
                 url: '${ctx.path}/internal/qzsetting/getCategoryTag',
                 dataType: 'json',
@@ -941,7 +947,7 @@
                 success: function (res) {
                     if (res.code === 200) {
                         $("#categoryTag").empty();
-                        $("#categoryTag").append('<option value="">请选择分类标签</option>');
+                        $("#categoryTag").append('<option value="">分类标签</option>');
                         $.each(res.data, function (index, item) {
                             $('#categoryTag').append(
                                 '<option value="' + item + '">' + item.trim() + '</option>');
@@ -953,8 +959,8 @@
             });
         }
 
+        /*动态加载客户列表*/
         function get_active_customer_list(customerUuid) {
-            /*动态加载客户列表*/
             $.ajax({
                 url: '${ctx.path}/internal/qzsetting/getActiveCustomer',
                 dataType: 'json',
@@ -963,7 +969,7 @@
                     if (res.code === 200) {
                         toUpdateQZSettingFromData = res.data;
                         $("#customerUuid").empty();
-                        $("#customerUuid").append('<option value="">请选择客户</option>');
+                        $("#customerUuid").append('<option value="">客户</option>');
                         $.each(res.data, function (index, item) {
                             $('#customerUuid').append(
                                 '<option value="' + item.uuid + '">' + item.contactPerson.trim()
@@ -982,13 +988,10 @@
             data.field.customerUuid.replace(/\s*/g, "");
             data.field.categoryTag.replace(/\s*/g, "");
 
-            if (data.field.createTimes != null || data.field.createTimes !== '') {
-                var str = data.field.createTimes.split(" - ");
-                data.field.createTime = str[0];
-                data.field.createTimePrefix = str[1]
-            }
             if (!data.field.createTimePrefix) {
                 data.field.createTimePrefix = '';
+            } else {
+                data.field.createTimePrefix += ' 23:59:59';
             }
             if (data.field.domain != null && data.field.domain !== '') {
                 if (data.field.domain.indexOf(".") === -1) {
@@ -1044,8 +1047,7 @@
             get_operation_combine_list(terminalType);
             get_qzcategory_label_list(whereCondition.categoryTag);
             get_active_customer_list(whereCondition.customerUuid);
-            let qz_setting_table = $("#qzSettingTable").parent().find(
-                ".layui-table-main").find("table");
+            let qz_setting_table = $("#qzSettingTable").parent().find(".layui-table-main").find("table");
             $.each(res.data, function (idx, val) {
                 let td = qz_setting_table.find("tr[data-index='" + val.LAY_TABLE_INDEX + "']").find("td[data-field='1']");
                 let optimizeGroupName = td.find("input[name='" + terminalType + "Group']").val();
@@ -1122,35 +1124,30 @@
             initQZSettingKeywordCount(td.find(".other-rank_2"), data["customerKeywordCount"], data["categoryTagNames"], data["operationCombineName"]);
 
             if (data['aiZhan'] !== undefined) {
-                generateQZKeywordTrendCharts(
-                    td.find("#keywordTrendCharts")[0], data['aiZhan']);
+                generateQZKeywordTrendCharts(td.find("#keywordTrendCharts")[0], data['aiZhan']);
             }
 
             if (data['5118'] !== undefined) {
-                generateQZKeywordTrendCharts(
-                    td.find("#keywordTrendCharts")[0], data['5118']);
+                generateQZKeywordTrendCharts(td.find("#keywordTrendCharts")[0], data['5118']);
             }
 
             if (data['designationWord'] === undefined) {
                 td.find("div.rank-wrap1").css("display", "none");
             } else {
                 // 指定词曲线
-                generateQZDesignationWordTrendCharts(
-                    td.find("#designationWordCharts")[0],
-                    data['designationWord']);
+                generateQZDesignationWordTrendCharts(td.find("#designationWordCharts")[0], data['designationWord']);
             }
 
             if (data['xt'] === undefined) {
                 td.find("div.rank-wrap2").css("display", "none");
             } else {
                 // 排名-操作词数图表
-                generateQZXTKeywordTrendCharts(td.find("#xtCharts")[0],
-                    data['xt']);
+                generateQZXTKeywordTrendCharts(td.find("#xtCharts")[0], data['xt']);
             }
         }
 
+        /*动态加载操作组合列表*/
         function get_operation_combine_list(terminalType) {
-            /*动态加载操作组合列表*/
             $.ajax({
                 url: '/internal/operationcombine/getOperationCombines/' + terminalType,
                 type: 'get',
@@ -1217,7 +1214,9 @@
         element.on('tab(tabQzsetting)', function (data) {
             let terminalType = data.elem.context.dataset.terminal;
             $('#terminalType').val(terminalType);
-            getTerminalSearchEngineMap(terminalType);
+            let searchEngineTmp = '<#if searchEngineTmp?exists>${searchEngineTmp}<#else>百度</#if>';
+            getTerminalSearchEngineMap(terminalType, searchEngineTmp);
+            $('#searchEngine').val(searchEngineTmp);
             active['reload'].call(this);
         });
 
@@ -1304,6 +1303,7 @@
                     },
                     tooltip: {
                         trigger: 'axis',
+                        confine: true,
                         position: function (point, params, dom, rect, size) {
                             return [point[0] + 20, '-15%'];
                         }
@@ -1365,7 +1365,7 @@
                                     color: '#000'
                                 }
                             }
-                        },
+                        }/*,
                         {
                             show: true,
                             type: 'value',
@@ -1394,10 +1394,10 @@
                                     color: '#000'
                                 }
                             }
-                        }
+                        }*/
                     ],
                     series: [
-                        {
+/*                        {
                             name: '收录',
                             smooth: true,
                             type: 'line',
@@ -1412,7 +1412,7 @@
                                     width: 3
                                 }
                             }
-                        },
+                        },*/
                         {
                             name: '前10',
                             smooth: true,
@@ -1496,6 +1496,7 @@
                     },
                     tooltip: {
                         trigger: 'axis',
+                        confine: true,
                         position: function (point, params, dom, rect, size) {
                             return [point[0] + 20, '-15%'];
                         }
@@ -1557,7 +1558,7 @@
                                     color: '#000'
                                 }
                             }
-                        },
+                        }/*,
                         {
                             show: true,
                             type: 'value',
@@ -1586,10 +1587,10 @@
                                     color: '#000'
                                 }
                             }
-                        }
+                        }*/
                     ],
                     series: [
-                        {
+/*                        {
                             name: '收录',
                             smooth: true,
                             type: 'line',
@@ -1604,7 +1605,7 @@
                                     width: 3
                                 }
                             }
-                        },
+                        },*/
                         {
                             name: '前10',
                             smooth: true,
@@ -1696,6 +1697,7 @@
                 },
                 tooltip: {
                     trigger: 'axis',
+                    confine: true,
                     position: function (point, params, dom, rect, size) {
                         return [point[0] + 20, '-15%'];
                     }
@@ -1846,6 +1848,7 @@
                 },
                 tooltip: {
                     trigger: 'axis',
+                    confine: true,
                     position: function (point, params, dom, rect, size) {
                         return [point[0] + 20, '-15%'];
                     }
@@ -2041,13 +2044,6 @@
             }
         }
 
-        function toTimeFormat(time) {
-            var date = toDateFormat(time);
-            var hours = time.getHours() < 10 ? ("0" + time.getHours()) : time.getHours();
-            var minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
-            var seconds = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds();
-            return date + " " + hours + ":" + minutes + ":" + seconds;
-        }
 
         function toDateFormat(time) {
             return time.getFullYear() + "-" +
@@ -2580,7 +2576,9 @@
 
         let oneRowI = '<tr>\n                            <td class="my-left" colspan="4">\n                                <div class="my-label" style="max-width: none">\n                                     <input type="text" class="layui-input my-input"\n                                     placeholder="请在此输入你想要记录的内容"\n                                     style="height: 36px;padding-right: 10px">\n                                </div>\n                            </td>\n                            <td class="my-left my-bottom">\n                                <div class="my-label my-btn">\n                                <button type="button" onclick="commitNoteBook(this)"\n                                    class="layui-btn layui-btn-xs">\n                                保存\n                                </button>\n                                </div>\n                             </td>\n                             </tr>';
 
-        // 修改
+        /**
+         * 修改
+         */
         window.showSettingDialog = function (uuid) {
             okLayer.open("其他 / 前往全站设置信息 / 修改", "/internal/qzsetting/toQZSettingAdd", "90%",
                 "90%", function (layero) {
@@ -2592,7 +2590,9 @@
                 },'40px')
         };
 
-        // 收费
+        /**
+         * 收费
+         */
         window.showChargeDialog = function (uuid, contactPearson, domain, renewalStatus) {
             okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toQZSettingCharge", "60%",
                 "70%", function (layero) {
@@ -2712,7 +2712,9 @@
             });
         };
 
-        // 运营记录 原记事本
+        /**
+         * 运营记录 原记事本
+         */
         window.openNoteBookDialog = function (uuid) {
             noteAddRow = true;
             showData(uuid, function (noteBookHtml) {
@@ -2833,6 +2835,9 @@
             });
         }
 
+        /**
+         *  全站设置排除词
+         */
         window.showExcludeCustomerKeywordDialog = function (uuid, customerUuid, domain, pcGroup,
             phoneGroup) {
             let terminalType = $("#terminalType").val();
@@ -2854,7 +2859,9 @@
                 },'40px')
         };
 
-        // 修改选中站点优化组关联的操作组合
+        /**
+         * 修改选中站点优化组关联的操作组合
+         */
         form.on('select(operationCombineFilter)', function (data) {
             let checkStatus = table.checkStatus('qzSettingTable');
             if (checkStatus.data.length === 0) {
@@ -2899,6 +2906,9 @@
             });
         });
 
+        /**
+         * 全站添加关键字
+         */
         window.showAddKeywordDialog = function (uuid, customerUuid, domain, bearPawNumber,
             searchEngine, type, pcGroup, phoneGroup) {
             let terminalType = $("#terminalType").val();
@@ -3273,7 +3283,7 @@
         <i style="font-size: 15px !important;" class="layui-icon">&#xe642;</i>修改整站归属
     </button>
     </div>
-    <#if isSEOSales==1>
+    <@shiro.hasRole name="SEOSales">
     <div class="layui-btn-group">
         <button class="layui-btn layui-btn-sm" lay-event="batchUpdateRenewalStatusToNormal">
             <i class="layui-icon">&#x1005;</i>正常续费
@@ -3288,7 +3298,7 @@
             <i class="layui-icon">&#xe63f;</i>改为其他
         </button>
     </div>
-    </#if>
+    </@shiro.hasRole>
 </script>
 
 <script type="text/html" id="item">
@@ -3328,11 +3338,15 @@
             </span>
             <span>
                 达标时间:
-                <a href="javascript:;">{{layui.util.toDateString(d.standardTime,'yyyy-MM-dd')}}</a>
+                <a href="javascript:;">
+                    {{d.standardTime == null ? "暂无" :layui.util.toDateString(d.standardTime, 'yyyy-MM-dd')}}
+                </a>
             </span>
             <span>
                 创建时间:
-                <a href="javascript:;">{{layui.util.toDateString(d.createTime,'yyyy-MM-dd')}}</a>
+                <a href="javascript:;">
+                    {{d.createTime == null ? "暂无" :layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+                </a>
             </span>
         </div>
         <!--    标签    -->

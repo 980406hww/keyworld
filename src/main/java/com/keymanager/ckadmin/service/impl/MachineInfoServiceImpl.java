@@ -117,7 +117,19 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public void updateMachineInfo(MachineInfo machineInfo) {
-        machineInfoDao.updateById(machineInfo);
+        MachineInfo oldMachineInfo = machineInfoDao.selectById(machineInfo.getClientID());
+        oldMachineInfo.setMachineGroup(machineInfo.getMachineGroup());
+        oldMachineInfo.setAllowSwitchGroup(machineInfo.getAllowSwitchGroup());
+        oldMachineInfo.setHost(machineInfo.getHost());
+        oldMachineInfo.setPort(machineInfo.getPort());
+        oldMachineInfo.setUserName(machineInfo.getUserName());
+        oldMachineInfo.setBroadbandAccount(machineInfo.getBroadbandAccount());
+        oldMachineInfo.setBroadbandPassword(machineInfo.getBroadbandPassword());
+        oldMachineInfo.setVpsBackendSystemComputerID(machineInfo.getVpsBackendSystemComputerID());
+        oldMachineInfo.setVpsBackendSystemPassword(machineInfo.getVpsBackendSystemPassword());
+        oldMachineInfo.setSwitchGroupName(machineInfo.getSwitchGroupName());
+        oldMachineInfo.setUpdateSettingTime(Utils.getCurrentTimestamp());
+        machineInfoDao.updateById(oldMachineInfo);
     }
 
     @Override
@@ -430,8 +442,8 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     @Override
-    public List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(String clientIDPrefix, String city, String switchGroupName) {
-        List<MachineInfoSummaryVO> pcMachineInfoSummaryVos = machineInfoDao.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName);
+    public List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(String clientIDPrefix, String city, String switchGroupName, String init) {
+        List<MachineInfoSummaryVO> pcMachineInfoSummaryVos = machineInfoDao.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName, init);
         Collections.sort(pcMachineInfoSummaryVos);
 
         MachineInfoSummaryVO previousClientIDPrefix = null;

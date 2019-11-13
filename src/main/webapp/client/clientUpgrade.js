@@ -72,6 +72,7 @@ function showClientUpgrade(uuid) {
         $.ajax({
             url: '/internal/clientUpgrade/getClientUpgrade/' + uuid,
             type: 'Get',
+            dataType: 'json',
             success: function (data) {
                 if (data != null) {
                     var clientUpgradeForm = $("#clientUpgradeForm");

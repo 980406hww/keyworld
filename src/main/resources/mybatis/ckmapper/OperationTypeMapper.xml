@@ -17,6 +17,7 @@
         t_operation_type
         WHERE 1 = 1
         AND fTerminalType = #{operationType.terminalType}
+        <if test="init != null and init == 'init'">AND 1 != 1</if>
         <if test="operationType.operationTypeName != null and operationType.operationTypeName != ''">
             AND fOperationTypeName like '%${operationType.operationTypeName}%'
         </if>

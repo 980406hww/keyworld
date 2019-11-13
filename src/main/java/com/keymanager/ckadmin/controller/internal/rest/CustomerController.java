@@ -60,7 +60,7 @@ public class CustomerController extends SpringMVCBaseController {
     @Resource(name = "userRoleService2")
     private UserRoleService userRoleService;
 
-    @RequiresPermissions("/internal/customer/searchCustomers")
+    @RequiresPermissions("/internal/customer/toCustomers")
     @GetMapping(value = "/toCustomers")
     public ModelAndView toCustomers() {
         ModelAndView mv = new ModelAndView();
@@ -68,7 +68,7 @@ public class CustomerController extends SpringMVCBaseController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/customer/searchCustomers")
+    @RequiresPermissions("/internal/customer/toCustomers")
     @PostMapping(value = "/getCustomers")
     public ResultBean getCustomers(@RequestBody CustomerCriteria customerCriteria, HttpSession session) {
         ResultBean resultBean = new ResultBean();
@@ -107,9 +107,15 @@ public class CustomerController extends SpringMVCBaseController {
     }
 
     @RequestMapping("/getActiveUsers")
-    public List<UserInfo> getActiveUsers() {
-        List<UserInfo> activeUsers = userInfoService.findActiveUsers();
-        return activeUsers;
+    public ResultBean getActiveUsers() {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            resultBean.setData(userInfoService.findActiveUsers());
+        } catch (Exception e) {
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
     }
 
     /**
@@ -302,6 +308,33 @@ public class CustomerController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @PostMapping(value = "/changeSearchEngine")
+    public ResultBean changeSearchEngine(@RequestBody Map requestMap) {
+        try {
+            long uuid = Long.parseLong((String) requestMap.get("uuid"));
+            String searchEngine = (String) requestMap.get("searchEngine");
+            customerService.changeSearchEngine(uuid, searchEngine);
+            return new ResultBean(200, "更新成功");
+        } catch (NumberFormatException e) {
+            logger.error(e.getMessage());
+            return new ResultBean(400, "更新失败");
+        }
+    }
+
+    @RequiresPermissions("/internal/customer/saveCustomer")
+    @PostMapping(value = "/changeExternalAccount")
+    public ResultBean changeExternalAccount(@RequestBody Map requestMap) {
+        try {
+            long uuid = Long.parseLong((String) requestMap.get("uuid"));
+            String externalAccount = (String) requestMap.get("externalAccount");
+            customerService.changeExternalAccount(uuid, externalAccount);
+            return new ResultBean(200, "更新成功");
+        } catch (NumberFormatException e) {
+            logger.error(e.getMessage());
+            return new ResultBean(400, "更新失败");
+        }
+    }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywordLists")
     @RequestMapping(value = "/searchCustomerTypeCount2", method = RequestMethod.POST)
@@ -319,7 +352,7 @@ public class CustomerController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("fail");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }

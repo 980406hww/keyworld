@@ -93,7 +93,6 @@
             <otherwise></otherwise>
         </choose>
         <if test="criteria.updateStatus != null and criteria.updateStatus != ''">AND qs.fUpdateStatus = #{criteria.updateStatus}</if>
-        <if test="criteria.renewalStatus != null">AND qs.fRenewalStatus = #{criteria.renewalStatus}</if>
         <if test="criteria.autoCrawlKeywordFlag != null">AND qs.fAutoCrawlKeywordFlag = #{criteria.autoCrawlKeywordFlag}</if>
         <if test="criteria.standardSpecies != null and criteria.standardSpecies != ''">
             AND EXISTS (
@@ -104,7 +103,19 @@
             )
         </if>
         <if test="criteria.optimizationType != null">AND qot.fOptimizationType = #{criteria.optimizationType}</if>
-        <if test="criteria.renewalStatus != null">AND qs.fRenewalStatus = #{criteria.renewalStatus}</if>
+        <if test="criteria.renewalStatus != null">
+            <choose>
+                <when test="criteria.renewalStatus == 11">
+                    AND (qs.fRenewalStatus = 2 OR qs.fRenewalStatus = 1 OR qs.fRenewalStatus = 4)
+                </when>
+                <when test="criteria.renewalStatus == 12">
+                    AND (qs.fRenewalStatus = 2 OR qs.fRenewalStatus = 1)
+                </when>
+                <otherwise>
+                    AND qs.fRenewalStatus = #{criteria.renewalStatus}
+                </otherwise>
+            </choose>
+        </if>
         <if test="criteria.categoryTag != null and criteria.categoryTag != ''">
             AND EXISTS (SELECT 1 FROM t_qz_category_tag qc WHERE qc.fQZSettingUuid = qs.fUuid AND qc.fTagName = #{criteria.categoryTag})
         </if>

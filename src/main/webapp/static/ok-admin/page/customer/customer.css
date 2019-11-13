@@ -63,8 +63,23 @@ html {
     transition: opacity 0.5s;
 }
 
-.layui-form-select input {
+#searchForm .layui-form-select input {
     height: 30px;
+}
+
+#data_list .layui-form-switch{
+    margin-top: 0 !important;
+}
+
+#data_list .layui-form-select dl{
+    top: 26px;
+    padding: 0;
+    z-index: 999;
+}
+
+#data_list .layui-form-select dl dd{
+    height: 24px;
+    line-height: 24px;
 }
 
 .layui-inline input {
@@ -125,7 +140,9 @@ html {
 }*/
 
 #data_list {
-    padding-top: 10px;
+    padding: 10px 0 5px 5px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .layui-tab {
@@ -135,13 +152,7 @@ html {
 /*操作*/
 .operation {
     display: none;
-    font-size: 14px;
 }
-
-.operation a {
-    color: #1a81ea;
-}
-
 
 .layadmin-maillist-fluid .layadmin-contact-box:hover .operation {
     display: block;
@@ -179,21 +190,17 @@ html {
 
 
 .layadmin-maillist-fluid .layadmin-title {
-    margin: 5px 0 10px 0;
+    margin: 5px 0 2px 0;
     height: 22px;
 }
 
 .layadmin-maillist-fluid .layadmin-contact-box {
-    padding: 10px;
-    padding-bottom: 0;
+    padding: 5px 10px 0 10px;
+    margin: 5px;
     background-color: #fff;
     border: 1px solid #e7eaec;
-    overflow: hidden;
-}
-
-
-.operation a {
-    color: #1a81ea;
+    overflow: visible;
+    width: 31.3%;
 }
 
 .other_info a {

@@ -476,10 +476,11 @@
 </div>
 <!--js逻辑-->
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
-    let uuid_ = null;
-    let layui_ = null;
-    let flag_ = true;
+    var uuid_ = null;
+    var layui_ = null;
+    var init_ = false;
 
     /**
      * 供上方调用
@@ -495,6 +496,7 @@
     }
 
     function initForm2(isSEOSales) {
+        init_ = true;
         if (isSEOSales === '1') {
             initRenewalStatus('2');
         } else {
@@ -594,7 +596,6 @@
                         }
                     }
                     l.form.val("addQZSetting", d_n);
-                    flag_ = false;
                 } else {
                     l.common.showFailMsg('数据获取失败');
                 }
@@ -787,60 +788,58 @@
 
         window.getInitData = function (a, b) {
             b = b === undefined ? '百度' : b;
-            if (flag_) {
-                $.ajax({
-                    url: '/internal/qzsetting/getSaveQZSettingsMsg',
-                    type: 'get',
-                    dataType: 'json',
-                    success: function (res) {
-                        if (res.code === 200) {
-                            let customerList = document.getElementById('customerList');
-                            let searchList = document.getElementById('searchList');
-                            let html_c = '<option value="">请选择</option>';
-                            if (a) {
-                                html_c += '<option value="';
-                                html_c += a.uuid;
-                                html_c += '" selected>';
-                                html_c += a.contactPerson;
-                                html_c += '</option>';
-                                customerList.setAttribute('disabled', '');
-                            } else {
-                                let customers = res.data.customers;
-                                let l = customers.length;
-                                for (let i = 0; i < l; i++) {
-                                    html_c += '<option value="';
-                                    html_c += customers[i].uuid;
-                                    html_c += '">';
-                                    html_c += customers[i].contactPerson;
-                                    html_c += '</option>';
-                                }
-                            }
-                            let html_s = '';
-                            let search = res.data.search;
-                            for (let item in res.data.search) {
-                                html_s += '<option value="';
-                                html_s += item + '"';
-                                if (item === b) {
-                                    html_s += 'selected';
-                                }
-                                html_s += '>';
-                                html_s += search[item];
-                                html_s += '</option>';
-                            }
-                            customerList.innerHTML = html_c;
-                            searchList.innerHTML = html_s;
-                            form.render('select');
-                            if (a) {
-                                let customerInput = customerList.nextElementSibling.children[0].children[0];
-                                customerInput.classList.remove('layui-disabled');
-                                customerInput.setAttribute('disabled', '');
-                            }
+            $.ajax({
+                url: '/internal/qzsetting/getSaveQZSettingsMsg',
+                type: 'get',
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        let customerList = document.getElementById('customerList');
+                        let searchList = document.getElementById('searchList');
+                        let html_c = '<option value="">请选择</option>';
+                        if (a) {
+                            html_c += '<option value="';
+                            html_c += a.uuid;
+                            html_c += '" selected>';
+                            html_c += a.contactPerson;
+                            html_c += '</option>';
+                            customerList.setAttribute('disabled', '');
                         } else {
-                            common.showFailMsg('数据获取失败');
+                            let customers = res.data.customers;
+                            let l = customers.length;
+                            for (let i = 0; i < l; i++) {
+                                html_c += '<option value="';
+                                html_c += customers[i].uuid;
+                                html_c += '">';
+                                html_c += customers[i].contactPerson;
+                                html_c += '</option>';
+                            }
                         }
+                        let html_s = '';
+                        let search = res.data.search;
+                        for (let item in res.data.search) {
+                            html_s += '<option value="';
+                            html_s += item + '"';
+                            if (item === b) {
+                                html_s += 'selected';
+                            }
+                            html_s += '>';
+                            html_s += search[item];
+                            html_s += '</option>';
+                        }
+                        customerList.innerHTML = html_c;
+                        searchList.innerHTML = html_s;
+                        form.render('select');
+                        if (a) {
+                            let customerInput = customerList.nextElementSibling.children[0].children[0];
+                            customerInput.classList.remove('layui-disabled');
+                            customerInput.setAttribute('disabled', '');
+                        }
+                    } else {
+                        common.showFailMsg('数据获取失败');
                     }
-                });
-            }
+                }
+            });
         };
 
         tbody_com = $('#computerTbody');
@@ -1215,7 +1214,7 @@
                 return;
             }
             p.removeChild(m);
-        }
+        };
 
         $('#close').click(function () {
             parent.layer.close(parent.layer.getFrameIndex(window.name));
@@ -1223,7 +1222,7 @@
 
         form.verify({
             domain: [
-                /^([a-z0-9]*)\.*([\u4e00-\u9fa50-9]+|[a-z0-9]+)\.([\u4e00-\u9fa5]+|[a-z]+|ac.cn|bj.cn|sh.cn|tj.cn|cq.cn|he.cn|sn.cn|sx.cn|nm.cn|ln.cn|jl.cn|hl.cn|js.cn|zj.cn|ah.cn|fj.cn|jx.cn|sd.cn|ha.cn|hb.cn|hn.cn|gd.cn|gx.cn|hi.cn|sc.cn|gz.cn|yn.cn|gs.cn|qh.cn|nx.cn|xj.cn|tw.cn|hk.cn|mo.cn|xz.cn|com.cn|net.cn|org.cn|gov.cn|.com.hk)$/,
+                /^([a-z0-9]*)\.?.*\.([\u4e00-\u9fa5]+|[a-z0-9]+|ac.cn|bj.cn|sh.cn|tj.cn|cq.cn|he.cn|sn.cn|sx.cn|nm.cn|ln.cn|jl.cn|hl.cn|js.cn|zj.cn|ah.cn|fj.cn|jx.cn|sd.cn|ha.cn|hb.cn|hn.cn|gd.cn|gx.cn|hi.cn|sc.cn|gz.cn|yn.cn|gs.cn|qh.cn|nx.cn|xj.cn|tw.cn|hk.cn|mo.cn|xz.cn|com.cn|net.cn|org.cn|gov.cn|.com.hk)$/,
                 "请正确输入域名"
             ],
             tagNames: [
@@ -1232,8 +1231,10 @@
             ]
         });
 
-        // 执行初始化数据方法
-        getInitData();
+        if (init_) {
+            // 执行初始化数据方法
+            getInitData();
+        }
     });
 </script>
 </body>

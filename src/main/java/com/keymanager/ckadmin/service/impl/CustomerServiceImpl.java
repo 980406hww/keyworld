@@ -55,7 +55,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
                 customerUuids.add(customer.getUuid());
             }
             List<Map> customerCustomerBusinessMapList = customerBusinessService.getCustomerBusinessMapList(customerUuids);
-            Map<Integer, Map> customerCustomerBusinessMap = new HashMap<>();
+            Map<Integer, Map> customerCustomerBusinessMap = new HashMap<>(customerUuids.size());
             for (Map map : customerCustomerBusinessMapList) {
                 customerCustomerBusinessMap.put((Integer) map.get("customerUuid"), map);
             }
@@ -209,6 +209,16 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     @Override
     public void changeRemark(Long uuid, String remark) {
         customerDao.changeRemark(uuid, remark);
+    }
+
+    @Override
+    public void changeExternalAccount(Long uuid, String externalAccount) {
+        customerDao.changeExternalAccount(uuid, externalAccount);
+    }
+
+    @Override
+    public void changeSearchEngine(Long uuid, String searchEngine) {
+        customerDao.changeSearchEngine(uuid, searchEngine);
     }
 
     @Override

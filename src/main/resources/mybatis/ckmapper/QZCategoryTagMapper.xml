@@ -24,8 +24,15 @@
         SELECT qc.fTagName
         FROM t_qz_category_tag qc
         WHERE 1 = 1
-        <if test="userName != null">
-            AND qc.fBelongUser = #{userName}
+        <if test="userName != null and userName != ''">
+            AND EXISTS (
+                SELECT 1
+                FROM t_qz_setting qs
+                LEFT JOIN t_customer c
+                ON c.fUuid = qs.fCustomerUuid
+                WHERE qs.fUuid = qc.fQZSettingUuid
+                AND c.fUserID = #{userName}
+            )
         </if>
         GROUP BY qc.fTagName
     </select>

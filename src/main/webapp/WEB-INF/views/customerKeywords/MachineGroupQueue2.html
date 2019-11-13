@@ -23,6 +23,7 @@
 </div>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
     var sign = false;
     // 进度条加载提示
@@ -51,6 +52,7 @@
                 method: 'post',
                 url: '${ctx.path}/internal/customerKeyword/searchMachineGroupAndSize',
                 limit: 50,
+                limits: [25, 50, 100, 500, 1000],
                 page: true,
                 autoSort: false,
                 size: 'sm',

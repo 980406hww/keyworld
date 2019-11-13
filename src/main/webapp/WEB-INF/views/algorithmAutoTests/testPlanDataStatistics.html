@@ -25,6 +25,7 @@
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
 
     let layui_ = null;
@@ -76,7 +77,9 @@
 
 <!--模板-->
 <script type="text/html" id="toDateTime">
-    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+    {{#  if(d.createTime){ }}
+        {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+    {{#  } }}
 </script>
 </body>
 </html>

@@ -106,19 +106,24 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
             url: '/internal/customer/getActiveUsers',
             dataType: 'json',
             type: 'get',
-            success: function (data) {
-                $("#userName").empty();
-                $("#userName").append('<option value="">所属用户</option>');
-                $.each(data, function (index, item) {
-                    $('#userName').append(
-                        '<option value="' + item.loginName + '">'
-                        + item.userName
-                        + '</option>');// 下拉菜单里添加元素
-                });
-                if (belongUser !== '' || belongUser != null) {
-                    $("#userName").val(belongUser)
+            success: function (res) {
+                if (res.code === 200) {
+                    let data = res.data;
+                    $("#userName").empty();
+                    $("#userName").append('<option value="">所属用户</option>');
+                    $.each(data, function (index, item) {
+                        $('#userName').append(
+                            '<option value="' + item.loginName + '">'
+                            + item.userName
+                            + '</option>');// 下拉菜单里添加元素
+                    });
+                    if (belongUser !== '' || belongUser != null) {
+                        $("#userName").val(belongUser)
+                    }
+                    form.render("select");
+                } else {
+                    common.showFailMsg('获取用户列表失败');
                 }
-                form.render("select");
             }
         });
     }
@@ -149,6 +154,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
     }
 
     function get_keywords(whereCondition) {
+        if (!whereCondition.optimizeGroupNameLike) {
+            whereCondition.optimizeGroupNameLike = '';
+        }
         var keywordTable = table.render({
             elem: '#keywordTable',
             method: 'post',
@@ -185,7 +193,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 {field: 'invalidRefreshCount', title: '无效', width: '60', hide: true },
                 {field: 'status', title: '状态', width: '60', templet: '#statusTpl' },
                 {field: 'paymentStatus', title: '付费状态', width: '80', hide: true },
-                {field: 'remarks', title: '备注', width: '100', hide: true},
+                {field: 'remarks', title: '备注', width: '100', hide: true, templet: '#remarksTpl'},
                 {field: 'failedCause', title: '失败原因', width: '80', hide: true},
             ]],
             height: 'full-110',
@@ -206,6 +214,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
         let postData = common.formToJsonObject('searchForm');
         postData.orderBy = obj.field;
         postData.orderMode = obj.type === 'desc' ? '0' : '1';
+        if (!postData.optimizeGroupNameLike) {
+            postData.optimizeGroupNameLike = '';
+        }
         table.reload('keywordTable', {
             initSort: obj,
             where: postData
@@ -224,6 +235,10 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
     );
 
     form.verify({
+        num: [
+            /(^$)|(^[0-9]?$)|(^[1-9][0-9]+$)/,
+            "请输入合适的正整数、如：1、2、3"
+        ],
         positiveInteger: [
             /(^$)|(^[0-9]*[1-9][0-9]*$)/,
             "请输入合适的正整数、如：1、2、3"
@@ -241,6 +256,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 let postData = common.formToJsonObject('searchForm');
                 if (!postData.noReachStandardDays) {
                     postData.noReachStandardDays = '';
+                }
+                if (!postData.optimizeGroupNameLike) {
+                    postData.optimizeGroupNameLike = '';
                 }
                 table.reload('keywordTable', {
                     where: postData,
@@ -603,6 +621,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 }
             });
         });
+    }
+
+    if (document.getElementById('keyword').value || document.getElementById('optimizeGroupName').value ||
+        document.getElementById('machineGroup').value) {
+        $('#searchBtn').click();
+    } else {
+        get_keywords({init: 'init'});
     }
 
     window.toCustomerKeyword = function (customerUuid, contactPerson) {

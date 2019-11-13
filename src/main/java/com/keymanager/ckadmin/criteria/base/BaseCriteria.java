@@ -13,6 +13,15 @@ public class BaseCriteria {
     private Integer limit;
     private String orderBy;
     private Integer orderMode = 1;
+    private String init;
+
+    public String getInit() {
+        return init;
+    }
+
+    public void setInit(String init) {
+        this.init = init;
+    }
 
     public Integer getPage() {
         return page;

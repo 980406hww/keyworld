@@ -26,7 +26,7 @@ public class WarnListController {
     @Resource(name = "warnListService2")
     private WarnListService warnListService;
 
-    @RequiresPermissions("/internal/warnlist/searchWarnLists")
+    @RequiresPermissions("/internal/warnlists/toSearchWarnLists")
     @RequestMapping(value = "/toSearchWarnLists", method = RequestMethod.GET)
     public ModelAndView toSearchWarnLists() {
         ModelAndView mv = new ModelAndView();
@@ -42,7 +42,7 @@ public class WarnListController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/warnlist/searchWarnLists")
+    @RequiresPermissions("/internal/warnlists/toSearchWarnLists")
     @RequestMapping(value = "/searchWarnLists", method = RequestMethod.POST)
     public ResultBean searchWarnLists(@RequestBody WarnListCriteria warnListCriteria) {
         ResultBean resultBean = new ResultBean();

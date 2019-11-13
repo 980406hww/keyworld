@@ -21,6 +21,7 @@
         <include refid="selectCol"/>
         FROM t_industry_info tii
         WHERE 1 = 1
+        <if test="industryCriteria.init != null and industryCriteria.init == 'init'">AND 1 != 1</if>
         <if test="industryCriteria.loginName != null and industryCriteria.loginName != ''">AND tii.fUserID = #{industryCriteria.loginName}</if>
         <if test="industryCriteria.searchEngine != null and industryCriteria.searchEngine != ''">AND tii.fSearchEngine = #{industryCriteria.searchEngine}</if>
         <if test="industryCriteria.industryName != null and industryCriteria.industryName != ''">AND tii.fIndustryName like CONCAT('%', #{industryCriteria.industryName}, '%')</if>

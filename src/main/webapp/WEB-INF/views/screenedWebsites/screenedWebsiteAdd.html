@@ -63,9 +63,11 @@
 </div>
 <!--js逻辑-->
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
     let uuid_ = null;
     let layui_ = null;
+    let flag_ = false;
 
     /**
      * 供上方调用
@@ -90,10 +92,46 @@
             dataType: 'json',
             success: function (res) {
                 if (res.code === 200) {
+                    if (!flag_) {
+                        init_optimizeGroupName(l, res.data.optimizeGroupName);
+                    }
                     l.form.val("save", res.data);
                 } else {
                     l.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg, {icon: 5, time: 3000});
                 }
+            }
+        });
+    }
+
+    function init_optimizeGroupName(l,k){
+        l.$.ajax({
+            url: '/internal/group/getAllGroupNames',
+            type: 'POST',
+            headers: {
+                "Accept": 'application/json',
+                "Content-Type": 'application/json'
+            },
+            success: function (res) {
+                if (res.code === 200) {
+                    flag_ = true;
+                    let groupData = res.data;
+                    let group_list = l.$('#optimizeGroupName');
+                    group_list.empty();
+                    group_list.append('<option value="">请选择分组</option>');
+                    l.$.each(groupData, function (index, item) {
+                        if (item === k){
+                            group_list.append('<option value="' + item + '" selected>' + item + '</option>');
+                        }else {
+                            group_list.append('<option value="' + item + '">' + item + '</option>');
+                        }
+                    });
+                    l.form.render("select")
+                } else {
+                    l.common.showFailMsg(res.msg);
+                }
+            },
+            error: function () {
+                l.common.showFailMsg("未知错误，请稍后重试！！");
             }
         });
     }
@@ -108,35 +146,8 @@
         } else {
             layui_ = layui;
         }
-        init_optimizeGroupName();
 
-        function init_optimizeGroupName(){
-            $.ajax({
-                url: '/internal/group/getAllGroupNames',
-                type: 'POST',
-                headers: {
-                    "Accept": 'application/json',
-                    "Content-Type": 'application/json'
-                },
-                success: function (res) {
-                    if (res.code === 200) {
-                        let groupData = res.data;
-                        let group_list = $('#optimizeGroupName');
-                        group_list.empty();
-                        group_list.append('<option value="">请选择分组</option>');
-                        $.each(groupData, function (index, item) {
-                            group_list.append('<option value="' + item + '">' + item + '</option>');
-                        });
-                        form.render("select")
-                    } else {
-                        common.showFailMsg(res.msg);
-                    }
-                },
-                error: function () {
-                    common.showFailMsg("未知错误，请稍后重试！！");
-                }
-            });
-        }
+        init_optimizeGroupName(layui);
 
         form.on("submit(commit)", function (data) {
             if (checkGroupExist(data.field)){

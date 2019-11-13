@@ -135,7 +135,11 @@
 <!--js逻辑-->
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script src="/static/ok-admin/js/okadmin.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
+    // 别删 这是给子页面使用的 本页面找不到使用方法
+    var isLoginIframe = 'yes';
+
     layui.use(['jquery', 'common', 'layer'], function () {
         let $ = layui.jquery;
         let common = layui.common;
@@ -224,25 +228,25 @@
                     if (oldPwd) {
                         msg.append('oldPwd', oldPwd);
                     } else {
-                        common.showFailMsg('原密码不能为空');
+                        layui.layer.msg("原密码不能为空", {icon: 5, anim: 5, time: 1000, isOutAnim: false});
                         return false;
                     }
                     if (!newPwd) {
-                        common.showFailMsg('新密码不能为空');
+                        layui.layer.msg("新密码不能为空", {icon: 5, anim: 5, time: 1000, isOutAnim: false});
                         return false;
                     }
                     if (!againPwd) {
-                        common.showFailMsg('确认密码不能为空');
+                        layui.layer.msg("确认密码不能为空", {icon: 5, anim: 5, time: 1000, isOutAnim: false});
                         return false;
                     }
                     if (oldPwd === newPwd) {
-                        common.showFailMsg('新旧密码必须不一致');
+                        layui.layer.msg("新旧密码必须不一致", {icon: 5, anim: 5, time: 1000, isOutAnim: false});
                         return false;
                     }
                     if (newPwd === againPwd) {
                         msg.append('pwd', newPwd);
                     } else {
-                        common.showFailMsg('两次密码不一致');
+                        layui.layer.msg("两次密码不一致", {icon: 5, anim: 5, time: 1000, isOutAnim: false});
                         return false;
                     }
                     layer.confirm('确认修改密码吗？', {offset: '120px'}, function (_index) {
@@ -265,11 +269,11 @@
                                         }
                                     }, 'json');
                                 } else {
-                                    common.showFailMsg(res.msg);
+                                    layui.layer.msg(res.msg, {icon: 5, anim: 5, time: 1000, isOutAnim: false});
                                 }
                             },
                             error: function () {
-                                common.showFailMsg('网络错误请稍后再试');
+                                layui.layer.msg("网络错误请稍后再试", {icon: 5, anim: 5, time: 1000, isOutAnim: false});
                             }
                         });
                     });

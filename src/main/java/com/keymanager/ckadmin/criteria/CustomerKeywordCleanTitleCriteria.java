@@ -13,7 +13,7 @@ public class CustomerKeywordCleanTitleCriteria {
     private List<Long> uuids;
     private Long customerUuid;
     private String terminalType;
-    private String type;//词类型
+    private String type;
     private String cleanType;
 
     public List<Long> getUuids() {

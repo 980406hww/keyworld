@@ -92,7 +92,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">优化组</label>
                         <div class="layui-input-block">
-                            <input type="text" name="optimizeGroupName" id="optimizeGroupName" placeholder="" autocomplete="off" class="layui-input"/>
+                            <input type="text" name="optimizeGroupName" id="optimizeGroupName" autocomplete="off" class="layui-input"/>
                         </div>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">机器分组</label>
                         <div class="layui-input-block">
-                            <input type="text" name="machineGroup" id="machineGroup" placeholder="" autocomplete="off" value="" class="layui-input"/>
+                            <input type="text" name="machineGroup" id="machineGroup"  autocomplete="off" value="Default" class="layui-input"/>
                         </div>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">指数</label>
                         <div class="layui-input-block">
-                            <input type="number" name="initialIndexCount" id="initialIndexCount" placeholder="" autocomplete="off" class="layui-input"
+                            <input type="number" name="initialIndexCount" id="initialIndexCount" value="100" autocomplete="off" class="layui-input"
                                    lay-verify="index"/>
                         </div>
                     </div>
@@ -120,7 +120,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">排名</label>
                         <div class="layui-input-block">
-                            <input type="number" name="initialPosition" id="initialPosition" placeholder="" value="0" autocomplete="off" class="layui-input"
+                            <input type="number" name="initialPosition" id="initialPosition" value="100" autocomplete="off" class="layui-input"
                                    lay-verify="positiveInteger"/>
                         </div>
                     </div>
@@ -142,7 +142,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">排序</label>
                         <div class="layui-input-block">
-                            <input type="number" name="sequence" id="sequence" placeholder="" autocomplete="off" class="layui-input">
+                            <input type="number" name="sequence" id="sequence" value="0" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                 </div>
@@ -267,6 +267,7 @@
 <!--js逻辑-->
 
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
 
     let layui_ = null;

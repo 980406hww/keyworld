@@ -214,6 +214,10 @@ function getSupplier(uuid, callback) {
     $.ajax({
         url: '/internal/supplier/getSupplier/' + uuid,
         type: 'Get',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
         success: function (supplier) {
             callback(supplier);
         },

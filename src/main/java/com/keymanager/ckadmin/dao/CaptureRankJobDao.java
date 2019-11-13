@@ -20,4 +20,8 @@ public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
     void changeCaptureRankJobStatuses(@Param("uuids") List<Long> uuids, @Param("updateBy") String updateBy, @Param("captureRankJobStatus") boolean status);
 
     void resetCaptureRankJobs(@Param("uuids") List<Long> uuids);
+
+    List<Long> getCaptureRankJobUuids(@Param("uuids") List<Long> uuids);
+
+    void updateCaptureRankJobCustomerUuids(@Param("jobUuids") List<Long> jobUuids, @Param("customerUuid") Long customerUuid);
 }

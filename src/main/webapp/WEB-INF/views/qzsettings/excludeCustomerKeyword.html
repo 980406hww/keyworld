@@ -54,8 +54,7 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">关键字</label>
                 <div class="layui-input-block">
-                    <textarea name="customerKeywordDialogContent" id="customerKeywordDialogContent" placeholder="请输入要排除的关键词，多个请换行" class="layui-textarea"
-                              lay-verify="required" style="height: 450px"></textarea>
+                    <textarea name="customerKeywordDialogContent" id="customerKeywordDialogContent" placeholder="请输入要排除的关键词，多个请换行" class="layui-textarea" style="height: 450px"></textarea>
                 </div>
             </div>
 
@@ -74,6 +73,7 @@
 <!--js逻辑-->
 
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
 
     let data_ = null;
@@ -123,10 +123,11 @@
         });
     }
 
-    layui.use(["form", "jquery", "layer", "common"], function () {
+    layui.use(["form", "jquery", "layer", "common", "layer"], function () {
         let form = layui.form;
         let $ = layui.jquery;
         let common = layui.common;
+        let layer = layui.layer;
 
         if (data_ != null) {
             setForm(layui, data_);
@@ -136,6 +137,18 @@
 
         form.on("submit(save)", function (data) {
             var postData = common.jsonObjectTrim(data.field);
+            if (!postData.customerKeywordDialogContent) {
+                layer.confirm('确认修改为空值吗？', {offset: '120px'}, function (index) {
+                    commit(postData);
+                    layer.close(index);
+                });
+            }else {
+                commit(postData);
+            }
+            return false;
+        });
+
+        function commit(postData) {
             let keywordStr = postData.customerKeywordDialogContent;
             keywordStr = keywordStr.replace(/[，|\r\n]/g, ",").replace(/[\s+]/g, "");
             if (keywordStr.substring(keywordStr.length - 1) === ',') {
@@ -146,7 +159,7 @@
                 return keywords.indexOf(keyword) === index && keyword !== '';
             });
             postData.keywords = keywords;
-            delete postData.customerKeywordDialogContent;
+            postData.customerKeywordDialogContent = null;
             $.ajax({
                 url: '/internal/qzsetting/excludeQZSettingCustomerKeywords2',
                 type: 'post',
@@ -166,16 +179,13 @@
                     }
                 }
             });
-            return false;
-        });
+        }
 
         $('#close').click(function () {
             parent.layer.close(parent.layer.getFrameIndex(window.name));
             return false;
         });
-
     })
-
 </script>
 </body>
 </html>

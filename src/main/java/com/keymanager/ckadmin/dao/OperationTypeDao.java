@@ -17,5 +17,5 @@ public interface OperationTypeDao extends BaseMapper<OperationType> {
 
     List<String> getOperationTypeByTerminalTypeAndRole(@Param("terminalType") String terminalType, @Param("flag") int flag);
 
-    List<OperationType> searchOperationTypeListsPage(Page<OperationType> page, @Param("operationType") OperationType operationType);
+    List<OperationType> searchOperationTypeListsPage(Page<OperationType> page, @Param("operationType") OperationType operationType, @Param("init") String init);
 }

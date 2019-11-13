@@ -1005,17 +1005,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-		int qzSettingKeywordCount = customerKeywordService
-			.getQZSettingKeywordCount(qzSetting.getCustomerUuid(), "PC"
-				.equals(terminalType) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup());
-		List<QZKeywordRankInfo> rankInfos = qzKeywordRankInfoService
-			.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "xt");
+		int qzSettingKeywordCount = customerKeywordService.getQZSettingKeywordCount(qzSetting.getCustomerUuid(), "PC".equals(terminalType) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup());
+		List<QZKeywordRankInfo> rankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "xt");
 
 		if (CollectionUtils.isNotEmpty(rankInfos)) {
 			if (rankInfos.size() > 1) {
 				handlingQKErrorData(qzSetting, terminalType);
-				saveQZRankingCurveRankInfo(qzSetting.getUuid(), terminalType, null,
-					qzSettingKeywordCount);
+				saveQZRankingCurveRankInfo(qzSetting.getUuid(), terminalType, null, qzSettingKeywordCount);
 			} else {
 				QZKeywordRankInfo rankInfo = rankInfos.iterator().next();
 				String dateStr = rankInfo.getBaiduRecordFullDate();
@@ -1030,25 +1026,19 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 						if (dateStrings.length == 1) {
 							rankInfo.setBaiduRecord("['" + qzSettingKeywordCount + "']");
 						} else {
-							rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(),
-								"'" + qzSettingKeywordCount + "'", 0));
+							rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'", 0));
 						}
 					} else {
 						// 不为当天, 添加数据
-						rankInfo.setBaiduRecord(
-							fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'",
-								1));
-						rankInfo.setBaiduRecordFullDate(fillData(rankInfo.getBaiduRecordFullDate(),
-							"'" + sdf.format(date) + "'", 1));
+						rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'", 1));
+						rankInfo.setBaiduRecordFullDate(fillData(rankInfo.getBaiduRecordFullDate(), "'" + sdf.format(date) + "'", 1));
 					}
 				}
 				qzKeywordRankInfoService.saveQZKeywordRankInfo(rankInfo);
 			}
 		} else {
-			saveQZRankingCurveRankInfo(qzSetting.getUuid(), terminalType, null,
-				qzSettingKeywordCount);
+			saveQZRankingCurveRankInfo(qzSetting.getUuid(), terminalType, null, qzSettingKeywordCount);
 		}
-
 	}
 
 	private void handlingQKErrorData(QZSetting qzSetting, String terminalType) {

@@ -129,6 +129,7 @@
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 
 <script>
     var sign = false;
@@ -153,6 +154,7 @@
                 method: 'post',
                 url: '${ctx.path}/internal/operationTypes/searchOperationTypeLists',
                 limit: 50,
+                limits: [25, 50, 100, 500, 1000],
                 page: true,
                 autoSort: false,
                 size: 'sm',
@@ -215,6 +217,8 @@
             init_Search(postData);
             return false
         });
+
+        init_Search({init: 'init'});
 
         table.on('tool(tableFilter)', function (obj) {
             var data = obj.data, event = obj.event;
@@ -363,7 +367,9 @@
 </script>
 
 <script type="text/html" id="toDateTime">
+    {{#  if(d.createTime){ }}
     {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+    {{#  } }}
 </script>
 
 <script type="text/html" id="toStatus">

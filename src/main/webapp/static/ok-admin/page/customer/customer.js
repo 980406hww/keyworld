@@ -1,3 +1,4 @@
+
 var sign = false;
 
 getHeight();
@@ -26,7 +27,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
 
     init_keyword_type();
 
+    init_belong_user();
+
     function initLayPage(pageConf) {
+        var load_index = layer.load(2, {shade: false}); //添加laoding 0-2
         if (!pageConf) {
             pageConf = {};
             pageConf.limit = 30;
@@ -67,6 +71,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                     }
                 });
                 init_data(result.data);
+                layer.close(load_index);
                 form.render();
             },
             error: function () {
@@ -78,43 +83,43 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
     function init_data(data) {
         $("#data_list").html('');
         $.each(data, function (index, obj) {
-            let item = '<div class="layui-col-md6 layui-col-sm6">' +
-                '   <div class="layadmin-contact-box">' +
-                '       <div class="layui-col-md6 layui-col-sm6">';
-            item += '           <h3 class="layadmin-title skip" title="'+obj.contactPerson+'">' +
-                '               <input type="checkbox" name="checkItem" value="' + obj.uuid + '" status="'+obj.status+'"lay-skin="primary" >' +
+            let item = '<div class="layadmin-contact-box">';
+            item += '      <div class="layui-row"><div class="layui-col-md9">'
+                + '        <h3 class="layadmin-title skip" title="' + obj.contactPerson + '">' +
+                '               <input type="checkbox" name="checkItem" value="' + obj.uuid + '" status="' + obj.status + '"lay-skin="primary" >' +
                 '               <strong >' + obj.contactPerson + '</strong>' +
-                '           </h3>';
+                '           </h3>'
+                + '         </div><div class="layui-col-md3">';
+            item += '       <div class="operation" style="text-align: center;line-height: 27px"><a href="javascript:void(0)" class="caller-fr can-click" onclick=editCustomer("' + obj.uuid + '")>' +
+                '               修改\n' +
+                '               <i class="layui-icon layui-icon-edit"></i>\n' +
+                '           </a><a style="margin-left: 10px" href="javascript:void(0)" class="caller-fr can-click" onclick=delOneCustomer("' + obj.uuid + '")>' +
+                '               删除\n' +
+                '               <i class="layui-icon layui-icon-close"></i>\n' +
+                '           </a></div>';
+            item += '</div></div>';
+            item += '   <div class="layui-row">' +
+                '       <div class="layui-col-md5">';
             item += '           <div class="layadmin-address other_info">' +
                 '                   <strong>描述信息</strong>' +
-                '                   <p class="skip" >客户类型:' + obj.type +'</p>' +
-                '                   <p class="skip" >所属用户:' + obj.loginName +'</p>' +
-                '                   <p class="skip" >客户状态:<span id="status'+obj.uuid+'" style="color: ' + generate_customer_status(obj.uuid, obj.status, 1) + '</span></p>' +
-                '                   <p class="skip" >是否产生日报表:<span id="dr'+obj.uuid+'">' + generate_customer_daily_report(obj.uuid, obj.status, obj.dailyReportIdentify) + '</span></p>' +
+                '                   <p class="skip" >客户类型 : ' + obj.type +'</p>' +
+                '                   <p class="skip" >所属用户 : ' + obj.userName +'</p>' +
+                '                   <div class="skip" style="height: 24px;margin: 1px 0"><span style="position: relative;top: 1px">客户状态 : </span>'+ generate_customer_status(obj.uuid, obj.status) +'</div>' +
+                '                   <div class="skip" style="height: 24px;margin: 1px 0"><span style="position: relative;top: 1px">产生报表 : </span>' + generate_customer_daily_report(obj.uuid, obj.dailyReportIdentify) + '</div>' +
                 '               </div>';
             item += '           <div class="layadmin-address">' +
                 '                   <strong>联系方式</strong>' +
                 '                   <br>' +
-                '                   电话:' + obj.telphone +
+                '                   电话 : ' + obj.telphone +
                 '                   <br>' +
-                '                   QQ:' + obj.qq +
-                '               </div>';
-            item += '           <div class="layadmin-address ">' +
-                '                   <strong>备注</strong>';
-            if (isSEOSales){
-                item += '       <p class="skip can-click" title="'+obj.saleRemark+'" onclick=changeSaleRemark("'+obj.uuid+'","'+obj.saleRemark+'") >客户标签:<span style="color: #00a65a" id="saleRemark'+obj.uuid+'">' + obj.saleRemark + '</span></p>';
-            }
-            item += '           <p class="skip can-click" title="'+obj.remark+'" onclick=changeRemark("'+obj.uuid+'","'+obj.remark+'") >销售详细备注:<span style="color: #00a65a" id="remark'+obj.uuid+'">' + obj.remark + '</span></p>' +
+                '                   QQ : ' + obj.qq +
                 '               </div>' +
                 '      </div>';
-            item += '   <div class="layui-col-md5  layui-col-sm6" style="margin-top: 37px">';
+            item += '   <div class="layui-col-md7">';
             let customerBusinessList = obj.customerBusinessList;
             if (customerBusinessList !== null && customerBusinessList.length > 0) {
-                var contactPerson = obj.contactPerson.replace(/\s+/g, "");
                 $.each(obj.customerBusinessList, function (index, tmp) {
-                    let url = '', title = '', id = '';
                     if (tmp === 'keyword') {
-
                         item += '<div class="layadmin-address">' +
                             '<strong>' +
                             '单词业务' +
@@ -127,9 +132,19 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             async: false,
                             success: function (res) {
                                 if (res.code === 200) {
-                                    item += generate_keyword_info(obj, res.data)
+                                    if (res.data != null) {
+                                        item += '<span>操作词数 : ' + res.data.totalCount + '</span><br>';
+                                        if (res.data["PC"] != null) {
+                                            item += generate_customer_info(obj.contactPerson, res.data["PC"], 'PC', 'pt', obj.uuid);
+                                        }
+                                        if (res.data["Phone"] != null) {
+                                            item += generate_customer_info(obj.contactPerson, res.data["Phone"], 'Phone', 'pt', obj.uuid);
+                                        }
+                                    } else {
+                                        item += generate_customer_info(obj.contactPerson, null, 'PC', 'pt', obj.uuid);
+                                    }
                                 } else {
-                                    item += '暂无数据'
+                                    item += generate_customer_info(obj.contactPerson, null, 'PC', 'pt', obj.uuid);
                                 }
                                 item += '</div>';
                             }
@@ -146,9 +161,19 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             async: false,
                             success: function (res) {
                                 if (res.code === 200) {
-                                    item += generate_qzsetting_info(obj, res.data)
+                                    if (res.data != null) {
+                                        item += '<span>站点数 : ' + res.data.totalCount + '</span><br>';
+                                        if (res.data["PC"] != null) {
+                                            item += generate_qzsetting_info(obj.contactPerson, res.data["PC"], 'PC',  obj.uuid);
+                                        }
+                                        if (res.data["Phone"] != null) {
+                                            item += generate_qzsetting_info(obj.contactPerson, res.data["Phone"], 'Phone', obj.uuid);
+                                        }
+                                    } else {
+                                        item += generate_qzsetting_info(obj.contactPerson, null, 'PC',  obj.uuid);
+                                    }
                                 } else {
-                                    item += '暂无数据';
+                                    item += generate_qzsetting_info(obj.contactPerson, null, 'PC', obj.uuid);
                                 }
                                 item += '</div>';
                             }
@@ -165,10 +190,53 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                             async: false,
                             success: function (res) {
                                 if (res.code === 200) {
-                                    item += generate_negative_info(obj, res.data)
+                                    if (res.data != null) {
+                                        item += '<span>操作词数 : ' + res.data.totalCount + '</span><br>';
+                                        if (res.data["PC"] != null) {
+                                            item += generate_customer_info(obj.contactPerson, res.data["PC"], 'PC', 'fm', obj.uuid);
+                                        }
+                                        if (res.data["Phone"] != null) {
+                                            item += generate_customer_info(obj.contactPerson, res.data["Phone"], 'Phone', 'fm', obj.uuid);
+                                        }
+                                    } else {
+                                        item += generate_customer_info(obj.contactPerson, null, 'PC', 'fm', obj.uuid);
+                                    }
                                 } else {
-                                    item += '暂无数据';
+                                    item += generate_customer_info(obj.contactPerson, null, 'PC', 'fm', obj.uuid);
                                 }
+                                item += '</div>';
+                            }
+                        });
+                    } else if (tmp === 'qt') {
+                        item += '<div class="layadmin-address"><strong>' +
+                            '其他业务' +
+                            '</strong>' +
+                            '<br>';
+                        $.ajax({
+                            url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid + '/qt',
+                            dataType: 'json',
+                            type: 'get',
+                            async: false,
+                            success: function (res) {
+                                if (res.code === 200) {
+                                    if (res.data != null) {
+                                        item += '<span>操作词数 : ' + res.data.totalCount + '</span><br>';
+                                        if (res.data["PC"] != null) {
+                                            item += generate_customer_info(obj.contactPerson, res.data["PC"], 'PC', 'qt', obj.uuid);
+                                        }
+                                        if (res.data["Phone"] != null) {
+                                            item += generate_customer_info(obj.contactPerson, res.data["Phone"], 'Phone', 'qt', obj.uuid);
+                                        }
+                                    } else {
+                                        item += generate_customer_info(obj.contactPerson, null, 'PC', 'qt', obj.uuid);
+                                    }
+                                } else {
+                                    item += generate_customer_info(obj.contactPerson, null, 'PC', 'qt', obj.uuid);
+                                }
+                                let se = obj.searchEngine ? obj.searchEngine : '无';
+                                item += '<div><span style="position: relative;top:1px">搜索引擎 : </span>' + get_se_method(obj.searchEngine, obj.uuid) + '</div>';
+                                let ea = obj.externalAccount ? obj.externalAccount : '无';
+                                item += '<div style="height: 24px;margin-top: 1px;line-height: 24px"><span data-uuid="' + obj.uuid + '">账号 : </span><a href="javascript:void(0)" title="'+obj.externalAccount+'" onclick="changeMe(this)">'+ ea +'</a></div>';
                                 item += '</div>';
                             }
                         });
@@ -180,24 +248,16 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                     '    </div>';
             }
             item += '</div>';
-            item += '<div class="layui-col-md1 layui-col-sm6 operation">\n' +
-                '       <h3 class="layadmin-title">\n' +
-                '           <strong>操作</strong>\n' +
-                '       </h3>' +
-                '       <div class="layadmin-address">\n' +
-                '           <a href="javascript:void(0)" class="caller-fr" onclick=editCustomer("' + obj.uuid + '")>' +
-                '               修改\n' +
-                '               <i class="layui-icon layui-icon-edit"></i>\n' +
-                '           </a>\n' +
-                '       </div>' +
-                '       <div class="layadmin-address">\n' +
-                '           <a href="javascript:void(0)" class="caller-fr" onclick=delOneCustomer("' + obj.uuid + '")>' +
-                '                   删除\n' +
-                '               <i class="layui-icon layui-icon-close"></i>\n' +
-                '           </a>\n' +
-                '       </div>';
             item += '</div>';
-            item += '</div>';
+            item += '           <div class="layadmin-address ">' +
+                '                   <strong>备注</strong>';
+            if (isSEOSales){
+                item += '       <p class="skip">客户标签 : <span title="'+obj.saleRemark+'" class="can-click" onclick=changeSaleRemark("'+obj.uuid+'",this)>' + obj.saleRemark + '</span></p>';
+            }
+            let msg = obj.remark ? obj.remark : '暂无';
+            item += '           <p class="skip">销售详细备注 : <span title="'+obj.remark+'" class="can-click" onclick=changeRemark("'+obj.uuid+'",this)>' + msg + '</span></p>' +
+                '               </div>'
+                + '</div>';
             $("#data_list").append(item)
         })
     }
@@ -224,7 +284,30 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                         i++;
                     });
                     form.render("select");
+                }
+            }
+        });
+    }
 
+    function init_belong_user() {
+        $.ajax({
+            url: '/internal/customer/getActiveUsers',
+            dataType: 'json',
+            type: 'get',
+            success: function (res) {
+                if (res.code === 200) {
+                    let data = res.data;
+                    $("#loginName").empty();
+                    $("#loginName").append('<option value="">所属用户</option>');
+                    $.each(data, function (index, item) {
+                        $('#loginName').append(
+                            '<option value="' + item.loginName + '">'
+                            + item.userName
+                            + '</option>');// 下拉菜单里添加元素
+                    });
+                    form.render("select");
+                } else {
+                    common.showFailMsg('获取用户列表失败');
                 }
             }
         });
@@ -242,14 +325,15 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 window.searchCurrentDateCompletedReportsIntervalId = intervalId;
             }
         } else {
-            window.clearInterval(searchCurrentDateCompletedReportsIntervalId);
+            if (window.searchCurrentDateCompletedReportsIntervalId){
+                window.clearInterval(window.searchCurrentDateCompletedReportsIntervalId);
+            }
         }
     });
 
     window.showCustomerByType = function (customerType){
         $('#type').val(customerType);
         $('#searchBtn').click();
-
     };
 
     form.on('checkbox(checkAll)', function (data) {
@@ -407,7 +491,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
     };
 
     //更新关键字状态
-    window.changeCustomerKeywordStatus = function (customerUuid, status) {
+    window.changeCustomerKeywordStatus = function (customerUuid, status, entryType, terminalType) {
         if (status === '0') {
             msg = "确定暂停所有关键字吗?"
         } else if (status === '1') {
@@ -417,7 +501,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
             var data = {};
             data.customerUuid = customerUuid;
             data.status = status;
-            data.entryType = $('#entryType').val();
+            data.entryType = entryType;
+            data.terminalType = terminalType;
             $.ajax({
                 url: '/internal/customerKeyword/changeCustomerKeywordStatus2',
                 data: JSON.stringify(data),
@@ -446,8 +531,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
     };
 
     // 改变客户状态
-    window.changeCustomerStatus = function (uuid, oldStatus) {
-        let newStatus = oldStatus === '1' ? 2 : 1;
+    window.changeCustomerStatus = function (uuid, ele) {
+        let newStatus = ele.children[0].innerHTML === '激活' ? 2 : 1;
         var postData = {};
         postData.customerUuid = uuid;
         postData.status = newStatus;
@@ -462,28 +547,33 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
             success: function (result) {
                 if (result.code === 200) {
                     common.showSuccessMsg('操作成功');
-                    $('#status' + uuid).html(generate_customer_status(uuid, newStatus, 2));
-                    $('#status' + uuid).css("color", newStatus === 1 ? "green" : "red");
+                    if (newStatus === 2) {
+                        ele.classList.remove('layui-form-onswitch');
+                        ele.children[0].innerHTML = '暂停';
+                    } else {
+                        ele.classList.add('layui-form-onswitch');
+                        ele.children[0].innerHTML = '激活';
+                    }
+                } else {
+                    common.showFailMsg('操作失败');
                 }
             },
             error: function () {
                 common.showFailMsg('操作失败');
-                $('#status' + uuid).html(generate_customer_status(uuid, oldStatus, 2));
-                $('#status' + uuid).css("color", oldStatus === 1 ? "green" : "red");
             }
         });
     };
 
     //改变日报表值
-    window.changeCustomerDailyReportIdentify = function (uuid, status, oldIdentify, newIdentify) {
-        if (status !== '1') {
-            common.showFailMsg('请激活客户');
+    window.changeCustomerDailyReportIdentify = function (uuid, ele) {
+        if (ele.parentElement.previousElementSibling.children[1].children[0].innerHTML !== '激活') {
+            common.showFailMsg('请先激活客户');
             return;
         }
-
+        let identify = ele.children[0].innerHTML === '是' ? '0' : '1';
         var postData = {};
         postData.customerUuid = uuid;
-        postData.identify = newIdentify;
+        postData.identify = identify;
         $.ajax({
             url: '/internal/customer/changeCustomerDailyReportIdentify2',
             type: 'POST',
@@ -495,15 +585,21 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
             success: function (result) {
                 if (result.code === 200) {
                     common.showSuccessMsg('操作成功');
-                    $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, newIdentify))
+                    if (identify === '0') {
+                        ele.classList.remove('layui-form-onswitch');
+                        ele.children[0].innerHTML = '否';
+                    } else {
+                        ele.classList.add('layui-form-onswitch');
+                        ele.children[0].innerHTML = '是';
+                    }
+                } else {
+                    common.showFailMsg('操作失败');
                 }
             },
             error: function () {
                 common.showFailMsg('操作失败');
-                $('#dr' + uuid).html(generate_customer_daily_report(uuid, status, oldIdentify))
             }
         });
-
     };
 
     //触发所选客户日报表
@@ -561,10 +657,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
     };
 
     //改客户标签
-    window.changeSaleRemark = function (uuid, saleRemark) {
+    window.changeSaleRemark = function (uuid, ele) {
         layer.prompt({
             formType: 3,
-            value: saleRemark,
+            value: ele.title,
             title: '客户标签',
             yes: function (index, layero) {
                 var index2 = index;
@@ -584,8 +680,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                     success: function (result) {
                         if (result.code === 200) {
                             common.showSuccessMsg('操作成功');
-                            $('#saleRemark'+uuid).text(value);
-                            $('#saleRemark'+uuid).parent().attr("title",value);
+                            ele.innerHTML = value;
+                            ele.title = value;
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -597,13 +693,13 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 layer.close(index2);
             }
         });
-    }
+    };
 
     //改备注 => 运营查看
-    window.changeRemark = function (uuid, remark) {
+    window.changeRemark = function (uuid, ele) {
         layer.prompt({
             formType: 2,
-            value: remark,
+            value: ele.title,
             title: '备注',
             yes: function (index, layero) {
                 var index2 = index;
@@ -623,8 +719,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                     success: function (result) {
                         if (result.code === 200) {
                             common.showSuccessMsg('操作成功');
-                            $('#remark'+uuid).text(value);
-                            $('#remark'+uuid).parent().attr("title",value);
+                            ele.innerHTML = value;
+                            ele.title = value;
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -634,6 +730,72 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                     }
                 });
                 layer.close(index2);
+            }
+        });
+    };
+
+    window.selectOne = function (ele) {
+        let input = ele.parentElement.previousElementSibling.children[0];
+        let value = ele.getAttribute('lay-value');
+        if (value === input.value) {
+            common.showSuccessMsg('操作成功');
+            return;
+        }
+        let postData = {};
+        postData.uuid = input.dataset.uuid;
+        postData.searchEngine = value;
+        $.ajax({
+            url: '/internal/customer/changeSearchEngine',
+            data: JSON.stringify(postData),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if (result.code === 200) {
+                    common.showSuccessMsg('操作成功');
+                    input.value = value;
+                    clearThis(ele);
+                    ele.classList.add('layui-this');
+                } else {
+                    common.showFailMsg('操作失败');
+                }
+            },
+            error: function () {
+                common.showFailMsg('未知错误，请稍后重试');
+            }
+        });
+    };
+
+    window.changeExternalAccount = function (ele) {
+        let postData = {};
+        postData.uuid = ele.previousElementSibling.dataset.uuid;
+        postData.externalAccount = ele.value;
+        $.ajax({
+            url: '/internal/customer/changeExternalAccount',
+            data: JSON.stringify(postData),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if (result.code === 200) {
+                    common.showSuccessMsg('操作成功');
+                    let msg = ele.value ? ele.value : '无';
+                    let html = '<a href="javascript:void(0)" title="' + ele.value + '" onclick="changeMe(this)">' + msg + '</a>';
+                    let p = ele.parentElement;
+                    p.removeChild(ele);
+                    p.innerHTML += html;
+                } else {
+                    common.showFailMsg('操作失败');
+                }
+            },
+            error: function () {
+                common.showFailMsg('未知错误，请稍后重试');
             }
         });
     };
@@ -666,120 +828,173 @@ function showCondition() {
     open2 = !open2;
 }
 
-function generate_customer_status(uuid, status, times){
-    let stat = '暂停';
+function generate_customer_status(uuid, status) {
+    let stat = '<div onclick=changeCustomerStatus(\'' + uuid + '\',this) class="layui-unselect layui-form-switch ';
     if (status === 1) {
-        stat = '激活';
+        stat += 'layui-form-onswitch';
     }
-    if (times === 1) {
-        if (status === 1) {
-            stat = "green\">" + stat;
-        } else {
-            stat = "red\">" + stat;
+    stat += '" lay-skin="_switch"><em>';
+    if (status === 1) {
+        stat += '激活';
+    }else {
+        stat += '暂停';
+    }
+    stat += '</em><i></i></div>';
+    return stat;
+}
+
+function generate_customer_daily_report(uuid, identify) {
+    uuid = uuid + '';
+    identify = identify + '';
+    let stat = '<div onclick=changeCustomerDailyReportIdentify(\'' + uuid + '\',this) class="layui-unselect layui-form-switch ';
+    if (identify === '1') {
+        stat += 'layui-form-onswitch';
+    }
+    stat += '" lay-skin="_switch"><em>';
+    if (identify === '1') {
+        stat += '是';
+    } else {
+        stat += '否';
+    }
+    stat += '</em><i></i></div>';
+    return stat;
+}
+
+let seAll = ['百度', '搜狗', '360', '百度下拉', '谷歌', '神马', '必应中国', '必应日本'];
+
+function get_se_method(se, uuid) {
+    let html = '<div onclick="showSelect(this)" style="width: 100px;display: inline-block;vertical-align: middle" class="layui-unselect layui-form-select">'
+        + '<div class="layui-select-title">'
+        + '<input type="text" data-uuid="' + uuid + '" style="height: 24px;" placeholder="请选择" value="';
+    html += se;
+    html += '" readonly="" class="layui-input layui-unselect">'
+        + '<i class="layui-edge"></i>'
+        + '</div>'
+        + '<dl class="layui-anim layui-anim-upbit">';
+    for (let i = 0; i < seAll.length; i++) {
+        html += '<dd onclick="selectOne(this)" lay-value="';
+        html += seAll[i];
+        html += '" class="';
+        if (seAll[i] === se) {
+            html += 'layui-this';
+        }
+        html += '">';
+        html += seAll[i];
+        html += '</dd>';
+    }
+    html += '</dl>'
+        + '</div>';
+    return html;
+}
+
+window.showSelect = function (ele) {
+    let flag = true;
+    let classList = ele.classList;
+    for (let i = 0; i < classList.length; i++) {
+        if (classList[i] === 'layui-form-selected') {
+            flag = false;
+            break;
         }
     }
-    stat += ' | <a href="javascript:void(0)" onclick=changeCustomerStatus(\'' + uuid + '\',\'' + status + '\')>修改状态</a>';
-    return stat;
+    if (flag) {
+        ele.classList.add('layui-form-selected');
+    } else {
+        ele.classList.remove('layui-form-selected');
+    }
+};
+
+function clearThis(ele) {
+    let all = ele.parentElement.children;
+    for (let i = 0; i < all.length; i++) {
+        all[i].classList.remove('layui-this');
+    }
 }
 
-function generate_customer_daily_report(uuid, status, oldIdentify){
-    uuid = uuid +'';
-    status = status+'';
-    oldIdentify = oldIdentify+'';
-    let newIdentify = '1';
-    let stat ='否';
-    if(oldIdentify === '1'){
-        stat = '是';
-        newIdentify = '0'
+window.changeMe = function (ele) {
+    let html = '<input type="text" autofocus onkeydown="downEnter(this)" onblur="changeExternalAccount(this)" class="layui-input" style="height: 24px;width: 128px;display: inline-block;vertical-align: middle;" value="';
+    if (ele.title) {
+        html += ele.title;
     }
+    html += '">';
+    let p = ele.parentElement;
+    p.removeChild(ele);
+    p.innerHTML += html;
+    p.getElementsByTagName('input')[0].focus();
+};
 
-    if (status === '1') {
-        stat += ' | <a href="javascript:void(0)" onclick=changeCustomerDailyReportIdentify(\'' + uuid + '\',\'' + status + '\',\'' + oldIdentify + '\',\'' + newIdentify + '\')>修改状态</a>';
+function downEnter(ele) {
+    if (event.keyCode === 13) {
+        changeExternalAccount(ele);
     }
-    return stat;
 }
 
-function generate_keyword_info(obj, data) {
+function generate_qzsetting_info(contactPerson, data, terminalType, customerUuid) {
     let htm = '';
-
-    if (data.totalCount > 0) {
-        let url = '/internal/customerKeyword/toCustomerKeywords/pt/PC/'+obj.uuid;
-        let contactPerson = obj.contactPerson.replace(/\s+/g, "");
+    let terminalTypeName = terminalType === "PC" ? "电脑端" : "移动端";
+    if (data != null) {
+        if (data["count"] > 0) {
+            let url = '/internal/qzsetting/toQZSettingsWithCustomerUuid/' + customerUuid + '/' + terminalType;
+            contactPerson = contactPerson.replace(/\s+/g, "");
+            let title = contactPerson + '-全站';
+            let id = contactPerson + '-toQz-' + terminalType;
+            htm += '<span>'+ terminalTypeName +' : <a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>' + data["count"] + '</a></span>&nbsp;&nbsp;状态:';
+            if (data["active"] > 0) {
+                htm += '<span style="color: green;">'+data["active"]+'个续费</span>|'
+            }
+            if (data["stop"] > 0) {
+                htm += '<span style="color: darkred;">'+data["stop"]+'个暂停</span>|'
+            }
+            if (data["down"] > 0) {
+                htm += '<span style="color: grey;">'+data["down"]+'个下架</span>|'
+            }
+            if(data["other"] > 0) {
+                htm += '<span style="color: lightgrey;">'+data["other"]+'个其他</span>|'
+            }
+            htm = htm.substring(0, htm.lastIndexOf("|"));
+            htm += '<br>';
+        }
+    } else {
+        let url = '/internal/customerKeyword/toCustomerKeywords/qz/' + terminalType + '/' + customerUuid;
+        contactPerson = contactPerson.replace(/\s+/g, "");
         let title = contactPerson + '-关键字列表';
-        let id = contactPerson + '-关键字列表';
-        htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>总数:' + data.totalCount + '</span></a>&nbsp;&nbsp;&nbsp;&nbsp;(';
-        if (data.totalCount === data.activeCount) {
-            htm += '<span style="color: green;">激活</span>' +
-                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","0")>暂停关键字</a>'
-        } else if (data.totalCount > 0 && data.activeCount > 0) {
-            htm += '<span style="color: yellowgreen;">部分暂停</span>' +
-                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","0")>暂停关键字</a>' +
-                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","1")>激活关键字</a>'
-        } else {
-            htm += '<span style="color: red;">暂停</span>' +
-                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","1")>激活关键字</a>'
-        }
-        htm += ')';
-    } else {
-        htm += '<span>暂无数据</span>'
+        let id = contactPerson + '-qz-' + terminalType;
+        htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>查看关键字</span></a>';
     }
     return htm;
 }
 
-function generate_qzsetting_info(obj, data) {
+/**
+ * type: pt, fm, qt
+ */
+function generate_customer_info(contactPerson, data, terminalType, type, customerUuid) {
     let htm = '';
-
-    if (data.totalCount > 0) {
-        let entryType = document.getElementById('entryType').value;
-        let url = '/internal/qzsetting/toQZSettingsWithCustomerUuid/'+obj.uuid;
-        let contactPerson = obj.contactPerson.replace(/\s+/g, "");
-        let title = contactPerson + '-全站信息';
-        let id = contactPerson + '-全站信息';
-        htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>总数:' + data.totalCount + '</span></a>&nbsp;&nbsp;状态:';
-        if (data.activeCount > 0) {
-            htm += '<span style="color: green;">'+data.activeCount+'个续费|</span>'
-        }
-        if (data.pauseCount > 0) {
-            htm += '<span style="color: darkred;">'+data.pauseCount+'个暂停|</span>'
-
-        }
-        if (data.downCount > 0) {
-            htm += '<span style="color: grey;">'+data.downCount+'个下架|</span>'
-        }
-        if(data.otherCount > 0) {
-            htm += '<span style="color: lightgrey;">'+data.otherCount+'个其他|</span>'
-        }
-        htm = htm.substring(0, htm.lastIndexOf("|"));
-    } else {
-        htm += '<span>暂无数据</span>'
-    }
-    return htm;
-}
-
-function generate_negative_info(obj,data) {
-    let htm = '';
-
-    if (data.totalCount > 0) {
-        let url = '/internal/customerKeyword/toCustomerKeywords/fm/PC/'+obj.uuid;
-        let contactPerson = obj.contactPerson.replace(/\s+/g, "");
-        let title = contactPerson + '-负面信息';
-        let id = contactPerson + '-负面信息';
-        htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>总数:' + data.totalCount + '</span></a>&nbsp;&nbsp;&nbsp;&nbsp;(';
-        if (data.totalCount === data.activeCount) {
-            htm += '<span style="color: green;">激活</span>' +
-                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","0")>暂停关键字</a>'
-        } else if (data.totalCount > 0 && data.activeCount > 0) {
-            htm += '<span style="color: yellowgreen;">部分暂停</span>' +
-                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","0")>暂停关键字</a>' +
-                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","1")>激活关键字</a>'
+    let url = '/internal/customerKeyword/toCustomerKeywords/' + type + '/' + terminalType + '/' + customerUuid;
+    contactPerson = contactPerson.replace(/\s+/g, "");
+    let title = contactPerson + '-关键字列表';
+    let id = contactPerson + '-' + type + '-' + terminalType;
+    let terminalTypeName = terminalType === 'PC' ? "电脑端" : "移动端";
+    if (data !== null) {
+        if (data.totalCount > 0) {
+            htm += '<span>' + terminalTypeName + ' : <a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>' + data.totalCount + '</a></span>(';
+            if (data.totalCount === data.activeCount) {
+                htm += '<span style="color: green;">激活</span>' +
+                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","0","' + type + '","' + terminalType + '")>暂停关键字</a>'
+            } else if (data.totalCount > 0 && data.activeCount > 0) {
+                htm += '<span style="color: yellowgreen;">部分暂停</span>' +
+                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","0","' + type + '","' + terminalType + '")>暂停关键字</a>' +
+                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","1","' + type + '","' + terminalType + '")>激活关键字</a>'
+            } else {
+                htm += '<span style="color: red;">暂停</span>' +
+                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","1","' + type + '","' + terminalType + '")>激活关键字</a>'
+            }
+            htm += ')';
         } else {
-            htm += '<span style="color: red;">暂停</span>' +
-                '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + data.customerUuid + '","1")>激活关键字</a>'
+            htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>查看' + terminalTypeName + '关键字</span></a>';
         }
-        htm += ')';
     } else {
-        htm += '<span>暂无数据</span>'
+        htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>查看关键字</span></a>';
     }
+    htm += '<br>';
     return htm;
 }
 

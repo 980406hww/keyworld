@@ -16,7 +16,11 @@
             margin: 0;
         }
 
-        .layui-table-body .laytable-cell-1-0-3{
+        .layui-table-body .laytable-cell-1-0-3, .layui-table-body .laytable-cell-6-0-3, .layui-table-body .laytable-cell-11-0-3,
+        .layui-table-body .laytable-cell-2-0-3, .layui-table-body .laytable-cell-7-0-3, .layui-table-body .laytable-cell-12-0-3,
+        .layui-table-body .laytable-cell-3-0-3, .layui-table-body .laytable-cell-8-0-3, .layui-table-body .laytable-cell-13-0-3,
+        .layui-table-body .laytable-cell-4-0-3, .layui-table-body .laytable-cell-9-0-3, .layui-table-body .laytable-cell-14-0-3,
+        .layui-table-body .laytable-cell-5-0-3, .layui-table-body .laytable-cell-10-0-3, .layui-table-body .laytable-cell-15-0-3 {
             text-align: left;
         }
     </style>
@@ -28,6 +32,7 @@
 </div>
 
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
     let uuid_ = null;
     let layui_ = null;
@@ -108,7 +113,9 @@
     {{#  } }}
 </script>
 <script type="text/html" id="item4">
-    {{ layui.util.toDateString(d.createTime,'yyyy-MM-dd') }}
+    {{#  if(d.createTime){ }}
+        {{ layui.util.toDateString(d.createTime,'yyyy-MM-dd') }}
+    {{#  } }}
 </script>
 </body>
 </html>

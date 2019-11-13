@@ -145,7 +145,7 @@
                                     </div>
                                     <div class="layui-inline">
                                         <select name="dayNum">
-                                            <option value="">请选择历史记录</option>
+                                            <option value="">历史记录</option>
                                             <option value="1">一天前</option>
                                             <option value="2">两天前</option>
                                             <option value="3">三天前</option>
@@ -175,6 +175,7 @@
 <!--js逻辑-->
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script src="/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
     // 进度条加载提示
     NProgress.start();
@@ -194,21 +195,23 @@
         <@shiro.hasPermission name = "/internal/customerKeyword/searchCustomerKeywordLists" >
         window.searchCustomerKeywords = function (group) {
             let url = '/internal/customerKeyword/toKeywords';
-            let id = group + '-关键字';
+            let title = group + '-关键字';
+            let id = group + '-关键字-sl';
             let data = {
                 group: group,
                 status: '1',
                 type: document.getElementById('entryType').value,
                 terminal: document.getElementById('terminalType').value
             };
-            updateOrNewTab(url, id, id ,data);
+            updateOrNewTab(url, title, id ,data);
         };
         </@shiro.hasPermission>
 
         <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
         window.findKeyword = function (optimizeGroupName, invalidRefreshCount) {
             let url = '/internal/customerKeyword/toKeywords';
-            let id = optimizeGroupName + '-无效关键字';
+            let title = optimizeGroupName + '-关键字';
+            let id = optimizeGroupName + '-关键字-wx';
             let data = {
                 status: '1',
                 type: document.getElementById('entryType').value,
@@ -223,7 +226,7 @@
             } else {
                 data.nrsd = '-1';
             }
-            updateOrNewTab(url, id, id ,data);
+            updateOrNewTab(url, title, id ,data);
         };
         </@shiro.hasPermission>
 
@@ -287,7 +290,6 @@
                             $('#terminalType').val("PC");
                             element.tabChange('refreshTab', one+"PC");
                         }
-
                         form.render("select");
                     }
                 }
@@ -477,13 +479,15 @@
         //监听工具条
         var active = {
             reload: function () {
-                let condition = common.formToJsonObject("searchForm");
-                if (condition.dayNum === '') {
-                    condition.dayNum = 0;
+                if (table.index >= 1) {
+                    let condition = common.formToJsonObject("searchForm");
+                    if (condition.dayNum === '') {
+                        condition.dayNum = 0;
+                    }
+                    table.reload('refreshTable', {
+                        where: condition
+                    });
                 }
-                table.reload('refreshTable', {
-                    where: condition
-                });
             }
         };
 
@@ -496,6 +500,8 @@
             tableInit(condition);
             return false;
         });
+
+        tableInit({init: 'init'});
 
         function dbs(d) {
             if (d.reachStandardKeywordCount > 0) {

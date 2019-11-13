@@ -1758,7 +1758,6 @@
         SELECT COUNT(1)
         FROM t_customer_keyword ck
         WHERE ck.fCustomerUuid = #{customerUuid}
-        AND ck.fStatus = 1
         AND ck.fOptimizeGroupName LIKE '${groupName}%'
     </select>
 

@@ -32,8 +32,7 @@ public class UserNoteBookController {
         Integer searchAll = (Integer) resultMap.get("searchAll");
         String terminalType = (String) resultMap.get("terminalType");
         try {
-            resultBean.setData(userNoteBookService
-                .findUserNoteBooks(customerUuid, terminalType, searchAll));
+            resultBean.setData(userNoteBookService.findUserNoteBooks(customerUuid, terminalType, searchAll));
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

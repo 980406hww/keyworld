@@ -65,7 +65,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<CustomerKeywordSummaryInfoVO> searchCustomerKeywordSummaryInfo(@Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
 
-    KeywordCountVO getCustomerKeywordsCountByCustomerUuid(@Param("customerUuid") Long customerUuid, @Param("terminalType") String terminalType, @Param("type") String type);
+    List<KeywordCountVO> getCustomerKeywordsCountByCustomerUuid(@Param("customerUuid") Long customerUuid, @Param("type") String type);
 
     void resetInvalidRefreshCount(@Param("criteria") RefreshStatisticsCriteria criteria);
 
@@ -133,6 +133,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void editCustomerOptimizePlanCount(@Param("optimizePlanCount") Integer optimizePlanCount, @Param("settingType") String settingType, @Param("uuids") List<String> uuids);
 
-    List<QZRateKeywordCountVO> getQZRateKeywordCount(Page<QZRateKeywordCountVO> page,
-        @Param("qzRateKewordCountCriteria") QZRateKewordCountCriteria qzRateKewordCountCriteria);
+    void updateSelectFailReason(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
+    
+    List<QZRateKeywordCountVO> getQZRateKeywordCount(Page<QZRateKeywordCountVO> page, @Param("qzRateKewordCountCriteria") QZRateKewordCountCriteria qzRateKewordCountCriteria);
 }

@@ -1,14 +1,19 @@
 package com.keymanager.ckadmin.util;
 
+import com.keymanager.ckadmin.entity.CaptureRankJob;
 import com.keymanager.util.PagePercentage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -470,6 +475,26 @@ public class Utils {
                 }
             }
             return value1;
+        }
+    }
+
+    public static void handleObject(Object obj) {
+        Class<?> clazz = obj.getClass();
+        Field[] fields = clazz.getDeclaredFields();
+        try {
+            for (Field field : fields) {
+                if (field.getType().equals(String.class)) {
+                    String name = field.getName();
+                    name = name.substring(0, 1).toUpperCase() + name.substring(1);
+                    Method m = clazz.getMethod("get" + name);
+                    if ("".equals(m.invoke(obj))) {
+                        m = clazz.getMethod("set" + name, String.class);
+                        m.invoke(obj, new Object[]{null});
+                    }
+                }
+            }
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 

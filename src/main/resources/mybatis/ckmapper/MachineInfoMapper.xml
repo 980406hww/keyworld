@@ -79,6 +79,7 @@
         FROM
         t_machine_info mi
         WHERE mi.fTerminalType = #{machineInfoCriteria.terminalType}
+        <if test="machineInfoCriteria.init != null and machineInfoCriteria.init == 'init'">AND 1 != 1</if>
         <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''">AND
             mi.fClientID like '${machineInfoCriteria.clientID}%'
         </if>
@@ -124,7 +125,7 @@
         </if>
         <if test="machineInfoCriteria.startUpClient != null">AND mi.fDownloadProgramType > ''</if>
         <if test="machineInfoCriteria.vpsBackendSystemComputerID != null and machineInfoCriteria.vpsBackendSystemComputerID != ''">
-            AND (mi.fVPSBackendSystemComputerID like '${machineInfoCriteria.vpsBackendSystemComputerID}%')
+            AND mi.fVPSBackendSystemComputerID = #{machineInfoCriteria.vpsBackendSystemComputerID}
         </if>
         <if test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''">
             AND mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName}
@@ -136,8 +137,8 @@
                 #{switchGroup}
             </foreach>
         </if>
-        <if test="machineInfoCriteria.orderBy != null and machineInfoCriteria.orderBy != ''">ORDER BY
-            ${machineInfoCriteria.orderBy}
+        <if test="machineInfoCriteria.orderBy != null and machineInfoCriteria.orderBy != ''">
+            ORDER BY ${machineInfoCriteria.orderBy}
         </if>
     </select>
 
@@ -481,23 +482,20 @@
             cs.fSwitchGroupName as 'switchGroupName'
         FROM t_machine_info cs
         <where> cs.fValid = 1
-            <if test="clientIDPrefix!=null and clientIDPrefix!=''">and cs.fClientIDPrefix LIKE
-                '%${clientIDPrefix}%'
-            </if>
-            <if test="city!=null and city!=''">and cs.fCity LIKE '%${city}%'</if>
-            <if test="switchGroupName!=null and switchGroupName!=''">and cs.fSwitchGroupName LIKE
-                '%${switchGroupName}%'
-            </if>
+            <if test="init != null and init == 'init'">AND 1 != 1</if>
+            <if test="clientIDPrefix!=null and clientIDPrefix!=''">AND cs.fClientIDPrefix LIKE '%${clientIDPrefix}%'</if>
+            <if test="city!=null and city!=''">AND cs.fCity LIKE '%${city}%'</if>
+            <if test="switchGroupName!=null and switchGroupName!=''">AND cs.fSwitchGroupName LIKE '%${switchGroupName}%'</if>
         </where>
         GROUP BY cs.fClientIDPrefix, cs.fTerminalType, cs.fCity, cs.fSwitchGroupName
         ORDER BY cs.fClientIDPrefix
     </select>
 
-    <select id="searchMachineInfoGroupSummaryVO"
-            resultType="com.keymanager.ckadmin.vo.MachineInfoGroupSummaryVO">
+    <select id="searchMachineInfoGroupSummaryVO" resultType="com.keymanager.ckadmin.vo.MachineInfoGroupSummaryVO">
         SELECT cs.fGroup as 'group', cs.fTerminalType as terminalType, COUNT(1) AS 'count' FROM
         t_machine_info cs
         <where>
+            <if test="machineInfoGroupStatCriteria.init != null and machineInfoGroupStatCriteria.init == 'init'">AND 1 != 1</if>
             <if test="machineInfoGroupStatCriteria.groupName!=null and machineInfoGroupStatCriteria.groupName!=''">and cs.fGroup LIKE
                 '%${machineInfoGroupStatCriteria.groupName}%'
             </if>
@@ -658,27 +656,26 @@
         </if>
     </update>
 
-    <select id="searchMachineInfoFormMachineGroupWorkInfo"
-            resultType="com.keymanager.ckadmin.entity.MachineGroupWorkInfo">
+    <select id="searchMachineInfoFormMachineGroupWorkInfo" resultType="com.keymanager.ckadmin.entity.MachineGroupWorkInfo">
         SELECT
         cs.fMachineGroup AS "machineGroup",
-        cs.fTerminalType AS "terminalType",
-        SUM(IF(DATE_ADD(cs.fLastVisitTime, INTERVAL IF(10 > cs.fPageNo * 3, 15, cs.fPageNo * 3 + 5)
-        MINUTE) &lt; NOW(), 1, 0)) AS 'unworkMachineCount',
+        SUM(IF(DATE_ADD(cs.fLastVisitTime, INTERVAL IF(10 > cs.fPageNo * 3, 15, cs.fPageNo * 3 + 5) MINUTE) &lt; NOW(), 1, 0)) AS 'unworkMachineCount',
         SUM(cs.fIdleTotalMinutes) AS "idleTotalMinutes",
         COUNT(1) AS 'totalMachineCount'
         FROM t_machine_info cs
         WHERE cs.fValid = 1
-        <if
-                test="machineGroupWorkInfoCriteria.terminalType!=null and machineGroupWorkInfoCriteria.terminalType!=''">
+        <if test="machineGroupWorkInfoCriteria.init != null and machineGroupWorkInfoCriteria.init == 'init'">AND 1 != 1</if>
+        <if test="machineGroupWorkInfoCriteria.terminalType!=null and machineGroupWorkInfoCriteria.terminalType!=''">
             AND cs.fTerminalType = #{machineGroupWorkInfoCriteria.terminalType}
         </if>
-        <if
-                test="machineGroupWorkInfoCriteria.machineGroup!=null and machineGroupWorkInfoCriteria.machineGroup!=''">
+        <if test="machineGroupWorkInfoCriteria.machineGroup!=null and machineGroupWorkInfoCriteria.machineGroup!=''">
             AND cs.fMachineGroup like '${machineGroupWorkInfoCriteria.machineGroup}%'
-            AND EXISTS (SELECT 1 FROM t_customer_keyword ck WHERE ck.fType =
-            #{machineGroupWorkInfoCriteria.entryType} AND ck.fMachineGroup like
-            '${machineGroupWorkInfoCriteria.machineGroup}%')
+            AND EXISTS (
+                SELECT 1
+                FROM t_customer_keyword ck
+                WHERE ck.fType = #{machineGroupWorkInfoCriteria.entryType}
+                AND ck.fMachineGroup like '${machineGroupWorkInfoCriteria.machineGroup}%'
+            )
         </if>
         GROUP BY cs.fMachineGroup, cs.fTerminalType
     </select>

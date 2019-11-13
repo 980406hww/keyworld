@@ -112,6 +112,7 @@
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 
 <script>
     var sign = false;
@@ -148,7 +149,7 @@
                         let keywordData = res.data;
                         let keyword_list = $('#keyword');
                         keyword_list.empty();
-                        keyword_list.append('<option value="">请选择关键字</option>');
+                        keyword_list.append('<option value="">关键字</option>');
                         $.each(keywordData, function (index, item) {
                             keyword_list.append('<option value="' + item + '">' + item + '</option>');
                         });
@@ -170,6 +171,7 @@
                 method: 'post',
                 url: '/internal/negativeRank/getNegativeRanks',
                 limit: 50,
+                limits: [25, 50, 100, 500, 1000],
                 page: true,
                 autoSort: false,
                 size: 'sm',
@@ -306,12 +308,16 @@
             init_table_data(postData);
             return false
         });
+
+        init_table_data({init: 'init'});
     });
 
 </script>
 <!--模板-->
 <script type="text/html" id="toDateTime">
-    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+    {{#  if(d.createTime){ }}
+    {{ layui.util.toDateString(d.createTime,'yyyy-MM-dd') }}
+    {{#  } }}
 </script>
 
 </body>

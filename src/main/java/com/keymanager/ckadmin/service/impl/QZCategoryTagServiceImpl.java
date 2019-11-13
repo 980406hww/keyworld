@@ -38,7 +38,6 @@ public class QZCategoryTagServiceImpl extends ServiceImpl<QZCategoryTagDao, QZCa
                 existingQZCategoryTagMap.remove(newQZCategoryTag.getTagName());
             } else {
                 newQZCategoryTag.setQzSettingUuid(qzSettingUuid);
-                newQZCategoryTag.setBelongUser(userName);
                 qzCategoryTagDao.insert(newQZCategoryTag);
             }
         }

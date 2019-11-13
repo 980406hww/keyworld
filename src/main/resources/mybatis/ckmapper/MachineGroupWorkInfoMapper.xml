@@ -4,35 +4,25 @@
 
     <select id="getMachineGroupWorkInfos" resultType="com.keymanager.ckadmin.entity.MachineGroupWorkInfo">
         SELECT
-        ck.fMachineGroup AS "machineGroup",
-        ck.fType AS "type",
-        ck.fTerminalType AS "terminalType",
-        toc.fMaxInvalidCount AS "maxInvalidCount",
-        COUNT(1) AS "totalKeywordCount",
-        SUM(IF(ck.fOptimizeRemainingCount > 0, 1, 0)) AS "needOptimizeKeywordCount",
+        ck.fMachineGroup     AS "machineGroup",
+        COUNT(1)             AS "totalKeywordCount",
+        SUM(IF(ck.fOptimizeRemainingCount > 0, 1, 0))                  AS "needOptimizeKeywordCount",
         SUM(IF(ck.fInvalidRefreshCount >= toc.fMaxInvalidCount, 1, 0)) AS "invalidKeywordCount",
-        SUM(IF(ck.fOptimizedCount = 0, 1, 0)) AS "zeroOptimizedCount",
-        SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(), 1, 0)) AS "reachStandardKeywordCount",
+        SUM(IF(ck.fOptimizedCount = 0, 1, 0))                          AS "zeroOptimizedCount",
+        SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(), 1, 0))      AS "reachStandardKeywordCount",
         SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(), ck.fTodayFee, 0)) AS "todaySubTotal",
-        SUM(ck.fOptimizePlanCount) AS "totalOptimizeCount",
-        SUM(ck.fOptimizedCount) AS "totalOptimizedCount",
+        SUM(ck.fOptimizePlanCount)      AS "totalOptimizeCount",
+        SUM(ck.fOptimizedCount)         AS "totalOptimizedCount",
         SUM(ck.fOptimizeRemainingCount) AS "needOptimizeCount",
-        SUM(ck.fQueryCount) AS "queryCount"
+        SUM(ck.fQueryCount)             AS "queryCount"
         FROM t_customer_keyword ck, t_group g, t_operation_combine toc
-        <if test="(criteria.userName != null and criteria.userName != '') ||
-                    (criteria.customerName!=null and criteria.customerName!='')">
-            , t_customer c
-        </if>
         WHERE ck.fStatus = 1
-        <if test="(criteria.userName != null and criteria.userName != '') ||
-                    (criteria.customerName!=null and criteria.customerName!='')">
-            AND ck.fCustomerUuid = c.fUuid
-        </if>
+        <if test="criteria.init != null and criteria.init == 'init'">AND 1 != 1</if>
         AND toc.fUuid = g.fOperationCombineUuid
         AND ck.fOptimizeGroupName = g.fGroupName
         AND ck.fTerminalType = toc.fTerminalType
         <if test="criteria.machineGroup!=null and criteria.machineGroup!=''">
-            AND ck.fMachineGroup like concat(#{criteria.machineGroup}, "%")
+            AND ck.fMachineGroup like concat(#{criteria.machineGroup}, '%')
         </if>
         <if test="criteria.entryType!=null and criteria.entryType!=''">
             AND ck.fType = #{criteria.entryType}
@@ -41,12 +31,11 @@
             AND ck.fTerminalType = #{criteria.terminalType}
         </if>
         <if test="criteria.customerName!=null and criteria.customerName!=''">
-            AND c.fContactPerson like concat('%', #{criteria.customerName}, "%")
+            AND EXISTS (SELECT 1 FROM t_customer c WHERE ck.fCustomerUuid = c.fUuid AND c.fContactPerson LIKE CONCAT('%', #{criteria.customerName}, '%'))
         </if>
-        GROUP BY ck.fMachineGroup, ck.fType, ck.fTerminalType, toc.fMaxInvalidCount
+        GROUP BY ck.fMachineGroup, ck.fType, ck.fTerminalType
         ORDER BY ck.fMachineGroup;
     </select>
-
 
     <select id="getHistoryMachineGroupWorkInfo" resultType="com.keymanager.ckadmin.entity.MachineGroupWorkInfo">
         SELECT
@@ -69,6 +58,9 @@
         WHERE DATE_SUB(CURDATE(), INTERVAL #{criteria.dayNum} DAY) = mgwi.fCreateDate
         AND mgwi.fType = #{criteria.entryType}
         AND mgwi.fTerminalType = #{criteria.terminalType}
+        <if test="criteria.machineGroup!=null and criteria.machineGroup!=''">
+            AND mgwi.fMachineGroup LIKE CONCAT(#{criteria.machineGroup}, "%")
+        </if>
         GROUP BY mgwi.fUuid
         ORDER BY mgwi.fMachineGroup
     </select>

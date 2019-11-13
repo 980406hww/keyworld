@@ -46,7 +46,6 @@
 
 
     <div class="my-opration-hide" id="operationContent">
-
         <div class="layui-btn-group">
             <@shiro.hasPermission name="/internal/customerKeyword/uploadCustomerKeywords">
             <button class="layui-btn layui-btn-sm" id="upload_keyword_simple" lay-event="upload_keyword_simple">
@@ -69,7 +68,6 @@
             </a>
             </@shiro.hasPermission>
         </div>
-
         <div class="layui-btn-group">
             <@shiro.hasPermission name="/internal/customerKeyword/downloadSingleCustomerReport">
             <button class="layui-btn layui-btn-sm" id="download_daily_report" lay-event="download_daily_report">
@@ -87,109 +85,113 @@
             </button>
             </@shiro.hasPermission>
         </div>
-
-    <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
-        <div class="layui-btn-group">
-            <button class="layui-btn layui-btn-sm" id="change_current_bearPawNumber" lay-event="change_current_bearPawNumber">
-                修改当前熊掌号
-            </button>
-            <button class="layui-btn layui-btn-sm" id="change_select_bearPawNumber" lay-event="change_select_bearPawNumber">
-                修改选中熊掌号
-            </button>
-        </div>
-    </@shiro.hasPermission>
-
-    <@shiro.hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
-        <div class="layui-btn-group">
-            <button class="layui-btn layui-btn-sm" id="delete_keyword_by_nullTitle_and_nullUrl" lay-event="delete_keyword_by_nullTitle_and_nullUrl">
-                删除标题和网址为空的关键字
-            </button>
-            <button class="layui-btn layui-btn-sm" id="delete_keyword_by_nullTitle" lay-event="delete_keyword_by_nullTitle">
-                删除标题为空的关键字
-            </button>
-        </div>
-    </@shiro.hasPermission>
-
-    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
-        <div class="layui-btn-group">
-            <button class="layui-btn layui-btn-sm" id="change_current_optimizedGroup" lay-event="change_current_optimizedGroup">
-                修改当前优化组
-            </button>
-            <button class="layui-btn layui-btn-sm" id="change_select_optimizedGroup" lay-event="change_select_optimizedGroup">
-                修改选中优化组
-            </button>
-        </div>
-    </@shiro.hasPermission>
-
-    <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
-        <div class="layui-btn-group">
-            <button class="layui-btn layui-btn-sm" id="change_current_searchEngine" lay-event="change_current_searchEngine">
-                修改当前搜索引擎
-            </button>
-            <button class="layui-btn layui-btn-sm" id="change_select_searchEngine" lay-event="change_select_searchEngine">
-                修改选中搜索引擎
-            </button>
-        </div>
-    </@shiro.hasPermission>
-
-    <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordMachineGroup">
-        <div class="layui-btn-group">
-            <button class="layui-btn layui-btn-sm" id="change_current_machineGroup" lay-event="change_current_machineGroup">
-                修改当前机器分组
-            </button>
-            <button class="layui-btn layui-btn-sm" id="change_select_machineGroup" lay-event="change_select_machineGroup">
-                修改选中机器分组
-            </button>
-        </div>
-    </@shiro.hasPermission>
-
-        <div class="layui-btn-group">
-            <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
-            <button class="layui-btn layui-btn-sm" id="down_off_all_keyword" lay-event="down_off_all_keyword">
-                下架所有关键字
-            </button>
-            <button class="layui-btn layui-btn-sm" id="down_off_select_keyword" lay-event="down_off_select_keyword">
-                下架选中关键字
-            </button>
-            <button class="layui-btn layui-btn-sm" id="pause_all_keyword" lay-event="pause_all_keyword">
-                暂停所有关键字
-            </button>
-            <button class="layui-btn layui-btn-sm" id="pause_select_keyword" lay-event="pause_select_keyword">
-                暂停选中关键字
-            </button>
-            </@shiro.hasPermission>
-            <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-            <button class="layui-btn layui-btn-sm" id="active_all_keyword" lay-event="active_all_keyword">
-                激活所有关键字
-            </button>
-            <button class="layui-btn layui-btn-sm" id="active_select_keyword" lay-event="active_select_keyword">
-                激活选中关键字
-            </button>
-            </@shiro.hasPermission>
-        </div>
-
-    <@shiro.hasPermission name="/internal/customerKeyword/cleanTitle">
-        <div class="layui-btn-group">
-            <button class="layui-btn layui-btn-sm" id="recollect_customer_keyword_title" lay-event="recollect_customer_keyword_title">
-                重采客户标题
-            </button>
-            <button class="layui-btn layui-btn-sm" id="recollect_select_keyword_title" lay-event="recollect_select_keyword_title">
-                重采所选标题
-            </button>
-            <button class="layui-btn layui-btn-sm" id="clean_customer_keyword_title" lay-event="clean_customer_keyword_title">
-                清空客户标题
-            </button>
-            <button class="layui-btn layui-btn-sm" id="clean_select_keyword_title" lay-event="clean_select_keyword_title">
-                清空所选标题
-            </button>
-        </div>
-    </@shiro.hasPermission>
-
+        <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
+            <div class="layui-btn-group">
+                <button class="layui-btn layui-btn-sm" id="change_current_bearPawNumber" lay-event="change_current_bearPawNumber">
+                    修改当前熊掌号
+                </button>
+                <button class="layui-btn layui-btn-sm" id="change_select_bearPawNumber" lay-event="change_select_bearPawNumber">
+                    修改选中熊掌号
+                </button>
+            </div>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
+            <div class="layui-btn-group">
+                <button class="layui-btn layui-btn-sm" id="delete_keyword_by_nullTitle_and_nullUrl" lay-event="delete_keyword_by_nullTitle_and_nullUrl">
+                    删除标题和网址为空的关键字
+                </button>
+                <button class="layui-btn layui-btn-sm" id="delete_keyword_by_nullTitle" lay-event="delete_keyword_by_nullTitle">
+                    删除标题为空的关键字
+                </button>
+            </div>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
+            <div class="layui-btn-group">
+                <button class="layui-btn layui-btn-sm" id="change_current_optimizedGroup" lay-event="change_current_optimizedGroup">
+                    修改当前优化组
+                </button>
+                <button class="layui-btn layui-btn-sm" id="change_select_optimizedGroup" lay-event="change_select_optimizedGroup">
+                    修改选中优化组
+                </button>
+            </div>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
+            <div class="layui-btn-group">
+                <button class="layui-btn layui-btn-sm" id="change_current_searchEngine" lay-event="change_current_searchEngine">
+                    修改当前搜索引擎
+                </button>
+                <button class="layui-btn layui-btn-sm" id="change_select_searchEngine" lay-event="change_select_searchEngine">
+                    修改选中搜索引擎
+                </button>
+            </div>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordMachineGroup">
+            <div class="layui-btn-group">
+                <button class="layui-btn layui-btn-sm" id="change_current_machineGroup" lay-event="change_current_machineGroup">
+                    修改当前机器分组
+                </button>
+                <button class="layui-btn layui-btn-sm" id="change_select_machineGroup" lay-event="change_select_machineGroup">
+                    修改选中机器分组
+                </button>
+            </div>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
+            <div class="layui-btn-group">
+                <button class="layui-btn layui-btn-sm" id="down_off_all_keyword" lay-event="down_off_all_keyword">
+                    下架所有关键字
+                </button>
+                <button class="layui-btn layui-btn-sm" id="down_off_select_keyword" lay-event="down_off_select_keyword">
+                    下架选中关键字
+                </button>
+                <button class="layui-btn layui-btn-sm" id="pause_all_keyword" lay-event="pause_all_keyword">
+                    暂停所有关键字
+                </button>
+                <button class="layui-btn layui-btn-sm" id="pause_select_keyword" lay-event="pause_select_keyword">
+                    暂停选中关键字
+                </button>
+                </@shiro.hasPermission>
+                <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+                <button class="layui-btn layui-btn-sm" id="active_all_keyword" lay-event="active_all_keyword">
+                    激活所有关键字
+                </button>
+                <button class="layui-btn layui-btn-sm" id="active_select_keyword" lay-event="active_select_keyword">
+                    激活选中关键字
+                </button>
+            </div>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/customerKeyword/cleanTitle">
+            <div class="layui-btn-group">
+                <button class="layui-btn layui-btn-sm" id="recollect_customer_keyword_title" lay-event="recollect_customer_keyword_title">
+                    重采客户标题
+                </button>
+                <button class="layui-btn layui-btn-sm" id="recollect_select_keyword_title" lay-event="recollect_select_keyword_title">
+                    重采所选标题
+                </button>
+                <button class="layui-btn layui-btn-sm" id="clean_customer_keyword_title" lay-event="clean_customer_keyword_title">
+                    清空客户标题
+                </button>
+                <button class="layui-btn layui-btn-sm" id="clean_select_keyword_title" lay-event="clean_select_keyword_title">
+                    清空所选标题
+                </button>
+            </div>
+        </@shiro.hasPermission>
+        <@shiro.hasRole name="Operation">
+            <div class="layui-btn-group">
+                <button class="layui-btn layui-btn-sm" lay-event="clear_all_by_condition_fail_reason">
+                    清空当前失败原因
+                </button>
+                <button class="layui-btn layui-btn-sm" lay-event="clear_select_fail_reason">
+                    清空选中失败原因
+                </button>
+            </div>
+        </@shiro.hasRole>
     </div>
 </script>
 <!--模板-->
 <script type="text/html" id="toDateTime">
-    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+    {{#  if(d.createTime){ }}
+    {{ layui.util.toDateString(d.createTime,'yyyy-MM-dd') }}
+    {{#  } }}
 </script>
 
 <script type="text/html" id="statusTpl">
@@ -215,7 +217,7 @@
 </script>
 
 <script type="text/html" id="currentPositionTpl">
-    <a href="{{d.searchEngineUrl}}" target="_blank" title="排名采集城市:{{= d.capturePositionCity}}&#10;排名采集时间:{{layui.util.toDateString(d.capturePositionQueryTime, 'yyyy-MM-dd')}}">{{d.currentPosition}}</a>
+    <a href="{{d.searchEngineUrl}}" target="_blank" title="排名采集城市:{{= d.capturePositionCity}}&#10;排名采集时间:{{layui.util.toDateString(d.capturePositionQueryTime, 'yyyy-MM-dd HH:mm:ss')}}">{{d.currentPosition}}</a>
 </script>
 
 <script type="text/html" id="collectMethodTpl">
@@ -227,6 +229,12 @@
     <span title="优化日期: {{layui.util.toDateString(d.optimizeDate, 'yyyy-MM-dd')}}&#10;要刷: {{d.optimizePlanCount}}&#10;已刷: {{d.optimizedCount}}">七天</span>
     {{#  }else{ }}
     <span title="优化日期: {{layui.util.toDateString(d.optimizeDate, 'yyyy-MM-dd')}}&#10;要刷: {{d.optimizePlanCount}}&#10;已刷: {{d.optimizedCount}}">按月</span>
+    {{# } }}
+</script>
+
+<script type="text/html" id="remarksTpl">
+    {{#  if(d.remarks && d.remarks !== 'null') { }}
+    {{ d.remarks }}
     {{# } }}
 </script>
 

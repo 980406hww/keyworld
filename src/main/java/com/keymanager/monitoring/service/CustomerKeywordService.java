@@ -170,8 +170,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     break;
                 }
             }
-            customerKeywordDao.batchUpdateOptimizedCountFromCache(updateOptimizedCountSimpleVOMap.values());
-            machineInfoService.updateOptimizationResultFromCache(updateOptimizedCountVOMap.values());
+            if(updateOptimizedCountSimpleVOMap.size() > 0) {
+                customerKeywordDao.batchUpdateOptimizedCountFromCache(updateOptimizedCountSimpleVOMap.values());
+            }
+            if(updateOptimizedCountVOMap.size() > 0) {
+                machineInfoService.updateOptimizationResultFromCache(updateOptimizedCountVOMap.values());
+            }
             times++;
         } while (times < 20 && updateOptimizedResultQueue.size() > 100 && !queueEmptied);
     }
@@ -1041,7 +1045,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     private void addCustomerKeywords(List<CustomerKeyword> customerKeywords, String loginName) throws Exception {
         for (CustomerKeyword customerKeyword : customerKeywords) {
-            if (customerKeyword.getKeywordEffect() == null || customerKeyword.getKeywordEffect().equals("")) {
+            if (StringUtil.isNullOrEmpty(customerKeyword.getKeywordEffect())) {
                 customerKeyword.setKeywordEffect(KeywordEffectEnum.Common.name());
             } else {
                 switch (customerKeyword.getKeywordEffect().trim()) {

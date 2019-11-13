@@ -34,6 +34,7 @@
         LEFT JOIN t_organization o
         ON o.fUuid = u.fOrganizationID
         WHERE 1 = 1
+        <if test="qzSettingSearchCriteria.init != null and qzSettingSearchCriteria.init == 'init'">AND 1 != 1</if>
         <if test="qzSettingSearchCriteria.loginName != null and qzSettingSearchCriteria.loginName != ''">AND c.fUserID = #{qzSettingSearchCriteria.loginName}
         </if>
         <if test="qzSettingSearchCriteria.organizationID != null and qzSettingSearchCriteria.organizationID != ''">AND o.fUuid =
@@ -60,7 +61,19 @@
         <if test="qzSettingSearchCriteria.updateStatus != null and qzSettingSearchCriteria.updateStatus != ''">AND qs.fUpdateStatus =
             #{qzSettingSearchCriteria.updateStatus}
         </if>
-        <if test="qzSettingSearchCriteria.renewalStatus != null">AND qs.fRenewalStatus = #{qzSettingSearchCriteria.renewalStatus}</if>
+        <if test="qzSettingSearchCriteria.renewalStatus != null">
+            <choose>
+                <when test="qzSettingSearchCriteria.renewalStatus == 11">
+                    AND (qs.fRenewalStatus = 2 OR qs.fRenewalStatus = 1 OR qs.fRenewalStatus = 4)
+                </when>
+                <when test="qzSettingSearchCriteria.renewalStatus == 12">
+                    AND (qs.fRenewalStatus = 2 OR qs.fRenewalStatus = 1)
+                </when>
+                <otherwise>
+                    AND qs.fRenewalStatus = #{qzSettingSearchCriteria.renewalStatus}
+                </otherwise>
+            </choose>
+        </if>
         <if test="qzSettingSearchCriteria.autoCrawlKeywordFlag != null">AND qs.fAutoCrawlKeywordFlag = #{qzSettingSearchCriteria.autoCrawlKeywordFlag}</if>
         <if test="qzSettingSearchCriteria.standardSpecies != null and qzSettingSearchCriteria.standardSpecies != ''">
             AND EXISTS (
@@ -137,11 +150,11 @@
         <if test="qzSettingSearchCriteria.categoryTag != null and qzSettingSearchCriteria.categoryTag != ''">
             AND EXISTS (SELECT 1 FROM t_qz_category_tag qc WHERE qc.fQZSettingUuid = qs.fUuid AND qc.fTagName = #{qzSettingSearchCriteria.categoryTag})
         </if>
-        <if test="qzSettingSearchCriteria.createTime != null and qzSettingSearchCriteria.createTime != ''">AND qs.fCreateTime &gt;=
-            #{qzSettingSearchCriteria.createTime}
+        <if test="qzSettingSearchCriteria.createTime != null and qzSettingSearchCriteria.createTime != ''">
+            AND qs.fCreateTime &gt;= #{qzSettingSearchCriteria.createTime}
         </if>
-        <if test="qzSettingSearchCriteria.createTimePrefix != null and qzSettingSearchCriteria.createTimePrefix != ''">AND qs.fCreateTime &lt;=
-            #{qzSettingSearchCriteria.createTimePrefix}
+        <if test="qzSettingSearchCriteria.createTimePrefix != null and qzSettingSearchCriteria.createTimePrefix != ''">
+            AND qs.fCreateTime &lt;= #{qzSettingSearchCriteria.createTimePrefix}
         </if>
         <choose>
             <when test="qzSettingSearchCriteria.dateRangeType == 0">
@@ -304,15 +317,15 @@
     </update>
 
     <select id="getQZSettingsCountByCustomerUuid" resultType="com.keymanager.ckadmin.vo.QZSettingCountVO">
-        SELECT qz.fCustomerUuid              AS 'customerUuid',
-               COUNT(1)                      AS 'totalCount',
-               SUM(IF(qz.fRenewalStatus = 1 OR qz.fRenewalStatus = 2 , 1, 0)) AS 'activeCount',
-               SUM(IF(qz.fRenewalStatus = 0 , 1, 0)) AS 'pauseCount',
-               SUM(IF(qz.fRenewalStatus = 3 , 1, 0)) AS 'downCount',
-               SUM(IF(qz.fRenewalStatus = 4 , 1, 0)) AS 'otherCount'
-        FROM t_qz_setting qz
-        WHERE qz.fCustomerUuid = #{customerUuid}
-        AND EXISTS ( SELECT 1 FROM t_qz_keyword_rank_info qk WHERE qk.fQZSettingUuid = qz.fUuid AND qk.fDataProcessingStatus = 1 LIMIT 1)
+        SELECT
+            qot.fOperationtype AS 'terminalType',
+            qs.fRenewalStatus AS 'renewalStatus'
+        FROM t_qz_operation_type qot
+        LEFT JOIN t_qz_setting qs
+        ON qot.fQZSettingUuid = qs.fUuid
+        WHERE qs.fCustomerUuid = #{customerUuid}
+        AND qot.fIsDeleted = 0
+        GROUP BY qs.fUuid, qot.fOperationtype;
     </select>
 
     <select id="getAvailableOptimizationGroups" resultType="com.keymanager.ckadmin.vo.GroupVO">

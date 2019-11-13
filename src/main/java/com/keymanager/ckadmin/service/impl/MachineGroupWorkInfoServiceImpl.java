@@ -62,7 +62,6 @@ public class MachineGroupWorkInfoServiceImpl implements MachineGroupWorkInfoServ
             total.setZeroOptimizedCount(total.getZeroOptimizedCount() + machineGroupWorkInfo.getZeroOptimizedCount());
             total.setReachStandardKeywordCount(total.getReachStandardKeywordCount() + machineGroupWorkInfo.getReachStandardKeywordCount());
             total.setTodaySubTotal(total.getTodaySubTotal() + machineGroupWorkInfo.getTodaySubTotal());
-            total.setMaxInvalidCount(machineGroupWorkInfo.getMaxInvalidCount());
             total.setIdleTotalMinutes(total.getIdleTotalMinutes() + machineGroupWorkInfo.getIdleTotalMinutes());
             machineGroupWorkInfo.setAvgOptimizedCount();
             machineGroupWorkInfo.setInvalidKeywordPercentage();

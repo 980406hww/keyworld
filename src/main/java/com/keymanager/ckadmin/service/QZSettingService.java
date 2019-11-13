@@ -14,7 +14,6 @@ import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.vo.ExternalQZSettingVO;
 import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
-import com.keymanager.ckadmin.vo.QZSettingCountVO;
 
 import java.util.List;
 import java.util.Map;
@@ -69,7 +68,7 @@ public interface QZSettingService extends IService<QZSetting> {
 
     void updateQzSetting(QZSetting qzSetting);
 
-    QZSettingCountVO getQZSettingsCountByCustomerUuid(Long customerUuid);
+    Map<String, Object> getQZSettingsCountByCustomerUuid(Long customerUuid);
 
     String findQZCustomer(String domain);
 

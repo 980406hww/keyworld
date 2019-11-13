@@ -43,6 +43,7 @@ public class KeywordCriteria extends BaseCriteria {
     private Integer titleFlag;//标题标志位
     private String keywordEffect;
     private String notLike;
+    private String optimizeGroupNameLike;
 
     private Integer noReachStandardDays;//未达标天数
 
@@ -54,6 +55,14 @@ public class KeywordCriteria extends BaseCriteria {
     private String targetSearchEngine;
 
     private String deleteType;
+
+    public String getOptimizeGroupNameLike() {
+        return optimizeGroupNameLike;
+    }
+
+    public void setOptimizeGroupNameLike(String optimizeGroupNameLike) {
+        this.optimizeGroupNameLike = optimizeGroupNameLike;
+    }
 
     public String getNotLike() {
         return notLike;

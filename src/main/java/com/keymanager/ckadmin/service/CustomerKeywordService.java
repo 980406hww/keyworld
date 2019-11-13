@@ -58,7 +58,7 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     List<CustomerKeywordSummaryInfoVO> searchCustomerKeywordSummaryInfo(String entryType, long customerUuid);
 
-    KeywordCountVO getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String terminalType, String type);
+    Map<String, Object>  getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String type);
 
     void resetInvalidRefreshCount(RefreshStatisticsCriteria criteria);
 
@@ -122,6 +122,7 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     void editCustomerOptimizePlanCount(Integer optimizePlanCount, String settingType, List<String> uuids);
 
-    Page<QZRateKeywordCountVO> getQZRateKewordCountList(Page<QZRateKeywordCountVO> page,
-        QZRateKewordCountCriteria qzRateKewordCountCriteria) throws CloneNotSupportedException;
+    void updateSelectFailReason(KeywordCriteria keywordCriteria);
+    
+    Page<QZRateKeywordCountVO> getQZRateKewordCountList(Page<QZRateKeywordCountVO> page, QZRateKewordCountCriteria qzRateKewordCountCriteria) throws CloneNotSupportedException;
 }
