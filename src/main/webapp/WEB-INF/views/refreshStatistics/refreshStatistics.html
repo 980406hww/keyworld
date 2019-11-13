@@ -194,28 +194,28 @@
 
         <@shiro.hasPermission name = "/internal/customerKeyword/searchCustomerKeywordLists" >
         window.searchCustomerKeywords = function (group) {
-            let url = '/internal/customerKeyword/toKeywords';
             let title = group + '-关键字';
             let id = group + '-关键字-sl';
             let data = {
                 group: group,
-                status: '1',
                 type: document.getElementById('entryType').value,
                 terminal: document.getElementById('terminalType').value
             };
-            updateOrNewTab(url, title, id ,data);
+            let url = '/internal/customerKeyword/toKeywordsFromRS/' + data.type + '/' + data.terminal + '/' + data.group + '/null/null';
+            common.updateOrNewTab(url, title, id);
         };
         </@shiro.hasPermission>
 
         <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
         window.findKeyword = function (optimizeGroupName, invalidRefreshCount) {
-            let url = '/internal/customerKeyword/toKeywords';
             let title = optimizeGroupName + '-关键字';
             let id = optimizeGroupName + '-关键字-wx';
             let data = {
-                status: '1',
                 type: document.getElementById('entryType').value,
-                terminal: document.getElementById('terminalType').value
+                terminal: document.getElementById('terminalType').value,
+                group: null,
+                nrsd: null,
+                irc: null
             };
             if (optimizeGroupName && optimizeGroupName !== '') {
                 data.group = optimizeGroupName;
@@ -226,7 +226,9 @@
             } else {
                 data.nrsd = '-1';
             }
-            updateOrNewTab(url, title, id ,data);
+            let url = '/internal/customerKeyword/toKeywordsFromRS/' + data.type + '/' + data.terminal + '/' + data.group + '/' + data.nrsd +  '/' + data.irc;
+            console.log(url);
+            // updateOrNewTab(url, title, id ,data);
         };
         </@shiro.hasPermission>
 

@@ -33,11 +33,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
     laydate.render({
         elem: '#ltCreateTime',
     });
+
+    // TODO
     init_search();
+    init_belong_user();
+    init_searchEngine();
 
     function init_search() {
-        init_belong_user();
-        init_searchEngine();
         let this_ = window.parent.document.getElementsByTagName('iframe');
         this_ = this_[this_.length - 1];
         let d = this_.dataset;

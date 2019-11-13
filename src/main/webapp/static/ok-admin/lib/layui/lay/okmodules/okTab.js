@@ -169,7 +169,7 @@ layui.define(["element", "jquery"], function (exports) {
         var _this = $(_thisa).clone(true);//拷贝dom（js： _this.cloneNode(true) ）
         var url = _this.attr("data-url");//选项卡的页面路径
         var needTab = window.localStorage.getItem("needTab");
-        if (!needTab) {
+        if (needTab !== 'need') {
             window.open('/login?url='+ url, "_blank");
             return;
         }

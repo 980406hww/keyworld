@@ -88,7 +88,8 @@
                                     <div class="layui-inline" style="width: 130px">
                                         <input type="text" name="optimizeGroupName" id="optimizeGroupName" placeholder="请输入优化组名" autocomplete="off"
                                                onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');"
-                                               class="layui-input layui-input-text" />
+                                               class="layui-input layui-input-text"
+                                               value="<#if group?exists>${group}</#if>"/>
                                     </div>
                                     <div class="layui-inline one-special">
                                         <input type="checkbox" name="optimizeGroupNameLike" value="on" title="模糊搜索">
