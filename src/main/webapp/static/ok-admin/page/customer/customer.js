@@ -814,6 +814,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
             "请输入正确格式手机号码"
         ]
     });
+
+    window.updateOrNewTab = function (url, tit, id) {
+        common.updateOrNewTab(url, tit, id);
+    }
 });
 
 let open2 = true;
@@ -996,28 +1000,6 @@ function generate_customer_info(contactPerson, data, terminalType, type, custome
     }
     htm += '<br>';
     return htm;
-}
-
-function updateOrNewTab(url, tit, id) {
-    var update = false;
-    var contentIframe = ("<iframe src='" + url + "' lay-id='" + id
-        + "'frameborder='0' scrolling='yes' width='100%' height='100%'></iframe>");
-    parent.layui.$('.layui-tab-title li').each(function () {
-        if (id === this.getAttribute('lay-id')) {
-            update = true;
-        }
-    });
-    if (!update) {
-        parent.layui.element.tabAdd('ok-tab', {
-            title: '<strong style="display: none;" is-close="true" lay-id="'+id+'" data-url="'+url+'"></strong>' +
-                '<i class="layui-icon">&#xe648;</i> ' + tit,
-                content: contentIframe,
-                id: id
-            }
-        );
-    }
-
-    parent.layui.element.tabChange('ok-tab', id)
 }
 
 

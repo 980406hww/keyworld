@@ -17,8 +17,6 @@ import com.keymanager.ckadmin.vo.MachineInfoSummaryVO;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -653,13 +651,24 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/searchMachineInfos")
     @RequestMapping(value = "/toMachineInfoFromATP/{terminalType}/{machineGroup}", method = RequestMethod.GET)
-    public ModelAndView toMachineInfoFromATP(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "machineGroup") String machineGroup)
-        throws UnsupportedEncodingException {
+    public ModelAndView toMachineInfoFromATP(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "machineGroup") String machineGroup) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/machineManage");
-        machineGroup = URLDecoder.decode(machineGroup, "UTF-8");
         mv.addObject("machineGroupFromATP", machineGroup);
         mv.addObject("terminalTypeFromATP", terminalType);
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/machineInfo/searchMachineInfos")
+    @RequestMapping(value = "/toMachineInfoFromMGS/{terminalType}/{machineGroup}", method = RequestMethod.GET)
+    public ModelAndView toMachineInfoFromMGS(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "machineGroup") String machineGroup) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/machineManage");
+        if (!("null".equals(machineGroup))) {
+            mv.addObject("machineGroupFromATP", machineGroup);
+        }
+        mv.addObject("terminalTypeFromATP", terminalType);
+        mv.addObject("hasProblemTmp", "true");
         return mv;
     }
 

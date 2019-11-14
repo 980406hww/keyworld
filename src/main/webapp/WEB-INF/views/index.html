@@ -60,7 +60,7 @@
             <div id="yesLogo" style="display: none">
                 <ul class="layui-tab-title ok-tab-title not-scroll">
                     <li class="layui-this" id="firstTab" lay-id="1-1">
-                        <strong style="display: none;" is-close="true" data-url="/internal/customerKeyword/toKeywords"></strong>
+                        <strong style="display: none;" is-close="true" data-url=""></strong>
                         <i class="ok-icon ok-iconairplay"></i>
                         <cite>关键字统计</cite>
                     </li>
@@ -68,7 +68,7 @@
             </div>
             <div class="layui-tab-content ok-tab-content">
                 <div class="layui-tab-item layui-show">
-                    <iframe id="firstBody" src="/internal/customerKeyword/toKeywords" frameborder="0" scrolling="yes" width="100%" height="100%"></iframe>
+                    <iframe id="firstBody" src="" frameborder="0" scrolling="yes" width="100%" height="100%"></iframe>
                 </div>
             </div>
         </div>
@@ -89,7 +89,7 @@
             <@shiro.hasPermission name="/internal/negativelist/evictAllNegativeListCache">
             <dd onclick="clearNegativeListCache()">清理负面清单</dd>
             </@shiro.hasPermission>
-            <dd onclick="switchSingleOrMulti()">切换单多页</dd>
+            <dd onclick="switchSingleOrMulti()">启关多标签页</dd>
             <dd onclick="openUpdPasswordWindow()">修改密码</dd>
         </dl>
     </div>
@@ -117,6 +117,15 @@
         window.location.reload();
     }
 
+    let firstTab = document.getElementById('firstTab');
+    let firstBody = document.getElementById('firstBody');
+    let src = '<#if url?exists>${url}<#else>/internal/customerKeyword/toKeywords</#if>';
+    let key = '<#if key?exists>${key}<#else>关键字统计</#if>';
+    firstTab.setAttribute('lay-id', '<#if first?exists>1-1<#elseif key?exists>${id}<#else>z-z</#if>');
+    firstTab.children[0].dataset.url = src;
+    firstTab.children[2].innerHTML = key;
+    firstBody.src = src;
+
     let needTab = window.localStorage.getItem('needTab');
     if (needTab === 'need') {
         let yesLogo = document.getElementById('yesLogo');
@@ -129,16 +138,8 @@
         contentBody.classList.add('single-body');
         document.getElementById('firstBody').parentElement.parentElement.style.top = '40px';
     } else {
-        let firstTab = document.getElementById('firstTab');
-        let firstBody = document.getElementById('firstBody');
-        let src = '<#if url?exists>${url}<#else>/internal/customerKeyword/toKeywords</#if>';
-        let key = '<#if key?exists>${key}</#if>';
-        firstTab.setAttribute('lay-id', '<#if key?exists>${id}<#else>1-1</#if>');
-        firstTab.children[0].dataset.url = src;
-        firstTab.children[2].innerHTML = key ? key : "关键字统计";
-        firstBody.src = src;
-        document.title = key ? key : "关键字管理系统";
-
+        let tit = '<#if tit?exists>${tit}</#if>';
+        document.title = tit ? tit : key;
         let notLogo = document.getElementById('notLogo');
         notLogo.classList.add('not-logo');
         notLogo.innerHTML = document.getElementById('multiPage').innerHTML;

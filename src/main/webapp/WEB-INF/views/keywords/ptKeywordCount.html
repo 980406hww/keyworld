@@ -227,49 +227,25 @@
         });
 
         init_table_data({init: 'init'});
+
+        window.toKeyword = function (keyword) {
+            let terminalType = document.getElementById('terminalType').value;
+            let searchEngine = document.getElementById('searchEngine').value === '' ? 'null' : document.getElementById('searchEngine').value;
+            let belongUser = document.getElementById('userName').value === '' ? 'null' : document.getElementById('userName').value;
+            let url = '/internal/customerKeyword/toKeywordsFromPT/pt/' + terminalType + '/' + searchEngine + '/' + belongUser + '/' + keyword;
+            let title = '关键字:' + keyword + '详情';
+            common.updateOrNewTab(url, title, keyword)
+        };
+
+        window.toKeywordWithPosition = function (keyword, position) {
+            let terminalType = document.getElementById('terminalType').value;
+            let searchEngine = document.getElementById('searchEngine').value === '' ? 'null' : document.getElementById('searchEngine').value;
+            let belongUser = document.getElementById('userName').value === '' ? 'null' : document.getElementById('userName').value;
+            let url = '/internal/customerKeyword/toKeywordsFromPTWithPosition/pt/' + terminalType + '/' + searchEngine + '/' + belongUser + '/' + keyword + '/' + position;
+            let title = '关键字:' + keyword + '排名详情';
+            common.updateOrNewTab(url, title, keyword + position)
+        };
     });
-
-    function toKeyword(keyword) {
-        let terminalType = document.getElementById('terminalType').value;
-        let searchEngine = document.getElementById('searchEngine').value===''?'null':document.getElementById('searchEngine').value;
-        let belongUser = document.getElementById('userName').value===''?'null':document.getElementById('userName').value;
-        let url = '/internal/customerKeyword/toKeywordsFromPT/pt/' + terminalType + '/' +searchEngine+'/'+belongUser+'/'+ keyword;
-        url = encodeURI(encodeURI(url));
-        let title = '关键字:' + keyword + '详情';
-        updateOrNewTab(url, title, keyword)
-    }
-
-    function toKeywordWithPosition(keyword, position) {
-        let terminalType = document.getElementById('terminalType').value;
-        let searchEngine = document.getElementById('searchEngine').value===''?'null':document.getElementById('searchEngine').value;
-        let belongUser = document.getElementById('userName').value===''?'null':document.getElementById('userName').value;
-        let url = '/internal/customerKeyword/toKeywordsFromPTWithPosition/pt/' + terminalType + '/' +searchEngine+'/'+belongUser+'/'+ keyword + '/' + position;
-        url = encodeURI(encodeURI(url));
-        let title = '关键字:' + keyword + '排名详情';
-        updateOrNewTab(url, title, keyword + position)
-    }
-
-    function updateOrNewTab(url, tit, id) {
-        var update = false;
-        var contentIframe = ("<iframe src='" + url + "' lay-id='" + id
-            + "'frameborder='0' scrolling='yes' width='100%' height='100%'></iframe>");
-        parent.layui.$('.layui-tab-title li').each(function () {
-            if (id === this.getAttribute('lay-id')) {
-                update = true;
-            }
-        });
-        if (!update) {
-            parent.layui.element.tabAdd('ok-tab', {
-                    title: '<strong style="display: none;" is-close="true" lay-id="'+id+'" data-url="'+url+'"></strong>' +
-                        '<i class="layui-icon">&#xe648;</i> ' + tit,
-                    content: contentIframe,
-                    id: id
-                }
-            );
-        }
-        parent.layui.element.tabChange('ok-tab', id)
-    }
-
 </script>
 <#include  "./ptKeywordCountTpl.html" />
 

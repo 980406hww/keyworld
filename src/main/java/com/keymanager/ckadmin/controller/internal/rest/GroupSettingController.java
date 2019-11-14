@@ -10,8 +10,6 @@ import com.keymanager.ckadmin.service.GroupSettingService;
 import com.keymanager.ckadmin.service.OperationCombineService;
 import com.keymanager.ckadmin.service.OperationTypeService;
 import com.keymanager.ckadmin.util.SQLFilterUtils;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.List;
 import javax.annotation.Resource;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -203,10 +201,9 @@ public class GroupSettingController {
     }
 
     @GetMapping("/toGroupSettingFromATP/{terminalType}/{operationCombineName}")
-    public ModelAndView toGroupSettingFromATP(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "operationCombineName") String operationCombineName) throws UnsupportedEncodingException {
+    public ModelAndView toGroupSettingFromATP(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "operationCombineName") String operationCombineName) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("groupSettings/groupSetting");
-        operationCombineName = URLDecoder.decode(operationCombineName, "UTF-8");
         mv.addObject("operationCombineNameFromATP",operationCombineName);
         mv.addObject("terminalTypeFromATP",terminalType);
         return mv;

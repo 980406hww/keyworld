@@ -6,11 +6,14 @@ import com.keymanager.ckadmin.service.ResourceService;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -30,10 +33,37 @@ public class LayerUIAdminTestController {
     @Resource(name = "resourceService2")
     private ResourceService resourceService;
 
-    @RequestMapping("/index")
-    public ModelAndView toIndex() {
+    @GetMapping("/index")
+    public ModelAndView index(@RequestParam(required = false) String url, @RequestParam(required = false) String tit, HttpSession session) {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("index");
+        mv.setViewName("/index");
+        mv.addObject("url", url);
+        if (null == url || "".equals(url)) {
+            mv.addObject("first", "1-1");
+            return mv;
+        }
+        List menus = (List) session.getAttribute("menus");
+        if (null == menus || menus.isEmpty()) {
+            menus = resourceService.selectAuthorizationResource((String) session.getAttribute("username"), null);
+        }
+        int i = 0, j = 0;
+        String key = null;
+            outFor:
+        for (Object obj : menus) {
+            Menu menu = (Menu) obj;
+            i++;
+            for (Menu m : menu.getChildren()) {
+                j++;
+                if (url.equals(m.getHref())) {
+                    key = m.getTitle();
+                    break outFor;
+                }
+            }
+            j = 0;
+        }
+        mv.addObject("key", key);
+        mv.addObject("tit", tit);
+        mv.addObject("id", i + "-" + j);
         return mv;
     }
 

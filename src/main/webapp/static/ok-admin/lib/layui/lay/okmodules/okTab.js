@@ -165,12 +165,16 @@ layui.define(["element", "jquery"], function (exports) {
     };
 
     //右侧内容nav操作添加tab页
-    okTab.prototype.tabAdd = function (_thisa) {
+    okTab.prototype.tabAdd = function (_thisa, tit) {
         var _this = $(_thisa).clone(true);//拷贝dom（js： _this.cloneNode(true) ）
         var url = _this.attr("data-url");//选项卡的页面路径
         var needTab = window.localStorage.getItem("needTab");
-        if (!needTab) {
-            window.open('/login?url='+ url, "_blank");
+        if (needTab !== 'need') {
+            url = '/internal/layer/index?url=' + url;
+            if (tit) {
+                url += '&tit=' + tit;
+            }
+            window.open(url, "_blank");
             return;
         }
         var that = this;
