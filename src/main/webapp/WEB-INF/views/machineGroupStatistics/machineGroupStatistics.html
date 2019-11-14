@@ -176,11 +176,6 @@
             </div>
         </div>
     </div>
-    <form id="searchMachineInfoForm" style="display: none;" method="post" target="_blank"
-          action="/internal/machineInfo/searchBadMachineInfo">
-        <input type="hidden" name="hasProblem" value="hasProblem"/>
-        <input type="hidden" name="machineGroup" id="openMachineGroup" value=""/>
-    </form>
 </div>
 <!--js逻辑-->
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
@@ -242,8 +237,16 @@
 
         <@shiro.hasPermission name="/internal/machineInfo/searchBadMachineInfo">
         window.findMachineInfo = function (machineGroup) {
-            $("#searchMachineInfoForm").find("#openMachineGroup").val(machineGroup);
-            $("#searchMachineInfoForm").submit();
+            let url = '/internal/machineManage/toMachineInfoFromMGS/' + document.getElementById('terminalType').value + '/';
+            if (machineGroup) {
+                url += machineGroup;
+            } else {
+                url += 'null';
+                machineGroup = '总计';
+            }
+            let title = machineGroup + '-机器管理';
+            let id = machineGroup;
+            common.updateOrNewTab(url, title, id);
         };
         </@shiro.hasPermission>
 
@@ -502,9 +505,9 @@
                         field: 'unworkMachineCount', title: '已停数', width: '5%', align: 'center', sort: true, templet: function (d) {
                             if (d.unworkMachineCount > 0) {
                                 if (d.machineGroup === '总计') {
-                                    return '<a target="_blank" href="javascript:findMachineInfo(\'\')">' + d.unworkMachineCount + '</a>';
+                                    return '<a style="color: blue" href="javascript:findMachineInfo(\'\')">' + d.unworkMachineCount + '</a>';
                                 }
-                                return '<a target="_blank" href="javascript:findMachineInfo(\'' + d.machineGroup + '\')">' + d.unworkMachineCount + '</a>';
+                                return '<a style="color: blue" href="javascript:findMachineInfo(\'' + d.machineGroup + '\')">' + d.unworkMachineCount + '</a>';
                             } else {
                                 return '';
                             }

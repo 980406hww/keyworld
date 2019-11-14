@@ -955,8 +955,8 @@
         <if test="keywordChecks.originalUrl==1">,fOriginalUrl = #{keywordValues.originalUrl}</if>
         <if test="keywordChecks.optimizePlanCount==1">
             , fOptimizePlanCount = #{keywordValues.optimizePlanCount}
-            , fOptimizeRemainingCount = IF(#{keywordValues.optimizePlanCount} - fOptimizedCount > 0, #{keywordValues.optimizePlanCount} - fOptimizedCount, 0)
             , fOptimizeTodayCount = IF(fOptimizePlanCount > 0, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
+            , fOptimizeRemainingCount = fOptimizeTodayCount - fOptimizedCount
             , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
             , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
         </if>
@@ -1102,7 +1102,7 @@
             SET fOptimizePlanCount = #{optimizePlanCount}
         </if>
         , fOptimizeTodayCount = IF(fOptimizePlanCount > 0, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
-        , fOptimizeRemainingCount = IF(#{optimizePlanCount} - fOptimizedCount > 0, #{optimizePlanCount} - fOptimizedCount, 0)
+        , fOptimizeRemainingCount = fOptimizeTodayCount - fOptimizedCount
         , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
         , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
         WHERE fTerminalType = #{terminalType}
@@ -1119,7 +1119,7 @@
             SET fOptimizePlanCount = #{optimizePlanCount}
         </if>
         , fOptimizeTodayCount = IF(fOptimizePlanCount > 0, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
-        , fOptimizeRemainingCount = IF(#{optimizePlanCount} - fOptimizedCount > 0, #{optimizePlanCount} - fOptimizedCount, 0)
+        , fOptimizeRemainingCount = fOptimizeTodayCount - fOptimizedCount
         , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
         , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
         WHERE fUuid IN
