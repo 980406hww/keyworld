@@ -75,7 +75,7 @@ public class LoginController extends BaseController {
      */
     @GetMapping("/login")
     @CsrfToken(create = true)
-    public ModelAndView login(@RequestParam(required = false) String url, HttpSession session) {
+    public ModelAndView login(@RequestParam(required = false) String url, @RequestParam(required = false) String tit, HttpSession session) {
         logger.info("GET请求登录");
         ModelAndView mv = new ModelAndView();
         if (SecurityUtils.getSubject().isAuthenticated()) {
@@ -86,6 +86,7 @@ public class LoginController extends BaseController {
                 mv.setViewName("/index");
                 mv.addObject("url", url);
                 if (null == url || "".equals(url)) {
+                    mv.addObject("first", "1-1");
                     return mv;
                 }
                 List menus = (List) session.getAttribute("menus");
@@ -108,6 +109,7 @@ public class LoginController extends BaseController {
                     j = 0;
                 }
                 mv.addObject("key", key);
+                mv.addObject("tit", tit);
                 mv.addObject("id", i + "-" + j);
                 return mv;
             }

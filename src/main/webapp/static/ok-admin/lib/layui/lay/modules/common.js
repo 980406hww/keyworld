@@ -55,7 +55,7 @@ layui.define(['jquery', 'layer', 'okTab'], function (exports) {
             if (needTab !== 'need') {
                 let _this = document.createElement('DIV');
                 _this.dataset.url = url;
-                okTab.tabAdd($(_this));
+                okTab.tabAdd($(_this), tit);
                 return;
             }
             var update = false;
