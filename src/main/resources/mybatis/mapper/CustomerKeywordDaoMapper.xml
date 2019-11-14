@@ -566,11 +566,11 @@
     </select>
 
     <update id="resetOptimizationInfoForNoOptimizeDate" timeout="200000">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeTodayCount = fOptimizePlanCount * ROUND((RAND()*0.7+0.5),1), fQueryInterval = (24*60*60)/fOptimizeTodayCount, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate IS NULL
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeTodayCount = fOptimizePlanCount * ROUND((RAND()*0.7+0.5),1), fQueryInterval = (24*60*60)/fOptimizeTodayCount, fOptimizeRemainingCount = fOptimizeTodayCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate IS NULL
     </update>
 
     <update id="resetOptimizationInfo">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeTodayCount = fOptimizePlanCount * ROUND((RAND()*0.7+0.5),1), fQueryInterval = (24*60*60)/fOptimizeTodayCount, fOptimizeRemainingCount = fOptimizePlanCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate <![CDATA[<]]> CURRENT_DATE() LIMIT 200000
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeTodayCount = fOptimizePlanCount * ROUND((RAND()*0.7+0.5),1), fQueryInterval = (24*60*60)/fOptimizeTodayCount, fOptimizeRemainingCount = fOptimizeTodayCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate <![CDATA[<]]> CURRENT_DATE() LIMIT 200000
     </update>
 
     <select id="searchRemainingOptimizationCount" resultType="java.util.Map">
@@ -1128,7 +1128,7 @@
             SET fOptimizePlanCount = #{optimizePlanCount}
         </if>
         , fOptimizeTodayCount = IF(fOptimizePlanCount > 0, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
-        , fOptimizeRemainingCount = IF(#{optimizePlanCount} - fOptimizedCount > 0, #{optimizePlanCount} - fOptimizedCount, 0)
+        , fOptimizeRemainingCount = fOptimizeTodayCount - fOptimizedCount
         , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
         , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
         WHERE fUuid IN
@@ -1146,7 +1146,7 @@
             SET fOptimizePlanCount = #{optimizePlanCount}
         </if>
         , fOptimizeTodayCount = IF(fOptimizePlanCount > 0, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
-        , fOptimizeRemainingCount = IF(#{optimizePlanCount} - fOptimizedCount > 0, #{optimizePlanCount} - fOptimizedCount, 0)
+        , fOptimizeRemainingCount = fOptimizeTodayCount - fOptimizedCount
         , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
         , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
         WHERE fTerminalType = #{terminalType}
@@ -1412,8 +1412,8 @@
         <if test="keywordChecks.originalUrl==1"> ,fOriginalUrl = #{keywordStatus.originalUrl}</if>
         <if test="keywordChecks.optimizePlanCount==1">
             , fOptimizePlanCount = #{keywordStatus.optimizePlanCount}
-            , fOptimizeRemainingCount = IF(#{keywordStatus.optimizePlanCount} - fOptimizedCount > 0, #{keywordStatus.optimizePlanCount} - fOptimizedCount, 0)
             , fOptimizeTodayCount = IF(fOptimizePlanCount > 0, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
+            , fOptimizeRemainingCount = fOptimizeTodayCount - fOptimizedCount
             , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
             , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
         </if>
