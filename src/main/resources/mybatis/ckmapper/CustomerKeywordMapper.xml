@@ -1138,4 +1138,16 @@
         WHERE c.fUuid = ck.fCustomerUuid
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
+
+    <select id="getMaxInvalidCountByMachineGroup" resultType="java.lang.Integer">
+        SELECT toc.fMaxInvalidCount
+        FROM t_customer_keyword ck
+        LEFT JOIN t_group g
+        ON ck.fOptimizeGroupName = g.fGroupName
+        LEFT JOIN t_operation_combine toc
+        ON toc.fUuid = g.fOperationCombineUuid
+        WHERE ck.fMachineGroup = #{machineGroup}
+        GROUP BY ck.fOptimizeGroupName
+        LIMIT 1
+    </select>
 </mapper>
