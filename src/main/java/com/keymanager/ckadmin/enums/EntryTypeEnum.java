@@ -1,7 +1,7 @@
 package com.keymanager.ckadmin.enums;
 
 public enum EntryTypeEnum {
-	bc,
+	qt,
 	pt,
 	fm,
 	qz;

@@ -214,26 +214,26 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public void excludeCustomerKeyword(
-        QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+    public void excludeCustomerKeyword(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
         customerKeywordDao.excludeCustomerKeyword(qzSettingExcludeCustomerKeywordsCriteria);
     }
 
     @Override
     public void addCustomerKeyword(List<CustomerKeyword> customerKeywords, String userName) {
+        List<CustomerKeyword> addCustomerKeywords = new ArrayList<>();
         for (CustomerKeyword customerKeyword : customerKeywords) {
             CustomerKeyword tmpCustomerKeyword = checkCustomerKeyword(customerKeyword, userName);
-            if (null == tmpCustomerKeyword) {
-                customerKeywords.remove(customerKeyword);
+            if (null != tmpCustomerKeyword) {
+                addCustomerKeywords.add(tmpCustomerKeyword);
             }
         }
-        if (CollectionUtils.isNotEmpty(customerKeywords)) {
+        if (CollectionUtils.isNotEmpty(addCustomerKeywords)) {
             int fromIndex = 0, toIndex = 1000;
             do {
-                customerKeywordDao.addCustomerKeywords(new ArrayList<>(customerKeywords.subList(fromIndex, Math.min(toIndex, customerKeywords.size()))));
+                customerKeywordDao.addCustomerKeywords(new ArrayList<>(addCustomerKeywords.subList(fromIndex, Math.min(toIndex, addCustomerKeywords.size()))));
                 fromIndex += 1000;
                 toIndex += 1000;
-            } while (customerKeywords.size() > fromIndex);
+            } while (addCustomerKeywords.size() > fromIndex);
         }
     }
 
@@ -310,6 +310,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(customerKeyword.getOptimizePlanCount() * (Math.random() * 0.7 + 0.5), 1));
             queryInterval = queryInterval / optimizeTodayCount;
             customerKeyword.setOptimizeTodayCount(optimizeTodayCount);
+            customerKeyword.setOptimizeRemainingCount(optimizeTodayCount);
         } else {
             if ("Important".equals(customerKeyword.getKeywordEffect())) {
                 Integer optimizePlanCount = Integer.valueOf(configService.getConfig("KeywordEffectOptimizePlanCount", "ImportantKeyword").getValue());
@@ -345,11 +346,16 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         if (!CustomerKeywordSourceEnum.Capture.name().equals(customerKeyword.getCustomerKeywordSource())) {
             String oldKeywordEffect = customerKeyword1.getKeywordEffect();
             String keywordEffect = customerKeyword.getKeywordEffect();
-            if (null != oldKeywordEffect) {
+            if (StringUtil.isNotNullNorEmpty(oldKeywordEffect)) {
                 if (!oldKeywordEffect.equals(keywordEffect)) {
-                    Map<String, Integer> levelMap = KeywordEffectEnum.toLevelMap();
-                    String newKeywordEffect = levelMap.get(oldKeywordEffect) < levelMap.get(keywordEffect) ? oldKeywordEffect : keywordEffect;
-                    customerKeyword.setKeywordEffect(newKeywordEffect);
+                    if ("Common".equals(oldKeywordEffect)) {
+                        customerKeyword.setKeywordEffect(keywordEffect);
+                    } else {
+                        Map<String, Integer> levelMap = KeywordEffectEnum.toLevelMap();
+                        Integer levelValue = levelMap.get(keywordEffect);
+                        String newKeywordEffect = levelMap.get(oldKeywordEffect) < (levelValue == null ? 4 : levelValue) ? oldKeywordEffect : keywordEffect;
+                        customerKeyword.setKeywordEffect(newKeywordEffect);
+                    }
                     customerKeyword.setUpdateTime(new Date());
                     customerKeywordDao.updateSameCustomerKeyword(customerKeyword);
                 }
@@ -362,8 +368,19 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public KeywordCountVO getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String terminalType) {
-        return customerKeywordDao.getCustomerKeywordsCountByCustomerUuid(customerUuid, terminalType);
+    public Map<String, Object> getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String type) {
+        Map<String, Object> map = null;
+        List<KeywordCountVO> keywordCountVos = customerKeywordDao.getCustomerKeywordsCountByCustomerUuid(customerUuid, type);
+        if (CollectionUtils.isNotEmpty(keywordCountVos)) {
+            map = new HashMap<>(3);
+            int totalCount = 0;
+            for (KeywordCountVO keywordCountVo : keywordCountVos) {
+                totalCount += keywordCountVo.getTotalCount();
+                map.put(keywordCountVo.getTerminalType(), keywordCountVo);
+            }
+            map.put("totalCount", totalCount);
+        }
+        return map;
     }
 
     @Override
@@ -454,6 +471,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             }
         }
         customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.UI.name());
+        customerKeyword.setKeywordEffect(KeywordEffectEnum.Important.name());
+        customerKeyword.setManualCleanTitle(true);
+        customerKeyword.setServiceProvider("baidutop123");
         addCustomerKeyword(customerKeyword, userName);
     }
 
@@ -477,6 +497,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(customerKeyword.getOptimizePlanCount() * (Math.random() * 0.7 + 0.5), 1));
             queryInterval = queryInterval / optimizeTodayCount;
             customerKeyword.setOptimizeTodayCount(optimizeTodayCount);
+            customerKeyword.setOptimizeRemainingCount(optimizeTodayCount);
         }
         customerKeyword.setQueryInterval(queryInterval);
         customerKeyword.setUpdateTime(new Date());
@@ -489,7 +510,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
 
-    //简化版Excel文件导入
+    /**
+     * 简化版Excel文件导入
+     */
     @Override
     public boolean handleExcel(InputStream inputStream, String excelType, int customerUuid, String type, String terminalType, String userName)
         throws Exception {
@@ -516,7 +539,24 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     private void addCustomerKeywords(List<CustomerKeyword> customerKeywords, String loginName) throws Exception {
         for (CustomerKeyword customerKeyword : customerKeywords) {
-            customerKeyword.setKeywordEffect("");
+            if (StringUtil.isNullOrEmpty(customerKeyword.getKeywordEffect())) {
+                customerKeyword.setKeywordEffect("Common");
+            } else {
+                switch (customerKeyword.getKeywordEffect().trim()) {
+                    case "曲线词":
+                        customerKeyword.setKeywordEffect(KeywordEffectEnum.Curve.name());
+                        break;
+                    case "指定词":
+                        customerKeyword.setKeywordEffect(KeywordEffectEnum.Appointment.name());
+                        break;
+                    case "赠送词":
+                        customerKeyword.setKeywordEffect("Present");
+                        break;
+                    default:
+                        customerKeyword.setKeywordEffect("Common");
+                        break;
+                }
+            }
             addCustomerKeyword(customerKeyword, loginName);
         }
     }
@@ -633,9 +673,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     @Override
     public Page<PTkeywordCountVO> searchPTKeywordCount(Page<PTkeywordCountVO> page, PTKeywordCountCriteria keywordCriteria) {
-        long startMilleSeconds = System.currentTimeMillis();
-        List<PTkeywordCountVO> ptkeywordCountVOS = customerKeywordDao.searchPTKeywordCount(page, keywordCriteria);
-        page.setRecords(ptkeywordCountVOS);
+        page.setRecords(customerKeywordDao.searchPTKeywordCount(page, keywordCriteria));
         return page;
     }
 
@@ -657,6 +695,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public void editCustomerOptimizePlanCount(Integer optimizePlanCount, String settingType, List<String> uuids) {
         customerKeywordDao.editCustomerOptimizePlanCount(optimizePlanCount, settingType, uuids);
+    }
+
+    @Override
+    public void updateSelectFailReason(KeywordCriteria keywordCriteria) {
+        customerKeywordDao.updateSelectFailReason(keywordCriteria);
     }
 }
 

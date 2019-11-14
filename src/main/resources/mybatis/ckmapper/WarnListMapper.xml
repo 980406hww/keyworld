@@ -17,9 +17,9 @@
 	<select id="searchWarnLists" parameterType="com.keymanager.ckadmin.criteria.WarnListCriteria" resultType="com.keymanager.ckadmin.entity.WarnList">
 		SELECT
 		<include refid="selectCol" />
-		FROM
-			t_warn_list n
+		FROM t_warn_list n
 		WHERE 1 = 1
+		<if test="warnListCriteria.init != null and warnListCriteria.init == 'init'">AND 1 != 1</if>
 		<if test="warnListCriteria.keyword != null and warnListCriteria.keyword != ''">AND n.fKeyword like '%${warnListCriteria.keyword}%'</if>
 		<if test="warnListCriteria.title != null and warnListCriteria.title != ''">AND n.fTitle  like  '%${warnListCriteria.title}%'</if>
 		<if test="warnListCriteria.url != null and warnListCriteria.url != ''">AND n.fUrl like '%${warnListCriteria.url}%'</if>

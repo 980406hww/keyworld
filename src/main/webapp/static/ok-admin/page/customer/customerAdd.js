@@ -4,13 +4,22 @@ let layui_ = null;
 function initForm(data) {
     uuid_ = data.uuid;
     document.getElementById('entryType').value = data.entryType;
+    if (data.entryType === 'qt'){
+        let se = document.getElementById('qtSpecialSearchEngine');
+        if (se) {
+            se.style.display = 'block';
+        }
+        let ea = document.getElementById('qtSpecialExternalAccount');
+        if (ea) {
+            ea.style.display = 'block';
+        }
+    }
     if (layui_ != null && uuid_ != null) {
         setForm(layui_, uuid_);
     }
 }
 
 function setForm(l, u) {
-    let $ = l.jquery;
     l.jquery.ajax({
         url: '/internal/customer/getCustomersMsgById/' + u,
         type: 'get',
@@ -22,7 +31,7 @@ function setForm(l, u) {
                     res.data['customerBusinessList[' + customerBusinessList[index] + ']'] = customerBusinessList[index];
                 }
                 l.form.val("addCustomer", res.data);
-
+                l.form.render("select");
             } else {
                 l.layer.msg(res.msg, {icon: 5, time: 3000});
             }
@@ -59,11 +68,17 @@ layui.use(["form", "common", "jquery", "layer"], function () {
             delete data.field['customerBusinessList[fm]'];
         }
 
+        if (data.field['customerBusinessList[qt]']) {
+            customerBusinessList.push(data.field['customerBusinessList[qt]']);
+            delete data.field['customerBusinessList[qt]'];
+        }
+
         data.field.customerBusinessList = customerBusinessList;
         data.field.customerBusinessStr = customerBusinessStr;
         if (!common.waitMoment()) {
             return false;
         }
+        console.log(data.field);
         $.ajax({
             url: '/internal/customer/saveCustomer2',
             type: 'post',
@@ -99,6 +114,16 @@ layui.use(["form", "common", "jquery", "layer"], function () {
         telPhone: [
             /(^$)|(^(13[0-9]|14[5-9]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[13589])\d{8}$)/,
             "请输入正确格式手机号码"
-        ]
+        ],
+        ifQtNotNull: function (value) {
+            if (document.getElementById('entryType').value === 'qt') {
+                if (value && value.trim()) {
+                    return '';
+                }else {
+                    return '必填项不允许为空';
+                }
+            }
+            return '';
+        }
     });
 });

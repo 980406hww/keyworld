@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>关键字统计</title>
+    <title>关键字列表</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
@@ -34,6 +34,18 @@
 
         .layui-table-tool-self{
             top: 0;
+        }
+
+        .one-special .layui-form-checkbox{
+            margin: 0 !important;
+        }
+
+        .layui-table-body .laytable-cell-1-0-14, .layui-table-body .laytable-cell-6-0-14, .layui-table-body .laytable-cell-11-0-14,
+        .layui-table-body .laytable-cell-2-0-14, .layui-table-body .laytable-cell-7-0-14, .layui-table-body .laytable-cell-12-0-14,
+        .layui-table-body .laytable-cell-3-0-14, .layui-table-body .laytable-cell-8-0-14, .layui-table-body .laytable-cell-13-0-14,
+        .layui-table-body .laytable-cell-4-0-14, .layui-table-body .laytable-cell-9-0-14, .layui-table-body .laytable-cell-14-0-14,
+        .layui-table-body .laytable-cell-5-0-14, .layui-table-body .laytable-cell-10-0-14, .layui-table-body .laytable-cell-15-0-14 {
+            padding: 0 9px !important;
         }
     </style>
 </head>
@@ -70,9 +82,11 @@
                                                value="<#if group?exists>${group}</#if>" class="layui-input layui-input-text"
                                                onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                     </div>
+                                    <div class="layui-inline one-special">
+                                        <input type="checkbox" name="optimizeGroupNameLike" value="on" title="模糊搜索">
+                                    </div>
                                     <div class="layui-inline" style="width: 140px">
-                                        <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off"
-                                               class="layui-input layui-input-text "
+                                        <input type="text" name="url" id="url" placeholder="请输入域名" autocomplete="off" class="layui-input"
                                                onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                     </div>
                                     <div class="layui-inline" style="width: 135px">
@@ -130,9 +144,10 @@
 
                                     <div class="layui-form-item" lay-filter="loginNameFilter">
                                         <div class="layui-inline">
-                                            <label class="layui-form-label">链接</label>
+                                            <label class="layui-form-label">机器分组</label>
                                             <div class="layui-input-inline">
-                                                <input type="text" name="url" id="url" placeholder="请输入链接" autocomplete="off" class="layui-input"
+                                                <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off"
+                                                       class="layui-input layui-input-text "
                                                        onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                             </div>
                                         </div>
@@ -156,7 +171,7 @@
                                             <label class="layui-form-label">失败原因</label>
                                             <div class="layui-input-inline">
                                                 <select name="failedCause" id="failedCause">
-                                                    <option value="" selected="selected">请选择失败原因</option>
+                                                    <option value="" selected="selected">失败原因</option>
                                                     <option value="爬取中">爬取中</option>
                                                     <option value="关键字未收录">关键字未收录</option>
                                                     <option value="标题无法操作">标题无法操作</option>
@@ -247,6 +262,7 @@
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
     let qzBusiness = '<#if businessType?exists>${businessType}</#if>';
     let searchEngine = '<#if searchEngine?exists>${searchEngine}</#if>';

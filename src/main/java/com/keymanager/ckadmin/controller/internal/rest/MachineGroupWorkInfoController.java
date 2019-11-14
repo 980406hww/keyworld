@@ -44,7 +44,7 @@ public class MachineGroupWorkInfoController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/machinegroupworkinfo/searchMachineGroupWorkInfos")
+    @RequiresPermissions("/internal/machinegroupstatistics/toMachineGroupStatistics")
     @RequestMapping(value = "/searchMachineGroupWorkInfos", method = RequestMethod.POST)
     public ResultBean searchMachineGroupWorkInfosPost(@RequestBody MachineGroupWorkInfoCriteria criteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();

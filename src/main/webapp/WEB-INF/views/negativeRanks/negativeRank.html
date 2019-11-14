@@ -112,6 +112,7 @@
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 
 <script>
     var sign = false;
@@ -134,7 +135,6 @@
         });
 
         init_search_data();
-        init_table_data(common.formToJsonObject('searchForm'));
 
         function init_search_data() {
             $.ajax({
@@ -149,7 +149,7 @@
                         let keywordData = res.data;
                         let keyword_list = $('#keyword');
                         keyword_list.empty();
-                        keyword_list.append('<option value="">请选择关键字</option>');
+                        keyword_list.append('<option value="">关键字</option>');
                         $.each(keywordData, function (index, item) {
                             keyword_list.append('<option value="' + item + '">' + item + '</option>');
                         });
@@ -171,6 +171,7 @@
                 method: 'post',
                 url: '/internal/negativeRank/getNegativeRanks',
                 limit: 50,
+                limits: [25, 50, 100, 500, 1000],
                 page: true,
                 autoSort: false,
                 size: 'sm',
@@ -223,8 +224,7 @@
             }
         });
 
-
-            function updateNegativeRank(uuid, rankType, oldValue) {
+        function updateNegativeRank(uuid, rankType, oldValue) {
             let tit = '';
             switch (rankType) {
                 case 'firstPageRanks':
@@ -289,38 +289,35 @@
 
         let active = {
             reload: function () {
-                let data = common.formToJsonObject('searchForm');
-                data.entryType = 'pt';
-                table.reload('keywordTable', {
-                    where: data,
-                    page: {
-                        curr: 1
-                    }
-                });
-            },
+                if (table.index >= 1)  {
+                    let data = common.formToJsonObject('searchForm');
+                    data.entryType = 'pt';
+                    table.reload('keywordTable', {
+                        where: data,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
+            }
         };
 
         form.on("submit(search)", function (data) {
             let postData = data.field;
-            postData = common.jsonObjectTrim(postData)
-            table.reload('negativeRankTable', {
-                where: postData,
-                page: {
-                    curr: 1
-                }
-            });
+            postData = common.jsonObjectTrim(postData);
+            init_table_data(postData);
             return false
         });
 
-
-
-
+        init_table_data({init: 'init'});
     });
 
 </script>
 <!--模板-->
 <script type="text/html" id="toDateTime">
-    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+    {{#  if(d.createTime){ }}
+    {{ layui.util.toDateString(d.createTime,'yyyy-MM-dd') }}
+    {{#  } }}
 </script>
 
 </body>

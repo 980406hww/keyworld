@@ -123,7 +123,11 @@
             text-align: center;
         }
 
-        .layui-table-body .laytable-cell-1-0-13 {
+        .layui-table-body .laytable-cell-1-0-13, .layui-table-body .laytable-cell-6-0-13, .layui-table-body .laytable-cell-11-0-13,
+        .layui-table-body .laytable-cell-2-0-13, .layui-table-body .laytable-cell-7-0-13, .layui-table-body .laytable-cell-12-0-13,
+        .layui-table-body .laytable-cell-3-0-13, .layui-table-body .laytable-cell-8-0-13, .layui-table-body .laytable-cell-13-0-13,
+        .layui-table-body .laytable-cell-4-0-13, .layui-table-body .laytable-cell-9-0-13, .layui-table-body .laytable-cell-14-0-13,
+        .layui-table-body .laytable-cell-5-0-13, .layui-table-body .laytable-cell-10-0-13, .layui-table-body .laytable-cell-15-0-13 {
             text-align: center;
         }
 
@@ -182,6 +186,7 @@
 <!--js逻辑-->
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script src="/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
     // 进度条加载提示
     NProgress.start();
@@ -200,13 +205,6 @@
         var layer = layui.layer;
         var okLayer = layui.okLayer;
         var common = layui.common;
-
-        init();
-
-        function init() {
-            let condition = common.formToJsonObject("searchForm");
-            tableInit(condition);
-        }
 
         function tableInit(condition) {
             table.render({
@@ -324,13 +322,15 @@
         // 监听工具条
         var active = {
             reload: function () {
-                let condition = common.formToJsonObject("searchForm");
-                table.reload('supplierTable', {
-                    where: condition,
-                    page: {
-                        curr: 1
-                    }
-                });
+                if (table.index >= 1) {
+                    let condition = common.formToJsonObject("searchForm");
+                    table.reload('supplierTable', {
+                        where: condition,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
             }
         };
 
@@ -431,14 +431,11 @@
         form.on("submit(search)", function (data) {
             let condition = data.field;
             condition = common.jsonObjectTrim(condition);
-            table.reload('supplierTable', {
-                where: condition,
-                page: {
-                    curr: 1
-                }
-            });
+            tableInit(condition);
             return false;
         });
+
+        tableInit({init: 'init'});
     });
 </script>
 </body>

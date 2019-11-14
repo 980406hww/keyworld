@@ -1,7 +1,7 @@
 package com.keymanager.monitoring.enums;
 
 public enum EntryTypeEnum {
-	bc,
+	qt,
 	pt,
 	fm,
 	qz;

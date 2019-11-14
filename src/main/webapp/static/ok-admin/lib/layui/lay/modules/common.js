@@ -51,6 +51,13 @@ layui.define(['jquery', 'layer', 'okTab'], function (exports) {
             });
         },
         updateOrNewTab: function (url, tit, id) {
+            var needTab = window.localStorage.getItem("needTab");
+            if (needTab !== 'need') {
+                let _this = document.createElement('DIV');
+                _this.dataset.url = url;
+                okTab.tabAdd($(_this), tit);
+                return;
+            }
             var update = false;
             var contentIframe = ("<iframe src='" + url + "' lay-id='" + id + "'frameborder='0' scrolling='yes' width='100%' height='100%'></iframe>");
             parent.layui.$('.layui-tab-title li').each(function () {

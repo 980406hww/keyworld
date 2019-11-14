@@ -128,6 +128,10 @@ function getMainKeyword(uuid) {
     $.ajax({
         url: '/internal/complaints/findTSMainKeywordById/' + uuid,
         type: 'Get',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
         success: function (tsMainKeyword) {
             if (tsMainKeyword != null ) {
                 initMainKeywordDialog(tsMainKeyword);

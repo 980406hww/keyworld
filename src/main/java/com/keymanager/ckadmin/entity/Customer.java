@@ -17,8 +17,8 @@ public class Customer extends BaseEntity {
     @TableField(value = "fExternalAccount")
     private String externalAccount;
 
-//    @TableField(value = "fSearchEngine")
-//    private String searchEngine;
+    @TableField(value = "fSearchEngine")
+    private String searchEngine;
 
     @TableField(value = "fEntryType")
     private String entryType;
@@ -30,9 +30,6 @@ public class Customer extends BaseEntity {
     @Pattern(regexp = "()|(^[1-9]\\d{4,14}$)", message = "QQ号格式不符")
     @TableField(value = "fQQ")
     private String qq;
-
-    @TableField(value = "fWechat")
-    private String wechat;
 
     @TableField(value = "fEmail")
     private String email;
@@ -66,6 +63,9 @@ public class Customer extends BaseEntity {
     private String type;
 
     @TableField(exist = false)
+    private String userName;
+
+    @TableField(exist = false)
     private int keywordCount;
 
     @TableField(exist = false)
@@ -79,6 +79,14 @@ public class Customer extends BaseEntity {
 
     @TableField(exist = false)
     private List<String> customerBusinessList;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public String getLoginName() {
         return loginName;
@@ -96,13 +104,13 @@ public class Customer extends BaseEntity {
         this.externalAccount = externalAccount;
     }
 
-//    public String getSearchEngine() {
-//        return searchEngine;
-//    }
-//
-//    public void setSearchEngine(String searchEngine) {
-//        this.searchEngine = searchEngine;
-//    }
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
+    }
 
     public String getEntryType() {
         return entryType;
@@ -126,14 +134,6 @@ public class Customer extends BaseEntity {
 
     public void setQq(String qq) {
         this.qq = qq;
-    }
-
-    public String getWechat() {
-        return wechat;
-    }
-
-    public void setWechat(String wechat) {
-        this.wechat = wechat;
     }
 
     public String getEmail() {

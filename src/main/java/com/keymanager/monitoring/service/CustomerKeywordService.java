@@ -170,8 +170,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     break;
                 }
             }
-            customerKeywordDao.batchUpdateOptimizedCountFromCache(updateOptimizedCountSimpleVOMap.values());
-            machineInfoService.updateOptimizationResultFromCache(updateOptimizedCountVOMap.values());
+            if(updateOptimizedCountSimpleVOMap.size() > 0) {
+                customerKeywordDao.batchUpdateOptimizedCountFromCache(updateOptimizedCountSimpleVOMap.values());
+            }
+            if(updateOptimizedCountVOMap.size() > 0) {
+                machineInfoService.updateOptimizationResultFromCache(updateOptimizedCountVOMap.values());
+            }
             times++;
         } while (times < 20 && updateOptimizedResultQueue.size() > 100 && !queueEmptied);
     }
@@ -712,6 +716,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(customerKeyword.getOptimizePlanCount() * (Math.random() * 0.7 + 0.5), 1));
             queryInterval = queryInterval / optimizeTodayCount;
             customerKeyword.setOptimizeTodayCount(optimizeTodayCount);
+            customerKeyword.setOptimizeRemainingCount(optimizeTodayCount);
         }
         customerKeyword.setQueryInterval(queryInterval);
         customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
@@ -738,6 +743,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(customerKeyword.getOptimizePlanCount() * (Math.random() * 0.7 + 0.5), 1));
             queryInterval = queryInterval / optimizeTodayCount;
             customerKeyword.setOptimizeTodayCount(optimizeTodayCount);
+            customerKeyword.setOptimizeRemainingCount(optimizeTodayCount);
         }
         customerKeyword.setQueryInterval(queryInterval);
         customerKeyword.setUpdateTime(new Date());
@@ -827,27 +833,28 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         List<CustomerKeyword> customerKeywords = customerKeywordDao.searchCustomerKeywordsForUpdateIndex(baiduIndexCriteria.getKeyword());
         if (CollectionUtils.isNotEmpty(customerKeywords)) {
             for (CustomerKeyword customerKeyword : customerKeywords) {
+                int optimizePlanCount;
                 if (TerminalTypeEnum.PC.name().equals(customerKeyword.getTerminalType())) {
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPcIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPcIndex());
                     if (EntryTypeEnum.qz.name().equals(customerKeyword.getType())) {
-                        customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPcIndex() == 0 ? 5 : baiduIndexCriteria.getPcIndex());
-                        customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPcIndex() == 0 ? 5 : baiduIndexCriteria.getPcIndex());
+                        optimizePlanCount = baiduIndexCriteria.getPcIndex() == 0 ? 5 : baiduIndexCriteria.getPcIndex();
                     } else {
-                        customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
-                        customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPcIndex() < 100 ? 100 : baiduIndexCriteria.getPcIndex());
+                        optimizePlanCount = (int) Math.floor(Utils.getRoundValue(baiduIndexCriteria.getPcIndex() * 1.0 / 100, 1));
+                        optimizePlanCount = (optimizePlanCount < 101 ? optimizePlanCount : 100) * 4 + 50;
                     }
                 } else {
                     customerKeyword.setInitialIndexCount(baiduIndexCriteria.getPhoneIndex());
                     customerKeyword.setCurrentIndexCount(baiduIndexCriteria.getPhoneIndex());
                     if (EntryTypeEnum.qz.name().equals(customerKeyword.getType())) {
-                        customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPhoneIndex() == 0 ? 5 : baiduIndexCriteria.getPhoneIndex());
-                        customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPhoneIndex() == 0 ? 5 : baiduIndexCriteria.getPhoneIndex());
+                        optimizePlanCount = baiduIndexCriteria.getPhoneIndex() == 0 ? 5 : baiduIndexCriteria.getPhoneIndex();
                     } else {
-                        customerKeyword.setOptimizePlanCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
-                        customerKeyword.setOptimizeRemainingCount(baiduIndexCriteria.getPhoneIndex() < 100 ? 100 : baiduIndexCriteria.getPhoneIndex());
+                        optimizePlanCount = (int) Math.floor(Utils.getRoundValue(baiduIndexCriteria.getPcIndex() * 1.0 / 100, 1));
+                        optimizePlanCount = (optimizePlanCount < 101 ? optimizePlanCount : 100) * 4 + 50;
                     }
                 }
+                customerKeyword.setOptimizePlanCount(optimizePlanCount);
+                customerKeyword.setOptimizeRemainingCount(optimizePlanCount);
                 calculatePrice(customerKeyword);
                 customerKeyword.setUpdateTime(new Date());
                 customerKeywordDao.updateCustomerKeywordIndex(customerKeyword);
@@ -1038,7 +1045,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     private void addCustomerKeywords(List<CustomerKeyword> customerKeywords, String loginName) throws Exception {
         for (CustomerKeyword customerKeyword : customerKeywords) {
-            if (customerKeyword.getKeywordEffect() == null || customerKeyword.getKeywordEffect().equals("")) {
+            if (StringUtil.isNullOrEmpty(customerKeyword.getKeywordEffect())) {
                 customerKeyword.setKeywordEffect(KeywordEffectEnum.Common.name());
             } else {
                 switch (customerKeyword.getKeywordEffect().trim()) {
@@ -1585,20 +1592,16 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void adjustOptimizationCount() {
-        List<Map> bcCustomerKeywordSummaries = customerKeywordDao.searchKeywordsForAdjustingOptimizationCount("bc");
+        List<Map> bcCustomerKeywordSummaries = customerKeywordDao.searchKeywordsForAdjustingOptimizationCount("qt");
 //        List<Map> ptCustomerKeywordSummaries = customerKeywordDao.searchKeywordsForAdjustingOptimizationCount("pt");
 //        bcCustomerKeywordSummaries.addAll(ptCustomerKeywordSummaries);
         if (CollectionUtils.isNotEmpty(bcCustomerKeywordSummaries)) {
             for (Map customerKeywordSummaryMap : bcCustomerKeywordSummaries) {
                 Long uuid = Long.parseLong(customerKeywordSummaryMap.get("uuid").toString());
-                int currentIndexCount = (Integer) customerKeywordSummaryMap.get("currentIndexCount");
+                int optimizeTodayCount = (Integer) customerKeywordSummaryMap.get("optimizeTodayCount");
                 Integer positionFirstFee = (Integer) customerKeywordSummaryMap.get("positionFirstFee");
                 String positionStr = (String) customerKeywordSummaryMap.get("positions");
                 String[] positionArray = positionStr.split(",");
-                int optimizationPlanCount = currentIndexCount < 100 ? 150 : currentIndexCount;
-                if (positionFirstFee != null && positionFirstFee > 0) {
-                    optimizationPlanCount = (optimizationPlanCount + positionFirstFee * 4) / 2;
-                }
                 if (positionArray.length == 3) {
                     boolean lessFifth = true;
                     for (String position : positionArray) {
@@ -1609,12 +1612,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                         }
                     }
                     if (lessFifth) {
-                        optimizationPlanCount = 20 + currentIndexCount / 50;
+                        int resetOptimizeTodayCount = 20 + optimizeTodayCount / 50;;
+                        int queryInterval = (24 * 60 * 60) / resetOptimizeTodayCount;
+                        customerKeywordDao.adjustOptimizePlanCount(uuid, queryInterval, resetOptimizeTodayCount);
                     }
                 }
-                int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(optimizationPlanCount * (Math.random() * 0.7 + 0.5), 1));
-                int queryInterval = (24 * 60 * 60) / optimizeTodayCount;
-                customerKeywordDao.adjustOptimizePlanCount(uuid, optimizationPlanCount, queryInterval, optimizeTodayCount);
             }
         }
         customerKeywordDao.updateOptimizePlanCountForBaiduMap();
@@ -1882,7 +1884,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
 
         Config otherMaxInvalidCountConfig = configService.getConfig(Constants.CONFIG_KEY_MAX_INVALID_COUNT, "all");
-        groupNames = customerKeywordDao.fetchOptimizationCompletedGroupNames("'pt','qz', 'bc'", Integer.parseInt(otherMaxInvalidCountConfig.getValue()));
+        groupNames = customerKeywordDao.fetchOptimizationCompletedGroupNames("'pt','qz', 'qt'", Integer.parseInt(otherMaxInvalidCountConfig.getValue()));
         if (CollectionUtils.isNotEmpty(groupNames)) {
             updateRemainingKeywordIndicator(groupNames);
         }

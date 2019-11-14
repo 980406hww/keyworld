@@ -46,6 +46,7 @@
           <include refid="negativeRankSQL"/>
         FROM t_negative_rank as tnr
         where 1 = 1
+        <if test="negativeRankCriteria.init != null and negativeRankCriteria.init == 'init'">AND 1 != 1</if>
         <if test="negativeRankCriteria.keyword != null and negativeRankCriteria.keyword != ''">AND tnr.fKeyword LIKE '%${negativeRankCriteria.keyword}%'</if>
         <if test="negativeRankCriteria.searchEngine != null and negativeRankCriteria.searchEngine != ''">AND tnr.fSearchEngine = #{negativeRankCriteria.searchEngine}</if>
         <if test="negativeRankCriteria.createTime != null and negativeRankCriteria.createTime != ''">AND DATE_FORMAT(tnr.fCreateTime,'%Y-%m-%d') = #{negativeRankCriteria.createTime}</if>

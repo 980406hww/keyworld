@@ -17,8 +17,6 @@ import com.keymanager.ckadmin.vo.MachineInfoSummaryVO;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -547,8 +545,7 @@ public class MachineInfoController extends SpringMVCBaseController {
             if (!switchGroups.contains("DepartmentManager")) {
                 machineInfoCriteria.setSwitchGroups(switchGroups);
             }
-            performanceService
-                .addPerformanceLog(machineInfoCriteria.getTerminalType() + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
+            performanceService.addPerformanceLog(machineInfoCriteria.getTerminalType() + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
             page = machineInfoService.searchMachineInfos(page, machineInfoCriteria, true);
             List<MachineInfo> machineInfos = page.getRecords();
             resultBean.setCode(0);
@@ -654,11 +651,9 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/searchMachineInfos")
     @RequestMapping(value = "/toMachineInfoFromATP/{terminalType}/{machineGroup}", method = RequestMethod.GET)
-    public ModelAndView toMachineInfoFromATP(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "machineGroup") String machineGroup)
-        throws UnsupportedEncodingException {
+    public ModelAndView toMachineInfoFromATP(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "machineGroup") String machineGroup) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/machineManage");
-        machineGroup = URLDecoder.decode(machineGroup, "UTF-8");
         mv.addObject("machineGroupFromATP", machineGroup);
         mv.addObject("terminalTypeFromATP", terminalType);
         return mv;
@@ -692,8 +687,8 @@ public class MachineInfoController extends SpringMVCBaseController {
             String clientIDPrefix = map.get("clientIDPrefix");
             String city = map.get("city");
             String switchGroupName = map.get("switchGroupName");
-            List<MachineInfoSummaryVO> machineInfoSummaryVOs = machineInfoService.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName);
-            resultBean.setData(machineInfoSummaryVOs);
+            String init = map.get("init");
+            resultBean.setData(machineInfoService.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName, init));
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

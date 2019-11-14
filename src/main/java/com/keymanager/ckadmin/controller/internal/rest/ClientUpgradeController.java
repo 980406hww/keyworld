@@ -32,7 +32,7 @@ public class ClientUpgradeController {
     @Resource(name = "clientUpgradeService2")
     private ClientUpgradeService clientUpgradeService;
 
-    @RequiresPermissions("/internal/clientUpgrade/searchClientUpgrades")
+    @RequiresPermissions("/internal/clientUpgrade/toClientUpgrades2")
     @RequestMapping(value = "/toClientUpgrades2", method = RequestMethod.GET)
     public ModelAndView toClientUpgrades2() {
         ModelAndView mv = new ModelAndView();
@@ -40,7 +40,7 @@ public class ClientUpgradeController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/clientUpgrade/searchClientUpgrades")
+    @RequiresPermissions("/internal/clientUpgrade/toClientUpgrades2")
     @RequestMapping(value = "/getClientUpgrades2")
     public ResultBean getClientUpgrades2(@RequestBody ClientUpgradeCriteria clientUpgradeCriteria){
         ResultBean resultBean = new ResultBean();

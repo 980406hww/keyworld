@@ -31,8 +31,6 @@ import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.webDo.KeywordCountDO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.util.TerminalTypeMapping;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -45,6 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -116,7 +115,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @RequiresPermissions("/internal/customerKeyword/toKeywords")
     @GetMapping(value = "/toKeywords")
     public ModelAndView toCustomers() {
         ModelAndView mv = new ModelAndView();
@@ -130,10 +129,10 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean();
         try {
             Set<String> roles = getCurrentUser().getRoles();
-            if(!roles.contains("DepartmentManager")) {
+            if (!roles.contains("DepartmentManager")) {
                 keywordCriteria.setUserName((String) request.getSession().getAttribute("username"));
             }
-            Page<CustomerKeyword> page = new Page(keywordCriteria.getPage(), keywordCriteria.getLimit());
+            Page<CustomerKeyword> page = new Page<>(keywordCriteria.getPage(), keywordCriteria.getLimit());
             String orderByField = ReflectUtils.getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {
                 page.setOrderByField(orderByField);
@@ -158,12 +157,12 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordStatus")
     @PostMapping(value = "/changeCustomerKeywordStatus2")
-    public ResultBean changeCustomerKeywordStatus(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+    public ResultBean changeCustomerKeywordStatus(@RequestBody Map<String, Object> requestMap) {
         try {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
             String customerUuid = (String) requestMap.get("customerUuid");
             String entryType = (String) requestMap.get("entryType");
             String status = (String) requestMap.get("status");
+            String terminalType = (String) requestMap.get("terminalType");
             customerKeywordService.changeCustomerKeywordStatus(terminalType, entryType, Long.parseLong(customerUuid), Integer.parseInt(status));
             return new ResultBean(200, "success");
         } catch (Exception e) {
@@ -175,15 +174,11 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     /**
      * 根据用户id获取关键字统计信息
      */
-    @GetMapping("/getCustomerKeywordsCount/{customerUuid}")
-    public ResultBean getCustomerKeywordsCount(@PathVariable Long customerUuid, HttpServletRequest request) {
-        ResultBean resultBean = new ResultBean();
+    @GetMapping("/getCustomerKeywordsCount/{customerUuid}/{type}")
+    public ResultBean getCustomerKeywordsCount(@PathVariable Long customerUuid, @PathVariable String type, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
         try {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
-            KeywordCountVO keywordCountVO = customerKeywordService.getCustomerKeywordsCountByCustomerUuid(customerUuid, terminalType);
-            resultBean.setCode(200);
-            resultBean.setMsg("success");
-            resultBean.setData(keywordCountVO);
+            resultBean.setData(customerKeywordService.getCustomerKeywordsCountByCustomerUuid(customerUuid, type));
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
@@ -322,7 +317,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @RequiresPermissions("/internal/customerKeyword/toCustomerKeywords")
     @GetMapping(value = "/toCustomerKeywords/{businessType}/{terminalType}/{customerUuid}")
     public ModelAndView toCustomerKeywords(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
         @PathVariable(name = "customerUuid") Long customerUuid) {
@@ -337,12 +332,12 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @RequiresPermissions("/internal/customerKeyword/toKeywords")
     @PostMapping(value = "/getCustomerKeywords")
     public ResultBean searchCustomerKeywords(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         try {
-            Page<CustomerKeyword> page = new Page(keywordCriteria.getPage(), keywordCriteria.getLimit());
+            Page<CustomerKeyword> page = new Page<>(keywordCriteria.getPage(), keywordCriteria.getLimit());
             String orderByField = ReflectUtils
                 .getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {
@@ -389,7 +384,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception ex) {
             logger.error(ex.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("fail");
+            resultBean.setMsg(ex.getMessage());
             return resultBean;
         }
     }
@@ -422,15 +417,16 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         return mv;
     }
 
-    //关键字Excel上传(简化版)
+    /**
+     * 关键字Excel上传(简化版)
+     */
     @RequiresPermissions("/internal/customerKeyword/uploadCustomerKeywords")
     @PostMapping(value = "/uploadCustomerKeywords2")
     public ResultBean uploadCustomerKeywords(KeywordCountDO keywordCountDO, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");
         String userName = (String) request.getSession().getAttribute("username");
         try {
-            boolean uploaded = customerKeywordService
-                .handleExcel(keywordCountDO.getFile().getInputStream(), keywordCountDO.getExcelType(), keywordCountDO.getCustomerUuid(),
+            boolean uploaded = customerKeywordService.handleExcel(keywordCountDO.getFile().getInputStream(), keywordCountDO.getExcelType(), keywordCountDO.getCustomerUuid(),
                     keywordCountDO.getEntryType(), keywordCountDO.getTerminalType(), userName);
             if (uploaded) {
                 resultBean.setMsg("文件上传成功");
@@ -441,7 +437,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }
@@ -614,7 +610,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("fail");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }
@@ -659,7 +655,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     public ResultBean getPTKeywords(@RequestBody PTKeywordCountCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         try {
-            Page<PTkeywordCountVO> page = new Page(keywordCriteria.getPage(), keywordCriteria.getLimit());
+            Page<PTkeywordCountVO> page = new Page<>(keywordCriteria.getPage(), keywordCriteria.getLimit());
             String orderByField = ReflectUtils.getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {
                 page.setOrderByField(orderByField);
@@ -686,21 +682,20 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     @GetMapping(value = "/toKeywordsFromPT/{businessType}/{terminalType}/{searchEngine}/{belongUser}/{keyword}")
     public ModelAndView toKeywords(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
         @PathVariable(name = "searchEngine") String searchEngine, @PathVariable(name = "belongUser") String belongUser,
-        @PathVariable(name = "keyword") String keyword) throws UnsupportedEncodingException {
+        @PathVariable(name = "keyword") String keyword) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/keyword");
         mv.addObject("businessType", businessType);
         //取名叫terminalType会与session中存在的terminalType同名，值会被覆盖成session中的值
         mv.addObject("terminalType2", terminalType);
-        searchEngine = URLDecoder.decode(searchEngine, "UTF-8");
-        keyword = URLDecoder.decode(keyword, "UTF-8");
         if (!("null").equals(searchEngine)) {
-            mv.addObject("se123", searchEngine);
+            mv.addObject("SearchEngine", searchEngine);
         }
         if (!("null").equals(belongUser)) {
             mv.addObject("belongUser", belongUser);
         }
-        mv.addObject("kw123", keyword);
+        mv.addObject("Keyword", keyword);
+        mv.addObject("notLike", "1");
         return mv;
     }
 
@@ -709,23 +704,24 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     public ModelAndView toKeywordsWithPosition(@PathVariable(name = "businessType") String businessType,
         @PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "searchEngine") String searchEngine,
         @PathVariable(name = "belongUser") String belongUser,
-        @PathVariable(name = "keyword") String keyword, @PathVariable(name = "position") Integer position) throws UnsupportedEncodingException {
+        @PathVariable(name = "keyword") String keyword, @PathVariable(name = "position") Integer position) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/keyword");
         mv.addObject("businessType", businessType);
         //取名叫terminalType会与session中存在的terminalType同名，值会被覆盖成session中的值
         mv.addObject("terminalType2", terminalType);
-        keyword = URLDecoder.decode(keyword, "UTF-8");
-        mv.addObject("kw123", keyword);
-        mv.addObject("pst123", position);
+        mv.addObject("Keyword", keyword);
+        mv.addObject("ltPosition", position);
+        mv.addObject("gtPosition", "1");
         return mv;
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
     @GetMapping(value = "/toKeywordsWithQZ/{businessType}/{terminalType}/{customerUuid}/{group}/{searchEngine}/{status}")
     public ModelAndView toKeywordsWithQZ(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "group") String group, @PathVariable(name = "searchEngine") String searchEngine,
-        @PathVariable(name = "status") int status) throws UnsupportedEncodingException {
+        @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "group") String group,
+        @PathVariable(name = "searchEngine") String searchEngine,
+        @PathVariable(name = "status") int status) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/customerKeyword");
         mv.addObject("businessType", businessType);
@@ -733,7 +729,6 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         mv.addObject("customerUuid", customerUuid);
         mv.addObject("group", group);
         mv.addObject("status", status);
-        searchEngine = URLDecoder.decode(searchEngine, "UTF-8");
         mv.addObject("searchEngine", searchEngine);
         return mv;
     }
@@ -783,7 +778,9 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             if (customerUuid != null) {
                 String terminalType = (String) requestMap.get("terminalType");
                 String entryType = (String) requestMap.get("entryType");
-                customerKeywordService.editOptimizePlanCountByCustomerUuid(terminalType, entryType, Long.parseLong(customerUuid), Integer.parseInt(optimizePlanCount), settingType);
+                customerKeywordService
+                    .editOptimizePlanCountByCustomerUuid(terminalType, entryType, Long.parseLong(customerUuid), Integer.parseInt(optimizePlanCount),
+                        settingType);
             } else {
                 customerKeywordService.editCustomerOptimizePlanCount(Integer.parseInt(optimizePlanCount), settingType, uuids);
             }
@@ -793,5 +790,63 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             resultBean.setCode(400);
         }
         return resultBean;
+    }
+
+    @RequiresRoles("Operation")
+    @PostMapping(value = "/clearFailReason")
+    public ResultBean clearFailReason(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            String userName = (String) request.getSession().getAttribute("username");
+            boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+            if (!isDepartmentManager) {
+                keywordCriteria.setUserName(userName);
+            }
+            if ((keywordCriteria.getUuids() == null || keywordCriteria.getUuids().isEmpty()) && (keywordCriteria.getCustomerUuid() == null)) {
+                return resultBean;
+            }
+            customerKeywordService.updateSelectFailReason(keywordCriteria);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/toKeywordsFromRS/{businessType}/{terminalType}/{group}/{irc}")
+    public ModelAndView toKeywordsFromRS(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
+        @PathVariable(name = "group") String group, @PathVariable(name = "irc") String irc) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/keyword");
+        mv.addObject("businessType", businessType);
+        mv.addObject("terminalType2", terminalType);
+        mv.addObject("status", "1");
+        if (!("null").equals(group)) {
+            mv.addObject("groupTmp", group);
+        }
+        if (!("null").equals(irc)) {
+            mv.addObject("irc", irc);
+        }
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/toKeywordsFromMGS/{businessType}/{terminalType}/{machineGroup}/{irc}")
+    public ModelAndView toKeywordsFromMGS(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
+        @PathVariable(name = "machineGroup") String machineGroup, @PathVariable(name = "irc") String irc) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/keyword");
+        mv.addObject("businessType", businessType);
+        mv.addObject("terminalType2", terminalType);
+        mv.addObject("status", "1");
+        if (!("null").equals(machineGroup)) {
+            mv.addObject("machineGroupTmp", machineGroup);
+        }
+        if (!("null").equals(irc)) {
+            mv.addObject("irc", irc);
+        }
+        return mv;
     }
 }

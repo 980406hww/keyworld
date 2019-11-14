@@ -185,7 +185,7 @@ function getScreenedWebsite(uuid, callback) {
         url: '/internal/screenedWebsite/getScreenedWebsite/' + uuid,
         type: 'Get',
         success: function (screenedWebsite) {
-            callback(screenedWebsite);
+            callback(JSON.parse(screenedWebsite));
         },
         error: function () {
             $().toastmessage('showErrorToast', "获取信息失败");
@@ -220,11 +220,11 @@ function delScreenedWebsite(uuid, optimizeGroupName) {
         }
     });
 }
-function initScreenedWebsiteDialog(screenedWebsite) {
+function initScreenedWebsiteDialog(obj) {
     var screenedWebsiteForm = $("#screenedWebsiteForm");
-    screenedWebsiteForm.find("#uuid").val(screenedWebsite.uuid);
-    screenedWebsiteForm.find("#optimizeGroupName").val(screenedWebsite.optimizeGroupName);
-    screenedWebsiteForm.find("#screenedWebsite").val(screenedWebsite.screenedWebsite.replace(/[,]/g, "\n"));
+    screenedWebsiteForm.find("#uuid").val(obj.uuid);
+    screenedWebsiteForm.find("#optimizeGroupName").val(obj.optimizeGroupName);
+    screenedWebsiteForm.find("#screenedWebsite").val(obj.screenedWebsite.replace(/[,]/g, "\n"));
 }
 function changePaging(currentPage, pageSize) {
     var searchScreenedWebsiteForm = $("#searchScreenedWebsiteForm");

@@ -8,16 +8,17 @@ package com.keymanager.ckadmin.vo;
  * @Version 1.0
  */
 public class KeywordCountVO {
-    private Long customerUuid;
+
+    private String terminalType;
     private Integer totalCount;
     private Integer activeCount;
 
-    public Long getCustomerUuid() {
-        return customerUuid;
+    public String getTerminalType() {
+        return terminalType;
     }
 
-    public void setCustomerUuid(Long customerUuid) {
-        this.customerUuid = customerUuid;
+    public void setTerminalType(String terminalType) {
+        this.terminalType = terminalType;
     }
 
     public Integer getTotalCount() {

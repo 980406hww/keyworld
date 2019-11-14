@@ -7,6 +7,19 @@
     <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
     <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
     <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+
         /* 下拉条件框 */
         .my-collapse {
             position: relative;
@@ -138,7 +151,7 @@
                                     </div>
                                     <div class="layui-inline">
                                         <select name="dayNum">
-                                            <option value="">请选择历史记录</option>
+                                            <option value="">历史记录</option>
                                             <option value="1">一天前</option>
                                             <option value="2">两天前</option>
                                             <option value="3">三天前</option>
@@ -148,15 +161,10 @@
                                         </select>
                                     </div>
                                     <div class="layui-inline">
-                                        <button class="layui-btn" lay-submit lay-filter="search"
-                                                id="searchBtn">搜索
-                                        </button>
+                                        <button class="layui-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
                                     </div>
                                     <div class="layui-inline">
-                                        <button style="background: #897c00;color: #ffffff" class="layui-btn"
-                                                type="reset">
-                                            重置
-                                        </button>
+                                        <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">重置</button>
                                     </div>
                                 </div>
                             </div>
@@ -177,6 +185,7 @@
 <!--js逻辑-->
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script src="/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
     // 进度条加载提示
     NProgress.start();
@@ -195,37 +204,40 @@
 
         <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
         window.searchCustomerKeywords = function (machineGroup) {
-            let url = '/internal/customerKeyword/toKeywords';
-            let id = machineGroup + '-关键字统计-O-FMG';
             let data = {
                 machineGroup: machineGroup,
                 status: '1',
                 type: document.getElementById('entryType').value,
                 terminal: document.getElementById('terminalType').value
             };
-            updateOrNewTab(url, id, id ,data);
+            let title = machineGroup + '-关键字';
+            let id = machineGroup + '-sl' + data.type + data.terminal;
+            let url = '/internal/customerKeyword/toKeywordsFromMGS/' + data.type + '/' + data.terminal + '/' + data.machineGroup + '/null';
+            common.updateOrNewTab(url, title, id);
         };
         </@shiro.hasPermission>
 
         <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
         window.findKeyword = function (machineGroup, invalidRefreshCount) {
-            let url = '/internal/customerKeyword/toKeywords';
-            let id = machineGroup + '-关键字-N-FMG';
             let data = {
                 status: '1',
                 type: document.getElementById('entryType').value,
-                terminal: document.getElementById('terminalType').value
+                terminal: document.getElementById('terminalType').value,
+                machineGroup: null,
+                irc: null
             };
-            if (machineGroup && machineGroup !== '') {
+            if (machineGroup) {
                 data.machineGroup = machineGroup;
-            }
-            if (invalidRefreshCount && invalidRefreshCount !== '') {
-                data.nrsd = '0';
-                data.irc = invalidRefreshCount;
             } else {
-                data.nrsd = '-1';
+                machineGroup = '总计'
             }
-            updateOrNewTab(url, id, id ,data);
+            let title = machineGroup + '-关键字';
+            let id = machineGroup + '-wx-' + data.type + data.terminal;
+            if (invalidRefreshCount) {
+                data.irc = invalidRefreshCount;
+            }
+            let url = '/internal/customerKeyword/toKeywordsFromMGS/' + data.type + '/' + data.terminal + '/' + data.machineGroup + '/' + data.irc;
+            common.updateOrNewTab(url, title, id);
         };
         </@shiro.hasPermission>
 
@@ -265,16 +277,7 @@
             });
         };
 
-        init();
-
-        function init() {
-            let condition = common.formToJsonObject("searchForm");
-            if (condition.dayNum === '') {
-                condition.dayNum = 0;
-            }
-            init_keyword_type();
-            tableInit(condition);
-        }
+        init_keyword_type();
 
         function init_keyword_type(data) {
             $.ajax({
@@ -305,7 +308,6 @@
                             $('#terminalType').val("PC");
                             element.tabChange('machineGroupTab', one+"PC");
                         }
-
                         form.render("select");
                     }
                 }
@@ -314,6 +316,9 @@
 
         <@shiro.hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
         function tableInit(condition) {
+            if (condition.machineGroup){
+                condition.groupName = condition.machineGroup;
+            }
             table.render({
                 elem: '#machineTable',
                 method: 'post',
@@ -498,9 +503,9 @@
                         field: 'unworkMachineCount', title: '已停数', width: '5%', align: 'center', sort: true, templet: function (d) {
                             if (d.unworkMachineCount > 0) {
                                 if (d.machineGroup === '总计') {
-                                    return '<a target="_blank" href="javascript:findMachineInfo(\'\')">d.unworkMachineCount</a>';
+                                    return '<a target="_blank" href="javascript:findMachineInfo(\'\')">' + d.unworkMachineCount + '</a>';
                                 }
-                                return '<a target="_blank" href="javascript:findMachineInfo(\'' + d.machineGroup + '\')">d.unworkMachineCount</a>';
+                                return '<a target="_blank" href="javascript:findMachineInfo(\'' + d.machineGroup + '\')">' + d.unworkMachineCount + '</a>';
                             } else {
                                 return '';
                             }
@@ -513,10 +518,6 @@
             });
         }
         </@shiro.hasPermission>
-
-        // form.on('select(entryType)', function (data) {
-        //     active['reload'].call(this);
-        // });
 
         element.on('tab(machineGroupTab)', function (data) {
             let d = data.elem.context.dataset;
@@ -532,8 +533,8 @@
                 if (condition.dayNum === '') {
                     condition.dayNum = 0;
                 }
-                if (!condition.groupNameFuzzyQuery) {
-                    condition.groupNameFuzzyQuery = '';
+                if (condition.machineGroup){
+                    condition.groupName = condition.machineGroup;
                 }
                 table.reload('machineTable', {
                     where: condition
@@ -547,44 +548,11 @@
             if (condition.dayNum === '') {
                 condition.dayNum = 0;
             }
-            if (!condition.groupNameFuzzyQuery) {
-                condition.groupNameFuzzyQuery = '';
-            }
-            table.reload('machineTable', {
-                where: condition
-            });
+            tableInit(condition);
             return false;
         });
 
-        function updateOrNewTab(url, tit, id ,data) {
-            var update = false;
-            var contentIframe = "<iframe src='" + url + "' lay-id='" + id + "'frameborder='0' scrolling='yes' width='100%' height='100%'";
-            if (data.machineGroup) {
-                contentIframe += " data-machine-group='" + data.machineGroup + "'";
-            }
-            if (data.nrsd) {
-                contentIframe += " data-nrsd='" + data.nrsd + "'";
-            }
-            if (data.irc) {
-                contentIframe += " data-irc='" + data.irc + "'";
-            }
-            contentIframe += " data-status='" + data.status + "' data-type='" + data.type + "' data-terminal='" + data.terminal + "'></iframe>";
-            parent.layui.$('.layui-tab-title li').each(function () {
-                if (id === this.getAttribute('lay-id')) {
-                    update = true;
-                }
-            });
-            if (!update) {
-                parent.layui.element.tabAdd('ok-tab', {
-                    title: '<strong style="display: none;" is-close="true" lay-id="'+id+'" data-url="'+url+'"></strong>' +
-                        '<i class="layui-icon">&#xe648;</i> ' + tit,
-                        content: contentIframe,
-                        id: id
-                    }
-                );
-            }
-            parent.layui.element.tabChange('ok-tab', id)
-        }
+        tableInit({init: 'init'});
     });
 </script>
 </body>

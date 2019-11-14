@@ -1,6 +1,7 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
@@ -15,6 +16,7 @@ import com.keymanager.util.TerminalTypeMapping;
 import java.io.BufferedOutputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RequestMapping("/internal/dailyReport")
 @RestController
-public class DailyReportController {
+public class DailyReportController extends SpringMVCBaseController {
     private static Logger logger = LoggerFactory.getLogger(DailyReportController.class);
 
     @Resource(name = "customerKeywordService2")
@@ -49,7 +51,7 @@ public class DailyReportController {
     @RequestMapping(value = "/downloadSingleCustomerReport2/{customerUuid}", method = RequestMethod.GET)
     public ResultBean downloadSingleCustomerReport(@PathVariable("customerUuid")Long customerUuid, HttpServletRequest request,
         HttpServletResponse response) throws Exception {
-        ResultBean resultBean = new ResultBean(200,"sucess");
+        ResultBean resultBean = new ResultBean(200,"success");
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         int dayOfMonth = Utils.getDayOfMonth();
 
@@ -75,7 +77,8 @@ public class DailyReportController {
                 // 清空response
                 response.reset();
                 // 设置response的Header
-                response.addHeader("Content-Disposition", "attachment;filename=" + fileName);//new String(fileName.getBytes("utf-8"), "ISO-8859-1"));
+                //new String(fileName.getBytes("utf-8"), "ISO-8859-1"));
+                response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
                 response.addHeader("Content-Length", "" + buffer.length);
                 OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
                 response.setContentType("application/octet-stream;charset=utf-8");
@@ -98,9 +101,12 @@ public class DailyReportController {
     public ResultBean searchCurrentDateCompletedReports(HttpServletRequest request) throws Exception{
         ResultBean resultBean = new ResultBean(200,"success");
         try {
-            String userName = (String) request.getSession().getAttribute("username");
-            String entryType = "pt";
-            List<DailyReport> dailyReports = dailyReportService.searchCurrentDateCompletedReports(EntryTypeEnum.bc.name().equalsIgnoreCase(entryType) ? null : userName);
+            String userName = null;
+            Set<String> roles = getCurrentUser().getRoles();
+            if(!roles.contains("QTSpecial")) {
+                userName = (String) request.getSession().getAttribute("username");
+            }
+            List<DailyReport> dailyReports = dailyReportService.searchCurrentDateCompletedReports(userName);
             resultBean.setData(dailyReports);
         } catch (Exception e) {
             logger.error(e.getMessage());

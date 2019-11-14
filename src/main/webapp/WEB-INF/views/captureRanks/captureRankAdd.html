@@ -166,6 +166,7 @@
 </div>
 <!--js逻辑-->
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
     let uuid_ = null;
     let layui_ = null;
@@ -242,12 +243,13 @@
         })
     }
 
-    layui.use(["form", "jquery", "layer", "laydate", "common"], function () {
+    layui.use(["form", "jquery", "layer", "laydate", "common", "util"], function () {
         let form = layui.form;
         let $ = layui.jquery;
         let layer = layui.layer;
         let laydate = layui.laydate;
         let common = layui.common;
+        document.getElementById('ds').value = layui.util.toDateString(new Date(), 'HH:mm:ss');
 
         if (uuid_ != null) {
             setForm(layui, uuid_);

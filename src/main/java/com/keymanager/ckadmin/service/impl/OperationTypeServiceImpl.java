@@ -26,8 +26,8 @@ public class OperationTypeServiceImpl extends ServiceImpl<OperationTypeDao, Oper
     private OperationTypeDao operationTypeDao;
 
     @Override
-    public List<OperationType> getOperationTypes(OperationType operationType, Page<OperationType> page) {
-        return operationTypeDao.searchOperationTypeListsPage(page, operationType);
+    public List<OperationType> getOperationTypes(OperationType operationType, Page<OperationType> page, String init) {
+        return operationTypeDao.searchOperationTypeListsPage(page, operationType, init);
     }
 
     @Override

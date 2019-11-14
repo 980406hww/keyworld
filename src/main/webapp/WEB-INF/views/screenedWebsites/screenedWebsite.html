@@ -108,6 +108,7 @@
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 
 <script>
     var sign = false;
@@ -125,15 +126,13 @@
         var okLayer = layui.okLayer;
         var common = layui.common;
 
-        init_table_data(common.formToJsonObject('searchForm'));
-
         function init_table_data(whereCondition) {
-            whereCondition.entryType = 'pt';
             table.render({
                 elem: '#screenedWebsiteTable',
                 method: 'post',
                 url: '/internal/screenedWebsite/getScreenedWebsites',
                 limit: 50,
+                limits: [25, 50, 100, 500, 1000],
                 page: true,
                 autoSort: false,
                 size: 'sm',
@@ -288,35 +287,34 @@
 
         var active = {
             reload: function () {
-                let data = common.formToJsonObject('searchForm');
-                data.entryType = 'pt';
-                table.reload('screenedWebsiteTable', {
-                    where: data,
-                    page: {
-                        curr: 1
-                    }
-                });
+                if (table.index >= 1) {
+                    let data = common.formToJsonObject('searchForm');
+                    table.reload('screenedWebsiteTable', {
+                        where: data,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
             },
         };
 
         form.on("submit(search)", function (data) {
             var postData = data.field;
             postData = common.jsonObjectTrim(postData);
-            table.reload('screenedWebsiteTable', {
-                where: postData,
-                page: {
-                    curr: 1
-                }
-            });
+            init_table_data(postData);
             return false
         });
 
+        init_table_data({init: 'init'});
     });
 
 </script>
 <!--模板-->
 <script type="text/html" id="toDateTime">
+    {{#  if(d.createTime){ }}
     {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+    {{#  } }}
 </script>
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">

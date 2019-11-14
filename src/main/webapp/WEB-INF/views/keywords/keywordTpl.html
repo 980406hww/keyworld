@@ -44,7 +44,9 @@
 </script>
 <!--模板-->
 <script type="text/html" id="toDateTime">
-    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+    {{#  if(d.createTime){ }}
+    {{ layui.util.toDateString(d.createTime,'yyyy-MM-dd') }}
+    {{#  } }}
 </script>
 
 <script type="text/html" id="statusTpl">
@@ -55,7 +57,13 @@
     {{#  }else if(d.status === 3) { }}
     <span style="color: grey;">下架</span>
     {{# }else{ }}
-    <span style="color: red;">暂停</span>
+    <span style="color: red;">暂不操作</span>
+    {{# } }}
+</script>
+
+<script type="text/html" id="remarksTpl">
+    {{#  if(d.remarks && d.remarks !== 'null') { }}
+    {{ d.remarks }}
     {{# } }}
 </script>
 
@@ -70,7 +78,7 @@
 </script>
 
 <script type="text/html" id="currentPositionTpl">
-    <a href="{{d.searchEngineUrl}}" target="_blank" title="排名采集城市:{{= d.capturePositionCity}}&#10;排名采集时间:{{layui.util.toDateString(d.capturePositionQueryTime, 'yyyy-MM-dd')}}">{{d.currentPosition}}</a>
+    <a href="{{d.searchEngineUrl}}" target="_blank" title="排名采集城市:{{= d.capturePositionCity}}&#10;排名采集时间:{{layui.util.toDateString(d.capturePositionQueryTime, 'yyyy-MM-dd HH:mm:ss')}}">{{d.currentPosition}}</a>
 </script>
 
 <script type="text/html" id="collectMethodTpl">

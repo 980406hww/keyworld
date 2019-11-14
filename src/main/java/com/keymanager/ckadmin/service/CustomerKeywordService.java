@@ -56,7 +56,7 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     List<CustomerKeywordSummaryInfoVO> searchCustomerKeywordSummaryInfo(String entryType, long customerUuid);
 
-    KeywordCountVO getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String terminalType);
+    Map<String, Object>  getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String type);
 
     void resetInvalidRefreshCount(RefreshStatisticsCriteria criteria);
 
@@ -119,4 +119,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void editOptimizePlanCountByCustomerUuid(String terminalType, String entryType, Long customerUuid, Integer optimizePlanCount, String settingType);
 
     void editCustomerOptimizePlanCount(Integer optimizePlanCount, String settingType, List<String> uuids);
+
+    void updateSelectFailReason(KeywordCriteria keywordCriteria);
 }

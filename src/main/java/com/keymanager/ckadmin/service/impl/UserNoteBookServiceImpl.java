@@ -16,8 +16,7 @@ public class UserNoteBookServiceImpl extends ServiceImpl<UserNoteBookDao, UserNo
     private UserNoteBookDao userNoteBookDao;
 
     @Override
-    public List<UserNoteBook> findUserNoteBooks(Long customerUuid, String terminalType,
-        Integer searchAll) {
+    public List<UserNoteBook> findUserNoteBooks(Long customerUuid, String terminalType, Integer searchAll) {
         return userNoteBookDao.findUserNoteBooks(customerUuid, terminalType, searchAll);
     }
 

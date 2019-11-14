@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldStrategy;
 import com.keymanager.monitoring.entity.BaseEntity;
 
 /**

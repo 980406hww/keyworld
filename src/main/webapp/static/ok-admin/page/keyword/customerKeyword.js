@@ -22,10 +22,16 @@ function showCondition() {
 
 function show_more_operation() {
     let operationContent = document.getElementById('operationContent');
+    let rightDirection = document.getElementById('rightDirection');
+    let downDirection = document.getElementById('downDirection');
     if (show) {
         operationContent.style.display = 'block';
+        downDirection.style.display = 'inline-block';
+        rightDirection.style.display = 'none';
     } else {
         operationContent.style.display = 'none';
+        downDirection.style.display = 'none';
+        rightDirection.style.display = 'inline-block';
     }
     show = !show;
 }
@@ -38,6 +44,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     let laydate = layui.laydate;
     let okLayer = layui.okLayer;
     let common = layui.common;
+    let layer = layui.layer;
     //日期范围
     laydate.render({
         elem: '#gtCreateTime',
@@ -79,25 +86,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         });
     }
 
-    function init_belong_user() {
-        $.ajax({
-            url: '/internal/customer/getActiveUsers',
-            dataType: 'json',
-            type: 'get',
-            success: function (data) {
-                $("#userName").empty();
-                $("#userName").append('<option value="">请选择所属用户</option>');
-                $.each(data, function (index, item) {
-                    $('#userName').append(
-                        '<option value="' + item.loginName + '">'
-                        + item.userName
-                        + '</option>');// 下拉菜单里添加元素
-                });
-                form.render("select");
-            }
-        });
-    }
-
     element.on('tab(keywordTab)', function (data) {
         let d = data.elem.context.dataset;
         $('#type').val(d.type);
@@ -118,7 +106,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
             success: function (data) {
                 $("#searchEngine").empty();
                 $("#searchEngine").append(
-                    '<option value="">请选择搜索引擎</option>');
+                    '<option value="">搜索引擎</option>');
                 $.each(data.data, function (index, item) {
                     if (item === searchEngine){
                         $('#searchEngine').append('<option value="' + item + '" selected>' + item + '</option>');// 下拉菜单里添加元素
@@ -132,6 +120,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     }
 
     function get_keywords(whereCondition) {
+        if (!whereCondition.optimizeGroupNameLike) {
+            whereCondition.optimizeGroupNameLike = '';
+        }
         let keywordTable = table.render({
             elem: '#keywordTable',
             method: 'post',
@@ -153,7 +144,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
                 {field: 'keyword', title: '关键字', width: '150', align: 'left'},
                 {field: 'url', title: '链接', width: '140', align: 'left'},
                 {field: 'bearPawNumber', title: '熊掌号', align: 'left', width: '100'},
-                {field: 'title', title: '标题', width: '220', align: 'left'},
+                {field: 'title', title: '标题', width: '240', align: 'left'},
                 {field: 'currentIndexCount', title: '指数', align: 'left', width: '80', templet: '#indexCountTpl'},
                 {field: 'initialPosition', title: '初始排名', align: 'left', width: '80'},
                 {field: 'currentPosition', title: '现排名', align: 'left', width: '80', templet: '#currentPositionTpl'},
@@ -161,12 +152,21 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
                 {field: 'collectMethod', title: '收费方式', align: 'center', width: '80', templet: '#collectMethodTpl'},
                 {field: 'optimizePlanCount', title: '要刷', align: 'left', width: '80'},
                 {field: 'optimizedCount', title: '已刷', align: 'left', width: '80'},
-                {field: 'invalidRefreshCount', title: '无效', align: 'left', width: '60', hide: 'true'},
+                {field: 'invalidRefreshCount', title: '无效', align: 'left', width: '60', hide: true},
+                {field: 'startOptimizedTime', title: '开始优化日期', align: 'center', width: '100', hide: true},
+                {
+                    field: 'lastOptimizeDateTime', title: '最后优化时间', align: 'center', width: '100', hide: true, templet: function (d) {
+                        if (d.lastOptimizeDateTime) {
+                            return layui.util.toDateString(d.lastOptimizeDateTime, 'yyyy-MM-dd HH:mm:ss')
+                        }
+                        return '';
+                    }
+                },
                 {field: 'status', title: '状态', align: 'center', width: '80', templet: '#statusTpl'},
-                {field: 'failedCause', title: '失败原因', align: 'left', width: '100',},
+                {field: 'failedCause', title: '失败原因', align: 'left', width: '80',},
                 {field: 'optimizeGroupName', title: '优化分组', align: 'left', width: '80'},
                 {field: 'machineGroup', title: '机器分组', align: 'left', width: '80'},
-                {field: 'remarks', title: '备注', align: 'left', width: '80', hide: true},
+                {field: 'remarks', title: '备注', align: 'left', width: '80', hide: true, templet: '#remarksTpl'},
                 {title: '操作', align: 'center', width: '120', templet: '#operationTpl'}
             ]],
             height: 'full-110',
@@ -210,8 +210,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     let active = {
         reload: function () {
             show = true;
+            let condition = common.formToJsonObject('searchForm');
+            if (!condition.optimizeGroupNameLike) {
+                condition.optimizeGroupNameLike = '';
+            }
             table.reload('keywordTable', {
-                where: common.formToJsonObject('searchForm'),
+                where: condition,
                 page: {
                     curr: 1 //从第一页开始
                 }
@@ -233,6 +237,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     form.on("submit(search)", function (data) {
         if (!data.field.noPosition){
             data.field.noPosition = '';
+        }
+        if (!data.field.optimizeGroupNameLike) {
+            data.field.optimizeGroupNameLike = '';
         }
         data.field = common.jsonObjectTrim(data.field);
         table.reload('keywordTable', {
@@ -349,10 +356,65 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
             case 'clean_select_keyword_title':
                 change_title('cleanSelect');
                 break;
+            case 'clear_all_by_condition_fail_reason':
+                clear_current_fail_reason('cleanSelect');
+                break;
+            case 'clear_select_fail_reason':
+                clear_select_fail_reason();
+                break;
             default:
                 break;
         }
     });
+
+    function clear_current_fail_reason() {
+        layer.confirm('确定清空当前词的失败原因吗？', function (index) {
+            commit_csfr(common.formToJsonObject('searchForm'), index);
+        });
+    }
+
+    function clear_select_fail_reason() {
+        //获取选中数据
+        let uuidArr = get_selected_uuid_arr();
+        if (uuidArr.length <= 0) {
+            common.showFailMsg('请选择要操作的词');
+            return;
+        }
+        layer.confirm('确定清空选中词的失败原因吗？', function (index) {
+            let postData = {};
+            postData.uuids = uuidArr;
+            postData.terminalType = $('#terminalType').val();
+            commit_csfr(postData, index);
+        });
+    }
+
+    function commit_csfr(p, index) {
+        $.ajax({
+            url: '/internal/customerKeyword/clearFailReason',
+            data: JSON.stringify(p),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000,
+            type: 'POST',
+            success: function (result) {
+                if (result.code === 200) {
+                    common.showSuccessMsg('操作成功', function () {
+                        active['reload'].call(this);
+                    });
+                } else {
+                    common.showFailMsg('操作失败');
+                }
+            },
+            error: function () {
+                common.showFailMsg('网络异常请稍后再试');
+            },
+            complete: function () {
+                layer.close(index);
+            }
+        });
+    }
 
     function batchUpdateBelongUser (){
         let uuidArr = get_selected_uuid_arr();
@@ -388,7 +450,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         data.terminalType = terminalType;
         data.uuid = null;
         let url = '/internal/customerKeyword/toCustomerKeywordAdd';
-        okLayer.open("关键字管理 / 客户客户关键字 / 添加关键字", url, "60%", "90%", function (layero) {
+        okLayer.open("关键字管理 / 客户关键字 / 添加关键字", url, "60%", "90%", function (layero) {
             window[layero.find("iframe")[0]["name"]].initForm(data);
         }, function () {
             if (sign) {

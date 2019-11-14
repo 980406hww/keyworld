@@ -35,9 +35,13 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierDao, Supplier> impl
         page.setOrderByField("fCreateTime");
         page.setAsc(false);
         Wrapper<Supplier> wrapper = new EntityWrapper<>();
-        wrapper.like("fContactperson", criteria.getContactPerson());
-        wrapper.like("fQq", criteria.getQq());
-        wrapper.like("fPhone", criteria.getPhone());
+        if (null != criteria.getInit() && "init".equals(criteria.getInit())) {
+            wrapper.where("1 != 1", "");
+        } else {
+            wrapper.like("fContactperson", criteria.getContactPerson());
+            wrapper.like("fQq", criteria.getQq());
+            wrapper.like("fPhone", criteria.getPhone());
+        }
         page = selectPage(page, wrapper);
         for (Supplier supplier : page.getRecords()) {
             supplementServiceType(supplier);

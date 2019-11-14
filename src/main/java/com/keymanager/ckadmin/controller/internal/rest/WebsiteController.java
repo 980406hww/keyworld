@@ -75,7 +75,7 @@ public class WebsiteController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/website/searchWebsites")
+    @RequiresPermissions("/internal/websites/toWebSiteList")
     @GetMapping("/toWebSiteList")
     public ModelAndView toWebSiteList() {
         ModelAndView mv = new ModelAndView();
@@ -274,7 +274,7 @@ public class WebsiteController {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/website/searchWebsites")
+    @RequiresPermissions("/internal/websites/toWebSiteList")
     @PostMapping(value = "/searchWebsites")
     public ResultBean searchWebsitesPost(@RequestBody WebsiteCriteria websiteCriteria) {
         ResultBean resultBean = new ResultBean();

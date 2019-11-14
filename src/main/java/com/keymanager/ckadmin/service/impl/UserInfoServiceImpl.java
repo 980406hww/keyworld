@@ -100,5 +100,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
         return trees;
     }
 
-
+    @Override
+    public List<String> selectUserNames() {
+        return userInfoDao.selectUserNames();
+    }
 }

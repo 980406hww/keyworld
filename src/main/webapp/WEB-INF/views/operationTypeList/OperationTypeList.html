@@ -129,6 +129,7 @@
 
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 
 <script>
     var sign = false;
@@ -147,14 +148,13 @@
         var layer = layui.layer;
         var common = layui.common;
 
-        init_Search({'terminalType': 'PC'});
-
         function init_Search(whereCondition) {
             table.render({
                 elem: '#operationTypeTable',
                 method: 'post',
                 url: '${ctx.path}/internal/operationTypes/searchOperationTypeLists',
                 limit: 50,
+                limits: [25, 50, 100, 500, 1000],
                 page: true,
                 autoSort: false,
                 size: 'sm',
@@ -190,17 +190,19 @@
 
         var active = {
             reload: function () {
-                var terminalType = $("#terminalType").val();
-                if (terminalType === '' || terminalType == null) {
-                    terminalType = 'PC'
-                }
-                var data = {'terminalType': terminalType};
-                table.reload('operationTypeTable', {
-                    where: data,
-                    page: {
-                        curr: 1
+                if (table.index >= 1) {
+                    var terminalType = $("#terminalType").val();
+                    if (terminalType === '' || terminalType == null) {
+                        terminalType = 'PC'
                     }
-                });
+                    var data = {'terminalType': terminalType};
+                    table.reload('operationTypeTable', {
+                        where: data,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
             },
         };
 
@@ -215,6 +217,8 @@
             init_Search(postData);
             return false
         });
+
+        init_Search({init: 'init'});
 
         table.on('tool(tableFilter)', function (obj) {
             var data = obj.data, event = obj.event;
@@ -363,7 +367,9 @@
 </script>
 
 <script type="text/html" id="toDateTime">
+    {{#  if(d.createTime){ }}
     {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+    {{#  } }}
 </script>
 
 <script type="text/html" id="toStatus">

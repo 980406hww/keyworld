@@ -64,6 +64,10 @@ function editWarnList(uuid) {
     $.ajax({
         url: '/internal/warnlist/getWarnList/' + uuid,
         type: 'Get',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
         success: function (warnList) {
             if (warnList != null) {
                 var warnListForm = $("#warnListForm");

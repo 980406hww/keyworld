@@ -39,7 +39,7 @@ public class NegativeKeywordNameController extends SpringMVCBaseController {
     @Resource(name = "negativeKeywordNamePositionInfoService2")
     private NegativeKeywordNamePositionInfoService negativeKeywordNamePositionInfoService;
 
-    @RequiresPermissions("/internal/negativelist/searchNegativeLists")
+    @RequiresPermissions("/internal/negativeKeywords/toNegativeKeywords")
     @RequestMapping(value = "/toNegativeKeywords", method = RequestMethod.GET)
     public ModelAndView toSearchPositiveLists() {
         ModelAndView mv = new ModelAndView();

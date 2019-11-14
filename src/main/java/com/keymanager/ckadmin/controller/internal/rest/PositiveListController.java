@@ -27,7 +27,7 @@ public class PositiveListController {
     @Resource(name = "positiveListService2")
     private PositiveListService positiveListService;
 
-    @RequiresPermissions("/internal/positivelist/searchPositiveLists")
+    @RequiresPermissions("/internal/positivelists/toSearchPositiveLists")
     @RequestMapping(value = "/toSearchPositiveLists", method = RequestMethod.GET)
     public ModelAndView toSearchPositiveLists(HttpServletRequest request) {
         ModelAndView mv = new ModelAndView();
@@ -43,7 +43,7 @@ public class PositiveListController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/positivelist/searchPositiveLists")
+    @RequiresPermissions("/internal/positivelists/toSearchPositiveLists")
     @RequestMapping(value = "/searchPositiveLists", method = RequestMethod.POST)
     public ResultBean searchPositiveListsPost(HttpServletRequest request, @RequestBody PositiveListCriteria positiveListCriteria) {
         ResultBean resultBean = new ResultBean();

@@ -20,15 +20,19 @@ public class KeywordInfoServiceImpl extends ServiceImpl<KeywordInfoDao, KeywordI
         page.setOrderByField("fCreateTime");
         page.setAsc(false);
         Wrapper<KeywordInfo> wrapper = new EntityWrapper<>();
-        wrapper.like("fUserName", criteria.getUserName());
-        wrapper.like("fSearchEngine", criteria.getSearchEngine());
-        wrapper.like("fSearchEngine", criteria.getTerminalType());
-        if (null != criteria.getOperationType() && !"".equals(criteria.getOperationType())) {
-            wrapper.eq("fOperationType", criteria.getOperationType());
-        }
-        wrapper.like("fKeywordInfo", criteria.getKeywordInfo());
-        if (null != criteria.getCreateTime() && !"".equals(criteria.getCreateTime())) {
-            wrapper.where("DATE_FORMAT(fCreateTime,'%Y-%m-%d') = {0}", criteria.getCreateTime());
+        if (null != criteria.getInit() && "init".equals(criteria.getInit())) {
+            wrapper.where("1 != 1", "");
+        } else {
+            wrapper.like("fUserName", criteria.getUserName());
+            wrapper.like("fSearchEngine", criteria.getSearchEngine());
+            wrapper.like("fSearchEngine", criteria.getTerminalType());
+            if (null != criteria.getOperationType() && !"".equals(criteria.getOperationType())) {
+                wrapper.eq("fOperationType", criteria.getOperationType());
+            }
+            wrapper.like("fKeywordInfo", criteria.getKeywordInfo());
+            if (null != criteria.getCreateTime() && !"".equals(criteria.getCreateTime())) {
+                wrapper.where("DATE_FORMAT(fCreateTime,'%Y-%m-%d') = {0}", criteria.getCreateTime());
+            }
         }
         page = selectPage(page, wrapper);
         for (KeywordInfo keywordInfo : page.getRecords()) {

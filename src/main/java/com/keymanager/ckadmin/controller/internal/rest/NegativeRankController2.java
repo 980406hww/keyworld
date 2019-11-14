@@ -47,14 +47,14 @@ public class NegativeRankController2 {
     private ConfigService configService;
 
     @GetMapping(value = "/toNegativeRanks")
-    public ModelAndView toCustomers() {
+    public ModelAndView toNegativeRanks() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("negativeRanks/negativeRank");
         return mv;
     }
 
     @PostMapping(value = "/getNegativeRanks")
-    public ResultBean getCustomers(@RequestBody NegativeRankCriteria negativeRankCriteria) {
+    public ResultBean getNegativeRanks(@RequestBody NegativeRankCriteria negativeRankCriteria) {
         ResultBean resultBean = new ResultBean();
         if (SQLFilterUtils.sqlInject(negativeRankCriteria.toString())) {
             resultBean.setCode(400);
@@ -96,8 +96,8 @@ public class NegativeRankController2 {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/negativeRank/updateNegativeRankKeyword")
-    @RequestMapping(value = "updateNegativeRankKeyword2",method = RequestMethod.POST)
+    @RequiresPermissions("/internal/negativeRank/toNegativeRanks")
+    @RequestMapping(value = "/updateNegativeRankKeyword2",method = RequestMethod.POST)
     public ResultBean updateNegativeRankKeyword(@RequestBody NegativeRank negativeRank){
         ResultBean resultBean = new ResultBean(200,"success");
         try {

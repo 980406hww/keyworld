@@ -86,4 +86,18 @@
             #{uuid}
         </foreach>
     </update>
+
+    <select id="getCaptureRankJobUuids" resultType="java.lang.Long">
+        SELECT fUuid FROM t_capture_rank_job WHERE fQZSettingUuid IN
+        <foreach collection="uuids" item="uuid" separator="," open="(" close=")">
+            #{uuid}
+        </foreach>
+    </select>
+
+    <update id="updateCaptureRankJobCustomerUuids">
+        UPDATE t_capture_rank_job SET fCustomerUuid = #{customerUuid} WHERE fUuid IN
+        <foreach collection="jobUuids" item="uuid" separator="," open="(" close=")">
+            #{uuid}
+        </foreach>
+    </update>
 </mapper>

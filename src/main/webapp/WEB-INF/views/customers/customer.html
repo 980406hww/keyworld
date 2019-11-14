@@ -41,19 +41,21 @@
                         <input type="hidden" id="entryType" name="entryType" value=""/>
                         <input type="checkbox" name="checkAll" lay-skin="primary" lay-filter="checkAll">
                         <div class="layui-inline" style="width: 140px">
-                            <div class="layui-input-inline">
-                                <select name="type" id="type">
-                                    <option value="">请选择客户类型</option>
-                                    <option value="普通客户">普通客户</option>
-                                    <option value="测试客户">测试客户</option>
-                                </select>
-                            </div>
+                            <select name="type" id="type">
+                                <option value="">客户类型</option>
+                                <option value="普通客户">普通客户</option>
+                                <option value="测试客户">测试客户</option>
+                            </select>
+                        </div>
+                        <div class="layui-inline">
+                            <select name="loginName" id="loginName">
+                                <option value="">所属用户</option>
+                            </select>
                         </div>
                         <div class="layui-inline" style="width: 140px">
                             <input type="text" name="contactPerson" id="contactPerson" placeholder="请输入客户名称" class="layui-input"
                                    onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                         </div>
-
                         <div class="layui-inline" style="width: 140px">
                             <div class="layui-input-inline">
                                 <input type="text" name="saleRemark" id="saleRemark" placeholder="请输入客户标签" autocomplete="off" class="layui-input"
@@ -93,35 +95,19 @@
                             </div>
                         </div>
 
-                        <@shiro.hasPermission name="/internal/dailyReport/triggerReportGeneration">
-                        <div class="layui-inline" id="showDailyReportsDiv">
-
-                        </div>
-                        </@shiro.hasPermission>
-
                         <div class="layui-inline">
                             <div class="layui-btn layui-btn-sm layui-btn-danger" onclick="batchDelete()">
                                 批量删除
                             </div>
                         </div>
-
-
+                        <div class="layui-inline" id="dailyReportDiv"></div>
                     </div>
                     <div class="my-hide" id="searchContent">
                         <div class="layui-form-item" lay-filter="loginNameFilter">
-
-
                             <div class="layui-inline">
                                 <label class="layui-form-label">QQ</label>
                                 <div class="layui-input-inline">
                                     <input type="text" name="qq" id="qq" placeholder="请输入QQ" autocomplete="off" class="layui-input" lay-verify="qq"
-                                           onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">微信</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="wechat" id="wechat" placeholder="请输入微信" autocomplete="off" class="layui-input" lay-verify="noSpace"
                                            onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                 </div>
                             </div>
@@ -132,15 +118,13 @@
                                            onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                 </div>
                             </div>
-
                             <div class="layui-inline">
-                                <label class="layui-form-label">销售详细备注</label>
+                                <label class="layui-form-label">备注</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="remark" id="remark" placeholder="请输入销售详细备注" autocomplete="off" class="layui-input" lay-verify="noSpace"
+                                    <input type="text" name="remark" id="remark" placeholder="备注给运营" autocomplete="off" class="layui-input"
                                            onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -155,15 +139,24 @@
     </div>
 </div>
 <div id="page_nav"></div>
+<script>
+    var isSEOSales = false;
+    <@shiro.hasRole name="SEOSales">
+        isSEOSales = true;
+    </@shiro.hasRole>
 
+    <@shiro.hasAnyRoles name="Operation,Technical,SEO,AlgorithmGroup">
+        isSEOSales = false;
+    </@shiro.hasAnyRoles>
+</script>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
-<script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script src="/static/ok-admin/page/customer/customer.js"></script>
 <script>
     layui.define(['layer', 'jquery'], function (exports) {
         var $ = layui.jquery;
         exports('searchCurrentDateCompletedReports', function () {//函数参数
-            var htm = '';
+            let div = $("#dailyReportDiv");
             $.ajax({
                 url: '/internal/dailyReport/searchCurrentDateCompletedReports2',
                 headers: {
@@ -173,32 +166,32 @@
                 timeout: 5000,
                 type: 'GET',
                 success: function (result) {
+                    var htmlContent = "";
                     if (result.code === 200) {
-
-                        $.each(result.data,function(idx,val){
-
-                            var date = new Date(val.completeTime);
-                            htm +='  <a class="layui-btn layui-btn-sm" href="' + val.reportPath + '">下载日报表(' + ((date.getHours() < 10) ? '0'
-                                + date.getHours() : date.getHours()) + ':' + ((date.getMinutes() < 10) ? '0' + date.getMinutes()
-                                : date.getMinutes()) + ')</a><br>';
-                        });
-                        $('#showDailyReportsDiv').empty().append(htm);
-
+                        if (result.data != null) {
+                            $.each(result.data,function(idx,val){
+                                var date = new Date(val.completeTime);
+                                htmlContent +=' <a class="layui-btn layui-btn-sm" href="' + val.reportPath + '">下载日报表(' + ((date.getHours() < 10) ? '0'
+                                    + date.getHours() : date.getHours()) + ':' + ((date.getMinutes() < 10) ? '0' + date.getMinutes()
+                                    : date.getMinutes()) + ')</a>';
+                            });
+                        } else {
+                            htmlContent = $('<span class="layui-btn layui-btn-sm" disabled>今天没报表</span>');
+                        }
+                        div.html(htmlContent);
                     } else {
-                        $('#showDailyReportsDiv').empty().append($('<span class="layui-btn layui-btn-sm" disabled>今天没报表</span>'));
+                        div.html($('<span class="layui-btn layui-btn-sm" disabled>获取报表清单异常</span>'));
                     }
                 },
                 error: function () {
-                    $('#showDailyReportsDiv').empty().append($('<span class="layui-btn layui-btn-sm" disabled>获取报表清单异常</span>'));
+                    div.html($('<span class="layui-btn layui-btn-sm" disabled>获取报表清单异常</span>'));
                 }
             });
         });
-
     });
 
     layui.use(['jquery'], function () {
     <@shiro.hasPermission name="/internal/dailyReport/triggerReportGeneration">
-
         var intervalId = setInterval(function () {
             layui.searchCurrentDateCompletedReports();
         }, 1000 * 30);

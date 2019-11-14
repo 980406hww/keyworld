@@ -46,6 +46,7 @@
             JOIN t_advertising a ON a.fWebsiteUuid = w.fUuid
         </if>
 		WHERE 1 = 1
+		<if test="websiteCriteria.init != null and websiteCriteria.init == 'init'">AND 1 != 1</if>
 		<if test="websiteCriteria.websiteName != null and websiteCriteria.websiteName != ''">AND w.fWebsiteName LIKE '%${websiteCriteria.websiteName}%'</if>
 		<if test="websiteCriteria.domain != null and websiteCriteria.domain != ''">AND w.fDomain LIKE '%${websiteCriteria.domain}%'</if>
 		<if test="websiteCriteria.industryType != null and websiteCriteria.industryType != ''">AND w.fIndustry = #{websiteCriteria.industryType}</if>

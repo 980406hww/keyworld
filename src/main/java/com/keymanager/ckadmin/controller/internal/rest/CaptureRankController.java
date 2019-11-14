@@ -39,7 +39,7 @@ public class CaptureRankController {
     @Resource(name = "customerKeywordService2")
     private CustomerKeywordService customerKeywordService;
 
-    @RequiresPermissions("/internal/captureRank/searchCaptureRankJobs")
+    @RequiresPermissions("/internal/captureRanks/toCaptureRank")
     @GetMapping(value = "/toCaptureRank")
     public ModelAndView toCaptureRank() {
         ModelAndView mv = new ModelAndView();
@@ -47,7 +47,7 @@ public class CaptureRankController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/captureRank/searchCaptureRankJobs")
+    @RequiresPermissions("/internal/captureRanks/toCaptureRank")
     @RequestMapping(value = "/getCaptureRankJobs", method = RequestMethod.POST)
     public ResultBean searchCaptureRankingJobs(@RequestBody CaptureRankJobSearchCriteria criteria) {
         ResultBean resultBean = new ResultBean();
@@ -65,7 +65,7 @@ public class CaptureRankController {
         return resultBean;
     }
 
-    @RequiresPermissions("/internal/captureRank/searchCaptureRankJobs")
+    @RequiresPermissions("/internal/captureRanks/toCaptureRank")
     @RequestMapping(value = "/getInitData", method = RequestMethod.GET)
     public ResultBean getInitData() {
         ResultBean resultBean = new ResultBean();

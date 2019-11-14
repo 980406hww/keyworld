@@ -90,6 +90,7 @@
 </div>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
     var sign = false;
     // 进度条加载提示
@@ -108,18 +109,19 @@
 
         let active = {
             reload: function () {
-                let terminalType = $("#terminalType").val();
-                let data = {'terminalType': terminalType};
-                table.reload('salesListTable', {
-                    where: data,
-                    page: {
-                        curr: 1
-                    }
-                });
+                if (table.index >= 1) {
+                    let terminalType = $("#terminalType").val();
+                    let data = {'terminalType': terminalType};
+                    table.reload('salesListTable', {
+                        where: data,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
             },
         };
 
-        searchSalesInfo();
         initManagePart();
 
         form.on("submit(search)", function (data) {
@@ -127,6 +129,8 @@
             searchSalesInfo(postData);
             return false;
         });
+
+        searchSalesInfo({init: 'init'});
 
         function initManagePart(){
             $.ajax({
@@ -140,7 +144,7 @@
                     if (res.code === 200) {
                         let websiteTypeMap = res.data;
                         let managePart = $('#managePart');
-                        managePart.append('<option value="" >负责部分</option>')
+                        managePart.append('<option value="" >负责部分</option>');
                         $.each(websiteTypeMap, function (index, item) {
                             managePart.append('<option value="' + index + '" >' + item + '</option>');
                         });
@@ -161,6 +165,7 @@
                 method: 'post',
                 url: '${ctx.path}/internal/salesInfo/searchSalesInfos',
                 limit: 50,
+                limits: [25, 50, 100, 500, 1000],
                 page: true,
                 autoSort: false,
                 size: 'sm',
@@ -319,11 +324,15 @@
 
 </script>
 <script type="text/html" id="toDateTime">
+    {{#  if(d.createTime){ }}
     {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+    {{#  } }}
 </script>
 
 <script type="text/html" id="toUpdateTime">
+    {{#  if(d.updateTime){ }}
     {{layui.util.toDateString(d.updateTime, 'yyyy-MM-dd')}}
+    {{#  } }}
 </script>
 
 <script type="text/html" id="toolbarTpl">

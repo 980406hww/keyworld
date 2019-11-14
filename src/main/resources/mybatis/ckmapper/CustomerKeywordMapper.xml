@@ -348,13 +348,14 @@
     </select>
 
     <select id="getCustomerKeywordsCountByCustomerUuid" resultType="com.keymanager.ckadmin.vo.KeywordCountVO">
-        SELECT ck.fCustomerUuid              as 'customerUuid',
-        COUNT(1)                      as 'totalCount',
-        SUM(IF(ck.fStatus = 1, 1, 0)) AS 'activeCount'
+        SELECT
+            ck.fTerminalType AS 'terminalType',
+            COUNT(1)      		AS 'totalCount',
+            SUM(IF(ck.fStatus = 1, 1, 0)) AS 'activeCount'
         FROM t_customer_keyword ck
-        WHERE ck.fTerminalType = #{terminalType}
-        AND ck.fCustomerUuid = #{customerUuid}
-        AND ck.fType = 'pt'
+        WHERE ck.fCustomerUuid = #{customerUuid}
+        AND ck.fType = #{type}
+        GROUP BY ck.fTerminalType
     </select>
 
     <update id="resetInvalidRefreshCount" parameterType="com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria">
@@ -395,17 +396,27 @@
     </update>
 
     <sql id="searchCustomerKeywordsCriteria">
+        <if test="keywordCriteria.init != null and keywordCriteria.init == 'init'">
+            AND 1 != 1
+        </if>
         <if test="keywordCriteria.customerUuid != null and keywordCriteria.customerUuid != ''">
             AND ck.fCustomerUuid = #{keywordCriteria.customerUuid}
         </if>
         <if test="keywordCriteria.keyword != null and keywordCriteria.keyword != ''">
-            AND ck.fKeyword LIKE CONCAT(#{keywordCriteria.keyword},'%')
+            <choose>
+                <when test="keywordCriteria.notLike != null and keywordCriteria.notLike == '1'">
+                    AND ck.fKeyword = #{keywordCriteria.keyword}
+                </when>
+                <otherwise>
+                    AND ck.fKeyword LIKE CONCAT(#{keywordCriteria.keyword},'%')
+                </otherwise>
+            </choose>
         </if>
         <if test="keywordCriteria.userName != null and keywordCriteria.userName != ''">
             AND c.fUserID = #{keywordCriteria.userName}
         </if>
         <if test="keywordCriteria.url != null and keywordCriteria.url != ''">
-            AND ck.fUrl LIKE CONCAT(#{keywordCriteria.url},'%')
+            AND ck.fUrl LIKE CONCAT('%', #{keywordCriteria.url},'%')
         </if>
         <if test="keywordCriteria.bearPawNumber != null and keywordCriteria.bearPawNumber != ''">
             AND ck.fBearPawNumber LIKE CONCAT(#{keywordCriteria.bearPawNumber},'%')
@@ -414,7 +425,14 @@
             AND ck.fStatus = #{keywordCriteria.status}
         </if>
         <if test="keywordCriteria.optimizeGroupName != null and keywordCriteria.optimizeGroupName != ''">
-            AND ck.fOptimizeGroupName LIKE CONCAT(#{keywordCriteria.optimizeGroupName},'%')
+            <choose>
+                <when test="keywordCriteria.optimizeGroupNameLike != null and keywordCriteria.optimizeGroupNameLike == 'on'">
+                    AND ck.fOptimizeGroupName LIKE CONCAT(#{keywordCriteria.optimizeGroupName},'%')
+                </when>
+                <otherwise>
+                    AND ck.fOptimizeGroupName = #{keywordCriteria.optimizeGroupName}
+                </otherwise>
+            </choose>
         </if>
         <if test="keywordCriteria.machineGroup != null and keywordCriteria.machineGroup != ''">
             AND ck.fMachineGroup LIKE CONCAT(#{keywordCriteria.machineGroup},'%')
@@ -425,8 +443,7 @@
         <if test="keywordCriteria.failedCause != null and keywordCriteria.failedCause != ''">
             AND ck.fFailedCause = #{keywordCriteria.failedCause}
         </if>
-
-        <if test="keywordCriteria.terminalType != null || keywordCriteria.terminalType != ''">
+        <if test="keywordCriteria.terminalType != null and keywordCriteria.terminalType != ''">
             AND ck.fTerminalType = #{keywordCriteria.terminalType}
         </if>
         <if test="keywordCriteria.searchEngine != null and keywordCriteria.searchEngine != ''">
@@ -837,7 +854,7 @@
         AND fTerminalType = #{terminalType}
     </select>
 
-    <update id="updateSearchEngine" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria">
+    <update id="updateSearchEngine">
         UPDATE
         t_customer_keyword ck,t_customer c
         SET
@@ -1025,24 +1042,24 @@
         GROUP BY ck.fOptimizeGroupName
     </select>
 
-    <select id="searchPTKeywordCount" parameterType="com.keymanager.ckadmin.criteria.PTKeywordCountCriteria"
-            resultType="com.keymanager.ckadmin.vo.PTkeywordCountVO">
+    <select id="searchPTKeywordCount" resultType="com.keymanager.ckadmin.vo.PTkeywordCountVO">
         SELECT
-        ck.fTerminalType AS 'terminalType',
-        ck.fCustomerUuid AS 'customerUuid',
         ck.fKeyword AS 'keyword',
         ck.fSearchEngine AS 'searchEngine',
         COUNT(1) AS 'keywordCount',
         SUM(IF(ck.fCurrentPosition BETWEEN 1 AND 3, 1, 0)) AS 'topThree',
         SUM(IF(ck.fCurrentPosition BETWEEN 1 AND 10, 1, 0)) AS 'topTen',
-        COUNT( DISTINCT ck.fCustomerUuid) AS 'customerCount',
+        COUNT(DISTINCT ck.fCustomerUuid) AS 'customerCount',
         COUNT(DISTINCT c.fUserID) AS 'userCount'
         FROM
         t_customer_keyword ck,
         t_customer c
         WHERE c.fUuid = ck.fCustomerUuid
-        AND ck.fType = 'pt'
+        AND ck.fType IN ('pt', 'qt')
         AND ck.fTerminalType = #{keywordCriteria.terminalType}
+        <if test="keywordCriteria.init != null and keywordCriteria.init == 'init'">
+            AND 1 != 1
+        </if>
         <if test="keywordCriteria.keyword != null and keywordCriteria.keyword != ''">
             AND ck.fKeyword like concat(#{keywordCriteria.keyword}, '%')
         </if>
@@ -1106,8 +1123,18 @@
         , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
         , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
         WHERE fUuid IN
-        <foreach item="uuid"  collection="uuids" open="(" separator="," close=")">
+        <foreach item="uuid" collection="uuids" open="(" separator="," close=")">
             #{uuid}
         </foreach>
+    </update>
+
+    <update id="updateSelectFailReason" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria">
+        UPDATE
+        t_customer_keyword ck,t_customer c
+        SET
+        ck.fFailedCause = null,
+        ck.fUpdateTime = NOW()
+        WHERE c.fUuid = ck.fCustomerUuid
+        <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 </mapper>

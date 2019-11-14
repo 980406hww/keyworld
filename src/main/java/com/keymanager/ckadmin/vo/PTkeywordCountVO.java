@@ -2,7 +2,6 @@ package com.keymanager.ckadmin.vo;
 
 
 public class PTkeywordCountVO {
-    private String terminalType;
     private String keyword;
     private String searchEngine;
     private Integer keywordCount;
@@ -10,14 +9,6 @@ public class PTkeywordCountVO {
     private Integer userCount;
     private Integer topThree;
     private Integer topTen;
-
-    public String getTerminalType() {
-        return terminalType;
-    }
-
-    public void setTerminalType(String terminalType) {
-        this.terminalType = terminalType;
-    }
 
     public String getKeyword() {
         return keyword;

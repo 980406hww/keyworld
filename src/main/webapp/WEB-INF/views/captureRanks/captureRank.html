@@ -140,7 +140,16 @@
             word-break: break-all;
         }
 
-        .layui-table-body .laytable-cell-1-0-15, .layui-table-body .laytable-cell-1-0-16 {
+        .layui-table-body .laytable-cell-1-0-15, .layui-table-body .laytable-cell-6-0-15, .layui-table-body .laytable-cell-11-0-15,
+        .layui-table-body .laytable-cell-2-0-15, .layui-table-body .laytable-cell-7-0-15, .layui-table-body .laytable-cell-12-0-15,
+        .layui-table-body .laytable-cell-3-0-15, .layui-table-body .laytable-cell-8-0-15, .layui-table-body .laytable-cell-13-0-15,
+        .layui-table-body .laytable-cell-4-0-15, .layui-table-body .laytable-cell-9-0-15, .layui-table-body .laytable-cell-14-0-15,
+        .layui-table-body .laytable-cell-5-0-15, .layui-table-body .laytable-cell-10-0-15, .layui-table-body .laytable-cell-15-0-15,
+        .layui-table-body .laytable-cell-1-0-16, .layui-table-body .laytable-cell-6-0-16, .layui-table-body .laytable-cell-11-0-16,
+        .layui-table-body .laytable-cell-2-0-16, .layui-table-body .laytable-cell-7-0-16, .layui-table-body .laytable-cell-12-0-16,
+        .layui-table-body .laytable-cell-3-0-16, .layui-table-body .laytable-cell-8-0-16, .layui-table-body .laytable-cell-13-0-16,
+        .layui-table-body .laytable-cell-4-0-16, .layui-table-body .laytable-cell-9-0-16, .layui-table-body .laytable-cell-14-0-16,
+        .layui-table-body .laytable-cell-5-0-16, .layui-table-body .laytable-cell-10-0-16, .layui-table-body .laytable-cell-15-0-16 {
             padding: 0 11px !important;
         }
 
@@ -157,6 +166,10 @@
         .layui-btn-xs {
             height: 18px;
             line-height: 18px;
+        }
+
+        .details-header{
+            padding-right: 16px;
         }
     </style>
 </head>
@@ -181,14 +194,14 @@
                                     </div>
                                     <div class="layui-inline">
                                         <select name="exectionType">
-                                            <option value="">请选择执行类型</option>
+                                            <option value="">执行类型</option>
                                             <option value="Once">一次</option>
                                             <option value="EveryDay">每天</option>
                                         </select>
                                     </div>
                                     <div class="layui-inline">
                                         <select name="exectionStatus">
-                                            <option value="">请选择执行状态</option>
+                                            <option value="">执行状态</option>
                                             <option value="New">New</option>
                                             <option value="Processing">Processing</option>
                                             <option value="Checking">Checking</option>
@@ -205,12 +218,12 @@
                                     </div>
                                     <div class="layui-inline">
                                         <select name="rankJobArea" id="rankJobArea">
-                                            <option value="">请选择任务区域</option>
+                                            <option value="">任务区域</option>
                                         </select>
                                     </div>
                                     <div class="layui-inline" id="showRankJobCity">
                                         <select name="rankJobCity" id="rankJobCity">
-                                            <option value="">请选择任务城市</option>
+                                            <option value="">任务城市</option>
                                         </select>
                                     </div>
                                     <@shiro.hasPermission name="/internal/captureRank/searchCaptureRankJobs">
@@ -237,6 +250,7 @@
 <!--js逻辑-->
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script src="/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
     let rankJobAreaMap = null;
 
@@ -270,7 +284,6 @@
                         rankJobArea(res.data.rankJobArea);
                         rankJobCity(res.data.rankJobCityList);
                         form.render('select');
-                        init();
                     } else {
                         common.showFailMsg(res.msg ? res.msg : '未知错误');
                     }
@@ -284,7 +297,7 @@
         function rankJobArea(area) {
             rankJobAreaMap = area;
             let rankJobArea = document.getElementById('rankJobArea');
-            let html = '<option value="">请选择任务区域</option>';
+            let html = '<option value="">任务区域</option>';
             for (let k in area) {
                 html += '<option value="' + k + '">' + area[k] + '</option>';
             }
@@ -293,16 +306,11 @@
 
         function rankJobCity(city) {
             let rankJobCity = document.getElementById('rankJobCity');
-            let html = '<option value="">请选择任务城市</option>';
+            let html = '<option value="">任务城市</option>';
             for (let i = 0; i < city.length; i++) {
                 html += '<option value="' + city[i] + '">' + city[i] + '</option>';
             }
             rankJobCity.innerHTML = html;
-        }
-
-        function init() {
-            let condition = common.formToJsonObject("searchForm");
-            tableInit(condition);
         }
 
         function tableInit(condition) {
@@ -372,24 +380,36 @@
                     {field: 'pageSize', title: '每页条数', width: '4%', align: 'center'},
                     {
                         field: 'startTime', title: '抓取开始时间', width: '5.6%', align: 'center', templet: function (d) {
-                            return layui.util.toDateString(d.startTime, 'yyyy-MM-dd HH:mm');
+                            if (d.startTime){
+                                return layui.util.toDateString(d.startTime, 'yyyy-MM-dd HH:mm');
+                            }
+                            return '';
                         }
                     },
                     {
                         field: 'endTime', title: '抓取结束时间', width: '5.6%', align: 'center', templet: function (d) {
-                            return layui.util.toDateString(d.endTime, 'yyyy-MM-dd HH:mm');
+                            if (d.endTime) {
+                                return layui.util.toDateString(d.endTime, 'yyyy-MM-dd HH:mm');
+                            }
+                            return '';
                         }
                     },
                     {field: 'updateBy', title: '修改人', width: '4.2%', align: 'center'},
                     {
                         field: 'updateTime', title: '修改时间', width: '4.6%', align: 'center', templet: function (d) {
-                            return layui.util.toDateString(d.updateTime, 'yyyy-MM-dd HH:mm');
+                            if (d.updateTime) {
+                                return layui.util.toDateString(d.updateTime, 'yyyy-MM-dd HH:mm');
+                            }
+                            return '';
                         }
                     },
                     {field: 'createBy', title: '创建人', width: '4.2%', align: 'center'},
                     {
                         field: 'createTime', title: '创建时间', width: '4.6%', align: 'center', templet: function (d) {
-                            return layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm');
+                            if (d.createTime) {
+                                return layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm');
+                            }
+                            return '';
                         }
                     },
                     {title: '操作', width: '8%', templet: '#item', align: 'center'}
@@ -435,13 +455,15 @@
         //监听工具条
         var active = {
             reload: function () {
-                let condition = common.formToJsonObject("searchForm");
-                table.reload('captureRankTable', {
-                    where: condition,
-                    page: {
-                        curr: 1
-                    }
-                });
+                if (table.index >= 1) {
+                    let condition = common.formToJsonObject("searchForm");
+                    table.reload('captureRankTable', {
+                        where: condition,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
             }
         };
 
@@ -701,14 +723,11 @@
         form.on("submit(search)", function (data) {
             let condition = data.field;
             condition = common.jsonObjectTrim(condition);
-            table.reload('captureRankTable', {
-                where: condition,
-                page: {
-                    curr: 1
-                }
-            });
+            tableInit(condition);
             return false;
         });
+
+        tableInit({init: 'init'});
 
         initFrom();
     });
@@ -732,9 +751,9 @@
     <div class="layui-btn-group">
         <@shiro.hasPermission name="/internal/captureRank/changeCaptureRankJobStatus">
         {{# if(d.captureRankJobStatus){ }}
-        <button class="layui-btn layui-btn-xs" style="background-color: red" lay-event="stop">暂停</button>
+        <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="stop">暂停</button>
         {{# }else{ }}
-        <button class="layui-btn layui-btn-xs" style="background-color: #FFB800" lay-event="noStop">激活</button>
+        <button class="layui-btn layui-btn-xs" style="background-color: #d5a033" lay-event="noStop">激活</button>
         {{# } }}
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/captureRank/saveCaptureRankJob">

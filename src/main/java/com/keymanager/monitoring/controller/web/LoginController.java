@@ -1,5 +1,7 @@
 package com.keymanager.monitoring.controller.web;
 
+import com.keymanager.ckadmin.common.result.Menu;
+import com.keymanager.ckadmin.service.ResourceService;
 import com.keymanager.monitoring.common.base.BaseController;
 import com.keymanager.monitoring.common.csrf.CsrfToken;
 import com.keymanager.monitoring.common.result.Tree;
@@ -11,6 +13,7 @@ import com.keymanager.monitoring.vo.ExtendedUsernamePasswordToken;
 import com.keymanager.util.Constants;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.Enumeration;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
@@ -43,6 +46,9 @@ public class LoginController extends BaseController {
     @Autowired
     private IResourceService resourceService;
 
+    @Resource(name = "resourceService2")
+    private ResourceService resourceService2;
+
     @Autowired
     private IUserInfoService userInfoService;
 
@@ -67,18 +73,49 @@ public class LoginController extends BaseController {
      *
      * @return {String}
      */
-    @GetMapping("login")
+    @GetMapping("/login")
     @CsrfToken(create = true)
-    public String login(HttpSession session) {
+    public ModelAndView login(@RequestParam(required = false) String url, @RequestParam(required = false) String tit, HttpSession session) {
         logger.info("GET请求登录");
+        ModelAndView mv = new ModelAndView();
         if (SecurityUtils.getSubject().isAuthenticated()) {
             if (Constants.OLD_PERMISSION_VERSION.equals(session.getAttribute("version"))) {
-                return "/customerkeyword/keywordfinderList";
+                mv.setViewName("/customerkeyword/keywordfinderList");
+                return mv;
             } else {
-                return "/index";
+                mv.setViewName("/index");
+                mv.addObject("url", url);
+                if (null == url || "".equals(url)) {
+                    mv.addObject("first", "1-1");
+                    return mv;
+                }
+                List menus = (List) session.getAttribute("menus");
+                if (null == menus || menus.isEmpty()) {
+                    menus = resourceService2.selectAuthorizationResource((String) session.getAttribute("username"), null);
+                }
+                int i = 0, j = 0;
+                String key = null;
+                    outFor:
+                for (Object obj : menus) {
+                    Menu menu = (Menu) obj;
+                    i++;
+                    for (Menu m : menu.getChildren()) {
+                        j++;
+                        if (url.equals(m.getHref())) {
+                            key = m.getTitle();
+                            break outFor;
+                        }
+                    }
+                    j = 0;
+                }
+                mv.addObject("key", key);
+                mv.addObject("tit", tit);
+                mv.addObject("id", i + "-" + j);
+                return mv;
             }
         }
-        return "/views/login";
+        mv.setViewName("/newLogin");
+        return mv;
     }
 
     /**
@@ -173,21 +210,18 @@ public class LoginController extends BaseController {
 
     /**
      * 旧版本登录
-     * @return
      */
     @GetMapping("/loginOldVersion")
     @ResponseBody
     public ModelAndView loginOldVersion(HttpSession session) {
         Enumeration<String> e = session.getAttributeNames();
-        if (e.hasMoreElements()){
+        if (e.hasMoreElements()) {
             Subject subject = SecurityUtils.getSubject();
             session.invalidate();
             subject.logout();
         }
         ModelAndView mv = new ModelAndView();
         mv.setViewName("/views/login");
-        mv.addObject("version","1.0");
-        mv.addObject("msg","旧 版 本 登 录");
         return mv;
     }
 }

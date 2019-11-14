@@ -27,7 +27,7 @@ public class NegativeListController {
     @Resource(name = "negativeListService2")
     private NegativeListService negativeListService;
 
-    @RequiresPermissions("/internal/negativelist/searchNegativeLists")
+    @RequiresPermissions("/internal/negativelists/toSearchNegativeLists")
     @RequestMapping(value = "/toSearchNegativeLists", method = RequestMethod.GET)
     public ModelAndView toSearchPositiveLists() {
         ModelAndView mv = new ModelAndView();
@@ -43,7 +43,7 @@ public class NegativeListController {
         return mv;
     }
 
-    @RequiresPermissions("/internal/negativelist/searchNegativeLists")
+    @RequiresPermissions("/internal/negativelists/toSearchNegativeLists")
     @RequestMapping(value = "/searchNegativeLists", method = RequestMethod.POST)
     public ResultBean searchNegativeLists(@RequestBody NegativeListCriteria negativeListCriteria) {
         ResultBean resultBean = new ResultBean();
