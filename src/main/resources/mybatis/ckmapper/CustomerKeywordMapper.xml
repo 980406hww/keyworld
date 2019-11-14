@@ -61,6 +61,7 @@
         FROM t_customer_keyword ck
         WHERE ck.fMachineGroup = #{machineGroup}
         AND ck.fStatus = 1
+        AND ck.fOptimizeRemainingCount > 0
         AND ck.fTerminalType = #{terminalType}
         AND ck.fQueryTime <![CDATA[<]]> NOW()
         AND ck.fInvalidFlag = 0
