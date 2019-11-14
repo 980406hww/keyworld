@@ -170,7 +170,7 @@ layui.define(["element", "jquery"], function (exports) {
         var url = _this.attr("data-url");//选项卡的页面路径
         var needTab = window.localStorage.getItem("needTab");
         if (needTab !== 'need') {
-            url = '/login?url=' + url;
+            url = '/internal/layer/index?url=' + url;
             if (tit) {
                 url += '&tit=' + tit;
             }

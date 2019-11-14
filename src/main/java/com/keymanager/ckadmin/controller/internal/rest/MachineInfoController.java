@@ -659,6 +659,19 @@ public class MachineInfoController extends SpringMVCBaseController {
         return mv;
     }
 
+    @RequiresPermissions("/internal/machineInfo/searchMachineInfos")
+    @RequestMapping(value = "/toMachineInfoFromMGS/{terminalType}/{machineGroup}", method = RequestMethod.GET)
+    public ModelAndView toMachineInfoFromMGS(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "machineGroup") String machineGroup) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("machineManage/machineManage");
+        if (!("null".equals(machineGroup))) {
+            mv.addObject("machineGroupFromATP", machineGroup);
+        }
+        mv.addObject("terminalTypeFromATP", terminalType);
+        mv.addObject("hasProblemTmp", "true");
+        return mv;
+    }
+
     @RequiresPermissions("/internal/machineInfo/machineInfoGroupStat")
     @PostMapping(value = "/machineInfoGroupStat")
     public ResultBean machineInfoGroupStat(@RequestBody MachineInfoGroupStatCriteria machineInfoGroupStatCriteria) {
