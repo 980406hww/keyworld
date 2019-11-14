@@ -230,9 +230,9 @@
 
         window.toKeyword = function (keyword) {
             let terminalType = document.getElementById('terminalType').value;
-            let searchEngine = document.getElementById('searchEngine').value === '' ? 'null' : document.getElementById('searchEngine').value;
-            let belongUser = document.getElementById('userName').value === '' ? 'null' : document.getElementById('userName').value;
-            let url = '/internal/customerKeyword/toKeywordsFromPT/pt/' + terminalType + '/' + searchEngine + '/' + belongUser + '/' + keyword;
+            let searchEngine = document.getElementById('searchEngine').value;
+            let belongUser = document.getElementById('userName').value;
+            let url = '/internal/customerKeyword/toKeywordsFromPT/pt/' + terminalType + '/' + keyword + '/' + searchEngine + '/' + belongUser;
             let title = '关键字:' + keyword + '详情';
             common.updateOrNewTab(url, title, keyword)
         };

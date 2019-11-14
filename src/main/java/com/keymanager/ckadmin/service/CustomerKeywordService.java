@@ -121,4 +121,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void editCustomerOptimizePlanCount(Integer optimizePlanCount, String settingType, List<String> uuids);
 
     void updateSelectFailReason(KeywordCriteria keywordCriteria);
+
+    Integer getMaxInvalidCountByMachineGroup(String machineGroup);
 }
