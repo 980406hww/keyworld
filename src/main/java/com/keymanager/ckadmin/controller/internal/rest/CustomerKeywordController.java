@@ -815,45 +815,38 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toKeywordsFromRS/{businessType}/{terminalType}/{group}/{nrsd}/{irc}")
+    @GetMapping(value = "/toKeywordsFromRS/{businessType}/{terminalType}/{group}/{irc}")
     public ModelAndView toKeywordsFromRS(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "group") String group, @PathVariable(name = "nrsd") String nrsd, @PathVariable(name = "irc") String irc) {
+        @PathVariable(name = "group") String group, @PathVariable(name = "irc") String irc) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/keyword");
         mv.addObject("businessType", businessType);
         mv.addObject("terminalType2", terminalType);
         mv.addObject("status", "1");
         if (!("null").equals(group)) {
-            mv.addObject("group", group);
-        }
-        if (!("null").equals(nrsd)) {
-            mv.addObject("nrsd", nrsd);
+            mv.addObject("groupTmp", group);
         }
         if (!("null").equals(irc)) {
             mv.addObject("irc", irc);
         }
-        // TODO
         return mv;
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toKeywordsFromMGS/{businessType}/{terminalType}/{searchEngine}/{belongUser}/{keyword}")
+    @GetMapping(value = "/toKeywordsFromMGS/{businessType}/{terminalType}/{machineGroup}/{irc}")
     public ModelAndView toKeywordsFromMGS(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "searchEngine") String searchEngine, @PathVariable(name = "belongUser") String belongUser,
-        @PathVariable(name = "keyword") String keyword) {
+        @PathVariable(name = "machineGroup") String machineGroup, @PathVariable(name = "irc") String irc) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/keyword");
         mv.addObject("businessType", businessType);
-        //取名叫terminalType会与session中存在的terminalType同名，值会被覆盖成session中的值
         mv.addObject("terminalType2", terminalType);
-        if (!("null").equals(searchEngine)) {
-            mv.addObject("SearchEngine", searchEngine);
+        mv.addObject("status", "1");
+        if (!("null").equals(machineGroup)) {
+            mv.addObject("machineGroupTmp", machineGroup);
         }
-        if (!("null").equals(belongUser)) {
-            mv.addObject("belongUser", belongUser);
+        if (!("null").equals(irc)) {
+            mv.addObject("irc", irc);
         }
-        mv.addObject("Keyword", keyword);
-        mv.addObject("notLike", "1");
         return mv;
     }
 }

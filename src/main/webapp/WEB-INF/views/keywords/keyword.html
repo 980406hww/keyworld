@@ -89,7 +89,7 @@
                                         <input type="text" name="optimizeGroupName" id="optimizeGroupName" placeholder="请输入优化组名" autocomplete="off"
                                                onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');"
                                                class="layui-input layui-input-text"
-                                               value="<#if group?exists>${group}</#if>"/>
+                                               value="<#if groupTmp?exists>${groupTmp}<#else></#if>"/>
                                     </div>
                                     <div class="layui-inline one-special">
                                         <input type="checkbox" name="optimizeGroupNameLike" value="on" title="模糊搜索">
@@ -122,7 +122,7 @@
                                     <div class="layui-inline" style="width: 140px">
                                         <input type="text" name="machineGroup" id="machineGroup" placeholder="请输入机器分组" autocomplete="off"
                                                onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');"
-                                               class="layui-input layui-input-text " />
+                                               class="layui-input layui-input-text " value="<#if machineGroupTmp?exists>${machineGroupTmp}<#else></#if>"/>
                                     </div>
                                     <div class="layui-inline">
                                         <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索
@@ -214,7 +214,7 @@
                                             <div class="layui-input-inline">
                                                 <input type="number" name="invalidRefreshCount" id="invalidRefreshCount" placeholder="请输入无效点击数" autocomplete="off"
                                                        onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');"
-                                                       class="layui-input" lay-verify="positiveInteger">
+                                                       class="layui-input" lay-verify="positiveInteger" value="<#if irc?exists>${irc}<#else></#if>">
                                             </div>
                                         </div>
 
@@ -260,6 +260,12 @@
     var searchEngine = '<#if SearchEngine?exists>${SearchEngine}</#if>';
     var belongUser = '<#if belongUser?exists>${belongUser}</#if>';
     var terminal225 = '<#if terminalType2?exists>${terminalType2}<#else>PC</#if>';
+    var zzz = '<#if groupTmp?exists>${groupTmp}<#else></#if>';
+    var dataTmp = {
+        status: '<#if status?exists>${status}</#if>',
+        type: '<#if businessType?exists>${businessType}</#if>',
+        terminal: terminal225
+    }
 </script>
 <script src="/static/ok-admin/page/keyword/keyword.js"></script>
 <#include  "./keywordTpl.html" />
