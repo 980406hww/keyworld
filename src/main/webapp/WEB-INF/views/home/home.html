@@ -122,6 +122,38 @@
 </div>
 
 <div class="layui-row layui-col-space15">
+    <!--每日排名涨幅-->
+    <div class="layui-col-md6">
+        <div class="layui-card">
+            <div class="yskj-card-body clearfix" style="position:relative;height: 360px;">
+                <div style="position: absolute;top: 18px;left: 0;z-index: 9999;width: 100%;">
+                    <form class="layui-form layui-form-pane" id="keywordFrom">
+                        <div style="float: right; width: 100px;margin: 0 16px 0 6px">
+                            <div class="my-btn" onclick="toCustomerKeywordMon()">数据详情</div>
+                        </div>
+                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
+                            <select name="terminal" id="terminal" lay-filter="terminal">
+                                <option value="" selected>电脑+手机</option>
+                                <option value="PC">电脑</option>
+                                <option value="Phone">手机</option>
+                            </select>
+                        </div>
+                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
+                            <select name="searchEngine" id="searchEngine" lay-filter="searchEngine">
+                                <option value="">所有</option>
+                            </select>
+                        </div>
+                        <div style="float: right;position: relative;top: 2px;">
+                            <input type="radio" name="time" value="-7" title="7天" lay-filter="keywordTime">
+                            <input type="radio" name="time" value="-30" title="30天" lay-filter="keywordTime">
+                            <input type="radio" name="time" value="-90" title="3个月" lay-filter="keywordTime" checked>
+                        </div>
+                    </form>
+                </div>
+                <div style="height: 100%;" id="keywordLogShow"></div>
+            </div>
+        </div>
+    </div>
     <!--每日站点趋势-->
     <div class="layui-col-md6">
         <div class="layui-card">
@@ -133,8 +165,8 @@
                         </div>
                         <div style="float: right; width: 120px;margin: 0 0 0 6px">
                             <select name="terminalType" id="qzRateTerminalType" lay-filter="qzRateTerminalType">
-                                <option value="">电脑+手机</option>
-                                <option value="PC" selected>电脑</option>
+                                <option value="" selected>电脑+手机</option>
+                                <option value="PC">电脑</option>
                                 <option value="Phone">手机</option>
                             </select>
                         </div>
@@ -154,6 +186,9 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="layui-row layui-col-space15">
     <!--每月站点监控-->
     <div class="layui-col-md6">
         <div class="layui-card">
@@ -165,8 +200,8 @@
                         </div>
                         <div style="float: right; width: 120px;margin: 0 0 0 6px">
                             <select name="qzTerminal" id="qzTerminal" lay-filter="qzTerminal">
-                                <option value="">电脑+手机</option>
-                                <option value="PC" selected>电脑</option>
+                                <option value="" selected>电脑+手机</option>
+                                <option value="PC">电脑</option>
                                 <option value="Phone">手机</option>
                             </select>
                         </div>
@@ -176,48 +211,13 @@
                             </select>
                         </div>
                         <div style="float: right;position: relative;top: 2px;">
-                            <input type="radio" name="time" value="1" title="30天" lay-filter="time">
-                            <input type="radio" name="time" value="2" title="3个月" lay-filter="time">
-                            <input type="radio" name="time" value="3" title="1年" lay-filter="time" checked>
+                            <input type="radio" name="time" value="-30" title="30天" lay-filter="time">
+                            <input type="radio" name="time" value="-90" title="3个月" lay-filter="time" checked>
+                            <input type="radio" name="time" value="-365" title="1年" lay-filter="time">
                         </div>
                     </form>
                 </div>
                 <div style="height: 100%;" id="chargeLogShow"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="layui-row layui-col-space15">
-    <!--每日排名涨幅-->
-    <div class="layui-col-md6">
-        <div class="layui-card">
-            <div class="yskj-card-body clearfix" style="position:relative;height: 360px;">
-                <div style="position: absolute;top: 18px;left: 0;z-index: 9999;width: 100%;">
-                    <form class="layui-form layui-form-pane" id="keywordFrom">
-                        <div style="float: right; width: 100px;margin: 0 16px 0 6px">
-                            <div class="my-btn" onclick="toCustomerKeywordMon()">数据详情</div>
-                        </div>
-                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
-                            <select name="terminal" id="terminal" lay-filter="terminal">
-                                <option value="">电脑+手机</option>
-                                <option value="PC" selected>电脑</option>
-                                <option value="Phone">手机</option>
-                            </select>
-                        </div>
-                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
-                            <select name="searchEngine" id="searchEngine" lay-filter="searchEngine">
-                                <option value="">所有</option>
-                            </select>
-                        </div>
-                        <div style="float: right;position: relative;top: 2px;">
-                            <input type="radio" name="time" value="1" title="30天" lay-filter="keywordTime">
-                            <input type="radio" name="time" value="2" title="3个月" lay-filter="keywordTime">
-                            <input type="radio" name="time" value="3" title="1年" lay-filter="keywordTime" checked>
-                        </div>
-                    </form>
-                </div>
-                <div style="height: 100%;" id="keywordLogShow"></div>
             </div>
         </div>
     </div>
@@ -231,10 +231,10 @@
 </body>
 <script>var condition;</script>
 <script type="text/javascript" src="/static/ok-admin/lib/layui/layui.js"></script>
-<script type="text/javascript" src="/static/ok-admin/js/home.js"></script>
 <script src="/static/ok-admin/js/somePublic.js"></script>
-<script type="text/javascript" src="/static/ok-admin/page/qzsetting/qzChargeMon.js"></script>
+<script type="text/javascript" src="/static/ok-admin/js/home.js"></script>
 <script type="text/javascript" src="/static/ok-admin/page/keyword/customerKeywordMon.js"></script>
+<script type="text/javascript" src="/static/ok-admin/page/qzsetting/qzChargeMon.js"></script>
 <script>
     layui.use(['jquery', 'form', 'common'], function () {
         var $ = layui.jquery;
@@ -242,7 +242,9 @@
         var common = layui.common;
 
         init_searchEngine();
+
         let postData = common.formToJsonObject('qzRateSearchForm');
+
         init_qz_rate_statistics(postData);
 
         function init_searchEngine() {
@@ -292,13 +294,7 @@
                                     x: '10'
                                 },
                                 tooltip: {
-                                    trigger: "axis",
-                                    axisPointer: {
-                                        type: "cross",
-                                        label: {
-                                            backgroundColor: "#6a7985"
-                                        }
-                                    }
+                                    trigger: "axis"
                                 },
                                 legend: {
                                     orient: 'vertical',
@@ -395,7 +391,6 @@
         form.on('select(qzRateTerminalType)', function (data) {
             let postData = common.formToJsonObject('qzRateSearchForm');
             init_qz_rate_statistics(postData);
-
         });
 
         form.on('select(qzRateSearchEngine)', function (data) {

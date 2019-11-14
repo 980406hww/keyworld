@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8">
-    <title>每日站点操作监控</title>
+    <title>每月站点监控</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -66,14 +66,6 @@
             height: 30px;
             line-height: 30px;
         }
-
-        .layui-table-body .layui-table-cell {
-            text-align: left;
-        }
-
-        .layui-table-body .laytable-cell-checkbox {
-            text-align: center;
-        }
     </style>
 </head>
 <body class="childrenBody home">
@@ -86,8 +78,8 @@
                     <form class="layui-form layui-form-pane" id="form">
                         <div style="float: right; width: 120px;margin: 0 6% 0 6px">
                             <select name="qzTerminal" id="qzTerminal" lay-filter="qzTerminal">
-                                <option value="">电脑+手机</option>
-                                <option value="PC" selected>电脑</option>
+                                <option value="" selected>电脑+手机</option>
+                                <option value="PC">电脑</option>
                                 <option value="Phone">手机</option>
                             </select>
                         </div>
@@ -97,9 +89,9 @@
                             </select>
                         </div>
                         <div style="float: right;position: relative;top: 2px;">
-                            <input type="radio" name="time" value="1" title="30天" lay-filter="time">
-                            <input type="radio" name="time" value="2" title="3个月" lay-filter="time">
-                            <input type="radio" name="time" value="3" title="1年" lay-filter="time" checked>
+                            <input type="radio" name="time" value="-30" title="30天" lay-filter="time">
+                            <input type="radio" name="time" value="-90" title="3个月" lay-filter="time" checked>
+                            <input type="radio" name="time" value="-365" title="1年" lay-filter="time">
                         </div>
                     </form>
                 </div>
@@ -134,7 +126,7 @@
         var table = layui.table;
         var laydate = layui.laydate;
 
-        tableInit({searchEngine: '百度', terminal: 'PC'});
+        tableInit({searchEngine: '', terminal: ''});
 
         function tableInit(condition) {
             table.render({
@@ -153,14 +145,16 @@
                 contentType: 'application/json',
                 cols: [[
                     {
-                        field: 'qzDomain', title: '域名', width: '31%', align: 'center', templet: function (d) {
+                        field: 'qzDomain', title: '域名', width: '31%', align: 'left', templet: function (d) {
                             if (d.isDel === 1) {
                                 return '<span lay-event="toQzSetting" style="color: #0c7df5;cursor: pointer;">' + d.qzDomain + '</span>';
                             }
                             return d.qzDomain;
                         }
                     },
-                    {field: 'qzCustomer', title: '客户名称', width: '30%', align: 'center'},
+                    {
+                        field: 'qzCustomer', title: '客户名称', width: '30%', align: 'left'
+                    },
                     {
                         field: 'operationType', title: '操作', width: '10%', align: 'center', templet: function (d) {
                             let msg = '';
@@ -306,11 +300,19 @@
     <div>
         <form class="layui-form layui-form-pane" lay-filter="searchForm" id="searchForm">
             <div class="layui-inline">
+                <label class="layui-form-label">搜索引擎</label>
+                <div class="layui-input-block">
+                    <select name="searchEngine" id="searchEngine">
+                        <option value="">所有</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
                 <label class="layui-form-label">终端选择</label>
                 <div class="layui-input-block">
                     <select name="terminal" id="terminal">
-                        <option value="">电脑+手机</option>
-                        <option value="PC" selected>电脑</option>
+                        <option value="" selected>电脑+手机</option>
+                        <option value="PC">电脑</option>
                         <option value="Phone">手机</option>
                     </select>
                 </div>
@@ -325,14 +327,6 @@
                         <option value="0">暂停</option>
                         <option value="3">下架</option>
                         <option value="4">删除</option>
-                    </select>
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">搜索引擎</label>
-                <div class="layui-input-block">
-                    <select name="searchEngine" id="searchEngine">
-                        <option value="">所有</option>
                     </select>
                 </div>
             </div>

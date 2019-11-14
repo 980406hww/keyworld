@@ -8,7 +8,7 @@ layui.config({base: "/static/ok-admin/js/"}).use(useModel, function () {
             let qzRateRange = postData.qzRateRange === '' ? '1' : postData.qzRateRange;
             let url = '/internal/layer/toQZRateStatisticsDetail/' + qzRateRange + '/' + postData.terminalType + '/' + postData.searchEngine;
             url = encodeURI(encodeURI(url));
-            common.updateOrNewTab(url, '站点涨幅详情', 'qzRateStatisticsDetail');
+            common.updateOrNewTab(url, '站点趋势详情', 'qzRateStatisticsDetail');
         };
 
         window.toChargeMon = function () {

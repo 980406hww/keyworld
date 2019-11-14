@@ -146,13 +146,7 @@
                                 x: '10'
                             },
                             tooltip: {
-                                trigger: "axis",
-                                axisPointer: {
-                                    type: "cross",
-                                    label: {
-                                        backgroundColor: "#6a7985"
-                                    }
-                                }
+                                trigger: "axis"
                             },
                             legend: {
                                 orient: 'vertical',
@@ -311,7 +305,7 @@
 
             let url = '/internal/qzRateStatistics/toQZRateHistory/' + data.terminalType + '/' + data.qzUuid;
 
-            okLayer.open("首页 / 每日站点趋势 / 站点趋势历史", url, "60%", "45%", function (layero) {
+            okLayer.open("首页 / 每日站点趋势 / 站点趋势详情", url, "60%", "45%", function (layero) {
             }, function () {
 
             })

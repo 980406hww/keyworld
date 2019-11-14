@@ -47,22 +47,23 @@ public class CustomerKeywordMonServiceImpl extends ServiceImpl<CustomerKeywordMo
             Long number = (Long) map.get("number");
             int index = dates.size() - 1;
             long count;
+            // todo 用sql进行统计
             if (position <= 3) {
                 count = topThreeData.get(index);
                 topThreeData.remove(index);
                 topThreeData.add(index, number + count);
             }
-            if (position <= 5) {
+            if (position <= 5 && position > 3) {
                 count = topFiveData.get(index);
                 topFiveData.remove(index);
                 topFiveData.add(index, number + count);
             }
-            if (position <= 10) {
+            if (position <= 10 && position > 5) {
                 count = topTenData.get(index);
                 topTenData.remove(index);
                 topTenData.add(index, number + count);
             }
-            if (position <= 50) {
+            if (position <= 50 && position > 10) {
                 count = topFifthData.get(index);
                 topFifthData.remove(index);
                 topFifthData.add(index, number + count);

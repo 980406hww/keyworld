@@ -26,13 +26,7 @@ layui.use(['jquery', 'form', 'common'], function () {
             data: ['新增', '续费', '暂停', '下架', '删除']
         },
         tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                type: 'cross',
-                label: {
-                    backgroundColor: '#337ab7'
-                }
-            }
+            trigger: 'axis'
         },
         toolbox: {
             show: true,
@@ -99,7 +93,7 @@ layui.use(['jquery', 'form', 'common'], function () {
     if (condition) {
         getChargeMonData(condition);
     } else {
-        getChargeMonData({searchEngines: '百度', qzTerminal: 'PC'});
+        getChargeMonData({searchEngines: '', qzTerminal: ''});
     }
 
     function getChargeMonData(condition) {
@@ -165,7 +159,7 @@ layui.use(['jquery', 'form', 'common'], function () {
         getChargeMonData(common.formToJsonObject('form'));
     });
 
-    window.handle = function (name, data, sel = '百度') {
+    window.handle = function (name, data, sel) {
         $("#" + name).empty();
         $('#' + name).append('<option value>所有</option>');// 下拉菜单里添加元素
         $.each(data, function (index, item) {

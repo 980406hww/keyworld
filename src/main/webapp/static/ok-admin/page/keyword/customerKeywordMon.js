@@ -61,13 +61,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
             data: ['前3名', '前5名', '前10名', '前50名']
         },
         tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                type: 'cross',
-                label: {
-                    backgroundColor: '#337ab7'
-                }
-            }
+            trigger: 'axis'
         },
         toolbox: {
             show: true,
@@ -127,8 +121,8 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
         getKeywordMonData(condition);
         tableInit(condition);
     } else {
-        getKeywordMonData({searchEngine: '百度', terminal: 'PC'});
-        tableInit({searchEngine: '百度', terminal: 'PC'});
+        getKeywordMonData({searchEngine: '', terminal: ''});
+        tableInit({searchEngine: '', terminal: ''});
     }
 
     form.on('select(searchEngine)', function () {
@@ -174,11 +168,11 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
         reload(condition);
     });
 
-    window.handle = function (name, data, sel = '百度') {
+    window.handle = function (name, data, searchEngine) {
         $("#" + name).empty();
         $('#' + name).append('<option value>所有</option>');// 下拉菜单里添加元素
         $.each(data, function (index, item) {
-            if (sel === item) {
+            if (searchEngine === item) {
                 $('#' + name).append('<option value="' + item + '" selected>' + item + '</option>');// 下拉菜单里添加元素
             } else {
                 $('#' + name).append('<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
@@ -249,12 +243,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
             show: false
         },
         tooltip: {
-            trigger: 'axis',
-            show: true,
-            axisPointer: {
-                type: 'none'
-            },
-            confine: true
+            trigger: 'axis'
         },
         xAxis: {
             type: 'category',

@@ -118,8 +118,8 @@
                     <form class="layui-form layui-form-pane" id="keywordFrom">
                         <div style="float: right; width: 120px;margin: 0 6% 0 6px">
                             <select name="terminal" id="terminal" lay-filter="terminal">
-                                <option value="">电脑+手机</option>
-                                <option value="PC" selected>电脑</option>
+                                <option value="" selected>电脑+手机</option>
+                                <option value="PC">电脑</option>
                                 <option value="Phone">手机</option>
                             </select>
                         </div>
@@ -212,7 +212,7 @@
                 success: function (res) {
                     console.log(res);
                     if (res.code === 200) {
-                        var type = $("#type");
+                        let type = $("#type");
                         type.empty();
                         type.append('<option value="">关键字类型</option>');
                         if (res.data != null) {
