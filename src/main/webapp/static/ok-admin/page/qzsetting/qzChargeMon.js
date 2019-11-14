@@ -93,7 +93,7 @@ layui.use(['jquery', 'form', 'common'], function () {
     if (condition) {
         getChargeMonData(condition);
     } else {
-        getChargeMonData({searchEngines: '', qzTerminal: ''});
+        getChargeMonData({searchEngines: '', qzTerminal: '', time: "-90"});
     }
 
     function getChargeMonData(condition) {
@@ -110,11 +110,11 @@ layui.use(['jquery', 'form', 'common'], function () {
                 console.log(res);
                 if (res.code === 200) {
                     chargeOption.xAxis.data = res.data.date;
-                    chargeOption.series[0].data = res.data.one;
-                    chargeOption.series[1].data = res.data.two;
-                    chargeOption.series[2].data = res.data.three;
-                    chargeOption.series[3].data = res.data.four;
-                    chargeOption.series[4].data = res.data.five;
+                    chargeOption.series[0].data = res.data.addQzDataCount;  // 新增
+                    chargeOption.series[1].data = res.data.renewalQzDataCount;  // 续费
+                    chargeOption.series[2].data = res.data.stopQzDataCount; // 暂停
+                    chargeOption.series[3].data = res.data.obtainedQzDataCount;  // 下架
+                    chargeOption.series[4].data = res.data.deleteQzDataCount;  // 删除
                     chargeLogShow.setOption(chargeOption); //数据图
                 } else if (res.code === 300) {
                     chargeOption.series[0].data = [];

@@ -44,27 +44,14 @@ public class QZChargeMonController {
             String searchEngines = (String) condition.get("searchEngines");
             String time = (String) condition.get("time");
             String terminal = (String) condition.get("qzTerminal");
-            int num = 12, type = 1;
-            if (null != time) {
-                switch (time) {
-                    case "2":
-                        num = 3;
-                        break;
-                    case "1":
-                        type = 2;
-                        num = 30;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            Map<String, Object> data = qzChargeMonService.getQZChargeMonData(searchEngines, terminal, num, type);
+            Map<String, Object> data = qzChargeMonService.getQZChargeMonData(searchEngines, terminal, time);
             if (null == data || data.isEmpty()) {
                 resultBean.setCode(300);
             } else {
                 resultBean.setData(data);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());

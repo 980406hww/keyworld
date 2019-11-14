@@ -34,28 +34,14 @@ public class CustomerKeywordMonController {
     public ResultBean getCustomerKeywordMonData(@RequestBody Map<String, Object> condition) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
-            String time = (String) condition.get("time");
-            int num = 12, type = 1;
-            if (null != time) {
-                switch (time) {
-                    case "2":
-                        num = 3;
-                        break;
-                    case "1":
-                        num = 30;
-                        type = 2;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            Map<String, Object> data = customerKeywordMonService.getCustomerKeywordMonData(condition, num, type);
+            Map<String, Object> data = customerKeywordMonService.getCustomerKeywordMonData(condition);
             if (null == data || data.isEmpty()) {
                 resultBean.setCode(300);
             } else {
                 resultBean.setData(data);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());

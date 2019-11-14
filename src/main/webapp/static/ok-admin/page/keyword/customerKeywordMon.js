@@ -121,7 +121,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
         getKeywordMonData(condition);
         tableInit(condition);
     } else {
-        getKeywordMonData({searchEngine: '', terminal: ''});
+        getKeywordMonData({searchEngine: '', terminal: '', time: '-90'});
         tableInit({searchEngine: '', terminal: ''});
     }
 

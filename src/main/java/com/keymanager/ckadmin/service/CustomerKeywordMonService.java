@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface CustomerKeywordMonService extends IService<CustomerKeywordMon> {
 
-    Map<String, Object> getCustomerKeywordMonData(Map<String, Object> condition, int num, int type);
+    Map<String, Object> getCustomerKeywordMonData(Map<String, Object> condition);
 
     Page<Map<String, Object>> selectTableByCondition(Map<String, Object> condition);
 }

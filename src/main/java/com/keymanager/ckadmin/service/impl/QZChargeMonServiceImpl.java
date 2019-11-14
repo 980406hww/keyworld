@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 @Service("qzChargeMonService2")
@@ -21,81 +22,41 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
     private QzChargeMonDao qzChargeMonDao;
 
     @Override
-    public Map<String, Object> getQZChargeMonData(String searchEngines, String terminal, Integer num, Integer type) {
+    public Map<String, Object> getQZChargeMonData(String searchEngines, String terminal, String time) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(type == 1 ? Calendar.MONTH : Calendar.DAY_OF_MONTH, type == 1 ? -(--num) : -num);
-        String pattern = "yyyy-MM";
-        if (type == 2) {
-            pattern += "-dd";
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        calendar.add(Calendar.DATE, Integer.parseInt(time));
         Map<String, Object> condition = new HashMap<>(4);
-        condition.put("operationDate", sdf.format(calendar.getTime()));
+        condition.put("ltDate", sdf.format(calendar.getTime()));
+        condition.put("gtDate", sdf.format(new Date()));
         condition.put("searchEngine", searchEngines);
         condition.put("terminal", terminal);
-        if (type == 2) {
-            condition.put("pattern", "%Y-%m-%d");
-        } else {
-            condition.put("pattern", "%Y-%m");
-        }
         List<Map<String, Object>> maps = qzChargeMonDao.getQZChargeMonData(condition);
-        if (null == maps || maps.isEmpty()) {
-            return null;
-        }
-        List<String> date = new ArrayList<>();
-        List<Long> oneData = new ArrayList<>();
-        List<Long> twoData = new ArrayList<>();
-        List<Long> threeData = new ArrayList<>();
-        List<Long> fourData = new ArrayList<>();
-        List<Long> fiveData = new ArrayList<>();
-        String lastMonth = "";
-        for (Map<String, Object> map : maps) {
-            String month = (String) map.get("monthDate");
-            if (!lastMonth.equals(month)) {
-                date.add(month);
-                oneData.add(0L);
-                twoData.add(0L);
-                threeData.add(0L);
-                fourData.add(0L);
-                fiveData.add(0L);
+        if (CollectionUtils.isNotEmpty(maps)) {
+            List<String> date = new ArrayList<>();
+            List<Long> addQzData = new ArrayList<>();
+            List<Long> renewalQzData = new ArrayList<>();
+            List<Long> stopQzData = new ArrayList<>();
+            List<Long> obtainedQzData = new ArrayList<>();
+            List<Long> deleteQzData = new ArrayList<>();
+            for (Map<String, Object> map : maps) {
+                date.add((String) map.get("monthDate"));
+                addQzData.add((Long) map.get("addQzData"));
+                renewalQzData.add((Long) map.get("renewalQzData"));
+                stopQzData.add((Long) map.get("stopQzData"));
+                obtainedQzData.add((Long) map.get("obtainedQzData"));
+                deleteQzData.add((Long) map.get("monthDate"));
             }
-            Integer operationType = (Integer) map.get("operationType");
-            Long number = (Long) map.get("number");
-            int index = date.size() - 1;
-            switch (operationType) {
-                case 2:
-                    oneData.remove(index);
-                    oneData.add(index, number);
-                    break;
-                case 1:
-                    twoData.remove(index);
-                    twoData.add(index, number);
-                    break;
-                case 0:
-                    threeData.remove(index);
-                    threeData.add(index, number);
-                    break;
-                case 3:
-                    fourData.remove(index);
-                    fourData.add(index, number);
-                    break;
-                case 4:
-                    fiveData.remove(index);
-                    fiveData.add(index, number);
-                    break;
-                default:
-                    break;
-            }
-            lastMonth = month;
+            Map<String, Object> data = new HashMap<>(6);
+            data.put("date", date);
+            data.put("addQzDataCount", addQzData);
+            data.put("renewalQzDataCount", renewalQzData);
+            data.put("stopQzDataCount", stopQzData);
+            data.put("obtainedQzDataCount", obtainedQzData);
+            data.put("deleteQzDataCount", deleteQzData);
+            return data;
         }
-        Map<String, Object> data = new HashMap<>(6);
-        data.put("date", date);
-        data.put("one", oneData);
-        data.put("two", twoData);
-        data.put("three", threeData);
-        data.put("four", fourData);
-        data.put("five", fiveData);
-        return data;
+        return null;
     }
 }

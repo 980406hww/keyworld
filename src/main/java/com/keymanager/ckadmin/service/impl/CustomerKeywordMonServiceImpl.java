@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 @Service("customerKeywordMonService2")
@@ -22,61 +23,31 @@ public class CustomerKeywordMonServiceImpl extends ServiceImpl<CustomerKeywordMo
     private CustomerKeywordMonDao customerKeywordMonDao;
 
     @Override
-    public Map<String, Object> getCustomerKeywordMonData(Map<String, Object> condition, int num, int type) {
-        handleCondition(condition, num, type);
+    public Map<String, Object> getCustomerKeywordMonData(Map<String, Object> condition) {
+        handleCondition(condition);
         List<Map<String, Object>> maps = customerKeywordMonDao.getCustomerKeywordMonData(condition);
-        if (null == maps || maps.isEmpty()) {
-            return null;
+        if (CollectionUtils.isNotEmpty(maps)) {
+            List<String> dates = new ArrayList<>();
+            List<Long> topThreeData = new ArrayList<>();
+            List<Long> topFiveData = new ArrayList<>();
+            List<Long> topTenData = new ArrayList<>();
+            List<Long> topFifthData = new ArrayList<>();
+            for (Map<String, Object> map : maps) {
+                dates.add((String) map.get("date"));
+                topThreeData.add((Long) map.get("topThreeCount"));
+                topFiveData.add((Long) map.get("topFiveCount"));
+                topTenData.add((Long) map.get("topTenCount"));
+                topFifthData.add((Long) map.get("topFifthCount"));
+            }
+            Map<String, Object> data = new HashMap<>(5);
+            data.put("date", dates);
+            data.put("topThreeData", topThreeData);
+            data.put("topFiveData", topFiveData);
+            data.put("topTenData", topTenData);
+            data.put("topFifthData", topFifthData);
+            return data;
         }
-        List<String> dates = new ArrayList<>();
-        List<Long> topThreeData = new ArrayList<>();
-        List<Long> topFiveData = new ArrayList<>();
-        List<Long> topTenData = new ArrayList<>();
-        List<Long> topFifthData = new ArrayList<>();
-        String lastDate = "";
-        for (Map<String, Object> map : maps) {
-            String date = (String) map.get("date");
-            if (!lastDate.equals(date)) {
-                dates.add(date);
-                topThreeData.add(0L);
-                topFiveData.add(0L);
-                topTenData.add(0L);
-                topFifthData.add(0L);
-            }
-            Integer position = (Integer) map.get("position");
-            Long number = (Long) map.get("number");
-            int index = dates.size() - 1;
-            long count;
-            // todo 用sql进行统计
-            if (position <= 3) {
-                count = topThreeData.get(index);
-                topThreeData.remove(index);
-                topThreeData.add(index, number + count);
-            }
-            if (position <= 5 && position > 3) {
-                count = topFiveData.get(index);
-                topFiveData.remove(index);
-                topFiveData.add(index, number + count);
-            }
-            if (position <= 10 && position > 5) {
-                count = topTenData.get(index);
-                topTenData.remove(index);
-                topTenData.add(index, number + count);
-            }
-            if (position <= 50 && position > 10) {
-                count = topFifthData.get(index);
-                topFifthData.remove(index);
-                topFifthData.add(index, number + count);
-            }
-            lastDate = date;
-        }
-        Map<String, Object> data = new HashMap<>(5);
-        data.put("date", dates);
-        data.put("topThreeData", topThreeData);
-        data.put("topFiveData", topFiveData);
-        data.put("topTenData", topTenData);
-        data.put("topFifthData", topFifthData);
-        return data;
+        return null;
     }
 
     @Override
@@ -110,13 +81,14 @@ public class CustomerKeywordMonServiceImpl extends ServiceImpl<CustomerKeywordMo
         return page;
     }
 
-    private void handleCondition(Map<String, Object> condition, int num, int type) {
+    private void handleCondition(Map<String, Object> condition) {
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(type == 1 ? Calendar.MONTH : Calendar.DAY_OF_MONTH, type == 1 ? -(--num) : -num);
-        String pattern = type == 2 ? "yyyy-MM-dd" : "yyyy-MM";
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-        condition.put("date", sdf.format(calendar.getTime()));
-        condition.put("pattern", (type == 2 ? "%Y-%m-%d" : "%Y-%m"));
+        calendar.add(Calendar.DATE, Integer.parseInt((String) condition.get("time")));
+        String ltDate = f.format(calendar.getTime());
+        String gtDate = f.format(new Date());
+        condition.put("ltDate", ltDate);
+        condition.put("gtDate", gtDate);
     }
 }
