@@ -132,6 +132,19 @@ public class CustomerController extends SpringMVCBaseController {
     }
 
     /**
+     * 跳转客户规则
+     *
+     * @return
+     */
+    @RequiresPermissions("/internal/customerChargeType/saveCustomerChargeType")
+    @GetMapping(value = "/toCustomersRule")
+    public ModelAndView toCustomersRule() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("customers/customerRuleAdd");
+        return mv;
+    }
+
+    /**
      * 获得用户信息
      *
      * @param uuid

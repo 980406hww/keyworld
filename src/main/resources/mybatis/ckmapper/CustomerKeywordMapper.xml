@@ -404,7 +404,7 @@
         </if>
         <if test="keywordCriteria.keyword != null and keywordCriteria.keyword != ''">
             <choose>
-                <when test="keywordCriteria.notLike != null and keywordCriteria.notLike == '1'">
+                <when test="keywordCriteria.notLike != null and keywordCriteria.notLike == 'on'">
                     AND ck.fKeyword = #{keywordCriteria.keyword}
                 </when>
                 <otherwise>

@@ -154,6 +154,10 @@ html {
     display: none;
 }
 
+.operation > a {
+    margin-left: 5px;
+}
+
 .layadmin-maillist-fluid .layadmin-contact-box:hover .operation {
     display: block;
 }

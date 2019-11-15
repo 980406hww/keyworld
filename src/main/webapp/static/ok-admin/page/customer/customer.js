@@ -82,21 +82,34 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
 
     function init_data(data) {
         $("#data_list").html('');
+        let et = document.getElementById('entryType').value;
         $.each(data, function (index, obj) {
             let item = '<div class="layadmin-contact-box">';
-            item += '      <div class="layui-row"><div class="layui-col-md9">'
+            item += '      <div class="layui-row"><div class="layui-col-md5">'
                 + '        <h3 class="layadmin-title skip" title="' + obj.contactPerson + '">' +
                 '               <input type="checkbox" name="checkItem" value="' + obj.uuid + '" status="' + obj.status + '"lay-skin="primary" >' +
                 '               <strong >' + obj.contactPerson + '</strong>' +
                 '           </h3>'
-                + '         </div><div class="layui-col-md3">';
-            item += '       <div class="operation" style="text-align: center;line-height: 27px"><a href="javascript:void(0)" class="caller-fr can-click" onclick=editCustomer("' + obj.uuid + '")>' +
-                '               修改\n' +
-                '               <i class="layui-icon layui-icon-edit"></i>\n' +
-                '           </a><a style="margin-left: 10px" href="javascript:void(0)" class="caller-fr can-click" onclick=delOneCustomer("' + obj.uuid + '")>' +
-                '               删除\n' +
-                '               <i class="layui-icon layui-icon-close"></i>\n' +
-                '           </a></div>';
+                + '         </div><div class="layui-col-md7">';
+            item += '       <div class="operation" style="text-align: right;line-height: 27px">';
+            if (et === 'qt') {
+                item += '           <a href="javascript:void(0)" class="caller-fr can-click" onclick=openCustomerRule("' + obj.uuid + '")>' +
+                    '                   客户规则' +
+                    '               </a>'
+                    + '             <a href="javascript:void(0)" class="caller-fr can-click" onclick=editCustomer("' + obj.uuid + '")>' +
+                    '                   快速加词' +
+                    '               </a>'
+                    + '             <a href="javascript:void(0)" class="caller-fr can-click" onclick=editCustomer("' + obj.uuid + '")>' +
+                    '                   上传模板' +
+                    '               </a>';
+            }
+            item += '             <a href="javascript:void(0)" class="caller-fr can-click" onclick=editCustomer("' + obj.uuid + '")>' +
+                '                   修改<i style="position: relative;top: 1px" class="layui-icon layui-icon-edit"></i>' +
+                '               </a>'
+                + '             <a href="javascript:void(0)" class="caller-fr can-click" onclick=delOneCustomer("' + obj.uuid + '")>' +
+                '                   删除<i style="position: relative;top: 1px" class="layui-icon layui-icon-close"></i>' +
+                '               </a>'
+                + '</div>';
             item += '</div></div>';
             item += '   <div class="layui-row">' +
                 '       <div class="layui-col-md5">';
@@ -488,6 +501,29 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 sign = false;
             }
         })
+    };
+
+    // 打开客户规则
+    window.openCustomerRule = function(uuid){
+        okLayer.open("首页 / 客户列表 / 客户规则", "/internal/customer/toCustomersRule", "56%", "65%", function (layero) {
+            window[layero.find("iframe")[0]["name"]].initForm(uuid);
+        }, function () {
+            if (sign) {
+                let pageConf = common.formToJsonObject('searchForm');
+                initLayPage(pageConf);
+                sign = false;
+            }
+        })
+    };
+
+    // 打开快速加词
+    window.openQuicklyAddKeyword = function(uuid){
+
+    };
+
+    // 上传日报表
+    window.uploadDayReportList = function(){
+
     };
 
     //更新关键字状态

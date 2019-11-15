@@ -348,6 +348,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             }
             page = customerKeywordService.searchCustomerKeywords(page, keywordCriteria);
             List<CustomerKeyword> keywords = page.getRecords();
+            System.out.println(keywords.get(0).getSearchEngineUrl());
             resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
             resultBean.setMsg("success");
@@ -695,7 +696,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             mv.addObject("belongUser", belongUser);
         }
         mv.addObject("Keyword", keyword);
-        mv.addObject("notLike", "1");
+        mv.addObject("notLike", "on");
         return mv;
     }
 
@@ -812,6 +813,19 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             resultBean.setMsg("未知错误");
         }
         return resultBean;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/toCustomerKeywordFromQZ/{businessType}/{terminalType}/{customerUuid}/{group}")
+    public ModelAndView toCustomerKeywordFromQZ(@PathVariable(name = "businessType") String businessType,
+        @PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "group") String group) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/customerKeyword");
+        mv.addObject("businessType", businessType);
+        mv.addObject("terminalType2", terminalType);
+        mv.addObject("customerUuid", customerUuid);
+        mv.addObject("group", group);
+        return mv;
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")

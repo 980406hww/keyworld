@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.CustomerChargeTypeDao">
+
+    <sql id="rowID">
+        t.fUuid AS `uuid`,
+        t.fCustomerUuid AS `customerUuid`,
+        t.fChargeType AS `chargeType`,
+        t.fUpdateTime AS `updateTime`,
+        t.fCreateTime AS `createTime`
+    </sql>
+
+    <select id="getCustomerChargeType" resultType="com.keymanager.ckadmin.entity.CustomerChargeType">
+        SELECT
+        <include refid="rowID"/>
+        FROM t_customer_charge_type t
+        WHERE t.fCustomerUuid = #{customerUuid}
+    </select>
+
+</mapper>
