@@ -63,7 +63,7 @@ public class QZRateStatisticsController {
     }
 
     /**
-     * 获取站点所有的涨幅趋势数据
+     * 获取站点近3个月的涨幅趋势数据
      */
     @PostMapping("/getQZRateHistory")
     public ResultBean getQZRateHistory(@RequestBody Map requestMap){
@@ -71,7 +71,7 @@ public class QZRateStatisticsController {
         try{
             String qzUuid = (String) requestMap.get("qzUuid");
             String terminalType = (String) requestMap.get("terminalType");
-            resultBean.setData(qzRateStatisticsService.getQzRateHistory(qzUuid,terminalType));
+            resultBean.setData(qzRateStatisticsService.getQzRateHistory(qzUuid, terminalType));
             return resultBean;
         }catch (Exception e){
             e.printStackTrace();

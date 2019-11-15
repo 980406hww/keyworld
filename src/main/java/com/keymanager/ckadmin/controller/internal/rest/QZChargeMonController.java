@@ -125,6 +125,13 @@ public class QZChargeMonController {
             }
             mv.addObject("search", search);
         }
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, 1);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        mv.addObject("dateStart", sdf.format(date));
+        mv.addObject("dateEnd", sdf.format(calendar.getTime()));
         return mv;
     }
 }

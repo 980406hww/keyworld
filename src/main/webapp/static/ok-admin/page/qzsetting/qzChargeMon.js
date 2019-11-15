@@ -33,7 +33,7 @@ layui.use(['jquery', 'form', 'common'], function () {
             type: 'category',
             boundaryGap: false,
             axisLabel: {
-                interval: 30
+                interval: 1
             },
             data: []
         },
@@ -110,7 +110,7 @@ layui.use(['jquery', 'form', 'common'], function () {
     if (condition) {
         getChargeMonData(condition);
     } else {
-        getChargeMonData({searchEngines: '', qzTerminal: '', time: "-90"});
+        getChargeMonData({searchEngines: '', qzTerminal: '', time: "1"});
     }
 
     function getChargeMonData(condition) {
@@ -161,14 +161,14 @@ layui.use(['jquery', 'form', 'common'], function () {
 
     form.on('radio(time)', function (data) {
         switch (data.value) {
-            case '-30':
+            case '1':
+                chargeOption.xAxis.axisLabel.interval = 1;
+                break;
+            case '2':
                 chargeOption.xAxis.axisLabel.interval = 3;
                 break;
-            case '-90':
-                chargeOption.xAxis.axisLabel.interval = 6;
-                break;
             default:
-                chargeOption.xAxis.axisLabel.interval = 30;
+                chargeOption.xAxis.axisLabel.interval = 3;
                 break;
         }
         getChargeMonData(common.formToJsonObject('form'));

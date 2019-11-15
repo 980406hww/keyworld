@@ -59,6 +59,7 @@
         FROM t_qz_rate_statistics
         WHERE fQZSettingUuid = #{qzUuid}
         AND fTerminalType = #{terminalType}
+        AND fRateFullDate BETWEEN #{threeMonAgo} AND #{today}
         GROUP BY fQZSettingUuid
     </select>
 </mapper>

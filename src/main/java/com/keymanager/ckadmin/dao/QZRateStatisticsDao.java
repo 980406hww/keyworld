@@ -26,5 +26,5 @@ public interface QZRateStatisticsDao extends BaseMapper<QZRateStatistics> {
 
     Integer getRate(@Param("qzUuid") Long qzUuid, @Param("terminalType") String terminalType, @Param("rateFullDate") String rateFullDate);
 
-    Map getQzRateHistory(@Param("qzUuid") Long qzUuid, @Param("terminalType") String terminalType);
+    Map getQzRateHistory(@Param("qzUuid") Long qzUuid, @Param("terminalType") String terminalType, @Param("today") String today, @Param("threeMonAgo") String threeMonAgo);
 }

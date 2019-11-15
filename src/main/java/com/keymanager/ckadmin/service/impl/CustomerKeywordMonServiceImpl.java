@@ -88,8 +88,7 @@ public class CustomerKeywordMonServiceImpl extends ServiceImpl<CustomerKeywordMo
         calendar.setTime(new Date());
         calendar.add(Calendar.DATE, Integer.parseInt((String) condition.get("time")));
         String ltDate = f.format(calendar.getTime());
-        String gtDate = f.format(new Date());
         condition.put("ltDate", ltDate);
-        condition.put("gtDate", gtDate);
+        condition.put("gtDate", f.format(new Date()) + " 23:59:59");
     }
 }

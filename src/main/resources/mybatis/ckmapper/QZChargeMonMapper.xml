@@ -9,7 +9,7 @@
             SUM(IF(fOperationType = 2, 1, 0))  AS 'addQzData',
             SUM(IF(fOperationType = 3, 1, 0))  AS 'obtainedQzData',
             SUM(IF(fOperationType = 4, 1, 0))  AS 'deleteQzData',
-            DATE_FORMAT(fOperationDate, '%Y-%m-%d') AS 'monthDate'
+            DATE_FORMAT(fOperationDate, #{condition.dateFormat}) AS 'monthDate'
         FROM t_qz_charge_mon
         WHERE fOperationDate BETWEEN #{condition.ltDate}  AND #{condition.gtDate}
         <if test="condition.searchEngine != null and condition.searchEngine != ''">
@@ -18,6 +18,6 @@
         <if test="condition.terminal != null and condition.terminal != ''">
             AND fTerminalType = #{condition.terminal}
         </if>
-        GROUP BY DATE_FORMAT(fOperationDate, '%Y-%m-%d')
+        GROUP BY DATE_FORMAT(fOperationDate, #{condition.dateFormat})
     </select>
 </mapper>

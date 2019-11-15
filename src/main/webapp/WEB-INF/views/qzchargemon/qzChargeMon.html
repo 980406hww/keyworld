@@ -336,14 +336,14 @@
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label">时间区间</label>
+                <label class="layui-form-label">操作时间</label>
                 <div class="layui-input-block">
-                    <input type="text" autocomplete="off" name="dateStart" id="dateStart" class="layui-input" style="width: 100px;" placeholder=">=">
+                    <input type="text" autocomplete="off" name="dateStart" id="dateStart" value="<#if dateStart?exists>${dateStart}</#if>" class="layui-input" style="width: 100px;" placeholder=">=">
                 </div>
             </div>
             <div class="layui-inline">
                 <div class="layui-input-block" style="margin-left: 0;">
-                    <input type="text" autocomplete="off" name="dateEnd" id="dateEnd" class="layui-input" style="width: 100px;" placeholder="<=">
+                    <input type="text" autocomplete="off" name="dateEnd" id="dateEnd" value="<#if dateEnd?exists>${dateEnd}</#if>" class="layui-input" style="width: 100px;" placeholder="<=">
                 </div>
             </div>
             <div class="layui-inline">

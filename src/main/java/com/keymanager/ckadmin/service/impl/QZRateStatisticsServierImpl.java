@@ -77,7 +77,7 @@ public class QZRateStatisticsServierImpl extends ServiceImpl<QZRateStatisticsDao
     public List<QZRateStatisticsCountVO> getQZRateStatisticCount(QZRateStatisticsCountCriteria qzRateStatisticsCountCriteria) {
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
         String gtDate = f.format(new Date());
-        qzRateStatisticsCountCriteria.setGtRateFullDate(gtDate);
+        qzRateStatisticsCountCriteria.setGtRateFullDate(gtDate + " 23:59:59");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.add(Calendar.DATE, qzRateStatisticsCountCriteria.getQzRateRange());
@@ -118,6 +118,13 @@ public class QZRateStatisticsServierImpl extends ServiceImpl<QZRateStatisticsDao
 
     @Override
     public Map getQzRateHistory(String qzUuid, String terminalType) {
-        return qzRateStatisticsDao.getQzRateHistory(Long.parseLong(qzUuid), terminalType);
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, -3);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String today = sdf.format(date);
+        String threeMonAgo = sdf.format(calendar.getTime());
+        return qzRateStatisticsDao.getQzRateHistory(Long.parseLong(qzUuid), terminalType, today, threeMonAgo);
     }
 }
