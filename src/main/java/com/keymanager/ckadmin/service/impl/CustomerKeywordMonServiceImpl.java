@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.dao.CustomerKeywordMonDao;
 import com.keymanager.ckadmin.entity.CustomerKeywordMon;
 import com.keymanager.ckadmin.service.CustomerKeywordMonService;
+import com.keymanager.ckadmin.vo.CustomerKeywordMonCountVO;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,19 +26,19 @@ public class CustomerKeywordMonServiceImpl extends ServiceImpl<CustomerKeywordMo
     @Override
     public Map<String, Object> getCustomerKeywordMonData(Map<String, Object> condition) {
         handleCondition(condition);
-        List<Map<String, Object>> maps = customerKeywordMonDao.getCustomerKeywordMonData(condition);
-        if (CollectionUtils.isNotEmpty(maps)) {
+        List<CustomerKeywordMonCountVO> customerKeywordMonCountVos = customerKeywordMonDao.getCustomerKeywordMonData(condition);
+        if (CollectionUtils.isNotEmpty(customerKeywordMonCountVos)) {
             List<String> dates = new ArrayList<>();
             List<Long> topThreeData = new ArrayList<>();
             List<Long> topFiveData = new ArrayList<>();
             List<Long> topTenData = new ArrayList<>();
             List<Long> topFifthData = new ArrayList<>();
-            for (Map<String, Object> map : maps) {
-                dates.add((String) map.get("date"));
-                topThreeData.add((Long) map.get("topThreeCount"));
-                topFiveData.add((Long) map.get("topFiveCount"));
-                topTenData.add((Long) map.get("topTenCount"));
-                topFifthData.add((Long) map.get("topFifthCount"));
+            for (CustomerKeywordMonCountVO customerKeywordMonCountVo : customerKeywordMonCountVos) {
+                dates.add(customerKeywordMonCountVo.getDate());
+                topThreeData.add(customerKeywordMonCountVo.getTopThreeCount());
+                topFiveData.add(customerKeywordMonCountVo.getTopFiveCount());
+                topTenData.add(customerKeywordMonCountVo.getTopTenCount());
+                topFifthData.add(customerKeywordMonCountVo.getTopFifthCount());
             }
             Map<String, Object> data = new HashMap<>(5);
             data.put("date", dates);

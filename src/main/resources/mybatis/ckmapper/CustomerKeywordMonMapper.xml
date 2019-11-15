@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.ckadmin.dao.CustomerKeywordMonDao">
-    <select id="getCustomerKeywordMonData" resultType="java.util.HashMap">
+    <select id="getCustomerKeywordMonData" resultType="com.keymanager.ckadmin.vo.CustomerKeywordMonCountVO">
         SELECT
-            SUM(IF(ckm.fPosition BETWEEN 1 AND 3, 1, 0))  AS 'topThreeCount',
+            SUM(IF(ckm.fPosition BETWEEN 1 AND 3, 1, 0)) AS 'topThreeCount',
             SUM(IF(ckm.fPosition BETWEEN 1 AND 5, 1, 0)) AS 'topFiveCount',
-            SUM(IF(ckm.fPosition BETWEEN 1 AND 10, 1, 0))  AS 'topTenCount',
+            SUM(IF(ckm.fPosition BETWEEN 1 AND 10, 1, 0)) AS 'topTenCount',
             SUM(IF(ckm.fPosition BETWEEN 1 AND 50, 1, 0)) AS 'topFifthCount',
             DATE_FORMAT(ckm.fRecordDate, '%Y-%m-%d') AS 'date'
         FROM t_customer_keyword_mon ckm

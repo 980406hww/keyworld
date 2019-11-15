@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8">
-    <title>关键字管理系统</title>
+    <title>站点趋势历史</title>
 
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -13,7 +13,6 @@
     <script type="text/javascript" src="/static/ok-admin/lib/echarts/echarts.min.js"></script>
     <script type="text/javascript" src="/static/ok-admin/lib/echarts/echarts.theme.js"></script>
     <style>
-
         input.layui-input.layui-unselect {
             height: 30px !important;
         }
@@ -29,6 +28,7 @@
             cursor: pointer;
             font-size: 0;
         }
+
         .map-body {
             height: 300px;
         }
@@ -46,7 +46,7 @@
             </div>
         </div>
     </div>
-
+    
 </div>
 
 </body>
@@ -97,13 +97,6 @@
                                 tooltip: {
                                     trigger: "axis"
                                 },
-                                legend: {
-                                    orient: 'vertical',
-                                    data: [
-                                        "涨幅"
-
-                                    ]
-                                },
                                 grid: {
                                     top: "12%",
                                     left: "3%",
@@ -115,6 +108,9 @@
                                     {
                                         type: "category",
                                         boundaryGap: false,
+                                        axisLabel: {
+                                            interval: 3,
+                                        },
                                         data: date
                                     }
                                 ],
@@ -127,11 +123,15 @@
                                     {
                                         name: "涨幅",
                                         type: "line",
-                                        areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
+                                        smooth: true,
+                                        symbolSize: 1,
+                                        symbol: 'none',
+                                        lineStyle: {
+                                            type: "solid",
+                                            width: 1
+                                        },
                                         data: rate
-
                                     }
-
                                 ]
                             };
                             let qzRateHistory = echarts.init($('#qzRateHistory')[0]);

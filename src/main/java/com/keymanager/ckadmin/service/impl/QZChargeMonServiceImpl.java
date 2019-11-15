@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.dao.QzChargeMonDao;
 import com.keymanager.ckadmin.entity.QzChargeMon;
 import com.keymanager.ckadmin.service.QzChargeMonService;
+import com.keymanager.ckadmin.vo.QZChargeMonCountVO;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,21 +33,21 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
         condition.put("gtDate", sdf.format(new Date()));
         condition.put("searchEngine", searchEngines);
         condition.put("terminal", terminal);
-        List<Map<String, Object>> maps = qzChargeMonDao.getQZChargeMonData(condition);
-        if (CollectionUtils.isNotEmpty(maps)) {
+        List<QZChargeMonCountVO> chargeMonCountVos = qzChargeMonDao.getQZChargeMonData(condition);
+        if (CollectionUtils.isNotEmpty(chargeMonCountVos)) {
             List<String> date = new ArrayList<>();
             List<Long> addQzData = new ArrayList<>();
             List<Long> renewalQzData = new ArrayList<>();
             List<Long> stopQzData = new ArrayList<>();
             List<Long> obtainedQzData = new ArrayList<>();
             List<Long> deleteQzData = new ArrayList<>();
-            for (Map<String, Object> map : maps) {
-                date.add((String) map.get("monthDate"));
-                addQzData.add((Long) map.get("addQzData"));
-                renewalQzData.add((Long) map.get("renewalQzData"));
-                stopQzData.add((Long) map.get("stopQzData"));
-                obtainedQzData.add((Long) map.get("obtainedQzData"));
-                deleteQzData.add((Long) map.get("monthDate"));
+            for (QZChargeMonCountVO qzChargeMonCountVo : chargeMonCountVos) {
+                date.add(qzChargeMonCountVo.getMonthDate());
+                addQzData.add(qzChargeMonCountVo.getAddQzData());
+                renewalQzData.add(qzChargeMonCountVo.getRenewalQzData());
+                stopQzData.add(qzChargeMonCountVo.getStopQzData());
+                obtainedQzData.add(qzChargeMonCountVo.getObtainedQzData());
+                deleteQzData.add(qzChargeMonCountVo.getDeleteQzData());
             }
             Map<String, Object> data = new HashMap<>(6);
             data.put("date", date);

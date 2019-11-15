@@ -6,6 +6,7 @@ layui.use(['jquery', 'form', 'common'], function () {
     var common = layui.common;
 
     var chargeOption = {
+        color: ['#51d02e', '#2aa0ea', '#fac600', '#ff3701', '#a951ec'],
         title: {
             text: '每月站点监控',
             subtext: '',
@@ -15,12 +16,12 @@ layui.use(['jquery', 'form', 'common'], function () {
         grid: {
             x: 40,
             y: 50,
-            x2: 90,
-            y2: 50,
+            x2: 60,
+            y2: 20,
         },
         legend: {
             orient: 'vertical',
-            icon: "circle",
+            icon: "rect",
             x: 'right',
             y: 'center',
             data: ['新增', '续费', '暂停', '下架', '删除']
@@ -28,16 +29,11 @@ layui.use(['jquery', 'form', 'common'], function () {
         tooltip: {
             trigger: 'axis'
         },
-        toolbox: {
-            show: true,
-            right: 20
-        },
         xAxis: {
             type: 'category',
             boundaryGap: false,
             axisLabel: {
-                interval: 0,
-                rotate: -30
+                interval: 30
             },
             data: []
         },
@@ -48,47 +44,68 @@ layui.use(['jquery', 'form', 'common'], function () {
             {
                 name: '新增',
                 type: 'line',
-                stack: '总量',
                 smooth: true,
-                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
+                symbolSize: 1,
+                symbol: 'none',
+                lineStyle: {
+                    type: "solid",
+                    width: 1
+                },
                 data: [],
             },
             {
                 name: '续费',
                 type: 'line',
-                stack: '总量',
                 smooth: true,
-                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
+                symbolSize: 1,
+                symbol: 'none',
+                lineStyle: {
+                    type: "solid",
+                    width: 1
+                },
                 data: [],
             },
             {
                 name: '暂停',
                 type: 'line',
-                stack: '总量',
                 smooth: true,
-                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
+                symbolSize: 1,
+                symbol: 'none',
+                lineStyle: {
+                    type: "solid",
+                    width: 1
+                },
                 data: [],
             },
             {
                 name: '下架',
                 type: 'line',
-                stack: '总量',
                 smooth: true,
-                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
+                symbolSize: 1,
+                symbol: 'none',
+                lineStyle: {
+                    type: "solid",
+                    width: 1
+                },
                 data: [],
             },
             {
                 name: '删除',
                 type: 'line',
-                stack: '总量',
                 smooth: true,
-                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
+                symbolSize: 1,
+                symbol: 'none',
+                lineStyle: {
+                    type: "solid",
+                    width: 1
+                },
                 data: [],
             }
         ]
     };
 
     var chargeLogShow = echarts.init(document.getElementById('chargeLogShow'));
+    chargeLogShow.showLoading({text: '数据加载中'});
 
     if (condition) {
         getChargeMonData(condition);
@@ -107,7 +124,7 @@ layui.use(['jquery', 'form', 'common'], function () {
             },
             data: JSON.stringify(condition),
             success: function (res) {
-                console.log(res);
+                chargeLogShow.hideLoading();
                 if (res.code === 200) {
                     chargeOption.xAxis.data = res.data.date;
                     chargeOption.series[0].data = res.data.addQzDataCount;  // 新增
@@ -115,19 +132,20 @@ layui.use(['jquery', 'form', 'common'], function () {
                     chargeOption.series[2].data = res.data.stopQzDataCount; // 暂停
                     chargeOption.series[3].data = res.data.obtainedQzDataCount;  // 下架
                     chargeOption.series[4].data = res.data.deleteQzDataCount;  // 删除
-                    chargeLogShow.setOption(chargeOption); //数据图
+                    chargeLogShow.setOption(chargeOption, true); //数据图
                 } else if (res.code === 300) {
                     chargeOption.series[0].data = [];
                     chargeOption.series[1].data = [];
                     chargeOption.series[2].data = [];
                     chargeOption.series[3].data = [];
                     chargeOption.series[4].data = [];
-                    chargeLogShow.setOption(chargeOption);
+                    chargeLogShow.setOption(chargeOption, true);
                 } else {
                     common.showFailMsg('每月站点监控数据获取失败');
                 }
             },
             error: function () {
+                chargeLogShow.hideLoading();
                 common.showFailMsg('网络异常请稍后再试');
             }
         });
@@ -143,17 +161,14 @@ layui.use(['jquery', 'form', 'common'], function () {
 
     form.on('radio(time)', function (data) {
         switch (data.value) {
-            case '1':
-                chargeOption.xAxis.axisLabel.rotate = -30;
-                chargeOption.grid.y2 = 50;
+            case '-30':
+                chargeOption.xAxis.axisLabel.interval = 3;
                 break;
-            case '2':
-                chargeOption.xAxis.axisLabel.rotate = 0;
-                chargeOption.grid.y2 = 20;
+            case '-90':
+                chargeOption.xAxis.axisLabel.interval = 6;
                 break;
-            case '3':
-                chargeOption.xAxis.axisLabel.rotate = -30;
-                chargeOption.grid.y2 = 50;
+            default:
+                chargeOption.xAxis.axisLabel.interval = 30;
                 break;
         }
         getChargeMonData(common.formToJsonObject('form'));

@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8">
-    <title>关键字管理系统</title>
+    <title>站点趋势详情</title>
 
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -37,6 +37,12 @@
 
         .layui-form-radio > i {
             margin-right: 4px !important;
+        }
+
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 165px;
         }
     </style>
 </head>
@@ -135,10 +141,10 @@
                 timeout: 10000,
                 type: 'POST',
                 success: function (res) {
-                    console.log(res);
                     if (res.code === 200) {
                         var qzDailyStatisticsData = res.data;
                         var qzDailyStatisticsOption = {
+                            color: ['#1fd5e5', '#51d02e', '#a951ec', '#ff3701'],
                             title: {
                                 text: '每日站点趋势',
                                 subtext: '',
@@ -150,7 +156,7 @@
                             },
                             legend: {
                                 orient: 'vertical',
-                                icon: "circle",
+                                icon: "rect",
                                 x: 'right',
                                 y: 'center',
                                 data: [
@@ -163,16 +169,15 @@
                             grid: {
                                 x: 40,
                                 y: 50,
-                                x2: 90,
-                                y2: 40,
+                                x2: 60,
+                                y2: 20,
                             },
                             xAxis: {
                                 type: "category",
                                 boundaryGap: false,
                                 data: qzDailyStatisticsData.date,
                                 axisLabel: {
-                                    interval: 0,
-                                    rotate: -30
+                                    interval: 3
                                 }
                             },
                             yAxis: {
@@ -184,10 +189,11 @@
                                         name: "站点总数",
                                         type: "line",
                                         smooth: true,
-                                        areaStyle: {
-                                            normal: {
-                                                color: 'rgba(255,255,255,0)'
-                                            }
+                                        symbolSize: 1,
+                                        symbol: 'none',
+                                        lineStyle: {
+                                            type: "solid",
+                                            width: 1
                                         },
                                         data: qzDailyStatisticsData.totalCount,
 
@@ -196,10 +202,11 @@
                                         name: "上涨个数",
                                         type: "line",
                                         smooth: true,
-                                        areaStyle: {
-                                            normal: {
-                                                color: 'rgba(255,255,255,0)'
-                                            }
+                                        symbolSize: 1,
+                                        symbol: 'none',
+                                        lineStyle: {
+                                            type: "solid",
+                                            width: 1
                                         },
                                         data: qzDailyStatisticsData.riseCount
                                     },
@@ -207,10 +214,11 @@
                                         name: "不变个数",
                                         type: "line",
                                         smooth: true,
-                                        areaStyle: {
-                                            normal: {
-                                                color: 'rgba(255,255,255,0)'
-                                            }
+                                        symbolSize: 1,
+                                        symbol: 'none',
+                                        lineStyle: {
+                                            type: "solid",
+                                            width: 1
                                         },
                                         data: qzDailyStatisticsData.unchangedCount
                                     },
@@ -218,28 +226,25 @@
                                         name: "下降个数",
                                         type: "line",
                                         smooth: true,
-                                        areaStyle: {
-                                            normal: {
-                                                color: 'rgba(255,255,255,0)'
-                                            }
+                                        symbolSize: 1,
+                                        symbol: 'none',
+                                        lineStyle: {
+                                            type: "solid",
+                                            width: 1
                                         },
                                         data: qzDailyStatisticsData.fallCount
                                     }
-
                                 ]
                         };
                         switch (condition.qzRateRange) {
                             case '-7':
-                                qzDailyStatisticsOption.xAxis.axisLabel.rotate = 0;
-                                qzDailyStatisticsOption.grid.y2 = 20;
+                                qzDailyStatisticsOption.xAxis.axisLabel.interval = 0;
                                 break;
                             case '-30':
-                                qzDailyStatisticsOption.xAxis.axisLabel.rotate = -30;
-                                qzDailyStatisticsOption.grid.y2 = 40;
+                                qzDailyStatisticsOption.xAxis.axisLabel.interval = 3;
                                 break;
                             case '-90':
-                                qzDailyStatisticsOption.xAxis.axisLabel.rotate = -30;
-                                qzDailyStatisticsOption.grid.y2 = 40;
+                                qzDailyStatisticsOption.xAxis.axisLabel.interval = 6;
                                 break;
                         }
                         qzDailyStatistics.setOption(qzDailyStatisticsOption);
@@ -253,21 +258,18 @@
 
         form.on('select(qzRateTerminalType)', function (data) {
             let postData = common.formToJsonObject('qzRateSearchForm');
-            console.log(postData);
             init_qz_rate_statistics(postData);
             init_table_data(postData);
         });
 
         form.on('select(qzRateSearchEngine)', function (data) {
             let postData = common.formToJsonObject('qzRateSearchForm');
-            console.log(postData);
             init_qz_rate_statistics(postData);
             init_table_data(postData);
         });
 
         form.on('radio(qzRateRange)', function (data) {
             let postData = common.formToJsonObject('qzRateSearchForm');
-            console.log(postData);
             init_qz_rate_statistics(postData);
         });
 
@@ -295,7 +297,7 @@
                 ]],
                 height: 'full-405',
                 done: function (res, curr, count) {
-                    console.log(res);
+                    // console.log(res);
                 }
             });
         }

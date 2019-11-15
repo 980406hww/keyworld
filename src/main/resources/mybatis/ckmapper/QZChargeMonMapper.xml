@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.ckadmin.dao.QzChargeMonDao">
     <!--查询一条操作类型信息-->
-    <select id="getQZChargeMonData" resultType="java.util.HashMap">
+    <select id="getQZChargeMonData" resultType="com.keymanager.ckadmin.vo.QZChargeMonCountVO">
         SELECT
             SUM(IF(fOperationType = 0, 1, 0))  AS 'stopQzData',
             SUM(IF(fOperationType = 1, 1, 0)) AS 'renewalQzData',

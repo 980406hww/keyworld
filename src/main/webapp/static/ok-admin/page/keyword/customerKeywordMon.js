@@ -4,8 +4,109 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
     var common = layui.common;
     var table = layui.table;
 
-    window.getKeywordMonData = function (condition) {
-        console.log('condition', condition);
+    var keywordOption = {
+        color: ['#51d02e', '#2aa0ea', '#fac600', '#a951ec'],
+        title: {
+            text: '每日排名涨幅',
+            subtext: '',
+            y: '10',
+            x: '10'
+        },
+        grid: {
+            x: 40,
+            y: 50,
+            x2: 60,
+            y2: 20,
+        },
+        legend: {
+            orient: 'vertical',
+            icon: "rect",
+            x: 'right',
+            y: 'center',
+            data: ['前3名', '前5名', '前10名', '前50名']
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        toolbox: {
+            show: true,
+            right: 20
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            axisLabel: {
+                interval: 10
+            },
+            data: []
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: '前3名',
+                type: 'line',
+                smooth: true,
+                symbolSize: 1,
+                symbol: 'none',
+                lineStyle: {
+                    type: "solid",
+                    width: 1
+                },
+                data: [],
+            },
+            {
+                name: '前5名',
+                type: 'line',
+                smooth: true,
+                symbolSize: 1,
+                symbol: 'none',
+                lineStyle: {
+                    type: "solid",
+                    width: 1
+                },
+                data: []
+            },
+            {
+                name: '前10名',
+                type: 'line',
+                smooth: true,
+                symbolSize: 1,
+                symbol: 'none',
+                lineStyle: {
+                    type: "solid",
+                    width: 1
+                },
+                data: []
+            },
+            {
+                name: '前50名',
+                type: 'line',
+                smooth: true,
+                symbolSize: 1,
+                symbol: 'none',
+                lineStyle: {
+                    type: "solid",
+                    width: 1
+                },
+                data: []
+            }
+        ]
+    };
+
+    var keywordLogShow = echarts.init(document.getElementById('keywordLogShow'));
+    keywordLogShow.showLoading({text: '数据加载中'});
+
+    if (condition) {
+        getKeywordMonData(condition);
+        tableInit(condition);
+    } else {
+        getKeywordMonData({searchEngine: '', terminal: '', time: '-90'});
+        tableInit({searchEngine: '', terminal: ''});
+    }
+
+    function getKeywordMonData(condition) {
         $.ajax({
             url: '/internal/customerkeywordmon/getCustomerKeywordMonData',
             type: 'post',
@@ -16,7 +117,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
             },
             data: JSON.stringify(condition),
             success: function (res) {
-                console.log(res);
+                keywordLogShow.hideLoading();
                 if (res.code === 200) {
                     keywordOption.xAxis.data = res.data.date;
                     keywordOption.series[0].data = res.data.topThreeData;
@@ -35,94 +136,10 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                 }
             },
             error: function () {
+                keywordLogShow.hideLoading();
                 common.showFailMsg('网络异常请稍后再试');
             }
         });
-    };
-
-    var keywordOption = {
-        title: {
-            text: '每日排名涨幅',
-            subtext: '',
-            y: '10',
-            x: '10'
-        },
-        grid: {
-            x: 40,
-            y: 50,
-            x2: 90,
-            y2: 50,
-        },
-        legend: {
-            orient: 'vertical',
-            icon: "circle",
-            x: 'right',
-            y: 'center',
-            data: ['前3名', '前5名', '前10名', '前50名']
-        },
-        tooltip: {
-            trigger: 'axis'
-        },
-        toolbox: {
-            show: true,
-            right: 20
-        },
-        xAxis: {
-            type: 'category',
-            boundaryGap: false,
-            axisLabel: {
-                interval: 0,
-                rotate: -30
-            },
-            data: []
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: [
-            {
-                name: '前3名',
-                type: 'line',
-                stack: '总量',
-                smooth: true,
-                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
-                data: [],
-            },
-            {
-                name: '前5名',
-                type: 'line',
-                stack: '总量',
-                smooth: true,
-                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
-                data: []
-            },
-            {
-                name: '前10名',
-                type: 'line',
-                stack: '总量',
-                smooth: true,
-                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
-                data: []
-            },
-            {
-                name: '前50名',
-                type: 'line',
-                stack: '总量',
-                smooth: true,
-                areaStyle: {normal: {color: 'rgba(255,255,255,0)'}},
-                data: []
-            }
-        ]
-    };
-
-    var keywordLogShow = echarts.init(document.getElementById('keywordLogShow'));
-
-    if (condition) {
-        getKeywordMonData(condition);
-        tableInit(condition);
-    } else {
-        getKeywordMonData({searchEngine: '', terminal: '', time: '-90'});
-        tableInit({searchEngine: '', terminal: ''});
     }
 
     form.on('select(searchEngine)', function () {
@@ -140,17 +157,14 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
     form.on('radio(keywordTime)', function (data) {
         var condition = common.formToJsonObject('keywordFrom');
         switch (data.value) {
-            case '1':
-                keywordOption.xAxis.axisLabel.rotate = -30;
-                keywordOption.grid.y2 = 50;
+            case '-7':
+                keywordOption.xAxis.axisLabel.interval = 0;
                 break;
-            case '2':
-                keywordOption.xAxis.axisLabel.rotate = 0;
-                keywordOption.grid.y2 = 20;
+            case '-30':
+                keywordOption.xAxis.axisLabel.interval = 3;
                 break;
-            case '3':
-                keywordOption.xAxis.axisLabel.rotate = -30;
-                keywordOption.grid.y2 = 50;
+            default:
+                keywordOption.xAxis.axisLabel.interval = 6;
                 break;
         }
         getKeywordMonData(condition);
@@ -236,7 +250,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
         },
         legend: {
             orient: 'vertical',
-            icon: "circle",
+            icon: "rect",
             x: 'right',
             y: 'center',
             data: ['排名'],
