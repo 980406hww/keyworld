@@ -665,7 +665,7 @@
         SET fQueryDate = CURRENT_DATE(),
         fQueryCount = fQueryCount + 1,
         fInvalidRefreshCount = fInvalidRefreshCount + 1,
-        fQueryTime = DATE_ADD(fQueryTime, INTERVAL (IF ((ROUND(RAND(),1) &lt; 0.5), ROUND(fQueryInterval * ROUND(RAND() + 1)), ROUND(fQueryInterval * ROUND(RAND() * 0.4 + 0.1)))) SECOND ),
+        fQueryTime = DATE_ADD(fQueryTime, INTERVAL ROUND(fQueryInterval * (2*RAND() + 8)/10) SECOND ),
         fInvalidFlag = if(fInvalidRefreshCount > 8, 1, 0)
         WHERE fUuid IN
         <foreach item="uuid" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
