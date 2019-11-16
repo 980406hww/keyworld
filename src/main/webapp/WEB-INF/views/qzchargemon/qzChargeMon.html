@@ -47,7 +47,7 @@
         }
 
         .layui-inline input {
-            width: 120px;
+            width: 150px;
             height: 30px;
         }
 
@@ -96,8 +96,8 @@
                         </div>
                         <div style="float: right;position: relative;top: 2px;">
                             <input type="radio" name="time" value="-30" title="30天" lay-filter="time">
-                            <input type="radio" name="time" value="-90" title="3个月" lay-filter="time" checked>
-                            <input type="radio" name="time" value="-365" title="1年" lay-filter="time">
+                            <input type="radio" name="time" value="1" title="1年" lay-filter="time" checked>
+                            <input type="radio" name="time" value="2" title="3年" lay-filter="time">
                         </div>
                     </form>
                 </div>
@@ -116,6 +116,8 @@
     var terminal = '<#if terminal?exists>${terminal}</#if>';
     var search = '<#if search?exists>${search}</#if>';
     var time = '<#if time?exists>${time}</#if>';
+    var dateStart = '<#if dateStart?exists>${dateStart}</#if>';
+    var dateEnd = '<#if dateEnd?exists>${dateEnd}</#if>';
     var condition = {
         searchEngines: search,
         qzTerminal: terminal,
@@ -132,9 +134,7 @@
         var table = layui.table;
         var laydate = layui.laydate;
 
-        tableInit({searchEngine: '', terminal: ''});
-
-        function tableInit(condition) {
+        window.qzChargeTableInit = function (condition) {
             table.render({
                 elem: '#table',
                 method: 'post',
@@ -199,23 +199,24 @@
                 height: 'full-385',
                 loading: true,
                 done: function (res, curr, count) {
+                    $("#dateStart").val(condition.dateStart);
+                    $("#dateEnd").val(condition.dateEnd);
                     laydate.render({elem: '#dateStart'});
                     laydate.render({elem: '#dateEnd'});
                     getSeData('searchEngine');
                 }
             });
+        };
+
+        if (condition) {
+            console.log(condition);
+            qzChargeTableInit(condition);
+        } else {
+            qzChargeTableInit({searchEngine: '', terminal: '', dateStart: dateStart, dateEnd: dateEnd});
         }
 
         function initFrom() {
-            if (condition.terminal) {
-                if (condition.terminal === 'PC') {
-                    document.getElementById('terminal').children[1].setAttribute('selected', '');
-                } else {
-                    document.getElementById('terminal').children[2].setAttribute('selected', '');
-                }
-            } else {
-                document.getElementById('terminal').children[1].removeAttribute('selected');
-            }
+            initCustomer(condition.customerUuid);
             if (condition.operationType) {
                 switch (condition.operationType) {
                     case '1':
@@ -237,10 +238,40 @@
                         break;
                 }
             }
-            handle('searchEngine', searchEngine, condition.searchEngine);
             document.getElementById('dateStart').value = condition.dateStart;
             document.getElementById('dateEnd').value = condition.dateEnd;
             form.render('select');
+        }
+
+        function initCustomer(customerUuid) {
+            $.ajax({
+                url: "/internal/customer/getActiveCustomers2",
+                type: "GET",
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        var customer = $("#customer");
+                        customer.empty();
+                        customer.append('<option value="">请选择客户</option>');
+                        if (res.data != null) {
+                            let customerList = res.data;
+                            $.each(customerList, function (idx, val) {
+                                if(customerUuid === val.uuid){
+                                    customer.append('<option value="' + val.contactPerson + '_' + val.uuid + '" selected>' + val.contactPerson + '_' + val.uuid + '</option>')
+                                }else{
+                                    customer.append('<option value="' + val.contactPerson + '_' + val.uuid + '" >' + val.contactPerson + '_' + val.uuid + '</option>')
+                                }
+                            });
+                        }
+                        form.render('select');
+                    } else {
+                        common.showFailMsg("数据获取失败");
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络错误请稍后再试");
+                }
+            });
         }
 
         window.resetForm = function () {
@@ -256,10 +287,11 @@
             handle('searchEngine', searchEngine);
         };
 
-        let condition = null;
+        var condition = null;
 
         window.getManyData = function () {
             condition = common.formToJsonObject('searchForm');
+            console.log(condition);
             table.reload('table', {
                 where: condition,
                 page: {
@@ -305,20 +337,16 @@
     <div>
         <form class="layui-form layui-form-pane" lay-filter="searchForm" id="searchForm">
             <div class="layui-inline">
-                <label class="layui-form-label">搜索引擎</label>
+                <label class="layui-form-label">域名</label>
                 <div class="layui-input-block">
-                    <select name="searchEngine" id="searchEngine">
-                        <option value="">所有</option>
-                    </select>
+                    <input type="text" autocomplete="off" name="qzDomain" id="qzDomain" class="layui-input" style="width: 100px;" placeholder="请输入域名">
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label">终端选择</label>
+                <label class="layui-form-label">客户名称</label>
                 <div class="layui-input-block">
-                    <select name="terminal" id="terminal">
-                        <option value="" selected>电脑+手机</option>
-                        <option value="PC">电脑</option>
-                        <option value="Phone">手机</option>
+                    <select name="customerUuid" id="customerUuid">
+                        <option value="" selected>请选择客户名称</option>
                     </select>
                 </div>
             </div>
@@ -326,7 +354,7 @@
                 <label class="layui-form-label">操作类型</label>
                 <div class="layui-input-block">
                     <select name="operationType" id="operationType">
-                        <option value="">所有</option>
+                        <option value="">请选择操作类型</option>
                         <option value="2">新增</option>
                         <option value="1">续费</option>
                         <option value="0">暂停</option>
@@ -338,12 +366,12 @@
             <div class="layui-inline">
                 <label class="layui-form-label">操作时间</label>
                 <div class="layui-input-block">
-                    <input type="text" autocomplete="off" name="dateStart" id="dateStart" value="<#if dateStart?exists>${dateStart}</#if>" class="layui-input" style="width: 100px;" placeholder=">=">
+                    <input type="text" autocomplete="off" name="dateStart" id="dateStart" class="layui-input" style="width: 100px;" placeholder=">=">
                 </div>
             </div>
             <div class="layui-inline">
                 <div class="layui-input-block" style="margin-left: 0;">
-                    <input type="text" autocomplete="off" name="dateEnd" id="dateEnd" value="<#if dateEnd?exists>${dateEnd}</#if>" class="layui-input" style="width: 100px;" placeholder="<=">
+                    <input type="text" autocomplete="off" name="dateEnd" id="dateEnd" class="layui-input" style="width: 100px;" placeholder="<=">
                 </div>
             </div>
             <div class="layui-inline">

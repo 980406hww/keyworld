@@ -68,11 +68,11 @@
         <div class="layui-card">
             <div class="yskj-card-body clearfix cart-data">
                 <div class="img-box" ok-pc-in-show>
-                    <img src="${ctx.basePath}/static/ok-admin/images/home-01.png" alt="none"/>
+                    <img src="${ctx.basePath}/static/ok-admin/images/home-04.png" alt="none"/>
                 </div>
                 <div class="cart-r">
-                    <div class="stat-text incomes-num">0</div>
-                    <div class="stat-heading">收入</div>
+                    <div class="stat-text fans-num">0</div>
+                    <div class="stat-heading">客户</div>
                 </div>
             </div>
         </div>
@@ -86,7 +86,21 @@
                 </div>
                 <div class="cart-r">
                     <div class="stat-text goods-num">0</div>
-                    <div class="stat-heading">商品</div>
+                    <div class="stat-heading">站点</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-col-xs6 layui-col-md3">
+        <div class="layui-card">
+            <div class="yskj-card-body clearfix cart-data">
+                <div class="img-box" ok-pc-in-show>
+                    <img src="${ctx.basePath}/static/ok-admin/images/home-01.png" alt="none"/>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text incomes-num">0</div>
+                    <div class="stat-heading">关键词</div>
                 </div>
             </div>
         </div>
@@ -100,29 +114,16 @@
                 </div>
                 <div class="cart-r">
                     <div class="stat-text blogs-num">0</div>
-                    <div class="stat-heading">博客</div>
+                    <div class="stat-heading">机器</div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="layui-col-xs6 layui-col-md3">
-        <div class="layui-card">
-            <div class="yskj-card-body clearfix cart-data">
-                <div class="img-box" ok-pc-in-show>
-                    <img src="${ctx.basePath}/static/ok-admin/images/home-04.png" alt="none"/>
-                </div>
-                <div class="cart-r">
-                    <div class="stat-text fans-num">0</div>
-                    <div class="stat-heading">用户</div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
 <div class="layui-row layui-col-space15">
-    <!--每日排名涨幅-->
+    <!--每日排名趋势-->
     <div class="layui-col-md6">
         <div class="layui-card">
             <div class="yskj-card-body clearfix" style="position:relative;height: 360px;">
@@ -140,7 +141,7 @@
                         </div>
                         <div style="float: right; width: 120px;margin: 0 0 0 6px">
                             <select name="searchEngine" id="searchEngine" lay-filter="searchEngine">
-                                <option value="">所有</option>
+                                <option value="">搜索引擎</option>
                             </select>
                         </div>
                         <div style="float: right;position: relative;top: 2px;">
@@ -172,7 +173,7 @@
                         </div>
                         <div style="float: right; width: 120px;margin: 0 0 0 6px">
                             <select name="searchEngine" id="qzRateSearchEngine" lay-filter="qzRateSearchEngine">
-                                <option value="">所有</option>
+                                <option value="">搜索引擎</option>
                             </select>
                         </div>
                         <div style="float: right;position: relative;top: 2px;" id="qzRangeDiv">
@@ -207,7 +208,7 @@
                         </div>
                         <div style="float: right; width: 120px;margin: 0 0 0 6px">
                             <select name="searchEngines" id="searchEngines" lay-filter="searchEngines">
-                                <option value="">所有</option>
+                                <option value="">搜索引擎</option>
                             </select>
                         </div>
                         <div style="float: right;position: relative;top: 2px;">
@@ -258,7 +259,7 @@
                 data: JSON.stringify({'terminalType': 'All'}),
                 success: function (data) {
                     $("#qzRateSearchEngine").empty();
-                    $("#qzRateSearchEngine").append('<option value="">所有</option>');
+                    $("#qzRateSearchEngine").append('<option value="">搜索引擎</option>');
                     $.each(data.data, function (index, item) {
                         $('#qzRateSearchEngine').append('<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
                     });
@@ -299,10 +300,10 @@
                                     trigger: "axis"
                                 },
                                 legend: {
-                                    orient: 'vertical',
+                                    orient: 'horizontal',
                                     icon: "rect",
-                                    x: 'right',
-                                    y: 'center',
+                                    top: '40',
+                                    left: '30%',
                                     data: [
                                         "站点总数",
                                         "上涨个数",
@@ -312,8 +313,8 @@
                                 },
                                 grid: {
                                     x: 40,
-                                    y: 50,
-                                    x2: 60,
+                                    y: 70,
+                                    x2: 20,
                                     y2: 20,
                                 },
                                 xAxis: {

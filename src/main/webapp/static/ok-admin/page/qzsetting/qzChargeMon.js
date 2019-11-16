@@ -1,5 +1,4 @@
 var searchEngine;
-
 layui.use(['jquery', 'form', 'common'], function () {
     var $ = layui.jquery;
     var form = layui.form;
@@ -15,15 +14,15 @@ layui.use(['jquery', 'form', 'common'], function () {
         },
         grid: {
             x: 40,
-            y: 50,
-            x2: 60,
+            y: 70,
+            x2: 20,
             y2: 20,
         },
         legend: {
-            orient: 'vertical',
+            orient: 'horizontal',
             icon: "rect",
-            x: 'right',
-            y: 'center',
+            top: '40',
+            left: '35%',
             data: ['新增', '续费', '暂停', '下架', '删除']
         },
         tooltip: {
@@ -176,7 +175,7 @@ layui.use(['jquery', 'form', 'common'], function () {
 
     window.handle = function (name, data, sel) {
         $("#" + name).empty();
-        $('#' + name).append('<option value>所有</option>');// 下拉菜单里添加元素
+        $('#' + name).append('<option value>搜索引擎</option>');// 下拉菜单里添加元素
         $.each(data, function (index, item) {
             if (sel === item) {
                 $('#' + name).append('<option value="' + item + '" selected>' + item + '</option>');// 下拉菜单里添加元素

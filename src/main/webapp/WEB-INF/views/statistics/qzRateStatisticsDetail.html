@@ -63,7 +63,7 @@
                         </div>
                         <div style="float: right; width: 120px;margin: 0 0 0 6px">
                             <select name="searchEngine" id="qzRateSearchEngine" lay-filter="qzRateSearchEngine">
-                                <option value="">所有</option>
+                                <option value="">搜索引擎</option>
                             </select>
                         </div>
                         <div style="float: right;position: relative;top: 2px;" id="qzRangeDiv">
@@ -112,7 +112,7 @@
                 data: JSON.stringify({'terminalType': 'All'}),
                 success: function (data) {
                     $("#qzRateSearchEngine").empty();
-                    $("#qzRateSearchEngine").append('<option value="">所有</option>');
+                    $("#qzRateSearchEngine").append('<option value="">搜索引擎</option>');
                     $.each(data.data, function (index, item) {
                         $('#qzRateSearchEngine').append(
                             '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
@@ -155,10 +155,10 @@
                                 trigger: "axis"
                             },
                             legend: {
-                                orient: 'vertical',
+                                orient: 'horizontal',
                                 icon: "rect",
-                                x: 'right',
-                                y: 'center',
+                                top: '40',
+                                left: '35%',
                                 data: [
                                     "站点总数",
                                     "上涨个数",
@@ -168,8 +168,8 @@
                             },
                             grid: {
                                 x: 40,
-                                y: 50,
-                                x2: 60,
+                                y: 70,
+                                x2: 20,
                                 y2: 20,
                             },
                             xAxis: {

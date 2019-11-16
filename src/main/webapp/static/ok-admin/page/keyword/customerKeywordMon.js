@@ -7,22 +7,22 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
     var keywordOption = {
         color: ['#51d02e', '#2aa0ea', '#fac600', '#a951ec'],
         title: {
-            text: '每日排名涨幅',
+            text: '每日排名趋势',
             subtext: '',
             y: '10',
             x: '10'
         },
         grid: {
             x: 40,
-            y: 50,
-            x2: 60,
+            y: 70,
+            x2: 20,
             y2: 20,
         },
         legend: {
-            orient: 'vertical',
+            orient: 'horizontal',
             icon: "rect",
-            x: 'right',
-            y: 'center',
+            top: '40',
+            left: '30%',
             data: ['前3名', '前5名', '前10名', '前50名']
         },
         tooltip: {
@@ -132,7 +132,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                     keywordOption.series[3].data = [];
                     keywordLogShow.setOption(keywordOption);
                 } else {
-                    common.showFailMsg('每日排名涨幅数据获取失败');
+                    common.showFailMsg('每日排名趋势数据获取失败');
                 }
             },
             error: function () {
@@ -184,7 +184,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
 
     window.handle = function (name, data, searchEngine) {
         $("#" + name).empty();
-        $('#' + name).append('<option value>所有</option>');// 下拉菜单里添加元素
+        $('#' + name).append('<option value>搜索引擎</option>');// 下拉菜单里添加元素
         $.each(data, function (index, item) {
             if (searchEngine === item) {
                 $('#' + name).append('<option value="' + item + '" selected>' + item + '</option>');// 下拉菜单里添加元素
