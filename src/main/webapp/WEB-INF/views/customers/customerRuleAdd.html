@@ -575,7 +575,6 @@
             type: 'get',
             dataType: 'json',
             success: function (res) {
-                console.log(res);
                 if (res.code === 200 && res.data) {
                     let d = res.data, s_d = {}, pcFlag = false, phoneFlag = false;
                     l.element.tabChange('customerRuleTab', d.chargeType);
@@ -642,12 +641,13 @@
                                 + '                                            </div>\n'
                                 + '                                        </td>\n'
                                 + '                                    </tr>';
-                            let k = 2,l=2;
+                            let k = 2, l = 2;
                             for (let i = 0; i < d.customerChargeTypeIntervals.length; i++) {
                                 let temp = d.customerChargeTypeIntervals[i];
                                 if (temp.operationType === 'PC') {
                                     if (pcFlag) {
-                                        $(tbody_com).append(html.replace('{0}', k++).replace('{1}', temp.startIndex).replace('{2}', temp.endIndex).replace('{3}', temp.price));
+                                        $(tbody_com).append(html.replace('{0}', k++).replace('{1}', temp.startIndex ? temp.startIndex : '').replace('{2}',
+                                            temp.endIndex ? temp.endIndex : '').replace('{3}', temp.price ? temp.price : ''));
                                     } else {
                                         let c = tbody_com.children[1].children;
                                         c[1].firstElementChild.firstElementChild.value = temp.startIndex;
@@ -657,7 +657,8 @@
                                     pcFlag = true;
                                 } else {
                                     if (phoneFlag) {
-                                        $(tbody_phone).append(html.replace('{0}', l++).replace('{1}', temp.startIndex).replace('{2}', temp.endIndex).replace('{3}', temp.price));
+                                        $(tbody_phone).append(html.replace('{0}', l++).replace('{1}', temp.startIndex ? temp.startIndex : '').replace('{2}',
+                                            temp.endIndex ? temp.endIndex : '').replace('{3}', temp.price ? temp.price : ''));
                                     } else {
                                         let c = tbody_phone.children[1].children;
                                         c[1].firstElementChild.firstElementChild.value = temp.startIndex;
@@ -669,7 +670,7 @@
                             }
                         }
                         if (d.customerChargeTypePercentages) {
-                            for (let i = 0; i < 2; i++) {
+                            for (let i = 0; i < d.customerChargeTypePercentages.length; i++) {
                                 let temp = d.customerChargeTypePercentages[i];
                                 if (temp.operationType === 'PC') {
                                     pcFlag = true;
