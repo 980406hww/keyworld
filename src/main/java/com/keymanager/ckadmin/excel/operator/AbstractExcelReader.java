@@ -76,7 +76,7 @@ public abstract class AbstractExcelReader {
     }
 
     public List<CustomerKeyword> readDataFromExcel() {
-        List<CustomerKeyword> customerKeywords = new ArrayList<CustomerKeyword>();
+        List<CustomerKeyword> customerKeywords = new ArrayList<>();
         for (int i = 1; i < reader.getCurrentSheet().getRows(); i++) {
             CustomerKeyword customerKeyword = this.readRow(i);
             if (customerKeyword != null) {

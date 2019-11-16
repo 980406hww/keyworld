@@ -132,4 +132,8 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void editCustomerOptimizePlanCount(@Param("optimizePlanCount") Integer optimizePlanCount, @Param("settingType") String settingType, @Param("uuids") List<String> uuids);
 
     void updateSelectFailReason(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
+
+    Integer getMaxSequence(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
+
+    List<CustomerKeyword> searchSameCustomerKeywords(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("searchEngine") String searchEngine);
 }

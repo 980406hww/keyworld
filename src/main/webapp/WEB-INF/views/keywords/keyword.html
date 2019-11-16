@@ -260,15 +260,13 @@
     var searchEngine = '<#if SearchEngine?exists>${SearchEngine}</#if>';
     var belongUser = '<#if belongUser?exists>${belongUser}</#if>';
     var terminal225 = '<#if terminalType2?exists>${terminalType2}<#else>PC</#if>';
-    var zzz = '<#if groupTmp?exists>${groupTmp}<#else></#if>';
     var dataTmp = {
         status: '<#if status?exists>${status}</#if>',
         type: '<#if businessType?exists>${businessType}</#if>',
         terminal: terminal225
-    }
+    };
 </script>
 <script src="/static/ok-admin/page/keyword/keyword.js"></script>
 <#include  "./keywordTpl.html" />
-
 </body>
 </html>

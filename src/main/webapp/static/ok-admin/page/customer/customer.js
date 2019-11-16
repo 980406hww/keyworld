@@ -1,4 +1,3 @@
-
 var sign = false;
 
 getHeight();
@@ -96,10 +95,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 item += '           <a href="javascript:void(0)" class="caller-fr can-click" onclick=openCustomerRule("' + obj.uuid + '")>' +
                     '                   客户规则' +
                     '               </a>'
-                    + '             <a href="javascript:void(0)" class="caller-fr can-click" onclick=editCustomer("' + obj.uuid + '")>' +
+                    + '             <a href="javascript:void(0)" class="caller-fr can-click" onclick=openQuicklyAddKeyword("' + obj.uuid + '")>' +
                     '                   快速加词' +
                     '               </a>'
-                    + '             <a href="javascript:void(0)" class="caller-fr can-click" onclick=editCustomer("' + obj.uuid + '")>' +
+                    + '             <a href="javascript:void(0)" class="caller-fr can-click" onclick=uploadDayReportList("' + obj.uuid + '")>' +
                     '                   上传模板' +
                     '               </a>';
             }
@@ -518,12 +517,178 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
 
     // 打开快速加词
     window.openQuicklyAddKeyword = function(uuid){
-
+        let html = '<div style="margin: 10px 10px 0 10px;">'
+            + '<form class="layui-form layui-form-pane ok-form">'
+            + '        <div class="layui-form-item">'
+            + '             <textarea style="height: 250px" id="customerKeywordTextarea" placeholder="关键字 域名  关键字与域名以空格作为分割，一行一组" autocomplete="off" class="layui-textarea"></textarea>'
+            + '        </div>'
+            + '        <div class="layui-form-item" style="margin-bottom: 0">'
+            + '            <label style="width: 100px" class="layui-form-label">分组名称</label>'
+            + '            <div style="margin-left: 100px" class="layui-input-block">'
+            + '                <input type="text" id="group" autocomplete="off" class="layui-input" value="{0}">'
+            + '            </div>'
+            + '        </div>'
+            + '</div></form>';
+        let group = isPC() ? 'pc_pm_xiaowu' : 'm_pm_tiantian';
+        layer.open({
+            type: 1,
+            title: '快速加词',
+            content: html.replace('{0}', group),
+            shadeClose: true,
+            resize: false,
+            area: '550px',
+            offset: '100px',
+            btn: ['确定', '取消'],
+            yes: function (index) {
+                let customerKeywords = [];
+                let customerKeywordTextarea = document.getElementById('customerKeywordTextarea').value.trim();
+                let group = document.getElementById('group').value.trim();
+                if (!customerKeywordTextarea) {
+                    common.showFailMsg('请输入关键字信息');
+                    return false;
+                }
+                if (!group) {
+                    common.showFailMsg('请输入关键字分组名称');
+                    return false;
+                }
+                let customerKeywordTextArray = customerKeywordTextarea.split("\n");
+                if (customerKeywordTextArray.length === 1) {
+                    customerKeywordTextArray = customerKeywordTextarea.split("\r\n");
+                }
+                $.each(customerKeywordTextArray, function (idx, val) {
+                    val = val.trim();
+                    if (val !== '') {
+                        let customerKeywordAttributes = val.split(" ");
+                        if (customerKeywordAttributes.length === 1) {
+                            customerKeywordAttributes = val.split(" ");
+                        }
+                        if (customerKeywordAttributes.length === 1) {
+                            customerKeywordAttributes = val.split("	");
+                        }
+                        let tmpCustomerKeywordAttributes = [];
+                        $.each(customerKeywordAttributes, function (idx, val) {
+                            if (val !== '') {
+                                tmpCustomerKeywordAttributes.push(val);
+                            }
+                        });
+                        let customerKeyword = {};
+                        customerKeyword.customerUuid = uuid;
+                        customerKeyword.keyword = tmpCustomerKeywordAttributes[0].trim();
+                        customerKeyword.url = tmpCustomerKeywordAttributes[1].trim();
+                        customerKeyword.optimizeGroupName = group.trim();
+                        customerKeyword.url = customerKeyword.url.replace("http://", "");
+                        customerKeyword.url = customerKeyword.url.replace("https://", "");
+                        if (customerKeyword.url.length > 25) {
+                            customerKeyword.url = customerKeyword.url.substring(0, 25);
+                        }
+                        customerKeyword.manualCleanTitle = true;
+                        customerKeywords.push(customerKeyword);
+                    }
+                });
+                $.ajax({
+                    url: '/internal/customerKeyword/saveCustomerKeywords2',
+                    data: JSON.stringify(customerKeywords),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (res) {
+                        if (res.code === 200) {
+                            common.showSuccessMsg('保存成功', function () {
+                                let pageConf = common.formToJsonObject('searchForm');
+                                initLayPage(pageConf);
+                                layer.close(index);
+                            });
+                        } else {
+                            common.showFailMsg('保存失败');
+                        }
+                    },
+                    error: function () {
+                        common.showFailMsg('网络错误请稍后再试');
+                    }
+                });
+            },
+            btn2: function (index) {
+                layer.close(index);
+            }
+        });
     };
 
-    // 上传日报表
-    window.uploadDayReportList = function(){
+    function isPC() {
+        let userAgentInfo = navigator.userAgent;
+        let Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+        for (let v = 0; v < Agents.length; v++) {
+            if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                return false;
+            }
+        }
+        return true;
+    }
 
+    // 上传日报表
+    window.uploadDayReportList = function(uuid){
+        let html = '<div style="margin: 10px 10px 0 10px;">'
+            + '<form class="layui-form layui-form-pane ok-form">'
+            + '            <div style="position: relative;">'
+            + '                <div class="layui-btn layui-btn-radius layui-btn-normal" style="cursor: pointer; height: 38px; width: 142px;">'
+            + '                    <i class="layui-icon">&#xe67c;</i>选择文件'
+            + '                </div>'
+            + '                <input id="file" name="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"'
+            + '                type="file" onchange="showName(this)" style="cursor: pointer; opacity: 0; position: absolute; left: 0; height: 38px; width: 142px;">'
+            + '                <div id="fileName">允许上传.xls .xlsx文件</div>'
+            + '            </div>'
+            + '</div></form>';
+        layer.open({
+            type: 1,
+            title: '上传报表',
+            content: html,
+            shadeClose: true,
+            resize: false,
+            area: '400px',
+            offset: '100px',
+            btn: ['确定', '取消'],
+            yes: function (index) {
+                let file = document.getElementById('file');
+                let fileType = file.value.split('.');
+                fileType = fileType[fileType.length - 1];
+                if (fileType !== 'xls' && fileType !== 'xlsx') {
+                    common.showFailMsg("请提交表格文 .xls .xlsx");
+                    return false;
+                }
+                let formData = new FormData();
+                formData.append('file', file.files[0]);
+                formData.append('customerUuid', uuid);
+                $.ajax({
+                    url: '/internal/customer/uploadDailyReportTemplate2',
+                    type: 'POST',
+                    cache: false,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (res) {
+                        if (res.code === 200) {
+                            common.showSuccessMsg("上传成功", function () {
+                                layer.close(index);
+                            })
+                        } else {
+                            common.showFailMsg("上传失败");
+                        }
+                    },
+                    error: function () {
+                        common.showFailMsg("网络异常请稍后再试");
+                    }
+                });
+            },
+            btn2: function (index) {
+                layer.close(index);
+            }
+        });
+    };
+
+    window.showName = function (e) {
+        document.getElementById("fileName").innerText = e.value;
     };
 
     //更新关键字状态
@@ -1037,8 +1202,3 @@ function generate_customer_info(contactPerson, data, terminalType, type, custome
     htm += '<br>';
     return htm;
 }
-
-
-
-
-

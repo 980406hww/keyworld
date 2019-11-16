@@ -223,7 +223,7 @@
                                                     <option value=''>请选择</option>
                                                     <option value='2'>有标题</option>
                                                     <option value='1'>无标题</option>
-                                                </select>&nbsp;
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="layui-inline">
@@ -260,8 +260,8 @@
     </div>
 </div>
 <!--js逻辑-->
-<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
-<script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/lib/nprogress/nprogress.js"></script>
 <script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
     let qzBusiness = '<#if businessType?exists>${businessType}</#if>';
@@ -278,7 +278,7 @@
     }
 </script>
 <script src="/static/ok-admin/page/keyword/customerKeyword.js"></script>
-<#include "./customerKeywordTpl.html" />
+<#include "./customerKeywordTpl.html"/>
 <form id="downloadKeywordForm" hidden lay-filter="downloadKeywordForm" method="post" action="/internal/customerKeyword/downloadCustomerKeywordInfo2">
 
     <input type="hidden"  name="customerUuid" id="customerUuidHidden" value=""/>
