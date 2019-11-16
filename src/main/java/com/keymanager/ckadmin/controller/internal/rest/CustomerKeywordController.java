@@ -681,21 +681,21 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toKeywordsFromPT/{businessType}/{terminalType}/{searchEngine}/{belongUser}/{keyword}")
+    @GetMapping(value = {"/toKeywordsFromPT/{businessType}/{terminalType}/{keyword}/{searchEngine}/{belongUser}",
+        "/toKeywordsFromPT/{businessType}/{terminalType}/{keyword}/{searchEngine}", "/toKeywordsFromPT/{businessType}/{terminalType}/{keyword}/{belongUser}",
+        "/toKeywordsFromPT/{businessType}/{terminalType}/{keyword}"})
     public ModelAndView toKeywords(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "searchEngine") String searchEngine, @PathVariable(name = "belongUser") String belongUser,
-        @PathVariable(name = "keyword") String keyword) throws UnsupportedEncodingException {
+        @PathVariable(name = "keyword") String keyword, @PathVariable(name = "searchEngine", required = false) String searchEngine,
+        @PathVariable(name = "belongUser", required = false) String belongUser) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/keyword");
         mv.addObject("businessType", businessType);
         //取名叫terminalType会与session中存在的terminalType同名，值会被覆盖成session中的值
         mv.addObject("terminalType2", terminalType);
-        searchEngine = URLDecoder.decode(searchEngine, "UTF-8");
-        keyword = URLDecoder.decode(keyword, "UTF-8");
-        if (!("null").equals(searchEngine)) {
+        if (null != searchEngine) {
             mv.addObject("SearchEngine", searchEngine);
         }
-        if (!("null").equals(belongUser)) {
+        if (null != belongUser) {
             mv.addObject("belongUser", belongUser);
         }
         mv.addObject("Keyword", keyword);
@@ -708,13 +708,12 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     public ModelAndView toKeywordsWithPosition(@PathVariable(name = "businessType") String businessType,
         @PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "searchEngine") String searchEngine,
         @PathVariable(name = "belongUser") String belongUser,
-        @PathVariable(name = "keyword") String keyword, @PathVariable(name = "position") Integer position) throws UnsupportedEncodingException {
+        @PathVariable(name = "keyword") String keyword, @PathVariable(name = "position") Integer position) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/keyword");
         mv.addObject("businessType", businessType);
         //取名叫terminalType会与session中存在的terminalType同名，值会被覆盖成session中的值
         mv.addObject("terminalType2", terminalType);
-        keyword = URLDecoder.decode(keyword, "UTF-8");
         mv.addObject("Keyword", keyword);
         mv.addObject("ltPosition", position);
         mv.addObject("gtPosition", "1");
@@ -726,7 +725,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     public ModelAndView toKeywordsWithQZ(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
         @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "group") String group,
         @PathVariable(name = "searchEngine") String searchEngine,
-        @PathVariable(name = "status") int status) throws UnsupportedEncodingException {
+        @PathVariable(name = "status") int status) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/customerKeyword");
         mv.addObject("businessType", businessType);
@@ -734,7 +733,6 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         mv.addObject("customerUuid", customerUuid);
         mv.addObject("group", group);
         mv.addObject("status", status);
-        searchEngine = URLDecoder.decode(searchEngine, "UTF-8");
         mv.addObject("searchEngine", searchEngine);
         return mv;
     }
@@ -818,5 +816,56 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             resultBean.setMsg(e.getMessage());
         }
         return resultBean;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = {"/toKeywordsFromRS/{businessType}/{terminalType}/{irc}/{group}", "/toKeywordsFromRS/{businessType}/{terminalType}/{irc}"})
+    public ModelAndView toKeywordsFromRS(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
+        @PathVariable(name = "group", required = false) String group, @PathVariable(name = "irc", required = false) Integer irc) {
+        ModelAndView mv = null;
+        try {
+            mv = new ModelAndView();
+            mv.setViewName("keywords/keyword");
+            mv.addObject("businessType", businessType);
+            mv.addObject("terminalType2", terminalType);
+            mv.addObject("status", "1");
+            if (null != group) {
+                mv.addObject("groupTmp", group);
+            }
+            if (null != irc) {
+                mv.addObject("irc", irc == 0 ? "" : irc);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = {"/toKeywordsFromMGS/{businessType}/{terminalType}/{irc}/{machineGroup}", "/toKeywordsFromMGS/{businessType}/{terminalType}/{irc}"})
+    public ModelAndView toKeywordsFromMGS(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
+        @PathVariable(name = "irc", required = false) Integer irc, @PathVariable(name = "machineGroup", required = false) String machineGroup) {
+        ModelAndView mv = null;
+        try {
+            mv = new ModelAndView();
+            mv.setViewName("keywords/keyword");
+            mv.addObject("businessType", businessType);
+            mv.addObject("terminalType2", terminalType);
+            mv.addObject("status", "1");
+            if (null != machineGroup) {
+                mv.addObject("machineGroupTmp", machineGroup);
+            }
+            if (null != irc) {
+                mv.addObject("irc", irc == 0 ? "" : irc);
+                if (irc < 0 && machineGroup != null) {
+                    Integer maxInvalidCount = customerKeywordService.getMaxInvalidCountByMachineGroup(machineGroup);
+                    mv.addObject("irc", maxInvalidCount == null ? 8 : maxInvalidCount);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
+        return mv;
     }
 }

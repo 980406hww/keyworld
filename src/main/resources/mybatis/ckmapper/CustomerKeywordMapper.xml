@@ -61,6 +61,7 @@
         FROM t_customer_keyword ck
         WHERE ck.fMachineGroup = #{machineGroup}
         AND ck.fStatus = 1
+        AND ck.fOptimizeRemainingCount > 0
         AND ck.fTerminalType = #{terminalType}
         AND ck.fQueryTime <![CDATA[<]]> NOW()
         AND ck.fInvalidFlag = 0
@@ -80,8 +81,7 @@
         SET fQueryDate = CURRENT_DATE(),
         fQueryCount = fQueryCount + 1,
         fInvalidRefreshCount = fInvalidRefreshCount + 1,
-        fQueryTime = DATE_ADD(fQueryTime, INTERVAL (IF ((ROUND(RAND(),1) &lt; 0.5), ROUND(fQueryInterval * ROUND(RAND() + 1)), ROUND(fQueryInterval *
-        ROUND(RAND() * 0.4 + 0.1)))) SECOND ),
+        fQueryTime = DATE_ADD(fQueryTime, INTERVAL ROUND(fQueryInterval * (2*RAND() + 8)/10) SECOND ),
         fInvalidFlag = if(fInvalidRefreshCount > 8, 1, 0)
         WHERE fUuid IN
         <foreach item="uuid" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
@@ -955,8 +955,8 @@
         <if test="keywordChecks.originalUrl==1">,fOriginalUrl = #{keywordValues.originalUrl}</if>
         <if test="keywordChecks.optimizePlanCount==1">
             , fOptimizePlanCount = #{keywordValues.optimizePlanCount}
-            , fOptimizeRemainingCount = IF(#{keywordValues.optimizePlanCount} - fOptimizedCount > 0, #{keywordValues.optimizePlanCount} - fOptimizedCount, 0)
             , fOptimizeTodayCount = IF(fOptimizePlanCount > 0, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
+            , fOptimizeRemainingCount = fOptimizeTodayCount - fOptimizedCount
             , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
             , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
         </if>
@@ -1102,7 +1102,7 @@
             SET fOptimizePlanCount = #{optimizePlanCount}
         </if>
         , fOptimizeTodayCount = IF(fOptimizePlanCount > 0, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
-        , fOptimizeRemainingCount = IF(#{optimizePlanCount} - fOptimizedCount > 0, #{optimizePlanCount} - fOptimizedCount, 0)
+        , fOptimizeRemainingCount = fOptimizeTodayCount - fOptimizedCount
         , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
         , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
         WHERE fTerminalType = #{terminalType}
@@ -1119,7 +1119,7 @@
             SET fOptimizePlanCount = #{optimizePlanCount}
         </if>
         , fOptimizeTodayCount = IF(fOptimizePlanCount > 0, fOptimizePlanCount * ROUND((RAND() * 0.7 + 0.5), 1) , 0)
-        , fOptimizeRemainingCount = IF(#{optimizePlanCount} - fOptimizedCount > 0, #{optimizePlanCount} - fOptimizedCount, 0)
+        , fOptimizeRemainingCount = fOptimizeTodayCount - fOptimizedCount
         , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
         , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
         WHERE fUuid IN
@@ -1138,6 +1138,18 @@
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 
+    <select id="getMaxInvalidCountByMachineGroup" resultType="java.lang.Integer">
+        SELECT toc.fMaxInvalidCount
+        FROM t_customer_keyword ck
+        LEFT JOIN t_group g
+        ON ck.fOptimizeGroupName = g.fGroupName
+        LEFT JOIN t_operation_combine toc
+        ON toc.fUuid = g.fOperationCombineUuid
+        WHERE ck.fMachineGroup = #{machineGroup}
+        GROUP BY ck.fOptimizeGroupName
+        LIMIT 1
+    </select>
+    
     <select id="getQZRateKeywordCount" parameterType="com.keymanager.ckadmin.criteria.QZRateKewordCountCriteria" resultType="com.keymanager.ckadmin.vo.QZRateKeywordCountVO">
         SELECT
             c.fUuid AS customerUuid,

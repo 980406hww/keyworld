@@ -134,6 +134,8 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void editCustomerOptimizePlanCount(@Param("optimizePlanCount") Integer optimizePlanCount, @Param("settingType") String settingType, @Param("uuids") List<String> uuids);
 
     void updateSelectFailReason(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
+
+    Integer getMaxInvalidCountByMachineGroup(@Param("machineGroup") String machineGroup);
     
     List<QZRateKeywordCountVO> getQZRateKeywordCount(Page<QZRateKeywordCountVO> page, @Param("qzRateKewordCountCriteria") QZRateKewordCountCriteria qzRateKewordCountCriteria);
 }

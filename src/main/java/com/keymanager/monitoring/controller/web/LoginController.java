@@ -67,18 +67,23 @@ public class LoginController extends BaseController {
      *
      * @return {String}
      */
-    @GetMapping("login")
+    @GetMapping("/login")
     @CsrfToken(create = true)
-    public String login(HttpSession session) {
+    public ModelAndView login(HttpSession session) {
         logger.info("GET请求登录");
+        ModelAndView mv = new ModelAndView();
         if (SecurityUtils.getSubject().isAuthenticated()) {
             if (Constants.OLD_PERMISSION_VERSION.equals(session.getAttribute("version"))) {
-                return "/customerkeyword/keywordfinderList";
+                mv.setViewName("/customerkeyword/keywordfinderList");
+                return mv;
             } else {
-                return "/index";
+                mv.setViewName("/index");
+                mv.addObject("first", "home");
+                return mv;
             }
         }
-        return "/newLogin";
+        mv.setViewName("/newLogin");
+        return mv;
     }
 
     /**
@@ -174,13 +179,12 @@ public class LoginController extends BaseController {
 
     /**
      * 旧版本登录
-     * @return
      */
     @GetMapping("/loginOldVersion")
     @ResponseBody
     public ModelAndView loginOldVersion(HttpSession session) {
         Enumeration<String> e = session.getAttributeNames();
-        if (e.hasMoreElements()){
+        if (e.hasMoreElements()) {
             Subject subject = SecurityUtils.getSubject();
             session.invalidate();
             subject.logout();

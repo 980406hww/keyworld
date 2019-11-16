@@ -258,7 +258,7 @@
                                         </select>
                                     </div>
                                     <div class="layui-inline">
-                                        <input type="checkbox" name="hasProblem" value="hasProblem" title="停了">
+                                        <input type="checkbox" name="hasProblem" id="hasProblem" value="hasProblem" title="停了">
                                         <input type="checkbox" name="noUpgrade" value="noUpgrade" title="没升级">
                                     </div>
                                     <div class="layui-inline">
@@ -367,6 +367,8 @@
 
     var s_c = 0;
 
+    let hasProblemTmp = '<#if hasProblemTmp?exists>${hasProblemTmp}</#if>';
+
     function showCondition() {
         let searchContent = document.getElementById('searchContent');
         if (s_c++ % 2 === 0) {
@@ -430,9 +432,14 @@
             return false
         });
 
-        if (document.getElementById('machineGroup').value){
+        if (hasProblemTmp === 'true') {
+            document.getElementById('hasProblem').checked = true;
+            form.render('checkbox');
+        }
+
+        if (document.getElementById('machineGroup').value || hasProblemTmp === 'true') {
             $('#searchBtn').click();
-        }else {
+        } else {
             searchMachine({init: 'init'});
         }
 

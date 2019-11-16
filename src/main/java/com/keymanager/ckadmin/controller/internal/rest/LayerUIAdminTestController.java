@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -44,10 +45,37 @@ public class LayerUIAdminTestController {
     @Resource(name = "qzRateStatisticsService2")
     private QZRateStatisticsService qzRateStatisticsService;
 
-    @RequestMapping("/index")
-    public ModelAndView toIndex() {
+    @GetMapping("/index")
+    public ModelAndView index(@RequestParam(required = false) String url, @RequestParam(required = false) String tit, HttpSession session) {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("index");
+        mv.setViewName("/index");
+        mv.addObject("url", url);
+        if (null == url || "".equals(url)) {
+            mv.addObject("first", "home");
+            return mv;
+        }
+        List menus = (List) session.getAttribute("menus");
+        if (null == menus || menus.isEmpty()) {
+            menus = resourceService.selectAuthorizationResource((String) session.getAttribute("username"), null);
+        }
+        int i = 0, j = 0;
+        String key = null;
+            outFor:
+        for (Object obj : menus) {
+            Menu menu = (Menu) obj;
+            i++;
+            for (Menu m : menu.getChildren()) {
+                j++;
+                if (url.equals(m.getHref())) {
+                    key = m.getTitle();
+                    break outFor;
+                }
+            }
+            j = 0;
+        }
+        mv.addObject("key", key);
+        mv.addObject("tit", tit);
+        mv.addObject("id", i + "-" + j);
         return mv;
     }
 
@@ -62,7 +90,11 @@ public class LayerUIAdminTestController {
     public ResponseEntity<?> selectMenus(HttpServletRequest request) {
         try {
             String loginName = (String) request.getSession().getAttribute("username");
-            List<Menu> menus = resourceService.selectAuthorizationResource(loginName, null);
+            List menus = (List) request.getSession().getAttribute("menus");
+            if (null == menus || menus.isEmpty()) {
+                menus = resourceService.selectAuthorizationResource(loginName, null);
+                request.getSession().setAttribute("menus", menus);
+            }
             return new ResponseEntity<Object>(menus, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

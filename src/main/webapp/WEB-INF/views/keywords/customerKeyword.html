@@ -93,11 +93,11 @@
                                         排名
                                         <div class="layui-input-inline" style="width: 50px;">
                                             <input type="number" name="gtPosition" placeholder=">=" autocomplete="off" class="layui-input"
-                                                   onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" lay-verify="positiveInteger">
+                                                   onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');">
                                         </div>
                                         <div class="layui-input-inline" style="width: 50px;">
                                             <input type="number" name="ltPosition" placeholder="<=" autocomplete="off" class="layui-input"
-                                                   onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" lay-verify="positiveInteger">
+                                                   onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');">
                                         </div>
                                     </div>
                                     <div class="layui-inline" style="width: 140px">
@@ -231,7 +231,7 @@
                                             <div class="layui-input-inline">
                                                 <input type="number" name="invalidRefreshCount" id="invalidRefreshCount" placeholder="请输入无效点击数" autocomplete="off"
                                                        onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');"
-                                                       class="layui-input" lay-verify="positiveInteger" />
+                                                       class="layui-input" />
                                             </div>
                                         </div>
                                         <div class="layui-inline">
@@ -313,7 +313,5 @@
     <input type="hidden" id="customerUuidKU" name="customerUuid"  value=""/>
     <input type="hidden" id="terminalTypeKU" name="terminalType" hidden value=""/>
 </form>
-
-
 
 </html>

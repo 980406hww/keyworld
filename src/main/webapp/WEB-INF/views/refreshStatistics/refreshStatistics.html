@@ -194,39 +194,41 @@
 
         <@shiro.hasPermission name = "/internal/customerKeyword/searchCustomerKeywordLists" >
         window.searchCustomerKeywords = function (group) {
-            let url = '/internal/customerKeyword/toKeywords';
-            let title = group + '-关键字';
-            let id = group + '-关键字-sl';
             let data = {
                 group: group,
-                status: '1',
                 type: document.getElementById('entryType').value,
-                terminal: document.getElementById('terminalType').value
+                terminal: document.getElementById('terminalType').value,
+                irc: 0
             };
-            updateOrNewTab(url, title, id ,data);
+            let title = group + '-关键字';
+            let id = group + '-sl' + data.type + data.terminal;
+            let url = '/internal/customerKeyword/toKeywordsFromRS/' + data.type + '/' + data.terminal + '/' + data.irc + '/' + data.group;
+            common.updateOrNewTab(url, title, id);
         };
         </@shiro.hasPermission>
 
         <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
         window.findKeyword = function (optimizeGroupName, invalidRefreshCount) {
-            let url = '/internal/customerKeyword/toKeywords';
-            let title = optimizeGroupName + '-关键字';
-            let id = optimizeGroupName + '-关键字-wx';
             let data = {
-                status: '1',
                 type: document.getElementById('entryType').value,
-                terminal: document.getElementById('terminalType').value
+                terminal: document.getElementById('terminalType').value,
+                group: "",
+                irc: 8
             };
-            if (optimizeGroupName && optimizeGroupName !== '') {
+            if (optimizeGroupName) {
                 data.group = optimizeGroupName;
+            }else {
+                optimizeGroupName = '总计';
             }
+            let title = optimizeGroupName + '-关键字';
+            let id = optimizeGroupName + '-wx-' + data.type + data.terminal;
             if (invalidRefreshCount && invalidRefreshCount !== '') {
-                data.nrsd = '0';
                 data.irc = invalidRefreshCount;
             } else {
-                data.nrsd = '-1';
+                data.irc = 4;
             }
-            updateOrNewTab(url, title, id ,data);
+            let url = '/internal/customerKeyword/toKeywordsFromRS/' + data.type + '/' + data.terminal + '/' + data.irc + '/' + data.group;
+            common.updateOrNewTab(url, title, id);
         };
         </@shiro.hasPermission>
 
@@ -261,7 +263,7 @@
 
         init_keyword_type();
 
-        function init_keyword_type(data) {
+        function init_keyword_type() {
             $.ajax({
                 url: '/internal/common/getBusinessTypeByUserRole',
                 dataType: 'json',
@@ -269,7 +271,7 @@
                 type: 'get',
                 success: function (res) {
                     if (res.code === 200) {
-                        let i = 0, one = 'pt', flag = true;
+                        let i = 0, one = 'pt';
                         $.each(res.data, function (index, item) {
                             let businessItem = item.split("#");
                             $('#tabItem').append(
@@ -280,16 +282,10 @@
                             }
                         });
                         let tabItem = document.getElementById('tabItem').children;
-                        if (data) {
-                            $('#entryType').val(data.type);
-                            $('#terminalType').val(data.terminal);
-                            element.tabChange('refreshTab', data.type+data.terminal);
-                        } else {
-                            tabItem[0].classList.add('layui-this');
-                            $('#entryType').val(one);
-                            $('#terminalType').val("PC");
-                            element.tabChange('refreshTab', one+"PC");
-                        }
+                        tabItem[0].classList.add('layui-this');
+                        $('#entryType').val(one);
+                        $('#terminalType').val("PC");
+                        element.tabChange('refreshTab', one+"PC");
                         form.render("select");
                     }
                 }
@@ -502,49 +498,6 @@
         });
 
         tableInit({init: 'init'});
-
-        function dbs(d) {
-            if (d.reachStandardKeywordCount > 0) {
-                if (d.group === '总计') {
-                    return '<a href="javascript:findKeyword(\'\', \'\')" style="color: blue">' + d.reachStandardKeywordCount + '('
-                        + d.todaySubTotal + ')</a>';
-                }
-                return '<a href="javascript:findKeyword(\'' + d.group + '\', \'\')" style="color: blue">' + d.reachStandardKeywordCount + '('
-                    + d.todaySubTotal + ')</a>';
-            } else {
-                return 1;
-            }
-        }
-
-        function updateOrNewTab(url, tit, id ,data) {
-            var update = false;
-            var contentIframe = "<iframe src='" + url + "' lay-id='" + id + "'frameborder='0' scrolling='yes' width='100%' height='100%'";
-            if (data.group) {
-                contentIframe += " data-group='" + data.group + "'";
-            }
-            if (data.nrsd) {
-                contentIframe += " data-nrsd='" + data.nrsd + "'";
-            }
-            if (data.irc) {
-                contentIframe += " data-irc='" + data.irc + "'";
-            }
-            contentIframe += " data-status='" + data.status + "' data-type='" + data.type + "' data-terminal='" + data.terminal + "'></iframe>";
-            parent.layui.$('.layui-tab-title li').each(function () {
-                if (id === this.getAttribute('lay-id')) {
-                    update = true;
-                }
-            });
-            if (!update) {
-                parent.layui.element.tabAdd('ok-tab', {
-                    title: '<strong style="display: none;" is-close="true" lay-id="'+id+'" data-url="'+url+'"></strong>' +
-                        '<i class="layui-icon">&#xe648;</i> ' + tit,
-                        content: contentIframe,
-                        id: id
-                    }
-                );
-            }
-            parent.layui.element.tabChange('ok-tab', id)
-        }
     });
 </script>
 <script type="text/html" id="group">

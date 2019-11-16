@@ -1598,14 +1598,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         if (CollectionUtils.isNotEmpty(bcCustomerKeywordSummaries)) {
             for (Map customerKeywordSummaryMap : bcCustomerKeywordSummaries) {
                 Long uuid = Long.parseLong(customerKeywordSummaryMap.get("uuid").toString());
-                int currentIndexCount = (Integer) customerKeywordSummaryMap.get("currentIndexCount");
+                int optimizeTodayCount = (Integer) customerKeywordSummaryMap.get("optimizeTodayCount");
                 Integer positionFirstFee = (Integer) customerKeywordSummaryMap.get("positionFirstFee");
                 String positionStr = (String) customerKeywordSummaryMap.get("positions");
                 String[] positionArray = positionStr.split(",");
-                int optimizationPlanCount = currentIndexCount < 100 ? 150 : currentIndexCount;
-                if (positionFirstFee != null && positionFirstFee > 0) {
-                    optimizationPlanCount = (optimizationPlanCount + positionFirstFee * 4) / 2;
-                }
                 if (positionArray.length == 3) {
                     boolean lessFifth = true;
                     for (String position : positionArray) {
@@ -1616,12 +1612,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                         }
                     }
                     if (lessFifth) {
-                        optimizationPlanCount = 20 + currentIndexCount / 50;
+                        int resetOptimizeTodayCount = 20 + optimizeTodayCount / 50;;
+                        int queryInterval = (24 * 60 * 60) / resetOptimizeTodayCount;
+                        customerKeywordDao.adjustOptimizePlanCount(uuid, queryInterval, resetOptimizeTodayCount);
                     }
                 }
-                int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(optimizationPlanCount * (Math.random() * 0.7 + 0.5), 1));
-                int queryInterval = (24 * 60 * 60) / optimizeTodayCount;
-                customerKeywordDao.adjustOptimizePlanCount(uuid, optimizationPlanCount, queryInterval, optimizeTodayCount);
             }
         }
         customerKeywordDao.updateOptimizePlanCountForBaiduMap();

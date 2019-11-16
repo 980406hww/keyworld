@@ -33,17 +33,18 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
     laydate.render({
         elem: '#ltCreateTime',
     });
-    init_search();
 
-    function init_search() {
-        init_belong_user();
-        init_searchEngine();
-        let this_ = window.parent.document.getElementsByTagName('iframe');
-        this_ = this_[this_.length - 1];
-        let d = this_.dataset;
+    // TODO
+    init_search(dataTmp);
+    init_belong_user();
+    init_searchEngine();
+
+    function init_search(d) {
+        // let this_ = window.parent.document.getElementsByTagName('iframe');
+        // this_ = this_[this_.length - 1];
         if (d.type && d.terminal && d.status) {
-            document.getElementById('type').value = d.type;
-            document.getElementById('terminalType').value = d.terminal;
+            // document.getElementById('type').value = d.type;
+            // document.getElementById('terminalType').value = d.terminal;
             let statuses = document.getElementById('status').children;
             for (let i = 0; i < statuses.length; i++) {
                 if (statuses[i].value === d.status) {
@@ -54,14 +55,14 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
         } else {
             init_keyword_type();
         }
-        if (d.group) {
-            document.getElementById('optimizeGroupName').value = d.group;
-        } else if (d.machineGroup) {
-            document.getElementById('machineGroup').value = d.machineGroup;
-        }
-        if (d.irc) {
-            document.getElementById('invalidRefreshCount').value = d.irc;
-        }
+        // if (d.group) {
+        //     // document.getElementById('optimizeGroupName').value = d.group;
+        // } else if (d.machineGroup) {
+        //     // document.getElementById('machineGroup').value = d.machineGroup;
+        // }
+        // if (d.irc) {
+        //     // document.getElementById('invalidRefreshCount').value = d.irc;
+        // }
     }
 
     function init_keyword_type(data) {
@@ -73,7 +74,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
             success: function (res) {
                 if (res.code === 200) {
                     // $("#tabItem").empty();
-                    let i = 0, one = 'pt', flag = true;
+                    let i = 0, one = 'pt';
                     $.each(res.data, function (index, item) {
                         let businessItem = item.split("#");
                         $('#tabItem').append(
@@ -83,12 +84,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                             one = businessItem[0];
                         }
                     });
-                    let tabItem = document.getElementById('tabItem').children;
                     if (data) {
-                        $('#type').val(data.type);
-                        $('#terminalType').val(data.terminal);
+                        // $('#type').val(data.type);
+                        // $('#terminalType').val(data.terminal);
                         element.tabChange('keywordTab', data.type+data.terminal);
                     } else {
+                        let tabItem = document.getElementById('tabItem').children;
                         tabItem[0].classList.add('layui-this');
                         $('#type').val(one);
                         $('#terminalType').val(terminal225);
@@ -190,7 +191,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 {field: 'collectMethod', title: '收费方式', width: '80', templet: '#collectMethodTpl' },
                 {field: 'optimizePlanCount', title: '要刷', width: '60',},
                 {field: 'optimizedCount', title: '已刷', width: '60'},
-                {field: 'invalidRefreshCount', title: '无效', width: '60', hide: true },
+                {field: 'invalidRefreshCount', title: '无效', sort: true, width: '60', hide: true },
                 {field: 'status', title: '状态', width: '60', templet: '#statusTpl' },
                 {field: 'paymentStatus', title: '付费状态', width: '80', hide: true },
                 {field: 'remarks', title: '备注', width: '100', hide: true, templet: '#remarksTpl'},
@@ -237,10 +238,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
     form.verify({
         num: [
             /(^$)|(^[0-9]?$)|(^[1-9][0-9]+$)/,
-            "请输入合适的正整数、如：1、2、3"
-        ],
-        positiveInteger: [
-            /(^$)|(^[0-9]*[1-9][0-9]*$)/,
             "请输入合适的正整数、如：1、2、3"
         ],
         telPhone: [
@@ -624,7 +621,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
     }
 
     if (document.getElementById('keyword').value || document.getElementById('optimizeGroupName').value ||
-        document.getElementById('machineGroup').value) {
+        document.getElementById('machineGroup').value || document.getElementById('invalidRefreshCount').value) {
         $('#searchBtn').click();
     } else {
         get_keywords({init: 'init'});

@@ -347,28 +347,7 @@
         });
 
         function searchIndustryDetail(uuid, name) {
-            updateOrNewTab("/internal/industryDetails/toIndustryDetails/" + uuid, name + "的信息", uuid + name);
-        }
-
-        function updateOrNewTab(url, tit, id) {
-            var update = false;
-            var contentIframe = ("<iframe src='" + url + "' lay-id='" + id
-                + "'frameborder='0' scrolling='yes' width='100%' height='100%'></iframe>");
-            parent.layui.$('.layui-tab-title li').each(function () {
-                if (id === this.getAttribute('lay-id')) {
-                    update = true;
-                }
-            });
-            if (!update) {
-                parent.layui.element.tabAdd('ok-tab', {
-                        title: '<strong style="display: none;" is-close="true" lay-id="'+id+'" data-url="'+url+'"></strong>' +
-                            '<i class="layui-icon">&#xe648;</i> ' + tit,
-                        content: contentIframe,
-                        id: id
-                    }
-                );
-            }
-            parent.layui.element.tabChange('ok-tab', id)
+            common.updateOrNewTab("/internal/industryDetails/toIndustryDetails/" + uuid, name + "的信息", uuid + name);
         }
 
         function uploadIndustryInfo(excelType){

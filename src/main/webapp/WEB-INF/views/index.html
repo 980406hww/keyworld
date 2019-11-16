@@ -10,136 +10,164 @@
         .layui-inline {
             margin-top: 6px;
         }
+
+        .ok-left .not-logo{
+            padding: 0 5px !important;
+            text-align: left !important;
+            overflow: visible !important;
+        }
+
+        .not-logo .layui-form-select dl dd{
+            height: 26px;
+            line-height: 26px;
+            font-size: 14px;
+        }
+
+        .not-logo .layui-form-select dl dd:hover{
+            background-color: #111859;
+            -webkit-transition: .5s all;
+            transition: .5s all;
+        }
+
+        .not-logo .layui-select-title{
+            cursor: pointer;
+            letter-spacing: 2px;
+        }
+
+        .not-logo .layui-select-title:hover{
+            color: #a25d00;
+            -webkit-transition: .5s all;
+            transition: .5s all;
+        }
     </style>
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin okadmin">
-    <!--头部导航-->
-    <!--    <div class="layui-header okadmin-header">-->
-    <!--        <ul class="layui-nav layui-layout-left">-->
-    <!--            <li class="layui-nav-item">-->
-    <!--                    <a class="ok-menu ok-show-menu" href="javascript:;" title="菜单切换">-->
-    <!--                        <i class="layui-icon layui-icon-shrink-right" id="ok_app_menu"></i>-->
-    <!--                    </a>-->
-    <!--            </li>-->
-    <!--            <li class="layui-nav-item">-->
-    <!--                <a class="ok-refresh" href="javascript:;" title="刷新">-->
-    <!--                    <i class="layui-icon layui-icon-refresh-3"></i>-->
-    <!--                </a>-->
-    <!--            </li>-->
-    <!--            <li class="layui-nav-item ok-input-search">-->
-    <!--                <input type="text" placeholder="搜索..." class="layui-input layui-input-search"/>-->
-    <!--            </li>-->
-    <!--            <li class="ok-nav-item ok-hide-md">-->
-    <!--                &lt;!&ndash;<div id="tp-weather-widget"></div>&ndash;&gt;-->
-    <!--            </li>-->
-    <!--        </ul>-->
-    <!--        <ul class="layui-nav layui-layout-right">-->
-    <!--            <li class="no-line layui-nav-item">-->
-    <!--                <a href="javascript:;">-->
-    <!--                    <@shiro.principal property="name"/>-->
-    <!--                </a>-->
-    <!--                <dl id="userInfo" class="layui-nav-child">-->
-    <!--&lt;!&ndash;                    <dd><a lay-id="u-1" href="javascript:;">个人中心<span&ndash;&gt;-->
-    <!--&lt;!&ndash;                            class="layui-badge-dot"></span></a></dd>&ndash;&gt;-->
-    <!--                    <dd><a href="javascript:void(0)" id="logout">退出登录</a></dd>-->
-    <!--                </dl>-->
-    <!--            </li>-->
-    <!--        </ul>-->
-    <!--    </div>-->
-    <!--遮罩层-->
-    <div class="ok-make"></div>
     <!--左侧导航区域-->
     <div class="layui-side layui-side-menu okadmin-bg-20222A ok-left">
         <div class="layui-side-scroll okadmin-side">
-            <div class="okadmin-logo">关键字管理系统</div>
-            <!--<div class="user-photo">
-                <a class="img" title="我的头像">
-                    <img src="${ctx.basePath}/static/ok-admin/images/head.png" class="userAvatar">
-                </a>
-                <p>你好！<span class="userName">  <@shiro.principal property="name"/></span>, 欢迎登录</p>
-            </div>-->
+            <div id="notLogo" class="okadmin-logo">
+                关键字管理系统
+            </div>
             <!--左侧导航菜单-->
             <ul id="navBar" class="layui-nav okadmin-nav okadmin-bg-20222A layui-nav-tree">
             </ul>
         </div>
     </div>
-
     <!-- 内容主体区域 -->
     <div class="content-body">
         <div class="layui-tab ok-tab" id="mainnav" lay-filter="ok-tab" lay-allowClose="true" lay-unauto>
-            <div class="layui-icon okadmin-tabs-control ok-right-nav-menu">
-                <a class="ok-menu ok-show-menu" href="javascript:;" style="width: 40px;height: 40px;display: inline-block" title="菜单切换">
-                    <i class="layui-icon layui-icon-shrink-right" id="ok_app_menu"></i>
-                </a>
-            </div>
-            <div data-id="left" id="okLeftMove" class="layui-icon okadmin-tabs-control layui-icon-prev okNavMove" style="left: 40px;"></div>
-<!--            <div class="layui-icon okadmin-tabs-control ok-right-nav-menu" style="right: 120px;">-->
-<!--                <a href="javascript:void(0)" id="logout" title="退出">-->
-<!--                    <i class="exit-icon"></i>-->
-<!--                </a>-->
-<!--            </div>-->
-            <div data-id="right" id="okRightMove" class="layui-icon okadmin-tabs-control layui-icon-next okNavMove" style="right: 180px;"></div>
-            <div class="layui-icon okadmin-tabs-control ok-right-nav-menu" style="right: 140px;">
-                <ul class="okadmin-nav">
-                    <li class="no-line okadmin-nav-item">
-                        <div class="okadmin-link layui-icon-down" href="javascript:;"></div>
-                        <dl id="tabAction" class="okadmin-nav-child layui-anim-upbit layui-anim">
-                            <dd><a data-num="1" href="javascript:;">关闭当前标签页</a></dd>
-                            <dd><a data-num="2" href="javascript:;">关闭其他标签页</a></dd>
-                            <dd><a data-num="3" href="javascript:;">关闭所有标签页</a></dd>
-                        </dl>
+            <div id="yesLogo" style="display: none">
+                <ul class="layui-tab-title ok-tab-title not-scroll">
+                    <li class="layui-this" id="firstTab" lay-id="home">
+                        <strong style="display: none;" is-close="true" lay-id="home" data-url=""></strong>
+                            <i class="ok-icon ok-iconairplay"></i>
+                        <cite>主页</cite>
                     </li>
                 </ul>
             </div>
-            <div class="layui-icon okadmin-tabs-control ok-right-nav-menu" style="right: 100px;">
-                <a id="ok-refresh" class="ok-refresh" href="javascript:;" style="width: 40px;line-height: 40px;display: inline-block" title="刷新">
-                    <i class="layui-icon layui-icon-refresh-3"></i>
-                </a>
-            </div>
-            <div class="layui-icon okadmin-tabs-control ok-right-nav-menu" style="right: 0;width: 100px;">
-                <ul class="okadmin-nav">
-                    <li class="no-line okadmin-nav-item">
-                        <div class="okadmin-link ">
-                            <@shiro.principal property="name"/>
-                        </div>
-                        <dl class="okadmin-nav-child layui-anim-upbit layui-anim" style="right: -10px">
-                            <@shiro.hasPermission name="/internal/config/evictAllConfigCache">
-                            <dd><a onclick="clearConfigCache()" href="javascript:;" style="width: 100px">清理Config</a></dd>
-                            </@shiro.hasPermission>
-                            <@shiro.hasPermission name="/internal/negativelist/evictAllNegativeListCache">
-                            <dd><a onclick="clearNegativeListCache()" href="javascript:;" href="/internal/negativelists/evictAllNegativeListCache" style="width: 100px">清理负面清单</a></dd>
-                            </@shiro.hasPermission>
-                            <dd><a href="javascript:openUpdPasswordWindow();" style="width: 100px">修改密码</a></dd>
-                            <dd><a id="logout" href="javascript:;" style="width: 100px">退出登录</a></dd>
-                        </dl>
-                    </li>
-                </ul>
-            </div>
-            <ul class="layui-tab-title ok-tab-title not-scroll">
-                <li class="layui-this" lay-id="home" >
-                    <strong style="display: none;" is-close="true" lay-id="home" data-url="/internal/layer/home"></strong>
-                    <i class="ok-icon ok-iconairplay"></i>
-                    <cite>主页</cite>
-                </li>
-            </ul>
             <div class="layui-tab-content ok-tab-content">
                 <div class="layui-tab-item layui-show">
-                    <iframe src='/internal/layer/home' frameborder="0" scrolling="yes" width="100%" height="100%"></iframe>
+                    <iframe id="firstBody" src="" frameborder="0" scrolling="yes" width="100%" height="100%"></iframe>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <!--js逻辑-->
-<script src="/static/ok-admin/lib/layui/layui.js"></script>
-<script src="/static/ok-admin/js/okadmin.js"></script>
-<script src="/static/ok-admin/js/somePublic.js"></script>
+<#include "./singlePageTpl.html"/>
+<script type="text/html" id="multiPage">
+    <div onclick="showSelect(this)" id="control" style="width: 110px;display: inline-block;vertical-align: middle;text-align: center"
+         class="layui-unselect layui-form-select">
+        <div class="layui-select-title">
+            <@shiro.principal property="name"/>
+        </div>
+        <dl class="layui-anim layui-anim-upbit" style="background: #000">
+            <@shiro.hasPermission name="/internal/config/evictAllConfigCache">
+            <dd onclick="clearConfigCache()">清理Config</dd>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/internal/negativelist/evictAllNegativeListCache">
+            <dd onclick="clearNegativeListCache()">清理负面清单</dd>
+            </@shiro.hasPermission>
+            <dd onclick="switchSingleOrMulti()">启关多标签页</dd>
+            <dd onclick="openUpdPasswordWindow()">修改密码</dd>
+        </dl>
+    </div>
+    <span style="position: relative;top: 1px">
+        <span style="font-size: 12px">[ <a id="logout" href="javascript:;" style="line-height: 40px;display: inline-block;background: none;color: #05c5ff">
+            退出登录
+        </a> ]</span>
+        <span style="position: relative;top: 1px">
+            <a id="ok-refresh" class="ok-refresh" href="javascript:;" style="width: 17px;display: inline-block;background: none;text-align: center" title="刷新">
+                <i class="layui-icon layui-icon-refresh-3" style="color: #fff;background: none;font-size: 10px"></i>
+            </a>
+        </span>
+    </span>
+</script>
 <script>
     // 别删 这是给子页面使用的 本页面找不到使用方法
     var isLoginIframe = 'yes';
 
+    function switchSingleOrMulti() {
+        if (window.localStorage.getItem('needTab')) {
+            window.localStorage.setItem('needTab', '');
+        } else {
+            window.localStorage.setItem('needTab', 'need');
+        }
+        window.location.reload();
+    }
+
+    let firstTab = document.getElementById('firstTab');
+    let firstBody = document.getElementById('firstBody');
+    let src = '<#if url?exists>${url}<#else>/internal/layer/home</#if>';
+    let key = '<#if key?exists>${key}<#else>主页</#if>';
+    firstTab.setAttribute('lay-id', '<#if first?exists>home<#elseif key?exists>${id}<#else>z-z</#if>');
+    firstTab.children[0].dataset.url = src;
+    firstTab.children[2].innerHTML = key;
+    firstBody.src = src;
+
+    let needTab = window.localStorage.getItem('needTab');
+    if (needTab === 'need') {
+        let yesLogo = document.getElementById('yesLogo');
+        let html = yesLogo.innerHTML;
+        let parent = yesLogo.parentElement;
+        parent.removeChild(yesLogo);
+        parent.innerHTML = document.getElementById('singlePage').innerHTML + html + parent.innerHTML;
+        let contentBody = parent.parentElement;
+        contentBody.style.top = '4px';
+        contentBody.classList.add('single-body');
+        document.getElementById('firstBody').parentElement.parentElement.style.top = '40px';
+    } else {
+        let tit = '<#if tit?exists>${tit}</#if>';
+        document.title = tit ? tit : key;
+        let notLogo = document.getElementById('notLogo');
+        notLogo.classList.add('not-logo');
+        notLogo.innerHTML = document.getElementById('multiPage').innerHTML;
+
+        window.showSelect = function (ele) {
+            let flag = true;
+            let classList = ele.classList;
+            for (let i = 0; i < classList.length; i++) {
+                if (classList[i] === 'layui-form-selected') {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                ele.classList.add('layui-form-selected');
+            } else {
+                ele.classList.remove('layui-form-selected');
+            }
+            if (event) {
+                event.stopPropagation();
+            }
+        };
+    }
+</script>
+<script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/js/okadmin.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
+<script>
     layui.use(['jquery', 'common', 'layer'], function () {
         let $ = layui.jquery;
         let common = layui.common;
