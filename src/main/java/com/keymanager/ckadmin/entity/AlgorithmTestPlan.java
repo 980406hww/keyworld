@@ -33,9 +33,15 @@ public class AlgorithmTestPlan{
     private String algorithmTestPlanName;
 
     /**
+     * 操作组合id
+     */
+    @TableField("fOperationCombineId")
+    private Long operationCombineId;
+
+    /**
      * 操作组合名称
      */
-    @TableField("fOperationCombineName")
+    @TableField(exist = false)
     private String operationCombineName;
 
     /**
@@ -149,12 +155,12 @@ public class AlgorithmTestPlan{
         this.algorithmTestPlanName = algorithmTestPlanName;
     }
 
-    public String getOperationCombineName() {
-        return operationCombineName;
+    public Long getOperationCombineId() {
+        return operationCombineId;
     }
 
-    public void setOperationCombineName(String operationCombineName) {
-        this.operationCombineName = operationCombineName;
+    public void setOperationCombineId(Long operationCombineId) {
+        this.operationCombineId = operationCombineId;
     }
 
     public String getTerminalType() {
@@ -283,5 +289,13 @@ public class AlgorithmTestPlan{
 
     public void setExcuteCount(Integer excuteCount) {
         this.excuteCount = excuteCount;
+    }
+
+    public String getOperationCombineName() {
+        return operationCombineName;
+    }
+
+    public void setOperationCombineName(String operationCombineName) {
+        this.operationCombineName = operationCombineName;
     }
 }

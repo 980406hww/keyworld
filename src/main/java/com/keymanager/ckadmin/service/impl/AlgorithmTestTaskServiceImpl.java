@@ -13,8 +13,11 @@ import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.service.AlgorithmTestTaskService;
 
+import com.keymanager.ckadmin.service.CustomerBusinessService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.criteria.GroupCriteria;
+
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -42,6 +45,9 @@ public class AlgorithmTestTaskServiceImpl extends ServiceImpl<AlgorithmTestTaskD
     @Resource(name = "groupDao2")
     private GroupDao groupDao;
 
+    @Resource(name = "customerBusinessService2")
+    private CustomerBusinessService customerBusinessService;
+
     @Resource(name = "customerKeywordService2")
     private CustomerKeywordService customerKeywordService;
 
@@ -55,8 +61,13 @@ public class AlgorithmTestTaskServiceImpl extends ServiceImpl<AlgorithmTestTaskD
 
     @Override
     public void saveAlgorithmTestTask(ExternalAlgorithmTestTaskCriteria externalAlgorithmTestTaskCriteria) {
+        AlgorithmTestTask algorithmTestTask = externalAlgorithmTestTaskCriteria.getAlgorithmTestTask();
         Customer customer = externalAlgorithmTestTaskCriteria.getCustomer();
         customerDao.saveExternalCustomer(customer);
+        List<String> customerBusinessList=new ArrayList<>();
+        customerBusinessList.add("keyword");
+        customer.setCustomerBusinessList(customerBusinessList);
+        customerBusinessService.saveCustomerBusiness(customer);
         GroupCriteria groupCriteria = externalAlgorithmTestTaskCriteria.getGroupCriteria();
         groupDao.saveExternalGroup(groupCriteria);
         List<CustomerKeyword> customerKeywords = externalAlgorithmTestTaskCriteria.getCustomerKeywords();
@@ -66,9 +77,11 @@ public class AlgorithmTestTaskServiceImpl extends ServiceImpl<AlgorithmTestTaskD
         }
         customerKeywordService.addCustomerKeyword(customerKeywords, groupCriteria.getUserName());
         AlgorithmTestPlan algorithmTestPlan = new AlgorithmTestPlan();
-        algorithmTestPlan.setUuid(externalAlgorithmTestTaskCriteria.getAlgorithmTestTask().getAlgorithmTestPlanUuid());
-        algorithmTestPlan.setExcuteStatus(0);
+        algorithmTestPlan.setUuid(algorithmTestTask.getAlgorithmTestPlanUuid());
+        algorithmTestPlan.setExcuteStatus(2);
         algorithmTestPlanDao.updateById(algorithmTestPlan);
-        algorithmTestTaskDao.saveAlgorithmTestTask(externalAlgorithmTestTaskCriteria.getAlgorithmTestTask());
+        algorithmTestTaskDao.saveAlgorithmTestTask(algorithmTestTask);
     }
+
+
 }

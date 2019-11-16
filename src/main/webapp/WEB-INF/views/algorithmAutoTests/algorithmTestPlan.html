@@ -12,45 +12,76 @@
         .layui-tab-content {
             padding: 0px;
         }
+
         .layui-card-body {
             position: relative;
             padding: 0px;
             line-height: 24px;
         }
+
         .layui-table, .layui-table-view {
             margin: 0px;
-            border-width: 1px;
+            border-width: 0px;
         }
+
         .my-collapse > div:first-child {
-            margin-top: 10px;
             background: #f2f2f2;
             border: 0px;
         }
+
         .layui-table-page > div {
             height: 26px;
             position: fixed;
             right: 25px;
         }
 
-        .layui-table-cell a:link {
-            color: blue;
+        .layui-btn-xs {
+            height: 18px;
+            line-height: 18px;
         }
 
-        .layui-table-cell a:visited {
-            color: blue;
+        /* 下拉条件框 */
+        .my-collapse {
+            position: relative;
+            box-shadow: none;
         }
 
-        .layui-table-cell a:hover {
-            color: red;
+        .my-collapse * {
+            box-shadow: none;
         }
 
-        .layui-table-cell a:active {
-            color: darkslateblue;
+        .my-collapse > div {
+            padding: 6px 5px;
+        }
+
+        .my-collapse .my-btn {
+            height: 30px !important;
+            line-height: 30px !important;
+            padding: 0 18px;
+            background-color: #45a3c2;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .my-collapse .my-btn:hover {
+            opacity: .8;
+            transition: opacity 0.5s;
+        }
+
+        #searchContent input {
+            height: 38px;
+            width: 185px;
+            display: inline;
         }
 
         .layui-table-tool {
             min-height: 30px;
-            padding: 6px 5px 6px 5px;
+            padding: 0px 5px 6px 5px;
         }
 
         .layui-table-tool-self{
@@ -60,47 +91,65 @@
 </head>
 <body>
 <div class="ok-body">
+    <div class="layui-tab layui-tab-card" lay-filter="keywordTab">
+        <ul class="layui-tab-title" id="tabItem">
+            <li lay-id="PC" class="layui-this" data-terminal="PC">电脑</li>
+            <li lay-id="Phone" data-terminal="Phone">手机</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <!--模糊搜索区域-->
+                <div class="layui-card ">
+                    <div class="layui-card-body ">
+                        <form class="layui-form layui-form-pane" id="searchForm">
+                            <div class="my-collapse">
+                                <div>
+                                    <input type="hidden" name="terminalType" id="terminalType" value="PC">
+                                    <div class="layui-inline" style="width: 120px;height: 30px">
+                                        <select id="searchEngine" name="searchEngine">
+                                            <option value="">All</option>
+                                            <option value="百度">百度</option>
+                                            <option value="搜狗">搜狗</option>
+                                            <option value="360">360</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input type="text" name="algorithmTestPlanName" id="algorithmTestPlanName" placeholder="测试计划名称" autocomplete="off"
+                                               class="layui-input">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input type="text" name="operationCombineName" id="operationCombineName" placeholder="操作组合名称" autocomplete="off"
+                                               class="layui-input">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input type="text" name="machineGroup" id="machineGroup" placeholder="机器分组" autocomplete="off"
+                                               class="layui-input">
+                                    </div>
 
-    <div class="layui-tab-item layui-show">
-        <!--模糊搜索区域-->
-        <div class="layui-card ">
-            <div class="layui-card-body ">
-                <form class="layui-form layui-form-pane" id="searchForm">
-                    <div class="my-collapse">
-                        <div>
-                            <div class="layui-inline">
-                                <input type="text" name="algorithmTestPlanName" id="algorithmTestPlanName" placeholder="测试计划名称" autocomplete="off"
-                                       class="layui-input">
-                            </div>
-                            <div class="layui-inline">
-                                <input type="text" name="operationCombineName" id="operationCombineName" placeholder="操作组合名称" autocomplete="off"
-                                       class="layui-input">
-                            </div>
-                            <div class="layui-inline">
-                                <input type="text" name="machineGroup" id="machineGroup" placeholder="机器分组" autocomplete="off"
-                                       class="layui-input">
-                            </div>
+                                    <div class="layui-inline">
+                                        <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索</button>
+                                    </div>
 
-                            <div class="layui-inline">
-                                <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索</button>
-                            </div>
+                                    <div class="layui-inline">
+                                        <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset" id="resetBtn">
+                                            重置
+                                        </button>
+                                    </div>
+                                </div>
 
-                            <div class="layui-inline">
-                                <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset" id="resetBtn">
-                                    重置
-                                </button>
                             </div>
-                        </div>
-
+                        </form>
                     </div>
-                </form>
+                </div>
+                <!--数据表格-->
+                <table class="layui-hide" id="algorithmTestPlanTable" lay-filter="tableFilter"></table>
             </div>
         </div>
-        <!--数据表格-->
-        <table class="layui-hide" id="algorithmTestPlanTable" lay-filter="tableFilter"></table>
     </div>
 
+
 </div>
+
 <!--js逻辑-->
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
@@ -111,15 +160,47 @@
     NProgress.start();
     window.onload = function () {
         NProgress.done();
+
     };
 
-    layui.use(['table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','common'], function () {
+    layui.use(['table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','common','element'], function () {
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
         var layer = layui.layer;
         var okLayer = layui.okLayer;
         var common = layui.common;
+        var element = layui.element;
+
+        var terminalType = $("#terminalType").val();
+        if (terminalType === '' || terminalType == null) {
+            terminalType = 'PC'
+        }
+
+        $.ajax({
+            url: '/internal/algorithmAutoTest/getAlgorithmTestPlanAddData/'+ terminalType,
+            type: 'get',
+            dataType: 'json',
+            success: function (res) {
+                // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
+                // 客户端会主观认为服务端返回的就是 JSON 格式的字符串
+                var html = "";
+                for (var item in res.data.searchEngineMap) {
+                    html += "<option value='";
+                    html += item;
+                    html += "'";
+                    if (res.data.searchEngineMap[item] == "百度") {
+                        html += " selected";
+                    }
+                    html += ">";
+                    html += res.data.searchEngineMap[item];
+                    html += "</option>";
+                }
+                $("#searchEngine").empty();
+                $("#searchEngine").append(html);
+                form.render('select');
+            }
+        });
 
         function init_table_data(whereCondition) {
             whereCondition.entryType = 'pt';
@@ -145,7 +226,6 @@
                     {field: 'terminalType', title: '终端类型', width: '79'},
                     {field: 'searchEngine', title: '搜索引擎', width: '79'},
                     {field: 'machineGroup', title: '机器分组', width: '85', templet:'#toMachineManageTpl',event: 'toMachineManage'},
-                    // {field: 'excuteType', title: '执行类型', width: '80'},
                     {title: '执行类型', width: '80', templet: function(d) {
                             if (d.excuteType === 1) {
                                 return "执行多次";
@@ -154,10 +234,21 @@
                             }
                         }
                     },
+                    {
+                        field: 'excuteStatus', title: '执行状态', width: '79',
+                        templet: function (d) {
+                            if (d.excuteStatus === 1) {
+                                return "执行中";
+                            } else if (d.excuteStatus === 0) {
+                                return "未执行";
+                            } else if (d.excuteStatus === 2) {
+                                return "已完成";
+                            }
+                        }
+                    },
                     {field: 'excuteCount', title: '已执行次数', width: '90'},
                     {field: 'testIntervalDay', title: '执行间隔(天)', width: '102'},
                     {field: 'testKeywordCount', title: '测试词数', width: '80'},
-                    // {field: 'testkeywordRankBegin', title: '排名区间', width: '80'},
 
                     {title: '排名区间', width: '80', templet: function(d){
                             return d.testkeywordRankBegin + "-" + d.testkeywordRankEnd
@@ -166,12 +257,12 @@
 
                     {field: 'optimizePlanCount', title: '刷量', width: '60'},
                     {field: 'status', title: '状态', width: '60', templet:'#statusTpl'},
-                    {field: 'executeQueryTime', title: '上次执行时间', width: '110', templet: '#toDateTime'},
+                    {field: 'executeQueryTime', title: '上次执行时间', width: '110', templet: '#executeQueryTimeTpl'},
                     {field: 'createBy', title: '创建人', width: '90'},
-                    {field: 'createTime', title: '创建时间', width: '100', templet: '#toDateTime'},
+                    {field: 'createTime', title: '创建时间', width: '100', templet: '#createTimeTpl'},
                     {title: '操作', templet: '#operationTpl', align: 'center', width: '300',fixed: "right"}
                 ]],
-                height: 'full-65',
+                height: 'full-105',
                 done: function (res, curr, count) {
                 }
             });
@@ -192,6 +283,9 @@
                     break;
                 case 'delete_selected':
                     batch_delete_byUuids();
+                    break;
+                case 'execute_now':
+                    execute_now();
                     break;
                 default:
                     break;
@@ -229,7 +323,7 @@
         });
 
         function add_algorithmTestPlan() {
-            let url = '/internal/algorithmAutoTest/toAlgorithmTestPlanAdd';
+            var url = '/internal/algorithmAutoTest/toAlgorithmTestPlanAdd';
             okLayer.open("其他 / 测试计划管理 / 添加测试计划", url, "50%", "63%", function (layero) {
             }, function () {
                 if (sign) {
@@ -241,7 +335,7 @@
 
         function update_algorithmTestPlan(uuid) {
 
-            let url = '/internal/algorithmAutoTest/toAlgorithmTestPlanAdd';
+            var url = '/internal/algorithmAutoTest/toAlgorithmTestPlanAdd';
             okLayer.open("其他 / 测试计划管理 / 修改测试计划", url, "50%", "63%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(uuid);
             }, function () {
@@ -263,7 +357,7 @@
                 common.showFailMsg('请选择要操作的计划');
                 return false;
             }
-            let msg = '确定暂停这些计划吗';
+            var msg = '确定暂停这些计划吗';
             if (status === 1) {
                 msg = '确定激活这些计划吗';
             }
@@ -298,7 +392,47 @@
                 });
             });
         }
-
+        function execute_now(){
+            var checkStatus = table.checkStatus('algorithmTestPlanTable')
+                , data = checkStatus.data;
+            var uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要立即执行的计划');
+                return false;
+            }
+            layer.confirm("确定要立即执行选中计划吗", {icon: 3, title: '立即执行计划'}, function (index) {
+                var postData = {};
+                postData.uuids = uuidArr;
+                $.ajax({
+                    url: '/internal/algorithmAutoTest/executeAlgorithmTestPlans',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 10000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            common.showSuccessMsg('操作成功', function () {
+                                active['reload'].call(this);
+                            });
+                        } else {
+                            common.showFailMsg('操作失败');
+                        }
+                    },
+                    error: function () {
+                        common.showFailMsg('未知错误，请稍后重试');
+                    },
+                    complete: function () {
+                        layer.close(index);
+                    }
+                });
+            });
+        }
         function batch_delete_byUuids() {
             var checkStatus = table.checkStatus('algorithmTestPlanTable')
                 , data = checkStatus.data;
@@ -410,7 +544,7 @@
         }
 
         function show_task_data(uuid){
-            let url = '/internal/algorithmAutoTest/toShowTaskData';
+            var url = '/internal/algorithmAutoTest/toShowTaskData';
             okLayer.open("其他 / 测试计划管理 / 查看任务计划", url, "60%", "70%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(uuid);
             }, function () {
@@ -422,7 +556,7 @@
         }
 
         function show_test_data_statistics(uuid){
-            let url = '/internal/algorithmAutoTest/toShowTestPlanDataStatistics';
+            var url = '/internal/algorithmAutoTest/toShowTestPlanDataStatistics';
             okLayer.open("其他 / 测试计划管理 / 展示历史统计数据", url, "60%", "70%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initForm(uuid);
             }, function () {
@@ -435,40 +569,49 @@
 
         var active = {
             reload: function () {
-                if (table.index >= 1) {
-                    let data = common.formToJsonObject('searchForm');
+                if (true) {
+                    var terminalType = $("#terminalType").val();
+                    if (terminalType === '' || terminalType == null) {
+                        terminalType = 'PC'
+                    }
+                    var data = common.formToJsonObject('searchForm');
                     data = common.jsonObjectTrim(data);
                     data.entryType = 'pt';
+                    data.init = '';
                     table.reload('algorithmTestPlanTable', {
                         where: data,
                         page: {
                             curr: 1
                         }
-                    });
+                    },true);
                 }
             },
         };
 
         form.on("submit(search)", function (data) {
-            var postData = data.field;
-            postData = common.jsonObjectTrim(postData);
-            init_table_data(postData);
+            active['reload'].call(this);
             return false
+        });
+
+        element.on('tab(keywordTab)', function (data) {
+            var d = data.elem.context.dataset;
+            $('#terminalType').val(d.terminal);
+            active['reload'].call(this);
         });
 
         init_table_data({init: 'init'});
 
         function toOperationCombine(data){
-            let url = '/internal/groupsetting/toGroupSettingFromATP/'+data.terminalType +'/'+data.operationCombineName;
+            var url = '/internal/groupsetting/toGroupSettingFromATP/'+data.terminalType +'/'+data.operationCombineName;
             url = encodeURI(encodeURI(url));
-            let title = '操作组合:' + data.operationCombineName + '详情';
+            var title = '操作组合:' + data.operationCombineName + '详情';
             common.updateOrNewTab(url, title, data.operationCombineName)
         }
 
         function toMachineManage(data){
-            let url = '/internal/machineManage/toMachineInfoFromATP/'+data.terminalType +'/'+data.machineGroup;
+            var url = '/internal/machineManage/toMachineInfoFromATP/'+data.terminalType +'/'+data.machineGroup;
             url = encodeURI(encodeURI(url));
-            let title = '机器分组:' + data.machineGroup + '详情';
+            var title = '机器分组:' + data.machineGroup + '详情';
             common.updateOrNewTab(url, title, data.machineGroup)
         }
     });
@@ -476,9 +619,14 @@
 
 </script>
 <!--模板-->
-<script type="text/html" id="toDateTime">
+<script type="text/html" id="createTimeTpl">
     {{#  if(d.createTime){ }}
-    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}
+    {{#  } }}
+</script>
+<script type="text/html" id="executeQueryTimeTpl">
+    {{#  if(d.executeQueryTime){ }}
+    {{layui.util.toDateString(d.executeQueryTime, 'yyyy-MM-dd HH:mm:ss')}}
     {{#  } }}
 </script>
 <!-- 头工具栏模板 -->
@@ -500,6 +648,9 @@
         <@shiro.hasPermission name="/internal/algorithmAutoTest/deleteAlgorithmTestPlan">
         <button class="layui-btn layui-btn-sm layui-btn-danger" id="delete_selected" lay-event="delete_selected">
             删除所选
+        </button>
+        <button class="layui-btn layui-btn-sm" id="execute_now" lay-event="execute_now">
+            马上执行
         </button>
         </@shiro.hasPermission>
     </div>

@@ -5,37 +5,24 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.AlgorithmTestCriteria;
 import com.keymanager.ckadmin.criteria.AlgorithmTestTaskCriteria;
-import com.keymanager.ckadmin.entity.AlgorithmTestDataStatistics;
 import com.keymanager.ckadmin.entity.AlgorithmTestPlan;
 import com.keymanager.ckadmin.entity.AlgorithmTestTask;
-import com.keymanager.ckadmin.service.AlgorithmTestPlanService;
-import com.keymanager.ckadmin.service.AlgorithmTestResultStatisticsService;
-import com.keymanager.ckadmin.service.AlgorithmTestTaskService;
-import com.keymanager.ckadmin.service.ConfigService;
+import com.keymanager.ckadmin.service.*;
 import com.keymanager.ckadmin.vo.AlgorithmTestDataStatisticsVo;
-import com.keymanager.util.TerminalTypeMapping;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lhc on 2019/8/16.
@@ -59,6 +46,9 @@ public class AlgorithmAutoTestController {
     @Resource(name = "algorithmTestTaskService2")
     private AlgorithmTestTaskService algorithmTestTaskService;
 
+    @Resource(name = "operationCombineService2")
+    private OperationCombineService operationCombineService;
+
     @RequiresPermissions("/internal/algorithmAutoTest/toAlgorithmTestPlans")
     @RequestMapping(value = "/toAlgorithmTestPlans", method = RequestMethod.GET)
     public ModelAndView toAlgorithmTestPlans() {
@@ -81,18 +71,18 @@ public class AlgorithmAutoTestController {
 
     /**
      * 获得初始数据
-     * @param request
+     * @param terminalType
      * @return
      */
     @RequiresPermissions("/internal/algorithmAutoTest/saveAlgorithmTestPlan")
-    @RequestMapping(value = "/getAlgorithmTestPlanAddData", method = RequestMethod.GET)
-    public ResultBean getAlgorithmTestPlanAddData(HttpServletRequest request) {
+    @RequestMapping(value = "/getAlgorithmTestPlanAddData/{terminalType}", method = RequestMethod.GET)
+    public ResultBean getAlgorithmTestPlanAddData(@PathVariable(value = "terminalType",required = false) String terminalType) {
         ResultBean resultBean = new ResultBean();
         try{
             Map<String, Object> mapData = new HashMap<>();
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
             mapData.put("terminalType", terminalType);
             mapData.put("searchEngineMap", configService.getSearchEngineMap(terminalType));
+            mapData.put("operationCombineList", operationCombineService.getOperationCombineNames(terminalType));
             resultBean.setCode(200);
             resultBean.setData(mapData);
         } catch (Exception e) {
@@ -323,5 +313,20 @@ public class AlgorithmAutoTestController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/algorithmAutoTest/deleteAlgorithmTestPlan")
+    @RequestMapping(value = "/executeAlgorithmTestPlans", method = RequestMethod.POST)
+    public ResultBean executeAlgorithmTestPlans(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200,"success");
+        try {
+            List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
+            algorithmTestPlanService.executeAlgorithmTestPlans(uuids);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
 }
 
