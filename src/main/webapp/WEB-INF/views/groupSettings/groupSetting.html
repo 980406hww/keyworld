@@ -322,6 +322,7 @@
         };
 
         function initLayPage(pageConf) {
+            var load_index = layer.load(2, {shade: false}); //添加laoding 0-2
             if (!pageConf) {
                 pageConf = {};
                 pageConf.limit = 30;
@@ -361,6 +362,7 @@
                         }
                     });
                     init_data(result.data);
+                    layer.close(load_index);
                 },
                 error: function () {
                     common.showFailMsg('获取分组信息失败，请稍后再试');

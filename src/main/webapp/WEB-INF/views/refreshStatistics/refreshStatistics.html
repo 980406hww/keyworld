@@ -197,11 +197,12 @@
             let data = {
                 group: group,
                 type: document.getElementById('entryType').value,
-                terminal: document.getElementById('terminalType').value
+                terminal: document.getElementById('terminalType').value,
+                irc: 0
             };
             let title = group + '-关键字';
             let id = group + '-sl' + data.type + data.terminal;
-            let url = '/internal/customerKeyword/toKeywordsFromRS/' + data.type + '/' + data.terminal + '/' + data.group + '/null';
+            let url = '/internal/customerKeyword/toKeywordsFromRS/' + data.type + '/' + data.terminal + '/' + data.irc + '/' + data.group;
             common.updateOrNewTab(url, title, id);
         };
         </@shiro.hasPermission>
@@ -211,8 +212,8 @@
             let data = {
                 type: document.getElementById('entryType').value,
                 terminal: document.getElementById('terminalType').value,
-                group: null,
-                irc: null
+                group: "",
+                irc: 8
             };
             if (optimizeGroupName) {
                 data.group = optimizeGroupName;
@@ -223,8 +224,10 @@
             let id = optimizeGroupName + '-wx-' + data.type + data.terminal;
             if (invalidRefreshCount && invalidRefreshCount !== '') {
                 data.irc = invalidRefreshCount;
+            } else {
+                data.irc = 4;
             }
-            let url = '/internal/customerKeyword/toKeywordsFromRS/' + data.type + '/' + data.terminal + '/' + data.group +  '/' + data.irc;
+            let url = '/internal/customerKeyword/toKeywordsFromRS/' + data.type + '/' + data.terminal + '/' + data.irc + '/' + data.group;
             common.updateOrNewTab(url, title, id);
         };
         </@shiro.hasPermission>
@@ -495,19 +498,6 @@
         });
 
         tableInit({init: 'init'});
-
-        // function dbs(d) {
-        //     if (d.reachStandardKeywordCount > 0) {
-        //         if (d.group === '总计') {
-        //             return '<a href="javascript:findKeyword(\'\', \'\')" style="color: blue">' + d.reachStandardKeywordCount + '('
-        //                 + d.todaySubTotal + ')</a>';
-        //         }
-        //         return '<a href="javascript:findKeyword(\'' + d.group + '\', \'\')" style="color: blue">' + d.reachStandardKeywordCount + '('
-        //             + d.todaySubTotal + ')</a>';
-        //     } else {
-        //         return 1;
-        //     }
-        // }
     });
 </script>
 <script type="text/html" id="group">

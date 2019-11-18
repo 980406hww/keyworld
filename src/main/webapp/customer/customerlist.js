@@ -201,6 +201,7 @@ function changeCustomerChargeType(customerUuid) {
         url: '/internal/customerChargeType/getCustomerChargeType/' + customerUuid,
         type: 'Get',
         success: function (customerChargeType) {
+            customerChargeType = JSON.parse(customerChargeType);
             $("#tabPC tr:not(:first)").remove();
             $("#tabPhone tr:not(:first)").remove();
             $("#customerChargeTypeDialog").find("#customerChargeTypeUuid").val(null);

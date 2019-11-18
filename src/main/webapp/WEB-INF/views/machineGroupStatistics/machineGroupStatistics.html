@@ -176,11 +176,6 @@
             </div>
         </div>
     </div>
-    <form id="searchMachineInfoForm" style="display: none;" method="post" target="_blank"
-          action="/internal/machineInfo/searchBadMachineInfo">
-        <input type="hidden" name="hasProblem" value="hasProblem"/>
-        <input type="hidden" name="machineGroup" id="openMachineGroup" value=""/>
-    </form>
 </div>
 <!--js逻辑-->
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
@@ -208,43 +203,50 @@
                 machineGroup: machineGroup,
                 status: '1',
                 type: document.getElementById('entryType').value,
-                terminal: document.getElementById('terminalType').value
+                terminal: document.getElementById('terminalType').value,
+                irc: 0
             };
             let title = machineGroup + '-关键字';
             let id = machineGroup + '-sl' + data.type + data.terminal;
-            let url = '/internal/customerKeyword/toKeywordsFromMGS/' + data.type + '/' + data.terminal + '/' + data.machineGroup + '/null';
+            let url = '/internal/customerKeyword/toKeywordsFromMGS/' + data.type + '/' + data.terminal + '/' + data.irc + '/' + data.machineGroup;
             common.updateOrNewTab(url, title, id);
         };
         </@shiro.hasPermission>
 
         <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
-        window.findKeyword = function (machineGroup, invalidRefreshCount) {
+        window.findKeyword = function (machineGroup) { // 总计 4; 机器分组搜索时，到操作组合表查
             let data = {
                 status: '1',
                 type: document.getElementById('entryType').value,
                 terminal: document.getElementById('terminalType').value,
-                machineGroup: null,
-                irc: null
+                machineGroup: "",
+                irc: -1
             };
-            if (machineGroup) {
-                data.machineGroup = machineGroup;
+            if (!machineGroup) {
+                machineGroup = '总计';
+                data.irc = 4;
             } else {
-                machineGroup = '总计'
+                data.machineGroup = machineGroup;
             }
             let title = machineGroup + '-关键字';
             let id = machineGroup + '-wx-' + data.type + data.terminal;
-            if (invalidRefreshCount) {
-                data.irc = invalidRefreshCount;
-            }
-            let url = '/internal/customerKeyword/toKeywordsFromMGS/' + data.type + '/' + data.terminal + '/' + data.machineGroup + '/' + data.irc;
+            let url = '/internal/customerKeyword/toKeywordsFromMGS/' + data.type + '/' + data.terminal + '/' + data.irc + '/' + data.machineGroup;
             common.updateOrNewTab(url, title, id);
         };
         </@shiro.hasPermission>
 
         <@shiro.hasPermission name="/internal/machineInfo/searchBadMachineInfo">
         window.findMachineInfo = function (machineGroup) {
-            $("#searchMachineInfoForm").find("#openMachineGroup").val(machineGroup);
-            $("#searchMachineInfoForm").submit();
+            let url = '/internal/machineManage/toMachineInfoFromMGS/' + document.getElementById('terminalType').value + '/';
+            if (machineGroup) {
+                url += machineGroup;
+            } else {
+                url += '';
+                machineGroup = '总计';
+            }
+            let title = machineGroup + '-机器管理';
+            let id = machineGroup;
+            common.updateOrNewTab(url, title, id);
         };
         </@shiro.hasPermission>
 
@@ -350,10 +352,10 @@
                         field: 'reachStandardKeywordCount', title: '达标数(金额)', width: '7%', align: 'center', sort: true, templet: function (d) {
                             if (d.reachStandardKeywordCount > 0) {
                                 if (d.machineGroup === '总计') {
-                                    return '<a href="javascript:findKeyword(\'\', \'\')" style="color: blue">' + d.reachStandardKeywordCount + '('
+                                    return '<a href="javascript:findKeyword(\'\')" style="color: blue">' + d.reachStandardKeywordCount + '('
                                         + d.todaySubTotal + ')</a>';
                                 }
-                                return '<a href="javascript:findKeyword(\'' + d.machineGroup + '\', \'\')" style="color: blue">' + d.reachStandardKeywordCount
+                                return '<a href="javascript:findKeyword(\'' + d.machineGroup + '\')" style="color: blue">' + d.reachStandardKeywordCount
                                     + '(' + d.todaySubTotal + ')</a>';
                             } else {
                                 return '';
@@ -392,10 +394,10 @@
                             if (d.invalidKeywordCount > 0) {
                                 let html = '';
                                 if (d.machineGroup === '总计') {
-                                    html = '<a href="javascript:findKeyword(\'\', \'' + d.maxInvalidCount + '\')" style="color: blue">' + d.invalidKeywordCount
+                                    html = '<a href="javascript:findKeyword(\'\')" style="color: blue">' + d.invalidKeywordCount
                                         + '</a>';
                                 } else {
-                                    html = '<a href="javascript:findKeyword(\'' + d.machineGroup + '\', \'' + d.maxInvalidCount + '\')" style="color: blue">'
+                                    html = '<a href="javascript:findKeyword(\'' + d.machineGroup + '\')" style="color: blue">'
                                         + d.invalidKeywordCount + '</a>';
                                 }
                                 <@shiro.hasPermission name="/internal/customerKeyword/resetInvalidRefreshCount">
@@ -503,9 +505,9 @@
                         field: 'unworkMachineCount', title: '已停数', width: '5%', align: 'center', sort: true, templet: function (d) {
                             if (d.unworkMachineCount > 0) {
                                 if (d.machineGroup === '总计') {
-                                    return '<a target="_blank" href="javascript:findMachineInfo(\'\')">' + d.unworkMachineCount + '</a>';
+                                    return '<a style="color: blue" href="javascript:findMachineInfo(\'\')">' + d.unworkMachineCount + '</a>';
                                 }
-                                return '<a target="_blank" href="javascript:findMachineInfo(\'' + d.machineGroup + '\')">' + d.unworkMachineCount + '</a>';
+                                return '<a style="color: blue" href="javascript:findMachineInfo(\'' + d.machineGroup + '\')">' + d.unworkMachineCount + '</a>';
                             } else {
                                 return '';
                             }

@@ -701,6 +701,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     public void updateSelectFailReason(KeywordCriteria keywordCriteria) {
         customerKeywordDao.updateSelectFailReason(keywordCriteria);
     }
+
+    @Override
+    public Integer getMaxInvalidCountByMachineGroup(String machineGroup) {
+        return customerKeywordDao.getMaxInvalidCountByMachineGroup(machineGroup);
+    }
 }
 
 
