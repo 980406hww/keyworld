@@ -240,7 +240,11 @@ public class DailyReportServiceImpl extends ServiceImpl<DailyReportDao, DailyRep
 
 	@Override
 	public List<DailyReport> searchCurrentDateCompletedReports(String userName){
-		return dailyReportDao.searchCurrentDateCompletedReports(userName);
+		List<DailyReport> dailyReports = dailyReportDao.searchCurrentDateCompletedReports(userName);
+		if (CollectionUtils.isEmpty(dailyReports)) {
+			return null;
+		}
+		return dailyReports;
 	}
 
 	@Override

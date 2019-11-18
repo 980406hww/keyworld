@@ -364,8 +364,8 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
     }
 
     function showLogData(data) {
-        var boxes = document.getElementById('table').nextElementSibling
-        .getElementsByClassName('layui-table-body')[0].getElementsByClassName('laytable-cell-1-0-2');
+        var boxes = document.getElementById('table').nextElementSibling.getElementsByClassName('layui-table-body')[0]
+        .getElementsByClassName('laytable-cell-1-0-2');
         for (let i = 0; i < boxes.length; i++) {
             if (data[i].hData) {
                 let boxLogShow = echarts.init(boxes[i]);

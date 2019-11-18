@@ -112,226 +112,6 @@
 </div>
 
 </body>
-<script>
-    var terminal = '<#if terminal?exists>${terminal}</#if>';
-    var search = '<#if search?exists>${search}</#if>';
-    var time = '<#if time?exists>${time}</#if>';
-    var dateStart = '<#if dateStart?exists>${dateStart}</#if>';
-    var dateEnd = '<#if dateEnd?exists>${dateEnd}</#if>';
-    var condition = {
-        searchEngines: search,
-        qzTerminal: terminal,
-        time: time
-    };
-</script>
-<script type="text/javascript" src="/static/ok-admin/lib/layui/layui.js"></script>
-<script type="text/javascript" src="/static/ok-admin/page/qzsetting/qzChargeMon.js"></script>
-<script>
-    layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
-        var $ = layui.jquery;
-        var form = layui.form;
-        var common = layui.common;
-        var table = layui.table;
-        var laydate = layui.laydate;
-
-        window.qzChargeTableInit = function (condition) {
-            table.render({
-                elem: '#table',
-                method: 'post',
-                url: '/internal/qzchargemon/getMonDataByCondition',
-                page: true,
-                limit: 25,
-                limits: [10, 25, 50, 100, 500],
-                size: 'sm',
-                id: 'table',
-                toolbar: "#toolbarTpl",
-                even: false,//隔行背景
-                where: condition,
-                defaultToolbar: [],
-                contentType: 'application/json',
-                cols: [[
-                    {
-                        field: 'qzDomain', title: '域名', width: '31%', align: 'left', templet: function (d) {
-                            if (d.isDel === 1) {
-                                return '<span lay-event="toQzSetting" style="color: #0c7df5;cursor: pointer;">' + d.qzDomain + '</span>';
-                            }
-                            return d.qzDomain;
-                        }
-                    },
-                    {
-                        field: 'qzCustomer', title: '客户名称', width: '30%', align: 'left'
-                    },
-                    {
-                        field: 'operationType', title: '操作', width: '10%', align: 'center', templet: function (d) {
-                            let msg = '';
-                            switch (d.operationType) {
-                                case 1:
-                                    msg = '<span style="color: green">续费</span>';
-                                    break;
-                                case 2:
-                                    msg = '<span style="color: orange">新增</span>';
-                                    break;
-                                case 0:
-                                    msg = '<span style="color: pink">暂停</span>';
-                                    break;
-                                case 3:
-                                    msg = '<span style="color: red">下架</span>';
-                                    break;
-                                case 4:
-                                    msg = '<span style="color: grey">删除</span>';
-                                    break;
-                                default:
-                                    msg = '<span style="color: yellow">未知操作</span>';
-                                    break;
-                            }
-                            return msg;
-                        }
-                    },
-                    {
-                        field: 'operationDate', title: '操作时间', width: '17%', align: 'center', templet: function (d) {
-                            return layui.util.toDateString(d.operationDate, 'yyyy-MM-dd HH:mm:ss')
-                        }
-                    },
-                    {
-                        field: 'operationUser', title: '操作人', width: '12%', align: 'center'
-                    }
-                ]],
-                height: 'full-385',
-                loading: true,
-                done: function (res, curr, count) {
-                    $("#dateStart").val(condition.dateStart);
-                    $("#dateEnd").val(condition.dateEnd);
-                    laydate.render({elem: '#dateStart'});
-                    laydate.render({elem: '#dateEnd'});
-                    getSeData('searchEngine');
-                }
-            });
-        };
-
-        if (condition) {
-            console.log(condition);
-            qzChargeTableInit(condition);
-        } else {
-            qzChargeTableInit({searchEngine: '', terminal: '', dateStart: dateStart, dateEnd: dateEnd});
-        }
-
-        function initFrom() {
-            initCustomer(condition.customerUuid);
-            if (condition.operationType) {
-                switch (condition.operationType) {
-                    case '1':
-                        document.getElementById('operationType').children[2].setAttribute('selected', '');
-                        break;
-                    case '2':
-                        document.getElementById('operationType').children[1].setAttribute('selected', '');
-                        break;
-                    case '0':
-                        document.getElementById('operationType').children[3].setAttribute('selected', '');
-                        break;
-                    case '3':
-                        document.getElementById('operationType').children[4].setAttribute('selected', '');
-                        break;
-                    case '4':
-                        document.getElementById('operationType').children[5].setAttribute('selected', '');
-                        break;
-                    default:
-                        break;
-                }
-            }
-            document.getElementById('dateStart').value = condition.dateStart;
-            document.getElementById('dateEnd').value = condition.dateEnd;
-            form.render('select');
-        }
-
-        function initCustomer(customerUuid) {
-            $.ajax({
-                url: "/internal/customer/getActiveCustomers2",
-                type: "GET",
-                dataType: 'json',
-                success: function (res) {
-                    if (res.code === 200) {
-                        var customer = $("#customer");
-                        customer.empty();
-                        customer.append('<option value="">请选择客户</option>');
-                        if (res.data != null) {
-                            let customerList = res.data;
-                            $.each(customerList, function (idx, val) {
-                                if(customerUuid === val.uuid){
-                                    customer.append('<option value="' + val.contactPerson + '_' + val.uuid + '" selected>' + val.contactPerson + '_' + val.uuid + '</option>')
-                                }else{
-                                    customer.append('<option value="' + val.contactPerson + '_' + val.uuid + '" >' + val.contactPerson + '_' + val.uuid + '</option>')
-                                }
-                            });
-                        }
-                        form.render('select');
-                    } else {
-                        common.showFailMsg("数据获取失败");
-                    }
-                },
-                error: function () {
-                    common.showFailMsg("网络错误请稍后再试");
-                }
-            });
-        }
-
-        window.resetForm = function () {
-            let terminals = document.getElementById('terminal').children;
-            for (let i = 0; i < terminals.length; i++) {
-                terminals[i].removeAttribute('selected');
-            }
-            terminals[1].setAttribute('selected', '');
-            let operationTypes = document.getElementById('operationType').children;
-            for (let i = 0; i < operationTypes.length; i++) {
-                operationTypes[i].removeAttribute('selected');
-            }
-            handle('searchEngine', searchEngine);
-        };
-
-        var condition = null;
-
-        window.getManyData = function () {
-            condition = common.formToJsonObject('searchForm');
-            console.log(condition);
-            table.reload('table', {
-                where: condition,
-                page: {
-                    curr: 1
-                },
-                done: function (res, curr, count) {
-                    laydate.render({elem: '#dateStart'});
-                    laydate.render({elem: '#dateEnd'});
-                    if (condition) {
-                        initFrom();
-                    }
-                }
-            });
-        };
-
-        table.on('tool(table)', function (obj) {
-            var data = obj.data, event = obj.event;
-            if (event === 'toQzSetting') {
-                $.ajax({
-                    url: '/internal/customer/getCustomerUuidByName',
-                    type: 'post',
-                    data: JSON.stringify({name: data.qzCustomer}),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    dataType: 'json'
-                    , success: function (res) {
-                        if (res.code === 200) {
-                            let url = '/internal/qzsetting/toQzSetting/' + data.qzDomain + '/' + data.terminalType.split(',')[0] + '/';
-                            url += res.data ? res.data : '';
-                            url = encodeURI(encodeURI(url));
-                            common.updateOrNewTab(url, data.qzCustomer + '整站信息', data.qzCustomer + '整站信息');
-                        }
-                    }
-                });
-            }
-        });
-    });
-</script>
 <!-- 头工具栏模板 -->
 <script type="text/html" id="toolbarTpl">
     <div>
@@ -366,12 +146,12 @@
             <div class="layui-inline">
                 <label class="layui-form-label">操作时间</label>
                 <div class="layui-input-block">
-                    <input type="text" autocomplete="off" name="dateStart" id="dateStart" class="layui-input" style="width: 100px;" placeholder=">=">
+                    <input type="text" autocomplete="off" name="dateStart" id="dateStart" value="<#if dateStart?exists>${dateStart}</#if>" class="layui-input" style="width: 100px;" placeholder=">=">
                 </div>
             </div>
             <div class="layui-inline">
                 <div class="layui-input-block" style="margin-left: 0;">
-                    <input type="text" autocomplete="off" name="dateEnd" id="dateEnd" class="layui-input" style="width: 100px;" placeholder="<=">
+                    <input type="text" autocomplete="off" name="dateEnd" id="dateEnd" value="<#if dateEnd?exists>${dateEnd}</#if>" class="layui-input" style="width: 100px;" placeholder="<=">
                 </div>
             </div>
             <div class="layui-inline">
@@ -384,5 +164,140 @@
             </div>
         </form>
     </div>
+</script>
+<script>
+    var terminal = '<#if terminal?exists>${terminal}</#if>';
+    var search = '<#if search?exists>${search}</#if>';
+    var time = '<#if time?exists>${time}</#if>';
+    var dateStart = '<#if dateStart?exists>${dateStart}</#if>';
+    var dateEnd = '<#if dateEnd?exists>${dateEnd}</#if>';
+    var condition = {
+        searchEngines: search,
+        qzTerminal: terminal,
+        time: time,
+        dateStart: dateStart,
+        dateEnd: dateEnd
+    };
+</script>
+<script type="text/javascript" src="/static/ok-admin/lib/layui/layui.js"></script>
+<script type="text/javascript" src="/static/ok-admin/page/qzsetting/qzChargeMon.js"></script>
+<script>
+    layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
+        var $ = layui.jquery;
+        var form = layui.form;
+        var common = layui.common;
+        var table = layui.table;
+        var laydate = layui.laydate;
+
+        function initFrom() {
+            if (condition.operationType) {
+                switch (condition.operationType) {
+                    case '1':
+                        document.getElementById('operationType').children[2].setAttribute('selected', '');
+                        break;
+                    case '2':
+                        document.getElementById('operationType').children[1].setAttribute('selected', '');
+                        break;
+                    case '0':
+                        document.getElementById('operationType').children[3].setAttribute('selected', '');
+                        break;
+                    case '3':
+                        document.getElementById('operationType').children[4].setAttribute('selected', '');
+                        break;
+                    case '4':
+                        document.getElementById('operationType').children[5].setAttribute('selected', '');
+                        break;
+                    default:
+                        break;
+                }
+            }
+            document.getElementById('dateStart').value = condition.dateStart;
+            document.getElementById('dateEnd').value = condition.dateEnd;
+            form.render('select');
+        }
+
+        initCustomer();
+
+        function initCustomer() {
+            $.ajax({
+                url: "/internal/customer/getActiveCustomers2",
+                type: "GET",
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        var customer = $("#customerUuid");
+                        customer.empty();
+                        customer.append('<option value="">请选择客户</option>');
+                        if (res.data != null) {
+                            let customerList = res.data;
+                            $.each(customerList, function (idx, val) {
+                                customer.append('<option value="' + val.contactPerson + '_' + val.uuid + '" >' + val.contactPerson + '_' + val.uuid + '</option>')
+                            });
+                        }
+                        form.render('select');
+                    } else {
+                        common.showFailMsg("数据获取失败");
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络错误请稍后再试");
+                }
+            });
+        }
+
+        window.resetForm = function () {
+            let terminals = document.getElementById('terminal').children;
+            for (let i = 0; i < terminals.length; i++) {
+                terminals[i].removeAttribute('selected');
+            }
+            terminals[1].setAttribute('selected', '');
+            let operationTypes = document.getElementById('operationType').children;
+            for (let i = 0; i < operationTypes.length; i++) {
+                operationTypes[i].removeAttribute('selected');
+            }
+            qz_handle('searchEngine', searchEngine);
+        };
+
+        window.getManyData = function () {
+            condition = common.formToJsonObject('searchForm');
+            table.reload('table', {
+                where: condition,
+                page: {
+                    curr: 1
+                },
+                done: function (res, curr, count) {
+                    laydate.render({elem: '#dateStart'});
+                    laydate.render({elem: '#dateEnd'});
+                    if (condition) {
+                        initFrom();
+                    }
+                }
+            });
+        };
+
+        table.on('tool(table)', function (obj) {
+            let data = obj.data, event = obj.event;
+            if (event === 'toQzSetting') {
+                $.ajax({
+                    url: '/internal/customer/getCustomerUuidByName',
+                    type: 'post',
+                    data: JSON.stringify({name: data.qzCustomer}),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    dataType: 'json'
+                    , success: function (res) {
+                        if (res.code === 200) {
+                            let url = '/internal/qzsetting/toQzSetting/' + data.qzDomain + '/' + data.terminalType.split(',')[0] + '/';
+                            url += res.data ? res.data : '';
+                            url = encodeURI(encodeURI(url));
+                            common.updateOrNewTab(url, data.qzCustomer + '整站信息', data.qzCustomer + '整站信息');
+                        }
+                    }
+                });
+            }
+        });
+    });
 </script>
 </html>
