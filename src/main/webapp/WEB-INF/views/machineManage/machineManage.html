@@ -355,6 +355,7 @@
 </div>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="${ctx.basePath}/static/FileSaver.js"></script>
 <script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
     var sign = false;
@@ -1019,14 +1020,14 @@
                     changeTerminalType(data.clientID, data.terminalType);
                     break;
                 case 'connectVNC':
-                    connectVNC(data.host, data.port, data.userName, data.password, obj.tr[0]);
+                    connectVNC(data.clientID,data.host, data.port, data.userName, data.password, obj.tr[0]);
                     break;
                 default:
                     break;
             }
         });
 
-        function connectVNC(host, port, vncUser, vncPwd, ele) {
+        function connectVNC(clientID,host, port, vncUser, vncPwd, ele) {
             try {
                 let fso = new ActiveXObject("Scripting.FileSystemObject");
                 if (!fso.FolderExists("C:\\vnc")) {
@@ -1069,7 +1070,18 @@
                 obj = null;
             } catch (e) {
                 if (e.name === "ReferenceError") {
-                    common.showFailMsg('请更换到带IE内核的浏览器！');
+                    // alert("当前浏览器不兼容，请更换到兼容模式！")
+                    // var link = vncLink.split(":");
+                    var content = "[Connection]\n" +
+                        "Host=" + host +
+                        "\nPort=" + port +
+                        "\nUsername=" + vncUser +
+                        "\nPassword=" + vncPwd;
+                    var filename = "机器" + ".vnc";
+                    var blob = new Blob([content], {
+                        type: "text/plain;charset=utf-8"
+                    });
+                    saveAs(blob, filename);
                 } else {
                     common.showFailMsg('未找到对应的.vnc文件或其他的错误');
                 }

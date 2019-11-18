@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,9 +10,9 @@
 <body>
 
 
-    <!--form表单-->
-    <form class="layui-form layui-form-pane ok-form" lay-filter="save">
-        <div class="ok-body">
+<!--form表单-->
+<form class="layui-form layui-form-pane ok-form" lay-filter="save" id="saveForm">
+    <div class="ok-body">
         <div class="layui-form-item">
             <label class="layui-form-label">测试计划名称</label>
             <input type="hidden" name="uuid">
@@ -25,23 +24,22 @@
         <div class="layui-form-item">
             <label class="layui-form-label">操作组合名称</label>
             <div class="layui-input-block">
-                <input type="text" name="operationCombineName" placeholder="请输入操作机组名称" autocomplete="off"
-                       class="layui-input" lay-verify="required">
+                <select id="operationCombineId" name="operationCombineId" lay-verify="required" lay-search>
+                    <option value="">请选择操作组合</option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">终端类型</label>
             <div class="layui-input-block">
-                <select name="terminalType">
-                    <option value="PC">PC</option>
-                    <option value="Phone">Phone</option>
-                </select>
+                <input type="radio" name="terminalType" value="PC" title="PC" checked>
+                <input type="radio" name="terminalType" value="Phone" title="Phone">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">搜索引擎</label>
             <div class="layui-input-block">
-                <select id="searchEngine" name="searchEngine">
+                <select name="searchEngine">
                     <option value="谷歌">谷歌</option>
                     <option value="百度">百度</option>
                 </select>
@@ -50,10 +48,20 @@
         <div class="layui-form-item">
             <label class="layui-form-label">机器分组</label>
             <div class="layui-input-block">
-                <input type="text" name="machineGroup" placeholder="请输入机器分组" value="qz" autocomplete="off" class="layui-input"
+                <input type="text" name="machineGroup" placeholder="请输入机器分组" value="qz" autocomplete="off"
+                       class="layui-input"
                        lay-verify="required">
             </div>
         </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">执行类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="excuteType" value="0" title="执行一次" checked>
+                <input type="radio" name="excuteType" value="1" title="执行多次">
+            </div>
+        </div>
+
         <div class="layui-form-item">
             <label class="layui-form-label">测试间隔天数</label>
             <div class="layui-input-block">
@@ -68,20 +76,20 @@
                        lay-verify="positiveInteger">
             </div>
         </div>
+
         <div class="layui-form-item">
-            <label class="layui-form-label">测试词排名起始</label>
-            <div class="layui-input-block">
+            <label class="layui-form-label">测试词排名区间</label>
+            <div class="layui-input-inline" style="width: 130px;">
                 <input type="number" name="testkeywordRankBegin" value="40" autocomplete="off" class="layui-input"
                        lay-verify="positiveInteger">
             </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">测试词排名结束</label>
-            <div class="layui-input-block">
+            <div class="layui-form-mid">-</div>
+            <div class="layui-input-inline" style="width: 130px;">
                 <input type="number" name="testkeywordRankEnd" value="50" autocomplete="off" class="layui-input"
                        lay-verify="positiveInteger">
             </div>
         </div>
+
         <div class="layui-form-item">
             <label class="layui-form-label">刷量</label>
             <div class="layui-input-block">
@@ -89,20 +97,20 @@
                        lay-verify="positiveInteger">
             </div>
         </div>
+    </div>
+    <div style="height: 58px;"></div>
+    <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+        <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+            <button class="layui-btn" lay-submit lay-filter="commit">确定</button>
+            <button type="reset" class="layui-btn layui-btn-primary">
+                重置
+            </button>
+            <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">
+                取消
+            </button>
         </div>
-        <div style="height: 58px;"></div>
-        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
-            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
-                <button class="layui-btn" lay-submit lay-filter="commit">确定</button>
-                <button type="reset" class="layui-btn layui-btn-primary">
-                    重置
-                </button>
-                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">
-                    取消
-                </button>
-            </div>
-        </div>
-    </form>
+    </div>
+</form>
 
 <!--js逻辑-->
 
@@ -110,12 +118,12 @@
 <script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
 
-    let uuid_ = null;
-    let layui_ = null;
-
+    var uuid_ = null;
+    var layui_ = null;
+    var operationCombineId_ = '';
     function initForm(data) {
         uuid_ = data;
-        if (layui_ != null) {
+        if (layui_ !== null) {
             setForm(layui_, uuid_);
         }
     }
@@ -132,6 +140,7 @@
             dataType: 'json',
             success: function (res) {
                 if (res.code === 200) {
+                    operationCombineId_ = res.data.operationCombineId;
                     l.form.val("save", res.data);
                 } else {
                     l.layer.msg(res.msg === null || res.msg === '' ? '未知错误' : res.msg, {icon: 5, time: 3000});
@@ -141,45 +150,74 @@
     }
 
     layui.use(["form", "jquery", "layer", "common"], function () {
-        let form = layui.form;
-        let $ = layui.jquery;
-        let common = layui.common;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var common = layui.common;
 
-        $.ajax({
-            url: '/internal/algorithmAutoTest/getAlgorithmTestPlanAddData',
-            type: 'get',
-            dataType: 'json',
-            success: function (res) {
-                // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
-                // 客户端会主观认为服务端返回的就是 JSON 格式的字符串
-                let html = "";
-                for (let item in res.data.searchEngineMap) {
-                    html += "<option value='";
-                    html += item;
-                    html += "'";
-                    html += ">";
-                    html += res.data.searchEngineMap[item];
-                    html += "</option>";
-                }
-                $("#searchEngine").empty();
-                $("#searchEngine").append(html);
-                form.render('select');
-            }
-        });
-
-        if (uuid_ != null) {
+        if (uuid_ !== null) {
             setForm(layui, uuid_);
         } else {
             layui_ = layui;
         }
 
+        function initSearchEngine(data) {
+            var html = "";
+
+            for (var item in data) {
+                html += "<option value='";
+                html += item;
+                html += "'";
+                if (data[item] == "百度") {
+                    html += " selected";
+                }
+                html += ">";
+                html += data[item];
+                html += "</option>";
+            }
+            $("[name=searchEngine]").empty();
+            $("[name=searchEngine]").append(html);
+        }
+
+        function initOperationCombineId(data) {
+            var operationCombineId = document.getElementById('operationCombineId');
+            var html = '<option value="">请选择操作组合</option>';
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].uuid === operationCombineId_) {
+                    html += '<option value="' + data[i].uuid + '" selected>' + data[i].operationCombineName + '</option>';
+                } else {
+                    html += '<option value="' + data[i].uuid + '">' + data[i].operationCombineName + '</option>';
+                }
+            }
+            operationCombineId.innerHTML = html;
+        }
+        var terminalType = window.parent.document.getElementById('terminalType').value;
+        $.ajax({
+            url: '/internal/algorithmAutoTest/getAlgorithmTestPlanAddData/'+ terminalType,
+            type: 'get',
+            dataType: 'json',
+            success: function (res) {
+                // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
+                // 客户端会主观认为服务端返回的就是 JSON 格式的字符串
+                initSearchEngine(res.data.searchEngineMap);
+                initOperationCombineId(res.data.operationCombineList);
+                form.render('select');
+            }
+        });
+
+
         form.on("submit(commit)", function (data) {
-            $.each(data.field,function(idx,item){
-                data.field[idx] = $.trim(item).replace(/\+/g," ")
+            $.each(data.field, function (idx, item) {
+                data.field[idx] = $.trim(item).replace(/\+/g, " ")
             });
             if (!common.waitMoment()) {
                 return false;
             }
+            if ($(":input[name='testkeywordRankBegin']").val() >= $(":input[name='testkeywordRankEnd']").val()) {
+                common.showFailMsg("测试词排名起始不能大于或等于结束！");
+                return false;
+            }
+            debugger;
+            // console.log("添加的值为：" + JSON.stringify(data.field));
             $.ajax({
                 url: '/internal/algorithmAutoTest/postAlgorithmTestPlanAddData',
                 type: 'post',

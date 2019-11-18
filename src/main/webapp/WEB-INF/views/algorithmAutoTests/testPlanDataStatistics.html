@@ -53,11 +53,14 @@
             even: true,//隔行背景
             contentType: 'application/json',
             cols: [[
-                {field: 'topTenCount', title: '首页个数', width: '20%',align:'center'},
-                {field: 'zeroOptimizedCount', title: '没刷量个数', width: '20%',align:'center'},
-                {field: 'rankChangeRate', title: '首页排名率', width: '20%',align:'center'},
-                {field: 'recordDate', title: '记录日期', width: '20%',align:'center',templet: '#toDateTime'},
-                {field: 'createTime', title: '创建时间', width: '20%',align:'center',templet: '#toDateTime'},
+                {field: 'keywordGroup', title: '关键字分组', width: '12.5%',align:'center'},
+                {field: 'customerName', title: '客户名称', width: '12.5%',align:'center'},
+                {field: 'actualKeywordCount', title: '实际测试词数', width: '13%',align:'center'},
+                {field: 'topTenCount', title: '首页个数', width: '12.5%',align:'center'},
+                {field: 'zeroOptimizedCount', title: '没刷量个数', width: '12%',align:'center'},
+                {field: 'rankChangeRate', title: '首页排名率', width: '12.5%',align:'center'},
+                {field: 'recordDate', title: '记录日期', width: '12.5%',align:'center',templet: '#recordDateTpl'},
+                {field: 'createTime', title: '创建时间', width: '13%',align:'center',templet: '#createTimeTpl'}
             ]],
             height: 'full-30',
             done: function (res, curr, count) {
@@ -76,9 +79,14 @@
 </script>
 
 <!--模板-->
-<script type="text/html" id="toDateTime">
+<script type="text/html" id="createTimeTpl">
     {{#  if(d.createTime){ }}
-        {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+        {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}
+    {{#  } }}
+</script>
+<script type="text/html" id="recordDateTpl">
+    {{#  if(d.recordDate){ }}
+    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
     {{#  } }}
 </script>
 </body>

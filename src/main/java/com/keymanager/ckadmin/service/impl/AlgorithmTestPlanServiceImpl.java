@@ -8,13 +8,11 @@ import com.keymanager.ckadmin.dao.AlgorithmTestPlanDao;
 import com.keymanager.ckadmin.dao.AlgorithmTestTaskDao;
 import com.keymanager.ckadmin.entity.AlgorithmTestPlan;
 import com.keymanager.ckadmin.service.AlgorithmTestPlanService;
+import org.springframework.stereotype.Service;
 
-import com.keymanager.monitoring.service.AlgorithmTestTaskService;
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Service;
 
 /**
  * <p>
@@ -80,5 +78,19 @@ public class AlgorithmTestPlanServiceImpl extends ServiceImpl<AlgorithmTestPlanD
     @Override
     public void updateAlgorithmTestPlansStatus(List<Integer> uuids, Integer status) {
         algorithmTestPlanDao.updateAlgorithmTestPlansStatus(uuids,status);
+    }
+
+    @Override
+    public void executeAlgorithmTestPlans(List<Integer> uuids) {
+        algorithmTestPlanDao.executeAlgorithmTestPlans(uuids);
+    }
+
+    @Override
+    public synchronized AlgorithmTestPlan selectOneAvailableAlgorithmTestPlan() {
+        AlgorithmTestPlan algorithmTestPlan = algorithmTestPlanDao.selectOneAvailableAlgorithmTestPlan();
+        if (null != algorithmTestPlan) {
+            algorithmTestPlanDao.updateExcuteQueryTimeAndExcuteCount(algorithmTestPlan.getUuid());
+        }
+        return algorithmTestPlan;
     }
 }

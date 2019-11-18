@@ -3,9 +3,8 @@ package com.keymanager.ckadmin.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.keymanager.ckadmin.criteria.AlgorithmTestCriteria;
-import com.keymanager.ckadmin.criteria.AlgorithmTestTaskCriteria;
-import com.keymanager.ckadmin.entity.AlgorithmTestDataStatistics;
 import com.keymanager.ckadmin.entity.AlgorithmTestPlan;
+
 import java.util.List;
 
 /**
@@ -31,5 +30,9 @@ public interface AlgorithmTestPlanService extends IService<AlgorithmTestPlan> {
     void changeAlgorithmTestPlanStatus(Integer uuid, Integer status);
 
     void updateAlgorithmTestPlansStatus(List<Integer> uuids, Integer status);
+
+    AlgorithmTestPlan selectOneAvailableAlgorithmTestPlan();
+
+    void executeAlgorithmTestPlans(List<Integer> uuids);
 
 }

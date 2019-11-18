@@ -15,7 +15,7 @@ public class GroupCriteria extends BaseCriteria{
 
     private String groupName;
 
-    private String operationCombineName;
+    private Long operationCombineId;
 
     private String createBy;
 
@@ -35,12 +35,12 @@ public class GroupCriteria extends BaseCriteria{
         this.groupName = groupName;
     }
 
-    public String getOperationCombineName() {
-        return operationCombineName;
+    public Long getOperationCombineId() {
+        return operationCombineId;
     }
 
-    public void setOperationCombineName(String operationCombineName) {
-        this.operationCombineName = operationCombineName;
+    public void setOperationCombineId(Long operationCombineId) {
+        this.operationCombineId = operationCombineId;
     }
 
     public String getCreateBy() {
