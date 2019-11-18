@@ -76,7 +76,7 @@ public class QZChargeMonController {
             page.setOrderByField("fOperationDate");
             page.setAsc(false);
             Wrapper<QzChargeMon> wrapper = new EntityWrapper<>();
-            wrapper.like("fTerminalType", criteria.getTerminal());
+            wrapper.like("fTerminalType", criteria.getQzTerminal());
             if (null != criteria.getSearchEngine() && !"".equals(criteria.getSearchEngine())) {
                 wrapper.eq("fSearchEngine", criteria.getSearchEngine());
             }

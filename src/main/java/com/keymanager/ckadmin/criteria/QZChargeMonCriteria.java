@@ -4,18 +4,18 @@ import com.keymanager.ckadmin.criteria.base.BaseCriteria;
 
 public class QZChargeMonCriteria extends BaseCriteria {
 
-    private String terminal;
+    private String qzTerminal;
     private String searchEngine;
     private String dateStart;
     private String dateEnd;
     private Integer operationType;
 
-    public String getTerminal() {
-        return terminal;
+    public String getQzTerminal() {
+        return qzTerminal;
     }
 
-    public void setTerminal(String terminal) {
-        this.terminal = terminal;
+    public void setQzTerminal(String qzTerminal) {
+        this.qzTerminal = qzTerminal;
     }
 
     public String getSearchEngine() {
