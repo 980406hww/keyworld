@@ -265,9 +265,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         }
 
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
-            CustomerKeyword customerKeyword1 = customerKeywordDao
-                .getOneSimilarCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid()
-                    , customerKeyword.getKeyword(), originalUrl, customerKeyword.getTitle());
+            CustomerKeyword customerKeyword1 = customerKeywordDao.getOneSimilarCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid()
+                , customerKeyword.getKeyword(), originalUrl, customerKeyword.getTitle());
             if (customerKeyword1 != null) {
                 detectCustomerKeywordEffect(customerKeyword, customerKeyword1);
                 return null;
@@ -757,6 +756,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             customerKeyword.setPositionFifthFee(existingCustomerKeyword.getPositionFifthFee());
             customerKeyword.setPositionFirstPageFee(existingCustomerKeyword.getPositionFirstPageFee());
         }
+    }
+
+    @Override
+    public Integer getMaxInvalidCountByMachineGroup(String machineGroup) {
+        return customerKeywordDao.getMaxInvalidCountByMachineGroup(machineGroup);
     }
 }
 

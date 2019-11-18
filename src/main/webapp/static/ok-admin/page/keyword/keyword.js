@@ -191,7 +191,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 {field: 'collectMethod', title: '收费方式', width: '80', templet: '#collectMethodTpl' },
                 {field: 'optimizePlanCount', title: '要刷', width: '60',},
                 {field: 'optimizedCount', title: '已刷', width: '60'},
-                {field: 'invalidRefreshCount', title: '无效', width: '60', hide: true },
+                {field: 'invalidRefreshCount', title: '无效', sort: true, width: '60', hide: true },
                 {field: 'status', title: '状态', width: '60', templet: '#statusTpl' },
                 {field: 'paymentStatus', title: '付费状态', width: '80', hide: true },
                 {field: 'remarks', title: '备注', width: '100', hide: true, templet: '#remarksTpl'},
@@ -238,10 +238,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
     form.verify({
         num: [
             /(^$)|(^[0-9]?$)|(^[1-9][0-9]+$)/,
-            "请输入合适的正整数、如：1、2、3"
-        ],
-        positiveInteger: [
-            /(^$)|(^[0-9]*[1-9][0-9]*$)/,
             "请输入合适的正整数、如：1、2、3"
         ],
         telPhone: [

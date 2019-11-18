@@ -31,6 +31,8 @@ import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.webDo.KeywordCountDO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.util.TerminalTypeMapping;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -693,19 +695,21 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toKeywordsFromPT/{businessType}/{terminalType}/{searchEngine}/{belongUser}/{keyword}")
+    @GetMapping(value = {"/toKeywordsFromPT/{businessType}/{terminalType}/{keyword}/{searchEngine}/{belongUser}",
+        "/toKeywordsFromPT/{businessType}/{terminalType}/{keyword}/{searchEngine}", "/toKeywordsFromPT/{businessType}/{terminalType}/{keyword}/{belongUser}",
+        "/toKeywordsFromPT/{businessType}/{terminalType}/{keyword}"})
     public ModelAndView toKeywords(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "searchEngine") String searchEngine, @PathVariable(name = "belongUser") String belongUser,
-        @PathVariable(name = "keyword") String keyword) {
+        @PathVariable(name = "keyword") String keyword, @PathVariable(name = "searchEngine", required = false) String searchEngine,
+        @PathVariable(name = "belongUser", required = false) String belongUser) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/keyword");
         mv.addObject("businessType", businessType);
         //取名叫terminalType会与session中存在的terminalType同名，值会被覆盖成session中的值
         mv.addObject("terminalType2", terminalType);
-        if (!("null").equals(searchEngine)) {
+        if (null != searchEngine) {
             mv.addObject("SearchEngine", searchEngine);
         }
-        if (!("null").equals(belongUser)) {
+        if (null != belongUser) {
             mv.addObject("belongUser", belongUser);
         }
         mv.addObject("Keyword", keyword);
@@ -843,37 +847,52 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toKeywordsFromRS/{businessType}/{terminalType}/{group}/{irc}")
+    @GetMapping(value = {"/toKeywordsFromRS/{businessType}/{terminalType}/{irc}/{group}", "/toKeywordsFromRS/{businessType}/{terminalType}/{irc}"})
     public ModelAndView toKeywordsFromRS(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "group") String group, @PathVariable(name = "irc") String irc) {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("keywords/keyword");
-        mv.addObject("businessType", businessType);
-        mv.addObject("terminalType2", terminalType);
-        mv.addObject("status", "1");
-        if (!("null").equals(group)) {
-            mv.addObject("groupTmp", group);
-        }
-        if (!("null").equals(irc)) {
-            mv.addObject("irc", irc);
+        @PathVariable(name = "group", required = false) String group, @PathVariable(name = "irc", required = false) Integer irc) {
+        ModelAndView mv = null;
+        try {
+            mv = new ModelAndView();
+            mv.setViewName("keywords/keyword");
+            mv.addObject("businessType", businessType);
+            mv.addObject("terminalType2", terminalType);
+            mv.addObject("status", "1");
+            if (null != group) {
+                mv.addObject("groupTmp", group);
+            }
+            if (null != irc) {
+                mv.addObject("irc", irc == 0 ? "" : irc);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
         return mv;
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toKeywordsFromMGS/{businessType}/{terminalType}/{machineGroup}/{irc}")
+    @GetMapping(value = {"/toKeywordsFromMGS/{businessType}/{terminalType}/{irc}/{machineGroup}", "/toKeywordsFromMGS/{businessType}/{terminalType}/{irc}"})
     public ModelAndView toKeywordsFromMGS(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "machineGroup") String machineGroup, @PathVariable(name = "irc") String irc) {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("keywords/keyword");
-        mv.addObject("businessType", businessType);
-        mv.addObject("terminalType2", terminalType);
-        mv.addObject("status", "1");
-        if (!("null").equals(machineGroup)) {
-            mv.addObject("machineGroupTmp", machineGroup);
-        }
-        if (!("null").equals(irc)) {
-            mv.addObject("irc", irc);
+        @PathVariable(name = "irc", required = false) Integer irc, @PathVariable(name = "machineGroup", required = false) String machineGroup) {
+        ModelAndView mv = null;
+        try {
+            mv = new ModelAndView();
+            mv.setViewName("keywords/keyword");
+            mv.addObject("businessType", businessType);
+            mv.addObject("terminalType2", terminalType);
+            mv.addObject("status", "1");
+            if (null != machineGroup) {
+                mv.addObject("machineGroupTmp", machineGroup);
+            }
+            if (null != irc) {
+                mv.addObject("irc", irc == 0 ? "" : irc);
+                if (irc < 0 && machineGroup != null) {
+                    Integer maxInvalidCount = customerKeywordService.getMaxInvalidCountByMachineGroup(machineGroup);
+                    mv.addObject("irc", maxInvalidCount == null ? 8 : maxInvalidCount);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return mv;
     }
