@@ -1150,7 +1150,7 @@
         LIMIT 1
     </select>
     
-    <select id="getQZRateKeywordCount" parameterType="com.keymanager.ckadmin.criteria.QZRateKewordCountCriteria" resultType="com.keymanager.ckadmin.vo.QZRateKeywordCountVO">
+    <select id="getQZRateKeywordCount" resultType="com.keymanager.ckadmin.vo.QZRateKeywordCountVO">
         SELECT
             c.fUuid AS customerUuid,
             c.fContactPerson AS customerName,
@@ -1178,4 +1178,12 @@
         GROUP BY ck.fQZSettingUuid
     </select>
 
+    <select id="getCustomerKeywordStatusCount" resultType="java.util.Map">
+        SELECT
+        COUNT(ck.fStatus = 2 OR NULL)  AS 'addCount',
+        COUNT(ck.fStatus = 1 OR NULL)  AS 'operatorCount',
+        COUNT(ck.fStatus = 0 OR NULL)  AS 'stopCount',
+        COUNT(ck.fStatus = 3 OR NULL)  AS 'obtainedCount'
+        FROM t_customer_keyword ck
+    </select>
 </mapper>

@@ -138,4 +138,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     Integer getMaxInvalidCountByMachineGroup(@Param("machineGroup") String machineGroup);
     
     List<QZRateKeywordCountVO> getQZRateKeywordCount(Page<QZRateKeywordCountVO> page, @Param("qzRateKewordCountCriteria") QZRateKewordCountCriteria qzRateKewordCountCriteria);
+
+    Map<String, Object> getCustomerKeywordStatusCount();
 }

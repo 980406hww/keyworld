@@ -7,6 +7,11 @@
     width: 100%;
     box-sizing: border-box;
 }
+
+.yskj-card-body div{
+    text-align: center;
+}
+
 .yskj-card-body-tb{
     padding: 15px 0;
     position: relative;
@@ -20,8 +25,9 @@
 }
 .cart-data .stat-text{
     color: #455a64;
-    font-size: 24px;
-    padding-bottom: 5px;
+    font-size: 16px;
+    height: 30px;
+    padding-top: 10px;
 }
 .cart-data .stat-heading{
     color: #99abb4;
@@ -29,14 +35,21 @@
 .cart-data .img-box{
     display: inline-block;
     vertical-align: middle;
-    padding-right: 20px;
 }
+
 .cart-data .img-box img{
     width: 60px;
 }
 .cart-data .cart-r{
     display: inline-block;
     vertical-align: middle;
+    width: 75px;
+}
+
+.cart-data .cart-r-qz{
+    display: inline-block;
+    vertical-align: middle;
+    width: 60px;
 }
 
 .my-card-title{

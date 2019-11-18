@@ -759,6 +759,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     public Integer getMaxInvalidCountByMachineGroup(String machineGroup) {
         return customerKeywordDao.getMaxInvalidCountByMachineGroup(machineGroup);
     }
+
+    @Override
+    public Map<String, Object> getCustomerKeywordStatusCount() {
+        return customerKeywordDao.getCustomerKeywordStatusCount();
+    }
 }
 
 

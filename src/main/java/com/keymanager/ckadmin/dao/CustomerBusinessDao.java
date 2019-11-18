@@ -29,4 +29,6 @@ public interface CustomerBusinessDao extends BaseMapper<CustomerBusiness> {
     List<String> getCustomerBusinessStrByCustomerUuid(@Param("customerUuid") Long customerUuid);
 
     void insertCustomerBusiness(@Param("customerBusiness") CustomerBusiness customerBusiness);
+
+    Map<String, Object> getCustomerBusinessCount();
 }

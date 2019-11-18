@@ -45,4 +45,9 @@ public class CustomerBusinessServiceImpl extends ServiceImpl<CustomerBusinessDao
     public List<String> getCustomerBusinessStrByCustomerUuid(long customerUuid) {
         return customerBusinessDao.getCustomerBusinessStrByCustomerUuid(customerUuid);
     }
+
+    @Override
+    public Map<String, Object> getCustomerBusinessCount() {
+        return customerBusinessDao.getCustomerBusinessCount();
+    }
 }

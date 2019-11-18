@@ -739,4 +739,19 @@ public class QZSettingController extends SpringMVCBaseController {
             logger.error(e.getMessage());
         }
     }
+
+    @PostMapping("/getQzSettingRenewalStatusCount")
+    public ResultBean getQzSettingRenewalStatusCount() {
+        ResultBean resultBean = new ResultBean(200, "获取站点各续费状态下的数量成功");
+        try {
+            resultBean.setData(qzSettingService.getQzSettingRenewalStatusCount());
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            resultBean.setMsg(e.getMessage());
+            resultBean.setCode(400);
+            return resultBean;
+        }
+        return resultBean;
+    }
 }

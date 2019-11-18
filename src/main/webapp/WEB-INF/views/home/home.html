@@ -69,10 +69,23 @@
             <div class="yskj-card-body clearfix cart-data">
                 <div class="img-box" ok-pc-in-show>
                     <img src="${ctx.basePath}/static/ok-admin/images/home-04.png" alt="none"/>
+                    <div class="stat-heading" style="text-align: center">客户业务</div>
                 </div>
                 <div class="cart-r">
-                    <div class="stat-text fans-num">0</div>
-                    <div class="stat-heading">客户</div>
+                    <div class="stat-text" id="keyword_customer_business">10000000</div>
+                    <div class="stat-heading">单词业务</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="qzsetting_customer_business">10000000</div>
+                    <div class="stat-heading">全站业务</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="fm_customer_business">10000000</div>
+                    <div class="stat-heading">负面业务</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="qt_customer_business">10000000</div>
+                    <div class="stat-heading">其他业务</div>
                 </div>
             </div>
         </div>
@@ -83,10 +96,27 @@
             <div class="yskj-card-body clearfix cart-data">
                 <div class="img-box" ok-pc-in-show>
                     <img src="${ctx.basePath}/static/ok-admin/images/home-02.png" alt="none"/>
+                    <div class="stat-heading" style="text-align: center">站点</div>
                 </div>
-                <div class="cart-r">
-                    <div class="stat-text goods-num">0</div>
-                    <div class="stat-heading">站点</div>
+                <div class="cart-r-qz">
+                    <div class="stat-text" id="qz_addCount">10000</div>
+                    <div class="stat-heading">新增</div>
+                </div>
+                <div class="cart-r-qz">
+                    <div class="stat-text" id="qz_operatorCount">10000</div>
+                    <div class="stat-heading">续费</div>
+                </div>
+                <div class="cart-r-qz">
+                    <div class="stat-text" id="qz_stopCount">10000</div>
+                    <div class="stat-heading">暂停</div>
+                </div>
+                <div class="cart-r-qz">
+                    <div class="stat-text" id="qz_obtainedCount">10000</div>
+                    <div class="stat-heading">下架</div>
+                </div>
+                <div class="cart-r-qz">
+                    <div class="stat-text" id="qz_otherCount">10000</div>
+                    <div class="stat-heading">其他</div>
                 </div>
             </div>
         </div>
@@ -95,12 +125,25 @@
     <div class="layui-col-xs6 layui-col-md3">
         <div class="layui-card">
             <div class="yskj-card-body clearfix cart-data">
-                <div class="img-box" ok-pc-in-show>
+                <div class="img-box img-box" ok-pc-in-show>
                     <img src="${ctx.basePath}/static/ok-admin/images/home-01.png" alt="none"/>
+                    <div class="stat-heading" style="text-align: center">关键词</div>
                 </div>
                 <div class="cart-r">
-                    <div class="stat-text incomes-num">0</div>
-                    <div class="stat-heading">关键词</div>
+                    <div class="stat-text" id="customer_keyword_addCount">10000000</div>
+                    <div class="stat-heading">新增</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="customer_keyword_operatorCount">10000000</div>
+                    <div class="stat-heading">激活</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="customer_keyword_stopCount">10000000</div>
+                    <div class="stat-heading">暂停</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="customer_keyword_obtainedCount">10000000</div>
+                    <div class="stat-heading">下架</div>
                 </div>
             </div>
         </div>
@@ -111,10 +154,23 @@
             <div class="yskj-card-body clearfix cart-data">
                 <div class="img-box" ok-pc-in-show>
                     <img src="${ctx.basePath}/static/ok-admin/images/home-03.png" alt="none"/>
+                    <div class="stat-heading" style="text-align: center">机器</div>
                 </div>
                 <div class="cart-r">
-                    <div class="stat-text blogs-num">0</div>
-                    <div class="stat-heading">机器</div>
+                    <div class="stat-text" id="machine_pc_active">10000</div>
+                    <div class="stat-heading">电脑端</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="machine_pc_stop">10000</div>
+                    <div class="stat-heading">死亡数</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="machine_phone_active">10000</div>
+                    <div class="stat-heading">移动端</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="machine_phone_stop">10000</div>
+                    <div class="stat-heading">死亡数</div>
                 </div>
             </div>
         </div>
@@ -419,5 +475,96 @@
             let postData = common.formToJsonObject('qzRateSearchForm');
             init_qz_rate_statistics(postData);
         });
+
+        getCustomerBusinessCount();
+
+        /**
+         * 获取各业务下的客户数
+         */
+        function getCustomerBusinessCount() {
+            $.ajax({
+                url: '/internal/customerbusiness/getCustomerBusinessCount',
+                dataType: 'json',
+                timeout: 10000,
+                type: 'POST',
+                success: function (res) {
+                    if (res.code === 200) {
+                        if (res.data != null) {
+                            let data = res.data;
+                            $("#keyword_customer_business").html(data.keyword);
+                            $("#qzsetting_customer_business").html(data.qzsetting);
+                            $("#fm_customer_business").html(data.fm);
+                            $("#qt_customer_business").html(data.qt); // 是否与pt的相加
+                        }
+                    } else {
+                        common.showFailMsg(res.msg);
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络异常请稍后再试")
+                }
+            });
+        }
+
+        getQzSettingRenewalStatusCount();
+
+        /**
+         * 获取站点各续费状态下的数量
+         */
+        function getQzSettingRenewalStatusCount() {
+            $.ajax({
+                url: '/internal/qzsetting/getQzSettingRenewalStatusCount',
+                dataType: 'json',
+                timeout: 10000,
+                type: 'POST',
+                success: function (res) {
+                    if (res.code === 200) {
+                        if (res.data != null) {
+                            let data = res.data;
+                            $("#qz_addCount").html(data.addCount);
+                            $("#qz_operatorCount").html(data.operatorCount);
+                            $("#qz_stopCount").html(data.stopCount);
+                            $("#qz_obtainedCount").html(data.obtainedCount);
+                            $("#qz_otherCount").html(data.otherCount);
+                        }
+                    } else {
+                        common.showFailMsg(res.msg);
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络异常请稍后再试")
+                }
+            });
+        }
+
+        getCustomerKeywordStatusCount();
+
+        /**
+         * 获取关键词各状态下的数量
+         */
+        function getCustomerKeywordStatusCount() {
+            $.ajax({
+                url: '/internal/customerKeyword/getCustomerKeywordStatusCount',
+                dataType: 'json',
+                timeout: 10000,
+                type: 'POST',
+                success: function (res) {
+                    if (res.code === 200) {
+                        if (res.data != null) {
+                            let data = res.data;
+                            $("#customer_keyword_addCount").html(data.addCount);
+                            $("#customer_keyword_operatorCount").html(data.operatorCount);
+                            $("#customer_keyword_stopCount").html(data.stopCount);
+                            $("#customer_keyword_obtainedCount").html(data.obtainedCount);
+                        }
+                    } else {
+                        common.showFailMsg(res.msg);
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络异常请稍后再试")
+                }
+            });
+        }
     });
 </script>

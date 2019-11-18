@@ -934,4 +934,9 @@ public class QZSettingServiceImpl extends
     public List<Long> getQZUuidsByUserID(String userID, String searchEngine, String terminalType) {
         return qzSettingDao.getQZUuidsByUserID(userID,searchEngine,terminalType);
     }
+
+    @Override
+    public Map<String, Object> getQzSettingRenewalStatusCount() {
+        return qzSettingDao.getQzSettingRenewalStatusCount();
+    }
 }

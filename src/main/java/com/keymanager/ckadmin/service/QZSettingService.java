@@ -79,4 +79,6 @@ public interface QZSettingService extends IService<QZSetting> {
     List<QZSetting> selectByUuids(List uuids);
 
     List<Long> getQZUuidsByUserID(String userID, String searchEngine, String terminalType);
+
+    Map<String, Object> getQzSettingRenewalStatusCount();
 }

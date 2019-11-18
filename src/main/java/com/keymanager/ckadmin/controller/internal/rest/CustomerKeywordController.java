@@ -868,4 +868,19 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         }
         return mv;
     }
+
+    @PostMapping("/getCustomerKeywordStatusCount")
+    public ResultBean getCustomerKeywordStatusCount() {
+        ResultBean resultBean = new ResultBean(200, "获取关键词各状态下的数量成功");
+        try {
+            resultBean.setData(customerKeywordService.getCustomerKeywordStatusCount());
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            resultBean.setMsg(e.getMessage());
+            resultBean.setCode(400);
+            return resultBean;
+        }
+        return resultBean;
+    }
 }
