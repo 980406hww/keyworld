@@ -251,11 +251,13 @@ layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
 
     function conditionChanged() {
         let form_condition = common.formToJsonObject('form');
-        let searchForm_condition = common.formToJsonObject('searchForm');
-        searchForm_condition.searchEngine = form_condition.searchEngine;
-        searchForm_condition.qzTerminal = form_condition.qzTerminal;
         getChargeMonData(form_condition);
-        qzChargeTableInit(searchForm_condition);
+        if (document.getElementById('searchForm')) {
+            let searchForm_condition = common.formToJsonObject('searchForm');
+            searchForm_condition.searchEngine = form_condition.searchEngine;
+            searchForm_condition.qzTerminal = form_condition.qzTerminal;
+            qzChargeTableInit(searchForm_condition);
+        }
     }
 
     window.qz_handle = function (name, data, sel) {

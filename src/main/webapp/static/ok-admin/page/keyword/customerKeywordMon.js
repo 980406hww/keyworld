@@ -384,11 +384,10 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
     }
 
     function showLogData(data) {
-        var boxes = document.getElementById('table').nextElementSibling.getElementsByClassName('layui-table-body')[0]
-        .getElementsByClassName('laytable-cell-1-0-2');
+        var boxes = document.getElementsByClassName('layui-table-body')[0].getElementsByTagName('tr');
         for (let i = 0; i < boxes.length; i++) {
             if (data[i].hData) {
-                let boxLogShow = echarts.init(boxes[i]);
+                let boxLogShow = echarts.init(boxes[i].children[2].firstElementChild);
                 option.series[0].data = data[i].hData.split(',');
                 option.xAxis.data = data[i].hDate.split(',');
                 boxLogShow.setOption(option);
