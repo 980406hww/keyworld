@@ -11,6 +11,8 @@ public class QZRateKewordCountCriteria extends BaseCriteria {
     private Integer qzrateRange;
     private String todayDate;
     private String userID;
+    private Integer customerUuid;
+    private String domain;
 
     public String getTerminalType() {
         return terminalType;
@@ -58,5 +60,21 @@ public class QZRateKewordCountCriteria extends BaseCriteria {
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+
+    public Integer getCustomerUuid() {
+        return customerUuid;
+    }
+
+    public void setCustomerUuid(Integer customerUuid) {
+        this.customerUuid = customerUuid;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
     }
 }

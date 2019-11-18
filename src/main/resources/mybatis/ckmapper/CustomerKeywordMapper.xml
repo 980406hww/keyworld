@@ -1169,6 +1169,12 @@
             <if test="qzRateKewordCountCriteria.terminalType != null and qzRateKewordCountCriteria.terminalType != ''">
                 AND ck.fTerminalType=#{qzRateKewordCountCriteria.terminalType}
             </if>
+            <if test="qzRateKewordCountCriteria.customerUuid != null and qzRateKewordCountCriteria.customerUuid != ''">
+                AND c.fUuid=#{qzRateKewordCountCriteria.customerUuid}
+            </if>
+        <if test="qzRateKewordCountCriteria.domain != null and qzRateKewordCountCriteria.domain != ''">
+            AND qz.fDomain LIKE CONCAT(#{qzRateKewordCountCriteria.domain},'%')
+        </if>
             <if test="qzRateKewordCountCriteria.qzUuids != null">
                 AND ck.fQZSettingUuid IN
                 <foreach item="qzUuid"  collection="qzRateKewordCountCriteria.qzUuids" open="(" separator="," close=")">
@@ -1178,4 +1184,31 @@
         GROUP BY ck.fQZSettingUuid
     </select>
 
+    <select id="getQZRateKeywordCountByCriteria" parameterType="com.keymanager.ckadmin.criteria.QZRateKewordCountCriteria" resultType="int">
+        SELECT COUNT(1)
+        FROM (
+        SELECT
+        ck.fQZSettingUuid
+        FROM t_customer_keyword ck
+        LEFT JOIN t_qz_setting qz on ck.fQZSettingUuid = qz.fUuid
+        LEFT JOIN t_customer c on c.fUuid = qz.fCustomerUuid
+        WHERE 1=1
+        <if test="criteria.terminalType != null and criteria.terminalType != ''">
+            AND ck.fTerminalType=#{criteria.terminalType}
+        </if>
+        <if test="criteria.customerUuid != null and criteria.customerUuid != ''">
+            AND c.fUuid=#{criteria.customerUuid}
+        </if>
+        <if test="criteria.domain != null and criteria.domain != ''">
+            AND qz.fDomain LIKE CONCAT(#{criteria.domain},'%')
+        </if>
+        <if test="criteria.qzUuids != null">
+            AND ck.fQZSettingUuid IN
+            <foreach item="qzUuid" collection="criteria.qzUuids" open="(" separator="," close=")">
+                #{qzUuid}
+            </foreach>
+        </if>
+        GROUP BY ck.fQZSettingUuid
+        ) T
+    </select>
 </mapper>

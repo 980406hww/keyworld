@@ -22,7 +22,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
             orient: 'horizontal',
             icon: "rect",
             top: '40',
-            left: '30%',
+            x: 'center',
             data: ['前3名', '前5名', '前10名', '前50名']
         },
         tooltip: {
@@ -100,10 +100,17 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
 
     if (condition) {
         getKeywordMonData(condition);
+        condition.dateStart = layui.util.toDateString(new Date(), 'yyyy-MM-dd');
+        condition.dateEnd = condition.dateStart + ' 23:59:59';
         tableInit(condition);
     } else {
         getKeywordMonData({searchEngine: '', terminal: '', time: '-90'});
-        tableInit({searchEngine: '', terminal: ''});
+        tableInit({
+            searchEngine: '',
+            terminal: '',
+            dateStart: layui.util.toDateString(new Date(), 'yyyy-MM-dd'),
+            dateEnd: layui.util.toDateString(new Date(), 'yyyy-MM-dd') + ' 23:59:59'
+        });
     }
 
     function getKeywordMonData(condition) {
@@ -182,6 +189,10 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
         reload(condition);
     });
 
+    window.searchTable = function () {
+        reload(common.formToJsonObject('keywordFrom'));
+    };
+
     window.handle = function (name, data, searchEngine) {
         $("#" + name).empty();
         $('#' + name).append('<option value>搜索引擎</option>');// 下拉菜单里添加元素
@@ -257,7 +268,16 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
             show: false
         },
         tooltip: {
-            trigger: 'axis'
+            trigger: 'axis',
+            show: true,
+            axisPointer: {
+                type: 'none'
+            },
+            confine: true,
+            formatter: function (p) {
+                return '<div style="font-size: 6px;line-height: 14px"><span>' + p[0].axisValue + '</span>'
+                    + '<br>' + p[0].marker + '<span>排名：' + p[0].value + '</span></div>'
+            }
         },
         xAxis: {
             type: 'category',
@@ -298,16 +318,16 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
             limits: [10, 25, 50, 100, 500],
             size: 'md',
             id: 'table',
-            even: false,//隔行背景
+            even: true,//隔行背景
             where: condition,
             defaultToolbar: [],
             contentType: 'application/json',
             cols: [[
-                {field: 'keyword', title: '关键字', width: '23%', align: 'center'},
-                {field: 'customer', title: '客户名称', width: '18%', align: 'center'},
-                {title: '近日趋势', width: '14%', align: 'center'},
+                {field: 'keyword', title: '关键字', width: '20%', align: 'center'},
+                {field: 'customer', title: '客户名称', width: '16%', align: 'center'},
+                {title: '近日趋势', width: '20%', align: 'center'},
                 {
-                    field: 'position', title: '现排名', width: '7%', align: 'center', templet: function (d) {
+                    field: 'position', title: '现排名', width: '6%', align: 'center', templet: function (d) {
                         let msg = '';
                         if (d.position <= 3) {
                             msg = '<span style="color:black;">' + d.position + '</span>';
@@ -355,7 +375,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                     }
                 }
             ]],
-            height: 'full-385',
+            height: 'full-425',
             loading: true,
             done: function (res, curr, count) {
                 showLogData(res.data);
@@ -378,6 +398,14 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
     }
 
     function reload(condition) {
+        let postData = common.formToJsonObject('searchForm');
+        if (postData.dateStart) {
+            postData.dateStart += ' 00:00:00';
+        }
+        if (postData.dateEnd) {
+            postData.dateEnd += ' 23:59:59';
+        }
+        Object.assign(condition, postData);
         table.reload('table', {
             where: condition,
             page: {

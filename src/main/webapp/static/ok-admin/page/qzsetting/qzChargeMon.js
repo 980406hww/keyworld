@@ -25,7 +25,7 @@ layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
             orient: 'horizontal',
             icon: "rect",
             top: '40',
-            left: '35%',
+            x: 'center',
             data: ['新增', '续费', '暂停', '下架', '删除']
         },
         tooltip: {
@@ -165,7 +165,7 @@ layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
             size: 'sm',
             id: 'table',
             toolbar: "#toolbarTpl",
-            even: false,//隔行背景
+            even: true,//隔行背景
             where: condition,
             defaultToolbar: [],
             contentType: 'application/json',

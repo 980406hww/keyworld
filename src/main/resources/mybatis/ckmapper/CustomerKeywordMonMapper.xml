@@ -33,8 +33,13 @@
         FROM t_customer_keyword_mon ckm
         LEFT JOIN t_customer_keyword ck
         ON ckm.fKeywordUuid = ck.fUuid
-        WHERE ckm.fRecordDate >= #{condition.yesterday}
-        AND ckm.fRecordDate &lt; #{condition.day}
+        WHERE 1 = 1
+        <if test="condition.yesterday != null and condition.yesterday != ''">
+            AND ckm.fRecordDate >= #{condition.yesterday}
+        </if>
+        <if test="condition.day != null and condition.day != ''">
+            AND ckm.fRecordDate &lt; #{condition.day}
+        </if>
         <if test="condition.searchEngine != null and condition.searchEngine != ''">
             AND ck.fSearchEngine = #{condition.searchEngine}
         </if>
@@ -46,6 +51,9 @@
         </if>
         <if test="condition.type != null and condition.type != ''">
             AND ck.fType = #{condition.type}
+        </if>
+        <if test="condition.keyword != null and condition.keyword != ''">
+            AND ckm.fKeyword LIKE CONCAT(#{condition.keyword},'%')
         </if>
         GROUP BY ckm.fKeyword) T;
     </select>
@@ -61,19 +69,25 @@
         (SELECT GROUP_CONCAT(ckm_s.fPosition)
         FROM t_customer_keyword_mon ckm_s
         WHERE ckm_s.fKeyword = ckm.fKeyword
-        AND ckm_s.fRecordDate >= #{condition.sevenDayAgo}
-        AND ckm_s.fRecordDate &lt; #{condition.day}
+        AND ckm_s.fRecordDate >= #{condition.fifteenDayAgo}
+        AND ckm_s.fRecordDate &lt; #{condition.today}
         GROUP BY ckm_s.fKeyword) AS 'hData',
         (SELECT GROUP_CONCAT(DATE_FORMAT(ckm_s.fRecordDate, '%Y-%m-%d'))
         FROM t_customer_keyword_mon ckm_s
         WHERE ckm_s.fKeyword = ckm.fKeyword
-        AND ckm_s.fRecordDate >= #{condition.sevenDayAgo}
-        AND ckm_s.fRecordDate &lt; #{condition.day}
+        AND ckm_s.fRecordDate >= #{condition.fifteenDayAgo}
+        AND ckm_s.fRecordDate &lt; #{condition.today}
         GROUP BY ckm_s.fKeyword) AS 'hDate'
         FROM t_customer_keyword_mon ckm
         LEFT JOIN t_customer_keyword ck ON ckm.fKeywordUuid = ck.fUuid
         LEFT JOIN t_customer c ON ckm.fCustomerUuid = c.fUuid
-        WHERE ckm.fRecordDate >= #{condition.yesterday}
+        WHERE 1 = 1
+        <if test="condition.dateStart != null and condition.dateStart != ''">
+            AND ckm.fRecordDate >= #{condition.dateStart}
+        </if>
+        <if test="condition.dateEnd != null and condition.dateEnd != ''">
+            AND ckm.fRecordDate &lt; #{condition.dateEnd}
+        </if>
         <if test="condition.searchEngine != null and condition.searchEngine != ''">
             AND ck.fSearchEngine = #{condition.searchEngine}
         </if>
@@ -85,6 +99,9 @@
         </if>
         <if test="condition.type != null and condition.type != ''">
             AND ck.fType = #{condition.type}
+        </if>
+        <if test="condition.keyword != null and condition.keyword != ''">
+            AND ckm.fKeyword LIKE CONCAT(#{condition.keyword},'%')
         </if>
         GROUP BY ckm.fKeyword
         LIMIT #{condition.start},#{condition.limit};
