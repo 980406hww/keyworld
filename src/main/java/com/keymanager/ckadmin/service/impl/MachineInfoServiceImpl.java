@@ -593,6 +593,11 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
         return data;
     }
 
+    @Override
+    public Map<String, String> getMachineStatusCount() {
+        return machineInfoDao.getMachineStatusCount();
+    }
+
     private Map<String, Object> getCityMap(String cityName) {
         Map<String, Object> map = new HashMap<>(2);
         map.put("name", cityName);

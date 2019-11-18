@@ -148,4 +148,6 @@ public interface MachineInfoService extends IService<MachineInfo> {
     List<Map<String, Object>> getMachineInfos();
 
     Map<String, Object> getMachineInfoBody(String cityName);
+
+    Map<String, String> getMachineStatusCount();
 }

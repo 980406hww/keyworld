@@ -734,7 +734,6 @@
         ORDER BY cs.fClientIDPrefix
     </select>
 
-
     <select id="getMachineInfoBody" parameterType="java.lang.String" resultType="com.keymanager.ckadmin.vo.MachineInfoSummaryVO">
         SELECT cs.fClientIDPrefix as clientIDPrefix,
             cs.fTerminalType as type,
@@ -747,5 +746,14 @@
         GROUP BY cs.fClientIDPrefix, cs.fTerminalType, cs.fCity, cs.fSwitchGroupName
         ORDER BY cs.fClientIDPrefix
     </select>
+
+    <select id="getMachineStatusCount" resultType="java.util.HashMap">
+    SELECT
+        SUM(IF(fTerminalType = 'PC', 1, 0)) AS 'pcAll',
+        SUM(IF(fTerminalType = 'PC' AND (fContinuousFailCount &gt; 5 OR fTenMinsLastVisitTime &lt; NOW()) AND fValid = 1, 1, 0))    AS 'pcDie',
+        SUM(IF(fTerminalType = 'Phone', 1, 0))     AS 'phoneAll',
+        SUM(IF(fTerminalType = 'Phone' AND (fContinuousFailCount &gt; 5 OR fTenMinsLastVisitTime &lt; NOW()) AND fValid = 1, 1, 0)) AS 'phoneDie'
+    FROM t_machine_info
+  </select>
 </mapper>
 

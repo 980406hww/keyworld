@@ -246,7 +246,7 @@ public class MachineInfoController extends SpringMVCBaseController {
     @RequiresPermissions("/internal/machineInfo/uploadVNCFile")
     @RequestMapping(value = "/uploadVNCFile", method = RequestMethod.POST)
     public ResultBean uploadVNCFile(@RequestParam(value = "file", required = false) MultipartFile file,
-                                    @RequestParam(name = "terminalType") String terminalType) {
+        @RequestParam(name = "terminalType") String terminalType) {
         ResultBean resultBean = new ResultBean();
         try {
             machineInfoService.uploadVNCFile(file.getInputStream(), terminalType);
@@ -545,7 +545,8 @@ public class MachineInfoController extends SpringMVCBaseController {
             if (!switchGroups.contains("DepartmentManager")) {
                 machineInfoCriteria.setSwitchGroups(switchGroups);
             }
-            performanceService.addPerformanceLog(machineInfoCriteria.getTerminalType() + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
+            performanceService
+                .addPerformanceLog(machineInfoCriteria.getTerminalType() + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
             page = machineInfoService.searchMachineInfos(page, machineInfoCriteria, true);
             List<MachineInfo> machineInfos = page.getRecords();
             resultBean.setCode(0);
@@ -651,7 +652,8 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/searchMachineInfos")
     @RequestMapping(value = "/toMachineInfoFromATP/{terminalType}/{machineGroup}", method = RequestMethod.GET)
-    public ModelAndView toMachineInfoFromATP(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "machineGroup") String machineGroup) {
+    public ModelAndView toMachineInfoFromATP(@PathVariable(name = "terminalType") String terminalType,
+        @PathVariable(name = "machineGroup") String machineGroup) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/machineManage");
         mv.addObject("machineGroupFromATP", machineGroup);
@@ -661,7 +663,8 @@ public class MachineInfoController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/machineInfo/searchMachineInfos")
     @GetMapping(value = {"/toMachineInfoFromMGS/{terminalType}/{machineGroup}", "/toMachineInfoFromMGS/{terminalType}"})
-    public ModelAndView toMachineInfoFromMGS(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "machineGroup", required = false) String machineGroup) {
+    public ModelAndView toMachineInfoFromMGS(@PathVariable(name = "terminalType") String terminalType,
+        @PathVariable(name = "machineGroup", required = false) String machineGroup) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/machineManage");
         if (null != machineGroup) {
@@ -706,6 +709,20 @@ public class MachineInfoController extends SpringMVCBaseController {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    @GetMapping("/getMachineStatusCount")
+    public ResultBean getMachineStatusCount() {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            resultBean.setData(machineInfoService.getMachineStatusCount());
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            resultBean.setMsg(e.getMessage());
+            resultBean.setCode(400);
         }
         return resultBean;
     }
